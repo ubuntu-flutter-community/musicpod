@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:metadata_god/metadata_god.dart';
 import 'package:music/data/audio.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -39,6 +40,14 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  Metadata? _metadata;
+  Metadata? get metaData => _metadata;
+  set metaData(Metadata? value) {
+    if (value == null || value == _metadata) return;
+    _metadata = value;
+    notifyListeners();
+  }
+
   Future<void> play() async {
     if (audio == null) return;
 
@@ -64,7 +73,15 @@ class PlayerModel extends SafeChangeNotifier {
     await _audioPlayer.resume();
   }
 
-  void init() {
+  Future<void> setImage() async {
+    if (audio != null &&
+        audio!.audioType == AudioType.local &&
+        audio!.resourcePath != null) {
+      metaData = await MetadataGod.getMetadata(audio!.resourcePath!);
+    }
+  }
+
+  Future<void> init() async {
     _audioPlayer.onPlayerStateChanged.listen((playerState) {
       isPlaying = playerState == PlayerState.playing;
     });
@@ -78,6 +95,7 @@ class PlayerModel extends SafeChangeNotifier {
         position = newPosition;
       }
     });
+    notifyListeners();
   }
 
   @override

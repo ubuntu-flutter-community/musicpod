@@ -18,10 +18,28 @@ class Player extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
+            child: model.metaData?.picture == null
+                ? null
+                : Image.memory(
+                    model.metaData!.picture!.data,
+                    height: 120.0,
+                    // width: 120.0,
+                  ),
+          ),
+          SizedBox(
             width: 200,
             child: Padding(
               padding: const EdgeInsets.all(20),
-              child: Text(model.audio?.title ?? ''),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    model.metaData?.title ?? '',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(model.metaData?.artist ?? ''),
+                ],
+              ),
             ),
           ),
           Expanded(

@@ -7,6 +7,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_linux
   gtk
   handy_window
+  metadata_god
   screen_retriever
   window_manager
   yaru_window_linux

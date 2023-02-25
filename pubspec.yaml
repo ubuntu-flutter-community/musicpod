@@ -18,10 +18,10 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  # flutter_media_metadata: ^1.0.0+1
   handy_window: ^0.3.1
   http: ^0.13.5
   intl: ^0.17.0
+  metadata_god: ^0.3.2
   path: ^1.8.2
   provider: ^6.0.5
   safe_change_notifier: ^0.2.0

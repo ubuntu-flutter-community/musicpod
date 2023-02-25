@@ -44,6 +44,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                   playerModel.pause();
                 } else {
                   playerModel.audio = localAudioModel.audios![index];
+                  await playerModel.setImage();
                   await playerModel.play();
                 }
               }

@@ -40,7 +40,7 @@ class _App extends StatefulWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => PlayerModel(),
+          create: (_) => PlayerModel()..init(),
         ),
         ChangeNotifierProvider(
           create: (_) => HomeModel(),
@@ -59,12 +59,6 @@ class _App extends StatefulWidget {
 
 class _AppState extends State<_App> {
   var _searchActive = false;
-
-  @override
-  void initState() {
-    super.initState();
-    context.read<PlayerModel>().init();
-  }
 
   @override
   Widget build(BuildContext context) {
