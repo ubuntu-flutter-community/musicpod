@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/home/home_model.dart';
 import 'package:music/app/home/home_page.dart';
+import 'package:music/app/home/local_audio/local_audio_model.dart';
 import 'package:music/app/player.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/l10n/l10n.dart';
@@ -41,6 +42,9 @@ class _App extends StatefulWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => HomeModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => LocalAudioModel(),
         )
       ],
       child: const _App(),
