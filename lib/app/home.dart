@@ -8,6 +8,7 @@ import 'package:music/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:file_selector/file_selector.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -34,8 +35,11 @@ class Home extends StatelessWidget {
         context.l10n.podcasts,
       ],
       views: [
-        const Center(
-          child: Text('Local Audio'),
+        Center(
+          child: ElevatedButton(
+            onPressed: () async => await getDirectoryPath(),
+            child: const Text('Pick your music collection'),
+          ),
         ),
         ListView.builder(
           padding: const EdgeInsets.all(kYaruPagePadding),
