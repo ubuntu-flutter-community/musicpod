@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music/app/home_model.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/app/tabbed_page.dart';
 import 'package:music/data/audio.dart';
@@ -13,9 +14,13 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<PlayerModel>();
+    final playerModel = context.watch<PlayerModel>();
+    final homeModel = context.watch<HomeModel>();
+
     final theme = Theme.of(context);
     return TabbedPage(
+      initialIndex: homeModel.selectedTab,
+      onTap: (index) => homeModel.selectedTab = index,
       tabIcons: const [
         Icon(YaruIcons.headphones),
         Icon(YaruIcons.globe),
@@ -37,19 +42,19 @@ class Home extends StatelessWidget {
           itemCount: stationsMap.length,
           itemBuilder: (context, index) {
             Future<void> onTap() async {
-              if (model.isPlaying) {
-                model.pause();
+              if (playerModel.isPlaying) {
+                playerModel.pause();
               } else {
-                model.audio = Audio(
+                playerModel.audio = Audio(
                   title: stationsMap.entries.elementAt(index).key,
                   audioType: AudioType.radio,
                   resourceUrl: stationsMap.entries.elementAt(index).value,
                 );
-                await model.play();
+                await playerModel.play();
               }
             }
 
-            final isPlaying = model.audio?.resourceUrl ==
+            final isPlaying = playerModel.audio?.resourceUrl ==
                 stationsMap.entries.elementAt(index).value;
 
             return ListTile(

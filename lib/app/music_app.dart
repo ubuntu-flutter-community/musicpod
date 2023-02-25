@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music/app/home_model.dart';
 import 'package:music/app/home.dart';
 import 'package:music/app/player.dart';
 import 'package:music/app/player_model.dart';
@@ -33,8 +34,15 @@ class _App extends StatefulWidget {
   const _App();
 
   static Widget create(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => PlayerModel(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => PlayerModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => HomeModel(),
+        )
+      ],
       child: const _App(),
     );
   }
