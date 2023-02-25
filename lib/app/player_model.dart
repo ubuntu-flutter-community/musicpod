@@ -42,8 +42,11 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> play() async {
     if (audio == null) return;
 
-    if (audio!.audioType == AudioType.radio) {
+    if (audio!.audioType == AudioType.radio && audio!.resourceUrl != null) {
       await _audioPlayer.play(UrlSource(audio!.resourceUrl!));
+    } else if (audio!.audioType == AudioType.local &&
+        audio!.resourcePath != null) {
+      await _audioPlayer.play(DeviceFileSource(audio!.resourcePath!));
     }
   }
 
