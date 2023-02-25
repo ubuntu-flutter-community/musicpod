@@ -34,7 +34,7 @@ class RadioPage extends StatelessWidget {
         }
 
         return ListTile(
-          contentPadding: const EdgeInsets.only(right: 8),
+          contentPadding: const EdgeInsets.only(left: 8, right: 4),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(kYaruButtonRadius),
           ),
@@ -46,16 +46,10 @@ class RadioPage extends StatelessWidget {
                   audioSelected ? theme.colorScheme.onSurface : theme.hintColor,
             ),
           ),
-          leading: YaruIconButton(
+          trailing: YaruIconButton(
             icon: const Icon(YaruIcons.star),
             onPressed: () {},
           ),
-          trailing: audioSelected
-              ? Icon(
-                  YaruIcons.media_play,
-                  color: theme.colorScheme.primary,
-                )
-              : null,
         );
       },
     );

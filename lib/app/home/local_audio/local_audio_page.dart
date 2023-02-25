@@ -49,7 +49,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
               }
 
               return ListTile(
-                contentPadding: const EdgeInsets.only(right: 8),
+                contentPadding: const EdgeInsets.only(left: 8, right: 4),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(kYaruButtonRadius),
                 ),
@@ -62,16 +62,10 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                         : theme.hintColor,
                   ),
                 ),
-                leading: YaruIconButton(
+                trailing: YaruIconButton(
                   icon: const Icon(YaruIcons.heart),
                   onPressed: () {},
                 ),
-                trailing: audioSelected
-                    ? Icon(
-                        YaruIcons.media_play,
-                        color: theme.colorScheme.primary,
-                      )
-                    : null,
               );
             },
           );
