@@ -1,9 +1,13 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import 'package:music/l10n/l10n.dart';
+
+const _kTestAudio =
+    'https://d1o44v9snwqbit.cloudfront.net/musicfox_demo_MF-701.mp3';
 
 class MusicApp extends StatelessWidget {
   const MusicApp({super.key});
@@ -37,6 +41,36 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var _searchActive = false;
+  final _audioPlayer = AudioPlayer();
+  bool _isPlaying = false;
+  Duration _duration = Duration.zero;
+  Duration _position = Duration.zero;
+
+  @override
+  void initState() {
+    _audioPlayer.onPlayerStateChanged.listen((playerState) {
+      setState(() {
+        _isPlaying = playerState == PlayerState.playing;
+      });
+    });
+    _audioPlayer.onDurationChanged.listen((newDuration) {
+      setState(() {
+        _duration = newDuration;
+      });
+    });
+    _audioPlayer.onPositionChanged.listen((newPosition) {
+      setState(() {
+        _position = newPosition;
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,21 +137,53 @@ class _HomeState extends State<Home> {
     );
 
     final audioPlayerBottom = SizedBox(
-      height: 60,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
+      height: 100,
+      child: Column(
+        children: [
           Expanded(
-            child: YaruIconButton(
-              icon: Icon(YaruIcons.skip_backward),
+            child: Material(
+              color: Colors.transparent,
+              child: Slider(
+                min: 0,
+                max: _duration.inSeconds.toDouble(),
+                value: _position.inSeconds.toDouble(),
+                onChanged: (v) async {
+                  final position = Duration(seconds: v.toInt());
+                  await _audioPlayer.seek(position);
+                  await _audioPlayer.resume();
+                },
+              ),
             ),
           ),
-          YaruIconButton(
-            icon: Icon(YaruIcons.media_play),
-          ),
-          Expanded(
-            child: YaruIconButton(
-              icon: Icon(YaruIcons.skip_forward),
+          SizedBox(
+            height: 60,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Expanded(
+                  child: YaruIconButton(
+                    icon: Icon(YaruIcons.skip_backward),
+                  ),
+                ),
+                YaruIconButton(
+                  onPressed: () async {
+                    if (_isPlaying) {
+                      await _audioPlayer.pause();
+                    } else {
+                      String url = _kTestAudio;
+                      await _audioPlayer.play(UrlSource(url));
+                    }
+                  },
+                  icon: Icon(
+                    _isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
+                  ),
+                ),
+                const Expanded(
+                  child: YaruIconButton(
+                    icon: Icon(YaruIcons.skip_forward),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
