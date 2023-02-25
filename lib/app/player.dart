@@ -1,104 +1,103 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:music/app/player_model.dart';
+import 'package:music/data/local_audio.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class Player extends StatelessWidget {
   const Player({
     super.key,
-    required this.audioPlayer,
-    required this.isPlaying,
-    required this.url,
-    required this.duration,
-    required this.position,
   });
-
-  final AudioPlayer audioPlayer;
-  final bool isPlaying;
-  final String url;
-  final Duration duration;
-  final Duration position;
 
   @override
   Widget build(BuildContext context) {
+    final model = context.watch<PlayerModel>();
     var theme = Theme.of(context);
     return Material(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
           height: 100,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 50,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          child: model.audioPlayer == null
+              ? const Center(
+                  child: YaruCircularProgressIndicator(),
+                )
+              : Column(
                   children: [
-                    const YaruIconButton(
-                      icon: Icon(YaruIcons.skip_backward),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: YaruIconButton(
-                        onPressed: () async {
-                          if (isPlaying) {
-                            await audioPlayer.pause();
-                          } else {
-                            await audioPlayer.play(UrlSource(url));
-                          }
-                        },
-                        icon: Icon(
-                          isPlaying
-                              ? YaruIcons.media_pause
-                              : YaruIcons.media_play,
-                        ),
+                    SizedBox(
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const YaruIconButton(
+                            icon: Icon(YaruIcons.skip_backward),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: YaruIconButton(
+                              onPressed: () async {
+                                if (model.isPlaying) {
+                                  await model.audioPlayer!.pause();
+                                } else {
+                                  await model.audioPlayer!
+                                      .play(UrlSource(kTestAudio));
+                                }
+                              },
+                              icon: Icon(
+                                model.isPlaying
+                                    ? YaruIcons.media_pause
+                                    : YaruIcons.media_play,
+                              ),
+                            ),
+                          ),
+                          const YaruIconButton(
+                            icon: Icon(YaruIcons.skip_forward),
+                          ),
+                        ],
                       ),
                     ),
-                    const YaruIconButton(
-                      icon: Icon(YaruIcons.skip_forward),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(formatTime(model.position)),
+                              Text(formatTime(model.duration)),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: SizedBox(
+                            height: 50,
+                            child: SliderTheme(
+                              data: theme.sliderTheme.copyWith(
+                                thumbColor: Colors.white,
+                                thumbShape:
+                                    const RoundSliderThumbShape(elevation: 4),
+                                inactiveTrackColor:
+                                    theme.primaryColor.withOpacity(0.3),
+                              ),
+                              child: Slider(
+                                min: 0,
+                                max: model.duration.inSeconds.toDouble(),
+                                value: model.position.inSeconds.toDouble(),
+                                onChanged: (v) async {
+                                  final position = Duration(seconds: v.toInt());
+                                  await model.audioPlayer!.seek(position);
+                                  await model.audioPlayer!.resume();
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(formatTime(position)),
-                        Text(formatTime(duration)),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: SliderTheme(
-                        data: theme.sliderTheme.copyWith(
-                          thumbColor: Colors.white,
-                          thumbShape: const RoundSliderThumbShape(elevation: 4),
-                          inactiveTrackColor:
-                              theme.primaryColor.withOpacity(0.3),
-                        ),
-                        child: Slider(
-                          min: 0,
-                          max: duration.inSeconds.toDouble(),
-                          value: position.inSeconds.toDouble(),
-                          onChanged: (v) async {
-                            final position = Duration(seconds: v.toInt());
-                            await audioPlayer.seek(position);
-                            await audioPlayer.resume();
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
         ),
       ),
     );

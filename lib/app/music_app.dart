@@ -1,13 +1,12 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/home.dart';
 import 'package:music/app/player.dart';
-import 'package:music/data/local_audio.dart';
+import 'package:music/app/player_model.dart';
+import 'package:music/l10n/l10n.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
-
-import 'package:music/l10n/l10n.dart';
 
 class MusicApp extends StatelessWidget {
   const MusicApp({super.key});
@@ -23,7 +22,7 @@ class MusicApp extends StatelessWidget {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: supportedLocales,
           onGenerateTitle: (context) => 'Music',
-          home: const _App(),
+          home: _App.create(context),
         );
       },
     );
@@ -33,41 +32,24 @@ class MusicApp extends StatelessWidget {
 class _App extends StatefulWidget {
   const _App();
 
+  static Widget create(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => PlayerModel(),
+      child: const _App(),
+    );
+  }
+
   @override
   State<_App> createState() => _AppState();
 }
 
 class _AppState extends State<_App> {
   var _searchActive = false;
-  final _audioPlayer = AudioPlayer();
-  bool _isPlaying = false;
-  Duration _duration = Duration.zero;
-  Duration _position = Duration.zero;
 
   @override
   void initState() {
-    _audioPlayer.onPlayerStateChanged.listen((playerState) {
-      setState(() {
-        _isPlaying = playerState == PlayerState.playing;
-      });
-    });
-    _audioPlayer.onDurationChanged.listen((newDuration) {
-      setState(() {
-        _duration = newDuration;
-      });
-    });
-    _audioPlayer.onPositionChanged.listen((newPosition) {
-      setState(() {
-        _position = newPosition;
-      });
-    });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _audioPlayer.dispose();
-    super.dispose();
+    context.read<PlayerModel>().init();
   }
 
   @override
@@ -175,13 +157,7 @@ class _AppState extends State<_App> {
         const Divider(
           height: 0,
         ),
-        Player(
-          audioPlayer: _audioPlayer,
-          isPlaying: _isPlaying,
-          url: kTestAudio,
-          duration: _duration,
-          position: _position,
-        )
+        const Player()
       ],
     );
   }
