@@ -65,15 +65,11 @@ class Player extends StatelessWidget {
                         model.audio!.audioType != AudioType.radio)
                       Row(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(formatTime(model.position)),
-                                Text(formatTime(model.duration)),
-                              ],
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(formatTime(model.position)),
+                            ],
                           ),
                           Expanded(
                             child: SizedBox(
@@ -99,6 +95,12 @@ class Player extends StatelessWidget {
                                 ),
                               ),
                             ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(formatTime(model.duration)),
+                            ],
                           ),
                         ],
                       ),
