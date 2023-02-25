@@ -41,8 +41,11 @@ class Home extends StatelessWidget {
           padding: const EdgeInsets.all(kYaruPagePadding),
           itemCount: stationsMap.length,
           itemBuilder: (context, index) {
+            final audioSelected = playerModel.audio?.resourceUrl ==
+                stationsMap.entries.elementAt(index).value;
+
             Future<void> onTap() async {
-              if (playerModel.isPlaying) {
+              if (playerModel.isPlaying && audioSelected) {
                 playerModel.pause();
               } else {
                 playerModel.audio = Audio(
@@ -54,9 +57,6 @@ class Home extends StatelessWidget {
               }
             }
 
-            final isPlaying = playerModel.audio?.resourceUrl ==
-                stationsMap.entries.elementAt(index).value;
-
             return ListTile(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(kYaruButtonRadius),
@@ -65,11 +65,12 @@ class Home extends StatelessWidget {
               title: Text(
                 stationsMap.entries.elementAt(index).key,
                 style: TextStyle(
-                  color:
-                      isPlaying ? theme.colorScheme.onSurface : theme.hintColor,
+                  color: audioSelected
+                      ? theme.colorScheme.onSurface
+                      : theme.hintColor,
                 ),
               ),
-              trailing: isPlaying
+              trailing: audioSelected
                   ? Icon(
                       YaruIcons.media_play,
                       color: theme.colorScheme.primary,
