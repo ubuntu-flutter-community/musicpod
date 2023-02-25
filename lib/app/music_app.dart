@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:music/app/home_model.dart';
-import 'package:music/app/home.dart';
+import 'package:music/app/home/home_model.dart';
+import 'package:music/app/home/home_page.dart';
 import 'package:music/app/player.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/l10n/l10n.dart';
@@ -68,7 +68,7 @@ class _AppState extends State<_App> {
           return const Text('Home');
         },
         builder: (context) {
-          return const Home();
+          return const HomePage();
         },
         iconBuilder: (context, selected) {
           return selected
