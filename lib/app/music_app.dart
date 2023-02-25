@@ -1,8 +1,9 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/home/home_model.dart';
-import 'package:music/app/home/home_page.dart';
 import 'package:music/app/home/local_audio/local_audio_model.dart';
+import 'package:music/app/home/local_audio/local_audio_page.dart';
+import 'package:music/app/home/radio/radio_page.dart';
 import 'package:music/app/player.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/l10n/l10n.dart';
@@ -72,30 +73,43 @@ class _AppState extends State<_App> {
     final masterItems = [
       MasterItem(
         tileBuilder: (context) {
-          return const Text('Home');
+          return Text(context.l10n.localAudio);
         },
         builder: (context) {
-          return const HomePage();
+          return const LocalAudioPage();
         },
         iconBuilder: (context, selected) {
           return selected
-              ? const Icon(YaruIcons.home_filled)
-              : const Icon(YaruIcons.home);
+              ? const Icon(YaruIcons.headphones)
+              : const Icon(YaruIcons.headphones);
         },
       ),
       MasterItem(
         tileBuilder: (context) {
-          return const Text('Library');
+          return Text(context.l10n.radio);
         },
         builder: (context) {
-          return const Center(
-            child: Text('Library'),
+          return const RadioPage();
+        },
+        iconBuilder: (context, selected) {
+          return selected
+              ? const Icon(YaruIcons.globe_filled)
+              : const Icon(YaruIcons.globe);
+        },
+      ),
+      MasterItem(
+        tileBuilder: (context) {
+          return Text(context.l10n.podcasts);
+        },
+        builder: (context) {
+          return Center(
+            child: Text(context.l10n.podcasts),
           );
         },
         iconBuilder: (context, selected) {
           return selected
-              ? const Icon(YaruIcons.book_filled)
-              : const Icon(YaruIcons.book);
+              ? const Icon(YaruIcons.network_cellular)
+              : const Icon(YaruIcons.network_cellular);
         },
       ),
       MasterItem(
@@ -186,7 +200,7 @@ class _AppState extends State<_App> {
 
               Widget? column;
 
-              if (index == 2) {
+              if (index == 3) {
                 column = Column(
                   children: [
                     const Divider(
