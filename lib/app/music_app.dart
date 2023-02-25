@@ -8,6 +8,8 @@ import 'package:music/l10n/l10n.dart';
 
 const _kTestAudio =
     'https://d1o44v9snwqbit.cloudfront.net/musicfox_demo_MF-701.mp3';
+// const _kTestRadio =
+//     'http://wdr-wdr5-live.icecast.wdr.de/wdr/wdr5/live/mp3/128/stream.mp3';
 
 class MusicApp extends StatelessWidget {
   const MusicApp({super.key});
@@ -23,23 +25,21 @@ class MusicApp extends StatelessWidget {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: supportedLocales,
           onGenerateTitle: (context) => 'Music',
-          home: const Home(),
+          home: const _App(),
         );
       },
     );
   }
 }
 
-class Home extends StatefulWidget {
-  const Home({
-    super.key,
-  });
+class _App extends StatefulWidget {
+  const _App();
 
   @override
-  State<Home> createState() => _HomeState();
+  State<_App> createState() => _AppState();
 }
 
-class _HomeState extends State<Home> {
+class _AppState extends State<_App> {
   var _searchActive = false;
   final _audioPlayer = AudioPlayer();
   bool _isPlaying = false;
