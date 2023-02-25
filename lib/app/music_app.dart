@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:music/app/player.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -136,83 +137,6 @@ class _AppState extends State<_App> {
           : const Text('Ubuntu Music'),
     );
 
-    final audioPlayerBottom = Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        height: 100,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 50,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Expanded(
-                    child: YaruIconButton(
-                      icon: Icon(YaruIcons.skip_backward),
-                    ),
-                  ),
-                  YaruIconButton(
-                    onPressed: () async {
-                      if (_isPlaying) {
-                        await _audioPlayer.pause();
-                      } else {
-                        String url = _kTestAudio;
-                        await _audioPlayer.play(UrlSource(url));
-                      }
-                    },
-                    icon: Icon(
-                      _isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
-                    ),
-                  ),
-                  const Expanded(
-                    child: YaruIconButton(
-                      icon: Icon(YaruIcons.skip_forward),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(formatTime(_position)),
-                        Text(formatTime(_duration)),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: SizedBox(
-                    height: 50,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: Slider(
-                        min: 0,
-                        max: _duration.inSeconds.toDouble(),
-                        value: _position.inSeconds.toDouble(),
-                        onChanged: (v) async {
-                          final position = Duration(seconds: v.toInt());
-                          await _audioPlayer.seek(position);
-                          await _audioPlayer.resume();
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-
     return Column(
       children: [
         appBar,
@@ -262,19 +186,15 @@ class _AppState extends State<_App> {
         const Divider(
           height: 0,
         ),
-        audioPlayerBottom
+        Player(
+          audioPlayer: _audioPlayer,
+          isPlaying: _isPlaying,
+          url: _kTestAudio,
+          duration: _duration,
+          position: _position,
+        )
       ],
     );
-  }
-
-  String formatTime(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final hours = twoDigits(duration.inHours);
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
-
-    return <String>[if (duration.inHours > 0) hours, minutes, seconds]
-        .join(':');
   }
 }
 
