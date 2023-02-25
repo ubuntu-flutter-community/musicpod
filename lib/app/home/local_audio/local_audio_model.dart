@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:music/data/audio.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:path/path.dart' as path;
 
 class LocalAudioModel extends SafeChangeNotifier {
   String? _directory;
@@ -22,9 +23,17 @@ class LocalAudioModel extends SafeChangeNotifier {
   Future<void> init() async {
     if (_directory != null) {
       final files = await _getFiles(path: directory!);
-      audios = files
-          .map((e) => Audio(resourcePath: e.path, audioType: AudioType.local))
-          .toList();
+      audios = files.map(
+        (e) {
+          File file = File(e.path);
+          String basename = path.basename(file.path);
+          return Audio(
+            resourcePath: e.path,
+            audioType: AudioType.local,
+            title: basename,
+          );
+        },
+      ).toList();
       notifyListeners();
     }
   }
