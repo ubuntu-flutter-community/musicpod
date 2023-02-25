@@ -138,7 +138,7 @@ class _AppState extends State<_App> {
         Expanded(
           child: YaruMasterDetailPage(
             layoutDelegate: const YaruMasterResizablePaneDelegate(
-              initialPaneWidth: 280,
+              initialPaneWidth: 200,
               minPaneWidth: 170,
               minPageWidth: kYaruMasterDetailBreakpoint / 2,
             ),
