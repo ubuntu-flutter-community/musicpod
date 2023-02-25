@@ -34,6 +34,7 @@ class RadioPage extends StatelessWidget {
         }
 
         return ListTile(
+          contentPadding: const EdgeInsets.only(right: 8),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(kYaruButtonRadius),
           ),

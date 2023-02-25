@@ -49,6 +49,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
               }
 
               return ListTile(
+                contentPadding: const EdgeInsets.only(right: 8),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(kYaruButtonRadius),
                 ),

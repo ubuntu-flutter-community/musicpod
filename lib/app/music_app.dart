@@ -1,3 +1,4 @@
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/home/home_model.dart';
 import 'package:music/app/home/home_page.dart';
@@ -66,6 +67,8 @@ class _AppState extends State<_App> {
 
   @override
   Widget build(BuildContext context) {
+    final localAudioModel = context.watch<LocalAudioModel>();
+
     final masterItems = [
       MasterItem(
         tileBuilder: (context) {
@@ -136,6 +139,36 @@ class _AppState extends State<_App> {
         appBar,
         Expanded(
           child: YaruMasterDetailPage(
+            bottomBar: Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: YaruMasterTile(
+                title: const Text('Settings'),
+                leading: const Icon(YaruIcons.settings),
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (context) {
+                    return SimpleDialog(
+                      titlePadding: EdgeInsets.zero,
+                      title: const YaruDialogTitleBar(
+                        title: Text('Chose collection directory'),
+                      ),
+                      children: [
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              localAudioModel.directory =
+                                  await getDirectoryPath();
+                              await localAudioModel.init();
+                            },
+                            child: const Text('Pick your music collection'),
+                          ),
+                        )
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ),
             layoutDelegate: const YaruMasterResizablePaneDelegate(
               initialPaneWidth: 200,
               minPaneWidth: 170,
