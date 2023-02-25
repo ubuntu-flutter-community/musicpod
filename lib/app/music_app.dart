@@ -170,13 +170,7 @@ class _AppState extends State<_App> {
                 );
               }
 
-              return column ??
-                  YaruMasterTile(
-                    title: masterItems[index].tileBuilder(context),
-                    leading: masterItems[index].iconBuilder == null
-                        ? null
-                        : masterItems[index].iconBuilder!(context, selected),
-                  );
+              return column ?? tile;
             },
             pageBuilder: (context, index) => YaruDetailPage(
               body: masterItems[index].builder(context),
