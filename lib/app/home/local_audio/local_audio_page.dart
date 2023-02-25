@@ -61,6 +61,10 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                         : theme.hintColor,
                   ),
                 ),
+                leading: YaruIconButton(
+                  icon: const Icon(YaruIcons.heart),
+                  onPressed: () {},
+                ),
                 trailing: audioSelected
                     ? Icon(
                         YaruIcons.media_play,

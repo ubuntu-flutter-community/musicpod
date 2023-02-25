@@ -45,6 +45,10 @@ class RadioPage extends StatelessWidget {
                   audioSelected ? theme.colorScheme.onSurface : theme.hintColor,
             ),
           ),
+          leading: YaruIconButton(
+            icon: const Icon(YaruIcons.star),
+            onPressed: () {},
+          ),
           trailing: audioSelected
               ? Icon(
                   YaruIcons.media_play,
