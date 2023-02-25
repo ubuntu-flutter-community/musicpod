@@ -82,6 +82,9 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> init() async {
+    _duration = Duration.zero;
+    _position = Duration.zero;
+
     _audioPlayer.onPlayerStateChanged.listen((playerState) {
       isPlaying = playerState == PlayerState.playing;
     });

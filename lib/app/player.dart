@@ -27,9 +27,9 @@ class Player extends StatelessWidget {
                   ),
           ),
           SizedBox(
-            width: 200,
+            width: 180,
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.only(left: kYaruPagePadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -128,7 +128,7 @@ class Player extends StatelessWidget {
             ),
           ),
           const SizedBox(
-            width: 200,
+            width: 120,
           ),
         ],
       ),
