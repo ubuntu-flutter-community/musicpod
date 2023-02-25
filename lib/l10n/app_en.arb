@@ -2,6 +2,7 @@
     "play": "Play",
     "pause": "Pause",
     "stop": "Stop",
+    "localAudio": "Local Audio",
     "music": "Music",
     "radio": "Radio",
     "podcasts": "Podcasts"

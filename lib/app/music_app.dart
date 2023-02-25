@@ -1,16 +1,13 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:music/app/home.dart';
 import 'package:music/app/player.dart';
+import 'package:music/data/local_audio.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import 'package:music/l10n/l10n.dart';
-
-const _kTestAudio =
-    'https://d1o44v9snwqbit.cloudfront.net/musicfox_demo_MF-701.mp3';
-// const _kTestRadio =
-//     'http://wdr-wdr5-live.icecast.wdr.de/wdr/wdr5/live/mp3/128/stream.mp3';
 
 class MusicApp extends StatelessWidget {
   const MusicApp({super.key});
@@ -81,9 +78,7 @@ class _AppState extends State<_App> {
           return const Text('Home');
         },
         builder: (context) {
-          return const Center(
-            child: Text('Home'),
-          );
+          return const Home();
         },
         iconBuilder: (context, selected) {
           return selected
@@ -183,7 +178,7 @@ class _AppState extends State<_App> {
         Player(
           audioPlayer: _audioPlayer,
           isPlaying: _isPlaying,
-          url: _kTestAudio,
+          url: kTestAudio,
           duration: _duration,
           position: _position,
         )
