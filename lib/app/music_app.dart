@@ -136,57 +136,80 @@ class _HomeState extends State<Home> {
           : const Text('Ubuntu Music'),
     );
 
-    final audioPlayerBottom = SizedBox(
-      height: 100,
-      child: Column(
-        children: [
-          Expanded(
-            child: Material(
-              color: Colors.transparent,
-              child: Slider(
-                min: 0,
-                max: _duration.inSeconds.toDouble(),
-                value: _position.inSeconds.toDouble(),
-                onChanged: (v) async {
-                  final position = Duration(seconds: v.toInt());
-                  await _audioPlayer.seek(position);
-                  await _audioPlayer.resume();
-                },
+    final audioPlayerBottom = Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        height: 100,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Expanded(
+                    child: YaruIconButton(
+                      icon: Icon(YaruIcons.skip_backward),
+                    ),
+                  ),
+                  YaruIconButton(
+                    onPressed: () async {
+                      if (_isPlaying) {
+                        await _audioPlayer.pause();
+                      } else {
+                        String url = _kTestAudio;
+                        await _audioPlayer.play(UrlSource(url));
+                      }
+                    },
+                    icon: Icon(
+                      _isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
+                    ),
+                  ),
+                  const Expanded(
+                    child: YaruIconButton(
+                      icon: Icon(YaruIcons.skip_forward),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-          SizedBox(
-            height: 60,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Row(
               children: [
-                const Expanded(
-                  child: YaruIconButton(
-                    icon: Icon(YaruIcons.skip_backward),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(formatTime(_position)),
+                        Text(formatTime(_duration)),
+                      ],
+                    ),
                   ),
                 ),
-                YaruIconButton(
-                  onPressed: () async {
-                    if (_isPlaying) {
-                      await _audioPlayer.pause();
-                    } else {
-                      String url = _kTestAudio;
-                      await _audioPlayer.play(UrlSource(url));
-                    }
-                  },
-                  icon: Icon(
-                    _isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
-                  ),
-                ),
-                const Expanded(
-                  child: YaruIconButton(
-                    icon: Icon(YaruIcons.skip_forward),
+                Expanded(
+                  child: SizedBox(
+                    height: 50,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Slider(
+                        min: 0,
+                        max: _duration.inSeconds.toDouble(),
+                        value: _position.inSeconds.toDouble(),
+                        onChanged: (v) async {
+                          final position = Duration(seconds: v.toInt());
+                          await _audioPlayer.seek(position);
+                          await _audioPlayer.resume();
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
 
@@ -242,6 +265,16 @@ class _HomeState extends State<Home> {
         audioPlayerBottom
       ],
     );
+  }
+
+  String formatTime(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final hours = twoDigits(duration.inHours);
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+
+    return <String>[if (duration.inHours > 0) hours, minutes, seconds]
+        .join(':');
   }
 }
 
