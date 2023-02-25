@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/data/audio.dart';
@@ -16,85 +15,102 @@ class Player extends StatelessWidget {
     final model = context.watch<PlayerModel>();
     var theme = Theme.of(context);
     return Material(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          height: 100,
-          child: Column(
-            children: [
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      child: Row(
+        children: [
+          SizedBox(
+            width: 200,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Text(model.audio?.title ?? ''),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 100,
+                child: Column(
                   children: [
-                    const YaruIconButton(
-                      icon: Icon(YaruIcons.skip_backward),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: YaruIconButton(
-                        onPressed: () async {
-                          if (model.isPlaying) {
-                            await model.pause();
-                          } else {
-                            await model.play();
-                          }
-                        },
-                        icon: Icon(
-                          model.isPlaying
-                              ? YaruIcons.media_pause
-                              : YaruIcons.media_play,
-                        ),
-                      ),
-                    ),
-                    const YaruIconButton(
-                      icon: Icon(YaruIcons.skip_forward),
-                    ),
-                  ],
-                ),
-              ),
-              if (model.audio != null &&
-                  model.audio!.audioType != AudioType.radio)
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                    Expanded(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(formatTime(model.position)),
-                          Text(formatTime(model.duration)),
+                          const YaruIconButton(
+                            icon: Icon(YaruIcons.skip_backward),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: YaruIconButton(
+                              onPressed: () async {
+                                if (model.isPlaying) {
+                                  await model.pause();
+                                } else {
+                                  await model.play();
+                                }
+                              },
+                              icon: Icon(
+                                model.isPlaying
+                                    ? YaruIcons.media_pause
+                                    : YaruIcons.media_play,
+                              ),
+                            ),
+                          ),
+                          const YaruIconButton(
+                            icon: Icon(YaruIcons.skip_forward),
+                          ),
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: SizedBox(
-                        height: 50,
-                        child: SliderTheme(
-                          data: theme.sliderTheme.copyWith(
-                            thumbColor: Colors.white,
-                            thumbShape:
-                                const RoundSliderThumbShape(elevation: 4),
-                            inactiveTrackColor:
-                                theme.primaryColor.withOpacity(0.3),
+                    if (model.audio != null &&
+                        model.audio!.audioType != AudioType.radio)
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(formatTime(model.position)),
+                                Text(formatTime(model.duration)),
+                              ],
+                            ),
                           ),
-                          child: Slider(
-                            min: 0,
-                            max: model.duration.inSeconds.toDouble(),
-                            value: model.position.inSeconds.toDouble(),
-                            onChanged: (v) async {
-                              model.position = Duration(seconds: v.toInt());
-                              await model.seek();
-                              await model.resume();
-                            },
+                          Expanded(
+                            child: SizedBox(
+                              height: 50,
+                              child: SliderTheme(
+                                data: theme.sliderTheme.copyWith(
+                                  thumbColor: Colors.white,
+                                  thumbShape:
+                                      const RoundSliderThumbShape(elevation: 4),
+                                  inactiveTrackColor:
+                                      theme.primaryColor.withOpacity(0.3),
+                                ),
+                                child: Slider(
+                                  min: 0,
+                                  max: model.duration.inSeconds.toDouble(),
+                                  value: model.position.inSeconds.toDouble(),
+                                  onChanged: (v) async {
+                                    model.position =
+                                        Duration(seconds: v.toInt());
+                                    await model.seek();
+                                    await model.resume();
+                                  },
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ),
                   ],
                 ),
-            ],
+              ),
+            ),
           ),
-        ),
+          const SizedBox(
+            width: 200,
+          ),
+        ],
       ),
     );
   }

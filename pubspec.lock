@@ -211,6 +211,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_media_metadata:
+    dependency: "direct main"
+    description:
+      name: flutter_media_metadata
+      sha256: "69cfc76ffd6cd5d546dcc4880584b3844c5e879e435aa54f57f1096c15bd04db"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0+1"
   flutter_test:
     dependency: "direct dev"
     description: flutter

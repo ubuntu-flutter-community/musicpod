@@ -37,11 +37,16 @@ class Home extends StatelessWidget {
           itemCount: stationsMap.length,
           itemBuilder: (context, index) {
             Future<void> onTap() async {
-              model.audio = Audio(
-                audioType: AudioType.radio,
-                resourceUrl: stationsMap.entries.elementAt(index).value,
-              );
-              await model.play();
+              if (model.isPlaying) {
+                model.pause();
+              } else {
+                model.audio = Audio(
+                  title: stationsMap.entries.elementAt(index).key,
+                  audioType: AudioType.radio,
+                  resourceUrl: stationsMap.entries.elementAt(index).value,
+                );
+                await model.play();
+              }
             }
 
             final isPlaying = model.audio?.resourceUrl ==

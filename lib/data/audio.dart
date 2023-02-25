@@ -4,14 +4,14 @@ class Audio {
   AudioType? audioType;
   String? resourcePath;
   String? resourceUrl;
-  String? name;
+  String? title;
   String? description;
   String? author;
   Audio({
     this.audioType,
     this.resourcePath,
     this.resourceUrl,
-    this.name,
+    this.title,
     this.description,
     this.author,
   });
@@ -19,14 +19,14 @@ class Audio {
   Audio copyWith({
     String? resourcePath,
     String? resourceUrl,
-    String? name,
+    String? title,
     String? description,
     String? author,
   }) {
     return Audio(
       resourcePath: resourcePath ?? this.resourcePath,
       resourceUrl: resourceUrl ?? this.resourceUrl,
-      name: name ?? this.name,
+      title: title ?? this.title,
       description: description ?? this.description,
       author: author ?? this.author,
     );
@@ -41,8 +41,8 @@ class Audio {
     if (resourceUrl != null) {
       result.addAll({'resourceUrl': resourceUrl});
     }
-    if (name != null) {
-      result.addAll({'name': name});
+    if (title != null) {
+      result.addAll({'title': title});
     }
     if (description != null) {
       result.addAll({'description': description});
@@ -58,7 +58,7 @@ class Audio {
     return Audio(
       resourcePath: map['resourcePath'],
       resourceUrl: map['resourceUrl'],
-      name: map['name'],
+      title: map['title'],
       description: map['description'],
       author: map['author'],
     );
@@ -70,7 +70,7 @@ class Audio {
 
   @override
   String toString() {
-    return 'Audio(resourcePath: $resourcePath, resourceUrl: $resourceUrl, name: $name, description: $description, author: $author)';
+    return 'Audio(resourcePath: $resourcePath, resourceUrl: $resourceUrl, title: $title, description: $description, author: $author)';
   }
 
   @override
@@ -80,7 +80,7 @@ class Audio {
     return other is Audio &&
         other.resourcePath == resourcePath &&
         other.resourceUrl == resourceUrl &&
-        other.name == name &&
+        other.title == title &&
         other.description == description &&
         other.author == author;
   }
@@ -89,7 +89,7 @@ class Audio {
   int get hashCode {
     return resourcePath.hashCode ^
         resourceUrl.hashCode ^
-        name.hashCode ^
+        title.hashCode ^
         description.hashCode ^
         author.hashCode;
   }
