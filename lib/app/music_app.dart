@@ -97,12 +97,17 @@ class _AppState extends State<_App> {
       ),
       MasterItem(
         tileBuilder: (context) {
-          return const Text('JP doggo walk playlist');
+          return Text(context.l10n.likedSongs);
         },
         builder: (context) {
-          return const Center(
-            child: Text('JP doggo walk playlist'),
+          return Center(
+            child: Text(context.l10n.likedSongs),
           );
+        },
+        iconBuilder: (context, selected) {
+          return selected
+              ? const Icon(YaruIcons.heart_filled)
+              : const Icon(YaruIcons.heart);
         },
       ),
     ];
