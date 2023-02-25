@@ -21,48 +21,49 @@ class Player extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        height: 100,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 50,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Expanded(
-                    child: YaruIconButton(
-                      icon: Icon(YaruIcons.skip_backward),
+    return Material(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          height: 100,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Expanded(
+                      child: YaruIconButton(
+                        icon: Icon(YaruIcons.skip_backward),
+                      ),
                     ),
-                  ),
-                  YaruIconButton(
-                    onPressed: () async {
-                      if (isPlaying) {
-                        await audioPlayer.pause();
-                      } else {
-                        await audioPlayer.play(UrlSource(url));
-                      }
-                    },
-                    icon: Icon(
-                      isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
+                    YaruIconButton(
+                      onPressed: () async {
+                        if (isPlaying) {
+                          await audioPlayer.pause();
+                        } else {
+                          await audioPlayer.play(UrlSource(url));
+                        }
+                      },
+                      icon: Icon(
+                        isPlaying
+                            ? YaruIcons.media_pause
+                            : YaruIcons.media_play,
+                      ),
                     ),
-                  ),
-                  const Expanded(
-                    child: YaruIconButton(
-                      icon: Icon(YaruIcons.skip_forward),
+                    const Expanded(
+                      child: YaruIconButton(
+                        icon: Icon(YaruIcons.skip_forward),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Material(
-                    color: Colors.transparent,
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -71,12 +72,9 @@ class Player extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
-                Expanded(
-                  child: SizedBox(
-                    height: 50,
-                    child: Material(
-                      color: Colors.transparent,
+                  Expanded(
+                    child: SizedBox(
+                      height: 50,
                       child: Slider(
                         min: 0,
                         max: duration.inSeconds.toDouble(),
@@ -89,10 +87,10 @@ class Player extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
