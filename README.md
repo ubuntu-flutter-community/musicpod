@@ -1,16 +1,16 @@
-# music
+# Ubuntu Music - WIP
 
-A new Flutter project.
+Music, Radio and Podcast player for Ubuntu made with Flutter.
 
-## Getting Started
+![](.github/screenshot_dark.png)
 
-This project is a starting point for a Flutter application.
+## Planed features
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [X] play local audio files
+- [ ] Filter local files
+- [X] set root directory
+- [X] play internet radio streams
+- [ ] play and download podcasts
+- [ ] Save playlists
+- [ ] Save liked songs
+- [ ] Save settings on disk
