@@ -21,6 +21,7 @@ class Player extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
     return Material(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -31,31 +32,30 @@ class Player extends StatelessWidget {
               SizedBox(
                 height: 50,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Expanded(
+                    const YaruIconButton(
+                      icon: Icon(YaruIcons.skip_backward),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: YaruIconButton(
-                        icon: Icon(YaruIcons.skip_backward),
+                        onPressed: () async {
+                          if (isPlaying) {
+                            await audioPlayer.pause();
+                          } else {
+                            await audioPlayer.play(UrlSource(url));
+                          }
+                        },
+                        icon: Icon(
+                          isPlaying
+                              ? YaruIcons.media_pause
+                              : YaruIcons.media_play,
+                        ),
                       ),
                     ),
-                    YaruIconButton(
-                      onPressed: () async {
-                        if (isPlaying) {
-                          await audioPlayer.pause();
-                        } else {
-                          await audioPlayer.play(UrlSource(url));
-                        }
-                      },
-                      icon: Icon(
-                        isPlaying
-                            ? YaruIcons.media_pause
-                            : YaruIcons.media_play,
-                      ),
-                    ),
-                    const Expanded(
-                      child: YaruIconButton(
-                        icon: Icon(YaruIcons.skip_forward),
-                      ),
+                    const YaruIconButton(
+                      icon: Icon(YaruIcons.skip_forward),
                     ),
                   ],
                 ),
@@ -75,15 +75,23 @@ class Player extends StatelessWidget {
                   Expanded(
                     child: SizedBox(
                       height: 50,
-                      child: Slider(
-                        min: 0,
-                        max: duration.inSeconds.toDouble(),
-                        value: position.inSeconds.toDouble(),
-                        onChanged: (v) async {
-                          final position = Duration(seconds: v.toInt());
-                          await audioPlayer.seek(position);
-                          await audioPlayer.resume();
-                        },
+                      child: SliderTheme(
+                        data: theme.sliderTheme.copyWith(
+                          thumbColor: Colors.white,
+                          thumbShape: const RoundSliderThumbShape(elevation: 4),
+                          inactiveTrackColor:
+                              theme.primaryColor.withOpacity(0.3),
+                        ),
+                        child: Slider(
+                          min: 0,
+                          max: duration.inSeconds.toDouble(),
+                          value: position.inSeconds.toDouble(),
+                          onChanged: (v) async {
+                            final position = Duration(seconds: v.toInt());
+                            await audioPlayer.seek(position);
+                            await audioPlayer.resume();
+                          },
+                        ),
                       ),
                     ),
                   ),
