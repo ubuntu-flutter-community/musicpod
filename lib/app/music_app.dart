@@ -153,15 +153,21 @@ class _AppState extends State<_App> {
     );
 
     final appBar = YaruWindowTitleBar(
-      leading: Center(
-        child: YaruIconButton(
-          isSelected: _searchActive,
-          icon: const Icon(YaruIcons.search),
-          onPressed: () => setState(() {
-            _searchActive = !_searchActive;
-          }),
-        ),
-      ),
+      leading: const YaruBackButton(),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: Center(
+            child: YaruIconButton(
+              isSelected: _searchActive,
+              icon: const Icon(YaruIcons.search),
+              onPressed: () => setState(() {
+                _searchActive = !_searchActive;
+              }),
+            ),
+          ),
+        )
+      ],
       title: _searchActive
           ? const SizedBox(
               height: 35,
@@ -182,7 +188,7 @@ class _AppState extends State<_App> {
             ),
             layoutDelegate: const YaruMasterResizablePaneDelegate(
               initialPaneWidth: 200,
-              minPaneWidth: 170,
+              minPaneWidth: 81,
               minPageWidth: kYaruMasterDetailBreakpoint / 2,
             ),
             length: masterItems.length,
