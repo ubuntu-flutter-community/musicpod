@@ -40,7 +40,7 @@ class _App extends StatefulWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => PlayerModel()..init(),
+          create: (_) => PlayerModel(),
         ),
         ChangeNotifierProvider(
           create: (_) => HomeModel(),

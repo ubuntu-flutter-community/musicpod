@@ -5,10 +5,25 @@ import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-class Player extends StatelessWidget {
+class Player extends StatefulWidget {
   const Player({
     super.key,
   });
+
+  @override
+  State<Player> createState() => _PlayerState();
+}
+
+class _PlayerState extends State<Player> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (mounted) {
+        context.read<PlayerModel>().init();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +59,14 @@ class Player extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: YaruIconButton(
-                            onPressed: () async {
+                            onPressed: () {
                               WidgetsBinding.instance
-                                  .addPostFrameCallback((timeStamp) async {
+                                  .addPostFrameCallback((timeStamp) {
                                 if (context.mounted) {
                                   if (model.isPlaying) {
-                                    await model.pause();
+                                    model.pause();
                                   } else {
-                                    await model.play();
+                                    model.play();
                                   }
                                 }
                               });

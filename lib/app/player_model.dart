@@ -12,19 +12,7 @@ class PlayerModel extends SafeChangeNotifier {
     if (value == null || value == _audio) return;
     _audio = value;
 
-    void resetAndNotify() {
-      _position = Duration.zero;
-      _duration = Duration.zero;
-      notifyListeners();
-    }
-
-    if (_audioPlayer.state == PlayerState.playing) {
-      _audioPlayer
-          .stop()
-          .then((_) => _audioPlayer.release().then((_) => resetAndNotify()));
-    } else {
-      resetAndNotify();
-    }
+    notifyListeners();
   }
 
   final AudioPlayer _audioPlayer;
@@ -71,7 +59,6 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> play() async {
     if (audio == null) return;
-
     if (audio!.path != null) {
       await _audioPlayer.play(DeviceFileSource(audio!.path!));
     } else if (audio!.url != null) {
@@ -103,6 +90,13 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> init() async {
+    _isPlaying = _audioPlayer.state == PlayerState.playing;
+    _audioPlayer.getDuration().then(
+          (value) => _duration = value,
+        );
+    _audioPlayer.getCurrentPosition().then(
+          (value) => _position = value,
+        );
     _audioPlayer.onPlayerStateChanged.listen((playerState) {
       isPlaying = playerState == PlayerState.playing;
     });
