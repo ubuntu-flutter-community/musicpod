@@ -35,6 +35,13 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   Widget build(BuildContext context) {
     final localAudioModel = context.watch<LocalAudioModel>();
     final playerModel = context.watch<PlayerModel>();
+    final theme = Theme.of(context);
+    final headerStyle = TextStyle(
+      height: 1.2,
+      fontSize: 45,
+      fontWeight: FontWeight.w100,
+      color: theme.hintColor,
+    );
 
     return localAudioModel.directory == null ||
             localAudioModel.directory!.isEmpty ||
@@ -48,20 +55,80 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
               child: const Text('Pick your music collection'),
             ),
           )
-        : ListView.builder(
-            controller: _controller,
-            padding: const EdgeInsets.all(kYaruPagePadding),
-            itemCount: localAudioModel.audios!.take(_amount).length,
-            itemBuilder: (context, index) {
-              final audioSelected =
-                  playerModel.audio == localAudioModel.audios![index];
+        : Container(
+            color: theme.brightness == Brightness.dark
+                ? const Color.fromARGB(255, 37, 37, 37)
+                : Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 10,
+                bottom: 20,
+              ),
+              child: Column(
+                children: [
+                  SingleChildScrollView(
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                    ),
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Text(
+                          'Songs',
+                          style: headerStyle.copyWith(
+                              color: theme.colorScheme.onSurface),
+                        ),
+                        const SizedBox(
+                          width: 40,
+                        ),
+                        Text(
+                          'Artists',
+                          style: headerStyle,
+                        ),
+                        const SizedBox(
+                          width: 40,
+                        ),
+                        Text(
+                          'Albums',
+                          style: headerStyle,
+                        ),
+                        const SizedBox(
+                          width: 40,
+                        ),
+                        Text(
+                          'Year',
+                          style: headerStyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: kYaruPagePadding,
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      controller: _controller,
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                      ),
+                      itemCount: localAudioModel.audios!.take(_amount).length,
+                      itemBuilder: (context, index) {
+                        final audioSelected =
+                            playerModel.audio == localAudioModel.audios![index];
 
-              return _LocalAudioTile(
-                key: ValueKey(localAudioModel.audios![index]),
-                selected: audioSelected,
-                audio: localAudioModel.audios![index],
-              );
-            },
+                        return _LocalAudioTile(
+                          key: ValueKey(localAudioModel.audios![index]),
+                          selected: audioSelected,
+                          audio: localAudioModel.audios![index],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
   }
 }
