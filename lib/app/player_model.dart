@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:music/data/audio.dart';
@@ -5,6 +7,9 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class PlayerModel extends SafeChangeNotifier {
   PlayerModel() : _audioPlayer = AudioPlayer();
+  StreamSubscription<PlayerState>? _playerSub;
+  StreamSubscription<Duration>? _durationSub;
+  StreamSubscription<Duration>? _positionSub;
 
   Audio? _audio;
   Audio? get audio => _audio;
@@ -61,6 +66,9 @@ class PlayerModel extends SafeChangeNotifier {
     if (audio == null) return;
     if (audio!.path != null) {
       await _audioPlayer.play(DeviceFileSource(audio!.path!));
+      if (audio!.audioType != AudioType.radio) {
+        repeatSingle = _repeatSingle ?? false;
+      }
     } else if (audio!.url != null) {
       await _audioPlayer.play(UrlSource(audio!.url!));
     }
@@ -90,14 +98,7 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> init() async {
-    _isPlaying = _audioPlayer.state == PlayerState.playing;
-    _audioPlayer.getDuration().then(
-          (value) => _duration = value,
-        );
-    _audioPlayer.getCurrentPosition().then(
-          (value) => _position = value,
-        );
-    _audioPlayer.onPlayerStateChanged.listen((playerState) {
+    _playerSub = _audioPlayer.onPlayerStateChanged.listen((playerState) {
       isPlaying = playerState == PlayerState.playing;
     });
     _audioPlayer.onDurationChanged.listen((newDuration) {
@@ -107,17 +108,17 @@ class PlayerModel extends SafeChangeNotifier {
       position = newPosition;
     });
 
-    _audioPlayer.onPlayerComplete.listen((_) async {
-      if (repeatSingle == true) {
-        // _position = Duration.zero;
-        // await play();
-        // notifyListeners();
-      }
+    _audioPlayer.onPlayerComplete.listen((_) {
+      _audioPlayer.release();
     });
+    notifyListeners();
   }
 
   @override
   void dispose() {
+    _playerSub?.cancel();
+    _positionSub?.cancel();
+    _durationSub?.cancel();
     _audioPlayer.dispose();
     super.dispose();
   }
