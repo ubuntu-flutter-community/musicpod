@@ -59,6 +59,7 @@ class _AppState extends State<_App> {
   @override
   Widget build(BuildContext context) {
     final localAudioModel = context.watch<LocalAudioModel>();
+    final playerModel = context.watch<PlayerModel>();
 
     final masterItems = [
       MasterItem(
@@ -176,56 +177,62 @@ class _AppState extends State<_App> {
     );
 
     return Scaffold(
+      backgroundColor: playerModel.fullScreen == true ? Colors.black : null,
       appBar: appBar,
-      body: Column(
-        children: [
-          Expanded(
-            child: YaruMasterDetailPage(
-              bottomBar: Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: settingsTile,
-              ),
-              layoutDelegate: const YaruMasterResizablePaneDelegate(
-                initialPaneWidth: 200,
-                minPaneWidth: 81,
-                minPageWidth: kYaruMasterDetailBreakpoint / 2,
-              ),
-              length: masterItems.length,
-              initialIndex: 0,
-              tileBuilder: (context, index, selected) {
-                final tile = YaruMasterTile(
-                  title: masterItems[index].tileBuilder(context),
-                  leading: masterItems[index].iconBuilder == null
-                      ? null
-                      : masterItems[index].iconBuilder!(context, selected),
-                );
+      body: playerModel.fullScreen == true
+          ? const Player()
+          : Column(
+              children: [
+                Expanded(
+                  child: YaruMasterDetailPage(
+                    bottomBar: Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: settingsTile,
+                    ),
+                    layoutDelegate: const YaruMasterResizablePaneDelegate(
+                      initialPaneWidth: 200,
+                      minPaneWidth: 81,
+                      minPageWidth: kYaruMasterDetailBreakpoint / 2,
+                    ),
+                    length: masterItems.length,
+                    initialIndex: 0,
+                    tileBuilder: (context, index, selected) {
+                      final tile = YaruMasterTile(
+                        title: masterItems[index].tileBuilder(context),
+                        leading: masterItems[index].iconBuilder == null
+                            ? null
+                            : masterItems[index].iconBuilder!(
+                                context,
+                                selected,
+                              ),
+                      );
 
-                Widget? column;
+                      Widget? column;
 
-                if (index == 3) {
-                  column = Column(
-                    children: [
-                      const Divider(
-                        height: 30,
-                      ),
-                      tile
-                    ],
-                  );
-                }
+                      if (index == 3) {
+                        column = Column(
+                          children: [
+                            const Divider(
+                              height: 30,
+                            ),
+                            tile
+                          ],
+                        );
+                      }
 
-                return column ?? tile;
-              },
-              pageBuilder: (context, index) => YaruDetailPage(
-                body: masterItems[index].builder(context),
-              ),
+                      return column ?? tile;
+                    },
+                    pageBuilder: (context, index) => YaruDetailPage(
+                      body: masterItems[index].builder(context),
+                    ),
+                  ),
+                ),
+                const Divider(
+                  height: 0,
+                ),
+                const Player()
+              ],
             ),
-          ),
-          const Divider(
-            height: 0,
-          ),
-          const Player()
-        ],
-      ),
     );
   }
 }

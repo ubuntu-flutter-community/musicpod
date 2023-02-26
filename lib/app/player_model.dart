@@ -10,6 +10,14 @@ class PlayerModel extends SafeChangeNotifier {
   StreamSubscription<Duration>? _durationSub;
   StreamSubscription<Duration>? _positionSub;
 
+  bool? _fullScreen;
+  bool? get fullScreen => _fullScreen;
+  set fullScreen(bool? value) {
+    if (value == null || value == _fullScreen) return;
+    _fullScreen = value;
+    notifyListeners();
+  }
+
   Audio? _audio;
   Audio? get audio => _audio;
   set audio(Audio? value) {
