@@ -52,7 +52,9 @@ class Player extends StatelessWidget {
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          const YaruIconButton(icon: Icon(YaruIcons.shuffle)),
                           const YaruIconButton(
                             icon: Icon(YaruIcons.skip_backward),
                           ),
@@ -76,6 +78,14 @@ class Player extends StatelessWidget {
                           const YaruIconButton(
                             icon: Icon(YaruIcons.skip_forward),
                           ),
+                          YaruIconButton(
+                            icon: const Icon(YaruIcons.repeat),
+                            isSelected: model.repeatSingle == true,
+                            onPressed: model.repeatSingle == null
+                                ? null
+                                : () =>
+                                    model.repeatSingle = !model.repeatSingle!,
+                          )
                         ],
                       ),
                     ),

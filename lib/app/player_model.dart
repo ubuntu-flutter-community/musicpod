@@ -11,6 +11,13 @@ class PlayerModel extends SafeChangeNotifier {
   set audio(Audio? value) {
     if (value == _audio) return;
     _audio = value;
+    if (_audio?.audioType == AudioType.radio) {
+      _repeatSingle = null;
+    } else {
+      _repeatSingle = _repeatSingle ?? false;
+    }
+    _duration = Duration.zero;
+    _position = Duration.zero;
     notifyListeners();
   }
 
@@ -45,6 +52,14 @@ class PlayerModel extends SafeChangeNotifier {
   set metaData(Metadata? value) {
     if (value == null || value == _metadata) return;
     _metadata = value;
+    notifyListeners();
+  }
+
+  bool? _repeatSingle;
+  bool? get repeatSingle => _repeatSingle;
+  set repeatSingle(bool? value) {
+    if (value == null || value == _repeatSingle) return;
+    _repeatSingle = value;
     notifyListeners();
   }
 
@@ -93,6 +108,13 @@ class PlayerModel extends SafeChangeNotifier {
     });
     _audioPlayer.onPositionChanged.listen((newPosition) {
       position = newPosition;
+    });
+
+    _audioPlayer.onPlayerComplete.listen((_) async {
+      if (repeatSingle == true) {
+        position = Duration.zero;
+        await seek();
+      }
     });
   }
 
