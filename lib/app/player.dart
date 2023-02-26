@@ -83,26 +83,6 @@ class _PlayerState extends State<Player> {
       ],
     );
 
-    final slider = SliderTheme(
-      data: theme.sliderTheme.copyWith(
-        thumbColor: Colors.white,
-        thumbShape: const RoundSliderThumbShape(
-          elevation: 4,
-        ),
-        inactiveTrackColor: theme.primaryColor.withOpacity(0.3),
-      ),
-      child: Slider(
-        min: 0,
-        max: model.duration?.inSeconds.toDouble() ?? 1.0,
-        value: model.position?.inSeconds.toDouble() ?? 0,
-        onChanged: (v) async {
-          model.position = Duration(seconds: v.toInt());
-          await model.seek();
-          await model.resume();
-        },
-      ),
-    );
-
     final trackText = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -125,42 +105,86 @@ class _PlayerState extends State<Player> {
       ],
     );
 
-    if (model.fullScreen == true) {
-      return Center(
-        child: SingleChildScrollView(
+    final sliderAndTime = Row(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(formatTime(model.position!)),
+          ],
+        ),
+        Expanded(
           child: SizedBox(
-            width: 800,
-            height: 800,
-            child: YaruBanner(
-              child: Padding(
-                padding: const EdgeInsets.all(kYaruPagePadding),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        fullScreenButton,
-                      ],
-                    ),
-                    if (model.audio?.metadata?.picture != null)
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.memory(
-                          model.audio!.metadata!.picture!.data,
-                          width: 400.0,
-                        ),
-                      ),
-                    controls,
-                    slider,
-                    trackText,
-                  ],
+            height: 50,
+            child: SliderTheme(
+              data: theme.sliderTheme.copyWith(
+                thumbColor: Colors.white,
+                thumbShape: const RoundSliderThumbShape(
+                  elevation: 4,
                 ),
+                inactiveTrackColor: theme.primaryColor.withOpacity(0.3),
+              ),
+              child: Slider(
+                min: 0,
+                max: model.duration?.inSeconds.toDouble() ?? 1.0,
+                value: model.position?.inSeconds.toDouble() ?? 0,
+                onChanged: (v) async {
+                  model.position = Duration(seconds: v.toInt());
+                  await model.seek();
+                  await model.resume();
+                },
               ),
             ),
           ),
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(formatTime(model.duration!)),
+          ],
+        ),
+      ],
+    );
+
+    if (model.fullScreen == true) {
+      return Stack(
+        alignment: Alignment.topRight,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(kYaruPagePadding),
+            child: fullScreenButton,
+          ),
+          Center(
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: 800,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 20,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (model.audio?.metadata?.picture != null)
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.memory(
+                            model.audio!.metadata!.picture!.data,
+                            width: 400.0,
+                          ),
+                        ),
+                      controls,
+                      sliderAndTime,
+                      trackText,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       );
     }
 
@@ -195,30 +219,7 @@ class _PlayerState extends State<Player> {
                           model.position != null &&
                           model.duration!.inSeconds > model.position!.inSeconds)
                         Expanded(
-                          child: Row(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(formatTime(model.position!)),
-                                ],
-                              ),
-                              Expanded(
-                                child: SizedBox(
-                                  height: 50,
-                                  child: slider,
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(formatTime(model.duration!)),
-                                ],
-                              ),
-                            ],
-                          ),
+                          child: sliderAndTime,
                         ),
                       Expanded(
                         child: trackText,

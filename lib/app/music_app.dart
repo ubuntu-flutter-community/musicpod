@@ -177,7 +177,11 @@ class _AppState extends State<_App> {
     );
 
     return Scaffold(
-      backgroundColor: playerModel.fullScreen == true ? Colors.black : null,
+      backgroundColor: playerModel.fullScreen == true
+          ? Theme.of(context).brightness == Brightness.dark
+              ? Colors.black
+              : Colors.white
+          : null,
       appBar: appBar,
       body: playerModel.fullScreen == true
           ? const Player()
