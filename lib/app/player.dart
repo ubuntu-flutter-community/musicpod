@@ -196,53 +196,49 @@ class _PlayerState extends State<Player> {
       );
     }
 
-    return Container(
-      color: theme.primaryColor.withOpacity(0.1),
-      child: SizedBox(
-        height: 120,
-        child: Stack(
-          alignment: Alignment.topRight,
-          children: [
-            fullScreenButton,
-            Row(
-              children: [
-                if (model.audio?.metadata?.picture != null)
-                  Image.memory(
-                    model.audio!.metadata!.picture!.data,
-                    width: 120.0,
+    return SizedBox(
+      height: 120,
+      child: Stack(
+        alignment: Alignment.topRight,
+        children: [
+          fullScreenButton,
+          Row(
+            children: [
+              if (model.audio?.metadata?.picture != null)
+                Image.memory(
+                  model.audio!.metadata!.picture!.data,
+                  width: 120.0,
+                ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kYaruPagePadding,
+                    vertical: 10,
                   ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: kYaruPagePadding,
-                      vertical: 10,
-                    ),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 50,
-                          child: controls,
-                        ),
-                        if (model.audio != null &&
-                            model.audio!.audioType != AudioType.radio &&
-                            model.duration != null &&
-                            model.position != null &&
-                            model.duration!.inSeconds >
-                                model.position!.inSeconds)
-                          Expanded(
-                            child: sliderAndTime,
-                          ),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 50,
+                        child: controls,
+                      ),
+                      if (model.audio != null &&
+                          model.audio!.audioType != AudioType.radio &&
+                          model.duration != null &&
+                          model.position != null &&
+                          model.duration!.inSeconds > model.position!.inSeconds)
                         Expanded(
-                          child: trackText,
+                          child: sliderAndTime,
                         ),
-                      ],
-                    ),
+                      Expanded(
+                        child: trackText,
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
