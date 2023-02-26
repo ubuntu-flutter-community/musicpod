@@ -29,7 +29,8 @@ class LocalAudioModel extends SafeChangeNotifier {
       final onlyFiles = <FileSystemEntity>[];
 
       for (var fileSystemEntity in allFileSystemEntities) {
-        if (!await FileSystemEntity.isDirectory(fileSystemEntity.path)) {
+        if (!await FileSystemEntity.isDirectory(fileSystemEntity.path) &&
+            fileSystemEntity.path.endsWith('.mp3')) {
           onlyFiles.add(fileSystemEntity);
         }
       }
