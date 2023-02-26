@@ -56,7 +56,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                 ),
                 onTap: onTap,
                 title: Text(
-                  localAudioModel.audios![index].title!,
+                  localAudioModel.audios![index].name!,
                   style: TextStyle(
                     color: audioSelected
                         ? theme.colorScheme.onSurface

@@ -9,16 +9,17 @@ class PlayerModel extends SafeChangeNotifier {
   Audio? _audio;
   Audio? get audio => _audio;
   set audio(Audio? value) {
-    if (value == _audio) return;
+    if (value == null || value == _audio) return;
     _audio = value;
-    if (_audio?.audioType == AudioType.radio) {
-      _repeatSingle = null;
-    } else {
-      _repeatSingle = _repeatSingle ?? false;
-    }
-    _duration = Duration.zero;
     _position = Duration.zero;
-    notifyListeners();
+
+    if (_audioPlayer.state == PlayerState.playing) {
+      _audioPlayer
+          .stop()
+          .then((_) => _audioPlayer.release().then((_) => notifyListeners()));
+    } else {
+      notifyListeners();
+    }
   }
 
   final AudioPlayer _audioPlayer;
@@ -66,11 +67,10 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> play() async {
     if (audio == null) return;
 
-    if (audio!.audioType == AudioType.radio && audio!.resourceUrl != null) {
-      await _audioPlayer.play(UrlSource(audio!.resourceUrl!));
-    } else if (audio!.audioType == AudioType.local &&
-        audio!.resourcePath != null) {
-      await _audioPlayer.play(DeviceFileSource(audio!.resourcePath!));
+    if (audio!.audioType == AudioType.radio && audio!.url != null) {
+      await _audioPlayer.play(UrlSource(audio!.url!));
+    } else if (audio!.audioType == AudioType.local && audio!.path != null) {
+      await _audioPlayer.play(DeviceFileSource(audio!.path!));
     }
   }
 
@@ -92,14 +92,12 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> setImage() async {
     if (audio != null &&
         audio!.audioType == AudioType.local &&
-        audio!.resourcePath != null) {
-      metaData = await MetadataGod.getMetadata(audio!.resourcePath!);
+        audio!.path != null) {
+      metaData = await MetadataGod.getMetadata(audio!.path!);
     }
   }
 
   Future<void> init() async {
-    // Lame trick to avoid min max issues at first track
-    duration = const Duration(hours: 100);
     _audioPlayer.onPlayerStateChanged.listen((playerState) {
       isPlaying = playerState == PlayerState.playing;
     });
@@ -112,8 +110,9 @@ class PlayerModel extends SafeChangeNotifier {
 
     _audioPlayer.onPlayerComplete.listen((_) async {
       if (repeatSingle == true) {
-        position = Duration.zero;
-        await seek();
+        // _position = Duration.zero;
+        // await play();
+        // notifyListeners();
       }
     });
   }

@@ -40,9 +40,9 @@ class LocalAudioModel extends SafeChangeNotifier {
           File file = File(e.path);
           String basename = path.basename(file.path);
           return Audio(
-            resourcePath: e.path,
+            path: e.path,
             audioType: AudioType.local,
-            title: basename,
+            name: basename,
           );
         },
       ).toList();

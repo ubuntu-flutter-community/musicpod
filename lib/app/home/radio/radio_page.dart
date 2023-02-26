@@ -18,7 +18,7 @@ class RadioPage extends StatelessWidget {
       padding: const EdgeInsets.all(kYaruPagePadding),
       itemCount: stationsMap.length,
       itemBuilder: (context, index) {
-        final audioSelected = playerModel.audio?.resourceUrl ==
+        final audioSelected = playerModel.audio?.url ==
             stationsMap.entries.elementAt(index).value;
 
         Future<void> onTap() async {
@@ -26,9 +26,9 @@ class RadioPage extends StatelessWidget {
             playerModel.pause();
           } else {
             playerModel.audio = Audio(
-              title: stationsMap.entries.elementAt(index).key,
+              name: stationsMap.entries.elementAt(index).key,
               audioType: AudioType.radio,
-              resourceUrl: stationsMap.entries.elementAt(index).value,
+              url: stationsMap.entries.elementAt(index).value,
             );
             playerModel.metaData = await MetadataGod.getMetadata(
               stationsMap.entries.elementAt(index).value,

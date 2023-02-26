@@ -2,53 +2,39 @@ import 'dart:convert';
 
 class Audio {
   AudioType? audioType;
-  String? resourcePath;
-  String? resourceUrl;
-  String? title;
-  String? description;
-  String? author;
+  String? path;
+  String? url;
+  String? name;
   Audio({
     this.audioType,
-    this.resourcePath,
-    this.resourceUrl,
-    this.title,
-    this.description,
-    this.author,
+    this.path,
+    this.url,
+    this.name,
   });
 
   Audio copyWith({
-    String? resourcePath,
-    String? resourceUrl,
-    String? title,
-    String? description,
-    String? author,
+    String? path,
+    String? url,
+    String? name,
   }) {
     return Audio(
-      resourcePath: resourcePath ?? this.resourcePath,
-      resourceUrl: resourceUrl ?? this.resourceUrl,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      author: author ?? this.author,
+      path: path ?? this.path,
+      url: url ?? this.url,
+      name: name ?? this.name,
     );
   }
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
 
-    if (resourcePath != null) {
-      result.addAll({'resourcePath': resourcePath});
+    if (path != null) {
+      result.addAll({'path': path});
     }
-    if (resourceUrl != null) {
-      result.addAll({'resourceUrl': resourceUrl});
+    if (url != null) {
+      result.addAll({'url': url});
     }
-    if (title != null) {
-      result.addAll({'title': title});
-    }
-    if (description != null) {
-      result.addAll({'description': description});
-    }
-    if (author != null) {
-      result.addAll({'author': author});
+    if (name != null) {
+      result.addAll({'name': name});
     }
 
     return result;
@@ -56,11 +42,9 @@ class Audio {
 
   factory Audio.fromMap(Map<String, dynamic> map) {
     return Audio(
-      resourcePath: map['resourcePath'],
-      resourceUrl: map['resourceUrl'],
-      title: map['title'],
-      description: map['description'],
-      author: map['author'],
+      path: map['path'],
+      url: map['url'],
+      name: map['name'],
     );
   }
 
@@ -69,30 +53,20 @@ class Audio {
   factory Audio.fromJson(String source) => Audio.fromMap(json.decode(source));
 
   @override
-  String toString() {
-    return 'Audio(resourcePath: $resourcePath, resourceUrl: $resourceUrl, title: $title, description: $description, author: $author)';
-  }
+  String toString() => 'Audio(path: $path, url: $url, name: $name)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
     return other is Audio &&
-        other.resourcePath == resourcePath &&
-        other.resourceUrl == resourceUrl &&
-        other.title == title &&
-        other.description == description &&
-        other.author == author;
+        other.path == path &&
+        other.url == url &&
+        other.name == name;
   }
 
   @override
-  int get hashCode {
-    return resourcePath.hashCode ^
-        resourceUrl.hashCode ^
-        title.hashCode ^
-        description.hashCode ^
-        author.hashCode;
-  }
+  int get hashCode => path.hashCode ^ url.hashCode ^ name.hashCode;
 }
 
 enum AudioType {

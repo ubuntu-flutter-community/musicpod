@@ -32,7 +32,8 @@ class Player extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    Expanded(
+                    SizedBox(
+                      height: 50,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -45,11 +46,16 @@ class Player extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: YaruIconButton(
                               onPressed: () async {
-                                if (model.isPlaying) {
-                                  await model.pause();
-                                } else {
-                                  await model.play();
-                                }
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((timeStamp) async {
+                                  if (context.mounted) {
+                                    if (model.isPlaying) {
+                                      await model.pause();
+                                    } else {
+                                      await model.play();
+                                    }
+                                  }
+                                });
                               },
                               icon: Icon(
                                 model.isPlaying
@@ -75,7 +81,8 @@ class Player extends StatelessWidget {
                     if (model.audio != null &&
                         model.audio!.audioType != AudioType.radio &&
                         model.duration != null &&
-                        model.position != null)
+                        model.position != null &&
+                        model.duration!.inSeconds > model.position!.inSeconds)
                       Expanded(
                         child: Row(
                           children: [
@@ -99,8 +106,11 @@ class Player extends StatelessWidget {
                                   ),
                                   child: Slider(
                                     min: 0,
-                                    max: model.duration!.inSeconds.toDouble(),
-                                    value: model.position!.inSeconds.toDouble(),
+                                    max: model.duration?.inSeconds.toDouble() ??
+                                        1.0,
+                                    value:
+                                        model.position?.inSeconds.toDouble() ??
+                                            0,
                                     onChanged: (v) async {
                                       model.position =
                                           Duration(seconds: v.toInt());
