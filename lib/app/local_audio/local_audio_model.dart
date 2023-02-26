@@ -21,6 +21,14 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  int _selectedTab = 0;
+  int get selectedTab => _selectedTab;
+  set selectedTab(int value) {
+    if (value == _selectedTab) return;
+    _selectedTab = value;
+    notifyListeners();
+  }
+
   Future<void> init() async {
     if (_directory != null) {
       final allFileSystemEntities = Set<FileSystemEntity>.from(

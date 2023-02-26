@@ -1,9 +1,8 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:music/app/home/home_model.dart';
-import 'package:music/app/home/local_audio/local_audio_model.dart';
-import 'package:music/app/home/local_audio/local_audio_page.dart';
-import 'package:music/app/home/radio/radio_page.dart';
+import 'package:music/app/local_audio/local_audio_model.dart';
+import 'package:music/app/local_audio/local_audio_page.dart';
+import 'package:music/app/radio/radio_page.dart';
 import 'package:music/app/player.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/l10n/l10n.dart';
@@ -41,9 +40,6 @@ class _App extends StatefulWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => PlayerModel(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => HomeModel(),
         ),
         ChangeNotifierProvider(
           create: (_) => LocalAudioModel(),

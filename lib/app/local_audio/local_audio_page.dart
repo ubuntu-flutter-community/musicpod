@@ -1,6 +1,6 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:music/app/home/local_audio/local_audio_model.dart';
+import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/player_model.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
