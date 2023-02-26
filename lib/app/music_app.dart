@@ -123,6 +123,35 @@ class _AppState extends State<_App> {
       ),
     ];
 
+    final settingsTile = YaruMasterTile(
+      title: const Text('Settings'),
+      leading: const Icon(YaruIcons.settings),
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            titlePadding: EdgeInsets.zero,
+            title: const YaruDialogTitleBar(
+              title: Text('Chose collection directory'),
+            ),
+            children: [
+              Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    localAudioModel.directory = await getDirectoryPath();
+                    await localAudioModel
+                        .init()
+                        .then((value) => Navigator.of(context).pop());
+                  },
+                  child: const Text('Pick your music collection'),
+                ),
+              )
+            ],
+          );
+        },
+      ),
+    );
+
     final appBar = YaruWindowTitleBar(
       leading: Center(
         child: YaruIconButton(
@@ -149,33 +178,7 @@ class _AppState extends State<_App> {
           child: YaruMasterDetailPage(
             bottomBar: Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: YaruMasterTile(
-                title: const Text('Settings'),
-                leading: const Icon(YaruIcons.settings),
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) {
-                    return SimpleDialog(
-                      titlePadding: EdgeInsets.zero,
-                      title: const YaruDialogTitleBar(
-                        title: Text('Chose collection directory'),
-                      ),
-                      children: [
-                        Center(
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              localAudioModel.directory =
-                                  await getDirectoryPath();
-                              await localAudioModel.init();
-                            },
-                            child: const Text('Pick your music collection'),
-                          ),
-                        )
-                      ],
-                    );
-                  },
-                ),
-              ),
+              child: settingsTile,
             ),
             layoutDelegate: const YaruMasterResizablePaneDelegate(
               initialPaneWidth: 200,
