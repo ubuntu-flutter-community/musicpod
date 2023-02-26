@@ -22,8 +22,19 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   Future<void> init() async {
     if (_directory != null) {
-      final files = await _getFiles(path: directory!);
-      audios = files.map(
+      final allFileSystemEntities = Set<FileSystemEntity>.from(
+        await _getFlattenedFileSystemEntities(path: directory!),
+      );
+
+      final onlyFiles = <FileSystemEntity>[];
+
+      for (var fileSystemEntity in allFileSystemEntities) {
+        if (!await FileSystemEntity.isDirectory(fileSystemEntity.path)) {
+          onlyFiles.add(fileSystemEntity);
+        }
+      }
+
+      audios = onlyFiles.map(
         (e) {
           File file = File(e.path);
           String basename = path.basename(file.path);
@@ -38,7 +49,11 @@ class LocalAudioModel extends SafeChangeNotifier {
     }
   }
 
-  Future<List<FileSystemEntity>> _getFiles({required String path}) async {
-    return await Directory(path).list().toList();
+  Future<List<FileSystemEntity>> _getFlattenedFileSystemEntities({
+    required String path,
+  }) async {
+    return await Directory(path)
+        .list(recursive: true, followLinks: false)
+        .toList();
   }
 }
