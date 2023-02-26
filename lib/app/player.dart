@@ -80,13 +80,15 @@ class Player extends StatelessWidget {
                       ),
                     ),
                     if (model.audio != null &&
-                        model.audio!.audioType != AudioType.radio)
+                        model.audio!.audioType != AudioType.radio &&
+                        model.duration != null &&
+                        model.position != null)
                       Row(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(formatTime(model.position)),
+                              Text(formatTime(model.position!)),
                             ],
                           ),
                           Expanded(
@@ -102,8 +104,8 @@ class Player extends StatelessWidget {
                                 ),
                                 child: Slider(
                                   min: 0,
-                                  max: model.duration.inSeconds.toDouble(),
-                                  value: model.position.inSeconds.toDouble(),
+                                  max: model.duration!.inSeconds.toDouble(),
+                                  value: model.position!.inSeconds.toDouble(),
                                   onChanged: (v) async {
                                     model.position =
                                         Duration(seconds: v.toInt());
@@ -117,7 +119,7 @@ class Player extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(formatTime(model.duration)),
+                              Text(formatTime(model.duration!)),
                             ],
                           ),
                         ],

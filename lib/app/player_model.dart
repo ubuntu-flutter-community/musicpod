@@ -24,17 +24,17 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Duration _duration = Duration.zero;
-  Duration get duration => _duration;
-  set duration(Duration value) {
+  Duration? _duration;
+  Duration? get duration => _duration;
+  set duration(Duration? value) {
     if (value == _duration) return;
     _duration = value;
     notifyListeners();
   }
 
-  Duration _position = Duration.zero;
-  Duration get position => _position;
-  set position(Duration value) {
+  Duration? _position;
+  Duration? get position => _position;
+  set position(Duration? value) {
     if (value == _position) return;
     _position = value;
     notifyListeners();
@@ -66,7 +66,8 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> seek() async {
-    await _audioPlayer.seek(position);
+    if (position == null) return;
+    await _audioPlayer.seek(position!);
   }
 
   Future<void> resume() async {
@@ -82,23 +83,17 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> init() async {
-    _duration = Duration.zero;
-    _position = Duration.zero;
-
+    // Lame trick to avoid min max issues at first track
+    duration = const Duration(hours: 100);
     _audioPlayer.onPlayerStateChanged.listen((playerState) {
       isPlaying = playerState == PlayerState.playing;
     });
     _audioPlayer.onDurationChanged.listen((newDuration) {
-      if (audio?.audioType != AudioType.radio) {
-        duration = newDuration;
-      }
+      duration = newDuration;
     });
     _audioPlayer.onPositionChanged.listen((newPosition) {
-      if (audio?.audioType != AudioType.radio) {
-        position = newPosition;
-      }
+      position = newPosition;
     });
-    notifyListeners();
   }
 
   @override
