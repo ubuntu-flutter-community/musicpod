@@ -14,6 +14,22 @@ class LocalAudioPage extends StatefulWidget {
 }
 
 class _LocalAudioPageState extends State<LocalAudioPage> {
+  late ScrollController _controller;
+  int _amount = 40;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = ScrollController();
+    _controller.addListener(() {
+      if (_controller.position.maxScrollExtent == _controller.offset) {
+        setState(() {
+          _amount++;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final localAudioModel = context.watch<LocalAudioModel>();
@@ -33,8 +49,9 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             ),
           )
         : ListView.builder(
+            controller: _controller,
             padding: const EdgeInsets.all(kYaruPagePadding),
-            itemCount: localAudioModel.audios!.length,
+            itemCount: localAudioModel.audios!.take(_amount).length,
             itemBuilder: (context, index) {
               final audioSelected =
                   playerModel.audio == localAudioModel.audios![index];
