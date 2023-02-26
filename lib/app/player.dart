@@ -19,71 +19,65 @@ class Player extends StatelessWidget {
         height: 120,
         child: Row(
           children: [
-            SizedBox(
-              child: model.metaData?.picture == null
-                  ? null
-                  : Image.memory(
-                      model.metaData!.picture!.data,
-                      height: 120.0,
-                      // width: 120.0,
-                    ),
-            ),
+            if (model.metaData?.picture != null)
+              Image.memory(
+                model.metaData!.picture!.data,
+                width: 120.0,
+              ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: kYaruPagePadding,
                   vertical: 10,
                 ),
-                child: SizedBox(
-                  height: 100,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const YaruIconButton(icon: Icon(YaruIcons.shuffle)),
-                            const YaruIconButton(
-                              icon: Icon(YaruIcons.skip_backward),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: YaruIconButton(
-                                onPressed: () async {
-                                  if (model.isPlaying) {
-                                    await model.pause();
-                                  } else {
-                                    await model.play();
-                                  }
-                                },
-                                icon: Icon(
-                                  model.isPlaying
-                                      ? YaruIcons.media_pause
-                                      : YaruIcons.media_play,
-                                ),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const YaruIconButton(icon: Icon(YaruIcons.shuffle)),
+                          const YaruIconButton(
+                            icon: Icon(YaruIcons.skip_backward),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: YaruIconButton(
+                              onPressed: () async {
+                                if (model.isPlaying) {
+                                  await model.pause();
+                                } else {
+                                  await model.play();
+                                }
+                              },
+                              icon: Icon(
+                                model.isPlaying
+                                    ? YaruIcons.media_pause
+                                    : YaruIcons.media_play,
                               ),
                             ),
-                            const YaruIconButton(
-                              icon: Icon(YaruIcons.skip_forward),
-                            ),
-                            YaruIconButton(
-                              icon: const Icon(YaruIcons.repeat),
-                              isSelected: model.repeatSingle == true,
-                              onPressed: model.repeatSingle == null
-                                  ? null
-                                  : () =>
-                                      model.repeatSingle = !model.repeatSingle!,
-                            )
-                          ],
-                        ),
+                          ),
+                          const YaruIconButton(
+                            icon: Icon(YaruIcons.skip_forward),
+                          ),
+                          YaruIconButton(
+                            icon: const Icon(YaruIcons.repeat),
+                            isSelected: model.repeatSingle == true,
+                            onPressed: model.repeatSingle == null
+                                ? null
+                                : () =>
+                                    model.repeatSingle = !model.repeatSingle!,
+                          )
+                        ],
                       ),
-                      if (model.audio != null &&
-                          model.audio!.audioType != AudioType.radio &&
-                          model.duration != null &&
-                          model.position != null)
-                        Row(
+                    ),
+                    if (model.audio != null &&
+                        model.audio!.audioType != AudioType.radio &&
+                        model.duration != null &&
+                        model.position != null)
+                      Expanded(
+                        child: Row(
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,19 +119,23 @@ class Player extends StatelessWidget {
                             ),
                           ],
                         ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            model.metaData?.title ?? '',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const Text(' - '),
-                          Text(model.metaData?.artist ?? ''),
-                        ],
                       ),
-                    ],
-                  ),
+                    if (model.metaData != null)
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              model.metaData?.title ?? '',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const Text(' - '),
+                            Text(model.metaData?.artist ?? ''),
+                          ],
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
