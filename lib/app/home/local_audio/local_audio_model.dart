@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:metadata_god/metadata_god.dart';
 import 'package:music/data/audio.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:path/path.dart' as path;
@@ -35,17 +36,23 @@ class LocalAudioModel extends SafeChangeNotifier {
         }
       }
 
-      audios = onlyFiles.map(
-        (e) {
-          File file = File(e.path);
-          String basename = path.basename(file.path);
-          return Audio(
-            path: e.path,
-            audioType: AudioType.local,
-            name: basename,
-          );
-        },
-      ).toList();
+      audios = [];
+      for (var e in onlyFiles) {
+        File file = File(e.path);
+        String basename = path.basename(file.path);
+
+        final metadata = await MetadataGod.getMetadata(e.path);
+
+        final audio = Audio(
+          path: e.path,
+          audioType: AudioType.local,
+          name: basename,
+          metadata: metadata,
+        );
+
+        audios?.add(audio);
+      }
+
       notifyListeners();
     }
   }

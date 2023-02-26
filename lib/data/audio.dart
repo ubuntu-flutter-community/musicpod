@@ -1,59 +1,40 @@
-import 'dart:convert';
+import 'package:metadata_god/metadata_god.dart';
 
 class Audio {
-  AudioType? audioType;
-  String? path;
-  String? url;
-  String? name;
+  final String? path;
+  final String? url;
+  final String? name;
+  final Metadata? metadata;
+  final AudioType? audioType;
+
   Audio({
-    this.audioType,
     this.path,
     this.url,
     this.name,
+    this.metadata,
+    this.audioType,
   });
 
   Audio copyWith({
     String? path,
     String? url,
     String? name,
+    Metadata? metadata,
+    AudioType? audioType,
   }) {
     return Audio(
       path: path ?? this.path,
       url: url ?? this.url,
       name: name ?? this.name,
+      metadata: metadata ?? this.metadata,
+      audioType: audioType ?? this.audioType,
     );
   }
-
-  Map<String, dynamic> toMap() {
-    final result = <String, dynamic>{};
-
-    if (path != null) {
-      result.addAll({'path': path});
-    }
-    if (url != null) {
-      result.addAll({'url': url});
-    }
-    if (name != null) {
-      result.addAll({'name': name});
-    }
-
-    return result;
-  }
-
-  factory Audio.fromMap(Map<String, dynamic> map) {
-    return Audio(
-      path: map['path'],
-      url: map['url'],
-      name: map['name'],
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Audio.fromJson(String source) => Audio.fromMap(json.decode(source));
 
   @override
-  String toString() => 'Audio(path: $path, url: $url, name: $name)';
+  String toString() {
+    return 'Audio(path: $path, url: $url, name: $name, metadata: $metadata, audioType: $audioType)';
+  }
 
   @override
   bool operator ==(Object other) {
@@ -62,11 +43,19 @@ class Audio {
     return other is Audio &&
         other.path == path &&
         other.url == url &&
-        other.name == name;
+        other.name == name &&
+        other.metadata == metadata &&
+        other.audioType == audioType;
   }
 
   @override
-  int get hashCode => path.hashCode ^ url.hashCode ^ name.hashCode;
+  int get hashCode {
+    return path.hashCode ^
+        url.hashCode ^
+        name.hashCode ^
+        metadata.hashCode ^
+        audioType.hashCode;
+  }
 }
 
 enum AudioType {

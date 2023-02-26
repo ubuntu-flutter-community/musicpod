@@ -33,9 +33,9 @@ class _PlayerState extends State<Player> {
       height: 120,
       child: Row(
         children: [
-          if (model.metaData?.picture != null)
+          if (model.audio?.metadata?.picture != null)
             Image.memory(
-              model.metaData!.picture!.data,
+              model.audio!.metadata!.picture!.data,
               width: 120.0,
             ),
           Expanded(
@@ -142,17 +142,17 @@ class _PlayerState extends State<Player> {
                         ],
                       ),
                     ),
-                  if (model.metaData != null)
+                  if (model.audio?.metadata != null)
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            model.metaData?.title ?? '',
+                            model.audio?.metadata?.title ?? '',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           const Text(' - '),
-                          Text(model.metaData?.artist ?? ''),
+                          Text(model.audio?.metadata?.artist ?? ''),
                         ],
                       ),
                     ),

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:metadata_god/metadata_god.dart';
 import 'package:music/data/audio.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -46,14 +45,6 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Metadata? _metadata;
-  Metadata? get metaData => _metadata;
-  set metaData(Metadata? value) {
-    if (value == null || value == _metadata) return;
-    _metadata = value;
-    notifyListeners();
-  }
-
   bool? _repeatSingle;
   bool? get repeatSingle => _repeatSingle;
   set repeatSingle(bool? value) {
@@ -87,14 +78,6 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> resume() async {
     if (audio == null) return;
     await _audioPlayer.resume();
-  }
-
-  Future<void> setImage() async {
-    if (audio != null &&
-        audio!.audioType == AudioType.local &&
-        audio!.path != null) {
-      metaData = await MetadataGod.getMetadata(audio!.path!);
-    }
   }
 
   Future<void> init() async {

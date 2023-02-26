@@ -63,7 +63,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                   WidgetsBinding.instance
                       .addPostFrameCallback((timeStamp) async {
                     playerModel.audio = localAudioModel.audios![index];
-                    await playerModel.setImage();
+                    // await playerModel.setImage();
                     await playerModel.play();
                   });
                 }
@@ -76,7 +76,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                 ),
                 onTap: onTap,
                 title: Text(
-                  localAudioModel.audios![index].name!,
+                  localAudioModel.audios![index].metadata?.title ??
+                      localAudioModel.audios![index].name!,
                   style: TextStyle(
                     color: audioSelected
                         ? theme.colorScheme.onSurface
