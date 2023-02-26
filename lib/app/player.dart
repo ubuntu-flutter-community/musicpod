@@ -32,7 +32,7 @@ class Player extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: kYaruPagePadding,
-                  vertical: 8,
+                  vertical: 10,
                 ),
                 child: SizedBox(
                   height: 100,
