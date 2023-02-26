@@ -153,7 +153,9 @@ class _AppState extends State<_App> {
     );
 
     final appBar = YaruWindowTitleBar(
-      leading: const YaruBackButton(),
+      leading: const YaruBackButton(
+        style: YaruBackButtonStyle.rounded,
+      ),
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 8),
@@ -177,55 +179,57 @@ class _AppState extends State<_App> {
           : const Text('Ubuntu Music'),
     );
 
-    return Column(
-      children: [
-        appBar,
-        Expanded(
-          child: YaruMasterDetailPage(
-            bottomBar: Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: settingsTile,
-            ),
-            layoutDelegate: const YaruMasterResizablePaneDelegate(
-              initialPaneWidth: 200,
-              minPaneWidth: 81,
-              minPageWidth: kYaruMasterDetailBreakpoint / 2,
-            ),
-            length: masterItems.length,
-            initialIndex: 0,
-            tileBuilder: (context, index, selected) {
-              final tile = YaruMasterTile(
-                title: masterItems[index].tileBuilder(context),
-                leading: masterItems[index].iconBuilder == null
-                    ? null
-                    : masterItems[index].iconBuilder!(context, selected),
-              );
-
-              Widget? column;
-
-              if (index == 3) {
-                column = Column(
-                  children: [
-                    const Divider(
-                      height: 30,
-                    ),
-                    tile
-                  ],
+    return Scaffold(
+      appBar: appBar,
+      body: Column(
+        children: [
+          Expanded(
+            child: YaruMasterDetailPage(
+              bottomBar: Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: settingsTile,
+              ),
+              layoutDelegate: const YaruMasterResizablePaneDelegate(
+                initialPaneWidth: 200,
+                minPaneWidth: 81,
+                minPageWidth: kYaruMasterDetailBreakpoint / 2,
+              ),
+              length: masterItems.length,
+              initialIndex: 0,
+              tileBuilder: (context, index, selected) {
+                final tile = YaruMasterTile(
+                  title: masterItems[index].tileBuilder(context),
+                  leading: masterItems[index].iconBuilder == null
+                      ? null
+                      : masterItems[index].iconBuilder!(context, selected),
                 );
-              }
 
-              return column ?? tile;
-            },
-            pageBuilder: (context, index) => YaruDetailPage(
-              body: masterItems[index].builder(context),
+                Widget? column;
+
+                if (index == 3) {
+                  column = Column(
+                    children: [
+                      const Divider(
+                        height: 30,
+                      ),
+                      tile
+                    ],
+                  );
+                }
+
+                return column ?? tile;
+              },
+              pageBuilder: (context, index) => YaruDetailPage(
+                body: masterItems[index].builder(context),
+              ),
             ),
           ),
-        ),
-        const Divider(
-          height: 0,
-        ),
-        const Player()
-      ],
+          const Divider(
+            height: 0,
+          ),
+          const Player()
+        ],
+      ),
     );
   }
 }
