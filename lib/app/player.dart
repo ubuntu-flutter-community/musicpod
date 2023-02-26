@@ -142,20 +142,21 @@ class _PlayerState extends State<Player> {
                         ],
                       ),
                     ),
-                  if (model.audio?.metadata != null)
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            model.audio?.metadata?.title ?? '',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const Text(' - '),
-                          Text(model.audio?.metadata?.artist ?? ''),
-                        ],
-                      ),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          model.audio?.metadata?.title ??
+                              model.audio?.name ??
+                              '',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const Text(' - '),
+                        Text(model.audio?.metadata?.artist ?? ''),
+                      ],
                     ),
+                  ),
                 ],
               ),
             ),

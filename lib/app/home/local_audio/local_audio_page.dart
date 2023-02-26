@@ -63,7 +63,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                   WidgetsBinding.instance
                       .addPostFrameCallback((timeStamp) async {
                     playerModel.audio = localAudioModel.audios![index];
-                    // await playerModel.setImage();
                     await playerModel.play();
                   });
                 }
