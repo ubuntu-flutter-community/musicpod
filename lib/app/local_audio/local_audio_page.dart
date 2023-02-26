@@ -2,6 +2,7 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/player_model.dart';
+import 'package:music/data/audio.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -34,7 +35,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   Widget build(BuildContext context) {
     final localAudioModel = context.watch<LocalAudioModel>();
     final playerModel = context.watch<PlayerModel>();
-    final theme = Theme.of(context);
 
     return localAudioModel.directory == null ||
             localAudioModel.directory!.isEmpty ||
@@ -56,39 +56,55 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
               final audioSelected =
                   playerModel.audio == localAudioModel.audios![index];
 
-              Future<void> onTap() async {
-                if (playerModel.isPlaying && audioSelected) {
-                  playerModel.pause();
-                } else {
-                  WidgetsBinding.instance
-                      .addPostFrameCallback((timeStamp) async {
-                    playerModel.audio = localAudioModel.audios![index];
-                    await playerModel.play();
-                  });
-                }
-              }
-
-              return ListTile(
-                contentPadding: const EdgeInsets.only(left: 8, right: 4),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(kYaruButtonRadius),
-                ),
-                onTap: onTap,
-                title: Text(
-                  localAudioModel.audios![index].metadata?.title ??
-                      localAudioModel.audios![index].name!,
-                  style: TextStyle(
-                    color: audioSelected
-                        ? theme.colorScheme.onSurface
-                        : theme.hintColor,
-                  ),
-                ),
-                trailing: YaruIconButton(
-                  icon: const Icon(YaruIcons.heart),
-                  onPressed: () {},
-                ),
+              return _LocalAudioTile(
+                key: ValueKey(localAudioModel.audios![index]),
+                selected: audioSelected,
+                audio: localAudioModel.audios![index],
               );
             },
           );
+  }
+}
+
+class _LocalAudioTile extends StatelessWidget {
+  const _LocalAudioTile({
+    super.key,
+    required this.selected,
+    required this.audio,
+  });
+
+  final Audio audio;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final playerModel = context.watch<PlayerModel>();
+    final theme = Theme.of(context);
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 8, right: 4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(kYaruButtonRadius),
+      ),
+      onTap: () async {
+        if (playerModel.isPlaying && selected) {
+          playerModel.pause();
+        } else {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+            playerModel.audio = audio;
+            await playerModel.play();
+          });
+        }
+      },
+      title: Text(
+        audio.metadata?.title ?? audio.name!,
+        style: TextStyle(
+          color: selected ? theme.colorScheme.onSurface : theme.hintColor,
+        ),
+      ),
+      trailing: YaruIconButton(
+        icon: const Icon(YaruIcons.heart),
+        onPressed: () {},
+      ),
+    );
   }
 }

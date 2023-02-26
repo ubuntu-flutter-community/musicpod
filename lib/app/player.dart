@@ -113,12 +113,13 @@ class _PlayerState extends State<Player> {
 
     final sliderAndTime = Row(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(formatTime(model.position!)),
-          ],
-        ),
+        if (model.position != null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(formatTime(model.position!)),
+            ],
+          ),
         Expanded(
           child: SizedBox(
             height: 50,
@@ -143,12 +144,13 @@ class _PlayerState extends State<Player> {
             ),
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(formatTime(model.duration!)),
-          ],
-        ),
+        if (model.duration != null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(formatTime(model.duration!)),
+            ],
+          ),
       ],
     );
 
