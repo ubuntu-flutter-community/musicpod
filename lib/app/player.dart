@@ -92,6 +92,9 @@ class _PlayerState extends State<Player> {
             fontWeight:
                 model.fullScreen == true ? FontWeight.w100 : FontWeight.bold,
             fontSize: model.fullScreen == true ? 45 : 15,
+            color: model.fullScreen == true
+                ? theme.colorScheme.onSurface.withOpacity(0.7)
+                : null,
           ),
         ),
         Text(
@@ -100,6 +103,9 @@ class _PlayerState extends State<Player> {
             fontWeight:
                 model.fullScreen == true ? FontWeight.w100 : FontWeight.w400,
             fontSize: model.fullScreen == true ? 45 : 15,
+            color: model.fullScreen == true
+                ? theme.colorScheme.onSurface.withOpacity(0.7)
+                : null,
           ),
         ),
       ],
@@ -150,10 +156,6 @@ class _PlayerState extends State<Player> {
       return Stack(
         alignment: Alignment.topRight,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(kYaruPagePadding),
-            child: fullScreenButton,
-          ),
           Center(
             child: SingleChildScrollView(
               child: SizedBox(
@@ -183,6 +185,10 @@ class _PlayerState extends State<Player> {
                 ),
               ),
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(kYaruPagePadding),
+            child: fullScreenButton,
           ),
         ],
       );
