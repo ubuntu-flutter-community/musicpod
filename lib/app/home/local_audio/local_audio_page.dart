@@ -43,9 +43,12 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                 if (playerModel.isPlaying && audioSelected) {
                   playerModel.pause();
                 } else {
-                  playerModel.audio = localAudioModel.audios![index];
-                  await playerModel.setImage();
-                  await playerModel.play();
+                  WidgetsBinding.instance
+                      .addPostFrameCallback((timeStamp) async {
+                    playerModel.audio = localAudioModel.audios![index];
+                    await playerModel.setImage();
+                    await playerModel.play();
+                  });
                 }
               }
 
