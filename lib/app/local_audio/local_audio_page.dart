@@ -73,10 +73,12 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
         )
       ],
       title: _searchActive
-          ? const SizedBox(
+          ? SizedBox(
               height: 35,
-              // width: 400,
-              child: TextField(),
+              child: TextField(
+                autofocus: true,
+                onChanged: (value) => localAudioModel.searchQuery = value,
+              ),
             )
           : Center(child: Text(context.l10n.localAudio)),
     );

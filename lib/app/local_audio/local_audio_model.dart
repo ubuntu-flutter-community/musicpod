@@ -6,6 +6,22 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:path/path.dart' as path;
 
 class LocalAudioModel extends SafeChangeNotifier {
+  String? _searchQuery;
+  String? get searchQuery => _searchQuery;
+  set searchQuery(String? value) {
+    if (value == null || value == _searchQuery) return;
+    _searchQuery = value;
+    notifyListeners();
+  }
+
+  AudioFilter _audioFilter = AudioFilter.song;
+  AudioFilter get audioFilter => _audioFilter;
+  set audioFilter(AudioFilter value) {
+    if (value == _audioFilter) return;
+    _audioFilter = value;
+    notifyListeners();
+  }
+
   String? _directory;
   String? get directory => _directory;
   set directory(String? value) {
@@ -15,7 +31,33 @@ class LocalAudioModel extends SafeChangeNotifier {
   }
 
   List<Audio>? _audios;
-  List<Audio>? get audios => _audios;
+  List<Audio>? get audios => searchQuery == null || searchQuery!.isEmpty
+      ? _audios
+      : _audios?.where((a) {
+          if (a.metadata == null) {
+            return false;
+          } else {
+            if (a.metadata?.title == null) {
+              return false;
+            } else {
+              if (a.metadata!.title!
+                  .toLowerCase()
+                  .contains(searchQuery!.toLowerCase())) {
+                return true;
+              }
+            }
+            if (a.metadata?.artist == null) {
+              return false;
+            } else {
+              if (a.metadata!.artist!
+                  .toLowerCase()
+                  .contains(searchQuery!.toLowerCase())) {
+                return true;
+              }
+            }
+          }
+          return a.metadata!.title!.contains(searchQuery!);
+        }).toList();
   set audios(List<Audio>? value) {
     _audios = value;
     notifyListeners();
@@ -72,4 +114,12 @@ class LocalAudioModel extends SafeChangeNotifier {
         .list(recursive: true, followLinks: false)
         .toList();
   }
+}
+
+enum AudioFilter {
+  song,
+  artist,
+  album,
+  genre,
+  year;
 }
