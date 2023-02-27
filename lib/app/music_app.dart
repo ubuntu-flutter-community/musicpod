@@ -155,7 +155,14 @@ class _AppState extends State<_App> {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor.withOpacity(0.05),
       body: playerModel.fullScreen == true
-          ? const Player()
+          ? Column(
+              children: const [
+                YaruWindowTitleBar(
+                    border: BorderSide.none,
+                    backgroundColor: Colors.transparent),
+                Expanded(child: Player())
+              ],
+            )
           : Column(
               children: [
                 Expanded(
