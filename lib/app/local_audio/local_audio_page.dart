@@ -37,12 +37,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     final localAudioModel = context.watch<LocalAudioModel>();
     final playerModel = context.watch<PlayerModel>();
     final theme = Theme.of(context);
-    final headerStyle = TextStyle(
-      height: 1.2,
-      fontSize: 45,
-      fontWeight: FontWeight.w100,
-      color: theme.hintColor,
-    );
 
     return localAudioModel.directory == null ||
             localAudioModel.directory!.isEmpty ||
@@ -61,12 +55,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                 ? const Color.fromARGB(255, 37, 37, 37)
                 : Colors.white,
             child: TabbedPage(
-              // tabIcons: const [
-              //   Icon(YaruIcons.address_book),
-              //   Icon(YaruIcons.address_book),
-              //   Icon(YaruIcons.task_list),
-              //   Icon(YaruIcons.appliance)
-              // ],
               tabTitles: const ['Songs', 'Artists', 'Albums', 'Genre'],
               views: [
                 ListView.builder(
