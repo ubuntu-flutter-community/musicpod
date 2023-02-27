@@ -54,8 +54,6 @@ class _App extends StatefulWidget {
 }
 
 class _AppState extends State<_App> {
-  var _searchActive = false;
-
   @override
   Widget build(BuildContext context) {
     final localAudioModel = context.watch<LocalAudioModel>();
@@ -149,42 +147,15 @@ class _AppState extends State<_App> {
       ),
     );
 
-    final appBar = YaruWindowTitleBar(
-      leading: const YaruBackButton(
-        style: YaruBackButtonStyle.rounded,
-      ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 8),
-          child: Center(
-            child: YaruIconButton(
-              isSelected: _searchActive,
-              icon: const Icon(YaruIcons.search),
-              onPressed: () => setState(() {
-                _searchActive = !_searchActive;
-              }),
-            ),
-          ),
-        )
-      ],
-      title: _searchActive
-          ? const SizedBox(
-              height: 35,
-              // width: 400,
-              child: TextField(),
-            )
-          : const Text('Ubuntu Music'),
-    );
-
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor.withOpacity(0.05),
-      appBar: appBar,
       body: playerModel.fullScreen == true
           ? const Player()
           : Column(
               children: [
                 Expanded(
                   child: YaruMasterDetailPage(
+                    appBar: const YaruWindowTitleBar(),
                     bottomBar: Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: settingsTile,

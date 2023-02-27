@@ -4,6 +4,7 @@ import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/app/tabbed_page.dart';
 import 'package:music/data/audio.dart';
+import 'package:music/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -18,6 +19,7 @@ class LocalAudioPage extends StatefulWidget {
 class _LocalAudioPageState extends State<LocalAudioPage> {
   late ScrollController _controller;
   int _amount = 40;
+  bool _searchActive = false;
 
   @override
   void initState() {
@@ -38,7 +40,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     final playerModel = context.watch<PlayerModel>();
     final theme = Theme.of(context);
 
-    return localAudioModel.directory == null ||
+    final page = localAudioModel.directory == null ||
             localAudioModel.directory!.isEmpty ||
             localAudioModel.audios == null
         ? Center(
@@ -81,6 +83,40 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
               ],
             ),
           );
+
+    final appBar = YaruWindowTitleBar(
+      leading: Navigator.of(context).canPop()
+          ? const YaruBackButton(
+              style: YaruBackButtonStyle.rounded,
+            )
+          : null,
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: Center(
+            child: YaruIconButton(
+              isSelected: _searchActive,
+              icon: const Icon(YaruIcons.search),
+              onPressed: () => setState(() {
+                _searchActive = !_searchActive;
+              }),
+            ),
+          ),
+        )
+      ],
+      title: _searchActive
+          ? const SizedBox(
+              height: 35,
+              // width: 400,
+              child: TextField(),
+            )
+          : Text(context.l10n.localAudio),
+    );
+
+    return YaruDetailPage(
+      appBar: appBar,
+      body: page,
+    );
   }
 }
 
