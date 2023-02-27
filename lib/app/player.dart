@@ -124,38 +124,39 @@ class _PlayerState extends State<Player> {
 
     final sliderAndTime = Row(
       children: [
-        if (model.position != null)
+        if (model.position != null && model.audio?.audioType != AudioType.radio)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(formatTime(model.position!)),
             ],
           ),
-        Expanded(
-          child: SizedBox(
-            height: 50,
-            child: SliderTheme(
-              data: theme.sliderTheme.copyWith(
-                thumbColor: Colors.white,
-                thumbShape: const RoundSliderThumbShape(
-                  elevation: 4,
+        if (model.position != null && model.audio?.audioType != AudioType.radio)
+          Expanded(
+            child: SizedBox(
+              height: 50,
+              child: SliderTheme(
+                data: theme.sliderTheme.copyWith(
+                  thumbColor: Colors.white,
+                  thumbShape: const RoundSliderThumbShape(
+                    elevation: 4,
+                  ),
+                  inactiveTrackColor: theme.primaryColor.withOpacity(0.3),
                 ),
-                inactiveTrackColor: theme.primaryColor.withOpacity(0.3),
-              ),
-              child: Slider(
-                min: 0,
-                max: model.duration?.inSeconds.toDouble() ?? 1.0,
-                value: model.position?.inSeconds.toDouble() ?? 0,
-                onChanged: (v) async {
-                  model.position = Duration(seconds: v.toInt());
-                  await model.seek();
-                  await model.resume();
-                },
+                child: Slider(
+                  min: 0,
+                  max: model.duration?.inSeconds.toDouble() ?? 1.0,
+                  value: model.position?.inSeconds.toDouble() ?? 0,
+                  onChanged: (v) async {
+                    model.position = Duration(seconds: v.toInt());
+                    await model.seek();
+                    await model.resume();
+                  },
+                ),
               ),
             ),
           ),
-        ),
-        if (model.duration != null)
+        if (model.duration != null && model.audio?.audioType != AudioType.radio)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

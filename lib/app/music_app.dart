@@ -2,6 +2,7 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/local_audio/local_audio_page.dart';
+import 'package:music/app/podcasts/podcasts_page.dart';
 import 'package:music/app/radio/radio_page.dart';
 import 'package:music/app/player.dart';
 import 'package:music/app/player_model.dart';
@@ -91,14 +92,7 @@ class _AppState extends State<_App> {
           return Text(context.l10n.podcasts);
         },
         builder: (context) {
-          return YaruDetailPage(
-            appBar: YaruWindowTitleBar(
-              title: Text(context.l10n.podcasts),
-            ),
-            body: Center(
-              child: Text(context.l10n.podcasts),
-            ),
-          );
+          return const PodcastsPage();
         },
         iconBuilder: (context, selected) {
           return selected
