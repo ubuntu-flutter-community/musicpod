@@ -2,7 +2,12 @@
 
 Music, Radio and Podcast player for Ubuntu made with Flutter.
 
-![](.github/screenshot_dark.png)
+
+
+| | |
+|-|-|
+|![](.github/screenshot_dark.png)|![](.github/screenshot_dark_fullscreen.png)|
+|![](.github/screenshot_light.png)|![](.github/screenshot_light_fullscreen.png)|
 
 ## Planed features
 
