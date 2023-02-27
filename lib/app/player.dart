@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/data/audio.dart';
+import 'package:music/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -241,15 +242,5 @@ class _PlayerState extends State<Player> {
         ],
       ),
     );
-  }
-
-  String formatTime(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final hours = twoDigits(duration.inHours);
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
-
-    return <String>[if (duration.inHours > 0) hours, minutes, seconds]
-        .join(':');
   }
 }

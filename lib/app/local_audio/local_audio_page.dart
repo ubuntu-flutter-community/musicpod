@@ -5,6 +5,7 @@ import 'package:music/app/player_model.dart';
 import 'package:music/app/tabbed_page.dart';
 import 'package:music/data/audio.dart';
 import 'package:music/l10n/l10n.dart';
+import 'package:music/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -134,6 +135,11 @@ class _LocalAudioTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final playerModel = context.watch<PlayerModel>();
     final theme = Theme.of(context);
+    final textStyle = TextStyle(
+      color: selected ? theme.colorScheme.onSurface : theme.hintColor,
+      fontWeight: selected ? FontWeight.w500 : FontWeight.normal,
+    );
+
     return ListTile(
       contentPadding: const EdgeInsets.only(left: 8, right: 4),
       shape: RoundedRectangleBorder(
@@ -149,11 +155,45 @@ class _LocalAudioTile extends StatelessWidget {
           });
         }
       },
-      title: Text(
-        audio.metadata?.title ?? audio.name!,
-        style: TextStyle(
-          color: selected ? theme.colorScheme.onSurface : theme.hintColor,
-        ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              audio.metadata?.title ?? audio.name!,
+              style: textStyle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              audio.metadata?.artist ?? '',
+              style: textStyle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              audio.metadata?.album ?? '',
+              style: textStyle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          if (audio.metadata?.durationMs != null)
+            Expanded(
+              child: Text(
+                formatTime(
+                  Duration(
+                    milliseconds: audio.metadata!.durationMs!.toInt(),
+                  ),
+                ),
+                style: textStyle,
+              ),
+            )
+        ],
       ),
       trailing: YaruIconButton(
         icon: const Icon(YaruIcons.heart),
