@@ -20,6 +20,7 @@ class MusicApp extends StatelessWidget {
       builder: (context, yaruThemeData, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
+          theme: yaruThemeData.theme,
           darkTheme: yaruThemeData.darkTheme,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: supportedLocales,

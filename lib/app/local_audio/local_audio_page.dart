@@ -2,6 +2,7 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/player_model.dart';
+import 'package:music/app/tabbed_page.dart';
 import 'package:music/data/audio.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -59,75 +60,37 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             color: theme.brightness == Brightness.dark
                 ? const Color.fromARGB(255, 37, 37, 37)
                 : Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 10,
-                bottom: 20,
-              ),
-              child: Column(
-                children: [
-                  SingleChildScrollView(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                    ),
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        Text(
-                          'Songs',
-                          style: headerStyle.copyWith(
-                              color: theme.colorScheme.onSurface),
-                        ),
-                        const SizedBox(
-                          width: 40,
-                        ),
-                        Text(
-                          'Artists',
-                          style: headerStyle,
-                        ),
-                        const SizedBox(
-                          width: 40,
-                        ),
-                        Text(
-                          'Albums',
-                          style: headerStyle,
-                        ),
-                        const SizedBox(
-                          width: 40,
-                        ),
-                        Text(
-                          'Year',
-                          style: headerStyle,
-                        ),
-                      ],
-                    ),
+            child: TabbedPage(
+              // tabIcons: const [
+              //   Icon(YaruIcons.address_book),
+              //   Icon(YaruIcons.address_book),
+              //   Icon(YaruIcons.task_list),
+              //   Icon(YaruIcons.appliance)
+              // ],
+              tabTitles: const ['Songs', 'Artists', 'Albums', 'Genre'],
+              views: [
+                ListView.builder(
+                  controller: _controller,
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    right: 20,
                   ),
-                  const SizedBox(
-                    height: kYaruPagePadding,
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      controller: _controller,
-                      padding: const EdgeInsets.only(
-                        left: 20,
-                        right: 20,
-                      ),
-                      itemCount: localAudioModel.audios!.take(_amount).length,
-                      itemBuilder: (context, index) {
-                        final audioSelected =
-                            playerModel.audio == localAudioModel.audios![index];
+                  itemCount: localAudioModel.audios!.take(_amount).length,
+                  itemBuilder: (context, index) {
+                    final audioSelected =
+                        playerModel.audio == localAudioModel.audios![index];
 
-                        return _LocalAudioTile(
-                          key: ValueKey(localAudioModel.audios![index]),
-                          selected: audioSelected,
-                          audio: localAudioModel.audios![index],
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
+                    return _LocalAudioTile(
+                      key: ValueKey(localAudioModel.audios![index]),
+                      selected: audioSelected,
+                      audio: localAudioModel.audios![index],
+                    );
+                  },
+                ),
+                const Center(),
+                const Center(),
+                const Center(),
+              ],
             ),
           );
   }

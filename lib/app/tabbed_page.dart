@@ -8,12 +8,13 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class TabbedPage extends StatefulWidget {
   const TabbedPage({
     super.key,
-    required this.tabIcons,
+    this.tabIcons,
     required this.tabTitles,
     required this.views,
     this.width,
     this.padding = const EdgeInsets.only(
-      top: kYaruPagePadding,
+      bottom: 10,
+      top: kYaruPagePadding / 2,
       right: kYaruPagePadding,
       left: kYaruPagePadding,
     ),
@@ -22,7 +23,7 @@ class TabbedPage extends StatefulWidget {
   });
 
   /// A list of [Widget]s used inside the tabs - must have the same length as [tabTitles] and [views].
-  final List<Widget> tabIcons;
+  final List<Widget>? tabIcons;
 
   /// The list of titles as [String]s - must have the same length as [tabIcons] and [views].
   final List<String> tabTitles;
@@ -61,6 +62,7 @@ class _TabbedPageState extends State<TabbedPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       children: [
         Padding(
@@ -72,6 +74,8 @@ class _TabbedPageState extends State<TabbedPage> with TickerProviderStateMixin {
               borderRadius: BorderRadius.circular(kYaruContainerRadius),
             ),
             child: TabBar(
+              labelStyle: theme.textTheme.headlineMedium,
+              // indicatorColor: Colors.transparent,
               dividerColor: Colors.transparent,
               controller: tabController,
               splashBorderRadius: BorderRadius.circular(kYaruContainerRadius),
@@ -80,7 +84,7 @@ class _TabbedPageState extends State<TabbedPage> with TickerProviderStateMixin {
                 for (var i = 0; i < widget.views.length; i++)
                   Tab(
                     text: widget.tabTitles[i],
-                    icon: widget.tabIcons[i],
+                    icon: widget.tabIcons?[i],
                   )
               ],
             ),
