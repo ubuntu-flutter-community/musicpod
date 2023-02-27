@@ -40,19 +40,14 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
               child: const Text('Pick your music collection'),
             ),
           )
-        : Container(
-            color: theme.brightness == Brightness.dark
-                ? const Color.fromARGB(255, 37, 37, 37)
-                : Colors.white,
-            child: TabbedPage(
-              tabTitles: const ['Songs', 'Artists', 'Albums', 'Genre'],
-              views: [
-                AudioList(audios: Set.from(localAudioModel.audios!)),
-                const Center(),
-                const Center(),
-                const Center(),
-              ],
-            ),
+        : TabbedPage(
+            tabTitles: const ['Songs', 'Artists', 'Albums', 'Genre'],
+            views: [
+              AudioList(audios: Set.from(localAudioModel.audios!)),
+              const Center(),
+              const Center(),
+              const Center(),
+            ],
           );
 
     final appBar = YaruWindowTitleBar(
@@ -87,6 +82,9 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     );
 
     return YaruDetailPage(
+      backgroundColor: theme.brightness == Brightness.dark
+          ? const Color.fromARGB(255, 37, 37, 37)
+          : Colors.white,
       appBar: appBar,
       body: page,
     );

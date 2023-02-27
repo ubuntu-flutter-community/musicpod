@@ -66,6 +66,7 @@ class _AppState extends State<_App> {
     final localAudioModel = context.watch<LocalAudioModel>();
     final playerModel = context.watch<PlayerModel>();
     final playlistModel = context.watch<PlaylistModel>();
+    final theme = Theme.of(context);
 
     final masterItems = [
       MasterItem(
@@ -114,6 +115,9 @@ class _AppState extends State<_App> {
           },
           builder: (context) {
             return YaruDetailPage(
+              backgroundColor: theme.brightness == Brightness.dark
+                  ? const Color.fromARGB(255, 37, 37, 37)
+                  : Colors.white,
               appBar: YaruWindowTitleBar(
                 title: Text(
                   _createPlaylistName(playlist, context),
