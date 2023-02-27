@@ -1,6 +1,6 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:music/app/common/audio_tile.dart';
+import 'package:music/app/common/audio_list.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/local_audio/local_audio_page.dart';
 import 'package:music/app/player.dart';
@@ -65,7 +65,6 @@ class _AppState extends State<_App> {
     final localAudioModel = context.watch<LocalAudioModel>();
     final playerModel = context.watch<PlayerModel>();
     final playlistModel = context.watch<PlaylistModel>();
-    final playlists = playlistModel.playlists;
 
     final masterItems = [
       MasterItem(
@@ -107,7 +106,7 @@ class _AppState extends State<_App> {
               : const Icon(YaruIcons.network_cellular);
         },
       ),
-      for (final playlist in playlists.entries)
+      for (final playlist in playlistModel.playlists.entries)
         MasterItem(
           tileBuilder: (context) {
             return Text(
@@ -119,7 +118,11 @@ class _AppState extends State<_App> {
           builder: (context) {
             return YaruDetailPage(
               appBar: YaruWindowTitleBar(
-                title: Text(playlist.key),
+                title: Text(
+                  playlist.key == 'likedAudio'
+                      ? context.l10n.likedSongs
+                      : playlist.key,
+                ),
                 leading: Navigator.canPop(context)
                     ? const YaruBackButton(
                         style: YaruBackButtonStyle.rounded,
@@ -128,17 +131,9 @@ class _AppState extends State<_App> {
                         width: 40,
                       ),
               ),
-              body: ListView.builder(
-                itemCount: playlist.value.length,
-                itemBuilder: (context, index) {
-                  final audio = playlist.value.toList().elementAt(index);
-                  final selected = playerModel.audio == audio;
-
-                  return AudioTile(
-                    selected: selected,
-                    audio: playlist.value.toList().elementAt(index),
-                  );
-                },
+              body: Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: AudioList(audios: playlist.value.toList()),
               ),
             );
           },

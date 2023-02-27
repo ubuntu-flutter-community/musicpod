@@ -1,10 +1,7 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:music/app/common/audio_tile.dart';
+import 'package:music/app/common/audio_list.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
-import 'package:music/app/player_model.dart';
-import 'package:music/app/playlists/playlist_dialog.dart';
-import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/app/tabbed_page.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:provider/provider.dart';
@@ -19,28 +16,16 @@ class LocalAudioPage extends StatefulWidget {
 }
 
 class _LocalAudioPageState extends State<LocalAudioPage> {
-  late ScrollController _controller;
-  int _amount = 40;
   bool _searchActive = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = ScrollController();
-    _controller.addListener(() {
-      if (_controller.position.maxScrollExtent == _controller.offset) {
-        setState(() {
-          _amount++;
-        });
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     final localAudioModel = context.watch<LocalAudioModel>();
-    final playerModel = context.watch<PlayerModel>();
-    final playlistModel = context.watch<PlaylistModel>();
     final theme = Theme.of(context);
 
     final page = localAudioModel.directory == null ||
@@ -62,71 +47,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             child: TabbedPage(
               tabTitles: const ['Songs', 'Artists', 'Albums', 'Genre'],
               views: [
-                ListView.builder(
-                  controller: _controller,
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                  ),
-                  itemCount: localAudioModel.audios!.take(_amount).length,
-                  itemBuilder: (context, index) {
-                    final audioSelected =
-                        playerModel.audio == localAudioModel.audios![index];
-
-                    return AudioTile(
-                      key: ValueKey(localAudioModel.audios![index]),
-                      selected: audioSelected,
-                      audio: localAudioModel.audios![index],
-                      likeIcon: YaruPopupMenuButton(
-                        style: TextButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide.none,
-                            borderRadius:
-                                BorderRadius.circular(kYaruButtonRadius),
-                          ),
-                        ),
-                        itemBuilder: (context) {
-                          return [
-                            PopupMenuItem(
-                              child: Text(context.l10n.createNewPlaylist),
-                              onTap: () => showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return ChangeNotifierProvider.value(
-                                    value: playlistModel,
-                                    child: PlaylistDialog(
-                                      audios: [localAudioModel.audios![index]],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            for (final playlist in playlistModel
-                                .playlists.entries
-                                .take(5)
-                                .toList())
-                              PopupMenuItem(
-                                child: Text(
-                                  '${context.l10n.addTo} ${playlist.key == 'likedAudio' ? context.l10n.likedSongs : playlist.key}',
-                                ),
-                              )
-                          ];
-                        },
-                        onSelected: (value) {},
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(10),
-                          onTap: () {},
-                          child: Icon(
-                            YaruIcons.heart,
-                            color: audioSelected
-                                ? theme.colorScheme.onSurface
-                                : theme.hintColor,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                AudioList(audios: localAudioModel.audios!),
                 const Center(),
                 const Center(),
                 const Center(),

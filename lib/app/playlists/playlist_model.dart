@@ -17,6 +17,13 @@ class PlaylistModel extends SafeChangeNotifier {
   void addPlaylist(String name, List<Audio> audios) =>
       _playlists.putIfAbsent(name, () => Set.from(audios));
 
+  void addAudioToPlaylist(String playlist, Audio audio) {
+    final p = _playlists[playlist];
+    if (p != null) {
+      p.add(audio);
+    }
+  }
+
   Future<void> init() async {
     _playlists.putIfAbsent('likedAudio', () => _likedAudios);
   }
