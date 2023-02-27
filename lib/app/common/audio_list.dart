@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_tile.dart';
-import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/app/playlists/playlist_dialog.dart';
 import 'package:music/app/playlists/playlist_model.dart';
@@ -13,7 +12,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class AudioList extends StatefulWidget {
   const AudioList({super.key, required this.audios, this.likeIcon});
 
-  final List<Audio> audios;
+  final Set<Audio> audios;
   final Widget? likeIcon;
 
   @override
@@ -39,7 +38,6 @@ class _AudioListState extends State<AudioList> {
 
   @override
   Widget build(BuildContext context) {
-    final localAudioModel = context.watch<LocalAudioModel>();
     final playerModel = context.watch<PlayerModel>();
     final playlistModel = context.watch<PlaylistModel>();
     final theme = Theme.of(context);
@@ -52,8 +50,10 @@ class _AudioListState extends State<AudioList> {
       ),
       itemCount: widget.audios.take(_amount).length,
       itemBuilder: (context, index) {
-        final audio = localAudioModel.audios![index];
+        final audio = widget.audios.elementAt(index);
         final audioSelected = playerModel.audio == audio;
+
+        final liked = playlistModel.likedAudios.contains(audio);
 
         return AudioTile(
           key: ValueKey(audio),
@@ -90,16 +90,19 @@ class _AudioListState extends State<AudioList> {
                           '${context.l10n.addTo} ${playlist.key == 'likedAudio' ? context.l10n.likedSongs : playlist.key}',
                         ),
                         onTap: () => playlistModel.addAudioToPlaylist(
-                            playlist.key, audio),
+                          playlist.key,
+                          audio,
+                        ),
                       )
                   ];
                 },
-                onSelected: (value) {},
                 child: InkWell(
                   borderRadius: BorderRadius.circular(10),
-                  onTap: () {},
+                  onTap: () => liked
+                      ? playlistModel.removeLikedAudio(audio)
+                      : playlistModel.addLikedAudio(audio),
                   child: Icon(
-                    YaruIcons.heart,
+                    liked ? YaruIcons.heart_filled : YaruIcons.heart,
                     color: audioSelected
                         ? theme.colorScheme.onSurface
                         : theme.hintColor,

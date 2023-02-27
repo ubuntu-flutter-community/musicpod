@@ -58,17 +58,19 @@ class _PlayerState extends State<Player> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: YaruIconButton(
-            onPressed: () {
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                if (context.mounted) {
-                  if (model.isPlaying) {
-                    model.pause();
-                  } else {
-                    model.play();
-                  }
-                }
-              });
-            },
+            onPressed: model.audio == null
+                ? null
+                : () {
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                      if (context.mounted) {
+                        if (model.isPlaying) {
+                          model.pause();
+                        } else {
+                          model.play();
+                        }
+                      }
+                    });
+                  },
             icon: Icon(
               model.isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
             ),

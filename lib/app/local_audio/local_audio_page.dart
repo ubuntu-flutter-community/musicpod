@@ -47,7 +47,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             child: TabbedPage(
               tabTitles: const ['Songs', 'Artists', 'Albums', 'Genre'],
               views: [
-                AudioList(audios: localAudioModel.audios!),
+                AudioList(audios: Set.from(localAudioModel.audios!)),
                 const Center(),
                 const Center(),
                 const Center(),

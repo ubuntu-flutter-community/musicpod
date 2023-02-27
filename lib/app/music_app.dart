@@ -8,6 +8,7 @@ import 'package:music/app/player_model.dart';
 import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/app/podcasts/podcasts_page.dart';
 import 'package:music/app/radio/radio_page.dart';
+import 'package:music/data/audio.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru/yaru.dart';
@@ -109,19 +110,13 @@ class _AppState extends State<_App> {
       for (final playlist in playlistModel.playlists.entries)
         MasterItem(
           tileBuilder: (context) {
-            return Text(
-              playlist.key == 'likedAudio'
-                  ? context.l10n.likedSongs
-                  : playlist.key,
-            );
+            return Text(_createPlaylistName(playlist, context));
           },
           builder: (context) {
             return YaruDetailPage(
               appBar: YaruWindowTitleBar(
                 title: Text(
-                  playlist.key == 'likedAudio'
-                      ? context.l10n.likedSongs
-                      : playlist.key,
+                  _createPlaylistName(playlist, context),
                 ),
                 leading: Navigator.canPop(context)
                     ? const YaruBackButton(
@@ -133,7 +128,7 @@ class _AppState extends State<_App> {
               ),
               body: Padding(
                 padding: const EdgeInsets.only(top: 20),
-                child: AudioList(audios: playlist.value.toList()),
+                child: AudioList(audios: playlist.value),
               ),
             );
           },
@@ -177,7 +172,9 @@ class _AppState extends State<_App> {
     );
 
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor.withOpacity(0.05),
+      backgroundColor: playerModel.isPlaying
+          ? Theme.of(context).primaryColor.withOpacity(0.05)
+          : null,
       body: playerModel.fullScreen == true
           ? Column(
               children: const [
@@ -242,6 +239,15 @@ class _AppState extends State<_App> {
               ],
             ),
     );
+  }
+
+  String _createPlaylistName(
+    MapEntry<String, Set<Audio>> playlist,
+    BuildContext context,
+  ) {
+    return playlist.key == 'likedAudio'
+        ? context.l10n.likedSongs
+        : playlist.key;
   }
 }
 

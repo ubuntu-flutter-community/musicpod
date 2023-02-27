@@ -3,8 +3,9 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class PlaylistModel extends SafeChangeNotifier {
   final Set<Audio> _likedAudios = {};
-  List<Audio> get likedAudios => _likedAudios.toList();
+  Set<Audio> get likedAudios => _likedAudios;
   void addLikedAudio(Audio audio) => _likedAudios.add(audio);
+  void removeLikedAudio(Audio audio) => _likedAudios.remove(audio);
 
   final Set<Audio> _starredStations = {};
   Set<Audio> get starredStations => _starredStations;
