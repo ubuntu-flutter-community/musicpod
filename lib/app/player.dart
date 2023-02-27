@@ -49,8 +49,11 @@ class _PlayerState extends State<Player> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const YaruIconButton(icon: Icon(YaruIcons.shuffle)),
-        const YaruIconButton(
-          icon: Icon(YaruIcons.skip_backward),
+        const Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: YaruIconButton(
+            icon: Icon(YaruIcons.skip_backward),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -71,8 +74,11 @@ class _PlayerState extends State<Player> {
             ),
           ),
         ),
-        const YaruIconButton(
-          icon: Icon(YaruIcons.skip_forward),
+        const Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: YaruIconButton(
+            icon: Icon(YaruIcons.skip_forward),
+          ),
         ),
         YaruIconButton(
           icon: const Icon(YaruIcons.repeat),
@@ -84,22 +90,25 @@ class _PlayerState extends State<Player> {
       ],
     );
 
-    final trackText = Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    final trackText = Wrap(
+      alignment: WrapAlignment.center,
+      runAlignment: WrapAlignment.center,
+      spacing: model.fullScreen == true ? 40 : 10,
       children: [
         Text(
           model.audio?.metadata?.title ?? model.audio?.name ?? '',
           style: TextStyle(
             fontWeight:
-                model.fullScreen == true ? FontWeight.w100 : FontWeight.bold,
+                model.fullScreen == true ? FontWeight.w400 : FontWeight.bold,
             fontSize: model.fullScreen == true ? 45 : 15,
             color: model.fullScreen == true
                 ? theme.colorScheme.onSurface.withOpacity(0.7)
                 : null,
           ),
+          textAlign: TextAlign.center,
         ),
         Text(
-          ' - ${model.audio?.metadata?.artist ?? ''}',
+          model.audio?.metadata?.artist ?? '',
           style: TextStyle(
             fontWeight:
                 model.fullScreen == true ? FontWeight.w100 : FontWeight.w400,
@@ -108,6 +117,7 @@ class _PlayerState extends State<Player> {
                 ? theme.colorScheme.onSurface.withOpacity(0.7)
                 : null,
           ),
+          textAlign: TextAlign.center,
         ),
       ],
     );
