@@ -3,7 +3,6 @@ import 'package:music/app/player_model.dart';
 import 'package:music/data/audio.dart';
 import 'package:music/utils.dart';
 import 'package:provider/provider.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AudioTile extends StatelessWidget {
@@ -18,7 +17,7 @@ class AudioTile extends StatelessWidget {
   final Audio audio;
   final bool selected;
   final void Function()? onLike;
-  final Icon? likeIcon;
+  final Widget? likeIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -86,10 +85,7 @@ class AudioTile extends StatelessWidget {
             )
         ],
       ),
-      trailing: YaruIconButton(
-        icon: likeIcon ?? const Icon(YaruIcons.heart),
-        onPressed: onLike,
-      ),
+      trailing: likeIcon,
     );
   }
 }

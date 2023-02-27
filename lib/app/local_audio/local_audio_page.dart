@@ -74,6 +74,45 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                       key: ValueKey(localAudioModel.audios![index]),
                       selected: audioSelected,
                       audio: localAudioModel.audios![index],
+                      likeIcon: YaruPopupMenuButton(
+                        style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide.none,
+                            borderRadius:
+                                BorderRadius.circular(kYaruButtonRadius),
+                          ),
+                        ),
+                        itemBuilder: (context) {
+                          return [
+                            const PopupMenuItem(
+                              child: Text('Create new playlist'),
+                            ),
+                            const PopupMenuItem(
+                              child: Text('Add to "Mads doggo walk"'),
+                            ),
+                            const PopupMenuItem(
+                              child: Text('Add to "JP doggo walk"'),
+                            ),
+                            const PopupMenuItem(
+                              child: Text('Add to "Pauls mountain bike tour"'),
+                            ),
+                            const PopupMenuItem(
+                              child: Text('Add to playlist ...'),
+                            )
+                          ];
+                        },
+                        onSelected: (value) {},
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(10),
+                          onTap: () {},
+                          child: Icon(
+                            YaruIcons.heart,
+                            color: audioSelected
+                                ? theme.colorScheme.onSurface
+                                : theme.hintColor,
+                          ),
+                        ),
+                      ),
                     );
                   },
                 ),
