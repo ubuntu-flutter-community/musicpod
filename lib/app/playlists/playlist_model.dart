@@ -30,6 +30,11 @@ class PlaylistModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  void removePlaylist(String name) {
+    _playlists.remove(name);
+    notifyListeners();
+  }
+
   void addAudioToPlaylist(String playlist, Audio audio) {
     final p = _playlists[playlist];
     if (p != null) {

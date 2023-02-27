@@ -120,8 +120,31 @@ class _AppState extends State<_App> {
                   ? const Color.fromARGB(255, 37, 37, 37)
                   : Colors.white,
               appBar: YaruWindowTitleBar(
-                title: Text(
-                  _createPlaylistName(playlist, context),
+                title: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (playlist.key != 'likedAudio')
+                      Center(
+                        child: YaruIconButton(
+                          icon: const Icon(YaruIcons.pen),
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => ChangeNotifierProvider.value(
+                              value: playlistModel,
+                              child: PlaylistDialog(
+                                playlistExists: true,
+                                audios: const [],
+                                onRemove: () =>
+                                    playlistModel.removePlaylist(playlist.key),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    Text(
+                      _createPlaylistName(playlist, context),
+                    ),
+                  ],
                 ),
                 leading: Navigator.canPop(context)
                     ? const YaruBackButton(
@@ -196,9 +219,11 @@ class _AppState extends State<_App> {
                 Expanded(
                   child: YaruMasterDetailPage(
                     appBar: YaruWindowTitleBar(
-                      title: Center(
-                        child: TextButton(
-                          onPressed: () => showDialog(
+                      titleSpacing: 0,
+                      title: SizedBox(
+                        child: YaruMasterTile(
+                          selected: false,
+                          onTap: () => showDialog(
                             context: context,
                             builder: (context) {
                               return ChangeNotifierProvider.value(
@@ -207,19 +232,8 @@ class _AppState extends State<_App> {
                               );
                             },
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Icon(YaruIcons.plus),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text('Create playlist'),
-                              SizedBox(
-                                width: 30,
-                              ),
-                            ],
-                          ),
+                          leading: const Icon(YaruIcons.plus),
+                          title: Text(context.l10n.playlistDialogTitleNew),
                         ),
                       ),
                     ),

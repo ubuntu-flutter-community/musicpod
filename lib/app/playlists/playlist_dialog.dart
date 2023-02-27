@@ -3,12 +3,20 @@ import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/data/audio.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:provider/provider.dart';
+import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class PlaylistDialog extends StatefulWidget {
-  const PlaylistDialog({super.key, required this.audios});
+  const PlaylistDialog({
+    super.key,
+    required this.audios,
+    this.playlistExists,
+    this.onRemove,
+  });
 
   final List<Audio> audios;
+  final bool? playlistExists;
+  final void Function()? onRemove;
 
   @override
   State<PlaylistDialog> createState() => _PlaylistDialogState();
@@ -46,13 +54,25 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
           onPressed: () => Navigator.pop(context),
           child: Text(context.l10n.cancel),
         ),
-        ElevatedButton(
-          onPressed: () {
-            model.addPlaylist(_nameController.text, widget.audios);
-            Navigator.pop(context);
-          },
-          child: Text(context.l10n.add),
-        )
+        if (widget.playlistExists == true)
+          OutlinedButton.icon(
+            label: Text(context.l10n.deletePlaylist),
+            icon: const Icon(YaruIcons.trash),
+            onPressed: widget.onRemove == null
+                ? null
+                : () {
+                    widget.onRemove!();
+                    Navigator.pop(context);
+                  },
+          )
+        else
+          ElevatedButton(
+            onPressed: () {
+              model.addPlaylist(_nameController.text, widget.audios);
+              Navigator.pop(context);
+            },
+            child: Text(context.l10n.add),
+          )
       ],
     );
   }
