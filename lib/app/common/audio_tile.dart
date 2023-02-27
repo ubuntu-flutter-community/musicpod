@@ -39,7 +39,8 @@ class AudioTile extends StatelessWidget {
         } else {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
             playerModel.audio = audio;
-            await playerModel.play();
+
+            playerModel.play().then((_) => playerModel.loadColor());
           });
         }
       },

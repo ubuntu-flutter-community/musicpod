@@ -202,7 +202,7 @@ class _AppState extends State<_App> {
 
     return Scaffold(
       backgroundColor: playerModel.isPlaying
-          ? Theme.of(context).primaryColor.withOpacity(0.05)
+          ? playerModel.surfaceTintColor ?? theme.primaryColor.withOpacity(0.05)
           : null,
       body: playerModel.fullScreen == true
           ? Column(

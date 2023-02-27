@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
 import 'package:music/data/audio.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class PlayerModel extends SafeChangeNotifier {
@@ -102,6 +104,21 @@ class PlayerModel extends SafeChangeNotifier {
     _audioPlayer.onPlayerComplete.listen((_) {
       _audioPlayer.release();
     });
+    notifyListeners();
+  }
+
+  Color? _color;
+  Color? get color => _color;
+  Color? get surfaceTintColor => _color?.withOpacity(0.05);
+
+  Future<void> loadColor() async {
+    if (audio == null || audio?.path == null) return;
+
+    final image = MemoryImage(
+      audio!.metadata!.picture!.data,
+    );
+    final generator = await PaletteGenerator.fromImageProvider(image);
+    _color = generator.dominantColor?.color;
     notifyListeners();
   }
 
