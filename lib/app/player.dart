@@ -181,7 +181,7 @@ class _PlayerState extends State<Player> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 40,
-                    vertical: 20,
+                    vertical: 40,
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
