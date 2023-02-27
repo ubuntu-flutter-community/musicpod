@@ -99,15 +99,16 @@ class _AudioListState extends State<AudioList> {
                       ),
                     for (final playlist
                         in playlistModel.playlists.entries.take(5).toList())
-                      PopupMenuItem(
-                        child: Text(
-                          '${context.l10n.addTo} ${playlist.key == 'likedAudio' ? context.l10n.likedSongs : playlist.key}',
-                        ),
-                        onTap: () => playlistModel.addAudioToPlaylist(
-                          playlist.key,
-                          audio,
-                        ),
-                      )
+                      if (playlist.key != 'likedAudio')
+                        PopupMenuItem(
+                          child: Text(
+                            '${context.l10n.addTo} ${playlist.key == 'likedAudio' ? context.l10n.likedSongs : playlist.key}',
+                          ),
+                          onTap: () => playlistModel.addAudioToPlaylist(
+                            playlist.key,
+                            audio,
+                          ),
+                        )
                   ];
                 },
                 child: InkWell(

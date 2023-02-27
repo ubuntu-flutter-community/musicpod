@@ -5,6 +5,7 @@ import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/local_audio/local_audio_page.dart';
 import 'package:music/app/player.dart';
 import 'package:music/app/player_model.dart';
+import 'package:music/app/playlists/playlist_dialog.dart';
 import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/app/podcasts/podcasts_page.dart';
 import 'package:music/app/radio/radio_page.dart';
@@ -144,7 +145,7 @@ class _AppState extends State<_App> {
                       : const Icon(YaruIcons.heart);
                 }
               : null,
-        )
+        ),
     ];
 
     final settingsTile = YaruMasterTile(
@@ -194,7 +195,34 @@ class _AppState extends State<_App> {
               children: [
                 Expanded(
                   child: YaruMasterDetailPage(
-                    appBar: const YaruWindowTitleBar(),
+                    appBar: YaruWindowTitleBar(
+                      title: Center(
+                        child: TextButton(
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) {
+                              return ChangeNotifierProvider.value(
+                                value: playlistModel,
+                                child: const PlaylistDialog(audios: []),
+                              );
+                            },
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
+                              Icon(YaruIcons.plus),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text('Create playlist'),
+                              SizedBox(
+                                width: 30,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     bottomBar: Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: settingsTile,

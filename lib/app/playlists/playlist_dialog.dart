@@ -37,6 +37,7 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
         children: [
           TextField(
             controller: _nameController,
+            decoration: const InputDecoration(label: Text('Playlist name')),
           )
         ],
       ),
