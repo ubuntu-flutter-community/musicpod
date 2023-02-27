@@ -91,8 +91,13 @@ class _AppState extends State<_App> {
           return Text(context.l10n.podcasts);
         },
         builder: (context) {
-          return Center(
-            child: Text(context.l10n.podcasts),
+          return YaruDetailPage(
+            appBar: YaruWindowTitleBar(
+              title: Text(context.l10n.podcasts),
+            ),
+            body: Center(
+              child: Text(context.l10n.podcasts),
+            ),
           );
         },
         iconBuilder: (context, selected) {
