@@ -158,8 +158,9 @@ class _AppState extends State<_App> {
           ? Column(
               children: const [
                 YaruWindowTitleBar(
-                    border: BorderSide.none,
-                    backgroundColor: Colors.transparent),
+                  border: BorderSide.none,
+                  backgroundColor: Colors.transparent,
+                ),
                 Expanded(child: Player())
               ],
             )
