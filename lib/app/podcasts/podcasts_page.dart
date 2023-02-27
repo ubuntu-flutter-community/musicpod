@@ -19,7 +19,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
           ? const YaruBackButton(
               style: YaruBackButtonStyle.rounded,
             )
-          : null,
+          : const SizedBox(
+              width: 40,
+            ),
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 8),
@@ -40,7 +42,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               // width: 400,
               child: TextField(),
             )
-          : Text(context.l10n.podcasts),
+          : Center(child: Text(context.l10n.podcasts)),
     );
 
     return YaruDetailPage(

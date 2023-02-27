@@ -1,11 +1,13 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:music/app/common/audio_tile.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/local_audio/local_audio_page.dart';
-import 'package:music/app/podcasts/podcasts_page.dart';
-import 'package:music/app/radio/radio_page.dart';
 import 'package:music/app/player.dart';
 import 'package:music/app/player_model.dart';
+import 'package:music/app/playlists/playlist_model.dart';
+import 'package:music/app/podcasts/podcasts_page.dart';
+import 'package:music/app/radio/radio_page.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru/yaru.dart';
@@ -44,6 +46,9 @@ class _App extends StatefulWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => LocalAudioModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PlaylistModel()..init(),
         )
       ],
       child: const _App(),
@@ -59,6 +64,8 @@ class _AppState extends State<_App> {
   Widget build(BuildContext context) {
     final localAudioModel = context.watch<LocalAudioModel>();
     final playerModel = context.watch<PlayerModel>();
+    final playlistModel = context.watch<PlaylistModel>();
+    final playlists = playlistModel.playlists;
 
     final masterItems = [
       MasterItem(
@@ -100,21 +107,49 @@ class _AppState extends State<_App> {
               : const Icon(YaruIcons.network_cellular);
         },
       ),
-      MasterItem(
-        tileBuilder: (context) {
-          return Text(context.l10n.likedSongs);
-        },
-        builder: (context) {
-          return Center(
-            child: Text(context.l10n.likedSongs),
-          );
-        },
-        iconBuilder: (context, selected) {
-          return selected
-              ? const Icon(YaruIcons.heart_filled)
-              : const Icon(YaruIcons.heart);
-        },
-      ),
+      for (final playlist in playlists.entries)
+        MasterItem(
+          tileBuilder: (context) {
+            return Text(
+              playlist.key == 'likedAudio'
+                  ? context.l10n.likedSongs
+                  : playlist.key,
+            );
+          },
+          builder: (context) {
+            return YaruDetailPage(
+              appBar: YaruWindowTitleBar(
+                title: Text(playlist.key),
+                leading: Navigator.canPop(context)
+                    ? const YaruBackButton(
+                        style: YaruBackButtonStyle.rounded,
+                      )
+                    : const SizedBox(
+                        width: 40,
+                      ),
+              ),
+              body: ListView.builder(
+                itemCount: playlist.value.length,
+                itemBuilder: (context, index) {
+                  final audio = playlist.value.toList().elementAt(index);
+                  final selected = playerModel.audio == audio;
+
+                  return AudioTile(
+                    selected: selected,
+                    audio: playlist.value.toList().elementAt(index),
+                  );
+                },
+              ),
+            );
+          },
+          iconBuilder: playlist.key == 'likedAudio'
+              ? (context, selected) {
+                  return selected
+                      ? const Icon(YaruIcons.heart_filled)
+                      : const Icon(YaruIcons.heart);
+                }
+              : null,
+        )
     ];
 
     final settingsTile = YaruMasterTile(

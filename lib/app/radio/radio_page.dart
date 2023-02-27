@@ -46,7 +46,9 @@ class _RadioPageState extends State<RadioPage> {
           ? const YaruBackButton(
               style: YaruBackButtonStyle.rounded,
             )
-          : null,
+          : const SizedBox(
+              width: 40,
+            ),
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 8),
@@ -67,7 +69,7 @@ class _RadioPageState extends State<RadioPage> {
               // width: 400,
               child: TextField(),
             )
-          : Text(context.l10n.radio),
+          : Center(child: Text(context.l10n.radio)),
     );
 
     return YaruDetailPage(

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_tile.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/player_model.dart';
+import 'package:music/app/playlists/playlist_dialog.dart';
+import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/app/tabbed_page.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +40,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   Widget build(BuildContext context) {
     final localAudioModel = context.watch<LocalAudioModel>();
     final playerModel = context.watch<PlayerModel>();
+    final playlistModel = context.watch<PlaylistModel>();
     final theme = Theme.of(context);
 
     final page = localAudioModel.directory == null ||
@@ -84,21 +87,29 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                         ),
                         itemBuilder: (context) {
                           return [
-                            const PopupMenuItem(
-                              child: Text('Create new playlist'),
+                            PopupMenuItem(
+                              child: Text(context.l10n.createNewPlaylist),
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return ChangeNotifierProvider.value(
+                                    value: playlistModel,
+                                    child: PlaylistDialog(
+                                      audios: [localAudioModel.audios![index]],
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
-                            const PopupMenuItem(
-                              child: Text('Add to "Mads doggo walk"'),
-                            ),
-                            const PopupMenuItem(
-                              child: Text('Add to "JP doggo walk"'),
-                            ),
-                            const PopupMenuItem(
-                              child: Text('Add to "Pauls mountain bike tour"'),
-                            ),
-                            const PopupMenuItem(
-                              child: Text('Add to playlist ...'),
-                            )
+                            for (final playlist in playlistModel
+                                .playlists.entries
+                                .take(5)
+                                .toList())
+                              PopupMenuItem(
+                                child: Text(
+                                  '${context.l10n.addTo} ${playlist.key == 'likedAudio' ? context.l10n.likedSongs : playlist.key}',
+                                ),
+                              )
                           ];
                         },
                         onSelected: (value) {},
@@ -128,7 +139,9 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
           ? const YaruBackButton(
               style: YaruBackButtonStyle.rounded,
             )
-          : null,
+          : const SizedBox(
+              width: 40,
+            ),
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 8),
@@ -149,7 +162,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
               // width: 400,
               child: TextField(),
             )
-          : Text(context.l10n.localAudio),
+          : Center(child: Text(context.l10n.localAudio)),
     );
 
     return YaruDetailPage(

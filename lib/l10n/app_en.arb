@@ -6,5 +6,11 @@
     "music": "Music",
     "radio": "Radio",
     "podcasts": "Podcasts",
-    "likedSongs": "Liked Songs"
+    "likedSongs": "Liked Songs",
+    "cancel": "Cancel",
+    "add": "Add",
+    "addTo": "Add to:",
+    "createNewPlaylist" : "Create new playlist",
+    "playlistDialogTitleNew": "Add playlist",
+    "playlistDialogTitleEdit": "Edit playlist"
 }
