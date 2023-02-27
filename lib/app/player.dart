@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/player_model.dart';
+import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/data/audio.dart';
 import 'package:music/utils.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,8 @@ class _PlayerState extends State<Player> {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<PlayerModel>();
+    final playlistModel = context.watch<PlaylistModel>();
+    final liked = playlistModel.likedAudios.contains(model.audio);
     final theme = Theme.of(context);
 
     final fullScreenButton = Padding(
@@ -49,7 +52,19 @@ class _PlayerState extends State<Player> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const YaruIconButton(icon: Icon(YaruIcons.shuffle)),
+        YaruIconButton(
+          onPressed:
+              model.audio == null || model.audio!.audioType == AudioType.radio
+                  ? null
+                  : () => playlistModel.addLikedAudio(model.audio!),
+          icon: liked
+              ? const Icon(YaruIcons.heart_filled)
+              : const Icon(YaruIcons.heart),
+        ),
+        const Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: YaruIconButton(icon: Icon(YaruIcons.shuffle)),
+        ),
         const Padding(
           padding: EdgeInsets.only(left: 10),
           child: YaruIconButton(
@@ -83,12 +98,19 @@ class _PlayerState extends State<Player> {
             icon: Icon(YaruIcons.skip_forward),
           ),
         ),
-        YaruIconButton(
-          icon: const Icon(YaruIcons.repeat),
-          isSelected: model.repeatSingle == true,
-          onPressed: model.repeatSingle == null
-              ? null
-              : () => model.repeatSingle = !model.repeatSingle!,
+        Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: YaruIconButton(
+            icon: const Icon(YaruIcons.repeat),
+            isSelected: model.repeatSingle == true,
+            onPressed: model.repeatSingle == null
+                ? null
+                : () => model.repeatSingle = !model.repeatSingle!,
+          ),
+        ),
+        const YaruIconButton(
+          icon: Icon(YaruIcons.media_stop),
+          onPressed: null,
         )
       ],
     );
