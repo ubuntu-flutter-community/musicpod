@@ -10,10 +10,16 @@ import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AudioList extends StatefulWidget {
-  const AudioList({super.key, required this.audios, this.likeIcon});
+  const AudioList({
+    super.key,
+    required this.audios,
+    this.likeIcon,
+    this.listName,
+  });
 
   final Set<Audio> audios;
   final Widget? likeIcon;
+  final String? listName;
 
   @override
   State<AudioList> createState() => _AudioListState();
@@ -83,6 +89,14 @@ class _AudioListState extends State<AudioList> {
                         },
                       ),
                     ),
+                    if (playlistModel.playlists.containsKey(widget.listName))
+                      PopupMenuItem(
+                        child: Text('Remove from ${widget.listName}'),
+                        onTap: () => playlistModel.removeAudioFromPlaylist(
+                          widget.listName!,
+                          audio,
+                        ),
+                      ),
                     for (final playlist
                         in playlistModel.playlists.entries.take(5).toList())
                       PopupMenuItem(

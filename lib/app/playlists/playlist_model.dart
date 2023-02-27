@@ -25,6 +25,13 @@ class PlaylistModel extends SafeChangeNotifier {
     }
   }
 
+  void removeAudioFromPlaylist(String playlist, Audio audio) {
+    final p = _playlists[playlist];
+    if (p != null && p.contains(audio)) {
+      p.remove(audio);
+    }
+  }
+
   Future<void> init() async {
     _playlists.putIfAbsent('likedAudio', () => _likedAudios);
   }

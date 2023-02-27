@@ -128,7 +128,8 @@ class _AppState extends State<_App> {
               ),
               body: Padding(
                 padding: const EdgeInsets.only(top: 20),
-                child: AudioList(audios: playlist.value),
+                child:
+                    AudioList(audios: playlist.value, listName: playlist.key),
               ),
             );
           },
