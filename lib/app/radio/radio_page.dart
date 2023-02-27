@@ -27,6 +27,8 @@ class _RadioPageState extends State<RadioPage> {
         final audioSelected = playerModel.audio?.url ==
             stationsMap.entries.elementAt(index).value;
 
+        playerModel.resetColor();
+
         final audio = Audio(
           name: stationsMap.entries.elementAt(index).key,
           audioType: AudioType.radio,
