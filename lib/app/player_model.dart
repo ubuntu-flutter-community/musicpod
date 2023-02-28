@@ -157,6 +157,10 @@ class PlayerModel extends SafeChangeNotifier {
     if (queue?.isNotEmpty == true && audio != null && queue!.contains(audio)) {
       final currentIndex = queue!.indexOf(audio!);
 
+      if (currentIndex == 0) {
+        return;
+      }
+
       nextAudio = queue?.elementAt(currentIndex - 1);
 
       if (nextAudio == null) return;
