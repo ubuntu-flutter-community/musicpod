@@ -165,7 +165,7 @@ class _PlayerState extends State<Player> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(formatTime(model.position!)),
+            Text(formatTime(model.position ?? Duration.zero)),
           ],
         ),
         Expanded(
@@ -208,7 +208,7 @@ class _PlayerState extends State<Player> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(formatTime(model.duration!)),
+            Text(formatTime(model.duration ?? Duration.zero)),
           ],
         ),
       ],

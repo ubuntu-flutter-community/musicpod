@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:music/app/common/audio_tile.dart';
+import 'package:music/app/common/audio_list.dart';
 import 'package:music/app/common/search_field.dart';
-import 'package:music/app/player_model.dart';
 import 'package:music/data/audio.dart';
 import 'package:music/data/stations.dart';
 import 'package:music/l10n/l10n.dart';
-import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -20,28 +18,22 @@ class _RadioPageState extends State<RadioPage> {
   bool _searchActive = false;
   @override
   Widget build(BuildContext context) {
-    final playerModel = context.watch<PlayerModel>();
-    final page = ListView.builder(
-      padding: const EdgeInsets.all(kYaruPagePadding),
-      itemCount: stationsMap.length,
-      itemBuilder: (context, index) {
-        final audioSelected = playerModel.audio?.url ==
-            stationsMap.entries.elementAt(index).value;
-
-        playerModel.resetColor();
-
-        final audio = Audio(
-          name: stationsMap.entries.elementAt(index).key,
-          audioType: AudioType.radio,
-          url: stationsMap.entries.elementAt(index).value,
-        );
-
-        return AudioTile(
-          selected: audioSelected,
-          audio: audio,
-          likeIcon: const Icon(YaruIcons.star),
-        );
-      },
+    final page = Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: AudioList(
+        listName: context.l10n.radio,
+        audios: Set.from(
+          stationsMap.entries
+              .map(
+                (e) => Audio(
+                  name: e.key,
+                  url: e.value,
+                  audioType: AudioType.radio,
+                ),
+              )
+              .toList(),
+        ),
+      ),
     );
 
     final appBar = YaruWindowTitleBar(
