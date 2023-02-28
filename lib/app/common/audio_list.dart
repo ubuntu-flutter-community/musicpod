@@ -113,10 +113,14 @@ class _AudioListState extends State<AudioList> {
               const SizedBox(
                 width: kYaruPagePadding,
               ),
-              Text(
-                '${widget.listName == 'likedAudio' ? context.l10n.likedSongs : widget.listName ?? ''}  •  ${widget.audios.length} ${context.l10n.titles}',
-                style: theme.textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.w100),
+              Expanded(
+                child: Text(
+                  '${widget.listName == 'likedAudio' ? context.l10n.likedSongs : widget.listName ?? ''}  •  ${widget.audios.length} ${context.l10n.titles}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.headlineSmall
+                      ?.copyWith(fontWeight: FontWeight.w100),
+                ),
               )
             ],
           ),
