@@ -12,6 +12,14 @@ class PlayerModel extends SafeChangeNotifier {
   StreamSubscription<Duration>? _durationSub;
   StreamSubscription<Duration>? _positionSub;
 
+  List<Audio>? _queue;
+  List<Audio>? get queue => _queue;
+  set queue(List<Audio>? value) {
+    if (value == null) return;
+    _queue = value;
+    notifyListeners();
+  }
+
   bool? _fullScreen;
   bool? get fullScreen => _fullScreen;
   set fullScreen(bool? value) {
@@ -64,7 +72,6 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> play() async {
-    if (audio == null) return;
     if (audio!.path != null) {
       await _audioPlayer.play(DeviceFileSource(audio!.path!));
       if (audio!.audioType != AudioType.radio) {
@@ -109,6 +116,12 @@ class PlayerModel extends SafeChangeNotifier {
     _audioPlayer.onPlayerComplete.listen((_) async {
       await _audioPlayer.release();
       await _audioPlayer.stop();
+      if (queue?.isNotEmpty == true) {
+        if (audio == null || queue?.indexOf(audio!) == null) return;
+        final index = queue?.indexOf(audio!);
+        audio = queue!.elementAt(index! + 1);
+        await play();
+      }
     });
     notifyListeners();
   }
