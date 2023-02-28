@@ -69,18 +69,22 @@ class _AudioListState extends State<AudioList> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _HeaderElement(
-                  onAudioFilterSelected: (_) =>
-                      widget.onAudioFilterSelected!(AudioFilter.title),
+                  onAudioFilterSelected: widget.onAudioFilterSelected == null
+                      ? null
+                      : (_) => widget.onAudioFilterSelected!(AudioFilter.title),
                   label: context.l10n.title,
                 ),
                 _HeaderElement(
-                  onAudioFilterSelected: (_) =>
-                      widget.onAudioFilterSelected!(AudioFilter.artist),
+                  onAudioFilterSelected: widget.onAudioFilterSelected == null
+                      ? null
+                      : (_) =>
+                          widget.onAudioFilterSelected!(AudioFilter.artist),
                   label: context.l10n.artist,
                 ),
                 _HeaderElement(
-                  onAudioFilterSelected: (_) =>
-                      widget.onAudioFilterSelected!(AudioFilter.album),
+                  onAudioFilterSelected: widget.onAudioFilterSelected == null
+                      ? null
+                      : (_) => widget.onAudioFilterSelected!(AudioFilter.album),
                   label: context.l10n.album,
                 ),
               ],
