@@ -40,12 +40,19 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             ),
           )
         : TabbedPage(
-            tabTitles: const ['Songs', 'Artists', 'Albums', 'Genre'],
+            tabTitles: [
+              context.l10n.titles,
+              context.l10n.artists,
+              context.l10n.albums,
+              context.l10n.genres,
+              // context.l10n.years,
+            ],
             views: [
               AudioList(audios: Set.from(localAudioModel.audios!)),
               const Center(),
               const Center(),
               const Center(),
+              // const Center(),
             ],
           );
 

@@ -16,7 +16,12 @@
     "playlistDialogTitleEdit": "Edit playlist",
     "save": "Save",
     "title": "Title",
+    "titles": "Titles",
     "artist": "Artist",
+    "artists": "Artists",
     "album": "Album",
+    "albums": "Albums",
+    "genres": "Genres",
+    "years": "Years",
     "searchLocalAudioHint": "Search local audio"
 }
