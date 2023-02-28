@@ -42,6 +42,7 @@ class Audio {
 
     if (other is Audio &&
         other.audioType == AudioType.local &&
+        other.path != null &&
         other.path == path) {
       return true;
     }

@@ -31,7 +31,8 @@ class _PlayerState extends State<Player> {
   Widget build(BuildContext context) {
     final model = context.watch<PlayerModel>();
     final playlistModel = context.watch<PlaylistModel>();
-    final liked = playlistModel.likedAudios.contains(model.audio);
+    final liked =
+        model.audio == null ? false : playlistModel.liked(model.audio!);
     final theme = Theme.of(context);
 
     final fullScreenButton = Padding(
@@ -56,7 +57,9 @@ class _PlayerState extends State<Player> {
           onPressed:
               model.audio == null || model.audio!.audioType == AudioType.radio
                   ? null
-                  : () => playlistModel.addLikedAudio(model.audio!),
+                  : () => liked
+                      ? playlistModel.removeLikedAudio(model.audio!)
+                      : playlistModel.addLikedAudio(model.audio!),
           icon: liked
               ? const Icon(YaruIcons.heart_filled)
               : const Icon(YaruIcons.heart),

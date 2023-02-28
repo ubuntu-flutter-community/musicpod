@@ -27,6 +27,13 @@ class AudioList extends StatefulWidget {
   final void Function(AudioFilter)? onAudioFilterSelected;
   final AudioFilter? audioFilter;
 
+  static Widget create(BuildContext context, Set<Audio> audios) {
+    return ChangeNotifierProvider(
+      create: (_) {},
+      child: AudioList(audios: audios),
+    );
+  }
+
   @override
   State<AudioList> createState() => _AudioListState();
 }
@@ -183,7 +190,7 @@ class _AudioListState extends State<AudioList> {
               final audio = widget.audios.elementAt(index);
               final audioSelected = playerModel.audio == audio;
 
-              final liked = playlistModel.likedAudios.contains(audio);
+              final liked = playlistModel.liked(audio);
 
               return AudioTile(
                 key: ValueKey(audio),

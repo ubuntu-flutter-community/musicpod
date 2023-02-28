@@ -5,13 +5,32 @@ class PlaylistModel extends SafeChangeNotifier {
   final Set<Audio> _likedAudios = {};
   Set<Audio> get likedAudios => _likedAudios;
   void addLikedAudio(Audio audio) {
+    for (var a in likedAudios) {
+      if (a.path == audio.path) {
+        return;
+      }
+    }
     _likedAudios.add(audio);
     notifyListeners();
   }
 
+  bool liked(Audio audio) {
+    for (var a in likedAudios) {
+      if (audio.path == a.path) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   void removeLikedAudio(Audio audio) {
-    _likedAudios.remove(audio);
-    notifyListeners();
+    for (var a in likedAudios) {
+      if (audio.path == a.path) {
+        _likedAudios.remove(audio);
+        notifyListeners();
+        return;
+      }
+    }
   }
 
   final Set<Audio> _starredStations = {};
@@ -49,6 +68,11 @@ class PlaylistModel extends SafeChangeNotifier {
   void addAudioToPlaylist(String playlist, Audio audio) {
     final p = _playlists[playlist];
     if (p != null) {
+      for (var e in p) {
+        if (e.path == audio.path) {
+          return;
+        }
+      }
       p.add(audio);
     }
     notifyListeners();

@@ -38,74 +38,10 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  List<Audio>? _audios;
-  List<Audio>? get audios {
-    List<Audio>? list;
-    if (searchQuery == null || searchQuery!.isEmpty) {
-      list = _audios;
-    } else {
-      list = _audios?.where((a) {
-        if (a.metadata == null) {
-          return false;
-        } else {
-          if (a.metadata?.title == null) {
-            return false;
-          } else {
-            if (a.metadata!.title!
-                .toLowerCase()
-                .contains(searchQuery!.toLowerCase())) {
-              return true;
-            }
-          }
-          if (a.metadata?.artist == null) {
-            return false;
-          } else {
-            if (a.metadata!.artist!
-                .toLowerCase()
-                .contains(searchQuery!.toLowerCase())) {
-              return true;
-            }
-          }
-        }
-        return a.metadata!.title!.contains(searchQuery!);
-      }).toList();
-    }
+  Set<Audio>? _audios;
+  Set<Audio>? get audios => _audios;
 
-    // list?.sort(
-    //   (a, b) {
-    //     if (a.metadata == null || b.metadata == null) {
-    //       return -1;
-    //     }
-
-    //     switch (audioFilter) {
-    //       case AudioFilter.album:
-    //         return (a.metadata!.album == null || b.metadata!.album == null)
-    //             ? -1
-    //             : a.metadata!.album!.compareTo(b.metadata!.album!);
-    //       case AudioFilter.artist:
-    //         return (a.metadata!.artist == null || b.metadata!.artist == null)
-    //             ? -1
-    //             : a.metadata!.artist!.compareTo(b.metadata!.artist!);
-    //       case AudioFilter.title:
-    //         return (a.metadata!.title == null || b.metadata!.title == null)
-    //             ? -1
-    //             : a.metadata!.title!.compareTo(b.metadata!.title!);
-    //       case AudioFilter.year:
-    //         return (a.metadata!.year == null || b.metadata!.year == null)
-    //             ? -1
-    //             : a.metadata!.year!.compareTo(b.metadata!.year!);
-    //       case AudioFilter.genre:
-    //         return (a.metadata!.genre == null || b.metadata!.genre == null)
-    //             ? -1
-    //             : a.metadata!.genre!.compareTo(b.metadata!.genre!);
-    //     }
-    //   },
-    // );
-
-    return list;
-  }
-
-  set audios(List<Audio>? value) {
+  set audios(Set<Audio>? value) {
     _audios = value;
     notifyListeners();
   }
@@ -144,7 +80,7 @@ class LocalAudioModel extends SafeChangeNotifier {
   }
 
   Future<void> init() async {
-    _directory = guessDirectory();
+    _directory ??= guessDirectory();
 
     if (_directory != null) {
       final allFileSystemEntities = Set<FileSystemEntity>.from(
@@ -160,7 +96,7 @@ class LocalAudioModel extends SafeChangeNotifier {
         }
       }
 
-      audios = [];
+      audios = {};
       for (var e in onlyFiles) {
         File file = File(e.path);
         String basename = path.basename(file.path);
