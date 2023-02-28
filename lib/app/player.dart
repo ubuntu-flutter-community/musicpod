@@ -249,8 +249,10 @@ class _PlayerState extends State<Player> {
             children: [
               if (model.audio?.metadata?.picture != null)
                 Image.memory(
+                  filterQuality: FilterQuality.medium,
+                  fit: BoxFit.cover,
                   model.audio!.metadata!.picture!.data,
-                  width: 120.0,
+                  height: 120.0,
                 ),
               Expanded(
                 child: Padding(

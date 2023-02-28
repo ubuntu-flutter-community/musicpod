@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:metadata_god/metadata_god.dart';
 import 'package:music/app/common/audio_tile.dart';
+import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/app/playlists/playlist_dialog.dart';
 import 'package:music/app/playlists/playlist_model.dart';
@@ -16,11 +16,15 @@ class AudioList extends StatefulWidget {
     required this.audios,
     this.likeIcon,
     this.listName,
+    this.onAudioFilterSelected,
+    this.audioFilter,
   });
 
   final Set<Audio> audios;
   final Widget? likeIcon;
   final String? listName;
+  final void Function(AudioFilter)? onAudioFilterSelected;
+  final AudioFilter? audioFilter;
 
   @override
   State<AudioList> createState() => _AudioListState();
@@ -48,10 +52,6 @@ class _AudioListState extends State<AudioList> {
     final playerModel = context.watch<PlayerModel>();
     final playlistModel = context.watch<PlaylistModel>();
     final theme = Theme.of(context);
-    final textStyle = TextStyle(
-      color: theme.colorScheme.onSurface,
-      fontWeight: FontWeight.w500,
-    );
 
     return Column(
       children: [
@@ -68,48 +68,43 @@ class _AudioListState extends State<AudioList> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: Text(
-                    context.l10n.title,
-                    style: textStyle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                _HeaderElement(
+                  onAudioFilterSelected: (_) =>
+                      widget.onAudioFilterSelected!(AudioFilter.title),
+                  label: context.l10n.title,
                 ),
-                Expanded(
-                  child: Text(
-                    context.l10n.artist,
-                    style: textStyle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                _HeaderElement(
+                  onAudioFilterSelected: (_) =>
+                      widget.onAudioFilterSelected!(AudioFilter.artist),
+                  label: context.l10n.artist,
                 ),
-                Expanded(
-                  child: Text(
-                    context.l10n.album,
-                    style: textStyle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                _HeaderElement(
+                  onAudioFilterSelected: (_) =>
+                      widget.onAudioFilterSelected!(AudioFilter.album),
+                  label: context.l10n.album,
                 ),
               ],
             ),
-            trailing: YaruPopupMenuButton(
+            trailing: YaruPopupMenuButton<AudioFilter>(
+              initialValue: widget.audioFilter,
+              onSelected: widget.onAudioFilterSelected,
               style: TextButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   side: BorderSide.none,
                   borderRadius: BorderRadius.circular(kYaruButtonRadius),
                 ),
               ),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(10),
-                onTap: () {},
-                child: Icon(
-                  YaruIcons.heart,
-                  color: theme.colorScheme.onSurface,
-                ),
+              child: Icon(
+                YaruIcons.ordered_list,
+                color: theme.colorScheme.onSurface,
               ),
-              itemBuilder: (p0) => [],
+              itemBuilder: (a) => [
+                for (final filter in AudioFilter.values)
+                  PopupMenuItem(
+                    value: filter,
+                    child: Text(filter.name),
+                  )
+              ],
             ),
           ),
         ),
@@ -199,6 +194,41 @@ class _AudioListState extends State<AudioList> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _HeaderElement extends StatelessWidget {
+  const _HeaderElement({
+    required this.onAudioFilterSelected,
+    required this.label,
+  });
+
+  final void Function(AudioFilter) onAudioFilterSelected;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textStyle = TextStyle(
+      color: theme.colorScheme.onSurface,
+      fontWeight: FontWeight.w500,
+    );
+    return Expanded(
+      child: Row(
+        children: [
+          InkWell(
+            borderRadius: BorderRadius.circular(5),
+            onTap: () => onAudioFilterSelected(AudioFilter.title),
+            child: Text(
+              label,
+              style: textStyle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

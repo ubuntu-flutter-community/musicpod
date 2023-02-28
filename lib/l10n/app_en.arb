@@ -23,5 +23,9 @@
     "albums": "Albums",
     "genres": "Genres",
     "years": "Years",
-    "searchLocalAudioHint": "Search local audio"
+    "searchLocalAudioHint": "Search local audio",
+    "library": "Library",
+    "playlists": "Playlists",
+    "discover": "Discover",
+    "forYou": "For you"
 }
