@@ -14,5 +14,9 @@
     "createNewPlaylist" : "Create new playlist",
     "playlistDialogTitleNew": "Add playlist",
     "playlistDialogTitleEdit": "Edit playlist",
-    "save": "Save"
+    "save": "Save",
+    "title": "Title",
+    "artist": "Artist",
+    "album": "Album",
+    "searchLocalAudioHint": "Search local audio"
 }

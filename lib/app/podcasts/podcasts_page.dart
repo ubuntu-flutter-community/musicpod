@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music/app/common/search_field.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -37,11 +38,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
         )
       ],
       title: _searchActive
-          ? const SizedBox(
-              height: 35,
-              // width: 400,
-              child: TextField(),
-            )
+          ? const SearchField()
           : Center(child: Text(context.l10n.podcasts)),
     );
 

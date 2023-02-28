@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_tile.dart';
+import 'package:music/app/common/search_field.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/data/audio.dart';
 import 'package:music/data/stations.dart';
@@ -66,11 +67,7 @@ class _RadioPageState extends State<RadioPage> {
         )
       ],
       title: _searchActive
-          ? const SizedBox(
-              height: 35,
-              // width: 400,
-              child: TextField(),
-            )
+          ? const SearchField()
           : Center(child: Text(context.l10n.radio)),
     );
 

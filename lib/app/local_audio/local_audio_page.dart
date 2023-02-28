@@ -1,6 +1,7 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_list.dart';
+import 'package:music/app/common/search_field.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/tabbed_page.dart';
 import 'package:music/l10n/l10n.dart';
@@ -16,8 +17,6 @@ class LocalAudioPage extends StatefulWidget {
 }
 
 class _LocalAudioPageState extends State<LocalAudioPage> {
-  bool _searchActive = false;
-
   @override
   void initState() {
     super.initState();
@@ -63,22 +62,20 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
           padding: const EdgeInsets.only(right: 8),
           child: Center(
             child: YaruIconButton(
-              isSelected: _searchActive,
+              isSelected: localAudioModel.searchActive,
               icon: const Icon(YaruIcons.search),
               onPressed: () => setState(() {
-                _searchActive = !_searchActive;
+                localAudioModel.searchActive = !localAudioModel.searchActive;
               }),
             ),
           ),
         )
       ],
-      title: _searchActive
-          ? SizedBox(
-              height: 35,
-              child: TextField(
-                autofocus: true,
-                onChanged: (value) => localAudioModel.searchQuery = value,
-              ),
+      title: localAudioModel.searchActive
+          ? SearchField(
+              label: context.l10n.searchLocalAudioHint,
+              text: localAudioModel.searchQuery,
+              onChanged: (value) => localAudioModel.searchQuery = value,
             )
           : Center(child: Text(context.l10n.localAudio)),
     );
