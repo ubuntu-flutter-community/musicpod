@@ -48,7 +48,10 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
               // context.l10n.years,
             ],
             views: [
-              AudioList(audios: Set.from(localAudioModel.audios!)),
+              AudioList(
+                audios: Set.from(localAudioModel.audios!),
+                onAudioFilterSelected: (f) => localAudioModel.audioFilter = f,
+              ),
               const Center(),
               const Center(),
               const Center(),

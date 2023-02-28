@@ -101,8 +101,9 @@ class PlayerModel extends SafeChangeNotifier {
       position = newPosition;
     });
 
-    _audioPlayer.onPlayerComplete.listen((_) {
-      _audioPlayer.release();
+    _audioPlayer.onPlayerComplete.listen((_) async {
+      await _audioPlayer.release();
+      await _audioPlayer.stop();
     });
     notifyListeners();
   }

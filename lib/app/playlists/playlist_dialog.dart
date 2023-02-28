@@ -81,3 +81,88 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
     );
   }
 }
+
+class CreatePlaylistPage extends StatefulWidget {
+  const CreatePlaylistPage({super.key, this.name});
+  final String? name;
+
+  @override
+  State<CreatePlaylistPage> createState() => _CreatePlaylistPageState();
+}
+
+class _CreatePlaylistPageState extends State<CreatePlaylistPage> {
+  late TextEditingController _nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.name);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final model = context.watch<PlaylistModel>();
+
+    return YaruDetailPage(
+      appBar: YaruWindowTitleBar(
+        title: Text(context.l10n.createNewPlaylist),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(kYaruPagePadding),
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: 300,
+                child: TextField(
+                  autofocus: true,
+                  controller: _nameController,
+                  decoration:
+                      const InputDecoration(label: Text('Playlist name')),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: kYaruPagePadding,
+          ),
+          Wrap(
+            spacing: 10,
+            children: [
+              OutlinedButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(context.l10n.cancel),
+              ),
+              if (model.playlists.containsKey(widget.name))
+                OutlinedButton.icon(
+                  label: Text(context.l10n.deletePlaylist),
+                  icon: const Icon(YaruIcons.trash),
+                  onPressed: () {
+                    model.removePlaylist(widget.name!);
+                    Navigator.pop(context);
+                  },
+                ),
+              if (model.playlists.containsKey(widget.name))
+                ElevatedButton(
+                  onPressed: () {
+                    model.updatePlaylistName(
+                        widget.name!, _nameController.text);
+                    Navigator.pop(context);
+                  },
+                  child: Text(context.l10n.save),
+                )
+              else
+                ElevatedButton(
+                  onPressed: () {
+                    model.addPlaylist(_nameController.text, []);
+                    Navigator.pop(context);
+                  },
+                  child: Text(context.l10n.add),
+                )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}

@@ -109,6 +109,20 @@ class _AppState extends State<_App> {
               : const Icon(YaruIcons.network_cellular);
         },
       ),
+      MasterItem(
+        iconBuilder: (context, selected) {
+          return const Icon(YaruIcons.plus);
+        },
+        tileBuilder: (context) {
+          return Text(context.l10n.playlistDialogTitleNew);
+        },
+        builder: (context) {
+          return ChangeNotifierProvider.value(
+            value: playlistModel,
+            child: const CreatePlaylistPage(),
+          );
+        },
+      ),
       for (final playlist in playlistModel.playlists.entries)
         MasterItem(
           tileBuilder: (context) {
@@ -216,25 +230,7 @@ class _AppState extends State<_App> {
               children: [
                 Expanded(
                   child: YaruMasterDetailPage(
-                    appBar: YaruWindowTitleBar(
-                      titleSpacing: 0,
-                      title: SizedBox(
-                        child: YaruMasterTile(
-                          selected: false,
-                          onTap: () => showDialog(
-                            context: context,
-                            builder: (context) {
-                              return ChangeNotifierProvider.value(
-                                value: playlistModel,
-                                child: const PlaylistDialog(audios: []),
-                              );
-                            },
-                          ),
-                          leading: const Icon(YaruIcons.plus),
-                          title: Text(context.l10n.playlistDialogTitleNew),
-                        ),
-                      ),
-                    ),
+                    appBar: const YaruWindowTitleBar(),
                     bottomBar: Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: settingsTile,

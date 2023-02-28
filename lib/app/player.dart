@@ -41,7 +41,7 @@ class _PlayerState extends State<Player> {
           model.fullScreen == true
               ? YaruIcons.fullscreen_exit
               : YaruIcons.fullscreen,
-          color: model.color ?? theme.primaryColor,
+          color: theme.colorScheme.onSurface,
         ),
         isSelected: model.fullScreen == true,
         onPressed: () => model.fullScreen = !(model.fullScreen ?? false),
@@ -168,9 +168,12 @@ class _PlayerState extends State<Player> {
                       thumbShape: const RoundSliderThumbShape(
                         elevation: 4,
                       ),
-                      inactiveTrackColor: model.color?.withOpacity(0.3) ??
-                          theme.primaryColor.withOpacity(0.5),
-                      activeTrackColor: model.color ?? theme.primaryColor,
+                      inactiveTrackColor: model.color != null
+                          ? theme.colorScheme.onSurface.withOpacity(0.35)
+                          : theme.primaryColor.withOpacity(0.5),
+                      activeTrackColor: model.color != null
+                          ? theme.colorScheme.onSurface.withOpacity(0.8)
+                          : theme.primaryColor,
                       overlayColor: model.color?.withOpacity(0.3) ??
                           theme.primaryColor.withOpacity(0.5),
                     ),

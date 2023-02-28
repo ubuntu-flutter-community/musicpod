@@ -200,11 +200,11 @@ class _AudioListState extends State<AudioList> {
 
 class _HeaderElement extends StatelessWidget {
   const _HeaderElement({
-    required this.onAudioFilterSelected,
+    this.onAudioFilterSelected,
     required this.label,
   });
 
-  final void Function(AudioFilter) onAudioFilterSelected;
+  final void Function(AudioFilter)? onAudioFilterSelected;
   final String label;
 
   @override
@@ -219,7 +219,9 @@ class _HeaderElement extends StatelessWidget {
         children: [
           InkWell(
             borderRadius: BorderRadius.circular(5),
-            onTap: () => onAudioFilterSelected(AudioFilter.title),
+            onTap: onAudioFilterSelected == null
+                ? null
+                : () => onAudioFilterSelected!(AudioFilter.title),
             child: Text(
               label,
               style: textStyle,
