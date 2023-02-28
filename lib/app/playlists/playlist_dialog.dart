@@ -10,13 +10,11 @@ class PlaylistDialog extends StatefulWidget {
   const PlaylistDialog({
     super.key,
     required this.audios,
-    this.playlistExists,
-    this.onRemove,
+    this.name,
   });
 
   final List<Audio> audios;
-  final bool? playlistExists;
-  final void Function()? onRemove;
+  final String? name;
 
   @override
   State<PlaylistDialog> createState() => _PlaylistDialogState();
@@ -28,7 +26,7 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController();
+    _nameController = TextEditingController(text: widget.name);
   }
 
   @override
@@ -54,16 +52,22 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
           onPressed: () => Navigator.pop(context),
           child: Text(context.l10n.cancel),
         ),
-        if (widget.playlistExists == true)
+        if (model.playlists.containsKey(widget.name))
           OutlinedButton.icon(
             label: Text(context.l10n.deletePlaylist),
             icon: const Icon(YaruIcons.trash),
-            onPressed: widget.onRemove == null
-                ? null
-                : () {
-                    widget.onRemove!();
-                    Navigator.pop(context);
-                  },
+            onPressed: () {
+              model.removePlaylist(widget.name!);
+              Navigator.pop(context);
+            },
+          ),
+        if (model.playlists.containsKey(widget.name))
+          ElevatedButton(
+            onPressed: () {
+              model.updatePlaylistName(widget.name!, _nameController.text);
+              Navigator.pop(context);
+            },
+            child: Text(context.l10n.save),
           )
         else
           ElevatedButton(

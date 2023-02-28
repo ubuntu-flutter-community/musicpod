@@ -30,6 +30,17 @@ class PlaylistModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  void updatePlaylistName(String oldName, String newName) {
+    if (newName == oldName) return;
+    final oldList = _playlists[oldName];
+    if (oldList != null) {
+      _playlists.remove(oldName);
+      _playlists.putIfAbsent(newName, () => oldList);
+    }
+
+    notifyListeners();
+  }
+
   void removePlaylist(String name) {
     _playlists.remove(name);
     notifyListeners();

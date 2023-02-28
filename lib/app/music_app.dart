@@ -132,10 +132,8 @@ class _AppState extends State<_App> {
                             builder: (context) => ChangeNotifierProvider.value(
                               value: playlistModel,
                               child: PlaylistDialog(
-                                playlistExists: true,
+                                name: playlist.key,
                                 audios: const [],
-                                onRemove: () =>
-                                    playlistModel.removePlaylist(playlist.key),
                               ),
                             ),
                           ),

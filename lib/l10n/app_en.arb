@@ -13,5 +13,6 @@
     "deletePlaylist": "Delete playlist",
     "createNewPlaylist" : "Create new playlist",
     "playlistDialogTitleNew": "Add playlist",
-    "playlistDialogTitleEdit": "Edit playlist"
+    "playlistDialogTitleEdit": "Edit playlist",
+    "save": "Save"
 }
