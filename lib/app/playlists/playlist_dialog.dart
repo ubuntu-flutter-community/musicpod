@@ -34,7 +34,9 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
     final model = context.watch<PlaylistModel>();
     return AlertDialog(
       title: YaruDialogTitleBar(
-        title: Text(context.l10n.playlistDialogTitleNew),
+        title: model.playlists.containsKey(widget.name)
+            ? Text(context.l10n.playlistDialogTitleEdit)
+            : Text(context.l10n.playlistDialogTitleNew),
       ),
       titlePadding: EdgeInsets.zero,
       scrollable: true,
@@ -129,10 +131,6 @@ class _CreatePlaylistPageState extends State<CreatePlaylistPage> {
           Wrap(
             spacing: 10,
             children: [
-              OutlinedButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(context.l10n.cancel),
-              ),
               if (model.playlists.containsKey(widget.name))
                 OutlinedButton.icon(
                   label: Text(context.l10n.deletePlaylist),
