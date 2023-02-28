@@ -85,6 +85,7 @@ class PlayerModel extends SafeChangeNotifier {
     } else if (audio!.url != null) {
       await _audioPlayer.play(UrlSource(audio!.url!));
     }
+    loadColor();
   }
 
   Future<void> stop() async {

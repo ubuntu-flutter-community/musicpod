@@ -153,58 +153,66 @@ class _PlayerState extends State<Player> {
       ],
     );
 
-    final sliderAndTime = (model.duration != null &&
-            model.position != null &&
-            model.duration!.inMilliseconds >= model.position!.inMilliseconds &&
-            model.audio?.audioType != AudioType.radio)
-        ? Row(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(formatTime(model.position!)),
-                ],
+    bool sliderActive() =>
+        model.audio != null &&
+        model.audio!.audioType != AudioType.radio &&
+        model.duration != null &&
+        model.position != null &&
+        model.duration!.inSeconds > model.position!.inSeconds;
+
+    final sliderAndTime = Row(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(formatTime(model.position!)),
+          ],
+        ),
+        Expanded(
+          child: SizedBox(
+            height: 50,
+            child: SliderTheme(
+              data: theme.sliderTheme.copyWith(
+                thumbColor: Colors.white,
+                thumbShape: const RoundSliderThumbShape(
+                  elevation: 4,
+                ),
+                inactiveTrackColor: model.color != null
+                    ? theme.colorScheme.onSurface.withOpacity(0.35)
+                    : theme.primaryColor.withOpacity(0.5),
+                activeTrackColor: model.color != null
+                    ? theme.colorScheme.onSurface.withOpacity(0.8)
+                    : theme.primaryColor,
+                overlayColor: model.color?.withOpacity(0.3) ??
+                    theme.primaryColor.withOpacity(0.5),
               ),
-              Expanded(
-                child: SizedBox(
-                  height: 50,
-                  child: SliderTheme(
-                    data: theme.sliderTheme.copyWith(
-                      thumbColor: Colors.white,
-                      thumbShape: const RoundSliderThumbShape(
-                        elevation: 4,
-                      ),
-                      inactiveTrackColor: model.color != null
-                          ? theme.colorScheme.onSurface.withOpacity(0.35)
-                          : theme.primaryColor.withOpacity(0.5),
-                      activeTrackColor: model.color != null
-                          ? theme.colorScheme.onSurface.withOpacity(0.8)
-                          : theme.primaryColor,
-                      overlayColor: model.color?.withOpacity(0.3) ??
-                          theme.primaryColor.withOpacity(0.5),
-                    ),
-                    child: Slider(
-                      min: 0,
-                      max: model.duration?.inSeconds.toDouble() ?? 1.0,
-                      value: model.position?.inSeconds.toDouble() ?? 0,
-                      onChanged: (v) async {
+              child: Slider(
+                min: 0,
+                max: sliderActive()
+                    ? model.duration?.inSeconds.toDouble() ?? 1.0
+                    : 1.0,
+                value: sliderActive()
+                    ? model.position?.inSeconds.toDouble() ?? 0
+                    : 0,
+                onChanged: sliderActive()
+                    ? (v) async {
                         model.position = Duration(seconds: v.toInt());
                         await model.seek();
                         await model.resume();
-                      },
-                    ),
-                  ),
-                ),
+                      }
+                    : null,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(formatTime(model.duration!)),
-                ],
-              ),
-            ],
-          )
-        : const SizedBox.shrink();
+            ),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(formatTime(model.duration!)),
+          ],
+        ),
+      ],
+    );
 
     if (model.fullScreen == true) {
       return Stack(
@@ -229,6 +237,7 @@ class _PlayerState extends State<Player> {
                           child: Image.memory(
                             model.audio!.metadata!.picture!.data,
                             height: 400.0,
+                            fit: BoxFit.fitHeight,
                           ),
                         ),
                       controls,
@@ -282,11 +291,22 @@ class _PlayerState extends State<Player> {
           Row(
             children: [
               if (model.audio?.metadata?.picture != null)
-                Image.memory(
-                  filterQuality: FilterQuality.medium,
-                  fit: BoxFit.cover,
-                  model.audio!.metadata!.picture!.data,
-                  height: 120.0,
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 100),
+                  child: Image.memory(
+                    filterQuality: FilterQuality.medium,
+                    fit: BoxFit.cover,
+                    model.audio!.metadata!.picture!.data,
+                    height: 120.0,
+                  ),
+                )
+              else
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 100),
+                  child: const YaruBorderContainer(
+                    width: 120.0,
+                    height: 120.0,
+                  ),
                 ),
               Expanded(
                 child: Padding(
@@ -300,14 +320,9 @@ class _PlayerState extends State<Player> {
                         height: 50,
                         child: controls,
                       ),
-                      if (model.audio != null &&
-                          model.audio!.audioType != AudioType.radio &&
-                          model.duration != null &&
-                          model.position != null &&
-                          model.duration!.inSeconds > model.position!.inSeconds)
-                        Expanded(
-                          child: sliderAndTime,
-                        ),
+                      Expanded(
+                        child: sliderAndTime,
+                      ),
                       Expanded(
                         child: trackText,
                       ),
