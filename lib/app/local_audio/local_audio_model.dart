@@ -118,7 +118,34 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  String? guessDirectory() {
+    Map<String, String> envVars = Platform.environment;
+    final home = envVars['HOME'];
+
+    final guessMap = <String, String>{
+      'de': 'Musik',
+      'dk': 'Musik',
+      'se': 'Musik',
+      'no': 'Musikk',
+      'es': 'Música',
+      'po': 'Música',
+      'it': 'Musica',
+      'tk': 'Müzik',
+      'fr': 'Musique'
+    };
+
+    for (var guess in guessMap.entries) {
+      final path = '$home/${guess.value}';
+      if (Directory(path).existsSync()) {
+        return path;
+      }
+    }
+    return null;
+  }
+
   Future<void> init() async {
+    _directory = guessDirectory();
+
     if (_directory != null) {
       final allFileSystemEntities = Set<FileSystemEntity>.from(
         await _getFlattenedFileSystemEntities(path: directory!),

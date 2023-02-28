@@ -20,6 +20,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   @override
   void initState() {
     super.initState();
+    final model = context.read<LocalAudioModel>();
+    model.init();
   }
 
   @override
