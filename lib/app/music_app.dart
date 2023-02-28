@@ -1,3 +1,5 @@
+import 'package:avatar_glow/avatar_glow.dart';
+import 'package:collection/collection.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/app_model.dart';
@@ -63,7 +65,7 @@ class _App extends StatefulWidget {
   State<_App> createState() => _AppState();
 }
 
-class _AppState extends State<_App> {
+class _AppState extends State<_App> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final localAudioModel = context.watch<LocalAudioModel>();
@@ -176,13 +178,24 @@ class _AppState extends State<_App> {
               ),
             );
           },
-          iconBuilder: playlist.key == 'likedAudio'
-              ? (context, selected) {
-                  return selected
-                      ? const Icon(YaruIcons.heart_filled)
-                      : const Icon(YaruIcons.heart);
-                }
-              : null,
+          iconBuilder: (context, selected) {
+            if (const ListEquality()
+                .equals(playerModel.queue, playlist.value.toList())) {
+              return AvatarGlow(
+                endRadius: 12,
+                glowColor: theme.colorScheme.onSurface,
+                child: playlist.key == 'likedAudio'
+                    ? const Icon(YaruIcons.heart)
+                    : Icon(
+                        YaruIcons.radiobox,
+                        color: theme.colorScheme.onSurface,
+                      ),
+              );
+            }
+            return playlist.key == 'likedAudio'
+                ? const Icon(YaruIcons.heart)
+                : const Icon(YaruIcons.radiobox);
+          },
         ),
     ];
 
