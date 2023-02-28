@@ -73,7 +73,10 @@ class _AudioListState extends State<AudioList> {
                           .equals(playerModel.queue, widget.audios.toList())) {
                         playerModel.pause();
                       } else {
+                        playerModel.queue = widget.audios.toList();
+                        playerModel.audio = widget.audios.first;
                         playerModel.stop();
+                        playerModel.play();
                       }
                     } else {
                       if (const ListEquality()
@@ -94,7 +97,7 @@ class _AudioListState extends State<AudioList> {
                             widget.audios.toList(),
                           )
                             ? YaruIcons.media_pause
-                            : YaruIcons.media_stop)
+                            : YaruIcons.media_play)
                         : YaruIcons.media_play,
                     color: theme.colorScheme.onInverseSurface,
                   ),
