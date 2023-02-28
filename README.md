@@ -12,10 +12,11 @@ Music, Radio and Podcast player for Ubuntu made with Flutter.
 ## Planed features
 
 - [X] play local audio files
-- [ ] Filter local files
+- [X] Filter local files
 - [X] set root directory
 - [X] play internet radio streams
+- [ ] browse for radio stations
 - [ ] play and download podcasts
-- [ ] Save playlists
-- [ ] Save liked songs
+- [X] Save playlists
+- [X] Save liked songs
 - [ ] Save settings on disk
