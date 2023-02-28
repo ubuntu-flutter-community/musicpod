@@ -239,7 +239,9 @@ class _PlayerState extends State<Player> {
                             height: 400.0,
                             fit: BoxFit.fitHeight,
                           ),
-                        ),
+                        )
+                      else
+                        const YaruPlaceholderIcon(size: Size(400, 400)),
                       controls,
                       sliderAndTime,
                       trackText,
@@ -301,9 +303,12 @@ class _PlayerState extends State<Player> {
                   ),
                 )
               else
-                const SizedBox(
-                  width: 120.0,
-                  height: 120.0,
+                const Padding(
+                  padding: EdgeInsets.only(
+                    left: 10,
+                  ),
+                  child:
+                      Center(child: YaruPlaceholderIcon(size: Size(100, 100))),
                 ),
               Expanded(
                 child: Padding(
