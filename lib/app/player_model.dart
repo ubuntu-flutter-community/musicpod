@@ -75,6 +75,11 @@ class PlayerModel extends SafeChangeNotifier {
     }
   }
 
+  Future<void> stop() async {
+    await _audioPlayer.release();
+    await _audioPlayer.stop();
+  }
+
   Future<void> pause() async {
     if (audio == null) return;
     await _audioPlayer.pause();
@@ -111,7 +116,7 @@ class PlayerModel extends SafeChangeNotifier {
   Color? _color;
   void resetColor() => _color = null;
   Color? get color => _color;
-  Color? get surfaceTintColor => _color?.withOpacity(0.05);
+  Color? get surfaceTintColor => _color?.withOpacity(0.1);
 
   Future<void> loadColor() async {
     if (audio == null || audio?.path == null) return;

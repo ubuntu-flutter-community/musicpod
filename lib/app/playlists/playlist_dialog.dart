@@ -146,7 +146,9 @@ class _CreatePlaylistPageState extends State<CreatePlaylistPage> {
                 ElevatedButton(
                   onPressed: () {
                     model.updatePlaylistName(
-                        widget.name!, _nameController.text);
+                      widget.name!,
+                      _nameController.text,
+                    );
                     Navigator.pop(context);
                   },
                   child: Text(context.l10n.save),
