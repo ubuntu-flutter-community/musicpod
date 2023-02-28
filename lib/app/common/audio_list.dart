@@ -9,6 +9,7 @@ import 'package:music/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:collection/collection.dart';
 
 class AudioList extends StatefulWidget {
   const AudioList({
@@ -55,6 +56,49 @@ class _AudioListState extends State<AudioList> {
 
     return Column(
       children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
+          child: Row(
+            children: [
+              FloatingActionButton(
+                onPressed: () {
+                  if (playerModel.isPlaying) {
+                    if (const ListEquality()
+                        .equals(playerModel.queue, widget.audios.toList())) {
+                      playerModel.pause();
+                    }
+                  } else {
+                    if (const ListEquality()
+                        .equals(playerModel.queue, widget.audios.toList())) {
+                      playerModel.resume();
+                    } else {
+                      playerModel.queue = widget.audios.toList();
+                      playerModel.stop();
+                      playerModel.play();
+                    }
+                  }
+                },
+                backgroundColor: theme.colorScheme.inverseSurface,
+                foregroundColor: theme.colorScheme.onInverseSurface,
+                child: Icon(
+                  playerModel.isPlaying
+                      ? (const ListEquality()
+                              .equals(playerModel.queue, widget.audios.toList())
+                          ? YaruIcons.media_pause
+                          : YaruIcons.media_stop)
+                      : YaruIcons.media_play,
+                ),
+              ),
+              const SizedBox(
+                width: kYaruPagePadding,
+              ),
+              Text(
+                widget.listName == 'likedAudio' ? context.l10n.likedSongs : '',
+                style: theme.textTheme.headlineLarge,
+              )
+            ],
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.only(
             left: 20,

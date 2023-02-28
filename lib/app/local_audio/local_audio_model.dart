@@ -71,36 +71,36 @@ class LocalAudioModel extends SafeChangeNotifier {
       }).toList();
     }
 
-    list?.sort(
-      (a, b) {
-        if (a.metadata == null || b.metadata == null) {
-          return -1;
-        }
+    // list?.sort(
+    //   (a, b) {
+    //     if (a.metadata == null || b.metadata == null) {
+    //       return -1;
+    //     }
 
-        switch (audioFilter) {
-          case AudioFilter.album:
-            return (a.metadata!.album == null || b.metadata!.album == null)
-                ? -1
-                : a.metadata!.album!.compareTo(b.metadata!.album!);
-          case AudioFilter.artist:
-            return (a.metadata!.artist == null || b.metadata!.artist == null)
-                ? -1
-                : a.metadata!.artist!.compareTo(b.metadata!.artist!);
-          case AudioFilter.title:
-            return (a.metadata!.title == null || b.metadata!.title == null)
-                ? -1
-                : a.metadata!.title!.compareTo(b.metadata!.title!);
-          case AudioFilter.year:
-            return (a.metadata!.year == null || b.metadata!.year == null)
-                ? -1
-                : a.metadata!.year!.compareTo(b.metadata!.year!);
-          case AudioFilter.genre:
-            return (a.metadata!.genre == null || b.metadata!.genre == null)
-                ? -1
-                : a.metadata!.genre!.compareTo(b.metadata!.genre!);
-        }
-      },
-    );
+    //     switch (audioFilter) {
+    //       case AudioFilter.album:
+    //         return (a.metadata!.album == null || b.metadata!.album == null)
+    //             ? -1
+    //             : a.metadata!.album!.compareTo(b.metadata!.album!);
+    //       case AudioFilter.artist:
+    //         return (a.metadata!.artist == null || b.metadata!.artist == null)
+    //             ? -1
+    //             : a.metadata!.artist!.compareTo(b.metadata!.artist!);
+    //       case AudioFilter.title:
+    //         return (a.metadata!.title == null || b.metadata!.title == null)
+    //             ? -1
+    //             : a.metadata!.title!.compareTo(b.metadata!.title!);
+    //       case AudioFilter.year:
+    //         return (a.metadata!.year == null || b.metadata!.year == null)
+    //             ? -1
+    //             : a.metadata!.year!.compareTo(b.metadata!.year!);
+    //       case AudioFilter.genre:
+    //         return (a.metadata!.genre == null || b.metadata!.genre == null)
+    //             ? -1
+    //             : a.metadata!.genre!.compareTo(b.metadata!.genre!);
+    //     }
+    //   },
+    // );
 
     return list;
   }

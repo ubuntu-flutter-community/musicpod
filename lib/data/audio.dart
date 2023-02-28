@@ -40,12 +40,18 @@ class Audio {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Audio &&
+    if (other is Audio && other.url != null && other.url == url) {
+      return true;
+    }
+
+    if (other is Audio &&
         other.path == path &&
-        other.url == url &&
-        other.name == name &&
-        other.metadata == metadata &&
-        other.audioType == audioType;
+        other.metadata?.title == metadata?.title &&
+        other.metadata?.artist == metadata?.artist) {
+      return true;
+    }
+
+    return false;
   }
 
   @override
