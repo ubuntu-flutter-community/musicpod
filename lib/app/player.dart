@@ -301,12 +301,9 @@ class _PlayerState extends State<Player> {
                   ),
                 )
               else
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 100),
-                  child: const YaruBorderContainer(
-                    width: 120.0,
-                    height: 120.0,
-                  ),
+                const SizedBox(
+                  width: 120.0,
+                  height: 120.0,
                 ),
               Expanded(
                 child: Padding(
