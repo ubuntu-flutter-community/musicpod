@@ -57,44 +57,51 @@ class _AudioListState extends State<AudioList> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
+          padding: const EdgeInsets.symmetric(
+              horizontal: kYaruPagePadding, vertical: 10),
           child: Row(
             children: [
-              FloatingActionButton(
-                onPressed: () {
-                  if (playerModel.isPlaying) {
-                    if (const ListEquality()
-                        .equals(playerModel.queue, widget.audios.toList())) {
-                      playerModel.pause();
-                    }
-                  } else {
-                    if (const ListEquality()
-                        .equals(playerModel.queue, widget.audios.toList())) {
-                      playerModel.resume();
+              CircleAvatar(
+                child: IconButton(
+                  onPressed: () {
+                    if (playerModel.isPlaying) {
+                      if (const ListEquality()
+                          .equals(playerModel.queue, widget.audios.toList())) {
+                        playerModel.pause();
+                      }
                     } else {
-                      playerModel.queue = widget.audios.toList();
-                      playerModel.stop();
-                      playerModel.play();
+                      if (const ListEquality()
+                          .equals(playerModel.queue, widget.audios.toList())) {
+                        playerModel.resume();
+                      } else {
+                        playerModel.queue = widget.audios.toList();
+                        playerModel.audio = widget.audios.first;
+                        playerModel.stop();
+                        playerModel.play();
+                      }
                     }
-                  }
-                },
-                backgroundColor: theme.colorScheme.inverseSurface,
-                foregroundColor: theme.colorScheme.onInverseSurface,
-                child: Icon(
-                  playerModel.isPlaying
-                      ? (const ListEquality()
-                              .equals(playerModel.queue, widget.audios.toList())
-                          ? YaruIcons.media_pause
-                          : YaruIcons.media_stop)
-                      : YaruIcons.media_play,
+                  },
+                  icon: Icon(
+                    playerModel.isPlaying
+                        ? (const ListEquality().equals(
+                            playerModel.queue,
+                            widget.audios.toList(),
+                          )
+                            ? YaruIcons.media_pause
+                            : YaruIcons.media_stop)
+                        : YaruIcons.media_play,
+                  ),
                 ),
               ),
               const SizedBox(
                 width: kYaruPagePadding,
               ),
               Text(
-                widget.listName == 'likedAudio' ? context.l10n.likedSongs : '',
-                style: theme.textTheme.headlineLarge,
+                widget.listName == 'likedAudio'
+                    ? context.l10n.likedSongs
+                    : widget.listName ?? '',
+                style: theme.textTheme.headlineLarge
+                    ?.copyWith(color: theme.hintColor),
               )
             ],
           ),

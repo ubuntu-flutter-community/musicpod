@@ -51,6 +51,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             ],
             views: [
               AudioList(
+                listName: context.l10n.localAudio,
                 audios: Set.from(localAudioModel.audios!),
                 onAudioFilterSelected: (f) => localAudioModel.audioFilter = f,
               ),
