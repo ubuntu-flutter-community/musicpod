@@ -37,6 +37,14 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  Audio? _nextAudio;
+  Audio? get nextAudio => _nextAudio;
+  set nextAudio(Audio? value) {
+    if (value == null || value == _nextAudio) return;
+    _nextAudio = value;
+    notifyListeners();
+  }
+
   final AudioPlayer _audioPlayer;
 
   bool _isPlaying = false;
@@ -63,10 +71,10 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  bool? _repeatSingle;
-  bool? get repeatSingle => _repeatSingle;
-  set repeatSingle(bool? value) {
-    if (value == null || value == _repeatSingle) return;
+  bool _repeatSingle = false;
+  bool get repeatSingle => _repeatSingle;
+  set repeatSingle(bool value) {
+    if (value == _repeatSingle) return;
     _repeatSingle = value;
     notifyListeners();
   }
@@ -74,9 +82,6 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> play() async {
     if (audio!.path != null) {
       await _audioPlayer.play(DeviceFileSource(audio!.path!));
-      if (audio!.audioType != AudioType.radio) {
-        repeatSingle = _repeatSingle ?? false;
-      }
     } else if (audio!.url != null) {
       await _audioPlayer.play(UrlSource(audio!.url!));
     }
@@ -111,20 +116,55 @@ class PlayerModel extends SafeChangeNotifier {
     });
     _audioPlayer.onPositionChanged.listen((newPosition) {
       position = newPosition;
+      estimateNext();
     });
 
     _audioPlayer.onPlayerComplete.listen((_) async {
-      await _audioPlayer.release();
-      await _audioPlayer.stop();
-      if (queue?.isNotEmpty == true) {
-        if (audio == null || queue?.indexOf(audio!) == null) return;
-        final index = queue?.indexOf(audio!);
-        audio = queue?.elementAt(index! + 1) ?? queue?.elementAt(0);
-        if (audio == null) return;
-        await play();
+      if (_repeatSingle == true) {
+        _audioPlayer.seek(Duration.zero);
+        await _audioPlayer.resume();
+      } else {
+        playNext();
       }
     });
     notifyListeners();
+  }
+
+  Future<void> playNext() async {
+    estimateNext();
+    if (nextAudio == null) return;
+    audio = nextAudio;
+
+    await _audioPlayer.release();
+    await _audioPlayer.stop();
+    await play();
+  }
+
+  void estimateNext() {
+    if (queue?.isNotEmpty == true && audio != null && queue!.contains(audio)) {
+      final currentIndex = queue!.indexOf(audio!);
+
+      if (currentIndex == queue!.length - 1) {
+        nextAudio = queue!.elementAt(0);
+      } else {
+        nextAudio = queue?.elementAt(currentIndex + 1);
+      }
+    }
+  }
+
+  Future<void> playPrevious() async {
+    if (queue?.isNotEmpty == true && audio != null && queue!.contains(audio)) {
+      final currentIndex = queue!.indexOf(audio!);
+
+      nextAudio = queue?.elementAt(currentIndex - 1);
+
+      if (nextAudio == null) return;
+      audio = nextAudio;
+
+      await _audioPlayer.release();
+      await _audioPlayer.stop();
+      await play();
+    }
   }
 
   Color? _color;

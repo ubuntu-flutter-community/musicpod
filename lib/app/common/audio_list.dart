@@ -57,17 +57,23 @@ class _AudioListState extends State<AudioList> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: kYaruPagePadding, vertical: 10),
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: 15,
+          ),
           child: Row(
             children: [
               CircleAvatar(
+                backgroundColor: theme.colorScheme.inverseSurface,
                 child: IconButton(
                   onPressed: () {
                     if (playerModel.isPlaying) {
                       if (const ListEquality()
                           .equals(playerModel.queue, widget.audios.toList())) {
                         playerModel.pause();
+                      } else {
+                        playerModel.stop();
                       }
                     } else {
                       if (const ListEquality()
@@ -90,6 +96,7 @@ class _AudioListState extends State<AudioList> {
                             ? YaruIcons.media_pause
                             : YaruIcons.media_stop)
                         : YaruIcons.media_play,
+                    color: theme.colorScheme.onInverseSurface,
                   ),
                 ),
               ),
@@ -97,11 +104,9 @@ class _AudioListState extends State<AudioList> {
                 width: kYaruPagePadding,
               ),
               Text(
-                widget.listName == 'likedAudio'
-                    ? context.l10n.likedSongs
-                    : widget.listName ?? '',
-                style: theme.textTheme.headlineLarge
-                    ?.copyWith(color: theme.hintColor),
+                '${widget.listName == 'likedAudio' ? context.l10n.likedSongs : widget.listName ?? ''}  •  ${widget.audios.length} ${context.l10n.titles}',
+                style: theme.textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.w100),
               )
             ],
           ),

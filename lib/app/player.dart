@@ -65,10 +65,11 @@ class _PlayerState extends State<Player> {
           padding: EdgeInsets.only(left: 10),
           child: YaruIconButton(icon: Icon(YaruIcons.shuffle)),
         ),
-        const Padding(
-          padding: EdgeInsets.only(left: 10),
+        Padding(
+          padding: const EdgeInsets.only(left: 10),
           child: YaruIconButton(
-            icon: Icon(YaruIcons.skip_backward),
+            onPressed: () => model.playPrevious(),
+            icon: const Icon(YaruIcons.skip_backward),
           ),
         ),
         Padding(
@@ -92,33 +93,38 @@ class _PlayerState extends State<Player> {
             ),
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.only(right: 10),
+        Padding(
+          padding: const EdgeInsets.only(right: 10),
           child: YaruIconButton(
-            icon: Icon(YaruIcons.skip_forward),
+            onPressed: () => model.playNext(),
+            icon: const Icon(YaruIcons.skip_forward),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(right: 10),
           child: YaruIconButton(
-            icon: const Icon(YaruIcons.repeat),
+            icon: Icon(
+              YaruIcons.repeat,
+              color: theme.colorScheme.onSurface,
+            ),
             isSelected: model.repeatSingle == true,
-            onPressed: model.repeatSingle == null
-                ? null
-                : () => model.repeatSingle = !model.repeatSingle!,
+            onPressed: () => model.repeatSingle = !(model.repeatSingle),
           ),
         ),
-        const YaruIconButton(
-          icon: Icon(YaruIcons.media_stop),
-          onPressed: null,
+        YaruIconButton(
+          icon: const Icon(YaruIcons.media_stop),
+          onPressed: () => model.stop(),
         )
       ],
     );
 
     final trackText = Wrap(
+      direction: model.fullScreen == true ? Axis.vertical : Axis.horizontal,
       alignment: WrapAlignment.center,
       runAlignment: WrapAlignment.center,
-      spacing: model.fullScreen == true ? 40 : 10,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: model.fullScreen == true ? 0 : 10,
+      runSpacing: 20,
       children: [
         Text(
           model.audio?.metadata?.title ?? model.audio?.name ?? '',
@@ -137,7 +143,7 @@ class _PlayerState extends State<Player> {
           style: TextStyle(
             fontWeight:
                 model.fullScreen == true ? FontWeight.w100 : FontWeight.w400,
-            fontSize: model.fullScreen == true ? 45 : 15,
+            fontSize: model.fullScreen == true ? 25 : 15,
             color: model.fullScreen == true
                 ? theme.colorScheme.onSurface.withOpacity(0.7)
                 : null,
@@ -215,14 +221,14 @@ class _PlayerState extends State<Player> {
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       if (model.audio?.metadata?.picture != null)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.memory(
                             model.audio!.metadata!.picture!.data,
-                            width: 400.0,
+                            height: 400.0,
                           ),
                         ),
                       controls,
@@ -238,6 +244,31 @@ class _PlayerState extends State<Player> {
             padding: const EdgeInsets.all(kYaruPagePadding),
             child: fullScreenButton,
           ),
+          if (model.nextAudio?.metadata?.title != null &&
+              model.nextAudio?.metadata?.artist != null)
+            Positioned(
+              left: 10,
+              bottom: 10,
+              child: YaruBorderContainer(
+                color: theme.cardColor,
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Up next',
+                      style: theme.textTheme.labelSmall,
+                    ),
+                    Text(
+                      '${model.nextAudio!.metadata!.artist!} • ${model.nextAudio!.metadata!.title!}',
+                      style: theme.textTheme.labelMedium
+                          ?.copyWith(color: theme.colorScheme.onSurface),
+                    )
+                  ],
+                ),
+              ),
+            )
         ],
       );
     }

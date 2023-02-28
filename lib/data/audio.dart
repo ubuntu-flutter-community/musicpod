@@ -44,10 +44,7 @@ class Audio {
       return true;
     }
 
-    if (other is Audio &&
-        other.path == path &&
-        other.metadata?.title == metadata?.title &&
-        other.metadata?.artist == metadata?.artist) {
+    if (other is Audio && other.path == path) {
       return true;
     }
 
