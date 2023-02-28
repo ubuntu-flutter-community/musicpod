@@ -1,5 +1,6 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:music/app/app_model.dart';
 import 'package:music/app/common/audio_list.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/local_audio/local_audio_page.dart';
@@ -51,7 +52,8 @@ class _App extends StatefulWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => PlaylistModel()..init(),
-        )
+        ),
+        ChangeNotifierProvider(create: (_) => AppModel())
       ],
       child: const _App(),
     );
@@ -67,6 +69,7 @@ class _AppState extends State<_App> {
     final localAudioModel = context.watch<LocalAudioModel>();
     final playerModel = context.watch<PlayerModel>();
     final playlistModel = context.watch<PlaylistModel>();
+    final appModel = context.watch<AppModel>();
     final theme = Theme.of(context);
 
     final masterItems = [
@@ -230,6 +233,7 @@ class _AppState extends State<_App> {
               children: [
                 Expanded(
                   child: YaruMasterDetailPage(
+                    onSelected: (value) => appModel.index = value ?? 0,
                     appBar: const YaruWindowTitleBar(),
                     bottomBar: Padding(
                       padding: const EdgeInsets.only(bottom: 10),
@@ -241,7 +245,7 @@ class _AppState extends State<_App> {
                       minPageWidth: kYaruMasterDetailBreakpoint / 2,
                     ),
                     length: masterItems.length,
-                    initialIndex: 0,
+                    initialIndex: appModel.index,
                     tileBuilder: (context, index, selected) {
                       final tile = YaruMasterTile(
                         title: masterItems[index].tileBuilder(context),
