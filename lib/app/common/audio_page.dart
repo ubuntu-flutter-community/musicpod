@@ -66,29 +66,30 @@ class AudioPage extends StatelessWidget {
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  context.l10n.album,
-                                  style: theme.textTheme.labelSmall,
-                                ),
-                                Text(
-                                  audios.firstOrNull!.metadata!.album ?? '',
-                                  style: theme.textTheme.displaySmall?.copyWith(
-                                    fontWeight: FontWeight.w100,
-                                    color: theme.hintColor,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
+                            Text(
+                              context.l10n.album,
+                              style: theme.textTheme.labelSmall,
+                            ),
+                            Text(
+                              audios.firstOrNull!.metadata!.album ?? '',
+                              style: theme.textTheme.headlineLarge?.copyWith(
+                                fontWeight: FontWeight.w100,
+                                // color: theme.hintColor,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(
+                              height: 5,
                             ),
                             Text(
                               audios.firstOrNull?.metadata?.artist ?? '',
-                              style: theme.textTheme.labelLarge,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.hintColor,
+                                fontWeight: FontWeight.w200,
+                                fontStyle: FontStyle.italic,
+                              ),
                             )
                           ],
                         ),
