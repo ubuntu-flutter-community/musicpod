@@ -85,6 +85,7 @@ class _SearchFieldState extends State<SearchField> {
           (context, textEditingController, focusNode, onFieldSubmitted) {
         return SizedBox(
           height: 35,
+          width: 400,
           child: TextField(
             controller: textEditingController,
             focusNode: focusNode,
@@ -139,6 +140,7 @@ class _SearchFieldState extends State<SearchField> {
             );
 
             return AudioPage(
+              audioPageType: AudioPageType.albumList,
               editableName: false,
               audios: album?.isNotEmpty == true ? Set.from(album!) : {audio},
               pageName: audio.metadata?.album ?? audio.metadata?.title ?? '',

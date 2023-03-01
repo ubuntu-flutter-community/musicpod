@@ -1,7 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_list.dart';
 import 'package:music/app/common/search_field.dart';
 import 'package:music/data/audio.dart';
+import 'package:music/l10n/l10n.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AudioPage extends StatelessWidget {
@@ -10,11 +13,13 @@ class AudioPage extends StatelessWidget {
     required this.audios,
     required this.pageName,
     this.editableName = true,
+    this.audioPageType = AudioPageType.list,
   });
 
   final Set<Audio> audios;
   final String pageName;
   final bool editableName;
+  final AudioPageType audioPageType;
 
   @override
   Widget build(BuildContext context) {
@@ -33,14 +38,95 @@ class AudioPage extends StatelessWidget {
                 width: 40,
               ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: AudioList(
-          audios: audios,
-          listName: pageName,
-          editableName: editableName,
-        ),
+      body: Column(
+        children: [
+          if (audioPageType == AudioPageType.albumList)
+            FutureBuilder<Color?>(
+              future: getColor(audios.firstOrNull),
+              builder: (context, snapshot) {
+                return Container(
+                  height: 240,
+                  color: snapshot.data ?? theme.cardColor,
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (audios.firstOrNull?.metadata?.picture != null)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 20),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.memory(
+                              audios.firstOrNull!.metadata!.picture!.data,
+                              width: 200.0,
+                              fit: BoxFit.fitWidth,
+                            ),
+                          ),
+                        ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  context.l10n.album,
+                                  style: theme.textTheme.labelSmall,
+                                ),
+                                Text(
+                                  audios.firstOrNull!.metadata!.album ?? '',
+                                  style: theme.textTheme.displaySmall?.copyWith(
+                                    fontWeight: FontWeight.w100,
+                                    color: theme.hintColor,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                            Text(
+                              audios.firstOrNull?.metadata?.artist ?? '',
+                              style: theme.textTheme.labelLarge,
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: AudioList(
+                audios: audios,
+                listName: pageName,
+                editableName: editableName,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
+}
+
+enum AudioPageType {
+  albumList,
+  list,
+  grid,
+  artistGrid,
+}
+
+Future<Color?> getColor(Audio? audio) async {
+  if (audio == null || audio.path == null) return null;
+
+  final image = MemoryImage(
+    audio.metadata!.picture!.data,
+  );
+  final generator = await PaletteGenerator.fromImageProvider(image);
+  return generator.dominantColor?.color.withOpacity(0.1);
 }
