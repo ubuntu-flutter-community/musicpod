@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/data/audio.dart';
-import 'package:music/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
