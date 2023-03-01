@@ -13,7 +13,7 @@ class PlaylistDialog extends StatefulWidget {
     this.name,
   });
 
-  final List<Audio> audios;
+  final Set<Audio> audios;
   final String? name;
 
   @override
@@ -154,7 +154,7 @@ class _CreatePlaylistPageState extends State<CreatePlaylistPage> {
               else
                 ElevatedButton(
                   onPressed: () {
-                    model.addPlaylist(_nameController.text, []);
+                    model.addPlaylist(_nameController.text, {});
                     Navigator.pop(context);
                   },
                   child: Text(context.l10n.add),

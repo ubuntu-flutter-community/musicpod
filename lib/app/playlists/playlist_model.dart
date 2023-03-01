@@ -44,8 +44,8 @@ class PlaylistModel extends SafeChangeNotifier {
   Map<String, Set<Audio>> get playlists => _playlists;
   List<Audio> getPlaylistAt(int index) =>
       _playlists.entries.elementAt(index).value.toList();
-  void addPlaylist(String name, List<Audio> audios) {
-    _playlists.putIfAbsent(name, () => Set.from(audios));
+  void addPlaylist(String name, Set<Audio> audios) {
+    _playlists.putIfAbsent(name, () => audios);
     notifyListeners();
   }
 

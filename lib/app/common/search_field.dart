@@ -92,42 +92,12 @@ class _SearchFieldState extends State<SearchField> {
       },
       optionsBuilder: (textEditingValue) {
         return widget.audios.where((a) {
-          if (a.url != null) {
+          if (a.toString().toLowerCase().contains(
+                textEditingValue.text.replaceAll(' ', '').toLowerCase(),
+              )) {
             return true;
           }
-
-          if (a.metadata == null) {
-            return false;
-          } else {
-            if (a.metadata?.title == null) {
-              return false;
-            } else {
-              if (a.metadata!.title!
-                  .toLowerCase()
-                  .contains(textEditingValue.text.toLowerCase())) {
-                return true;
-              }
-            }
-            if (a.metadata?.artist == null) {
-              return false;
-            } else {
-              if (a.metadata!.artist!
-                  .toLowerCase()
-                  .contains(textEditingValue.text.toLowerCase())) {
-                return true;
-              }
-            }
-            if (a.metadata?.album == null) {
-              return false;
-            } else {
-              if (a.metadata!.album!
-                  .toLowerCase()
-                  .contains(textEditingValue.text.toLowerCase())) {
-                return true;
-              }
-              return false;
-            }
-          }
+          return false;
         }).toList();
       },
       onSelected: (audio) => Navigator.of(context).push(

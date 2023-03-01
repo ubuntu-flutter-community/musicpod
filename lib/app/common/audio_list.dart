@@ -118,7 +118,7 @@ class _AudioListState extends State<AudioList> {
                                 return ChangeNotifierProvider.value(
                                   value: playlistModel,
                                   child: PlaylistDialog(
-                                    audios: [audio],
+                                    audios: {audio},
                                   ),
                                 );
                               },
@@ -239,7 +239,7 @@ class _AudioListControlPanel extends StatelessWidget {
                 value: playlistModel,
                 child: PlaylistDialog(
                   name: listName,
-                  audios: const [],
+                  audios: audios,
                 ),
               ),
             ),

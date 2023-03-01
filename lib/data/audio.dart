@@ -33,7 +33,17 @@ class Audio {
 
   @override
   String toString() {
-    return 'Audio(path: $path, url: $url, name: $name, metadata: $metadata, audioType: $audioType)';
+    String? stringFromMetadata;
+    if (metadata != null) {
+      stringFromMetadata =
+          '${metadata!.artist?.isNotEmpty == true ? metadata!.artist : ''}${metadata!.title?.isNotEmpty == true ? metadata!.title : ''}${metadata!.album?.isNotEmpty == true ? metadata!.album : ''}';
+    }
+
+    return stringFromMetadata?.isNotEmpty == true
+        ? stringFromMetadata!
+        : path ??
+            url ??
+            'Audio(path: $path, url: $url, name: $name, metadata: $metadata, audioType: $audioType)';
   }
 
   @override

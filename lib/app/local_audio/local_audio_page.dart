@@ -54,7 +54,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                 padding: const EdgeInsets.only(top: 20),
                 child: AudioList(
                   listName: context.l10n.localAudio,
-                  audios: Set.from(localAudioModel.audios!),
+                  audios: localAudioModel.audios!,
                   onAudioFilterSelected: (f) => localAudioModel.audioFilter = f,
                 ),
               ),
