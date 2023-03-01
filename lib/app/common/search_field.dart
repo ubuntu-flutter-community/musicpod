@@ -26,6 +26,7 @@ class _SearchFieldState extends State<SearchField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
+
     return SizedBox(
       height: 35,
       child: TextField(

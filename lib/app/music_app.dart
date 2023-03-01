@@ -1,9 +1,8 @@
 import 'package:avatar_glow/avatar_glow.dart';
-import 'package:collection/collection.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/app_model.dart';
-import 'package:music/app/common/audio_list.dart';
+import 'package:music/app/common/audio_page.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/local_audio/local_audio_page.dart';
 import 'package:music/app/player.dart';
@@ -12,8 +11,8 @@ import 'package:music/app/playlists/playlist_dialog.dart';
 import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/app/podcasts/podcasts_page.dart';
 import 'package:music/app/radio/radio_page.dart';
-import 'package:music/data/audio.dart';
 import 'package:music/l10n/l10n.dart';
+import 'package:music/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -131,56 +130,13 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
       for (final playlist in playlistModel.playlists.entries)
         MasterItem(
           tileBuilder: (context) {
-            return Text(_createPlaylistName(playlist, context));
+            return Text(createPlaylistName(playlist.key, context));
           },
           builder: (context) {
-            return YaruDetailPage(
-              backgroundColor: theme.brightness == Brightness.dark
-                  ? const Color.fromARGB(255, 37, 37, 37)
-                  : Colors.white,
-              appBar: YaruWindowTitleBar(
-                title: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (playlist.key != 'likedAudio')
-                      Center(
-                        child: YaruIconButton(
-                          icon: const Icon(YaruIcons.pen),
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (context) => ChangeNotifierProvider.value(
-                              value: playlistModel,
-                              child: PlaylistDialog(
-                                name: playlist.key,
-                                audios: const [],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    Text(
-                      _createPlaylistName(playlist, context),
-                    ),
-                  ],
-                ),
-                leading: Navigator.canPop(context)
-                    ? const YaruBackButton(
-                        style: YaruBackButtonStyle.rounded,
-                      )
-                    : const SizedBox(
-                        width: 40,
-                      ),
-              ),
-              body: Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child:
-                    AudioList(audios: playlist.value, listName: playlist.key),
-              ),
-            );
+            return AudioPage(audios: playlist.value, pageName: playlist.key);
           },
           iconBuilder: (context, selected) {
-            if (const ListEquality()
-                .equals(playerModel.queue, playlist.value.toList())) {
+            if (listsAreEqual(playerModel.queue, playlist.value.toList())) {
               return AvatarGlow(
                 endRadius: 12,
                 glowColor: theme.colorScheme.onSurface,
@@ -297,15 +253,6 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               ],
             ),
     );
-  }
-
-  String _createPlaylistName(
-    MapEntry<String, Set<Audio>> playlist,
-    BuildContext context,
-  ) {
-    return playlist.key == 'likedAudio'
-        ? context.l10n.likedSongs
-        : playlist.key;
   }
 }
 

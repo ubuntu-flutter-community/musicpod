@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_tile.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
@@ -7,6 +6,7 @@ import 'package:music/app/playlists/playlist_dialog.dart';
 import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/data/audio.dart';
 import 'package:music/l10n/l10n.dart';
+import 'package:music/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -181,8 +181,7 @@ class _AudioListControlPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final playerModel = context.watch<PlayerModel>();
     final theme = Theme.of(context);
-    final listIsQueue =
-        const ListEquality().equals(playerModel.queue, audios.toList());
+    final listIsQueue = listsAreEqual(playerModel.queue, audios.toList());
     return Row(
       children: [
         CircleAvatar(
