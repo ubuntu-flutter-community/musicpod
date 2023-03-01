@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_tile.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
@@ -9,7 +10,6 @@ import 'package:music/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
-import 'package:collection/collection.dart';
 
 class AudioList extends StatefulWidget {
   const AudioList({
@@ -69,118 +69,17 @@ class _AudioListState extends State<AudioList> {
             right: 20,
             bottom: 15,
           ),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: theme.colorScheme.inverseSurface,
-                child: IconButton(
-                  onPressed: () {
-                    if (playerModel.isPlaying) {
-                      if (const ListEquality()
-                          .equals(playerModel.queue, widget.audios.toList())) {
-                        playerModel.pause();
-                      } else {
-                        playerModel.queue = widget.audios.toList();
-                        playerModel.audio = widget.audios.first;
-                        playerModel.stop();
-                        playerModel.play();
-                      }
-                    } else {
-                      if (const ListEquality()
-                          .equals(playerModel.queue, widget.audios.toList())) {
-                        playerModel.resume();
-                      } else {
-                        playerModel.queue = widget.audios.toList();
-                        playerModel.audio = widget.audios.first;
-                        playerModel.stop();
-                        playerModel.play();
-                      }
-                    }
-                  },
-                  icon: Icon(
-                    playerModel.isPlaying
-                        ? (const ListEquality().equals(
-                            playerModel.queue,
-                            widget.audios.toList(),
-                          )
-                            ? YaruIcons.media_pause
-                            : YaruIcons.media_play)
-                        : YaruIcons.media_play,
-                    color: theme.colorScheme.onInverseSurface,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: kYaruPagePadding,
-              ),
-              Expanded(
-                child: Text(
-                  '${widget.listName == 'likedAudio' ? context.l10n.likedSongs : widget.listName ?? ''}  •  ${widget.audios.length} ${context.l10n.titles}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.w100),
-                ),
-              )
-            ],
+          child: _AudioListControlPanel(
+            audios: widget.audios,
+            listName: widget.listName,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(
+        const Padding(
+          padding: EdgeInsets.only(
             left: 20,
             right: 20,
           ),
-          child: ListTile(
-            contentPadding: const EdgeInsets.only(left: 8, right: 4),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(kYaruButtonRadius),
-            ),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _HeaderElement(
-                  onAudioFilterSelected: widget.onAudioFilterSelected == null
-                      ? null
-                      : (_) => widget.onAudioFilterSelected!(AudioFilter.title),
-                  label: context.l10n.title,
-                ),
-                _HeaderElement(
-                  onAudioFilterSelected: widget.onAudioFilterSelected == null
-                      ? null
-                      : (_) =>
-                          widget.onAudioFilterSelected!(AudioFilter.artist),
-                  label: context.l10n.artist,
-                ),
-                _HeaderElement(
-                  onAudioFilterSelected: widget.onAudioFilterSelected == null
-                      ? null
-                      : (_) => widget.onAudioFilterSelected!(AudioFilter.album),
-                  label: context.l10n.album,
-                ),
-              ],
-            ),
-            trailing: YaruPopupMenuButton<AudioFilter>(
-              initialValue: widget.audioFilter,
-              onSelected: widget.onAudioFilterSelected,
-              style: TextButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  side: BorderSide.none,
-                  borderRadius: BorderRadius.circular(kYaruButtonRadius),
-                ),
-              ),
-              child: Icon(
-                YaruIcons.ordered_list,
-                color: theme.colorScheme.onSurface,
-              ),
-              itemBuilder: (a) => [
-                for (final filter in AudioFilter.values)
-                  PopupMenuItem(
-                    value: filter,
-                    child: Text(filter.name),
-                  )
-              ],
-            ),
-          ),
+          child: _AudioListHeader(),
         ),
         Expanded(
           child: ListView.builder(
@@ -268,6 +167,117 @@ class _AudioListState extends State<AudioList> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _AudioListControlPanel extends StatelessWidget {
+  const _AudioListControlPanel({required this.audios, this.listName});
+
+  final Set<Audio> audios;
+  final String? listName;
+
+  @override
+  Widget build(BuildContext context) {
+    final playerModel = context.watch<PlayerModel>();
+    final theme = Theme.of(context);
+    final listIsQueue =
+        const ListEquality().equals(playerModel.queue, audios.toList());
+    return Row(
+      children: [
+        CircleAvatar(
+          backgroundColor: theme.colorScheme.inverseSurface,
+          child: IconButton(
+            onPressed: () {
+              if (playerModel.isPlaying) {
+                if (listIsQueue) {
+                  playerModel.pause();
+                } else {
+                  playerModel.startPlaylist(audios);
+                }
+              } else {
+                if (listIsQueue) {
+                  playerModel.resume();
+                } else {
+                  playerModel.startPlaylist(audios);
+                }
+              }
+            },
+            icon: Icon(
+              playerModel.isPlaying && listIsQueue
+                  ? YaruIcons.media_pause
+                  : YaruIcons.media_play,
+              color: theme.colorScheme.onInverseSurface,
+            ),
+          ),
+        ),
+        const SizedBox(
+          width: kYaruPagePadding,
+        ),
+        Expanded(
+          child: Text(
+            '${listName == 'likedAudio' ? context.l10n.likedSongs : listName ?? ''}  •  ${audios.length} ${context.l10n.titles}',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.headlineSmall
+                ?.copyWith(fontWeight: FontWeight.w100),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class _AudioListHeader extends StatelessWidget {
+  const _AudioListHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 8, right: 4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(kYaruButtonRadius),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _HeaderElement(
+            onAudioFilterSelected: (p0) {},
+            label: context.l10n.title,
+          ),
+          _HeaderElement(
+            onAudioFilterSelected: (p0) {},
+            label: context.l10n.artist,
+          ),
+          _HeaderElement(
+            onAudioFilterSelected: (p0) {},
+            label: context.l10n.album,
+          ),
+        ],
+      ),
+      trailing: YaruPopupMenuButton<AudioFilter>(
+        // initialValue: widget.audioFilter,
+        // onSelected: widget.onAudioFilterSelected,
+        style: TextButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            side: BorderSide.none,
+            borderRadius: BorderRadius.circular(kYaruButtonRadius),
+          ),
+        ),
+        child: Icon(
+          YaruIcons.ordered_list,
+          color: theme.colorScheme.onSurface,
+        ),
+        itemBuilder: (a) => [
+          for (final filter in AudioFilter.values)
+            PopupMenuItem(
+              value: filter,
+              child: Text(filter.name),
+            )
+        ],
+      ),
     );
   }
 }

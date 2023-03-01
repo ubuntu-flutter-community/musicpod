@@ -172,6 +172,13 @@ class PlayerModel extends SafeChangeNotifier {
     }
   }
 
+  Future<void> startPlaylist(Set<Audio> audios) async {
+    queue = audios.toList();
+    audio = audios.first;
+    await stop();
+    await play();
+  }
+
   Color? _color;
   void resetColor() => _color = null;
   Color? get color => _color;
