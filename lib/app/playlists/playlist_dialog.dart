@@ -30,6 +30,12 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
   }
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final model = context.watch<PlaylistModel>();
     return AlertDialog(
@@ -102,6 +108,12 @@ class _CreatePlaylistPageState extends State<CreatePlaylistPage> {
   }
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final model = context.watch<PlaylistModel>();
 
@@ -137,7 +149,6 @@ class _CreatePlaylistPageState extends State<CreatePlaylistPage> {
                   icon: const Icon(YaruIcons.trash),
                   onPressed: () {
                     model.removePlaylist(widget.name!);
-                    Navigator.pop(context);
                   },
                 ),
               if (model.playlists.containsKey(widget.name))
@@ -147,15 +158,14 @@ class _CreatePlaylistPageState extends State<CreatePlaylistPage> {
                       widget.name!,
                       _nameController.text,
                     );
-                    Navigator.pop(context);
                   },
                   child: Text(context.l10n.save),
                 )
               else
                 ElevatedButton(
                   onPressed: () {
+                    if (_nameController.text.isEmpty) return;
                     model.addPlaylist(_nameController.text, {});
-                    Navigator.pop(context);
                   },
                   child: Text(context.l10n.add),
                 )

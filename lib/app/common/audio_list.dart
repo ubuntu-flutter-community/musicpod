@@ -56,6 +56,12 @@ class _AudioListState extends State<AudioList> {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final playerModel = context.watch<PlayerModel>();
     final playlistModel = context.watch<PlaylistModel>();

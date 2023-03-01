@@ -48,16 +48,22 @@ class TabbedPage extends StatefulWidget {
 }
 
 class _TabbedPageState extends State<TabbedPage> with TickerProviderStateMixin {
-  late TabController tabController;
+  late TabController _tabController;
 
   @override
   void initState() {
-    tabController = TabController(
+    super.initState();
+    _tabController = TabController(
       initialIndex: widget.initialIndex,
       length: widget.views.length,
       vsync: this,
     );
-    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -78,7 +84,7 @@ class _TabbedPageState extends State<TabbedPage> with TickerProviderStateMixin {
                   .copyWith(fontWeight: FontWeight.w100),
               // indicatorColor: Colors.transparent,
               dividerColor: Colors.transparent,
-              controller: tabController,
+              controller: _tabController,
               splashBorderRadius: BorderRadius.circular(kYaruContainerRadius),
               onTap: widget.onTap,
               tabs: [
@@ -93,7 +99,7 @@ class _TabbedPageState extends State<TabbedPage> with TickerProviderStateMixin {
         ),
         Expanded(
           child: TabBarView(
-            controller: tabController,
+            controller: _tabController,
             children: widget.views,
           ),
         ),
