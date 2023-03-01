@@ -190,53 +190,37 @@ class _AudioListControlPanel extends StatelessWidget {
     final theme = Theme.of(context);
     final listIsQueue = listsAreEqual(playerModel.queue, audios.toList());
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: theme.colorScheme.inverseSurface,
-                child: IconButton(
-                  onPressed: () {
-                    if (playerModel.isPlaying) {
-                      if (listIsQueue) {
-                        playerModel.pause();
-                      } else {
-                        playerModel.startPlaylist(audios);
-                      }
-                    } else {
-                      if (listIsQueue) {
-                        playerModel.resume();
-                      } else {
-                        playerModel.startPlaylist(audios);
-                      }
-                    }
-                  },
-                  icon: Icon(
-                    playerModel.isPlaying && listIsQueue
-                        ? YaruIcons.media_pause
-                        : YaruIcons.media_play,
-                    color: theme.colorScheme.onInverseSurface,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: kYaruPagePadding,
-              ),
-              Expanded(
-                child: Text(
-                  '${listName == 'likedAudio' ? context.l10n.likedSongs : listName ?? ''}  •  ${audios.length} ${context.l10n.titles}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.w100),
-                ),
-              )
-            ],
+        CircleAvatar(
+          backgroundColor: theme.colorScheme.inverseSurface,
+          child: IconButton(
+            onPressed: () {
+              if (playerModel.isPlaying) {
+                if (listIsQueue) {
+                  playerModel.pause();
+                } else {
+                  playerModel.startPlaylist(audios);
+                }
+              } else {
+                if (listIsQueue) {
+                  playerModel.resume();
+                } else {
+                  playerModel.startPlaylist(audios);
+                }
+              }
+            },
+            icon: Icon(
+              playerModel.isPlaying && listIsQueue
+                  ? YaruIcons.media_pause
+                  : YaruIcons.media_play,
+              color: theme.colorScheme.onInverseSurface,
+            ),
           ),
         ),
-        if (listName != 'likedAudio')
+        const SizedBox(
+          width: kYaruPagePadding,
+        ),
+        if (listName != 'likedAudio' && listName != context.l10n.localAudio)
           YaruIconButton(
             icon: const Icon(YaruIcons.pen),
             onPressed: () => showDialog(
@@ -250,6 +234,15 @@ class _AudioListControlPanel extends StatelessWidget {
               ),
             ),
           ),
+        Expanded(
+          child: Text(
+            '${listName == 'likedAudio' ? context.l10n.likedSongs : listName ?? ''}  •  ${audios.length} ${context.l10n.titles}',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.headlineSmall
+                ?.copyWith(fontWeight: FontWeight.w100),
+          ),
+        ),
       ],
     );
   }

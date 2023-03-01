@@ -38,9 +38,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
         )
       ],
       title: _searchActive
-          ? const SearchField(
-              audios: {},
-            )
+          ? const SearchField()
           : Center(child: Text(context.l10n.podcasts)),
     );
 

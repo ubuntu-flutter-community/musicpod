@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_page.dart';
+import 'package:music/app/local_audio/local_audio_model.dart';
+import 'package:music/data/stations.dart';
+import 'package:music/l10n/l10n.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -8,12 +12,7 @@ import '../../data/audio.dart';
 class SearchField extends StatefulWidget {
   const SearchField({
     super.key,
-    this.label,
-    required this.audios,
   });
-
-  final String? label;
-  final Set<Audio> audios;
 
   @override
   State<SearchField> createState() => _SearchFieldState();
@@ -24,6 +23,7 @@ class _SearchFieldState extends State<SearchField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
+    final localAudioModel = context.watch<LocalAudioModel>();
 
     final autoComplete = Autocomplete<Audio>(
       optionsViewBuilder: (context, onSelected, audios) {
@@ -75,7 +75,7 @@ class _SearchFieldState extends State<SearchField> {
             focusNode: focusNode,
             autofocus: true,
             decoration: InputDecoration(
-              hintText: widget.label == null ? null : widget.label!,
+              hintText: context.l10n.search,
               contentPadding: const EdgeInsets.only(left: 10, right: 10),
               suffixIconConstraints:
                   const BoxConstraints(maxHeight: 35, maxWidth: 35),
@@ -91,12 +91,26 @@ class _SearchFieldState extends State<SearchField> {
         );
       },
       optionsBuilder: (textEditingValue) {
-        return widget.audios.where((a) {
+        final allAudios = (localAudioModel.audios != null
+                ? localAudioModel.audios!.toList()
+                : <Audio>[]) +
+            stationsMap.entries
+                .map(
+                  (e) => Audio(
+                    name: e.key,
+                    url: e.value,
+                    audioType: AudioType.radio,
+                  ),
+                )
+                .toList();
+
+        return allAudios.where((a) {
           if (a.toString().toLowerCase().contains(
                 textEditingValue.text.replaceAll(' ', '').toLowerCase(),
               )) {
             return true;
           }
+
           return false;
         }).toList();
       },
