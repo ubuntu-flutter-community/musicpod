@@ -20,6 +20,7 @@ class AudioList extends StatefulWidget {
     this.onAudioFilterSelected,
     this.audioFilter,
     this.editableName = true,
+    this.showLikeButton = true,
   });
 
   final Set<Audio> audios;
@@ -28,6 +29,7 @@ class AudioList extends StatefulWidget {
   final void Function(AudioFilter)? onAudioFilterSelected;
   final AudioFilter? audioFilter;
   final bool editableName;
+  final bool showLikeButton;
 
   @override
   State<AudioList> createState() => _AudioListState();
@@ -74,6 +76,7 @@ class _AudioListState extends State<AudioList> {
             editableName: widget.editableName,
             audios: widget.audios,
             listName: widget.listName,
+            showLikeButton: widget.showLikeButton,
           ),
         ),
         const Padding(
@@ -82,6 +85,9 @@ class _AudioListState extends State<AudioList> {
             right: 20,
           ),
           child: AudioListHeader(),
+        ),
+        const Divider(
+          height: 0,
         ),
         Expanded(
           child: ListView.builder(
@@ -179,11 +185,13 @@ class AudioListControlPanel extends StatelessWidget {
     required this.audios,
     this.listName,
     this.editableName = true,
+    this.showLikeButton = true,
   });
 
   final Set<Audio> audios;
   final String? listName;
   final bool editableName;
+  final bool showLikeButton;
 
   @override
   Widget build(BuildContext context) {
@@ -225,14 +233,15 @@ class AudioListControlPanel extends StatelessWidget {
         const SizedBox(
           width: 10,
         ),
-        IconButton(
-          onPressed: () => allLiked
-              ? playlistModel.removeLikedAudios(audios)
-              : playlistModel.addLikedAudios(audios),
-          icon: Icon(
-            allLiked ? YaruIcons.heart_filled : YaruIcons.heart,
+        if (showLikeButton)
+          IconButton(
+            onPressed: () => allLiked
+                ? playlistModel.removeLikedAudios(audios)
+                : playlistModel.addLikedAudios(audios),
+            icon: Icon(
+              allLiked ? YaruIcons.heart_filled : YaruIcons.heart,
+            ),
           ),
-        ),
         const SizedBox(
           width: 10,
         ),
@@ -330,10 +339,8 @@ class _HeaderElement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textStyle = TextStyle(
-      color: theme.colorScheme.onSurface,
-      fontWeight: FontWeight.w500,
+    const textStyle = TextStyle(
+      fontWeight: FontWeight.w100,
     );
     return Expanded(
       child: Row(

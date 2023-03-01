@@ -121,6 +121,9 @@ class AudioPage extends StatelessWidget {
             ),
             child: AudioListHeader(),
           ),
+          const Divider(
+            height: 0,
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
             child: Column(

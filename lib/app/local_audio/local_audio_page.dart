@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_list.dart';
 import 'package:music/app/common/search_field.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
-import 'package:music/app/tabbed_page.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -41,28 +40,15 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
               child: const Text('Pick your music collection'),
             ),
           )
-        : TabbedPage(
-            tabTitles: [
-              context.l10n.library,
-              context.l10n.playlists,
-              context.l10n.discover,
-              context.l10n.forYou,
-              // context.l10n.years,
-            ],
-            views: [
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: AudioList(
-                  listName: context.l10n.localAudio,
-                  audios: localAudioModel.audios!,
-                  onAudioFilterSelected: (f) => localAudioModel.audioFilter = f,
-                ),
-              ),
-              const Center(),
-              const Center(),
-              const Center(),
-              // const Center(),
-            ],
+        : Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: AudioList(
+              showLikeButton: false,
+              editableName: false,
+              listName: context.l10n.localAudio,
+              audios: localAudioModel.audios!,
+              onAudioFilterSelected: (f) => localAudioModel.audioFilter = f,
+            ),
           );
 
     final appBar = YaruWindowTitleBar(
