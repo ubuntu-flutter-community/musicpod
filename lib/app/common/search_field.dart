@@ -131,12 +131,15 @@ class _SearchFieldState extends State<SearchField> {
       onSelected: (audio) => Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) {
-            final album = localAudioModel.audios?.where((a) =>
-                a.metadata != null &&
-                a.metadata!.album != null &&
-                a.metadata?.album == audio.metadata?.album);
+            final album = localAudioModel.audios?.where(
+              (a) =>
+                  a.metadata != null &&
+                  a.metadata!.album != null &&
+                  a.metadata?.album == audio.metadata?.album,
+            );
 
             return AudioPage(
+              editableName: false,
               audios: album?.isNotEmpty == true ? Set.from(album!) : {audio},
               pageName: audio.metadata?.album ?? audio.metadata?.title ?? '',
             );

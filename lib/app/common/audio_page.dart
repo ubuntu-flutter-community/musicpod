@@ -5,10 +5,16 @@ import 'package:music/data/audio.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AudioPage extends StatelessWidget {
-  const AudioPage({super.key, required this.audios, required this.pageName});
+  const AudioPage({
+    super.key,
+    required this.audios,
+    required this.pageName,
+    this.editableName = true,
+  });
 
   final Set<Audio> audios;
   final String pageName;
+  final bool editableName;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +35,11 @@ class AudioPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: AudioList(audios: audios, listName: pageName),
+        child: AudioList(
+          audios: audios,
+          listName: pageName,
+          editableName: editableName,
+        ),
       ),
     );
   }

@@ -19,6 +19,7 @@ class AudioList extends StatefulWidget {
     this.listName,
     this.onAudioFilterSelected,
     this.audioFilter,
+    this.editableName = true,
   });
 
   final Set<Audio> audios;
@@ -26,13 +27,7 @@ class AudioList extends StatefulWidget {
   final String? listName;
   final void Function(AudioFilter)? onAudioFilterSelected;
   final AudioFilter? audioFilter;
-
-  static Widget create(BuildContext context, Set<Audio> audios) {
-    return ChangeNotifierProvider(
-      create: (_) {},
-      child: AudioList(audios: audios),
-    );
-  }
+  final bool editableName;
 
   @override
   State<AudioList> createState() => _AudioListState();
@@ -76,6 +71,7 @@ class _AudioListState extends State<AudioList> {
             bottom: 15,
           ),
           child: _AudioListControlPanel(
+            editableName: widget.editableName,
             audios: widget.audios,
             listName: widget.listName,
           ),
@@ -178,10 +174,15 @@ class _AudioListState extends State<AudioList> {
 }
 
 class _AudioListControlPanel extends StatelessWidget {
-  const _AudioListControlPanel({required this.audios, this.listName});
+  const _AudioListControlPanel({
+    required this.audios,
+    this.listName,
+    this.editableName = true,
+  });
 
   final Set<Audio> audios;
   final String? listName;
+  final bool editableName;
 
   @override
   Widget build(BuildContext context) {
@@ -220,7 +221,7 @@ class _AudioListControlPanel extends StatelessWidget {
         const SizedBox(
           width: kYaruPagePadding,
         ),
-        if (listName != 'likedAudio' && listName != context.l10n.localAudio)
+        if (editableName)
           YaruIconButton(
             icon: const Icon(YaruIcons.pen),
             onPressed: () => showDialog(
