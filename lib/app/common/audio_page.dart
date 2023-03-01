@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_list.dart';
-import 'package:music/app/playlists/playlist_dialog.dart';
-import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/data/audio.dart';
 import 'package:music/utils.dart';
-import 'package:provider/provider.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AudioPage extends StatelessWidget {
