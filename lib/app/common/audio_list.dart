@@ -70,7 +70,7 @@ class _AudioListState extends State<AudioList> {
             right: 20,
             bottom: 15,
           ),
-          child: _AudioListControlPanel(
+          child: AudioListControlPanel(
             editableName: widget.editableName,
             audios: widget.audios,
             listName: widget.listName,
@@ -81,7 +81,7 @@ class _AudioListState extends State<AudioList> {
             left: 20,
             right: 20,
           ),
-          child: _AudioListHeader(),
+          child: AudioListHeader(),
         ),
         Expanded(
           child: ListView.builder(
@@ -173,8 +173,9 @@ class _AudioListState extends State<AudioList> {
   }
 }
 
-class _AudioListControlPanel extends StatelessWidget {
-  const _AudioListControlPanel({
+class AudioListControlPanel extends StatelessWidget {
+  const AudioListControlPanel({
+    super.key,
     required this.audios,
     this.listName,
     this.editableName = true,
@@ -264,8 +265,8 @@ class _AudioListControlPanel extends StatelessWidget {
   }
 }
 
-class _AudioListHeader extends StatelessWidget {
-  const _AudioListHeader();
+class AudioListHeader extends StatelessWidget {
+  const AudioListHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
