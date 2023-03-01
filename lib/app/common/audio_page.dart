@@ -75,8 +75,10 @@ class AudioPage extends StatelessWidget {
                             Text(
                               audios.firstOrNull!.metadata!.album ?? '',
                               style: theme.textTheme.headlineLarge?.copyWith(
-                                fontWeight: FontWeight.w100,
-                                // color: theme.hintColor,
+                                fontWeight: FontWeight.w300,
+                                fontSize: 50,
+                                color: theme.colorScheme.onSurface
+                                    .withOpacity(0.8),
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -87,7 +89,6 @@ class AudioPage extends StatelessWidget {
                               audios.firstOrNull?.metadata?.artist ?? '',
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.hintColor,
-                                fontWeight: FontWeight.w200,
                                 fontStyle: FontStyle.italic,
                               ),
                             )
@@ -104,7 +105,6 @@ class AudioPage extends StatelessWidget {
               padding: const EdgeInsets.only(top: 20),
               child: AudioList(
                 audios: audios,
-                listName: pageName,
                 editableName: editableName,
               ),
             ),

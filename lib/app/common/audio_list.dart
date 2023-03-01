@@ -249,15 +249,16 @@ class _AudioListControlPanel extends StatelessWidget {
               ),
             ),
           ),
-        Expanded(
-          child: Text(
-            '${listName == 'likedAudio' ? context.l10n.likedSongs : listName ?? ''}  •  ${audios.length} ${context.l10n.titles}',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w100),
+        if (listName != null)
+          Expanded(
+            child: Text(
+              '${listName == 'likedAudio' ? context.l10n.likedSongs : listName ?? ''}  •  ${audios.length} ${context.l10n.titles}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.headlineSmall
+                  ?.copyWith(fontWeight: FontWeight.w100),
+            ),
           ),
-        ),
       ],
     );
   }
