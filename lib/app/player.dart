@@ -319,15 +319,16 @@ class _PlayerState extends State<Player> {
                     left: 10,
                   ),
                   child: Center(
-                      child: SizedBox(
-                    width: 100,
-                    height: 100,
-                    child: Icon(
-                      YaruIcons.music_note,
-                      size: 80,
-                      color: theme.hintColor.withOpacity(0.4),
+                    child: SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: Icon(
+                        YaruIcons.music_note,
+                        size: 80,
+                        color: theme.hintColor.withOpacity(0.4),
+                      ),
                     ),
-                  )),
+                  ),
                 ),
               Expanded(
                 child: Padding(
