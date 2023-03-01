@@ -190,6 +190,9 @@ class _AudioListControlPanel extends StatelessWidget {
     final playerModel = context.watch<PlayerModel>();
     final theme = Theme.of(context);
     final listIsQueue = listsAreEqual(playerModel.queue, audios.toList());
+    final allLiked =
+        audios.where((a) => playlistModel.liked(a)).toList().length ==
+            audios.length;
     return Row(
       children: [
         CircleAvatar(
@@ -219,7 +222,18 @@ class _AudioListControlPanel extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          width: kYaruPagePadding,
+          width: 10,
+        ),
+        IconButton(
+          onPressed: () => allLiked
+              ? playlistModel.removeLikedAudios(audios)
+              : playlistModel.addLikedAudios(audios),
+          icon: Icon(
+            allLiked ? YaruIcons.heart_filled : YaruIcons.heart,
+          ),
+        ),
+        const SizedBox(
+          width: 10,
         ),
         if (editableName)
           YaruIconButton(

@@ -14,6 +14,12 @@ class PlaylistModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  void addLikedAudios(Set<Audio> audios) {
+    for (var audio in audios) {
+      addLikedAudio(audio);
+    }
+  }
+
   bool liked(Audio audio) {
     for (var a in likedAudios) {
       if (audio.path == a.path) {
@@ -30,6 +36,12 @@ class PlaylistModel extends SafeChangeNotifier {
         notifyListeners();
         return;
       }
+    }
+  }
+
+  void removeLikedAudios(Set<Audio> audios) {
+    for (var audio in audios) {
+      removeLikedAudio(audio);
     }
   }
 
