@@ -59,7 +59,19 @@ class _RadioPageState extends State<RadioPage> {
         )
       ],
       title: _searchActive
-          ? const SearchField()
+          ? SearchField(
+              audios: Set.from(
+                stationsMap.entries
+                    .map(
+                      (e) => Audio(
+                        name: e.key,
+                        url: e.value,
+                        audioType: AudioType.radio,
+                      ),
+                    )
+                    .toList(),
+              ),
+            )
           : Center(child: Text(context.l10n.radio)),
     );
 

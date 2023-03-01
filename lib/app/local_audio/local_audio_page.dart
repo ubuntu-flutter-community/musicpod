@@ -89,9 +89,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
       ],
       title: localAudioModel.searchActive
           ? SearchField(
+              audios: localAudioModel.audios ?? {},
               label: context.l10n.searchLocalAudioHint,
-              text: localAudioModel.searchQuery,
-              onChanged: (value) => localAudioModel.searchQuery = value,
             )
           : Center(child: Text(context.l10n.localAudio)),
     );
