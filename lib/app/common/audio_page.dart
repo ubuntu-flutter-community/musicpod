@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_list.dart';
+import 'package:music/app/common/search_field.dart';
 import 'package:music/data/audio.dart';
-import 'package:music/utils.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AudioPage extends StatelessWidget {
@@ -18,9 +18,7 @@ class AudioPage extends StatelessWidget {
           ? const Color.fromARGB(255, 37, 37, 37)
           : Colors.white,
       appBar: YaruWindowTitleBar(
-        title: Text(
-          createPlaylistName(pageName, context),
-        ),
+        title: const SearchField(),
         leading: Navigator.canPop(context)
             ? const YaruBackButton(
                 style: YaruBackButtonStyle.rounded,

@@ -50,6 +50,7 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
+            autofocus: true,
             controller: _nameController,
             decoration: const InputDecoration(label: Text('Playlist name')),
           )

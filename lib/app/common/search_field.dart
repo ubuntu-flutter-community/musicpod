@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_page.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
+import 'package:music/app/playlists/playlist_dialog.dart';
+import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/data/stations.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +26,7 @@ class _SearchFieldState extends State<SearchField> {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
     final localAudioModel = context.watch<LocalAudioModel>();
+    final playlistModel = context.watch<PlaylistModel>();
 
     final autoComplete = Autocomplete<Audio>(
       optionsViewBuilder: (context, onSelected, audios) {
@@ -43,6 +46,18 @@ class _SearchFieldState extends State<SearchField> {
                   final option = audios.elementAt(index);
                   final i = AutocompleteHighlightedOption.of(context);
                   return ListTile(
+                    trailing: YaruIconButton(
+                      icon: const Icon(YaruIcons.plus),
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) {
+                          return ChangeNotifierProvider.value(
+                            value: playlistModel,
+                            child: PlaylistDialog(audios: {option}),
+                          );
+                        },
+                      ),
+                    ),
                     onTap: () => onSelected(option),
                     selected: i == index,
                     title: Text(
@@ -73,7 +88,6 @@ class _SearchFieldState extends State<SearchField> {
           child: TextField(
             controller: textEditingController,
             focusNode: focusNode,
-            autofocus: true,
             decoration: InputDecoration(
               hintText: context.l10n.search,
               contentPadding: const EdgeInsets.only(left: 10, right: 10),
