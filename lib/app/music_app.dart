@@ -213,7 +213,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                       minPaneWidth: 81,
                       minPageWidth: kYaruMasterDetailBreakpoint / 2,
                     ),
-                    length: masterItems.length,
+                    length: playlistModel.playlists.length + 4,
                     initialIndex: appModel.index,
                     tileBuilder: (context, index, selected) {
                       final tile = YaruMasterTile(
