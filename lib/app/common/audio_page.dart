@@ -16,36 +16,14 @@ class AudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playlistModel = context.watch<PlaylistModel>();
     final theme = Theme.of(context);
     return YaruDetailPage(
       backgroundColor: theme.brightness == Brightness.dark
           ? const Color.fromARGB(255, 37, 37, 37)
           : Colors.white,
       appBar: YaruWindowTitleBar(
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (pageName != 'likedAudio')
-              Center(
-                child: YaruIconButton(
-                  icon: const Icon(YaruIcons.pen),
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => ChangeNotifierProvider.value(
-                      value: playlistModel,
-                      child: PlaylistDialog(
-                        name: pageName,
-                        audios: const [],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            Text(
-              createPlaylistName(pageName, context),
-            ),
-          ],
+        title: Text(
+          createPlaylistName(pageName, context),
         ),
         leading: Navigator.canPop(context)
             ? const YaruBackButton(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:music/app/common/audio_page.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -26,8 +27,46 @@ class _SearchFieldState extends State<SearchField> {
     final light = theme.brightness == Brightness.light;
 
     final autoComplete = Autocomplete<Audio>(
-      // optionsViewBuilder: (context, onSelected, options) {},
-      // optionsViewBuilder: (context, onSelected, options) {},
+      optionsViewBuilder: (context, onSelected, audios) {
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: theme.dividerColor),
+              borderRadius: BorderRadius.circular(kYaruContainerRadius),
+            ),
+            child: SizedBox(
+              width: 400,
+              height: 400,
+              child: ListView.builder(
+                itemCount: audios.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final option = audios.elementAt(index);
+                  final i = AutocompleteHighlightedOption.of(context);
+                  return ListTile(
+                    onTap: () => onSelected(option),
+                    selected: i == index,
+                    title: Text(
+                      option.metadata != null
+                          ? '${option.metadata?.artist} - ${option.metadata?.title} - ${option.metadata?.album}'
+                          : option.url != null
+                              ? option.name ?? ''
+                              : '',
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+      displayStringForOption: (option) {
+        return option.metadata != null
+            ? '${option.metadata?.artist} - ${option.metadata?.title} - ${option.metadata?.album}'
+            : option.url != null
+                ? option.name ?? ''
+                : '';
+      },
       fieldViewBuilder:
           (context, textEditingController, focusNode, onFieldSubmitted) {
         return SizedBox(
@@ -52,11 +91,6 @@ class _SearchFieldState extends State<SearchField> {
           ),
         );
       },
-      displayStringForOption: (option) => option.metadata != null
-          ? '${option.metadata?.artist} - ${option.metadata?.title} - ${option.metadata?.album}'
-          : option.url != null
-              ? option.name ?? ''
-              : '',
       optionsBuilder: (textEditingValue) {
         return widget.audios.where((a) {
           if (a.url != null) {
