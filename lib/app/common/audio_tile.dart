@@ -71,17 +71,6 @@ class AudioTile extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-          if (audio.metadata?.durationMs != null)
-            Expanded(
-              child: Text(
-                formatTime(
-                  Duration(
-                    milliseconds: audio.metadata!.durationMs!.toInt(),
-                  ),
-                ),
-                style: textStyle,
-              ),
-            )
         ],
       ),
       trailing: likeIcon,

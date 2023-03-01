@@ -244,7 +244,15 @@ class _PlayerState extends State<Player> {
                           ),
                         )
                       else
-                        const YaruPlaceholderIcon(size: Size(400, 400)),
+                        SizedBox(
+                          width: 400,
+                          height: 400,
+                          child: Icon(
+                            YaruIcons.music_note,
+                            size: 300,
+                            color: theme.hintColor.withOpacity(0.4),
+                          ),
+                        ),
                       controls,
                       sliderAndTime,
                       trackText,
@@ -306,12 +314,20 @@ class _PlayerState extends State<Player> {
                   ),
                 )
               else
-                const Padding(
-                  padding: EdgeInsets.only(
+                Padding(
+                  padding: const EdgeInsets.only(
                     left: 10,
                   ),
-                  child:
-                      Center(child: YaruPlaceholderIcon(size: Size(100, 100))),
+                  child: Center(
+                      child: SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: Icon(
+                      YaruIcons.music_note,
+                      size: 80,
+                      color: theme.hintColor.withOpacity(0.4),
+                    ),
+                  )),
                 ),
               Expanded(
                 child: Padding(
