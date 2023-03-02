@@ -63,23 +63,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
           : const SizedBox(
               width: 40,
             ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 8),
-          child: Center(
-            child: YaruIconButton(
-              isSelected: localAudioModel.searchActive,
-              icon: const Icon(YaruIcons.search),
-              onPressed: () => setState(() {
-                localAudioModel.searchActive = !localAudioModel.searchActive;
-              }),
-            ),
-          ),
-        )
-      ],
-      title: localAudioModel.searchActive
-          ? const SearchField()
-          : Center(child: Text(context.l10n.localAudio)),
+      title: const SearchField(),
     );
 
     return YaruDetailPage(

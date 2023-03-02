@@ -209,7 +209,9 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                 Expanded(
                   child: YaruMasterDetailPage(
                     onSelected: (value) => appModel.index = value ?? 0,
-                    appBar: const YaruWindowTitleBar(),
+                    appBar: const YaruWindowTitleBar(
+                      title: Text('Ubuntu Music'),
+                    ),
                     bottomBar: Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: settingsTile,

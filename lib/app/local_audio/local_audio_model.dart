@@ -6,14 +6,6 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:path/path.dart' as path;
 
 class LocalAudioModel extends SafeChangeNotifier {
-  bool _searchActive = false;
-  bool get searchActive => _searchActive;
-  set searchActive(bool value) {
-    if (value == _searchActive) return;
-    _searchActive = value;
-    notifyListeners();
-  }
-
   String? _searchQuery;
   String? get searchQuery => _searchQuery;
   set searchQuery(String? value) {

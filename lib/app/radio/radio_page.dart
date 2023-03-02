@@ -23,7 +23,6 @@ class RadioPage extends StatefulWidget {
 }
 
 class _RadioPageState extends State<RadioPage> {
-  bool _searchActive = false;
   @override
   Widget build(BuildContext context) {
     final model = context.watch<RadioModel>();
@@ -52,23 +51,7 @@ class _RadioPageState extends State<RadioPage> {
           : const SizedBox(
               width: 40,
             ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 8),
-          child: Center(
-            child: YaruIconButton(
-              isSelected: _searchActive,
-              icon: const Icon(YaruIcons.search),
-              onPressed: () => setState(() {
-                _searchActive = !_searchActive;
-              }),
-            ),
-          ),
-        )
-      ],
-      title: _searchActive
-          ? const SearchField()
-          : Center(child: Text(context.l10n.radio)),
+      title: const SearchField(),
     );
 
     return YaruDetailPage(
