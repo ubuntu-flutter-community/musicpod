@@ -15,7 +15,7 @@ class AudioList extends StatefulWidget {
   const AudioList({
     super.key,
     required this.audios,
-    this.likeIcon,
+    this.isLikedIcon,
     this.listName,
     this.onAudioFilterSelected,
     this.audioFilter,
@@ -24,13 +24,13 @@ class AudioList extends StatefulWidget {
     this.showLikeButton = true,
     this.onLike,
     this.isLiked,
-    this.unLikedIcon,
+    this.isUnLikedIcon,
     this.onUnLike,
   });
 
   final Set<Audio> audios;
-  final Widget? likeIcon;
-  final Widget? unLikedIcon;
+  final Widget? isLikedIcon;
+  final Widget? isUnLikedIcon;
   final void Function(String name, Set<Audio> audios)? onLike;
   final void Function(String name)? onUnLike;
   final String? listName;
@@ -122,17 +122,17 @@ class _AudioListState extends State<AudioList> {
                 audio: audio,
                 likeIcon: widget.onLike != null &&
                         widget.onUnLike != null &&
-                        widget.likeIcon != null &&
-                        widget.unLikedIcon != null
+                        widget.isLikedIcon != null &&
+                        widget.isUnLikedIcon != null
                     ? liked
                         ? YaruIconButton(
-                            icon: widget.likeIcon!,
+                            icon: widget.isLikedIcon!,
                             onPressed: audio.name == null
                                 ? null
                                 : () => widget.onUnLike!(audio.name!),
                           )
                         : YaruIconButton(
-                            icon: widget.unLikedIcon!,
+                            icon: widget.isUnLikedIcon!,
                             onPressed: audio.name == null
                                 ? null
                                 : () => widget.onLike!(audio.name!, {audio}),
