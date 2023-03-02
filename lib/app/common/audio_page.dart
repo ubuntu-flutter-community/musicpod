@@ -160,7 +160,8 @@ class _AudioPageState extends State<AudioPage> {
                                 child: SizedBox(
                                   width: 500,
                                   child: Text(
-                                    widget.audios.firstOrNull!.description!,
+                                    widget.audios.firstOrNull!.description!
+                                        .trim(),
                                     style: theme.textTheme.bodyMedium?.copyWith(
                                       color: theme.hintColor,
                                     ),

@@ -11,8 +11,8 @@ class PodcastModel extends SafeChangeNotifier {
     var search = Search();
 
     SearchResult results = await search.search(
-      'Late Night Linux',
-      country: Country.UNITED_KINGDOM,
+      'Widgets',
+      country: Country.GERMANY,
       limit: 10,
     );
 

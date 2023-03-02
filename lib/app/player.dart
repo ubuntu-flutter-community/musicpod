@@ -246,6 +246,20 @@ class _PlayerState extends State<Player> {
                             ),
                           ),
                         )
+                      else if (model.audio?.imageUrl != null)
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: AnimatedContainer(
+                            height: 400,
+                            duration: const Duration(milliseconds: 300),
+                            child: Image.network(
+                              filterQuality: FilterQuality.medium,
+                              fit: BoxFit.cover,
+                              model.audio!.imageUrl!,
+                              height: 120.0,
+                            ),
+                          ),
+                        )
                       else
                         SizedBox(
                           width: 400,
@@ -358,6 +372,18 @@ class _PlayerState extends State<Player> {
                     filterQuality: FilterQuality.medium,
                     fit: BoxFit.cover,
                     model.audio!.metadata!.picture!.data,
+                    height: 120.0,
+                  ),
+                )
+              else if (model.audio?.imageUrl != null)
+                AnimatedContainer(
+                  height: 120,
+                  width: 120,
+                  duration: const Duration(milliseconds: 300),
+                  child: Image.network(
+                    filterQuality: FilterQuality.medium,
+                    fit: BoxFit.cover,
+                    model.audio!.imageUrl!,
                     height: 120.0,
                   ),
                 )
