@@ -5,11 +5,6 @@ class PlaylistModel extends SafeChangeNotifier {
   final Set<Audio> _likedAudios = {};
   Set<Audio> get likedAudios => _likedAudios;
   void addLikedAudio(Audio audio) {
-    for (var a in likedAudios) {
-      if (a.path == audio.path) {
-        return;
-      }
-    }
     _likedAudios.add(audio);
     notifyListeners();
   }
@@ -30,13 +25,8 @@ class PlaylistModel extends SafeChangeNotifier {
   }
 
   void removeLikedAudio(Audio audio) {
-    for (var a in likedAudios) {
-      if (audio.path == a.path) {
-        _likedAudios.remove(audio);
-        notifyListeners();
-        return;
-      }
-    }
+    _likedAudios.remove(audio);
+    notifyListeners();
   }
 
   void removeLikedAudios(Set<Audio> audios) {

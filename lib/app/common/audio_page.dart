@@ -20,12 +20,14 @@ class AudioPage extends StatelessWidget {
     required this.pageName,
     this.editableName = true,
     this.audioPageType = AudioPageType.list,
+    this.showLikeButton = true,
   });
 
   final Set<Audio> audios;
   final String pageName;
   final bool editableName;
   final AudioPageType audioPageType;
+  final bool showLikeButton;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class AudioPage extends StatelessWidget {
       child: AudioList(
         audios: audios,
         editableName: editableName,
+        showLikeButton: showLikeButton,
       ),
     );
     if (audioPageType == AudioPageType.albumList) {
@@ -48,7 +51,16 @@ class AudioPage extends StatelessWidget {
             builder: (context, snapshot) {
               return Container(
                 height: 240,
-                color: snapshot.data ?? theme.cardColor,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [
+                      Colors.transparent,
+                      snapshot.data ?? theme.cardColor
+                    ],
+                  ),
+                ),
                 padding: const EdgeInsets.all(20),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,

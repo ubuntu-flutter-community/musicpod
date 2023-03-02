@@ -133,7 +133,12 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             return Text(createPlaylistName(playlist.key, context));
           },
           builder: (context) {
-            return AudioPage(audios: playlist.value, pageName: playlist.key);
+            return AudioPage(
+              audios: playlist.value,
+              pageName: playlist.key,
+              editableName: false,
+              showLikeButton: false,
+            );
           },
           iconBuilder: (context, selected) {
             if (listsAreEqual(playerModel.queue, playlist.value.toList())) {
