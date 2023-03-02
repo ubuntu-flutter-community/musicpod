@@ -274,23 +274,66 @@ class _PlayerState extends State<Player> {
             Positioned(
               left: 10,
               bottom: 10,
-              child: YaruBorderContainer(
-                color: theme.cardColor,
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Up next',
-                      style: theme.textTheme.labelSmall,
-                    ),
-                    Text(
-                      '${model.nextAudio!.metadata!.artist!} • ${model.nextAudio!.metadata!.title!}',
-                      style: theme.textTheme.labelMedium
-                          ?.copyWith(color: theme.colorScheme.onSurface),
-                    )
-                  ],
+              child: SizedBox(
+                height: model.isUpNextExpanded ? 180 : 60,
+                width: 200,
+                child: YaruBanner(
+                  onTap: () => model.isUpNextExpanded = !model.isUpNextExpanded,
+                  color: theme.cardColor,
+                  padding: EdgeInsets.zero,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 10,
+                          top: 10,
+                          bottom: 5,
+                          right: 10,
+                        ),
+                        child: Text(
+                          'Up next',
+                          style: theme.textTheme.labelSmall,
+                        ),
+                      ),
+                      if (model.isUpNextExpanded)
+                        Expanded(
+                          child: ListView(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            children: [
+                              for (final audio in model.queue ?? [])
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 10,
+                                    right: 10,
+                                  ),
+                                  child: Text(
+                                    '${audio?.metadata?.artist ?? ''} • ${audio?.metadata?.title ?? ''}',
+                                    style:
+                                        theme.textTheme.labelMedium?.copyWith(
+                                      color: theme.colorScheme.onSurface,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                )
+                            ],
+                          ),
+                        )
+                      else
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 10,
+                            right: 10,
+                          ),
+                          child: Text(
+                            '${model.nextAudio!.metadata!.artist!} • ${model.nextAudio!.metadata!.title!}',
+                            style: theme.textTheme.labelMedium
+                                ?.copyWith(color: theme.colorScheme.onSurface),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        )
+                    ],
+                  ),
                 ),
               ),
             )

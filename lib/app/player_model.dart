@@ -195,6 +195,14 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  bool _isUpNextExpanded = false;
+  bool get isUpNextExpanded => _isUpNextExpanded;
+  set isUpNextExpanded(bool value) {
+    if (value == _isUpNextExpanded) return;
+    _isUpNextExpanded = value;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _playerSub?.cancel();
