@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:music/app/player_model.dart';
 import 'package:music/data/audio.dart';
-import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AudioTile extends StatelessWidget {
@@ -11,16 +9,21 @@ class AudioTile extends StatelessWidget {
     required this.audio,
     this.onLike,
     this.likeIcon,
+    required this.isPlayerPlaying,
+    required this.play,
+    required this.pause,
   });
 
   final Audio audio;
   final bool selected;
   final void Function()? onLike;
   final Widget? likeIcon;
+  final bool isPlayerPlaying;
+  final void Function() play;
+  final void Function() pause;
 
   @override
   Widget build(BuildContext context) {
-    final playerModel = context.watch<PlayerModel>();
     final theme = Theme.of(context);
     final textStyle = TextStyle(
       color: selected ? theme.colorScheme.onSurface : theme.hintColor,
@@ -32,13 +35,12 @@ class AudioTile extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(kYaruButtonRadius),
       ),
-      onTap: () async {
-        if (playerModel.isPlaying && selected) {
-          playerModel.pause();
+      onTap: () {
+        if (isPlayerPlaying && selected) {
+          pause();
         } else {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            playerModel.audio = audio;
-            playerModel.stop().then((_) => playerModel.play());
+            play();
           });
         }
       },

@@ -153,6 +153,12 @@ class AudioPage extends StatelessWidget {
                 final liked = playlistModel.liked(audio);
 
                 return AudioTile(
+                  isPlayerPlaying: playerModel.isPlaying,
+                  pause: playerModel.pause,
+                  play: () {
+                    playerModel.audio = audio;
+                    playerModel.stop().then((_) => playerModel.play());
+                  },
                   key: ValueKey(audio),
                   selected: audioSelected,
                   audio: audio,
