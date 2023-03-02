@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-class AudioPage extends StatelessWidget {
+class AudioPage extends StatefulWidget {
   const AudioPage({
     super.key,
     required this.audios,
@@ -34,6 +34,33 @@ class AudioPage extends StatelessWidget {
   final Widget? title;
 
   @override
+  State<AudioPage> createState() => _AudioPageState();
+}
+
+class _AudioPageState extends State<AudioPage> {
+  late ScrollController _controller;
+  int _amount = 40;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = ScrollController();
+    _controller.addListener(() {
+      if (_controller.position.maxScrollExtent == _controller.offset) {
+        setState(() {
+          _amount++;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final playerModel = context.watch<PlayerModel>();
     final playlistModel = context.watch<PlaylistModel>();
@@ -42,19 +69,20 @@ class AudioPage extends StatelessWidget {
     Widget? body = Padding(
       padding: const EdgeInsets.only(top: 20),
       child: AudioList(
-        deletable: deletable,
-        listName: pageName,
-        audios: audios,
-        editableName: editableName,
-        showLikeButton: showLikeButton,
+        deletable: widget.deletable,
+        listName: widget.pageName,
+        audios: widget.audios,
+        editableName: widget.editableName,
+        showLikeButton: widget.showLikeButton,
       ),
     );
-    if (audioPageType == AudioPageType.albumList &&
-        audios.firstOrNull!.metadata?.album != null) {
+    if (widget.audioPageType == AudioPageType.albumList &&
+        widget.audios.firstOrNull!.metadata?.album != null) {
       body = ListView(
+        controller: _controller,
         children: [
           FutureBuilder<Color?>(
-            future: getColor(audios.firstOrNull),
+            future: getColor(widget.audios.firstOrNull),
             builder: (context, snapshot) {
               return Container(
                 height: 240,
@@ -72,13 +100,25 @@ class AudioPage extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (audios.firstOrNull?.metadata?.picture != null)
+                    if (widget.audios.firstOrNull?.metadata?.picture != null)
                       Padding(
                         padding: const EdgeInsets.only(right: 20),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.memory(
-                            audios.firstOrNull!.metadata!.picture!.data,
+                            widget.audios.firstOrNull!.metadata!.picture!.data,
+                            width: 200.0,
+                            fit: BoxFit.fitWidth,
+                          ),
+                        ),
+                      )
+                    else if (widget.audios.firstOrNull?.imageUrl != null)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            widget.audios.firstOrNull!.imageUrl!,
                             width: 200.0,
                             fit: BoxFit.fitWidth,
                           ),
@@ -94,7 +134,7 @@ class AudioPage extends StatelessWidget {
                             style: theme.textTheme.labelSmall,
                           ),
                           Text(
-                            audios.firstOrNull!.metadata?.album ?? '',
+                            widget.audios.firstOrNull!.metadata?.album ?? '',
                             style: theme.textTheme.headlineLarge?.copyWith(
                               fontWeight: FontWeight.w300,
                               fontSize: 50,
@@ -107,7 +147,7 @@ class AudioPage extends StatelessWidget {
                             height: 5,
                           ),
                           Text(
-                            audios.firstOrNull?.metadata?.artist ?? '',
+                            widget.audios.firstOrNull?.metadata?.artist ?? '',
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: theme.hintColor,
                               fontStyle: FontStyle.italic,
@@ -129,10 +169,10 @@ class AudioPage extends StatelessWidget {
               bottom: 15,
             ),
             child: AudioListControlPanel(
-              editableName: editableName,
-              audios: audios,
-              deletable: deletable,
-              showLikeButton: showLikeButton,
+              editableName: widget.editableName,
+              audios: widget.audios,
+              deletable: widget.deletable,
+              showLikeButton: widget.showLikeButton,
             ),
           ),
           const Padding(
@@ -148,8 +188,9 @@ class AudioPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
             child: Column(
-              children: List.generate(audios.length, (index) {
-                final audio = audios.elementAt(index);
+              children:
+                  List.generate(widget.audios.take(_amount).length, (index) {
+                final audio = widget.audios.elementAt(index);
                 final audioSelected = playerModel.audio == audio;
 
                 final liked = playlistModel.liked(audio);
@@ -182,19 +223,20 @@ class AudioPage extends StatelessWidget {
                               return ChangeNotifierProvider.value(
                                 value: playlistModel,
                                 child: PlaylistDialog(
-                                  deletable: deletable,
+                                  deletable: widget.deletable,
                                   audios: {audio},
-                                  editableName: editableName,
+                                  editableName: widget.editableName,
                                 ),
                               );
                             },
                           ),
                         ),
-                        if (playlistModel.playlists.containsKey(pageName))
+                        if (playlistModel.playlists
+                            .containsKey(widget.pageName))
                           PopupMenuItem(
-                            child: Text('Remove from $pageName'),
+                            child: Text('Remove from ${widget.pageName}'),
                             onTap: () => playlistModel.removeAudioFromPlaylist(
-                              pageName,
+                              widget.pageName,
                               audio,
                             ),
                           ),
@@ -238,7 +280,7 @@ class AudioPage extends StatelessWidget {
           ? const Color.fromARGB(255, 37, 37, 37)
           : Colors.white,
       appBar: YaruWindowTitleBar(
-        title: title ?? const SearchField(),
+        title: widget.title ?? const SearchField(),
         leading: Navigator.canPop(context)
             ? const YaruBackButton(
                 style: YaruBackButtonStyle.rounded,

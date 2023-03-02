@@ -28,6 +28,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
             child: YaruCircularProgressIndicator(),
           )
         : AudioPage(
+            audioPageType: AudioPageType.albumList,
             title: Text(context.l10n.podcasts), //TODO: add search
             audios: model.podcasts,
             pageName: context.l10n.podcasts,
