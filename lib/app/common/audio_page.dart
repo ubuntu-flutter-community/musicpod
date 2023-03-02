@@ -22,6 +22,7 @@ class AudioPage extends StatelessWidget {
     required this.deletable,
     this.audioPageType = AudioPageType.list,
     this.showLikeButton = true,
+    this.title,
   });
 
   final Set<Audio> audios;
@@ -30,6 +31,7 @@ class AudioPage extends StatelessWidget {
   final bool deletable;
   final AudioPageType audioPageType;
   final bool showLikeButton;
+  final Widget? title;
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +238,7 @@ class AudioPage extends StatelessWidget {
           ? const Color.fromARGB(255, 37, 37, 37)
           : Colors.white,
       appBar: YaruWindowTitleBar(
-        title: const SearchField(),
+        title: title ?? const SearchField(),
         leading: Navigator.canPop(context)
             ? const YaruBackButton(
                 style: YaruBackButtonStyle.rounded,

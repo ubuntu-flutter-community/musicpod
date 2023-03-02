@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:music/app/common/search_field.dart';
+import 'package:music/app/common/audio_page.dart';
+import 'package:music/app/podcasts/podcast_model.dart';
 import 'package:music/l10n/l10n.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class PodcastsPage extends StatefulWidget {
@@ -12,23 +14,25 @@ class PodcastsPage extends StatefulWidget {
 
 class _PodcastsPageState extends State<PodcastsPage> {
   @override
-  Widget build(BuildContext context) {
-    final appBar = YaruWindowTitleBar(
-      leading: Navigator.of(context).canPop()
-          ? const YaruBackButton(
-              style: YaruBackButtonStyle.rounded,
-            )
-          : const SizedBox(
-              width: 40,
-            ),
-      title: const SearchField(),
-    );
+  void initState() {
+    super.initState();
+    context.read<PodcastModel>().init();
+  }
 
-    return YaruDetailPage(
-      appBar: appBar,
-      body: Center(
-        child: Text(context.l10n.podcasts),
-      ),
-    );
+  @override
+  Widget build(BuildContext context) {
+    final model = context.watch<PodcastModel>();
+
+    return model.podcasts.isEmpty
+        ? const Center(
+            child: YaruCircularProgressIndicator(),
+          )
+        : AudioPage(
+            title: Text(context.l10n.podcasts), //TODO: add search
+            audios: model.podcasts,
+            pageName: context.l10n.podcasts,
+            editableName: false,
+            deletable: false,
+          );
   }
 }

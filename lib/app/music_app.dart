@@ -9,6 +9,7 @@ import 'package:music/app/player.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/app/playlists/playlist_dialog.dart';
 import 'package:music/app/playlists/playlist_model.dart';
+import 'package:music/app/podcasts/podcast_model.dart';
 import 'package:music/app/podcasts/podcasts_page.dart';
 import 'package:music/app/radio/radio_page.dart';
 import 'package:music/app/radio/stations.dart';
@@ -55,7 +56,10 @@ class _App extends StatefulWidget {
         ChangeNotifierProvider(
           create: (_) => PlaylistModel()..init(),
         ),
-        ChangeNotifierProvider(create: (_) => AppModel())
+        ChangeNotifierProvider(create: (_) => AppModel()),
+        ChangeNotifierProvider(
+          create: (_) => PodcastModel(),
+        )
       ],
       child: const _App(),
     );

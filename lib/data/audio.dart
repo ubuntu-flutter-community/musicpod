@@ -6,6 +6,7 @@ class Audio {
   final String? name;
   final Metadata? metadata;
   final AudioType? audioType;
+  final String? imageUrl;
 
   Audio({
     this.path,
@@ -13,6 +14,7 @@ class Audio {
     this.name,
     this.metadata,
     this.audioType,
+    this.imageUrl,
   });
 
   Audio copyWith({
