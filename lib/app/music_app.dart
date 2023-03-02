@@ -190,9 +190,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
     );
 
     return Scaffold(
-      backgroundColor: playerModel.isPlaying
-          ? playerModel.surfaceTintColor ?? theme.primaryColor.withOpacity(0.05)
-          : null,
+      backgroundColor: playerModel.surfaceTintColor,
       body: playerModel.fullScreen == true
           ? Column(
               children: const [

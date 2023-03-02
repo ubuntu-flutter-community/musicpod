@@ -237,10 +237,13 @@ class _PlayerState extends State<Player> {
                       if (model.audio?.metadata?.picture != null)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.memory(
-                            model.audio!.metadata!.picture!.data,
-                            height: 400.0,
-                            fit: BoxFit.fitHeight,
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            child: Image.memory(
+                              model.audio!.metadata!.picture!.data,
+                              height: 400.0,
+                              fit: BoxFit.fitHeight,
+                            ),
                           ),
                         )
                       else
@@ -305,7 +308,9 @@ class _PlayerState extends State<Player> {
             children: [
               if (model.audio?.metadata?.picture != null)
                 AnimatedContainer(
-                  duration: const Duration(milliseconds: 100),
+                  height: 120,
+                  width: 120,
+                  duration: const Duration(milliseconds: 300),
                   child: Image.memory(
                     filterQuality: FilterQuality.medium,
                     fit: BoxFit.cover,
@@ -314,18 +319,21 @@ class _PlayerState extends State<Player> {
                   ),
                 )
               else
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 10,
-                  ),
-                  child: Center(
-                    child: SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Icon(
-                        YaruIcons.music_note,
-                        size: 80,
-                        color: theme.hintColor.withOpacity(0.4),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 10,
+                    ),
+                    child: Center(
+                      child: SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: Icon(
+                          YaruIcons.music_note,
+                          size: 80,
+                          color: theme.hintColor.withOpacity(0.4),
+                        ),
                       ),
                     ),
                   ),
