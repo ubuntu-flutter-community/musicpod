@@ -16,12 +16,7 @@ class PlaylistModel extends SafeChangeNotifier {
   }
 
   bool liked(Audio audio) {
-    for (var a in likedAudios) {
-      if (audio.path == a.path) {
-        return true;
-      }
-    }
-    return false;
+    return likedAudios.contains(audio);
   }
 
   void removeLikedAudio(Audio audio) {
