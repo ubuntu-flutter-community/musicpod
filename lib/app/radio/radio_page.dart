@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_list.dart';
 import 'package:music/app/common/search_field.dart';
-import 'package:music/data/audio.dart';
-import 'package:music/data/stations.dart';
+import 'package:music/app/playlists/playlist_model.dart';
+import 'package:music/app/radio/radio_model.dart';
 import 'package:music/l10n/l10n.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class RadioPage extends StatefulWidget {
   const RadioPage({super.key});
+
+  static Widget create(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => RadioModel()..init(),
+      child: const RadioPage(),
+    );
+  }
 
   @override
   State<RadioPage> createState() => _RadioPageState();
@@ -18,21 +26,21 @@ class _RadioPageState extends State<RadioPage> {
   bool _searchActive = false;
   @override
   Widget build(BuildContext context) {
+    final model = context.watch<RadioModel>();
+    final playListModel = context.watch<PlaylistModel>();
     final page = Padding(
       padding: const EdgeInsets.only(top: 20),
       child: AudioList(
+        isLiked: playListModel.isStarredStation,
         listName: context.l10n.radio,
-        audios: Set.from(
-          stationsMap.entries
-              .map(
-                (e) => Audio(
-                  name: e.key,
-                  url: e.value,
-                  audioType: AudioType.radio,
-                ),
-              )
-              .toList(),
-        ),
+        editableName: false,
+        deletable: true,
+        showLikeButton: false,
+        likeIcon: const Icon(YaruIcons.star_filled),
+        unLikedIcon: const Icon(YaruIcons.star),
+        onLike: playListModel.addPlaylist,
+        onUnLike: playListModel.removePlaylist,
+        audios: model.stations ?? {},
       ),
     );
 

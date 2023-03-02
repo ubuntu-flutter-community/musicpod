@@ -11,6 +11,7 @@ import 'package:music/app/playlists/playlist_dialog.dart';
 import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/app/podcasts/podcasts_page.dart';
 import 'package:music/app/radio/radio_page.dart';
+import 'package:music/app/radio/stations.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:music/utils.dart';
 import 'package:provider/provider.dart';
@@ -92,7 +93,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           return Text(context.l10n.radio);
         },
         builder: (context) {
-          return const RadioPage();
+          return RadioPage.create(context);
         },
         iconBuilder: (context, selected) {
           return selected
@@ -136,7 +137,9 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             return AudioPage(
               audios: playlist.value,
               pageName: playlist.key,
-              editableName: false,
+              editableName: playlist.key != 'likedAudio' &&
+                  !stationsMap.containsKey(playlist.key),
+              deletable: playlist.key != 'likedAudio',
               showLikeButton: false,
             );
           },
@@ -148,14 +151,14 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                 child: playlist.key == 'likedAudio'
                     ? const Icon(YaruIcons.heart)
                     : Icon(
-                        YaruIcons.radiobox,
+                        YaruIcons.star,
                         color: theme.colorScheme.onSurface,
                       ),
               );
             }
             return playlist.key == 'likedAudio'
                 ? const Icon(YaruIcons.heart)
-                : const Icon(YaruIcons.radiobox);
+                : const Icon(YaruIcons.star);
           },
         ),
     ];

@@ -11,10 +11,14 @@ class PlaylistDialog extends StatefulWidget {
     super.key,
     required this.audios,
     this.name,
+    required this.editableName,
+    required this.deletable,
   });
 
   final Set<Audio> audios;
   final String? name;
+  final bool editableName;
+  final bool deletable;
 
   @override
   State<PlaylistDialog> createState() => _PlaylistDialogState();
@@ -49,11 +53,12 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextField(
-            autofocus: true,
-            controller: _nameController,
-            decoration: const InputDecoration(label: Text('Playlist name')),
-          )
+          if (widget.editableName)
+            TextField(
+              autofocus: true,
+              controller: _nameController,
+              decoration: const InputDecoration(label: Text('Playlist name')),
+            )
         ],
       ),
       actions: [
@@ -61,16 +66,18 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
           onPressed: () => Navigator.pop(context),
           child: Text(context.l10n.cancel),
         ),
-        if (model.playlists.containsKey(widget.name))
+        if (widget.deletable)
           OutlinedButton.icon(
             label: Text(context.l10n.deletePlaylist),
             icon: const Icon(YaruIcons.trash),
-            onPressed: () {
-              model.removePlaylist(widget.name!);
-              Navigator.pop(context);
-            },
+            onPressed: widget.name == null
+                ? null
+                : () {
+                    model.removePlaylist(widget.name!);
+                    Navigator.pop(context);
+                  },
           ),
-        if (model.playlists.containsKey(widget.name))
+        if (widget.editableName && widget.name != null)
           ElevatedButton(
             onPressed: () {
               model.updatePlaylistName(widget.name!, _nameController.text);
@@ -78,7 +85,7 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
             },
             child: Text(context.l10n.save),
           )
-        else
+        else if (widget.editableName)
           ElevatedButton(
             onPressed: () {
               model.addPlaylist(_nameController.text, widget.audios);

@@ -32,9 +32,18 @@ class PlaylistModel extends SafeChangeNotifier {
 
   final Set<Audio> _starredStations = {};
   Set<Audio> get starredStations => _starredStations;
-  void addStarredStation(Audio station) {
-    _starredStations.add(station);
+  void addStarredStation(Audio audio) {
+    _starredStations.add(audio);
     notifyListeners();
+  }
+
+  void unStarStation(Audio audio) {
+    _starredStations.remove(audio);
+    notifyListeners();
+  }
+
+  bool isStarredStation(Audio audio) {
+    return audio.name == null ? false : playlists.containsKey(audio.name);
   }
 
   final Map<String, Set<Audio>> _playlists = {};

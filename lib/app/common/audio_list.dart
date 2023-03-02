@@ -20,16 +20,26 @@ class AudioList extends StatefulWidget {
     this.onAudioFilterSelected,
     this.audioFilter,
     this.editableName = true,
+    required this.deletable,
     this.showLikeButton = true,
+    this.onLike,
+    this.isLiked,
+    this.unLikedIcon,
+    this.onUnLike,
   });
 
   final Set<Audio> audios;
   final Widget? likeIcon;
+  final Widget? unLikedIcon;
+  final void Function(String name, Set<Audio> audios)? onLike;
+  final void Function(String name)? onUnLike;
   final String? listName;
   final void Function(AudioFilter)? onAudioFilterSelected;
   final AudioFilter? audioFilter;
   final bool editableName;
+  final bool deletable;
   final bool showLikeButton;
+  final bool Function(Audio)? isLiked;
 
   @override
   State<AudioList> createState() => _AudioListState();
@@ -73,6 +83,7 @@ class _AudioListState extends State<AudioList> {
             bottom: 15,
           ),
           child: AudioListControlPanel(
+            deletable: widget.deletable,
             editableName: widget.editableName,
             audios: widget.audios,
             listName: widget.listName,
@@ -101,75 +112,96 @@ class _AudioListState extends State<AudioList> {
               final audio = widget.audios.elementAt(index);
               final audioSelected = playerModel.audio == audio;
 
-              final liked = playlistModel.liked(audio);
+              bool liked = widget.isLiked != null
+                  ? widget.isLiked!(audio)
+                  : playlistModel.liked(audio);
 
               return AudioTile(
                 key: ValueKey(audio),
                 selected: audioSelected,
                 audio: audio,
-                likeIcon: widget.likeIcon ??
-                    YaruPopupMenuButton(
-                      style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide.none,
-                          borderRadius:
-                              BorderRadius.circular(kYaruButtonRadius),
-                        ),
-                      ),
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem(
-                            child: Text(context.l10n.createNewPlaylist),
-                            onTap: () => showDialog(
-                              context: context,
-                              builder: (context) {
-                                return ChangeNotifierProvider.value(
-                                  value: playlistModel,
-                                  child: PlaylistDialog(
-                                    audios: {audio},
-                                  ),
-                                );
-                              },
-                            ),
+                likeIcon: widget.onLike != null &&
+                        widget.onUnLike != null &&
+                        widget.likeIcon != null &&
+                        widget.unLikedIcon != null
+                    ? liked
+                        ? YaruIconButton(
+                            icon: widget.likeIcon!,
+                            onPressed: audio.name == null
+                                ? null
+                                : () => widget.onUnLike!(audio.name!),
+                          )
+                        : YaruIconButton(
+                            icon: widget.unLikedIcon!,
+                            onPressed: audio.name == null
+                                ? null
+                                : () => widget.onLike!(audio.name!, {audio}),
+                          )
+                    : YaruPopupMenuButton(
+                        style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide.none,
+                            borderRadius:
+                                BorderRadius.circular(kYaruButtonRadius),
                           ),
-                          if (playlistModel.playlists
-                              .containsKey(widget.listName))
+                        ),
+                        itemBuilder: (context) {
+                          return [
                             PopupMenuItem(
-                              child: Text('Remove from ${widget.listName}'),
-                              onTap: () =>
-                                  playlistModel.removeAudioFromPlaylist(
-                                widget.listName!,
-                                audio,
+                              child: Text(context.l10n.createNewPlaylist),
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return ChangeNotifierProvider.value(
+                                    value: playlistModel,
+                                    child: PlaylistDialog(
+                                      deletable: true,
+                                      editableName: true,
+                                      audios: {audio},
+                                    ),
+                                  );
+                                },
                               ),
                             ),
-                          for (final playlist in playlistModel.playlists.entries
-                              .take(5)
-                              .toList())
-                            if (playlist.key != 'likedAudio')
+                            if (playlistModel.playlists
+                                .containsKey(widget.listName))
                               PopupMenuItem(
-                                child: Text(
-                                  '${context.l10n.addTo} ${playlist.key == 'likedAudio' ? context.l10n.likedSongs : playlist.key}',
-                                ),
-                                onTap: () => playlistModel.addAudioToPlaylist(
-                                  playlist.key,
+                                child: Text('Remove from ${widget.listName}'),
+                                onTap: () =>
+                                    playlistModel.removeAudioFromPlaylist(
+                                  widget.listName!,
                                   audio,
                                 ),
-                              )
-                        ];
-                      },
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(10),
-                        onTap: () => liked
-                            ? playlistModel.removeLikedAudio(audio)
-                            : playlistModel.addLikedAudio(audio),
-                        child: Icon(
-                          liked ? YaruIcons.heart_filled : YaruIcons.heart,
-                          color: audioSelected
-                              ? theme.colorScheme.onSurface
-                              : theme.hintColor,
+                              ),
+                            for (final playlist in playlistModel
+                                .playlists.entries
+                                .take(5)
+                                .toList())
+                              if (playlist.key != 'likedAudio')
+                                PopupMenuItem(
+                                  child: Text(
+                                    '${context.l10n.addTo} ${playlist.key == 'likedAudio' ? context.l10n.likedSongs : playlist.key}',
+                                  ),
+                                  onTap: () => playlistModel.addAudioToPlaylist(
+                                    playlist.key,
+                                    audio,
+                                  ),
+                                )
+                          ];
+                        },
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(10),
+                          onTap: () => liked
+                              ? playlistModel.removeLikedAudio(audio)
+                              : playlistModel.addLikedAudio(audio),
+                          child: Icon(
+                            liked ? YaruIcons.heart_filled : YaruIcons.heart,
+                            color: audioSelected
+                                ? theme.colorScheme.onSurface
+                                : theme.hintColor,
+                          ),
                         ),
                       ),
-                    ),
               );
             },
           ),
@@ -185,12 +217,14 @@ class AudioListControlPanel extends StatelessWidget {
     required this.audios,
     this.listName,
     this.editableName = true,
+    required this.deletable,
     this.showLikeButton = true,
   });
 
   final Set<Audio> audios;
   final String? listName;
   final bool editableName;
+  final bool deletable;
   final bool showLikeButton;
 
   @override
@@ -245,7 +279,7 @@ class AudioListControlPanel extends StatelessWidget {
         const SizedBox(
           width: 10,
         ),
-        if (editableName)
+        if (editableName || deletable)
           YaruIconButton(
             icon: const Icon(YaruIcons.pen),
             onPressed: () => showDialog(
@@ -253,6 +287,8 @@ class AudioListControlPanel extends StatelessWidget {
               builder: (context) => ChangeNotifierProvider<PlaylistModel>.value(
                 value: playlistModel,
                 child: PlaylistDialog(
+                  editableName: editableName,
+                  deletable: deletable,
                   name: listName,
                   audios: audios,
                 ),

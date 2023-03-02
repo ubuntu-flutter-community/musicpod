@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_page.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
-import 'package:music/app/playlists/playlist_dialog.dart';
-import 'package:music/app/playlists/playlist_model.dart';
-import 'package:music/data/stations.dart';
+import 'package:music/app/radio/stations.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -26,7 +24,6 @@ class _SearchFieldState extends State<SearchField> {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
     final localAudioModel = context.watch<LocalAudioModel>();
-    final playlistModel = context.watch<PlaylistModel>();
 
     final autoComplete = Autocomplete<Audio>(
       optionsViewBuilder: (context, onSelected, audios) {
@@ -46,18 +43,6 @@ class _SearchFieldState extends State<SearchField> {
                   final option = audios.elementAt(index);
                   final i = AutocompleteHighlightedOption.of(context);
                   return ListTile(
-                    trailing: YaruIconButton(
-                      icon: const Icon(YaruIcons.plus),
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (context) {
-                          return ChangeNotifierProvider.value(
-                            value: playlistModel,
-                            child: PlaylistDialog(audios: {option}),
-                          );
-                        },
-                      ),
-                    ),
                     onTap: () => onSelected(option),
                     selected: i == index,
                     title: Text(
@@ -140,10 +125,16 @@ class _SearchFieldState extends State<SearchField> {
             );
 
             return AudioPage(
-              audioPageType: AudioPageType.albumList,
+              deletable: false,
+              audioPageType: audio.metadata?.album != null
+                  ? AudioPageType.albumList
+                  : AudioPageType.list,
               editableName: false,
               audios: album?.isNotEmpty == true ? Set.from(album!) : {audio},
-              pageName: audio.metadata?.album ?? audio.metadata?.title ?? '',
+              pageName: audio.metadata?.album ??
+                  audio.metadata?.title ??
+                  audio.name ??
+                  '',
             );
           },
         ),

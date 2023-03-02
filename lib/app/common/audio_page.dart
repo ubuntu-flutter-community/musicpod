@@ -18,7 +18,8 @@ class AudioPage extends StatelessWidget {
     super.key,
     required this.audios,
     required this.pageName,
-    this.editableName = true,
+    required this.editableName,
+    required this.deletable,
     this.audioPageType = AudioPageType.list,
     this.showLikeButton = true,
   });
@@ -26,6 +27,7 @@ class AudioPage extends StatelessWidget {
   final Set<Audio> audios;
   final String pageName;
   final bool editableName;
+  final bool deletable;
   final AudioPageType audioPageType;
   final bool showLikeButton;
 
@@ -38,12 +40,15 @@ class AudioPage extends StatelessWidget {
     Widget? body = Padding(
       padding: const EdgeInsets.only(top: 20),
       child: AudioList(
+        deletable: deletable,
+        listName: pageName,
         audios: audios,
         editableName: editableName,
         showLikeButton: showLikeButton,
       ),
     );
-    if (audioPageType == AudioPageType.albumList) {
+    if (audioPageType == AudioPageType.albumList &&
+        audios.firstOrNull!.metadata?.album != null) {
       body = ListView(
         children: [
           FutureBuilder<Color?>(
@@ -87,7 +92,7 @@ class AudioPage extends StatelessWidget {
                             style: theme.textTheme.labelSmall,
                           ),
                           Text(
-                            audios.firstOrNull!.metadata!.album ?? '',
+                            audios.firstOrNull!.metadata?.album ?? '',
                             style: theme.textTheme.headlineLarge?.copyWith(
                               fontWeight: FontWeight.w300,
                               fontSize: 50,
@@ -122,8 +127,10 @@ class AudioPage extends StatelessWidget {
               bottom: 15,
             ),
             child: AudioListControlPanel(
-              editableName: false,
+              editableName: editableName,
               audios: audios,
+              deletable: deletable,
+              showLikeButton: showLikeButton,
             ),
           ),
           const Padding(
@@ -167,7 +174,9 @@ class AudioPage extends StatelessWidget {
                               return ChangeNotifierProvider.value(
                                 value: playlistModel,
                                 child: PlaylistDialog(
+                                  deletable: deletable,
                                   audios: {audio},
+                                  editableName: editableName,
                                 ),
                               );
                             },
