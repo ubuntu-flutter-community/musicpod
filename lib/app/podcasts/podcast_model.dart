@@ -29,9 +29,10 @@ class PodcastModel extends SafeChangeNotifier {
               imageUrl: e.imageUrl,
               metadata: Metadata(
                 title: e.title,
-                album: podcast.description,
+                album: podcast.title,
                 artist: podcast.title,
               ),
+              description: podcast.description,
             ),
           );
         }

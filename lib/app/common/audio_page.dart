@@ -152,7 +152,24 @@ class _AudioPageState extends State<AudioPage> {
                               color: theme.hintColor,
                               fontStyle: FontStyle.italic,
                             ),
-                          )
+                          ),
+                          if (widget.audios.firstOrNull?.description != null)
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 15),
+                                child: SizedBox(
+                                  width: 500,
+                                  child: Text(
+                                    widget.audios.firstOrNull!.description!,
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: theme.hintColor,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 4,
+                                  ),
+                                ),
+                              ),
+                            )
                         ],
                       ),
                     )
