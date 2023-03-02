@@ -29,8 +29,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     final theme = Theme.of(context);
 
     final page = localAudioModel.directory == null ||
-            localAudioModel.directory!.isEmpty ||
-            localAudioModel.audios == null
+            localAudioModel.directory!.isEmpty
         ? Center(
             child: ElevatedButton(
               onPressed: () async {
@@ -40,16 +39,20 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
               child: const Text('Pick your music collection'),
             ),
           )
-        : Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: AudioList(
-              showLikeButton: false,
-              editableName: false,
-              listName: context.l10n.localAudio,
-              audios: localAudioModel.audios!,
-              onAudioFilterSelected: (f) => localAudioModel.audioFilter = f,
-            ),
-          );
+        : localAudioModel.audios == null
+            ? const Center(
+                child: YaruCircularProgressIndicator(),
+              )
+            : Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: AudioList(
+                  showLikeButton: false,
+                  editableName: false,
+                  listName: context.l10n.localAudio,
+                  audios: localAudioModel.audios!,
+                  onAudioFilterSelected: (f) => localAudioModel.audioFilter = f,
+                ),
+              );
 
     final appBar = YaruWindowTitleBar(
       leading: Navigator.of(context).canPop()
