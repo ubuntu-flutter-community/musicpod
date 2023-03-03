@@ -132,8 +132,7 @@ class _PlayerState extends State<Player> {
         Text(
           model.audio?.metadata?.title ?? model.audio?.name ?? '',
           style: TextStyle(
-            fontWeight:
-                model.fullScreen == true ? FontWeight.w400 : FontWeight.bold,
+            fontWeight: FontWeight.w200,
             fontSize: model.fullScreen == true ? 45 : 15,
             color: model.fullScreen == true
                 ? theme.colorScheme.onSurface.withOpacity(0.7)
@@ -146,8 +145,7 @@ class _PlayerState extends State<Player> {
         Text(
           model.audio?.metadata?.artist ?? '',
           style: TextStyle(
-            fontWeight:
-                model.fullScreen == true ? FontWeight.w100 : FontWeight.w400,
+            fontWeight: FontWeight.w100,
             fontSize: model.fullScreen == true ? 25 : 15,
             color: model.fullScreen == true
                 ? theme.colorScheme.onSurface.withOpacity(0.7)
