@@ -12,7 +12,6 @@ import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/app/podcasts/podcast_model.dart';
 import 'package:music/app/podcasts/podcasts_page.dart';
 import 'package:music/app/radio/radio_page.dart';
-import 'package:music/app/radio/stations.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:music/utils.dart';
 import 'package:provider/provider.dart';
@@ -157,12 +156,15 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           },
           builder: (context) {
             return AudioPage(
+              audioPageType: AudioPageType.albumList,
               audios: playlist.value,
               pageName: playlist.key,
-              editableName: playlist.key != 'likedAudio' &&
-                  !stationsMap.containsKey(playlist.key),
-              deletable: playlist.key != 'likedAudio',
-              showLikeButton: false,
+              editableName: false,
+              deletable: false,
+              likeButton: YaruIconButton(
+                icon: const Icon(YaruIcons.star_filled),
+                onPressed: () => playlistModel.removePlaylist(playlist.key),
+              ),
             );
           },
           iconBuilder: (context, selected) {

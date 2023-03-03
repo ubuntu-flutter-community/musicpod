@@ -34,7 +34,7 @@ class _RadioPageState extends State<RadioPage> {
         listName: context.l10n.radio,
         editableName: false,
         deletable: true,
-        showLikeButton: false,
+        likeButton: const SizedBox.shrink(),
         isLikedIcon: const Icon(YaruIcons.star_filled),
         isUnLikedIcon: const Icon(YaruIcons.star),
         onLike: playListModel.addPlaylist,

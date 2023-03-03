@@ -45,8 +45,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             : Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: AudioList(
+                  likeButton: const SizedBox.shrink(),
                   deletable: false,
-                  showLikeButton: false,
                   editableName: false,
                   listName: context.l10n.localAudio,
                   audios: localAudioModel.audios!,

@@ -21,11 +21,11 @@ class AudioList extends StatefulWidget {
     this.audioFilter,
     this.editableName = true,
     required this.deletable,
-    this.showLikeButton = true,
     this.onLike,
     this.isLiked,
     this.isUnLikedIcon,
     this.onUnLike,
+    this.likeButton,
   });
 
   final Set<Audio> audios;
@@ -38,8 +38,8 @@ class AudioList extends StatefulWidget {
   final AudioFilter? audioFilter;
   final bool editableName;
   final bool deletable;
-  final bool showLikeButton;
   final bool Function(Audio)? isLiked;
+  final Widget? likeButton;
 
   @override
   State<AudioList> createState() => _AudioListState();
@@ -87,7 +87,7 @@ class _AudioListState extends State<AudioList> {
             editableName: widget.editableName,
             audios: widget.audios,
             listName: widget.listName,
-            showLikeButton: widget.showLikeButton,
+            likeButton: widget.likeButton,
           ),
         ),
         const Padding(
@@ -224,14 +224,14 @@ class AudioListControlPanel extends StatelessWidget {
     this.listName,
     this.editableName = true,
     required this.deletable,
-    this.showLikeButton = true,
+    this.likeButton,
   });
 
   final Set<Audio> audios;
   final String? listName;
   final bool editableName;
   final bool deletable;
-  final bool showLikeButton;
+  final Widget? likeButton;
 
   @override
   Widget build(BuildContext context) {
@@ -273,7 +273,9 @@ class AudioListControlPanel extends StatelessWidget {
         const SizedBox(
           width: 10,
         ),
-        if (showLikeButton)
+        if (likeButton != null)
+          likeButton!
+        else
           IconButton(
             onPressed: () => allLiked
                 ? playlistModel.removeLikedAudios(audios)

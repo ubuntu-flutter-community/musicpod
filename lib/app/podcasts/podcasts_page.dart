@@ -3,6 +3,7 @@ import 'package:music/app/common/audio_card.dart';
 import 'package:music/app/common/audio_page.dart';
 import 'package:music/app/common/constants.dart';
 import 'package:music/app/player_model.dart';
+import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/app/podcasts/podcast_model.dart';
 import 'package:music/app/podcasts/podcast_search_field.dart';
 import 'package:music/data/audio.dart';
@@ -19,6 +20,7 @@ class PodcastsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.watch<PodcastModel>();
     final playerModel = context.watch<PlayerModel>();
+    final playListModel = context.watch<PlaylistModel>();
 
     final GridView grid;
     if (model.charts?.isNotEmpty == true) {
@@ -56,14 +58,47 @@ class PodcastsPage extends StatelessWidget {
                             a.metadata!.album != null &&
                             a.metadata?.album == audio.metadata?.album,
                       );
+                      final starred = audio.metadata?.title == null
+                          ? false
+                          : playListModel.playlists
+                              .containsKey(audio.metadata!.title!);
 
                       return AudioPage(
+                        likeButton: YaruIconButton(
+                          icon: Icon(
+                            starred ? YaruIcons.star_filled : YaruIcons.star,
+                          ),
+                          onPressed: starred
+                              ? () => playListModel
+                                  .removePlaylist(audio.metadata!.title!)
+                              : () {
+                                  model
+                                      .search(searchQuery: audio.name)
+                                      .then((value) {
+                                    if (model.searchResult?.isEmpty == true) {
+                                      return;
+                                    }
+                                    final album = model.searchResult?.where(
+                                      (a) =>
+                                          a.metadata != null &&
+                                          a.metadata!.album != null &&
+                                          a.metadata?.album ==
+                                              audio.metadata?.album,
+                                    );
+                                    if (album?.isNotEmpty == true &&
+                                        audio.metadata?.title != null) {
+                                      playListModel.addPlaylist(
+                                        audio.metadata!.title!,
+                                        album!.toSet(),
+                                      );
+                                    }
+                                  });
+                                },
+                        ),
                         imageUrl: audio.imageUrl,
                         title: const PodcastSearchField(),
                         deletable: false,
-                        audioPageType: audio.metadata?.album != null
-                            ? AudioPageType.albumList
-                            : AudioPageType.list,
+                        audioPageType: AudioPageType.albumList,
                         editableName: false,
                         audios: album?.isNotEmpty == true
                             ? Set.from(album!)

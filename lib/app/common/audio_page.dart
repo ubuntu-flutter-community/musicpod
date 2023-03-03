@@ -22,9 +22,9 @@ class AudioPage extends StatefulWidget {
     required this.editableName,
     required this.deletable,
     this.audioPageType = AudioPageType.list,
-    this.showLikeButton = true,
     this.title,
     this.imageUrl,
+    this.likeButton,
   });
 
   final Set<Audio> audios;
@@ -32,7 +32,7 @@ class AudioPage extends StatefulWidget {
   final bool editableName;
   final bool deletable;
   final AudioPageType audioPageType;
-  final bool showLikeButton;
+  final Widget? likeButton;
   final Widget? title;
   final String? imageUrl;
 
@@ -76,7 +76,7 @@ class _AudioPageState extends State<AudioPage> {
         listName: widget.pageName,
         audios: widget.audios,
         editableName: widget.editableName,
-        showLikeButton: widget.showLikeButton,
+        likeButton: widget.likeButton,
       ),
     );
     if (widget.audioPageType == AudioPageType.albumList &&
@@ -203,10 +203,10 @@ class _AudioPageState extends State<AudioPage> {
               bottom: 15,
             ),
             child: AudioListControlPanel(
+              likeButton: widget.likeButton,
               editableName: widget.editableName,
               audios: widget.audios,
               deletable: widget.deletable,
-              showLikeButton: widget.showLikeButton,
             ),
           ),
           const Padding(

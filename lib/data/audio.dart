@@ -70,6 +70,15 @@ class Audio {
       return true;
     }
 
+    if (other is Audio &&
+        other.audioType == AudioType.podcast &&
+        audioType == AudioType.podcast &&
+        url != null &&
+        other.url != null &&
+        other.url == url) {
+      return true;
+    }
+
     return false;
   }
 
