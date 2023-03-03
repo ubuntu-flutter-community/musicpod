@@ -90,9 +90,24 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           return const LocalAudioPage();
         },
         iconBuilder: (context, selected) {
-          return selected
-              ? const Icon(YaruIcons.headphones)
-              : const Icon(YaruIcons.headphones);
+          return Stack(
+            children: [
+              selected
+                  ? const Icon(YaruIcons.drive_harddisk_filled)
+                  : const Icon(YaruIcons.drive_harddisk),
+              Positioned(
+                left: 5,
+                top: 1,
+                child: Icon(
+                  YaruIcons.music_note,
+                  size: 10,
+                  color: selected
+                      ? theme.colorScheme.surface
+                      : theme.colorScheme.onSurface,
+                ),
+              )
+            ],
+          );
         },
       ),
       MasterItem(
@@ -104,8 +119,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
         },
         iconBuilder: (context, selected) {
           return selected
-              ? const Icon(YaruIcons.globe_filled)
-              : const Icon(YaruIcons.globe);
+              ? const Icon(YaruIcons.network_cellular)
+              : const Icon(YaruIcons.network_cellular);
         },
       ),
       MasterItem(
@@ -117,8 +132,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
         },
         iconBuilder: (context, selected) {
           return selected
-              ? const Icon(YaruIcons.network_cellular)
-              : const Icon(YaruIcons.network_cellular);
+              ? const Icon(YaruIcons.microphone_filled)
+              : const Icon(YaruIcons.microphone);
         },
       ),
       MasterItem(
