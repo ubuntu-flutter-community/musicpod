@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_list.dart';
 import 'package:music/app/common/audio_tile.dart';
+import 'package:music/app/common/safe_network_image.dart';
 import 'package:music/app/common/search_field.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/app/playlists/playlist_dialog.dart';
@@ -23,6 +24,7 @@ class AudioPage extends StatefulWidget {
     this.audioPageType = AudioPageType.list,
     this.showLikeButton = true,
     this.title,
+    this.imageUrl,
   });
 
   final Set<Audio> audios;
@@ -32,6 +34,7 @@ class AudioPage extends StatefulWidget {
   final AudioPageType audioPageType;
   final bool showLikeButton;
   final Widget? title;
+  final String? imageUrl;
 
   @override
   State<AudioPage> createState() => _AudioPageState();
@@ -113,14 +116,14 @@ class _AudioPageState extends State<AudioPage> {
                           ),
                         ),
                       )
-                    else if (widget.audios.firstOrNull?.imageUrl != null)
+                    else
                       Padding(
                         padding: const EdgeInsets.only(right: 20),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            widget.audios.firstOrNull!.imageUrl!,
-                            width: 200.0,
+                          child: SafeNetworkImage(
+                            url: widget.imageUrl ??
+                                widget.audios.firstOrNull!.imageUrl!,
                             fit: BoxFit.fitWidth,
                             filterQuality: FilterQuality.medium,
                           ),

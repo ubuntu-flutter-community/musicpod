@@ -29,43 +29,15 @@ class AudioCard extends StatelessWidget {
       padding: EdgeInsets.zero,
       onTap: onTap,
       onHover: (value) {},
-      child: Column(
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-              ),
-              child: SizedBox(
-                width: 250,
-                child: SafeNetworkImage(
-                  // TODO add memory image option
-                  fallBackIcon: fallBackLoadingIcon,
-                  url: audio.imageUrl,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          YaruTile(
-            style: YaruTileStyle.banner,
-            padding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              top: 6,
-              bottom: 5,
-            ),
-            title: Text(
-              audio.name ?? '',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          )
-        ],
+      child: ClipRRect(
+        clipBehavior: Clip.hardEdge,
+        borderRadius: BorderRadius.circular(10),
+        child: SafeNetworkImage(
+          // TODO add memory image option
+          fallBackIcon: fallBackLoadingIcon,
+          url: audio.imageUrl,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }

@@ -50,6 +50,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                     ? Audio()
                     : model.charts!.elementAt(index);
                 return AudioCard(
+                  audio: audio,
                   onTap: () {
                     model.search(searchQuery: audio.name).then((value) {
                       if (model.searchResult.isEmpty) {
@@ -67,6 +68,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                             );
 
                             return AudioPage(
+                              imageUrl: audio.imageUrl,
                               title: const PodcastSearchField(),
                               deletable: false,
                               audioPageType: audio.metadata?.album != null
@@ -86,7 +88,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
                       );
                     });
                   },
-                  audio: audio,
                 );
               },
             ),

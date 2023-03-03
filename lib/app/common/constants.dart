@@ -21,7 +21,7 @@ const kGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
 );
 const kImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
   maxCrossAxisExtent: 250,
-  childAspectRatio: 0.9,
+  // childAspectRatio: 0.9,
   // mainAxisExtent: 250,
   mainAxisSpacing: 10,
   crossAxisSpacing: 10,
