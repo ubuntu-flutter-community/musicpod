@@ -29,6 +29,7 @@ dependencies:
   podcast_search: ^0.5.2
   provider: ^6.0.5
   safe_change_notifier: ^0.2.0
+  shimmer: ^2.0.0
   yaru: ^0.5.5
   yaru_icons: ^1.0.3
   yaru_widgets: ^2.1.1

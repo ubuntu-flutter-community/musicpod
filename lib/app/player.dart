@@ -140,6 +140,8 @@ class _PlayerState extends State<Player> {
                 : null,
           ),
           textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
         Text(
           model.audio?.metadata?.artist ?? '',
@@ -152,6 +154,8 @@ class _PlayerState extends State<Player> {
                 : null,
           ),
           textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
         ),
       ],
     );
@@ -344,6 +348,7 @@ class _PlayerState extends State<Player> {
                             style: theme.textTheme.labelMedium
                                 ?.copyWith(color: theme.colorScheme.onSurface),
                             overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         )
                     ],

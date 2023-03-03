@@ -77,7 +77,7 @@ class _AudioPageState extends State<AudioPage> {
       ),
     );
     if (widget.audioPageType == AudioPageType.albumList &&
-        widget.audios.firstOrNull!.metadata?.album != null) {
+        widget.audios.firstOrNull?.metadata?.album != null) {
       body = ListView(
         controller: _controller,
         children: [
@@ -109,6 +109,7 @@ class _AudioPageState extends State<AudioPage> {
                             widget.audios.firstOrNull!.metadata!.picture!.data,
                             width: 200.0,
                             fit: BoxFit.fitWidth,
+                            filterQuality: FilterQuality.medium,
                           ),
                         ),
                       )
@@ -121,6 +122,7 @@ class _AudioPageState extends State<AudioPage> {
                             widget.audios.firstOrNull!.imageUrl!,
                             width: 200.0,
                             fit: BoxFit.fitWidth,
+                            filterQuality: FilterQuality.medium,
                           ),
                         ),
                       ),
