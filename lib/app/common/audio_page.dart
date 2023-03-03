@@ -123,6 +123,16 @@ class _AudioPageState extends State<AudioPage> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: SafeNetworkImage(
+                            fallBackIcon: SizedBox(
+                              width: 200,
+                              child: Center(
+                                child: Icon(
+                                  YaruIcons.music_note,
+                                  size: 80,
+                                  color: theme.hintColor,
+                                ),
+                              ),
+                            ),
                             url: widget.imageUrl ??
                                 widget.audios.firstOrNull?.imageUrl,
                             fit: BoxFit.fitWidth,

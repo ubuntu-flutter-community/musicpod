@@ -60,7 +60,7 @@ class PodcastModel extends SafeChangeNotifier {
   }
 
   Future<void> search({String? searchQuery}) async {
-    searchResult.clear();
+    searchResult = [];
     if (searchQuery?.isNotEmpty == true) {
       final podcastSearch = <Audio>[];
 

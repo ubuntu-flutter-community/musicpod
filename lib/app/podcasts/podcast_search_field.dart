@@ -89,11 +89,8 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
           ),
         );
       },
-      initialValue: TextEditingValue.empty,
       optionsBuilder: (textEditingValue) {
-        final allAudios = (podcastModel.searchResult.toList());
-
-        return allAudios.where((a) {
+        return podcastModel.searchResult.where((a) {
           if (a.toString().toLowerCase().contains(
                 textEditingValue.text.toLowerCase(),
               )) {
@@ -103,32 +100,35 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
           return false;
         }).toList();
       },
-      onSelected: (audio) => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) {
-            final album = podcastModel.searchResult.where(
-              (a) =>
-                  a.metadata != null &&
-                  a.metadata!.album != null &&
-                  a.metadata?.album == audio.metadata?.album,
-            );
+      onSelected: (audio) => podcastModel.search(searchQuery: ' ').then(
+            (value) => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  final album = podcastModel.searchResult.where(
+                    (a) =>
+                        a.metadata != null &&
+                        a.metadata!.album != null &&
+                        a.metadata?.album == audio.metadata?.album,
+                  );
 
-            return AudioPage(
-              title: const PodcastSearchField(),
-              deletable: false,
-              audioPageType: audio.metadata?.album != null
-                  ? AudioPageType.albumList
-                  : AudioPageType.list,
-              editableName: false,
-              audios: album.isNotEmpty == true ? Set.from(album) : {audio},
-              pageName: audio.metadata?.album ??
-                  audio.metadata?.title ??
-                  audio.name ??
-                  '',
-            );
-          },
-        ),
-      ),
+                  return AudioPage(
+                    title: const PodcastSearchField(),
+                    deletable: false,
+                    audioPageType: audio.metadata?.album != null
+                        ? AudioPageType.albumList
+                        : AudioPageType.list,
+                    editableName: false,
+                    audios:
+                        album.isNotEmpty == true ? Set.from(album) : {audio},
+                    pageName: audio.metadata?.album ??
+                        audio.metadata?.title ??
+                        audio.name ??
+                        '',
+                  );
+                },
+              ),
+            ),
+          ),
     );
 
     return autoComplete;
