@@ -24,38 +24,51 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> init() async {
-    charts ??= {};
-    charts?.clear();
+  Country _country = Country.GERMANY;
+  Country get country => _country;
+  set country(Country value) {
+    if (value == _country) return;
+    _country = value;
+    notifyListeners();
+  }
 
-    var chartsSearch = await _search.charts(
-      genre: 'Games',
+  Future<void> loadCharts() async {
+    final chartsSearch = await _search.charts(
+      genre: 'Science',
       limit: 10,
-      country: Country.GERMANY,
+      country: _country,
     );
 
-    for (var item in chartsSearch.items) {
-      if (item.feedUrl != null) {
-        final Podcast podcast = await Podcast.loadFeed(
-          url: item.feedUrl!,
-        );
+    if (chartsSearch.successful && chartsSearch.items.isNotEmpty) {
+      _charts ??= {};
+      _charts?.clear();
 
-        _charts!.add(
-          Audio(
-            url: podcast.episodes?.firstOrNull?.contentUrl,
-            audioType: AudioType.podcast,
-            name: podcast.title,
-            imageUrl: podcast.image,
-            metadata: Metadata(
-              title: podcast.title,
-              album: podcast.title,
-              artist: podcast.title,
+      for (var item in chartsSearch.items) {
+        if (item.feedUrl != null) {
+          final Podcast podcast = await Podcast.loadFeed(
+            url: item.feedUrl!,
+          );
+
+          _charts!.add(
+            Audio(
+              url: podcast.episodes?.firstOrNull?.contentUrl,
+              audioType: AudioType.podcast,
+              name: podcast.title,
+              imageUrl: podcast.image,
+              metadata: Metadata(
+                title: podcast.title,
+                album: podcast.title,
+                artist: podcast.title,
+              ),
+              description: podcast.description,
             ),
-            description: podcast.description,
-          ),
-        );
+          );
+        }
       }
+    } else {
+      _charts = null;
     }
+
     notifyListeners();
   }
 

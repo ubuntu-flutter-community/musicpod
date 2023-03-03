@@ -19,7 +19,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<PodcastModel>().init();
+    context.read<PodcastModel>().loadCharts();
   }
 
   @override
@@ -38,17 +38,20 @@ class _PodcastsPageState extends State<PodcastsPage> {
         title: const PodcastSearchField(),
       ),
       body: model.charts == null
-          ? const Center(
-              child: YaruCircularProgressIndicator(),
+          ? GridView(
+              gridDelegate: kImageGridDelegate,
+              padding: const EdgeInsets.all(kYaruPagePadding),
+              children: [
+                for (final dummy in List.generate(30, (index) => Audio()))
+                  AudioCard(audio: dummy)
+              ],
             )
           : GridView.builder(
               padding: const EdgeInsets.all(kYaruPagePadding),
-              itemCount: model.charts!.isEmpty ? 30 : model.charts!.length,
+              itemCount: model.charts!.length,
               gridDelegate: kImageGridDelegate,
               itemBuilder: (context, index) {
-                final audio = model.charts!.isEmpty
-                    ? Audio()
-                    : model.charts!.elementAt(index);
+                final audio = model.charts!.elementAt(index);
                 return AudioCard(
                   audio: audio,
                   onTap: () {
