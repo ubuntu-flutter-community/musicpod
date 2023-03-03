@@ -336,11 +336,21 @@ enum AudioPageType {
 }
 
 Future<Color?> getColor(Audio? audio) async {
-  if (audio == null || audio.path == null) return null;
+  if (audio == null) return null;
 
-  final image = MemoryImage(
-    audio.metadata!.picture!.data,
-  );
-  final generator = await PaletteGenerator.fromImageProvider(image);
-  return generator.dominantColor?.color.withOpacity(0.1);
+  if (audio.path != null) {
+    final image = MemoryImage(
+      audio.metadata!.picture!.data,
+    );
+    final generator = await PaletteGenerator.fromImageProvider(image);
+    return generator.dominantColor?.color.withOpacity(0.1);
+  } else if (audio.audioType == AudioType.podcast) {
+    if (audio.imageUrl == null) return null;
+    final image = NetworkImage(
+      audio.imageUrl!,
+    );
+    final generator = await PaletteGenerator.fromImageProvider(image);
+    return generator.dominantColor?.color.withOpacity(0.1);
+  }
+  return null;
 }
