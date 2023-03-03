@@ -68,6 +68,7 @@ class _AudioPageState extends State<AudioPage> {
     final playerModel = context.watch<PlayerModel>();
     final playlistModel = context.watch<PlaylistModel>();
     final theme = Theme.of(context);
+    final light = theme.brightness == Brightness.light;
 
     Widget? body = Padding(
       padding: const EdgeInsets.only(top: 20),
@@ -91,7 +92,10 @@ class _AudioPageState extends State<AudioPage> {
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  colors: [Colors.transparent, theme.cardColor],
+                  colors: [
+                    light ? Colors.white : Colors.transparent,
+                    light ? const Color(0xFFfafafa) : theme.cardColor
+                  ],
                 ),
               ),
               padding: const EdgeInsets.all(20),
