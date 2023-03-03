@@ -19,7 +19,6 @@ class PodcastModel extends SafeChangeNotifier {
   Set<Audio>? _charts;
   Set<Audio>? get charts => _charts;
   set charts(Set<Audio>? audios) {
-    if (audios == null) return;
     _charts = audios;
     notifyListeners();
   }
@@ -33,9 +32,10 @@ class PodcastModel extends SafeChangeNotifier {
   }
 
   Future<void> loadCharts() async {
+    charts = null;
     final chartsSearch = await _search.charts(
       genre: 'Science',
-      limit: 10,
+      limit: 20,
       country: _country,
     );
 
@@ -49,7 +49,7 @@ class PodcastModel extends SafeChangeNotifier {
             url: item.feedUrl!,
           );
 
-          _charts!.add(
+          _charts?.add(
             Audio(
               url: podcast.episodes?.firstOrNull?.contentUrl,
               audioType: AudioType.podcast,

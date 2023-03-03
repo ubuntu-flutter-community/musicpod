@@ -58,7 +58,7 @@ class _App extends StatefulWidget {
         ),
         ChangeNotifierProvider(create: (_) => AppModel()),
         ChangeNotifierProvider(
-          create: (_) => PodcastModel(),
+          create: (_) => PodcastModel()..loadCharts(),
         )
       ],
       child: const _App(),
