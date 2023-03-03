@@ -81,231 +81,227 @@ class _AudioPageState extends State<AudioPage> {
     );
     if (widget.audioPageType == AudioPageType.albumList &&
         widget.audios.firstOrNull?.metadata?.album != null) {
-      body = ListView(
+      body = SingleChildScrollView(
         controller: _controller,
-        children: [
-          FutureBuilder<Color?>(
-            future: getColor(widget.audios.firstOrNull),
-            builder: (context, snapshot) {
-              return Container(
-                height: 240,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [
-                      Colors.transparent,
-                      snapshot.data ?? theme.cardColor
-                    ],
-                  ),
+        child: Column(
+          children: [
+            Container(
+              height: 240,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [Colors.transparent, theme.cardColor],
                 ),
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (widget.audios.firstOrNull?.metadata?.picture != null)
-                      Padding(
-                        padding: const EdgeInsets.only(right: 20),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.memory(
-                            widget.audios.firstOrNull!.metadata!.picture!.data,
-                            width: 200.0,
-                            fit: BoxFit.fitWidth,
-                            filterQuality: FilterQuality.medium,
-                          ),
+              ),
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (widget.audios.firstOrNull?.metadata?.picture != null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.memory(
+                          widget.audios.firstOrNull!.metadata!.picture!.data,
+                          width: 200.0,
+                          fit: BoxFit.fitWidth,
+                          filterQuality: FilterQuality.medium,
                         ),
-                      )
-                    else if (widget.imageUrl != null ||
-                        widget.audios.firstOrNull?.imageUrl != null)
-                      Padding(
-                        padding: const EdgeInsets.only(right: 20),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: SafeNetworkImage(
-                            fallBackIcon: SizedBox(
-                              width: 200,
-                              child: Center(
-                                child: Icon(
-                                  YaruIcons.music_note,
-                                  size: 80,
-                                  color: theme.hintColor,
-                                ),
-                              ),
-                            ),
-                            url: widget.imageUrl ??
-                                widget.audios.firstOrNull?.imageUrl,
-                            fit: BoxFit.fitWidth,
-                            filterQuality: FilterQuality.medium,
-                          ),
-                        ),
-                      ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            context.l10n.album,
-                            style: theme.textTheme.labelSmall,
-                          ),
-                          Text(
-                            widget.audios.firstOrNull!.metadata?.album ?? '',
-                            style: theme.textTheme.headlineLarge?.copyWith(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 50,
-                              color:
-                                  theme.colorScheme.onSurface.withOpacity(0.8),
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            widget.audios.firstOrNull?.metadata?.artist ?? '',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.hintColor,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                          if (widget.audios.firstOrNull?.description != null)
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 15),
-                                child: SizedBox(
-                                  width: 500,
-                                  child: Text(
-                                    widget.audios.firstOrNull!.description!
-                                        .trim(),
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      color: theme.hintColor,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 4,
-                                  ),
-                                ),
-                              ),
-                            )
-                        ],
                       ),
                     )
-                  ],
-                ),
-              );
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 20,
-              left: 20,
-              right: 20,
-              bottom: 15,
-            ),
-            child: AudioListControlPanel(
-              likeButton: widget.likeButton,
-              editableName: widget.editableName,
-              audios: widget.audios,
-              deletable: widget.deletable,
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-            ),
-            child: AudioListHeader(),
-          ),
-          const Divider(
-            height: 0,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-            child: Column(
-              children:
-                  List.generate(widget.audios.take(_amount).length, (index) {
-                final audio = widget.audios.elementAt(index);
-                final audioSelected = playerModel.audio == audio;
-
-                final liked = playlistModel.liked(audio);
-
-                return AudioTile(
-                  isPlayerPlaying: playerModel.isPlaying,
-                  pause: playerModel.pause,
-                  play: () {
-                    playerModel.audio = audio;
-                    playerModel.stop().then((_) => playerModel.play());
-                  },
-                  key: ValueKey(audio),
-                  selected: audioSelected,
-                  audio: audio,
-                  // TODO: extract popup menu button!!!
-                  likeIcon: YaruPopupMenuButton(
-                    style: TextButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide.none,
-                        borderRadius: BorderRadius.circular(kYaruButtonRadius),
-                      ),
-                    ),
-                    itemBuilder: (context) {
-                      return [
-                        PopupMenuItem(
-                          child: Text(context.l10n.createNewPlaylist),
-                          onTap: () => showDialog(
-                            context: context,
-                            builder: (context) {
-                              return ChangeNotifierProvider.value(
-                                value: playlistModel,
-                                child: PlaylistDialog(
-                                  deletable: widget.deletable,
-                                  audios: {audio},
-                                  editableName: widget.editableName,
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        if (playlistModel.playlists
-                            .containsKey(widget.pageName))
-                          PopupMenuItem(
-                            child: Text('Remove from ${widget.pageName}'),
-                            onTap: () => playlistModel.removeAudioFromPlaylist(
-                              widget.pageName,
-                              audio,
+                  else if (widget.imageUrl != null ||
+                      widget.audios.firstOrNull?.imageUrl != null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: SafeNetworkImage(
+                          fallBackIcon: SizedBox(
+                            width: 200,
+                            child: Center(
+                              child: Icon(
+                                YaruIcons.music_note,
+                                size: 80,
+                                color: theme.hintColor,
+                              ),
                             ),
                           ),
-                        for (final playlist
-                            in playlistModel.playlists.entries.take(5).toList())
-                          if (playlist.key != 'likedAudio')
-                            PopupMenuItem(
-                              child: Text(
-                                '${context.l10n.addTo} ${playlist.key == 'likedAudio' ? context.l10n.likedSongs : playlist.key}',
-                              ),
-                              onTap: () => playlistModel.addAudioToPlaylist(
-                                playlist.key,
-                                audio,
-                              ),
-                            )
-                      ];
-                    },
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(10),
-                      onTap: () => liked
-                          ? playlistModel.removeLikedAudio(audio)
-                          : playlistModel.addLikedAudio(audio),
-                      child: Icon(
-                        liked ? YaruIcons.heart_filled : YaruIcons.heart,
-                        color: audioSelected
-                            ? theme.colorScheme.onSurface
-                            : theme.hintColor,
+                          url: widget.imageUrl ??
+                              widget.audios.firstOrNull?.imageUrl,
+                          fit: BoxFit.fitWidth,
+                          filterQuality: FilterQuality.medium,
+                        ),
                       ),
                     ),
-                  ),
-                );
-              }),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          context.l10n.album,
+                          style: theme.textTheme.labelSmall,
+                        ),
+                        Text(
+                          widget.audios.firstOrNull!.metadata?.album ?? '',
+                          style: theme.textTheme.headlineLarge?.copyWith(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 50,
+                            color: theme.colorScheme.onSurface.withOpacity(0.8),
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          widget.audios.firstOrNull?.metadata?.artist ?? '',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.hintColor,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        if (widget.audios.firstOrNull?.description != null)
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: SizedBox(
+                                width: 500,
+                                child: Text(
+                                  widget.audios.firstOrNull!.description!
+                                      .trim(),
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: theme.hintColor,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 4,
+                                ),
+                              ),
+                            ),
+                          )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 20,
+                left: 20,
+                right: 20,
+                bottom: 15,
+              ),
+              child: AudioListControlPanel(
+                likeButton: widget.likeButton,
+                editableName: widget.editableName,
+                audios: widget.audios,
+                deletable: widget.deletable,
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+              ),
+              child: AudioListHeader(),
+            ),
+            const Divider(
+              height: 0,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+              child: Column(
+                children:
+                    List.generate(widget.audios.take(_amount).length, (index) {
+                  final audio = widget.audios.elementAt(index);
+                  final audioSelected = playerModel.audio == audio;
+
+                  final liked = playlistModel.liked(audio);
+
+                  return AudioTile(
+                    isPlayerPlaying: playerModel.isPlaying,
+                    pause: playerModel.pause,
+                    play: () {
+                      playerModel.audio = audio;
+                      playerModel.stop().then((_) => playerModel.play());
+                    },
+                    key: ValueKey(audio),
+                    selected: audioSelected,
+                    audio: audio,
+                    // TODO: extract popup menu button!!!
+                    likeIcon: YaruPopupMenuButton(
+                      style: TextButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide.none,
+                          borderRadius:
+                              BorderRadius.circular(kYaruButtonRadius),
+                        ),
+                      ),
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            child: Text(context.l10n.createNewPlaylist),
+                            onTap: () => showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ChangeNotifierProvider.value(
+                                  value: playlistModel,
+                                  child: PlaylistDialog(
+                                    deletable: widget.deletable,
+                                    audios: {audio},
+                                    editableName: widget.editableName,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          if (playlistModel.playlists
+                              .containsKey(widget.pageName))
+                            PopupMenuItem(
+                              child: Text('Remove from ${widget.pageName}'),
+                              onTap: () =>
+                                  playlistModel.removeAudioFromPlaylist(
+                                widget.pageName,
+                                audio,
+                              ),
+                            ),
+                          for (final playlist in playlistModel.playlists.entries
+                              .take(5)
+                              .toList())
+                            if (playlist.key != 'likedAudio')
+                              PopupMenuItem(
+                                child: Text(
+                                  '${context.l10n.addTo} ${playlist.key == 'likedAudio' ? context.l10n.likedSongs : playlist.key}',
+                                ),
+                                onTap: () => playlistModel.addAudioToPlaylist(
+                                  playlist.key,
+                                  audio,
+                                ),
+                              )
+                        ];
+                      },
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(10),
+                        onTap: () => liked
+                            ? playlistModel.removeLikedAudio(audio)
+                            : playlistModel.addLikedAudio(audio),
+                        child: Icon(
+                          liked ? YaruIcons.heart_filled : YaruIcons.heart,
+                          color: audioSelected
+                              ? theme.colorScheme.onSurface
+                              : theme.hintColor,
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            )
+          ],
+        ),
       );
     }
 
