@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:music/string_x.dart';
 import 'package:music/data/audio.dart';
@@ -317,12 +318,19 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Country _country = Country.GERMANY;
+  Country _country = Country.UNITED_STATES;
   Country get country => _country;
   set country(Country value) {
     if (value == _country) return;
     _country = value;
     notifyListeners();
+  }
+
+  String getLocalizedCountry(Country country) {
+    return Locale.fromSubtags(
+          countryCode: country.countryCode,
+        ).scriptCode ??
+        country.countryCode;
   }
 
   Language _language = Language.NONE;
@@ -339,6 +347,22 @@ class PodcastModel extends SafeChangeNotifier {
     if (value == _podcastGenre) return;
     _podcastGenre = value;
     notifyListeners();
+  }
+
+  List<PodcastGenre> get notSelectedGenres {
+    return PodcastGenre.values.where((g) => g != podcastGenre).toList();
+  }
+
+  List<Country> get notSelectedCountries {
+    return countries.where((c) => c != country).toList();
+  }
+
+  Future<void> init(String? countryCode) async {
+    final c = countries.firstWhereOrNull((c) => c.countryCode == countryCode);
+    if (c != null) {
+      _country = c;
+    }
+    await loadCharts();
   }
 
   Future<void> loadCharts() async {

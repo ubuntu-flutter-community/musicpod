@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_card.dart';
 import 'package:music/app/common/audio_page.dart';
@@ -6,18 +5,12 @@ import 'package:music/app/common/constants.dart';
 import 'package:music/app/podcasts/podcast_model.dart';
 import 'package:music/app/podcasts/podcast_search_field.dart';
 import 'package:music/data/audio.dart';
-import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-class PodcastsPage extends StatefulWidget {
+class PodcastsPage extends StatelessWidget {
   const PodcastsPage({super.key});
 
-  @override
-  State<PodcastsPage> createState() => _PodcastsPageState();
-}
-
-class _PodcastsPageState extends State<PodcastsPage> {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<PodcastModel>();
@@ -91,22 +84,35 @@ class _PodcastsPageState extends State<PodcastsPage> {
               const EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 20),
           child: SizedBox(
             height: 40,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
+            child: Row(
               children: [
-                for (final genre in PodcastGenre.values
-                    .sorted((a, b) => a.name.compareTo(b.name)))
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: ChoiceChip(
-                      label: Text(genre.id),
-                      selected: model.podcastGenre == genre,
-                      onSelected: (value) {
-                        model.podcastGenre = genre;
-                        model.loadCharts();
-                      },
-                    ),
-                  )
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: ChoiceChip(
+                    label: Text(model.podcastGenre.id),
+                    selected: true,
+                    onSelected: (value) {},
+                  ),
+                ),
+                Expanded(
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      for (final genre in model.notSelectedGenres)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: ChoiceChip(
+                            label: Text(genre.id),
+                            selected: model.podcastGenre == genre,
+                            onSelected: (value) {
+                              model.podcastGenre = genre;
+                              model.loadCharts();
+                            },
+                          ),
+                        )
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -115,24 +121,41 @@ class _PodcastsPageState extends State<PodcastsPage> {
           padding: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
           child: SizedBox(
             height: 40,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
+            child: Row(
               children: [
-                for (final country in countries)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: ChoiceChip(
-                      label: Text(country.countryCode),
-                      selected: model.country == country,
-                      onSelected: (value) {
-                        model.country = country;
-                        model.loadCharts();
-                      },
-                    ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: ChoiceChip(
+                    label: Text(model.getLocalizedCountry(model.country)),
+                    selected: true,
+                    onSelected: (value) {
+                      // model.country = country;
+                      // model.loadCharts();
+                    },
                   ),
-                const Divider(
-                  height: 9,
-                  thickness: 0.0,
+                ),
+                Expanded(
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      for (final country in model.notSelectedCountries)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: ChoiceChip(
+                            label: Text(model.getLocalizedCountry(country)),
+                            selected: model.country == country,
+                            onSelected: (value) {
+                              model.country = country;
+                              model.loadCharts();
+                            },
+                          ),
+                        ),
+                      const Divider(
+                        height: 9,
+                        thickness: 0.0,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

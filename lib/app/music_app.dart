@@ -58,7 +58,10 @@ class _App extends StatefulWidget {
         ),
         ChangeNotifierProvider(create: (_) => AppModel()),
         ChangeNotifierProvider(
-          create: (_) => PodcastModel()..loadCharts(),
+          create: (_) => PodcastModel()
+            ..init(
+              WidgetsBinding.instance.window.locale.countryCode?.toUpperCase(),
+            ),
         )
       ],
       child: const _App(),
