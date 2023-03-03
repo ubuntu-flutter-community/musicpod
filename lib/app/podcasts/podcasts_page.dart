@@ -30,6 +30,17 @@ class PodcastsPage extends StatelessWidget {
           final audio = model.charts!.elementAt(index);
           return AudioCard(
             audio: audio,
+            onPlay: () {
+              final album = model.charts?.where(
+                (a) =>
+                    a.metadata != null &&
+                    a.metadata!.album != null &&
+                    a.metadata?.album == audio.metadata?.album,
+              );
+              if (album != null) {
+                playerModel.startPlaylist(album.toSet());
+              }
+            },
             onTap: () {
               model.search(searchQuery: audio.name).then((value) {
                 if (model.searchResult?.isEmpty == true) {
