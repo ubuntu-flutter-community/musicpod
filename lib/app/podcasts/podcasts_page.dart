@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_card.dart';
 import 'package:music/app/common/audio_page.dart';
 import 'package:music/app/common/constants.dart';
+import 'package:music/app/player_model.dart';
 import 'package:music/app/podcasts/podcast_model.dart';
 import 'package:music/app/podcasts/podcast_search_field.dart';
 import 'package:music/data/audio.dart';
+import 'package:music/utils.dart';
+import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
+import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class PodcastsPage extends StatelessWidget {
@@ -14,6 +18,7 @@ class PodcastsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<PodcastModel>();
+    final playerModel = context.watch<PlayerModel>();
 
     final GridView grid;
     if (model.charts?.isNotEmpty == true) {
@@ -76,90 +81,103 @@ class PodcastsPage extends StatelessWidget {
       );
     }
 
+    var textStyle = Theme.of(context)
+        .textTheme
+        .bodyLarge
+        ?.copyWith(fontWeight: FontWeight.w100);
+    var buttonStyle = TextButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(6),
+      ),
+    );
+
+    final chartsEnqueued =
+        listsAreEqual(playerModel.queue, model.charts?.toList());
+
     final page = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding:
-              const EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 20),
-          child: SizedBox(
-            height: 40,
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: ChoiceChip(
-                    label: Text(model.podcastGenre.id),
-                    selected: true,
-                    onSelected: (value) {},
+              const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: Theme.of(context).colorScheme.inverseSurface,
+                child: IconButton(
+                  onPressed: () {
+                    if (playerModel.isPlaying && chartsEnqueued) {
+                      playerModel.pause();
+                    } else {
+                      if (model.charts?.isNotEmpty == true) {
+                        playerModel.startPlaylist(model.charts!);
+                      }
+                    }
+                  },
+                  icon: Icon(
+                    playerModel.isPlaying && chartsEnqueued
+                        ? YaruIcons.media_pause
+                        : YaruIcons.media_play,
+                    color: Theme.of(context).colorScheme.onInverseSurface,
                   ),
                 ),
-                Expanded(
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      for (final genre in model.notSelectedGenres)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: ChoiceChip(
-                            label: Text(genre.id),
-                            selected: model.podcastGenre == genre,
-                            onSelected: (value) {
-                              model.podcastGenre = genre;
-                              model.loadCharts();
-                            },
-                          ),
-                        )
-                    ],
-                  ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              YaruPopupMenuButton<PodcastGenre>(
+                style: buttonStyle,
+                onSelected: (value) {
+                  model.podcastGenre = value;
+                  model.loadCharts();
+                },
+                initialValue: model.podcastGenre,
+                child: Text(
+                  model.podcastGenre.id,
+                  style: textStyle,
                 ),
-              ],
-            ),
+                itemBuilder: (context) {
+                  return [
+                    for (final genre in PodcastGenre.values)
+                      PopupMenuItem(
+                        value: genre,
+                        child: Text(genre.id),
+                      )
+                  ];
+                },
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              YaruPopupMenuButton<Country>(
+                style: buttonStyle,
+                onSelected: (value) {
+                  model.country = value;
+                  model.loadCharts();
+                },
+                initialValue: model.country,
+                child: Text(
+                  model.country.countryCode,
+                  style: textStyle,
+                ),
+                itemBuilder: (context) {
+                  return [
+                    for (final c in model.sortedCountries)
+                      PopupMenuItem(
+                        value: c,
+                        child: Text(c.countryCode),
+                      )
+                  ];
+                },
+              ),
+            ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
-          child: SizedBox(
-            height: 40,
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: ChoiceChip(
-                    label: Text(model.getLocalizedCountry(model.country)),
-                    selected: true,
-                    onSelected: (value) {
-                      // model.country = country;
-                      // model.loadCharts();
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      for (final country in model.notSelectedCountries)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: ChoiceChip(
-                            label: Text(model.getLocalizedCountry(country)),
-                            selected: model.country == country,
-                            onSelected: (value) {
-                              model.country = country;
-                              model.loadCharts();
-                            },
-                          ),
-                        ),
-                      const Divider(
-                        height: 9,
-                        thickness: 0.0,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+        const Divider(
+          height: 0,
+        ),
+        const SizedBox(
+          height: 15,
         ),
         Expanded(child: grid),
       ],

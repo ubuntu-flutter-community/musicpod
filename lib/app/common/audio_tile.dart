@@ -57,20 +57,26 @@ class AudioTile extends StatelessWidget {
           ),
           if (audio.metadata?.artist != null)
             Expanded(
-              child: Text(
-                audio.metadata!.artist!,
-                style: textStyle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text(
+                  audio.metadata!.artist!,
+                  style: textStyle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           if (audio.metadata?.album != null)
             Expanded(
-              child: Text(
-                audio.metadata!.album!,
-                style: textStyle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text(
+                  audio.metadata!.album!,
+                  style: textStyle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
         ],

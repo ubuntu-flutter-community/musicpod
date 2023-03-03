@@ -334,6 +334,7 @@ class AudioListHeader extends StatelessWidget {
           _HeaderElement(
             onAudioFilterSelected: (p0) {},
             label: context.l10n.title,
+            paddingLeft: false,
           ),
           _HeaderElement(
             onAudioFilterSelected: (p0) {},
@@ -374,10 +375,12 @@ class _HeaderElement extends StatelessWidget {
   const _HeaderElement({
     this.onAudioFilterSelected,
     required this.label,
+    this.paddingLeft = true,
   });
 
   final void Function(AudioFilter)? onAudioFilterSelected;
   final String label;
+  final bool paddingLeft;
 
   @override
   Widget build(BuildContext context) {
@@ -392,11 +395,16 @@ class _HeaderElement extends StatelessWidget {
             onTap: onAudioFilterSelected == null
                 ? null
                 : () => onAudioFilterSelected!(AudioFilter.title),
-            child: Text(
-              label,
-              style: textStyle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            child: Padding(
+              padding: paddingLeft
+                  ? const EdgeInsets.only(left: 10)
+                  : EdgeInsets.zero,
+              child: Text(
+                label,
+                style: textStyle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ),
         ],

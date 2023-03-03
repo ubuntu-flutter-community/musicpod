@@ -353,8 +353,11 @@ class PodcastModel extends SafeChangeNotifier {
     return PodcastGenre.values.where((g) => g != podcastGenre).toList();
   }
 
-  List<Country> get notSelectedCountries {
-    return countries.where((c) => c != country).toList();
+  List<Country> get sortedCountries {
+    final notSelected = countries.where((c) => c != country).toList();
+    final list = <Country>[country, ...notSelected];
+
+    return list;
   }
 
   Future<void> init(String? countryCode) async {
