@@ -116,14 +116,15 @@ class _AudioPageState extends State<AudioPage> {
                           ),
                         ),
                       )
-                    else
+                    else if (widget.imageUrl != null ||
+                        widget.audios.firstOrNull?.imageUrl != null)
                       Padding(
                         padding: const EdgeInsets.only(right: 20),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: SafeNetworkImage(
                             url: widget.imageUrl ??
-                                widget.audios.firstOrNull!.imageUrl!,
+                                widget.audios.firstOrNull?.imageUrl,
                             fit: BoxFit.fitWidth,
                             filterQuality: FilterQuality.medium,
                           ),

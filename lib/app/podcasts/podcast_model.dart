@@ -26,6 +26,7 @@ class PodcastModel extends SafeChangeNotifier {
 
   Future<void> init() async {
     charts ??= {};
+    charts?.clear();
 
     var chartsSearch = await _search.charts(
       genre: 'Games',
