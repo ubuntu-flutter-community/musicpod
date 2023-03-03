@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_page.dart';
+import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/app/podcasts/podcast_model.dart';
 import 'package:music/data/audio.dart';
 import 'package:music/l10n/l10n.dart';
@@ -22,6 +23,7 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
     final podcastModel = context.watch<PodcastModel>();
+    final playListModel = context.watch<PlaylistModel>();
 
     final autoComplete = Autocomplete<Audio>(
       optionsViewBuilder: (context, onSelected, audios) {
@@ -108,11 +110,35 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
             final album = podcastModel.searchResult?.where(
               (a) =>
                   a.metadata != null &&
-                  a.metadata!.artist != null &&
-                  a.metadata?.artist == audio.metadata?.artist,
+                  a.description != null &&
+                  a.description == audio.description,
             );
 
+            final starred = audio.metadata?.title == null
+                ? false
+                : playListModel.playlists.containsKey(audio.metadata!.title!);
+
             return AudioPage(
+              likeButton: YaruIconButton(
+                icon: Icon(
+                  starred ? YaruIcons.star_filled : YaruIcons.star,
+                ),
+                onPressed: starred
+                    ? () => playListModel.removePlaylist(audio.metadata!.title!)
+                    : () {
+                        if (podcastModel.searchResult?.isEmpty == true) {
+                          return;
+                        }
+
+                        if (album?.isNotEmpty == true &&
+                            audio.metadata?.title != null) {
+                          playListModel.addPlaylist(
+                            audio.metadata!.title!,
+                            album!.toSet(),
+                          );
+                        }
+                      },
+              ),
               title: const PodcastSearchField(),
               deletable: false,
               audioPageType: audio.metadata?.artist != null
