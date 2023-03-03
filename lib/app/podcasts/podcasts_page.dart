@@ -149,7 +149,7 @@ class PodcastsPage extends StatelessWidget {
                 ),
                 itemBuilder: (context) {
                   return [
-                    for (final genre in PodcastGenre.values)
+                    for (final genre in model.sortedGenres)
                       PopupMenuItem(
                         value: genre,
                         child: Text(genre.id),

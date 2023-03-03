@@ -326,13 +326,6 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  String getLocalizedCountry(Country country) {
-    return Locale.fromSubtags(
-          countryCode: country.countryCode,
-        ).scriptCode ??
-        country.countryCode;
-  }
-
   Language _language = Language.NONE;
   Language get language => _language;
   set language(Language value) {
@@ -349,12 +342,18 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  List<PodcastGenre> get notSelectedGenres {
-    return PodcastGenre.values.where((g) => g != podcastGenre).toList();
+  List<PodcastGenre> get sortedGenres {
+    final notSelected =
+        PodcastGenre.values.where((g) => g != podcastGenre).toList();
+
+    return [podcastGenre, ...notSelected];
   }
 
   List<Country> get sortedCountries {
-    final notSelected = countries.where((c) => c != country).toList();
+    final notSelected = countries
+        .where((c) => c != country)
+        .toList()
+        .sorted((a, b) => a.countryCode.compareTo(b.countryCode));
     final list = <Country>[country, ...notSelected];
 
     return list;
