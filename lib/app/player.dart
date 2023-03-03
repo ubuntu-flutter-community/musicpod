@@ -276,7 +276,10 @@ class _PlayerState extends State<Player> {
                         ),
                       controls,
                       sliderAndTime,
-                      trackText,
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: trackText,
+                      ),
                     ],
                   ),
                 ),
@@ -428,7 +431,10 @@ class _PlayerState extends State<Player> {
                         child: sliderAndTime,
                       ),
                       Expanded(
-                        child: trackText,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: trackText,
+                        ),
                       ),
                     ],
                   ),
