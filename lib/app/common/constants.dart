@@ -9,6 +9,7 @@ const kGridPadding = EdgeInsets.only(
 const kHeaderPadding = EdgeInsets.only(
   top: kPagePadding,
   left: kPagePadding,
+  right: kPagePadding,
   bottom: kPagePadding - 5,
 );
 const kIconPadding = EdgeInsets.only(top: 8, bottom: 8, right: 5);

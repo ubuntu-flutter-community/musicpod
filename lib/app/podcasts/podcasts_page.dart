@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_card.dart';
 import 'package:music/app/common/audio_page.dart';
@@ -86,60 +87,55 @@ class _PodcastsPageState extends State<PodcastsPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: kHeaderPadding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Science Top 20',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineLarge
-                    ?.copyWith(fontWeight: FontWeight.w100),
-              ),
-              const SizedBox(
-                height: kYaruPagePadding,
-              ),
-              Wrap(
-                alignment: WrapAlignment.start,
-                runAlignment: WrapAlignment.start,
-                spacing: 10,
-                children: [
-                  ChoiceChip(
-                    label: const Text('Germany'),
-                    selected: model.country == Country.GERMANY,
-                    onSelected: (value) {
-                      model.country = Country.GERMANY;
-                      model.loadCharts();
-                    },
+          padding:
+              const EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 20),
+          child: SizedBox(
+            height: 40,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                for (final genre in PodcastGenre.values
+                    .sorted((a, b) => a.name.compareTo(b.name)))
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: ChoiceChip(
+                      label: Text(genre.id),
+                      selected: model.podcastGenre == genre,
+                      onSelected: (value) {
+                        model.podcastGenre = genre;
+                        model.loadCharts();
+                      },
+                    ),
+                  )
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
+          child: SizedBox(
+            height: 40,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                for (final country in countries)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: ChoiceChip(
+                      label: Text(country.countryCode),
+                      selected: model.country == country,
+                      onSelected: (value) {
+                        model.country = country;
+                        model.loadCharts();
+                      },
+                    ),
                   ),
-                  ChoiceChip(
-                    label: const Text('USA'),
-                    selected: model.country == Country.UNITED_STATES,
-                    onSelected: (value) {
-                      model.country = Country.UNITED_STATES;
-                      model.loadCharts();
-                    },
-                  ),
-                  ChoiceChip(
-                    label: const Text('UK'),
-                    selected: model.country == Country.UNITED_KINGDOM,
-                    onSelected: (value) {
-                      model.country = Country.UNITED_KINGDOM;
-                      model.loadCharts();
-                    },
-                  ),
-                  ChoiceChip(
-                    label: const Text('Denmark'),
-                    selected: model.country == Country.DENMARK,
-                    onSelected: (value) {
-                      model.country = Country.DENMARK;
-                      model.loadCharts();
-                    },
-                  ),
-                ],
-              ),
-            ],
+                const Divider(
+                  height: 9,
+                  thickness: 0.0,
+                ),
+              ],
+            ),
           ),
         ),
         Expanded(child: grid),

@@ -185,14 +185,25 @@ class PlayerModel extends SafeChangeNotifier {
   Color? get surfaceTintColor => _color?.withOpacity(0.1);
 
   Future<void> loadColor() async {
-    if (audio == null || audio?.path == null) return;
+    if (audio?.audioType == AudioType.local) {
+      if (audio == null || audio?.path == null) return;
 
-    final image = MemoryImage(
-      audio!.metadata!.picture!.data,
-    );
-    final generator = await PaletteGenerator.fromImageProvider(image);
-    _color = generator.dominantColor?.color;
-    notifyListeners();
+      final image = MemoryImage(
+        audio!.metadata!.picture!.data,
+      );
+      final generator = await PaletteGenerator.fromImageProvider(image);
+      _color = generator.dominantColor?.color;
+      notifyListeners();
+    } else if (audio?.audioType == AudioType.podcast) {
+      if (audio == null || audio?.imageUrl == null) return;
+
+      final image = NetworkImage(
+        audio!.imageUrl!,
+      );
+      final generator = await PaletteGenerator.fromImageProvider(image);
+      _color = generator.dominantColor?.color;
+      notifyListeners();
+    }
   }
 
   bool _isUpNextExpanded = false;
