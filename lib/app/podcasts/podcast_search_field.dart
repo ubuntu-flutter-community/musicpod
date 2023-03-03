@@ -131,9 +131,9 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
                         }
 
                         if (album?.isNotEmpty == true &&
-                            audio.metadata?.title != null) {
+                            audio.metadata?.album != null) {
                           playListModel.addPlaylist(
-                            audio.metadata!.title!,
+                            audio.metadata!.album!,
                             album!.toSet(),
                           );
                         }
