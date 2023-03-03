@@ -9,9 +9,9 @@ class PodcastModel extends SafeChangeNotifier {
 
   final Search _search;
 
-  List<Audio> _searchResult = [];
-  List<Audio> get searchResult => _searchResult;
-  set searchResult(List<Audio> podcasts) {
+  List<Audio>? _searchResult;
+  List<Audio>? get searchResult => _searchResult;
+  set searchResult(List<Audio>? podcasts) {
     _searchResult = podcasts;
     notifyListeners();
   }
@@ -73,7 +73,7 @@ class PodcastModel extends SafeChangeNotifier {
   }
 
   Future<void> search({String? searchQuery}) async {
-    searchResult = [];
+    searchResult = null;
     if (searchQuery?.isNotEmpty == true) {
       final podcastSearch = <Audio>[];
 
@@ -108,9 +108,8 @@ class PodcastModel extends SafeChangeNotifier {
             }
           }
         }
-
-        searchResult = podcastSearch;
       }
+      searchResult = podcastSearch;
     }
   }
 }

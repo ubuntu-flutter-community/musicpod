@@ -33,14 +33,14 @@ class _PodcastsPageState extends State<PodcastsPage> {
             audio: audio,
             onTap: () {
               model.search(searchQuery: audio.name).then((value) {
-                if (model.searchResult.isEmpty) {
+                if (model.searchResult?.isEmpty == true) {
                   return;
                 }
 
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      final album = model.searchResult.where(
+                      final album = model.searchResult?.where(
                         (a) =>
                             a.metadata != null &&
                             a.metadata!.album != null &&
@@ -55,8 +55,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
                             ? AudioPageType.albumList
                             : AudioPageType.list,
                         editableName: false,
-                        audios: album.isNotEmpty == true
-                            ? Set.from(album)
+                        audios: album?.isNotEmpty == true
+                            ? Set.from(album!)
                             : {audio},
                         pageName: audio.metadata?.album ??
                             audio.metadata?.title ??
