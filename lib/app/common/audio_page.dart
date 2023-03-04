@@ -4,11 +4,13 @@ import 'package:music/app/common/audio_list.dart';
 import 'package:music/app/common/audio_tile.dart';
 import 'package:music/app/common/safe_network_image.dart';
 import 'package:music/app/common/search_field.dart';
+import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/app/playlists/playlist_dialog.dart';
 import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/data/audio.dart';
 import 'package:music/l10n/l10n.dart';
+import 'package:music/utils.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -43,6 +45,7 @@ class AudioPage extends StatefulWidget {
 class _AudioPageState extends State<AudioPage> {
   late ScrollController _controller;
   int _amount = 40;
+  AudioFilter _filter = AudioFilter.trackNumber;
 
   @override
   void initState() {
@@ -70,18 +73,22 @@ class _AudioPageState extends State<AudioPage> {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
 
+    var sortedAudios = widget.audios.toList();
+
+    sortListByAudioFilter(audioFilter: _filter, audios: sortedAudios);
+
     Widget? body = Padding(
       padding: const EdgeInsets.only(top: 20),
       child: AudioList(
         deletable: widget.deletable,
         listName: widget.pageName,
-        audios: widget.audios,
+        audios: sortedAudios.toSet(),
         editableName: widget.editableName,
         likeButton: widget.likeButton,
       ),
     );
     if (widget.audioPageType == AudioPageType.albumList &&
-        widget.audios.firstOrNull?.metadata?.album != null) {
+        sortedAudios.firstOrNull?.metadata?.album != null) {
       body = SingleChildScrollView(
         controller: _controller,
         child: Column(
@@ -102,13 +109,13 @@ class _AudioPageState extends State<AudioPage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (widget.audios.firstOrNull?.metadata?.picture != null)
+                  if (sortedAudios.firstOrNull?.metadata?.picture != null)
                     Padding(
                       padding: const EdgeInsets.only(right: 20),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.memory(
-                          widget.audios.firstOrNull!.metadata!.picture!.data,
+                          sortedAudios.firstOrNull!.metadata!.picture!.data,
                           width: 200.0,
                           fit: BoxFit.fitWidth,
                           filterQuality: FilterQuality.medium,
@@ -116,7 +123,7 @@ class _AudioPageState extends State<AudioPage> {
                       ),
                     )
                   else if (widget.imageUrl != null ||
-                      widget.audios.firstOrNull?.imageUrl != null)
+                      sortedAudios.firstOrNull?.imageUrl != null)
                     Padding(
                       padding: const EdgeInsets.only(right: 20),
                       child: ClipRRect(
@@ -133,7 +140,7 @@ class _AudioPageState extends State<AudioPage> {
                             ),
                           ),
                           url: widget.imageUrl ??
-                              widget.audios.firstOrNull?.imageUrl,
+                              sortedAudios.firstOrNull?.imageUrl,
                           fit: BoxFit.fitWidth,
                           filterQuality: FilterQuality.medium,
                         ),
@@ -149,7 +156,7 @@ class _AudioPageState extends State<AudioPage> {
                           style: theme.textTheme.labelSmall,
                         ),
                         Text(
-                          widget.audios.firstOrNull!.metadata?.album ?? '',
+                          sortedAudios.firstOrNull!.metadata?.album ?? '',
                           style: theme.textTheme.headlineLarge?.copyWith(
                             fontWeight: FontWeight.w300,
                             fontSize: 50,
@@ -161,21 +168,20 @@ class _AudioPageState extends State<AudioPage> {
                           height: 5,
                         ),
                         Text(
-                          widget.audios.firstOrNull?.metadata?.artist ?? '',
+                          sortedAudios.firstOrNull?.metadata?.artist ?? '',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.hintColor,
                             fontStyle: FontStyle.italic,
                           ),
                         ),
-                        if (widget.audios.firstOrNull?.description != null)
+                        if (sortedAudios.firstOrNull?.description != null)
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.only(top: 15),
                               child: SizedBox(
                                 width: 500,
                                 child: Text(
-                                  widget.audios.firstOrNull!.description!
-                                      .trim(),
+                                  sortedAudios.firstOrNull!.description!.trim(),
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: theme.hintColor,
                                   ),
@@ -201,16 +207,21 @@ class _AudioPageState extends State<AudioPage> {
               child: AudioListControlPanel(
                 likeButton: widget.likeButton,
                 editableName: widget.editableName,
-                audios: widget.audios,
+                audios: sortedAudios.toSet(),
                 deletable: widget.deletable,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(
+            Padding(
+              padding: const EdgeInsets.only(
                 left: 20,
                 right: 20,
               ),
-              child: AudioListHeader(),
+              child: AudioListHeader(
+                audioFilter: AudioFilter.title,
+                onAudioFilterSelected: (audioFilter) => setState(() {
+                  _filter = audioFilter;
+                }),
+              ),
             ),
             const Divider(
               height: 0,
@@ -219,8 +230,8 @@ class _AudioPageState extends State<AudioPage> {
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
               child: Column(
                 children:
-                    List.generate(widget.audios.take(_amount).length, (index) {
-                  final audio = widget.audios.elementAt(index);
+                    List.generate(sortedAudios.take(_amount).length, (index) {
+                  final audio = sortedAudios.elementAt(index);
                   final audioSelected = playerModel.audio == audio;
 
                   final liked = playlistModel.liked(audio);

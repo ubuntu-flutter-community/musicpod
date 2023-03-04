@@ -49,7 +49,7 @@ class _App extends StatefulWidget {
           create: (_) => PlayerModel(),
         ),
         ChangeNotifierProvider(
-          create: (_) => LocalAudioModel(),
+          create: (_) => LocalAudioModel()..init(),
         ),
         ChangeNotifierProvider(
           create: (_) => PlaylistModel()..init(),
@@ -153,7 +153,9 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           },
           builder: (context) {
             return AudioPage(
-              audioPageType: AudioPageType.albumList,
+              audioPageType: playlist.key != 'likedAudio'
+                  ? AudioPageType.albumList
+                  : AudioPageType.list,
               audios: playlist.value,
               pageName: playlist.key,
               editableName: false,

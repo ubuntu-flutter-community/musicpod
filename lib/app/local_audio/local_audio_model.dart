@@ -119,6 +119,7 @@ class LocalAudioModel extends SafeChangeNotifier {
 }
 
 enum AudioFilter {
+  trackNumber,
   title,
   artist,
   album,

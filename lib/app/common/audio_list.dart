@@ -17,8 +17,6 @@ class AudioList extends StatefulWidget {
     required this.audios,
     this.isLikedIcon,
     this.listName,
-    this.onAudioFilterSelected,
-    this.audioFilter,
     this.editableName = true,
     required this.deletable,
     this.onLike,
@@ -34,8 +32,7 @@ class AudioList extends StatefulWidget {
   final void Function(String name, Set<Audio> audios)? onLike;
   final void Function(String name)? onUnLike;
   final String? listName;
-  final void Function(AudioFilter)? onAudioFilterSelected;
-  final AudioFilter? audioFilter;
+
   final bool editableName;
   final bool deletable;
   final bool Function(Audio)? isLiked;
@@ -46,6 +43,8 @@ class AudioList extends StatefulWidget {
 }
 
 class _AudioListState extends State<AudioList> {
+  AudioFilter _filter = AudioFilter.album;
+
   late ScrollController _controller;
   int _amount = 40;
 
@@ -74,6 +73,10 @@ class _AudioListState extends State<AudioList> {
     final playlistModel = context.watch<PlaylistModel>();
     final theme = Theme.of(context);
 
+    var sortedAudios = widget.audios.toList();
+
+    sortListByAudioFilter(audioFilter: _filter, audios: sortedAudios);
+
     return Column(
       children: [
         Padding(
@@ -85,17 +88,22 @@ class _AudioListState extends State<AudioList> {
           child: AudioListControlPanel(
             deletable: widget.deletable,
             editableName: widget.editableName,
-            audios: widget.audios,
+            audios: sortedAudios.toSet(),
             listName: widget.listName,
             likeButton: widget.likeButton,
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.only(
+        Padding(
+          padding: const EdgeInsets.only(
             left: 20,
             right: 20,
           ),
-          child: AudioListHeader(),
+          child: AudioListHeader(
+            audioFilter: _filter,
+            onAudioFilterSelected: (audioFilter) => setState(() {
+              _filter = audioFilter;
+            }),
+          ),
         ),
         const Divider(
           height: 0,
@@ -107,9 +115,9 @@ class _AudioListState extends State<AudioList> {
               left: 20,
               right: 20,
             ),
-            itemCount: widget.audios.take(_amount).length,
+            itemCount: sortedAudios.take(_amount).length,
             itemBuilder: (context, index) {
-              final audio = widget.audios.elementAt(index);
+              final audio = sortedAudios.elementAt(index);
               final audioSelected = playerModel.audio == audio;
 
               bool liked = widget.isLiked != null
@@ -319,7 +327,14 @@ class AudioListControlPanel extends StatelessWidget {
 }
 
 class AudioListHeader extends StatelessWidget {
-  const AudioListHeader({super.key});
+  const AudioListHeader({
+    super.key,
+    this.onAudioFilterSelected,
+    required this.audioFilter,
+  });
+
+  final void Function(AudioFilter audioFilter)? onAudioFilterSelected;
+  final AudioFilter audioFilter;
 
   @override
   Widget build(BuildContext context) {
@@ -334,23 +349,36 @@ class AudioListHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _HeaderElement(
-            onAudioFilterSelected: (p0) {},
-            label: context.l10n.title,
+            onAudioFilterSelected: onAudioFilterSelected,
+            label: '#',
             paddingLeft: false,
+            audioFilter: AudioFilter.trackNumber,
+            flex: 1,
           ),
           _HeaderElement(
-            onAudioFilterSelected: (p0) {},
+            onAudioFilterSelected: onAudioFilterSelected,
+            label: context.l10n.title,
+            audioFilter: AudioFilter.title,
+            paddingLeft: false,
+            flex: 5,
+          ),
+          _HeaderElement(
+            onAudioFilterSelected: onAudioFilterSelected,
             label: context.l10n.artist,
+            audioFilter: AudioFilter.artist,
+            flex: 4,
           ),
           _HeaderElement(
-            onAudioFilterSelected: (p0) {},
+            onAudioFilterSelected: onAudioFilterSelected,
             label: context.l10n.album,
+            audioFilter: AudioFilter.album,
+            flex: 4,
           ),
         ],
       ),
       trailing: YaruPopupMenuButton<AudioFilter>(
-        // initialValue: widget.audioFilter,
-        // onSelected: widget.onAudioFilterSelected,
+        initialValue: audioFilter,
+        onSelected: onAudioFilterSelected,
         style: TextButton.styleFrom(
           shape: RoundedRectangleBorder(
             side: BorderSide.none,
@@ -378,11 +406,15 @@ class _HeaderElement extends StatelessWidget {
     this.onAudioFilterSelected,
     required this.label,
     this.paddingLeft = true,
+    required this.audioFilter,
+    this.flex = 1,
   });
 
-  final void Function(AudioFilter)? onAudioFilterSelected;
+  final void Function(AudioFilter audioFilter)? onAudioFilterSelected;
+  final AudioFilter audioFilter;
   final String label;
   final bool paddingLeft;
+  final int flex;
 
   @override
   Widget build(BuildContext context) {
@@ -390,17 +422,17 @@ class _HeaderElement extends StatelessWidget {
       fontWeight: FontWeight.w100,
     );
     return Expanded(
+      flex: flex,
       child: Row(
         children: [
-          InkWell(
-            borderRadius: BorderRadius.circular(5),
-            onTap: onAudioFilterSelected == null
-                ? null
-                : () => onAudioFilterSelected!(AudioFilter.title),
-            child: Padding(
-              padding: paddingLeft
-                  ? const EdgeInsets.only(left: 10)
-                  : EdgeInsets.zero,
+          Padding(
+            padding:
+                paddingLeft ? const EdgeInsets.only(left: 10) : EdgeInsets.zero,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(5),
+              onTap: onAudioFilterSelected == null
+                  ? null
+                  : () => onAudioFilterSelected!(audioFilter),
               child: Text(
                 label,
                 style: textStyle,
