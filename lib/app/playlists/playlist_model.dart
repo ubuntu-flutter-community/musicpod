@@ -52,6 +52,7 @@ class PlaylistModel extends SafeChangeNotifier {
       _playlists.entries.elementAt(index).value.toList();
   void addPlaylist(String name, Set<Audio> audios) {
     _playlists.putIfAbsent(name, () => audios);
+    index = playlists.length + 3;
     notifyListeners();
   }
 
@@ -68,7 +69,7 @@ class PlaylistModel extends SafeChangeNotifier {
 
   void removePlaylist(String name) {
     _playlists.remove(name);
-    notifyListeners();
+    index = playlists.length + 3;
   }
 
   void addAudioToPlaylist(String playlist, Audio audio) {
@@ -94,5 +95,13 @@ class PlaylistModel extends SafeChangeNotifier {
 
   Future<void> init() async {
     _playlists.putIfAbsent('likedAudio', () => _likedAudios);
+  }
+
+  int? _index;
+  int? get index => _index;
+  set index(int? value) {
+    if (value == null || value == _index) return;
+    _index = value;
+    notifyListeners();
   }
 }

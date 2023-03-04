@@ -72,6 +72,7 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
           height: 35,
           width: 400,
           child: TextField(
+            enabled: podcastModel.charts?.isNotEmpty == true,
             onChanged: (value) => podcastModel.search(searchQuery: value),
             controller: textEditingController,
             focusNode: focusNode,
@@ -94,15 +95,16 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
       optionsBuilder: (textEditingValue) {
         return podcastModel.searchResult?.isEmpty == true
             ? []
-            : podcastModel.searchResult!.where((a) {
-                if (a.toString().toLowerCase().contains(
-                      textEditingValue.text.toLowerCase(),
-                    )) {
-                  return true;
-                }
+            : podcastModel.searchResult?.where((a) {
+                  if (a.toString().toLowerCase().contains(
+                        textEditingValue.text.toLowerCase(),
+                      )) {
+                    return true;
+                  }
 
-                return false;
-              }).toList();
+                  return false;
+                }).toList() ??
+                [];
       },
       onSelected: (audio) => Navigator.of(context).push(
         MaterialPageRoute(

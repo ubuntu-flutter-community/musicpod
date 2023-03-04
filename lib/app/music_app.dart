@@ -1,7 +1,6 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:music/app/app_model.dart';
 import 'package:music/app/common/audio_page.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/local_audio/local_audio_page.dart';
@@ -55,7 +54,6 @@ class _App extends StatefulWidget {
         ChangeNotifierProvider(
           create: (_) => PlaylistModel()..init(),
         ),
-        ChangeNotifierProvider(create: (_) => AppModel()),
         ChangeNotifierProvider(
           create: (_) => PodcastModel()
             ..init(
@@ -77,7 +75,6 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
     final localAudioModel = context.watch<LocalAudioModel>();
     final playerModel = context.watch<PlayerModel>();
     final playlistModel = context.watch<PlaylistModel>();
-    final appModel = context.watch<AppModel>();
     final theme = Theme.of(context);
 
     final masterItems = [
@@ -161,10 +158,13 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               pageName: playlist.key,
               editableName: false,
               deletable: false,
-              likeButton: YaruIconButton(
-                icon: const Icon(YaruIcons.star_filled),
-                onPressed: () => playlistModel.removePlaylist(playlist.key),
-              ),
+              likeButton: playlist.key != 'likedAudio'
+                  ? YaruIconButton(
+                      icon: const Icon(YaruIcons.star_filled),
+                      onPressed: () =>
+                          playlistModel.removePlaylist(playlist.key),
+                    )
+                  : SizedBox.shrink(),
             );
           },
           iconBuilder: (context, selected) {
@@ -232,7 +232,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               children: [
                 Expanded(
                   child: YaruMasterDetailPage(
-                    onSelected: (value) => appModel.index = value ?? 0,
+                    onSelected: (value) => playlistModel.index = value ?? 0,
                     appBar: const YaruWindowTitleBar(
                       title: Text('Ubuntu Music'),
                     ),
@@ -245,8 +245,10 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                       minPaneWidth: 81,
                       minPageWidth: kYaruMasterDetailBreakpoint / 2,
                     ),
-                    length: playlistModel.playlists.length + 4,
-                    initialIndex: appModel.index,
+                    controller: YaruPageController(
+                      length: playlistModel.playlists.length + 4,
+                      initialIndex: playlistModel.index ?? 0,
+                    ),
                     tileBuilder: (context, index, selected) {
                       final tile = YaruMasterTile(
                         title: masterItems[index].tileBuilder(context),
