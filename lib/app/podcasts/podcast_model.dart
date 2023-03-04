@@ -310,6 +310,14 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  String? _searchQuery;
+  String? get searchQuery => _searchQuery;
+  void setSearchQuery(String? value) {
+    if (value == null || value == _searchQuery) return;
+    _searchQuery = value;
+    notifyListeners();
+  }
+
   Set<Set<Audio>>? _chartsPodcasts;
   Set<Set<Audio>>? get chartsPodcasts => _chartsPodcasts;
   set chartsPodcasts(Set<Set<Audio>>? value) {
@@ -398,6 +406,7 @@ class PodcastModel extends SafeChangeNotifier {
                 artist: item.artistName,
               ),
               description: podcast.description,
+              website: podcast.url,
             );
 
             episodes.add(audio);
