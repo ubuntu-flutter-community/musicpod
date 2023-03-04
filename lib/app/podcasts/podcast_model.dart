@@ -306,19 +306,15 @@ class PodcastModel extends SafeChangeNotifier {
   Set<Set<Audio>>? _podcastSearchResult;
   Set<Set<Audio>>? get podcastSearchResult => _podcastSearchResult;
   set podcastSearchResult(Set<Set<Audio>>? value) {
-    if (value != null) {
-      _podcastSearchResult = value;
-      notifyListeners();
-    }
+    _podcastSearchResult = value;
+    notifyListeners();
   }
 
   Set<Set<Audio>>? _chartsPodcasts;
   Set<Set<Audio>>? get chartsPodcasts => _chartsPodcasts;
   set chartsPodcasts(Set<Set<Audio>>? value) {
-    if (value != null) {
-      _chartsPodcasts = value;
-      notifyListeners();
-    }
+    _chartsPodcasts = value;
+    notifyListeners();
   }
 
   Country _country = Country.UNITED_STATES;
