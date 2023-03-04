@@ -29,5 +29,6 @@
     "discover": "Discover",
     "forYou": "For you",
     "search": "Search",
-    "noPodcastFound": "Sorry, no podcast was found with this search query."
+    "noPodcastFound": "Sorry, no podcast was found with this search query.",
+    "upNext": "Up next"
 }

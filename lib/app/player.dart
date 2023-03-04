@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/data/audio.dart';
+import 'package:music/l10n/l10n.dart';
 import 'package:music/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_loop_auto_scroll/scroll_loop_auto_scroll.dart';
@@ -317,7 +318,7 @@ class _PlayerState extends State<Player> {
               bottom: 10,
               child: SizedBox(
                 height: model.isUpNextExpanded ? 180 : 60,
-                width: 200,
+                width: 250,
                 child: YaruBanner(
                   onTap: () => model.isUpNextExpanded = !model.isUpNextExpanded,
                   color: theme.cardColor,
@@ -333,23 +334,28 @@ class _PlayerState extends State<Player> {
                           right: 10,
                         ),
                         child: Text(
-                          'Up next',
+                          context.l10n.upNext,
                           style: theme.textTheme.labelSmall,
                         ),
                       ),
-                      if (model.isUpNextExpanded)
+                      if (model.isUpNextExpanded &&
+                          model.queue?.isNotEmpty == true &&
+                          model.audio != null)
                         Expanded(
                           child: ListView(
                             padding: const EdgeInsets.only(bottom: 10),
                             children: [
-                              for (final audio in model.queue ?? [])
+                              for (final audio in model.queue!.sublist(
+                                model.queue!.indexOf(model.audio!) + 1,
+                                model.queue!.length - 1,
+                              ))
                                 Padding(
                                   padding: const EdgeInsets.only(
                                     left: 10,
                                     right: 10,
                                   ),
                                   child: Text(
-                                    '${audio?.metadata?.artist ?? ''} • ${audio?.metadata?.title ?? ''}',
+                                    '${audio.metadata?.title ?? ''} • ${audio.metadata?.artist ?? ''}',
                                     style:
                                         theme.textTheme.labelMedium?.copyWith(
                                       color: theme.colorScheme.onSurface,
@@ -367,7 +373,7 @@ class _PlayerState extends State<Player> {
                             right: 10,
                           ),
                           child: Text(
-                            '${model.nextAudio!.metadata!.artist!} • ${model.nextAudio!.metadata!.title!}',
+                            '${model.nextAudio!.metadata!.title!} • ${model.nextAudio!.metadata!.artist!}',
                             style: theme.textTheme.labelMedium
                                 ?.copyWith(color: theme.colorScheme.onSurface),
                             overflow: TextOverflow.ellipsis,
