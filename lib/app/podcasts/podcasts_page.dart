@@ -22,8 +22,18 @@ class PodcastsPage extends StatelessWidget {
     final playerModel = context.watch<PlayerModel>();
     final playListModel = context.watch<PlaylistModel>();
 
-    final GridView grid;
-    if (model.chartsPodcasts?.isNotEmpty == true) {
+    Widget grid;
+    if (model.chartsPodcasts == null) {
+      grid = GridView(
+        gridDelegate: kImageGridDelegate,
+        padding: kGridPadding,
+        children: List.generate(30, (index) => Audio())
+            .map((e) => const AudioCard())
+            .toList(),
+      );
+    } else if (model.chartsPodcasts!.isEmpty == true) {
+      grid = const SizedBox.shrink();
+    } else {
       grid = GridView.builder(
         padding: kGridPadding,
         itemCount: model.chartsPodcasts!.length,
@@ -71,14 +81,6 @@ class PodcastsPage extends StatelessWidget {
             },
           );
         },
-      );
-    } else {
-      grid = GridView(
-        gridDelegate: kImageGridDelegate,
-        padding: kGridPadding,
-        children: List.generate(30, (index) => Audio())
-            .map((e) => const AudioCard())
-            .toList(),
       );
     }
 
