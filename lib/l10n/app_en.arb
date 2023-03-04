@@ -28,5 +28,6 @@
     "playlists": "Playlists",
     "discover": "Discover",
     "forYou": "For you",
-    "search": "Search"
+    "search": "Search",
+    "noPodcastFound": "Sorry, no podcast was found with this search query."
 }

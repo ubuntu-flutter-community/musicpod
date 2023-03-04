@@ -65,8 +65,7 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
                           Navigator.of(context).popUntil((route) => false),
                     ),
                   ),
-                  body: model.podcastSearchResult == null ||
-                          model.podcastSearchResult!.isEmpty
+                  body: model.podcastSearchResult == null
                       ? GridView(
                           padding: const EdgeInsets.all(kYaruPagePadding),
                           gridDelegate: kImageGridDelegate,
@@ -74,63 +73,77 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
                               List.generate(30, (index) => const AudioCard())
                                   .toList(),
                         )
-                      : GridView(
-                          padding: const EdgeInsets.all(kYaruPagePadding),
-                          gridDelegate: kImageGridDelegate,
-                          children: [
-                            for (final Set<Audio> group
-                                in model.podcastSearchResult ?? {})
-                              AudioCard(
-                                imageUrl: group.firstOrNull?.imageUrl,
-                                onPlay: widget.onPlay == null
-                                    ? null
-                                    : () => widget.onPlay!(group),
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        final starred =
-                                            playlistModel.playlists.containsKey(
-                                          group.first.metadata?.album,
-                                        );
-                                        return AudioPage(
-                                          imageUrl: group.first.imageUrl,
-                                          likeButton: YaruIconButton(
-                                            icon: Icon(
-                                              starred
-                                                  ? YaruIcons.star_filled
-                                                  : YaruIcons.star,
-                                            ),
-                                            onPressed: starred
-                                                ? () => playlistModel
-                                                        .removePlaylist(
-                                                      group.first.metadata!
-                                                          .album!,
-                                                    )
-                                                : () {
-                                                    playlistModel.addPlaylist(
-                                                      group.first.metadata!
-                                                          .album!,
-                                                      group,
-                                                    );
-                                                  },
-                                          ),
-                                          title: const PodcastSearchField(),
-                                          deletable: false,
-                                          audioPageType:
-                                              AudioPageType.albumList,
-                                          editableName: false,
-                                          audios: group,
-                                          pageName:
-                                              group.first.metadata?.album ?? '',
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
-                              )
-                          ],
-                        ),
+                      : model.podcastSearchResult!.isEmpty
+                          ? Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(kYaruPagePadding),
+                                child: Text(
+                                  context.l10n.noPodcastFound,
+                                  style: theme.textTheme.headlineLarge,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            )
+                          : GridView(
+                              padding: const EdgeInsets.all(kYaruPagePadding),
+                              gridDelegate: kImageGridDelegate,
+                              children: [
+                                for (final Set<Audio> group
+                                    in model.podcastSearchResult ?? {})
+                                  AudioCard(
+                                    imageUrl: group.firstOrNull?.imageUrl,
+                                    onPlay: widget.onPlay == null
+                                        ? null
+                                        : () => widget.onPlay!(group),
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            final starred = playlistModel
+                                                .playlists
+                                                .containsKey(
+                                              group.first.metadata?.album,
+                                            );
+                                            return AudioPage(
+                                              imageUrl: group.first.imageUrl,
+                                              likeButton: YaruIconButton(
+                                                icon: Icon(
+                                                  starred
+                                                      ? YaruIcons.star_filled
+                                                      : YaruIcons.star,
+                                                ),
+                                                onPressed: starred
+                                                    ? () => playlistModel
+                                                            .removePlaylist(
+                                                          group.first.metadata!
+                                                              .album!,
+                                                        )
+                                                    : () {
+                                                        playlistModel
+                                                            .addPlaylist(
+                                                          group.first.metadata!
+                                                              .album!,
+                                                          group,
+                                                        );
+                                                      },
+                                              ),
+                                              title: const PodcastSearchField(),
+                                              deletable: false,
+                                              audioPageType:
+                                                  AudioPageType.albumList,
+                                              editableName: false,
+                                              audios: group,
+                                              pageName:
+                                                  group.first.metadata?.album ??
+                                                      '',
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  )
+                              ],
+                            ),
                 );
               },
             ),
