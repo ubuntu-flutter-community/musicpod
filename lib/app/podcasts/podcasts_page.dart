@@ -23,95 +23,51 @@ class PodcastsPage extends StatelessWidget {
     final playListModel = context.watch<PlaylistModel>();
 
     final GridView grid;
-    if (model.charts?.isNotEmpty == true) {
+    if (model.chartsPodcasts?.isNotEmpty == true) {
       grid = GridView.builder(
         padding: kGridPadding,
-        itemCount: model.charts!.length,
+        itemCount: model.chartsPodcasts!.length,
         gridDelegate: kImageGridDelegate,
         itemBuilder: (context, index) {
-          final audio = model.charts!.elementAt(index);
+          final podcast = model.chartsPodcasts!.elementAt(index);
+          final starred = playListModel.playlists
+              .containsKey(podcast.first.metadata?.album);
           return AudioCard(
-            audio: audio,
-            onPlay: () {
-              final album = model.charts?.where(
-                (a) =>
-                    a.metadata != null &&
-                    a.metadata!.album != null &&
-                    a.metadata?.album == audio.metadata?.album,
-              );
-              if (album != null) {
-                playerModel.startPlaylist(album.toSet());
-              }
-            },
+            imageUrl: podcast.first.imageUrl,
+            onPlay: () => playerModel.startPlaylist(podcast),
             onTap: () {
-              model.search(searchQuery: audio.name).then((value) {
-                if (model.searchResult?.isEmpty == true) {
-                  return;
-                }
-
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      final album = model.searchResult?.where(
-                        (a) =>
-                            a.metadata != null &&
-                            a.metadata!.album != null &&
-                            a.metadata?.album == audio.metadata?.album,
-                      );
-                      final starred = audio.metadata?.title == null
-                          ? false
-                          : playListModel.playlists
-                              .containsKey(audio.metadata!.title!);
-
-                      return AudioPage(
-                        likeButton: YaruIconButton(
-                          icon: Icon(
-                            starred ? YaruIcons.star_filled : YaruIcons.star,
-                          ),
-                          onPressed: starred
-                              ? () => playListModel
-                                  .removePlaylist(audio.metadata!.title!)
-                              : () {
-                                  model
-                                      .search(searchQuery: audio.name)
-                                      .then((value) {
-                                    if (model.searchResult?.isEmpty == true) {
-                                      return;
-                                    }
-                                    final album = model.searchResult?.where(
-                                      (a) =>
-                                          a.metadata != null &&
-                                          a.metadata!.album != null &&
-                                          a.metadata?.album ==
-                                              audio.metadata?.album,
-                                    );
-                                    if (album?.isNotEmpty == true &&
-                                        audio.metadata?.title != null) {
-                                      playListModel.addPlaylist(
-                                        audio.metadata!.title!,
-                                        album!.toSet(),
-                                      );
-                                    }
-                                  });
-                                },
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return AudioPage(
+                      likeButton: YaruIconButton(
+                        icon: Icon(
+                          starred ? YaruIcons.star_filled : YaruIcons.star,
                         ),
-                        imageUrl: audio.imageUrl,
-                        title: const PodcastSearchField(),
-                        deletable: false,
-                        audioPageType: AudioPageType.albumList,
-                        editableName: false,
-                        audios: album?.isNotEmpty == true
-                            ? Set.from(album!)
-                            : {audio},
-                        pageName: audio.metadata?.album ??
-                            audio.metadata?.title ??
-                            audio.name ??
-                            '',
-                      );
-                    },
-                  ),
-                );
-              });
+                        onPressed: starred
+                            ? () => playListModel
+                                .removePlaylist(podcast.first.metadata!.album!)
+                            : () {
+                                playListModel.addPlaylist(
+                                  podcast.first.metadata!.album!,
+                                  podcast,
+                                );
+                              },
+                      ),
+                      imageUrl: podcast.first.imageUrl,
+                      title: const PodcastSearchField(),
+                      deletable: false,
+                      audioPageType: AudioPageType.albumList,
+                      editableName: false,
+                      audios: podcast,
+                      pageName: podcast.first.metadata?.album ??
+                          podcast.first.metadata?.title ??
+                          podcast.first.name ??
+                          '',
+                    );
+                  },
+                ),
+              );
             },
           );
         },
@@ -120,10 +76,9 @@ class PodcastsPage extends StatelessWidget {
       grid = GridView(
         gridDelegate: kImageGridDelegate,
         padding: kGridPadding,
-        children: [
-          for (final dummy in List.generate(30, (index) => Audio()))
-            AudioCard(audio: dummy)
-        ],
+        children: List.generate(30, (index) => Audio())
+            .map((e) => const AudioCard())
+            .toList(),
       );
     }
 
@@ -138,7 +93,7 @@ class PodcastsPage extends StatelessWidget {
     );
 
     final chartsEnqueued =
-        listsAreEqual(playerModel.queue, model.charts?.toList());
+        listsAreEqual(playerModel.queue, model.chartsPodcasts?.first.toList());
 
     final page = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,8 +110,8 @@ class PodcastsPage extends StatelessWidget {
                     if (playerModel.isPlaying && chartsEnqueued) {
                       playerModel.pause();
                     } else {
-                      if (model.charts?.isNotEmpty == true) {
-                        playerModel.startPlaylist(model.charts!);
+                      if (model.chartsPodcasts?.first.isNotEmpty == true) {
+                        playerModel.startPlaylist(model.chartsPodcasts!.first);
                       }
                     }
                   },
@@ -238,7 +193,9 @@ class PodcastsPage extends StatelessWidget {
             : const SizedBox(
                 width: 40,
               ),
-        title: const PodcastSearchField(),
+        title: PodcastSearchField(
+          onPlay: playerModel.startPlaylist,
+        ),
       ),
       body: page,
     );

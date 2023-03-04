@@ -303,18 +303,22 @@ class PodcastModel extends SafeChangeNotifier {
 
   final Search _search;
 
-  List<Audio>? _searchResult;
-  List<Audio>? get searchResult => _searchResult;
-  set searchResult(List<Audio>? podcasts) {
-    _searchResult = podcasts;
-    notifyListeners();
+  Set<Set<Audio>>? _podcastSearchResult;
+  Set<Set<Audio>>? get podcastSearchResult => _podcastSearchResult;
+  set podcastSearchResult(Set<Set<Audio>>? value) {
+    if (value != null) {
+      _podcastSearchResult = value;
+      notifyListeners();
+    }
   }
 
-  Set<Audio>? _charts;
-  Set<Audio>? get charts => _charts;
-  set charts(Set<Audio>? audios) {
-    _charts = audios;
-    notifyListeners();
+  Set<Set<Audio>>? _chartsPodcasts;
+  Set<Set<Audio>>? get chartsPodcasts => _chartsPodcasts;
+  set chartsPodcasts(Set<Set<Audio>>? value) {
+    if (value != null) {
+      _chartsPodcasts = value;
+      notifyListeners();
+    }
   }
 
   Country _country = Country.UNITED_STATES;
@@ -367,7 +371,7 @@ class PodcastModel extends SafeChangeNotifier {
   }
 
   Future<void> loadCharts() async {
-    charts = null;
+    chartsPodcasts = null;
     final chartsSearch = await _search.charts(
       genre: podcastGenre.id,
       limit: 10,
@@ -375,8 +379,8 @@ class PodcastModel extends SafeChangeNotifier {
     );
 
     if (chartsSearch.successful && chartsSearch.items.isNotEmpty) {
-      _charts ??= {};
-      _charts?.clear();
+      _chartsPodcasts ??= {};
+      _chartsPodcasts?.clear();
 
       for (var item in chartsSearch.items) {
         if (item.feedUrl != null) {
@@ -384,9 +388,11 @@ class PodcastModel extends SafeChangeNotifier {
             url: item.feedUrl!,
           );
 
-          _charts?.add(
-            Audio(
-              url: podcast.episodes?.firstOrNull?.contentUrl,
+          final episodes = <Audio>{};
+
+          for (var episode in podcast.episodes ?? <Episode>[]) {
+            final audio = Audio(
+              url: episode.contentUrl,
               audioType: AudioType.podcast,
               name: podcast.title,
               imageUrl: podcast.image,
@@ -396,21 +402,24 @@ class PodcastModel extends SafeChangeNotifier {
                 artist: item.artistName,
               ),
               description: podcast.description,
-            ),
-          );
+            );
+
+            episodes.add(audio);
+          }
+          _chartsPodcasts?.add(episodes);
         }
       }
     } else {
-      _charts = null;
+      _chartsPodcasts = null;
     }
 
     notifyListeners();
   }
 
-  Future<void> search({String? searchQuery}) async {
-    searchResult = null;
+  Future<void> search({String? searchQuery, bool useAlbumImage = false}) async {
+    podcastSearchResult = null;
     if (searchQuery?.isNotEmpty == true) {
-      final podcastSearch = <Audio>[];
+      final podcastSearch = <Set<Audio>>{};
 
       SearchResult results = await _search.search(
         searchQuery!,
@@ -420,32 +429,40 @@ class PodcastModel extends SafeChangeNotifier {
       );
 
       if (results.items.firstOrNull?.feedUrl != null) {
-        final Podcast podcast = await Podcast.loadFeed(
-          url: results.items.firstOrNull!.feedUrl!,
-        );
+        for (var item in results.items) {
+          final Podcast podcast = await Podcast.loadFeed(
+            url: item.feedUrl!,
+          );
 
-        if (podcast.episodes?.isNotEmpty == true) {
-          for (var e in podcast.episodes!) {
-            if (e.contentUrl != null) {
-              podcastSearch.add(
-                Audio(
-                  url: e.contentUrl,
+          if (podcast.episodes?.isNotEmpty == true) {
+            final episodes = <Audio>{};
+
+            for (var episode in podcast.episodes!) {
+              if (episode.contentUrl != null) {
+                final audio = Audio(
+                  url: episode.contentUrl,
                   audioType: AudioType.podcast,
-                  name: '${podcast.title ?? ''} - ${e.title}',
-                  imageUrl: e.imageUrl ?? podcast.image,
+                  name: '${podcast.title ?? ''} - ${episode.title}',
+                  imageUrl: useAlbumImage
+                      ? podcast.image ?? episode.imageUrl
+                      : episode.imageUrl ?? podcast.image,
                   metadata: Metadata(
-                    title: e.title,
+                    title: episode.title,
                     album: podcast.title,
                     artist: podcast.copyright,
                   ),
                   description: podcast.description,
-                ),
-              );
+                  website: podcast.url,
+                );
+
+                episodes.add(audio);
+              }
             }
+            podcastSearch.add(episodes);
           }
         }
       }
-      searchResult = podcastSearch;
+      podcastSearchResult = podcastSearch;
     }
   }
 }

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/common/constants.dart';
 import 'package:music/app/common/safe_network_image.dart';
-import 'package:music/data/audio.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AudioCard extends StatefulWidget {
-  const AudioCard({super.key, required this.audio, this.onTap, this.onPlay});
-  final Audio audio;
+  const AudioCard({super.key, this.imageUrl, this.onTap, this.onPlay});
+  final String? imageUrl;
   final void Function()? onTap;
   final void Function()? onPlay;
 
@@ -47,7 +46,7 @@ class _AudioCardState extends State<AudioCard> {
             child: SafeNetworkImage(
               // TODO add memory image option
               fallBackIcon: fallBackLoadingIcon,
-              url: widget.audio.imageUrl,
+              url: widget.imageUrl,
               fit: BoxFit.contain,
             ),
           ),

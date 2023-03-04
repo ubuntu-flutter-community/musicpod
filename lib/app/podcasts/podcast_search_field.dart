@@ -1,5 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:music/app/common/audio_card.dart';
 import 'package:music/app/common/audio_page.dart';
+import 'package:music/app/common/constants.dart';
 import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/app/podcasts/podcast_model.dart';
 import 'package:music/data/audio.dart';
@@ -11,153 +14,144 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class PodcastSearchField extends StatefulWidget {
   const PodcastSearchField({
     super.key,
+    this.onPlay,
   });
+
+  final void Function(Set<Audio>)? onPlay;
 
   @override
   State<PodcastSearchField> createState() => _PodcastSearchFieldState();
 }
 
 class _PodcastSearchFieldState extends State<PodcastSearchField> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
-    final podcastModel = context.watch<PodcastModel>();
-    final playListModel = context.watch<PlaylistModel>();
+    final model = context.watch<PodcastModel>();
+    final playlistModel = context.read<PlaylistModel>();
 
-    final autoComplete = Autocomplete<Audio>(
-      optionsViewBuilder: (context, onSelected, audios) {
-        return Align(
-          alignment: Alignment.topLeft,
-          child: Material(
-            shape: RoundedRectangleBorder(
-              side: BorderSide(color: theme.dividerColor),
-              borderRadius: BorderRadius.circular(kYaruContainerRadius),
-            ),
-            child: SizedBox(
-              width: 400,
-              height: 400,
-              child: ListView.builder(
-                itemCount: audios.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final option = audios.elementAt(index);
-                  final i = AutocompleteHighlightedOption.of(context);
-                  return ListTile(
-                    onTap: () => onSelected(option),
-                    selected: i == index,
-                    title: Text(
-                      option.metadata != null
-                          ? '${option.metadata?.artist} - ${option.metadata?.title} - ${option.metadata?.album}'
-                          : option.url != null
-                              ? option.name ?? ''
-                              : '',
-                    ),
-                  );
-                },
-              ),
+    return SizedBox(
+      key: ObjectKey(model.podcastSearchResult),
+      height: 35,
+      width: 400,
+      child: TextField(
+        autofocus: true,
+        onSubmitted: (value) {
+          model.search(searchQuery: value, useAlbumImage: true).then(
+                (_) => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return YaruDetailPage(
+                        appBar: YaruWindowTitleBar(
+                          title: Text(value),
+                          leading: const YaruBackButton(
+                            style: YaruBackButtonStyle.rounded,
+                          ),
+                        ),
+                        body: model.podcastSearchResult == null
+                            ? const SizedBox.shrink()
+                            : GridView(
+                                padding: const EdgeInsets.all(kYaruPagePadding),
+                                gridDelegate: kImageGridDelegate,
+                                children: [
+                                  for (final Set<Audio> group
+                                      in model.podcastSearchResult!)
+                                    AudioCard(
+                                      imageUrl: group.firstOrNull?.imageUrl,
+                                      onPlay: widget.onPlay == null
+                                          ? null
+                                          : () => widget.onPlay!(group),
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              final starred = playlistModel
+                                                  .playlists
+                                                  .containsKey(
+                                                group.first.metadata?.album,
+                                              );
+                                              return AudioPage(
+                                                imageUrl: group.first.imageUrl,
+                                                likeButton: YaruIconButton(
+                                                  icon: Icon(
+                                                    starred
+                                                        ? YaruIcons.star_filled
+                                                        : YaruIcons.star,
+                                                  ),
+                                                  onPressed: starred
+                                                      ? () => playlistModel
+                                                              .removePlaylist(
+                                                            group
+                                                                .first
+                                                                .metadata!
+                                                                .album!,
+                                                          )
+                                                      : () {
+                                                          playlistModel
+                                                              .addPlaylist(
+                                                            group
+                                                                .first
+                                                                .metadata!
+                                                                .album!,
+                                                            group,
+                                                          );
+                                                        },
+                                                ),
+                                                title:
+                                                    const PodcastSearchField(),
+                                                deletable: false,
+                                                audioPageType:
+                                                    AudioPageType.albumList,
+                                                editableName: false,
+                                                audios: group,
+                                                pageName: group.first.metadata
+                                                        ?.album ??
+                                                    '',
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    )
+                                ],
+                              ),
+                      );
+                    },
+                  ),
+                ),
+              );
+        },
+        controller: _controller,
+        focusNode: FocusNode(),
+        decoration: InputDecoration(
+          hintText: context.l10n.search,
+          contentPadding: const EdgeInsets.only(left: 10, right: 10),
+          suffixIconConstraints:
+              const BoxConstraints(maxHeight: 35, maxWidth: 35),
+          suffixIcon: YaruIconButton(
+            onPressed: () => _controller.clear(),
+            icon: const Icon(
+              YaruIcons.edit_clear,
             ),
           ),
-        );
-      },
-      displayStringForOption: (option) {
-        return option.metadata != null
-            ? '${option.metadata?.title}'
-            : option.url != null
-                ? option.name ?? ''
-                : '';
-      },
-      fieldViewBuilder:
-          (context, textEditingController, focusNode, onFieldSubmitted) {
-        return SizedBox(
-          height: 35,
-          width: 400,
-          child: TextField(
-            enabled: podcastModel.charts?.isNotEmpty == true,
-            onChanged: (value) => podcastModel.search(searchQuery: value),
-            controller: textEditingController,
-            focusNode: focusNode,
-            decoration: InputDecoration(
-              hintText: context.l10n.search,
-              contentPadding: const EdgeInsets.only(left: 10, right: 10),
-              suffixIconConstraints:
-                  const BoxConstraints(maxHeight: 35, maxWidth: 35),
-              suffixIcon: YaruIconButton(
-                onPressed: () => textEditingController.clear(),
-                icon: const Icon(
-                  YaruIcons.edit_clear,
-                ),
-              ),
-              fillColor: light ? Colors.white : Theme.of(context).dividerColor,
-            ),
-          ),
-        );
-      },
-      optionsBuilder: (textEditingValue) {
-        return podcastModel.searchResult?.isEmpty == true
-            ? []
-            : podcastModel.searchResult?.where((a) {
-                  if (a.toString().toLowerCase().contains(
-                        textEditingValue.text.toLowerCase(),
-                      )) {
-                    return true;
-                  }
-
-                  return false;
-                }).toList() ??
-                [];
-      },
-      onSelected: (audio) => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) {
-            final album = podcastModel.searchResult?.where(
-              (a) =>
-                  a.metadata != null &&
-                  a.description != null &&
-                  a.description == audio.description,
-            );
-
-            final starred = audio.metadata?.title == null
-                ? false
-                : playListModel.playlists.containsKey(audio.metadata!.title!);
-
-            return AudioPage(
-              likeButton: YaruIconButton(
-                icon: Icon(
-                  starred ? YaruIcons.star_filled : YaruIcons.star,
-                ),
-                onPressed: starred
-                    ? () => playListModel.removePlaylist(audio.metadata!.title!)
-                    : () {
-                        if (podcastModel.searchResult?.isEmpty == true) {
-                          return;
-                        }
-
-                        if (album?.isNotEmpty == true &&
-                            audio.metadata?.album != null) {
-                          playListModel.addPlaylist(
-                            audio.metadata!.album!,
-                            album!.toSet(),
-                          );
-                        }
-                      },
-              ),
-              title: const PodcastSearchField(),
-              deletable: false,
-              audioPageType: audio.metadata?.artist != null
-                  ? AudioPageType.albumList
-                  : AudioPageType.list,
-              editableName: false,
-              audios: album?.isNotEmpty == true ? Set.from(album!) : {audio},
-              pageName: audio.metadata?.artist ??
-                  audio.metadata?.title ??
-                  audio.name ??
-                  '',
-            );
-          },
+          fillColor: light ? Colors.white : Theme.of(context).dividerColor,
         ),
       ),
     );
-
-    return autoComplete;
   }
 }

@@ -9,6 +9,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   handy_window
   metadata_god
   screen_retriever
+  url_launcher_linux
   window_manager
   yaru_window_linux
 )

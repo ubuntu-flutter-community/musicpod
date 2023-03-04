@@ -5,6 +5,7 @@ import 'package:music/data/audio.dart';
 import 'package:music/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_loop_auto_scroll/scroll_loop_auto_scroll.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -64,6 +65,12 @@ class _PlayerState extends State<Player> {
           icon: liked
               ? const Icon(YaruIcons.heart_filled)
               : const Icon(YaruIcons.heart),
+        ),
+        YaruIconButton(
+          onPressed: model.audio?.website == null
+              ? null
+              : () => launchUrl(Uri.parse(model.audio!.website!)),
+          icon: const Icon(YaruIcons.share),
         ),
         const Padding(
           padding: EdgeInsets.only(left: 10),
