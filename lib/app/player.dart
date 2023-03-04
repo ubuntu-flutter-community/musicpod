@@ -69,7 +69,18 @@ class _PlayerState extends State<Player> {
         YaruIconButton(
           onPressed: model.audio?.website == null
               ? null
-              : () => launchUrl(Uri.parse(model.audio!.website!)),
+              : () => ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      content: TextButton(
+                        child: Text(
+                          'Copied to clipboard: ${model.audio?.website}',
+                        ),
+                        onPressed: () =>
+                            launchUrl(Uri.parse(model.audio!.website!)),
+                      ),
+                    ),
+                  ),
           icon: const Icon(YaruIcons.share),
         ),
         const Padding(
