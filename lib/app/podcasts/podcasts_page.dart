@@ -95,7 +95,10 @@ class PodcastsPage extends StatelessWidget {
     );
 
     final chartsEnqueued =
-        listsAreEqual(playerModel.queue, model.chartsPodcasts?.first.toList());
+        model.chartsPodcasts == null || model.chartsPodcasts!.isEmpty
+            ? false
+            : listsAreEqual(
+                playerModel.queue, model.chartsPodcasts!.first.toList());
 
     final page = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
