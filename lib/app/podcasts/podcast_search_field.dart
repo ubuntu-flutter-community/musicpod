@@ -57,9 +57,9 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
                   MaterialPageRoute(
                     builder: (context) {
                       return YaruDetailPage(
-                        appBar: YaruWindowTitleBar(
-                          title: Text(value),
-                          leading: const YaruBackButton(
+                        appBar: const YaruWindowTitleBar(
+                          title: PodcastSearchField(),
+                          leading: YaruBackButton(
                             style: YaruBackButtonStyle.rounded,
                           ),
                         ),
