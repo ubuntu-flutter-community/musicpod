@@ -53,7 +53,6 @@ class PlaylistModel extends SafeChangeNotifier {
   void addPlaylist(String name, Set<Audio> audios) {
     _playlists.putIfAbsent(name, () => audios);
     index = playlists.length + 3;
-    notifyListeners();
   }
 
   void updatePlaylistName(String oldName, String newName) {

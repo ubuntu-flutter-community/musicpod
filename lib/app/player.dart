@@ -4,6 +4,7 @@ import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/data/audio.dart';
 import 'package:music/utils.dart';
 import 'package:provider/provider.dart';
+import 'package:scroll_loop_auto_scroll/scroll_loop_auto_scroll.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -274,7 +275,10 @@ class _PlayerState extends State<Player> {
                         ),
                       controls,
                       sliderAndTime,
-                      SingleChildScrollView(
+                      ScrollLoopAutoScroll(
+                        delay: const Duration(seconds: 1),
+                        duration: const Duration(seconds: 1000),
+                        gap: 1300,
                         scrollDirection: Axis.horizontal,
                         child: trackText,
                       ),

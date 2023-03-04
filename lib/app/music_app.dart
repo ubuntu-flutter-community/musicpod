@@ -164,7 +164,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                       onPressed: () =>
                           playlistModel.removePlaylist(playlist.key),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
             );
           },
           iconBuilder: (context, selected) {
