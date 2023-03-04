@@ -392,8 +392,8 @@ class PodcastModel extends SafeChangeNotifier {
               imageUrl: podcast.image,
               metadata: Metadata(
                 title: podcast.title,
-                album: podcast.title,
-                artist: podcast.title,
+                album: item.collectionName,
+                artist: item.artistName,
               ),
               description: podcast.description,
             ),
@@ -436,7 +436,7 @@ class PodcastModel extends SafeChangeNotifier {
                   metadata: Metadata(
                     title: e.title,
                     album: podcast.title,
-                    artist: podcast.title,
+                    artist: podcast.copyright,
                   ),
                   description: podcast.description,
                 ),
