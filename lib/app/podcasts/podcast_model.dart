@@ -422,19 +422,22 @@ class PodcastModel extends SafeChangeNotifier {
   }
 
   Future<void> search({String? searchQuery, bool useAlbumImage = false}) async {
+    if (searchQuery?.isEmpty == true) return;
     podcastSearchResult = null;
-    if (searchQuery?.isNotEmpty == true) {
-      final podcastSearch = <Set<Audio>>{};
 
-      SearchResult results = await _search.search(
-        searchQuery!,
-        country: _country,
-        language: _language,
-        limit: 10,
-      );
+    SearchResult results = await _search.search(
+      searchQuery!,
+      country: _country,
+      language: _language,
+      limit: 10,
+    );
 
-      if (results.items.firstOrNull?.feedUrl != null) {
-        for (var item in results.items) {
+    if (results.successful && results.items.isNotEmpty) {
+      _podcastSearchResult ??= {};
+      _podcastSearchResult?.clear();
+
+      for (var item in results.items) {
+        if (item.feedUrl != null) {
           final Podcast podcast = await Podcast.loadFeed(
             url: item.feedUrl!,
           );
@@ -463,11 +466,13 @@ class PodcastModel extends SafeChangeNotifier {
                 episodes.add(audio);
               }
             }
-            podcastSearch.add(episodes);
+            _podcastSearchResult?.add(episodes);
           }
         }
       }
-      podcastSearchResult = podcastSearch;
+    } else {
+      _podcastSearchResult = null;
     }
+    notifyListeners();
   }
 }

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_card.dart';
 import 'package:music/app/common/audio_page.dart';
@@ -7,7 +8,7 @@ import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/app/podcasts/podcast_model.dart';
 import 'package:music/app/podcasts/podcast_search_field.dart';
 import 'package:music/data/audio.dart';
-import 'package:music/utils.dart';
+import 'package:music/l10n/l10n.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -20,7 +21,8 @@ class PodcastsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.watch<PodcastModel>();
     final playerModel = context.watch<PlayerModel>();
-    final playListModel = context.watch<PlaylistModel>();
+    final playlistModel = context.watch<PlaylistModel>();
+    final theme = Theme.of(context);
 
     Widget grid;
     if (model.chartsPodcasts == null) {
@@ -40,7 +42,7 @@ class PodcastsPage extends StatelessWidget {
         gridDelegate: kImageGridDelegate,
         itemBuilder: (context, index) {
           final podcast = model.chartsPodcasts!.elementAt(index);
-          final starred = playListModel.playlists
+          final starred = playlistModel.playlists
               .containsKey(podcast.first.metadata?.album);
           return AudioCard(
             imageUrl: podcast.first.imageUrl,
@@ -57,10 +59,10 @@ class PodcastsPage extends StatelessWidget {
                           starred ? YaruIcons.star_filled : YaruIcons.star,
                         ),
                         onPressed: starred
-                            ? () => playListModel
+                            ? () => playlistModel
                                 .removePlaylist(podcast.first.metadata!.album!)
                             : () {
-                                playListModel.addPlaylist(
+                                playlistModel.addPlaylist(
                                   podcast.first.metadata!.album!,
                                   podcast,
                                 );
@@ -96,93 +98,71 @@ class PodcastsPage extends StatelessWidget {
       ),
     );
 
-    final chartsEnqueued =
-        model.chartsPodcasts == null || model.chartsPodcasts!.isEmpty
-            ? false
-            : listsAreEqual(
-                playerModel.queue,
-                model.chartsPodcasts!.first.toList(),
-              );
-
+    var controlPanel = Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
+      child: Row(
+        children: [
+          Text(
+            model.searchQuery?.isNotEmpty == true
+                ? '"${model.searchQuery!}"'
+                : 'Top 10 Charts:',
+            style: textStyle,
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          YaruPopupMenuButton<PodcastGenre>(
+            style: buttonStyle,
+            onSelected: (value) {
+              model.podcastGenre = value;
+              model.loadCharts();
+            },
+            initialValue: model.podcastGenre,
+            child: Text(
+              model.podcastGenre.id,
+              style: textStyle,
+            ),
+            itemBuilder: (context) {
+              return [
+                for (final genre in model.sortedGenres)
+                  PopupMenuItem(
+                    value: genre,
+                    child: Text(genre.id),
+                  )
+              ];
+            },
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          YaruPopupMenuButton<Country>(
+            style: buttonStyle,
+            onSelected: (value) {
+              model.country = value;
+              model.loadCharts();
+            },
+            initialValue: model.country,
+            child: Text(
+              model.country.countryCode,
+              style: textStyle,
+            ),
+            itemBuilder: (context) {
+              return [
+                for (final c in model.sortedCountries)
+                  PopupMenuItem(
+                    value: c,
+                    child: Text(c.countryCode),
+                  )
+              ];
+            },
+          ),
+        ],
+      ),
+    );
     final page = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding:
-              const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: Theme.of(context).colorScheme.inverseSurface,
-                child: IconButton(
-                  onPressed: () {
-                    if (playerModel.isPlaying && chartsEnqueued) {
-                      playerModel.pause();
-                    } else {
-                      if (model.chartsPodcasts?.first.isNotEmpty == true) {
-                        playerModel.startPlaylist(model.chartsPodcasts!.first);
-                      }
-                    }
-                  },
-                  icon: Icon(
-                    playerModel.isPlaying && chartsEnqueued
-                        ? YaruIcons.media_pause
-                        : YaruIcons.media_play,
-                    color: Theme.of(context).colorScheme.onInverseSurface,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              YaruPopupMenuButton<PodcastGenre>(
-                style: buttonStyle,
-                onSelected: (value) {
-                  model.podcastGenre = value;
-                  model.loadCharts();
-                },
-                initialValue: model.podcastGenre,
-                child: Text(
-                  model.podcastGenre.id,
-                  style: textStyle,
-                ),
-                itemBuilder: (context) {
-                  return [
-                    for (final genre in model.sortedGenres)
-                      PopupMenuItem(
-                        value: genre,
-                        child: Text(genre.id),
-                      )
-                  ];
-                },
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              YaruPopupMenuButton<Country>(
-                style: buttonStyle,
-                onSelected: (value) {
-                  model.country = value;
-                  model.loadCharts();
-                },
-                initialValue: model.country,
-                child: Text(
-                  model.country.countryCode,
-                  style: textStyle,
-                ),
-                itemBuilder: (context) {
-                  return [
-                    for (final c in model.sortedCountries)
-                      PopupMenuItem(
-                        value: c,
-                        child: Text(c.countryCode),
-                      )
-                  ];
-                },
-              ),
-            ],
-          ),
-        ),
+        controlPanel,
         const Divider(
           height: 0,
         ),
@@ -193,20 +173,135 @@ class PodcastsPage extends StatelessWidget {
       ],
     );
 
-    return YaruDetailPage(
-      appBar: YaruWindowTitleBar(
-        leading: Navigator.canPop(context)
-            ? const YaruBackButton(
-                style: YaruBackButtonStyle.rounded,
-              )
-            : const SizedBox(
-                width: 40,
+    return Navigator(
+      pages: [
+        MaterialPage(
+          child: YaruDetailPage(
+            appBar: YaruWindowTitleBar(
+              title: PodcastSearchField(
+                onPlay: playerModel.startPlaylist,
               ),
-        title: PodcastSearchField(
-          onPlay: playerModel.startPlaylist,
+            ),
+            body: page,
+          ),
         ),
-      ),
-      body: page,
+        if (model.searchQuery?.isNotEmpty == true)
+          MaterialPage(
+            child: YaruDetailPage(
+              appBar: YaruWindowTitleBar(
+                title: const PodcastSearchField(),
+                leading: YaruBackButton(
+                  style: YaruBackButtonStyle.rounded,
+                  onPressed: () {
+                    model.setSearchQuery('');
+                    Navigator.maybePop(context);
+                  },
+                ),
+              ),
+              body: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  controlPanel,
+                  const Divider(
+                    height: 0,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Expanded(
+                    child: model.podcastSearchResult == null
+                        ? GridView(
+                            padding: const EdgeInsets.all(kYaruPagePadding),
+                            gridDelegate: kImageGridDelegate,
+                            children:
+                                List.generate(30, (index) => const AudioCard())
+                                    .toList(),
+                          )
+                        : model.podcastSearchResult!.isEmpty
+                            ? Center(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.all(kYaruPagePadding),
+                                  child: Text(
+                                    context.l10n.noPodcastFound,
+                                    style: theme.textTheme.headlineLarge,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              )
+                            : GridView(
+                                padding: const EdgeInsets.all(kYaruPagePadding),
+                                gridDelegate: kImageGridDelegate,
+                                children: [
+                                  for (final Set<Audio> group
+                                      in model.podcastSearchResult!)
+                                    AudioCard(
+                                      imageUrl: group.firstOrNull?.imageUrl,
+                                      onPlay: () =>
+                                          playerModel.startPlaylist(group),
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              final starred = playlistModel
+                                                  .playlists
+                                                  .containsKey(
+                                                group.first.metadata?.album,
+                                              );
+                                              return AudioPage(
+                                                sort: false,
+                                                showTrack: false,
+                                                imageUrl: group.first.imageUrl,
+                                                likeButton: YaruIconButton(
+                                                  icon: Icon(
+                                                    starred
+                                                        ? YaruIcons.star_filled
+                                                        : YaruIcons.star,
+                                                  ),
+                                                  onPressed: starred
+                                                      ? () => playlistModel
+                                                              .removePlaylist(
+                                                            group
+                                                                .first
+                                                                .metadata!
+                                                                .album!,
+                                                          )
+                                                      : () {
+                                                          playlistModel
+                                                              .addPlaylist(
+                                                            group
+                                                                .first
+                                                                .metadata!
+                                                                .album!,
+                                                            group,
+                                                          );
+                                                        },
+                                                ),
+                                                title:
+                                                    const PodcastSearchField(),
+                                                deletable: false,
+                                                audioPageType:
+                                                    AudioPageType.albumList,
+                                                editableName: false,
+                                                audios: group,
+                                                pageName: group.first.metadata
+                                                        ?.album ??
+                                                    '',
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    )
+                                ],
+                              ),
+                  )
+                ],
+              ),
+            ),
+          )
+      ],
+      onPopPage: (route, result) => route.didPop(result),
     );
   }
 }
