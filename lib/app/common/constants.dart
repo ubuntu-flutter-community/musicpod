@@ -40,9 +40,9 @@ const kFakeReviewText =
 const kBorderContainerBgDark = Color.fromARGB(255, 46, 46, 46);
 const badgeTextStyle = TextStyle(color: Colors.white, fontSize: 10);
 
-const kShimmerBaseLight = Color.fromARGB(120, 228, 228, 228);
+const kShimmerBaseLight = Color.fromARGB(120, 230, 230, 230);
 const kShimmerBaseDark = Color.fromARGB(255, 51, 51, 51);
-const kShimmerHighLightLight = Color.fromARGB(200, 247, 247, 247);
+const kShimmerHighLightLight = Color.fromARGB(197, 218, 218, 218);
 const kShimmerHighLightDark = Color.fromARGB(255, 57, 57, 57);
 
 const kLeadingGap = 40.0;

@@ -1,6 +1,6 @@
-import 'package:avatar_glow/avatar_glow.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:music/app/common/audio_page.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/local_audio/local_audio_page.dart';
@@ -11,6 +11,7 @@ import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/app/podcasts/podcast_model.dart';
 import 'package:music/app/podcasts/podcasts_page.dart';
 import 'package:music/app/radio/radio_page.dart';
+import 'package:music/data/audio.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:music/utils.dart';
 import 'package:provider/provider.dart';
@@ -77,6 +78,19 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
     final playlistModel = context.watch<PlaylistModel>();
     final theme = Theme.of(context);
 
+    final orbit = Padding(
+      padding: const EdgeInsets.only(left: 3),
+      child: SizedBox(
+        width: 16,
+        height: 16,
+        child: LoadingIndicator(
+          strokeWidth: 0.0,
+          indicatorType: Indicator.lineScaleParty,
+          pause: !playerModel.isPlaying,
+        ),
+      ),
+    );
+
     final masterItems = [
       MasterItem(
         tileBuilder: (context) {
@@ -86,6 +100,9 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           return const LocalAudioPage();
         },
         iconBuilder: (context, selected) {
+          if (playerModel.audio?.audioType == AudioType.local) {
+            return orbit;
+          }
           return Stack(
             children: [
               selected
@@ -114,6 +131,10 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           return RadioPage.create(context);
         },
         iconBuilder: (context, selected) {
+          if (playerModel.audio?.audioType == AudioType.radio) {
+            return orbit;
+          }
+
           return selected
               ? const Icon(YaruIcons.network_cellular)
               : const Icon(YaruIcons.network_cellular);
@@ -127,6 +148,9 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           return const PodcastsPage();
         },
         iconBuilder: (context, selected) {
+          if (playerModel.audio?.audioType == AudioType.podcast) {
+            return orbit;
+          }
           return selected
               ? const Icon(YaruIcons.microphone_filled)
               : const Icon(YaruIcons.microphone);
@@ -170,18 +194,6 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             );
           },
           iconBuilder: (context, selected) {
-            if (listsAreEqual(playerModel.queue, playlist.value.toList())) {
-              return AvatarGlow(
-                endRadius: 12,
-                glowColor: theme.colorScheme.onSurface,
-                child: playlist.key == 'likedAudio'
-                    ? const Icon(YaruIcons.heart)
-                    : Icon(
-                        YaruIcons.star,
-                        color: theme.colorScheme.onSurface,
-                      ),
-              );
-            }
             return playlist.key == 'likedAudio'
                 ? const Icon(YaruIcons.heart)
                 : const Icon(YaruIcons.star);
