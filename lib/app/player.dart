@@ -445,22 +445,25 @@ class _PlayerState extends State<Player> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 50,
+                        height: 45,
                         child: controls,
                       ),
                       Expanded(
                         child: sliderAndTime,
                       ),
                       Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            title,
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            artist
-                          ],
+                        child: SizedBox(
+                          width: 400,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(child: title),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(child: artist)
+                            ],
+                          ),
                         ),
                       ),
                     ],
