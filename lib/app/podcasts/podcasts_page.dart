@@ -57,7 +57,7 @@ class PodcastsPage extends StatelessWidget {
                       showTrack: false,
                       likeButton: YaruIconButton(
                         icon: Icon(
-                          starred ? YaruIcons.star_filled : YaruIcons.star,
+                          starred ? YaruIcons.rss : YaruIcons.rss,
                         ),
                         onPressed: starred
                             ? () => playlistModel
@@ -273,8 +273,8 @@ class PodcastsPage extends StatelessWidget {
                                                 likeButton: YaruIconButton(
                                                   icon: Icon(
                                                     starred
-                                                        ? YaruIcons.star_filled
-                                                        : YaruIcons.star,
+                                                        ? YaruIcons.rss
+                                                        : YaruIcons.rss,
                                                   ),
                                                   onPressed: starred
                                                       ? () => playlistModel

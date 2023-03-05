@@ -55,6 +55,18 @@ class PlaylistModel extends SafeChangeNotifier {
     index = playlists.length + 3;
   }
 
+  final Map<String, String> _playlistsToFeedUrls = {};
+  Map<String, String> get playlistsToFeedUrls => _playlistsToFeedUrls;
+  void addPlaylistFeed(String playlist, String feedUrl) {
+    _playlistsToFeedUrls.putIfAbsent(playlist, () => feedUrl);
+    notifyListeners();
+  }
+
+  void removePlaylistFeed(String playlist) {
+    _playlistsToFeedUrls.remove(playlist);
+    notifyListeners();
+  }
+
   void updatePlaylistName(String oldName, String newName) {
     if (newName == oldName) return;
     final oldList = _playlists[oldName];

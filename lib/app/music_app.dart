@@ -188,7 +188,12 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               deletable: false,
               likeButton: playlist.key != 'likedAudio'
                   ? YaruIconButton(
-                      icon: const Icon(YaruIcons.star_filled),
+                      icon: Icon(
+                        playlist.value.first.audioType == AudioType.podcast
+                            ? YaruIcons.rss
+                            : YaruIcons.star_filled,
+                        color: theme.primaryColor,
+                      ),
                       onPressed: () =>
                           playlistModel.removePlaylist(playlist.key),
                     )
@@ -198,7 +203,11 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           iconBuilder: (context, selected) {
             return playlist.key == 'likedAudio'
                 ? const Icon(YaruIcons.heart)
-                : const Icon(YaruIcons.star);
+                : playlist.value.first.audioType == AudioType.podcast
+                    ? const Icon(YaruIcons.rss)
+                    : const Icon(
+                        YaruIcons.star,
+                      );
           },
         ),
     ];
