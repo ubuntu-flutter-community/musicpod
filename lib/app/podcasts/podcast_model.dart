@@ -106,10 +106,12 @@ class PodcastModel extends SafeChangeNotifier {
   }
 
   List<Country> get sortedCountries {
-    final notSelected = countries
-        .where((c) => c != country)
-        .toList()
-        .sorted((a, b) => a.countryCode.compareTo(b.countryCode));
+    final notSelected = countries.where((c) => c != country).toList().sorted(
+        (a, b) => codeToCountry[a.countryCode] == null ||
+                codeToCountry[b.countryCode] == null
+            ? 0
+            : codeToCountry[a.countryCode]!
+                .compareTo(codeToCountry[b.countryCode]!));
     final list = <Country>[country, ...notSelected];
 
     return list;
