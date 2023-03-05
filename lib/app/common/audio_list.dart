@@ -131,8 +131,13 @@ class _AudioListState extends State<AudioList> {
                 isPlayerPlaying: playerModel.isPlaying,
                 pause: playerModel.pause,
                 play: () {
-                  playerModel.audio = audio;
-                  playerModel.stop().then((_) => playerModel.play());
+                  WidgetsBinding.instance
+                      .addPostFrameCallback((timeStamp) async {
+                    if (context.mounted) {
+                      playerModel.audio = audio;
+                      await playerModel.play();
+                    }
+                  });
                 },
                 key: ValueKey(audio),
                 selected: audioSelected,
