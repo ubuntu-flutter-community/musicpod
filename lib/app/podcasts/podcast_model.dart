@@ -467,12 +467,12 @@ class PodcastModel extends SafeChangeNotifier {
               }
             }
             _podcastSearchResult?.add(episodes);
+            notifyListeners();
           }
         }
       }
     } else {
-      _podcastSearchResult = null;
+      podcastSearchResult = {};
     }
-    notifyListeners();
   }
 }
