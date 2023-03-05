@@ -47,15 +47,18 @@ class AudioTile extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            flex: 1,
-            child: Text(
-              '${audio.metadata?.trackNumber ?? 0}',
-              style: textStyle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+          if (audio.metadata?.trackNumber != null)
+            Expanded(
+              flex: 1,
+              child: Text(
+                audio.metadata?.trackNumber != null
+                    ? '${audio.metadata?.trackNumber}'
+                    : ' ',
+                style: textStyle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
           Expanded(
             flex: 5,
             child: Text(

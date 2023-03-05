@@ -24,6 +24,7 @@ class AudioList extends StatefulWidget {
     this.isUnLikedIcon,
     this.onUnLike,
     this.likeButton,
+    this.showTrack = true,
   });
 
   final Set<Audio> audios;
@@ -37,6 +38,7 @@ class AudioList extends StatefulWidget {
   final bool deletable;
   final bool Function(Audio)? isLiked;
   final Widget? likeButton;
+  final bool showTrack;
 
   @override
   State<AudioList> createState() => _AudioListState();
@@ -99,6 +101,7 @@ class _AudioListState extends State<AudioList> {
             right: 20,
           ),
           child: AudioListHeader(
+            showTrack: widget.showTrack,
             audioFilter: _filter,
             onAudioFilterSelected: (audioFilter) => setState(() {
               _filter = audioFilter;
@@ -331,10 +334,12 @@ class AudioListHeader extends StatelessWidget {
     super.key,
     this.onAudioFilterSelected,
     required this.audioFilter,
+    this.showTrack = true,
   });
 
   final void Function(AudioFilter audioFilter)? onAudioFilterSelected;
   final AudioFilter audioFilter;
+  final bool showTrack;
 
   @override
   Widget build(BuildContext context) {
@@ -348,13 +353,14 @@ class AudioListHeader extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _HeaderElement(
-            onAudioFilterSelected: onAudioFilterSelected,
-            label: '#',
-            paddingLeft: false,
-            audioFilter: AudioFilter.trackNumber,
-            flex: 1,
-          ),
+          if (showTrack)
+            _HeaderElement(
+              onAudioFilterSelected: onAudioFilterSelected,
+              label: '#',
+              paddingLeft: false,
+              audioFilter: AudioFilter.trackNumber,
+              flex: 1,
+            ),
           _HeaderElement(
             onAudioFilterSelected: onAudioFilterSelected,
             label: context.l10n.title,

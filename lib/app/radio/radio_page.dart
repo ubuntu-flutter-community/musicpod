@@ -30,6 +30,7 @@ class _RadioPageState extends State<RadioPage> {
     final page = Padding(
       padding: const EdgeInsets.only(top: 20),
       child: AudioList(
+        showTrack: false,
         isLiked: playListModel.isStarredStation,
         listName: context.l10n.radio,
         editableName: false,

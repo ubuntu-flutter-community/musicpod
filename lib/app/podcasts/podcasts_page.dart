@@ -50,6 +50,8 @@ class PodcastsPage extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) {
                     return AudioPage(
+                      sort: false,
+                      showTrack: false,
                       likeButton: YaruIconButton(
                         icon: Icon(
                           starred ? YaruIcons.star_filled : YaruIcons.star,
@@ -98,7 +100,9 @@ class PodcastsPage extends StatelessWidget {
         model.chartsPodcasts == null || model.chartsPodcasts!.isEmpty
             ? false
             : listsAreEqual(
-                playerModel.queue, model.chartsPodcasts!.first.toList());
+                playerModel.queue,
+                model.chartsPodcasts!.first.toList(),
+              );
 
     final page = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

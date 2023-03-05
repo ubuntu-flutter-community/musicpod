@@ -109,6 +109,8 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
                                             group.first.metadata?.album,
                                           );
                                           return AudioPage(
+                                            sort: false,
+                                            showTrack: false,
                                             imageUrl: group.first.imageUrl,
                                             likeButton: YaruIconButton(
                                               icon: Icon(

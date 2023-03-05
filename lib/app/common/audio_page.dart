@@ -27,6 +27,8 @@ class AudioPage extends StatefulWidget {
     this.title,
     this.imageUrl,
     this.likeButton,
+    this.sort = true,
+    this.showTrack = true,
   });
 
   final Set<Audio> audios;
@@ -37,6 +39,8 @@ class AudioPage extends StatefulWidget {
   final Widget? likeButton;
   final Widget? title;
   final String? imageUrl;
+  final bool sort;
+  final bool showTrack;
 
   @override
   State<AudioPage> createState() => _AudioPageState();
@@ -75,7 +79,9 @@ class _AudioPageState extends State<AudioPage> {
 
     var sortedAudios = widget.audios.toList();
 
-    sortListByAudioFilter(audioFilter: _filter, audios: sortedAudios);
+    if (widget.sort) {
+      sortListByAudioFilter(audioFilter: _filter, audios: sortedAudios);
+    }
 
     Widget? body = Padding(
       padding: const EdgeInsets.only(top: 20),
@@ -217,6 +223,7 @@ class _AudioPageState extends State<AudioPage> {
                 right: 20,
               ),
               child: AudioListHeader(
+                showTrack: widget.showTrack,
                 audioFilter: AudioFilter.title,
                 onAudioFilterSelected: (audioFilter) => setState(() {
                   _filter = audioFilter;

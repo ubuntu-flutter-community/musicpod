@@ -20,7 +20,6 @@ class RadioModel extends SafeChangeNotifier {
               name: e.key,
               url: e.value,
               metadata: Metadata(
-                trackNumber: 1,
                 title: e.key,
                 artist: e.key,
                 album: e.key,
