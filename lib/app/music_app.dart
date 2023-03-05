@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -73,12 +74,28 @@ class _App extends StatefulWidget {
 }
 
 class _AppState extends State<_App> with TickerProviderStateMixin {
+  var _shrinkSidebar = true;
+
+  final _delegateSmall = const YaruMasterResizablePaneDelegate(
+    initialPaneWidth: 81,
+    minPaneWidth: 81,
+    minPageWidth: kYaruMasterDetailBreakpoint / 2,
+  );
+
+  final _delegateBig = const YaruMasterResizablePaneDelegate(
+    initialPaneWidth: 200,
+    minPaneWidth: 81,
+    minPageWidth: kYaruMasterDetailBreakpoint / 2,
+  );
+
   @override
   Widget build(BuildContext context) {
     final localAudioModel = context.watch<LocalAudioModel>();
     final playerModel = context.watch<PlayerModel>();
     final playlistModel = context.watch<PlaylistModel>();
     final theme = Theme.of(context);
+    final shrinkSidebar = _shrinkSidebar ||
+        (MediaQuery.of(context).size.width < 800 ? true : false);
 
     final orbit = Padding(
       padding: const EdgeInsets.only(left: 3),
@@ -184,6 +201,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                   : AudioPageType.list,
               audios: playlist.value,
               pageName: playlist.key,
+              showTrack:
+                  playlist.value.firstOrNull?.metadata?.trackNumber != null,
               editableName: false,
               deletable: false,
               likeButton: playlist.key != 'likedAudio'
@@ -242,6 +261,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
     );
 
     return Scaffold(
+      key: ValueKey(_shrinkSidebar),
       backgroundColor: playerModel.surfaceTintColor,
       body: playerModel.fullScreen == true
           ? Column(
@@ -258,18 +278,29 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                 Expanded(
                   child: YaruMasterDetailPage(
                     onSelected: (value) => playlistModel.index = value ?? 0,
-                    appBar: const YaruWindowTitleBar(
-                      title: Text('Ubuntu Music'),
+                    appBar: YaruWindowTitleBar(
+                      titleSpacing: 20,
+                      title: Row(
+                        children: [
+                          Center(
+                            child: YaruIconButton(
+                              icon: shrinkSidebar
+                                  ? const Icon(YaruIcons.sidebar)
+                                  : const Icon(YaruIcons.sidebar),
+                              onPressed: () => setState(() {
+                                _shrinkSidebar = !_shrinkSidebar;
+                              }),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     bottomBar: Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: settingsTile,
                     ),
-                    layoutDelegate: const YaruMasterResizablePaneDelegate(
-                      initialPaneWidth: 200,
-                      minPaneWidth: 81,
-                      minPageWidth: kYaruMasterDetailBreakpoint / 2,
-                    ),
+                    layoutDelegate:
+                        _shrinkSidebar ? _delegateSmall : _delegateBig,
                     controller: YaruPageController(
                       length: playlistModel.playlists.length + 4,
                       initialIndex: playlistModel.index ?? 0,
