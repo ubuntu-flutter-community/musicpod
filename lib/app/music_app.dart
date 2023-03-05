@@ -1,6 +1,7 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:mpris_service/mpris_service.dart';
 import 'package:music/app/common/audio_page.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/local_audio/local_audio_page.dart';
@@ -15,6 +16,7 @@ import 'package:music/data/audio.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:music/utils.dart';
 import 'package:provider/provider.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -47,7 +49,7 @@ class _App extends StatefulWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => PlayerModel(),
+          create: (_) => PlayerModel(getService<MPRIS>()),
         ),
         ChangeNotifierProvider(
           create: (_) => LocalAudioModel()..init(),

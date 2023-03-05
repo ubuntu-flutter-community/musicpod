@@ -24,6 +24,8 @@ dependencies:
   intl: ^0.17.0
   loading_indicator: ^3.1.0
   metadata_god: ^0.3.2
+  mpris_service:
+    git: https://github.com/alexmercerind/mpris_service
   palette_generator: ^0.3.3+2
   path: ^1.8.2
   podcast_search: ^0.5.2
@@ -31,6 +33,7 @@ dependencies:
   safe_change_notifier: ^0.2.0
   scroll_loop_auto_scroll: ^0.0.5
   shimmer: ^2.0.0
+  ubuntu_service: ^0.2.0
   url_launcher: ^6.1.10
   yaru: ^0.5.5
   yaru_icons: ^1.0.3
@@ -44,3 +47,6 @@ dev_dependencies:
 
 flutter:
    generate: true
+
+dependency_overrides:
+  xml: ^6.2.2

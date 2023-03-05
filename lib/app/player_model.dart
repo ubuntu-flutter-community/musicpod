@@ -2,12 +2,18 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:mpris_service/mpris_service.dart';
 import 'package:music/data/audio.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class PlayerModel extends SafeChangeNotifier {
-  PlayerModel() : _audioPlayer = AudioPlayer();
+  PlayerModel(MPRIS mpris)
+      : _audioPlayer = AudioPlayer(),
+        _mediaControlService = mpris;
+
+  final AudioPlayer _audioPlayer;
+  final MPRIS _mediaControlService;
   StreamSubscription<PlayerState>? _playerSub;
   StreamSubscription<Duration>? _durationSub;
   StreamSubscription<Duration>? _positionSub;
@@ -34,6 +40,23 @@ class PlayerModel extends SafeChangeNotifier {
     if (value == null || value == _audio) return;
     _audio = value;
 
+    if (audio!.path != null || audio!.url != null) {
+      _mediaControlService.metadata = MPRISMetadata(
+        audio!.path != null ? Uri.file(audio!.path!) : Uri.parse(audio!.url!),
+        artUrl: _audio!.imageUrl == null
+            ? null
+            : Uri.parse(
+                _audio!.imageUrl!,
+              ),
+        album: _audio?.metadata?.album,
+        albumArtist: [_audio?.metadata?.albumArtist ?? ''],
+        artist: [_audio?.metadata?.albumArtist ?? ''],
+        discNumber: _audio?.metadata?.discNumber,
+        title: _audio?.metadata?.title,
+        trackNumber: _audio?.metadata?.trackNumber,
+      );
+    }
+
     notifyListeners();
   }
 
@@ -44,8 +67,6 @@ class PlayerModel extends SafeChangeNotifier {
     _nextAudio = value;
     notifyListeners();
   }
-
-  final AudioPlayer _audioPlayer;
 
   bool _isPlaying = false;
   bool get isPlaying => _isPlaying;
@@ -109,8 +130,34 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> init() async {
+    _mediaControlService.setEventHandler(
+      MPRISEventHandler(
+        playPause: () async {
+          isPlaying ? pause() : play();
+          _mediaControlService.playbackStatus = (isPlaying
+              ? MPRISPlaybackStatus.paused
+              : MPRISPlaybackStatus.playing);
+        },
+        play: () async {
+          play();
+        },
+        pause: () async {
+          pause();
+          _mediaControlService.playbackStatus = MPRISPlaybackStatus.paused;
+        },
+        next: () async {
+          playNext();
+        },
+        previous: () async {
+          playPrevious();
+        },
+      ),
+    );
+
     _playerSub = _audioPlayer.onPlayerStateChanged.listen((playerState) {
       isPlaying = playerState == PlayerState.playing;
+      _mediaControlService.playbackStatus =
+          isPlaying ? MPRISPlaybackStatus.playing : MPRISPlaybackStatus.paused;
     });
     _audioPlayer.onDurationChanged.listen((newDuration) {
       duration = newDuration;
@@ -216,6 +263,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   @override
   void dispose() {
+    _mediaControlService.dispose();
     _playerSub?.cancel();
     _positionSub?.cancel();
     _durationSub?.cancel();
