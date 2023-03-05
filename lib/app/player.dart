@@ -37,17 +37,16 @@ class _PlayerState extends State<Player> {
     final liked =
         model.audio == null ? false : playlistModel.liked(model.audio!);
     final theme = Theme.of(context);
+    final isFullScreen = model.fullScreen == true;
 
     final fullScreenButton = Padding(
       padding: const EdgeInsets.all(8.0),
       child: YaruIconButton(
         icon: Icon(
-          model.fullScreen == true
-              ? YaruIcons.fullscreen_exit
-              : YaruIcons.fullscreen,
+          isFullScreen ? YaruIcons.fullscreen_exit : YaruIcons.fullscreen,
           color: theme.colorScheme.onSurface,
         ),
-        isSelected: model.fullScreen == true,
+        isSelected: isFullScreen,
         onPressed: () => model.fullScreen = !(model.fullScreen ?? false),
       ),
     );
@@ -141,41 +140,29 @@ class _PlayerState extends State<Player> {
       ],
     );
 
-    final trackText = Wrap(
-      direction: model.fullScreen == true ? Axis.vertical : Axis.horizontal,
-      alignment: WrapAlignment.center,
-      runAlignment: WrapAlignment.center,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: model.fullScreen == true ? 0 : 10,
-      runSpacing: 20,
-      children: [
-        Text(
-          model.audio?.metadata?.title ?? model.audio?.name ?? '',
-          style: TextStyle(
-            fontWeight: FontWeight.w200,
-            fontSize: model.fullScreen == true ? 45 : 15,
-            color: model.fullScreen == true
-                ? theme.colorScheme.onSurface.withOpacity(0.7)
-                : null,
-          ),
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        Text(
-          model.audio?.metadata?.artist ?? '',
-          style: TextStyle(
-            fontWeight: FontWeight.w100,
-            fontSize: model.fullScreen == true ? 25 : 15,
-            color: model.fullScreen == true
-                ? theme.colorScheme.onSurface.withOpacity(0.7)
-                : null,
-          ),
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
-        ),
-      ],
+    final title = Text(
+      model.audio?.metadata?.title ?? model.audio?.name ?? '',
+      style: TextStyle(
+        fontWeight: FontWeight.w200,
+        fontSize: isFullScreen ? 45 : 15,
+        color:
+            isFullScreen ? theme.colorScheme.onSurface.withOpacity(0.7) : null,
+      ),
+      textAlign: TextAlign.center,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+    final artist = Text(
+      model.audio?.metadata?.artist ?? '',
+      style: TextStyle(
+        fontWeight: FontWeight.w100,
+        fontSize: isFullScreen ? 25 : 15,
+        color:
+            isFullScreen ? theme.colorScheme.onSurface.withOpacity(0.7) : null,
+      ),
+      textAlign: TextAlign.center,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
     );
 
     bool sliderActive() =>
@@ -239,7 +226,7 @@ class _PlayerState extends State<Player> {
       ],
     );
 
-    if (model.fullScreen == true) {
+    if (isFullScreen) {
       return Stack(
         alignment: Alignment.topRight,
         children: [
@@ -295,12 +282,20 @@ class _PlayerState extends State<Player> {
                       controls,
                       sliderAndTime,
                       ScrollLoopAutoScroll(
-                        delay: const Duration(seconds: 1),
-                        duration: const Duration(seconds: 1000),
-                        gap: 1300,
+                        delay: Duration.zero,
+                        duration: const Duration(seconds: 300),
                         scrollDirection: Axis.horizontal,
-                        child: trackText,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width,
+                          ),
+                          child: title,
+                        ),
                       ),
+                      artist,
+                      const SizedBox(
+                        height: 10,
+                      )
                     ],
                   ),
                 ),
@@ -457,9 +452,15 @@ class _PlayerState extends State<Player> {
                         child: sliderAndTime,
                       ),
                       Expanded(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: trackText,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            title,
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            artist
+                          ],
                         ),
                       ),
                     ],
