@@ -438,35 +438,39 @@ class PodcastModel extends SafeChangeNotifier {
 
       for (var item in results.items) {
         if (item.feedUrl != null) {
-          final Podcast podcast = await Podcast.loadFeed(
-            url: item.feedUrl!,
-          );
+          try {
+            final Podcast podcast = await Podcast.loadFeed(
+              url: item.feedUrl!,
+            );
 
-          if (podcast.episodes?.isNotEmpty == true) {
-            final episodes = <Audio>{};
+            if (podcast.episodes?.isNotEmpty == true) {
+              final episodes = <Audio>{};
 
-            for (var episode in podcast.episodes!) {
-              if (episode.contentUrl != null) {
-                final audio = Audio(
-                  url: episode.contentUrl,
-                  audioType: AudioType.podcast,
-                  name: '${podcast.title ?? ''} - ${episode.title}',
-                  imageUrl: useAlbumImage
-                      ? podcast.image ?? episode.imageUrl
-                      : episode.imageUrl ?? podcast.image,
-                  metadata: Metadata(
-                    title: episode.title,
-                    album: podcast.title,
-                    artist: podcast.copyright,
-                  ),
-                  description: podcast.description,
-                  website: podcast.url,
-                );
+              for (var episode in podcast.episodes!) {
+                if (episode.contentUrl != null) {
+                  final audio = Audio(
+                    url: episode.contentUrl,
+                    audioType: AudioType.podcast,
+                    name: '${podcast.title ?? ''} - ${episode.title}',
+                    imageUrl: useAlbumImage
+                        ? podcast.image ?? episode.imageUrl
+                        : episode.imageUrl ?? podcast.image,
+                    metadata: Metadata(
+                      title: episode.title,
+                      album: podcast.title,
+                      artist: podcast.copyright,
+                    ),
+                    description: podcast.description,
+                    website: podcast.url,
+                  );
 
-                episodes.add(audio);
+                  episodes.add(audio);
+                }
               }
+              _podcastSearchResult?.add(episodes);
+              notifyListeners();
             }
-            _podcastSearchResult?.add(episodes);
+          } on PodcastFailedException {
             notifyListeners();
           }
         }

@@ -41,17 +41,14 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
     final model = context.watch<PodcastModel>();
 
     return SizedBox(
-      // key: ObjectKey(model.podcastSearchResult),
       height: 35,
       width: 400,
       child: TextField(
-        autofocus: true,
         onSubmitted: (value) {
           model.setSearchQuery(value);
           model.search(searchQuery: value, useAlbumImage: true);
         },
         controller: _controller,
-        focusNode: FocusNode(),
         decoration: InputDecoration(
           hintText: context.l10n.search,
           contentPadding: const EdgeInsets.only(left: 10, right: 10),

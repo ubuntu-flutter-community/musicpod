@@ -220,12 +220,27 @@ class PodcastsPage extends StatelessWidget {
                         : model.podcastSearchResult!.isEmpty
                             ? Center(
                                 child: Padding(
-                                  padding:
-                                      const EdgeInsets.all(kYaruPagePadding),
-                                  child: Text(
-                                    context.l10n.noPodcastFound,
-                                    style: theme.textTheme.headlineLarge,
-                                    textAlign: TextAlign.center,
+                                  padding: const EdgeInsets.all(50),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Text(
+                                        '🐣🎙🎧❓',
+                                        style: TextStyle(fontSize: 40),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        context.l10n.noPodcastFound,
+                                        style: theme.textTheme.headlineLarge
+                                            ?.copyWith(
+                                          fontWeight: FontWeight.w100,
+                                          color: theme.colorScheme.onSurface,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               )
