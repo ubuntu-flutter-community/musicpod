@@ -8,6 +8,7 @@ import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/app/podcasts/podcast_model.dart';
 import 'package:music/app/podcasts/podcast_search_field.dart';
 import 'package:music/data/audio.dart';
+import 'package:music/data/countries.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
@@ -104,34 +105,35 @@ class PodcastsPage extends StatelessWidget {
         children: [
           Text(
             model.searchQuery?.isNotEmpty == true
-                ? '"${model.searchQuery!}"'
+                ? 'Search:     "${model.searchQuery!}"'
                 : 'Top 10 Charts:',
             style: textStyle,
           ),
           const SizedBox(
             width: 10,
           ),
-          YaruPopupMenuButton<PodcastGenre>(
-            style: buttonStyle,
-            onSelected: (value) {
-              model.podcastGenre = value;
-              model.loadCharts();
-            },
-            initialValue: model.podcastGenre,
-            child: Text(
-              model.podcastGenre.id,
-              style: textStyle,
+          if (model.searchQuery == null || model.searchQuery!.isEmpty)
+            YaruPopupMenuButton<PodcastGenre>(
+              style: buttonStyle,
+              onSelected: (value) {
+                model.podcastGenre = value;
+                model.loadCharts();
+              },
+              initialValue: model.podcastGenre,
+              child: Text(
+                model.podcastGenre.id,
+                style: textStyle,
+              ),
+              itemBuilder: (context) {
+                return [
+                  for (final genre in model.sortedGenres)
+                    PopupMenuItem(
+                      value: genre,
+                      child: Text(genre.id),
+                    )
+                ];
+              },
             ),
-            itemBuilder: (context) {
-              return [
-                for (final genre in model.sortedGenres)
-                  PopupMenuItem(
-                    value: genre,
-                    child: Text(genre.id),
-                  )
-              ];
-            },
-          ),
           const SizedBox(
             width: 10,
           ),
@@ -143,7 +145,8 @@ class PodcastsPage extends StatelessWidget {
             },
             initialValue: model.country,
             child: Text(
-              model.country.countryCode,
+              codeToCountry[model.country.countryCode] ??
+                  model.country.countryCode,
               style: textStyle,
             ),
             itemBuilder: (context) {
@@ -151,7 +154,7 @@ class PodcastsPage extends StatelessWidget {
                 for (final c in model.sortedCountries)
                   PopupMenuItem(
                     value: c,
-                    child: Text(c.countryCode),
+                    child: Text(codeToCountry[c.countryCode] ?? c.countryCode),
                   )
               ];
             },
