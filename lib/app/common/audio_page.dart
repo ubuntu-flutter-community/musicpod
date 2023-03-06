@@ -29,6 +29,7 @@ class AudioPage extends StatefulWidget {
     this.likeButton,
     this.sort = true,
     this.showTrack = true,
+    this.showWindowControls = true,
   });
 
   final Set<Audio> audios;
@@ -41,6 +42,7 @@ class AudioPage extends StatefulWidget {
   final String? imageUrl;
   final bool sort;
   final bool showTrack;
+  final bool showWindowControls;
 
   @override
   State<AudioPage> createState() => _AudioPageState();
@@ -337,7 +339,13 @@ class _AudioPageState extends State<AudioPage> {
           ? const Color.fromARGB(255, 37, 37, 37)
           : Colors.white,
       appBar: YaruWindowTitleBar(
-        title: widget.title ?? const SearchField(),
+        style: widget.showWindowControls
+            ? YaruTitleBarStyle.normal
+            : YaruTitleBarStyle.undecorated,
+        title: widget.title ??
+            SearchField(
+              spawnPageWithWindowControls: widget.showWindowControls,
+            ),
         leading: Navigator.canPop(context)
             ? const YaruBackButton(
                 style: YaruBackButtonStyle.rounded,

@@ -362,7 +362,6 @@ class AudioListHeader extends StatelessWidget {
             _HeaderElement(
               onAudioFilterSelected: onAudioFilterSelected,
               label: '#',
-              paddingLeft: false,
               audioFilter: AudioFilter.trackNumber,
               flex: 1,
             ),
@@ -370,7 +369,6 @@ class AudioListHeader extends StatelessWidget {
             onAudioFilterSelected: onAudioFilterSelected,
             label: context.l10n.title,
             audioFilter: AudioFilter.title,
-            paddingLeft: false,
             flex: 5,
           ),
           _HeaderElement(
@@ -416,7 +414,6 @@ class _HeaderElement extends StatelessWidget {
   const _HeaderElement({
     this.onAudioFilterSelected,
     required this.label,
-    this.paddingLeft = true,
     required this.audioFilter,
     this.flex = 1,
   });
@@ -424,7 +421,6 @@ class _HeaderElement extends StatelessWidget {
   final void Function(AudioFilter audioFilter)? onAudioFilterSelected;
   final AudioFilter audioFilter;
   final String label;
-  final bool paddingLeft;
   final int flex;
 
   @override
@@ -436,20 +432,16 @@ class _HeaderElement extends StatelessWidget {
       flex: flex,
       child: Row(
         children: [
-          Padding(
-            padding:
-                paddingLeft ? const EdgeInsets.only(left: 10) : EdgeInsets.zero,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(5),
-              onTap: onAudioFilterSelected == null
-                  ? null
-                  : () => onAudioFilterSelected!(audioFilter),
-              child: Text(
-                label,
-                style: textStyle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+          InkWell(
+            borderRadius: BorderRadius.circular(5),
+            onTap: onAudioFilterSelected == null
+                ? null
+                : () => onAudioFilterSelected!(audioFilter),
+            child: Text(
+              label,
+              style: textStyle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

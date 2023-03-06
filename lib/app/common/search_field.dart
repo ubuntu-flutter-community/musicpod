@@ -12,7 +12,10 @@ import '../../data/audio.dart';
 class SearchField extends StatefulWidget {
   const SearchField({
     super.key,
+    this.spawnPageWithWindowControls = true,
   });
+
+  final bool spawnPageWithWindowControls;
 
   @override
   State<SearchField> createState() => _SearchFieldState();
@@ -125,6 +128,7 @@ class _SearchFieldState extends State<SearchField> {
             );
 
             return AudioPage(
+              showWindowControls: widget.spawnPageWithWindowControls,
               deletable: false,
               audioPageType: audio.metadata?.album != null
                   ? AudioPageType.albumList

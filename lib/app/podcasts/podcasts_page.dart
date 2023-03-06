@@ -16,7 +16,12 @@ import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class PodcastsPage extends StatelessWidget {
-  const PodcastsPage({super.key});
+  const PodcastsPage({
+    super.key,
+    this.showWindowControls = true,
+  });
+
+  final bool showWindowControls;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +58,7 @@ class PodcastsPage extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) {
                     return AudioPage(
+                      showWindowControls: showWindowControls,
                       sort: false,
                       showTrack: false,
                       likeButton: YaruIconButton(
@@ -181,6 +187,9 @@ class PodcastsPage extends StatelessWidget {
         MaterialPage(
           child: YaruDetailPage(
             appBar: YaruWindowTitleBar(
+              style: showWindowControls
+                  ? YaruTitleBarStyle.normal
+                  : YaruTitleBarStyle.undecorated,
               title: PodcastSearchField(
                 onPlay: playerModel.startPlaylist,
               ),
@@ -192,6 +201,9 @@ class PodcastsPage extends StatelessWidget {
           MaterialPage(
             child: YaruDetailPage(
               appBar: YaruWindowTitleBar(
+                style: showWindowControls
+                    ? YaruTitleBarStyle.normal
+                    : YaruTitleBarStyle.undecorated,
                 title: const PodcastSearchField(),
                 leading: YaruBackButton(
                   style: YaruBackButtonStyle.rounded,
@@ -267,6 +279,8 @@ class PodcastsPage extends StatelessWidget {
                                                 group.first.metadata?.album,
                                               );
                                               return AudioPage(
+                                                showWindowControls:
+                                                    showWindowControls,
                                                 sort: false,
                                                 showTrack: false,
                                                 imageUrl: group.first.imageUrl,

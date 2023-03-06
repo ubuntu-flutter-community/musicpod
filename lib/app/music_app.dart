@@ -74,8 +74,6 @@ class _App extends StatefulWidget {
 }
 
 class _AppState extends State<_App> with TickerProviderStateMixin {
-  var _shrinkSidebar = true;
-
   final _delegateSmall = const YaruMasterResizablePaneDelegate(
     initialPaneWidth: 81,
     minPaneWidth: 81,
@@ -94,8 +92,9 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
     final playerModel = context.watch<PlayerModel>();
     final playlistModel = context.watch<PlaylistModel>();
     final theme = Theme.of(context);
-    final shrinkSidebar = _shrinkSidebar ||
-        (MediaQuery.of(context).size.width < 800 ? true : false);
+    final width = MediaQuery.of(context).size.width;
+    final shrinkSidebar = (width < 700);
+    final playerToTheRight = width > 1700;
 
     final orbit = Padding(
       padding: const EdgeInsets.only(left: 3),
@@ -116,7 +115,9 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           return Text(context.l10n.localAudio);
         },
         builder: (context) {
-          return const LocalAudioPage();
+          return LocalAudioPage(
+            showWindowControls: !playerToTheRight,
+          );
         },
         iconBuilder: (context, selected) {
           if (playerModel.audio?.audioType == AudioType.local) {
@@ -147,7 +148,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           return Text(context.l10n.radio);
         },
         builder: (context) {
-          return RadioPage.create(context);
+          return RadioPage.create(context, !playerToTheRight);
         },
         iconBuilder: (context, selected) {
           if (playerModel.audio?.audioType == AudioType.radio) {
@@ -164,7 +165,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           return Text(context.l10n.podcasts);
         },
         builder: (context) {
-          return const PodcastsPage();
+          return PodcastsPage(showWindowControls: !playerToTheRight);
         },
         iconBuilder: (context, selected) {
           if (playerModel.audio?.audioType == AudioType.podcast) {
@@ -196,6 +197,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           },
           builder: (context) {
             return AudioPage(
+              showWindowControls: !playerToTheRight,
               audioPageType: playlist.key != 'likedAudio'
                   ? AudioPageType.albumList
                   : AudioPageType.list,
@@ -260,8 +262,50 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
       ),
     );
 
+    var yaruMasterDetailPage = YaruMasterDetailPage(
+      onSelected: (value) => playlistModel.index = value ?? 0,
+      appBar: const YaruWindowTitleBar(),
+      bottomBar: Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: settingsTile,
+      ),
+      layoutDelegate: shrinkSidebar ? _delegateSmall : _delegateBig,
+      controller: YaruPageController(
+        length: playlistModel.playlists.length + 4,
+        initialIndex: playlistModel.index ?? 0,
+      ),
+      tileBuilder: (context, index, selected) {
+        final tile = YaruMasterTile(
+          title: masterItems[index].tileBuilder(context),
+          leading: masterItems[index].iconBuilder == null
+              ? null
+              : masterItems[index].iconBuilder!(
+                  context,
+                  selected,
+                ),
+        );
+
+        Widget? column;
+
+        if (index == 3) {
+          column = Column(
+            children: [
+              const Divider(
+                height: 30,
+              ),
+              tile
+            ],
+          );
+        }
+
+        return column ?? tile;
+      },
+      pageBuilder: (context, index) => YaruDetailPage(
+        body: masterItems[index].builder(context),
+      ),
+    );
     return Scaffold(
-      key: ValueKey(_shrinkSidebar),
+      key: ValueKey(shrinkSidebar),
       backgroundColor: playerModel.surfaceTintColor,
       body: playerModel.fullScreen == true
           ? Column(
@@ -273,75 +317,41 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                 Expanded(child: Player())
               ],
             )
-          : Column(
-              children: [
-                Expanded(
-                  child: YaruMasterDetailPage(
-                    onSelected: (value) => playlistModel.index = value ?? 0,
-                    appBar: YaruWindowTitleBar(
-                      titleSpacing: 20,
-                      title: Row(
-                        children: [
-                          Center(
-                            child: YaruIconButton(
-                              icon: shrinkSidebar
-                                  ? const Icon(YaruIcons.sidebar)
-                                  : const Icon(YaruIcons.sidebar),
-                              onPressed: () => setState(() {
-                                _shrinkSidebar = !_shrinkSidebar;
-                              }),
+          : !playerToTheRight
+              ? Column(
+                  children: [
+                    Expanded(
+                      child: yaruMasterDetailPage,
+                    ),
+                    const Divider(
+                      height: 0,
+                    ),
+                    const Player()
+                  ],
+                )
+              : Row(
+                  children: [
+                    Expanded(
+                      child: yaruMasterDetailPage,
+                    ),
+                    const VerticalDivider(
+                      width: 0,
+                    ),
+                    SizedBox(
+                      width: 500,
+                      child: Column(
+                        children: const [
+                          YaruWindowTitleBar(),
+                          Expanded(
+                            child: Player(
+                              expandHeight: true,
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    bottomBar: Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: settingsTile,
-                    ),
-                    layoutDelegate:
-                        _shrinkSidebar ? _delegateSmall : _delegateBig,
-                    controller: YaruPageController(
-                      length: playlistModel.playlists.length + 4,
-                      initialIndex: playlistModel.index ?? 0,
-                    ),
-                    tileBuilder: (context, index, selected) {
-                      final tile = YaruMasterTile(
-                        title: masterItems[index].tileBuilder(context),
-                        leading: masterItems[index].iconBuilder == null
-                            ? null
-                            : masterItems[index].iconBuilder!(
-                                context,
-                                selected,
-                              ),
-                      );
-
-                      Widget? column;
-
-                      if (index == 3) {
-                        column = Column(
-                          children: [
-                            const Divider(
-                              height: 30,
-                            ),
-                            tile
-                          ],
-                        );
-                      }
-
-                      return column ?? tile;
-                    },
-                    pageBuilder: (context, index) => YaruDetailPage(
-                      body: masterItems[index].builder(context),
-                    ),
-                  ),
+                    )
+                  ],
                 ),
-                const Divider(
-                  height: 0,
-                ),
-                const Player()
-              ],
-            ),
     );
   }
 }

@@ -8,7 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class LocalAudioPage extends StatelessWidget {
-  const LocalAudioPage({super.key});
+  const LocalAudioPage({super.key, this.showWindowControls = true});
+
+  final bool showWindowControls;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,9 @@ class LocalAudioPage extends StatelessWidget {
                   );
 
     final appBar = YaruWindowTitleBar(
+      style: showWindowControls
+          ? YaruTitleBarStyle.normal
+          : YaruTitleBarStyle.undecorated,
       leading: Navigator.of(context).canPop()
           ? const YaruBackButton(
               style: YaruBackButtonStyle.rounded,
@@ -49,7 +54,7 @@ class LocalAudioPage extends StatelessWidget {
           : const SizedBox(
               width: 40,
             ),
-      title: const SearchField(),
+      title: SearchField(spawnPageWithWindowControls: showWindowControls),
     );
 
     return YaruDetailPage(

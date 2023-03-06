@@ -9,12 +9,16 @@ import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class RadioPage extends StatefulWidget {
-  const RadioPage({super.key});
+  const RadioPage({super.key, this.showWindowControls = true});
 
-  static Widget create(BuildContext context) {
+  final bool showWindowControls;
+
+  static Widget create(BuildContext context, [bool showWindowControls = true]) {
     return ChangeNotifierProvider(
       create: (_) => RadioModel()..init(),
-      child: const RadioPage(),
+      child: RadioPage(
+        showWindowControls: showWindowControls,
+      ),
     );
   }
 
@@ -45,6 +49,9 @@ class _RadioPageState extends State<RadioPage> {
     );
 
     final appBar = YaruWindowTitleBar(
+      style: widget.showWindowControls
+          ? YaruTitleBarStyle.normal
+          : YaruTitleBarStyle.undecorated,
       leading: Navigator.of(context).canPop()
           ? const YaruBackButton(
               style: YaruBackButtonStyle.rounded,
@@ -52,7 +59,8 @@ class _RadioPageState extends State<RadioPage> {
           : const SizedBox(
               width: 40,
             ),
-      title: const SearchField(),
+      title:
+          SearchField(spawnPageWithWindowControls: widget.showWindowControls),
     );
 
     return YaruDetailPage(

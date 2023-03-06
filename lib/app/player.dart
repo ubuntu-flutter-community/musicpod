@@ -13,7 +13,10 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class Player extends StatefulWidget {
   const Player({
     super.key,
+    this.expandHeight = false,
   });
+
+  final bool expandHeight;
 
   @override
   State<Player> createState() => _PlayerState();
@@ -37,16 +40,17 @@ class _PlayerState extends State<Player> {
     final liked =
         model.audio == null ? false : playlistModel.liked(model.audio!);
     final theme = Theme.of(context);
-    final isFullScreen = model.fullScreen == true;
+    final isFullScreen = widget.expandHeight || model.fullScreen == true;
 
     final fullScreenButton = Padding(
       padding: const EdgeInsets.all(8.0),
       child: YaruIconButton(
         icon: Icon(
-          isFullScreen ? YaruIcons.fullscreen_exit : YaruIcons.fullscreen,
+          isFullScreen && !widget.expandHeight
+              ? YaruIcons.fullscreen_exit
+              : YaruIcons.fullscreen,
           color: theme.colorScheme.onSurface,
         ),
-        isSelected: isFullScreen,
         onPressed: () => model.fullScreen = !(model.fullScreen ?? false),
       ),
     );
