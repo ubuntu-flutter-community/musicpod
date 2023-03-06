@@ -41,6 +41,7 @@ class _PlayerState extends State<Player> {
         model.audio == null ? false : playlistModel.liked(model.audio!);
     final theme = Theme.of(context);
     final isFullScreen = widget.expandHeight || model.fullScreen == true;
+    final width = MediaQuery.of(context).size.width;
 
     final fullScreenButton = Padding(
       padding: const EdgeInsets.all(8.0),
@@ -291,7 +292,7 @@ class _PlayerState extends State<Player> {
                         scrollDirection: Axis.horizontal,
                         child: Padding(
                           padding: EdgeInsets.only(
-                            right: MediaQuery.of(context).size.width,
+                            right: width,
                           ),
                           child: title,
                         ),
@@ -457,15 +458,16 @@ class _PlayerState extends State<Player> {
                       ),
                       Expanded(
                         child: SizedBox(
-                          width: 400,
+                          width: width * 0.75,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Expanded(child: title),
+                              Flexible(flex: 1, child: title),
                               const SizedBox(
-                                width: 10,
+                                width: 20,
+                                child: Text(' ・'),
                               ),
-                              Expanded(child: artist)
+                              Flexible(flex: 1, child: artist),
                             ],
                           ),
                         ),
