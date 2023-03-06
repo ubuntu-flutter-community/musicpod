@@ -210,7 +210,9 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               likeButton: playlist.key != 'likedAudio'
                   ? YaruIconButton(
                       icon: Icon(
-                        playlist.value.first.audioType == AudioType.podcast
+                        playlist.value.isNotEmpty &&
+                                playlist.value.first.audioType ==
+                                    AudioType.podcast
                             ? YaruIcons.rss
                             : YaruIcons.star_filled,
                         color: theme.primaryColor,
@@ -224,7 +226,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           iconBuilder: (context, selected) {
             return playlist.key == 'likedAudio'
                 ? const Icon(YaruIcons.heart)
-                : playlist.value.first.audioType == AudioType.podcast
+                : playlist.value.isNotEmpty &&
+                        playlist.value.first.audioType == AudioType.podcast
                     ? const Icon(YaruIcons.rss)
                     : const Icon(
                         YaruIcons.star,
