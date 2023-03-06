@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:music/app/common/audio_page.dart';
+import 'package:music/app/common/safe_network_image.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
 import 'package:music/app/local_audio/local_audio_page.dart';
 import 'package:music/app/player.dart';
@@ -196,18 +197,56 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             return Text(createPlaylistName(playlist.key, context));
           },
           builder: (context) {
+            final noPicture = playlist.value.firstOrNull == null ||
+                playlist.value.firstOrNull!.metadata == null ||
+                playlist.value.firstOrNull!.metadata!.picture == null;
+
+            final noImage = playlist.value.firstOrNull == null ||
+                playlist.value.firstOrNull!.imageUrl == null;
+
             return AudioPage(
+              image: !noPicture
+                  ? Image.memory(
+                      playlist.value.firstOrNull!.metadata!.picture!.data,
+                      width: 200.0,
+                      fit: BoxFit.fitWidth,
+                      filterQuality: FilterQuality.medium,
+                    )
+                  : !noImage
+                      ? SafeNetworkImage(
+                          fallBackIcon: SizedBox(
+                            width: 200,
+                            child: Center(
+                              child: Icon(
+                                YaruIcons.music_note,
+                                size: 80,
+                                color: theme.hintColor,
+                              ),
+                            ),
+                          ),
+                          url: playlist.value.firstOrNull!.imageUrl,
+                          fit: BoxFit.fitWidth,
+                          filterQuality: FilterQuality.medium,
+                        )
+                      : null,
+              pageLabel: context.l10n.playlist,
+              pageTitle: playlist.key == 'likedAudio'
+                  ? context.l10n.likedSongs
+                  : playlist.key,
+              pageDescription: playlist.key == 'likedAudio'
+                  ? context.l10n.likedSongsDescription
+                  : '',
+              pageSubtile: playlist.key == 'likedAudio'
+                  ? context.l10n.likedSongsSubtitle
+                  : '',
               showWindowControls: !playerToTheRight,
-              audioPageType: playlist.key != 'likedAudio'
-                  ? AudioPageType.albumList
-                  : AudioPageType.list,
               audios: playlist.value,
-              pageName: playlist.key,
+              pageId: playlist.key,
               showTrack:
                   playlist.value.firstOrNull?.metadata?.trackNumber != null,
-              editableName: false,
-              deletable: false,
-              likeButton: playlist.key != 'likedAudio'
+              editableName: playlist.key != 'likedAudio',
+              deletable: playlist.key != 'likedAudio',
+              likePageButton: playlist.key != 'likedAudio'
                   ? YaruIconButton(
                       icon: Icon(
                         playlist.value.isNotEmpty &&

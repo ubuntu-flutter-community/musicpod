@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_card.dart';
 import 'package:music/app/common/audio_page.dart';
 import 'package:music/app/common/constants.dart';
+import 'package:music/app/common/safe_network_image.dart';
 import 'package:music/app/player_model.dart';
 import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/app/podcasts/podcast_model.dart';
@@ -61,7 +62,7 @@ class PodcastsPage extends StatelessWidget {
                       showWindowControls: showWindowControls,
                       sort: false,
                       showTrack: false,
-                      likeButton: YaruIconButton(
+                      likePageButton: YaruIconButton(
                         icon: Icon(
                           starred ? YaruIcons.rss : YaruIcons.rss,
                         ),
@@ -75,13 +76,31 @@ class PodcastsPage extends StatelessWidget {
                                 );
                               },
                       ),
-                      imageUrl: podcast.first.imageUrl,
+                      image: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          10,
+                        ),
+                        child: SafeNetworkImage(
+                          fallBackIcon: SizedBox(
+                            width: 200,
+                            child: Center(
+                              child: Icon(
+                                YaruIcons.music_note,
+                                size: 80,
+                                color: theme.hintColor,
+                              ),
+                            ),
+                          ),
+                          url: podcast.first.imageUrl,
+                          fit: BoxFit.fitWidth,
+                          filterQuality: FilterQuality.medium,
+                        ),
+                      ),
                       title: const PodcastSearchField(),
                       deletable: false,
-                      audioPageType: AudioPageType.albumList,
                       editableName: false,
                       audios: podcast,
-                      pageName: podcast.first.metadata?.album ??
+                      pageId: podcast.first.metadata?.album ??
                           podcast.first.metadata?.title ??
                           podcast.first.name ??
                           '',
@@ -283,8 +302,23 @@ class PodcastsPage extends StatelessWidget {
                                                     showWindowControls,
                                                 sort: false,
                                                 showTrack: false,
-                                                imageUrl: group.first.imageUrl,
-                                                likeButton: YaruIconButton(
+                                                image: SafeNetworkImage(
+                                                  fallBackIcon: SizedBox(
+                                                    width: 200,
+                                                    child: Center(
+                                                      child: Icon(
+                                                        YaruIcons.music_note,
+                                                        size: 80,
+                                                        color: theme.hintColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  url: group.first.imageUrl,
+                                                  fit: BoxFit.fitWidth,
+                                                  filterQuality:
+                                                      FilterQuality.medium,
+                                                ),
+                                                likePageButton: YaruIconButton(
                                                   icon: Icon(
                                                     starred
                                                         ? YaruIcons.rss
@@ -312,11 +346,9 @@ class PodcastsPage extends StatelessWidget {
                                                 title:
                                                     const PodcastSearchField(),
                                                 deletable: false,
-                                                audioPageType:
-                                                    AudioPageType.albumList,
                                                 editableName: false,
                                                 audios: group,
-                                                pageName: group.first.metadata
+                                                pageId: group.first.metadata
                                                         ?.album ??
                                                     '',
                                               );

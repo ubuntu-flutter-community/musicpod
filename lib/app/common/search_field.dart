@@ -1,21 +1,24 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_page.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
+import 'package:music/app/playlists/playlist_model.dart';
 import 'package:music/app/radio/stations.dart';
+import 'package:music/data/audio.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-import '../../data/audio.dart';
-
 class SearchField extends StatefulWidget {
   const SearchField({
     super.key,
     this.spawnPageWithWindowControls = true,
+    this.spawnedPageLikeButton,
   });
 
   final bool spawnPageWithWindowControls;
+  final Widget? spawnedPageLikeButton;
 
   @override
   State<SearchField> createState() => _SearchFieldState();
@@ -27,6 +30,7 @@ class _SearchFieldState extends State<SearchField> {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
     final localAudioModel = context.watch<LocalAudioModel>();
+    final playlistModel = context.watch<PlaylistModel>();
 
     final autoComplete = Autocomplete<Audio>(
       optionsViewBuilder: (context, onSelected, audios) {
@@ -127,18 +131,46 @@ class _SearchFieldState extends State<SearchField> {
                   a.metadata?.album == audio.metadata?.album,
             );
 
+            final name = album?.firstOrNull?.metadata?.album;
+
             return AudioPage(
+              image: album == null ||
+                      album.isEmpty ||
+                      album.first.metadata == null ||
+                      album.first.metadata!.picture == null
+                  ? null
+                  : Image.memory(
+                      album.firstOrNull!.metadata!.picture!.data,
+                      width: 200.0,
+                      fit: BoxFit.fitWidth,
+                      filterQuality: FilterQuality.medium,
+                    ),
+              likePageButton: name == null || album == null || album.isEmpty
+                  ? null
+                  : playlistModel.playlists.containsKey(name)
+                      ? YaruIconButton(
+                          icon: Icon(
+                            YaruIcons.star_filled,
+                            color: theme.primaryColor,
+                          ),
+                          onPressed: () => playlistModel.removePlaylist(
+                            name,
+                          ),
+                        )
+                      : YaruIconButton(
+                          icon: const Icon(
+                            YaruIcons.star,
+                          ),
+                          onPressed: () => playlistModel.addPlaylist(
+                            album.first.metadata!.album!,
+                            Set.from(album),
+                          ),
+                        ),
               showWindowControls: widget.spawnPageWithWindowControls,
               deletable: false,
-              audioPageType: audio.metadata?.album != null
-                  ? AudioPageType.albumList
-                  : AudioPageType.list,
+              audios: Set.from(album!),
+              pageId: name!,
               editableName: false,
-              audios: album?.isNotEmpty == true ? Set.from(album!) : {audio},
-              pageName: audio.metadata?.album ??
-                  audio.metadata?.title ??
-                  audio.name ??
-                  '',
             );
           },
         ),
