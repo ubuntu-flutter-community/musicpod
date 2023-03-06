@@ -204,6 +204,9 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             final noImage = playlist.value.firstOrNull == null ||
                 playlist.value.firstOrNull!.imageUrl == null;
 
+            final isPodcast = playlist.value.isNotEmpty &&
+                playlist.value.any((a) => a.audioType == AudioType.podcast);
+
             return AudioPage(
               image: !noPicture
                   ? Image.memory(
@@ -244,16 +247,12 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               pageId: playlist.key,
               showTrack:
                   playlist.value.firstOrNull?.metadata?.trackNumber != null,
-              editableName: playlist.key != 'likedAudio',
-              deletable: playlist.key != 'likedAudio',
+              editableName: playlist.key != 'likedAudio' && !isPodcast,
+              deletable: playlist.key != 'likedAudio' && !isPodcast,
               likePageButton: playlist.key != 'likedAudio'
                   ? YaruIconButton(
                       icon: Icon(
-                        playlist.value.isNotEmpty &&
-                                playlist.value.first.audioType ==
-                                    AudioType.podcast
-                            ? YaruIcons.rss
-                            : YaruIcons.star_filled,
+                        isPodcast ? YaruIcons.rss : YaruIcons.star_filled,
                         color: theme.primaryColor,
                       ),
                       onPressed: () =>
