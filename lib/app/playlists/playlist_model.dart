@@ -2,8 +2,15 @@ import 'package:music/data/audio.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class PlaylistModel extends SafeChangeNotifier {
+  int get totalListAmount =>
+      starredStationsLength + podcastsLength + playlistsLength + 5;
+
+  //
+  // Liked Audios
+  //
   final Set<Audio> _likedAudios = {};
   Set<Audio> get likedAudios => _likedAudios;
+
   void addLikedAudio(Audio audio) {
     _likedAudios.add(audio);
     notifyListeners();
@@ -30,40 +37,46 @@ class PlaylistModel extends SafeChangeNotifier {
     }
   }
 
-  final Set<Audio> _starredStations = {};
-  Set<Audio> get starredStations => _starredStations;
-  void addStarredStation(Audio audio) {
-    _starredStations.add(audio);
+  //
+  // Starred stations
+  //
+
+  final Map<String, Set<Audio>> _starredStations = {};
+  Map<String, Set<Audio>> get starredStations => _starredStations;
+  int get starredStationsLength => _starredStations.length;
+  void addStarredStation(String name, Set<Audio> audios) {
+    _starredStations.putIfAbsent(name, () => audios);
     notifyListeners();
   }
 
-  void unStarStation(Audio audio) {
-    _starredStations.remove(audio);
+  void unStarStation(String name) {
+    _starredStations.remove(name);
     notifyListeners();
   }
 
-  bool isStarredStation(Audio audio) {
-    return audio.name == null ? false : playlists.containsKey(audio.name);
+  bool isStarredStation(String name) {
+    return _starredStations.containsKey(name);
   }
+
+  //
+  // Normal playlists and albums
+  //
 
   final Map<String, Set<Audio>> _playlists = {};
   Map<String, Set<Audio>> get playlists => _playlists;
+  int get playlistsLength => _playlists.length;
   List<Audio> getPlaylistAt(int index) =>
       _playlists.entries.elementAt(index).value.toList();
+
+  bool isSavedPlaylist(String name) => _playlists.containsKey(name);
+
   void addPlaylist(String name, Set<Audio> audios) {
     _playlists.putIfAbsent(name, () => audios);
-    index = playlists.length + 3;
-  }
-
-  final Map<String, String> _playlistsToFeedUrls = {};
-  Map<String, String> get playlistsToFeedUrls => _playlistsToFeedUrls;
-  void addPlaylistFeed(String playlist, String feedUrl) {
-    _playlistsToFeedUrls.putIfAbsent(playlist, () => feedUrl);
     notifyListeners();
   }
 
-  void removePlaylistFeed(String playlist) {
-    _playlistsToFeedUrls.remove(playlist);
+  void removePlaylist(String name) {
+    _playlists.remove(name);
     notifyListeners();
   }
 
@@ -76,11 +89,6 @@ class PlaylistModel extends SafeChangeNotifier {
     }
 
     notifyListeners();
-  }
-
-  void removePlaylist(String name) {
-    _playlists.remove(name);
-    index = playlists.length + 3;
   }
 
   void addAudioToPlaylist(String playlist, Audio audio) {
@@ -104,9 +112,35 @@ class PlaylistModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> init() async {
-    _playlists.putIfAbsent('likedAudio', () => _likedAudios);
+  // Podcasts
+
+  final Map<String, Set<Audio>> _podcasts = {};
+  Map<String, Set<Audio>> get podcasts => _podcasts;
+  int get podcastsLength => _podcasts.length;
+  void addPodcast(String name, Set<Audio> audios) {
+    _podcasts.putIfAbsent(name, () => audios);
+    notifyListeners();
   }
+
+  void removePodcast(String name) {
+    _podcasts.remove(name);
+    _podcastsToFeedUrls.remove(name);
+    notifyListeners();
+  }
+
+  final Map<String, String> _podcastsToFeedUrls = {};
+  Map<String, String> get podcastsToFeedUrls => _podcastsToFeedUrls;
+  void addPlaylistFeed(String playlist, String feedUrl) {
+    _podcastsToFeedUrls.putIfAbsent(playlist, () => feedUrl);
+    notifyListeners();
+  }
+
+  Future<void> init() async {
+    // TODO: load from db
+  }
+  // Future<void> dispose() async {
+  // TODO: safe to db
+  // }
 
   int? _index;
   int? get index => _index;
@@ -114,5 +148,9 @@ class PlaylistModel extends SafeChangeNotifier {
     if (value == null || value == _index) return;
     _index = value;
     notifyListeners();
+  }
+
+  List<String> getTopFivePlaylistNames() {
+    return _playlists.entries.take(5).map((e) => e.key).toList();
   }
 }

@@ -134,6 +134,7 @@ class _SearchFieldState extends State<SearchField> {
             final name = album?.firstOrNull?.metadata?.album;
 
             return AudioPage(
+              audioType: AudioType.local,
               image: album == null ||
                       album.isEmpty ||
                       album.first.metadata == null ||

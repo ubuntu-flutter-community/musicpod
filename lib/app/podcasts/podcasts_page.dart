@@ -49,8 +49,8 @@ class PodcastsPage extends StatelessWidget {
         gridDelegate: kImageGridDelegate,
         itemBuilder: (context, index) {
           final podcast = model.chartsPodcasts!.elementAt(index);
-          final starred = playlistModel.playlists
-              .containsKey(podcast.first.metadata?.album);
+          final starred =
+              playlistModel.podcasts.containsKey(podcast.first.metadata?.album);
           return AudioCard(
             imageUrl: podcast.first.imageUrl,
             onPlay: () => playerModel.startPlaylist(podcast),
@@ -59,6 +59,7 @@ class PodcastsPage extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) {
                     return AudioPage(
+                      audioType: AudioType.podcast,
                       showWindowControls: showWindowControls,
                       sort: false,
                       showTrack: false,
@@ -68,9 +69,9 @@ class PodcastsPage extends StatelessWidget {
                         ),
                         onPressed: starred
                             ? () => playlistModel
-                                .removePlaylist(podcast.first.metadata!.album!)
+                                .removePodcast(podcast.first.metadata!.album!)
                             : () {
-                                playlistModel.addPlaylist(
+                                playlistModel.addPodcast(
                                   podcast.first.metadata!.album!,
                                   podcast,
                                 );
@@ -293,11 +294,12 @@ class PodcastsPage extends StatelessWidget {
                                           MaterialPageRoute(
                                             builder: (context) {
                                               final starred = playlistModel
-                                                  .playlists
+                                                  .podcasts
                                                   .containsKey(
                                                 group.first.metadata?.album,
                                               );
                                               return AudioPage(
+                                                audioType: AudioType.podcast,
                                                 showWindowControls:
                                                     showWindowControls,
                                                 sort: false,
@@ -326,7 +328,7 @@ class PodcastsPage extends StatelessWidget {
                                                   ),
                                                   onPressed: starred
                                                       ? () => playlistModel
-                                                              .removePlaylist(
+                                                              .removePodcast(
                                                             group
                                                                 .first
                                                                 .metadata!
@@ -334,7 +336,7 @@ class PodcastsPage extends StatelessWidget {
                                                           )
                                                       : () {
                                                           playlistModel
-                                                              .addPlaylist(
+                                                              .addPodcast(
                                                             group
                                                                 .first
                                                                 .metadata!

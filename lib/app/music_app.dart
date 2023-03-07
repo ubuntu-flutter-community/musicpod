@@ -191,6 +191,78 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           );
         },
       ),
+      MasterItem(
+        tileBuilder: (context) {
+          return Text(context.l10n.likedSongs);
+        },
+        builder: (context) {
+          return AudioPage(
+            audioType: AudioType.local,
+            placeTrailer: false,
+            showWindowControls: !playerToTheRight,
+            audios: playlistModel.likedAudios,
+            pageId: 'likedAudio',
+            pageTitle: context.l10n.likedSongs,
+            editableName: false,
+            deletable: false,
+            likePageButton: const SizedBox.shrink(),
+          );
+        },
+        iconBuilder: (context, selected) {
+          return const Icon(YaruIcons.heart);
+        },
+      ),
+      for (final podcast in playlistModel.podcasts.entries)
+        MasterItem(
+          tileBuilder: (context) {
+            return Text(podcast.key);
+          },
+          builder: (context) {
+            final noImage = podcast.value.firstOrNull == null ||
+                podcast.value.firstOrNull!.imageUrl == null;
+
+            return AudioPage(
+              audioType: AudioType.podcast,
+              image: !noImage
+                  ? SafeNetworkImage(
+                      fallBackIcon: SizedBox(
+                        width: 200,
+                        child: Center(
+                          child: Icon(
+                            YaruIcons.music_note,
+                            size: 80,
+                            color: theme.hintColor,
+                          ),
+                        ),
+                      ),
+                      url: podcast.value.firstOrNull!.imageUrl,
+                      fit: BoxFit.fitWidth,
+                      filterQuality: FilterQuality.medium,
+                    )
+                  : null,
+              pageLabel: context.l10n.podcast,
+              pageTitle: podcast.key,
+              showWindowControls: !playerToTheRight,
+              audios: podcast.value,
+              pageId: podcast.key,
+              showTrack: false,
+              editableName: false,
+              deletable: false,
+              likePageButton: YaruIconButton(
+                icon: Icon(
+                  YaruIcons.rss,
+                  color: theme.primaryColor,
+                ),
+                onPressed: () => playlistModel.removePodcast(podcast.key),
+              ),
+            );
+          },
+          iconBuilder: (context, selected) {
+            return const Icon(
+              YaruIcons.rss,
+            );
+          },
+        ),
       for (final playlist in playlistModel.playlists.entries)
         MasterItem(
           tileBuilder: (context) {
@@ -204,10 +276,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             final noImage = playlist.value.firstOrNull == null ||
                 playlist.value.firstOrNull!.imageUrl == null;
 
-            final isPodcast = playlist.value.isNotEmpty &&
-                playlist.value.any((a) => a.audioType == AudioType.podcast);
-
             return AudioPage(
+              audioType: AudioType.local,
               image: !noPicture
                   ? Image.memory(
                       playlist.value.firstOrNull!.metadata!.picture!.data,
@@ -233,45 +303,56 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                         )
                       : null,
               pageLabel: context.l10n.playlist,
-              pageTitle: playlist.key == 'likedAudio'
-                  ? context.l10n.likedSongs
-                  : playlist.key,
-              pageDescription: playlist.key == 'likedAudio'
-                  ? context.l10n.likedSongsDescription
-                  : '',
-              pageSubtile: playlist.key == 'likedAudio'
-                  ? context.l10n.likedSongsSubtitle
-                  : '',
+              pageTitle: playlist.key,
+              pageDescription: '',
+              pageSubtile: '',
               showWindowControls: !playerToTheRight,
               audios: playlist.value,
               pageId: playlist.key,
               showTrack:
                   playlist.value.firstOrNull?.metadata?.trackNumber != null,
-              editableName: playlist.key != 'likedAudio' && !isPodcast,
-              deletable: playlist.key != 'likedAudio' && !isPodcast,
-              likePageButton: playlist.key != 'likedAudio'
-                  ? YaruIconButton(
-                      icon: Icon(
-                        isPodcast ? YaruIcons.rss : YaruIcons.star_filled,
-                        color: theme.primaryColor,
-                      ),
-                      onPressed: () =>
-                          playlistModel.removePlaylist(playlist.key),
-                    )
-                  : const SizedBox.shrink(),
+              editableName: true,
+              deletable: true,
+              likePageButton: YaruIconButton(
+                icon: Icon(
+                  YaruIcons.star_filled,
+                  color: theme.primaryColor,
+                ),
+                onPressed: () => playlistModel.removePlaylist(playlist.key),
+              ),
             );
           },
           iconBuilder: (context, selected) {
-            return playlist.key == 'likedAudio'
-                ? const Icon(YaruIcons.heart)
-                : playlist.value.isNotEmpty &&
-                        playlist.value.first.audioType == AudioType.podcast
-                    ? const Icon(YaruIcons.rss)
-                    : const Icon(
-                        YaruIcons.star,
-                      );
+            return const Icon(
+              YaruIcons.star,
+            );
           },
         ),
+      for (final station in playlistModel.starredStations.entries)
+        MasterItem(
+          tileBuilder: (context) {
+            return Text(context.l10n.likedSongs);
+          },
+          builder: (context) {
+            return AudioPage(
+              audioType: AudioType.radio,
+              placeTrailer: false,
+              showWindowControls: !playerToTheRight,
+              audios: station.value,
+              pageId: station.key,
+              pageTitle: station.key,
+              editableName: false,
+              deletable: false,
+              likePageButton: YaruIconButton(
+                icon: const Icon(YaruIcons.star_filled),
+                onPressed: () => playlistModel.unStarStation(station.key),
+              ),
+            );
+          },
+          iconBuilder: (context, selected) {
+            return const Icon(YaruIcons.star);
+          },
+        )
     ];
 
     final settingsTile = YaruMasterTile(
@@ -312,7 +393,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
       ),
       layoutDelegate: shrinkSidebar ? _delegateSmall : _delegateBig,
       controller: YaruPageController(
-        length: playlistModel.playlists.length + 4,
+        length: playlistModel.totalListAmount,
         initialIndex: playlistModel.index ?? 0,
       ),
       tileBuilder: (context, index, selected) {

@@ -19,6 +19,7 @@ class AudioPage extends StatefulWidget {
   const AudioPage({
     super.key,
     required this.audios,
+    required this.audioType,
     required this.pageId,
     required this.editableName,
     required this.deletable,
@@ -28,8 +29,6 @@ class AudioPage extends StatefulWidget {
     this.sort = true,
     this.showTrack = true,
     this.showWindowControls = true,
-    this.likeIcon,
-    this.unLikeIcon,
     this.pageLabel,
     this.pageDescription,
     this.pageTitle,
@@ -39,6 +38,7 @@ class AudioPage extends StatefulWidget {
   });
 
   final Set<Audio>? audios;
+  final AudioType audioType;
   final String? pageLabel;
   final String pageId;
   final String? pageTitle;
@@ -52,8 +52,6 @@ class AudioPage extends StatefulWidget {
   final bool sort;
   final bool showTrack;
   final bool showWindowControls;
-  final Widget? likeIcon;
-  final Widget? unLikeIcon;
   final Widget? image;
   final bool? placeTrailer;
 
@@ -232,6 +230,41 @@ class _AudioPageState extends State<AudioPage> {
 
                   final liked = playlistModel.liked(audio);
 
+                  final likedAudioButton = InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: () => liked
+                        ? playlistModel.removeLikedAudio(audio)
+                        : playlistModel.addLikedAudio(audio),
+                    child: Icon(
+                      liked ? YaruIcons.heart_filled : YaruIcons.heart,
+                      color: audioSelected
+                          ? theme.colorScheme.onSurface
+                          : theme.hintColor,
+                    ),
+                  );
+
+                  final starred = audio.name == null
+                      ? false
+                      : playlistModel.isStarredStation(audio.name!);
+
+                  final starStationButton = InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: audio.name == null
+                        ? null
+                        : () {
+                            !starred
+                                ? playlistModel
+                                    .addStarredStation(audio.name!, {audio})
+                                : playlistModel.unStarStation(audio.name!);
+                          },
+                    child: Icon(
+                      starred ? YaruIcons.star_filled : YaruIcons.star,
+                      color: audioSelected
+                          ? theme.colorScheme.onSurface
+                          : theme.hintColor,
+                    ),
+                  );
+
                   return AudioTile(
                     isPlayerPlaying: playerModel.isPlaying,
                     pause: playerModel.pause,
@@ -247,71 +280,66 @@ class _AudioPageState extends State<AudioPage> {
                     key: ValueKey(audio),
                     selected: audioSelected,
                     audio: audio,
-                    likeIcon: YaruPopupMenuButton(
-                      style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide.none,
-                          borderRadius:
-                              BorderRadius.circular(kYaruButtonRadius),
-                        ),
-                      ),
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem(
-                            child: Text(context.l10n.createNewPlaylist),
-                            onTap: () => showDialog(
-                              context: context,
-                              builder: (context) {
-                                return ChangeNotifierProvider.value(
-                                  value: playlistModel,
-                                  child: PlaylistDialog(
-                                    name: widget.pageId,
-                                    deletable: widget.deletable,
-                                    audios: {audio},
-                                    editableName: widget.editableName,
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          if (playlistModel.playlists
-                              .containsKey(widget.pageId))
-                            PopupMenuItem(
-                              child: Text('Remove from ${widget.pageId}'),
-                              onTap: () =>
-                                  playlistModel.removeAudioFromPlaylist(
-                                widget.pageId,
-                                audio,
+                    likeIcon: widget.audioType == AudioType.local
+                        ? YaruPopupMenuButton(
+                            style: TextButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide.none,
+                                borderRadius:
+                                    BorderRadius.circular(kYaruButtonRadius),
                               ),
                             ),
-                          for (final playlist in playlistModel.playlists.entries
-                              .take(5)
-                              .toList())
-                            if (playlist.key != 'likedAudio')
-                              PopupMenuItem(
-                                child: Text(
-                                  '${context.l10n.addTo} ${playlist.key == 'likedAudio' ? context.l10n.likedSongs : playlist.key}',
+                            itemBuilder: (context) {
+                              return [
+                                PopupMenuItem(
+                                  child: Text(context.l10n.createNewPlaylist),
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return ChangeNotifierProvider.value(
+                                        value: playlistModel,
+                                        child: PlaylistDialog(
+                                          name: widget.pageId,
+                                          deletable: widget.deletable,
+                                          audios: {audio},
+                                          editableName: widget.editableName,
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
-                                onTap: () => playlistModel.addAudioToPlaylist(
-                                  playlist.key,
-                                  audio,
-                                ),
-                              )
-                        ];
-                      },
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(10),
-                        onTap: () => liked
-                            ? playlistModel.removeLikedAudio(audio)
-                            : playlistModel.addLikedAudio(audio),
-                        child: Icon(
-                          liked ? YaruIcons.heart_filled : YaruIcons.heart,
-                          color: audioSelected
-                              ? theme.colorScheme.onSurface
-                              : theme.hintColor,
-                        ),
-                      ),
-                    ),
+                                if (playlistModel
+                                    .isSavedPlaylist(widget.pageId))
+                                  PopupMenuItem(
+                                    child: Text('Remove from ${widget.pageId}'),
+                                    onTap: () =>
+                                        playlistModel.removeAudioFromPlaylist(
+                                      widget.pageId,
+                                      audio,
+                                    ),
+                                  ),
+                                for (final playlist
+                                    in playlistModel.getTopFivePlaylistNames())
+                                  PopupMenuItem(
+                                    child: Text(
+                                      '${context.l10n.addTo} $playlist',
+                                    ),
+                                    onTap: () =>
+                                        playlistModel.addAudioToPlaylist(
+                                      playlist,
+                                      audio,
+                                    ),
+                                  )
+                              ];
+                            },
+                            child: likedAudioButton,
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.only(right: 30, left: 10),
+                            child: widget.audioType == AudioType.radio
+                                ? starStationButton
+                                : likedAudioButton,
+                          ),
                   );
                 }),
               ),
