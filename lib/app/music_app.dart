@@ -163,8 +163,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           }
 
           return selected
-              ? const Icon(YaruIcons.network_cellular)
-              : const Icon(YaruIcons.network_cellular);
+              ? const Icon(YaruIcons.radio_filled)
+              : const Icon(YaruIcons.radio);
         },
       ),
       MasterItem(
@@ -179,8 +179,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             return orbit;
           }
           return selected
-              ? const Icon(YaruIcons.microphone_filled)
-              : const Icon(YaruIcons.microphone);
+              ? const Icon(YaruIcons.podcast_filled)
+              : const Icon(YaruIcons.podcast);
         },
       ),
       MasterItem(
