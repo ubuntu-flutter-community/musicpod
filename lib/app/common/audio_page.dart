@@ -19,7 +19,7 @@ class AudioPage extends StatefulWidget {
   const AudioPage({
     super.key,
     required this.audios,
-    required this.audioType,
+    required this.audioPageType,
     required this.pageId,
     required this.editableName,
     required this.deletable,
@@ -38,7 +38,7 @@ class AudioPage extends StatefulWidget {
   });
 
   final Set<Audio>? audios;
-  final AudioType audioType;
+  final AudioPageType audioPageType;
   final String? pageLabel;
   final String pageId;
   final String? pageTitle;
@@ -85,7 +85,12 @@ class _AudioPageState extends State<AudioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final playerModel = context.watch<PlayerModel>();
+    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
+    final setAudio = context.read<PlayerModel>().setAudio;
+    final currentAudio = context.select((PlayerModel m) => m.audio);
+    final play = context.read<PlayerModel>().play;
+    final pause = context.read<PlayerModel>().pause;
+
     final playlistModel = context.watch<PlaylistModel>();
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
@@ -226,7 +231,7 @@ class _AudioPageState extends State<AudioPage> {
                 children:
                     List.generate(sortedAudios.take(_amount).length, (index) {
                   final audio = sortedAudios.elementAt(index);
-                  final audioSelected = playerModel.audio == audio;
+                  final audioSelected = currentAudio == audio;
 
                   final liked = playlistModel.liked(audio);
 
@@ -266,21 +271,22 @@ class _AudioPageState extends State<AudioPage> {
                   );
 
                   return AudioTile(
-                    isPlayerPlaying: playerModel.isPlaying,
-                    pause: playerModel.pause,
+                    isPlayerPlaying: isPlaying,
+                    pause: pause,
                     play: () {
                       WidgetsBinding.instance
                           .addPostFrameCallback((timeStamp) async {
                         if (context.mounted) {
-                          playerModel.audio = audio;
-                          await playerModel.play();
+                          setAudio(audio);
+                          await play();
                         }
                       });
                     },
                     key: ValueKey(audio),
                     selected: audioSelected,
                     audio: audio,
-                    likeIcon: widget.audioType == AudioType.local
+                    likeIcon: widget.audioPageType != AudioPageType.podcast &&
+                            widget.audioPageType != AudioPageType.radio
                         ? YaruPopupMenuButton(
                             style: TextButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -336,7 +342,7 @@ class _AudioPageState extends State<AudioPage> {
                           )
                         : Padding(
                             padding: const EdgeInsets.only(right: 30, left: 10),
-                            child: widget.audioType == AudioType.radio
+                            child: widget.audioPageType == AudioPageType.radio
                                 ? starStationButton
                                 : likedAudioButton,
                           ),
@@ -373,4 +379,13 @@ class _AudioPageState extends State<AudioPage> {
       body: body,
     );
   }
+}
+
+enum AudioPageType {
+  immutable,
+  likedAudio,
+  podcast,
+  playlist,
+  album,
+  radio;
 }

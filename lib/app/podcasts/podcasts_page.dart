@@ -27,7 +27,7 @@ class PodcastsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<PodcastModel>();
-    final playerModel = context.watch<PlayerModel>();
+    final startPlaylist = context.read<PlayerModel>().startPlaylist;
     final playlistModel = context.watch<PlaylistModel>();
     final theme = Theme.of(context);
 
@@ -49,27 +49,34 @@ class PodcastsPage extends StatelessWidget {
         gridDelegate: kImageGridDelegate,
         itemBuilder: (context, index) {
           final podcast = model.chartsPodcasts!.elementAt(index);
-          final starred =
-              playlistModel.podcasts.containsKey(podcast.first.metadata?.album);
+
           return AudioCard(
             imageUrl: podcast.first.imageUrl,
-            onPlay: () => playerModel.startPlaylist(podcast),
+            onPlay: () => startPlaylist(podcast),
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
+                    final podcastSubscribed = podcast.first.metadata?.album ==
+                            null
+                        ? false
+                        : playlistModel
+                            .podcastSubscribed(podcast.first.metadata!.album!);
+
                     return AudioPage(
-                      audioType: AudioType.podcast,
+                      audioPageType: AudioPageType.podcast,
                       showWindowControls: showWindowControls,
                       sort: false,
                       showTrack: false,
                       likePageButton: YaruIconButton(
                         icon: Icon(
-                          starred ? YaruIcons.rss : YaruIcons.rss,
+                          YaruIcons.rss,
+                          color: podcastSubscribed ? theme.primaryColor : null,
                         ),
-                        onPressed: starred
-                            ? () => playlistModel
-                                .removePodcast(podcast.first.metadata!.album!)
+                        onPressed: podcastSubscribed
+                            ? () => playlistModel.removePodcast(
+                                  podcast.first.metadata!.album!,
+                                )
                             : () {
                                 playlistModel.addPodcast(
                                   podcast.first.metadata!.album!,
@@ -211,7 +218,7 @@ class PodcastsPage extends StatelessWidget {
                   ? YaruTitleBarStyle.normal
                   : YaruTitleBarStyle.undecorated,
               title: PodcastSearchField(
-                onPlay: playerModel.startPlaylist,
+                onPlay: startPlaylist,
               ),
             ),
             body: page,
@@ -283,23 +290,27 @@ class PodcastsPage extends StatelessWidget {
                                 padding: const EdgeInsets.all(kYaruPagePadding),
                                 gridDelegate: kImageGridDelegate,
                                 children: [
-                                  for (final Set<Audio> group
+                                  for (final Set<Audio> podcast
                                       in model.podcastSearchResult!)
                                     AudioCard(
-                                      imageUrl: group.firstOrNull?.imageUrl,
-                                      onPlay: () =>
-                                          playerModel.startPlaylist(group),
+                                      imageUrl: podcast.firstOrNull?.imageUrl,
+                                      onPlay: () => startPlaylist(podcast),
                                       onTap: () {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) {
-                                              final starred = playlistModel
-                                                  .podcasts
-                                                  .containsKey(
-                                                group.first.metadata?.album,
-                                              );
+                                              final subscribed = podcast.first
+                                                          .metadata?.album ==
+                                                      null
+                                                  ? false
+                                                  : playlistModel
+                                                      .podcastSubscribed(
+                                                      podcast.first.metadata!
+                                                          .album!,
+                                                    );
                                               return AudioPage(
-                                                audioType: AudioType.podcast,
+                                                audioPageType:
+                                                    AudioPageType.podcast,
                                                 showWindowControls:
                                                     showWindowControls,
                                                 sort: false,
@@ -315,42 +326,46 @@ class PodcastsPage extends StatelessWidget {
                                                       ),
                                                     ),
                                                   ),
-                                                  url: group.first.imageUrl,
+                                                  url: podcast.first.imageUrl,
                                                   fit: BoxFit.fitWidth,
                                                   filterQuality:
                                                       FilterQuality.medium,
                                                 ),
-                                                likePageButton: YaruIconButton(
-                                                  icon: Icon(
-                                                    starred
-                                                        ? YaruIcons.rss
-                                                        : YaruIcons.rss,
-                                                  ),
-                                                  onPressed: starred
-                                                      ? () => playlistModel
-                                                              .removePodcast(
-                                                            group
-                                                                .first
-                                                                .metadata!
-                                                                .album!,
-                                                          )
-                                                      : () {
+                                                likePageButton: subscribed
+                                                    ? YaruIconButton(
+                                                        icon: Icon(
+                                                          YaruIcons.rss,
+                                                          color: theme
+                                                              .primaryColor,
+                                                        ),
+                                                        onPressed: () =>
+                                                            playlistModel
+                                                                .removePodcast(
+                                                          podcast.first
+                                                              .metadata!.album!,
+                                                        ),
+                                                      )
+                                                    : YaruIconButton(
+                                                        icon: const Icon(
+                                                          YaruIcons.rss,
+                                                        ),
+                                                        onPressed: () {
                                                           playlistModel
                                                               .addPodcast(
-                                                            group
+                                                            podcast
                                                                 .first
                                                                 .metadata!
                                                                 .album!,
-                                                            group,
+                                                            podcast,
                                                           );
                                                         },
-                                                ),
+                                                      ),
                                                 title:
                                                     const PodcastSearchField(),
                                                 deletable: false,
                                                 editableName: false,
-                                                audios: group,
-                                                pageId: group.first.metadata
+                                                audios: podcast,
+                                                pageId: podcast.first.metadata
                                                         ?.album ??
                                                     '',
                                               );

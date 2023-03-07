@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_page.dart';
 import 'package:music/app/radio/radio_model.dart';
-import 'package:music/data/audio.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +28,7 @@ class _RadioPageState extends State<RadioPage> {
     final model = context.watch<RadioModel>();
 
     return AudioPage(
-      audioType: AudioType.radio,
+      audioPageType: AudioPageType.radio,
       placeTrailer: false,
       showTrack: false,
       editableName: false,

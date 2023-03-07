@@ -134,7 +134,8 @@ class _SearchFieldState extends State<SearchField> {
             final name = album?.firstOrNull?.metadata?.album;
 
             return AudioPage(
-              audioType: AudioType.local,
+              audioPageType: AudioPageType.album,
+              pageLabel: context.l10n.album,
               image: album == null ||
                       album.isEmpty ||
                       album.first.metadata == null ||
@@ -148,21 +149,21 @@ class _SearchFieldState extends State<SearchField> {
                     ),
               likePageButton: name == null || album == null || album.isEmpty
                   ? null
-                  : playlistModel.playlists.containsKey(name)
+                  : playlistModel.isPinnedAlbum(name)
                       ? YaruIconButton(
                           icon: Icon(
-                            YaruIcons.star_filled,
+                            YaruIcons.pin,
                             color: theme.primaryColor,
                           ),
-                          onPressed: () => playlistModel.removePlaylist(
+                          onPressed: () => playlistModel.removePinnedAlbum(
                             name,
                           ),
                         )
                       : YaruIconButton(
                           icon: const Icon(
-                            YaruIcons.star,
+                            YaruIcons.pin,
                           ),
-                          onPressed: () => playlistModel.addPlaylist(
+                          onPressed: () => playlistModel.addPinnedAlbum(
                             album.first.metadata!.album!,
                             Set.from(album),
                           ),

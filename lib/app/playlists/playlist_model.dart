@@ -3,7 +3,11 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class PlaylistModel extends SafeChangeNotifier {
   int get totalListAmount =>
-      starredStationsLength + podcastsLength + playlistsLength + 5;
+      starredStationsLength +
+      podcastsLength +
+      playlistsLength +
+      pinnedAlbumsLength +
+      5;
 
   //
   // Liked Audios
@@ -112,6 +116,10 @@ class PlaylistModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  List<String> getTopFivePlaylistNames() {
+    return _playlists.entries.take(5).map((e) => e.key).toList();
+  }
+
   // Podcasts
 
   final Map<String, Set<Audio>> _podcasts = {};
@@ -128,10 +136,34 @@ class PlaylistModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  bool podcastSubscribed(String name) => _podcasts.containsKey(name);
+
   final Map<String, String> _podcastsToFeedUrls = {};
   Map<String, String> get podcastsToFeedUrls => _podcastsToFeedUrls;
   void addPlaylistFeed(String playlist, String feedUrl) {
     _podcastsToFeedUrls.putIfAbsent(playlist, () => feedUrl);
+    notifyListeners();
+  }
+
+  //
+  // Albums
+  //
+
+  final Map<String, Set<Audio>> _pinnedAlbums = {};
+  Map<String, Set<Audio>> get pinnedAlbums => _pinnedAlbums;
+  int get pinnedAlbumsLength => _pinnedAlbums.length;
+  List<Audio> getAlbumAt(int index) =>
+      _pinnedAlbums.entries.elementAt(index).value.toList();
+
+  bool isPinnedAlbum(String name) => _pinnedAlbums.containsKey(name);
+
+  void addPinnedAlbum(String name, Set<Audio> audios) {
+    _pinnedAlbums.putIfAbsent(name, () => audios);
+    notifyListeners();
+  }
+
+  void removePinnedAlbum(String name) {
+    _pinnedAlbums.remove(name);
     notifyListeners();
   }
 
@@ -148,9 +180,5 @@ class PlaylistModel extends SafeChangeNotifier {
     if (value == null || value == _index) return;
     _index = value;
     notifyListeners();
-  }
-
-  List<String> getTopFivePlaylistNames() {
-    return _playlists.entries.take(5).map((e) => e.key).toList();
   }
 }

@@ -90,7 +90,13 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final localAudioModel = context.watch<LocalAudioModel>();
-    final playerModel = context.watch<PlayerModel>();
+
+    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
+    final audioType = context.select((PlayerModel m) => m.audio?.audioType);
+    final surfaceTintColor =
+        context.select((PlayerModel m) => m.surfaceTintColor);
+    final isFullScreen = context.select((PlayerModel m) => m.fullScreen);
+
     final playlistModel = context.watch<PlaylistModel>();
     final theme = Theme.of(context);
     final width = MediaQuery.of(context).size.width;
@@ -105,7 +111,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
         child: LoadingIndicator(
           strokeWidth: 0.0,
           indicatorType: Indicator.lineScaleParty,
-          pause: !playerModel.isPlaying,
+          pause: !isPlaying,
         ),
       ),
     );
@@ -121,7 +127,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           );
         },
         iconBuilder: (context, selected) {
-          if (playerModel.audio?.audioType == AudioType.local) {
+          if (audioType == AudioType.local) {
             return orbit;
           }
           return Stack(
@@ -152,7 +158,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           return RadioPage.create(context, !playerToTheRight);
         },
         iconBuilder: (context, selected) {
-          if (playerModel.audio?.audioType == AudioType.radio) {
+          if (audioType == AudioType.radio) {
             return orbit;
           }
 
@@ -169,7 +175,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           return PodcastsPage(showWindowControls: !playerToTheRight);
         },
         iconBuilder: (context, selected) {
-          if (playerModel.audio?.audioType == AudioType.podcast) {
+          if (audioType == AudioType.podcast) {
             return orbit;
           }
           return selected
@@ -197,7 +203,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
         },
         builder: (context) {
           return AudioPage(
-            audioType: AudioType.local,
+            audioPageType: AudioPageType.likedAudio,
             placeTrailer: false,
             showWindowControls: !playerToTheRight,
             audios: playlistModel.likedAudios,
@@ -222,7 +228,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                 podcast.value.firstOrNull!.imageUrl == null;
 
             return AudioPage(
-              audioType: AudioType.podcast,
+              audioPageType: AudioPageType.podcast,
               image: !noImage
                   ? SafeNetworkImage(
                       fallBackIcon: SizedBox(
@@ -277,7 +283,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                 playlist.value.firstOrNull!.imageUrl == null;
 
             return AudioPage(
-              audioType: AudioType.local,
+              audioPageType: AudioPageType.playlist,
               image: !noPicture
                   ? Image.memory(
                       playlist.value.firstOrNull!.metadata!.picture!.data,
@@ -328,6 +334,70 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             );
           },
         ),
+      for (final album in playlistModel.pinnedAlbums.entries)
+        MasterItem(
+          tileBuilder: (context) {
+            return Text(createPlaylistName(album.key, context));
+          },
+          builder: (context) {
+            final noPicture = album.value.firstOrNull == null ||
+                album.value.firstOrNull!.metadata == null ||
+                album.value.firstOrNull!.metadata!.picture == null;
+
+            final noImage = album.value.firstOrNull == null ||
+                album.value.firstOrNull!.imageUrl == null;
+
+            return AudioPage(
+              audioPageType: AudioPageType.album,
+              image: !noPicture
+                  ? Image.memory(
+                      album.value.firstOrNull!.metadata!.picture!.data,
+                      width: 200.0,
+                      fit: BoxFit.fitWidth,
+                      filterQuality: FilterQuality.medium,
+                    )
+                  : !noImage
+                      ? SafeNetworkImage(
+                          fallBackIcon: SizedBox(
+                            width: 200,
+                            child: Center(
+                              child: Icon(
+                                YaruIcons.music_note,
+                                size: 80,
+                                color: theme.hintColor,
+                              ),
+                            ),
+                          ),
+                          url: album.value.firstOrNull!.imageUrl,
+                          fit: BoxFit.fitWidth,
+                          filterQuality: FilterQuality.medium,
+                        )
+                      : null,
+              pageLabel: context.l10n.album,
+              pageTitle: album.key,
+              pageDescription: '',
+              pageSubtile: '',
+              showWindowControls: !playerToTheRight,
+              audios: album.value,
+              pageId: album.key,
+              showTrack: album.value.firstOrNull?.metadata?.trackNumber != null,
+              editableName: false,
+              deletable: true,
+              likePageButton: YaruIconButton(
+                icon: Icon(
+                  YaruIcons.pin,
+                  color: theme.primaryColor,
+                ),
+                onPressed: () => playlistModel.removePinnedAlbum(album.key),
+              ),
+            );
+          },
+          iconBuilder: (context, selected) {
+            return const Icon(
+              YaruIcons.pin,
+            );
+          },
+        ),
       for (final station in playlistModel.starredStations.entries)
         MasterItem(
           tileBuilder: (context) {
@@ -335,7 +405,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           },
           builder: (context) {
             return AudioPage(
-              audioType: AudioType.radio,
+              audioPageType: AudioPageType.radio,
               placeTrailer: false,
               showWindowControls: !playerToTheRight,
               audios: station.value,
@@ -428,8 +498,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
     );
     return Scaffold(
       key: ValueKey(shrinkSidebar),
-      backgroundColor: playerModel.surfaceTintColor,
-      body: playerModel.fullScreen == true
+      backgroundColor: surfaceTintColor,
+      body: isFullScreen == true
           ? Column(
               children: const [
                 YaruWindowTitleBar(

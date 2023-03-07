@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music/app/common/audio_page.dart';
 import 'package:music/app/local_audio/local_audio_model.dart';
-import 'package:music/data/audio.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +15,7 @@ class LocalAudioPage extends StatelessWidget {
     final audios = localAudioModel.audios;
 
     return AudioPage(
-      audioType: AudioType.local,
+      audioPageType: AudioPageType.immutable,
       placeTrailer: false,
       likePageButton: const SizedBox.shrink(),
       audios: audios,
