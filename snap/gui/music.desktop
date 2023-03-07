@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Music
+Comment=Music, podcast and internet radio player
+Exec=music
+Icon=music-app
+Terminal=false
+Type=Application
+Categories=Music and Audio; 

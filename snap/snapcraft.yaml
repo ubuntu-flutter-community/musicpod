@@ -1,0 +1,39 @@
+name: music
+version: 0.1.0
+summary: Music, podcast and internet radio player
+description: Play local audio files, browse podcasts online or listen to internet radio stations.
+website: https://github.com/ubuntu-flutter-community/music
+contact: frederik.feichtmeier@gmail.com
+source-code: https://github.com/ubuntu-flutter-community/music
+icon: gui/music.png
+
+confinement: strict
+base: core22
+grade: stable
+license: MPL-2.0
+
+apps:
+  music:
+    command: music
+    extensions: [gnome]
+    plugs:
+      - network
+      - audio-playback
+      - network-manager-observe
+      - home
+      - mpris
+
+slots:
+  org.mpris.MediaPlayer2.music:
+    interface: dbus
+    bus: session
+    name: mpris
+
+parts:
+  music:
+    source: .
+    plugin: flutter
+    flutter-target: lib/main.dart
+    build-packages:
+      - libgstreamer1.0-dev
+      - libgstreamer-plugins-base1.0-dev
