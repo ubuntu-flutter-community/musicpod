@@ -364,6 +364,7 @@ class _AudioPageState extends State<AudioPage> {
     }
 
     return YaruDetailPage(
+      key: ValueKey(widget.pageId),
       backgroundColor: theme.brightness == Brightness.dark
           ? const Color.fromARGB(255, 37, 37, 37)
           : Colors.white,
