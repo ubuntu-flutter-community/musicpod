@@ -5,7 +5,6 @@ import 'package:music/data/audio.dart';
 import 'package:music/l10n/l10n.dart';
 import 'package:music/utils.dart';
 import 'package:provider/provider.dart';
-import 'package:scroll_loop_auto_scroll/scroll_loop_auto_scroll.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -288,17 +287,10 @@ class _PlayerState extends State<Player> {
                         ),
                       controls,
                       sliderAndTime,
-                      ScrollLoopAutoScroll(
-                        delay: Duration.zero,
-                        duration: const Duration(seconds: 300),
-                        scrollDirection: Axis.horizontal,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            right: width,
-                          ),
+                      if (model.audio != null)
+                        FittedBox(
                           child: title,
                         ),
-                      ),
                       artist,
                       const SizedBox(
                         height: 10,
