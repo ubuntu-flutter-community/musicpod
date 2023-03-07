@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:metadata_god/metadata_god.dart';
+import 'package:mime_type/mime_type.dart';
 import 'package:music/data/audio.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:path/path.dart' as path;
@@ -83,7 +84,7 @@ class LocalAudioModel extends SafeChangeNotifier {
 
       for (var fileSystemEntity in allFileSystemEntities) {
         if (!await FileSystemEntity.isDirectory(fileSystemEntity.path) &&
-            fileSystemEntity.path.endsWith('.mp3')) {
+            validType(fileSystemEntity.path)) {
           onlyFiles.add(fileSystemEntity);
         }
       }
@@ -108,6 +109,8 @@ class LocalAudioModel extends SafeChangeNotifier {
       notifyListeners();
     }
   }
+
+  bool validType(String path) => mime(path)?.contains('audio') ?? false;
 
   Future<List<FileSystemEntity>> _getFlattenedFileSystemEntities({
     required String path,

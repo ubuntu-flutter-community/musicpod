@@ -24,6 +24,7 @@ dependencies:
   intl: ^0.17.0
   loading_indicator: ^3.1.0
   metadata_god: ^0.3.2
+  mime_type: ^1.0.0
   mpris_service:
     git: https://github.com/alexmercerind/mpris_service
   palette_generator: ^0.3.3+2
