@@ -87,7 +87,7 @@ class AudioPageControlPanel extends StatelessWidget {
         const SizedBox(
           width: 10,
         ),
-        if (editableName || deletable)
+        if (editableName)
           YaruIconButton(
             icon: const Icon(YaruIcons.pen),
             onPressed: () => showDialog(
