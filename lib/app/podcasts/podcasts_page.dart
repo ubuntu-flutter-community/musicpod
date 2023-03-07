@@ -28,8 +28,10 @@ class PodcastsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.watch<PodcastModel>();
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
-    final playlistModel = context.watch<PlaylistModel>();
     final theme = Theme.of(context);
+    final podcastSubscribed = context.read<PlaylistModel>().podcastSubscribed;
+    final removePodcast = context.read<PlaylistModel>().removePodcast;
+    final addPodcast = context.read<PlaylistModel>().addPodcast;
 
     Widget grid;
     if (model.chartsPodcasts == null) {
@@ -57,11 +59,9 @@ class PodcastsPage extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
-                    final podcastSubscribed = podcast.first.metadata?.album ==
-                            null
+                    final subscribed = podcast.first.metadata?.album == null
                         ? false
-                        : playlistModel
-                            .podcastSubscribed(podcast.first.metadata!.album!);
+                        : podcastSubscribed(podcast.first.metadata!.album!);
 
                     return AudioPage(
                       audioPageType: AudioPageType.podcast,
@@ -71,14 +71,14 @@ class PodcastsPage extends StatelessWidget {
                       likePageButton: YaruIconButton(
                         icon: Icon(
                           YaruIcons.rss,
-                          color: podcastSubscribed ? theme.primaryColor : null,
+                          color: subscribed ? theme.primaryColor : null,
                         ),
-                        onPressed: podcastSubscribed
-                            ? () => playlistModel.removePodcast(
+                        onPressed: subscribed
+                            ? () => removePodcast(
                                   podcast.first.metadata!.album!,
                                 )
                             : () {
-                                playlistModel.addPodcast(
+                                addPodcast(
                                   podcast.first.metadata!.album!,
                                   podcast,
                                 );
@@ -303,8 +303,7 @@ class PodcastsPage extends StatelessWidget {
                                                           .metadata?.album ==
                                                       null
                                                   ? false
-                                                  : playlistModel
-                                                      .podcastSubscribed(
+                                                  : podcastSubscribed(
                                                       podcast.first.metadata!
                                                           .album!,
                                                     );
@@ -339,8 +338,7 @@ class PodcastsPage extends StatelessWidget {
                                                               .primaryColor,
                                                         ),
                                                         onPressed: () =>
-                                                            playlistModel
-                                                                .removePodcast(
+                                                            removePodcast(
                                                           podcast.first
                                                               .metadata!.album!,
                                                         ),
@@ -350,8 +348,7 @@ class PodcastsPage extends StatelessWidget {
                                                           YaruIcons.rss,
                                                         ),
                                                         onPressed: () {
-                                                          playlistModel
-                                                              .addPodcast(
+                                                          addPodcast(
                                                             podcast
                                                                 .first
                                                                 .metadata!

@@ -36,12 +36,14 @@ class _PlayerState extends State<Player> {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<PlayerModel>();
-    final playlistModel = context.watch<PlaylistModel>();
-    final liked =
-        model.audio == null ? false : playlistModel.liked(model.audio!);
+    final liked = model.audio == null
+        ? false
+        : context.read<PlaylistModel>().liked(model.audio!);
     final theme = Theme.of(context);
     final isFullScreen = widget.expandHeight || model.fullScreen == true;
     final width = MediaQuery.of(context).size.width;
+    final removeLikedAudio = context.read<PlaylistModel>().removeLikedAudio;
+    final addLikedAudio = context.read<PlaylistModel>().addLikedAudio;
 
     final fullScreenButton = Padding(
       padding: const EdgeInsets.all(8.0),
@@ -65,8 +67,8 @@ class _PlayerState extends State<Player> {
               model.audio == null || model.audio!.audioType == AudioType.radio
                   ? null
                   : () => liked
-                      ? playlistModel.removeLikedAudio(model.audio!)
-                      : playlistModel.addLikedAudio(model.audio!),
+                      ? removeLikedAudio(model.audio!)
+                      : addLikedAudio(model.audio!),
           icon: liked
               ? const Icon(YaruIcons.heart_filled)
               : const Icon(YaruIcons.heart),

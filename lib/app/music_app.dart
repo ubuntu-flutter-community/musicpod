@@ -272,7 +272,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
       for (final playlist in playlistModel.playlists.entries)
         MasterItem(
           tileBuilder: (context) {
-            return Text(createPlaylistName(playlist.key, context));
+            return Text(playlist.key);
           },
           builder: (context) {
             final noPicture = playlist.value.firstOrNull == null ||
@@ -401,7 +401,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
       for (final station in playlistModel.starredStations.entries)
         MasterItem(
           tileBuilder: (context) {
-            return Text(context.l10n.likedSongs);
+            return Text(station.key);
           },
           builder: (context) {
             return AudioPage(

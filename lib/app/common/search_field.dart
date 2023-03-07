@@ -30,7 +30,9 @@ class _SearchFieldState extends State<SearchField> {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
     final localAudioModel = context.watch<LocalAudioModel>();
-    final playlistModel = context.watch<PlaylistModel>();
+    final isPinnedAlbum = context.read<PlaylistModel>().isPinnedAlbum;
+    final removePinnedAlbum = context.read<PlaylistModel>().removePinnedAlbum;
+    final addPinnedAlbum = context.read<PlaylistModel>().addPinnedAlbum;
 
     final autoComplete = Autocomplete<Audio>(
       optionsViewBuilder: (context, onSelected, audios) {
@@ -149,13 +151,13 @@ class _SearchFieldState extends State<SearchField> {
                     ),
               likePageButton: name == null || album == null || album.isEmpty
                   ? null
-                  : playlistModel.isPinnedAlbum(name)
+                  : isPinnedAlbum(name)
                       ? YaruIconButton(
                           icon: Icon(
                             YaruIcons.pin,
                             color: theme.primaryColor,
                           ),
-                          onPressed: () => playlistModel.removePinnedAlbum(
+                          onPressed: () => removePinnedAlbum(
                             name,
                           ),
                         )
@@ -163,7 +165,7 @@ class _SearchFieldState extends State<SearchField> {
                           icon: const Icon(
                             YaruIcons.pin,
                           ),
-                          onPressed: () => playlistModel.addPinnedAlbum(
+                          onPressed: () => addPinnedAlbum(
                             album.first.metadata!.album!,
                             Set.from(album),
                           ),

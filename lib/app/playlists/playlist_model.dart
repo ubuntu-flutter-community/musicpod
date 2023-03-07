@@ -72,7 +72,7 @@ class PlaylistModel extends SafeChangeNotifier {
   List<Audio> getPlaylistAt(int index) =>
       _playlists.entries.elementAt(index).value.toList();
 
-  bool isSavedPlaylist(String name) => _playlists.containsKey(name);
+  bool isPlaylistSaved(String? name) => _playlists.containsKey(name);
 
   void addPlaylist(String name, Set<Audio> audios) {
     _playlists.putIfAbsent(name, () => audios);

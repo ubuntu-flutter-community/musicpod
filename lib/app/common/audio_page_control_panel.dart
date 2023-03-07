@@ -27,35 +27,44 @@ class AudioPageControlPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playlistModel = context.watch<PlaylistModel>();
-    final playerModel = context.watch<PlayerModel>();
+    // final playlistModel = context.read<PlaylistModel>();
     final theme = Theme.of(context);
-    final listIsQueue = listsAreEqual(playerModel.queue, audios.toList());
+    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
+    final startPlaylist = context.read<PlayerModel>().startPlaylist;
+    final resume = context.read<PlayerModel>().resume;
+    final pause = context.read<PlayerModel>().pause;
+    final queue = context.select((PlayerModel m) => m.queue);
+    final playlistModel = context.read<PlaylistModel>();
+    final addLikedAudios = context.read<PlaylistModel>().addLikedAudios;
+    final removeLikedAudios = context.read<PlaylistModel>().removeLikedAudios;
+    final liked = context.read<PlaylistModel>().liked;
+
+    final listIsQueue = listsAreEqual(queue, audios.toList());
     final allLiked =
-        audios.where((a) => playlistModel.liked(a)).toList().length ==
-            audios.length;
+        audios.where((a) => liked(a)).toList().length == audios.length;
+
     return Row(
       children: [
         CircleAvatar(
           backgroundColor: theme.colorScheme.inverseSurface,
           child: IconButton(
             onPressed: () {
-              if (playerModel.isPlaying) {
+              if (isPlaying) {
                 if (listIsQueue) {
-                  playerModel.pause();
+                  pause();
                 } else {
-                  playerModel.startPlaylist(audios);
+                  startPlaylist(audios);
                 }
               } else {
                 if (listIsQueue) {
-                  playerModel.resume();
+                  resume();
                 } else {
-                  playerModel.startPlaylist(audios);
+                  startPlaylist(audios);
                 }
               }
             },
             icon: Icon(
-              playerModel.isPlaying && listIsQueue
+              isPlaying && listIsQueue
                   ? YaruIcons.media_pause
                   : YaruIcons.media_play,
               color: theme.colorScheme.onInverseSurface,
@@ -69,9 +78,8 @@ class AudioPageControlPanel extends StatelessWidget {
           likeButton!
         else
           IconButton(
-            onPressed: () => allLiked
-                ? playlistModel.removeLikedAudios(audios)
-                : playlistModel.addLikedAudios(audios),
+            onPressed: () =>
+                allLiked ? removeLikedAudios(audios) : addLikedAudios(audios),
             icon: Icon(
               allLiked ? YaruIcons.heart_filled : YaruIcons.heart,
             ),

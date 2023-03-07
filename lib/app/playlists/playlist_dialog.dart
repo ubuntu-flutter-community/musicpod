@@ -41,10 +41,14 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<PlaylistModel>();
+    final isPlaylistSaved = context.read<PlaylistModel>().isPlaylistSaved;
+    final removePlaylist = context.read<PlaylistModel>().removePlaylist;
+    final updatePlaylistName = context.read<PlaylistModel>().updatePlaylistName;
+    final addPlaylist = context.read<PlaylistModel>().addPlaylist;
+
     return AlertDialog(
       title: YaruDialogTitleBar(
-        title: model.playlists.containsKey(widget.name)
+        title: isPlaylistSaved(widget.name)
             ? Text(context.l10n.playlistDialogTitleEdit)
             : Text(context.l10n.playlistDialogTitleNew),
       ),
@@ -70,14 +74,14 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
             label: Text(context.l10n.deletePlaylist),
             icon: const Icon(YaruIcons.trash),
             onPressed: () {
-              model.removePlaylist(widget.name);
+              removePlaylist(widget.name);
               Navigator.pop(context);
             },
           ),
-        if (model.playlists.containsKey(widget.name))
+        if (isPlaylistSaved(widget.name))
           ElevatedButton(
             onPressed: () {
-              model.updatePlaylistName(widget.name, _nameController.text);
+              updatePlaylistName(widget.name, _nameController.text);
               Navigator.pop(context);
             },
             child: Text(context.l10n.save),
@@ -85,7 +89,7 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
         else
           ElevatedButton(
             onPressed: () {
-              model.addPlaylist(_nameController.text, widget.audios);
+              addPlaylist(_nameController.text, widget.audios);
               Navigator.pop(context);
             },
             child: Text(context.l10n.add),
@@ -120,8 +124,10 @@ class _CreatePlaylistPageState extends State<CreatePlaylistPage> {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<PlaylistModel>();
-
+    final isPlaylistSaved = context.read<PlaylistModel>().isPlaylistSaved;
+    final removePlaylist = context.read<PlaylistModel>().removePlaylist;
+    final updatePlaylistName = context.read<PlaylistModel>().updatePlaylistName;
+    final addPlaylist = context.read<PlaylistModel>().addPlaylist;
     return YaruDetailPage(
       appBar: YaruWindowTitleBar(
         title: Text(context.l10n.createNewPlaylist),
@@ -148,18 +154,18 @@ class _CreatePlaylistPageState extends State<CreatePlaylistPage> {
           Wrap(
             spacing: 10,
             children: [
-              if (model.playlists.containsKey(widget.name))
+              if (isPlaylistSaved(widget.name))
                 OutlinedButton.icon(
                   label: Text(context.l10n.deletePlaylist),
                   icon: const Icon(YaruIcons.trash),
                   onPressed: () {
-                    model.removePlaylist(widget.name!);
+                    removePlaylist(widget.name!);
                   },
                 ),
-              if (model.playlists.containsKey(widget.name))
+              if (isPlaylistSaved(widget.name))
                 ElevatedButton(
                   onPressed: () {
-                    model.updatePlaylistName(
+                    updatePlaylistName(
                       widget.name!,
                       _nameController.text,
                     );
@@ -170,7 +176,7 @@ class _CreatePlaylistPageState extends State<CreatePlaylistPage> {
                 ElevatedButton(
                   onPressed: () {
                     if (_nameController.text.isEmpty) return;
-                    model.addPlaylist(_nameController.text, {});
+                    addPlaylist(_nameController.text, {});
                   },
                   child: Text(context.l10n.add),
                 )

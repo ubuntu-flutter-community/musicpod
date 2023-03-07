@@ -91,7 +91,20 @@ class _AudioPageState extends State<AudioPage> {
     final play = context.read<PlayerModel>().play;
     final pause = context.read<PlayerModel>().pause;
 
-    final playlistModel = context.watch<PlaylistModel>();
+    final playlistModel = context.read<PlaylistModel>();
+    final isPlaylistSaved = context.read<PlaylistModel>().isPlaylistSaved;
+    final isLiked = context.read<PlaylistModel>().liked;
+    final removeLikedAudio = context.read<PlaylistModel>().removeLikedAudio;
+    final addLikedAudio = context.read<PlaylistModel>().addLikedAudio;
+    final isStarredStation = context.read<PlaylistModel>().isStarredStation;
+    final addStarredStation = context.read<PlaylistModel>().addStarredStation;
+    final unStarStation = context.read<PlaylistModel>().unStarStation;
+    final removeAudioFromPlaylist =
+        context.read<PlaylistModel>().removeAudioFromPlaylist;
+    final getTopFivePlaylistNames =
+        context.read<PlaylistModel>().getTopFivePlaylistNames;
+    final addAudioToPlaylist = context.read<PlaylistModel>().addAudioToPlaylist;
+
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
 
@@ -233,13 +246,12 @@ class _AudioPageState extends State<AudioPage> {
                   final audio = sortedAudios.elementAt(index);
                   final audioSelected = currentAudio == audio;
 
-                  final liked = playlistModel.liked(audio);
+                  final liked = isLiked(audio);
 
                   final likedAudioButton = InkWell(
                     borderRadius: BorderRadius.circular(10),
-                    onTap: () => liked
-                        ? playlistModel.removeLikedAudio(audio)
-                        : playlistModel.addLikedAudio(audio),
+                    onTap: () =>
+                        liked ? removeLikedAudio(audio) : addLikedAudio(audio),
                     child: Icon(
                       liked ? YaruIcons.heart_filled : YaruIcons.heart,
                       color: audioSelected
@@ -250,7 +262,7 @@ class _AudioPageState extends State<AudioPage> {
 
                   final starred = audio.name == null
                       ? false
-                      : playlistModel.isStarredStation(audio.name!);
+                      : isStarredStation(audio.name!);
 
                   final starStationButton = InkWell(
                     borderRadius: BorderRadius.circular(10),
@@ -258,9 +270,8 @@ class _AudioPageState extends State<AudioPage> {
                         ? null
                         : () {
                             !starred
-                                ? playlistModel
-                                    .addStarredStation(audio.name!, {audio})
-                                : playlistModel.unStarStation(audio.name!);
+                                ? addStarredStation(audio.name!, {audio})
+                                : unStarStation(audio.name!);
                           },
                     child: Icon(
                       starred ? YaruIcons.star_filled : YaruIcons.star,
@@ -314,24 +325,21 @@ class _AudioPageState extends State<AudioPage> {
                                     },
                                   ),
                                 ),
-                                if (playlistModel
-                                    .isSavedPlaylist(widget.pageId))
+                                if (isPlaylistSaved(widget.pageId))
                                   PopupMenuItem(
                                     child: Text('Remove from ${widget.pageId}'),
-                                    onTap: () =>
-                                        playlistModel.removeAudioFromPlaylist(
+                                    onTap: () => removeAudioFromPlaylist(
                                       widget.pageId,
                                       audio,
                                     ),
                                   ),
                                 for (final playlist
-                                    in playlistModel.getTopFivePlaylistNames())
+                                    in getTopFivePlaylistNames())
                                   PopupMenuItem(
                                     child: Text(
                                       '${context.l10n.addTo} $playlist',
                                     ),
-                                    onTap: () =>
-                                        playlistModel.addAudioToPlaylist(
+                                    onTap: () => addAudioToPlaylist(
                                       playlist,
                                       audio,
                                     ),
