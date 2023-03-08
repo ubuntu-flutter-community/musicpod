@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:music/data/audio.dart';
+import 'package:musicpod/data/audio.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AudioTile extends StatelessWidget {

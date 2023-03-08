@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
-import 'package:music/app/local_audio/local_audio_model.dart';
-import 'package:music/data/audio.dart';
-import 'package:music/l10n/l10n.dart';
+import 'package:musicpod/app/local_audio/local_audio_model.dart';
+import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/l10n/l10n.dart';
 
 String formatTime(Duration duration) {
   String twoDigits(int n) => n.toString().padLeft(2, '0');

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:music/app/playlists/playlist_model.dart';
-import 'package:music/data/audio.dart';
-import 'package:music/l10n/l10n.dart';
+import 'package:musicpod/app/playlists/playlist_model.dart';
+import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
-import 'package:music/data/audio.dart';
+import 'package:musicpod/data/audio.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 

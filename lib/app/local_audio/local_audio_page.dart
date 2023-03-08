@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:music/app/common/audio_page.dart';
-import 'package:music/app/local_audio/local_audio_model.dart';
-import 'package:music/l10n/l10n.dart';
+import 'package:musicpod/app/common/audio_page.dart';
+import 'package:musicpod/app/local_audio/local_audio_model.dart';
+import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 
 class LocalAudioPage extends StatelessWidget {

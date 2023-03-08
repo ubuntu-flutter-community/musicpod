@@ -1,4 +1,4 @@
-name: music
+name: musicpod
 description: Ubuntu music, radio and podcast player.
 
 publish_to: "none"

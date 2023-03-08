@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:metadata_god/metadata_god.dart';
 import 'package:mime_type/mime_type.dart';
-import 'package:music/data/audio.dart';
+import 'package:musicpod/data/audio.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:path/path.dart' as path;
 

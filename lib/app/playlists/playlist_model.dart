@@ -1,4 +1,4 @@
-import 'package:music/data/audio.dart';
+import 'package:musicpod/data/audio.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class PlaylistModel extends SafeChangeNotifier {

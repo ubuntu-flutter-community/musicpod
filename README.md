@@ -1,4 +1,4 @@
-# Ubuntu Music - WIP
+# Ubuntu Musicpod - WIP
 
 Music, Radio and Podcast player for Ubuntu made with Flutter.
 

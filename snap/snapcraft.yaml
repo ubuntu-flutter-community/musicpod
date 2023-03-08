@@ -1,11 +1,11 @@
-name: music
+name: musicpod
 version: 0.1.0
 summary: Music, podcast and internet radio player
 description: Play local audio files, browse podcasts online or listen to internet radio stations.
-website: https://github.com/ubuntu-flutter-community/music
+website: https://github.com/ubuntu-flutter-community/musicpod
 contact: frederik.feichtmeier@gmail.com
-source-code: https://github.com/ubuntu-flutter-community/music
-icon: snap/gui/music.png
+source-code: https://github.com/ubuntu-flutter-community/musicpod
+icon: snap/gui/musicpod.png
 
 confinement: strict
 base: core22
@@ -13,8 +13,8 @@ grade: stable
 license: MPL-2.0
 
 apps:
-  music:
-    command: music
+  musicpod:
+    command: musicpod
     extensions: [gnome]
     plugs:
       - network
@@ -25,7 +25,7 @@ apps:
       - mpris
 
 parts:
-  music:
+  musicpod:
     source: .
     plugin: flutter
     flutter-target: lib/main.dart

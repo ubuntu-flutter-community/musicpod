@@ -8,9 +8,9 @@ import 'app/music_app.dart';
 Future<void> main() async {
   // TODO: correct to snap desktop entry path after snapping
   final mpris = await MPRIS.create(
-    busName: 'org.mpris.MediaPlayer2.music',
-    identity: 'Music',
-    desktopEntry: '/home/frederik/.local/share/applications/music',
+    busName: 'org.mpris.MediaPlayer2.musicpod',
+    identity: 'Musicpod',
+    desktopEntry: '/home/frederik/.local/share/applications/musicpod',
   );
 
   registerService<MPRIS>(() => mpris);

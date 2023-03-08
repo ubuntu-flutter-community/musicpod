@@ -1,6 +1,6 @@
 import 'package:metadata_god/metadata_god.dart';
-import 'package:music/data/audio.dart';
-import 'package:music/app/radio/stations.dart';
+import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/app/radio/stations.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class RadioModel extends SafeChangeNotifier {
