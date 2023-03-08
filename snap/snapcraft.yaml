@@ -24,11 +24,18 @@ apps:
     slots:
       - mpris
 
+slots:
+  dbus-musicpod:
+    interface: dbus
+    bus: session
+    name: org.mpris.MediaPlayer2.musicpod
+
 parts:
   musicpod:
     source: .
     plugin: flutter
     flutter-target: lib/main.dart
     build-packages:
+      - libunwind-dev
       - libgstreamer1.0-dev
       - libgstreamer-plugins-base1.0-dev
