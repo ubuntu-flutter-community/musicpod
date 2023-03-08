@@ -3,7 +3,7 @@ version: 0.1.0
 summary: Music, podcast and internet radio player
 description: Play local audio files, browse podcasts online or listen to internet radio stations.
 website: https://github.com/ubuntu-flutter-community/music
-contact: https://github.com/ubuntu-flutter-community/music/issues
+contact: frederik.feichtmeier@gmail.com
 source-code: https://github.com/ubuntu-flutter-community/music
 icon: snap/gui/music.png
 
@@ -21,13 +21,8 @@ apps:
       - audio-playback
       - network-manager-observe
       - home
+    slots:
       - mpris
-
-slots:
-  org.mpris.MediaPlayer2.music:
-    interface: dbus
-    bus: session
-    name: mpris
 
 parts:
   music:
