@@ -10,7 +10,7 @@ Future<void> main() async {
   final mpris = await MPRIS.create(
     busName: 'org.mpris.MediaPlayer2.musicpod',
     identity: 'Musicpod',
-    desktopEntry: '/home/frederik/.local/share/applications/musicpod',
+    desktopEntry: '/var/lib/snapd/desktop/applications/musicpod',
   );
 
   registerService<MPRIS>(() => mpris);
