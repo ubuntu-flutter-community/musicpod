@@ -44,3 +44,5 @@ app.*.map.json
 /android/app/release
 
 .vscode/
+musicpod_0.1.0_amd64.snap
+pubspec.lock
