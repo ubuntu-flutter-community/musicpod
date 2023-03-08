@@ -9,7 +9,7 @@ Music, Radio and Podcast player for Ubuntu made with Flutter.
 |![](.github/wide_light.png) | ![](.github/wide_dark.png) |
 |![](.github/slim_light.png)|![](.github/slim_dark.png)|
 
-## Planed features
+## Planned features
 
 - [X] play local audio files
 - [X] Filter local files
