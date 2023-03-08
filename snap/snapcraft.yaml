@@ -5,7 +5,7 @@ description: Play local audio files, browse podcasts online or listen to interne
 website: https://github.com/ubuntu-flutter-community/music
 contact: frederik.feichtmeier@gmail.com
 source-code: https://github.com/ubuntu-flutter-community/music
-icon: gui/music.png
+icon: snap/gui/music.png
 
 confinement: strict
 base: core22
@@ -21,13 +21,8 @@ apps:
       - audio-playback
       - network-manager-observe
       - home
+    slots:
       - mpris
-
-slots:
-  org.mpris.MediaPlayer2.music:
-    interface: dbus
-    bus: session
-    name: mpris
 
 parts:
   music:
