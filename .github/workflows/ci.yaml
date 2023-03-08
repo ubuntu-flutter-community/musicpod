@@ -29,9 +29,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
       - run: sudo apt update
-      - run: sudo apt install -y clang cmake curl libgtk-3-dev ninja-build pkg-config unzip
-        env:
-          DEBIAN_FRONTEND: noninteractive
+      - run: sudo apt install -y clang cmake curl libgtk-3-dev ninja-build pkg-config unzip libunwind-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
       - run: flutter pub get
       - run: flutter build linux -v
