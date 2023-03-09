@@ -5,6 +5,7 @@ import 'package:mime_type/mime_type.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:path/path.dart' as path;
+import 'package:xdg_directories/xdg_directories.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
   String? _searchQuery;
@@ -47,33 +48,8 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  String? guessDirectory() {
-    Map<String, String> envVars = Platform.environment;
-    final home = envVars['HOME'];
-
-    final guessMap = <String, String>{
-      'de': 'Musik',
-      'dk': 'Musik',
-      'se': 'Musik',
-      'no': 'Musikk',
-      'es': 'Música',
-      'po': 'Música',
-      'it': 'Musica',
-      'tk': 'Müzik',
-      'fr': 'Musique'
-    };
-
-    for (var guess in guessMap.entries) {
-      final path = '$home/${guess.value}';
-      if (Directory(path).existsSync()) {
-        return path;
-      }
-    }
-    return null;
-  }
-
   Future<void> init() async {
-    _directory ??= guessDirectory();
+    _directory ??= getUserDirectory('MUSIC')?.path;
 
     if (_directory != null) {
       final allFileSystemEntities = Set<FileSystemEntity>.from(
