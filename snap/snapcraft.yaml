@@ -18,9 +18,14 @@ apps:
     extensions: [gnome]
     plugs:
       - network
+      - network-bind
+      - network-control
+      - alsa
       - audio-playback
       - network-manager-observe
       - home
+      - browser-support
+      - hostname-control
     slots:
       - mpris
 
