@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
 set(BINARY_NAME "musicpod")
-set(APPLICATION_ID "org.ubuntu.Musicpod")
+set(APPLICATION_ID "org.feichtmeier.Musicpod")
 
 cmake_policy(SET CMP0063 NEW)
 

@@ -28,7 +28,7 @@ slots:
   dbus-musicpod:
     interface: dbus
     bus: session
-    name: org.ubuntu.Musicpod
+    name: org.feichtmeier.Musicpod
 
 parts:
   musicpod:
