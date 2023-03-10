@@ -9,28 +9,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-class Player extends StatefulWidget {
-  const Player({
+class PlayerView extends StatelessWidget {
+  const PlayerView({
     super.key,
     this.expandHeight = false,
   });
 
   final bool expandHeight;
-
-  @override
-  State<Player> createState() => _PlayerState();
-}
-
-class _PlayerState extends State<Player> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (mounted) {
-        context.read<PlayerModel>().init();
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +24,7 @@ class _PlayerState extends State<Player> {
         ? false
         : context.read<PlaylistModel>().liked(model.audio!);
     final theme = Theme.of(context);
-    final isFullScreen = widget.expandHeight || model.fullScreen == true;
+    final isFullScreen = expandHeight || model.fullScreen == true;
     final width = MediaQuery.of(context).size.width;
     final removeLikedAudio = context.read<PlaylistModel>().removeLikedAudio;
     final addLikedAudio = context.read<PlaylistModel>().addLikedAudio;
@@ -48,7 +33,7 @@ class _PlayerState extends State<Player> {
       padding: const EdgeInsets.all(8.0),
       child: YaruIconButton(
         icon: Icon(
-          isFullScreen && !widget.expandHeight
+          isFullScreen && !expandHeight
               ? YaruIcons.fullscreen_exit
               : YaruIcons.fullscreen,
           color: theme.colorScheme.onSurface,
@@ -106,16 +91,11 @@ class _PlayerState extends State<Player> {
             onPressed: model.audio == null
                 ? null
                 : () {
-                    WidgetsBinding.instance
-                        .addPostFrameCallback((timeStamp) async {
-                      if (context.mounted) {
-                        if (model.isPlaying) {
-                          await model.pause();
-                        } else {
-                          await model.play();
-                        }
-                      }
-                    });
+                    if (model.isPlaying) {
+                      model.pause();
+                    } else {
+                      model.playOrPause();
+                    }
                   },
             icon: Icon(
               model.isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
@@ -141,8 +121,8 @@ class _PlayerState extends State<Player> {
           ),
         ),
         YaruIconButton(
-          icon: const Icon(YaruIcons.media_stop),
-          onPressed: () => model.stop(),
+          icon: const Icon(YaruIcons.repeat_single),
+          onPressed: () {},
         )
       ],
     );
@@ -214,7 +194,6 @@ class _PlayerState extends State<Player> {
                     ? (v) async {
                         model.position = Duration(seconds: v.toInt());
                         await model.seek();
-                        await model.resume();
                       }
                     : null,
               ),

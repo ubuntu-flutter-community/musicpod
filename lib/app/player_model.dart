@@ -1,22 +1,27 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:media_kit/media_kit.dart';
 
 class PlayerModel extends SafeChangeNotifier {
   PlayerModel(MPRIS mpris)
-      : _audioPlayer = AudioPlayer(),
+      : _player = Player(
+          configuration: const PlayerConfiguration(
+            vid: false,
+          ),
+        ),
         _mediaControlService = mpris;
 
-  final AudioPlayer _audioPlayer;
+  final Player _player;
   final MPRIS _mediaControlService;
-  StreamSubscription<PlayerState>? _playerSub;
+  StreamSubscription<bool>? _playerSub;
   StreamSubscription<Duration>? _durationSub;
   StreamSubscription<Duration>? _positionSub;
+  StreamSubscription<bool>? _isCompletedSub;
 
   List<Audio>? _queue;
   List<Audio>? get queue => _queue;
@@ -94,41 +99,50 @@ class PlayerModel extends SafeChangeNotifier {
   set repeatSingle(bool value) {
     if (value == _repeatSingle) return;
     _repeatSingle = value;
+    if (value) {
+      _player.setPlaylistMode(PlaylistMode.single);
+    } else {
+      _player.setPlaylistMode(PlaylistMode.none);
+    }
     notifyListeners();
   }
 
   Future<void> play() async {
-    position = await _audioPlayer.getCurrentPosition();
-    duration = await _audioPlayer.getDuration();
     if (audio!.path != null) {
-      await _audioPlayer.play(DeviceFileSource(audio!.path!));
+      _player.open(
+        Playlist(
+          [
+            Media('file://${audio!.path!}'),
+          ],
+        ),
+      );
     } else if (audio!.url != null) {
-      await _audioPlayer.play(UrlSource(audio!.url!));
+      _player.open(
+        Playlist(
+          [
+            Media(audio!.url!),
+          ],
+        ),
+      );
     }
-    loadColor().then((_) async {
-      position = await _audioPlayer.getCurrentPosition();
-      duration = await _audioPlayer.getDuration();
-    });
+
+    loadColor();
   }
 
-  Future<void> stop() async {
-    await _audioPlayer.release();
-    await _audioPlayer.stop();
-  }
+  Future<void> playOrPause() async => _player.playOrPause();
 
   Future<void> pause() async {
-    if (audio == null) return;
-    await _audioPlayer.pause();
+    await _player.pause();
   }
 
   Future<void> seek() async {
     if (position == null) return;
-    await _audioPlayer.seek(position!);
+    await _player.seek(position!);
   }
 
   Future<void> resume() async {
     if (audio == null) return;
-    await _audioPlayer.resume();
+    await _player.playOrPause();
   }
 
   Future<void> init() async {
@@ -156,25 +170,24 @@ class PlayerModel extends SafeChangeNotifier {
       ),
     );
 
-    _playerSub = _audioPlayer.onPlayerStateChanged.listen((playerState) {
-      isPlaying = playerState == PlayerState.playing;
+    _playerSub = _player.streams.isPlaying.listen((p) {
+      isPlaying = p;
       _mediaControlService.playbackStatus =
           isPlaying ? MPRISPlaybackStatus.playing : MPRISPlaybackStatus.paused;
     });
-    _audioPlayer.onDurationChanged.listen((newDuration) {
+    _durationSub = _player.streams.duration.listen((newDuration) {
       duration = newDuration;
     });
-    _audioPlayer.onPositionChanged.listen((newPosition) {
+    _positionSub = _player.streams.position.listen((newPosition) {
       position = newPosition;
-      estimateNext();
     });
 
-    _audioPlayer.onPlayerComplete.listen((_) async {
-      if (_repeatSingle == true) {
-        _audioPlayer.seek(Duration.zero);
-        await _audioPlayer.resume();
-      } else {
-        playNext();
+    _isCompletedSub = _player.streams.isCompleted.listen((value) async {
+      if (value) {
+        if (repeatSingle == false) {
+          await _player.pause();
+          await playNext();
+        }
       }
     });
     notifyListeners();
@@ -185,8 +198,6 @@ class PlayerModel extends SafeChangeNotifier {
     if (nextAudio == null) return;
     setAudio(nextAudio);
 
-    await _audioPlayer.release();
-    await _audioPlayer.stop();
     await play();
   }
 
@@ -215,8 +226,6 @@ class PlayerModel extends SafeChangeNotifier {
       if (nextAudio == null) return;
       setAudio(nextAudio);
 
-      await _audioPlayer.release();
-      await _audioPlayer.stop();
       await play();
     }
   }
@@ -224,7 +233,6 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> startPlaylist(Set<Audio> audios) async {
     queue = audios.toList();
     setAudio(audios.first);
-    await stop();
     await play();
   }
 
@@ -267,12 +275,13 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   @override
-  void dispose() {
-    _mediaControlService.dispose();
-    _playerSub?.cancel();
-    _positionSub?.cancel();
-    _durationSub?.cancel();
-    _audioPlayer.dispose();
+  Future<void> dispose() async {
+    await _mediaControlService.dispose();
+    await _playerSub?.cancel();
+    await _positionSub?.cancel();
+    await _durationSub?.cancel();
+    await _isCompletedSub?.cancel();
+    await _player.dispose();
     super.dispose();
   }
 }

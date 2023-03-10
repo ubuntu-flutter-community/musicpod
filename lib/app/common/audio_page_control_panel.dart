@@ -53,23 +53,13 @@ class AudioPageControlPanel extends StatelessWidget {
                 if (listIsQueue) {
                   pause();
                 } else {
-                  WidgetsBinding.instance
-                      .addPostFrameCallback((timeStamp) async {
-                    if (context.mounted) {
-                      await startPlaylist(audios);
-                    }
-                  });
+                  startPlaylist(audios);
                 }
               } else {
                 if (listIsQueue) {
                   resume();
                 } else {
-                  WidgetsBinding.instance
-                      .addPostFrameCallback((timeStamp) async {
-                    if (context.mounted) {
-                      await startPlaylist(audios);
-                    }
-                  });
+                  startPlaylist(audios);
                 }
               }
             },

@@ -3,10 +3,10 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  audioplayers_linux
   file_selector_linux
   gtk
   handy_window
+  media_kit_libs_linux
   metadata_god
   screen_retriever
   url_launcher_linux
