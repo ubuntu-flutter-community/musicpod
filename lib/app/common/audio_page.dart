@@ -90,6 +90,7 @@ class _AudioPageState extends State<AudioPage> {
     final currentAudio = context.select((PlayerModel m) => m.audio);
     final play = context.read<PlayerModel>().play;
     final pause = context.read<PlayerModel>().pause;
+    final resume = context.read<PlayerModel>().resume;
 
     final playlistModel = context.read<PlaylistModel>();
     final isPlaylistSaved = context.read<PlaylistModel>().isPlaylistSaved;
@@ -288,6 +289,7 @@ class _AudioPageState extends State<AudioPage> {
                       setAudio(audio);
                       await play();
                     },
+                    resume: resume,
                     key: ValueKey(audio),
                     selected: audioSelected,
                     audio: audio,

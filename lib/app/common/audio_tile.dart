@@ -12,6 +12,7 @@ class AudioTile extends StatelessWidget {
     required this.isPlayerPlaying,
     required this.play,
     required this.pause,
+    required this.resume,
   });
 
   final Audio audio;
@@ -20,6 +21,7 @@ class AudioTile extends StatelessWidget {
   final Widget? likeIcon;
   final bool isPlayerPlaying;
   final Future<void> Function() play;
+  final Future<void> Function() resume;
   final void Function() pause;
 
   @override
@@ -39,7 +41,11 @@ class AudioTile extends StatelessWidget {
         if (isPlayerPlaying && selected) {
           pause();
         } else {
-          play();
+          if (selected) {
+            resume();
+          } else {
+            play();
+          }
         }
       },
       title: Row(
