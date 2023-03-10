@@ -106,12 +106,13 @@ class _PlayerState extends State<Player> {
             onPressed: model.audio == null
                 ? null
                 : () {
-                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    WidgetsBinding.instance
+                        .addPostFrameCallback((timeStamp) async {
                       if (context.mounted) {
                         if (model.isPlaying) {
-                          model.pause();
+                          await model.pause();
                         } else {
-                          model.play();
+                          await model.play();
                         }
                       }
                     });
@@ -171,10 +172,7 @@ class _PlayerState extends State<Player> {
       maxLines: 1,
     );
 
-    bool sliderActive() =>
-        model.audio != null &&
-        model.audio!.audioType != AudioType.radio &&
-        model.duration != null &&
+    bool sliderActive = model.duration != null &&
         model.position != null &&
         model.duration!.inSeconds > model.position!.inSeconds;
 
@@ -206,13 +204,13 @@ class _PlayerState extends State<Player> {
               ),
               child: Slider(
                 min: 0,
-                max: sliderActive()
+                max: sliderActive
                     ? model.duration?.inSeconds.toDouble() ?? 1.0
                     : 1.0,
-                value: sliderActive()
+                value: sliderActive
                     ? model.position?.inSeconds.toDouble() ?? 0
                     : 0,
-                onChanged: sliderActive()
+                onChanged: sliderActive
                     ? (v) async {
                         model.position = Duration(seconds: v.toInt());
                         await model.seek();

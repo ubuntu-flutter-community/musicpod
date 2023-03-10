@@ -54,7 +54,13 @@ class PodcastsPage extends StatelessWidget {
 
           return AudioCard(
             imageUrl: podcast.first.imageUrl,
-            onPlay: () => startPlaylist(podcast),
+            onPlay: () {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+                if (context.mounted) {
+                  await startPlaylist(podcast);
+                }
+              });
+            },
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -294,7 +300,15 @@ class PodcastsPage extends StatelessWidget {
                                       in model.podcastSearchResult!)
                                     AudioCard(
                                       imageUrl: podcast.firstOrNull?.imageUrl,
-                                      onPlay: () => startPlaylist(podcast),
+                                      onPlay: () {
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback(
+                                                (timeStamp) async {
+                                          if (context.mounted) {
+                                            await startPlaylist(podcast);
+                                          }
+                                        });
+                                      },
                                       onTap: () {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(

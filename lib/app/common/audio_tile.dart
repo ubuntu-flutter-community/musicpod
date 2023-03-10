@@ -19,7 +19,7 @@ class AudioTile extends StatelessWidget {
   final void Function()? onLike;
   final Widget? likeIcon;
   final bool isPlayerPlaying;
-  final void Function() play;
+  final Future<void> Function() play;
   final void Function() pause;
 
   @override
@@ -39,8 +39,8 @@ class AudioTile extends StatelessWidget {
         if (isPlayerPlaying && selected) {
           pause();
         } else {
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            play();
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+            await play();
           });
         }
       },

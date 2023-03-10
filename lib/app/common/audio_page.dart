@@ -284,7 +284,7 @@ class _AudioPageState extends State<AudioPage> {
                   return AudioTile(
                     isPlayerPlaying: isPlaying,
                     pause: pause,
-                    play: () {
+                    play: () async {
                       WidgetsBinding.instance
                           .addPostFrameCallback((timeStamp) async {
                         if (context.mounted) {
