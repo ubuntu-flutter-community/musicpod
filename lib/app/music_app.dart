@@ -51,7 +51,7 @@ class _App extends StatefulWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => PlayerModel(getService<MPRIS>())..init(),
+          create: (_) => PlayerModel(getService<MPRIS>()),
         ),
         ChangeNotifierProvider(
           create: (_) => LocalAudioModel()..init(),
