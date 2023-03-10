@@ -285,13 +285,8 @@ class _AudioPageState extends State<AudioPage> {
                     isPlayerPlaying: isPlaying,
                     pause: pause,
                     play: () async {
-                      WidgetsBinding.instance
-                          .addPostFrameCallback((timeStamp) async {
-                        if (context.mounted) {
-                          setAudio(audio);
-                          await play();
-                        }
-                      });
+                      setAudio(audio);
+                      await play();
                     },
                     key: ValueKey(audio),
                     selected: audioSelected,

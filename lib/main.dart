@@ -6,7 +6,6 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import 'app/music_app.dart';
 
 Future<void> main() async {
-  // TODO: correct to snap desktop entry path after snapping
   final mpris = await MPRIS.create(
     busName: 'org.mpris.MediaPlayer2.musicpod',
     identity: 'Musicpod',

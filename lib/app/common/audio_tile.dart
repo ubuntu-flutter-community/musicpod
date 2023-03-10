@@ -39,9 +39,7 @@ class AudioTile extends StatelessWidget {
         if (isPlayerPlaying && selected) {
           pause();
         } else {
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-            await play();
-          });
+          play();
         }
       },
       title: Row(

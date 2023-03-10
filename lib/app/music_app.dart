@@ -7,8 +7,8 @@ import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
 import 'package:musicpod/app/local_audio/local_audio_page.dart';
-import 'package:musicpod/app/player.dart';
 import 'package:musicpod/app/player_model.dart';
+import 'package:musicpod/app/player_view.dart';
 import 'package:musicpod/app/playlists/playlist_dialog.dart';
 import 'package:musicpod/app/playlists/playlist_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
@@ -506,7 +506,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                   border: BorderSide.none,
                   backgroundColor: Colors.transparent,
                 ),
-                Expanded(child: Player())
+                Expanded(child: PlayerView())
               ],
             )
           : !playerToTheRight
@@ -518,7 +518,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                     const Divider(
                       height: 0,
                     ),
-                    const Player()
+                    const PlayerView()
                   ],
                 )
               : Row(
@@ -535,7 +535,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                         children: const [
                           YaruWindowTitleBar(),
                           Expanded(
-                            child: Player(
+                            child: PlayerView(
                               expandHeight: true,
                             ),
                           ),
