@@ -21,6 +21,7 @@ class PlayerModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _playerSub;
   StreamSubscription<Duration>? _durationSub;
   StreamSubscription<Duration>? _positionSub;
+  StreamSubscription<bool>? _isCompletedSub;
 
   List<Audio>? _queue;
   List<Audio>? get queue => _queue;
@@ -181,7 +182,7 @@ class PlayerModel extends SafeChangeNotifier {
       position = newPosition;
     });
 
-    _player.streams.isCompleted.listen((value) async {
+    _isCompletedSub = _player.streams.isCompleted.listen((value) async {
       if (value) {
         if (repeatSingle == false) {
           await _player.pause();
@@ -274,12 +275,13 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   @override
-  void dispose() {
-    _mediaControlService.dispose();
-    _playerSub?.cancel();
-    _positionSub?.cancel();
-    _durationSub?.cancel();
-    _player.dispose();
+  Future<void> dispose() async {
+    await _mediaControlService.dispose();
+    await _playerSub?.cancel();
+    await _positionSub?.cancel();
+    await _durationSub?.cancel();
+    await _isCompletedSub?.cancel();
+    await _player.dispose();
     super.dispose();
   }
 }

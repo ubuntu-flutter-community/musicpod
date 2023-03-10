@@ -51,7 +51,7 @@ class _App extends StatefulWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => PlayerModel(getService<MPRIS>()),
+          create: (_) => PlayerModel(getService<MPRIS>())..init(),
         ),
         ChangeNotifierProvider(
           create: (_) => LocalAudioModel()..init(),
@@ -86,6 +86,17 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
     minPaneWidth: 81,
     minPageWidth: kYaruMasterDetailBreakpoint / 2,
   );
+
+  @override
+  void initState() {
+    super.initState();
+    YaruWindow.of(context).onClose(
+      () {
+        context.read<PlayerModel>().dispose();
+        return true;
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

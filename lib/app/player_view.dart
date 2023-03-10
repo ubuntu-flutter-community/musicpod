@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-class PlayerView extends StatefulWidget {
+class PlayerView extends StatelessWidget {
   const PlayerView({
     super.key,
     this.expandHeight = false,
@@ -18,28 +18,13 @@ class PlayerView extends StatefulWidget {
   final bool expandHeight;
 
   @override
-  State<PlayerView> createState() => _PlayerViewState();
-}
-
-class _PlayerViewState extends State<PlayerView> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (mounted) {
-        context.read<PlayerModel>().init();
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final model = context.watch<PlayerModel>();
     final liked = model.audio == null
         ? false
         : context.read<PlaylistModel>().liked(model.audio!);
     final theme = Theme.of(context);
-    final isFullScreen = widget.expandHeight || model.fullScreen == true;
+    final isFullScreen = expandHeight || model.fullScreen == true;
     final width = MediaQuery.of(context).size.width;
     final removeLikedAudio = context.read<PlaylistModel>().removeLikedAudio;
     final addLikedAudio = context.read<PlaylistModel>().addLikedAudio;
@@ -48,7 +33,7 @@ class _PlayerViewState extends State<PlayerView> {
       padding: const EdgeInsets.all(8.0),
       child: YaruIconButton(
         icon: Icon(
-          isFullScreen && !widget.expandHeight
+          isFullScreen && !expandHeight
               ? YaruIcons.fullscreen_exit
               : YaruIcons.fullscreen,
           color: theme.colorScheme.onSurface,
