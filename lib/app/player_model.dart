@@ -149,7 +149,7 @@ class PlayerModel extends SafeChangeNotifier {
     _mediaControlService.setEventHandler(
       MPRISEventHandler(
         playPause: () async {
-          isPlaying ? pause() : play();
+          isPlaying ? pause() : playOrPause();
           _mediaControlService.playbackStatus = (isPlaying
               ? MPRISPlaybackStatus.paused
               : MPRISPlaybackStatus.playing);
