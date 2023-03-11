@@ -12,20 +12,18 @@ base: core22
 grade: stable
 license: MPL-2.0
 
+environment:
+  LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/lapack:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/caca:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/vdpau:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/mfx
+
 apps:
   musicpod:
     command: musicpod
     extensions: [gnome]
     plugs:
       - network
-      - network-bind
-      - network-control
-      - alsa
       - audio-playback
       - network-manager-observe
       - home
-      - browser-support
-      - hostname-control
     slots:
       - mpris
 
@@ -43,5 +41,29 @@ parts:
     flutter-target: lib/main.dart
     build-packages:
       - libunwind-dev
-      - libgstreamer1.0-dev
-      - libgstreamer-plugins-base1.0-dev
+      - libmpv-dev
+  deps:
+    plugin: nil
+    stage-packages:
+      - libtheora0
+      - libunwind8
+      - libmpv-dev
+    prime:
+      - -usr/lib/*/dri
+      - -usr/lib/*/*LLVM*
+      - -usr/lib/*/librsvg*
+      - -usr/lib/X11
+      - -usr/share
+      - -usr/include
+
+  # Find files provided by the base and platform snap and ensure they aren't
+  # duplicated in this snap
+  cleanup:
+    after: [musicpod, deps]
+    plugin: nil
+    build-snaps: [core22, gtk-common-themes, gnome-42-2204]
+    override-prime: |
+      set -eux
+      for snap in "core22" "gtk-common-themes" "gnome-42-2204"; do
+        cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$CRAFT_PRIME/{}" \;
+      done
