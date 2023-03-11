@@ -2,6 +2,12 @@
 
 Music, Radio and Podcast player for Ubuntu made with Flutter.
 
+
+
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/musicpod)
+
+
+
 | | |
 |-|-|
 |![](.github/album_light.png)|![](.github/album_dark.png)|
