@@ -24,6 +24,7 @@ apps:
       - audio-playback
       - network-manager-observe
       - home
+      - removable-media
     slots:
       - mpris
 
