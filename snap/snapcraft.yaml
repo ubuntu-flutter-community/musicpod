@@ -34,27 +34,139 @@ slots:
     name: org.feichtmeier.Musicpod
 
 parts:
+  mpv:
+    source: https://github.com/mpv-player/mpv.git
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - --buildtype=release
+      - -Dlibmpv=true
+    build-packages:
+      - libavcodec-dev
+      - libavfilter-dev
+      - libass-dev
+      - libx264-dev
+      - libvorbis-dev
+      - libjpeg-turbo8-dev
+    prime:
+      - usr/lib/*/libmpv*
+
   musicpod:
+    after: [mpv]
     source: .
     source-type: git
     plugin: flutter
     flutter-target: lib/main.dart
-    build-packages:
-      - libunwind-dev
-      - libmpv-dev
+
   deps:
     plugin: nil
     stage-packages:
-      - libtheora0
-      - libunwind8
-      - libmpv-dev
+      - libaom3
+      - libass9
+      - libblas3
+      - libbluray2
+      - libbs2b0
+      - libchromaprint1
+      - libcodec2-1.0
+      - libflite1
+      - libgme0
+      - libgsm1
+      - liblapack3
+      - liblilv-0-0
+      - libmfx1
+      - libmysofa1
+      - libnorm1
+      - libnuma1
+      - libopenmpt0
+      - libpgm-5.3-0
+      - libpocketsphinx3
+      - librabbitmq4
+      - librubberband2
+      - libserd-0-0
+      - libshine3
+      - libsnappy1v5
+      - libsodium23
+      - libsord-0-0
+      - libsoxr0
+      - libsphinxbase3
+      - libsratom-0-0
+      - libssh-gcrypt-4
+      - libudfread0
+      - libva-drm2
+      - libva-x11-2
+      - libvdpau1
+      - libvidstab1.1
+      - libx265-199
+      - libxvidcore4
+      - libzimg2
+      - libzmq5
+      - libzvbi0
+      - libavfilter7
+      - libavformat58
+      - libpostproc55
+      - libswscale5
+      - libsrt1.4-gnutls
+      - ocl-icd-libopencl1
     prime:
-      - -usr/lib/*/dri
-      - -usr/lib/*/*LLVM*
-      - -usr/lib/*/librsvg*
-      - -usr/lib/X11
-      - -usr/share
-      - -usr/include
+      - usr/lib/*/blas/libblas.so*
+      - usr/lib/*/lapack/liblapack.so*
+      - usr/lib/*/libaom.so*
+      - usr/lib/*/libass.so*
+      - usr/lib/*/libbluray.so*
+      - usr/lib/*/libbs2b.so*
+      - usr/lib/*/libchromaprint.so*
+      - usr/lib/*/libcodec2.so*
+      - usr/lib/*/libflite_cmulex.so*
+      - usr/lib/*/libflite_cmu_us_awb.so*
+      - usr/lib/*/libflite_cmu_us_kal16.so*
+      - usr/lib/*/libflite_cmu_us_kal.so*
+      - usr/lib/*/libflite_cmu_us_rms.so*
+      - usr/lib/*/libflite_cmu_us_slt.so*
+      - usr/lib/*/libflite.so*
+      - usr/lib/*/libflite_usenglish.so*
+      - usr/lib/*/libgme.so*
+      - usr/lib/*/libgsm.so*
+      - usr/lib/*/liblilv-0.so*
+      - usr/lib/*/libmfx.so*
+      - usr/lib/*/libmysofa.so*
+      - usr/lib/*/libnorm.so*
+      - usr/lib/*/libnuma.so*
+      - usr/lib/*/libOpenCL.so*
+      - usr/lib/*/libopenmpt.so*
+      - usr/lib/*/libpgm-5.3.so*
+      - usr/lib/*/libpocketsphinx.so*
+      - usr/lib/*/librabbitmq.so*
+      - usr/lib/*/librubberband.so*
+      - usr/lib/*/libserd-0.so*
+      - usr/lib/*/libshine.so*
+      - usr/lib/*/libsnappy.so*
+      - usr/lib/*/libsodium.so*
+      - usr/lib/*/libsord-0.so*
+      - usr/lib/*/libsoxr.so*
+      - usr/lib/*/libsphinxbase.so*
+      - usr/lib/*/libsratom-0.so*
+      - usr/lib/*/libssh-gcrypt.so*
+      - usr/lib/*/libudfread.so*
+      - usr/lib/*/libva-drm.so*
+      - usr/lib/*/libva-x11.so*
+      - usr/lib/*/libvdpau.so*
+      - usr/lib/*/libvidstab.so*
+      - usr/lib/*/libx265.so*
+      - usr/lib/*/libxvidcore.so*
+      - usr/lib/*/libzimg.so*
+      - usr/lib/*/libzmq.so*
+      - usr/lib/*/libzvbi.so*
+      - usr/lib/*/libx264.so*
+      - usr/lib/*/libswscale.so*
+      - usr/lib/*/libavfilter.so*
+      - usr/lib/*/libavformat.so*
+      - usr/lib/*/libpostproc.so*
+      - usr/lib/*/libsrt*.so*
+      - usr/lib/*/libda*.so*
+      - usr/lib/*/libgfortran.so*
+      - usr/lib/*/libavcodec.so*
+      - usr/lib/*/libavutil.so*
+      - usr/lib/*/libswresample.so*
 
   # Find files provided by the base and platform snap and ensure they aren't
   # duplicated in this snap
