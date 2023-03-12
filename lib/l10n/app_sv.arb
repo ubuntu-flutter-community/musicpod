@@ -6,7 +6,10 @@
     "music": "Musik",
     "radio": "Radio",
     "podcasts": "Podcasts",
+    "podcast": "Podcast",
     "likedSongs": "Gillade sånger",
+    "likedSongsDescription": "Allt ljud du har gillat. Lokalt eller från internet.",
+    "likedSongsSubtitle": "Tryck på hjärtknappen för att lägga till mer titlar.",
     "cancel": "Avbryt",
     "add": "Lägg till",
     "addTo": "Lägg till:",
@@ -26,6 +29,10 @@
     "searchLocalAudioHint": "Sök lokalt ljud",
     "library": "Bibliotek",
     "playlists": "Spellistor",
+    "playlist": "Spellista",
     "discover": "Upptäck",
-    "forYou": "För dig"
+    "forYou": "För dig",
+    "search": "Sök",
+    "noPodcastFound": "Tyvärr, ingen podcast hittades med denna sökterm.",
+    "upNext": "Spelas nästa"
 }
