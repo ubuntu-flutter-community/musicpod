@@ -10,6 +10,7 @@ import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcast_search_field.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/countries.dart';
+import 'package:musicpod/data/podcast_genre.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';

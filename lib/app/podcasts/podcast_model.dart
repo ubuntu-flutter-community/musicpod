@@ -1,54 +1,18 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/countries.dart';
-import 'package:musicpod/string_x.dart';
+import 'package:musicpod/data/podcast_genre.dart';
+import 'package:musicpod/service/podcast_service.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-enum PodcastGenre {
-  arts,
-  business,
-  comedy,
-  education,
-  fiction,
-  government,
-  healthAndFitness,
-  history,
-  kidsAndFamily,
-  leisure,
-  music,
-  news,
-  religionAndSpirituality,
-  science,
-  societyAndCulture,
-  sports,
-  tvAndFilm,
-  technology,
-  trueCrime;
-
-  String get id {
-    switch (this) {
-      case healthAndFitness:
-        return 'Health & Fitness';
-      case kidsAndFamily:
-        return 'Kids & Family';
-      case religionAndSpirituality:
-        return 'Religion & Spirituality';
-      case societyAndCulture:
-        return 'Society & Culture';
-      case tvAndFilm:
-        return 'TV & Film';
-      case trueCrime:
-        return 'True Crime';
-      default:
-        return name.capitalize();
-    }
-  }
-}
-
 class PodcastModel extends SafeChangeNotifier {
-  PodcastModel() : _search = Search();
+  final PodcastService _service;
+  PodcastModel(this._service) : _search = Search();
+  StreamSubscription<bool>? _chartsChangedSub;
 
   final Search _search;
 
@@ -67,12 +31,7 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Set<Set<Audio>>? _chartsPodcasts;
-  Set<Set<Audio>>? get chartsPodcasts => _chartsPodcasts;
-  set chartsPodcasts(Set<Set<Audio>>? value) {
-    _chartsPodcasts = value;
-    notifyListeners();
-  }
+  Set<Set<Audio>>? get chartsPodcasts => _service.chartsPodcasts;
 
   Country _country = Country.UNITED_STATES;
   Country get country => _country;
@@ -119,7 +78,10 @@ class PodcastModel extends SafeChangeNotifier {
   }
 
   void init(String? countryCode) {
-    if (_chartsPodcasts?.isNotEmpty == true) return;
+    _chartsChangedSub = _service.chartsChanged.listen((_) {
+      notifyListeners();
+    });
+    if (_service.chartsPodcasts?.isNotEmpty == true) return;
     final c = countries.firstWhereOrNull((c) => c.countryCode == countryCode);
     if (c != null) {
       _country = c;
@@ -127,53 +89,14 @@ class PodcastModel extends SafeChangeNotifier {
     loadCharts();
   }
 
-  void loadCharts() {
-    chartsPodcasts = null;
-    _search
-        .charts(
-      genre: podcastGenre.id,
-      limit: 10,
-      country: _country,
-    )
-        .then((chartsSearch) {
-      if (chartsSearch.successful && chartsSearch.items.isNotEmpty) {
-        _chartsPodcasts ??= {};
-        _chartsPodcasts?.clear();
-
-        for (var item in chartsSearch.items) {
-          if (item.feedUrl != null) {
-            Podcast.loadFeed(
-              url: item.feedUrl!,
-            ).then((podcast) {
-              final episodes = <Audio>{};
-
-              for (var episode in podcast.episodes ?? <Episode>[]) {
-                final audio = Audio(
-                  url: episode.contentUrl,
-                  audioType: AudioType.podcast,
-                  name: podcast.title,
-                  imageUrl: podcast.image,
-                  metadata: Metadata(
-                    title: episode.title,
-                    album: item.collectionName,
-                    artist: item.artistName,
-                  ),
-                  description: podcast.description,
-                  website: podcast.url,
-                );
-
-                episodes.add(audio);
-              }
-              _chartsPodcasts?.add(episodes);
-              notifyListeners();
-            });
-          }
-        }
-      } else {
-        chartsPodcasts = null;
-      }
-    });
+  @override
+  void dispose() {
+    _chartsChangedSub?.cancel();
+    super.dispose();
   }
+
+  void loadCharts() =>
+      _service.loadCharts(podcastGenre: podcastGenre, country: country);
 
   Future<void> search({String? searchQuery, bool useAlbumImage = false}) async {
     if (searchQuery?.isEmpty == true) return;

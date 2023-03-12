@@ -16,6 +16,7 @@ import 'package:musicpod/app/podcasts/podcasts_page.dart';
 import 'package:musicpod/app/radio/radio_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:musicpod/service/podcast_service.dart';
 import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
@@ -60,7 +61,7 @@ class _App extends StatefulWidget {
           create: (_) => PlaylistModel()..init(),
         ),
         ChangeNotifierProvider(
-          create: (_) => PodcastModel(),
+          create: (_) => PodcastModel(getService<PodcastService>()),
         )
       ],
       child: const _App(),
