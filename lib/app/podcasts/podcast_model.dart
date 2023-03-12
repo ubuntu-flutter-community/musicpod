@@ -118,59 +118,61 @@ class PodcastModel extends SafeChangeNotifier {
     return list;
   }
 
-  Future<void> init(String? countryCode) async {
+  void init(String? countryCode) {
+    if (_chartsPodcasts?.isNotEmpty == true) return;
     final c = countries.firstWhereOrNull((c) => c.countryCode == countryCode);
     if (c != null) {
       _country = c;
     }
-    await loadCharts();
+    loadCharts();
   }
 
-  Future<void> loadCharts() async {
+  void loadCharts() {
     chartsPodcasts = null;
-    final chartsSearch = await _search.charts(
+    _search
+        .charts(
       genre: podcastGenre.id,
       limit: 10,
       country: _country,
-    );
+    )
+        .then((chartsSearch) {
+      if (chartsSearch.successful && chartsSearch.items.isNotEmpty) {
+        _chartsPodcasts ??= {};
+        _chartsPodcasts?.clear();
 
-    if (chartsSearch.successful && chartsSearch.items.isNotEmpty) {
-      _chartsPodcasts ??= {};
-      _chartsPodcasts?.clear();
+        for (var item in chartsSearch.items) {
+          if (item.feedUrl != null) {
+            Podcast.loadFeed(
+              url: item.feedUrl!,
+            ).then((podcast) {
+              final episodes = <Audio>{};
 
-      for (var item in chartsSearch.items) {
-        if (item.feedUrl != null) {
-          final Podcast podcast = await Podcast.loadFeed(
-            url: item.feedUrl!,
-          );
+              for (var episode in podcast.episodes ?? <Episode>[]) {
+                final audio = Audio(
+                  url: episode.contentUrl,
+                  audioType: AudioType.podcast,
+                  name: podcast.title,
+                  imageUrl: podcast.image,
+                  metadata: Metadata(
+                    title: episode.title,
+                    album: item.collectionName,
+                    artist: item.artistName,
+                  ),
+                  description: podcast.description,
+                  website: podcast.url,
+                );
 
-          final episodes = <Audio>{};
-
-          for (var episode in podcast.episodes ?? <Episode>[]) {
-            final audio = Audio(
-              url: episode.contentUrl,
-              audioType: AudioType.podcast,
-              name: podcast.title,
-              imageUrl: podcast.image,
-              metadata: Metadata(
-                title: episode.title,
-                album: item.collectionName,
-                artist: item.artistName,
-              ),
-              description: podcast.description,
-              website: podcast.url,
-            );
-
-            episodes.add(audio);
+                episodes.add(audio);
+              }
+              _chartsPodcasts?.add(episodes);
+              notifyListeners();
+            });
           }
-          _chartsPodcasts?.add(episodes);
         }
+      } else {
+        chartsPodcasts = null;
       }
-    } else {
-      _chartsPodcasts = null;
-    }
-
-    notifyListeners();
+    });
   }
 
   Future<void> search({String? searchQuery, bool useAlbumImage = false}) async {

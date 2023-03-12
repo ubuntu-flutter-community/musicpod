@@ -16,13 +16,28 @@ import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-class PodcastsPage extends StatelessWidget {
+class PodcastsPage extends StatefulWidget {
   const PodcastsPage({
     super.key,
     this.showWindowControls = true,
   });
 
   final bool showWindowControls;
+
+  @override
+  State<PodcastsPage> createState() => _PodcastsPageState();
+}
+
+class _PodcastsPageState extends State<PodcastsPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<PodcastModel>().init(
+            WidgetsBinding.instance.window.locale.countryCode?.toUpperCase(),
+          );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +82,7 @@ class PodcastsPage extends StatelessWidget {
 
                     return AudioPage(
                       audioPageType: AudioPageType.podcast,
-                      showWindowControls: showWindowControls,
+                      showWindowControls: widget.showWindowControls,
                       sort: false,
                       showTrack: false,
                       likePageButton: YaruIconButton(
@@ -216,7 +231,7 @@ class PodcastsPage extends StatelessWidget {
         MaterialPage(
           child: YaruDetailPage(
             appBar: YaruWindowTitleBar(
-              style: showWindowControls
+              style: widget.showWindowControls
                   ? YaruTitleBarStyle.normal
                   : YaruTitleBarStyle.undecorated,
               title: PodcastSearchField(
@@ -230,7 +245,7 @@ class PodcastsPage extends StatelessWidget {
           MaterialPage(
             child: YaruDetailPage(
               appBar: YaruWindowTitleBar(
-                style: showWindowControls
+                style: widget.showWindowControls
                     ? YaruTitleBarStyle.normal
                     : YaruTitleBarStyle.undecorated,
                 title: const PodcastSearchField(),
@@ -315,7 +330,7 @@ class PodcastsPage extends StatelessWidget {
                                                 audioPageType:
                                                     AudioPageType.podcast,
                                                 showWindowControls:
-                                                    showWindowControls,
+                                                    widget.showWindowControls,
                                                 sort: false,
                                                 showTrack: false,
                                                 image: SafeNetworkImage(

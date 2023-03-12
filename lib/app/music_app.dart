@@ -60,10 +60,7 @@ class _App extends StatefulWidget {
           create: (_) => PlaylistModel()..init(),
         ),
         ChangeNotifierProvider(
-          create: (_) => PodcastModel()
-            ..init(
-              WidgetsBinding.instance.window.locale.countryCode?.toUpperCase(),
-            ),
+          create: (_) => PodcastModel(),
         )
       ],
       child: const _App(),
