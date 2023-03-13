@@ -241,6 +241,8 @@ class _AudioPageState extends State<AudioPage> {
                                         margin: EdgeInsets.zero,
                                         padding: EdgeInsets.zero,
                                         color: theme.hintColor,
+                                        textOverflow: TextOverflow.ellipsis,
+                                        maxLines: 4,
                                       )
                                     },
                                   ),
