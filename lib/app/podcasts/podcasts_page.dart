@@ -271,7 +271,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                   Expanded(
                     child: model.podcastSearchResult == null
                         ? GridView(
-                            padding: const EdgeInsets.all(kYaruPagePadding),
+                            padding: kGridPadding,
                             gridDelegate: kImageGridDelegate,
                             children:
                                 List.generate(30, (index) => const AudioCard())
@@ -305,7 +305,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                                 ),
                               )
                             : GridView(
-                                padding: const EdgeInsets.all(kYaruPagePadding),
+                                padding: kGridPadding,
                                 gridDelegate: kImageGridDelegate,
                                 children: [
                                   for (final Set<Audio> podcast
