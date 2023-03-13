@@ -96,14 +96,17 @@ class PodcastModel extends SafeChangeNotifier {
   void loadCharts() =>
       _service.loadCharts(podcastGenre: podcastGenre, country: country);
 
-  Future<void> search({
+  void search({
     String? searchQuery,
     bool useAlbumImage = false,
-  }) async =>
-      _service.search(
-        language: _language,
-        searchQuery: searchQuery,
-        country: _country,
-        useAlbumImage: useAlbumImage,
-      );
+  }) {
+    _service
+        .search(
+          language: _language,
+          searchQuery: searchQuery,
+          country: _country,
+          useAlbumImage: useAlbumImage,
+        )
+        .then((_) => notifyListeners());
+  }
 }
