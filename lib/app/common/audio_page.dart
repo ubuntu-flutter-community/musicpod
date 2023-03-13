@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:musicpod/app/common/audio_page_control_panel.dart';
 import 'package:musicpod/app/common/audio_page_header.dart';
 import 'package:musicpod/app/common/audio_tile.dart';
@@ -121,6 +122,11 @@ class _AudioPageState extends State<AudioPage> {
         sortListByAudioFilter(audioFilter: _filter, audios: sortedAudios);
       }
 
+      final description =
+          widget.pageDescription ?? sortedAudios.firstOrNull?.description ?? '';
+
+      final title =
+          widget.pageTitle ?? sortedAudios.firstOrNull?.metadata?.album ?? '';
       body = SingleChildScrollView(
         controller: _controller,
         child: Column(
@@ -160,9 +166,7 @@ class _AudioPageState extends State<AudioPage> {
                             style: theme.textTheme.labelSmall,
                           ),
                           Text(
-                            widget.pageTitle ??
-                                sortedAudios.firstOrNull?.metadata?.album ??
-                                '',
+                            title,
                             style: theme.textTheme.headlineLarge?.copyWith(
                               fontWeight: FontWeight.w300,
                               fontSize: 50,
@@ -187,17 +191,59 @@ class _AudioPageState extends State<AudioPage> {
                             child: Padding(
                               padding: const EdgeInsets.only(top: 15),
                               child: SizedBox(
-                                width: 500,
-                                child: Text(
-                                  widget.pageDescription ??
-                                      sortedAudios.firstOrNull?.description
-                                          ?.trim() ??
-                                      '',
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: theme.hintColor,
+                                width: 800,
+                                child: InkWell(
+                                  borderRadius:
+                                      BorderRadius.circular(kYaruButtonRadius),
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: YaruDialogTitleBar(
+                                        title: Text(title),
+                                        backgroundColor: Colors.transparent,
+                                        border: BorderSide.none,
+                                      ),
+                                      titlePadding: EdgeInsets.zero,
+                                      contentPadding: const EdgeInsets.only(
+                                        top: 10,
+                                        left: kYaruPagePadding,
+                                        right: kYaruPagePadding,
+                                        bottom: kYaruPagePadding,
+                                      ),
+                                      content: SizedBox(
+                                        width: 400,
+                                        child: Html(
+                                          data: description,
+                                          style: {
+                                            'html': Style(
+                                              margin: EdgeInsets.zero,
+                                              padding: EdgeInsets.zero,
+                                            ),
+                                            'body': Style(
+                                              margin: EdgeInsets.zero,
+                                              padding: EdgeInsets.zero,
+                                              color: theme.hintColor,
+                                            )
+                                          },
+                                        ),
+                                      ),
+                                      scrollable: true,
+                                    ),
                                   ),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 4,
+                                  child: Html(
+                                    data: description,
+                                    style: {
+                                      'html': Style(
+                                        margin: EdgeInsets.zero,
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                      'body': Style(
+                                        margin: EdgeInsets.zero,
+                                        padding: EdgeInsets.zero,
+                                        color: theme.hintColor,
+                                      )
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
