@@ -15,6 +15,12 @@ Music, Radio and Podcast player for Ubuntu made with Flutter.
 |![](.github/wide_light.png) | ![](.github/wide_dark.png) |
 |![](.github/slim_light.png)|![](.github/slim_dark.png)|
 
+## Credits
+
+Thank you @amugofjava for creating the very easy to use and reliable [podcast_search](https://github.com/amugofjava/podcast_search)!
+
+Thanks @alexmercerind for the super performant [Mediakit library](https://github.com/alexmercerind/media_kit) and [mpris_service](https://github.com/alexmercerind/mpris_service) dart implementation!
+
 ## Planned features
 
 - [X] play local audio files
