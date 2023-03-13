@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
@@ -11,6 +12,11 @@ class PodcastService {
   Set<Set<Audio>>? _chartsPodcasts;
   Set<Set<Audio>>? get chartsPodcasts => _chartsPodcasts;
 
+  static Future<Podcast> loadPodcast(String url) async =>
+      await Podcast.loadFeed(
+        url: url,
+      );
+
   void loadCharts({
     PodcastGenre podcastGenre = PodcastGenre.science,
     Country country = Country.UNITED_KINGDOM,
@@ -21,38 +27,35 @@ class PodcastService {
       limit: 10,
       country: country,
     )
-        .then((chartsSearch) {
+        .then((chartsSearch) async {
       if (chartsSearch.successful && chartsSearch.items.isNotEmpty) {
         _chartsPodcasts ??= {};
         chartsPodcasts?.clear();
 
         for (var item in chartsSearch.items) {
           if (item.feedUrl != null) {
-            Podcast.loadFeed(
-              url: item.feedUrl!,
-            ).then((podcast) {
-              final episodes = <Audio>{};
+            final podcast = await compute(loadPodcast, item.feedUrl!);
+            final episodes = <Audio>{};
 
-              for (var episode in podcast.episodes ?? <Episode>[]) {
-                final audio = Audio(
-                  url: episode.contentUrl,
-                  audioType: AudioType.podcast,
-                  name: podcast.title,
-                  imageUrl: podcast.image,
-                  metadata: Metadata(
-                    title: episode.title,
-                    album: item.collectionName,
-                    artist: item.artistName,
-                  ),
-                  description: podcast.description,
-                  website: podcast.url,
-                );
+            for (var episode in podcast.episodes ?? <Episode>[]) {
+              final audio = Audio(
+                url: episode.contentUrl,
+                audioType: AudioType.podcast,
+                name: podcast.title,
+                imageUrl: podcast.image,
+                metadata: Metadata(
+                  title: episode.title,
+                  album: item.collectionName,
+                  artist: item.artistName,
+                ),
+                description: podcast.description,
+                website: podcast.url,
+              );
 
-                episodes.add(audio);
-              }
-              chartsPodcasts?.add(episodes);
-              _chartsChangedController.add(true);
-            });
+              episodes.add(audio);
+            }
+            chartsPodcasts?.add(episodes);
+            _chartsChangedController.add(true);
           }
         }
       } else {
