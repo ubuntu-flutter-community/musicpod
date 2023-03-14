@@ -234,9 +234,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               style: widget.showWindowControls
                   ? YaruTitleBarStyle.normal
                   : YaruTitleBarStyle.undecorated,
-              title: PodcastSearchField(
-                onPlay: startPlaylist,
-              ),
+              title: const PodcastSearchField(),
             ),
             body: page,
           ),

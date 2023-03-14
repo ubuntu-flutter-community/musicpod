@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
-import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -9,10 +8,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class PodcastSearchField extends StatefulWidget {
   const PodcastSearchField({
     super.key,
-    this.onPlay,
   });
-
-  final void Function(Set<Audio>)? onPlay;
 
   @override
   State<PodcastSearchField> createState() => _PodcastSearchFieldState();
