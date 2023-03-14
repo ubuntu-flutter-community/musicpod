@@ -1,13 +1,14 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/player_model.dart';
 import 'package:musicpod/app/playlists/playlist_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcast_search_field.dart';
+import 'package:musicpod/app/podcasts/podcast_search_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/countries.dart';
 import 'package:musicpod/data/podcast_genre.dart';
@@ -48,6 +49,13 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final podcastSubscribed = context.read<PlaylistModel>().podcastSubscribed;
     final removePodcast = context.read<PlaylistModel>().removePodcast;
     final addPodcast = context.read<PlaylistModel>().addPodcast;
+    final textStyle =
+        theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w100);
+    final buttonStyle = TextButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(6),
+      ),
+    );
 
     Widget grid;
     if (model.chartsPodcasts == null) {
@@ -129,7 +137,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                       pageId: podcast.first.metadata?.album ??
                           podcast.first.metadata?.title ??
                           podcast.first.name ??
-                          '',
+                          podcast.toString(),
                     );
                   },
                 ),
@@ -140,17 +148,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
       );
     }
 
-    var textStyle = Theme.of(context)
-        .textTheme
-        .bodyLarge
-        ?.copyWith(fontWeight: FontWeight.w100);
-    var buttonStyle = TextButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6),
-      ),
-    );
-
-    var controlPanel = Padding(
+    final controlPanel = Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
       child: Row(
         children: [
@@ -213,6 +211,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
         ],
       ),
     );
+
     final page = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -278,120 +277,11 @@ class _PodcastsPageState extends State<PodcastsPage> {
                                     .toList(),
                           )
                         : model.podcastSearchResult!.isEmpty
-                            ? Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(50),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Text(
-                                        '🐣🎙🎧❓',
-                                        style: TextStyle(fontSize: 40),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        context.l10n.noPodcastFound,
-                                        style: theme.textTheme.headlineLarge
-                                            ?.copyWith(
-                                          fontWeight: FontWeight.w100,
-                                          color: theme.colorScheme.onSurface,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                            ? NoSearchResultPage(
+                                message: context.l10n.noPodcastFound,
                               )
-                            : GridView(
-                                padding: kGridPadding,
-                                gridDelegate: kImageGridDelegate,
-                                children: [
-                                  for (final Set<Audio> podcast
-                                      in model.podcastSearchResult!)
-                                    AudioCard(
-                                      imageUrl: podcast.firstOrNull?.imageUrl,
-                                      onPlay: () {
-                                        startPlaylist(podcast);
-                                      },
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              final subscribed = podcast.first
-                                                          .metadata?.album ==
-                                                      null
-                                                  ? false
-                                                  : podcastSubscribed(
-                                                      podcast.first.metadata!
-                                                          .album!,
-                                                    );
-                                              return AudioPage(
-                                                audioPageType:
-                                                    AudioPageType.podcast,
-                                                showWindowControls:
-                                                    widget.showWindowControls,
-                                                sort: false,
-                                                showTrack: false,
-                                                image: SafeNetworkImage(
-                                                  fallBackIcon: SizedBox(
-                                                    width: 200,
-                                                    child: Center(
-                                                      child: Icon(
-                                                        YaruIcons.music_note,
-                                                        size: 80,
-                                                        color: theme.hintColor,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  url: podcast.first.imageUrl,
-                                                  fit: BoxFit.fitWidth,
-                                                  filterQuality:
-                                                      FilterQuality.medium,
-                                                ),
-                                                likePageButton: subscribed
-                                                    ? YaruIconButton(
-                                                        icon: Icon(
-                                                          YaruIcons.rss,
-                                                          color: theme
-                                                              .primaryColor,
-                                                        ),
-                                                        onPressed: () =>
-                                                            removePodcast(
-                                                          podcast.first
-                                                              .metadata!.album!,
-                                                        ),
-                                                      )
-                                                    : YaruIconButton(
-                                                        icon: const Icon(
-                                                          YaruIcons.rss,
-                                                        ),
-                                                        onPressed: () {
-                                                          addPodcast(
-                                                            podcast
-                                                                .first
-                                                                .metadata!
-                                                                .album!,
-                                                            podcast,
-                                                          );
-                                                        },
-                                                      ),
-                                                title:
-                                                    const PodcastSearchField(),
-                                                deletable: false,
-                                                editableName: false,
-                                                audios: podcast,
-                                                pageId: podcast.first.metadata
-                                                        ?.album ??
-                                                    '',
-                                              );
-                                            },
-                                          ),
-                                        );
-                                      },
-                                    )
-                                ],
+                            : PodcastSearchPage(
+                                showWindowControls: widget.showWindowControls,
                               ),
                   )
                 ],
