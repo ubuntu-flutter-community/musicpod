@@ -15,18 +15,23 @@ class PodcastService {
   Set<Set<Audio>>? get chartsPodcasts => _chartsPodcasts;
   final Search _search;
 
-  static Future<Podcast> loadPodcast(String url) async =>
-      await Podcast.loadFeed(
+  static Future<Podcast?> loadPodcast(String url) async {
+    try {
+      return await Podcast.loadFeed(
         url: url,
       );
+    } catch (e) {
+      return null;
+    }
+  }
 
   void loadCharts({
-    PodcastGenre podcastGenre = PodcastGenre.science,
+    PodcastGenre podcastGenre = PodcastGenre.all,
     Country country = Country.UNITED_KINGDOM,
   }) {
     _search
         .charts(
-      genre: podcastGenre.id,
+      genre: podcastGenre == PodcastGenre.all ? '' : podcastGenre.id,
       limit: 10,
       country: country,
     )
@@ -40,19 +45,19 @@ class PodcastService {
             final podcast = await compute(loadPodcast, item.feedUrl!);
             final episodes = <Audio>{};
 
-            for (var episode in podcast.episodes ?? <Episode>[]) {
+            for (var episode in podcast?.episodes ?? <Episode>[]) {
               final audio = Audio(
                 url: episode.contentUrl,
                 audioType: AudioType.podcast,
-                name: podcast.title,
-                imageUrl: podcast.image,
+                name: podcast?.title,
+                imageUrl: podcast?.image,
                 metadata: Metadata(
                   title: episode.title,
                   album: item.collectionName,
                   artist: item.artistName,
                 ),
-                description: podcast.description,
-                website: podcast.url,
+                description: podcast?.description,
+                website: podcast?.url,
               );
 
               episodes.add(audio);
@@ -62,7 +67,7 @@ class PodcastService {
           }
         }
       } else {
-        _chartsPodcasts = null;
+        _chartsPodcasts = {};
         _chartsChangedController.add(true);
       }
     });
@@ -102,27 +107,27 @@ class PodcastService {
       for (var item in results.items) {
         if (item.feedUrl != null) {
           try {
-            final Podcast podcast = await compute(loadPodcast, item.feedUrl!);
+            final Podcast? podcast = await compute(loadPodcast, item.feedUrl!);
 
-            if (podcast.episodes?.isNotEmpty == true) {
+            if (podcast?.episodes?.isNotEmpty == true) {
               final episodes = <Audio>{};
 
-              for (var episode in podcast.episodes!) {
+              for (var episode in podcast?.episodes ?? []) {
                 if (episode.contentUrl != null) {
                   final audio = Audio(
                     url: episode.contentUrl,
                     audioType: AudioType.podcast,
-                    name: '${podcast.title ?? ''} - ${episode.title}',
+                    name: '${podcast?.title ?? ''} - ${episode.title}',
                     imageUrl: useAlbumImage
-                        ? podcast.image ?? episode.imageUrl
-                        : episode.imageUrl ?? podcast.image,
+                        ? podcast?.image ?? episode.imageUrl
+                        : episode.imageUrl ?? podcast?.image,
                     metadata: Metadata(
                       title: episode.title,
-                      album: podcast.title,
-                      artist: podcast.copyright,
+                      album: podcast?.title,
+                      artist: podcast?.copyright,
                     ),
-                    description: podcast.description,
-                    website: podcast.url,
+                    description: podcast?.description,
+                    website: podcast?.url,
                   );
 
                   episodes.add(audio);

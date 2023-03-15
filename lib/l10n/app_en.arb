@@ -36,5 +36,6 @@
     "forYou": "For you",
     "search": "Search",
     "noPodcastFound": "Sorry, no podcast was found with this search query.",
+    "noPodcastChartsFound": "Sorry, no charts available for this country or category.",
     "upNext": "Up next"
 }

@@ -43,7 +43,7 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  PodcastGenre _podcastGenre = PodcastGenre.science;
+  PodcastGenre _podcastGenre = PodcastGenre.all;
   PodcastGenre get podcastGenre => _podcastGenre;
   set podcastGenre(PodcastGenre value) {
     if (value == _podcastGenre) return;

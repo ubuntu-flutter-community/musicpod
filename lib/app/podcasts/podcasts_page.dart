@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_page.dart';
@@ -67,7 +68,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
             .toList(),
       );
     } else if (model.chartsPodcasts!.isEmpty == true) {
-      grid = const SizedBox.shrink();
+      grid = NoSearchResultPage(
+        message: context.l10n.noPodcastChartsFound,
+      );
     } else {
       grid = GridView.builder(
         padding: kGridPadding,
@@ -77,7 +80,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
           final podcast = model.chartsPodcasts!.elementAt(index);
 
           return AudioCard(
-            imageUrl: podcast.first.imageUrl,
+            imageUrl: podcast.firstOrNull?.imageUrl,
             onPlay: () {
               startPlaylist(podcast);
             },

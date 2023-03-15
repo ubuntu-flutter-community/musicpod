@@ -1,6 +1,7 @@
 import 'package:musicpod/string_x.dart';
 
 enum PodcastGenre {
+  all,
   arts,
   business,
   comedy,
