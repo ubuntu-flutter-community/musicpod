@@ -16,6 +16,7 @@ import 'package:musicpod/data/podcast_genre.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -58,6 +59,18 @@ class _PodcastsPageState extends State<PodcastsPage> {
       ),
     );
 
+    final light = theme.brightness == Brightness.light;
+
+    final fallBackLoadingIcon = Shimmer.fromColors(
+      baseColor: light ? kShimmerBaseLight : kShimmerBaseDark,
+      highlightColor: light ? kShimmerHighLightLight : kShimmerHighLightDark,
+      child: YaruBorderContainer(
+        color: light ? kShimmerBaseLight : kShimmerBaseDark,
+        height: 250,
+        width: 250,
+      ),
+    );
+
     Widget grid;
     if (model.chartsPodcasts == null) {
       grid = GridView(
@@ -79,8 +92,14 @@ class _PodcastsPageState extends State<PodcastsPage> {
         itemBuilder: (context, index) {
           final podcast = model.chartsPodcasts!.elementAt(index);
 
+          final image = SafeNetworkImage(
+            fallBackIcon: fallBackLoadingIcon,
+            url: podcast.firstOrNull?.imageUrl,
+            fit: BoxFit.contain,
+          );
+
           return AudioCard(
-            imageUrl: podcast.firstOrNull?.imageUrl,
+            image: image,
             onPlay: () {
               startPlaylist(podcast);
             },
@@ -273,9 +292,12 @@ class _PodcastsPageState extends State<PodcastsPage> {
                         ? GridView(
                             padding: kGridPadding,
                             gridDelegate: kImageGridDelegate,
-                            children:
-                                List.generate(30, (index) => const AudioCard())
-                                    .toList(),
+                            children: List.generate(
+                              30,
+                              (index) => AudioCard(
+                                image: fallBackLoadingIcon,
+                              ),
+                            ).toList(),
                           )
                         : model.podcastSearchResult!.isEmpty
                             ? NoSearchResultPage(

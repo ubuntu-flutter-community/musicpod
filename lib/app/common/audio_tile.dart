@@ -13,6 +13,7 @@ class AudioTile extends StatelessWidget {
     required this.play,
     required this.pause,
     required this.resume,
+    this.showTrack = true,
   });
 
   final Audio audio;
@@ -23,6 +24,7 @@ class AudioTile extends StatelessWidget {
   final Future<void> Function() play;
   final Future<void> Function() resume;
   final void Function() pause;
+  final bool showTrack;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +53,7 @@ class AudioTile extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (audio.metadata?.trackNumber != null)
+          if (audio.metadata?.trackNumber != null && showTrack)
             Expanded(
               flex: 1,
               child: Text(

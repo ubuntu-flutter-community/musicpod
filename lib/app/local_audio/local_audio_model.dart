@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:musicpod/data/audio.dart';
@@ -14,6 +15,61 @@ class LocalAudioModel extends SafeChangeNotifier {
     if (value == null || value == _searchQuery) return;
     _searchQuery = value;
     notifyListeners();
+  }
+
+  Set<Audio>? _similarAlbumsSearchResult;
+  Set<Audio>? get similarAlbumsSearchResult => _similarAlbumsSearchResult;
+  void setSimilarAlbumsSearchResult(Set<Audio>? value) {
+    _similarAlbumsSearchResult = value;
+    notifyListeners();
+  }
+
+  Set<Audio>? _titlesSearchResult;
+  Set<Audio>? get titlesSearchResult => _titlesSearchResult;
+  void setTitlesSearchResult(Set<Audio>? value) {
+    _titlesSearchResult = value;
+    notifyListeners();
+  }
+
+  void search() {
+    if (searchQuery == null) return;
+
+    final audiosWithSimilarAlbumName = audios?.where(
+      (audio) =>
+          audio.metadata != null &&
+          audio.metadata!.album?.isNotEmpty == true &&
+          audio.metadata!.album!
+              .toLowerCase()
+              .contains(searchQuery!.toLowerCase()),
+    );
+
+    final albumsSet = <Audio>{};
+    if (audiosWithSimilarAlbumName != null) {
+      for (var a in audiosWithSimilarAlbumName) {
+        if (albumsSet
+            .none((element) => element.metadata?.album == a.metadata?.album)) {
+          albumsSet.add(a);
+        }
+      }
+    }
+
+    var titles = audios?.where(
+          (audio) =>
+              audio.metadata != null &&
+              audio.metadata!.title?.isNotEmpty == true &&
+              audio.metadata!.title!
+                  .toLowerCase()
+                  .contains(searchQuery!.toLowerCase()),
+        ) ??
+        <Audio>{};
+    setTitlesSearchResult(
+      Set.from(
+        titles,
+      ),
+    );
+    setSimilarAlbumsSearchResult(
+      albumsSet.isNotEmpty == false ? {} : albumsSet,
+    );
   }
 
   AudioFilter _audioFilter = AudioFilter.title;

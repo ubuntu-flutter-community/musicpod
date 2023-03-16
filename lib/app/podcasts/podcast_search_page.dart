@@ -10,6 +10,7 @@ import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcast_search_field.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -26,6 +27,7 @@ class PodcastSearchPage extends StatelessWidget {
     final podcastSubscribed = context.read<PlaylistModel>().podcastSubscribed;
     final removePodcast = context.read<PlaylistModel>().removePodcast;
     final addPodcast = context.read<PlaylistModel>().addPodcast;
+    final light = theme.brightness == Brightness.light;
 
     return GridView(
       padding: kGridPadding,
@@ -33,7 +35,20 @@ class PodcastSearchPage extends StatelessWidget {
       children: [
         for (final Set<Audio> podcast in model.podcastSearchResult!)
           AudioCard(
-            imageUrl: podcast.firstOrNull?.imageUrl,
+            image: SafeNetworkImage(
+              fallBackIcon: Shimmer.fromColors(
+                baseColor: light ? kShimmerBaseLight : kShimmerBaseDark,
+                highlightColor:
+                    light ? kShimmerHighLightLight : kShimmerHighLightDark,
+                child: YaruBorderContainer(
+                  color: light ? kShimmerBaseLight : kShimmerBaseDark,
+                  height: 250,
+                  width: 250,
+                ),
+              ),
+              url: podcast.firstOrNull?.imageUrl,
+              fit: BoxFit.contain,
+            ),
             onPlay: () {
               startPlaylist(podcast);
             },

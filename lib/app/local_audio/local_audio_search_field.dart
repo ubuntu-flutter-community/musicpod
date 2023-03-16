@@ -43,7 +43,7 @@ class _LocalAudioSearchFieldState extends State<LocalAudioSearchField> {
       child: TextField(
         onSubmitted: (value) {
           model.setSearchQuery(value);
-          // model.search(searchQuery: value, useAlbumImage: true);
+          model.search();
         },
         controller: _controller,
         decoration: InputDecoration(
