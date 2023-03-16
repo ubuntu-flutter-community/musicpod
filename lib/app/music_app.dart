@@ -405,14 +405,16 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             final picture = album.value.firstOrNull?.metadata?.picture;
             Widget? albumArt;
             if (picture != null) {
-              albumArt = ClipRRect(
-                borderRadius: BorderRadius.circular(5),
-                child: Image.memory(
-                  picture.data,
-                  height: 25,
-                  width: 25,
-                  cacheHeight: 25,
-                  cacheWidth: 25,
+              albumArt = SizedBox(
+                width: 23,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Image.memory(
+                    picture.data,
+                    height: 23,
+                    fit: BoxFit.fitHeight,
+                    filterQuality: FilterQuality.medium,
+                  ),
                 ),
               );
             }
