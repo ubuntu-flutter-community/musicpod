@@ -34,7 +34,7 @@ class LocalAudioModel extends SafeChangeNotifier {
   void search() {
     if (searchQuery == null) return;
 
-    final audiosWithSimilarAlbumName = audios?.where(
+    final allAlbumsFindings = audios?.where(
       (audio) =>
           audio.metadata != null &&
           audio.metadata!.album?.isNotEmpty == true &&
@@ -43,12 +43,12 @@ class LocalAudioModel extends SafeChangeNotifier {
               .contains(searchQuery!.toLowerCase()),
     );
 
-    final albumsSet = <Audio>{};
-    if (audiosWithSimilarAlbumName != null) {
-      for (var a in audiosWithSimilarAlbumName) {
-        if (albumsSet
+    final albumsResult = <Audio>{};
+    if (allAlbumsFindings != null) {
+      for (var a in allAlbumsFindings) {
+        if (albumsResult
             .none((element) => element.metadata?.album == a.metadata?.album)) {
-          albumsSet.add(a);
+          albumsResult.add(a);
         }
       }
     }
@@ -68,7 +68,7 @@ class LocalAudioModel extends SafeChangeNotifier {
       ),
     );
     setSimilarAlbumsSearchResult(
-      albumsSet.isNotEmpty == false ? {} : albumsSet,
+      albumsResult,
     );
   }
 

@@ -32,11 +32,7 @@ class LocalAudioPage extends StatelessWidget {
         ),
         if (localAudioModel.searchQuery?.isNotEmpty == true)
           const MaterialPage(
-            child: LocalAudioSearchPage(
-                // titlesResult: {},
-                // albumsResult: {},
-                // artistsResults: {},
-                ),
+            child: LocalAudioSearchPage(),
           )
       ],
     );
