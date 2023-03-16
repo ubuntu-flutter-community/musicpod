@@ -108,6 +108,11 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> play() async {
+    if (audio == null) return;
+    queue ??= [];
+    if (!queue!.contains(audio)) {
+      queue!.insert(0, audio!);
+    }
     if (audio!.path != null) {
       _player.open(
         Playlist(
@@ -194,9 +199,9 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> playNext() async {
-    estimateNext();
     if (nextAudio == null) return;
     setAudio(nextAudio);
+    estimateNext();
 
     await play();
   }
@@ -208,7 +213,7 @@ class PlayerModel extends SafeChangeNotifier {
       if (currentIndex == queue!.length - 1) {
         nextAudio = queue!.elementAt(0);
       } else {
-        nextAudio = queue?.elementAt(currentIndex + 1);
+        nextAudio = queue?.elementAt(queue!.indexOf(audio!) + 1);
       }
     }
   }
@@ -231,8 +236,13 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> startPlaylist(Set<Audio> audios) async {
-    queue = audios.toList();
+    if (queue?.isNotEmpty == true) {
+      queue = audios.toList() + queue!.toList();
+    } else {
+      queue = audios.toList();
+    }
     setAudio(audios.first);
+    estimateNext();
     await play();
   }
 

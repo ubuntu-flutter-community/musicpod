@@ -402,9 +402,24 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             );
           },
           iconBuilder: (context, selected) {
-            return const Icon(
-              YaruIcons.pin,
-            );
+            final picture = album.value.firstOrNull?.metadata?.picture;
+            Widget? albumArt;
+            if (picture != null) {
+              albumArt = ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Image.memory(
+                  picture.data,
+                  height: 25,
+                  width: 25,
+                  cacheHeight: 25,
+                  cacheWidth: 25,
+                ),
+              );
+            }
+            return albumArt ??
+                const Icon(
+                  YaruIcons.playlist_play,
+                );
           },
         ),
       for (final station in playlistModel.starredStations.entries)

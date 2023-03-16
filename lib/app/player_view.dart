@@ -143,7 +143,9 @@ class _PlayerViewState extends State<PlayerView> {
     );
 
     final title = Text(
-      model.audio?.metadata?.title ?? model.audio?.name ?? '',
+      model.audio?.metadata?.title?.isNotEmpty == true
+          ? model.audio!.metadata!.title!
+          : (model.audio?.name ?? 'unknown'),
       style: TextStyle(
         fontWeight: FontWeight.w200,
         fontSize: isFullScreen ? 45 : 15,
@@ -331,10 +333,7 @@ class _PlayerViewState extends State<PlayerView> {
                           child: ListView(
                             padding: const EdgeInsets.only(bottom: 10),
                             children: [
-                              for (final audio in model.queue!.sublist(
-                                model.queue!.indexOf(model.audio!) + 1,
-                                model.queue!.length - 1,
-                              ))
+                              for (final audio in model.queue!)
                                 Padding(
                                   padding: const EdgeInsets.only(
                                     left: 10,
@@ -345,6 +344,9 @@ class _PlayerViewState extends State<PlayerView> {
                                     style:
                                         theme.textTheme.labelMedium?.copyWith(
                                       color: theme.colorScheme.onSurface,
+                                      fontWeight: model.audio == audio
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
