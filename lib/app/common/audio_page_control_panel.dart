@@ -66,7 +66,7 @@ class AudioPageControlPanel extends StatelessWidget {
             icon: Icon(
               isPlaying && listIsQueue
                   ? YaruIcons.media_pause
-                  : YaruIcons.media_play,
+                  : YaruIcons.playlist_play,
               color: theme.colorScheme.onInverseSurface,
             ),
           ),

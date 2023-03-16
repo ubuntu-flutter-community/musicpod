@@ -273,9 +273,25 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             );
           },
           iconBuilder: (context, selected) {
-            return const Icon(
-              YaruIcons.rss,
-            );
+            final picture = podcast.value.firstOrNull?.imageUrl;
+            Widget? albumArt;
+            if (picture != null) {
+              albumArt = SizedBox(
+                width: 23,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: SafeNetworkImage(
+                    url: picture,
+                    fit: BoxFit.fitHeight,
+                    filterQuality: FilterQuality.medium,
+                  ),
+                ),
+              );
+            }
+            return albumArt ??
+                const Icon(
+                  YaruIcons.rss,
+                );
           },
         ),
       for (final playlist in playlistModel.playlists.entries)
@@ -339,7 +355,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           },
           iconBuilder: (context, selected) {
             return const Icon(
-              YaruIcons.star,
+              YaruIcons.playlist,
             );
           },
         ),
