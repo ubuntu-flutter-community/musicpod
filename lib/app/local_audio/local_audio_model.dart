@@ -10,7 +10,7 @@ import 'package:xdg_directories/xdg_directories.dart';
 class LocalAudioModel extends SafeChangeNotifier {
   String? _searchQuery;
   String? get searchQuery => _searchQuery;
-  set searchQuery(String? value) {
+  void setSearchQuery(String? value) {
     if (value == null || value == _searchQuery) return;
     _searchQuery = value;
     notifyListeners();
