@@ -236,11 +236,7 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> startPlaylist(Set<Audio> audios) async {
-    if (queue?.isNotEmpty == true) {
-      queue = audios.toList() + queue!.toList();
-    } else {
-      queue = audios.toList();
-    }
+    queue = audios.toList();
     setAudio(audios.first);
     estimateNext();
     await play();
