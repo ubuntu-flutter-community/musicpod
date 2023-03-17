@@ -31,6 +31,13 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  Set<Audio>? _similarArtistsSearchResult;
+  Set<Audio>? get similarArtistsSearchResult => _similarArtistsSearchResult;
+  void setSimilarArtistsSearchResult(Set<Audio>? value) {
+    _similarArtistsSearchResult = value;
+    notifyListeners();
+  }
+
   void search() {
     if (searchQuery == null) return;
 
@@ -53,6 +60,25 @@ class LocalAudioModel extends SafeChangeNotifier {
       }
     }
 
+    final allArtistFindings = audios?.where(
+      (audio) =>
+          audio.metadata != null &&
+          audio.metadata!.artist?.isNotEmpty == true &&
+          audio.metadata!.artist!
+              .toLowerCase()
+              .contains(searchQuery!.toLowerCase()),
+    );
+    final artistsResult = <Audio>{};
+    if (allArtistFindings != null) {
+      for (var a in allArtistFindings) {
+        if (artistsResult.none(
+          (e) => e.metadata?.artist == a.metadata?.artist,
+        )) {
+          artistsResult.add(a);
+        }
+      }
+    }
+
     var titles = audios?.where(
           (audio) =>
               audio.metadata != null &&
@@ -67,9 +93,8 @@ class LocalAudioModel extends SafeChangeNotifier {
         titles,
       ),
     );
-    setSimilarAlbumsSearchResult(
-      albumsResult,
-    );
+    setSimilarAlbumsSearchResult(albumsResult);
+    setSimilarArtistsSearchResult(artistsResult);
   }
 
   AudioFilter _audioFilter = AudioFilter.title;

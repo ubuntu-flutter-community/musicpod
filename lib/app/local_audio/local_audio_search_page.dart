@@ -11,6 +11,7 @@ import 'package:musicpod/app/player_model.dart';
 import 'package:musicpod/app/playlists/playlist_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -50,11 +51,12 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
     final Set<Audio>? similarAlbumsResult =
         context.select((LocalAudioModel m) => m.similarAlbumsSearchResult);
 
-    // final Set<Set<Set<Audio>>>? artistsResults = {};
+    final Set<Audio>? similarArtistsSearchResult =
+        context.select((LocalAudioModel m) => m.similarArtistsSearchResult);
 
     final theme = Theme.of(context);
 
-    final titlesList = Column(
+    final titlesColumn = Column(
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
@@ -72,18 +74,11 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
           padding: EdgeInsets.only(left: 15, right: 15),
           child: AudioPageHeader(
             showTrack: false,
-            audioFilter: AudioFilter.title,
+            audioFilter: AudioFilter.trackNumber,
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            bottom: 15,
-          ),
-          child: Divider(
-            height: 0,
-          ),
+        const _SpacedDivider(
+          top: 0,
         ),
         if (titlesResult == null)
           Column(
@@ -130,16 +125,8 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
       ],
     );
 
-    final albumGrid = similarAlbumsResult == null
-        ? GridView(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: kImageGridDelegate,
-            padding: EdgeInsets.zero,
-            children: List.generate(8, (index) => Audio())
-                .map((e) => const AudioCard())
-                .toList(),
-          )
+    final albumGrid = similarAlbumsResult == null || similarAlbumsResult.isEmpty
+        ? const SizedBox.shrink()
         : GridView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -156,16 +143,10 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
                     a.metadata?.album == audio.metadata?.album,
               );
 
-              final albumList = album?.toList();
-              albumList?.sort(
-                (a, b) {
-                  if (a.metadata == null ||
-                      b.metadata == null ||
-                      a.metadata?.trackNumber == null ||
-                      b.metadata?.trackNumber == null) return 0;
-                  return a.metadata!.trackNumber!
-                      .compareTo(b.metadata!.trackNumber!);
-                },
+              final albumList = album?.toList() ?? [];
+              sortListByAudioFilter(
+                audioFilter: AudioFilter.trackNumber,
+                audios: albumList,
               );
 
               final name = album?.firstOrNull?.metadata?.album;
@@ -187,6 +168,7 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     width: double.infinity,
+                    height: 30,
                     margin: const EdgeInsets.all(1),
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
@@ -196,10 +178,18 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
                         bottomRight: Radius.circular(kYaruContainerRadius),
                       ),
                     ),
-                    child: Text(
-                      '${audio.metadata?.album == null ? '' : audio.metadata!.album!} • ${audio.metadata?.artist == null ? '' : audio.metadata!.artist!}',
-                      style:
-                          TextStyle(color: theme.colorScheme.onInverseSurface),
+                    child: FittedBox(
+                      child: Text(
+                        audio.metadata?.album == null
+                            ? ''
+                            : audio.metadata!.album!,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: theme.colorScheme.onInverseSurface,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -242,7 +232,7 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
                     },
                   ),
                 ),
-                onPlay: albumList == null
+                onPlay: albumList.isEmpty
                     ? null
                     : () => startPlaylist(Set.from(albumList)),
               );
@@ -267,17 +257,7 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
             ],
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 10,
-            bottom: 20,
-          ),
-          child: Divider(
-            height: 0,
-          ),
-        ),
+        const _SpacedDivider(),
         Padding(
           padding: const EdgeInsets.only(left: 15, right: 15),
           child: albumGrid,
@@ -285,17 +265,53 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
       ],
     );
 
+    final artistsColumn = Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 20,
+          ),
+          child: Row(
+            children: [
+              Text(
+                '${context.l10n.artists}  •  ${similarArtistsSearchResult?.length ?? 0}',
+                style: theme.textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.w100),
+              )
+            ],
+          ),
+        ),
+        const _SpacedDivider(),
+        for (final artist in similarArtistsSearchResult ?? <Audio>{})
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+            child: Row(
+              children: [
+                Text(
+                  artist.metadata?.artist ?? '',
+                  style: theme.textTheme.headlineSmall
+                      ?.copyWith(fontWeight: FontWeight.w100, fontSize: 20),
+                )
+              ],
+            ),
+          )
+      ],
+    );
+
     final body = ListView(
       shrinkWrap: true,
       children: [
-        titlesList,
+        titlesColumn,
         const SizedBox(
           height: 10,
         ),
         albumColumn,
         const SizedBox(
-          height: kYaruPagePadding,
+          height: 10,
         ),
+        artistsColumn
       ],
     );
 
@@ -317,6 +333,29 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
               ),
       ),
       body: body,
+    );
+  }
+}
+
+class _SpacedDivider extends StatelessWidget {
+  const _SpacedDivider({
+    this.top = 10,
+  });
+
+  final double top;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 20,
+        right: 20,
+        top: top,
+        bottom: 20,
+      ),
+      child: const Divider(
+        height: 0,
+      ),
     );
   }
 }
