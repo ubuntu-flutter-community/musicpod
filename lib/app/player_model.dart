@@ -190,7 +190,6 @@ class PlayerModel extends SafeChangeNotifier {
     _isCompletedSub = _player.streams.isCompleted.listen((value) async {
       if (value) {
         if (repeatSingle == false) {
-          await _player.pause();
           await playNext();
         }
       }

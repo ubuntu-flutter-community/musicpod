@@ -273,12 +273,12 @@ class _Albums extends StatelessWidget {
                                     ),
                                     onPressed: () => addPinnedAlbum(
                                       audio.metadata!.album!,
-                                      Set.from(album!.toList()),
+                                      Set.from(albumList),
                                     ),
                                   ),
                         showWindowControls: showWindowControlsOnSpawnedPage,
                         deletable: false,
-                        audios: Set.from(album!.toList()),
+                        audios: Set.from(albumList),
                         pageId: name!,
                         editableName: false,
                       );
