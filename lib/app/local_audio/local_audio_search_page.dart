@@ -33,30 +33,63 @@ class LocalAudioSearchPage extends StatefulWidget {
 class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    final body = ListView(
+      shrinkWrap: true,
+      children: [
+        const _Titles(),
+        const SizedBox(
+          height: 10,
+        ),
+        _Albums(widget.showWindowControls),
+        const SizedBox(
+          height: 10,
+        ),
+        const _Artists(),
+      ],
+    );
+
+    return YaruDetailPage(
+      backgroundColor: theme.brightness == Brightness.dark
+          ? const Color.fromARGB(255, 37, 37, 37)
+          : Colors.white,
+      appBar: YaruWindowTitleBar(
+        style: widget.showWindowControls
+            ? YaruTitleBarStyle.normal
+            : YaruTitleBarStyle.undecorated,
+        title: const LocalAudioSearchField(),
+        leading: Navigator.canPop(context)
+            ? const YaruBackButton(
+                style: YaruBackButtonStyle.rounded,
+              )
+            : const SizedBox(
+                width: 40,
+              ),
+      ),
+      body: body,
+    );
+  }
+}
+
+class _Titles extends StatelessWidget {
+  const _Titles();
+
+  @override
+  Widget build(BuildContext context) {
     final isPlaying = context.select((PlayerModel m) => m.isPlaying);
     final setAudio = context.read<PlayerModel>().setAudio;
     final currentAudio = context.select((PlayerModel m) => m.audio);
     final play = context.read<PlayerModel>().play;
     final pause = context.read<PlayerModel>().pause;
     final resume = context.read<PlayerModel>().resume;
-    final startPlaylist = context.read<PlayerModel>().startPlaylist;
-    final isPinnedAlbum = context.read<PlaylistModel>().isPinnedAlbum;
-    final removePinnedAlbum = context.read<PlaylistModel>().removePinnedAlbum;
-    final addPinnedAlbum = context.read<PlaylistModel>().addPinnedAlbum;
-    final audios = context.select((LocalAudioModel m) => m.audios);
 
     final Set<Audio>? titlesResult =
         context.select((LocalAudioModel m) => m.titlesSearchResult);
 
-    final Set<Audio>? similarAlbumsResult =
-        context.select((LocalAudioModel m) => m.similarAlbumsSearchResult);
-
-    final Set<Audio>? similarArtistsSearchResult =
-        context.select((LocalAudioModel m) => m.similarArtistsSearchResult);
-
     final theme = Theme.of(context);
 
-    final titlesColumn = Column(
+    return Column(
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
@@ -124,6 +157,26 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
           )
       ],
     );
+  }
+}
+
+class _Albums extends StatelessWidget {
+  const _Albums(this.showWindowControlsOnSpawnedPage);
+
+  final bool showWindowControlsOnSpawnedPage;
+
+  @override
+  Widget build(BuildContext context) {
+    final startPlaylist = context.read<PlayerModel>().startPlaylist;
+    final isPinnedAlbum = context.read<PlaylistModel>().isPinnedAlbum;
+    final removePinnedAlbum = context.read<PlaylistModel>().removePinnedAlbum;
+    final addPinnedAlbum = context.read<PlaylistModel>().addPinnedAlbum;
+    final audios = context.select((LocalAudioModel m) => m.audios);
+
+    final Set<Audio>? similarAlbumsResult =
+        context.select((LocalAudioModel m) => m.similarAlbumsSearchResult);
+
+    final theme = Theme.of(context);
 
     final albumGrid = similarAlbumsResult == null || similarAlbumsResult.isEmpty
         ? const SizedBox.shrink()
@@ -223,7 +276,7 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
                                       Set.from(album!.toList()),
                                     ),
                                   ),
-                        showWindowControls: widget.showWindowControls,
+                        showWindowControls: showWindowControlsOnSpawnedPage,
                         deletable: false,
                         audios: Set.from(album!.toList()),
                         pageId: name!,
@@ -239,7 +292,7 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
             },
           );
 
-    final albumColumn = Column(
+    return Column(
       children: [
         Padding(
           padding: const EdgeInsets.only(
@@ -264,8 +317,20 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
         )
       ],
     );
+  }
+}
 
-    final artistsColumn = Column(
+class _Artists extends StatelessWidget {
+  const _Artists();
+
+  @override
+  Widget build(BuildContext context) {
+    final Set<Audio>? similarArtistsSearchResult =
+        context.select((LocalAudioModel m) => m.similarArtistsSearchResult);
+
+    final theme = Theme.of(context);
+
+    return Column(
       children: [
         Padding(
           padding: const EdgeInsets.only(
@@ -298,41 +363,6 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
             ),
           )
       ],
-    );
-
-    final body = ListView(
-      shrinkWrap: true,
-      children: [
-        titlesColumn,
-        const SizedBox(
-          height: 10,
-        ),
-        albumColumn,
-        const SizedBox(
-          height: 10,
-        ),
-        artistsColumn
-      ],
-    );
-
-    return YaruDetailPage(
-      backgroundColor: theme.brightness == Brightness.dark
-          ? const Color.fromARGB(255, 37, 37, 37)
-          : Colors.white,
-      appBar: YaruWindowTitleBar(
-        style: widget.showWindowControls
-            ? YaruTitleBarStyle.normal
-            : YaruTitleBarStyle.undecorated,
-        title: const LocalAudioSearchField(),
-        leading: Navigator.canPop(context)
-            ? const YaruBackButton(
-                style: YaruBackButtonStyle.rounded,
-              )
-            : const SizedBox(
-                width: 40,
-              ),
-      ),
-      body: body,
     );
   }
 }

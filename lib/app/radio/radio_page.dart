@@ -28,6 +28,7 @@ class _RadioPageState extends State<RadioPage> {
     final model = context.watch<RadioModel>();
 
     return AudioPage(
+      title: Text(context.l10n.radio),
       audioPageType: AudioPageType.radio,
       placeTrailer: false,
       showTrack: false,

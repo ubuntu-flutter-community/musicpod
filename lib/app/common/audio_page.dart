@@ -5,7 +5,6 @@ import 'package:musicpod/app/common/audio_page_control_panel.dart';
 import 'package:musicpod/app/common/audio_page_header.dart';
 import 'package:musicpod/app/common/audio_tile.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
-import 'package:musicpod/app/local_audio/local_audio_search_field.dart';
 import 'package:musicpod/app/player_model.dart';
 import 'package:musicpod/app/playlists/playlist_dialog.dart';
 import 'package:musicpod/app/playlists/playlist_model.dart';
@@ -417,7 +416,7 @@ class _AudioPageState extends State<AudioPage> {
         style: widget.showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
-        title: widget.title ?? const LocalAudioSearchField(),
+        title: widget.title ?? Text(widget.pageTitle ?? widget.pageId),
         leading: Navigator.canPop(context)
             ? const YaruBackButton(
                 style: YaruBackButtonStyle.rounded,
