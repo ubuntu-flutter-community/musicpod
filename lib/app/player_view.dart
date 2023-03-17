@@ -23,16 +23,6 @@ class PlayerView extends StatefulWidget {
 
 class _PlayerViewState extends State<PlayerView> {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (mounted) {
-        context.read<PlayerModel>().init();
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final model = context.watch<PlayerModel>();
     final liked = model.audio == null

@@ -94,6 +94,11 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
         return true;
       },
     );
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (mounted) {
+        context.read<PlayerModel>().init();
+      }
+    });
   }
 
   @override
