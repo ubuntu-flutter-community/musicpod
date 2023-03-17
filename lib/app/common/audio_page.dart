@@ -35,6 +35,7 @@ class AudioPage extends StatefulWidget {
     this.pageSubtile,
     this.image,
     this.placeTrailer = true,
+    this.audioFilter = AudioFilter.trackNumber,
   });
 
   final Set<Audio>? audios;
@@ -54,6 +55,7 @@ class AudioPage extends StatefulWidget {
   final bool showWindowControls;
   final Widget? image;
   final bool? placeTrailer;
+  final AudioFilter audioFilter;
 
   @override
   State<AudioPage> createState() => _AudioPageState();
@@ -62,11 +64,12 @@ class AudioPage extends StatefulWidget {
 class _AudioPageState extends State<AudioPage> {
   late ScrollController _controller;
   int _amount = 40;
-  AudioFilter _filter = AudioFilter.trackNumber;
+  late AudioFilter _filter;
 
   @override
   void initState() {
     super.initState();
+    _filter = widget.audioFilter;
     _controller = ScrollController();
     _controller.addListener(() {
       if (_controller.position.maxScrollExtent == _controller.offset) {

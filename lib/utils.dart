@@ -47,7 +47,15 @@ void sortListByAudioFilter({
     case AudioFilter.album:
       audios.sort((a, b) {
         if (a.album != null && b.album != null) {
-          return a.album!.compareTo(b.album!);
+          final albumComp = a.album!.compareTo(b.album!);
+          if (albumComp == 0 &&
+              a.trackNumber != null &&
+              b.trackNumber != null) {
+            final trackComp = a.trackNumber!.compareTo(b.trackNumber!);
+
+            return trackComp;
+          }
+          return albumComp;
         }
         return 0;
       });

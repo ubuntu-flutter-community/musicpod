@@ -203,7 +203,8 @@ class LocalAudioModel extends SafeChangeNotifier {
           name: basename,
           artist: metadata?.artist,
           title: metadata?.title,
-          album: metadata?.album,
+          album:
+              '${metadata?.album} ${metadata?.discTotal != null && metadata!.discTotal! > 1 ? metadata.discNumber : ''}',
           albumArtist: metadata?.albumArtist,
           discNumber: metadata?.discNumber,
           discTotal: metadata?.discTotal,
@@ -239,5 +240,6 @@ enum AudioFilter {
   artist,
   album,
   genre,
-  year;
+  year,
+  diskNumber;
 }

@@ -364,6 +364,7 @@ class _Artists extends StatelessWidget {
                       final images = findImages(artistAudios ?? {});
 
                       return AudioPage(
+                        audioFilter: AudioFilter.album,
                         audioPageType: AudioPageType.artist,
                         pageLabel: context.l10n.artist,
                         pageTitle: artist.artist,
