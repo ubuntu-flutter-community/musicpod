@@ -53,12 +53,12 @@ class PlayerModel extends SafeChangeNotifier {
             : Uri.parse(
                 _audio!.imageUrl!,
               ),
-        album: _audio?.metadata?.album,
-        albumArtist: [_audio?.metadata?.albumArtist ?? ''],
-        artist: [_audio?.metadata?.albumArtist ?? ''],
-        discNumber: _audio?.metadata?.discNumber,
-        title: _audio?.metadata?.title,
-        trackNumber: _audio?.metadata?.trackNumber,
+        album: _audio?.album,
+        albumArtist: [_audio?.albumArtist ?? ''],
+        artist: [_audio?.albumArtist ?? ''],
+        discNumber: _audio?.discNumber,
+        title: _audio?.title,
+        trackNumber: _audio?.trackNumber,
       );
     }
 
@@ -248,13 +248,12 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> loadColor() async {
     if (audio?.audioType == AudioType.local) {
-      if (audio == null ||
-          audio?.path == null ||
-          audio!.metadata == null ||
-          audio!.metadata!.picture == null) return;
+      if (audio == null || audio?.path == null || audio!.picture == null) {
+        return;
+      }
 
       final image = MemoryImage(
-        audio!.metadata!.picture!.data,
+        audio!.picture!.data,
       );
       final generator = await PaletteGenerator.fromImageProvider(image);
       _color = generator.dominantColor?.color;

@@ -107,9 +107,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
-                    final subscribed = podcast.first.metadata?.album == null
+                    final subscribed = podcast.first.album == null
                         ? false
-                        : podcastSubscribed(podcast.first.metadata!.album!);
+                        : podcastSubscribed(podcast.first.album!);
 
                     return AudioPage(
                       audioPageType: AudioPageType.podcast,
@@ -123,11 +123,11 @@ class _PodcastsPageState extends State<PodcastsPage> {
                         ),
                         onPressed: subscribed
                             ? () => removePodcast(
-                                  podcast.first.metadata!.album!,
+                                  podcast.first.album!,
                                 )
                             : () {
                                 addPodcast(
-                                  podcast.first.metadata!.album!,
+                                  podcast.first.album!,
                                   podcast,
                                 );
                               },
@@ -156,8 +156,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
                       deletable: false,
                       editableName: false,
                       audios: podcast,
-                      pageId: podcast.first.metadata?.album ??
-                          podcast.first.metadata?.title ??
+                      pageId: podcast.first.album ??
+                          podcast.first.title ??
                           podcast.first.name ??
                           podcast.toString(),
                     );

@@ -186,10 +186,10 @@ class _Albums extends StatelessWidget {
             gridDelegate: kImageGridDelegate,
             itemBuilder: (context, index) {
               final audio = similarAlbumsResult.elementAt(index);
-              final name = audio.metadata?.album;
+              final name = audio.album;
               final album = findAlbum(audio);
 
-              final image = audio.metadata?.picture?.data == null
+              final image = audio.picture?.data == null
                   ? Center(
                       child: Icon(
                         YaruIcons.music_note,
@@ -198,7 +198,7 @@ class _Albums extends StatelessWidget {
                       ),
                     )
                   : Image.memory(
-                      audio.metadata!.picture!.data,
+                      audio.picture!.data,
                     );
 
               return AudioCard(
@@ -218,9 +218,7 @@ class _Albums extends StatelessWidget {
                     ),
                     child: FittedBox(
                       child: Text(
-                        audio.metadata?.album == null
-                            ? ''
-                            : audio.metadata!.album!,
+                        audio.album == null ? '' : audio.album!,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -259,7 +257,7 @@ class _Albums extends StatelessWidget {
                                     onPressed: album == null
                                         ? null
                                         : () => addPinnedAlbum(
-                                              audio.metadata!.album!,
+                                              audio.album!,
                                               album,
                                             ),
                                   ),
@@ -342,7 +340,7 @@ class _Artists extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  artist.metadata?.artist ?? '',
+                  artist.artist ?? '',
                   style: theme.textTheme.headlineSmall
                       ?.copyWith(fontWeight: FontWeight.w100, fontSize: 20),
                 )

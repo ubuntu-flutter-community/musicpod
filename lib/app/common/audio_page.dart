@@ -124,8 +124,7 @@ class _AudioPageState extends State<AudioPage> {
       final description =
           widget.pageDescription ?? sortedAudios.firstOrNull?.description ?? '';
 
-      final title =
-          widget.pageTitle ?? sortedAudios.firstOrNull?.metadata?.album ?? '';
+      final title = widget.pageTitle ?? sortedAudios.firstOrNull?.album ?? '';
       body = SingleChildScrollView(
         controller: _controller,
         child: Column(
@@ -179,7 +178,7 @@ class _AudioPageState extends State<AudioPage> {
                           ),
                           Text(
                             widget.pageSubtile ??
-                                sortedAudios.firstOrNull?.metadata?.artist ??
+                                sortedAudios.firstOrNull?.artist ??
                                 '',
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: theme.hintColor,

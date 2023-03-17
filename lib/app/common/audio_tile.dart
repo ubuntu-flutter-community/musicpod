@@ -53,13 +53,11 @@ class AudioTile extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (audio.metadata?.trackNumber != null && showTrack)
+          if (audio.trackNumber != null && showTrack)
             Expanded(
               flex: 1,
               child: Text(
-                audio.metadata?.trackNumber != null
-                    ? '${audio.metadata?.trackNumber}'
-                    : ' ',
+                audio.trackNumber != null ? '${audio.trackNumber}' : ' ',
                 style: textStyle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -68,27 +66,27 @@ class AudioTile extends StatelessWidget {
           Expanded(
             flex: 5,
             child: Text(
-              audio.metadata?.title ?? audio.name ?? '',
+              audio.title ?? audio.name ?? '',
               style: textStyle,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          if (audio.metadata?.artist != null)
+          if (audio.artist != null)
             Expanded(
               flex: 4,
               child: Text(
-                audio.metadata!.artist!,
+                audio.artist!,
                 style: textStyle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-          if (audio.metadata?.album != null)
+          if (audio.album != null)
             Expanded(
               flex: 4,
               child: Text(
-                audio.metadata!.album!,
+                audio.album!,
                 style: textStyle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

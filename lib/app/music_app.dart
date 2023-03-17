@@ -301,8 +301,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           },
           builder: (context) {
             final noPicture = playlist.value.firstOrNull == null ||
-                playlist.value.firstOrNull!.metadata == null ||
-                playlist.value.firstOrNull!.metadata!.picture == null;
+                playlist.value.firstOrNull!.picture == null;
 
             final noImage = playlist.value.firstOrNull == null ||
                 playlist.value.firstOrNull!.imageUrl == null;
@@ -311,7 +310,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               audioPageType: AudioPageType.playlist,
               image: !noPicture
                   ? Image.memory(
-                      playlist.value.firstOrNull!.metadata!.picture!.data,
+                      playlist.value.firstOrNull!.picture!.data,
                       width: 200.0,
                       fit: BoxFit.fitWidth,
                       filterQuality: FilterQuality.medium,
@@ -340,8 +339,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               showWindowControls: !playerToTheRight,
               audios: playlist.value,
               pageId: playlist.key,
-              showTrack:
-                  playlist.value.firstOrNull?.metadata?.trackNumber != null,
+              showTrack: playlist.value.firstOrNull?.trackNumber != null,
               editableName: true,
               deletable: true,
               likePageButton: YaruIconButton(
@@ -366,8 +364,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           },
           builder: (context) {
             final noPicture = album.value.firstOrNull == null ||
-                album.value.firstOrNull!.metadata == null ||
-                album.value.firstOrNull!.metadata!.picture == null;
+                album.value.firstOrNull!.picture == null;
 
             final noImage = album.value.firstOrNull == null ||
                 album.value.firstOrNull!.imageUrl == null;
@@ -376,7 +373,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               audioPageType: AudioPageType.album,
               image: !noPicture
                   ? Image.memory(
-                      album.value.firstOrNull!.metadata!.picture!.data,
+                      album.value.firstOrNull!.picture!.data,
                       width: 200.0,
                       fit: BoxFit.fitWidth,
                       filterQuality: FilterQuality.medium,
@@ -405,7 +402,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               showWindowControls: !playerToTheRight,
               audios: album.value,
               pageId: album.key,
-              showTrack: album.value.firstOrNull?.metadata?.trackNumber != null,
+              showTrack: album.value.firstOrNull?.trackNumber != null,
               editableName: false,
               deletable: true,
               likePageButton: YaruIconButton(
@@ -418,7 +415,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             );
           },
           iconBuilder: (context, selected) {
-            final picture = album.value.firstOrNull?.metadata?.picture;
+            final picture = album.value.firstOrNull?.picture;
             Widget? albumArt;
             if (picture != null) {
               albumArt = SizedBox(

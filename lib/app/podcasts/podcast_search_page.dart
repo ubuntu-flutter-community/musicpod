@@ -56,10 +56,10 @@ class PodcastSearchPage extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
-                    final subscribed = podcast.first.metadata?.album == null
+                    final subscribed = podcast.first.album == null
                         ? false
                         : podcastSubscribed(
-                            podcast.first.metadata!.album!,
+                            podcast.first.album!,
                           );
                     return AudioPage(
                       audioPageType: AudioPageType.podcast,
@@ -88,7 +88,7 @@ class PodcastSearchPage extends StatelessWidget {
                                 color: theme.primaryColor,
                               ),
                               onPressed: () => removePodcast(
-                                podcast.first.metadata!.album!,
+                                podcast.first.album!,
                               ),
                             )
                           : YaruIconButton(
@@ -97,7 +97,7 @@ class PodcastSearchPage extends StatelessWidget {
                               ),
                               onPressed: () {
                                 addPodcast(
-                                  podcast.first.metadata!.album!,
+                                  podcast.first.album!,
                                   podcast,
                                 );
                               },
@@ -106,7 +106,7 @@ class PodcastSearchPage extends StatelessWidget {
                       deletable: false,
                       editableName: false,
                       audios: podcast,
-                      pageId: podcast.first.metadata?.album ?? '',
+                      pageId: podcast.first.album ?? '',
                     );
                   },
                 ),

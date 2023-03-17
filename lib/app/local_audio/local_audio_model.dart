@@ -44,18 +44,14 @@ class LocalAudioModel extends SafeChangeNotifier {
 
     final allAlbumsFindings = audios?.where(
       (audio) =>
-          audio.metadata != null &&
-          audio.metadata!.album?.isNotEmpty == true &&
-          audio.metadata!.album!
-              .toLowerCase()
-              .contains(searchQuery!.toLowerCase()),
+          audio.album?.isNotEmpty == true &&
+          audio.album!.toLowerCase().contains(searchQuery!.toLowerCase()),
     );
 
     final albumsResult = <Audio>{};
     if (allAlbumsFindings != null) {
       for (var a in allAlbumsFindings) {
-        if (albumsResult
-            .none((element) => element.metadata?.album == a.metadata?.album)) {
+        if (albumsResult.none((element) => element.album == a.album)) {
           albumsResult.add(a);
         }
       }
@@ -63,17 +59,14 @@ class LocalAudioModel extends SafeChangeNotifier {
 
     final allArtistFindings = audios?.where(
       (audio) =>
-          audio.metadata != null &&
-          audio.metadata!.artist?.isNotEmpty == true &&
-          audio.metadata!.artist!
-              .toLowerCase()
-              .contains(searchQuery!.toLowerCase()),
+          audio.artist?.isNotEmpty == true &&
+          audio.artist!.toLowerCase().contains(searchQuery!.toLowerCase()),
     );
     final artistsResult = <Audio>{};
     if (allArtistFindings != null) {
       for (var a in allArtistFindings) {
         if (artistsResult.none(
-          (e) => e.metadata?.artist == a.metadata?.artist,
+          (e) => e.artist == a.artist,
         )) {
           artistsResult.add(a);
         }
@@ -82,11 +75,8 @@ class LocalAudioModel extends SafeChangeNotifier {
 
     var titles = audios?.where(
           (audio) =>
-              audio.metadata != null &&
-              audio.metadata!.title?.isNotEmpty == true &&
-              audio.metadata!.title!
-                  .toLowerCase()
-                  .contains(searchQuery!.toLowerCase()),
+              audio.title?.isNotEmpty == true &&
+              audio.title!.toLowerCase().contains(searchQuery!.toLowerCase()),
         ) ??
         <Audio>{};
     setTitlesSearchResult(
@@ -126,10 +116,7 @@ class LocalAudioModel extends SafeChangeNotifier {
     AudioFilter audioFilter = AudioFilter.trackNumber,
   ]) {
     final album = audios?.where(
-      (a) =>
-          a.metadata != null &&
-          a.metadata!.album != null &&
-          a.metadata?.album == audio.metadata?.album,
+      (a) => a.album != null && a.album == audio.album,
     );
 
     final albumList = album?.toList();
@@ -178,7 +165,18 @@ class LocalAudioModel extends SafeChangeNotifier {
           path: e.path,
           audioType: AudioType.local,
           name: basename,
-          metadata: metadata,
+          artist: metadata?.artist,
+          title: metadata?.title,
+          album: metadata?.album,
+          albumArtist: metadata?.albumArtist,
+          discNumber: metadata?.discNumber,
+          discTotal: metadata?.discTotal,
+          durationMs: metadata?.durationMs,
+          fileSize: metadata?.fileSize,
+          genre: metadata?.genre,
+          picture: metadata?.picture,
+          trackNumber: metadata?.trackNumber,
+          year: metadata?.year,
         );
 
         audios?.add(audio);

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:metadata_god/metadata_god.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
 import 'package:podcast_search/podcast_search.dart';
@@ -51,11 +50,9 @@ class PodcastService {
                 audioType: AudioType.podcast,
                 name: podcast?.title,
                 imageUrl: podcast?.image,
-                metadata: Metadata(
-                  title: episode.title,
-                  album: item.collectionName,
-                  artist: item.artistName,
-                ),
+                title: episode.title,
+                album: item.collectionName,
+                artist: item.artistName,
                 description: podcast?.description,
                 website: podcast?.url,
               );
@@ -121,11 +118,9 @@ class PodcastService {
                     imageUrl: useAlbumImage
                         ? podcast?.image ?? episode.imageUrl
                         : episode.imageUrl ?? podcast?.image,
-                    metadata: Metadata(
-                      title: episode.title,
-                      album: podcast?.title,
-                      artist: podcast?.copyright,
-                    ),
+                    title: episode.title,
+                    album: podcast?.title,
+                    artist: podcast?.copyright,
                     description: podcast?.description,
                     website: podcast?.url,
                   );
