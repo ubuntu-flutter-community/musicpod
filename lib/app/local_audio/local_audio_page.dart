@@ -13,8 +13,8 @@ class LocalAudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localAudioModel = context.watch<LocalAudioModel>();
-    final audios = localAudioModel.audios;
+    final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
+    final audios = context.select((LocalAudioModel m) => m.audios);
 
     return Navigator(
       onPopPage: (route, result) => route.didPop(result),
@@ -32,7 +32,7 @@ class LocalAudioPage extends StatelessWidget {
             showWindowControls: showWindowControls,
           ),
         ),
-        if (localAudioModel.searchQuery?.isNotEmpty == true)
+        if (searchQuery?.isNotEmpty == true)
           MaterialPage(
             child: LocalAudioSearchPage(
               showWindowControls: showWindowControls,

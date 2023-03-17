@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
-import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -9,7 +8,10 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class LocalAudioSearchField extends StatefulWidget {
   const LocalAudioSearchField({
     super.key,
+    this.text,
   });
+
+  final String? text;
 
   @override
   State<LocalAudioSearchField> createState() => _LocalAudioSearchFieldState();
@@ -21,8 +23,7 @@ class _LocalAudioSearchFieldState extends State<LocalAudioSearchField> {
   @override
   void initState() {
     super.initState();
-    final text = context.read<PodcastModel>().searchQuery;
-    _controller = TextEditingController(text: text);
+    _controller = TextEditingController(text: widget.text);
   }
 
   @override
@@ -52,7 +53,10 @@ class _LocalAudioSearchFieldState extends State<LocalAudioSearchField> {
           suffixIconConstraints:
               const BoxConstraints(maxHeight: 35, maxWidth: 35),
           suffixIcon: YaruIconButton(
-            onPressed: () => _controller.clear(),
+            onPressed: () {
+              _controller.clear();
+              model.setSearchQuery('');
+            },
             icon: const Icon(
               YaruIcons.edit_clear,
             ),

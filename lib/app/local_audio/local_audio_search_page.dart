@@ -32,6 +32,8 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final setSearchQuery = context.read<LocalAudioModel>().setSearchQuery;
+    final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
 
     final body = ListView(
       shrinkWrap: true,
@@ -56,10 +58,17 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
         style: widget.showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
-        title: const LocalAudioSearchField(),
+        title: LocalAudioSearchField(
+          key: ValueKey(searchQuery),
+          text: searchQuery,
+        ),
         leading: Navigator.canPop(context)
-            ? const YaruBackButton(
+            ? YaruBackButton(
                 style: YaruBackButtonStyle.rounded,
+                onPressed: () {
+                  setSearchQuery('');
+                  Navigator.maybePop(context);
+                },
               )
             : const SizedBox(
                 width: 40,
