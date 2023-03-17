@@ -44,7 +44,7 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
         const SizedBox(
           height: 10,
         ),
-        const _Artists(),
+        _Artists(showWindowControlsOnSpawnedPage: widget.showWindowControls),
       ],
     );
 
@@ -306,12 +306,16 @@ class _Albums extends StatelessWidget {
 }
 
 class _Artists extends StatelessWidget {
-  const _Artists();
+  const _Artists({required this.showWindowControlsOnSpawnedPage});
+
+  final bool showWindowControlsOnSpawnedPage;
 
   @override
   Widget build(BuildContext context) {
     final Set<Audio>? similarArtistsSearchResult =
         context.select((LocalAudioModel m) => m.similarArtistsSearchResult);
+    final findArtist = context.read<LocalAudioModel>().findArtist;
+    final findImages = context.read<LocalAudioModel>().findImages;
 
     final theme = Theme.of(context);
 
@@ -334,19 +338,78 @@ class _Artists extends StatelessWidget {
           ),
         ),
         const _SpacedDivider(),
-        for (final artist in similarArtistsSearchResult ?? <Audio>{})
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
-            child: Row(
-              children: [
-                Text(
-                  artist.artist ?? '',
-                  style: theme.textTheme.headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.w100, fontSize: 20),
-                )
-              ],
-            ),
-          )
+        GridView(
+          padding: kGridPadding,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: kImageGridDelegate,
+          children: [
+            for (final artist in similarArtistsSearchResult ?? <Audio>{})
+              YaruSelectableContainer(
+                selected: false,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      final artistAudios = findArtist(artist);
+
+                      return AudioPage(
+                        title: const LocalAudioSearchField(),
+                        audioPageType: AudioPageType.artist,
+                        pageLabel: context.l10n.artist,
+                        pageTitle: artist.artist,
+                        image: SizedBox(
+                          height: 200,
+                          width: 200,
+                          child: GridView(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 100,
+                            ),
+                            children: [
+                              if (artistAudios != null)
+                                for (final image
+                                    in findImages(artistAudios) ?? {})
+                                  Image.memory(image.data)
+                            ],
+                          ),
+                        ),
+                        pageSubtile: '',
+                        likePageButton: const SizedBox.shrink(),
+                        showWindowControls: showWindowControlsOnSpawnedPage,
+                        deletable: false,
+                        audios: artistAudios,
+                        pageId: artist.artist ?? artist.toString(),
+                        editableName: false,
+                      );
+                    },
+                  ),
+                ),
+                borderRadius: BorderRadius.circular(300),
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: theme.colorScheme.inverseSurface,
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        artist.artist ?? 'unknown',
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w100,
+                          fontSize: 20,
+                          color: theme.colorScheme.onInverseSurface,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+          ],
+        )
       ],
     );
   }

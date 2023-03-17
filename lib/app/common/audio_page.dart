@@ -431,6 +431,7 @@ class _AudioPageState extends State<AudioPage> {
 
 enum AudioPageType {
   immutable,
+  artist,
   likedAudio,
   podcast,
   playlist,

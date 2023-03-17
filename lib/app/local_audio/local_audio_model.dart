@@ -129,6 +129,42 @@ class LocalAudioModel extends SafeChangeNotifier {
     return albumList != null ? Set.from(albumList) : null;
   }
 
+  Set<Audio>? findArtist(
+    Audio audio, [
+    AudioFilter audioFilter = AudioFilter.album,
+  ]) {
+    final album = audios?.where(
+      (a) => a.artist != null && a.artist == audio.artist,
+    );
+
+    final albumList = album?.toList();
+    if (albumList != null) {
+      sortListByAudioFilter(
+        audioFilter: audioFilter,
+        audios: albumList,
+      );
+    }
+    return albumList != null ? Set.from(albumList) : null;
+  }
+
+  Set<Image>? findImages(Set<Audio> audios) {
+    final images = <Image>{};
+    final albumAudios = <Audio>{};
+    for (var audio in audios) {
+      if (albumAudios.none((a) => a.album == audio.album)) {
+        albumAudios.add(audio);
+      }
+    }
+
+    for (var audio in albumAudios) {
+      if (audio.picture?.data != null) {
+        images.add(audio.picture!);
+      }
+    }
+
+    return images;
+  }
+
   int _selectedTab = 0;
   int get selectedTab => _selectedTab;
   set selectedTab(int value) {
