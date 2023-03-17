@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/utils.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:path/path.dart' as path;
 import 'package:xdg_directories/xdg_directories.dart';
@@ -115,10 +116,30 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   Set<Audio>? _audios;
   Set<Audio>? get audios => _audios;
-
   set audios(Set<Audio>? value) {
     _audios = value;
     notifyListeners();
+  }
+
+  Set<Audio>? findAlbum(
+    Audio audio, [
+    AudioFilter audioFilter = AudioFilter.trackNumber,
+  ]) {
+    final album = audios?.where(
+      (a) =>
+          a.metadata != null &&
+          a.metadata!.album != null &&
+          a.metadata?.album == audio.metadata?.album,
+    );
+
+    final albumList = album?.toList();
+    if (albumList != null) {
+      sortListByAudioFilter(
+        audioFilter: audioFilter,
+        audios: albumList,
+      );
+    }
+    return albumList != null ? Set.from(albumList) : null;
   }
 
   int _selectedTab = 0;

@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_page.dart';
@@ -11,7 +10,6 @@ import 'package:musicpod/app/player_model.dart';
 import 'package:musicpod/app/playlists/playlist_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
-import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -171,7 +169,7 @@ class _Albums extends StatelessWidget {
     final isPinnedAlbum = context.read<PlaylistModel>().isPinnedAlbum;
     final removePinnedAlbum = context.read<PlaylistModel>().removePinnedAlbum;
     final addPinnedAlbum = context.read<PlaylistModel>().addPinnedAlbum;
-    final audios = context.select((LocalAudioModel m) => m.audios);
+    final findAlbum = context.read<LocalAudioModel>().findAlbum;
 
     final Set<Audio>? similarAlbumsResult =
         context.select((LocalAudioModel m) => m.similarAlbumsSearchResult);
@@ -187,22 +185,9 @@ class _Albums extends StatelessWidget {
             itemCount: similarAlbumsResult.length,
             gridDelegate: kImageGridDelegate,
             itemBuilder: (context, index) {
-              var audio = similarAlbumsResult.elementAt(index);
-
-              final album = audios?.where(
-                (a) =>
-                    a.metadata != null &&
-                    a.metadata!.album != null &&
-                    a.metadata?.album == audio.metadata?.album,
-              );
-
-              final albumList = album?.toList() ?? [];
-              sortListByAudioFilter(
-                audioFilter: AudioFilter.trackNumber,
-                audios: albumList,
-              );
-
-              final name = album?.firstOrNull?.metadata?.album;
+              final audio = similarAlbumsResult.elementAt(index);
+              final name = audio.metadata?.album;
+              final album = findAlbum(audio);
 
               final image = audio.metadata?.picture?.data == null
                   ? Center(
@@ -271,23 +256,25 @@ class _Albums extends StatelessWidget {
                                     icon: const Icon(
                                       YaruIcons.pin,
                                     ),
-                                    onPressed: () => addPinnedAlbum(
-                                      audio.metadata!.album!,
-                                      Set.from(albumList),
-                                    ),
+                                    onPressed: album == null
+                                        ? null
+                                        : () => addPinnedAlbum(
+                                              audio.metadata!.album!,
+                                              album,
+                                            ),
                                   ),
                         showWindowControls: showWindowControlsOnSpawnedPage,
                         deletable: false,
-                        audios: Set.from(albumList),
+                        audios: album,
                         pageId: name!,
                         editableName: false,
                       );
                     },
                   ),
                 ),
-                onPlay: albumList.isEmpty
+                onPlay: album == null || album.isEmpty
                     ? null
-                    : () => startPlaylist(Set.from(albumList)),
+                    : () => startPlaylist(album),
               );
             },
           );
