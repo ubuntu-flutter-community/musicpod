@@ -1,6 +1,5 @@
-import 'package:metadata_god/metadata_god.dart';
-import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/app/radio/stations.dart';
+import 'package:musicpod/data/audio.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class RadioModel extends SafeChangeNotifier {
@@ -19,11 +18,9 @@ class RadioModel extends SafeChangeNotifier {
             (e) => Audio(
               name: e.key,
               url: e.value,
-              metadata: Metadata(
-                title: e.key,
-                artist: e.key,
-                album: e.key,
-              ),
+              title: e.key,
+              artist: e.key,
+              album: e.key,
               audioType: AudioType.radio,
             ),
           )

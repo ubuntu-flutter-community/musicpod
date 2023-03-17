@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/utils.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:path/path.dart' as path;
 import 'package:xdg_directories/xdg_directories.dart';
@@ -10,10 +12,80 @@ import 'package:xdg_directories/xdg_directories.dart';
 class LocalAudioModel extends SafeChangeNotifier {
   String? _searchQuery;
   String? get searchQuery => _searchQuery;
-  set searchQuery(String? value) {
+  void setSearchQuery(String? value) {
     if (value == null || value == _searchQuery) return;
     _searchQuery = value;
     notifyListeners();
+  }
+
+  Set<Audio>? _similarAlbumsSearchResult;
+  Set<Audio>? get similarAlbumsSearchResult => _similarAlbumsSearchResult;
+  void setSimilarAlbumsSearchResult(Set<Audio>? value) {
+    _similarAlbumsSearchResult = value;
+    notifyListeners();
+  }
+
+  Set<Audio>? _titlesSearchResult;
+  Set<Audio>? get titlesSearchResult => _titlesSearchResult;
+  void setTitlesSearchResult(Set<Audio>? value) {
+    _titlesSearchResult = value;
+    notifyListeners();
+  }
+
+  Set<Audio>? _similarArtistsSearchResult;
+  Set<Audio>? get similarArtistsSearchResult => _similarArtistsSearchResult;
+  void setSimilarArtistsSearchResult(Set<Audio>? value) {
+    _similarArtistsSearchResult = value;
+    notifyListeners();
+  }
+
+  void search() {
+    if (searchQuery == null) return;
+
+    final allAlbumsFindings = audios?.where(
+      (audio) =>
+          audio.album?.isNotEmpty == true &&
+          audio.album!.toLowerCase().contains(searchQuery!.toLowerCase()),
+    );
+
+    final albumsResult = <Audio>{};
+    if (allAlbumsFindings != null) {
+      for (var a in allAlbumsFindings) {
+        if (albumsResult.none((element) => element.album == a.album)) {
+          albumsResult.add(a);
+        }
+      }
+    }
+
+    final allArtistFindings = audios?.where(
+      (audio) =>
+          audio.artist?.isNotEmpty == true &&
+          audio.artist!.toLowerCase().contains(searchQuery!.toLowerCase()),
+    );
+    final artistsResult = <Audio>{};
+    if (allArtistFindings != null) {
+      for (var a in allArtistFindings) {
+        if (artistsResult.none(
+          (e) => e.artist == a.artist,
+        )) {
+          artistsResult.add(a);
+        }
+      }
+    }
+
+    var titles = audios?.where(
+          (audio) =>
+              audio.title?.isNotEmpty == true &&
+              audio.title!.toLowerCase().contains(searchQuery!.toLowerCase()),
+        ) ??
+        <Audio>{};
+    setTitlesSearchResult(
+      Set.from(
+        titles,
+      ),
+    );
+    setSimilarAlbumsSearchResult(albumsResult);
+    setSimilarArtistsSearchResult(artistsResult);
   }
 
   AudioFilter _audioFilter = AudioFilter.title;
@@ -34,10 +106,63 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   Set<Audio>? _audios;
   Set<Audio>? get audios => _audios;
-
   set audios(Set<Audio>? value) {
     _audios = value;
     notifyListeners();
+  }
+
+  Set<Audio>? findAlbum(
+    Audio audio, [
+    AudioFilter audioFilter = AudioFilter.trackNumber,
+  ]) {
+    final album = audios?.where(
+      (a) => a.album != null && a.album == audio.album,
+    );
+
+    final albumList = album?.toList();
+    if (albumList != null) {
+      sortListByAudioFilter(
+        audioFilter: audioFilter,
+        audios: albumList,
+      );
+    }
+    return albumList != null ? Set.from(albumList) : null;
+  }
+
+  Set<Audio>? findArtist(
+    Audio audio, [
+    AudioFilter audioFilter = AudioFilter.album,
+  ]) {
+    final album = audios?.where(
+      (a) => a.artist != null && a.artist == audio.artist,
+    );
+
+    final albumList = album?.toList();
+    if (albumList != null) {
+      sortListByAudioFilter(
+        audioFilter: audioFilter,
+        audios: albumList,
+      );
+    }
+    return albumList != null ? Set.from(albumList) : null;
+  }
+
+  Set<Image>? findImages(Set<Audio> audios) {
+    final images = <Image>{};
+    final albumAudios = <Audio>{};
+    for (var audio in audios) {
+      if (albumAudios.none((a) => a.album == audio.album)) {
+        albumAudios.add(audio);
+      }
+    }
+
+    for (var audio in albumAudios) {
+      if (audio.picture?.data != null) {
+        images.add(audio.picture!);
+      }
+    }
+
+    return images;
   }
 
   int _selectedTab = 0;
@@ -76,7 +201,18 @@ class LocalAudioModel extends SafeChangeNotifier {
           path: e.path,
           audioType: AudioType.local,
           name: basename,
-          metadata: metadata,
+          artist: metadata?.artist,
+          title: metadata?.title,
+          album: metadata?.album,
+          albumArtist: metadata?.albumArtist,
+          discNumber: metadata?.discNumber,
+          discTotal: metadata?.discTotal,
+          durationMs: metadata?.durationMs,
+          fileSize: metadata?.fileSize,
+          genre: metadata?.genre,
+          picture: metadata?.picture,
+          trackNumber: metadata?.trackNumber,
+          year: metadata?.year,
         );
 
         audios?.add(audio);

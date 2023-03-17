@@ -30,44 +30,32 @@ void sortListByAudioFilter({
   switch (audioFilter) {
     case AudioFilter.artist:
       audios.sort((a, b) {
-        if (a.metadata != null &&
-            a.metadata!.artist != null &&
-            b.metadata != null &&
-            b.metadata!.artist != null) {
-          return a.metadata!.artist!.compareTo(b.metadata!.artist!);
+        if (a.artist != null && b.artist != null) {
+          return a.artist!.compareTo(b.artist!);
         }
         return 0;
       });
       break;
     case AudioFilter.title:
       audios.sort((a, b) {
-        if (a.metadata != null &&
-            a.metadata!.title != null &&
-            b.metadata != null &&
-            b.metadata!.title != null) {
-          return a.metadata!.title!.compareTo(b.metadata!.title!);
+        if (a.title != null && b.title != null) {
+          return a.title!.compareTo(b.title!);
         }
         return 0;
       });
       break;
     case AudioFilter.album:
       audios.sort((a, b) {
-        if (a.metadata != null &&
-            a.metadata!.album != null &&
-            b.metadata != null &&
-            b.metadata!.album != null) {
-          return a.metadata!.album!.compareTo(b.metadata!.album!);
+        if (a.album != null && b.album != null) {
+          return a.album!.compareTo(b.album!);
         }
         return 0;
       });
       break;
     default:
       audios.sort((a, b) {
-        if (a.metadata != null &&
-            a.metadata!.trackNumber != null &&
-            b.metadata != null &&
-            b.metadata!.trackNumber != null) {
-          return a.metadata!.trackNumber!.compareTo(b.metadata!.trackNumber!);
+        if (a.trackNumber != null && b.trackNumber != null) {
+          return a.trackNumber!.compareTo(b.trackNumber!);
         }
         return 0;
       });

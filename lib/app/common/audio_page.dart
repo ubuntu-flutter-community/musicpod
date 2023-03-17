@@ -4,7 +4,6 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:musicpod/app/common/audio_page_control_panel.dart';
 import 'package:musicpod/app/common/audio_page_header.dart';
 import 'package:musicpod/app/common/audio_tile.dart';
-import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
 import 'package:musicpod/app/player_model.dart';
 import 'package:musicpod/app/playlists/playlist_dialog.dart';
@@ -125,8 +124,7 @@ class _AudioPageState extends State<AudioPage> {
       final description =
           widget.pageDescription ?? sortedAudios.firstOrNull?.description ?? '';
 
-      final title =
-          widget.pageTitle ?? sortedAudios.firstOrNull?.metadata?.album ?? '';
+      final title = widget.pageTitle ?? sortedAudios.firstOrNull?.album ?? '';
       body = SingleChildScrollView(
         controller: _controller,
         child: Column(
@@ -180,7 +178,7 @@ class _AudioPageState extends State<AudioPage> {
                           ),
                           Text(
                             widget.pageSubtile ??
-                                sortedAudios.firstOrNull?.metadata?.artist ??
+                                sortedAudios.firstOrNull?.artist ??
                                 '',
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: theme.hintColor,
@@ -417,11 +415,7 @@ class _AudioPageState extends State<AudioPage> {
         style: widget.showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
-        title: widget.title ??
-            SearchField(
-              spawnedPageLikeButton: widget.likePageButton,
-              spawnPageWithWindowControls: widget.showWindowControls,
-            ),
+        title: widget.title ?? Text(widget.pageTitle ?? widget.pageId),
         leading: Navigator.canPop(context)
             ? const YaruBackButton(
                 style: YaruBackButtonStyle.rounded,
@@ -437,6 +431,7 @@ class _AudioPageState extends State<AudioPage> {
 
 enum AudioPageType {
   immutable,
+  artist,
   likedAudio,
   podcast,
   playlist,

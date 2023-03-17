@@ -23,16 +23,6 @@ class PlayerView extends StatefulWidget {
 
 class _PlayerViewState extends State<PlayerView> {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (mounted) {
-        context.read<PlayerModel>().init();
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final model = context.watch<PlayerModel>();
     final liked = model.audio == null
@@ -143,8 +133,8 @@ class _PlayerViewState extends State<PlayerView> {
     );
 
     final title = Text(
-      model.audio?.metadata?.title?.isNotEmpty == true
-          ? model.audio!.metadata!.title!
+      model.audio?.title?.isNotEmpty == true
+          ? model.audio!.title!
           : (model.audio?.name ?? 'unknown'),
       style: TextStyle(
         fontWeight: FontWeight.w200,
@@ -157,7 +147,7 @@ class _PlayerViewState extends State<PlayerView> {
       overflow: TextOverflow.ellipsis,
     );
     final artist = Text(
-      model.audio?.metadata?.artist ?? '',
+      model.audio?.artist ?? '',
       style: TextStyle(
         fontWeight: FontWeight.w100,
         fontSize: isFullScreen ? 25 : 15,
@@ -243,13 +233,13 @@ class _PlayerViewState extends State<PlayerView> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      if (model.audio?.metadata?.picture != null)
+                      if (model.audio?.picture != null)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
                             child: Image.memory(
-                              model.audio!.metadata!.picture!.data,
+                              model.audio!.picture!.data,
                               height: 400.0,
                               fit: BoxFit.fitHeight,
                             ),
@@ -299,8 +289,7 @@ class _PlayerViewState extends State<PlayerView> {
             padding: const EdgeInsets.all(kYaruPagePadding),
             child: fullScreenButton,
           ),
-          if (model.nextAudio?.metadata?.title != null &&
-              model.nextAudio?.metadata?.artist != null)
+          if (model.nextAudio?.title != null && model.nextAudio?.artist != null)
             Positioned(
               left: 10,
               bottom: 10,
@@ -340,7 +329,7 @@ class _PlayerViewState extends State<PlayerView> {
                                     right: 10,
                                   ),
                                   child: Text(
-                                    '${audio.metadata?.title ?? ''} • ${audio.metadata?.artist ?? ''}',
+                                    '${audio.title ?? ''} • ${audio.artist ?? ''}',
                                     style:
                                         theme.textTheme.labelMedium?.copyWith(
                                       color: theme.colorScheme.onSurface,
@@ -361,7 +350,7 @@ class _PlayerViewState extends State<PlayerView> {
                             right: 10,
                           ),
                           child: Text(
-                            '${model.nextAudio!.metadata!.title!} • ${model.nextAudio!.metadata!.artist!}',
+                            '${model.nextAudio!.title!} • ${model.nextAudio!.artist!}',
                             style: theme.textTheme.labelMedium
                                 ?.copyWith(color: theme.colorScheme.onSurface),
                             overflow: TextOverflow.ellipsis,
@@ -385,7 +374,7 @@ class _PlayerViewState extends State<PlayerView> {
           fullScreenButton,
           Row(
             children: [
-              if (model.audio?.metadata?.picture != null)
+              if (model.audio?.picture != null)
                 AnimatedContainer(
                   height: 120,
                   width: 120,
@@ -393,7 +382,7 @@ class _PlayerViewState extends State<PlayerView> {
                   child: Image.memory(
                     filterQuality: FilterQuality.medium,
                     fit: BoxFit.cover,
-                    model.audio!.metadata!.picture!.data,
+                    model.audio!.picture!.data,
                     height: 120.0,
                   ),
                 )

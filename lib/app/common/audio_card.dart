@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/app/common/constants.dart';
-import 'package:musicpod/app/common/safe_network_image.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AudioCard extends StatefulWidget {
-  const AudioCard({super.key, this.imageUrl, this.onTap, this.onPlay});
-  final String? imageUrl;
+  const AudioCard({
+    super.key,
+    this.image,
+    this.onTap,
+    this.onPlay,
+    this.bottom,
+  });
+  final Widget? image;
   final void Function()? onTap;
   final void Function()? onPlay;
+  final Widget? bottom;
 
   @override
   State<AudioCard> createState() => _AudioCardState();
@@ -20,17 +24,6 @@ class _AudioCardState extends State<AudioCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    var light = theme.brightness == Brightness.light;
-
-    final fallBackLoadingIcon = Shimmer.fromColors(
-      baseColor: light ? kShimmerBaseLight : kShimmerBaseDark,
-      highlightColor: light ? kShimmerHighLightLight : kShimmerHighLightDark,
-      child: Container(
-        color: light ? kShimmerBaseLight : kShimmerBaseDark,
-        height: 250,
-        width: 250,
-      ),
-    );
 
     return YaruBanner(
       padding: EdgeInsets.zero,
@@ -43,13 +36,9 @@ class _AudioCardState extends State<AudioCard> {
           ClipRRect(
             clipBehavior: Clip.hardEdge,
             borderRadius: BorderRadius.circular(10),
-            child: SafeNetworkImage(
-              // TODO add memory image option
-              fallBackIcon: fallBackLoadingIcon,
-              url: widget.imageUrl,
-              fit: BoxFit.contain,
-            ),
+            child: widget.image,
           ),
+          if (widget.bottom != null) widget.bottom!,
           if (_hovered)
             Positioned(
               bottom: 15,
