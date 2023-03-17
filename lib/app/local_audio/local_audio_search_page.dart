@@ -208,6 +208,8 @@ class _Albums extends StatelessWidget {
                     )
                   : Image.memory(
                       audio.picture!.data,
+                      fit: BoxFit.fitWidth,
+                      filterQuality: FilterQuality.medium,
                     );
 
               return AudioCard(
@@ -243,7 +245,6 @@ class _Albums extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) {
                       return AudioPage(
-                        title: const LocalAudioSearchField(),
                         audioPageType: AudioPageType.album,
                         pageLabel: context.l10n.album,
                         image: image,
@@ -360,31 +361,45 @@ class _Artists extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) {
                       final artistAudios = findArtist(artist);
+                      final images = findImages(artistAudios ?? {});
 
                       return AudioPage(
-                        title: const LocalAudioSearchField(),
                         audioPageType: AudioPageType.artist,
                         pageLabel: context.l10n.artist,
                         pageTitle: artist.artist,
-                        image: SizedBox(
-                          height: 200,
-                          width: 200,
-                          child: GridView(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 100,
-                            ),
-                            children: [
-                              if (artistAudios != null)
-                                for (final image
-                                    in findImages(artistAudios) ?? {})
-                                  Image.memory(image.data)
-                            ],
-                          ),
-                        ),
+                        image: images != null && images.length >= 4
+                            ? SizedBox(
+                                height: 200,
+                                width: 200,
+                                child: GridView(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                      const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 100,
+                                  ),
+                                  children: [
+                                    if (artistAudios != null)
+                                      for (final image in images)
+                                        Image.memory(
+                                          image.data,
+                                          width: 200.0,
+                                          fit: BoxFit.fill,
+                                          filterQuality: FilterQuality.medium,
+                                        )
+                                  ],
+                                ),
+                              )
+                            : images?.isNotEmpty == true
+                                ? Image.memory(
+                                    images!.first.data,
+                                    width: 200.0,
+                                    fit: BoxFit.fitWidth,
+                                    filterQuality: FilterQuality.medium,
+                                  )
+                                : const SizedBox.shrink(),
                         pageSubtile: '',
+                        placeTrailer: images?.isNotEmpty == true,
                         likePageButton: const SizedBox.shrink(),
                         showWindowControls: showWindowControlsOnSpawnedPage,
                         deletable: false,
