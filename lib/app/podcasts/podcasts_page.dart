@@ -192,7 +192,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               },
               initialValue: model.podcastGenre,
               child: Text(
-                model.podcastGenre.id,
+                model.podcastGenre.localize(context.l10n),
                 style: textStyle,
               ),
               itemBuilder: (context) {
@@ -200,7 +200,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                   for (final genre in model.sortedGenres)
                     PopupMenuItem(
                       value: genre,
-                      child: Text(genre.id),
+                      child: Text(genre.localize(context.l10n)),
                     )
                 ];
               },
