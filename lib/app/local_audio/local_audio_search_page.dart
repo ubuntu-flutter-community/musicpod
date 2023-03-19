@@ -212,19 +212,23 @@ class _Albums extends StatelessWidget {
               return AudioCard(
                 bottom: Align(
                   alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: double.infinity,
-                    height: 30,
-                    margin: const EdgeInsets.all(1),
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.inverseSurface,
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(kYaruContainerRadius),
-                        bottomRight: Radius.circular(kYaruContainerRadius),
+                  child: Tooltip(
+                    message: audio.album == null ? '' : audio.album!,
+                    child: Container(
+                      width: double.infinity,
+                      height: 30,
+                      margin: const EdgeInsets.all(1),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 5,
+                        horizontal: 10,
                       ),
-                    ),
-                    child: FittedBox(
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.inverseSurface,
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(kYaruContainerRadius),
+                          bottomRight: Radius.circular(kYaruContainerRadius),
+                        ),
+                      ),
                       child: Text(
                         audio.album == null ? '' : audio.album!,
                         textAlign: TextAlign.center,
