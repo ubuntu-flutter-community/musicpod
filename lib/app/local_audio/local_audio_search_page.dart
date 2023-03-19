@@ -18,7 +18,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import 'local_audio_model.dart';
 
-class LocalAudioSearchPage extends StatefulWidget {
+class LocalAudioSearchPage extends StatelessWidget {
   const LocalAudioSearchPage({
     super.key,
     this.showWindowControls = true,
@@ -26,11 +26,6 @@ class LocalAudioSearchPage extends StatefulWidget {
 
   final bool showWindowControls;
 
-  @override
-  State<LocalAudioSearchPage> createState() => _LocalAudioSearchPageState();
-}
-
-class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -44,11 +39,11 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
         const SizedBox(
           height: 10,
         ),
-        _Albums(widget.showWindowControls),
+        _Albums(showWindowControls),
         const SizedBox(
           height: 10,
         ),
-        _Artists(showWindowControls: widget.showWindowControls),
+        _Artists(showWindowControls: showWindowControls),
       ],
     );
 
@@ -57,7 +52,7 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
           ? const Color.fromARGB(255, 37, 37, 37)
           : Colors.white,
       appBar: YaruWindowTitleBar(
-        style: widget.showWindowControls
+        style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
         title: LocalAudioSearchField(
