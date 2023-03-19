@@ -1,4 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:metadata_god/metadata_god.dart' as metadata;
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/audio_page_header.dart';
@@ -46,7 +48,7 @@ class _LocalAudioSearchPageState extends State<LocalAudioSearchPage> {
         const SizedBox(
           height: 10,
         ),
-        _Artists(showWindowControlsOnSpawnedPage: widget.showWindowControls),
+        _Artists(showWindowControls: widget.showWindowControls),
       ],
     );
 
@@ -168,9 +170,9 @@ class _Titles extends StatelessWidget {
 }
 
 class _Albums extends StatelessWidget {
-  const _Albums(this.showWindowControlsOnSpawnedPage);
+  const _Albums(this.showWindowControls);
 
-  final bool showWindowControlsOnSpawnedPage;
+  final bool showWindowControls;
 
   @override
   Widget build(BuildContext context) {
@@ -244,38 +246,14 @@ class _Albums extends StatelessWidget {
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      return AudioPage(
-                        audioPageType: AudioPageType.album,
-                        pageLabel: context.l10n.album,
+                      return _AlbumPage(
                         image: image,
-                        likePageButton: name == null
-                            ? null
-                            : isPinnedAlbum(name)
-                                ? YaruIconButton(
-                                    icon: Icon(
-                                      YaruIcons.pin,
-                                      color: theme.primaryColor,
-                                    ),
-                                    onPressed: () => removePinnedAlbum(
-                                      name,
-                                    ),
-                                  )
-                                : YaruIconButton(
-                                    icon: const Icon(
-                                      YaruIcons.pin,
-                                    ),
-                                    onPressed: album == null
-                                        ? null
-                                        : () => addPinnedAlbum(
-                                              audio.album!,
-                                              album,
-                                            ),
-                                  ),
-                        showWindowControls: showWindowControlsOnSpawnedPage,
-                        deletable: false,
-                        audios: album,
-                        pageId: name!,
-                        editableName: false,
+                        name: name,
+                        isPinnedAlbum: isPinnedAlbum,
+                        removePinnedAlbum: removePinnedAlbum,
+                        album: album,
+                        addPinnedAlbum: addPinnedAlbum,
+                        showWindowControls: showWindowControls,
                       );
                     },
                   ),
@@ -315,10 +293,67 @@ class _Albums extends StatelessWidget {
   }
 }
 
-class _Artists extends StatelessWidget {
-  const _Artists({required this.showWindowControlsOnSpawnedPage});
+class _AlbumPage extends StatelessWidget {
+  const _AlbumPage({
+    required this.image,
+    required this.name,
+    required this.isPinnedAlbum,
+    required this.removePinnedAlbum,
+    required this.album,
+    required this.addPinnedAlbum,
+    required this.showWindowControls,
+  });
 
-  final bool showWindowControlsOnSpawnedPage;
+  final Widget image;
+  final String? name;
+  final bool Function(String name) isPinnedAlbum;
+  final void Function(String name) removePinnedAlbum;
+  final Set<Audio>? album;
+  final void Function(String name, Set<Audio> audios) addPinnedAlbum;
+  final bool showWindowControls;
+
+  @override
+  Widget build(BuildContext context) {
+    return AudioPage(
+      audioPageType: AudioPageType.album,
+      pageLabel: context.l10n.album,
+      image: image,
+      likePageButton: name == null
+          ? null
+          : isPinnedAlbum(name!)
+              ? YaruIconButton(
+                  icon: Icon(
+                    YaruIcons.pin,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () => removePinnedAlbum(
+                    name!,
+                  ),
+                )
+              : YaruIconButton(
+                  icon: const Icon(
+                    YaruIcons.pin,
+                  ),
+                  onPressed: album == null
+                      ? null
+                      : () => addPinnedAlbum(
+                            name!,
+                            album!,
+                          ),
+                ),
+      showWindowControls: showWindowControls,
+      deletable: false,
+      audios: album,
+      pageId: name!,
+      editableName: false,
+    );
+  }
+}
+
+class _Artists extends StatelessWidget {
+  const _Artists({required this.showWindowControls});
+
+  final bool showWindowControls;
 
   @override
   Widget build(BuildContext context) {
@@ -354,59 +389,19 @@ class _Artists extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: kImageGridDelegate,
           children: [
-            for (final artist in similarArtistsSearchResult ?? <Audio>{})
+            for (final artistResult in similarArtistsSearchResult ?? <Audio>{})
               YaruSelectableContainer(
                 selected: false,
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      final artistAudios = findArtist(artist);
+                      final artistAudios = findArtist(artistResult);
                       final images = findImages(artistAudios ?? {});
 
-                      return AudioPage(
-                        audioFilter: AudioFilter.album,
-                        audioPageType: AudioPageType.artist,
-                        pageLabel: context.l10n.artist,
-                        pageTitle: artist.artist,
-                        image: images != null && images.length >= 4
-                            ? SizedBox(
-                                height: 200,
-                                width: 200,
-                                child: GridView(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 100,
-                                  ),
-                                  children: [
-                                    if (artistAudios != null)
-                                      for (final image in images)
-                                        Image.memory(
-                                          image.data,
-                                          width: 200.0,
-                                          fit: BoxFit.fill,
-                                          filterQuality: FilterQuality.medium,
-                                        )
-                                  ],
-                                ),
-                              )
-                            : images?.isNotEmpty == true
-                                ? Image.memory(
-                                    images!.first.data,
-                                    width: 200.0,
-                                    fit: BoxFit.fitWidth,
-                                    filterQuality: FilterQuality.medium,
-                                  )
-                                : const SizedBox.shrink(),
-                        pageSubtile: '',
-                        placeTrailer: images?.isNotEmpty == true,
-                        likePageButton: const SizedBox.shrink(),
-                        showWindowControls: showWindowControlsOnSpawnedPage,
-                        deletable: false,
-                        audios: artistAudios,
-                        pageId: artist.artist ?? artist.toString(),
-                        editableName: false,
+                      return _ArtistPage(
+                        images: images,
+                        artistAudios: artistAudios,
+                        showWindowControls: showWindowControls,
                       );
                     },
                   ),
@@ -421,7 +416,7 @@ class _Artists extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        artist.artist ?? 'unknown',
+                        artistResult.artist ?? 'unknown',
                         style: theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w100,
                           fontSize: 20,
@@ -436,6 +431,66 @@ class _Artists extends StatelessWidget {
           ],
         )
       ],
+    );
+  }
+}
+
+class _ArtistPage extends StatelessWidget {
+  const _ArtistPage({
+    required this.images,
+    required this.artistAudios,
+    required this.showWindowControls,
+  });
+
+  final Set<metadata.Image>? images;
+  final Set<Audio>? artistAudios;
+  final bool showWindowControls;
+
+  @override
+  Widget build(BuildContext context) {
+    return AudioPage(
+      audioFilter: AudioFilter.album,
+      audioPageType: AudioPageType.artist,
+      pageLabel: context.l10n.artist,
+      pageTitle: artistAudios?.firstOrNull?.artist,
+      image: images != null && images!.length >= 4
+          ? SizedBox(
+              height: 200,
+              width: 200,
+              child: GridView(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 100,
+                ),
+                children: [
+                  if (artistAudios != null)
+                    for (final image in images ?? <metadata.Image>[])
+                      Image.memory(
+                        image.data,
+                        width: 200.0,
+                        fit: BoxFit.fill,
+                        filterQuality: FilterQuality.medium,
+                      )
+                ],
+              ),
+            )
+          : images?.isNotEmpty == true
+              ? Image.memory(
+                  images!.first.data,
+                  width: 200.0,
+                  fit: BoxFit.fitWidth,
+                  filterQuality: FilterQuality.medium,
+                )
+              : const SizedBox.shrink(),
+      pageSubtile: '',
+      placeTrailer: images?.isNotEmpty == true,
+      likePageButton: const SizedBox.shrink(),
+      showWindowControls: showWindowControls,
+      deletable: false,
+      audios: artistAudios,
+      pageId: artistAudios?.firstOrNull?.artist ?? artistAudios.toString(),
+      editableName: false,
     );
   }
 }
