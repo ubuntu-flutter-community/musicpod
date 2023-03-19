@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:metadata_god/metadata_god.dart' as metadata;
@@ -382,21 +384,45 @@ class _Artists extends StatelessWidget {
           ),
         ),
         const _SpacedDivider(),
-        GridView(
-          padding: kGridPadding,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: kImageGridDelegate,
-          children: [
-            for (final artistResult in similarArtistsSearchResult ?? <Audio>{})
-              YaruSelectableContainer(
+        if (similarArtistsSearchResult != null)
+          GridView.builder(
+            itemCount: similarArtistsSearchResult.length,
+            padding: kGridPadding,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: kImageGridDelegate,
+            itemBuilder: (context, index) {
+              final artistAudios = findArtist(
+                similarArtistsSearchResult.elementAt(index),
+              );
+              final images = findImages(artistAudios ?? {});
+
+              Color? bg;
+              if (images == null || images.isEmpty) {
+                Random random = Random();
+                bg = Color.fromRGBO(
+                  random.nextInt(255),
+                  random.nextInt(255),
+                  random.nextInt(255),
+                  1,
+                ).withOpacity(0.7);
+              }
+
+              var text = Text(
+                similarArtistsSearchResult.elementAt(index).artist ?? 'unknown',
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w100,
+                  fontSize: 20,
+                  color: theme.colorScheme.onInverseSurface,
+                ),
+                textAlign: TextAlign.center,
+              );
+
+              return YaruSelectableContainer(
                 selected: false,
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      final artistAudios = findArtist(artistResult);
-                      final images = findImages(artistAudios ?? {});
-
                       return _ArtistPage(
                         images: images,
                         artistAudios: artistAudios,
@@ -409,26 +435,37 @@ class _Artists extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: theme.colorScheme.inverseSurface,
+                    color: bg,
+                    image: images?.isNotEmpty == true
+                        ? DecorationImage(
+                            image: MemoryImage(images!.first.data),
+                          )
+                        : null,
+                    gradient: bg == null
+                        ? null
+                        : LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              bg,
+                              theme.colorScheme.inverseSurface,
+                            ],
+                          ),
                   ),
                   child: Center(
-                    child: Padding(
+                    child: Container(
+                      width: double.infinity,
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        artistResult.artist ?? 'unknown',
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w100,
-                          fontSize: 20,
-                          color: theme.colorScheme.onInverseSurface,
-                        ),
-                        textAlign: TextAlign.center,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.inverseSurface,
                       ),
+                      child: text,
                     ),
                   ),
                 ),
-              )
-          ],
-        )
+              );
+            },
+          )
       ],
     );
   }
@@ -456,22 +493,26 @@ class _ArtistPage extends StatelessWidget {
           ? SizedBox(
               height: 200,
               width: 200,
-              child: GridView(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 100,
+              child: ScrollConfiguration(
+                behavior:
+                    ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                child: GridView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 100,
+                  ),
+                  children: [
+                    if (artistAudios != null)
+                      for (final image in images ?? <metadata.Image>[])
+                        Image.memory(
+                          image.data,
+                          width: 200.0,
+                          fit: BoxFit.fill,
+                          filterQuality: FilterQuality.medium,
+                        )
+                  ],
                 ),
-                children: [
-                  if (artistAudios != null)
-                    for (final image in images ?? <metadata.Image>[])
-                      Image.memory(
-                        image.data,
-                        width: 200.0,
-                        fit: BoxFit.fill,
-                        filterQuality: FilterQuality.medium,
-                      )
-                ],
               ),
             )
           : images?.isNotEmpty == true
