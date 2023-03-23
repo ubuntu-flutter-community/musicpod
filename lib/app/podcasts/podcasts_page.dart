@@ -4,7 +4,9 @@ import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/no_search_result_page.dart';
+import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
+import 'package:musicpod/app/connectivity_notifier.dart';
 import 'package:musicpod/app/player_model.dart';
 import 'package:musicpod/app/playlists/playlist_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
@@ -45,6 +47,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
     final model = context.watch<PodcastModel>();
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
     final theme = Theme.of(context);
@@ -248,20 +251,11 @@ class _PodcastsPageState extends State<PodcastsPage> {
       ],
     );
 
-    return Navigator(
-      pages: [
-        MaterialPage(
-          child: YaruDetailPage(
-            appBar: YaruWindowTitleBar(
-              style: widget.showWindowControls
-                  ? YaruTitleBarStyle.normal
-                  : YaruTitleBarStyle.undecorated,
-              title: const PodcastSearchField(),
-            ),
-            body: page,
-          ),
-        ),
-        if (model.searchQuery?.isNotEmpty == true)
+    if (!isOnline) {
+      return const OfflinePage();
+    } else {
+      return Navigator(
+        pages: [
           MaterialPage(
             child: YaruDetailPage(
               appBar: YaruWindowTitleBar(
@@ -269,50 +263,63 @@ class _PodcastsPageState extends State<PodcastsPage> {
                     ? YaruTitleBarStyle.normal
                     : YaruTitleBarStyle.undecorated,
                 title: const PodcastSearchField(),
-                leading: YaruBackButton(
-                  style: YaruBackButtonStyle.rounded,
-                  onPressed: () {
-                    model.setSearchQuery('');
-                    Navigator.maybePop(context);
-                  },
+              ),
+              body: page,
+            ),
+          ),
+          if (model.searchQuery?.isNotEmpty == true)
+            MaterialPage(
+              child: YaruDetailPage(
+                appBar: YaruWindowTitleBar(
+                  style: widget.showWindowControls
+                      ? YaruTitleBarStyle.normal
+                      : YaruTitleBarStyle.undecorated,
+                  title: const PodcastSearchField(),
+                  leading: YaruBackButton(
+                    style: YaruBackButtonStyle.rounded,
+                    onPressed: () {
+                      model.setSearchQuery('');
+                      Navigator.maybePop(context);
+                    },
+                  ),
+                ),
+                body: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    controlPanel,
+                    const Divider(
+                      height: 0,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Expanded(
+                      child: model.podcastSearchResult == null
+                          ? GridView(
+                              padding: kGridPadding,
+                              gridDelegate: kImageGridDelegate,
+                              children: List.generate(
+                                30,
+                                (index) => AudioCard(
+                                  image: fallBackLoadingIcon,
+                                ),
+                              ).toList(),
+                            )
+                          : model.podcastSearchResult!.isEmpty
+                              ? NoSearchResultPage(
+                                  message: context.l10n.noPodcastFound,
+                                )
+                              : PodcastSearchPage(
+                                  showWindowControls: widget.showWindowControls,
+                                ),
+                    )
+                  ],
                 ),
               ),
-              body: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  controlPanel,
-                  const Divider(
-                    height: 0,
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Expanded(
-                    child: model.podcastSearchResult == null
-                        ? GridView(
-                            padding: kGridPadding,
-                            gridDelegate: kImageGridDelegate,
-                            children: List.generate(
-                              30,
-                              (index) => AudioCard(
-                                image: fallBackLoadingIcon,
-                              ),
-                            ).toList(),
-                          )
-                        : model.podcastSearchResult!.isEmpty
-                            ? NoSearchResultPage(
-                                message: context.l10n.noPodcastFound,
-                              )
-                            : PodcastSearchPage(
-                                showWindowControls: widget.showWindowControls,
-                              ),
-                  )
-                ],
-              ),
-            ),
-          )
-      ],
-      onPopPage: (route, result) => route.didPop(result),
-    );
+            )
+        ],
+        onPopPage: (route, result) => route.didPop(result),
+      );
+    }
   }
 }

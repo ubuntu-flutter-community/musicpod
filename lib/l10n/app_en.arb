@@ -57,5 +57,7 @@
     "sports": "Sports",
     "tvAndFilm": "TV & Film",
     "technology": "Technology",
-    "trueCrime": "True Crime"
+    "trueCrime": "True Crime",
+    "offline": "offline",
+    "offlineDescription": "It looks like your computer is not connected to the internet."
 }
