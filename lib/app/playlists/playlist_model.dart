@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:xdg_directories/xdg_directories.dart';
 
 class PlaylistModel extends SafeChangeNotifier {
   int get totalListAmount =>
@@ -171,10 +173,10 @@ class PlaylistModel extends SafeChangeNotifier {
   }
 
   Future<void> init() async {
-    _playlists = await _read('playlists.json');
-    _pinnedAlbums = await _read('pinnedAlbums.json');
-    _podcasts = await _read('podcasts.json');
-    _starredStations = await _read('starredStations.json');
+    _playlists = await _read(kPlaylistsFileName);
+    _pinnedAlbums = await _read(kPinnedAlbumsFileName);
+    _podcasts = await _read(kPodcastsFileName);
+    _starredStations = await _read(kStarredStationsFileName);
   }
 
   Future<void> save() async {
@@ -184,7 +186,7 @@ class PlaylistModel extends SafeChangeNotifier {
         value.map((audio) => audio.toMap()).toList(),
       ),
     );
-    await _write(writeAblePlaylists, 'playlists.json');
+    await _write(writeAblePlaylists, kPlaylistsFileName);
 
     final writeAbleAlbums = _pinnedAlbums.map(
       (key, value) => MapEntry<String, List<dynamic>>(
@@ -192,7 +194,7 @@ class PlaylistModel extends SafeChangeNotifier {
         value.map((audio) => audio.toMap()).toList(),
       ),
     );
-    await _write(writeAbleAlbums, 'pinnedAlbums.json');
+    await _write(writeAbleAlbums, kPinnedAlbumsFileName);
 
     final writeAblePodcasts = _podcasts.map(
       (key, value) => MapEntry<String, List<dynamic>>(
@@ -200,7 +202,7 @@ class PlaylistModel extends SafeChangeNotifier {
         value.map((audio) => audio.toMap()).toList(),
       ),
     );
-    await _write(writeAblePodcasts, 'podcasts.json');
+    await _write(writeAblePodcasts, kPodcastsFileName);
 
     final writeAbleStations = _starredStations.map(
       (key, value) => MapEntry<String, List<dynamic>>(
@@ -208,7 +210,7 @@ class PlaylistModel extends SafeChangeNotifier {
         value.map((audio) => audio.toMap()).toList(),
       ),
     );
-    await _write(writeAbleStations, 'starredStations.json');
+    await _write(writeAbleStations, kStarredStationsFileName);
   }
 
   int? _index;
@@ -222,7 +224,11 @@ class PlaylistModel extends SafeChangeNotifier {
 
 Future<void> _write(Map<String, dynamic> map, String fileName) async {
   final jsonStr = jsonEncode(map);
-  final workingDir = Directory.current.path;
+
+  final workingDir = '${configHome.path}/$kMusicPodConfigSubDir';
+  if (!Directory(workingDir).existsSync()) {
+    Directory(workingDir).create();
+  }
   final path = '$workingDir/$fileName';
 
   final file = File(path);
@@ -235,7 +241,7 @@ Future<void> _write(Map<String, dynamic> map, String fileName) async {
 }
 
 Future<Map<String, Set<Audio>>> _read(String fileName) async {
-  final workingDir = Directory.current.path;
+  final workingDir = '${configHome.path}/musicpod';
   final path = '$workingDir/$fileName';
   final file = File(path);
 

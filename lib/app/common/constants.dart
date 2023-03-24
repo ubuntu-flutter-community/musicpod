@@ -46,3 +46,9 @@ const kShimmerHighLightLight = Color.fromARGB(197, 218, 218, 218);
 const kShimmerHighLightDark = Color.fromARGB(255, 57, 57, 57);
 
 const kLeadingGap = 40.0;
+
+const kPlaylistsFileName = 'playlists.json';
+const kPinnedAlbumsFileName = 'pinnedAlbums.json';
+const kPodcastsFileName = 'podcasts.json';
+const kStarredStationsFileName = 'starredStations.json';
+const kMusicPodConfigSubDir = 'musicpod';
