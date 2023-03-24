@@ -38,3 +38,4 @@ Thanks @alexmercerind for the super performant [Mediakit library](https://github
 - [X] Save playlists
 - [X] Save liked songs
 - [X] Save settings on disk
+- [ ] notify when a new episode of your subscribed podcasts is available
