@@ -37,4 +37,5 @@ Thanks @alexmercerind for the super performant [Mediakit library](https://github
 - [X] filter podcasts by genre
 - [X] Save playlists
 - [X] Save liked songs
-- [ ] Save settings on disk
+- [X] Save settings on disk
+- [ ] notify when a new episode of your subscribed podcasts is available

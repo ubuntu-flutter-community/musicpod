@@ -310,18 +310,18 @@ class _AudioPageState extends State<AudioPage> {
                     ),
                   );
 
-                  final starred = audio.name == null
+                  final starred = audio.title == null
                       ? false
-                      : isStarredStation(audio.name!);
+                      : isStarredStation(audio.title!);
 
                   final starStationButton = InkWell(
                     borderRadius: BorderRadius.circular(10),
-                    onTap: audio.name == null
+                    onTap: audio.title == null
                         ? null
                         : () {
                             !starred
-                                ? addStarredStation(audio.name!, {audio})
-                                : unStarStation(audio.name!);
+                                ? addStarredStation(audio.title!, {audio})
+                                : unStarStation(audio.title!);
                           },
                     child: Icon(
                       starred ? YaruIcons.star_filled : YaruIcons.star,

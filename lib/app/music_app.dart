@@ -313,7 +313,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           },
           builder: (context) {
             final noPicture = playlist.value.firstOrNull == null ||
-                playlist.value.firstOrNull!.picture == null;
+                playlist.value.firstOrNull!.pictureData == null;
 
             final noImage = playlist.value.firstOrNull == null ||
                 playlist.value.firstOrNull!.imageUrl == null;
@@ -322,7 +322,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               audioPageType: AudioPageType.playlist,
               image: !noPicture
                   ? Image.memory(
-                      playlist.value.firstOrNull!.picture!.data,
+                      playlist.value.firstOrNull!.pictureData!,
                       width: 200.0,
                       fit: BoxFit.fitWidth,
                       filterQuality: FilterQuality.medium,
@@ -376,7 +376,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           },
           builder: (context) {
             final noPicture = album.value.firstOrNull == null ||
-                album.value.firstOrNull!.picture == null;
+                album.value.firstOrNull!.pictureData == null;
 
             final noImage = album.value.firstOrNull == null ||
                 album.value.firstOrNull!.imageUrl == null;
@@ -385,7 +385,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               audioPageType: AudioPageType.album,
               image: !noPicture
                   ? Image.memory(
-                      album.value.firstOrNull!.picture!.data,
+                      album.value.firstOrNull!.pictureData!,
                       width: 200.0,
                       fit: BoxFit.fitWidth,
                       filterQuality: FilterQuality.medium,
@@ -427,7 +427,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             );
           },
           iconBuilder: (context, selected) {
-            final picture = album.value.firstOrNull?.picture;
+            final picture = album.value.firstOrNull?.pictureData!;
             Widget? albumArt;
             if (picture != null) {
               albumArt = SizedBox(
@@ -435,7 +435,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(5),
                   child: Image.memory(
-                    picture.data,
+                    picture,
                     height: 23,
                     fit: BoxFit.fitHeight,
                     filterQuality: FilterQuality.medium,

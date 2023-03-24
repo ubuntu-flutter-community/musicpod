@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:metadata_god/metadata_god.dart';
@@ -6,7 +7,6 @@ import 'package:mime_type/mime_type.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/utils.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:path/path.dart' as path;
 import 'package:xdg_directories/xdg_directories.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
@@ -147,8 +147,8 @@ class LocalAudioModel extends SafeChangeNotifier {
     return albumList != null ? Set.from(albumList) : null;
   }
 
-  Set<Image>? findImages(Set<Audio> audios) {
-    final images = <Image>{};
+  Set<Uint8List>? findImages(Set<Audio> audios) {
+    final images = <Uint8List>{};
     final albumAudios = <Audio>{};
     for (var audio in audios) {
       if (albumAudios.none((a) => a.album == audio.album)) {
@@ -157,8 +157,8 @@ class LocalAudioModel extends SafeChangeNotifier {
     }
 
     for (var audio in albumAudios) {
-      if (audio.picture?.data != null) {
-        images.add(audio.picture!);
+      if (audio.pictureData != null) {
+        images.add(audio.pictureData!);
       }
     }
 
@@ -192,15 +192,11 @@ class LocalAudioModel extends SafeChangeNotifier {
 
       audios = {};
       for (var e in onlyFiles) {
-        File file = File(e.path);
-        String basename = path.basename(file.path);
-
         final metadata = await MetadataGod.getMetadata(e.path);
 
         final audio = Audio(
           path: e.path,
           audioType: AudioType.local,
-          name: basename,
           artist: metadata?.artist,
           title: metadata?.title,
           album:
@@ -211,7 +207,8 @@ class LocalAudioModel extends SafeChangeNotifier {
           durationMs: metadata?.durationMs,
           fileSize: metadata?.fileSize,
           genre: metadata?.genre,
-          picture: metadata?.picture,
+          pictureData: metadata?.picture?.data,
+          pictureMimeType: metadata?.picture?.mimeType,
           trackNumber: metadata?.trackNumber,
           year: metadata?.year,
         );

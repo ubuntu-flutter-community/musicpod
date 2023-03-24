@@ -133,9 +133,7 @@ class _PlayerViewState extends State<PlayerView> {
     );
 
     final title = Text(
-      model.audio?.title?.isNotEmpty == true
-          ? model.audio!.title!
-          : (model.audio?.name ?? 'unknown'),
+      model.audio?.title?.isNotEmpty == true ? model.audio!.title! : 'unknown',
       style: TextStyle(
         fontWeight: FontWeight.w200,
         fontSize: isFullScreen ? 45 : 15,
@@ -233,13 +231,13 @@ class _PlayerViewState extends State<PlayerView> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      if (model.audio?.picture != null)
+                      if (model.audio?.pictureData != null)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
                             child: Image.memory(
-                              model.audio!.picture!.data,
+                              model.audio!.pictureData!,
                               height: 400.0,
                               fit: BoxFit.fitHeight,
                             ),
@@ -374,7 +372,7 @@ class _PlayerViewState extends State<PlayerView> {
           fullScreenButton,
           Row(
             children: [
-              if (model.audio?.picture != null)
+              if (model.audio?.pictureData != null)
                 AnimatedContainer(
                   height: 120,
                   width: 120,
@@ -382,7 +380,7 @@ class _PlayerViewState extends State<PlayerView> {
                   child: Image.memory(
                     filterQuality: FilterQuality.medium,
                     fit: BoxFit.cover,
-                    model.audio!.picture!.data,
+                    model.audio!.pictureData!,
                     height: 120.0,
                   ),
                 )
