@@ -66,7 +66,7 @@ class AudioTile extends StatelessWidget {
           Expanded(
             flex: 5,
             child: Text(
-              audio.title ?? audio.name ?? '',
+              audio.title ?? 'unknown',
               style: textStyle,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

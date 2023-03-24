@@ -48,7 +48,6 @@ class PodcastService {
               final audio = Audio(
                 url: episode.contentUrl,
                 audioType: AudioType.podcast,
-                name: podcast?.title,
                 imageUrl: podcast?.image,
                 title: episode.title,
                 album: item.collectionName,
@@ -114,7 +113,6 @@ class PodcastService {
                   final audio = Audio(
                     url: episode.contentUrl,
                     audioType: AudioType.podcast,
-                    name: '${podcast?.title ?? ''} - ${episode.title}',
                     imageUrl: useAlbumImage
                         ? podcast?.image ?? episode.imageUrl
                         : episode.imageUrl ?? podcast?.image,

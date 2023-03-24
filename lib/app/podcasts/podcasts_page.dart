@@ -158,7 +158,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
                       audios: podcast,
                       pageId: podcast.first.album ??
                           podcast.first.title ??
-                          podcast.first.name ??
                           podcast.toString(),
                     );
                   },

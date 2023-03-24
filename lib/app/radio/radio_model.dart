@@ -16,7 +16,6 @@ class RadioModel extends SafeChangeNotifier {
       stationsMap.entries
           .map(
             (e) => Audio(
-              name: e.key,
               url: e.value,
               title: e.key,
               artist: e.key,

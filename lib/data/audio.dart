@@ -3,9 +3,13 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 
 class Audio {
+  /// The local path if available.
   final String? path;
+
+  /// The remote URL if available.
   final String? url;
-  final String? name;
+
+  /// The [AudioType]
   final AudioType? audioType;
 
   /// The url of the image if available.
@@ -17,45 +21,51 @@ class Audio {
   /// Website link or feed url.
   final String? website;
 
-  /// The title of the audio file.
+  /// The ID3-Tag title of the audio file.
   final String? title;
 
-  /// Duration of the audio file. It can be null if was not set
+  /// The ID3-Tag duration of the audio file. It can be null if was not set
   final double? durationMs;
 
-  /// The artist(s) of the audio file.
+  /// The ID3-Tag artist(s) of the audio file.
   final String? artist;
 
-  /// The album of the audio file.
+  /// The ID3-Tag album of the audio file.
   final String? album;
 
-  /// The album artist(s) of the audio file.
+  /// The ID3-Tag album artist(s) of the audio file.
   final String? albumArtist;
 
+  /// The ID3-Tag track number of the audio file.
   final int? trackNumber;
+
+  /// The ID3-Tag track total of the audio file.
   final int? trackTotal;
+
+  /// The ID3-Tag discNumber of the audio file.
   final int? discNumber;
+
+  /// The ID3-Tag discTotal of the audio file.
   final int? discTotal;
 
-  /// The year the track was released
+  /// The ID3-Tag year the track was released
   final int? year;
 
-  /// The genre of the track
+  /// The ID3-Tag genre of the track
   final String? genre;
 
-  /// The picture's MIME type.
+  /// The ID3-Tag picture's MIME type.
   final String? pictureMimeType;
 
-  /// The image data.
+  /// The ID3-Tag image data.
   final Uint8List? pictureData;
 
-  /// The file size of the audio file
+  /// The ID3-Tag file size of the audio file
   final int? fileSize;
 
   Audio({
     this.path,
     this.url,
-    this.name,
     this.audioType,
     this.imageUrl,
     this.description,
@@ -102,7 +112,6 @@ class Audio {
     return Audio(
       path: path ?? this.path,
       url: url ?? this.url,
-      name: name ?? this.name,
       audioType: audioType ?? this.audioType,
       imageUrl: imageUrl ?? this.imageUrl,
       description: description ?? this.description,
@@ -132,9 +141,6 @@ class Audio {
     }
     if (url != null) {
       result.addAll({'url': url});
-    }
-    if (name != null) {
-      result.addAll({'name': name});
     }
     if (audioType != null) {
       result.addAll({'audioType': audioType!.name});
@@ -198,7 +204,6 @@ class Audio {
     return Audio(
       path: map['path'],
       url: map['url'],
-      name: map['name'],
       audioType: map['audioType'] != null
           ? AudioType.values.byName(map['audioType'])
           : null,
@@ -229,7 +234,7 @@ class Audio {
 
   @override
   String toString() {
-    return 'Audio(path: $path, url: $url, name: $name, audioType: $audioType, imageUrl: $imageUrl, description: $description, website: $website, title: $title, durationMs: $durationMs, artist: $artist, album: $album, albumArtist: $albumArtist, trackNumber: $trackNumber, trackTotal: $trackTotal, discNumber: $discNumber, discTotal: $discTotal, year: $year, genre: $genre, pictureMimeType: $pictureMimeType, pictureData: $pictureData, fileSize: $fileSize)';
+    return 'Audio(path: $path, url: $url,  audioType: $audioType, imageUrl: $imageUrl, description: $description, website: $website, title: $title, durationMs: $durationMs, artist: $artist, album: $album, albumArtist: $albumArtist, trackNumber: $trackNumber, trackTotal: $trackTotal, discNumber: $discNumber, discTotal: $discTotal, year: $year, genre: $genre, pictureMimeType: $pictureMimeType, pictureData: $pictureData, fileSize: $fileSize)';
   }
 
   @override
@@ -239,7 +244,6 @@ class Audio {
     return other is Audio &&
         other.path == path &&
         other.url == url &&
-        other.name == name &&
         other.audioType == audioType &&
         other.imageUrl == imageUrl &&
         other.description == description &&
@@ -264,7 +268,6 @@ class Audio {
   int get hashCode {
     return path.hashCode ^
         url.hashCode ^
-        name.hashCode ^
         audioType.hashCode ^
         imageUrl.hashCode ^
         description.hashCode ^

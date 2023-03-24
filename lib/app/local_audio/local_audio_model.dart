@@ -7,7 +7,6 @@ import 'package:mime_type/mime_type.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/utils.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:path/path.dart' as path;
 import 'package:xdg_directories/xdg_directories.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
@@ -193,15 +192,11 @@ class LocalAudioModel extends SafeChangeNotifier {
 
       audios = {};
       for (var e in onlyFiles) {
-        File file = File(e.path);
-        String basename = path.basename(file.path);
-
         final metadata = await MetadataGod.getMetadata(e.path);
 
         final audio = Audio(
           path: e.path,
           audioType: AudioType.local,
-          name: basename,
           artist: metadata?.artist,
           title: metadata?.title,
           album:

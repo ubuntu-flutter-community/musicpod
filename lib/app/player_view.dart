@@ -133,9 +133,7 @@ class _PlayerViewState extends State<PlayerView> {
     );
 
     final title = Text(
-      model.audio?.title?.isNotEmpty == true
-          ? model.audio!.title!
-          : (model.audio?.name ?? 'unknown'),
+      model.audio?.title?.isNotEmpty == true ? model.audio!.title! : 'unknown',
       style: TextStyle(
         fontWeight: FontWeight.w200,
         fontSize: isFullScreen ? 45 : 15,
