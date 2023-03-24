@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:musicpod/data/audio.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -45,7 +48,7 @@ class PlaylistModel extends SafeChangeNotifier {
   // Starred stations
   //
 
-  final Map<String, Set<Audio>> _starredStations = {};
+  Map<String, Set<Audio>> _starredStations = {};
   Map<String, Set<Audio>> get starredStations => _starredStations;
   int get starredStationsLength => _starredStations.length;
   void addStarredStation(String name, Set<Audio> audios) {
@@ -66,7 +69,7 @@ class PlaylistModel extends SafeChangeNotifier {
   // Normal playlists and albums
   //
 
-  final Map<String, Set<Audio>> _playlists = {};
+  Map<String, Set<Audio>> _playlists = {};
   Map<String, Set<Audio>> get playlists => _playlists;
   int get playlistsLength => _playlists.length;
   List<Audio> getPlaylistAt(int index) =>
@@ -122,7 +125,7 @@ class PlaylistModel extends SafeChangeNotifier {
 
   // Podcasts
 
-  final Map<String, Set<Audio>> _podcasts = {};
+  Map<String, Set<Audio>> _podcasts = {};
   Map<String, Set<Audio>> get podcasts => _podcasts;
   int get podcastsLength => _podcasts.length;
   void addPodcast(String name, Set<Audio> audios) {
@@ -149,7 +152,7 @@ class PlaylistModel extends SafeChangeNotifier {
   // Albums
   //
 
-  final Map<String, Set<Audio>> _pinnedAlbums = {};
+  Map<String, Set<Audio>> _pinnedAlbums = {};
   Map<String, Set<Audio>> get pinnedAlbums => _pinnedAlbums;
   int get pinnedAlbumsLength => _pinnedAlbums.length;
   List<Audio> getAlbumAt(int index) =>
@@ -168,11 +171,45 @@ class PlaylistModel extends SafeChangeNotifier {
   }
 
   Future<void> init() async {
-    // TODO: load from db
+    _playlists = await _read('playlists.json');
+    _pinnedAlbums = await _read('pinnedAlbums.json');
+    _podcasts = await _read('podcasts.json');
+    _starredStations = await _read('starredStations.json');
   }
-  // Future<void> dispose() async {
-  // TODO: safe to db
-  // }
+
+  Future<void> save() async {
+    final writeAblePlaylists = _playlists.map(
+      (key, value) => MapEntry<String, List<dynamic>>(
+        key,
+        value.map((audio) => audio.toMap()).toList(),
+      ),
+    );
+    await _write(writeAblePlaylists, 'playlists.json');
+
+    final writeAbleAlbums = _pinnedAlbums.map(
+      (key, value) => MapEntry<String, List<dynamic>>(
+        key,
+        value.map((audio) => audio.toMap()).toList(),
+      ),
+    );
+    await _write(writeAbleAlbums, 'pinnedAlbums.json');
+
+    final writeAblePodcasts = _podcasts.map(
+      (key, value) => MapEntry<String, List<dynamic>>(
+        key,
+        value.map((audio) => audio.toMap()).toList(),
+      ),
+    );
+    await _write(writeAblePodcasts, 'podcasts.json');
+
+    final writeAbleStations = _starredStations.map(
+      (key, value) => MapEntry<String, List<dynamic>>(
+        key,
+        value.map((audio) => audio.toMap()).toList(),
+      ),
+    );
+    await _write(writeAbleStations, 'starredStations.json');
+  }
 
   int? _index;
   int? get index => _index;
@@ -180,5 +217,44 @@ class PlaylistModel extends SafeChangeNotifier {
     if (value == null || value == _index) return;
     _index = value;
     notifyListeners();
+  }
+}
+
+Future<void> _write(Map<String, dynamic> map, String fileName) async {
+  final jsonStr = jsonEncode(map);
+  final workingDir = Directory.current.path;
+  final path = '$workingDir/$fileName';
+
+  final file = File(path);
+
+  if (!file.existsSync()) {
+    file.create();
+  }
+
+  await file.writeAsString(jsonStr);
+}
+
+Future<Map<String, Set<Audio>>> _read(String fileName) async {
+  final workingDir = Directory.current.path;
+  final path = '$workingDir/$fileName';
+  final file = File(path);
+
+  if (file.existsSync()) {
+    final jsonStr = await file.readAsString();
+
+    final map = jsonDecode(jsonStr) as Map<String, dynamic>;
+
+    final m = map.map(
+      (key, value) => MapEntry<String, Set<Audio>>(
+        key,
+        Set.from(
+          (value as List<dynamic>).map((e) => Audio.fromMap(e)),
+        ),
+      ),
+    );
+
+    return m;
+  } else {
+    return <String, Set<Audio>>{};
   }
 }
