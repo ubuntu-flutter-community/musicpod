@@ -21,30 +21,40 @@ class PlaylistModel extends SafeChangeNotifier {
   Set<Audio> _likedAudios = {};
   Set<Audio> get likedAudios => _likedAudios;
 
-  void addLikedAudio(Audio audio) {
+  void addLikedAudio(Audio audio, [bool notify = true]) {
     _likedAudios.add(audio);
-    notifyListeners();
+    if (notify) {
+      _write({'likedAudios': _likedAudios}, kLikedAudios)
+          .then((value) => notifyListeners());
+    }
   }
 
   void addLikedAudios(Set<Audio> audios) {
     for (var audio in audios) {
-      addLikedAudio(audio);
+      addLikedAudio(audio, false);
     }
+    _write({'likedAudios': _likedAudios}, kLikedAudios)
+        .then((value) => notifyListeners());
   }
 
   bool liked(Audio audio) {
     return likedAudios.contains(audio);
   }
 
-  void removeLikedAudio(Audio audio) {
+  void removeLikedAudio(Audio audio, [bool notify = true]) {
     _likedAudios.remove(audio);
-    notifyListeners();
+    if (notify) {
+      _write({'likedAudios': _likedAudios}, kLikedAudios)
+          .then((value) => notifyListeners());
+    }
   }
 
   void removeLikedAudios(Set<Audio> audios) {
     for (var audio in audios) {
-      removeLikedAudio(audio);
+      removeLikedAudio(audio, false);
     }
+    _write({'likedAudios': _likedAudios}, kLikedAudios)
+        .then((value) => notifyListeners());
   }
 
   //
@@ -56,12 +66,14 @@ class PlaylistModel extends SafeChangeNotifier {
   int get starredStationsLength => _starredStations.length;
   void addStarredStation(String name, Set<Audio> audios) {
     _starredStations.putIfAbsent(name, () => audios);
-    notifyListeners();
+    _write(_starredStations, kStarredStationsFileName)
+        .then((_) => notifyListeners());
   }
 
   void unStarStation(String name) {
     _starredStations.remove(name);
-    notifyListeners();
+    _write(_starredStations, kStarredStationsFileName)
+        .then((_) => notifyListeners());
   }
 
   bool isStarredStation(String name) {
@@ -82,12 +94,12 @@ class PlaylistModel extends SafeChangeNotifier {
 
   void addPlaylist(String name, Set<Audio> audios) {
     _playlists.putIfAbsent(name, () => audios);
-    notifyListeners();
+    _write(_playlists, kPlaylistsFileName).then((_) => notifyListeners());
   }
 
   void removePlaylist(String name) {
     _playlists.remove(name);
-    notifyListeners();
+    _write(_playlists, kPlaylistsFileName).then((_) => notifyListeners());
   }
 
   void updatePlaylistName(String oldName, String newName) {
@@ -98,7 +110,7 @@ class PlaylistModel extends SafeChangeNotifier {
       _playlists.putIfAbsent(newName, () => oldList);
     }
 
-    notifyListeners();
+    _write(_playlists, kPlaylistsFileName).then((_) => notifyListeners());
   }
 
   void addAudioToPlaylist(String playlist, Audio audio) {
@@ -111,7 +123,7 @@ class PlaylistModel extends SafeChangeNotifier {
       }
       p.add(audio);
     }
-    notifyListeners();
+    _write(_playlists, kPlaylistsFileName).then((_) => notifyListeners());
   }
 
   void removeAudioFromPlaylist(String playlist, Audio audio) {
@@ -119,7 +131,7 @@ class PlaylistModel extends SafeChangeNotifier {
     if (p != null && p.contains(audio)) {
       p.remove(audio);
     }
-    notifyListeners();
+    _write(_playlists, kPlaylistsFileName).then((_) => notifyListeners());
   }
 
   List<String> getTopFivePlaylistNames() {
@@ -133,13 +145,13 @@ class PlaylistModel extends SafeChangeNotifier {
   int get podcastsLength => _podcasts.length;
   void addPodcast(String name, Set<Audio> audios) {
     _podcasts.putIfAbsent(name, () => audios);
-    notifyListeners();
+    _write(_podcasts, kPodcastsFileName).then((_) => notifyListeners());
   }
 
   void removePodcast(String name) {
     _podcasts.remove(name);
     _podcastsToFeedUrls.remove(name);
-    notifyListeners();
+    _write(_podcasts, kPodcastsFileName).then((_) => notifyListeners());
   }
 
   bool podcastSubscribed(String name) => _podcasts.containsKey(name);
@@ -148,7 +160,7 @@ class PlaylistModel extends SafeChangeNotifier {
   Map<String, String> get podcastsToFeedUrls => _podcastsToFeedUrls;
   void addPlaylistFeed(String playlist, String feedUrl) {
     _podcastsToFeedUrls.putIfAbsent(playlist, () => feedUrl);
-    notifyListeners();
+    _write(_podcasts, kPodcastsFileName).then((_) => notifyListeners());
   }
 
   //
@@ -165,12 +177,12 @@ class PlaylistModel extends SafeChangeNotifier {
 
   void addPinnedAlbum(String name, Set<Audio> audios) {
     _pinnedAlbums.putIfAbsent(name, () => audios);
-    notifyListeners();
+    _write(_pinnedAlbums, kPinnedAlbumsFileName).then((_) => notifyListeners());
   }
 
   void removePinnedAlbum(String name) {
     _pinnedAlbums.remove(name);
-    notifyListeners();
+    _write(_pinnedAlbums, kPinnedAlbumsFileName).then((_) => notifyListeners());
   }
 
   Future<void> init() async {

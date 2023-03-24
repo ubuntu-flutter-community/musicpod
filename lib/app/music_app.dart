@@ -500,14 +500,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
 
     var yaruMasterDetailPage = YaruMasterDetailPage(
       onSelected: (value) => playlistModel.index = value ?? 0,
-      appBar: YaruWindowTitleBar(
-        leading: Center(
-          child: YaruIconButton(
-            icon: const Icon(YaruIcons.save),
-            onPressed: () => playlistModel.save(),
-          ),
-        ),
-      ),
+      appBar: const YaruWindowTitleBar(),
       bottomBar: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: settingsTile,
