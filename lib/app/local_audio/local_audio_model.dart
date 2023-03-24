@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:metadata_god/metadata_god.dart';
@@ -147,8 +148,8 @@ class LocalAudioModel extends SafeChangeNotifier {
     return albumList != null ? Set.from(albumList) : null;
   }
 
-  Set<Image>? findImages(Set<Audio> audios) {
-    final images = <Image>{};
+  Set<Uint8List>? findImages(Set<Audio> audios) {
+    final images = <Uint8List>{};
     final albumAudios = <Audio>{};
     for (var audio in audios) {
       if (albumAudios.none((a) => a.album == audio.album)) {
@@ -157,8 +158,8 @@ class LocalAudioModel extends SafeChangeNotifier {
     }
 
     for (var audio in albumAudios) {
-      if (audio.picture?.data != null) {
-        images.add(audio.picture!);
+      if (audio.pictureData != null) {
+        images.add(audio.pictureData!);
       }
     }
 
@@ -211,7 +212,8 @@ class LocalAudioModel extends SafeChangeNotifier {
           durationMs: metadata?.durationMs,
           fileSize: metadata?.fileSize,
           genre: metadata?.genre,
-          picture: metadata?.picture,
+          pictureData: metadata?.picture?.data,
+          pictureMimeType: metadata?.picture?.mimeType,
           trackNumber: metadata?.trackNumber,
           year: metadata?.year,
         );

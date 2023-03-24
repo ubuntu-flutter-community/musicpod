@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:metadata_god/metadata_god.dart';
+import 'package:flutter/services.dart';
 
 class Audio {
   final String? path;
@@ -43,8 +43,11 @@ class Audio {
   /// The genre of the track
   final String? genre;
 
-  /// The attached album-art image data with [mimeType]
-  final Image? picture;
+  /// The picture's MIME type.
+  final String? pictureMimeType;
+
+  /// The image data.
+  final Uint8List? pictureData;
 
   /// The file size of the audio file
   final int? fileSize;
@@ -68,7 +71,8 @@ class Audio {
     this.discTotal,
     this.year,
     this.genre,
-    this.picture,
+    this.pictureMimeType,
+    this.pictureData,
     this.fileSize,
   });
 
@@ -91,7 +95,8 @@ class Audio {
     int? discTotal,
     int? year,
     String? genre,
-    Image? picture,
+    String? pictureMimeType,
+    Uint8List? pictureData,
     int? fileSize,
   }) {
     return Audio(
@@ -113,7 +118,8 @@ class Audio {
       discTotal: discTotal ?? this.discTotal,
       year: year ?? this.year,
       genre: genre ?? this.genre,
-      picture: picture ?? this.picture,
+      pictureMimeType: pictureMimeType ?? this.pictureMimeType,
+      pictureData: pictureData ?? this.pictureData,
       fileSize: fileSize ?? this.fileSize,
     );
   }
@@ -129,6 +135,9 @@ class Audio {
     }
     if (name != null) {
       result.addAll({'name': name});
+    }
+    if (audioType != null) {
+      result.addAll({'audioType': audioType!.name});
     }
     if (imageUrl != null) {
       result.addAll({'imageUrl': imageUrl});
@@ -172,7 +181,12 @@ class Audio {
     if (genre != null) {
       result.addAll({'genre': genre});
     }
-
+    if (pictureMimeType != null) {
+      result.addAll({'pictureMimeType': pictureMimeType});
+    }
+    if (pictureData != null) {
+      result.addAll({'pictureData': base64Encode(pictureData!)});
+    }
     if (fileSize != null) {
       result.addAll({'fileSize': fileSize});
     }
@@ -185,6 +199,9 @@ class Audio {
       path: map['path'],
       url: map['url'],
       name: map['name'],
+      audioType: map['audioType'] != null
+          ? AudioType.values.byName(map['audioType'])
+          : null,
       imageUrl: map['imageUrl'],
       description: map['description'],
       website: map['website'],
@@ -199,6 +216,9 @@ class Audio {
       discTotal: map['discTotal']?.toInt(),
       year: map['year']?.toInt(),
       genre: map['genre'],
+      pictureMimeType: map['pictureMimeType'],
+      pictureData:
+          map['pictureData'] != null ? base64Decode(map['pictureData']) : null,
       fileSize: map['fileSize']?.toInt(),
     );
   }
@@ -209,7 +229,7 @@ class Audio {
 
   @override
   String toString() {
-    return 'Audio(path: $path, url: $url, name: $name, audioType: $audioType, imageUrl: $imageUrl, description: $description, website: $website, title: $title, durationMs: $durationMs, artist: $artist, album: $album, albumArtist: $albumArtist, trackNumber: $trackNumber, trackTotal: $trackTotal, discNumber: $discNumber, discTotal: $discTotal, year: $year, genre: $genre, picture: $picture, fileSize: $fileSize)';
+    return 'Audio(path: $path, url: $url, name: $name, audioType: $audioType, imageUrl: $imageUrl, description: $description, website: $website, title: $title, durationMs: $durationMs, artist: $artist, album: $album, albumArtist: $albumArtist, trackNumber: $trackNumber, trackTotal: $trackTotal, discNumber: $discNumber, discTotal: $discTotal, year: $year, genre: $genre, pictureMimeType: $pictureMimeType, pictureData: $pictureData, fileSize: $fileSize)';
   }
 
   @override
@@ -235,7 +255,8 @@ class Audio {
         other.discTotal == discTotal &&
         other.year == year &&
         other.genre == genre &&
-        other.picture == picture &&
+        other.pictureMimeType == pictureMimeType &&
+        other.pictureData == pictureData &&
         other.fileSize == fileSize;
   }
 
@@ -259,7 +280,8 @@ class Audio {
         discTotal.hashCode ^
         year.hashCode ^
         genre.hashCode ^
-        picture.hashCode ^
+        pictureMimeType.hashCode ^
+        pictureData.hashCode ^
         fileSize.hashCode;
   }
 }
@@ -267,5 +289,5 @@ class Audio {
 enum AudioType {
   local,
   radio,
-  podcast,
+  podcast;
 }

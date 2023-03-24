@@ -248,12 +248,12 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> loadColor() async {
     if (audio?.audioType == AudioType.local) {
-      if (audio == null || audio?.path == null || audio!.picture == null) {
+      if (audio == null || audio?.path == null || audio!.pictureData == null) {
         return;
       }
 
       final image = MemoryImage(
-        audio!.picture!.data,
+        audio!.pictureData!,
       );
       final generator = await PaletteGenerator.fromImageProvider(image);
       _color = generator.dominantColor?.color;

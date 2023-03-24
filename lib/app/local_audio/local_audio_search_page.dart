@@ -1,8 +1,8 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:metadata_god/metadata_god.dart' as metadata;
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/audio_page_header.dart';
@@ -197,7 +197,7 @@ class _Albums extends StatelessWidget {
               final name = audio.album;
               final album = findAlbum(audio);
 
-              final image = audio.picture?.data == null
+              final image = audio.pictureData == null
                   ? Center(
                       child: Icon(
                         YaruIcons.music_note,
@@ -206,7 +206,7 @@ class _Albums extends StatelessWidget {
                       ),
                     )
                   : Image.memory(
-                      audio.picture!.data,
+                      audio.pictureData!,
                       fit: BoxFit.fitWidth,
                       filterQuality: FilterQuality.medium,
                     );
@@ -438,7 +438,7 @@ class _Artists extends StatelessWidget {
                     color: bg,
                     image: images?.isNotEmpty == true
                         ? DecorationImage(
-                            image: MemoryImage(images!.first.data),
+                            image: MemoryImage(images!.first),
                           )
                         : null,
                     gradient: bg == null
@@ -478,7 +478,7 @@ class _ArtistPage extends StatelessWidget {
     required this.showWindowControls,
   });
 
-  final Set<metadata.Image>? images;
+  final Set<Uint8List>? images;
   final Set<Audio>? artistAudios;
   final bool showWindowControls;
 
@@ -504,9 +504,9 @@ class _ArtistPage extends StatelessWidget {
                   ),
                   children: [
                     if (artistAudios != null)
-                      for (final image in images ?? <metadata.Image>[])
+                      for (final image in images ?? <Uint8List>[])
                         Image.memory(
-                          image.data,
+                          image,
                           width: 200.0,
                           fit: BoxFit.fill,
                           filterQuality: FilterQuality.medium,
@@ -517,7 +517,7 @@ class _ArtistPage extends StatelessWidget {
             )
           : images?.isNotEmpty == true
               ? Image.memory(
-                  images!.first.data,
+                  images!.first,
                   width: 200.0,
                   fit: BoxFit.fitWidth,
                   filterQuality: FilterQuality.medium,
