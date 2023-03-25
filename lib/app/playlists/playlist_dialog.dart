@@ -6,6 +6,58 @@ import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+class SimplePlaylistDialog extends StatefulWidget {
+  const SimplePlaylistDialog({
+    super.key,
+    this.onCreateNewPlaylist,
+    required this.audio,
+  });
+
+  final Audio audio;
+  final void Function(String name, Set<Audio> audios)? onCreateNewPlaylist;
+
+  @override
+  State<SimplePlaylistDialog> createState() => _SimplePlaylistDialogState();
+}
+
+class _SimplePlaylistDialogState extends State<SimplePlaylistDialog> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const YaruDialogTitleBar(
+        border: BorderSide.none,
+        backgroundColor: Colors.transparent,
+      ),
+      titlePadding: EdgeInsets.zero,
+      content: TextField(
+        decoration: InputDecoration(label: Text(context.l10n.playlist)),
+        controller: _controller,
+      ),
+      actions: [
+        OutlinedButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            context.l10n.cancel,
+          ),
+        ),
+        ElevatedButton(
+          onPressed: widget.onCreateNewPlaylist == null
+              ? null
+              : () {
+                  widget.onCreateNewPlaylist!(_controller.text, {widget.audio});
+                  Navigator.of(context).pop();
+                },
+          child: Text(
+            context.l10n.createNewPlaylist,
+          ),
+        )
+      ],
+    );
+  }
+}
+
 class PlaylistDialog extends StatefulWidget {
   const PlaylistDialog({
     super.key,

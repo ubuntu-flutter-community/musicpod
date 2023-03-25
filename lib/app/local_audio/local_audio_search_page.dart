@@ -1,14 +1,15 @@
-import 'dart:math';
-import 'dart:typed_data';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
+import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/audio_page_header.dart';
 import 'package:musicpod/app/common/audio_tile.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/loading_tile.dart';
+import 'package:musicpod/app/common/round_image_container.dart';
+import 'package:musicpod/app/common/spaced_divider.dart';
+import 'package:musicpod/app/local_audio/artist_page.dart';
 import 'package:musicpod/app/local_audio/local_audio_search_field.dart';
 import 'package:musicpod/app/player_model.dart';
 import 'package:musicpod/app/playlists/playlist_model.dart';
@@ -116,7 +117,7 @@ class _Titles extends StatelessWidget {
             audioFilter: AudioFilter.trackNumber,
           ),
         ),
-        const _SpacedDivider(
+        const SpacedDivider(
           top: 0,
         ),
         if (titlesResult == null)
@@ -284,7 +285,7 @@ class _Albums extends StatelessWidget {
             ],
           ),
         ),
-        const _SpacedDivider(),
+        const SpacedDivider(),
         Padding(
           padding: const EdgeInsets.only(left: 15, right: 15),
           child: albumGrid,
@@ -383,7 +384,7 @@ class _Artists extends StatelessWidget {
             ],
           ),
         ),
-        const _SpacedDivider(),
+        const SpacedDivider(),
         if (similarArtistsSearchResult != null)
           GridView.builder(
             itemCount: similarArtistsSearchResult.length,
@@ -396,17 +397,6 @@ class _Artists extends StatelessWidget {
                 similarArtistsSearchResult.elementAt(index),
               );
               final images = findImages(artistAudios ?? {});
-
-              Color? bg;
-              if (images == null || images.isEmpty) {
-                Random random = Random();
-                bg = Color.fromRGBO(
-                  random.nextInt(255),
-                  random.nextInt(255),
-                  random.nextInt(255),
-                  1,
-                ).withOpacity(0.7);
-              }
 
               var text = Text(
                 similarArtistsSearchResult.elementAt(index).artist ?? 'unknown',
@@ -423,7 +413,7 @@ class _Artists extends StatelessWidget {
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      return _ArtistPage(
+                      return ArtistPage(
                         images: images,
                         artistAudios: artistAudios,
                         showWindowControls: showWindowControls,
@@ -432,128 +422,12 @@ class _Artists extends StatelessWidget {
                   ),
                 ),
                 borderRadius: BorderRadius.circular(300),
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: bg,
-                    image: images?.isNotEmpty == true
-                        ? DecorationImage(
-                            image: MemoryImage(images!.first),
-                          )
-                        : null,
-                    gradient: bg == null
-                        ? null
-                        : LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              bg,
-                              theme.colorScheme.inverseSurface,
-                            ],
-                          ),
-                  ),
-                  child: Center(
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.inverseSurface,
-                      ),
-                      child: text,
-                    ),
-                  ),
-                ),
+                child:
+                    RoundImageContainer(image: images?.firstOrNull, text: text),
               );
             },
           )
       ],
-    );
-  }
-}
-
-class _ArtistPage extends StatelessWidget {
-  const _ArtistPage({
-    required this.images,
-    required this.artistAudios,
-    required this.showWindowControls,
-  });
-
-  final Set<Uint8List>? images;
-  final Set<Audio>? artistAudios;
-  final bool showWindowControls;
-
-  @override
-  Widget build(BuildContext context) {
-    return AudioPage(
-      audioFilter: AudioFilter.album,
-      audioPageType: AudioPageType.artist,
-      pageLabel: context.l10n.artist,
-      pageTitle: artistAudios?.firstOrNull?.artist,
-      image: images != null && images!.length >= 4
-          ? SizedBox(
-              height: 200,
-              width: 200,
-              child: ScrollConfiguration(
-                behavior:
-                    ScrollConfiguration.of(context).copyWith(scrollbars: false),
-                child: GridView(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 100,
-                  ),
-                  children: [
-                    if (artistAudios != null)
-                      for (final image in images ?? <Uint8List>[])
-                        Image.memory(
-                          image,
-                          width: 200.0,
-                          fit: BoxFit.fill,
-                          filterQuality: FilterQuality.medium,
-                        )
-                  ],
-                ),
-              ),
-            )
-          : images?.isNotEmpty == true
-              ? Image.memory(
-                  images!.first,
-                  width: 200.0,
-                  fit: BoxFit.fitWidth,
-                  filterQuality: FilterQuality.medium,
-                )
-              : const SizedBox.shrink(),
-      pageSubtile: '',
-      placeTrailer: images?.isNotEmpty == true,
-      likePageButton: const SizedBox.shrink(),
-      showWindowControls: showWindowControls,
-      deletable: false,
-      audios: artistAudios,
-      pageId: artistAudios?.firstOrNull?.artist ?? artistAudios.toString(),
-      editableName: false,
-    );
-  }
-}
-
-class _SpacedDivider extends StatelessWidget {
-  const _SpacedDivider({
-    this.top = 10,
-  });
-
-  final double top;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: top,
-        bottom: 20,
-      ),
-      child: const Divider(
-        height: 0,
-      ),
     );
   }
 }
