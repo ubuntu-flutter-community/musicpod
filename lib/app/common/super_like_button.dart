@@ -15,7 +15,7 @@ class SuperLikeButton extends StatelessWidget {
   });
 
   final void Function()? onCreateNewPlaylist;
-  final void Function()? onRemoveFromPlaylist;
+  final void Function(String playlistId)? onRemoveFromPlaylist;
   final void Function(String playlistId)? onAddToPlaylist;
   final String? playlistId;
   final List<String>? topFivePlaylistIds;
@@ -39,7 +39,9 @@ class SuperLikeButton extends StatelessWidget {
           ),
           if (onRemoveFromPlaylist != null)
             PopupMenuItem(
-              onTap: onRemoveFromPlaylist,
+              onTap: onRemoveFromPlaylist == null || playlistId == null
+                  ? null
+                  : () => onRemoveFromPlaylist!(playlistId!),
               child: Text('Remove from $playlistId'),
             ),
           if (topFivePlaylistIds != null)

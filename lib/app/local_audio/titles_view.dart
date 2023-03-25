@@ -4,9 +4,9 @@ import 'package:musicpod/app/common/audio_tile.dart';
 import 'package:musicpod/app/common/super_like_button.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
 import 'package:musicpod/app/player_model.dart';
+import 'package:musicpod/app/playlists/playlist_dialog.dart';
 import 'package:musicpod/app/playlists/playlist_model.dart';
 import 'package:musicpod/data/audio.dart';
-import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -107,34 +107,36 @@ class _TitlesViewState extends State<TitlesView> {
 
               final liked = isLiked(audio);
 
-              return AudioTile(
-                likeIcon: SuperLikeButton(
-                  onCreateNewPlaylist: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return _CreatePlaylistDialog(
-                          audio: audio,
-                          onCreateNewPlaylist: addPlaylist,
-                        );
-                      },
-                    );
-                  },
-                  onAddToPlaylist: (playlistId) =>
-                      addAudioToPlaylist(playlistId, audio),
-                  topFivePlaylistIds: getPlaylistIds(),
-                  icon: InkWell(
-                    borderRadius: BorderRadius.circular(10),
-                    onTap: () =>
-                        liked ? removeLikedAudio(audio) : addLikedAudio(audio),
-                    child: Icon(
-                      liked ? YaruIcons.heart_filled : YaruIcons.heart,
-                      color: audioSelected
-                          ? theme.colorScheme.onSurface
-                          : theme.hintColor,
-                    ),
+              final superLikeButton = SuperLikeButton(
+                onCreateNewPlaylist: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return SimplePlaylistDialog(
+                        audio: audio,
+                        onCreateNewPlaylist: addPlaylist,
+                      );
+                    },
+                  );
+                },
+                onAddToPlaylist: (playlistId) =>
+                    addAudioToPlaylist(playlistId, audio),
+                topFivePlaylistIds: getPlaylistIds(),
+                icon: InkWell(
+                  borderRadius: BorderRadius.circular(10),
+                  onTap: () =>
+                      liked ? removeLikedAudio(audio) : addLikedAudio(audio),
+                  child: Icon(
+                    liked ? YaruIcons.heart_filled : YaruIcons.heart,
+                    color: audioSelected
+                        ? theme.colorScheme.onSurface
+                        : theme.hintColor,
                   ),
                 ),
+              );
+
+              return AudioTile(
+                likeIcon: superLikeButton,
                 isPlayerPlaying: isPlaying,
                 pause: pause,
                 play: () async {
@@ -147,57 +149,6 @@ class _TitlesViewState extends State<TitlesView> {
                 audio: audio,
               );
             },
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class _CreatePlaylistDialog extends StatefulWidget {
-  const _CreatePlaylistDialog({
-    this.onCreateNewPlaylist,
-    required this.audio,
-  });
-
-  final Audio audio;
-  final void Function(String name, Set<Audio> audios)? onCreateNewPlaylist;
-
-  @override
-  State<_CreatePlaylistDialog> createState() => _CreatePlaylistDialogState();
-}
-
-class _CreatePlaylistDialogState extends State<_CreatePlaylistDialog> {
-  final TextEditingController _controller = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const YaruDialogTitleBar(
-        border: BorderSide.none,
-        backgroundColor: Colors.transparent,
-      ),
-      titlePadding: EdgeInsets.zero,
-      content: TextField(
-        decoration: InputDecoration(label: Text(context.l10n.playlist)),
-        controller: _controller,
-      ),
-      actions: [
-        OutlinedButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(
-            context.l10n.cancel,
-          ),
-        ),
-        ElevatedButton(
-          onPressed: widget.onCreateNewPlaylist == null
-              ? null
-              : () {
-                  widget.onCreateNewPlaylist!(_controller.text, {widget.audio});
-                  Navigator.of(context).pop();
-                },
-          child: Text(
-            context.l10n.createNewPlaylist,
           ),
         )
       ],
