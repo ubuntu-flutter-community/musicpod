@@ -89,6 +89,9 @@ class _AudioPageBodyState extends State<AudioPageBody> {
   @override
   Widget build(BuildContext context) {
     final isPlaying = context.select((PlayerModel m) => m.isPlaying);
+    final startPlaylist = context.read<PlayerModel>().startPlaylist;
+
+    final queueName = context.select((PlayerModel m) => m.queueName);
     final setAudio = context.read<PlayerModel>().setAudio;
     final currentAudio = context.select((PlayerModel m) => m.audio);
     final play = context.read<PlayerModel>().play;
@@ -97,6 +100,9 @@ class _AudioPageBodyState extends State<AudioPageBody> {
 
     final isLiked = context.read<PlaylistModel>().liked;
     final removeLikedAudio = context.read<PlaylistModel>().removeLikedAudio;
+    final removePlaylist = context.read<PlaylistModel>().removePlaylist;
+    final updatePlaylistName = context.read<PlaylistModel>().updatePlaylistName;
+
     final addLikedAudio = context.read<PlaylistModel>().addLikedAudio;
     final isStarredStation = context.read<PlaylistModel>().isStarredStation;
     final addStarredStation = context.read<PlaylistModel>().addStarredStation;
@@ -264,8 +270,15 @@ class _AudioPageBodyState extends State<AudioPageBody> {
               bottom: 15,
             ),
             child: AudioPageControlPanel(
+              removePlaylist: removePlaylist,
+              updatePlaylistName: updatePlaylistName,
+              pause: pause,
+              resume: resume,
+              startPlaylist: startPlaylist,
+              isPlaying: isPlaying,
+              queueName: queueName,
               listName: widget.pageId,
-              likeButton: widget.likePageButton,
+              controlButton: widget.likePageButton,
               editableName: widget.editableName,
               audios: sortedAudios.toSet(),
               deletable: widget.deletable,
@@ -355,8 +368,8 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                             showDialog(
                               context: context,
                               builder: (context) {
-                                return SimplePlaylistDialog(
-                                  audio: audio,
+                                return PlaylistDialog(
+                                  audios: {audio},
                                   onCreateNewPlaylist: addPlaylist,
                                 );
                               },

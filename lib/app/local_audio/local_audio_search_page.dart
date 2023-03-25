@@ -260,9 +260,9 @@ class _Albums extends StatelessWidget {
                     },
                   ),
                 ),
-                onPlay: album == null || album.isEmpty
+                onPlay: album == null || album.isEmpty || name == null
                     ? null
-                    : () => startPlaylist(album),
+                    : () => startPlaylist(album, name),
               );
             },
           );

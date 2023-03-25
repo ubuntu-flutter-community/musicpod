@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
+import 'package:musicpod/app/common/audio_page_control_panel.dart';
 import 'package:musicpod/app/common/audio_page_header.dart';
 import 'package:musicpod/app/common/audio_tile.dart';
 import 'package:musicpod/app/common/super_like_button.dart';
@@ -7,6 +8,7 @@ import 'package:musicpod/app/player_model.dart';
 import 'package:musicpod/app/playlists/playlist_dialog.dart';
 import 'package:musicpod/app/playlists/playlist_model.dart';
 import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -34,7 +36,7 @@ class _TitlesViewState extends State<TitlesView> {
   @override
   void initState() {
     super.initState();
-    _filter = AudioFilter.title;
+    _filter = AudioFilter.album;
     _controller = ScrollController();
     _controller.addListener(() {
       if (_controller.position.maxScrollExtent == _controller.offset) {
@@ -50,6 +52,8 @@ class _TitlesViewState extends State<TitlesView> {
     final theme = Theme.of(context);
 
     final isPlaying = context.select((PlayerModel m) => m.isPlaying);
+    final startPlaylist = context.read<PlayerModel>().startPlaylist;
+
     final currentAudio = context.select((PlayerModel m) => m.audio);
 
     final setAudio = context.read<PlayerModel>().setAudio;
@@ -82,6 +86,24 @@ class _TitlesViewState extends State<TitlesView> {
       children: [
         Padding(
           padding: const EdgeInsets.only(
+            top: 20,
+            left: 20,
+            right: 20,
+            bottom: 15,
+          ),
+          child: AudioPageControlPanel(
+            resume: resume,
+            pause: pause,
+            startPlaylist: startPlaylist,
+            isPlaying: isPlaying,
+            audios: Set.from(sortedAudios),
+            listName: context.l10n.localAudio,
+            deletable: false,
+            editableName: false,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
             left: 20,
             right: 20,
           ),
@@ -112,8 +134,8 @@ class _TitlesViewState extends State<TitlesView> {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return SimplePlaylistDialog(
-                        audio: audio,
+                      return PlaylistDialog(
+                        audios: {audio},
                         onCreateNewPlaylist: addPlaylist,
                       );
                     },

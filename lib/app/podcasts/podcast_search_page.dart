@@ -49,9 +49,11 @@ class PodcastSearchPage extends StatelessWidget {
               url: podcast.firstOrNull?.imageUrl,
               fit: BoxFit.contain,
             ),
-            onPlay: () {
-              startPlaylist(podcast);
-            },
+            onPlay: podcast.first.album == null
+                ? null
+                : () {
+                    startPlaylist(podcast, podcast.first.album!);
+                  },
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(

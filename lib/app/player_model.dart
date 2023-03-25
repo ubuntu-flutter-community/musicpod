@@ -24,6 +24,14 @@ class PlayerModel extends SafeChangeNotifier {
   StreamSubscription<Duration>? _positionSub;
   StreamSubscription<bool>? _isCompletedSub;
 
+  String? _queueName;
+  String? get queueName => _queueName;
+  void setQueueName(String? value) {
+    if (value == null || value == _queueName) return;
+    _queueName = value;
+    notifyListeners();
+  }
+
   List<Audio>? _queue;
   List<Audio>? get queue => _queue;
   set queue(List<Audio>? value) {
@@ -249,8 +257,9 @@ class PlayerModel extends SafeChangeNotifier {
     }
   }
 
-  Future<void> startPlaylist(Set<Audio> audios) async {
+  Future<void> startPlaylist(Set<Audio> audios, String listName) async {
     queue = audios.toList();
+    setQueueName(listName);
     setAudio(audios.first);
     estimateNext();
     await play();
