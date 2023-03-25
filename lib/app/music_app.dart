@@ -371,9 +371,6 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             final noPicture = album.value.firstOrNull == null ||
                 album.value.firstOrNull!.pictureData == null;
 
-            final noImage = album.value.firstOrNull == null ||
-                album.value.firstOrNull!.imageUrl == null;
-
             return AudioPage(
               audioPageType: AudioPageType.album,
               image: !noPicture
@@ -383,23 +380,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                       fit: BoxFit.fitWidth,
                       filterQuality: FilterQuality.medium,
                     )
-                  : !noImage
-                      ? SafeNetworkImage(
-                          fallBackIcon: SizedBox(
-                            width: 200,
-                            child: Center(
-                              child: Icon(
-                                YaruIcons.music_note,
-                                size: 80,
-                                color: theme.hintColor,
-                              ),
-                            ),
-                          ),
-                          url: album.value.firstOrNull!.imageUrl,
-                          fit: BoxFit.fitWidth,
-                          filterQuality: FilterQuality.medium,
-                        )
-                      : null,
+                  : null,
               pageLabel: context.l10n.album,
               pageTitle: album.key,
               pageDescription: '',

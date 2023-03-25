@@ -103,6 +103,18 @@ class LocalAudioModel extends SafeChangeNotifier {
     return artistsResult;
   }
 
+  Set<Audio> findAllAlbums() {
+    final albumsResult = <Audio>{};
+    if (audios != null) {
+      for (var a in audios!) {
+        if (albumsResult.none((element) => element.album == a.album)) {
+          albumsResult.add(a);
+        }
+      }
+    }
+    return albumsResult;
+  }
+
   AudioFilter _audioFilter = AudioFilter.title;
   AudioFilter get audioFilter => _audioFilter;
   set audioFilter(AudioFilter value) {

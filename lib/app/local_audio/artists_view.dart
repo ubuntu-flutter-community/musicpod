@@ -32,7 +32,7 @@ class _ArtistsViewState extends State<ArtistsView> {
 
     return GridView.builder(
       itemCount: widget.similarArtistsSearchResult.length,
-      padding: kGridPadding,
+      padding: const EdgeInsets.all(kYaruPagePadding),
       shrinkWrap: true,
       gridDelegate: kImageGridDelegate,
       itemBuilder: (context, index) {
