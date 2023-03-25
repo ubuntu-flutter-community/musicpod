@@ -39,7 +39,7 @@ class ArtistPage extends StatelessWidget {
               : const SizedBox.shrink(),
       pageSubtile: artistAudios?.firstOrNull?.genre,
       placeTrailer: images?.isNotEmpty == true,
-      likePageButton: const SizedBox.shrink(),
+      controlPageButton: const SizedBox.shrink(),
       showWindowControls: showWindowControls,
       deletable: false,
       audios: artistAudios,

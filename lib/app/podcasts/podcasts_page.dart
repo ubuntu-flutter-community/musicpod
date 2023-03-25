@@ -116,7 +116,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                       showWindowControls: widget.showWindowControls,
                       sort: false,
                       showTrack: false,
-                      likePageButton: YaruIconButton(
+                      controlPageButton: YaruIconButton(
                         icon: Icon(
                           YaruIcons.rss,
                           color: subscribed ? theme.primaryColor : null,

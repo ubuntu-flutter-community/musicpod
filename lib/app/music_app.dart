@@ -225,7 +225,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             pageTitle: context.l10n.likedSongs,
             editableName: false,
             deletable: false,
-            likePageButton: const SizedBox.shrink(),
+            controlPageButton: const SizedBox.shrink(),
           );
         },
         iconBuilder: (context, selected) {
@@ -268,7 +268,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               showTrack: false,
               editableName: false,
               deletable: false,
-              likePageButton: YaruIconButton(
+              controlPageButton: YaruIconButton(
                 icon: Icon(
                   YaruIcons.rss,
                   color: theme.primaryColor,
@@ -347,7 +347,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               showTrack: playlist.value.firstOrNull?.trackNumber != null,
               editableName: true,
               deletable: true,
-              likePageButton: YaruIconButton(
+              controlPageButton: YaruIconButton(
                 icon: Icon(
                   YaruIcons.star_filled,
                   color: theme.primaryColor,
@@ -410,7 +410,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               showTrack: album.value.firstOrNull?.trackNumber != null,
               editableName: false,
               deletable: true,
-              likePageButton: YaruIconButton(
+              controlPageButton: YaruIconButton(
                 icon: Icon(
                   YaruIcons.pin,
                   color: theme.primaryColor,
@@ -457,7 +457,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               pageTitle: station.key,
               editableName: false,
               deletable: false,
-              likePageButton: YaruIconButton(
+              controlPageButton: YaruIconButton(
                 icon: const Icon(YaruIcons.star_filled),
                 onPressed: () => playlistModel.unStarStation(station.key),
               ),

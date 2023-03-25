@@ -320,7 +320,7 @@ class _AlbumPage extends StatelessWidget {
       audioPageType: AudioPageType.album,
       pageLabel: context.l10n.album,
       image: image,
-      likePageButton: name == null
+      controlPageButton: name == null
           ? null
           : isPinnedAlbum(name!)
               ? YaruIconButton(
