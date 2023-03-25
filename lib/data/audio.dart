@@ -260,7 +260,6 @@ class Audio {
         other.year == year &&
         other.genre == genre &&
         other.pictureMimeType == pictureMimeType &&
-        other.pictureData == pictureData &&
         other.fileSize == fileSize;
   }
 
@@ -284,7 +283,6 @@ class Audio {
         year.hashCode ^
         genre.hashCode ^
         pictureMimeType.hashCode ^
-        pictureData.hashCode ^
         fileSize.hashCode;
   }
 }

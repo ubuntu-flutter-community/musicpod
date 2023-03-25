@@ -81,7 +81,7 @@ class PodcastSearchPage extends StatelessWidget {
                         fit: BoxFit.fitWidth,
                         filterQuality: FilterQuality.medium,
                       ),
-                      likePageButton: subscribed
+                      controlPageButton: subscribed
                           ? YaruIconButton(
                               icon: Icon(
                                 YaruIcons.rss,

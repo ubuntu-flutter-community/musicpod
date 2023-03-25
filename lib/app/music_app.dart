@@ -232,7 +232,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             pageTitle: context.l10n.likedSongs,
             editableName: false,
             deletable: false,
-            likePageButton: const SizedBox.shrink(),
+            controlPageButton: const SizedBox.shrink(),
           );
         },
         iconBuilder: (context, selected) {
@@ -275,7 +275,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               showTrack: false,
               editableName: false,
               deletable: false,
-              likePageButton: YaruIconButton(
+              controlPageButton: YaruIconButton(
                 icon: Icon(
                   YaruIcons.rss,
                   color: theme.primaryColor,
@@ -354,7 +354,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               showTrack: playlist.value.firstOrNull?.trackNumber != null,
               editableName: true,
               deletable: true,
-              likePageButton: YaruIconButton(
+              controlPageButton: YaruIconButton(
                 icon: Icon(
                   YaruIcons.star_filled,
                   color: theme.primaryColor,
@@ -378,9 +378,6 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             final noPicture = album.value.firstOrNull == null ||
                 album.value.firstOrNull!.pictureData == null;
 
-            final noImage = album.value.firstOrNull == null ||
-                album.value.firstOrNull!.imageUrl == null;
-
             return AudioPage(
               audioPageType: AudioPageType.album,
               image: !noPicture
@@ -390,34 +387,18 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                       fit: BoxFit.fitWidth,
                       filterQuality: FilterQuality.medium,
                     )
-                  : !noImage
-                      ? SafeNetworkImage(
-                          fallBackIcon: SizedBox(
-                            width: 200,
-                            child: Center(
-                              child: Icon(
-                                YaruIcons.music_note,
-                                size: 80,
-                                color: theme.hintColor,
-                              ),
-                            ),
-                          ),
-                          url: album.value.firstOrNull!.imageUrl,
-                          fit: BoxFit.fitWidth,
-                          filterQuality: FilterQuality.medium,
-                        )
-                      : null,
+                  : null,
               pageLabel: context.l10n.album,
               pageTitle: album.key,
               pageDescription: '',
-              pageSubtile: '',
+              pageSubtile: album.value.firstOrNull?.artist ?? '',
               showWindowControls: !playerToTheRight,
               audios: album.value,
               pageId: album.key,
               showTrack: album.value.firstOrNull?.trackNumber != null,
               editableName: false,
               deletable: true,
-              likePageButton: YaruIconButton(
+              controlPageButton: YaruIconButton(
                 icon: Icon(
                   YaruIcons.pin,
                   color: theme.primaryColor,
@@ -464,7 +445,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               pageTitle: station.key,
               editableName: false,
               deletable: false,
-              likePageButton: YaruIconButton(
+              controlPageButton: YaruIconButton(
                 icon: const Icon(YaruIcons.star_filled),
                 onPressed: () => playlistModel.unStarStation(station.key),
               ),

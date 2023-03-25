@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:mime_type/mime_type.dart';
+import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/utils.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
@@ -86,6 +87,32 @@ class LocalAudioModel extends SafeChangeNotifier {
     );
     setSimilarAlbumsSearchResult(albumsResult);
     setSimilarArtistsSearchResult(artistsResult);
+  }
+
+  Set<Audio> findAllArtists() {
+    final artistsResult = <Audio>{};
+    if (audios != null) {
+      for (var a in audios!) {
+        if (artistsResult.none(
+          (e) => e.artist == a.artist,
+        )) {
+          artistsResult.add(a);
+        }
+      }
+    }
+    return artistsResult;
+  }
+
+  Set<Audio> findAllAlbums() {
+    final albumsResult = <Audio>{};
+    if (audios != null) {
+      for (var a in audios!) {
+        if (albumsResult.none((element) => element.album == a.album)) {
+          albumsResult.add(a);
+        }
+      }
+    }
+    return albumsResult;
   }
 
   AudioFilter _audioFilter = AudioFilter.title;
@@ -229,14 +256,4 @@ class LocalAudioModel extends SafeChangeNotifier {
         .list(recursive: true, followLinks: false)
         .toList();
   }
-}
-
-enum AudioFilter {
-  trackNumber,
-  title,
-  artist,
-  album,
-  genre,
-  year,
-  diskNumber;
 }

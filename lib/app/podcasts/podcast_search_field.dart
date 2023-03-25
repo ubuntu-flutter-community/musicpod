@@ -40,22 +40,36 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
       height: 35,
       width: 400,
       child: TextField(
+        style: theme.textTheme.bodyMedium,
+        strutStyle: const StrutStyle(
+          leading: 0.2,
+        ),
+        textAlignVertical: TextAlignVertical.center,
+        cursorWidth: 1,
         onSubmitted: (value) {
           model.setSearchQuery(value);
           model.search(searchQuery: value, useAlbumImage: true);
         },
         controller: _controller,
         decoration: InputDecoration(
+          contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 18),
+          prefixIcon: const Icon(
+            YaruIcons.search,
+            size: 16,
+          ),
+          prefixIconConstraints:
+              const BoxConstraints(minWidth: 34, minHeight: 30),
           hintText: context.l10n.search,
-          contentPadding: const EdgeInsets.only(left: 10, right: 10),
           suffixIconConstraints:
               const BoxConstraints(maxHeight: 35, maxWidth: 35),
-          suffixIcon: YaruIconButton(
-            onPressed: () => _controller.clear(),
-            icon: const Icon(
-              YaruIcons.edit_clear,
-            ),
-          ),
+          suffixIcon: _controller.text.isEmpty
+              ? null
+              : YaruIconButton(
+                  onPressed: () => _controller.clear(),
+                  icon: const Icon(
+                    YaruIcons.edit_clear,
+                  ),
+                ),
           fillColor: light ? Colors.white : Theme.of(context).dividerColor,
         ),
       ),

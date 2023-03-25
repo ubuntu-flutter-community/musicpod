@@ -38,7 +38,7 @@ class _RadioPageState extends State<RadioPage> {
             showTrack: false,
             editableName: false,
             deletable: false,
-            likePageButton: const SizedBox.shrink(),
+            controlPageButton: const SizedBox.shrink(),
             audios: model.stations,
             pageId: context.l10n.radio,
           )
