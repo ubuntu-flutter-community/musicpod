@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_page_body.dart';
-import 'package:musicpod/app/local_audio/local_audio_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
