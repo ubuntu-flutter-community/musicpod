@@ -34,17 +34,14 @@ class _PlayerViewState extends State<PlayerView> {
     final removeLikedAudio = context.read<PlaylistModel>().removeLikedAudio;
     final addLikedAudio = context.read<PlaylistModel>().addLikedAudio;
 
-    final fullScreenButton = Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: YaruIconButton(
-        icon: Icon(
-          isFullScreen && !widget.expandHeight
-              ? YaruIcons.fullscreen_exit
-              : YaruIcons.fullscreen,
-          color: theme.colorScheme.onSurface,
-        ),
-        onPressed: () => model.fullScreen = !(model.fullScreen ?? false),
+    final fullScreenButton = YaruIconButton(
+      icon: Icon(
+        isFullScreen && !widget.expandHeight
+            ? YaruIcons.fullscreen_exit
+            : YaruIcons.fullscreen,
+        color: theme.colorScheme.onSurface,
       ),
+      onPressed: () => model.fullScreen = !(model.fullScreen ?? false),
     );
 
     final controls = Row(
@@ -78,10 +75,6 @@ class _PlayerViewState extends State<PlayerView> {
                     ),
                   ),
           icon: const Icon(YaruIcons.share),
-        ),
-        const Padding(
-          padding: EdgeInsets.only(left: 10),
-          child: YaruIconButton(icon: Icon(YaruIcons.shuffle)),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 10),
@@ -118,7 +111,7 @@ class _PlayerViewState extends State<PlayerView> {
           padding: const EdgeInsets.only(right: 10),
           child: YaruIconButton(
             icon: Icon(
-              YaruIcons.repeat,
+              YaruIcons.repeat_single,
               color: theme.colorScheme.onSurface,
             ),
             isSelected: model.repeatSingle == true,
@@ -126,8 +119,12 @@ class _PlayerViewState extends State<PlayerView> {
           ),
         ),
         YaruIconButton(
-          icon: const Icon(YaruIcons.repeat_single),
-          onPressed: () {},
+          icon: Icon(
+            YaruIcons.shuffle,
+            color: theme.colorScheme.onSurface,
+          ),
+          isSelected: model.shuffle,
+          onPressed: () => model.shuffle = !(model.shuffle),
         )
       ],
     );
@@ -369,7 +366,7 @@ class _PlayerViewState extends State<PlayerView> {
       child: Stack(
         alignment: Alignment.topRight,
         children: [
-          fullScreenButton,
+          Positioned(top: 12, right: 20, child: fullScreenButton),
           Row(
             children: [
               if (model.audio?.pictureData != null)

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
@@ -107,6 +108,14 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  bool _shuffle = false;
+  bool get shuffle => _shuffle;
+  set shuffle(bool value) {
+    if (value == _shuffle) return;
+    _shuffle = value;
+    notifyListeners();
+  }
+
   Future<void> play() async {
     if (audio == null) return;
     queue ??= [];
@@ -209,10 +218,16 @@ class PlayerModel extends SafeChangeNotifier {
     if (queue?.isNotEmpty == true && audio != null && queue!.contains(audio)) {
       final currentIndex = queue!.indexOf(audio!);
 
-      if (currentIndex == queue!.length - 1) {
-        nextAudio = queue!.elementAt(0);
+      if (shuffle) {
+        final random = Random();
+        final randomIndex = random.nextInt(queue!.length - 1);
+        nextAudio = queue!.elementAt(randomIndex);
       } else {
-        nextAudio = queue?.elementAt(queue!.indexOf(audio!) + 1);
+        if (currentIndex == queue!.length - 1) {
+          nextAudio = queue!.elementAt(0);
+        } else {
+          nextAudio = queue?.elementAt(queue!.indexOf(audio!) + 1);
+        }
       }
     }
   }
