@@ -34,7 +34,7 @@ class _TitlesViewState extends State<TitlesView> {
   @override
   void initState() {
     super.initState();
-    _filter = AudioFilter.title;
+    _filter = AudioFilter.album;
     _controller = ScrollController();
     _controller.addListener(() {
       if (_controller.position.maxScrollExtent == _controller.offset) {
