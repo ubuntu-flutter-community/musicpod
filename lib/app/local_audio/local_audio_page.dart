@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/local_audio/artists_view.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
 import 'package:musicpod/app/local_audio/local_audio_search_field.dart';
 import 'package:musicpod/app/local_audio/local_audio_search_page.dart';
@@ -45,6 +46,7 @@ class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final audios = context.read<LocalAudioModel>().audios;
+    final artists = context.read<LocalAudioModel>().findAllArtists();
     final theme = Theme.of(context);
     return YaruDetailPage(
       backgroundColor: theme.brightness == Brightness.dark
@@ -65,8 +67,9 @@ class StartPage extends StatelessWidget {
         ],
         views: [
           TitlesView(audios: audios, showWindowControls: showWindowControls),
-          Center(
-            child: Text(context.l10n.artists),
+          ArtistsView(
+            showWindowControls: showWindowControls,
+            similarArtistsSearchResult: artists,
           ),
           Center(
             child: Text(context.l10n.albums),
