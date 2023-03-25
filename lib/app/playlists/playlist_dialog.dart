@@ -6,27 +6,46 @@ import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-class SimplePlaylistDialog extends StatefulWidget {
-  const SimplePlaylistDialog({
+class PlaylistDialog extends StatefulWidget {
+  const PlaylistDialog({
     super.key,
     this.onCreateNewPlaylist,
-    required this.audio,
+    this.onDeletePlaylist,
+    this.onUpdatePlaylistName,
+    this.playlistName,
+    this.audios,
   });
 
-  final Audio audio;
+  final Set<Audio>? audios;
   final void Function(String name, Set<Audio> audios)? onCreateNewPlaylist;
+  final void Function(String name)? onUpdatePlaylistName;
+  final void Function()? onDeletePlaylist;
+  final String? playlistName;
 
   @override
-  State<SimplePlaylistDialog> createState() => _SimplePlaylistDialogState();
+  State<PlaylistDialog> createState() => _PlaylistDialogState();
 }
 
-class _SimplePlaylistDialogState extends State<SimplePlaylistDialog> {
-  final TextEditingController _controller = TextEditingController();
+class _PlaylistDialogState extends State<PlaylistDialog> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.playlistName);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const YaruDialogTitleBar(
+      title: YaruDialogTitleBar(
+        title: widget.playlistName != null ? Text(widget.playlistName!) : null,
         border: BorderSide.none,
         backgroundColor: Colors.transparent,
       ),
@@ -42,109 +61,38 @@ class _SimplePlaylistDialogState extends State<SimplePlaylistDialog> {
             context.l10n.cancel,
           ),
         ),
-        ElevatedButton(
-          onPressed: widget.onCreateNewPlaylist == null
-              ? null
-              : () {
-                  widget.onCreateNewPlaylist!(_controller.text, {widget.audio});
-                  Navigator.of(context).pop();
-                },
-          child: Text(
-            context.l10n.createNewPlaylist,
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class PlaylistDialog extends StatefulWidget {
-  const PlaylistDialog({
-    super.key,
-    required this.audios,
-    required this.name,
-    required this.editableName,
-    required this.deletable,
-  });
-
-  final Set<Audio> audios;
-  final String name;
-  final bool editableName;
-  final bool deletable;
-
-  @override
-  State<PlaylistDialog> createState() => _PlaylistDialogState();
-}
-
-class _PlaylistDialogState extends State<PlaylistDialog> {
-  late TextEditingController _nameController;
-
-  @override
-  void initState() {
-    super.initState();
-    _nameController = TextEditingController(text: widget.name);
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isPlaylistSaved = context.read<PlaylistModel>().isPlaylistSaved;
-    final removePlaylist = context.read<PlaylistModel>().removePlaylist;
-    final updatePlaylistName = context.read<PlaylistModel>().updatePlaylistName;
-    final addPlaylist = context.read<PlaylistModel>().addPlaylist;
-
-    return AlertDialog(
-      title: YaruDialogTitleBar(
-        title: isPlaylistSaved(widget.name)
-            ? Text(context.l10n.playlistDialogTitleEdit)
-            : Text(context.l10n.playlistDialogTitleNew),
-      ),
-      titlePadding: EdgeInsets.zero,
-      scrollable: true,
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextField(
-            autofocus: true,
-            controller: _nameController,
-            decoration: const InputDecoration(label: Text('Playlist name')),
-          )
-        ],
-      ),
-      actions: [
-        OutlinedButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(context.l10n.cancel),
-        ),
-        if (widget.deletable)
-          OutlinedButton.icon(
-            label: Text(context.l10n.deletePlaylist),
-            icon: const Icon(YaruIcons.trash),
+        if (widget.onDeletePlaylist != null)
+          OutlinedButton(
             onPressed: () {
-              removePlaylist(widget.name);
+              widget.onDeletePlaylist!();
               Navigator.pop(context);
             },
+            child: Text(
+              context.l10n.deletePlaylist,
+            ),
           ),
-        if (isPlaylistSaved(widget.name))
+        if (widget.onUpdatePlaylistName != null)
           ElevatedButton(
             onPressed: () {
-              updatePlaylistName(widget.name, _nameController.text);
-              Navigator.pop(context);
+              widget.onUpdatePlaylistName!(_controller.text);
+              Navigator.of(context).pop();
             },
-            child: Text(context.l10n.save),
-          )
-        else
+            child: Text(
+              context.l10n.save,
+            ),
+          ),
+        if (widget.onCreateNewPlaylist != null)
           ElevatedButton(
             onPressed: () {
-              addPlaylist(_nameController.text, widget.audios);
-              Navigator.pop(context);
+              widget.onCreateNewPlaylist!(
+                _controller.text,
+                widget.audios ?? {},
+              );
+              Navigator.of(context).pop();
             },
-            child: Text(context.l10n.add),
+            child: Text(
+              context.l10n.add,
+            ),
           )
       ],
     );

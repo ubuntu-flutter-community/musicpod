@@ -107,9 +107,9 @@ class _AlbumsViewState extends State<AlbumsView> {
               },
             ),
           ),
-          onPlay: album == null || album.isEmpty
+          onPlay: album == null || album.isEmpty || name == null
               ? null
-              : () => startPlaylist(album),
+              : () => startPlaylist(album, name),
         );
       },
     );

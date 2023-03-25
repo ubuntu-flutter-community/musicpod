@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/app/player_model.dart';
 import 'package:musicpod/app/playlists/playlist_dialog.dart';
-import 'package:musicpod/app/playlists/playlist_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
-import 'package:musicpod/utils.dart';
-import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -16,32 +12,32 @@ class AudioPageControlPanel extends StatelessWidget {
     required this.listName,
     this.editableName = true,
     required this.deletable,
-    this.likeButton,
+    this.controlButton,
+    required this.isPlaying,
+    this.queueName,
+    required this.startPlaylist,
+    required this.pause,
+    required this.resume,
+    this.removePlaylist,
+    this.updatePlaylistName,
   });
 
   final Set<Audio> audios;
   final String listName;
   final bool editableName;
   final bool deletable;
-  final Widget? likeButton;
+  final Widget? controlButton;
+  final bool isPlaying;
+  final String? queueName;
+  final void Function(Set<Audio> audios, String listName) startPlaylist;
+  final void Function() pause;
+  final void Function() resume;
+  final void Function(String name)? removePlaylist;
+  final void Function(String oldName, String newName)? updatePlaylistName;
 
   @override
   Widget build(BuildContext context) {
-    // final playlistModel = context.read<PlaylistModel>();
     final theme = Theme.of(context);
-    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
-    final startPlaylist = context.read<PlayerModel>().startPlaylist;
-    final resume = context.read<PlayerModel>().resume;
-    final pause = context.read<PlayerModel>().pause;
-    final queue = context.select((PlayerModel m) => m.queue);
-    final playlistModel = context.read<PlaylistModel>();
-    final addLikedAudios = context.read<PlaylistModel>().addLikedAudios;
-    final removeLikedAudios = context.read<PlaylistModel>().removeLikedAudios;
-    final liked = context.read<PlaylistModel>().liked;
-
-    final listIsQueue = listsAreEqual(queue, audios.toList());
-    final allLiked =
-        audios.where((a) => liked(a)).toList().length == audios.length;
 
     return Row(
       children: [
@@ -50,21 +46,21 @@ class AudioPageControlPanel extends StatelessWidget {
           child: IconButton(
             onPressed: () {
               if (isPlaying) {
-                if (listIsQueue) {
+                if (queueName == listName) {
                   pause();
                 } else {
-                  startPlaylist(audios);
+                  startPlaylist(audios, listName);
                 }
               } else {
-                if (listIsQueue) {
+                if (queueName == listName) {
                   resume();
                 } else {
-                  startPlaylist(audios);
+                  startPlaylist(audios, listName);
                 }
               }
             },
             icon: Icon(
-              isPlaying && listIsQueue
+              isPlaying && queueName == listName
                   ? YaruIcons.media_pause
                   : YaruIcons.playlist_play,
               color: theme.colorScheme.onInverseSurface,
@@ -74,16 +70,7 @@ class AudioPageControlPanel extends StatelessWidget {
         const SizedBox(
           width: 10,
         ),
-        if (likeButton != null)
-          likeButton!
-        else
-          IconButton(
-            onPressed: () =>
-                allLiked ? removeLikedAudios(audios) : addLikedAudios(audios),
-            icon: Icon(
-              allLiked ? YaruIcons.heart_filled : YaruIcons.heart,
-            ),
-          ),
+        if (controlButton != null) controlButton!,
         const SizedBox(
           width: 10,
         ),
@@ -92,14 +79,14 @@ class AudioPageControlPanel extends StatelessWidget {
             icon: const Icon(YaruIcons.pen),
             onPressed: () => showDialog(
               context: context,
-              builder: (context) => ChangeNotifierProvider<PlaylistModel>.value(
-                value: playlistModel,
-                child: PlaylistDialog(
-                  editableName: editableName,
-                  deletable: deletable,
-                  name: listName,
-                  audios: audios,
-                ),
+              builder: (context) => PlaylistDialog(
+                playlistName: listName,
+                onDeletePlaylist: removePlaylist == null
+                    ? null
+                    : () => removePlaylist!(listName),
+                onUpdatePlaylistName: updatePlaylistName == null
+                    ? null
+                    : (name) => updatePlaylistName!(listName, name),
               ),
             ),
           ),

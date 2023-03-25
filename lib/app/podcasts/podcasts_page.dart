@@ -91,6 +91,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
         gridDelegate: kImageGridDelegate,
         itemBuilder: (context, index) {
           final podcast = model.chartsPodcasts!.elementAt(index);
+          final name = podcast.first.album!;
 
           final image = SafeNetworkImage(
             fallBackIcon: fallBackLoadingIcon,
@@ -101,7 +102,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
           return AudioCard(
             image: image,
             onPlay: () {
-              startPlaylist(podcast);
+              startPlaylist(podcast, name);
             },
             onTap: () {
               Navigator.of(context).push(
@@ -109,7 +110,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                   builder: (context) {
                     final subscribed = podcast.first.album == null
                         ? false
-                        : podcastSubscribed(podcast.first.album!);
+                        : podcastSubscribed(name);
 
                     return AudioPage(
                       audioPageType: AudioPageType.podcast,
@@ -123,11 +124,11 @@ class _PodcastsPageState extends State<PodcastsPage> {
                         ),
                         onPressed: subscribed
                             ? () => removePodcast(
-                                  podcast.first.album!,
+                                  name,
                                 )
                             : () {
                                 addPodcast(
-                                  podcast.first.album!,
+                                  name,
                                   podcast,
                                 );
                               },
