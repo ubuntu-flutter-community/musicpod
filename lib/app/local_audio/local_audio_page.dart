@@ -66,6 +66,7 @@ class StartPage extends StatelessWidget {
     final audios = context.read<LocalAudioModel>().audios;
     final artists = context.read<LocalAudioModel>().findAllArtists();
     final albums = context.read<LocalAudioModel>().findAllAlbums();
+    final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
     final theme = Theme.of(context);
     return YaruDetailPage(
       backgroundColor: theme.brightness == Brightness.dark
@@ -75,7 +76,9 @@ class StartPage extends StatelessWidget {
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
-        title: const LocalAudioSearchField(),
+        title: LocalAudioSearchField(
+          key: ValueKey(searchQuery),
+        ),
       ),
       body: TabbedPage(
         initialIndex: selectedIndex,

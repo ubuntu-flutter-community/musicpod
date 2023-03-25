@@ -42,6 +42,13 @@ class _LocalAudioSearchFieldState extends State<LocalAudioSearchField> {
       height: 35,
       width: 400,
       child: TextField(
+        autofocus: true,
+        style: theme.textTheme.bodyMedium,
+        strutStyle: const StrutStyle(
+          leading: 0.2,
+        ),
+        textAlignVertical: TextAlignVertical.center,
+        cursorWidth: 1,
         onSubmitted: (value) {
           model.setSearchQuery(value);
           model.search();
@@ -49,18 +56,26 @@ class _LocalAudioSearchFieldState extends State<LocalAudioSearchField> {
         controller: _controller,
         decoration: InputDecoration(
           hintText: context.l10n.search,
-          contentPadding: const EdgeInsets.only(left: 10, right: 10),
+          contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 18),
+          prefixIcon: const Icon(
+            YaruIcons.search,
+            size: 16,
+          ),
+          prefixIconConstraints:
+              const BoxConstraints(minWidth: 34, minHeight: 30),
           suffixIconConstraints:
               const BoxConstraints(maxHeight: 35, maxWidth: 35),
-          suffixIcon: YaruIconButton(
-            onPressed: () {
-              _controller.clear();
-              model.setSearchQuery('');
-            },
-            icon: const Icon(
-              YaruIcons.edit_clear,
-            ),
-          ),
+          suffixIcon: _controller.text.isEmpty
+              ? null
+              : YaruIconButton(
+                  onPressed: () {
+                    _controller.clear();
+                    model.setSearchQuery('');
+                  },
+                  icon: const Icon(
+                    YaruIcons.edit_clear,
+                  ),
+                ),
           fillColor: light ? Colors.white : Theme.of(context).dividerColor,
         ),
       ),
