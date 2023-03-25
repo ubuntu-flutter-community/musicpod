@@ -1,0 +1,206 @@
+import 'package:flutter/material.dart';
+import 'package:musicpod/app/common/audio_page_header.dart';
+import 'package:musicpod/app/common/audio_tile.dart';
+import 'package:musicpod/app/common/super_like_button.dart';
+import 'package:musicpod/app/local_audio/local_audio_model.dart';
+import 'package:musicpod/app/player_model.dart';
+import 'package:musicpod/app/playlists/playlist_model.dart';
+import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/l10n/l10n.dart';
+import 'package:musicpod/utils.dart';
+import 'package:provider/provider.dart';
+import 'package:yaru_icons/yaru_icons.dart';
+import 'package:yaru_widgets/yaru_widgets.dart';
+
+class TitlesView extends StatefulWidget {
+  const TitlesView({
+    super.key,
+    required this.audios,
+    required this.showWindowControls,
+  });
+
+  final Set<Audio>? audios;
+  final bool showWindowControls;
+
+  @override
+  State<TitlesView> createState() => _TitlesViewState();
+}
+
+class _TitlesViewState extends State<TitlesView> {
+  late AudioFilter _filter;
+  late ScrollController _controller;
+  int _amount = 40;
+
+  @override
+  void initState() {
+    super.initState();
+    _filter = AudioFilter.title;
+    _controller = ScrollController();
+    _controller.addListener(() {
+      if (_controller.position.maxScrollExtent == _controller.offset) {
+        setState(() {
+          _amount++;
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
+    final currentAudio = context.select((PlayerModel m) => m.audio);
+
+    final setAudio = context.read<PlayerModel>().setAudio;
+    final play = context.read<PlayerModel>().play;
+    final pause = context.read<PlayerModel>().pause;
+    final resume = context.read<PlayerModel>().resume;
+    final isLiked = context.read<PlaylistModel>().liked;
+
+    final removeLikedAudio = context.read<PlaylistModel>().removeLikedAudio;
+    final addLikedAudio = context.read<PlaylistModel>().addLikedAudio;
+    final getPlaylistIds =
+        context.read<PlaylistModel>().getTopFivePlaylistNames;
+    final addAudioToPlaylist = context.read<PlaylistModel>().addAudioToPlaylist;
+    final addPlaylist = context.read<PlaylistModel>().addPlaylist;
+
+    if (widget.audios == null) {
+      return const Center(
+        child: YaruCircularProgressIndicator(),
+      );
+    }
+
+    final sortedAudios = widget.audios!.toList();
+
+    sortListByAudioFilter(
+      audioFilter: _filter,
+      audios: sortedAudios,
+    );
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+          ),
+          child: AudioPageHeader(
+            showTrack: true,
+            audioFilter: _filter,
+            onAudioFilterSelected: (audioFilter) => setState(() {
+              _filter = audioFilter;
+            }),
+          ),
+        ),
+        const Divider(
+          height: 0,
+        ),
+        Expanded(
+          child: ListView.builder(
+            controller: _controller,
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            itemCount: sortedAudios.take(_amount).length,
+            itemBuilder: (context, index) {
+              final audio = sortedAudios.elementAt(index);
+              final audioSelected = currentAudio == audio;
+
+              final liked = isLiked(audio);
+
+              return AudioTile(
+                likeIcon: SuperLikeButton(
+                  onCreateNewPlaylist: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return _CreatePlaylistDialog(
+                          audio: audio,
+                          onCreateNewPlaylist: addPlaylist,
+                        );
+                      },
+                    );
+                  },
+                  onAddToPlaylist: (playlistId) =>
+                      addAudioToPlaylist(playlistId, audio),
+                  topFivePlaylistIds: getPlaylistIds(),
+                  icon: InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: () =>
+                        liked ? removeLikedAudio(audio) : addLikedAudio(audio),
+                    child: Icon(
+                      liked ? YaruIcons.heart_filled : YaruIcons.heart,
+                      color: audioSelected
+                          ? theme.colorScheme.onSurface
+                          : theme.hintColor,
+                    ),
+                  ),
+                ),
+                isPlayerPlaying: isPlaying,
+                pause: pause,
+                play: () async {
+                  setAudio(audio);
+                  await play();
+                },
+                resume: resume,
+                key: ValueKey(audio),
+                selected: audioSelected,
+                audio: audio,
+              );
+            },
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class _CreatePlaylistDialog extends StatefulWidget {
+  const _CreatePlaylistDialog({
+    this.onCreateNewPlaylist,
+    required this.audio,
+  });
+
+  final Audio audio;
+  final void Function(String name, Set<Audio> audios)? onCreateNewPlaylist;
+
+  @override
+  State<_CreatePlaylistDialog> createState() => _CreatePlaylistDialogState();
+}
+
+class _CreatePlaylistDialogState extends State<_CreatePlaylistDialog> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const YaruDialogTitleBar(
+        border: BorderSide.none,
+        backgroundColor: Colors.transparent,
+      ),
+      titlePadding: EdgeInsets.zero,
+      content: TextField(
+        decoration: InputDecoration(label: Text(context.l10n.playlist)),
+        controller: _controller,
+      ),
+      actions: [
+        OutlinedButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            context.l10n.cancel,
+          ),
+        ),
+        ElevatedButton(
+          onPressed: widget.onCreateNewPlaylist == null
+              ? null
+              : () {
+                  widget.onCreateNewPlaylist!(_controller.text, {widget.audio});
+                  Navigator.of(context).pop();
+                },
+          child: Text(
+            context.l10n.createNewPlaylist,
+          ),
+        )
+      ],
+    );
+  }
+}
