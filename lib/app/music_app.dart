@@ -403,7 +403,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               pageLabel: context.l10n.album,
               pageTitle: album.key,
               pageDescription: '',
-              pageSubtile: '',
+              pageSubtile: album.value.firstOrNull?.artist ?? '',
               showWindowControls: !playerToTheRight,
               audios: album.value,
               pageId: album.key,
