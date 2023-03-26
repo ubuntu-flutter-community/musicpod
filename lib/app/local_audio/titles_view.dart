@@ -19,10 +19,14 @@ class TitlesView extends StatefulWidget {
     super.key,
     required this.audios,
     required this.showWindowControls,
+    this.onArtistTap,
+    this.onAlbumTap,
   });
 
   final Set<Audio>? audios;
   final bool showWindowControls;
+  final void Function(String artist)? onArtistTap;
+  final void Function(String album)? onAlbumTap;
 
   @override
   State<TitlesView> createState() => _TitlesViewState();
@@ -158,6 +162,8 @@ class _TitlesViewState extends State<TitlesView> {
               );
 
               return AudioTile(
+                onArtistTap: widget.onArtistTap,
+                onAlbumTap: widget.onAlbumTap,
                 likeIcon: superLikeButton,
                 isPlayerPlaying: isPlaying,
                 pause: pause,

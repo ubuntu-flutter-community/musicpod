@@ -14,15 +14,22 @@ class ArtistPage extends StatelessWidget {
     required this.images,
     required this.artistAudios,
     required this.showWindowControls,
+    this.onArtistTap,
+    this.onAlbumTap,
   });
 
   final Set<Uint8List>? images;
   final Set<Audio>? artistAudios;
   final bool showWindowControls;
 
+  final void Function(String artist)? onArtistTap;
+  final void Function(String album)? onAlbumTap;
+
   @override
   Widget build(BuildContext context) {
     return AudioPage(
+      onAlbumTap: onAlbumTap,
+      onArtistTap: onArtistTap,
       audioFilter: AudioFilter.album,
       audioPageType: AudioPageType.artist,
       pageLabel: context.l10n.artist,

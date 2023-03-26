@@ -67,7 +67,16 @@ class StartPage extends StatelessWidget {
     final artists = context.read<LocalAudioModel>().findAllArtists();
     final albums = context.read<LocalAudioModel>().findAllAlbums();
     final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
+    final setSearchQuery = context.read<LocalAudioModel>().setSearchQuery;
+    final search = context.read<LocalAudioModel>().search;
+
     final theme = Theme.of(context);
+
+    void onTap(text) {
+      setSearchQuery(text);
+      search();
+    }
+
     return YaruDetailPage(
       backgroundColor: theme.brightness == Brightness.dark
           ? const Color.fromARGB(255, 37, 37, 37)
@@ -89,12 +98,24 @@ class StartPage extends StatelessWidget {
           context.l10n.albums,
         ],
         views: [
-          TitlesView(audios: audios, showWindowControls: showWindowControls),
+          TitlesView(
+            onArtistTap: onTap,
+            onAlbumTap: onTap,
+            audios: audios,
+            showWindowControls: showWindowControls,
+          ),
           ArtistsView(
             showWindowControls: showWindowControls,
             similarArtistsSearchResult: artists,
+            onArtistTap: onTap,
+            onAlbumTap: onTap,
           ),
-          AlbumsView(showWindowControls: showWindowControls, albums: albums),
+          AlbumsView(
+            showWindowControls: showWindowControls,
+            albums: albums,
+            onArtistTap: onTap,
+            onAlbumTap: onTap,
+          ),
         ],
       ),
     );
