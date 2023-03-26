@@ -122,18 +122,23 @@ class _TapAbleText extends StatelessWidget {
       color: selected ? theme.colorScheme.onSurface : theme.hintColor,
       fontWeight: selected ? FontWeight.w500 : FontWeight.normal,
     );
-    return InkWell(
-      splashColor: Colors.transparent,
-      focusColor: Colors.transparent,
-      hoverColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      onTap: onTap == null ? null : () => onTap!(),
-      child: Text(
-        text,
-        style: textStyle,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
+    return Row(
+      children: [
+        Flexible(
+          fit: FlexFit.loose,
+          child: InkWell(
+            hoverColor: theme.primaryColor.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(4),
+            onTap: onTap == null ? null : () => onTap!(),
+            child: Text(
+              text,
+              style: textStyle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
