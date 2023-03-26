@@ -43,6 +43,7 @@ parts:
       - --buildtype=release
       - -Dlibmpv=true
     build-packages:
+      - curl
       - libavcodec-dev
       - libavfilter-dev
       - libass-dev
