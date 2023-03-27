@@ -21,6 +21,8 @@ Thank you @amugofjava for creating the very easy to use and reliable [podcast_se
 
 Thanks @alexmercerind for the super performant [Mediakit library](https://github.com/alexmercerind/media_kit) and [mpris_service](https://github.com/alexmercerind/mpris_service) dart implementation!
 
+Thank you @KRTirtho for the very easy to use [Metadata God](https://github.com/KRTirtho/metadata_god) package
+
 ## Planned features
 
 - [X] play local audio files
