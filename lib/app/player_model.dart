@@ -225,10 +225,14 @@ class PlayerModel extends SafeChangeNotifier {
   void estimateNext() {
     if (queue?.isNotEmpty == true && audio != null && queue!.contains(audio)) {
       final currentIndex = queue!.indexOf(audio!);
+      final max = queue!.length - 1;
 
       if (shuffle) {
         final random = Random();
-        final randomIndex = random.nextInt(queue!.length - 1);
+        var randomIndex = random.nextInt(max);
+        do {
+          randomIndex = random.nextInt(max);
+        } while (randomIndex == currentIndex);
         nextAudio = queue!.elementAt(randomIndex);
       } else {
         if (currentIndex == queue!.length - 1) {
