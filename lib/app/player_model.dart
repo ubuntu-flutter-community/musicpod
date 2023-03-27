@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:media_kit/media_kit.dart';
 
 class PlayerModel extends SafeChangeNotifier {
   PlayerModel(MPRIS mpris)
@@ -42,7 +42,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   bool? _fullScreen;
   bool? get fullScreen => _fullScreen;
-  set fullScreen(bool? value) {
+  void setFullScreen(bool? value) {
     if (value == null || value == _fullScreen) return;
     _fullScreen = value;
     notifyListeners();
@@ -91,21 +91,21 @@ class PlayerModel extends SafeChangeNotifier {
 
   Duration? _duration;
   Duration? get duration => _duration;
-  set duration(Duration? value) {
+  void setDuration(Duration? value) {
     _duration = value;
     notifyListeners();
   }
 
   Duration? _position = Duration.zero;
   Duration? get position => _position;
-  set position(Duration? value) {
+  void setPosition(Duration? value) {
     _position = value;
     notifyListeners();
   }
 
   bool _repeatSingle = false;
   bool get repeatSingle => _repeatSingle;
-  set repeatSingle(bool value) {
+  void setRepeatSingle(bool value) {
     if (value == _repeatSingle) return;
     _repeatSingle = value;
     if (value) {
@@ -118,7 +118,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   bool _shuffle = false;
   bool get shuffle => _shuffle;
-  set shuffle(bool value) {
+  void setShuffle(bool value) {
     if (value == _shuffle) return;
     _shuffle = value;
     notifyListeners();
@@ -198,10 +198,10 @@ class PlayerModel extends SafeChangeNotifier {
           isPlaying ? MPRISPlaybackStatus.playing : MPRISPlaybackStatus.paused;
     });
     _durationSub = _player.streams.duration.listen((newDuration) {
-      duration = newDuration;
+      setDuration(newDuration);
     });
     _positionSub = _player.streams.position.listen((newPosition) {
-      position = newPosition;
+      setPosition(newPosition);
     });
 
     _isCompletedSub = _player.streams.isCompleted.listen((value) async {
@@ -296,7 +296,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   bool _isUpNextExpanded = false;
   bool get isUpNextExpanded => _isUpNextExpanded;
-  set isUpNextExpanded(bool value) {
+  void setUpNextExpanded(bool value) {
     if (value == _isUpNextExpanded) return;
     _isUpNextExpanded = value;
     notifyListeners();

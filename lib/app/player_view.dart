@@ -24,12 +24,34 @@ class PlayerView extends StatefulWidget {
 class _PlayerViewState extends State<PlayerView> {
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<PlayerModel>();
-    final liked = model.audio == null
-        ? false
-        : context.read<PlaylistModel>().liked(model.audio!);
+    final audio = context.select((PlayerModel m) => m.audio);
+    final nextAudio = context.select((PlayerModel m) => m.nextAudio);
+    final queue = context.select((PlayerModel m) => m.queue);
+    final repeatSingle = context.select((PlayerModel m) => m.repeatSingle);
+    final setRepeatSingle = context.read<PlayerModel>().setRepeatSingle;
+    final shuffle = context.select((PlayerModel m) => m.shuffle);
+    final setShuffle = context.read<PlayerModel>().setShuffle;
+    final position = context.select((PlayerModel m) => m.position);
+    final setPosition = context.read<PlayerModel>().setPosition;
+    final duration = context.select((PlayerModel m) => m.duration);
+    final color = context.select((PlayerModel m) => m.color);
+
+    final isUpNextExpanded =
+        context.select((PlayerModel m) => m.isUpNextExpanded);
+    final setUpNextExpanded = context.read<PlayerModel>().setUpNextExpanded;
+    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
+    final fullScreen = context.select((PlayerModel m) => m.fullScreen);
+    final setFullScreen = context.read<PlayerModel>().setFullScreen;
+    final playPrevious = context.read<PlayerModel>().playPrevious;
+    final playNext = context.read<PlayerModel>().playNext;
+    final seek = context.read<PlayerModel>().seek;
+    final pause = context.read<PlayerModel>().pause;
+    final playOrPause = context.read<PlayerModel>().playOrPause;
+
+    final liked =
+        audio == null ? false : context.read<PlaylistModel>().liked(audio);
     final theme = Theme.of(context);
-    final isFullScreen = widget.expandHeight || model.fullScreen == true;
+    final isFullScreen = widget.expandHeight || fullScreen == true;
     final width = MediaQuery.of(context).size.width;
     final removeLikedAudio = context.read<PlaylistModel>().removeLikedAudio;
     final addLikedAudio = context.read<PlaylistModel>().addLikedAudio;
@@ -41,7 +63,7 @@ class _PlayerViewState extends State<PlayerView> {
             : YaruIcons.fullscreen,
         color: theme.colorScheme.onSurface,
       ),
-      onPressed: () => model.fullScreen = !(model.fullScreen ?? false),
+      onPressed: () => setFullScreen(!(fullScreen ?? false)),
     );
 
     final controls = Row(
@@ -49,28 +71,24 @@ class _PlayerViewState extends State<PlayerView> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         YaruIconButton(
-          onPressed:
-              model.audio == null || model.audio!.audioType == AudioType.radio
-                  ? null
-                  : () => liked
-                      ? removeLikedAudio(model.audio!)
-                      : addLikedAudio(model.audio!),
+          onPressed: audio == null || audio.audioType == AudioType.radio
+              ? null
+              : () => liked ? removeLikedAudio(audio) : addLikedAudio(audio),
           icon: liked
               ? const Icon(YaruIcons.heart_filled)
               : const Icon(YaruIcons.heart),
         ),
         YaruIconButton(
-          onPressed: model.audio?.website == null
+          onPressed: audio?.website == null
               ? null
               : () => ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       behavior: SnackBarBehavior.floating,
                       content: TextButton(
                         child: Text(
-                          'Copied to clipboard: ${model.audio?.website}',
+                          'Copied to clipboard: ${audio?.website}',
                         ),
-                        onPressed: () =>
-                            launchUrl(Uri.parse(model.audio!.website!)),
+                        onPressed: () => launchUrl(Uri.parse(audio!.website!)),
                       ),
                     ),
                   ),
@@ -79,31 +97,31 @@ class _PlayerViewState extends State<PlayerView> {
         Padding(
           padding: const EdgeInsets.only(left: 10),
           child: YaruIconButton(
-            onPressed: () => model.playPrevious(),
+            onPressed: () => playPrevious(),
             icon: const Icon(YaruIcons.skip_backward),
           ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: YaruIconButton(
-            onPressed: model.audio == null
+            onPressed: audio == null
                 ? null
                 : () {
-                    if (model.isPlaying) {
-                      model.pause();
+                    if (isPlaying) {
+                      pause();
                     } else {
-                      model.playOrPause();
+                      playOrPause();
                     }
                   },
             icon: Icon(
-              model.isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
+              isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
             ),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(right: 10),
           child: YaruIconButton(
-            onPressed: () => model.playNext(),
+            onPressed: () => playNext(),
             icon: const Icon(YaruIcons.skip_forward),
           ),
         ),
@@ -114,8 +132,8 @@ class _PlayerViewState extends State<PlayerView> {
               YaruIcons.repeat_single,
               color: theme.colorScheme.onSurface,
             ),
-            isSelected: model.repeatSingle == true,
-            onPressed: () => model.repeatSingle = !(model.repeatSingle),
+            isSelected: repeatSingle == true,
+            onPressed: () => setRepeatSingle(!(repeatSingle)),
           ),
         ),
         YaruIconButton(
@@ -123,14 +141,14 @@ class _PlayerViewState extends State<PlayerView> {
             YaruIcons.shuffle,
             color: theme.colorScheme.onSurface,
           ),
-          isSelected: model.shuffle,
-          onPressed: () => model.shuffle = !(model.shuffle),
+          isSelected: shuffle,
+          onPressed: () => setShuffle(!(shuffle)),
         )
       ],
     );
 
     final title = Text(
-      model.audio?.title?.isNotEmpty == true ? model.audio!.title! : 'unknown',
+      audio?.title?.isNotEmpty == true ? audio!.title! : 'unknown',
       style: TextStyle(
         fontWeight: FontWeight.w200,
         fontSize: isFullScreen ? 45 : 15,
@@ -142,7 +160,7 @@ class _PlayerViewState extends State<PlayerView> {
       overflow: TextOverflow.ellipsis,
     );
     final artist = Text(
-      model.audio?.artist ?? '',
+      audio?.artist ?? '',
       style: TextStyle(
         fontWeight: FontWeight.w100,
         fontSize: isFullScreen ? 25 : 15,
@@ -154,16 +172,16 @@ class _PlayerViewState extends State<PlayerView> {
       maxLines: 1,
     );
 
-    bool sliderActive = model.duration != null &&
-        model.position != null &&
-        model.duration!.inSeconds > model.position!.inSeconds;
+    bool sliderActive = duration != null &&
+        position != null &&
+        duration.inSeconds > position.inSeconds;
 
     final sliderAndTime = Row(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(formatTime(model.position ?? Duration.zero)),
+            Text(formatTime(position ?? Duration.zero)),
           ],
         ),
         Expanded(
@@ -175,27 +193,23 @@ class _PlayerViewState extends State<PlayerView> {
                 thumbShape: const RoundSliderThumbShape(
                   elevation: 4,
                 ),
-                inactiveTrackColor: model.color != null
+                inactiveTrackColor: color != null
                     ? theme.colorScheme.onSurface.withOpacity(0.35)
                     : theme.primaryColor.withOpacity(0.5),
-                activeTrackColor: model.color != null
+                activeTrackColor: color != null
                     ? theme.colorScheme.onSurface.withOpacity(0.8)
                     : theme.primaryColor,
-                overlayColor: model.color?.withOpacity(0.3) ??
+                overlayColor: color?.withOpacity(0.3) ??
                     theme.primaryColor.withOpacity(0.5),
               ),
               child: Slider(
                 min: 0,
-                max: sliderActive
-                    ? model.duration?.inSeconds.toDouble() ?? 1.0
-                    : 1.0,
-                value: sliderActive
-                    ? model.position?.inSeconds.toDouble() ?? 0
-                    : 0,
+                max: sliderActive ? duration.inSeconds.toDouble() : 1.0,
+                value: sliderActive ? position.inSeconds.toDouble() : 0,
                 onChanged: sliderActive
                     ? (v) async {
-                        model.position = Duration(seconds: v.toInt());
-                        await model.seek();
+                        setPosition(Duration(seconds: v.toInt()));
+                        await seek();
                       }
                     : null,
               ),
@@ -205,7 +219,7 @@ class _PlayerViewState extends State<PlayerView> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(formatTime(model.duration ?? Duration.zero)),
+            Text(formatTime(duration ?? Duration.zero)),
           ],
         ),
       ],
@@ -228,19 +242,19 @@ class _PlayerViewState extends State<PlayerView> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      if (model.audio?.pictureData != null)
+                      if (audio?.pictureData != null)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
                             child: Image.memory(
-                              model.audio!.pictureData!,
+                              audio!.pictureData!,
                               height: 400.0,
                               fit: BoxFit.fitHeight,
                             ),
                           ),
                         )
-                      else if (model.audio?.imageUrl != null)
+                      else if (audio?.imageUrl != null)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: AnimatedContainer(
@@ -249,7 +263,7 @@ class _PlayerViewState extends State<PlayerView> {
                             child: Image.network(
                               filterQuality: FilterQuality.medium,
                               fit: BoxFit.cover,
-                              model.audio!.imageUrl!,
+                              audio!.imageUrl!,
                               height: 120.0,
                             ),
                           ),
@@ -266,7 +280,7 @@ class _PlayerViewState extends State<PlayerView> {
                         ),
                       controls,
                       sliderAndTime,
-                      if (model.audio != null)
+                      if (audio != null)
                         FittedBox(
                           child: title,
                         ),
@@ -284,15 +298,15 @@ class _PlayerViewState extends State<PlayerView> {
             padding: const EdgeInsets.all(kYaruPagePadding),
             child: fullScreenButton,
           ),
-          if (model.nextAudio?.title != null && model.nextAudio?.artist != null)
+          if (nextAudio?.title != null && nextAudio?.artist != null)
             Positioned(
               left: 10,
               bottom: 10,
               child: SizedBox(
-                height: model.isUpNextExpanded ? 180 : 60,
+                height: isUpNextExpanded ? 180 : 60,
                 width: 250,
                 child: YaruBanner(
-                  onTap: () => model.isUpNextExpanded = !model.isUpNextExpanded,
+                  onTap: () => setUpNextExpanded(!isUpNextExpanded),
                   color: theme.cardColor,
                   padding: EdgeInsets.zero,
                   child: Column(
@@ -310,14 +324,14 @@ class _PlayerViewState extends State<PlayerView> {
                           style: theme.textTheme.labelSmall,
                         ),
                       ),
-                      if (model.isUpNextExpanded &&
-                          model.queue?.isNotEmpty == true &&
-                          model.audio != null)
+                      if (isUpNextExpanded &&
+                          queue?.isNotEmpty == true &&
+                          audio != null)
                         Expanded(
                           child: ListView(
                             padding: const EdgeInsets.only(bottom: 10),
                             children: [
-                              for (final audio in model.queue!)
+                              for (final audio in queue!)
                                 Padding(
                                   padding: const EdgeInsets.only(
                                     left: 10,
@@ -328,7 +342,7 @@ class _PlayerViewState extends State<PlayerView> {
                                     style:
                                         theme.textTheme.labelMedium?.copyWith(
                                       color: theme.colorScheme.onSurface,
-                                      fontWeight: model.audio == audio
+                                      fontWeight: audio == audio
                                           ? FontWeight.bold
                                           : FontWeight.normal,
                                     ),
@@ -345,7 +359,7 @@ class _PlayerViewState extends State<PlayerView> {
                             right: 10,
                           ),
                           child: Text(
-                            '${model.nextAudio!.title!} • ${model.nextAudio!.artist!}',
+                            '${nextAudio!.title!} • ${nextAudio.artist!}',
                             style: theme.textTheme.labelMedium
                                 ?.copyWith(color: theme.colorScheme.onSurface),
                             overflow: TextOverflow.ellipsis,
@@ -369,7 +383,7 @@ class _PlayerViewState extends State<PlayerView> {
           Positioned(top: 12, right: 20, child: fullScreenButton),
           Row(
             children: [
-              if (model.audio?.pictureData != null)
+              if (audio?.pictureData != null)
                 AnimatedContainer(
                   height: 120,
                   width: 120,
@@ -377,11 +391,11 @@ class _PlayerViewState extends State<PlayerView> {
                   child: Image.memory(
                     filterQuality: FilterQuality.medium,
                     fit: BoxFit.cover,
-                    model.audio!.pictureData!,
+                    audio!.pictureData!,
                     height: 120.0,
                   ),
                 )
-              else if (model.audio?.imageUrl != null)
+              else if (audio?.imageUrl != null)
                 AnimatedContainer(
                   height: 120,
                   width: 120,
@@ -389,7 +403,7 @@ class _PlayerViewState extends State<PlayerView> {
                   child: Image.network(
                     filterQuality: FilterQuality.medium,
                     fit: BoxFit.cover,
-                    model.audio!.imageUrl!,
+                    audio!.imageUrl!,
                     height: 120.0,
                   ),
                 )
