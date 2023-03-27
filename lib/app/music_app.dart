@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
@@ -16,6 +15,7 @@ import 'package:musicpod/app/podcasts/podcasts_page.dart';
 import 'package:musicpod/app/radio/radio_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
 import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +58,7 @@ class _App extends StatefulWidget {
           create: (_) => LocalAudioModel()..init(),
         ),
         ChangeNotifierProvider(
-          create: (_) => PlaylistModel()..init(),
+          create: (_) => PlaylistModel(getService<LibraryService>())..init(),
         ),
         ChangeNotifierProvider(
           create: (_) => PodcastModel(getService<PodcastService>()),
@@ -105,7 +105,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final localAudioModel = context.watch<LocalAudioModel>();
 
-    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
+    // final isPlaying = context.select((PlayerModel m) => m.isPlaying);
     final audioType = context.select((PlayerModel m) => m.audio?.audioType);
     final surfaceTintColor =
         context.select((PlayerModel m) => m.surfaceTintColor);
@@ -117,17 +117,11 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
     final shrinkSidebar = (width < 700);
     final playerToTheRight = width > 1700;
 
-    final orbit = Padding(
-      padding: const EdgeInsets.only(left: 3),
-      child: SizedBox(
-        width: 16,
-        height: 16,
-        child: LoadingIndicator(
-          strokeWidth: 0.0,
-          indicatorType: Indicator.lineScaleParty,
-          pause: !isPlaying,
-        ),
-      ),
+    // TODO: replace with a custom painter for a nice audio playing animation
+    // that does not take 5% CPU...
+    final orbit = Icon(
+      YaruIcons.media_play,
+      color: theme.primaryColor,
     );
 
     final masterItems = [

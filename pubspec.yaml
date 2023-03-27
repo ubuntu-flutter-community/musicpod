@@ -19,7 +19,6 @@ dependencies:
   handy_window: ^0.3.1
   http: ^0.13.5
   intl: ^0.17.0
-  loading_indicator: ^3.1.0
   media_kit: ^0.0.1
   media_kit_libs_linux: ^1.0.0
   metadata_god: ^0.3.2

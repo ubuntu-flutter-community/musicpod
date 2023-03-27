@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
+import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -14,6 +15,7 @@ Future<void> main() async {
   );
 
   registerService<MPRIS>(() => mpris);
+  registerService<LibraryService>(LibraryService.new);
   registerService<PodcastService>(PodcastService.new);
 
   await YaruWindowTitleBar.ensureInitialized();
