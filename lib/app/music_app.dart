@@ -104,6 +104,11 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final localAudioModel = context.watch<LocalAudioModel>();
+    final searchLocal = localAudioModel.search;
+    final setLocalSearchQuery = localAudioModel.setSearchQuery;
+
+    final searchPodcasts = context.read<PodcastModel>().search;
+    final setPodcastSearchQuery = context.read<PodcastModel>().setSearchQuery;
 
     // final isPlaying = context.select((PlayerModel m) => m.isPlaying);
     final audioType = context.select((PlayerModel m) => m.audio?.audioType);
@@ -123,6 +128,23 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
       YaruIcons.media_play,
       color: theme.primaryColor,
     );
+
+    void onTextTap({required String text, audioType = AudioType.local}) {
+      switch (audioType) {
+        case AudioType.local:
+          setLocalSearchQuery(text);
+          searchLocal();
+          playlistModel.index = 0;
+          break;
+        case AudioType.podcast:
+          setPodcastSearchQuery(
+            text,
+          );
+          searchPodcasts(searchQuery: text, useAlbumImage: true);
+          playlistModel.index = 2;
+          break;
+      }
+    }
 
     final masterItems = [
       MasterItem(
@@ -211,6 +233,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
         },
         builder: (context) {
           return AudioPage(
+            onArtistTap: (artist) => onTextTap(text: artist),
+            onAlbumTap: (album) => onTextTap(text: album),
             audioPageType: AudioPageType.likedAudio,
             placeTrailer: false,
             showWindowControls: !playerToTheRight,
@@ -236,6 +260,10 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                 podcast.value.firstOrNull!.imageUrl == null;
 
             return AudioPage(
+              onAlbumTap: (album) =>
+                  onTextTap(text: album, audioType: AudioType.podcast),
+              onArtistTap: (artist) =>
+                  onTextTap(text: artist, audioType: AudioType.podcast),
               audioPageType: AudioPageType.podcast,
               image: !noImage
                   ? SafeNetworkImage(
@@ -306,6 +334,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                 playlist.value.firstOrNull!.imageUrl == null;
 
             return AudioPage(
+              onArtistTap: (artist) => onTextTap(text: artist),
+              onAlbumTap: (album) => onTextTap(text: album),
               audioPageType: AudioPageType.playlist,
               image: !noPicture
                   ? Image.memory(
@@ -366,6 +396,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                 album.value.firstOrNull!.pictureData == null;
 
             return AudioPage(
+              onArtistTap: (artist) => onTextTap(text: artist),
+              onAlbumTap: (album) => onTextTap(text: album),
               audioPageType: AudioPageType.album,
               image: !noPicture
                   ? Image.memory(
