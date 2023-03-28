@@ -72,7 +72,6 @@ class PodcastSearchPage extends StatelessWidget {
                             podcast.first.album!,
                           );
                     return AudioPage(
-                      audioFilter: AudioFilter.trackNumber,
                       onAlbumTap: onTapText,
                       onArtistTap: onTapText,
                       audioPageType: AudioPageType.podcast,

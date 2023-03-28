@@ -261,7 +261,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                 podcast.value.firstOrNull!.imageUrl == null;
 
             return AudioPage(
-              audioFilter: AudioFilter.trackNumber,
+              sort: false,
               onAlbumTap: (album) =>
                   onTextTap(text: album, audioType: AudioType.podcast),
               onArtistTap: (artist) =>
