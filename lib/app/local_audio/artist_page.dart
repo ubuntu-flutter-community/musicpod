@@ -7,6 +7,7 @@ import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/image_grid.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:yaru_widgets/yaru_widgets.dart';
 
 class ArtistPage extends StatelessWidget {
   const ArtistPage({
@@ -34,16 +35,7 @@ class ArtistPage extends StatelessWidget {
       audioPageType: AudioPageType.artist,
       pageLabel: context.l10n.artist,
       pageTitle: artistAudios?.firstOrNull?.artist,
-      image: images != null && images!.length >= 4
-          ? ImageGrid(images: images)
-          : images?.isNotEmpty == true
-              ? Image.memory(
-                  images!.first,
-                  width: 200.0,
-                  fit: BoxFit.fitWidth,
-                  filterQuality: FilterQuality.medium,
-                )
-              : const SizedBox.shrink(),
+      image: ArtistImage(images: images),
       pageSubtile: artistAudios?.firstOrNull?.genre,
       placeTrailer: images?.isNotEmpty == true,
       controlPageButton: const SizedBox.shrink(),
@@ -53,5 +45,45 @@ class ArtistPage extends StatelessWidget {
       pageId: artistAudios?.firstOrNull?.artist ?? artistAudios.toString(),
       editableName: false,
     );
+  }
+}
+
+class ArtistImage extends StatelessWidget {
+  const ArtistImage({super.key, this.images});
+
+  final Set<Uint8List>? images;
+
+  @override
+  Widget build(BuildContext context) {
+    if (images?.isNotEmpty == true) {
+      if (images!.length >= 4) {
+        return ImageGrid(images: images);
+      } else if (images!.length >= 2) {
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: MemoryImage(images!.first),
+            ),
+          ),
+          child: YaruClip.diagonal(
+            position: YaruDiagonalClip.bottomLeft,
+            child: Image.memory(
+              images!.elementAt(1),
+              fit: BoxFit.fitWidth,
+              filterQuality: FilterQuality.medium,
+            ),
+          ),
+        );
+      } else {
+        return Image.memory(
+          images!.first,
+          width: 200.0,
+          fit: BoxFit.fitWidth,
+          filterQuality: FilterQuality.medium,
+        );
+      }
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 }
