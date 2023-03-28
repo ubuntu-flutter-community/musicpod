@@ -109,4 +109,7 @@ class PodcastModel extends SafeChangeNotifier {
         )
         .then((_) => notifyListeners());
   }
+
+  Future<Set<Audio>> findEpisodes({required String url}) async =>
+      await _service.findEpisodes(url: url);
 }

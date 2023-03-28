@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
+import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
-import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
@@ -12,6 +12,7 @@ import 'package:musicpod/app/player_view.dart';
 import 'package:musicpod/app/playlists/playlist_dialog.dart';
 import 'package:musicpod/app/playlists/playlist_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
+import 'package:musicpod/app/podcasts/podcast_page.dart';
 import 'package:musicpod/app/podcasts/podcasts_page.dart';
 import 'package:musicpod/app/radio/radio_page.dart';
 import 'package:musicpod/data/audio.dart';
@@ -130,7 +131,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
       color: theme.primaryColor,
     );
 
-    void onTextTap({required String text, audioType = AudioType.local}) {
+    void onTextTap(
+        {required String text, AudioType audioType = AudioType.local}) {
       switch (audioType) {
         case AudioType.local:
           setLocalSearchQuery(text);
@@ -143,6 +145,9 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           );
           searchPodcasts(searchQuery: text, useAlbumImage: true);
           playlistModel.index = 2;
+          break;
+        case AudioType.radio:
+          // TODO: Handle this case.
           break;
       }
     }
@@ -257,48 +262,49 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             return Text(podcast.key);
           },
           builder: (context) {
-            final noImage = podcast.value.firstOrNull == null ||
-                podcast.value.firstOrNull!.imageUrl == null;
+            Widget page(Set<Audio> audios) => PodcastPage(
+                  pageId: podcast.key,
+                  audios: audios,
+                  showWindowControls: !playerToTheRight,
+                  onAlbumTap: (album) =>
+                      onTextTap(text: album, audioType: AudioType.podcast),
+                  onArtistTap: (artist) =>
+                      onTextTap(text: artist, audioType: AudioType.podcast),
+                  onControlButtonPressed: () =>
+                      playlistModel.removePodcast(podcast.key),
+                  imageUrl: podcast.value.firstOrNull?.imageUrl,
+                );
 
-            return AudioPage(
-              sort: false,
-              onAlbumTap: (album) =>
-                  onTextTap(text: album, audioType: AudioType.podcast),
-              onArtistTap: (artist) =>
-                  onTextTap(text: artist, audioType: AudioType.podcast),
-              audioPageType: AudioPageType.podcast,
-              image: !noImage
-                  ? SafeNetworkImage(
-                      fallBackIcon: SizedBox(
-                        width: 200,
-                        child: Center(
-                          child: Icon(
-                            YaruIcons.music_note,
-                            size: 80,
-                            color: theme.hintColor,
-                          ),
-                        ),
-                      ),
-                      url: podcast.value.firstOrNull!.imageUrl,
-                      fit: BoxFit.fitWidth,
-                      filterQuality: FilterQuality.medium,
-                    )
-                  : null,
-              pageLabel: context.l10n.podcast,
-              pageTitle: podcast.key,
-              showWindowControls: !playerToTheRight,
-              audios: podcast.value,
-              pageId: podcast.key,
-              showTrack: false,
-              editableName: false,
-              deletable: false,
-              controlPageButton: YaruIconButton(
-                icon: Icon(
-                  YaruIcons.rss,
-                  color: theme.primaryColor,
-                ),
-                onPressed: () => playlistModel.removePodcast(podcast.key),
-              ),
+            if (podcast.value.firstOrNull?.website == null) {
+              return page(podcast.value);
+            }
+            return FutureBuilder<Set<Audio>>(
+              future: context.read<PodcastModel>().findEpisodes(
+                    url: podcast.value.firstOrNull!.website!,
+                  ),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!.length != podcast.value.length) {
+                    final client = NotificationsClient();
+                    client
+                        .notify(
+                          '${context.l10n.newEpisodeAvailable} ${podcast.key}',
+                          appIcon: 'music-app',
+                          appName: 'musicpod',
+                        )
+                        .then(
+                          (_) => client.close().then(
+                                (_) => playlistModel.addPodcast(
+                                  podcast.key,
+                                  podcast.value,
+                                ),
+                              ),
+                        );
+                  }
+                }
+
+                return page(snapshot.data ?? podcast.value);
+              },
             );
           },
           iconBuilder: (context, selected) {
@@ -313,6 +319,10 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                     url: picture,
                     fit: BoxFit.fitHeight,
                     filterQuality: FilterQuality.medium,
+                    fallBackIcon: Icon(
+                      YaruIcons.podcast,
+                      color: theme.hintColor,
+                    ),
                   ),
                 ),
               );
