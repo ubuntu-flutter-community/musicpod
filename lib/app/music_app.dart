@@ -131,8 +131,10 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
       color: theme.primaryColor,
     );
 
-    void onTextTap(
-        {required String text, AudioType audioType = AudioType.local}) {
+    void onTextTap({
+      required String text,
+      AudioType audioType = AudioType.local,
+    }) {
       switch (audioType) {
         case AudioType.local:
           setLocalSearchQuery(text);
