@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
+import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
@@ -260,6 +261,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                 podcast.value.firstOrNull!.imageUrl == null;
 
             return AudioPage(
+              audioFilter: AudioFilter.trackNumber,
               onAlbumTap: (album) =>
                   onTextTap(text: album, audioType: AudioType.podcast),
               onArtistTap: (artist) =>
