@@ -286,7 +286,10 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                   ),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  if (snapshot.data!.length != podcast.value.length) {
+                  if (!listsAreEqual(
+                    snapshot.data!.toList(),
+                    podcast.value.toList(),
+                  )) {
                     final client = NotificationsClient();
                     client
                         .notify(
@@ -296,16 +299,17 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                         )
                         .then(
                           (_) => client.close().then(
-                                (_) => playlistModel.addPodcast(
+                                (_) => playlistModel.updatePodcast(
                                   podcast.key,
-                                  podcast.value,
+                                  snapshot.data!,
                                 ),
                               ),
                         );
                   }
+                  return page(snapshot.data!);
+                } else {
+                  return page(podcast.value);
                 }
-
-                return page(snapshot.data ?? podcast.value);
               },
             );
           },

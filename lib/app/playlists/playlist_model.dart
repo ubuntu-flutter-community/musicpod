@@ -110,6 +110,8 @@ class PlaylistModel extends SafeChangeNotifier {
   int get podcastsLength => podcasts.length;
   void addPodcast(String name, Set<Audio> audios) =>
       _service.addPodcast(name, audios);
+  void updatePodcast(String name, Set<Audio> audios) =>
+      _service.updatePodcast(name, audios);
 
   void removePodcast(String name) => _service.removePodcast(name);
 

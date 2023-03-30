@@ -148,14 +148,18 @@ class LibraryService {
         .then((_) => _podcastsController.add(true));
   }
 
+  void updatePodcast(String name, Set<Audio> audios) {
+    _podcasts.update(name, (value) => audios);
+    _write(_podcasts, kPodcastsFileName)
+        .then((_) => _podcastsController.add(true));
+  }
+
   void removePodcast(String name) {
     _podcasts.remove(name);
     _podcastsToFeedUrls.remove(name);
     _write(_podcasts, kPodcastsFileName)
         .then((_) => _podcastsController.add(true));
   }
-
-  bool podcastSubscribed(String name) => _podcasts.containsKey(name);
 
   final Map<String, String> _podcastsToFeedUrls = {};
   Map<String, String> get podcastsToFeedUrls => _podcastsToFeedUrls;
