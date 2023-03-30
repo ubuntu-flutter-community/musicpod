@@ -124,6 +124,34 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
     final shrinkSidebar = (width < 700);
     final playerToTheRight = width > 1700;
 
+    // TODO: check for internet access
+    // Update and notify id new podcasts are available
+    final podcastModel = context.read<PodcastModel>();
+    for (final podcast in playlistModel.podcasts.entries) {
+      if (podcast.value.firstOrNull?.website != null) {
+        podcastModel
+            .findEpisodes(
+          url: podcast.value.firstOrNull!.website!,
+        )
+            .then((audios) {
+          if (!listsAreEqual(
+            audios.toList(),
+            podcast.value.toList(),
+          )) {
+            playlistModel.updatePodcast(podcast.key, audios);
+            final client = NotificationsClient();
+            client
+                .notify(
+                  '${context.l10n.newEpisodeAvailable} ${podcast.key}',
+                  appIcon: 'music-app',
+                  appName: 'musicpod',
+                )
+                .then((_) => client.close());
+          }
+        });
+      }
+    }
+
     // TODO: replace with a custom painter for a nice audio playing animation
     // that does not take 5% CPU...
     final orbit = Icon(
@@ -264,53 +292,17 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             return Text(podcast.key);
           },
           builder: (context) {
-            Widget page(Set<Audio> audios) => PodcastPage(
-                  pageId: podcast.key,
-                  audios: audios,
-                  showWindowControls: !playerToTheRight,
-                  onAlbumTap: (album) =>
-                      onTextTap(text: album, audioType: AudioType.podcast),
-                  onArtistTap: (artist) =>
-                      onTextTap(text: artist, audioType: AudioType.podcast),
-                  onControlButtonPressed: () =>
-                      playlistModel.removePodcast(podcast.key),
-                  imageUrl: podcast.value.firstOrNull?.imageUrl,
-                );
-
-            if (podcast.value.firstOrNull?.website == null) {
-              return page(podcast.value);
-            }
-            return FutureBuilder<Set<Audio>>(
-              future: context.read<PodcastModel>().findEpisodes(
-                    url: podcast.value.firstOrNull!.website!,
-                  ),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  if (!listsAreEqual(
-                    snapshot.data!.toList(),
-                    podcast.value.toList(),
-                  )) {
-                    final client = NotificationsClient();
-                    client
-                        .notify(
-                          '${context.l10n.newEpisodeAvailable} ${podcast.key}',
-                          appIcon: 'music-app',
-                          appName: 'musicpod',
-                        )
-                        .then(
-                          (_) => client.close().then(
-                                (_) => playlistModel.updatePodcast(
-                                  podcast.key,
-                                  snapshot.data!,
-                                ),
-                              ),
-                        );
-                  }
-                  return page(snapshot.data!);
-                } else {
-                  return page(podcast.value);
-                }
-              },
+            return PodcastPage(
+              pageId: podcast.key,
+              audios: podcast.value,
+              showWindowControls: !playerToTheRight,
+              onAlbumTap: (album) =>
+                  onTextTap(text: album, audioType: AudioType.podcast),
+              onArtistTap: (artist) =>
+                  onTextTap(text: artist, audioType: AudioType.podcast),
+              onControlButtonPressed: () =>
+                  playlistModel.removePodcast(podcast.key),
+              imageUrl: podcast.value.firstOrNull?.imageUrl,
             );
           },
           iconBuilder: (context, selected) {

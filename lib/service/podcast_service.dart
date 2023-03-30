@@ -141,7 +141,7 @@ class PodcastService {
 
   Future<Set<Audio>> findEpisodes({required String url}) async {
     final episodes = <Audio>{};
-    final Podcast? podcast = await loadPodcast(url);
+    final Podcast? podcast = await compute(loadPodcast, url);
 
     if (podcast?.episodes?.isNotEmpty == true) {
       for (var episode in podcast?.episodes ?? []) {
