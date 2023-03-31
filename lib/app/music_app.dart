@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
@@ -123,34 +122,6 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
     final width = MediaQuery.of(context).size.width;
     final shrinkSidebar = (width < 700);
     final playerToTheRight = width > 1700;
-
-    // TODO: check for internet access
-    // Update and notify id new podcasts are available
-    final podcastModel = context.read<PodcastModel>();
-    for (final podcast in playlistModel.podcasts.entries) {
-      if (podcast.value.firstOrNull?.website != null) {
-        podcastModel
-            .findEpisodes(
-          url: podcast.value.firstOrNull!.website!,
-        )
-            .then((audios) {
-          if (!listsAreEqual(
-            audios.toList(),
-            podcast.value.toList(),
-          )) {
-            playlistModel.updatePodcast(podcast.key, audios);
-            final client = NotificationsClient();
-            client
-                .notify(
-                  '${context.l10n.newEpisodeAvailable} ${podcast.key}',
-                  appIcon: 'music-app',
-                  appName: 'musicpod',
-                )
-                .then((_) => client.close());
-          }
-        });
-      }
-    }
 
     // TODO: replace with a custom painter for a nice audio playing animation
     // that does not take 5% CPU...

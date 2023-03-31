@@ -40,4 +40,4 @@ Thank you @KRTirtho for the very easy to use [Metadata God](https://github.com/K
 - [X] Save playlists
 - [X] Save liked songs
 - [X] Save settings on disk
-- [ ] notify when a new episode of your subscribed podcasts is available
+- [X] notify when a new episode of your subscribed podcasts is available

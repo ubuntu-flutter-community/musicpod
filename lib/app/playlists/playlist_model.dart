@@ -15,8 +15,6 @@ class PlaylistModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _stationsSub;
 
   Future<void> init() async {
-    await _service.init();
-
     _likedAudiosSub =
         _service.likedAudiosChanged.listen((event) => notifyListeners());
     _playlistsSub =
