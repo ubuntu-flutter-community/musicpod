@@ -104,7 +104,7 @@ class AudioTile extends StatelessWidget {
   }
 }
 
-class _TapAbleText extends StatefulWidget {
+class _TapAbleText extends StatelessWidget {
   const _TapAbleText({
     this.onTap,
     required this.text,
@@ -116,34 +116,22 @@ class _TapAbleText extends StatefulWidget {
   final bool selected;
 
   @override
-  State<_TapAbleText> createState() => _TapAbleTextState();
-}
-
-class _TapAbleTextState extends State<_TapAbleText> {
-  bool _hovered = false;
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textStyle = TextStyle(
-      color: _hovered
-          ? theme.primaryColor
-          : widget.selected
-              ? theme.colorScheme.onSurface
-              : theme.hintColor,
-      fontWeight: widget.selected ? FontWeight.w500 : FontWeight.normal,
+    final style = TextStyle(
+      color: selected ? theme.colorScheme.onSurface : theme.hintColor,
     );
     return Row(
       children: [
         Flexible(
           fit: FlexFit.loose,
           child: InkWell(
-            hoverColor: Colors.transparent,
+            hoverColor: theme.primaryColor.withOpacity(0.3),
             borderRadius: BorderRadius.circular(4),
-            onHover: (value) => setState(() => _hovered = value),
-            onTap: widget.onTap == null ? null : () => widget.onTap!(),
+            onTap: onTap == null ? null : () => onTap!(),
             child: Text(
-              widget.text,
-              style: textStyle,
+              text,
+              style: style,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
