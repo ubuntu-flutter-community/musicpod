@@ -12,9 +12,7 @@ base: core22
 grade: stable
 license: MPL-2.0
 
-architectures:
-  - amd64
-  - arm64
+architectures: [amd64, arm64]
 
 environment:
   LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/lapack:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/caca:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/vdpau:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/mfx
