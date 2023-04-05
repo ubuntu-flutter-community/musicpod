@@ -41,7 +41,7 @@ class PlaylistModel extends SafeChangeNotifier {
       podcastsLength +
       playlistsLength +
       pinnedAlbumsLength +
-      4;
+      5;
 
   //
   // Liked Audios

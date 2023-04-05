@@ -221,6 +221,20 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
         },
       ),
       MasterItem(
+        iconBuilder: (context, selected) {
+          return const Icon(YaruIcons.plus);
+        },
+        tileBuilder: (context) {
+          return Text(context.l10n.playlistDialogTitleNew);
+        },
+        builder: (context) {
+          return ChangeNotifierProvider.value(
+            value: playlistModel,
+            child: const CreatePlaylistPage(),
+          );
+        },
+      ),
+      MasterItem(
         tileBuilder: (context) {
           return Text(context.l10n.likedSongs);
         },
@@ -474,22 +488,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
 
     var yaruMasterDetailPage = YaruMasterDetailPage(
       onSelected: (value) => playlistModel.index = value ?? 0,
-      appBar: YaruWindowTitleBar(
-        titleSpacing: 0,
-        title: YaruMasterTile(
-          onTap: () => showDialog(
-            context: context,
-            builder: (context) {
-              return PlaylistDialog(
-                audios: const {},
-                onCreateNewPlaylist: playlistModel.addPlaylist,
-              );
-            },
-          ),
-          title: Text(context.l10n.playlistDialogTitleNew),
-          leading: const Icon(YaruIcons.plus),
-        ),
-      ),
+      appBar: const YaruWindowTitleBar(),
       bottomBar: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: settingsTile,
