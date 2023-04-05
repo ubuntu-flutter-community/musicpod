@@ -120,7 +120,7 @@ class PodcastService {
                     album: podcast?.title,
                     artist: podcast?.copyright,
                     description: podcast?.description,
-                    website: podcast?.url,
+                    website: item.feedUrl,
                   );
 
                   episodes.add(audio);
@@ -137,5 +137,29 @@ class PodcastService {
     } else {
       _updateSearchResult({});
     }
+  }
+
+  Future<Set<Audio>> findEpisodes({required String url}) async {
+    final episodes = <Audio>{};
+    final Podcast? podcast = await compute(loadPodcast, url);
+
+    if (podcast?.episodes?.isNotEmpty == true) {
+      for (var episode in podcast?.episodes ?? []) {
+        if (episode.contentUrl != null) {
+          final audio = Audio(
+            url: episode.contentUrl,
+            audioType: AudioType.podcast,
+            imageUrl: podcast?.image ?? episode.imageUrl,
+            title: episode.title,
+            album: podcast?.title,
+            artist: podcast?.copyright,
+            description: podcast?.description,
+            website: podcast?.url,
+          );
+          episodes.add(audio);
+        }
+      }
+    }
+    return episodes;
   }
 }

@@ -62,6 +62,13 @@ class _PodcastsPageState extends State<PodcastsPage> {
       ),
     );
 
+    final search = model.search;
+    final setSearchQuery = model.setSearchQuery;
+    void onTapText(String text) {
+      setSearchQuery(text);
+      search(searchQuery: text, useAlbumImage: true);
+    }
+
     final light = theme.brightness == Brightness.light;
 
     final fallBackLoadingIcon = Shimmer.fromColors(
@@ -116,6 +123,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
                         : podcastSubscribed(name);
 
                     return AudioPage(
+                      onAlbumTap: onTapText,
+                      onArtistTap: onTapText,
                       audioPageType: AudioPageType.podcast,
                       showWindowControls: widget.showWindowControls,
                       sort: false,

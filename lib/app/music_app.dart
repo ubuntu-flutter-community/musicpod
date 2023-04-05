@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
@@ -14,10 +13,12 @@ import 'package:musicpod/app/player_view.dart';
 import 'package:musicpod/app/playlists/playlist_dialog.dart';
 import 'package:musicpod/app/playlists/playlist_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
+import 'package:musicpod/app/podcasts/podcast_page.dart';
 import 'package:musicpod/app/podcasts/podcasts_page.dart';
 import 'package:musicpod/app/radio/radio_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
 import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +61,7 @@ class _App extends StatefulWidget {
           create: (_) => LocalAudioModel()..init(),
         ),
         ChangeNotifierProvider(
-          create: (_) => PlaylistModel()..init(),
+          create: (_) => PlaylistModel(getService<LibraryService>())..init(),
         ),
         ChangeNotifierProvider(
           create: (_) => PodcastModel(getService<PodcastService>()),
@@ -111,8 +112,13 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final localAudioModel = context.watch<LocalAudioModel>();
+    final searchLocal = localAudioModel.search;
+    final setLocalSearchQuery = localAudioModel.setSearchQuery;
 
-    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
+    final searchPodcasts = context.read<PodcastModel>().search;
+    final setPodcastSearchQuery = context.read<PodcastModel>().setSearchQuery;
+
+    // final isPlaying = context.select((PlayerModel m) => m.isPlaying);
     final audioType = context.select((PlayerModel m) => m.audio?.audioType);
     final surfaceTintColor =
         context.select((PlayerModel m) => m.surfaceTintColor);
@@ -124,18 +130,35 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
     final shrinkSidebar = (width < 700);
     final playerToTheRight = width > 1700;
 
-    final orbit = Padding(
-      padding: const EdgeInsets.only(left: 3),
-      child: SizedBox(
-        width: 16,
-        height: 16,
-        child: LoadingIndicator(
-          strokeWidth: 0.0,
-          indicatorType: Indicator.lineScaleParty,
-          pause: !isPlaying,
-        ),
-      ),
+    // TODO: replace with a custom painter for a nice audio playing animation
+    // that does not take 5% CPU...
+    final orbit = Icon(
+      YaruIcons.media_play,
+      color: theme.primaryColor,
     );
+
+    void onTextTap({
+      required String text,
+      AudioType audioType = AudioType.local,
+    }) {
+      switch (audioType) {
+        case AudioType.local:
+          setLocalSearchQuery(text);
+          searchLocal();
+          playlistModel.index = 0;
+          break;
+        case AudioType.podcast:
+          setPodcastSearchQuery(
+            text,
+          );
+          searchPodcasts(searchQuery: text, useAlbumImage: true);
+          playlistModel.index = 2;
+          break;
+        case AudioType.radio:
+          // TODO: Handle this case.
+          break;
+      }
+    }
 
     final masterItems = [
       MasterItem(
@@ -224,6 +247,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
         },
         builder: (context) {
           return AudioPage(
+            onArtistTap: (artist) => onTextTap(text: artist),
+            onAlbumTap: (album) => onTextTap(text: album),
             audioPageType: AudioPageType.likedAudio,
             placeTrailer: false,
             showWindowControls: !playerToTheRight,
@@ -245,43 +270,17 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             return Text(podcast.key);
           },
           builder: (context) {
-            final noImage = podcast.value.firstOrNull == null ||
-                podcast.value.firstOrNull!.imageUrl == null;
-
-            return AudioPage(
-              audioPageType: AudioPageType.podcast,
-              image: !noImage
-                  ? SafeNetworkImage(
-                      fallBackIcon: SizedBox(
-                        width: 200,
-                        child: Center(
-                          child: Icon(
-                            YaruIcons.music_note,
-                            size: 80,
-                            color: theme.hintColor,
-                          ),
-                        ),
-                      ),
-                      url: podcast.value.firstOrNull!.imageUrl,
-                      fit: BoxFit.fitWidth,
-                      filterQuality: FilterQuality.medium,
-                    )
-                  : null,
-              pageLabel: context.l10n.podcast,
-              pageTitle: podcast.key,
-              showWindowControls: !playerToTheRight,
-              audios: podcast.value,
+            return PodcastPage(
               pageId: podcast.key,
-              showTrack: false,
-              editableName: false,
-              deletable: false,
-              controlPageButton: YaruIconButton(
-                icon: Icon(
-                  YaruIcons.rss,
-                  color: theme.primaryColor,
-                ),
-                onPressed: () => playlistModel.removePodcast(podcast.key),
-              ),
+              audios: podcast.value,
+              showWindowControls: !playerToTheRight,
+              onAlbumTap: (album) =>
+                  onTextTap(text: album, audioType: AudioType.podcast),
+              onArtistTap: (artist) =>
+                  onTextTap(text: artist, audioType: AudioType.podcast),
+              onControlButtonPressed: () =>
+                  playlistModel.removePodcast(podcast.key),
+              imageUrl: podcast.value.firstOrNull?.imageUrl,
             );
           },
           iconBuilder: (context, selected) {
@@ -296,6 +295,10 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                     url: picture,
                     fit: BoxFit.fitHeight,
                     filterQuality: FilterQuality.medium,
+                    fallBackIcon: Icon(
+                      YaruIcons.podcast,
+                      color: theme.hintColor,
+                    ),
                   ),
                 ),
               );
@@ -319,6 +322,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                 playlist.value.firstOrNull!.imageUrl == null;
 
             return AudioPage(
+              onArtistTap: (artist) => onTextTap(text: artist),
+              onAlbumTap: (album) => onTextTap(text: album),
               audioPageType: AudioPageType.playlist,
               image: !noPicture
                   ? Image.memory(
@@ -379,6 +384,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                 album.value.firstOrNull!.pictureData == null;
 
             return AudioPage(
+              onArtistTap: (artist) => onTextTap(text: artist),
+              onAlbumTap: (album) => onTextTap(text: album),
               audioPageType: AudioPageType.album,
               image: !noPicture
                   ? Image.memory(

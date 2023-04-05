@@ -1,7 +1,12 @@
+
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:collection/collection.dart';
+import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
+import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
+import 'package:musicpod/utils.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -15,9 +20,42 @@ Future<void> main() async {
   );
 
   registerService<MPRIS>(() => mpris);
+  registerService<LibraryService>(LibraryService.new);
   registerService<PodcastService>(PodcastService.new);
   registerService<Connectivity>(Connectivity.new);
 
   await YaruWindowTitleBar.ensureInitialized();
+
+  // TODO: check for internet access
+  // Update and notify id new podcasts are available
+  final podcastService = getService<PodcastService>();
+  final libraryService = getService<LibraryService>();
+  libraryService.init().then((_) {
+    // TODO: add splash screen
+    for (final podcast in libraryService.podcasts.entries) {
+      if (podcast.value.firstOrNull?.website != null) {
+        podcastService
+            .findEpisodes(
+          url: podcast.value.firstOrNull!.website!,
+        )
+            .then((audios) {
+          if (!listsAreEqual(
+            audios.toList(),
+            podcast.value.toList(),
+          )) {
+            libraryService.updatePodcast(podcast.key, audios);
+            final client = NotificationsClient();
+            client
+                .notify(
+                  'New episodes available: ${podcast.key}',
+                  appIcon: 'music-app',
+                  appName: 'musicpod',
+                )
+                .then((_) => client.close());
+          }
+        });
+      }
+    }
+  });
   runApp(const MusicApp());
 }

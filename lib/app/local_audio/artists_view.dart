@@ -13,10 +13,15 @@ class ArtistsView extends StatefulWidget {
     super.key,
     required this.similarArtistsSearchResult,
     required this.showWindowControls,
+    this.onArtistTap,
+    this.onAlbumTap,
   });
 
   final Set<Audio> similarArtistsSearchResult;
   final bool showWindowControls;
+
+  final void Function(String artist)? onArtistTap;
+  final void Function(String album)? onAlbumTap;
 
   @override
   State<ArtistsView> createState() => _ArtistsViewState();
@@ -58,6 +63,8 @@ class _ArtistsViewState extends State<ArtistsView> {
             MaterialPageRoute(
               builder: (context) {
                 return ArtistPage(
+                  onAlbumTap: widget.onAlbumTap,
+                  onArtistTap: widget.onArtistTap,
                   images: images,
                   artistAudios: artistAudios,
                   showWindowControls: widget.showWindowControls,

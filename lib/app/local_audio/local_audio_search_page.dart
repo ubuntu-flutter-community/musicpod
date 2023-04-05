@@ -33,20 +33,43 @@ class LocalAudioSearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final setSearchQuery = context.read<LocalAudioModel>().setSearchQuery;
+    final search = context.read<LocalAudioModel>().search;
     final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
+
+    void onTapWithPop(text) {
+      setSearchQuery(text);
+      search();
+      Navigator.of(context).pop();
+    }
+
+    void onTap(text) {
+      setSearchQuery(text);
+      search();
+    }
 
     final body = ListView(
       shrinkWrap: true,
       children: [
-        const _Titles(),
+        _Titles(
+          onAlbumTap: onTap,
+          onArtistTap: onTap,
+        ),
         const SizedBox(
           height: 10,
         ),
-        _Albums(showWindowControls),
+        _Albums(
+          showWindowControls: showWindowControls,
+          onArtistTap: onTapWithPop,
+          onAlbumTap: onTapWithPop,
+        ),
         const SizedBox(
           height: 10,
         ),
-        _Artists(showWindowControls: showWindowControls),
+        _Artists(
+          showWindowControls: showWindowControls,
+          onAlbumTap: onTapWithPop,
+          onArtistTap: onTapWithPop,
+        ),
       ],
     );
 
@@ -80,7 +103,10 @@ class LocalAudioSearchPage extends StatelessWidget {
 }
 
 class _Titles extends StatelessWidget {
-  const _Titles();
+  const _Titles({this.onArtistTap, this.onAlbumTap});
+
+  final void Function(String artist)? onArtistTap;
+  final void Function(String album)? onAlbumTap;
 
   @override
   Widget build(BuildContext context) {
@@ -146,6 +172,8 @@ class _Titles extends StatelessWidget {
                   right: 15,
                 ),
                 child: AudioTile(
+                  onAlbumTap: onAlbumTap,
+                  onArtistTap: onArtistTap,
                   showTrack: false,
                   isPlayerPlaying: isPlaying,
                   pause: pause,
@@ -168,9 +196,16 @@ class _Titles extends StatelessWidget {
 }
 
 class _Albums extends StatelessWidget {
-  const _Albums(this.showWindowControls);
+  const _Albums({
+    required this.showWindowControls,
+    this.onArtistTap,
+    this.onAlbumTap,
+  });
 
   final bool showWindowControls;
+
+  final void Function(String artist)? onArtistTap;
+  final void Function(String album)? onAlbumTap;
 
   @override
   Widget build(BuildContext context) {
@@ -249,6 +284,8 @@ class _Albums extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) {
                       return AlbumPage(
+                        onAlbumTap: onAlbumTap,
+                        onArtistTap: onArtistTap,
                         image: image,
                         name: name,
                         isPinnedAlbum: isPinnedAlbum,
@@ -296,9 +333,16 @@ class _Albums extends StatelessWidget {
 }
 
 class _Artists extends StatelessWidget {
-  const _Artists({required this.showWindowControls});
+  const _Artists({
+    required this.showWindowControls,
+    this.onArtistTap,
+    this.onAlbumTap,
+  });
 
   final bool showWindowControls;
+
+  final void Function(String artist)? onArtistTap;
+  final void Function(String album)? onAlbumTap;
 
   @override
   Widget build(BuildContext context) {
@@ -357,6 +401,8 @@ class _Artists extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) {
                       return ArtistPage(
+                        onAlbumTap: onAlbumTap,
+                        onArtistTap: onArtistTap,
                         images: images,
                         artistAudios: artistAudios,
                         showWindowControls: showWindowControls,

@@ -15,6 +15,8 @@ class AlbumPage extends StatelessWidget {
     required this.album,
     required this.addPinnedAlbum,
     required this.showWindowControls,
+    this.onArtistTap,
+    this.onAlbumTap,
   });
 
   final Widget image;
@@ -24,10 +26,14 @@ class AlbumPage extends StatelessWidget {
   final Set<Audio>? album;
   final void Function(String name, Set<Audio> audios) addPinnedAlbum;
   final bool showWindowControls;
+  final void Function(String artist)? onArtistTap;
+  final void Function(String album)? onAlbumTap;
 
   @override
   Widget build(BuildContext context) {
     return AudioPage(
+      onAlbumTap: onAlbumTap,
+      onArtistTap: onArtistTap,
       audioPageType: AudioPageType.album,
       pageLabel: context.l10n.album,
       image: image,

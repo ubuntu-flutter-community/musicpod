@@ -53,3 +53,4 @@ const kPinnedAlbumsFileName = 'pinnedAlbums.json';
 const kPodcastsFileName = 'podcasts.json';
 const kStarredStationsFileName = 'starredStations.json';
 const kMusicPodConfigSubDir = 'musicpod';
+const kDirectoryProperty = 'directory';

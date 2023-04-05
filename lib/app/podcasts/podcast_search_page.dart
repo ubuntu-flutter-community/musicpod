@@ -28,6 +28,13 @@ class PodcastSearchPage extends StatelessWidget {
     final removePodcast = context.read<PlaylistModel>().removePodcast;
     final addPodcast = context.read<PlaylistModel>().addPodcast;
     final light = theme.brightness == Brightness.light;
+    final search = model.search;
+    final setSearchQuery = model.setSearchQuery;
+
+    void onTapText(String text) {
+      setSearchQuery(text);
+      search(searchQuery: text, useAlbumImage: true);
+    }
 
     return GridView(
       padding: kGridPadding,
@@ -64,6 +71,8 @@ class PodcastSearchPage extends StatelessWidget {
                             podcast.first.album!,
                           );
                     return AudioPage(
+                      onAlbumTap: onTapText,
+                      onArtistTap: onTapText,
                       audioPageType: AudioPageType.podcast,
                       showWindowControls: showWindowControls,
                       sort: false,

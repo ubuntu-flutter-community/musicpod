@@ -49,7 +49,6 @@
     "history": "History",
     "kidsAndFamily": "Kids & Family",
     "leisure": "Leisure",
-    "music": "Music",
     "news": "News",
     "religionAndSpirituality": "Religion & Spirituality",
     "science": "Science",
@@ -59,5 +58,6 @@
     "technology": "Technology",
     "trueCrime": "True Crime",
     "offline": "offline",
-    "offlineDescription": "It looks like your computer is not connected to the internet."
+    "offlineDescription": "It looks like your computer is not connected to the internet.",
+    "newEpisodeAvailable": "New episode available:"
 }

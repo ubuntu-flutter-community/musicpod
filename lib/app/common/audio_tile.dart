@@ -13,6 +13,8 @@ class AudioTile extends StatelessWidget {
     required this.play,
     required this.pause,
     required this.resume,
+    this.onArtistTap,
+    this.onAlbumTap,
     this.showTrack = true,
   });
 
@@ -25,6 +27,8 @@ class AudioTile extends StatelessWidget {
   final Future<void> Function() resume;
   final void Function() pause;
   final bool showTrack;
+  final void Function(String artist)? onArtistTap;
+  final void Function(String artist)? onAlbumTap;
 
   @override
   Widget build(BuildContext context) {
@@ -75,26 +79,65 @@ class AudioTile extends StatelessWidget {
           if (audio.artist != null)
             Expanded(
               flex: 4,
-              child: Text(
-                audio.artist!,
-                style: textStyle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              child: _TapAbleText(
+                onTap: onArtistTap == null
+                    ? null
+                    : () => onArtistTap!(audio.artist!),
+                text: audio.artist!,
+                selected: selected,
               ),
             ),
           if (audio.album != null)
             Expanded(
               flex: 4,
-              child: Text(
-                audio.album!,
-                style: textStyle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              child: _TapAbleText(
+                onTap:
+                    onAlbumTap == null ? null : () => onAlbumTap!(audio.album!),
+                text: audio.album!,
+                selected: selected,
               ),
             ),
         ],
       ),
       trailing: likeIcon,
+    );
+  }
+}
+
+class _TapAbleText extends StatelessWidget {
+  const _TapAbleText({
+    this.onTap,
+    required this.text,
+    required this.selected,
+  });
+
+  final void Function()? onTap;
+  final String text;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final style = TextStyle(
+      color: selected ? theme.colorScheme.onSurface : theme.hintColor,
+    );
+    return Row(
+      children: [
+        Flexible(
+          fit: FlexFit.loose,
+          child: InkWell(
+            hoverColor: theme.primaryColor.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(4),
+            onTap: onTap == null ? null : () => onTap!(),
+            child: Text(
+              text,
+              style: style,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

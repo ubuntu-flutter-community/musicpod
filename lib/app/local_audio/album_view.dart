@@ -15,10 +15,14 @@ class AlbumsView extends StatefulWidget {
     super.key,
     required this.albums,
     required this.showWindowControls,
+    this.onArtistTap,
+    this.onAlbumTap,
   });
 
   final Set<Audio> albums;
   final bool showWindowControls;
+  final void Function(String artist)? onArtistTap;
+  final void Function(String album)? onAlbumTap;
 
   @override
   State<AlbumsView> createState() => _AlbumsViewState();
@@ -96,6 +100,8 @@ class _AlbumsViewState extends State<AlbumsView> {
             MaterialPageRoute(
               builder: (context) {
                 return AlbumPage(
+                  onAlbumTap: widget.onAlbumTap,
+                  onArtistTap: widget.onArtistTap,
                   image: image,
                   name: name,
                   isPinnedAlbum: isPinnedAlbum,

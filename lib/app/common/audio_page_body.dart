@@ -37,6 +37,8 @@ class AudioPageBody extends StatefulWidget {
     this.image,
     this.placeTrailer,
     required this.audioFilter,
+    this.onArtistTap,
+    this.onAlbumTap,
   });
 
   final Set<Audio>? audios;
@@ -56,6 +58,9 @@ class AudioPageBody extends StatefulWidget {
   final Widget? image;
   final bool? placeTrailer;
   final AudioFilter audioFilter;
+
+  final void Function(String artist)? onArtistTap;
+  final void Function(String album)? onAlbumTap;
 
   @override
   State<AudioPageBody> createState() => _AudioPageBodyState();
@@ -344,6 +349,8 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                 );
 
                 return AudioTile(
+                  onAlbumTap: widget.onAlbumTap,
+                  onArtistTap: widget.onArtistTap,
                   isPlayerPlaying: isPlaying,
                   pause: pause,
                   play: () async {

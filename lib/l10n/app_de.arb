@@ -48,7 +48,6 @@
     "history": "Geschichte",
     "kidsAndFamily": "Kids & Family",
     "leisure": "Freizeit",
-    "music": "Musik",
     "news": "Nachrichten",
     "religionAndSpirituality": "Religion & Spiritualität",
     "science": "Wissenschaft",
@@ -56,5 +55,6 @@
     "sports": "Sport",
     "tvAndFilm": "TV & Film",
     "technology": "Technologie",
-    "trueCrime": "True Crime"
+    "trueCrime": "True Crime",
+    "newEpisodeAvailable": "Neue Episode verfügbar:"
 }
