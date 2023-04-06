@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_page.dart';
+import 'package:musicpod/app/common/offline_page.dart';
+import 'package:musicpod/app/connectivity_notifier.dart';
 import 'package:musicpod/app/radio/radio_model.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
@@ -26,17 +28,20 @@ class _RadioPageState extends State<RadioPage> {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<RadioModel>();
+    final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
 
-    return AudioPage(
-      title: Text(context.l10n.radio),
-      audioPageType: AudioPageType.radio,
-      placeTrailer: false,
-      showTrack: false,
-      editableName: false,
-      deletable: false,
-      controlPageButton: const SizedBox.shrink(),
-      audios: model.stations,
-      pageId: context.l10n.radio,
-    );
+    return isOnline
+        ? AudioPage(
+            title: Text(context.l10n.radio),
+            audioPageType: AudioPageType.radio,
+            placeTrailer: false,
+            showTrack: false,
+            editableName: false,
+            deletable: false,
+            controlPageButton: const SizedBox.shrink(),
+            audios: model.stations,
+            pageId: context.l10n.radio,
+          )
+        : const OfflinePage();
   }
 }

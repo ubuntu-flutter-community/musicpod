@@ -1,9 +1,11 @@
 import 'package:collection/collection.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
+import 'package:musicpod/app/connectivity_notifier.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
 import 'package:musicpod/app/local_audio/local_audio_page.dart';
 import 'package:musicpod/app/player_model.dart';
@@ -63,6 +65,11 @@ class _App extends StatefulWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => PodcastModel(getService<PodcastService>()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ConnectivityNotifier(
+            getService<Connectivity>(),
+          )..init(),
         )
       ],
       child: const _App(),

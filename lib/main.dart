@@ -1,3 +1,5 @@
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:collection/collection.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ Future<void> main() async {
   registerService<MPRIS>(() => mpris);
   registerService<LibraryService>(LibraryService.new);
   registerService<PodcastService>(PodcastService.new);
+  registerService<Connectivity>(Connectivity.new);
 
   await YaruWindowTitleBar.ensureInitialized();
 
