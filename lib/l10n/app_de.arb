@@ -36,6 +36,7 @@
     "forYou": "Für dich",
     "search": "Suche",
     "noPodcastFound": "Entschuldigung, es wurden keine Podcasts unter diesem Suchbegriff gefunden.",
+    "noPodcastChartsFound": "Entschuldigung, es sind keine Podcast-Charts verfügbar.",
     "upNext": "Als nächstes",
     "all": "Alles",
     "arts": "Kunst",
@@ -56,5 +57,7 @@
     "tvAndFilm": "TV & Film",
     "technology": "Technologie",
     "trueCrime": "True Crime",
+    "offline": "Offline",
+    "offlineDescription": "Dein Computer scheint nicht mit dem Internet verbunden zu sein.",
     "newEpisodeAvailable": "Neue Episode verfügbar:"
 }
