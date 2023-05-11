@@ -23,7 +23,7 @@ dependencies:
   intl: ^0.17.0
   media_kit: 0.0.1
   media_kit_libs_linux: ^1.0.0
-  metadata_god: ^0.3.2
+  metadata_god: ^0.4.0
   mime_type: ^1.0.0
   mpris_service:
     git: https://github.com/alexmercerind/mpris_service
