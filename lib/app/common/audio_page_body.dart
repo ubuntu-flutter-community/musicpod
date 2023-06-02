@@ -227,12 +227,12 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                                         data: description,
                                         style: {
                                           'html': Style(
-                                            margin: EdgeInsets.zero,
-                                            padding: EdgeInsets.zero,
+                                            margin: Margins.zero,
+                                            padding: HtmlPaddings.zero,
                                           ),
                                           'body': Style(
-                                            margin: EdgeInsets.zero,
-                                            padding: EdgeInsets.zero,
+                                            margin: Margins.zero,
+                                            padding: HtmlPaddings.zero,
                                             color: theme.hintColor,
                                           )
                                         },
@@ -245,12 +245,12 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                                   data: description,
                                   style: {
                                     'html': Style(
-                                      margin: EdgeInsets.zero,
-                                      padding: EdgeInsets.zero,
+                                      margin: Margins.zero,
+                                      padding: HtmlPaddings.zero,
                                     ),
                                     'body': Style(
-                                      margin: EdgeInsets.zero,
-                                      padding: EdgeInsets.zero,
+                                      margin: Margins.zero,
+                                      padding: HtmlPaddings.zero,
                                       color: theme.hintColor,
                                       textOverflow: TextOverflow.ellipsis,
                                       maxLines: 4,

@@ -223,25 +223,25 @@ class LocalAudioModel extends SafeChangeNotifier {
 
       audios = {};
       for (var e in onlyFiles) {
-        final metadata = await MetadataGod.getMetadata(e.path);
+        final metadata = await MetadataGod.readMetadata(file: e.path);
 
         final audio = Audio(
           path: e.path,
           audioType: AudioType.local,
-          artist: metadata?.artist,
-          title: metadata?.title,
+          artist: metadata.artist,
+          title: metadata.title,
           album:
-              '${metadata?.album} ${metadata?.discTotal != null && metadata!.discTotal! > 1 ? metadata.discNumber : ''}',
-          albumArtist: metadata?.albumArtist,
-          discNumber: metadata?.discNumber,
-          discTotal: metadata?.discTotal,
-          durationMs: metadata?.durationMs,
-          fileSize: metadata?.fileSize,
-          genre: metadata?.genre,
-          pictureData: metadata?.picture?.data,
-          pictureMimeType: metadata?.picture?.mimeType,
-          trackNumber: metadata?.trackNumber,
-          year: metadata?.year,
+              '${metadata.album} ${metadata.discTotal != null && metadata.discTotal! > 1 ? metadata.discNumber : ''}',
+          albumArtist: metadata.albumArtist,
+          discNumber: metadata.discNumber,
+          discTotal: metadata.discTotal,
+          durationMs: metadata.durationMs,
+          fileSize: metadata.fileSize,
+          genre: metadata.genre,
+          pictureData: metadata.picture?.data,
+          pictureMimeType: metadata.picture?.mimeType,
+          trackNumber: metadata.trackNumber,
+          year: metadata.year,
         );
 
         audios?.add(audio);

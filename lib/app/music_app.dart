@@ -539,8 +539,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
       key: ValueKey(shrinkSidebar),
       backgroundColor: surfaceTintColor,
       body: isFullScreen == true
-          ? Column(
-              children: const [
+          ? const Column(
+              children: [
                 YaruWindowTitleBar(
                   border: BorderSide.none,
                   backgroundColor: Colors.transparent,
@@ -568,10 +568,10 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                     const VerticalDivider(
                       width: 0,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 500,
                       child: Column(
-                        children: const [
+                        children: [
                           YaruWindowTitleBar(),
                           Expanded(
                             child: PlayerView(

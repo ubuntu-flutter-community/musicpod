@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:musicpod/data/audio.dart';
-import 'package:musicpod/data/countries.dart';
 import 'package:musicpod/data/podcast_genre.dart';
 import 'package:musicpod/service/podcast_service.dart';
 import 'package:podcast_search/podcast_search.dart';
@@ -27,7 +26,7 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Country _country = Country.UNITED_STATES;
+  Country _country = Country.unitedStates;
   Country get country => _country;
   set country(Country value) {
     if (value == _country) return;
@@ -35,7 +34,7 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Language _language = Language.NONE;
+  Language _language = Language.none;
   Language get language => _language;
   set language(Language value) {
     if (value == _language) return;
@@ -59,13 +58,10 @@ class PodcastModel extends SafeChangeNotifier {
   }
 
   List<Country> get sortedCountries {
-    final notSelected = countries.where((c) => c != country).toList().sorted(
-          (a, b) => codeToCountry[a.countryCode] == null ||
-                  codeToCountry[b.countryCode] == null
-              ? 0
-              : codeToCountry[a.countryCode]!
-                  .compareTo(codeToCountry[b.countryCode]!),
-        );
+    final notSelected =
+        Country.values.where((c) => c != country).toList().sorted(
+              (a, b) => a.name.compareTo(b.name),
+            );
     final list = <Country>[country, ...notSelected];
 
     return list;
@@ -79,7 +75,7 @@ class PodcastModel extends SafeChangeNotifier {
       notifyListeners();
     });
     if (_service.chartsPodcasts?.isNotEmpty == true) return;
-    final c = countries.firstWhereOrNull((c) => c.countryCode == countryCode);
+    final c = Country.values.firstWhereOrNull((c) => c.code == countryCode);
     if (c != null) {
       _country = c;
     }
@@ -109,7 +105,4 @@ class PodcastModel extends SafeChangeNotifier {
         )
         .then((_) => notifyListeners());
   }
-
-  Future<Set<Audio>> findEpisodes({required String url}) async =>
-      await _service.findEpisodes(url: url);
 }
