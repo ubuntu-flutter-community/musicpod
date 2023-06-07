@@ -32,7 +32,7 @@ dependencies:
   podcast_search:
     git:
       url: https://github.com/Feichtmeier/podcast_search
-      ref: use_rss_dart_and_upgrade_to_dart_3
+      ref: ac2368a8321664ec588881ca5c83bcd933385184
   provider: ^6.0.5
   safe_change_notifier: ^0.2.0
   shimmer: ^3.0.0
