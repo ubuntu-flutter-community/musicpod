@@ -26,7 +26,7 @@ class PodcastService {
 
   void loadCharts({
     PodcastGenre podcastGenre = PodcastGenre.all,
-    Country country = Country.UNITED_KINGDOM,
+    Country country = Country.unitedKingdom,
   }) {
     _search
         .charts(
@@ -83,8 +83,8 @@ class PodcastService {
     String? searchQuery,
     bool useAlbumImage = false,
     PodcastGenre podcastGenre = PodcastGenre.science,
-    Country country = Country.UNITED_KINGDOM,
-    Language language = Language.NONE,
+    Country country = Country.unitedKingdom,
+    Language language = Language.none,
   }) async {
     if (searchQuery?.isEmpty == true) return;
     _updateSearchResult(null);
@@ -108,7 +108,7 @@ class PodcastService {
             if (podcast?.episodes?.isNotEmpty == true) {
               final episodes = <Audio>{};
 
-              for (var episode in podcast?.episodes ?? []) {
+              for (var episode in podcast?.episodes ?? <Episode>[]) {
                 if (episode.contentUrl != null) {
                   final audio = Audio(
                     url: episode.contentUrl,

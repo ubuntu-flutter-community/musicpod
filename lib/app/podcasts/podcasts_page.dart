@@ -13,9 +13,9 @@ import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcast_search_field.dart';
 import 'package:musicpod/app/podcasts/podcast_search_page.dart';
 import 'package:musicpod/data/audio.dart';
-import 'package:musicpod/data/countries.dart';
 import 'package:musicpod/data/podcast_genre.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:musicpod/string_x.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -39,9 +39,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<PodcastModel>().init(
-            WidgetsBinding.instance.window.locale.countryCode?.toUpperCase(),
-          );
+      final code = WidgetsBinding.instance.platformDispatcher.locale.countryCode
+          ?.toLowerCase();
+      context.read<PodcastModel>().init(code);
     });
   }
 
@@ -228,8 +228,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
             },
             initialValue: model.country,
             child: Text(
-              codeToCountry[model.country.countryCode] ??
-                  model.country.countryCode,
+              model.country.name.capitalize(),
               style: textStyle,
             ),
             itemBuilder: (context) {
@@ -237,7 +236,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                 for (final c in model.sortedCountries)
                   PopupMenuItem(
                     value: c,
-                    child: Text(codeToCountry[c.countryCode] ?? c.countryCode),
+                    child: Text(c.name.capitalize()),
                   )
               ];
             },

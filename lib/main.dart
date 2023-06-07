@@ -1,8 +1,9 @@
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:collection/collection.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:metadata_god/metadata_god.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
@@ -24,6 +25,9 @@ Future<void> main() async {
   registerService<PodcastService>(PodcastService.new);
   registerService<Connectivity>(Connectivity.new);
 
+  WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
+  MetadataGod.initialize();
   await YaruWindowTitleBar.ensureInitialized();
 
   // TODO: check for internet access

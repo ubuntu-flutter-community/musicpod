@@ -31,7 +31,10 @@ class SafeNetworkImage extends StatelessWidget {
       frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
         return frame == null ? fallBack : child;
       },
-      errorBuilder: (context, error, stackTrace) => fallBack,
+      errorBuilder: (context, error, stackTrace) => const Icon(
+        YaruIcons.image_missing,
+        size: 20,
+      ),
     );
   }
 }

@@ -12,7 +12,7 @@ class PlayerModel extends SafeChangeNotifier {
   PlayerModel(MPRIS mpris)
       : _player = Player(
           configuration: const PlayerConfiguration(
-            vid: false,
+            title: 'MusicPod',
           ),
         ),
         _mediaControlService = mpris;
@@ -192,7 +192,7 @@ class PlayerModel extends SafeChangeNotifier {
       ),
     );
 
-    _playerSub = _player.streams.isPlaying.listen((p) {
+    _playerSub = _player.streams.playing.listen((p) {
       isPlaying = p;
       _mediaControlService.playbackStatus =
           isPlaying ? MPRISPlaybackStatus.playing : MPRISPlaybackStatus.paused;
@@ -204,7 +204,7 @@ class PlayerModel extends SafeChangeNotifier {
       setPosition(newPosition);
     });
 
-    _isCompletedSub = _player.streams.isCompleted.listen((value) async {
+    _isCompletedSub = _player.streams.completed.listen((value) async {
       if (value) {
         if (repeatSingle == false) {
           await playNext();
