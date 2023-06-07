@@ -12,7 +12,7 @@ class PlayerModel extends SafeChangeNotifier {
   PlayerModel(MPRIS mpris)
       : _player = Player(
           configuration: const PlayerConfiguration(
-            vid: false,
+            title: 'MusicPod',
           ),
         ),
         _mediaControlService = mpris;
