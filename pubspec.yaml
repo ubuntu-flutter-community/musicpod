@@ -21,7 +21,7 @@ dependencies:
   handy_window: ^0.3.1
   http: ^0.13.5
   intl: ^0.18.0
-  media_kit: ^0.0.7+1
+  media_kit: ^0.0.11
   media_kit_libs_linux: ^1.0.2
   metadata_god: ^0.4.1
   mime_type: ^1.0.0
