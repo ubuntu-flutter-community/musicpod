@@ -7,7 +7,9 @@ import 'package:metadata_god/metadata_god.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
+import 'package:musicpod/service/radio_service.dart';
 import 'package:musicpod/utils.dart';
+import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -24,6 +26,12 @@ Future<void> main() async {
   registerService<LibraryService>(LibraryService.new);
   registerService<PodcastService>(PodcastService.new);
   registerService<Connectivity>(Connectivity.new);
+
+  registerService<RadioService>(
+    () => RadioService(
+      const RadioBrowserApi.fromHost('de1.api.radio-browser.info'),
+    ),
+  );
 
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
