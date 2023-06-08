@@ -79,7 +79,6 @@ parts:
       - libgsm1
       - liblapack3
       - liblilv-0-0
-      - libmfx1
       - libmysofa1
       - libnorm1
       - libnuma1
@@ -113,6 +112,8 @@ parts:
       - libswscale5
       - libsrt1.4-gnutls
       - ocl-icd-libopencl1
+      - on amd64:
+        - libmfx1
     prime:
       - usr/lib/*/blas/libblas.so*
       - usr/lib/*/lapack/liblapack.so*
