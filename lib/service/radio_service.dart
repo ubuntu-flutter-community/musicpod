@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:podcast_search/podcast_search.dart';
-import 'package:radio_browser_api/radio_browser_api.dart' hide Country;
+import 'package:radio_browser_api/radio_browser_api.dart';
 
 class RadioService {
   final RadioBrowserApi radioBrowserApi;
@@ -18,18 +17,31 @@ class RadioService {
   final _stationsChangedController = StreamController<bool>.broadcast();
   Stream<bool> get stationsChanged => _stationsChangedController.stream;
 
-  Future<void> loadStations({Country country = Country.germany}) async {
-    final stations = await radioBrowserApi.getStationsByCountry(
-      country: country.name,
-      parameters: InputParameters(
-        hidebroken: true,
-        reverse: true,
-        order: 'stationcount',
-        limit: 100,
-      ),
-    );
+  Future<void> loadStations({String? country, String? name}) async {
+    RadioBrowserListResponse<Station>? response;
 
-    setStations(stations.items);
+    if (name?.isEmpty == false) {
+      response = await radioBrowserApi.getStationsByName(
+        name: name!,
+        parameters: const InputParameters(
+          hidebroken: true,
+          order: 'stationcount',
+          limit: 100,
+        ),
+      );
+    } else if (country?.isEmpty == false) {
+      response = await radioBrowserApi.getStationsByCountry(
+        country: country!,
+        parameters: const InputParameters(
+          hidebroken: true,
+          reverse: true,
+          order: 'stationcount',
+          limit: 100,
+        ),
+      );
+    }
+
+    setStations(response?.items);
   }
 
   List<Tag>? _tags;
@@ -45,5 +57,15 @@ class RadioService {
   Future<void> loadTags() async {
     final response = await radioBrowserApi.getTags();
     _tags = response.items;
+  }
+
+  String? _searchQuery;
+  String? get searchQuery => _searchQuery;
+  final _searchController = StreamController<bool>.broadcast();
+  Stream<bool> get searchQueryChanged => _searchController.stream;
+  void setSearchQuery(String? value) {
+    if (value == _searchQuery) return;
+    _searchQuery = value;
+    _searchController.add(true);
   }
 }
