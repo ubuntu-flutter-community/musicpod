@@ -15,21 +15,29 @@ class RadioModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _stationsSub;
   StreamSubscription<bool>? _searchSub;
 
-  Set<Audio>? get stations => _radioService.stations?.isEmpty == false
-      ? Set.from(
-          _radioService.stations!.map(
-            (e) => Audio(
-              url: e.urlResolved,
-              title: e.name,
-              artist: e.tags ?? '',
-              album: e.bitrate.toString(),
-              audioType: AudioType.radio,
-              imageUrl: e.favicon,
-              website: e.homepage,
-            ),
+  Set<Audio>? get stations {
+    if (_radioService.stations != null) {
+      if (_radioService.stations!.isEmpty) {
+        return <Audio>{};
+      }
+
+      return Set.from(
+        _radioService.stations!.map(
+          (e) => Audio(
+            url: e.urlResolved,
+            title: e.name,
+            artist: e.tags ?? '',
+            album: e.bitrate.toString(),
+            audioType: AudioType.radio,
+            imageUrl: e.favicon,
+            website: e.homepage,
           ),
-        )
-      : null;
+        ),
+      );
+    } else {
+      return null;
+    }
+  }
 
   Future<void> init() async {
     _stationsSub =

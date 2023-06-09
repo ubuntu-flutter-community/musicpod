@@ -40,6 +40,7 @@ class AudioPageBody extends StatefulWidget {
     this.onArtistTap,
     this.onAlbumTap,
     this.placePlayAllButton = true,
+    this.noResultMessage,
   });
 
   final Set<Audio>? audios;
@@ -60,6 +61,7 @@ class AudioPageBody extends StatefulWidget {
   final bool? placeTrailer;
   final AudioFilter audioFilter;
   final bool placePlayAllButton;
+  final String? noResultMessage;
 
   final void Function(String artist)? onArtistTap;
   final void Function(String album)? onAlbumTap;
@@ -128,6 +130,12 @@ class _AudioPageBodyState extends State<AudioPageBody> {
       return const Center(
         child: YaruCircularProgressIndicator(),
       );
+    } else {
+      if (widget.audios!.isEmpty) {
+        return Center(
+          child: Text(widget.noResultMessage ?? context.l10n.nothingFound),
+        );
+      }
     }
 
     var sortedAudios = widget.audios!.toList();
