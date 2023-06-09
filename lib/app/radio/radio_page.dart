@@ -47,6 +47,7 @@ class _RadioPageState extends State<RadioPage> {
 
     return isOnline
         ? AudioPage(
+            showWindowControls: widget.showWindowControls,
             noResultMessage: context.l10n.noStationFound,
             title: RadioSearchField(
               text: searchQuery,
