@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 
@@ -21,20 +22,19 @@ class SafeNetworkImage extends StatelessWidget {
         Icon(
           YaruIcons.music_note,
           size: 60,
-          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+          color: Theme.of(context).hintColor,
         );
     if (url == null) return fallBack;
-    return Image.network(
-      url!,
-      filterQuality: filterQuality,
-      fit: fit,
-      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-        return frame == null ? fallBack : child;
-      },
-      errorBuilder: (context, error, stackTrace) => const Icon(
-        YaruIcons.image_missing,
-        size: 20,
+
+    return CachedNetworkImage(
+      imageUrl: url!,
+      imageBuilder: (context, imageProvider) => Image(
+        image: imageProvider,
+        filterQuality: filterQuality,
+        fit: fit,
       ),
+      placeholder: (context, url) => fallBack,
+      errorWidget: (context, url, _) => fallBack,
     );
   }
 }

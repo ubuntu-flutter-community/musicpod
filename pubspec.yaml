@@ -8,6 +8,7 @@ environment:
   flutter: ">=3.10.0"
 
 dependencies:
+  cached_network_image: ^3.2.3
   collection: ^1.17.0
   connectivity_plus: ^4.0.1
   desktop_notifications: ^0.6.3

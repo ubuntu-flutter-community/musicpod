@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/player_model.dart';
 import 'package:musicpod/app/playlists/playlist_model.dart';
 import 'package:musicpod/data/audio.dart';
@@ -245,8 +246,7 @@ class _PlayerViewState extends State<PlayerView> {
                       if (audio?.pictureData != null)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
+                          child: SizedBox(
                             child: Image.memory(
                               audio!.pictureData!,
                               height: 400.0,
@@ -257,14 +257,17 @@ class _PlayerViewState extends State<PlayerView> {
                       else if (audio?.imageUrl != null)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: AnimatedContainer(
+                          child: SizedBox(
                             height: 400,
-                            duration: const Duration(milliseconds: 300),
-                            child: Image.network(
+                            child: SafeNetworkImage(
+                              url: audio!.imageUrl!,
                               filterQuality: FilterQuality.medium,
                               fit: BoxFit.cover,
-                              audio!.imageUrl!,
-                              height: 120.0,
+                              fallBackIcon: Icon(
+                                YaruIcons.music_note,
+                                size: 200,
+                                color: theme.hintColor,
+                              ),
                             ),
                           ),
                         )
@@ -396,15 +399,13 @@ class _PlayerViewState extends State<PlayerView> {
                   ),
                 )
               else if (audio?.imageUrl != null)
-                AnimatedContainer(
+                SizedBox(
                   height: 120,
                   width: 120,
-                  duration: const Duration(milliseconds: 300),
-                  child: Image.network(
+                  child: SafeNetworkImage(
+                    url: audio!.imageUrl!,
                     filterQuality: FilterQuality.medium,
                     fit: BoxFit.cover,
-                    audio!.imageUrl!,
-                    height: 120.0,
                   ),
                 )
               else
