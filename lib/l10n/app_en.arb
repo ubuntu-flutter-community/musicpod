@@ -59,5 +59,7 @@
     "trueCrime": "True Crime",
     "offline": "offline",
     "offlineDescription": "It looks like your computer is not connected to the internet.",
-    "newEpisodeAvailable": "New episode available:"
+    "newEpisodeAvailable": "New episode available:",
+    "noStationFound": "No station found with this search query",
+    "nothingFound": "Nothing found"
 }

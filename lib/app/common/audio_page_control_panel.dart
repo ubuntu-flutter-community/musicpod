@@ -20,12 +20,14 @@ class AudioPageControlPanel extends StatelessWidget {
     required this.resume,
     this.removePlaylist,
     this.updatePlaylistName,
+    this.placePlayAllButton = true,
   });
 
   final Set<Audio> audios;
   final String listName;
   final bool editableName;
   final bool deletable;
+  final bool placePlayAllButton;
   final Widget? controlButton;
   final bool isPlaying;
   final String? queueName;
@@ -41,35 +43,37 @@ class AudioPageControlPanel extends StatelessWidget {
 
     return Row(
       children: [
-        CircleAvatar(
-          backgroundColor: theme.colorScheme.inverseSurface,
-          child: IconButton(
-            onPressed: () {
-              if (isPlaying) {
-                if (queueName == listName) {
-                  pause();
+        if (placePlayAllButton)
+          CircleAvatar(
+            backgroundColor: theme.colorScheme.inverseSurface,
+            child: IconButton(
+              onPressed: () {
+                if (isPlaying) {
+                  if (queueName == listName) {
+                    pause();
+                  } else {
+                    startPlaylist(audios, listName);
+                  }
                 } else {
-                  startPlaylist(audios, listName);
+                  if (queueName == listName) {
+                    resume();
+                  } else {
+                    startPlaylist(audios, listName);
+                  }
                 }
-              } else {
-                if (queueName == listName) {
-                  resume();
-                } else {
-                  startPlaylist(audios, listName);
-                }
-              }
-            },
-            icon: Icon(
-              isPlaying && queueName == listName
-                  ? YaruIcons.media_pause
-                  : YaruIcons.playlist_play,
-              color: theme.colorScheme.onInverseSurface,
+              },
+              icon: Icon(
+                isPlaying && queueName == listName
+                    ? YaruIcons.media_pause
+                    : YaruIcons.playlist_play,
+                color: theme.colorScheme.onInverseSurface,
+              ),
             ),
           ),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
+        if (placePlayAllButton)
+          const SizedBox(
+            width: 10,
+          ),
         if (controlButton != null) controlButton!,
         const SizedBox(
           width: 10,

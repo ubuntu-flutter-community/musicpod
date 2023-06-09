@@ -27,6 +27,8 @@ class AudioPage extends StatelessWidget {
     this.audioFilter = AudioFilter.trackNumber,
     this.onArtistTap,
     this.onAlbumTap,
+    this.placePlayAllButton = true,
+    this.noResultMessage,
   });
 
   final Set<Audio>? audios;
@@ -47,6 +49,8 @@ class AudioPage extends StatelessWidget {
   final Widget? image;
   final bool? placeTrailer;
   final AudioFilter audioFilter;
+  final bool placePlayAllButton;
+  final String? noResultMessage;
 
   final void Function(String artist)? onArtistTap;
   final void Function(String album)? onAlbumTap;
@@ -56,6 +60,8 @@ class AudioPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     final body = AudioPageBody(
+      noResultMessage: noResultMessage,
+      placePlayAllButton: placePlayAllButton,
       onAlbumTap: onAlbumTap,
       onArtistTap: onArtistTap,
       audios: audios,

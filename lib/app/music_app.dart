@@ -82,14 +82,14 @@ class _App extends StatefulWidget {
 
 class _AppState extends State<_App> with TickerProviderStateMixin {
   final _delegateSmall = const YaruMasterResizablePaneDelegate(
-    initialPaneWidth: 86,
-    minPaneWidth: 86,
+    initialPaneWidth: 93,
+    minPaneWidth: 93,
     minPageWidth: kYaruMasterDetailBreakpoint / 2,
   );
 
   final _delegateBig = const YaruMasterResizablePaneDelegate(
     initialPaneWidth: 200,
-    minPaneWidth: 80,
+    minPaneWidth: 93,
     minPageWidth: kYaruMasterDetailBreakpoint / 2,
   );
 
