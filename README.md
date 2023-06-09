@@ -1,4 +1,4 @@
-# Ubuntu Musicpod - WIP
+# Musicpod
 
 Music, Radio and Podcast player for Ubuntu made with Flutter.
 
@@ -23,6 +23,8 @@ Thanks @alexmercerind for the super performant [Mediakit library](https://github
 
 Thank you @KRTirtho for the very easy to use [Metadata God](https://github.com/KRTirtho/metadata_god) package
 
+Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https://github.com/tomassasovsky/radio-browser-api.dart)
+
 ## Planned features
 
 - [X] play local audio files
@@ -30,7 +32,7 @@ Thank you @KRTirtho for the very easy to use [Metadata God](https://github.com/K
 - [X] set root directory
 - [X] create and manage playlists
 - [X] play internet radio streams
-- [ ] browse for radio stations
+- [X] browse for radio stations
 - [X] play podcasts
 - [ ] download podcasts
 - [X] search for podcasts
