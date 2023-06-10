@@ -58,7 +58,7 @@ class RadioModel extends SafeChangeNotifier {
     if (c != null) {
       _country = c;
     }
-    if (stations?.isNotEmpty == false) {
+    if (stations == null) {
       await loadStationsByCountry();
     }
   }
