@@ -41,12 +41,18 @@ class AudioPageBody extends StatefulWidget {
     this.onAlbumTap,
     this.placePlayAllButton = true,
     this.noResultMessage,
+    this.titleLabel,
+    this.artistLabel,
+    this.albumLabel,
+    this.pageTitleWidget,
   });
 
   final Set<Audio>? audios;
   final AudioPageType audioPageType;
   final String? pageLabel;
   final String pageId;
+  final Widget? pageTitleWidget;
+
   final String? pageTitle;
   final String? pageDescription;
   final String? pageSubtile;
@@ -62,6 +68,7 @@ class AudioPageBody extends StatefulWidget {
   final AudioFilter audioFilter;
   final bool placePlayAllButton;
   final String? noResultMessage;
+  final String? titleLabel, artistLabel, albumLabel;
 
   final void Function(String artist)? onArtistTap;
   final void Function(String album)? onAlbumTap;
@@ -126,19 +133,59 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
 
+    var sortedAudios = widget.audios?.toList() ?? [];
+
+    final audioControlPanel = Padding(
+      padding: const EdgeInsets.only(
+        top: 20,
+        left: 20,
+        right: 20,
+        bottom: 15,
+      ),
+      child: AudioPageControlPanel(
+        title: widget.pageTitleWidget,
+        placePlayAllButton: widget.placePlayAllButton,
+        removePlaylist: removePlaylist,
+        updatePlaylistName: updatePlaylistName,
+        pause: pause,
+        resume: resume,
+        startPlaylist: startPlaylist,
+        isPlaying: isPlaying,
+        queueName: queueName,
+        listName: widget.pageTitle ?? widget.pageId,
+        controlButton: widget.likePageButton,
+        editableName: widget.editableName,
+        audios: sortedAudios.toSet(),
+        deletable: widget.deletable,
+      ),
+    );
+
     if (widget.audios == null) {
-      return const Center(
-        child: YaruCircularProgressIndicator(),
+      return Column(
+        children: [
+          audioControlPanel,
+          const Expanded(
+            child: Center(
+              child: YaruCircularProgressIndicator(),
+            ),
+          ),
+        ],
       );
     } else {
       if (widget.audios!.isEmpty) {
-        return Center(
-          child: Text(widget.noResultMessage ?? context.l10n.nothingFound),
+        return Column(
+          children: [
+            audioControlPanel,
+            Expanded(
+              child: Center(
+                child:
+                    Text(widget.noResultMessage ?? context.l10n.nothingFound),
+              ),
+            ),
+          ],
         );
       }
     }
-
-    var sortedAudios = widget.audios!.toList();
 
     if (widget.sort) {
       sortListByAudioFilter(audioFilter: _filter, audios: sortedAudios);
@@ -277,35 +324,16 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                 ],
               ),
             ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 20,
-              left: 20,
-              right: 20,
-              bottom: 15,
-            ),
-            child: AudioPageControlPanel(
-              placePlayAllButton: widget.placePlayAllButton,
-              removePlaylist: removePlaylist,
-              updatePlaylistName: updatePlaylistName,
-              pause: pause,
-              resume: resume,
-              startPlaylist: startPlaylist,
-              isPlaying: isPlaying,
-              queueName: queueName,
-              listName: widget.pageTitle ?? widget.pageId,
-              controlButton: widget.likePageButton,
-              editableName: widget.editableName,
-              audios: sortedAudios.toSet(),
-              deletable: widget.deletable,
-            ),
-          ),
+          audioControlPanel,
           Padding(
             padding: const EdgeInsets.only(
               left: 20,
               right: 20,
             ),
             child: AudioPageHeader(
+              titleLabel: widget.titleLabel,
+              artistLabel: widget.artistLabel,
+              albumLabel: widget.albumLabel,
               showTrack: widget.showTrack,
               audioFilter: AudioFilter.title,
               onAudioFilterSelected: (audioFilter) => setState(() {

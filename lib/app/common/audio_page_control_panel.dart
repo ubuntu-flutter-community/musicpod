@@ -21,10 +21,12 @@ class AudioPageControlPanel extends StatelessWidget {
     this.removePlaylist,
     this.updatePlaylistName,
     this.placePlayAllButton = true,
+    this.title,
   });
 
   final Set<Audio> audios;
   final String listName;
+  final Widget? title;
   final bool editableName;
   final bool deletable;
   final bool placePlayAllButton;
@@ -95,13 +97,14 @@ class AudioPageControlPanel extends StatelessWidget {
             ),
           ),
         Expanded(
-          child: Text(
-            '${listName == 'likedAudio' ? context.l10n.likedSongs : listName}  •  ${audios.length} ${context.l10n.titles}',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w100),
-          ),
+          child: title ??
+              Text(
+                '${listName == 'likedAudio' ? context.l10n.likedSongs : listName}  •  ${audios.length} ${context.l10n.titles}',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.w100),
+              ),
         ),
       ],
     );

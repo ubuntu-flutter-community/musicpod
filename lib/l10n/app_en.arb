@@ -61,5 +61,9 @@
     "offlineDescription": "It looks like your computer is not connected to the internet.",
     "newEpisodeAvailable": "New episode available:",
     "noStationFound": "No station found with this search query",
-    "nothingFound": "Nothing found"
+    "nothingFound": "Nothing found",
+    "tags": "Tags",
+    "quality": "Quality",
+    "station": "Station",
+    "country": "Country"
 }

@@ -29,6 +29,10 @@ class AudioPage extends StatelessWidget {
     this.onAlbumTap,
     this.placePlayAllButton = true,
     this.noResultMessage,
+    this.titleLabel,
+    this.artistLabel,
+    this.albumLabel,
+    this.pageTitleWidget,
   });
 
   final Set<Audio>? audios;
@@ -36,6 +40,7 @@ class AudioPage extends StatelessWidget {
   final String? pageLabel;
   final String pageId;
   final String? pageTitle;
+  final Widget? pageTitleWidget;
   final String? pageDescription;
   final String? pageSubtile;
   final bool editableName;
@@ -51,6 +56,7 @@ class AudioPage extends StatelessWidget {
   final AudioFilter audioFilter;
   final bool placePlayAllButton;
   final String? noResultMessage;
+  final String? titleLabel, artistLabel, albumLabel;
 
   final void Function(String artist)? onArtistTap;
   final void Function(String album)? onAlbumTap;
@@ -60,6 +66,9 @@ class AudioPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     final body = AudioPageBody(
+      titleLabel: titleLabel,
+      artistLabel: artistLabel,
+      albumLabel: albumLabel,
       noResultMessage: noResultMessage,
       placePlayAllButton: placePlayAllButton,
       onAlbumTap: onAlbumTap,
@@ -80,6 +89,7 @@ class AudioPage extends StatelessWidget {
       pageLabel: pageLabel,
       pageSubtile: pageSubtile,
       pageTitle: pageTitle,
+      pageTitleWidget: pageTitleWidget,
       placeTrailer: placeTrailer,
     );
 

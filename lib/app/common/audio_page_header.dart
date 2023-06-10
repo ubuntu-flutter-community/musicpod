@@ -10,11 +10,15 @@ class AudioPageHeader extends StatelessWidget {
     this.onAudioFilterSelected,
     required this.audioFilter,
     this.showTrack = true,
+    this.titleLabel,
+    this.artistLabel,
+    this.albumLabel,
   });
 
   final void Function(AudioFilter audioFilter)? onAudioFilterSelected;
   final AudioFilter audioFilter;
   final bool showTrack;
+  final String? titleLabel, artistLabel, albumLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -37,19 +41,19 @@ class AudioPageHeader extends StatelessWidget {
             ),
           _HeaderElement(
             onAudioFilterSelected: onAudioFilterSelected,
-            label: context.l10n.title,
+            label: titleLabel ?? context.l10n.title,
             audioFilter: AudioFilter.title,
             flex: 5,
           ),
           _HeaderElement(
             onAudioFilterSelected: onAudioFilterSelected,
-            label: context.l10n.artist,
+            label: artistLabel ?? context.l10n.artist,
             audioFilter: AudioFilter.artist,
             flex: 4,
           ),
           _HeaderElement(
             onAudioFilterSelected: onAudioFilterSelected,
-            label: context.l10n.album,
+            label: albumLabel ?? context.l10n.album,
             audioFilter: AudioFilter.album,
             flex: 4,
           ),

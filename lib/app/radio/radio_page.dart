@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_page.dart';
+import 'package:musicpod/app/common/country_popup.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/connectivity_notifier.dart';
 import 'package:musicpod/app/radio/radio_model.dart';
@@ -15,11 +16,8 @@ class RadioPage extends StatefulWidget {
   final bool showWindowControls;
 
   static Widget create(BuildContext context, [bool showWindowControls = true]) {
-    final countryCode = WidgetsBinding
-        .instance.platformDispatcher.locale.countryCode
-        ?.toLowerCase();
     return ChangeNotifierProvider(
-      create: (_) => RadioModel(getService<RadioService>(), countryCode),
+      create: (_) => RadioModel(getService<RadioService>()),
       child: RadioPage(
         showWindowControls: showWindowControls,
       ),
@@ -34,7 +32,10 @@ class _RadioPageState extends State<RadioPage> {
   @override
   void initState() {
     super.initState();
-    context.read<RadioModel>().init();
+    final countryCode = WidgetsBinding
+        .instance.platformDispatcher.locale.countryCode
+        ?.toLowerCase();
+    context.read<RadioModel>().init(countryCode);
   }
 
   @override
@@ -44,6 +45,14 @@ class _RadioPageState extends State<RadioPage> {
     final search = context.read<RadioModel>().search;
     final searchQuery = context.select((RadioModel m) => m.searchQuery);
     final setSearchQuery = context.read<RadioModel>().setSearchQuery;
+    final country = context.select((RadioModel m) => m.country);
+    final setCountry = context.read<RadioModel>().setCountry;
+    final loadStationsByCountry =
+        context.read<RadioModel>().loadStationsByCountry;
+    final textStyle = Theme.of(context)
+        .textTheme
+        .bodyLarge
+        ?.copyWith(fontWeight: FontWeight.w100);
 
     return isOnline
         ? AudioPage(
@@ -56,16 +65,44 @@ class _RadioPageState extends State<RadioPage> {
                 search(value);
               },
             ),
+            titleLabel: context.l10n.station,
+            artistLabel: context.l10n.quality,
+            albumLabel: context.l10n.tags,
             audioPageType: AudioPageType.radio,
             placeTrailer: false,
             showTrack: false,
             editableName: false,
             deletable: false,
-            controlPageButton: const SizedBox.shrink(),
+            controlPageButton: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  '${context.l10n.country}:',
+                  style: textStyle,
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                CountryPopup(
+                  value: country,
+                  onSelected: (country) {
+                    setCountry(country);
+                    loadStationsByCountry();
+                  },
+                ),
+              ],
+            ),
             audios: stations,
             pageId: context.l10n.radio,
-            pageTitle:
-                '${context.l10n.radio}${searchQuery?.isEmpty == false ? ' ${context.l10n.search}: $searchQuery' : ''}',
+            pageTitleWidget: Text(
+              searchQuery?.isEmpty == false
+                  ? ' ${context.l10n.search}: $searchQuery'
+                  : '',
+              style: textStyle,
+            ),
             placePlayAllButton: false,
           )
         : const OfflinePage();

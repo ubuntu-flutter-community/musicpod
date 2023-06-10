@@ -3,17 +3,25 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/service/radio_service.dart';
+import 'package:musicpod/string_x.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class RadioModel extends SafeChangeNotifier {
   final RadioService _radioService;
-  final String? _countryCode;
 
-  RadioModel(this._radioService, this._countryCode);
+  RadioModel(this._radioService);
 
   StreamSubscription<bool>? _stationsSub;
   StreamSubscription<bool>? _searchSub;
+
+  Country? _country;
+  Country? get country => _country;
+  void setCountry(Country value) {
+    if (value == _country) return;
+    _country = value;
+    notifyListeners();
+  }
 
   Set<Audio>? get stations {
     if (_radioService.stations != null) {
@@ -39,24 +47,25 @@ class RadioModel extends SafeChangeNotifier {
     }
   }
 
-  Future<void> init() async {
+  Future<void> init(String? countryCode) async {
     _stationsSub =
         _radioService.stationsChanged.listen((_) => notifyListeners());
 
     _searchSub =
         _radioService.searchQueryChanged.listen((_) => notifyListeners());
 
-    if (stations == null) {
-      await _loadStationsByCountry();
+    final c = Country.values.firstWhereOrNull((c) => c.code == countryCode);
+    if (c != null) {
+      _country = c;
+    }
+    if (stations?.isNotEmpty == false) {
+      await loadStationsByCountry();
     }
   }
 
-  Future<void> _loadStationsByCountry() {
+  Future<void> loadStationsByCountry() {
     return _radioService.loadStations(
-      country: Country.values
-              .firstWhereOrNull((c) => c.code == _countryCode)
-              ?.name ??
-          Country.unitedStates.name,
+      country: country?.name.camelToSentence(),
     );
   }
 
@@ -64,7 +73,7 @@ class RadioModel extends SafeChangeNotifier {
     if (searchQuery != null) {
       await _radioService.loadStations(name: searchQuery);
     } else {
-      await _loadStationsByCountry();
+      await loadStationsByCountry();
     }
   }
 

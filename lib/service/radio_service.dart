@@ -17,7 +17,11 @@ class RadioService {
   final _stationsChangedController = StreamController<bool>.broadcast();
   Stream<bool> get stationsChanged => _stationsChangedController.stream;
 
-  Future<void> loadStations({String? country, String? name}) async {
+  Future<void> loadStations({
+    String? country,
+    String? name,
+    String? state,
+  }) async {
     RadioBrowserListResponse<Station>? response;
 
     if (name?.isEmpty == false) {
@@ -34,7 +38,15 @@ class RadioService {
         country: country!,
         parameters: const InputParameters(
           hidebroken: true,
-          reverse: true,
+          order: 'stationcount',
+          limit: 100,
+        ),
+      );
+    } else if (state?.isEmpty == false) {
+      response = await radioBrowserApi.getStationsByState(
+        state: country!,
+        parameters: const InputParameters(
+          hidebroken: true,
           order: 'stationcount',
           limit: 100,
         ),
