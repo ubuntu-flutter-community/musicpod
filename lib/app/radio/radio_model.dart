@@ -69,12 +69,13 @@ class RadioModel extends SafeChangeNotifier {
 
     await _radioService.loadTags();
 
+    final c = Country.values.firstWhereOrNull((c) => c.code == countryCode);
+    _country = c;
+
     if (stations == null) {
       await loadStationsByCountry();
     }
 
-    final c = Country.values.firstWhereOrNull((c) => c.code == countryCode);
-    _country = c;
     notifyListeners();
   }
 
