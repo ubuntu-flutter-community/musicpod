@@ -75,12 +75,12 @@ class _TabbedPageState extends State<TabbedPage> with TickerProviderStateMixin {
           padding: widget.padding,
           child: Container(
             width: widget.width,
-            height: 60,
+            height: 50,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(kYaruContainerRadius),
             ),
             child: TabBar(
-              labelStyle: theme.textTheme.headlineMedium!
+              labelStyle: theme.textTheme.headlineSmall!
                   .copyWith(fontWeight: FontWeight.w100),
               // indicatorColor: Colors.transparent,
               dividerColor: Colors.transparent,
