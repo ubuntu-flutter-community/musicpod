@@ -21,6 +21,7 @@ class RadioService {
     String? country,
     String? name,
     String? state,
+    Tag? tag,
   }) async {
     RadioBrowserListResponse<Station>? response;
 
@@ -36,6 +37,15 @@ class RadioService {
     } else if (country?.isEmpty == false) {
       response = await radioBrowserApi.getStationsByCountry(
         country: country!,
+        parameters: const InputParameters(
+          hidebroken: true,
+          order: 'stationcount',
+          limit: 100,
+        ),
+      );
+    } else if (tag != null) {
+      response = await radioBrowserApi.getStationsByTag(
+        tag: tag.name,
         parameters: const InputParameters(
           hidebroken: true,
           order: 'stationcount',
@@ -67,7 +77,14 @@ class RadioService {
   Stream<bool> get tagsChanged => _tagsChangedController.stream;
 
   Future<void> loadTags() async {
-    final response = await radioBrowserApi.getTags();
+    final response = await radioBrowserApi.getTags(
+      parameters: const InputParameters(
+        hidebroken: true,
+        limit: 100,
+        order: 'stationcount',
+        reverse: true,
+      ),
+    );
     _tags = response.items;
   }
 

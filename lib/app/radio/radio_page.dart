@@ -5,6 +5,7 @@ import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/connectivity_notifier.dart';
 import 'package:musicpod/app/radio/radio_model.dart';
 import 'package:musicpod/app/radio/radio_search_field.dart';
+import 'package:musicpod/app/radio/tag_popup.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/radio_service.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +50,11 @@ class _RadioPageState extends State<RadioPage> {
     final setCountry = context.read<RadioModel>().setCountry;
     final loadStationsByCountry =
         context.read<RadioModel>().loadStationsByCountry;
+    final tag = context.select((RadioModel m) => m.tag);
+    final setTag = context.read<RadioModel>().setTag;
+    final tags = context.select((RadioModel m) => m.tags);
+    final loadStationsByTag = context.read<RadioModel>().loadStationsByTag;
+
     final textStyle = Theme.of(context)
         .textTheme
         .bodyLarge
@@ -93,6 +99,24 @@ class _RadioPageState extends State<RadioPage> {
                     loadStationsByCountry();
                   },
                 ),
+                const SizedBox(
+                  width: 15,
+                ),
+                Text(
+                  '${context.l10n.tag}:',
+                  style: textStyle,
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                TagPopup(
+                  value: tag,
+                  onSelected: (tag) {
+                    setTag(tag);
+                    loadStationsByTag();
+                  },
+                  tags: tags,
+                )
               ],
             ),
             audios: stations,
