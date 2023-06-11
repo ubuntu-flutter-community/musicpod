@@ -66,5 +66,6 @@
     "quality": "Quality",
     "station": "Station",
     "country": "Country",
-    "tag": "Tag"
+    "tag": "Tag",
+    "all": "All"
 }

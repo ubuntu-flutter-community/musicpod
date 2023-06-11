@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/string_x.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -32,7 +33,7 @@ class TagPopup extends StatelessWidget {
       onSelected: onSelected,
       initialValue: value,
       child: Text(
-        value?.name.capitalize().camelToSentence() ?? '',
+        value?.name ?? context.l10n.all,
         style: textStyle ?? fallBackTextStyle,
       ),
       itemBuilder: (context) {
