@@ -282,7 +282,10 @@ class _PlayerViewState extends State<PlayerView> {
                           ),
                         ),
                       controls,
-                      sliderAndTime,
+                      SizedBox(
+                        width: 600,
+                        child: sliderAndTime,
+                      ),
                       if (audio != null)
                         FittedBox(
                           child: title,
