@@ -223,28 +223,32 @@ class LocalAudioModel extends SafeChangeNotifier {
 
       audios = {};
       for (var e in onlyFiles) {
-        final metadata = await MetadataGod.readMetadata(file: e.path);
+        try {
+          final metadata = await MetadataGod.readMetadata(file: e.path);
 
-        final audio = Audio(
-          path: e.path,
-          audioType: AudioType.local,
-          artist: metadata.artist,
-          title: metadata.title,
-          album:
-              '${metadata.album} ${metadata.discTotal != null && metadata.discTotal! > 1 ? metadata.discNumber : ''}',
-          albumArtist: metadata.albumArtist,
-          discNumber: metadata.discNumber,
-          discTotal: metadata.discTotal,
-          durationMs: metadata.durationMs,
-          fileSize: metadata.fileSize,
-          genre: metadata.genre,
-          pictureData: metadata.picture?.data,
-          pictureMimeType: metadata.picture?.mimeType,
-          trackNumber: metadata.trackNumber,
-          year: metadata.year,
-        );
+          final audio = Audio(
+            path: e.path,
+            audioType: AudioType.local,
+            artist: metadata.artist,
+            title: metadata.title,
+            album:
+                '${metadata.album} ${metadata.discTotal != null && metadata.discTotal! > 1 ? metadata.discNumber : ''}',
+            albumArtist: metadata.albumArtist,
+            discNumber: metadata.discNumber,
+            discTotal: metadata.discTotal,
+            durationMs: metadata.durationMs,
+            fileSize: metadata.fileSize,
+            genre: metadata.genre,
+            pictureData: metadata.picture?.data,
+            pictureMimeType: metadata.picture?.mimeType,
+            trackNumber: metadata.trackNumber,
+            year: metadata.year,
+          );
 
-        audios?.add(audio);
+          audios?.add(audio);
+        } catch (e) {
+          print(e);
+        }
       }
 
       notifyListeners();
