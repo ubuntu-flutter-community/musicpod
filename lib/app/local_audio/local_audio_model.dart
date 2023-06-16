@@ -3,10 +3,12 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/app/music_app.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/utils.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
@@ -221,8 +223,11 @@ class LocalAudioModel extends SafeChangeNotifier {
         }
       }
 
+      int failures = 0;
+      int total = 0;
       audios = {};
       for (var e in onlyFiles) {
+        total++;
         try {
           final metadata = await MetadataGod.readMetadata(file: e.path);
 
@@ -247,10 +252,16 @@ class LocalAudioModel extends SafeChangeNotifier {
 
           audios?.add(audio);
         } catch (e) {
-          print(e);
+          failures++;
         }
       }
-
+      if (failures > 0) {
+        MusicApp.scaffoldKey.currentState?.showSnackBar(
+          SnackBar(
+            content: Text('Failed to import $failures of $total audio files.'),
+          ),
+        );
+      }
       notifyListeners();
     }
   }

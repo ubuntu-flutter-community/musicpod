@@ -30,6 +30,8 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class MusicApp extends StatelessWidget {
   const MusicApp({super.key});
 
+  static final GlobalKey<ScaffoldMessengerState> scaffoldKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return YaruTheme(
@@ -42,6 +44,7 @@ class MusicApp extends StatelessWidget {
           supportedLocales: supportedLocales,
           onGenerateTitle: (context) => 'Music',
           home: _App.create(context),
+          scaffoldMessengerKey: scaffoldKey,
         );
       },
     );
