@@ -259,6 +259,7 @@ class LocalAudioModel extends SafeChangeNotifier {
         MusicApp.scaffoldKey.currentState?.showSnackBar(
           SnackBar(
             content: Text('Failed to import $failures of $total audio files.'),
+            backgroundColor: Colors.red,
           ),
         );
       }
