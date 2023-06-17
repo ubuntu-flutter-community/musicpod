@@ -41,7 +41,10 @@ class _PodcastsPageState extends State<PodcastsPage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final code = WidgetsBinding.instance.platformDispatcher.locale.countryCode
           ?.toLowerCase();
-      context.read<PodcastModel>().init(code);
+      context.read<PodcastModel>().init(
+            countryCode: code,
+            updateMessage: context.l10n.newEpisodeAvailable,
+          );
     });
   }
 

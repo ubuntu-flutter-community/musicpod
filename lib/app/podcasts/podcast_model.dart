@@ -1,22 +1,33 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
+import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class PodcastModel extends SafeChangeNotifier {
-  PodcastModel(this._service);
+  PodcastModel(
+    this._podcastService,
+    this._libraryService,
+    this._connectivity,
+    this._notificationsClient,
+  );
 
-  final PodcastService _service;
+  final PodcastService _podcastService;
+  final LibraryService _libraryService;
+  final Connectivity _connectivity;
+  final NotificationsClient _notificationsClient;
 
   StreamSubscription<bool>? _chartsChangedSub;
   StreamSubscription<bool>? _searchChangedSub;
 
-  Set<Set<Audio>>? get chartsPodcasts => _service.chartsPodcasts;
-  Set<Set<Audio>>? get podcastSearchResult => _service.searchResult;
+  Set<Set<Audio>>? get chartsPodcasts => _podcastService.chartsPodcasts;
+  Set<Set<Audio>>? get podcastSearchResult => _podcastService.searchResult;
 
   String? _searchQuery;
   String? get searchQuery => _searchQuery;
@@ -67,19 +78,34 @@ class PodcastModel extends SafeChangeNotifier {
     return list;
   }
 
-  void init(String? countryCode) {
-    _chartsChangedSub = _service.chartsChanged.listen((_) {
+  Future<void> init({
+    String? countryCode,
+    required String updateMessage,
+  }) async {
+    _chartsChangedSub = _podcastService.chartsChanged.listen((_) {
       notifyListeners();
     });
-    _searchChangedSub = _service.searchChanged.listen((_) {
+    _searchChangedSub = _podcastService.searchChanged.listen((_) {
       notifyListeners();
     });
-    if (_service.chartsPodcasts?.isNotEmpty == true) return;
+    if (_podcastService.chartsPodcasts?.isNotEmpty == true) return;
     final c = Country.values.firstWhereOrNull((c) => c.code == countryCode);
     if (c != null) {
       _country = c;
     }
-    loadCharts();
+    if (_podcastService.chartsPodcasts == null ||
+        _podcastService.chartsPodcasts?.isEmpty == true) {
+      loadCharts();
+    }
+
+    final result = await _connectivity.checkConnectivity();
+    if (result == ConnectivityResult.none) return;
+    _podcastService.updatePodcasts(
+      oldPodcasts: _libraryService.podcasts,
+      updatePodcast: _libraryService.updatePodcast,
+      notify: _notificationsClient.notify,
+      updateMessage: updateMessage,
+    );
   }
 
   @override
@@ -90,13 +116,13 @@ class PodcastModel extends SafeChangeNotifier {
   }
 
   void loadCharts() =>
-      _service.loadCharts(podcastGenre: podcastGenre, country: country);
+      _podcastService.loadCharts(podcastGenre: podcastGenre, country: country);
 
   void search({
     String? searchQuery,
     bool useAlbumImage = false,
   }) {
-    _service
+    _podcastService
         .search(
           language: _language,
           searchQuery: searchQuery,

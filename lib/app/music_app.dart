@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
@@ -67,7 +68,12 @@ class _App extends StatefulWidget {
           create: (_) => PlaylistModel(getService<LibraryService>())..init(),
         ),
         ChangeNotifierProvider(
-          create: (_) => PodcastModel(getService<PodcastService>()),
+          create: (_) => PodcastModel(
+            getService<PodcastService>(),
+            getService<LibraryService>(),
+            getService<Connectivity>(),
+            getService<NotificationsClient>(),
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => ConnectivityNotifier(
