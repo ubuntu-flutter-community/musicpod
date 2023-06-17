@@ -165,6 +165,7 @@ class PodcastService {
     return episodes;
   }
 
+  bool? _checkedForUpdates;
   Future<void> updatePodcasts({
     required Map<String, Set<Audio>> oldPodcasts,
     required void Function(String name, Set<Audio> audios) updatePodcast,
@@ -180,6 +181,7 @@ class PodcastService {
       List<NotificationAction> actions,
     }) notify,
   }) async {
+    if (_checkedForUpdates == true) return;
     for (final oldPodcast in oldPodcasts.entries) {
       if (oldPodcast.value.firstOrNull?.website != null) {
         findEpisodes(
@@ -199,5 +201,6 @@ class PodcastService {
         });
       }
     }
+    _checkedForUpdates = true;
   }
 }
