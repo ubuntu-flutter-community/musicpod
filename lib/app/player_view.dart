@@ -149,7 +149,7 @@ class _PlayerViewState extends State<PlayerView> {
     );
 
     final title = Text(
-      audio?.title?.isNotEmpty == true ? audio!.title! : 'unknown',
+      audio?.title?.isNotEmpty == true ? audio!.title! : '',
       style: TextStyle(
         fontWeight: FontWeight.w200,
         fontSize: isFullScreen ? 45 : 15,
