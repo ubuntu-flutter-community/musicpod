@@ -16,6 +16,7 @@ import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcast_page.dart';
 import 'package:musicpod/app/podcasts/podcasts_page.dart';
 import 'package:musicpod/app/radio/radio_page.dart';
+import 'package:musicpod/app/responsive_master_tile.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/library_service.dart';
@@ -82,14 +83,14 @@ class _App extends StatefulWidget {
 
 class _AppState extends State<_App> with TickerProviderStateMixin {
   final _delegateSmall = const YaruMasterResizablePaneDelegate(
-    initialPaneWidth: 93,
-    minPaneWidth: 93,
+    initialPaneWidth: 60,
+    minPaneWidth: 60,
     minPageWidth: kYaruMasterDetailBreakpoint / 2,
   );
 
   final _delegateBig = const YaruMasterResizablePaneDelegate(
     initialPaneWidth: 200,
-    minPaneWidth: 93,
+    minPaneWidth: 60,
     minPageWidth: kYaruMasterDetailBreakpoint / 2,
   );
 
@@ -464,32 +465,35 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
         )
     ];
 
-    final settingsTile = YaruMasterTile(
-      title: const Text('Settings'),
-      leading: const Icon(YaruIcons.settings),
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) {
-          return SimpleDialog(
-            titlePadding: EdgeInsets.zero,
-            title: const YaruDialogTitleBar(
-              title: Text('Chose collection directory'),
-            ),
-            children: [
-              Center(
-                child: ElevatedButton(
-                  onPressed: () async {
-                    localAudioModel.directory = await getDirectoryPath();
-                    await localAudioModel
-                        .init()
-                        .then((value) => Navigator.of(context).pop());
-                  },
-                  child: const Text('Pick your music collection'),
-                ),
-              )
-            ],
-          );
-        },
+    final settingsTile = LayoutBuilder(
+      builder: (context, constraints) => ResponsiveMasterTile(
+        title: const Text('Settings'),
+        leading: const Icon(YaruIcons.settings),
+        availableWidth: constraints.maxWidth,
+        onTap: () => showDialog(
+          context: context,
+          builder: (context) {
+            return SimpleDialog(
+              titlePadding: EdgeInsets.zero,
+              title: const YaruDialogTitleBar(
+                title: Text('Chose collection directory'),
+              ),
+              children: [
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      localAudioModel.directory = await getDirectoryPath();
+                      await localAudioModel
+                          .init()
+                          .then((value) => Navigator.of(context).pop());
+                    },
+                    child: const Text('Pick your music collection'),
+                  ),
+                )
+              ],
+            );
+          },
+        ),
       ),
     );
 
@@ -505,8 +509,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
         length: playlistModel.totalListAmount,
         initialIndex: playlistModel.index ?? 0,
       ),
-      tileBuilder: (context, index, selected) {
-        final tile = YaruMasterTile(
+      tileBuilder: (context, index, selected, availableWidth) {
+        final tile = ResponsiveMasterTile(
           title: masterItems[index].tileBuilder(context),
           leading: masterItems[index].iconBuilder == null
               ? null
@@ -514,6 +518,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                   context,
                   selected,
                 ),
+          availableWidth: availableWidth,
         );
 
         Widget? column;
