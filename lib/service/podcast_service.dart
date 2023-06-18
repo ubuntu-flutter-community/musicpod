@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
+import 'package:musicpod/utils.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 class PodcastService {
@@ -161,5 +163,44 @@ class PodcastService {
       }
     }
     return episodes;
+  }
+
+  bool? _checkedForUpdates;
+  Future<void> updatePodcasts({
+    required Map<String, Set<Audio>> oldPodcasts,
+    required void Function(String name, Set<Audio> audios) updatePodcast,
+    required String updateMessage,
+    required Future<Notification> Function(
+      String summary, {
+      String body,
+      String appName,
+      String appIcon,
+      int expireTimeoutMs,
+      int replacesId,
+      List<NotificationHint> hints,
+      List<NotificationAction> actions,
+    }) notify,
+  }) async {
+    if (_checkedForUpdates == true) return;
+    for (final oldPodcast in oldPodcasts.entries) {
+      if (oldPodcast.value.firstOrNull?.website != null) {
+        findEpisodes(
+          url: oldPodcast.value.firstOrNull!.website!,
+        ).then((audios) {
+          if (!listsAreEqual(
+            audios.toList(),
+            oldPodcast.value.toList(),
+          )) {
+            updatePodcast(oldPodcast.key, audios);
+            notify(
+              'New episodes available: ${oldPodcast.key}',
+              appIcon: 'music-app',
+              appName: 'MusicPod',
+            );
+          }
+        });
+      }
+    }
+    _checkedForUpdates = true;
   }
 }

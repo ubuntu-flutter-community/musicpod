@@ -45,6 +45,9 @@ class AudioPageBody extends StatefulWidget {
     this.artistLabel,
     this.albumLabel,
     this.pageTitleWidget,
+    this.titleFlex = 5,
+    this.artistFlex = 5,
+    this.albumFlex = 4,
   });
 
   final Set<Audio>? audios;
@@ -69,6 +72,7 @@ class AudioPageBody extends StatefulWidget {
   final bool placePlayAllButton;
   final String? noResultMessage;
   final String? titleLabel, artistLabel, albumLabel;
+  final int titleFlex, artistFlex, albumFlex;
 
   final void Function(String artist)? onArtistTap;
   final void Function(String album)? onAlbumTap;
@@ -331,6 +335,9 @@ class _AudioPageBodyState extends State<AudioPageBody> {
               right: 20,
             ),
             child: AudioPageHeader(
+              titleFlex: widget.titleFlex,
+              artistFlex: widget.artistFlex,
+              albumFlex: widget.albumFlex,
               titleLabel: widget.titleLabel,
               artistLabel: widget.artistLabel,
               albumLabel: widget.albumLabel,
@@ -388,6 +395,9 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                 );
 
                 return AudioTile(
+                  titleFlex: widget.titleFlex,
+                  artistFlex: widget.artistFlex,
+                  albumFlex: widget.albumFlex,
                   onAlbumTap: widget.onAlbumTap,
                   onArtistTap: widget.onArtistTap,
                   isPlayerPlaying: isPlaying,

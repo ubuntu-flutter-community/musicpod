@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
@@ -31,6 +32,8 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class MusicApp extends StatelessWidget {
   const MusicApp({super.key});
 
+  static final GlobalKey<ScaffoldMessengerState> scaffoldKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return YaruTheme(
@@ -43,6 +46,7 @@ class MusicApp extends StatelessWidget {
           supportedLocales: supportedLocales,
           onGenerateTitle: (context) => 'Music',
           home: _App.create(context),
+          scaffoldMessengerKey: scaffoldKey,
         );
       },
     );
@@ -65,7 +69,12 @@ class _App extends StatefulWidget {
           create: (_) => PlaylistModel(getService<LibraryService>())..init(),
         ),
         ChangeNotifierProvider(
-          create: (_) => PodcastModel(getService<PodcastService>()),
+          create: (_) => PodcastModel(
+            getService<PodcastService>(),
+            getService<LibraryService>(),
+            getService<Connectivity>(),
+            getService<NotificationsClient>(),
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => ConnectivityNotifier(
@@ -447,6 +456,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             return AudioPage(
               audioPageType: AudioPageType.radio,
               placeTrailer: false,
+              showTrack: false,
               showWindowControls: !playerToTheRight,
               audios: station.value,
               pageId: station.key,
