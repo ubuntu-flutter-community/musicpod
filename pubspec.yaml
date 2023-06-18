@@ -41,7 +41,7 @@ dependencies:
   ubuntu_service: ^0.2.0
   url_launcher: ^6.1.10
   xdg_directories: ^1.0.0
-  yaru: ^0.7.0
+  yaru: ^0.8.0
   yaru_icons: ^1.0.4
   yaru_widgets: ^2.4.0
 
