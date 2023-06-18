@@ -16,6 +16,9 @@ class AudioTile extends StatelessWidget {
     this.onArtistTap,
     this.onAlbumTap,
     this.showTrack = true,
+    this.titleFlex = 5,
+    this.artistFlex = 5,
+    this.albumFlex = 4,
   });
 
   final Audio audio;
@@ -29,6 +32,7 @@ class AudioTile extends StatelessWidget {
   final bool showTrack;
   final void Function(String artist)? onArtistTap;
   final void Function(String artist)? onAlbumTap;
+  final int titleFlex, artistFlex, albumFlex;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +72,7 @@ class AudioTile extends StatelessWidget {
               ),
             ),
           Expanded(
-            flex: 5,
+            flex: titleFlex,
             child: Text(
               audio.title ?? 'unknown',
               style: textStyle,
@@ -78,7 +82,7 @@ class AudioTile extends StatelessWidget {
           ),
           if (audio.artist != null)
             Expanded(
-              flex: 4,
+              flex: artistFlex,
               child: _TapAbleText(
                 onTap: onArtistTap == null
                     ? null
@@ -89,7 +93,7 @@ class AudioTile extends StatelessWidget {
             ),
           if (audio.album != null)
             Expanded(
-              flex: 4,
+              flex: albumFlex,
               child: _TapAbleText(
                 onTap:
                     onAlbumTap == null ? null : () => onAlbumTap!(audio.album!),
