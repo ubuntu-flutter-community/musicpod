@@ -455,6 +455,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             return AudioPage(
               audioPageType: AudioPageType.radio,
               placeTrailer: false,
+              showTrack: false,
               showWindowControls: !playerToTheRight,
               audios: station.value,
               pageId: station.key,
