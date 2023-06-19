@@ -337,7 +337,7 @@ class _PlayerViewState extends State<PlayerView> {
                           child: ListView(
                             padding: const EdgeInsets.only(bottom: 10),
                             children: [
-                              for (final audio in queue!)
+                              for (final e in queue!)
                                 Padding(
                                   padding: const EdgeInsets.only(
                                     left: 10,
@@ -348,7 +348,7 @@ class _PlayerViewState extends State<PlayerView> {
                                     style:
                                         theme.textTheme.labelMedium?.copyWith(
                                       color: theme.colorScheme.onSurface,
-                                      fontWeight: audio == audio
+                                      fontWeight: e == audio
                                           ? FontWeight.bold
                                           : FontWeight.normal,
                                     ),
