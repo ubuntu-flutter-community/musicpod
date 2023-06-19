@@ -107,8 +107,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     YaruWindow.of(context).onClose(
-      () {
-        context.read<PlayerModel>().dispose();
+      () async {
+        await context.read<PlayerModel>().dispose();
         return true;
       },
     );

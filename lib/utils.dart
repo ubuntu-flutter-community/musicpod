@@ -1,8 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:xdg_directories/xdg_directories.dart';
+
+import 'app/common/constants.dart';
 
 String formatTime(Duration duration) {
   String twoDigits(int n) => n.toString().padLeft(2, '0');
@@ -69,4 +75,81 @@ void sortListByAudioFilter({
       });
       break;
   }
+}
+
+Future<String> getWorkingDir() async {
+  final workingDir = '${configHome.path}/$kMusicPodConfigSubDir';
+  if (!Directory(workingDir).existsSync()) {
+    await Directory(workingDir).create();
+  }
+  return workingDir;
+}
+
+Future<void> writeSetting(
+  String? key,
+  dynamic value,
+) async {
+  if (key == null || value == null) return;
+  final oldSettings = await getSettings();
+  if (oldSettings.containsKey(key)) {
+    oldSettings.update(key, (v) => value);
+  } else {
+    oldSettings.putIfAbsent(key, () => value);
+  }
+  final jsonStr = jsonEncode(oldSettings);
+
+  final workingDir = await getWorkingDir();
+
+  final file = File('$workingDir/settings.json');
+
+  if (!file.existsSync()) {
+    file.create();
+  }
+
+  await file.writeAsString(jsonStr);
+}
+
+Future<dynamic> readSetting(dynamic key) async {
+  if (key == null) return null;
+  final oldSettings = await getSettings();
+  return oldSettings[key];
+}
+
+Future<Map<String, String>> getSettings() async {
+  final workingDir = await getWorkingDir();
+
+  final file = File('$workingDir/settings.json');
+
+  if (file.existsSync()) {
+    final jsonStr = await file.readAsString();
+
+    final map = jsonDecode(jsonStr) as Map<String, dynamic>;
+
+    final m = map.map(
+      (key, value) => MapEntry<String, String>(
+        key,
+        value,
+      ),
+    );
+
+    return m;
+  } else {
+    return <String, String>{};
+  }
+}
+
+Duration? parseDuration(String? durationAsString) {
+  if (durationAsString == null || durationAsString == 'null') return null;
+  int hours = 0;
+  int minutes = 0;
+  int micros;
+  List<String> parts = durationAsString.split(':');
+  if (parts.length > 2) {
+    hours = int.parse(parts[parts.length - 3]);
+  }
+  if (parts.length > 1) {
+    minutes = int.parse(parts[parts.length - 2]);
+  }
+  micros = (double.parse(parts[parts.length - 1]) * 1000000).round();
+  return Duration(hours: hours, minutes: minutes, microseconds: micros);
 }

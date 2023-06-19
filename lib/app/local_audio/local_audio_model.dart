@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -132,8 +131,7 @@ class LocalAudioModel extends SafeChangeNotifier {
   set directory(String? value) {
     if (value == null || value == _directory) return;
     _directory = value;
-    _write({kDirectoryProperty: value}, 'settings.json')
-        .then((_) => notifyListeners());
+    writeSetting(kDirectoryProperty, value).then((_) => notifyListeners());
   }
 
   Set<Audio>? _audios;
@@ -206,7 +204,7 @@ class LocalAudioModel extends SafeChangeNotifier {
   }
 
   Future<void> init() async {
-    _directory = (await _read('settings.json'))[kDirectoryProperty];
+    _directory = await readSetting(kDirectoryProperty);
     _directory ??= getUserDirectory('MUSIC')?.path;
 
     if (_directory != null) {
@@ -275,46 +273,5 @@ class LocalAudioModel extends SafeChangeNotifier {
     return await Directory(path)
         .list(recursive: true, followLinks: false)
         .toList();
-  }
-
-  Future<void> _write(Map<String, String> map, String fileName) async {
-    final jsonStr = jsonEncode(map);
-
-    final workingDir = '${configHome.path}/$kMusicPodConfigSubDir';
-    if (!Directory(workingDir).existsSync()) {
-      await Directory(workingDir).create();
-    }
-    final path = '$workingDir/$fileName';
-
-    final file = File(path);
-
-    if (!file.existsSync()) {
-      file.create();
-    }
-
-    await file.writeAsString(jsonStr);
-  }
-
-  Future<Map<String, String>> _read(String fileName) async {
-    final workingDir = '${configHome.path}/musicpod';
-    final path = '$workingDir/$fileName';
-    final file = File(path);
-
-    if (file.existsSync()) {
-      final jsonStr = await file.readAsString();
-
-      final map = jsonDecode(jsonStr) as Map<String, dynamic>;
-
-      final m = map.map(
-        (key, value) => MapEntry<String, String>(
-          key,
-          value,
-        ),
-      );
-
-      return m;
-    } else {
-      return <String, String>{};
-    }
   }
 }

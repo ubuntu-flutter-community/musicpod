@@ -4,7 +4,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:mpris_service/mpris_service.dart';
+import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/utils.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -151,7 +153,8 @@ class PlayerModel extends SafeChangeNotifier {
     loadColor();
   }
 
-  Future<void> playOrPause() async => _player.playOrPause();
+  Future<void> playOrPause() async =>
+      color == null ? play() : _player.playOrPause();
 
   Future<void> pause() async {
     await _player.pause();
@@ -211,6 +214,9 @@ class PlayerModel extends SafeChangeNotifier {
         }
       }
     });
+
+    await _readLastAudio();
+
     notifyListeners();
   }
 
@@ -306,8 +312,25 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> _writeLastAudio() async {
+    await writeSetting(kLastPositionAsString, _position.toString());
+    await writeSetting(kLastAudio, _audio?.toJson());
+  }
+
+  Future<void> _readLastAudio() async {
+    final positionAsString = await readSetting(kLastPositionAsString);
+    if (positionAsString != null) {
+      _position = parseDuration(positionAsString);
+    }
+    final maybeAudio = await readSetting(kLastAudio);
+    if (maybeAudio != null) {
+      _audio = Audio.fromJson(maybeAudio);
+    }
+  }
+
   @override
   Future<void> dispose() async {
+    await _writeLastAudio();
     await _mediaControlService.dispose();
     await _playerSub?.cancel();
     await _positionSub?.cancel();
