@@ -57,3 +57,4 @@ const kDirectoryProperty = 'directory';
 const kRadioUrl = 'de1.api.radio-browser.info';
 const kLastAudio = 'lastAudio';
 const kLastPositionAsString = 'lastPositionAsString';
+const kLastDurationAsString = 'lastDurationAsString';
