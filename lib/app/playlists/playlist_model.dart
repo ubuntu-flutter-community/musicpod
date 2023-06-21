@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
@@ -36,12 +37,36 @@ class PlaylistModel extends SafeChangeNotifier {
     super.dispose();
   }
 
-  int get totalListAmount =>
-      starredStationsLength +
-      podcastsLength +
-      playlistsLength +
-      pinnedAlbumsLength +
-      5;
+  int get totalListAmount {
+    const fix = 5;
+    switch (_audioPageType) {
+      case AudioPageType.album:
+        return pinnedAlbumsLength + fix;
+      case AudioPageType.playlist:
+        return playlistsLength + fix;
+      case AudioPageType.podcast:
+        return podcastsLength + fix;
+      case AudioPageType.radio:
+        return starredStationsLength + 5;
+      default:
+        return starredStationsLength +
+            podcastsLength +
+            playlistsLength +
+            pinnedAlbumsLength +
+            fix;
+    }
+  }
+
+  AudioPageType? _audioPageType;
+  AudioPageType? get audioPageType => _audioPageType;
+  void setAudioPageType(AudioPageType? value) {
+    if (value == _audioPageType) {
+      _audioPageType = null;
+    } else {
+      _audioPageType = value;
+    }
+    notifyListeners();
+  }
 
   //
   // Liked Audios

@@ -334,3 +334,28 @@ class _PodcastsPageState extends State<PodcastsPage> {
     }
   }
 }
+
+class PodcastsPageIcon extends StatelessWidget {
+  const PodcastsPageIcon({
+    super.key,
+    required this.isPlaying,
+    required this.selected,
+  });
+
+  final bool isPlaying, selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    if (isPlaying) {
+      return Icon(
+        YaruIcons.media_play,
+        color: theme.primaryColor,
+      );
+    }
+
+    return selected
+        ? const Icon(YaruIcons.podcast_filled)
+        : const Icon(YaruIcons.podcast);
+  }
+}

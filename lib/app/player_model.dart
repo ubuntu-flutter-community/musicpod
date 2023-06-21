@@ -126,7 +126,7 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> play() async {
+  Future<void> play({bool bigPlay = false}) async {
     if (audio == null) return;
     queue ??= [];
     if (!queue!.contains(audio)) {
@@ -141,7 +141,8 @@ class PlayerModel extends SafeChangeNotifier {
 
     Duration? firstPlayPosition = _position;
     _player.open(playList);
-    if (_firstPlay &&
+    if (bigPlay &&
+        _firstPlay &&
         firstPlayPosition != null &&
         _audio!.audioType != AudioType.radio) {
       _player.setVolume(0).then(
@@ -157,7 +158,7 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> playOrPause() async {
-    return _firstPlay ? play() : _player.playOrPause();
+    return _firstPlay ? play(bigPlay: true) : _player.playOrPause();
   }
 
   Future<void> pause() async {

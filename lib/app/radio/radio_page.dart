@@ -10,6 +10,7 @@ import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/radio_service.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
+import 'package:yaru_icons/yaru_icons.dart';
 
 class RadioPage extends StatefulWidget {
   const RadioPage({super.key, this.showWindowControls = true});
@@ -133,5 +134,30 @@ class _RadioPageState extends State<RadioPage> {
             placePlayAllButton: false,
           )
         : const OfflinePage();
+  }
+}
+
+class RadioPageIcon extends StatelessWidget {
+  const RadioPageIcon({
+    super.key,
+    required this.isPlaying,
+    required this.selected,
+  });
+
+  final bool isPlaying, selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    if (isPlaying) {
+      return Icon(
+        YaruIcons.media_play,
+        color: theme.primaryColor,
+      );
+    }
+
+    return selected
+        ? const Icon(YaruIcons.radio_filled)
+        : const Icon(YaruIcons.radio);
   }
 }

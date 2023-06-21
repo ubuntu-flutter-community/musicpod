@@ -8,6 +8,7 @@ import 'package:musicpod/app/local_audio/titles_view.dart';
 import 'package:musicpod/app/tabbed_page.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
+import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class LocalAudioPage extends StatefulWidget {
@@ -118,6 +119,46 @@ class StartPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class LocalAudioPageIcon extends StatelessWidget {
+  const LocalAudioPageIcon({
+    super.key,
+    required this.selected,
+    required this.isPlaying,
+  });
+
+  final bool selected;
+  final bool isPlaying;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    if (isPlaying) {
+      return Icon(
+        YaruIcons.media_play,
+        color: theme.primaryColor,
+      );
+    }
+    return Stack(
+      children: [
+        selected
+            ? const Icon(YaruIcons.drive_harddisk_filled)
+            : const Icon(YaruIcons.drive_harddisk),
+        Positioned(
+          left: 5,
+          top: 1,
+          child: Icon(
+            YaruIcons.music_note,
+            size: 10,
+            color: selected
+                ? theme.colorScheme.surface
+                : theme.colorScheme.onSurface,
+          ),
+        )
+      ],
     );
   }
 }

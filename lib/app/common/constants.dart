@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yaru_widgets/yaru_widgets.dart';
 
 const kPagePadding = 20.0;
 const kGridPadding = EdgeInsets.only(
@@ -27,6 +28,19 @@ const kImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
   mainAxisSpacing: 10,
   crossAxisSpacing: 10,
 );
+
+const delegateSmall = YaruMasterResizablePaneDelegate(
+  initialPaneWidth: 60,
+  minPaneWidth: 60,
+  minPageWidth: kYaruMasterDetailBreakpoint / 2,
+);
+
+const delegateBig = YaruMasterResizablePaneDelegate(
+  initialPaneWidth: 250,
+  minPaneWidth: 60,
+  minPageWidth: kYaruMasterDetailBreakpoint / 2,
+);
+
 const kSnapcraftColor = Color(0xFFE95420);
 const kDebianColor = Color(0xFFdb2264);
 const kGreenLight = Color.fromARGB(255, 51, 121, 63);

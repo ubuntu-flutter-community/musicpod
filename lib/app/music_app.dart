@@ -5,6 +5,7 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/common/audio_page.dart';
+import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/connectivity_notifier.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
@@ -91,18 +92,6 @@ class _App extends StatefulWidget {
 }
 
 class _AppState extends State<_App> with TickerProviderStateMixin {
-  final _delegateSmall = const YaruMasterResizablePaneDelegate(
-    initialPaneWidth: 60,
-    minPaneWidth: 60,
-    minPageWidth: kYaruMasterDetailBreakpoint / 2,
-  );
-
-  final _delegateBig = const YaruMasterResizablePaneDelegate(
-    initialPaneWidth: 200,
-    minPaneWidth: 60,
-    minPageWidth: kYaruMasterDetailBreakpoint / 2,
-  );
-
   @override
   void initState() {
     super.initState();
@@ -140,13 +129,6 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
     final shrinkSidebar = (width < 700);
     final playerToTheRight = width > 1700;
 
-    // TODO: replace with a custom painter for a nice audio playing animation
-    // that does not take 5% CPU...
-    final orbit = Icon(
-      YaruIcons.media_play,
-      color: theme.primaryColor,
-    );
-
     void onTextTap({
       required String text,
       AudioType audioType = AudioType.local,
@@ -180,29 +162,10 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
             showWindowControls: !playerToTheRight,
           );
         },
-        iconBuilder: (context, selected) {
-          if (audioType == AudioType.local) {
-            return orbit;
-          }
-          return Stack(
-            children: [
-              selected
-                  ? const Icon(YaruIcons.drive_harddisk_filled)
-                  : const Icon(YaruIcons.drive_harddisk),
-              Positioned(
-                left: 5,
-                top: 1,
-                child: Icon(
-                  YaruIcons.music_note,
-                  size: 10,
-                  color: selected
-                      ? theme.colorScheme.surface
-                      : theme.colorScheme.onSurface,
-                ),
-              )
-            ],
-          );
-        },
+        iconBuilder: (context, selected) => LocalAudioPageIcon(
+          selected: selected,
+          isPlaying: audioType == AudioType.local,
+        ),
       ),
       MasterItem(
         tileBuilder: (context) {
@@ -211,15 +174,10 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
         builder: (context) {
           return RadioPage.create(context, !playerToTheRight);
         },
-        iconBuilder: (context, selected) {
-          if (audioType == AudioType.radio) {
-            return orbit;
-          }
-
-          return selected
-              ? const Icon(YaruIcons.radio_filled)
-              : const Icon(YaruIcons.radio);
-        },
+        iconBuilder: (context, selected) => RadioPageIcon(
+          selected: selected,
+          isPlaying: audioType == AudioType.radio,
+        ),
       ),
       MasterItem(
         tileBuilder: (context) {
@@ -228,14 +186,10 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
         builder: (context) {
           return PodcastsPage(showWindowControls: !playerToTheRight);
         },
-        iconBuilder: (context, selected) {
-          if (audioType == AudioType.podcast) {
-            return orbit;
-          }
-          return selected
-              ? const Icon(YaruIcons.podcast_filled)
-              : const Icon(YaruIcons.podcast);
-        },
+        iconBuilder: (context, selected) => PodcastsPageIcon(
+          selected: selected,
+          isPlaying: audioType == AudioType.podcast,
+        ),
       ),
       MasterItem(
         iconBuilder: (context, selected) {
@@ -274,205 +228,213 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           return const Icon(YaruIcons.heart);
         },
       ),
-      for (final podcast in playlistModel.podcasts.entries)
-        MasterItem(
-          tileBuilder: (context) {
-            return Text(podcast.key);
-          },
-          builder: (context) {
-            return PodcastPage(
-              pageId: podcast.key,
-              audios: podcast.value,
-              showWindowControls: !playerToTheRight,
-              onAlbumTap: (album) =>
-                  onTextTap(text: album, audioType: AudioType.podcast),
-              onArtistTap: (artist) =>
-                  onTextTap(text: artist, audioType: AudioType.podcast),
-              onControlButtonPressed: () =>
-                  playlistModel.removePodcast(podcast.key),
-              imageUrl: podcast.value.firstOrNull?.imageUrl,
-            );
-          },
-          iconBuilder: (context, selected) {
-            final picture = podcast.value.firstOrNull?.imageUrl;
-            Widget? albumArt;
-            if (picture != null) {
-              albumArt = SizedBox(
-                width: 23,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: SafeNetworkImage(
-                    url: picture,
-                    fit: BoxFit.fitHeight,
-                    filterQuality: FilterQuality.medium,
-                    fallBackIcon: Icon(
-                      YaruIcons.podcast,
-                      color: theme.hintColor,
+      if (playlistModel.audioPageType == null ||
+          playlistModel.audioPageType == AudioPageType.podcast)
+        for (final podcast in playlistModel.podcasts.entries)
+          MasterItem(
+            tileBuilder: (context) {
+              return Text(podcast.key);
+            },
+            builder: (context) {
+              return PodcastPage(
+                pageId: podcast.key,
+                audios: podcast.value,
+                showWindowControls: !playerToTheRight,
+                onAlbumTap: (album) =>
+                    onTextTap(text: album, audioType: AudioType.podcast),
+                onArtistTap: (artist) =>
+                    onTextTap(text: artist, audioType: AudioType.podcast),
+                onControlButtonPressed: () =>
+                    playlistModel.removePodcast(podcast.key),
+                imageUrl: podcast.value.firstOrNull?.imageUrl,
+              );
+            },
+            iconBuilder: (context, selected) {
+              final picture = podcast.value.firstOrNull?.imageUrl;
+              Widget? albumArt;
+              if (picture != null) {
+                albumArt = SizedBox(
+                  width: 23,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: SafeNetworkImage(
+                      url: picture,
+                      fit: BoxFit.fitHeight,
+                      filterQuality: FilterQuality.medium,
+                      fallBackIcon: Icon(
+                        YaruIcons.podcast,
+                        color: theme.hintColor,
+                      ),
                     ),
                   ),
-                ),
-              );
-            }
-            return albumArt ??
-                const Icon(
-                  YaruIcons.rss,
                 );
-          },
-        ),
-      for (final playlist in playlistModel.playlists.entries)
-        MasterItem(
-          tileBuilder: (context) {
-            return Text(playlist.key);
-          },
-          builder: (context) {
-            final noPicture = playlist.value.firstOrNull == null ||
-                playlist.value.firstOrNull!.pictureData == null;
+              }
+              return albumArt ??
+                  const Icon(
+                    YaruIcons.rss,
+                  );
+            },
+          ),
+      if (playlistModel.audioPageType == null ||
+          playlistModel.audioPageType == AudioPageType.playlist)
+        for (final playlist in playlistModel.playlists.entries)
+          MasterItem(
+            tileBuilder: (context) {
+              return Text(playlist.key);
+            },
+            builder: (context) {
+              final noPicture = playlist.value.firstOrNull == null ||
+                  playlist.value.firstOrNull!.pictureData == null;
 
-            final noImage = playlist.value.firstOrNull == null ||
-                playlist.value.firstOrNull!.imageUrl == null;
+              final noImage = playlist.value.firstOrNull == null ||
+                  playlist.value.firstOrNull!.imageUrl == null;
 
-            return AudioPage(
-              onArtistTap: (artist) => onTextTap(text: artist),
-              onAlbumTap: (album) => onTextTap(text: album),
-              audioPageType: AudioPageType.playlist,
-              image: !noPicture
-                  ? Image.memory(
-                      playlist.value.firstOrNull!.pictureData!,
-                      width: 200.0,
-                      fit: BoxFit.fitWidth,
-                      filterQuality: FilterQuality.medium,
-                    )
-                  : !noImage
-                      ? SafeNetworkImage(
-                          fallBackIcon: SizedBox(
-                            width: 200,
-                            child: Center(
-                              child: Icon(
-                                YaruIcons.music_note,
-                                size: 80,
-                                color: theme.hintColor,
+              return AudioPage(
+                onArtistTap: (artist) => onTextTap(text: artist),
+                onAlbumTap: (album) => onTextTap(text: album),
+                audioPageType: AudioPageType.playlist,
+                image: !noPicture
+                    ? Image.memory(
+                        playlist.value.firstOrNull!.pictureData!,
+                        width: 200.0,
+                        fit: BoxFit.fitWidth,
+                        filterQuality: FilterQuality.medium,
+                      )
+                    : !noImage
+                        ? SafeNetworkImage(
+                            fallBackIcon: SizedBox(
+                              width: 200,
+                              child: Center(
+                                child: Icon(
+                                  YaruIcons.music_note,
+                                  size: 80,
+                                  color: theme.hintColor,
+                                ),
                               ),
                             ),
-                          ),
-                          url: playlist.value.firstOrNull!.imageUrl,
-                          fit: BoxFit.fitWidth,
-                          filterQuality: FilterQuality.medium,
-                        )
-                      : null,
-              pageLabel: context.l10n.playlist,
-              pageTitle: playlist.key,
-              pageDescription: '',
-              pageSubtile: '',
-              showWindowControls: !playerToTheRight,
-              audios: playlist.value,
-              pageId: playlist.key,
-              showTrack: playlist.value.firstOrNull?.trackNumber != null,
-              editableName: true,
-              deletable: true,
-              controlPageButton: YaruIconButton(
-                icon: Icon(
-                  YaruIcons.star_filled,
-                  color: theme.primaryColor,
-                ),
-                onPressed: () => playlistModel.removePlaylist(playlist.key),
-              ),
-            );
-          },
-          iconBuilder: (context, selected) {
-            return const Icon(
-              YaruIcons.playlist,
-            );
-          },
-        ),
-      for (final album in playlistModel.pinnedAlbums.entries)
-        MasterItem(
-          tileBuilder: (context) {
-            return Text(createPlaylistName(album.key, context));
-          },
-          builder: (context) {
-            final noPicture = album.value.firstOrNull == null ||
-                album.value.firstOrNull!.pictureData == null;
-
-            return AudioPage(
-              onArtistTap: (artist) => onTextTap(text: artist),
-              onAlbumTap: (album) => onTextTap(text: album),
-              audioPageType: AudioPageType.album,
-              image: !noPicture
-                  ? Image.memory(
-                      album.value.firstOrNull!.pictureData!,
-                      width: 200.0,
-                      fit: BoxFit.fitWidth,
-                      filterQuality: FilterQuality.medium,
-                    )
-                  : null,
-              pageLabel: context.l10n.album,
-              pageTitle: album.key,
-              pageDescription: '',
-              pageSubtile: album.value.firstOrNull?.artist ?? '',
-              showWindowControls: !playerToTheRight,
-              audios: album.value,
-              pageId: album.key,
-              showTrack: album.value.firstOrNull?.trackNumber != null,
-              editableName: false,
-              deletable: true,
-              controlPageButton: YaruIconButton(
-                icon: Icon(
-                  YaruIcons.pin,
-                  color: theme.primaryColor,
-                ),
-                onPressed: () => playlistModel.removePinnedAlbum(album.key),
-              ),
-            );
-          },
-          iconBuilder: (context, selected) {
-            final picture = album.value.firstOrNull?.pictureData!;
-            Widget? albumArt;
-            if (picture != null) {
-              albumArt = SizedBox(
-                width: 23,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: Image.memory(
-                    picture,
-                    height: 23,
-                    fit: BoxFit.fitHeight,
-                    filterQuality: FilterQuality.medium,
+                            url: playlist.value.firstOrNull!.imageUrl,
+                            fit: BoxFit.fitWidth,
+                            filterQuality: FilterQuality.medium,
+                          )
+                        : null,
+                pageLabel: context.l10n.playlist,
+                pageTitle: playlist.key,
+                pageDescription: '',
+                pageSubtile: '',
+                showWindowControls: !playerToTheRight,
+                audios: playlist.value,
+                pageId: playlist.key,
+                showTrack: playlist.value.firstOrNull?.trackNumber != null,
+                editableName: true,
+                deletable: true,
+                controlPageButton: YaruIconButton(
+                  icon: Icon(
+                    YaruIcons.star_filled,
+                    color: theme.primaryColor,
                   ),
+                  onPressed: () => playlistModel.removePlaylist(playlist.key),
                 ),
               );
-            }
-            return albumArt ??
-                const Icon(
-                  YaruIcons.playlist_play,
+            },
+            iconBuilder: (context, selected) {
+              return const Icon(
+                YaruIcons.playlist,
+              );
+            },
+          ),
+      if (playlistModel.audioPageType == null ||
+          playlistModel.audioPageType == AudioPageType.album)
+        for (final album in playlistModel.pinnedAlbums.entries)
+          MasterItem(
+            tileBuilder: (context) {
+              return Text(createPlaylistName(album.key, context));
+            },
+            builder: (context) {
+              final noPicture = album.value.firstOrNull == null ||
+                  album.value.firstOrNull!.pictureData == null;
+
+              return AudioPage(
+                onArtistTap: (artist) => onTextTap(text: artist),
+                onAlbumTap: (album) => onTextTap(text: album),
+                audioPageType: AudioPageType.album,
+                image: !noPicture
+                    ? Image.memory(
+                        album.value.firstOrNull!.pictureData!,
+                        width: 200.0,
+                        fit: BoxFit.fitWidth,
+                        filterQuality: FilterQuality.medium,
+                      )
+                    : null,
+                pageLabel: context.l10n.album,
+                pageTitle: album.key,
+                pageDescription: '',
+                pageSubtile: album.value.firstOrNull?.artist ?? '',
+                showWindowControls: !playerToTheRight,
+                audios: album.value,
+                pageId: album.key,
+                showTrack: album.value.firstOrNull?.trackNumber != null,
+                editableName: false,
+                deletable: true,
+                controlPageButton: YaruIconButton(
+                  icon: Icon(
+                    YaruIcons.pin,
+                    color: theme.primaryColor,
+                  ),
+                  onPressed: () => playlistModel.removePinnedAlbum(album.key),
+                ),
+              );
+            },
+            iconBuilder: (context, selected) {
+              final picture = album.value.firstOrNull?.pictureData!;
+              Widget? albumArt;
+              if (picture != null) {
+                albumArt = SizedBox(
+                  width: 23,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: Image.memory(
+                      picture,
+                      height: 23,
+                      fit: BoxFit.fitHeight,
+                      filterQuality: FilterQuality.medium,
+                    ),
+                  ),
                 );
-          },
-        ),
-      for (final station in playlistModel.starredStations.entries)
-        MasterItem(
-          tileBuilder: (context) {
-            return Text(station.key);
-          },
-          builder: (context) {
-            return AudioPage(
-              audioPageType: AudioPageType.radio,
-              placeTrailer: false,
-              showTrack: false,
-              showWindowControls: !playerToTheRight,
-              audios: station.value,
-              pageId: station.key,
-              pageTitle: station.key,
-              editableName: false,
-              deletable: false,
-              controlPageButton: YaruIconButton(
-                icon: const Icon(YaruIcons.star_filled),
-                onPressed: () => playlistModel.unStarStation(station.key),
-              ),
-            );
-          },
-          iconBuilder: (context, selected) {
-            return const Icon(YaruIcons.star);
-          },
-        )
+              }
+              return albumArt ??
+                  const Icon(
+                    YaruIcons.playlist_play,
+                  );
+            },
+          ),
+      if (playlistModel.audioPageType == null ||
+          playlistModel.audioPageType == AudioPageType.radio)
+        for (final station in playlistModel.starredStations.entries)
+          MasterItem(
+            tileBuilder: (context) {
+              return Text(station.key);
+            },
+            builder: (context) {
+              return AudioPage(
+                audioPageType: AudioPageType.radio,
+                placeTrailer: false,
+                showTrack: false,
+                showWindowControls: !playerToTheRight,
+                audios: station.value,
+                pageId: station.key,
+                pageTitle: station.key,
+                editableName: false,
+                deletable: false,
+                controlPageButton: YaruIconButton(
+                  icon: const Icon(YaruIcons.star_filled),
+                  onPressed: () => playlistModel.unStarStation(station.key),
+                ),
+              );
+            },
+            iconBuilder: (context, selected) {
+              return const Icon(YaruIcons.star);
+            },
+          )
     ];
 
     final settingsTile = LayoutBuilder(
@@ -514,7 +476,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
         padding: const EdgeInsets.only(bottom: 10),
         child: settingsTile,
       ),
-      layoutDelegate: shrinkSidebar ? _delegateSmall : _delegateBig,
+      layoutDelegate: shrinkSidebar ? delegateSmall : delegateBig,
       controller: YaruPageController(
         length: playlistModel.totalListAmount,
         initialIndex: playlistModel.index ?? 0,
@@ -542,6 +504,42 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
               tile
             ],
           );
+        } else if (index == 4 &&
+            availableWidth >= 130 &&
+            (playlistModel.totalListAmount > 5 ||
+                playlistModel.audioPageType != null)) {
+          var mainPageType = AudioPageType.values.where(
+            (e) => !<AudioPageType>[
+              AudioPageType.immutable,
+              AudioPageType.likedAudio,
+              AudioPageType.artist,
+            ].contains(e),
+          );
+
+          column = Column(
+            children: [
+              tile,
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 10,
+                  bottom: 5,
+                  right: 18,
+                  left: 18,
+                ),
+                child: YaruChoiceChipBar(
+                  wrap: true,
+                  labels: mainPageType
+                      .map((e) => Text(e.localize(context.l10n)))
+                      .toList(),
+                  onSelected: (index) => playlistModel
+                      .setAudioPageType(mainPageType.elementAt(index)),
+                  isSelected: mainPageType
+                      .map((e) => e == playlistModel.audioPageType)
+                      .toList(),
+                ),
+              ),
+            ],
+          );
         }
 
         return column ?? tile;
@@ -550,6 +548,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
         body: masterItems[index].builder(context),
       ),
     );
+
     return Scaffold(
       key: ValueKey(shrinkSidebar),
       backgroundColor: surfaceTintColor,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_page_body.dart';
 import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AudioPage extends StatelessWidget {
@@ -131,4 +132,31 @@ enum AudioPageType {
   playlist,
   album,
   radio;
+
+  String localize(AppLocalizations l10n) {
+    switch (this) {
+      case AudioPageType.immutable:
+        return 'immutable';
+      case AudioPageType.artist:
+        return l10n.artists;
+      case AudioPageType.likedAudio:
+        return l10n.likedSongs;
+      case AudioPageType.podcast:
+        return l10n.podcasts;
+      case AudioPageType.playlist:
+        return l10n.playlists;
+      case AudioPageType.album:
+        return l10n.albums;
+      case AudioPageType.radio:
+        return l10n.radio;
+    }
+  }
 }
+
+final mainPageType = AudioPageType.values.where(
+  (e) => !<AudioPageType>[
+    AudioPageType.immutable,
+    AudioPageType.likedAudio,
+    AudioPageType.artist,
+  ].contains(e),
+);
