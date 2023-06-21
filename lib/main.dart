@@ -36,8 +36,8 @@ Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
-  MetadataGod.initialize();
   await YaruWindowTitleBar.ensureInitialized();
+  MetadataGod.initialize();
 
   libraryService.init();
   runApp(const MusicApp());

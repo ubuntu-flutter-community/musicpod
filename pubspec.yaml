@@ -27,7 +27,9 @@ dependencies:
   metadata_god: ^0.4.1
   mime_type: ^1.0.0
   mpris_service:
-    git: https://github.com/alexmercerind/mpris_service
+    git:
+      url: https://github.com/alexmercerind/mpris_service
+      ref: 3a4a721
   palette_generator: ^0.3.3+2
   path: ^1.8.2
   podcast_search:
@@ -46,7 +48,7 @@ dependencies:
   yaru_widgets:
     git:
       url: https://github.com/ubuntu/yaru_widgets.dart
-      ref: dd56e1809ad2d4fac579bb9f8687384bc6c77efe
+      ref: e1b3725
 
 
 dev_dependencies:
