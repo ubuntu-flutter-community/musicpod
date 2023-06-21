@@ -344,7 +344,7 @@ class _PlayerViewState extends State<PlayerView> {
                                     right: 10,
                                   ),
                                   child: Text(
-                                    '${audio.title ?? ''} • ${audio.artist ?? ''}',
+                                    '${e.title ?? ''} • ${e.artist ?? ''}',
                                     style:
                                         theme.textTheme.labelMedium?.copyWith(
                                       color: theme.colorScheme.onSurface,
