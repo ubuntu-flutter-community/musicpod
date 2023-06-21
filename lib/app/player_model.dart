@@ -139,10 +139,18 @@ class PlayerModel extends SafeChangeNotifier {
         Media(audio!.url!),
     ]);
 
-    await _player.open(playList, play: !_firstPlay);
-    if (_firstPlay) {
-      await seek();
-      await _player.play();
+    Duration? firstPlayPosition = _position;
+    _player.open(playList);
+    if (_firstPlay &&
+        firstPlayPosition != null &&
+        _audio!.audioType != AudioType.radio) {
+      _player.setVolume(0).then(
+            (_) => Future.delayed(const Duration(seconds: 1)).then(
+              (_) => _player
+                  .seek(firstPlayPosition)
+                  .then((_) => _player.setVolume(100.0)),
+            ),
+          );
     }
     _firstPlay = false;
     loadColor();
