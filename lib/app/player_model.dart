@@ -132,29 +132,25 @@ class PlayerModel extends SafeChangeNotifier {
     if (!queue!.contains(audio)) {
       queue!.insert(0, audio!);
     }
-    if (audio!.path != null) {
-      _player.open(
-        Playlist(
-          [
-            Media('file://${audio!.path!}'),
-          ],
-        ),
-      );
-    } else if (audio!.url != null) {
-      _player.open(
-        Playlist(
-          [
-            Media(audio!.url!),
-          ],
-        ),
-      );
-    }
+    final playList = Playlist([
+      if (audio!.path != null)
+        Media('file://${audio!.path!}')
+      else if (audio!.url != null)
+        Media(audio!.url!),
+    ]);
 
+    await _player.open(playList, play: !_firstPlay);
+    if (_firstPlay) {
+      await seek();
+      await _player.play();
+    }
+    _firstPlay = false;
     loadColor();
   }
 
-  Future<void> playOrPause() async =>
-      color == null ? play() : _player.playOrPause();
+  Future<void> playOrPause() async {
+    return _firstPlay ? play() : _player.playOrPause();
+  }
 
   Future<void> pause() async {
     await _player.pause();
@@ -195,6 +191,8 @@ class PlayerModel extends SafeChangeNotifier {
       ),
     );
 
+    await _readLastAudio();
+
     _playerSub = _player.streams.playing.listen((p) {
       isPlaying = p;
       _mediaControlService.playbackStatus =
@@ -214,8 +212,6 @@ class PlayerModel extends SafeChangeNotifier {
         }
       }
     });
-
-    await _readLastAudio();
 
     notifyListeners();
   }
@@ -314,17 +310,23 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> _writeLastAudio() async {
     await writeSetting(kLastPositionAsString, _position.toString());
+    await writeSetting(kLastDurationAsString, _duration.toString());
     await writeSetting(kLastAudio, _audio?.toJson());
   }
 
+  bool _firstPlay = true;
   Future<void> _readLastAudio() async {
     final positionAsString = await readSetting(kLastPositionAsString);
+    final durationAsString = await readSetting(kLastDurationAsString);
     if (positionAsString != null) {
-      _position = parseDuration(positionAsString);
+      setPosition(parseDuration(positionAsString));
     }
     final maybeAudio = await readSetting(kLastAudio);
     if (maybeAudio != null) {
       _audio = Audio.fromJson(maybeAudio);
+      if (durationAsString != null) {
+        setDuration(parseDuration(durationAsString));
+      }
     }
   }
 
