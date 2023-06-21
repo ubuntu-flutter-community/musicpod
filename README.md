@@ -25,21 +25,27 @@ Thank you @KRTirtho for the very easy to use [Metadata God](https://github.com/K
 
 Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https://github.com/tomassasovsky/radio-browser-api.dart)
 
-## Planned features
+## MusicPod Level 1
 
 - [X] play local audio files
-- [X] Filter local files
+- [X] filter local files
 - [X] set root directory
 - [X] create and manage playlists
 - [X] play internet radio streams
 - [X] browse for radio stations
 - [X] play podcasts
-- [ ] download podcasts
 - [X] search for podcasts
 - [X] load podcast charts
 - [X] filter podcasts by country
 - [X] filter podcasts by genre
-- [X] Save playlists
-- [X] Save liked songs
-- [X] Save settings on disk
+- [X] save playlists
+- [X] save liked songs
+- [X] save settings on disk
 - [X] notify when a new episode of your subscribed podcasts is available
+
+## MusicPod Level 2
+
+- [ ] streaming provider agnostic sharing links
+- [ ] additional tag-grid view for the radio page
+- [ ] option to download podcasts
+- [ ] reduced memory allocation
