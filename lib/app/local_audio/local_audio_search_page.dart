@@ -11,8 +11,8 @@ import 'package:musicpod/app/common/spaced_divider.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
 import 'package:musicpod/app/local_audio/artist_page.dart';
 import 'package:musicpod/app/local_audio/local_audio_search_field.dart';
-import 'package:musicpod/app/player_model.dart';
-import 'package:musicpod/app/playlists/playlist_model.dart';
+import 'package:musicpod/app/player/player_model.dart';
+import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
@@ -210,9 +210,9 @@ class _Albums extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
-    final isPinnedAlbum = context.read<PlaylistModel>().isPinnedAlbum;
-    final removePinnedAlbum = context.read<PlaylistModel>().removePinnedAlbum;
-    final addPinnedAlbum = context.read<PlaylistModel>().addPinnedAlbum;
+    final isPinnedAlbum = context.read<LibraryModel>().isPinnedAlbum;
+    final removePinnedAlbum = context.read<LibraryModel>().removePinnedAlbum;
+    final addPinnedAlbum = context.read<LibraryModel>().addPinnedAlbum;
     final findAlbum = context.read<LocalAudioModel>().findAlbum;
 
     final Set<Audio>? similarAlbumsResult =
@@ -286,7 +286,6 @@ class _Albums extends StatelessWidget {
                       return AlbumPage(
                         onAlbumTap: onAlbumTap,
                         onArtistTap: onArtistTap,
-                        image: image,
                         name: name,
                         isPinnedAlbum: isPinnedAlbum,
                         removePinnedAlbum: removePinnedAlbum,

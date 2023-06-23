@@ -7,11 +7,11 @@ import 'package:metadata_god/metadata_god.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/constants.dart';
-import 'package:musicpod/app/music_app.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/utils.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:xdg_directories/xdg_directories.dart';
+import 'package:yaru_icons/yaru_icons.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
   String? _searchQuery;
@@ -128,10 +128,12 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   String? _directory;
   String? get directory => _directory;
-  set directory(String? value) {
+  Future<void> setDirectory(String? value) async {
     if (value == null || value == _directory) return;
-    _directory = value;
-    writeSetting(kDirectoryProperty, value).then((_) => notifyListeners());
+    await writeSetting(kDirectoryProperty, value).then((_) {
+      _directory = value;
+      notifyListeners();
+    });
   }
 
   Set<Audio>? _audios;
@@ -203,7 +205,12 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> init() async {
+  Future<void> init({
+    ScaffoldFeatureController<SnackBar, SnackBarClosedReason> Function(
+      SnackBar snackBar,
+    )? showSnackBar,
+    Color? warningColor,
+  }) async {
     _directory = await readSetting(kDirectoryProperty);
     _directory ??= getUserDirectory('MUSIC')?.path;
 
@@ -232,10 +239,11 @@ class LocalAudioModel extends SafeChangeNotifier {
           final audio = Audio(
             path: e.path,
             audioType: AudioType.local,
-            artist: metadata.artist,
-            title: metadata.title,
-            album:
-                '${metadata.album} ${metadata.discTotal != null && metadata.discTotal! > 1 ? metadata.discNumber : ''}',
+            artist: metadata.artist ?? '',
+            title: metadata.title ?? e.path,
+            album: metadata.album == null
+                ? ''
+                : '${metadata.album} ${metadata.discTotal != null && metadata.discTotal! > 1 ? metadata.discNumber : ''}',
             albumArtist: metadata.albumArtist,
             discNumber: metadata.discNumber,
             discTotal: metadata.discTotal,
@@ -254,10 +262,23 @@ class LocalAudioModel extends SafeChangeNotifier {
         }
       }
       if (failures > 0) {
-        MusicApp.scaffoldKey.currentState?.showSnackBar(
+        showSnackBar?.call(
           SnackBar(
-            content: Text('Failed to import $failures of $total audio files.'),
-            backgroundColor: Colors.red,
+            content: Row(
+              children: [
+                Icon(
+                  YaruIcons.warning,
+                  color: warningColor,
+                ),
+                Text(
+                  'Failed to import $failures of $total audio files.',
+                  selectionColor: warningColor,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+              ],
+            ),
           ),
         );
       }

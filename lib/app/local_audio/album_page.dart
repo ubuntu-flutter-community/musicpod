@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/data/audio.dart';
@@ -8,7 +10,6 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class AlbumPage extends StatelessWidget {
   const AlbumPage({
     super.key,
-    required this.image,
     required this.name,
     required this.isPinnedAlbum,
     required this.removePinnedAlbum,
@@ -19,7 +20,28 @@ class AlbumPage extends StatelessWidget {
     this.onAlbumTap,
   });
 
-  final Widget image;
+  static Widget createIcon(BuildContext context, Uint8List? picture) {
+    Widget? albumArt;
+    if (picture != null) {
+      albumArt = SizedBox(
+        width: 23,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(5),
+          child: Image.memory(
+            picture,
+            height: 23,
+            fit: BoxFit.fitHeight,
+            filterQuality: FilterQuality.medium,
+          ),
+        ),
+      );
+    }
+    return albumArt ??
+        const Icon(
+          YaruIcons.playlist_play,
+        );
+  }
+
   final String? name;
   final bool Function(String name) isPinnedAlbum;
   final void Function(String name) removePinnedAlbum;
@@ -36,7 +58,14 @@ class AlbumPage extends StatelessWidget {
       onArtistTap: onArtistTap,
       audioPageType: AudioPageType.album,
       pageLabel: context.l10n.album,
-      image: image,
+      image: album?.firstOrNull?.pictureData != null
+          ? Image.memory(
+              album!.firstOrNull!.pictureData!,
+              width: 200.0,
+              fit: BoxFit.fitWidth,
+              filterQuality: FilterQuality.medium,
+            )
+          : null,
       controlPageButton: name == null
           ? null
           : isPinnedAlbum(name!)

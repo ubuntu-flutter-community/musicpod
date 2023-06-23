@@ -85,7 +85,6 @@ class AudioPage extends StatelessWidget {
       audioPageType: audioPageType,
       pageId: pageId,
       editableName: editableName,
-      deletable: deletable,
       sort: sort,
       showTrack: showTrack,
       showWindowControls: showWindowControls,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
-import 'package:musicpod/app/player_model.dart';
-import 'package:musicpod/app/playlists/playlist_model.dart';
+import 'package:musicpod/app/player/player_model.dart';
+import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/utils.dart';
@@ -50,12 +50,12 @@ class _PlayerViewState extends State<PlayerView> {
     final playOrPause = context.read<PlayerModel>().playOrPause;
 
     final liked =
-        audio == null ? false : context.read<PlaylistModel>().liked(audio);
+        audio == null ? false : context.read<LibraryModel>().liked(audio);
     final theme = Theme.of(context);
     final isFullScreen = widget.expandHeight || fullScreen == true;
     final width = MediaQuery.of(context).size.width;
-    final removeLikedAudio = context.read<PlaylistModel>().removeLikedAudio;
-    final addLikedAudio = context.read<PlaylistModel>().addLikedAudio;
+    final removeLikedAudio = context.read<LibraryModel>().removeLikedAudio;
+    final addLikedAudio = context.read<LibraryModel>().addLikedAudio;
 
     final fullScreenButton = YaruIconButton(
       icon: Icon(

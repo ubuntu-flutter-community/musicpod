@@ -3,8 +3,8 @@ import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
-import 'package:musicpod/app/player_model.dart';
-import 'package:musicpod/app/playlists/playlist_model.dart';
+import 'package:musicpod/app/player/player_model.dart';
+import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -33,9 +33,9 @@ class _AlbumsViewState extends State<AlbumsView> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
-    final isPinnedAlbum = context.read<PlaylistModel>().isPinnedAlbum;
-    final removePinnedAlbum = context.read<PlaylistModel>().removePinnedAlbum;
-    final addPinnedAlbum = context.read<PlaylistModel>().addPinnedAlbum;
+    final isPinnedAlbum = context.read<LibraryModel>().isPinnedAlbum;
+    final removePinnedAlbum = context.read<LibraryModel>().removePinnedAlbum;
+    final addPinnedAlbum = context.read<LibraryModel>().addPinnedAlbum;
 
     final findAlbum = context.read<LocalAudioModel>().findAlbum;
 
@@ -102,7 +102,6 @@ class _AlbumsViewState extends State<AlbumsView> {
                 return AlbumPage(
                   onAlbumTap: widget.onAlbumTap,
                   onArtistTap: widget.onArtistTap,
-                  image: image,
                   name: name,
                   isPinnedAlbum: isPinnedAlbum,
                   removePinnedAlbum: removePinnedAlbum,

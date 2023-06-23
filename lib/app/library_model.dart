@@ -5,8 +5,8 @@ import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-class PlaylistModel extends SafeChangeNotifier {
-  PlaylistModel(this._service);
+class LibraryModel extends SafeChangeNotifier {
+  LibraryModel(this._service);
 
   final LibraryService _service;
   StreamSubscription<bool>? _likedAudiosSub;
@@ -99,6 +99,9 @@ class PlaylistModel extends SafeChangeNotifier {
 
   bool isStarredStation(String name) => _service.isStarredStation(name);
 
+  bool get showStarredStations =>
+      audioPageType == null || audioPageType == AudioPageType.radio;
+
   //
   // Playlists
   //
@@ -127,6 +130,9 @@ class PlaylistModel extends SafeChangeNotifier {
   List<String> getTopFivePlaylistNames() =>
       playlists.entries.take(5).map((e) => e.key).toList();
 
+  bool get showPlaylists =>
+      audioPageType == null || audioPageType == AudioPageType.playlist;
+
   // Podcasts
 
   Map<String, Set<Audio>> get podcasts => _service.podcasts;
@@ -143,6 +149,9 @@ class PlaylistModel extends SafeChangeNotifier {
   Map<String, String> get podcastsToFeedUrls => _service.podcastsToFeedUrls;
   void addPlaylistFeed(String playlist, String feedUrl) =>
       _service.addPlaylistFeed(playlist, feedUrl);
+
+  bool get showSubbedPodcasts =>
+      audioPageType == null || audioPageType == AudioPageType.podcast;
 
   //
   // Albums
@@ -166,4 +175,7 @@ class PlaylistModel extends SafeChangeNotifier {
     _index = value;
     notifyListeners();
   }
+
+  bool get showPinnedAlbums =>
+      audioPageType == null || audioPageType == AudioPageType.album;
 }

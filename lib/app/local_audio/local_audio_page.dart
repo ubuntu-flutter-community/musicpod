@@ -5,7 +5,7 @@ import 'package:musicpod/app/local_audio/local_audio_model.dart';
 import 'package:musicpod/app/local_audio/local_audio_search_field.dart';
 import 'package:musicpod/app/local_audio/local_audio_search_page.dart';
 import 'package:musicpod/app/local_audio/titles_view.dart';
-import 'package:musicpod/app/tabbed_page.dart';
+import 'package:musicpod/app/common/tabbed_page.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';

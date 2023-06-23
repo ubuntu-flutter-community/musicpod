@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/app/playlists/playlist_model.dart';
+import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
@@ -124,10 +124,10 @@ class _CreatePlaylistPageState extends State<CreatePlaylistPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isPlaylistSaved = context.read<PlaylistModel>().isPlaylistSaved;
-    final removePlaylist = context.read<PlaylistModel>().removePlaylist;
-    final updatePlaylistName = context.read<PlaylistModel>().updatePlaylistName;
-    final addPlaylist = context.read<PlaylistModel>().addPlaylist;
+    final isPlaylistSaved = context.read<LibraryModel>().isPlaylistSaved;
+    final removePlaylist = context.read<LibraryModel>().removePlaylist;
+    final updatePlaylistName = context.read<LibraryModel>().updatePlaylistName;
+    final addPlaylist = context.read<LibraryModel>().addPlaylist;
     return YaruDetailPage(
       appBar: YaruWindowTitleBar(
         title: Text(context.l10n.createNewPlaylist),

@@ -18,6 +18,31 @@ class PodcastPage extends StatelessWidget {
     this.audios,
   });
 
+  static Widget createIcon(BuildContext context, String? picture) {
+    Widget? albumArt;
+    if (picture != null) {
+      albumArt = SizedBox(
+        width: 23,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(5),
+          child: SafeNetworkImage(
+            url: picture,
+            fit: BoxFit.fitHeight,
+            filterQuality: FilterQuality.medium,
+            fallBackIcon: Icon(
+              YaruIcons.podcast,
+              color: Theme.of(context).hintColor,
+            ),
+          ),
+        ),
+      );
+    }
+    return albumArt ??
+        const Icon(
+          YaruIcons.rss,
+        );
+  }
+
   final void Function()? onControlButtonPressed;
   final void Function(String)? onAlbumTap;
   final void Function(String)? onArtistTap;

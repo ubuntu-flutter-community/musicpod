@@ -7,9 +7,9 @@ import 'package:musicpod/app/common/audio_page_control_panel.dart';
 import 'package:musicpod/app/common/audio_page_header.dart';
 import 'package:musicpod/app/common/audio_tile.dart';
 import 'package:musicpod/app/common/super_like_button.dart';
-import 'package:musicpod/app/player_model.dart';
+import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/playlists/playlist_dialog.dart';
-import 'package:musicpod/app/playlists/playlist_model.dart';
+import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/utils.dart';
@@ -28,7 +28,6 @@ class AudioPageBody extends StatefulWidget {
     this.pageDescription,
     this.pageSubtile,
     required this.editableName,
-    required this.deletable,
     this.likePageButton,
     this.imageUrl,
     required this.sort,
@@ -60,7 +59,6 @@ class AudioPageBody extends StatefulWidget {
   final String? pageDescription;
   final String? pageSubtile;
   final bool editableName;
-  final bool deletable;
   final Widget? likePageButton;
   final String? imageUrl;
   final bool sort;
@@ -118,21 +116,21 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     final pause = context.read<PlayerModel>().pause;
     final resume = context.read<PlayerModel>().resume;
 
-    final isLiked = context.read<PlaylistModel>().liked;
-    final removeLikedAudio = context.read<PlaylistModel>().removeLikedAudio;
-    final removePlaylist = context.read<PlaylistModel>().removePlaylist;
-    final updatePlaylistName = context.read<PlaylistModel>().updatePlaylistName;
+    final isLiked = context.read<LibraryModel>().liked;
+    final removeLikedAudio = context.read<LibraryModel>().removeLikedAudio;
+    final removePlaylist = context.read<LibraryModel>().removePlaylist;
+    final updatePlaylistName = context.read<LibraryModel>().updatePlaylistName;
 
-    final addLikedAudio = context.read<PlaylistModel>().addLikedAudio;
-    final isStarredStation = context.read<PlaylistModel>().isStarredStation;
-    final addStarredStation = context.read<PlaylistModel>().addStarredStation;
-    final unStarStation = context.read<PlaylistModel>().unStarStation;
+    final addLikedAudio = context.read<LibraryModel>().addLikedAudio;
+    final isStarredStation = context.read<LibraryModel>().isStarredStation;
+    final addStarredStation = context.read<LibraryModel>().addStarredStation;
+    final unStarStation = context.read<LibraryModel>().unStarStation;
     final removeAudioFromPlaylist =
-        context.read<PlaylistModel>().removeAudioFromPlaylist;
+        context.read<LibraryModel>().removeAudioFromPlaylist;
     final getTopFivePlaylistNames =
-        context.read<PlaylistModel>().getTopFivePlaylistNames;
-    final addAudioToPlaylist = context.read<PlaylistModel>().addAudioToPlaylist;
-    final addPlaylist = context.read<PlaylistModel>().addPlaylist;
+        context.read<LibraryModel>().getTopFivePlaylistNames;
+    final addAudioToPlaylist = context.read<LibraryModel>().addAudioToPlaylist;
+    final addPlaylist = context.read<LibraryModel>().addPlaylist;
 
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
@@ -160,7 +158,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
         controlButton: widget.likePageButton,
         editableName: widget.editableName,
         audios: sortedAudios.toSet(),
-        deletable: widget.deletable,
       ),
     );
 

@@ -11,7 +11,6 @@ class AudioPageControlPanel extends StatelessWidget {
     required this.audios,
     required this.listName,
     this.editableName = true,
-    required this.deletable,
     this.controlButton,
     required this.isPlaying,
     this.queueName,
@@ -28,7 +27,7 @@ class AudioPageControlPanel extends StatelessWidget {
   final String listName;
   final Widget? title;
   final bool editableName;
-  final bool deletable;
+
   final bool placePlayAllButton;
   final Widget? controlButton;
   final bool isPlaying;

@@ -12,7 +12,7 @@ import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-import 'app/music_app.dart';
+import 'app/musicpod.dart';
 
 Future<void> main() async {
   final mpris = await MPRIS.create(
@@ -40,5 +40,5 @@ Future<void> main() async {
   MetadataGod.initialize();
 
   libraryService.init();
-  runApp(const MusicApp());
+  runApp(const MusicPod());
 }

@@ -7,8 +7,8 @@ import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/connectivity_notifier.dart';
-import 'package:musicpod/app/player_model.dart';
-import 'package:musicpod/app/playlists/playlist_model.dart';
+import 'package:musicpod/app/player/player_model.dart';
+import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcast_search_field.dart';
 import 'package:musicpod/app/podcasts/podcast_search_page.dart';
@@ -54,9 +54,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final model = context.watch<PodcastModel>();
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
     final theme = Theme.of(context);
-    final podcastSubscribed = context.read<PlaylistModel>().podcastSubscribed;
-    final removePodcast = context.read<PlaylistModel>().removePodcast;
-    final addPodcast = context.read<PlaylistModel>().addPodcast;
+    final podcastSubscribed = context.read<LibraryModel>().podcastSubscribed;
+    final removePodcast = context.read<LibraryModel>().removePodcast;
+    final addPodcast = context.read<LibraryModel>().addPodcast;
     final textStyle =
         theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w100);
     final buttonStyle = TextButton.styleFrom(
