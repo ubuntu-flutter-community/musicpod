@@ -48,16 +48,8 @@ class StationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final tags = <Widget>[
-      for (final tag in station.album?.split(',') ?? <String>[])
-        Card(
-          child: InkWell(
-            hoverColor: theme.primaryColor.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(4),
-            child: Text(tag),
-            onTap: () => onTextTap?.call(tag),
-          ),
-        )
+    final tags = <String>[
+      for (final tag in station.album?.split(',') ?? <String>[]) tag
     ];
     return YaruDetailPage(
       backgroundColor: theme.brightness == Brightness.dark
@@ -101,36 +93,43 @@ class StationPage extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: theme.primaryColor,
-                      child: IconButton(
-                        onPressed: () => unStarStation(name),
-                        icon: Icon(
-                          YaruIcons.star_filled,
-                          color: theme.colorScheme.onPrimary,
-                        ),
+                SizedBox(
+                  width: 380,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: theme.primaryColor,
+                            child: IconButton(
+                              onPressed: () => unStarStation(name),
+                              icon: Icon(
+                                YaruIcons.star_filled,
+                                color: theme.colorScheme.onPrimary,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            station.title ?? '',
+                            style: theme.textTheme.headlineSmall,
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          station.title ?? '',
-                          style: const TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        Wrap(
-                          spacing: 5,
-                          children: tags,
-                        )
-                      ],
-                    )
-                  ],
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      YaruChoiceChipBar(
+                        yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+                        labels: tags.map((e) => Text(e)).toList(),
+                        isSelected: tags.map((e) => false).toList(),
+                        onSelected: (index) => onTextTap?.call(tags[index]),
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),
