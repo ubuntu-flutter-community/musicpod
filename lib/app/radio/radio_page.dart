@@ -69,7 +69,7 @@ class _RadioPageState extends State<RadioPage> {
               text: searchQuery,
               onSubmitted: (value) {
                 setSearchQuery(value);
-                search(value);
+                search(name: value);
               },
             ),
             titleLabel: context.l10n.station,

@@ -89,9 +89,11 @@ class RadioModel extends SafeChangeNotifier {
     await _radioService.loadStations(tag: tag);
   }
 
-  Future<void> search(String? searchQuery) async {
-    if (searchQuery != null) {
-      await _radioService.loadStations(name: searchQuery);
+  Future<void> search({String? name, String? tag}) async {
+    if (name != null) {
+      await _radioService.loadStations(name: name);
+    } else if (tag != null) {
+      await _radioService.loadStations(tag: Tag(name: tag, stationCount: 1));
     } else {
       await loadStationsByCountry();
     }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/common/tapable_text.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -83,7 +84,7 @@ class AudioTile extends StatelessWidget {
           if (audio.artist != null)
             Expanded(
               flex: artistFlex,
-              child: _TapAbleText(
+              child: TapAbleText(
                 onTap: onArtistTap == null
                     ? null
                     : () => onArtistTap!(audio.artist!),
@@ -94,7 +95,7 @@ class AudioTile extends StatelessWidget {
           if (audio.album != null)
             Expanded(
               flex: albumFlex,
-              child: _TapAbleText(
+              child: TapAbleText(
                 onTap:
                     onAlbumTap == null ? null : () => onAlbumTap!(audio.album!),
                 text: audio.album!,
@@ -104,44 +105,6 @@ class AudioTile extends StatelessWidget {
         ],
       ),
       trailing: likeIcon,
-    );
-  }
-}
-
-class _TapAbleText extends StatelessWidget {
-  const _TapAbleText({
-    this.onTap,
-    required this.text,
-    required this.selected,
-  });
-
-  final void Function()? onTap;
-  final String text;
-  final bool selected;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final style = TextStyle(
-      color: selected ? theme.colorScheme.onSurface : theme.hintColor,
-    );
-    return Row(
-      children: [
-        Flexible(
-          fit: FlexFit.loose,
-          child: InkWell(
-            hoverColor: theme.primaryColor.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(4),
-            onTap: onTap == null ? null : () => onTap!(),
-            child: Text(
-              text,
-              style: style,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

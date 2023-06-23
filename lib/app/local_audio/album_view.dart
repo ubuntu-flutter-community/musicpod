@@ -66,34 +66,8 @@ class _AlbumsViewState extends State<AlbumsView> {
         return AudioCard(
           bottom: Align(
             alignment: Alignment.bottomCenter,
-            child: Tooltip(
-              message: audio.album == null ? '' : audio.album!,
-              child: Container(
-                width: double.infinity,
-                height: 30,
-                margin: const EdgeInsets.all(1),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 5,
-                  horizontal: 10,
-                ),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.inverseSurface,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(kYaruContainerRadius),
-                    bottomRight: Radius.circular(kYaruContainerRadius),
-                  ),
-                ),
-                child: Text(
-                  audio.album == null ? '' : audio.album!,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(
-                    color: theme.colorScheme.onInverseSurface,
-                  ),
-                ),
-              ),
-            ),
+            child:
+                AudioCardBottom(text: audio.album == null ? '' : audio.album!),
           ),
           image: image,
           onTap: () => Navigator.of(context).push(
@@ -117,6 +91,51 @@ class _AlbumsViewState extends State<AlbumsView> {
               : () => startPlaylist(album, name),
         );
       },
+    );
+  }
+}
+
+class AudioCardBottom extends StatelessWidget {
+  const AudioCardBottom({
+    super.key,
+    required this.text,
+  });
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Tooltip(
+        message: text,
+        child: Container(
+          width: double.infinity,
+          height: 30,
+          margin: const EdgeInsets.all(1),
+          padding: const EdgeInsets.symmetric(
+            vertical: 5,
+            horizontal: 10,
+          ),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.inverseSurface,
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(kYaruContainerRadius),
+              bottomRight: Radius.circular(kYaruContainerRadius),
+            ),
+          ),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            style: TextStyle(
+              color: theme.colorScheme.onInverseSurface,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

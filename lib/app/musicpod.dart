@@ -19,13 +19,16 @@ import 'package:musicpod/app/playlists/playlist_page.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcast_page.dart';
 import 'package:musicpod/app/podcasts/podcasts_page.dart';
+import 'package:musicpod/app/radio/radio_model.dart';
 import 'package:musicpod/app/radio/radio_page.dart';
+import 'package:musicpod/app/radio/station_page.dart';
 import 'package:musicpod/app/responsive_master_tile.dart';
 import 'package:musicpod/app/settings/settings_tile.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
+import 'package:musicpod/service/radio_service.dart';
 import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
@@ -71,6 +74,9 @@ class _App extends StatefulWidget {
   }) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (_) => RadioModel(getService<RadioService>()),
+        ),
         ChangeNotifierProvider(
           create: (_) => PlayerModel(getService<MPRIS>()),
         ),
@@ -128,7 +134,11 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
     final searchPodcasts = context.read<PodcastModel>().search;
     final setPodcastSearchQuery = context.read<PodcastModel>().setSearchQuery;
 
+    final searchRadio = context.read<RadioModel>().search;
+    final setRadioQuery = context.read<RadioModel>().setSearchQuery;
+
     // final isPlaying = context.select((PlayerModel m) => m.isPlaying);
+    final play = context.read<PlayerModel>().play;
     final audioType = context.select((PlayerModel m) => m.audio?.audioType);
     final surfaceTintColor =
         context.select((PlayerModel m) => m.surfaceTintColor);
@@ -157,7 +167,9 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           library.index = 2;
           break;
         case AudioType.radio:
-          // TODO: Handle this case.
+          setRadioQuery(text);
+          searchRadio(tag: text);
+          library.index = 1;
           break;
       }
     }
@@ -175,7 +187,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
       ),
       MasterItem(
         tileBuilder: (context) => Text(context.l10n.radio),
-        builder: (context) => RadioPage.create(context, !playerToTheRight),
+        builder: (context) => RadioPage(showWindowControls: !playerToTheRight),
         iconBuilder: (context, selected) => RadioPageIcon(
           selected: selected,
           isPlaying: audioType == AudioType.radio,
@@ -207,7 +219,8 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
           showWindowControls: !playerToTheRight,
           likedAudios: library.likedAudios,
         ),
-        iconBuilder: (context, selected) => const Icon(YaruIcons.heart),
+        iconBuilder: (context, selected) =>
+            LikedAudioPage.createIcon(context: context, selected: selected),
       ),
       if (library.showSubbedPodcasts)
         for (final podcast in library.podcasts.entries)
@@ -268,22 +281,19 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
         for (final station in library.starredStations.entries)
           MasterItem(
             tileBuilder: (context) => Text(station.key),
-            builder: (context) => AudioPage(
-              audioPageType: AudioPageType.radio,
-              placeTrailer: false,
-              showTrack: false,
-              showWindowControls: !playerToTheRight,
-              audios: station.value,
-              pageId: station.key,
-              pageTitle: station.key,
-              editableName: false,
-              deletable: false,
-              controlPageButton: YaruIconButton(
-                icon: const Icon(YaruIcons.star_filled),
-                onPressed: () => library.unStarStation(station.key),
-              ),
+            builder: (context) => StationPage(
+              onTextTap: (text) =>
+                  onTextTap(text: text, audioType: AudioType.radio),
+              unStarStation: library.unStarStation,
+              name: station.key,
+              station: station.value.first,
+              onPlay: (audio) => play(newAudio: audio),
             ),
-            iconBuilder: (context, selected) => const Icon(YaruIcons.star),
+            iconBuilder: (context, selected) => StationPage.createIcon(
+              context: context,
+              station: station.value.first,
+              selected: selected,
+            ),
           )
     ];
 

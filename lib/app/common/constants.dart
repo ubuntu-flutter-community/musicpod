@@ -13,14 +13,7 @@ const kHeaderPadding = EdgeInsets.only(
   right: kPagePadding,
   bottom: kPagePadding - 5,
 );
-const kIconPadding = EdgeInsets.only(top: 8, bottom: 8, right: 5);
-const kDialogWidth = 450.0;
-const kGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
-  mainAxisExtent: 150,
-  mainAxisSpacing: 10,
-  crossAxisSpacing: 10,
-  maxCrossAxisExtent: 550,
-);
+
 const kImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
   maxCrossAxisExtent: 250,
   // childAspectRatio: 0.9,
@@ -41,25 +34,12 @@ const delegateBig = YaruMasterResizablePaneDelegate(
   minPageWidth: kYaruMasterDetailBreakpoint / 2,
 );
 
-const kSnapcraftColor = Color(0xFFE95420);
-const kDebianColor = Color(0xFFdb2264);
-const kGreenLight = Color.fromARGB(255, 51, 121, 63);
-const kGreenDark = Color.fromARGB(255, 128, 211, 143);
-const kStarColor = Color(0xFFf99b11);
-const kStarDevColor = Color(0xFFb24a26);
-const kCheckForUpdateTimeOutInMinutes = 30;
-const kFakeReviewText =
-    'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.';
-
-const kBorderContainerBgDark = Color.fromARGB(255, 46, 46, 46);
-const badgeTextStyle = TextStyle(color: Colors.white, fontSize: 10);
-
 const kShimmerBaseLight = Color.fromARGB(120, 230, 230, 230);
 const kShimmerBaseDark = Color.fromARGB(255, 51, 51, 51);
 const kShimmerHighLightLight = Color.fromARGB(197, 218, 218, 218);
 const kShimmerHighLightDark = Color.fromARGB(255, 57, 57, 57);
-
-const kLeadingGap = 40.0;
+const kBackgroundDark = Color.fromARGB(255, 37, 37, 37);
+const kBackGroundLight = Colors.white;
 
 const kLikedAudios = 'likedAudios.json';
 const kPlaylistsFileName = 'playlists.json';

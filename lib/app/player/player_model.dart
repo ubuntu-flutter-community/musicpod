@@ -126,7 +126,10 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> play({bool bigPlay = false}) async {
+  Future<void> play({bool bigPlay = false, Audio? newAudio}) async {
+    if (newAudio != null) {
+      setAudio(newAudio);
+    }
     if (audio == null) return;
     queue ??= [];
     if (!queue!.contains(audio)) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_page_body.dart';
+import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -103,8 +104,8 @@ class AudioPage extends StatelessWidget {
     return YaruDetailPage(
       key: ValueKey(pageId),
       backgroundColor: theme.brightness == Brightness.dark
-          ? const Color.fromARGB(255, 37, 37, 37)
-          : Colors.white,
+          ? kBackgroundDark
+          : kBackGroundLight,
       appBar: YaruWindowTitleBar(
         style: showWindowControls
             ? YaruTitleBarStyle.normal
