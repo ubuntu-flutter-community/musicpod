@@ -113,9 +113,11 @@ class StationPage extends StatelessWidget {
                           const SizedBox(
                             width: 10,
                           ),
-                          Text(
-                            station.title ?? '',
-                            style: theme.textTheme.headlineSmall,
+                          Expanded(
+                            child: Text(
+                              station.title ?? '',
+                              style: theme.textTheme.headlineSmall,
+                            ),
                           ),
                         ],
                       ),
