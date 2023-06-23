@@ -527,7 +527,7 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
                   left: 18,
                 ),
                 child: YaruChoiceChipBar(
-                  wrap: true,
+                  yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
                   labels: mainPageType
                       .map((e) => Text(e.localize(context.l10n)))
                       .toList(),
