@@ -9,12 +9,14 @@ class SafeNetworkImage extends StatelessWidget {
     this.filterQuality = FilterQuality.medium,
     this.fit = BoxFit.fitHeight,
     this.fallBackIcon,
+    this.errorIcon,
   });
 
   final String? url;
   final FilterQuality filterQuality;
   final BoxFit fit;
   final Widget? fallBackIcon;
+  final Widget? errorIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class SafeNetworkImage extends StatelessWidget {
         fit: fit,
       ),
       placeholder: (context, url) => fallBack,
-      errorWidget: (context, url, _) => fallBack,
+      errorWidget: (context, url, _) => errorIcon ?? fallBack,
     );
   }
 }

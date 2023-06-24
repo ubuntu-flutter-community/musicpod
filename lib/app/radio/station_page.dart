@@ -14,13 +14,18 @@ class StationPage extends StatelessWidget {
     this.onPlay,
     required this.name,
     required this.unStarStation,
+    required this.starStation,
     this.onTextTap,
+    required this.isStarred,
   });
 
   final Audio station;
   final String name;
   final void Function(Audio? audio)? onPlay;
   final void Function(String station) unStarStation;
+  final void Function(String station) starStation;
+  final bool isStarred;
+
   final void Function(String text)? onTextTap;
 
   static Widget createIcon({
@@ -56,6 +61,13 @@ class StationPage extends StatelessWidget {
           : kBackGroundLight,
       appBar: YaruWindowTitleBar(
         title: Text(name),
+        leading: Navigator.canPop(context)
+            ? const YaruBackButton(
+                style: YaruBackButtonStyle.rounded,
+              )
+            : const SizedBox(
+                width: 40,
+              ),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -102,9 +114,13 @@ class StationPage extends StatelessWidget {
                           CircleAvatar(
                             backgroundColor: theme.primaryColor,
                             child: IconButton(
-                              onPressed: () => unStarStation(name),
+                              onPressed: isStarred
+                                  ? () => unStarStation(name)
+                                  : () => starStation(name),
                               icon: Icon(
-                                YaruIcons.star_filled,
+                                isStarred
+                                    ? YaruIcons.star_filled
+                                    : YaruIcons.star,
                                 color: theme.colorScheme.onPrimary,
                               ),
                             ),
@@ -127,7 +143,12 @@ class StationPage extends StatelessWidget {
                         yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
                         labels: tags.map((e) => Text(e)).toList(),
                         isSelected: tags.map((e) => false).toList(),
-                        onSelected: (index) => onTextTap?.call(tags[index]),
+                        onSelected: (index) {
+                          onTextTap?.call(tags[index]);
+                          if (Navigator.canPop(context)) {
+                            Navigator.of(context).pop();
+                          }
+                        },
                       ),
                     ],
                   ),

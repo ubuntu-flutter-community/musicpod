@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/app/common/audio_page.dart';
+import 'package:musicpod/app/common/audio_card.dart';
+import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/country_popup.dart';
 import 'package:musicpod/app/common/offline_page.dart';
+import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/connectivity_notifier.dart';
+import 'package:musicpod/app/library_model.dart';
+import 'package:musicpod/app/local_audio/album_view.dart';
+import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/radio/radio_model.dart';
 import 'package:musicpod/app/radio/radio_search_field.dart';
+import 'package:musicpod/app/radio/station_page.dart';
 import 'package:musicpod/app/radio/tag_popup.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/radio_service.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_icons/yaru_icons.dart';
+import 'package:yaru_widgets/yaru_widgets.dart';
 
 class RadioPage extends StatefulWidget {
-  const RadioPage({super.key, this.showWindowControls = true});
+  const RadioPage({super.key, this.showWindowControls = true, this.onTextTap});
 
   final bool showWindowControls;
+  final void Function(String text)? onTextTap;
 
   static Widget create(BuildContext context, [bool showWindowControls = true]) {
     return ChangeNotifierProvider(
@@ -44,6 +53,7 @@ class _RadioPageState extends State<RadioPage> {
   Widget build(BuildContext context) {
     final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
     final stations = context.select((RadioModel m) => m.stations);
+    final stationsCount = context.select((RadioModel m) => m.stations?.length);
     final search = context.read<RadioModel>().search;
     final searchQuery = context.select((RadioModel m) => m.searchQuery);
     final setSearchQuery = context.read<RadioModel>().setSearchQuery;
@@ -56,84 +66,170 @@ class _RadioPageState extends State<RadioPage> {
     final tags = context.select((RadioModel m) => m.tags);
     final loadStationsByTag = context.read<RadioModel>().loadStationsByTag;
 
-    final textStyle = Theme.of(context)
-        .textTheme
-        .bodyLarge
-        ?.copyWith(fontWeight: FontWeight.w100);
+    final play = context.select((PlayerModel m) => m.play);
 
-    return isOnline
-        ? AudioPage(
-            showWindowControls: widget.showWindowControls,
-            noResultMessage: context.l10n.noStationFound,
-            title: RadioSearchField(
-              text: searchQuery,
-              onSubmitted: (value) {
-                setSearchQuery(value);
-                search(name: value);
-              },
+    final starStation = context.select((LibraryModel m) => m.addStarredStation);
+    final unstarStation = context.select((LibraryModel m) => m.unStarStation);
+    final isStarredStation = context.read<LibraryModel>().isStarredStation;
+
+    final theme = Theme.of(context);
+    final light = theme.brightness == Brightness.light;
+
+    final textStyle =
+        theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w100);
+
+    if (!isOnline) {
+      return const OfflinePage();
+    } else {
+      return YaruDetailPage(
+        appBar: YaruWindowTitleBar(
+          title: RadioSearchField(
+            text: searchQuery,
+            onSubmitted: (value) {
+              setSearchQuery(value);
+              search(name: value);
+            },
+          ),
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 20,
+                left: 20,
+                right: 20,
+                bottom: 15,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    '${context.l10n.country}:',
+                    style: textStyle,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  CountryPopup(
+                    value: country,
+                    onSelected: (country) {
+                      setCountry(country);
+                      loadStationsByCountry();
+                    },
+                  ),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  Text(
+                    '${context.l10n.tag}:',
+                    style: textStyle,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  TagPopup(
+                    value: tag,
+                    onSelected: (tag) {
+                      setTag(tag);
+                      loadStationsByTag();
+                    },
+                    tags: tags,
+                  )
+                ],
+              ),
             ),
-            titleLabel: context.l10n.station,
-            artistLabel: context.l10n.quality,
-            albumLabel: context.l10n.tags,
-            artistFlex: 1,
-            titleFlex: 3,
-            albumFlex: 4,
-            audioPageType: AudioPageType.radio,
-            placeTrailer: false,
-            showTrack: false,
-            editableName: false,
-            deletable: false,
-            controlPageButton: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  '${context.l10n.country}:',
-                  style: textStyle,
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                CountryPopup(
-                  value: country,
-                  onSelected: (country) {
-                    setCountry(country);
-                    loadStationsByCountry();
-                  },
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Text(
-                  '${context.l10n.tag}:',
-                  style: textStyle,
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                TagPopup(
-                  value: tag,
-                  onSelected: (tag) {
-                    setTag(tag);
-                    loadStationsByTag();
-                  },
-                  tags: tags,
-                )
-              ],
+            Expanded(
+              child: GridView.builder(
+                padding: kGridPadding,
+                gridDelegate: kImageGridDelegate,
+                itemCount: stationsCount,
+                itemBuilder: (context, index) {
+                  final station = stations?.elementAt(index);
+                  return AudioCard(
+                    bottom: AudioCardBottom(text: station?.title ?? ''),
+                    onPlay: () => play(newAudio: station),
+                    onTap: station == null
+                        ? null
+                        : () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  final starred = isStarredStation(
+                                    station.title ?? station.toString(),
+                                  );
+                                  return StationPage(
+                                    onTextTap: widget.onTextTap,
+                                    station: station,
+                                    name: station.title ?? station.toString(),
+                                    unStarStation: (s) => unstarStation(
+                                      station.title ?? station.toString(),
+                                    ),
+                                    starStation: (s) => starStation(
+                                      station.title!,
+                                      {station},
+                                    ),
+                                    onPlay: (audio) => play(newAudio: station),
+                                    isStarred: starred,
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                    image: station?.imageUrl == null
+                        ? Container(
+                            height: double.infinity,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.bottomLeft,
+                                end: Alignment.topRight,
+                                colors: [
+                                  theme.primaryColor.withOpacity(0.1),
+                                  theme.primaryColor.withOpacity(0.8)
+                                ],
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Icon(
+                                YaruIcons.radio,
+                                size: 50,
+                                color: theme.hintColor,
+                              ),
+                            ),
+                          )
+                        : Center(
+                            child: SafeNetworkImage(
+                              fit: BoxFit.cover,
+                              fallBackIcon: Shimmer.fromColors(
+                                baseColor: light
+                                    ? kShimmerBaseLight
+                                    : kShimmerBaseDark,
+                                highlightColor: light
+                                    ? kShimmerHighLightLight
+                                    : kShimmerHighLightDark,
+                                child: YaruBorderContainer(
+                                  color: light
+                                      ? kShimmerBaseLight
+                                      : kShimmerBaseDark,
+                                  height: 250,
+                                  width: 250,
+                                ),
+                              ),
+                              url: station?.imageUrl,
+                            ),
+                          ),
+                  );
+                },
+              ),
             ),
-            audios: stations,
-            pageId: context.l10n.radio,
-            pageTitleWidget: Text(
-              searchQuery?.isEmpty == false
-                  ? ' ${context.l10n.search}: $searchQuery'
-                  : '',
-              style: textStyle,
-            ),
-            placePlayAllButton: false,
-          )
-        : const OfflinePage();
+          ],
+        ),
+      );
+    }
   }
 }
 

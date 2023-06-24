@@ -161,7 +161,11 @@ class _AppState extends State<App> with TickerProviderStateMixin {
       ),
       MasterItem(
         tileBuilder: (context) => Text(context.l10n.radio),
-        builder: (context) => RadioPage(showWindowControls: !playerToTheRight),
+        builder: (context) => RadioPage(
+          showWindowControls: !playerToTheRight,
+          onTextTap: (text) =>
+              onTextTap(text: text, audioType: AudioType.radio),
+        ),
         iconBuilder: (context, selected) => RadioPageIcon(
           selected: selected,
           isPlaying: audioType == AudioType.radio,
@@ -258,6 +262,8 @@ class _AppState extends State<App> with TickerProviderStateMixin {
           MasterItem(
             tileBuilder: (context) => Text(station.key),
             builder: (context) => StationPage(
+              isStarred: true,
+              starStation: (station) {},
               onTextTap: (text) =>
                   onTextTap(text: text, audioType: AudioType.radio),
               unStarStation: library.unStarStation,
