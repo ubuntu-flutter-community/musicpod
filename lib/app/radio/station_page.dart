@@ -28,21 +28,20 @@ class StationPage extends StatelessWidget {
     required Audio station,
     required bool selected,
   }) {
-    return station.imageUrl == null
-        ? (selected
-            ? const Icon(YaruIcons.star_filled)
-            : const Icon(YaruIcons.star))
-        : ClipRRect(
-            borderRadius: BorderRadius.circular(5),
-            child: SizedBox(
-              height: 23,
-              child: SafeNetworkImage(
-                fit: BoxFit.fitHeight,
-                url: station.imageUrl,
-                filterQuality: FilterQuality.medium,
-              ),
-            ),
-          );
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: SizedBox(
+        height: 23,
+        child: SafeNetworkImage(
+          fallBackIcon: selected
+              ? const Icon(YaruIcons.star_filled)
+              : const Icon(YaruIcons.star),
+          fit: BoxFit.fitHeight,
+          url: station.imageUrl,
+          filterQuality: FilterQuality.medium,
+        ),
+      ),
+    );
   }
 
   @override

@@ -254,13 +254,14 @@ class _PlayerViewState extends State<PlayerView> {
                             ),
                           ),
                         )
-                      else if (audio?.imageUrl != null)
+                      else if (audio?.imageUrl != null ||
+                          audio?.albumArtUrl != null)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: SizedBox(
                             height: 400,
                             child: SafeNetworkImage(
-                              url: audio!.imageUrl!,
+                              url: audio?.imageUrl ?? audio?.albumArtUrl,
                               filterQuality: FilterQuality.medium,
                               fit: BoxFit.cover,
                               fallBackIcon: Icon(
@@ -401,12 +402,12 @@ class _PlayerViewState extends State<PlayerView> {
                     height: 120.0,
                   ),
                 )
-              else if (audio?.imageUrl != null)
+              else if (audio?.imageUrl != null || audio?.albumArtUrl != null)
                 SizedBox(
                   height: 120,
                   width: 120,
                   child: SafeNetworkImage(
-                    url: audio!.imageUrl!,
+                    url: audio?.imageUrl ?? audio?.albumArtUrl,
                     filterQuality: FilterQuality.medium,
                     fit: BoxFit.cover,
                   ),

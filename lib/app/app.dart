@@ -209,11 +209,13 @@ class _AppState extends State<App> with TickerProviderStateMixin {
               onArtistTap: (artist) =>
                   onTextTap(text: artist, audioType: AudioType.podcast),
               onControlButtonPressed: () => library.removePodcast(podcast.key),
-              imageUrl: podcast.value.firstOrNull?.imageUrl,
+              imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
+                  podcast.value.firstOrNull?.imageUrl,
             ),
             iconBuilder: (context, selected) => PodcastPage.createIcon(
               context,
-              podcast.value.firstOrNull?.imageUrl,
+              podcast.value.firstOrNull?.albumArtUrl ??
+                  podcast.value.firstOrNull?.imageUrl,
             ),
           ),
       if (library.showPlaylists)

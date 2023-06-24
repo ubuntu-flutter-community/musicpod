@@ -126,7 +126,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
           final image = SafeNetworkImage(
             fallBackIcon: fallBackLoadingIcon,
-            url: podcast.firstOrNull?.imageUrl,
+            url: podcast.firstOrNull?.albumArtUrl ??
+                podcast.firstOrNull?.imageUrl,
             fit: BoxFit.contain,
           );
 
@@ -354,7 +355,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
                     ),
                   ),
                 ),
-                url: podcast.firstOrNull?.imageUrl,
+                url: podcast.firstOrNull?.albumArtUrl ??
+                    podcast.firstOrNull?.imageUrl,
                 fit: BoxFit.fitWidth,
                 filterQuality: FilterQuality.medium,
               ),

@@ -8,6 +8,7 @@ import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcast_search_field.dart';
+import 'package:musicpod/data/audio.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -60,7 +61,8 @@ class PodcastSearchPage extends StatelessWidget {
                 width: 250,
               ),
             ),
-            url: podcast.firstOrNull?.imageUrl,
+            url: podcast.firstOrNull?.albumArtUrl ??
+                podcast.firstOrNull?.imageUrl,
             fit: BoxFit.contain,
           ),
           onPlay: podcast.firstOrNull?.album == null
@@ -69,73 +71,94 @@ class PodcastSearchPage extends StatelessWidget {
                   startPlaylist(podcast, podcast.firstOrNull?.album ?? '');
                 },
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  final subscribed = podcast.firstOrNull?.album == null
-                      ? false
-                      : podcastSubscribed(
-                          podcast.first.album!,
-                        );
-                  return AudioPage(
-                    onAlbumTap: onTapText,
-                    onArtistTap: onTapText,
-                    audioPageType: AudioPageType.podcast,
-                    showWindowControls: showWindowControls,
-                    sort: false,
-                    showTrack: false,
-                    image: SafeNetworkImage(
-                      fallBackIcon: SizedBox(
-                        width: 200,
-                        child: Center(
-                          child: Icon(
-                            YaruIcons.music_note,
-                            size: 80,
-                            color: theme.hintColor,
-                          ),
-                        ),
-                      ),
-                      url: podcast.firstOrNull?.imageUrl,
-                      fit: BoxFit.fitWidth,
-                      filterQuality: FilterQuality.medium,
-                    ),
-                    controlPageButton: subscribed
-                        ? YaruIconButton(
-                            icon: Icon(
-                              YaruIcons.rss,
-                              color: theme.primaryColor,
-                            ),
-                            onPressed: podcast.firstOrNull?.album == null
-                                ? null
-                                : () => removePodcast(
-                                      podcast.first.album!,
-                                    ),
-                          )
-                        : YaruIconButton(
-                            icon: const Icon(
-                              YaruIcons.rss,
-                            ),
-                            onPressed: podcast.firstOrNull?.album == null
-                                ? null
-                                : () {
-                                    addPodcast(
-                                      podcast.first.album!,
-                                      podcast,
-                                    );
-                                  },
-                          ),
-                    title: const PodcastSearchField(),
-                    deletable: false,
-                    editableName: false,
-                    audios: podcast,
-                    pageId: podcast.firstOrNull?.album ?? podcast.toString(),
-                  );
-                },
-              ),
+            _pushPodcastPage(
+              context,
+              podcast,
+              podcastSubscribed,
+              onTapText,
+              theme,
+              removePodcast,
+              addPodcast,
             );
           },
         );
       },
+    );
+  }
+
+  void _pushPodcastPage(
+    BuildContext context,
+    Set<Audio> podcast,
+    bool Function(String name) podcastSubscribed,
+    void Function(String text) onTapText,
+    ThemeData theme,
+    void Function(String name) removePodcast,
+    void Function(String name, Set<Audio> audios) addPodcast,
+  ) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          final subscribed = podcast.firstOrNull?.album == null
+              ? false
+              : podcastSubscribed(
+                  podcast.first.album!,
+                );
+          return AudioPage(
+            onAlbumTap: onTapText,
+            onArtistTap: onTapText,
+            audioPageType: AudioPageType.podcast,
+            showWindowControls: showWindowControls,
+            sort: false,
+            showTrack: false,
+            image: SafeNetworkImage(
+              fallBackIcon: SizedBox(
+                width: 200,
+                child: Center(
+                  child: Icon(
+                    YaruIcons.music_note,
+                    size: 80,
+                    color: theme.hintColor,
+                  ),
+                ),
+              ),
+              url: podcast.firstOrNull?.albumArtUrl ??
+                  podcast.firstOrNull?.imageUrl,
+              fit: BoxFit.fitWidth,
+              filterQuality: FilterQuality.medium,
+            ),
+            controlPageButton: subscribed
+                ? YaruIconButton(
+                    icon: Icon(
+                      YaruIcons.rss,
+                      color: theme.primaryColor,
+                    ),
+                    onPressed: podcast.firstOrNull?.album == null
+                        ? null
+                        : () => removePodcast(
+                              podcast.first.album!,
+                            ),
+                  )
+                : YaruIconButton(
+                    icon: const Icon(
+                      YaruIcons.rss,
+                    ),
+                    onPressed: podcast.firstOrNull?.album == null
+                        ? null
+                        : () {
+                            addPodcast(
+                              podcast.first.album!,
+                              podcast,
+                            );
+                          },
+                  ),
+            title: const PodcastSearchField(),
+            deletable: false,
+            editableName: false,
+            audios: podcast,
+            pageId: podcast.firstOrNull?.album ?? podcast.toString(),
+          );
+        },
+      ),
     );
   }
 }

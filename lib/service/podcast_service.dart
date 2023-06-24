@@ -68,19 +68,6 @@ class PodcastService {
     }
   }
 
-  Audio _createAudio(Episode episode, Podcast? podcast, Item item) {
-    return Audio(
-      url: episode.contentUrl,
-      audioType: AudioType.podcast,
-      imageUrl: episode.imageUrl ?? podcast?.image,
-      title: episode.title,
-      album: item.collectionName,
-      artist: item.artistName,
-      description: podcast?.description,
-      website: podcast?.url,
-    );
-  }
-
   final _searchChangedController = StreamController<bool>.broadcast();
   Stream<bool> get searchChanged => _searchChangedController.stream;
   Set<Set<Audio>>? _searchResult;
@@ -122,18 +109,7 @@ class PodcastService {
 
               for (var episode in podcast?.episodes ?? <Episode>[]) {
                 if (episode.contentUrl != null) {
-                  final audio = Audio(
-                    url: episode.contentUrl,
-                    audioType: AudioType.podcast,
-                    imageUrl: useAlbumImage
-                        ? podcast?.image ?? episode.imageUrl
-                        : episode.imageUrl ?? podcast?.image,
-                    title: episode.title,
-                    album: podcast?.title,
-                    artist: podcast?.copyright,
-                    description: podcast?.description,
-                    website: item.feedUrl,
-                  );
+                  final audio = _createAudio(episode, podcast, item);
 
                   episodes.add(audio);
                 }
@@ -149,6 +125,20 @@ class PodcastService {
     } else {
       _updateSearchResult({});
     }
+  }
+
+  Audio _createAudio(Episode episode, Podcast? podcast, Item item) {
+    return Audio(
+      url: episode.contentUrl,
+      audioType: AudioType.podcast,
+      imageUrl: episode.imageUrl,
+      albumArtUrl: podcast?.image,
+      title: episode.title,
+      album: item.collectionName,
+      artist: item.artistName,
+      description: podcast?.description,
+      website: podcast?.url,
+    );
   }
 
   Future<Set<Audio>> findEpisodes({required String url}) async {

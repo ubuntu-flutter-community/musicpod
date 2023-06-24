@@ -63,6 +63,9 @@ class Audio {
   /// The ID3-Tag file size of the audio file
   final int? fileSize;
 
+  /// Optional art that belongs to parent element
+  final String? albumArtUrl;
+
   Audio({
     this.path,
     this.url,
@@ -84,6 +87,7 @@ class Audio {
     this.pictureMimeType,
     this.pictureData,
     this.fileSize,
+    this.albumArtUrl,
   });
 
   Audio copyWith({
@@ -108,6 +112,7 @@ class Audio {
     String? pictureMimeType,
     Uint8List? pictureData,
     int? fileSize,
+    String? albumArtUrl,
   }) {
     return Audio(
       path: path ?? this.path,
@@ -130,6 +135,7 @@ class Audio {
       pictureMimeType: pictureMimeType ?? this.pictureMimeType,
       pictureData: pictureData ?? this.pictureData,
       fileSize: fileSize ?? this.fileSize,
+      albumArtUrl: albumArtUrl ?? this.albumArtUrl,
     );
   }
 
@@ -196,6 +202,9 @@ class Audio {
     if (fileSize != null) {
       result.addAll({'fileSize': fileSize});
     }
+    if (albumArtUrl != null) {
+      result.addAll({'albumArtUrl': albumArtUrl});
+    }
 
     return result;
   }
@@ -225,6 +234,7 @@ class Audio {
       pictureData:
           map['pictureData'] != null ? base64Decode(map['pictureData']) : null,
       fileSize: map['fileSize']?.toInt(),
+      albumArtUrl: map['albumArtUrl'],
     );
   }
 
@@ -234,7 +244,7 @@ class Audio {
 
   @override
   String toString() {
-    return 'Audio(path: $path, url: $url,  audioType: $audioType, imageUrl: $imageUrl, description: $description, website: $website, title: $title, durationMs: $durationMs, artist: $artist, album: $album, albumArtist: $albumArtist, trackNumber: $trackNumber, trackTotal: $trackTotal, discNumber: $discNumber, discTotal: $discTotal, year: $year, genre: $genre, pictureMimeType: $pictureMimeType, pictureData: $pictureData, fileSize: $fileSize)';
+    return 'Audio(path: $path, url: $url,  audioType: $audioType, imageUrl: $imageUrl, description: $description, website: $website, title: $title, durationMs: $durationMs, artist: $artist, album: $album, albumArtist: $albumArtist, trackNumber: $trackNumber, trackTotal: $trackTotal, discNumber: $discNumber, discTotal: $discTotal, year: $year, genre: $genre, pictureMimeType: $pictureMimeType, pictureData: $pictureData, fileSize: $fileSize, albumArtUrl: $albumArtUrl)';
   }
 
   @override
@@ -260,7 +270,8 @@ class Audio {
         other.year == year &&
         other.genre == genre &&
         other.pictureMimeType == pictureMimeType &&
-        other.fileSize == fileSize;
+        other.fileSize == fileSize &&
+        other.albumArtUrl == albumArtUrl;
   }
 
   @override
@@ -283,7 +294,8 @@ class Audio {
         year.hashCode ^
         genre.hashCode ^
         pictureMimeType.hashCode ^
-        fileSize.hashCode;
+        fileSize.hashCode ^
+        albumArtUrl.hashCode;
   }
 }
 

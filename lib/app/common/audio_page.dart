@@ -15,7 +15,6 @@ class AudioPage extends StatelessWidget {
     required this.editableName,
     required this.deletable,
     this.title,
-    this.imageUrl,
     this.controlPageButton,
     this.sort = true,
     this.showTrack = true,
@@ -52,7 +51,6 @@ class AudioPage extends StatelessWidget {
   final bool deletable;
   final Widget? controlPageButton;
   final Widget? title;
-  final String? imageUrl;
   final bool sort;
   final bool showTrack;
   final bool showWindowControls;
@@ -91,7 +89,6 @@ class AudioPage extends StatelessWidget {
       showWindowControls: showWindowControls,
       audioFilter: audioFilter,
       image: image,
-      imageUrl: imageUrl,
       pageDescription: pageDescription,
       likePageButton: controlPageButton,
       pageLabel: pageLabel,

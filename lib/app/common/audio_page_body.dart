@@ -29,7 +29,6 @@ class AudioPageBody extends StatefulWidget {
     this.pageSubtile,
     required this.editableName,
     this.likePageButton,
-    this.imageUrl,
     required this.sort,
     required this.showTrack,
     required this.showWindowControls,
@@ -60,7 +59,6 @@ class AudioPageBody extends StatefulWidget {
   final String? pageSubtile;
   final bool editableName;
   final Widget? likePageButton;
-  final String? imageUrl;
   final bool sort;
   final bool showTrack;
   final bool showWindowControls;
