@@ -15,6 +15,11 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import 'app/musicpod.dart';
 
 Future<void> main() async {
+  await YaruWindowTitleBar.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
+  MetadataGod.initialize();
+
   final mpris = await MPRIS.create(
     busName: 'org.mpris.MediaPlayer2.musicpod',
     identity: 'Musicpod',
@@ -22,8 +27,7 @@ Future<void> main() async {
   );
 
   registerService<MPRIS>(() => mpris);
-  final libraryService = LibraryService();
-  registerService<LibraryService>(() => libraryService);
+  registerService<LibraryService>(LibraryService.new);
   registerService<PodcastService>(PodcastService.new);
   registerService<Connectivity>(Connectivity.new);
   registerService<NotificationsClient>(NotificationsClient.new);
@@ -34,11 +38,5 @@ Future<void> main() async {
     ),
   );
 
-  WidgetsFlutterBinding.ensureInitialized();
-  MediaKit.ensureInitialized();
-  await YaruWindowTitleBar.ensureInitialized();
-  MetadataGod.initialize();
-
-  libraryService.init();
   runApp(const MusicPod());
 }

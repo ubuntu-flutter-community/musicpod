@@ -15,7 +15,12 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _podcastsSub;
   StreamSubscription<bool>? _stationsSub;
 
+  bool ready = false;
+
   Future<void> init() async {
+    await _service.init();
+    ready = true;
+    notifyListeners();
     _likedAudiosSub =
         _service.likedAudiosChanged.listen((event) => notifyListeners());
     _playlistsSub =

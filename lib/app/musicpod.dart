@@ -7,6 +7,7 @@ import 'package:musicpod/app/audio_page_filter_bar.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/connectivity_notifier.dart';
+import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/liked_audio_page.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
@@ -14,7 +15,6 @@ import 'package:musicpod/app/local_audio/local_audio_page.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/player/player_view.dart';
 import 'package:musicpod/app/playlists/playlist_dialog.dart';
-import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/playlists/playlist_page.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcast_page.dart';
@@ -24,6 +24,7 @@ import 'package:musicpod/app/radio/radio_page.dart';
 import 'package:musicpod/app/radio/station_page.dart';
 import 'package:musicpod/app/responsive_master_tile.dart';
 import 'package:musicpod/app/settings/settings_tile.dart';
+import 'package:musicpod/app/splash_screen.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/library_service.dart';
@@ -359,54 +360,61 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
       ),
     );
 
+    final Widget body;
+    if (isFullScreen == true) {
+      body = const Column(
+        children: [
+          YaruWindowTitleBar(
+            border: BorderSide.none,
+            backgroundColor: Colors.transparent,
+          ),
+          Expanded(child: PlayerView())
+        ],
+      );
+    } else {
+      if (!playerToTheRight) {
+        body = Column(
+          children: [
+            Expanded(
+              child: yaruMasterDetailPage,
+            ),
+            const Divider(
+              height: 0,
+            ),
+            const PlayerView()
+          ],
+        );
+      } else {
+        body = Row(
+          children: [
+            Expanded(
+              child: yaruMasterDetailPage,
+            ),
+            const VerticalDivider(
+              width: 0,
+            ),
+            const SizedBox(
+              width: 500,
+              child: Column(
+                children: [
+                  YaruWindowTitleBar(),
+                  Expanded(
+                    child: PlayerView(
+                      expandHeight: true,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        );
+      }
+    }
+
     return Scaffold(
       key: ValueKey(shrinkSidebar),
       backgroundColor: surfaceTintColor,
-      body: isFullScreen == true
-          ? const Column(
-              children: [
-                YaruWindowTitleBar(
-                  border: BorderSide.none,
-                  backgroundColor: Colors.transparent,
-                ),
-                Expanded(child: PlayerView())
-              ],
-            )
-          : !playerToTheRight
-              ? Column(
-                  children: [
-                    Expanded(
-                      child: yaruMasterDetailPage,
-                    ),
-                    const Divider(
-                      height: 0,
-                    ),
-                    const PlayerView()
-                  ],
-                )
-              : Row(
-                  children: [
-                    Expanded(
-                      child: yaruMasterDetailPage,
-                    ),
-                    const VerticalDivider(
-                      width: 0,
-                    ),
-                    const SizedBox(
-                      width: 500,
-                      child: Column(
-                        children: [
-                          YaruWindowTitleBar(),
-                          Expanded(
-                            child: PlayerView(
-                              expandHeight: true,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+      body: library.ready ? body : const SplashScreen(),
     );
   }
 }
