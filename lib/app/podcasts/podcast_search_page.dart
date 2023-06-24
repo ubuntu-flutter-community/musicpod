@@ -37,7 +37,7 @@ class PodcastSearchPage extends StatelessWidget {
 
     void onTapText(String text) {
       setSearchQuery(text);
-      search(searchQuery: text, useAlbumImage: true);
+      search(searchQuery: text);
     }
 
     return GridView.builder(

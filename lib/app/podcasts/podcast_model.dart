@@ -120,13 +120,11 @@ class PodcastModel extends SafeChangeNotifier {
 
   void search({
     String? searchQuery,
-    bool useAlbumImage = false,
   }) {
     _podcastService.search(
       language: _language,
       searchQuery: searchQuery,
       country: _country,
-      useAlbumImage: useAlbumImage,
     );
   }
 }

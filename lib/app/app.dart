@@ -137,7 +137,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
           setPodcastSearchQuery(
             text,
           );
-          searchPodcasts(searchQuery: text, useAlbumImage: true);
+          searchPodcasts(searchQuery: text);
           library.index = 2;
           break;
         case AudioType.radio:

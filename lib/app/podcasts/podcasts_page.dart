@@ -87,7 +87,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
     void onTapText(String text) {
       setSearchQuery(text);
-      search(searchQuery: text, useAlbumImage: true);
+      search(searchQuery: text);
     }
 
     final light = theme.brightness == Brightness.light;

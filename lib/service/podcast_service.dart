@@ -80,7 +80,6 @@ class PodcastService {
 
   Future<void> search({
     String? searchQuery,
-    bool useAlbumImage = false,
     PodcastGenre podcastGenre = PodcastGenre.science,
     Country country = Country.unitedKingdom,
     Language language = Language.none,

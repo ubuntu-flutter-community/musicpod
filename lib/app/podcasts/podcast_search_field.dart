@@ -48,7 +48,7 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
         cursorWidth: 1,
         onSubmitted: (value) {
           model.setSearchQuery(value);
-          model.search(searchQuery: value, useAlbumImage: true);
+          model.search(searchQuery: value);
         },
         controller: _controller,
         decoration: InputDecoration(
