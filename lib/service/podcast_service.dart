@@ -29,50 +29,60 @@ class PodcastService {
   void loadCharts({
     PodcastGenre podcastGenre = PodcastGenre.all,
     Country country = Country.unitedKingdom,
-  }) {
-    _search
-        .charts(
+  }) async {
+    _chartsPodcasts = null;
+    _chartsChangedController.add(true);
+
+    SearchResult chartsSearch = await _search.charts(
       genre: podcastGenre == PodcastGenre.all ? '' : podcastGenre.id,
       limit: 10,
       country: country,
-    )
-        .then((chartsSearch) async {
-      if (chartsSearch.successful && chartsSearch.items.isNotEmpty) {
-        _chartsPodcasts ??= {};
-        chartsPodcasts?.clear();
+    );
 
-        for (var item in chartsSearch.items) {
-          if (item.feedUrl != null) {
-            final podcast = await compute(loadPodcast, item.feedUrl!);
-            final episodes = <Audio>{};
+    if (chartsSearch.successful && chartsSearch.items.isNotEmpty) {
+      _chartsPodcasts ??= {};
+      _chartsPodcasts?.clear();
 
-            for (var episode in podcast?.episodes ?? <Episode>[]) {
-              final audio = Audio(
-                url: episode.contentUrl,
-                audioType: AudioType.podcast,
-                imageUrl: podcast?.image,
-                title: episode.title,
-                album: item.collectionName,
-                artist: item.artistName,
-                description: podcast?.description,
-                website: podcast?.url,
-              );
+      for (final item in chartsSearch.items) {
+        if (item.feedUrl != null) {
+          try {
+            final Podcast? podcast = await compute(loadPodcast, item.feedUrl!);
 
-              episodes.add(audio);
+            if (podcast?.episodes?.isNotEmpty == true) {
+              final chartsPodcast = podcast!.episodes!
+                  .map((e) => _createAudio(e, podcast, item))
+                  .toSet();
+
+              _chartsPodcasts?.add(chartsPodcast);
+              _chartsChangedController.add(true);
             }
-            chartsPodcasts?.add(episodes);
+            _chartsChangedController.add(true);
+          } on PodcastFailedException {
             _chartsChangedController.add(true);
           }
         }
-      } else {
-        _chartsPodcasts = {};
-        _chartsChangedController.add(true);
       }
-    });
+    } else {
+      _chartsPodcasts = {};
+      _chartsChangedController.add(true);
+    }
+  }
+
+  Audio _createAudio(Episode episode, Podcast? podcast, Item item) {
+    return Audio(
+      url: episode.contentUrl,
+      audioType: AudioType.podcast,
+      imageUrl: episode.imageUrl ?? podcast?.image,
+      title: episode.title,
+      album: item.collectionName,
+      artist: item.artistName,
+      description: podcast?.description,
+      website: podcast?.url,
+    );
   }
 
   final _searchChangedController = StreamController<bool>.broadcast();
-  Stream<bool> get searchChanged => _chartsChangedController.stream;
+  Stream<bool> get searchChanged => _searchChangedController.stream;
   Set<Set<Audio>>? _searchResult;
   Set<Set<Audio>>? get searchResult => _searchResult;
 

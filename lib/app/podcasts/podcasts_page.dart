@@ -51,7 +51,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
   @override
   Widget build(BuildContext context) {
     final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
-    final model = context.watch<PodcastModel>();
+    final model = context.read<PodcastModel>();
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
     final theme = Theme.of(context);
     final podcastSubscribed = context.read<LibraryModel>().podcastSubscribed;
@@ -67,6 +67,24 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
     final search = model.search;
     final setSearchQuery = model.setSearchQuery;
+    final searchQuery = context.select((PodcastModel m) => m.searchQuery);
+
+    final charts = context.select((PodcastModel m) => m.charts);
+    final chartsCount = context.select((PodcastModel m) => m.charts?.length);
+
+    final country = context.select((PodcastModel m) => m.country);
+    final sortedCountries =
+        context.select((PodcastModel m) => m.sortedCountries);
+    context.select((PodcastModel m) => m.country);
+
+    final setCountry = model.setCountry;
+    final podcastGenre = context.select((PodcastModel m) => m.podcastGenre);
+    final sortedGenres = context.select((PodcastModel m) => m.sortedGenres);
+    final setPodcastGenre = model.setPodcastGenre;
+    final loadCharts = model.loadCharts;
+    final podcastSearchResult =
+        context.select((PodcastModel m) => m.podcastSearchResult);
+
     void onTapText(String text) {
       setSearchQuery(text);
       search(searchQuery: text, useAlbumImage: true);
@@ -85,7 +103,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     );
 
     Widget grid;
-    if (model.chartsPodcasts == null) {
+    if (charts == null) {
       grid = GridView(
         gridDelegate: kImageGridDelegate,
         padding: kGridPadding,
@@ -93,17 +111,17 @@ class _PodcastsPageState extends State<PodcastsPage> {
             .map((e) => const AudioCard())
             .toList(),
       );
-    } else if (model.chartsPodcasts!.isEmpty == true) {
+    } else if (charts.isEmpty == true) {
       grid = NoSearchResultPage(
         message: context.l10n.noPodcastChartsFound,
       );
     } else {
       grid = GridView.builder(
         padding: kGridPadding,
-        itemCount: model.chartsPodcasts!.length,
+        itemCount: chartsCount,
         gridDelegate: kImageGridDelegate,
         itemBuilder: (context, index) {
-          final podcast = model.chartsPodcasts!.elementAt(index);
+          final podcast = charts.elementAt(index);
           final name = podcast.firstOrNull?.album ?? '';
 
           final image = SafeNetworkImage(
@@ -117,69 +135,16 @@ class _PodcastsPageState extends State<PodcastsPage> {
             onPlay: () {
               startPlaylist(podcast, name);
             },
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    final subscribed = podcast.firstOrNull?.album == null
-                        ? false
-                        : podcastSubscribed(name);
-
-                    return AudioPage(
-                      onAlbumTap: onTapText,
-                      onArtistTap: onTapText,
-                      audioPageType: AudioPageType.podcast,
-                      showWindowControls: widget.showWindowControls,
-                      sort: false,
-                      showTrack: false,
-                      controlPageButton: YaruIconButton(
-                        icon: Icon(
-                          YaruIcons.rss,
-                          color: subscribed ? theme.primaryColor : null,
-                        ),
-                        onPressed: subscribed
-                            ? () => removePodcast(
-                                  name,
-                                )
-                            : () {
-                                addPodcast(
-                                  name,
-                                  podcast,
-                                );
-                              },
-                      ),
-                      image: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          10,
-                        ),
-                        child: SafeNetworkImage(
-                          fallBackIcon: SizedBox(
-                            width: 200,
-                            child: Center(
-                              child: Icon(
-                                YaruIcons.music_note,
-                                size: 80,
-                                color: theme.hintColor,
-                              ),
-                            ),
-                          ),
-                          url: podcast.firstOrNull?.imageUrl,
-                          fit: BoxFit.fitWidth,
-                          filterQuality: FilterQuality.medium,
-                        ),
-                      ),
-                      title: const PodcastSearchField(),
-                      deletable: false,
-                      editableName: false,
-                      audios: podcast,
-                      pageId: podcast.firstOrNull?.album ??
-                          podcast.firstOrNull?.title ??
-                          podcast.toString(),
-                    );
-                  },
-                ),
-              );
-            },
+            onTap: () => _pushNewPodcastPage(
+              context,
+              podcast,
+              podcastSubscribed,
+              name,
+              onTapText,
+              theme,
+              removePodcast,
+              addPodcast,
+            ),
           );
         },
       );
@@ -190,29 +155,29 @@ class _PodcastsPageState extends State<PodcastsPage> {
       child: Row(
         children: [
           Text(
-            model.searchQuery?.isNotEmpty == true
-                ? 'Search:     "${model.searchQuery!}"'
+            searchQuery?.isNotEmpty == true
+                ? 'Search:     "${searchQuery!}"'
                 : 'Top 10 Charts:',
             style: textStyle,
           ),
           const SizedBox(
             width: 10,
           ),
-          if (model.searchQuery == null || model.searchQuery!.isEmpty)
+          if (searchQuery == null || searchQuery.isEmpty)
             YaruPopupMenuButton<PodcastGenre>(
               style: buttonStyle,
               onSelected: (value) {
-                model.podcastGenre = value;
-                model.loadCharts();
+                setPodcastGenre(value);
+                loadCharts();
               },
-              initialValue: model.podcastGenre,
+              initialValue: podcastGenre,
               child: Text(
-                model.podcastGenre.localize(context.l10n),
+                podcastGenre.localize(context.l10n),
                 style: textStyle,
               ),
               itemBuilder: (context) {
                 return [
-                  for (final genre in model.sortedGenres)
+                  for (final genre in sortedGenres)
                     PopupMenuItem(
                       value: genre,
                       child: Text(genre.localize(context.l10n)),
@@ -226,17 +191,17 @@ class _PodcastsPageState extends State<PodcastsPage> {
           YaruPopupMenuButton<Country>(
             style: buttonStyle,
             onSelected: (value) {
-              model.country = value;
-              model.loadCharts();
+              setCountry(value);
+              loadCharts();
             },
-            initialValue: model.country,
+            initialValue: country,
             child: Text(
-              model.country.name.capitalize(),
+              country.name.capitalize(),
               style: textStyle,
             ),
             itemBuilder: (context) {
               return [
-                for (final c in model.sortedCountries)
+                for (final c in sortedCountries)
                   PopupMenuItem(
                     value: c,
                     child: Text(c.name.capitalize()),
@@ -278,7 +243,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               body: page,
             ),
           ),
-          if (model.searchQuery?.isNotEmpty == true)
+          if (searchQuery?.isNotEmpty == true)
             MaterialPage(
               child: YaruDetailPage(
                 appBar: YaruWindowTitleBar(
@@ -289,7 +254,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                   leading: YaruBackButton(
                     style: YaruBackButtonStyle.rounded,
                     onPressed: () {
-                      model.setSearchQuery('');
+                      setSearchQuery('');
                       Navigator.maybePop(context);
                     },
                   ),
@@ -305,7 +270,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                       height: 15,
                     ),
                     Expanded(
-                      child: model.podcastSearchResult == null
+                      child: podcastSearchResult == null
                           ? GridView(
                               padding: kGridPadding,
                               gridDelegate: kImageGridDelegate,
@@ -316,7 +281,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                                 ),
                               ).toList(),
                             )
-                          : model.podcastSearchResult!.isEmpty
+                          : podcastSearchResult.isEmpty
                               ? NoSearchResultPage(
                                   message: context.l10n.noPodcastFound,
                                 )
@@ -332,6 +297,79 @@ class _PodcastsPageState extends State<PodcastsPage> {
         onPopPage: (route, result) => route.didPop(result),
       );
     }
+  }
+
+  void _pushNewPodcastPage(
+    BuildContext context,
+    Set<Audio> podcast,
+    bool Function(String name) podcastSubscribed,
+    String name,
+    void Function(String text) onTapText,
+    ThemeData theme,
+    void Function(String name) removePodcast,
+    void Function(String name, Set<Audio> audios) addPodcast,
+  ) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          final subscribed = podcast.firstOrNull?.album == null
+              ? false
+              : podcastSubscribed(name);
+
+          return AudioPage(
+            onAlbumTap: onTapText,
+            onArtistTap: onTapText,
+            audioPageType: AudioPageType.podcast,
+            showWindowControls: widget.showWindowControls,
+            sort: false,
+            showTrack: false,
+            controlPageButton: YaruIconButton(
+              icon: Icon(
+                YaruIcons.rss,
+                color: subscribed ? theme.primaryColor : null,
+              ),
+              onPressed: subscribed
+                  ? () => removePodcast(
+                        name,
+                      )
+                  : () {
+                      addPodcast(
+                        name,
+                        podcast,
+                      );
+                    },
+            ),
+            image: ClipRRect(
+              borderRadius: BorderRadius.circular(
+                10,
+              ),
+              child: SafeNetworkImage(
+                fallBackIcon: SizedBox(
+                  width: 200,
+                  child: Center(
+                    child: Icon(
+                      YaruIcons.music_note,
+                      size: 80,
+                      color: theme.hintColor,
+                    ),
+                  ),
+                ),
+                url: podcast.firstOrNull?.imageUrl,
+                fit: BoxFit.fitWidth,
+                filterQuality: FilterQuality.medium,
+              ),
+            ),
+            title: const PodcastSearchField(),
+            deletable: false,
+            editableName: false,
+            audios: podcast,
+            pageId: podcast.firstOrNull?.album ??
+                podcast.firstOrNull?.title ??
+                podcast.toString(),
+          );
+        },
+      ),
+    );
   }
 }
 

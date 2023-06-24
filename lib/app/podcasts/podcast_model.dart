@@ -26,7 +26,7 @@ class PodcastModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _chartsChangedSub;
   StreamSubscription<bool>? _searchChangedSub;
 
-  Set<Set<Audio>>? get chartsPodcasts => _podcastService.chartsPodcasts;
+  Set<Set<Audio>>? get charts => _podcastService.chartsPodcasts;
   Set<Set<Audio>>? get podcastSearchResult => _podcastService.searchResult;
 
   String? _searchQuery;
@@ -39,7 +39,7 @@ class PodcastModel extends SafeChangeNotifier {
 
   Country _country = Country.unitedStates;
   Country get country => _country;
-  set country(Country value) {
+  void setCountry(Country value) {
     if (value == _country) return;
     _country = value;
     notifyListeners();
@@ -55,7 +55,7 @@ class PodcastModel extends SafeChangeNotifier {
 
   PodcastGenre _podcastGenre = PodcastGenre.all;
   PodcastGenre get podcastGenre => _podcastGenre;
-  set podcastGenre(PodcastGenre value) {
+  void setPodcastGenre(PodcastGenre value) {
     if (value == _podcastGenre) return;
     _podcastGenre = value;
     notifyListeners();
@@ -122,13 +122,11 @@ class PodcastModel extends SafeChangeNotifier {
     String? searchQuery,
     bool useAlbumImage = false,
   }) {
-    _podcastService
-        .search(
-          language: _language,
-          searchQuery: searchQuery,
-          country: _country,
-          useAlbumImage: useAlbumImage,
-        )
-        .then((_) => notifyListeners());
+    _podcastService.search(
+      language: _language,
+      searchQuery: searchQuery,
+      country: _country,
+      useAlbumImage: useAlbumImage,
+    );
   }
 }

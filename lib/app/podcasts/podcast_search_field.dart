@@ -34,7 +34,7 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
-    final model = context.watch<PodcastModel>();
+    final model = context.read<PodcastModel>();
 
     return SizedBox(
       height: 35,
