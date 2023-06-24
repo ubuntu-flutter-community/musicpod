@@ -12,6 +12,7 @@ import 'package:musicpod/app/liked_audio_page.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
 import 'package:musicpod/app/local_audio/local_audio_page.dart';
+import 'package:musicpod/app/master_item.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/player/player_view.dart';
 import 'package:musicpod/app/playlists/playlist_dialog.dart';
@@ -37,35 +38,8 @@ import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-class MusicPod extends StatelessWidget {
-  const MusicPod({super.key});
-
-  static final GlobalKey<ScaffoldMessengerState> scaffoldKey = GlobalKey();
-
-  @override
-  Widget build(BuildContext context) {
-    return YaruTheme(
-      builder: (context, yaruThemeData, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: yaruThemeData.theme,
-          darkTheme: yaruThemeData.darkTheme,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: supportedLocales,
-          onGenerateTitle: (context) => 'Music',
-          home: _App.create(
-            context: context,
-            showSnackBar: scaffoldKey.currentState?.showSnackBar,
-          ),
-          scaffoldMessengerKey: scaffoldKey,
-        );
-      },
-    );
-  }
-}
-
-class _App extends StatefulWidget {
-  const _App();
+class App extends StatefulWidget {
+  const App({super.key});
 
   static Widget create({
     required BuildContext context,
@@ -101,15 +75,15 @@ class _App extends StatefulWidget {
           )..init(),
         )
       ],
-      child: const _App(),
+      child: const App(),
     );
   }
 
   @override
-  State<_App> createState() => _AppState();
+  State<App> createState() => _AppState();
 }
 
-class _AppState extends State<_App> with TickerProviderStateMixin {
+class _AppState extends State<App> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -138,7 +112,6 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
     final searchRadio = context.read<RadioModel>().search;
     final setRadioQuery = context.read<RadioModel>().setSearchQuery;
 
-    // final isPlaying = context.select((PlayerModel m) => m.isPlaying);
     final play = context.read<PlayerModel>().play;
     final audioType = context.select((PlayerModel m) => m.audio?.audioType);
     final surfaceTintColor =
@@ -417,16 +390,4 @@ class _AppState extends State<_App> with TickerProviderStateMixin {
       body: library.ready ? body : const SplashScreen(),
     );
   }
-}
-
-class MasterItem {
-  MasterItem({
-    required this.tileBuilder,
-    required this.builder,
-    this.iconBuilder,
-  });
-
-  final WidgetBuilder tileBuilder;
-  final WidgetBuilder builder;
-  final Widget Function(BuildContext context, bool selected)? iconBuilder;
 }

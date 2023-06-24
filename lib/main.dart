@@ -5,14 +5,13 @@ import 'package:media_kit/media_kit.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/musicpod.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
 import 'package:musicpod/service/radio_service.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
-
-import 'app/musicpod.dart';
 
 Future<void> main() async {
   await YaruWindowTitleBar.ensureInitialized();

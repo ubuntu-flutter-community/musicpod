@@ -47,10 +47,10 @@ class _SplashScreenState extends State<SplashScreen>
               color: theme.primaryColor,
               borderRadius: BorderRadius.circular(30),
             ),
-            child: Icon(
+            child: const Icon(
               YaruIcons.music_note,
               size: 250,
-              color: Theme.of(context).colorScheme.onSurface,
+              color: Colors.white,
             ),
           ),
         ),
