@@ -83,6 +83,9 @@ class _RadioPageState extends State<RadioPage> {
     } else {
       return YaruDetailPage(
         appBar: YaruWindowTitleBar(
+          style: widget.showWindowControls
+              ? YaruTitleBarStyle.normal
+              : YaruTitleBarStyle.undecorated,
           title: RadioSearchField(
             text: searchQuery,
             onSubmitted: (value) {
@@ -161,6 +164,8 @@ class _RadioPageState extends State<RadioPage> {
                                     station.title ?? station.toString(),
                                   );
                                   return StationPage(
+                                    showWindowControls:
+                                        widget.showWindowControls,
                                     onTextTap: widget.onTextTap,
                                     station: station,
                                     name: station.title ?? station.toString(),

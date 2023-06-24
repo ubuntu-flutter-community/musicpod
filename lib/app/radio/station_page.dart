@@ -17,6 +17,7 @@ class StationPage extends StatelessWidget {
     required this.starStation,
     this.onTextTap,
     required this.isStarred,
+    required this.showWindowControls,
   });
 
   final Audio station;
@@ -25,6 +26,7 @@ class StationPage extends StatelessWidget {
   final void Function(String station) unStarStation;
   final void Function(String station) starStation;
   final bool isStarred;
+  final bool showWindowControls;
 
   final void Function(String text)? onTextTap;
 
@@ -60,6 +62,9 @@ class StationPage extends StatelessWidget {
           ? kBackgroundDark
           : kBackGroundLight,
       appBar: YaruWindowTitleBar(
+        style: showWindowControls
+            ? YaruTitleBarStyle.normal
+            : YaruTitleBarStyle.undecorated,
         title: Text(name),
         leading: Navigator.canPop(context)
             ? const YaruBackButton(

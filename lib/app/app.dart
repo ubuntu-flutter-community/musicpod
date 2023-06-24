@@ -262,6 +262,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
           MasterItem(
             tileBuilder: (context) => Text(station.key),
             builder: (context) => StationPage(
+              showWindowControls: !playerToTheRight,
               isStarred: true,
               starStation: (station) {},
               onTextTap: (text) =>
