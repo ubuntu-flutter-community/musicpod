@@ -56,16 +56,16 @@ class PodcastSearchPage extends StatelessWidget {
               url: podcast.firstOrNull?.imageUrl,
               fit: BoxFit.contain,
             ),
-            onPlay: podcast.first.album == null
+            onPlay: podcast.firstOrNull?.album == null
                 ? null
                 : () {
-                    startPlaylist(podcast, podcast.first.album!);
+                    startPlaylist(podcast, podcast.firstOrNull?.album ?? '');
                   },
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
-                    final subscribed = podcast.first.album == null
+                    final subscribed = podcast.firstOrNull?.album == null
                         ? false
                         : podcastSubscribed(
                             podcast.first.album!,
@@ -88,7 +88,7 @@ class PodcastSearchPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        url: podcast.first.imageUrl,
+                        url: podcast.firstOrNull?.imageUrl,
                         fit: BoxFit.fitWidth,
                         filterQuality: FilterQuality.medium,
                       ),
@@ -98,26 +98,30 @@ class PodcastSearchPage extends StatelessWidget {
                                 YaruIcons.rss,
                                 color: theme.primaryColor,
                               ),
-                              onPressed: () => removePodcast(
-                                podcast.first.album!,
-                              ),
+                              onPressed: podcast.firstOrNull?.album == null
+                                  ? null
+                                  : () => removePodcast(
+                                        podcast.first.album!,
+                                      ),
                             )
                           : YaruIconButton(
                               icon: const Icon(
                                 YaruIcons.rss,
                               ),
-                              onPressed: () {
-                                addPodcast(
-                                  podcast.first.album!,
-                                  podcast,
-                                );
-                              },
+                              onPressed: podcast.firstOrNull?.album == null
+                                  ? null
+                                  : () {
+                                      addPodcast(
+                                        podcast.first.album!,
+                                        podcast,
+                                      );
+                                    },
                             ),
                       title: const PodcastSearchField(),
                       deletable: false,
                       editableName: false,
                       audios: podcast,
-                      pageId: podcast.first.album ?? '',
+                      pageId: podcast.firstOrNull?.album ?? podcast.toString(),
                     );
                   },
                 ),

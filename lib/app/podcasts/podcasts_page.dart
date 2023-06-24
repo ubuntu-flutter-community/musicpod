@@ -104,7 +104,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
         gridDelegate: kImageGridDelegate,
         itemBuilder: (context, index) {
           final podcast = model.chartsPodcasts!.elementAt(index);
-          final name = podcast.first.album!;
+          final name = podcast.firstOrNull?.album ?? '';
 
           final image = SafeNetworkImage(
             fallBackIcon: fallBackLoadingIcon,
@@ -121,7 +121,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
-                    final subscribed = podcast.first.album == null
+                    final subscribed = podcast.firstOrNull?.album == null
                         ? false
                         : podcastSubscribed(name);
 
@@ -163,7 +163,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                               ),
                             ),
                           ),
-                          url: podcast.first.imageUrl,
+                          url: podcast.firstOrNull?.imageUrl,
                           fit: BoxFit.fitWidth,
                           filterQuality: FilterQuality.medium,
                         ),
@@ -172,8 +172,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
                       deletable: false,
                       editableName: false,
                       audios: podcast,
-                      pageId: podcast.first.album ??
-                          podcast.first.title ??
+                      pageId: podcast.firstOrNull?.album ??
+                          podcast.firstOrNull?.title ??
                           podcast.toString(),
                     );
                   },
