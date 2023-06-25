@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+const kRepoUrl = 'http://github.com/ubuntu-flutter-community/musicpod';
+
 const kPagePadding = 20.0;
 const kGridPadding = EdgeInsets.only(
   bottom: kPagePadding,

@@ -19,6 +19,7 @@ dependencies:
   flutter_html: ^3.0.0-beta.2
   flutter_localizations:
     sdk: flutter
+  flutter_markdown: ^0.6.15
   handy_window: ^0.3.1
   http: ^0.13.5
   intl: ^0.18.0
@@ -59,4 +60,7 @@ dev_dependencies:
 flutter:
    generate: true
    uses-material-design: true
+   assets:
+    - snap/gui/musicpod.png
+    - assets/contributors.md
 
