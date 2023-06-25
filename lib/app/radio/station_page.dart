@@ -3,6 +3,7 @@ import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
+import 'package:musicpod/app/radio/radio_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -39,6 +40,7 @@ class StationPage extends StatelessWidget {
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(
         height: 23,
+        width: 23,
         child: SafeNetworkImage(
           fallBackIcon: selected
               ? const Icon(YaruIcons.star_filled)
@@ -57,6 +59,7 @@ class StationPage extends StatelessWidget {
     final tags = <String>[
       for (final tag in station.album?.split(',') ?? <String>[]) tag
     ];
+    const size = 350.0;
     return YaruDetailPage(
       backgroundColor: theme.brightness == Brightness.dark
           ? kBackgroundDark
@@ -82,9 +85,12 @@ class StationPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const SizedBox(
+                  height: 20,
+                ),
                 SizedBox(
-                  height: 400,
-                  width: 400,
+                  height: size,
+                  width: size,
                   child: AudioCard(
                     bottom: station.imageUrl == null
                         ? AudioCardBottom(text: name)
@@ -92,13 +98,11 @@ class StationPage extends StatelessWidget {
                     onTap: () => onPlay?.call(station),
                     onPlay: () => onPlay?.call(station),
                     image: SizedBox(
-                      height: 400,
-                      width: 400,
+                      height: size,
+                      width: size,
                       child: SafeNetworkImage(
-                        fallBackIcon: Icon(
-                          YaruIcons.radio,
-                          color: theme.hintColor,
-                          size: 200,
+                        fallBackIcon: const RadioFallBackIcon(
+                          iconSize: size / 2,
                         ),
                         url: station.imageUrl,
                         fit: BoxFit.cover,
@@ -110,7 +114,7 @@ class StationPage extends StatelessWidget {
                   height: 20,
                 ),
                 SizedBox(
-                  width: 380,
+                  width: size * 0.95,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

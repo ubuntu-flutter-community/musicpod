@@ -23,6 +23,7 @@ class PodcastPage extends StatelessWidget {
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(
         width: 23,
+        height: 23,
         child: SafeNetworkImage(
           url: imageUrl,
           fit: BoxFit.fitHeight,

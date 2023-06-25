@@ -4,13 +4,12 @@ import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
-import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/library_model.dart';
+import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcast_search_field.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -31,7 +30,6 @@ class PodcastSearchPage extends StatelessWidget {
     final podcastSubscribed = context.read<LibraryModel>().podcastSubscribed;
     final removePodcast = context.read<LibraryModel>().removePodcast;
     final addPodcast = context.read<LibraryModel>().addPodcast;
-    final light = theme.brightness == Brightness.light;
     final search = model.search;
     final setSearchQuery = model.setSearchQuery;
 
@@ -51,16 +49,6 @@ class PodcastSearchPage extends StatelessWidget {
         final podcast = searchResult!.elementAt(index);
         return AudioCard(
           image: SafeNetworkImage(
-            fallBackIcon: Shimmer.fromColors(
-              baseColor: light ? kShimmerBaseLight : kShimmerBaseDark,
-              highlightColor:
-                  light ? kShimmerHighLightLight : kShimmerHighLightDark,
-              child: YaruBorderContainer(
-                color: light ? kShimmerBaseLight : kShimmerBaseDark,
-                height: 250,
-                width: 250,
-              ),
-            ),
             url: podcast.firstOrNull?.albumArtUrl ??
                 podcast.firstOrNull?.imageUrl,
             fit: BoxFit.contain,

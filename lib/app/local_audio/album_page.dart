@@ -25,6 +25,7 @@ class AlbumPage extends StatelessWidget {
     if (picture != null) {
       albumArt = SizedBox(
         width: 23,
+        height: 23,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(5),
           child: Image.memory(

@@ -7,8 +7,8 @@ import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/connectivity_notifier.dart';
-import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/library_model.dart';
+import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcast_search_field.dart';
 import 'package:musicpod/app/podcasts/podcast_search_page.dart';
@@ -18,7 +18,6 @@ import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/string_x.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -90,18 +89,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
       search(searchQuery: text);
     }
 
-    final light = theme.brightness == Brightness.light;
-
-    final fallBackLoadingIcon = Shimmer.fromColors(
-      baseColor: light ? kShimmerBaseLight : kShimmerBaseDark,
-      highlightColor: light ? kShimmerHighLightLight : kShimmerHighLightDark,
-      child: YaruBorderContainer(
-        color: light ? kShimmerBaseLight : kShimmerBaseDark,
-        height: 250,
-        width: 250,
-      ),
-    );
-
     Widget grid;
     if (charts == null) {
       grid = GridView(
@@ -125,7 +112,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
           final name = podcast.firstOrNull?.album ?? '';
 
           final image = SafeNetworkImage(
-            fallBackIcon: fallBackLoadingIcon,
             url: podcast.firstOrNull?.albumArtUrl ??
                 podcast.firstOrNull?.imageUrl,
             fit: BoxFit.contain,
@@ -277,9 +263,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                               gridDelegate: kImageGridDelegate,
                               children: List.generate(
                                 30,
-                                (index) => AudioCard(
-                                  image: fallBackLoadingIcon,
-                                ),
+                                (index) => const AudioCard(),
                               ).toList(),
                             )
                           : podcastSearchResult.isEmpty

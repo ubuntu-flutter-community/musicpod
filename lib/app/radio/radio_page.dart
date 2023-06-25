@@ -15,8 +15,8 @@ import 'package:musicpod/app/radio/tag_popup.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/radio_service.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
+import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -73,7 +73,6 @@ class _RadioPageState extends State<RadioPage> {
     final isStarredStation = context.read<LibraryModel>().isStarredStation;
 
     final theme = Theme.of(context);
-    final light = theme.brightness == Brightness.light;
 
     final textStyle =
         theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w100);
@@ -183,50 +182,13 @@ class _RadioPageState extends State<RadioPage> {
                               ),
                             );
                           },
-                    image: station?.imageUrl == null
-                        ? Container(
-                            height: double.infinity,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.bottomLeft,
-                                end: Alignment.topRight,
-                                colors: [
-                                  theme.primaryColor.withOpacity(0.1),
-                                  theme.primaryColor.withOpacity(0.8)
-                                ],
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: Icon(
-                                YaruIcons.radio,
-                                size: 50,
-                                color: theme.hintColor,
-                              ),
-                            ),
-                          )
-                        : Center(
-                            child: SafeNetworkImage(
-                              fit: BoxFit.cover,
-                              fallBackIcon: Shimmer.fromColors(
-                                baseColor: light
-                                    ? kShimmerBaseLight
-                                    : kShimmerBaseDark,
-                                highlightColor: light
-                                    ? kShimmerHighLightLight
-                                    : kShimmerHighLightDark,
-                                child: YaruBorderContainer(
-                                  color: light
-                                      ? kShimmerBaseLight
-                                      : kShimmerBaseDark,
-                                  height: 250,
-                                  width: 250,
-                                ),
-                              ),
-                              url: station?.imageUrl,
-                            ),
-                          ),
+                    image: SizedBox.expand(
+                      child: SafeNetworkImage(
+                        fit: BoxFit.cover,
+                        fallBackIcon: const RadioFallBackIcon(),
+                        url: station?.imageUrl,
+                      ),
+                    ),
                   );
                 },
               ),
@@ -235,6 +197,42 @@ class _RadioPageState extends State<RadioPage> {
         ),
       );
     }
+  }
+}
+
+class RadioFallBackIcon extends StatelessWidget {
+  const RadioFallBackIcon({
+    super.key,
+    this.iconSize,
+  });
+
+  final double? iconSize;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+          colors: [
+            theme.primaryColor.withOpacity(0.3),
+            theme.primaryColor.withOpacity(0.7)
+          ],
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: Icon(
+          YaruIcons.radio,
+          size: iconSize ?? 70,
+          color: contrastColor(theme.colorScheme.background).withOpacity(0.5),
+        ),
+      ),
+    );
   }
 }
 
