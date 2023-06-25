@@ -229,43 +229,47 @@ class LocalAudioModel extends SafeChangeNotifier {
       }
 
       int failures = 0;
-      int total = 0;
-      audios = {};
       showSnackBar?.call(const SnackBar(content: Text('Importing...')));
-      for (var e in onlyFiles) {
-        if (e is File) {
-          total++;
-          try {
-            final metadata = await MetadataRetriever.fromFile(e);
-            final audio = Audio(
-              path: e.path,
-              audioType: AudioType.local,
-              artist: metadata.trackArtistNames?.join(', ') ??
-                  metadata.albumArtistName ??
-                  metadata.authorName ??
-                  '',
-              title: metadata.trackName ?? e.path,
-              album: metadata.albumName == null
-                  ? ''
-                  : '${metadata.albumName} ${metadata.discNumber ?? ''}',
-              albumArtist: metadata.albumArtistName,
-              discNumber: metadata.discNumber,
-              discTotal: metadata.discNumber,
-              durationMs: metadata.trackDuration,
-              fileSize: e.lengthSync(),
-              genre: metadata.genre,
-              pictureData: metadata.albumArt,
-              pictureMimeType: metadata.mimeType,
-              trackNumber: metadata.trackNumber,
-              year: metadata.year,
-            );
 
-            audios?.add(audio);
-          } catch (e) {
-            failures++;
-          }
-        }
-      }
+      audios = Set.from((await Future.wait(
+        onlyFiles.map(
+          (e) => Future(() async {
+            if (e is File) {
+              try {
+                final metadata = await MetadataRetriever.fromFile(e);
+                final audio = Audio(
+                  path: e.path,
+                  audioType: AudioType.local,
+                  artist: metadata.trackArtistNames?.join(', ') ??
+                      metadata.authorName ??
+                      metadata.albumArtistName ??
+                      '',
+                  title: metadata.trackName ?? e.path,
+                  album: metadata.albumName == null
+                      ? ''
+                      : '${metadata.albumName} ${metadata.discNumber ?? ''}',
+                  albumArtist: metadata.albumArtistName,
+                  discNumber: metadata.discNumber,
+                  discTotal: metadata.discNumber,
+                  durationMs: metadata.trackDuration,
+                  fileSize: e.lengthSync(),
+                  genre: metadata.genre,
+                  pictureData: metadata.albumArt,
+                  pictureMimeType: metadata.mimeType,
+                  trackNumber: metadata.trackNumber,
+                  year: metadata.year,
+                );
+
+                return audio;
+              } catch (e) {
+                failures++;
+              }
+            }
+          }),
+        ),
+      ))
+          .where((element) => element != null)
+          .map((e) => e!));
       if (failures > 0) {
         showSnackBar?.call(
           SnackBar(
@@ -276,7 +280,7 @@ class LocalAudioModel extends SafeChangeNotifier {
                   color: warningColor,
                 ),
                 Text(
-                  'Failed to import $failures of $total audio files.',
+                  'Failed to import $failures of ${onlyFiles.length} audio files.',
                   selectionColor: warningColor,
                 ),
                 const SizedBox(

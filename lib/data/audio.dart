@@ -211,7 +211,7 @@ class Audio {
       description: map['description'],
       website: map['website'],
       title: map['title'],
-      durationMs: map['durationMs']?.toDouble(),
+      durationMs: map['durationMs']?.toInt(),
       artist: map['artist'],
       album: map['album'],
       albumArtist: map['albumArtist'],
