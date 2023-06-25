@@ -66,6 +66,8 @@ parts:
 
   deps:
     plugin: nil
+    build-packages:
+      - libmediafile-dev
     stage-packages:
       - libaom3
       - libass9
@@ -111,6 +113,7 @@ parts:
       - libpostproc55
       - libswscale5
       - libsrt1.4-gnutls
+      - libmediafile
       - ocl-icd-libopencl1
       - on amd64:
         - libmfx1
@@ -174,6 +177,7 @@ parts:
       - usr/lib/*/libavcodec.so*
       - usr/lib/*/libavutil.so*
       - usr/lib/*/libswresample.so*
+      - usr/lib/*/libmediafile.so*
 
   # Find files provided by the base and platform snap and ensure they aren't
   # duplicated in this snap

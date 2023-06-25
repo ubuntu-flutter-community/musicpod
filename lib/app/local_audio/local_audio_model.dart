@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:metadata_god/metadata_god.dart';
+import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/constants.dart';
@@ -231,34 +231,39 @@ class LocalAudioModel extends SafeChangeNotifier {
       int failures = 0;
       int total = 0;
       audios = {};
+      showSnackBar?.call(const SnackBar(content: Text('Importing...')));
       for (var e in onlyFiles) {
-        total++;
-        try {
-          final metadata = await MetadataGod.readMetadata(file: e.path);
+        if (e is File) {
+          total++;
+          try {
+            final metadata = await MetadataRetriever.fromFile(e);
+            final audio = Audio(
+              path: e.path,
+              audioType: AudioType.local,
+              artist: metadata.trackArtistNames?.join(', ') ??
+                  metadata.albumArtistName ??
+                  metadata.authorName ??
+                  '',
+              title: metadata.trackName ?? e.path,
+              album: metadata.albumName == null
+                  ? ''
+                  : '${metadata.albumName} ${metadata.discNumber ?? ''}',
+              albumArtist: metadata.albumArtistName,
+              discNumber: metadata.discNumber,
+              discTotal: metadata.discNumber,
+              durationMs: metadata.trackDuration,
+              fileSize: e.lengthSync(),
+              genre: metadata.genre,
+              pictureData: metadata.albumArt,
+              pictureMimeType: metadata.mimeType,
+              trackNumber: metadata.trackNumber,
+              year: metadata.year,
+            );
 
-          final audio = Audio(
-            path: e.path,
-            audioType: AudioType.local,
-            artist: metadata.artist ?? '',
-            title: metadata.title ?? e.path,
-            album: metadata.album == null
-                ? ''
-                : '${metadata.album} ${metadata.discTotal != null && metadata.discTotal! > 1 ? metadata.discNumber : ''}',
-            albumArtist: metadata.albumArtist,
-            discNumber: metadata.discNumber,
-            discTotal: metadata.discTotal,
-            durationMs: metadata.durationMs,
-            fileSize: metadata.fileSize,
-            genre: metadata.genre,
-            pictureData: metadata.picture?.data,
-            pictureMimeType: metadata.picture?.mimeType,
-            trackNumber: metadata.trackNumber,
-            year: metadata.year,
-          );
-
-          audios?.add(audio);
-        } catch (e) {
-          failures++;
+            audios?.add(audio);
+          } catch (e) {
+            failures++;
+          }
         }
       }
       if (failures > 0) {

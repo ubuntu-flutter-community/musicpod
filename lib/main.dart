@@ -2,7 +2,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:metadata_god/metadata_god.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/service/library_service.dart';
@@ -37,7 +36,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
   await YaruWindowTitleBar.ensureInitialized();
-  MetadataGod.initialize();
 
   libraryService.init();
   runApp(const MusicPod());
