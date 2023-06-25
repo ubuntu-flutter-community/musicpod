@@ -7,6 +7,7 @@ import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/musicpod.dart';
 import 'package:musicpod/service/library_service.dart';
+import 'package:musicpod/service/local_audio_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
 import 'package:musicpod/service/radio_service.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
@@ -27,6 +28,7 @@ Future<void> main() async {
 
   registerService<MPRIS>(() => mpris);
   registerService<LibraryService>(LibraryService.new);
+  registerService<LocalAudioService>(LocalAudioService.new);
   registerService<PodcastService>(PodcastService.new);
   registerService<Connectivity>(Connectivity.new);
   registerService<NotificationsClient>(NotificationsClient.new);

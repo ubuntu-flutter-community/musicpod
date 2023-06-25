@@ -6,8 +6,6 @@ import 'package:yaru/yaru.dart';
 class MusicPod extends StatelessWidget {
   const MusicPod({super.key});
 
-  static final GlobalKey<ScaffoldMessengerState> scaffoldKey = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
     return YaruTheme(
@@ -21,9 +19,7 @@ class MusicPod extends StatelessWidget {
           onGenerateTitle: (context) => 'MusicPod',
           home: App.create(
             context: context,
-            showSnackBar: scaffoldKey.currentState?.showSnackBar,
           ),
-          scaffoldMessengerKey: scaffoldKey,
         );
       },
     );
