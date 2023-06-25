@@ -10,6 +10,7 @@ import 'package:musicpod/app/connectivity_notifier.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/liked_audio_page.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
+import 'package:musicpod/app/local_audio/failed_imports_content.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
 import 'package:musicpod/app/local_audio/local_audio_page.dart';
 import 'package:musicpod/app/master_item.dart';
@@ -29,12 +30,12 @@ import 'package:musicpod/app/splash_screen.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/library_service.dart';
+import 'package:musicpod/service/local_audio_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
 import 'package:musicpod/service/radio_service.dart';
 import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
-import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -43,9 +44,6 @@ class App extends StatefulWidget {
 
   static Widget create({
     required BuildContext context,
-    required ScaffoldFeatureController<SnackBar, SnackBarClosedReason> Function(
-      SnackBar snackBar,
-    )? showSnackBar,
   }) {
     return MultiProvider(
       providers: [
@@ -56,7 +54,7 @@ class App extends StatefulWidget {
           create: (_) => PlayerModel(getService<MPRIS>()),
         ),
         ChangeNotifierProvider(
-          create: (_) => LocalAudioModel()..init(showSnackBar: showSnackBar),
+          create: (_) => LocalAudioModel(getService<LocalAudioService>()),
         ),
         ChangeNotifierProvider(
           create: (_) => LibraryModel(getService<LibraryService>())..init(),
@@ -289,8 +287,13 @@ class _AppState extends State<App> with TickerProviderStateMixin {
           onDirectorySelected: (directoryPath) async {
             localAudioModel.setDirectory(directoryPath).then(
                   (value) async => await localAudioModel.init(
-                    warningColor: Theme.of(context).colorScheme.warning,
-                    showSnackBar: ScaffoldMessenger.of(context).showSnackBar,
+                    onFail: (failedImports) =>
+                        ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content:
+                            FailedImportsContent(failedImports: failedImports),
+                      ),
+                    ),
                   ),
                 );
           },

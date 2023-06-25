@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/common/tabbed_page.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/local_audio/artists_view.dart';
+import 'package:musicpod/app/local_audio/failed_imports_content.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
 import 'package:musicpod/app/local_audio/local_audio_search_field.dart';
 import 'package:musicpod/app/local_audio/local_audio_search_page.dart';
 import 'package:musicpod/app/local_audio/titles_view.dart';
-import 'package:musicpod/app/common/tabbed_page.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -22,6 +23,21 @@ class LocalAudioPage extends StatefulWidget {
 
 class _LocalAudioPageState extends State<LocalAudioPage> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<LocalAudioModel>().init(
+          onFail: (failedImports) => ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              duration: const Duration(seconds: 10),
+              content: FailedImportsContent(
+                failedImports: failedImports,
+              ),
+            ),
+          ),
+        );
+  }
 
   @override
   Widget build(BuildContext context) {

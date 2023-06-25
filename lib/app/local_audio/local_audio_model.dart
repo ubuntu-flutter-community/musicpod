@@ -1,20 +1,20 @@
-import 'dart:io';
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
-import 'package:metadata_god/metadata_god.dart';
-import 'package:mime_type/mime_type.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
-import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/service/local_audio_service.dart';
 import 'package:musicpod/utils.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:xdg_directories/xdg_directories.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
+  LocalAudioModel(this._service);
+
+  final LocalAudioService _service;
+
   String? _searchQuery;
+
   String? get searchQuery => _searchQuery;
   void setSearchQuery(String? value) {
     if (value == null || value == _searchQuery) return;
@@ -126,22 +126,12 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  String? _directory;
-  String? get directory => _directory;
-  Future<void> setDirectory(String? value) async {
-    if (value == null || value == _directory) return;
-    await writeSetting(kDirectoryProperty, value).then((_) {
-      _directory = value;
-      notifyListeners();
-    });
-  }
+  String? get directory => _service.directory;
+  Future<void> setDirectory(String? value) async =>
+      _service.setDirectory(value);
 
-  Set<Audio>? _audios;
-  Set<Audio>? get audios => _audios;
-  set audios(Set<Audio>? value) {
-    _audios = value;
-    notifyListeners();
-  }
+  Set<Audio>? get audios => _service.audios;
+  set audios(Set<Audio>? value) => _service.audios = value;
 
   Set<Audio>? findAlbum(
     Audio audio, [
@@ -205,94 +195,32 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> init({
-    ScaffoldFeatureController<SnackBar, SnackBarClosedReason> Function(
-      SnackBar snackBar,
-    )? showSnackBar,
-    Color? warningColor,
-  }) async {
-    _directory = await readSetting(kDirectoryProperty);
-    _directory ??= getUserDirectory('MUSIC')?.path;
+  StreamSubscription<bool>? _directoryChangedSub;
+  StreamSubscription<bool>? _audiosChangedSub;
 
-    if (_directory != null) {
-      final allFileSystemEntities = Set<FileSystemEntity>.from(
-        await _getFlattenedFileSystemEntities(path: directory!),
-      );
-
-      final onlyFiles = <FileSystemEntity>[];
-
-      for (var fileSystemEntity in allFileSystemEntities) {
-        if (!await FileSystemEntity.isDirectory(fileSystemEntity.path) &&
-            validType(fileSystemEntity.path)) {
-          onlyFiles.add(fileSystemEntity);
-        }
-      }
-
-      int failures = 0;
-      int total = 0;
-      audios = {};
-      for (var e in onlyFiles) {
-        total++;
-        try {
-          final metadata = await MetadataGod.readMetadata(file: e.path);
-
-          final audio = Audio(
-            path: e.path,
-            audioType: AudioType.local,
-            artist: metadata.artist ?? '',
-            title: metadata.title ?? e.path,
-            album: metadata.album == null
-                ? ''
-                : '${metadata.album} ${metadata.discTotal != null && metadata.discTotal! > 1 ? metadata.discNumber : ''}',
-            albumArtist: metadata.albumArtist,
-            discNumber: metadata.discNumber,
-            discTotal: metadata.discTotal,
-            durationMs: metadata.durationMs,
-            fileSize: metadata.fileSize,
-            genre: metadata.genre,
-            pictureData: metadata.picture?.data,
-            pictureMimeType: metadata.picture?.mimeType,
-            trackNumber: metadata.trackNumber,
-            year: metadata.year,
-          );
-
-          audios?.add(audio);
-        } catch (e) {
-          failures++;
-        }
-      }
-      if (failures > 0) {
-        showSnackBar?.call(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(
-                  YaruIcons.warning,
-                  color: warningColor,
-                ),
-                Text(
-                  'Failed to import $failures of $total audio files.',
-                  selectionColor: warningColor,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-              ],
-            ),
-          ),
-        );
-      }
-      notifyListeners();
-    }
+  @override
+  Future<void> dispose() async {
+    _directoryChangedSub?.cancel();
+    _audiosChangedSub?.cancel();
+    super.dispose();
   }
 
-  bool validType(String path) => mime(path)?.contains('audio') ?? false;
-
-  Future<List<FileSystemEntity>> _getFlattenedFileSystemEntities({
-    required String path,
+  Future<void> init({
+    required void Function(List<String> failedImports) onFail,
   }) async {
-    return await Directory(path)
-        .list(recursive: true, followLinks: false)
-        .toList();
+    final failedImports = await _service.init();
+
+    _directoryChangedSub = _service.directoryChanged.listen((_) {
+      notifyListeners();
+    });
+    _audiosChangedSub = _service.audiosChanged.listen((_) {
+      notifyListeners();
+    });
+
+    notifyListeners();
+
+    if (failedImports.isNotEmpty) {
+      onFail(failedImports);
+    }
   }
 }

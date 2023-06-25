@@ -67,5 +67,6 @@
     "station": "Station",
     "country": "Country",
     "tag": "Tag",
-    "all": "All"
+    "all": "All",
+    "failedToImport": "Failed to import the following files:"
 }
