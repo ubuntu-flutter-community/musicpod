@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:musicpod/app/common/constants.dart';
@@ -38,69 +39,85 @@ class LocalAudioService {
     _audiosController.add(true);
   }
 
-  final _failedImports = <String>[];
   Future<List<String>> init() async {
-    _failedImports.clear();
     _directory = await readSetting(kDirectoryProperty);
     _directory ??= getUserDirectory('MUSIC')?.path;
 
-    if (_directory != null) {
-      final allFileSystemEntities = Set<FileSystemEntity>.from(
-        await _getFlattenedFileSystemEntities(path: directory!),
-      );
+    final result = await compute(_init, directory);
 
-      final onlyFiles = <FileSystemEntity>[];
+    _audios = result.$2;
 
-      for (var fileSystemEntity in allFileSystemEntities) {
-        if (!await FileSystemEntity.isDirectory(fileSystemEntity.path) &&
-            _validType(fileSystemEntity.path)) {
-          onlyFiles.add(fileSystemEntity);
-        }
-      }
-
-      audios = {};
-      for (var e in onlyFiles) {
-        try {
-          final metadata = await MetadataGod.readMetadata(file: e.path);
-
-          final audio = Audio(
-            path: e.path,
-            audioType: AudioType.local,
-            artist: metadata.artist ?? '',
-            title: metadata.title ?? e.path,
-            album: metadata.album == null
-                ? ''
-                : '${metadata.album} ${metadata.discTotal != null && metadata.discTotal! > 1 ? metadata.discNumber : ''}',
-            albumArtist: metadata.albumArtist,
-            discNumber: metadata.discNumber,
-            discTotal: metadata.discTotal,
-            durationMs: metadata.durationMs,
-            fileSize: metadata.fileSize,
-            genre: metadata.genre,
-            pictureData: metadata.picture?.data,
-            pictureMimeType: metadata.picture?.mimeType,
-            trackNumber: metadata.trackNumber,
-            year: metadata.year,
-          );
-
-          audios?.add(audio);
-        } catch (error) {
-          _failedImports.add(e.path);
-        }
-      }
-    }
     _audiosController.add(true);
     _directoryController.add(true);
-    return _failedImports;
+
+    return result.$1;
+  }
+}
+
+FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
+  MetadataGod.initialize();
+
+  Set<Audio>? newAudios;
+  List<String> failedImports = [];
+
+  if (directory != null) {
+    newAudios = {};
+
+    final allFileSystemEntities = Set<FileSystemEntity>.from(
+      await _getFlattenedFileSystemEntities(path: directory),
+    );
+
+    final onlyFiles = <FileSystemEntity>[];
+
+    for (var fileSystemEntity in allFileSystemEntities) {
+      if (!await FileSystemEntity.isDirectory(fileSystemEntity.path) &&
+          _validType(fileSystemEntity.path)) {
+        onlyFiles.add(fileSystemEntity);
+      }
+    }
+    for (var e in onlyFiles) {
+      try {
+        final metadata = await MetadataGod.readMetadata(file: e.path);
+        final audio = _createAudio(e.path, metadata);
+
+        newAudios.add(audio);
+      } catch (error) {
+        failedImports.add(e.path);
+      }
+    }
   }
 
-  bool _validType(String path) => mime(path)?.contains('audio') ?? false;
+  return (failedImports, newAudios);
+}
 
-  Future<List<FileSystemEntity>> _getFlattenedFileSystemEntities({
-    required String path,
-  }) async {
-    return await Directory(path)
-        .list(recursive: true, followLinks: false)
-        .toList();
-  }
+Audio _createAudio(String path, Metadata metadata) {
+  return Audio(
+    path: path,
+    audioType: AudioType.local,
+    artist: metadata.artist ?? '',
+    title: metadata.title ?? path,
+    album: metadata.album == null
+        ? ''
+        : '${metadata.album} ${metadata.discTotal != null && metadata.discTotal! > 1 ? metadata.discNumber : ''}',
+    albumArtist: metadata.albumArtist,
+    discNumber: metadata.discNumber,
+    discTotal: metadata.discTotal,
+    durationMs: metadata.durationMs,
+    fileSize: metadata.fileSize,
+    genre: metadata.genre,
+    pictureData: metadata.picture?.data,
+    pictureMimeType: metadata.picture?.mimeType,
+    trackNumber: metadata.trackNumber,
+    year: metadata.year,
+  );
+}
+
+bool _validType(String path) => mime(path)?.contains('audio') ?? false;
+
+Future<List<FileSystemEntity>> _getFlattenedFileSystemEntities({
+  required String path,
+}) async {
+  return await Directory(path)
+      .list(recursive: true, followLinks: false)
+      .toList();
 }
