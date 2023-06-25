@@ -287,9 +287,11 @@ class _AppState extends State<App> with TickerProviderStateMixin {
           onDirectorySelected: (directoryPath) async {
             localAudioModel.setDirectory(directoryPath).then(
                   (value) async => await localAudioModel.init(
+                    forceInit: true,
                     onFail: (failedImports) =>
                         ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
+                        duration: const Duration(seconds: 10),
                         content:
                             FailedImportsContent(failedImports: failedImports),
                       ),

@@ -207,8 +207,16 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   Future<void> init({
     required void Function(List<String> failedImports) onFail,
+    bool forceInit = false,
   }) async {
-    final failedImports = await _service.init();
+    if (forceInit ||
+        (_service.audios == null || _service.audios?.isEmpty == true)) {
+      final failedImports = await _service.init();
+
+      if (failedImports.isNotEmpty) {
+        onFail(failedImports);
+      }
+    }
 
     _directoryChangedSub = _service.directoryChanged.listen((_) {
       notifyListeners();
@@ -218,9 +226,5 @@ class LocalAudioModel extends SafeChangeNotifier {
     });
 
     notifyListeners();
-
-    if (failedImports.isNotEmpty) {
-      onFail(failedImports);
-    }
   }
 }

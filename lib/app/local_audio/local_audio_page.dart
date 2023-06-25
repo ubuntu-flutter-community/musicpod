@@ -27,16 +27,20 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   @override
   void initState() {
     super.initState();
-    context.read<LocalAudioModel>().init(
-          onFail: (failedImports) => ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              duration: const Duration(seconds: 10),
-              content: FailedImportsContent(
-                failedImports: failedImports,
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (!mounted) return;
+      context.read<LocalAudioModel>().init(
+            onFail: (failedImports) =>
+                ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                duration: const Duration(seconds: 10),
+                content: FailedImportsContent(
+                  failedImports: failedImports,
+                ),
               ),
             ),
-          ),
-        );
+          );
+    });
   }
 
   @override
