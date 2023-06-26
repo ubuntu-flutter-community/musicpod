@@ -171,20 +171,16 @@ class _AudioPageBodyState extends State<AudioPageBody> {
       sortListByAudioFilter(audioFilter: _filter, audios: sortedAudios);
     }
 
-    final description =
-        widget.pageDescription ?? sortedAudios.firstOrNull?.description;
-
-    final title = widget.pageTitle ?? sortedAudios.firstOrNull?.album ?? '';
-
     return SingleChildScrollView(
       controller: _controller,
       child: Column(
         children: [
           if (widget.showAudioPageHeader == true)
             AudioPageHeader(
-              title: title,
+              title: widget.pageTitle ?? sortedAudios.firstOrNull?.album ?? '',
               sortedAudios: sortedAudios,
-              description: description,
+              description: widget.pageDescription ??
+                  sortedAudios.firstOrNull?.description,
               image: widget.image,
               subTitle: widget.pageSubTitle,
               label: widget.pageLabel,
