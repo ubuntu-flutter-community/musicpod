@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:shimmer/shimmer.dart';
@@ -26,30 +25,25 @@ class SafeNetworkImage extends StatelessWidget {
     final light = theme.brightness == Brightness.light;
 
     final fallBack = fallBackIcon ??
-        Icon(
-          YaruIcons.music_note,
-          size: 60,
-          color: Theme.of(context).hintColor,
+        Shimmer.fromColors(
+          baseColor: light ? kShimmerBaseLight : kShimmerBaseDark,
+          highlightColor:
+              light ? kShimmerHighLightLight : kShimmerHighLightDark,
+          child: Container(
+            color: light ? kShimmerBaseLight : kShimmerBaseDark,
+            height: 250,
+            width: 250,
+          ),
         );
     if (url == null) return fallBack;
 
-    return CachedNetworkImage(
-      imageUrl: url!,
-      imageBuilder: (context, imageProvider) => Image(
-        image: imageProvider,
-        filterQuality: filterQuality,
-        fit: fit,
-      ),
-      placeholder: (context, url) => Shimmer.fromColors(
-        baseColor: light ? kShimmerBaseLight : kShimmerBaseDark,
-        highlightColor: light ? kShimmerHighLightLight : kShimmerHighLightDark,
-        child: Container(
-          color: light ? kShimmerBaseLight : kShimmerBaseDark,
-          height: 250,
-          width: 250,
-        ),
-      ),
-      errorWidget: (context, url, error) {
+    return Image.network(
+      url!,
+      filterQuality: filterQuality,
+      fit: fit,
+      frameBuilder: (context, child, frame, wasSyncLoaded) =>
+          frame == null ? fallBack : child,
+      errorBuilder: (context, url, error) {
         return errorIcon ??
             Icon(
               YaruIcons.image_missing,
