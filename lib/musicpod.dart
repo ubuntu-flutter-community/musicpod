@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/app.dart';
 import 'package:musicpod/l10n/l10n.dart';
@@ -19,6 +21,15 @@ class MusicPod extends StatelessWidget {
           onGenerateTitle: (context) => 'MusicPod',
           home: App.create(
             context: context,
+          ),
+          scrollBehavior: const MaterialScrollBehavior().copyWith(
+            dragDevices: {
+              PointerDeviceKind.mouse,
+              PointerDeviceKind.touch,
+              PointerDeviceKind.stylus,
+              PointerDeviceKind.unknown,
+              PointerDeviceKind.trackpad,
+            },
           ),
         );
       },

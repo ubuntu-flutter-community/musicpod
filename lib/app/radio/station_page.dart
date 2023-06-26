@@ -152,7 +152,7 @@ class StationPage extends StatelessWidget {
                         height: 20,
                       ),
                       YaruChoiceChipBar(
-                        yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+                        yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.stack,
                         labels: tags.map((e) => Text(e)).toList(),
                         isSelected: tags.map((e) => false).toList(),
                         onSelected: (index) {
