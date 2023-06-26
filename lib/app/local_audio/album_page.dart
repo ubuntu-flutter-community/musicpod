@@ -59,6 +59,7 @@ class AlbumPage extends StatelessWidget {
       onArtistTap: onArtistTap,
       audioPageType: AudioPageType.album,
       pageLabel: context.l10n.album,
+      pageSubtile: album?.firstOrNull?.artist,
       image: album?.firstOrNull?.pictureData != null
           ? Image.memory(
               album!.firstOrNull!.pictureData!,

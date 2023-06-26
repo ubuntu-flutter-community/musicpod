@@ -1,7 +1,5 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -9,7 +7,6 @@ class AudioPageHeader extends StatelessWidget {
   const AudioPageHeader({
     super.key,
     required this.title,
-    required this.sortedAudios,
     this.description,
     this.image,
     this.label,
@@ -17,7 +14,6 @@ class AudioPageHeader extends StatelessWidget {
   });
 
   final String title;
-  final List<Audio> sortedAudios;
   final String? description;
   final Widget? image;
   final String? label;
@@ -73,7 +69,7 @@ class AudioPageHeader extends StatelessWidget {
                   height: 5,
                 ),
                 Text(
-                  subTitle ?? sortedAudios.firstOrNull?.artist ?? '',
+                  subTitle ?? '',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.hintColor,
                     fontStyle: FontStyle.italic,

@@ -178,7 +178,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
           if (widget.showAudioPageHeader == true)
             AudioPageHeader(
               title: widget.pageTitle ?? sortedAudios.firstOrNull?.album ?? '',
-              sortedAudios: sortedAudios,
               description: widget.pageDescription ??
                   sortedAudios.firstOrNull?.description,
               image: widget.image,
