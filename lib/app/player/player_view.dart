@@ -57,6 +57,15 @@ class _PlayerViewState extends State<PlayerView> {
     final removeLikedAudio = context.read<LibraryModel>().removeLikedAudio;
     final addLikedAudio = context.read<LibraryModel>().addLikedAudio;
 
+    IconData iconData;
+    if (audio?.audioType == AudioType.radio) {
+      iconData = YaruIcons.radio;
+    } else if (audio?.audioType == AudioType.podcast) {
+      iconData = YaruIcons.podcast;
+    } else {
+      iconData = YaruIcons.music_note;
+    }
+
     final fullScreenButton = YaruIconButton(
       icon: Icon(
         isFullScreen && !widget.expandHeight
@@ -267,7 +276,7 @@ class _PlayerViewState extends State<PlayerView> {
                               filterQuality: FilterQuality.medium,
                               fit: BoxFit.cover,
                               fallBackIcon: Icon(
-                                YaruIcons.music_note,
+                                iconData,
                                 size: 200,
                                 color: theme.hintColor,
                               ),
@@ -279,7 +288,7 @@ class _PlayerViewState extends State<PlayerView> {
                           width: 400,
                           height: 400,
                           child: Icon(
-                            YaruIcons.music_note,
+                            iconData,
                             size: 300,
                             color: theme.hintColor.withOpacity(0.4),
                           ),
@@ -426,7 +435,7 @@ class _PlayerViewState extends State<PlayerView> {
                         width: 100,
                         height: 100,
                         child: Icon(
-                          YaruIcons.music_note,
+                          iconData,
                           size: 80,
                           color: theme.hintColor.withOpacity(0.4),
                         ),
