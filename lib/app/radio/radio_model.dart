@@ -59,6 +59,8 @@ class RadioModel extends SafeChangeNotifier {
   }
 
   Future<void> init(String? countryCode) async {
+    await _radioService.init();
+
     _stationsSub =
         _radioService.stationsChanged.listen((_) => notifyListeners());
 

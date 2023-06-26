@@ -3,13 +3,11 @@ import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:mpris_service/mpris_service.dart';
-import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/musicpod.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/local_audio_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
 import 'package:musicpod/service/radio_service.dart';
-import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -28,14 +26,11 @@ Future<void> main() async {
   registerService<LibraryService>(LibraryService.new);
   registerService<LocalAudioService>(LocalAudioService.new);
   registerService<PodcastService>(PodcastService.new);
-  registerService<Connectivity>(Connectivity.new);
+  final connectivity = Connectivity();
+  registerService<Connectivity>(() => connectivity);
   registerService<NotificationsClient>(NotificationsClient.new);
 
-  registerService<RadioService>(
-    () => RadioService(
-      const RadioBrowserApi.fromHost(kRadioUrl),
-    ),
-  );
+  registerService<RadioService>(() => RadioService(connectivity));
 
   runApp(const MusicPod());
 }

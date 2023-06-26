@@ -1,11 +1,21 @@
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:musicpod/app/common/constants.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
 class RadioService {
-  final RadioBrowserApi radioBrowserApi;
+  RadioBrowserApi? radioBrowserApi;
+  final Connectivity connectivity;
 
-  RadioService(this.radioBrowserApi);
+  RadioService(this.connectivity);
+
+  Future<void> init() async {
+    final result = await connectivity.checkConnectivity();
+    if (result != ConnectivityResult.none && radioBrowserApi == null) {
+      radioBrowserApi = const RadioBrowserApi.fromHost(kRadioUrl);
+    }
+  }
 
   List<Station>? _stations;
   List<Station>? get stations => _stations;
@@ -24,9 +34,9 @@ class RadioService {
     Tag? tag,
   }) async {
     RadioBrowserListResponse<Station>? response;
-
+    if (radioBrowserApi == null) return;
     if (name?.isEmpty == false) {
-      response = await radioBrowserApi.getStationsByName(
+      response = await radioBrowserApi!.getStationsByName(
         name: name!,
         parameters: const InputParameters(
           hidebroken: true,
@@ -35,7 +45,7 @@ class RadioService {
         ),
       );
     } else if (country?.isEmpty == false) {
-      response = await radioBrowserApi.getStationsByCountry(
+      response = await radioBrowserApi!.getStationsByCountry(
         country: country!,
         parameters: const InputParameters(
           hidebroken: true,
@@ -44,7 +54,7 @@ class RadioService {
         ),
       );
     } else if (tag != null) {
-      response = await radioBrowserApi.getStationsByTag(
+      response = await radioBrowserApi!.getStationsByTag(
         tag: tag.name,
         parameters: const InputParameters(
           hidebroken: true,
@@ -53,7 +63,7 @@ class RadioService {
         ),
       );
     } else if (state?.isEmpty == false) {
-      response = await radioBrowserApi.getStationsByState(
+      response = await radioBrowserApi!.getStationsByState(
         state: country!,
         parameters: const InputParameters(
           hidebroken: true,
@@ -77,7 +87,8 @@ class RadioService {
   Stream<bool> get tagsChanged => _tagsChangedController.stream;
 
   Future<void> loadTags() async {
-    final response = await radioBrowserApi.getTags(
+    if (radioBrowserApi == null) return;
+    final response = await radioBrowserApi!.getTags(
       parameters: const InputParameters(
         hidebroken: true,
         limit: 100,
