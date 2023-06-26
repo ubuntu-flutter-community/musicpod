@@ -33,7 +33,7 @@ class LikedAudioPage extends StatelessWidget {
       onArtistTap: onArtistTap,
       onAlbumTap: onAlbumTap,
       audioPageType: AudioPageType.likedAudio,
-      placeTrailer: false,
+      showAudioPageHeader: false,
       showWindowControls: showWindowControls,
       audios: likedAudios,
       pageId: 'likedAudio',

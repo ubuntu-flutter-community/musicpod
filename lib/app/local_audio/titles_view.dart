@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_page_control_panel.dart';
-import 'package:musicpod/app/common/audio_page_header.dart';
+import 'package:musicpod/app/common/audio_tile_header.dart';
 import 'package:musicpod/app/common/audio_tile.dart';
 import 'package:musicpod/app/common/super_like_button.dart';
 import 'package:musicpod/app/player/player_model.dart';
@@ -109,7 +109,7 @@ class _TitlesViewState extends State<TitlesView> {
             left: 20,
             right: 20,
           ),
-          child: AudioPageHeader(
+          child: AudioTileHeader(
             showTrack: true,
             audioFilter: _filter,
             onAudioFilterSelected: (audioFilter) => setState(() {

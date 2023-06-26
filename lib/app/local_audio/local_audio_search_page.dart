@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
-import 'package:musicpod/app/common/audio_page_header.dart';
+import 'package:musicpod/app/common/audio_tile_header.dart';
 import 'package:musicpod/app/common/audio_tile.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/loading_tile.dart';
@@ -138,7 +138,7 @@ class _Titles extends StatelessWidget {
         ),
         const Padding(
           padding: EdgeInsets.only(left: 15, right: 15),
-          child: AudioPageHeader(
+          child: AudioTileHeader(
             showTrack: false,
             audioFilter: AudioFilter.trackNumber,
           ),
