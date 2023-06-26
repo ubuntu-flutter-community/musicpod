@@ -182,7 +182,7 @@ class _PlayerViewState extends State<PlayerView> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(formatTime(position ?? Duration.zero)),
+            RepaintBoundary(child: Text(formatTime(position ?? Duration.zero))),
           ],
         ),
         Expanded(
@@ -203,16 +203,18 @@ class _PlayerViewState extends State<PlayerView> {
                 overlayColor: color?.withOpacity(0.3) ??
                     theme.primaryColor.withOpacity(0.5),
               ),
-              child: Slider(
-                min: 0,
-                max: sliderActive ? duration.inSeconds.toDouble() : 1.0,
-                value: sliderActive ? position.inSeconds.toDouble() : 0,
-                onChanged: sliderActive
-                    ? (v) async {
-                        setPosition(Duration(seconds: v.toInt()));
-                        await seek();
-                      }
-                    : null,
+              child: RepaintBoundary(
+                child: Slider(
+                  min: 0,
+                  max: sliderActive ? duration.inSeconds.toDouble() : 1.0,
+                  value: sliderActive ? position.inSeconds.toDouble() : 0,
+                  onChanged: sliderActive
+                      ? (v) async {
+                          setPosition(Duration(seconds: v.toInt()));
+                          await seek();
+                        }
+                      : null,
+                ),
               ),
             ),
           ),
@@ -220,7 +222,7 @@ class _PlayerViewState extends State<PlayerView> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(formatTime(duration ?? Duration.zero)),
+            RepaintBoundary(child: Text(formatTime(duration ?? Duration.zero))),
           ],
         ),
       ],
