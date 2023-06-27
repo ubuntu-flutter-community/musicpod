@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/app/common/constants.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 
 class SafeNetworkImage extends StatelessWidget {
@@ -21,28 +19,18 @@ class SafeNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final light = theme.brightness == Brightness.light;
-
-    final fallBack = fallBackIcon ??
-        Shimmer.fromColors(
-          baseColor: light ? kShimmerBaseLight : kShimmerBaseDark,
-          highlightColor:
-              light ? kShimmerHighLightLight : kShimmerHighLightDark,
-          child: Container(
-            color: light ? kShimmerBaseLight : kShimmerBaseDark,
-            height: 250,
-            width: 250,
-          ),
-        );
+    final fallBack = fallBackIcon ?? const Icon(YaruIcons.music_note);
     if (url == null) return fallBack;
 
     return Image.network(
       url!,
       filterQuality: filterQuality,
       fit: fit,
-      frameBuilder: (context, child, frame, wasSyncLoaded) =>
-          frame == null ? fallBack : child,
+      frameBuilder: (context, child, frame, wasSyncLoaded) => AnimatedOpacity(
+        duration: const Duration(seconds: 1),
+        opacity: frame == null ? 0 : 1.0,
+        child: child,
+      ),
       errorBuilder: (context, url, error) {
         return errorIcon ??
             Icon(
