@@ -45,6 +45,7 @@ Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https
 
 ## MusicPod Level 2
 
+- [ ] Big feature: add a shop to buy digital audio for your collection
 - [ ] streaming provider agnostic sharing links
 - [ ] additional tag-grid view for the radio page
 - [ ] option to download podcasts
