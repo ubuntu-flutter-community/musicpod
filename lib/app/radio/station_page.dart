@@ -36,22 +36,36 @@ class StationPage extends StatelessWidget {
 
   static Widget createIcon({
     required BuildContext context,
-    required Audio station,
+    required String? imageUrl,
     required bool selected,
+    required bool isOnline,
   }) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(
-        height: 23,
-        width: 23,
-        child: SafeNetworkImage(
-          fallBackIcon: selected
-              ? const Icon(YaruIcons.star_filled)
-              : const Icon(YaruIcons.star),
-          fit: BoxFit.fitHeight,
-          url: station.imageUrl,
-          filterQuality: FilterQuality.medium,
-        ),
+        height: kSideBarIconSize,
+        width: kSideBarIconSize,
+        child: isOnline
+            ? SafeNetworkImage(
+                fallBackIcon: selected
+                    ? const Icon(
+                        YaruIcons.star_filled,
+                      )
+                    : const Icon(
+                        YaruIcons.star,
+                      ),
+                errorIcon: selected
+                    ? const Icon(
+                        YaruIcons.star_filled,
+                      )
+                    : const Icon(
+                        YaruIcons.star,
+                      ),
+                fit: BoxFit.fitHeight,
+                url: imageUrl,
+                filterQuality: FilterQuality.medium,
+              )
+            : const Icon(YaruIcons.network_offline),
       ),
     );
   }
@@ -205,12 +219,23 @@ class SimpleStationPage extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(
-        height: 23,
-        width: 23,
+        height: kSideBarIconSize,
+        width: kSideBarIconSize,
         child: SafeNetworkImage(
           fallBackIcon: selected
-              ? const Icon(YaruIcons.star_filled)
-              : const Icon(YaruIcons.star),
+              ? const Icon(
+                  YaruIcons.star_filled,
+                )
+              : const Icon(
+                  YaruIcons.star,
+                ),
+          errorIcon: selected
+              ? const Icon(
+                  YaruIcons.star_filled,
+                )
+              : const Icon(
+                  YaruIcons.star,
+                ),
           fit: BoxFit.fitHeight,
           url: station.imageUrl,
           filterQuality: FilterQuality.medium,

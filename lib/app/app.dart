@@ -4,8 +4,11 @@ import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/audio_page_filter_bar.dart';
+import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/app/common/offline_page.dart';
+import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/connectivity_notifier.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/liked_audio_page.dart';
@@ -121,6 +124,11 @@ class _AppState extends State<App> with TickerProviderStateMixin {
     final shrinkSidebar = (width < 700);
     final playerToTheRight = width > 1700;
 
+    final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
+
+    final spotlightAudio = context.select((LibraryModel m) => m.spotlightAudio);
+    final setSpotlightAudio = library.setSpotlightAudio;
+
     void onTextTap({
       required String text,
       AudioType audioType = AudioType.local,
@@ -160,6 +168,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
       MasterItem(
         tileBuilder: (context) => Text(context.l10n.radio),
         builder: (context) => RadioPage(
+          isOnline: isOnline,
           showWindowControls: !playerToTheRight,
           onTextTap: (text) =>
               onTextTap(text: text, audioType: AudioType.radio),
@@ -172,7 +181,10 @@ class _AppState extends State<App> with TickerProviderStateMixin {
       MasterItem(
         tileBuilder: (context) => Text(context.l10n.podcasts),
         builder: (context) {
-          return PodcastsPage(showWindowControls: !playerToTheRight);
+          return PodcastsPage(
+            showWindowControls: !playerToTheRight,
+            isOnline: isOnline,
+          );
         },
         iconBuilder: (context, selected) => PodcastsPageIcon(
           selected: selected,
@@ -202,23 +214,31 @@ class _AppState extends State<App> with TickerProviderStateMixin {
         for (final podcast in library.podcasts.entries)
           MasterItem(
             tileBuilder: (context) => Text(podcast.key),
-            builder: (context) => PodcastPage(
-              pageId: podcast.key,
-              audios: podcast.value,
-              showWindowControls: !playerToTheRight,
-              onAlbumTap: (album) =>
-                  onTextTap(text: album, audioType: AudioType.podcast),
-              onArtistTap: (artist) =>
-                  onTextTap(text: artist, audioType: AudioType.podcast),
-              onControlButtonPressed: () => library.removePodcast(podcast.key),
-              imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
-                  podcast.value.firstOrNull?.imageUrl,
-            ),
-            iconBuilder: (context, selected) => PodcastPage.createIcon(
-              context,
-              podcast.value.firstOrNull?.albumArtUrl ??
-                  podcast.value.firstOrNull?.imageUrl,
-            ),
+            builder: (context) => isOnline
+                ? PodcastPage(
+                    pageId: podcast.key,
+                    audios: podcast.value,
+                    showWindowControls: !playerToTheRight,
+                    onAlbumTap: (album) =>
+                        onTextTap(text: album, audioType: AudioType.podcast),
+                    onArtistTap: (artist) =>
+                        onTextTap(text: artist, audioType: AudioType.podcast),
+                    onControlButtonPressed: () =>
+                        library.removePodcast(podcast.key),
+                    imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
+                        podcast.value.firstOrNull?.imageUrl,
+                  )
+                : const OfflinePage(),
+            iconBuilder: (context, selected) => isOnline
+                ? PodcastPage.createIcon(
+                    context: context,
+                    imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
+                        podcast.value.firstOrNull?.imageUrl,
+                    isOnline: isOnline,
+                  )
+                : const Icon(
+                    YaruIcons.network_offline,
+                  ),
           ),
       if (library.showPlaylists)
         for (final playlist in library.playlists.entries)
@@ -259,22 +279,29 @@ class _AppState extends State<App> with TickerProviderStateMixin {
         for (final station in library.starredStations.entries)
           MasterItem(
             tileBuilder: (context) => Text(station.key),
-            builder: (context) => StationPage(
-              showWindowControls: !playerToTheRight,
-              isStarred: true,
-              starStation: (station) {},
-              onTextTap: (text) =>
-                  onTextTap(text: text, audioType: AudioType.radio),
-              unStarStation: library.unStarStation,
-              name: station.key,
-              station: station.value.first,
-              onPlay: (audio) => play(newAudio: audio),
-            ),
-            iconBuilder: (context, selected) => StationPage.createIcon(
-              context: context,
-              station: station.value.first,
-              selected: selected,
-            ),
+            builder: (context) => isOnline
+                ? StationPage(
+                    showWindowControls: !playerToTheRight,
+                    isStarred: true,
+                    starStation: (station) {},
+                    onTextTap: (text) =>
+                        onTextTap(text: text, audioType: AudioType.radio),
+                    unStarStation: library.unStarStation,
+                    name: station.key,
+                    station: station.value.first,
+                    onPlay: (audio) => play(newAudio: audio),
+                  )
+                : const OfflinePage(),
+            iconBuilder: (context, selected) => isOnline
+                ? StationPage.createIcon(
+                    context: context,
+                    imageUrl: station.value.first.imageUrl,
+                    selected: selected,
+                    isOnline: isOnline,
+                  )
+                : const Icon(
+                    YaruIcons.network_offline,
+                  ),
           )
     ];
 
@@ -398,10 +425,46 @@ class _AppState extends State<App> with TickerProviderStateMixin {
       }
     }
 
+    final nav = Navigator.of(context);
+
     return Scaffold(
       key: ValueKey(shrinkSidebar),
       backgroundColor: surfaceTintColor,
-      body: library.ready ? body : const SplashScreen(),
+      body: library.ready
+          ? Stack(
+              children: [
+                body,
+                if (spotlightAudio != null)
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: YaruBorderContainer(
+                      color: Theme.of(context).colorScheme.background,
+                      child: SizedBox(
+                        height: 300,
+                        width: 300,
+                        child: AudioCard(
+                          onTap: () {
+                            onTextTap(
+                              text: spotlightAudio.album!,
+                              audioType: spotlightAudio.audioType!,
+                            );
+                            if (nav.canPop()) {
+                              nav.pop();
+                            }
+                            setSpotlightAudio(null);
+                          },
+                          image: spotlightAudio.audioType == AudioType.local
+                              ? Image.memory(spotlightAudio.pictureData!)
+                              : SafeNetworkImage(
+                                  url: spotlightAudio.imageUrl,
+                                ),
+                        ),
+                      ),
+                    ),
+                  )
+              ],
+            )
+          : const SplashScreen(),
     );
   }
 }

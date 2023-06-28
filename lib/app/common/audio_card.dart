@@ -50,7 +50,7 @@ class _AudioCardState extends State<AudioCard> {
                 ),
           ),
           if (widget.bottom != null) widget.bottom!,
-          if (_hovered)
+          if (_hovered && widget.onPlay != null)
             Positioned(
               bottom: 15,
               right: 15,

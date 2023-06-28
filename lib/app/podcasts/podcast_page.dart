@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_page.dart';
+import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
@@ -18,21 +19,31 @@ class PodcastPage extends StatelessWidget {
     this.audios,
   });
 
-  static Widget createIcon(BuildContext context, String? imageUrl) {
+  static Widget createIcon({
+    required BuildContext context,
+    String? imageUrl,
+    required bool isOnline,
+  }) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(
-        width: 23,
-        height: 23,
-        child: SafeNetworkImage(
-          url: imageUrl,
-          fit: BoxFit.fitHeight,
-          filterQuality: FilterQuality.medium,
-          fallBackIcon: Icon(
-            YaruIcons.rss,
-            color: Theme.of(context).hintColor,
-          ),
-        ),
+        width: kSideBarIconSize,
+        height: kSideBarIconSize,
+        child: isOnline
+            ? SafeNetworkImage(
+                url: imageUrl,
+                fit: BoxFit.fitHeight,
+                filterQuality: FilterQuality.medium,
+                fallBackIcon: const Icon(
+                  YaruIcons.rss,
+                  size: kSideBarIconSize,
+                ),
+                errorIcon: const Icon(
+                  YaruIcons.rss,
+                  size: kSideBarIconSize,
+                ),
+              )
+            : const Icon(YaruIcons.network_offline),
       ),
     );
   }
@@ -55,15 +66,15 @@ class PodcastPage extends StatelessWidget {
       image: imageUrl == null
           ? null
           : SafeNetworkImage(
-              fallBackIcon: SizedBox(
-                width: 200,
-                child: Center(
-                  child: Icon(
-                    YaruIcons.music_note,
-                    size: 80,
-                    color: Theme.of(context).hintColor,
-                  ),
-                ),
+              fallBackIcon: Icon(
+                YaruIcons.podcast,
+                size: 80,
+                color: Theme.of(context).hintColor,
+              ),
+              errorIcon: Icon(
+                YaruIcons.podcast,
+                size: 80,
+                color: Theme.of(context).hintColor,
               ),
               url: imageUrl,
               fit: BoxFit.fitWidth,

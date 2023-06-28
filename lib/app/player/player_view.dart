@@ -54,8 +54,11 @@ class _PlayerViewState extends State<PlayerView> {
     final theme = Theme.of(context);
     final isFullScreen = widget.expandHeight || fullScreen == true;
     final width = MediaQuery.of(context).size.width;
-    final removeLikedAudio = context.read<LibraryModel>().removeLikedAudio;
-    final addLikedAudio = context.read<LibraryModel>().addLikedAudio;
+    final lm = context.read<LibraryModel>();
+    final removeLikedAudio = lm.removeLikedAudio;
+    final addLikedAudio = lm.addLikedAudio;
+
+    final setSpotlightAudio = lm.setSpotlightAudio;
 
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
@@ -402,25 +405,31 @@ class _PlayerViewState extends State<PlayerView> {
           Row(
             children: [
               if (audio?.pictureData != null)
-                AnimatedContainer(
-                  height: 120,
-                  width: 120,
-                  duration: const Duration(milliseconds: 300),
-                  child: Image.memory(
-                    filterQuality: FilterQuality.medium,
-                    fit: BoxFit.cover,
-                    audio!.pictureData!,
-                    height: 120.0,
+                InkWell(
+                  onTap: () => setSpotlightAudio(audio),
+                  child: AnimatedContainer(
+                    height: 120,
+                    width: 120,
+                    duration: const Duration(milliseconds: 300),
+                    child: Image.memory(
+                      filterQuality: FilterQuality.medium,
+                      fit: BoxFit.cover,
+                      audio!.pictureData!,
+                      height: 120.0,
+                    ),
                   ),
                 )
               else if (audio?.imageUrl != null || audio?.albumArtUrl != null)
-                SizedBox(
-                  height: 120,
-                  width: 120,
-                  child: SafeNetworkImage(
-                    url: audio?.imageUrl ?? audio?.albumArtUrl,
-                    filterQuality: FilterQuality.medium,
-                    fit: BoxFit.cover,
+                InkWell(
+                  onTap: () => setSpotlightAudio(audio),
+                  child: SizedBox(
+                    height: 120,
+                    width: 120,
+                    child: SafeNetworkImage(
+                      url: audio?.imageUrl ?? audio?.albumArtUrl,
+                      filterQuality: FilterQuality.medium,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 )
               else

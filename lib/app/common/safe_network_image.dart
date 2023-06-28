@@ -19,7 +19,19 @@ class SafeNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fallBack = fallBackIcon ?? const Icon(YaruIcons.music_note);
+    final fallBack = fallBackIcon ??
+        const Icon(
+          YaruIcons.music_note,
+          size: 60,
+        );
+
+    final errorWidget = errorIcon ??
+        Icon(
+          YaruIcons.image_missing,
+          size: 60,
+          color: Theme.of(context).hintColor,
+        );
+
     if (url == null) return fallBack;
 
     return Image.network(
@@ -32,12 +44,7 @@ class SafeNetworkImage extends StatelessWidget {
         child: child,
       ),
       errorBuilder: (context, url, error) {
-        return errorIcon ??
-            Icon(
-              YaruIcons.image_missing,
-              size: 60,
-              color: Theme.of(context).hintColor,
-            );
+        return errorWidget;
       },
     );
   }

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_page.dart';
+import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -24,13 +25,13 @@ class AlbumPage extends StatelessWidget {
     Widget? albumArt;
     if (picture != null) {
       albumArt = SizedBox(
-        width: 23,
-        height: 23,
+        width: kSideBarIconSize,
+        height: kSideBarIconSize,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(5),
           child: Image.memory(
             picture,
-            height: 23,
+            height: kSideBarIconSize,
             fit: BoxFit.fitHeight,
             filterQuality: FilterQuality.medium,
           ),

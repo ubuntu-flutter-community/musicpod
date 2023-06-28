@@ -68,49 +68,49 @@ class AudioPageHeader extends StatelessWidget {
                 const SizedBox(
                   height: 5,
                 ),
-                Text(
-                  subTitle ?? '',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.hintColor,
-                    fontStyle: FontStyle.italic,
+                if (subTitle?.isNotEmpty == true)
+                  Text(
+                    subTitle!,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.hintColor,
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
-                ),
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 15),
-                    child: description == null
-                        ? const SizedBox.expand()
-                        : SizedBox(
-                            width: 800,
-                            child: InkWell(
-                              borderRadius:
-                                  BorderRadius.circular(kYaruButtonRadius),
-                              onTap: () => showDialog(
-                                context: context,
-                                builder: (context) => _DescriptionDialog(
-                                  title: title,
-                                  description: description!,
-                                ),
-                              ),
-                              child: Html(
-                                data: description,
-                                style: {
-                                  'html': Style(
-                                    margin: Margins.zero,
-                                    padding: HtmlPaddings.zero,
-                                  ),
-                                  'body': Style(
-                                    margin: Margins.zero,
-                                    padding: HtmlPaddings.zero,
-                                    color: theme.hintColor,
-                                    textOverflow: TextOverflow.ellipsis,
-                                    maxLines: 4,
-                                  )
-                                },
+                  child: description == null
+                      ? const SizedBox.expand()
+                      : SizedBox(
+                          width: 800,
+                          child: InkWell(
+                            borderRadius:
+                                BorderRadius.circular(kYaruButtonRadius),
+                            onTap: () => showDialog(
+                              context: context,
+                              builder: (context) => _DescriptionDialog(
+                                title: title,
+                                description: description!,
                               ),
                             ),
+                            child: Html(
+                              data: description,
+                              style: {
+                                'html': Style(
+                                  margin: Margins.zero,
+                                  padding: HtmlPaddings.zero,
+                                  textAlign: TextAlign.start,
+                                ),
+                                'body': Style(
+                                  margin: Margins.zero,
+                                  padding: HtmlPaddings.only(top: 5),
+                                  color: theme.hintColor,
+                                  textOverflow: TextOverflow.ellipsis,
+                                  maxLines: 4,
+                                  textAlign: TextAlign.start,
+                                )
+                              },
+                            ),
                           ),
-                  ),
+                        ),
                 )
               ],
             ),

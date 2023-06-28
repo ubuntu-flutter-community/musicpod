@@ -4,7 +4,6 @@ import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/country_popup.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
-import 'package:musicpod/app/connectivity_notifier.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/player/player_model.dart';
@@ -21,16 +20,27 @@ import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class RadioPage extends StatefulWidget {
-  const RadioPage({super.key, this.showWindowControls = true, this.onTextTap});
+  const RadioPage({
+    super.key,
+    this.showWindowControls = true,
+    this.onTextTap,
+    required this.isOnline,
+  });
 
   final bool showWindowControls;
   final void Function(String text)? onTextTap;
+  final bool isOnline;
 
-  static Widget create(BuildContext context, [bool showWindowControls = true]) {
+  static Widget create({
+    required BuildContext context,
+    bool showWindowControls = true,
+    required bool isOnline,
+  }) {
     return ChangeNotifierProvider(
       create: (_) => RadioModel(getService<RadioService>()),
       child: RadioPage(
         showWindowControls: showWindowControls,
+        isOnline: isOnline,
       ),
     );
   }
@@ -51,7 +61,6 @@ class _RadioPageState extends State<RadioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
     final stations = context.select((RadioModel m) => m.stations);
     final stationsCount = context.select((RadioModel m) => m.stations?.length);
     final search = context.read<RadioModel>().search;
@@ -77,7 +86,7 @@ class _RadioPageState extends State<RadioPage> {
     final textStyle =
         theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w100);
 
-    if (!isOnline) {
+    if (!widget.isOnline) {
       return const OfflinePage();
     } else {
       return YaruDetailPage(

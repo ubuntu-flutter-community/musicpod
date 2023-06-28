@@ -33,6 +33,7 @@ class RadioService {
     String? state,
     Tag? tag,
   }) async {
+    if (radioBrowserApi == null) return;
     RadioBrowserListResponse<Station>? response;
     if (radioBrowserApi == null) return;
     if (name?.isEmpty == false) {

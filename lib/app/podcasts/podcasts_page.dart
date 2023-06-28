@@ -6,7 +6,6 @@ import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
-import 'package:musicpod/app/connectivity_notifier.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
@@ -25,9 +24,11 @@ class PodcastsPage extends StatefulWidget {
   const PodcastsPage({
     super.key,
     this.showWindowControls = true,
+    required this.isOnline,
   });
 
   final bool showWindowControls;
+  final bool isOnline;
 
   @override
   State<PodcastsPage> createState() => _PodcastsPageState();
@@ -49,7 +50,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
     final model = context.read<PodcastModel>();
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
     final theme = Theme.of(context);
@@ -214,7 +214,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
       ],
     );
 
-    if (!isOnline) {
+    if (!widget.isOnline) {
       return const OfflinePage();
     } else {
       return Navigator(

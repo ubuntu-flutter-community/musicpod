@@ -183,4 +183,12 @@ class LibraryModel extends SafeChangeNotifier {
 
   bool get showPinnedAlbums =>
       audioPageType == null || audioPageType == AudioPageType.album;
+
+  Audio? _spotlightAudio;
+  Audio? get spotlightAudio => _spotlightAudio;
+  void setSpotlightAudio(Audio? value) {
+    if (value == _spotlightAudio) return;
+    _spotlightAudio = value;
+    notifyListeners();
+  }
 }
