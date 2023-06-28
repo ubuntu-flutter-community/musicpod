@@ -245,66 +245,73 @@ class _PlayerViewState extends State<PlayerView> {
         alignment: Alignment.topRight,
         children: [
           Center(
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: 40,
-                right: 40,
-                top: MediaQuery.of(context).size.height / 10,
-                bottom: MediaQuery.of(context).size.height / 30,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: audio?.pictureData != null
-                          ? Image.memory(
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: 800,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 40,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      if (audio?.pictureData != null)
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: SizedBox(
+                            child: Image.memory(
                               audio!.pictureData!,
-                              fit: BoxFit.fitWidth,
-                            )
-                          : (audio?.imageUrl != null ||
-                                  audio?.albumArtUrl != null)
-                              ? SafeNetworkImage(
-                                  url: audio?.imageUrl ?? audio?.albumArtUrl,
-                                  filterQuality: FilterQuality.medium,
-                                  fit: BoxFit.fitWidth,
-                                  fallBackIcon: Icon(
-                                    iconData,
-                                    size: 200,
-                                    color: theme.hintColor,
-                                  ),
-                                )
-                              : SizedBox(
-                                  width: 400,
-                                  child: Icon(
-                                    iconData,
-                                    size: 300,
-                                    color: theme.hintColor.withOpacity(0.4),
-                                  ),
-                                ),
-                    ),
+                              height: 400.0,
+                              fit: BoxFit.fitHeight,
+                            ),
+                          ),
+                        )
+                      else if (audio?.imageUrl != null ||
+                          audio?.albumArtUrl != null)
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: SizedBox(
+                            height: 400,
+                            child: SafeNetworkImage(
+                              url: audio?.imageUrl ?? audio?.albumArtUrl,
+                              filterQuality: FilterQuality.medium,
+                              fit: BoxFit.cover,
+                              fallBackIcon: Icon(
+                                iconData,
+                                size: 200,
+                                color: theme.hintColor,
+                              ),
+                            ),
+                          ),
+                        )
+                      else
+                        SizedBox(
+                          width: 400,
+                          height: 400,
+                          child: Icon(
+                            iconData,
+                            size: 300,
+                            color: theme.hintColor.withOpacity(0.4),
+                          ),
+                        ),
+                      controls,
+                      SizedBox(
+                        width: 600,
+                        child: sliderAndTime,
+                      ),
+                      if (audio != null)
+                        FittedBox(
+                          child: title,
+                        ),
+                      artist,
+                      const SizedBox(
+                        height: 10,
+                      )
+                    ],
                   ),
-                  const SizedBox(
-                    height: kYaruPagePadding,
-                  ),
-                  Expanded(child: controls),
-                  SizedBox(
-                    width: 600,
-                    child: sliderAndTime,
-                  ),
-                  if (audio != null)
-                    Expanded(
-                      flex: 1,
-                      child: FittedBox(fit: BoxFit.fitWidth, child: title),
-                    ),
-                  Expanded(flex: 2, child: artist),
-                  const SizedBox(
-                    height: 10,
-                  )
-                ],
+                ),
               ),
             ),
           ),
