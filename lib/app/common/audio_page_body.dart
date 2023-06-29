@@ -119,7 +119,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
 
     final audioControlPanel = Padding(
       padding: const EdgeInsets.only(
-        top: 20,
+        top: 10,
         left: 20,
         right: 20,
         bottom: 15,
