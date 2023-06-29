@@ -41,7 +41,9 @@ class PlayerView extends StatelessWidget {
     final playOrPause = playerModel.playOrPause;
 
     final library = context.read<LibraryModel>();
-    final liked = audio == null ? false : library.liked(audio);
+    final liked = audio == null
+        ? false
+        : context.select((LibraryModel m) => m.likedAudios.contains(audio));
     final width = MediaQuery.of(context).size.width;
     final removeLikedAudio = library.removeLikedAudio;
     final addLikedAudio = library.addLikedAudio;
@@ -49,7 +51,11 @@ class PlayerView extends StatelessWidget {
     final removeStarredStation = library.unStarStation;
     final isStarredStation = audio == null
         ? false
-        : library.isStarredStation(audio.title ?? audio.toString());
+        : context.select(
+            (LibraryModel m) => m.starredStations.containsKey(
+              audio.title,
+            ),
+          );
 
     final setSpotlightAudio = library.setSpotlightAudio;
 
