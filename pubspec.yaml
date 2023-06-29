@@ -11,8 +11,8 @@ dependencies:
   collection: ^1.17.0
   connectivity_plus: ^4.0.1
   desktop_notifications: ^0.6.3
-  file_selector: ^0.9.2+3
-  file_selector_linux: ^0.9.1+1
+  file_selector: ^0.9.4
+  file_selector_linux: ^0.9.2
   flutter:
     sdk: flutter
   flutter_html: ^3.0.0-beta.2
@@ -43,12 +43,9 @@ dependencies:
   ubuntu_service: ^0.2.0
   url_launcher: ^6.1.10
   xdg_directories: ^1.0.0
-  yaru: ^0.8.0
+  yaru: ^0.9.0
   yaru_icons: ^1.0.4
-  yaru_widgets:
-    git:
-      url: https://github.com/ubuntu/yaru_widgets.dart
-      ref: d92074d
+  yaru_widgets: ^2.5.0
 
 
 dev_dependencies:
