@@ -32,10 +32,7 @@ dependencies:
       ref: 3a4a721
   palette_generator: ^0.3.3+2
   path: ^1.8.2
-  podcast_search:
-    git:
-      url: https://github.com/Feichtmeier/podcast_search
-      ref: ac2368a8321664ec588881ca5c83bcd933385184
+  podcast_search: ^0.6.0
   provider: ^6.0.5
   radio_browser_api: ^0.1.0+4
   safe_change_notifier: ^0.2.0

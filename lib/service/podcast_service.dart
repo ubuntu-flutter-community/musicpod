@@ -48,8 +48,8 @@ class PodcastService {
           try {
             final Podcast? podcast = await compute(loadPodcast, item.feedUrl!);
 
-            if (podcast?.episodes?.isNotEmpty == true) {
-              final chartsPodcast = podcast!.episodes!
+            if (podcast?.episodes.isNotEmpty == true) {
+              final chartsPodcast = podcast!.episodes
                   .map((e) => _createAudio(e, podcast, item))
                   .toSet();
 
@@ -103,7 +103,7 @@ class PodcastService {
           try {
             final Podcast? podcast = await compute(loadPodcast, item.feedUrl!);
 
-            if (podcast?.episodes?.isNotEmpty == true) {
+            if (podcast?.episodes.isNotEmpty == true) {
               final episodes = <Audio>{};
 
               for (var episode in podcast?.episodes ?? <Episode>[]) {
@@ -144,7 +144,7 @@ class PodcastService {
     final episodes = <Audio>{};
     final Podcast? podcast = await compute(loadPodcast, url);
 
-    if (podcast?.episodes?.isNotEmpty == true) {
+    if (podcast?.episodes.isNotEmpty == true) {
       for (var episode in podcast?.episodes ?? []) {
         if (episode.contentUrl != null) {
           final audio = Audio(
