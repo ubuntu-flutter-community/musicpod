@@ -38,6 +38,7 @@ class FullHeightPlayer extends StatelessWidget {
     required this.setFullScreen,
     required this.fullScreen,
     required this.expandHeight,
+    required this.onTextTap,
   });
 
   final Audio? audio;
@@ -74,32 +75,46 @@ class FullHeightPlayer extends StatelessWidget {
   final bool fullScreen;
   final bool expandHeight;
 
+  final void Function({required String text, AudioType audioType}) onTextTap;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final title = Text(
-      audio?.title?.isNotEmpty == true ? audio!.title! : '',
-      style: TextStyle(
-        fontWeight: FontWeight.w200,
-        fontSize: 45,
-        color: theme.colorScheme.onSurface.withOpacity(0.7),
+    final title = InkWell(
+      borderRadius: BorderRadius.circular(4),
+      onTap: audio?.audioType == null || audio?.title == null
+          ? null
+          : () => onTextTap(text: audio!.title!, audioType: audio!.audioType!),
+      child: Text(
+        audio?.title?.isNotEmpty == true ? audio!.title! : '',
+        style: TextStyle(
+          fontWeight: FontWeight.w200,
+          fontSize: 45,
+          color: theme.colorScheme.onSurface.withOpacity(0.7),
+        ),
+        textAlign: TextAlign.center,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
-      textAlign: TextAlign.center,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
     );
 
-    final artist = Text(
-      audio?.artist ?? '',
-      style: TextStyle(
-        fontWeight: FontWeight.w100,
-        fontSize: 25,
-        color: theme.colorScheme.onSurface.withOpacity(0.7),
+    final artist = InkWell(
+      borderRadius: BorderRadius.circular(4),
+      onTap: audio?.audioType == null || audio?.artist == null
+          ? null
+          : () => onTextTap(text: audio!.artist!, audioType: audio!.audioType!),
+      child: Text(
+        audio?.artist ?? '',
+        style: TextStyle(
+          fontWeight: FontWeight.w100,
+          fontSize: 25,
+          color: theme.colorScheme.onSurface.withOpacity(0.7),
+        ),
+        textAlign: TextAlign.center,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
       ),
-      textAlign: TextAlign.center,
-      overflow: TextOverflow.ellipsis,
-      maxLines: 1,
     );
 
     final controls = PlayerControls(

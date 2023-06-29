@@ -4,11 +4,9 @@ import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/audio_page_filter_bar.dart';
-import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/offline_page.dart';
-import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/connectivity_notifier.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/liked_audio_page.dart';
@@ -125,9 +123,6 @@ class _AppState extends State<App> with TickerProviderStateMixin {
     final playerToTheRight = width > 1700;
 
     final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
-
-    final spotlightAudio = context.select((LibraryModel m) => m.spotlightAudio);
-    final setSpotlightAudio = library.setSpotlightAudio;
 
     void onTextTap({
       required String text,
@@ -376,13 +371,17 @@ class _AppState extends State<App> with TickerProviderStateMixin {
 
     final Widget body;
     if (isFullScreen == true) {
-      body = const Column(
+      body = Column(
         children: [
-          YaruWindowTitleBar(
+          const YaruWindowTitleBar(
             border: BorderSide.none,
             backgroundColor: Colors.transparent,
           ),
-          Expanded(child: PlayerView())
+          Expanded(
+            child: PlayerView(
+              onTextTap: onTextTap,
+            ),
+          )
         ],
       );
     } else {
@@ -395,7 +394,9 @@ class _AppState extends State<App> with TickerProviderStateMixin {
             const Divider(
               height: 0,
             ),
-            const PlayerView()
+            PlayerView(
+              onTextTap: onTextTap,
+            )
           ],
         );
       } else {
@@ -407,14 +408,15 @@ class _AppState extends State<App> with TickerProviderStateMixin {
             const VerticalDivider(
               width: 0,
             ),
-            const SizedBox(
+            SizedBox(
               width: 500,
               child: Column(
                 children: [
-                  YaruWindowTitleBar(),
+                  const YaruWindowTitleBar(),
                   Expanded(
                     child: PlayerView(
                       isSideBarPlayer: true,
+                      onTextTap: onTextTap,
                     ),
                   ),
                 ],
@@ -425,46 +427,10 @@ class _AppState extends State<App> with TickerProviderStateMixin {
       }
     }
 
-    final nav = Navigator.of(context);
-
     return Scaffold(
       key: ValueKey(shrinkSidebar),
       backgroundColor: surfaceTintColor,
-      body: library.ready
-          ? Stack(
-              children: [
-                body,
-                if (spotlightAudio != null)
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: YaruBorderContainer(
-                      color: Theme.of(context).colorScheme.background,
-                      child: SizedBox(
-                        height: 300,
-                        width: 300,
-                        child: AudioCard(
-                          onTap: () {
-                            onTextTap(
-                              text: spotlightAudio.album!,
-                              audioType: spotlightAudio.audioType!,
-                            );
-                            if (nav.canPop()) {
-                              nav.pop();
-                            }
-                            setSpotlightAudio(null);
-                          },
-                          image: spotlightAudio.audioType == AudioType.local
-                              ? Image.memory(spotlightAudio.pictureData!)
-                              : SafeNetworkImage(
-                                  url: spotlightAudio.imageUrl,
-                                ),
-                        ),
-                      ),
-                    ),
-                  )
-              ],
-            )
-          : const SplashScreen(),
+      body: library.ready ? body : const SplashScreen(),
     );
   }
 }

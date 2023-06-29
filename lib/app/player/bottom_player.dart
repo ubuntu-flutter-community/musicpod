@@ -12,7 +12,6 @@ class BottomPlayer extends StatelessWidget {
     super.key,
     required this.setFullScreen,
     required this.audio,
-    required this.setSpotlightAudio,
     required this.width,
     this.color,
     this.duration,
@@ -34,10 +33,10 @@ class BottomPlayer extends StatelessWidget {
     required this.addStarredStation,
     required this.removeLikedAudio,
     required this.addLikedAudio,
+    required this.onTextTap,
   });
 
   final Audio? audio;
-  final void Function(Audio? value) setSpotlightAudio;
   final double width;
   final Color? color;
   final Duration? duration;
@@ -64,6 +63,8 @@ class BottomPlayer extends StatelessWidget {
 
   final void Function(bool?) setFullScreen;
 
+  final void Function({required String text, AudioType audioType}) onTextTap;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -77,15 +78,21 @@ class BottomPlayer extends StatelessWidget {
       iconData = YaruIcons.music_note;
     }
 
-    final title = Text(
-      audio?.title?.isNotEmpty == true ? audio!.title! : '',
-      style: const TextStyle(
-        fontWeight: FontWeight.w200,
-        fontSize: 15,
+    final title = InkWell(
+      borderRadius: BorderRadius.circular(4),
+      onTap: audio?.audioType == null || audio?.title == null
+          ? null
+          : () => onTextTap(text: audio!.title!, audioType: audio!.audioType!),
+      child: Text(
+        audio?.title?.isNotEmpty == true ? audio!.title! : '',
+        style: const TextStyle(
+          fontWeight: FontWeight.w200,
+          fontSize: 15,
+        ),
+        textAlign: TextAlign.center,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
-      textAlign: TextAlign.center,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
     );
 
     return SizedBox(
@@ -107,31 +114,25 @@ class BottomPlayer extends StatelessWidget {
           Row(
             children: [
               if (audio?.pictureData != null)
-                InkWell(
-                  onTap: () => setSpotlightAudio(audio),
-                  child: AnimatedContainer(
-                    height: 120,
-                    width: 120,
-                    duration: const Duration(milliseconds: 300),
-                    child: Image.memory(
-                      filterQuality: FilterQuality.medium,
-                      fit: BoxFit.cover,
-                      audio!.pictureData!,
-                      height: 120.0,
-                    ),
+                AnimatedContainer(
+                  height: 120,
+                  width: 120,
+                  duration: const Duration(milliseconds: 300),
+                  child: Image.memory(
+                    filterQuality: FilterQuality.medium,
+                    fit: BoxFit.cover,
+                    audio!.pictureData!,
+                    height: 120.0,
                   ),
                 )
               else if (audio?.imageUrl != null || audio?.albumArtUrl != null)
-                InkWell(
-                  onTap: () => setSpotlightAudio(audio),
-                  child: SizedBox(
-                    height: 120,
-                    width: 120,
-                    child: SafeNetworkImage(
-                      url: audio?.imageUrl ?? audio?.albumArtUrl,
-                      filterQuality: FilterQuality.medium,
-                      fit: BoxFit.cover,
-                    ),
+                SizedBox(
+                  height: 120,
+                  width: 120,
+                  child: SafeNetworkImage(
+                    url: audio?.imageUrl ?? audio?.albumArtUrl,
+                    filterQuality: FilterQuality.medium,
+                    fit: BoxFit.cover,
                   ),
                 )
               else
@@ -207,15 +208,25 @@ class BottomPlayer extends StatelessWidget {
                               if (audio?.artist?.trim().isNotEmpty == true)
                                 Flexible(
                                   flex: 1,
-                                  child: Text(
-                                    audio!.artist!,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w100,
-                                      fontSize: 15,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(4),
+                                    onTap: audio?.audioType == null ||
+                                            audio?.artist == null
+                                        ? null
+                                        : () => onTextTap(
+                                              text: audio!.artist!,
+                                              audioType: audio!.audioType!,
+                                            ),
+                                    child: Text(
+                                      audio?.artist ?? '',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w100,
+                                        fontSize: 15,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
                                     ),
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
                                   ),
                                 ),
                             ],

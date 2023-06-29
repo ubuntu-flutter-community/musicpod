@@ -3,15 +3,18 @@ import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/bottom_player.dart';
 import 'package:musicpod/app/player/full_height_player.dart';
 import 'package:musicpod/app/player/player_model.dart';
+import 'package:musicpod/data/audio.dart';
 import 'package:provider/provider.dart';
 
 class PlayerView extends StatelessWidget {
   const PlayerView({
     super.key,
     this.isSideBarPlayer = false,
+    required this.onTextTap,
   });
 
   final bool isSideBarPlayer;
+  final void Function({required String text, AudioType audioType}) onTextTap;
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +60,11 @@ class PlayerView extends StatelessWidget {
             ),
           );
 
-    final setSpotlightAudio = library.setSpotlightAudio;
-
     final showFullHeightPlayer = isSideBarPlayer || fullScreen == true;
 
     if (showFullHeightPlayer) {
       return FullHeightPlayer(
+        onTextTap: onTextTap,
         expandHeight: isSideBarPlayer,
         fullScreen: showFullHeightPlayer,
         setFullScreen: setFullScreen,
@@ -95,9 +97,9 @@ class PlayerView extends StatelessWidget {
     }
 
     return BottomPlayer(
+      onTextTap: onTextTap,
       setFullScreen: setFullScreen,
       audio: audio,
-      setSpotlightAudio: setSpotlightAudio,
       width: width,
       color: color,
       duration: duration,
