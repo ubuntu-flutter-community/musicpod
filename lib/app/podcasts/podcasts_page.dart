@@ -6,10 +6,10 @@ import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
+import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
-import 'package:musicpod/app/podcasts/podcast_search_field.dart';
 import 'package:musicpod/app/podcasts/podcast_search_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
@@ -131,6 +131,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
               theme,
               removePodcast,
               addPodcast,
+              setSearchQuery,
+              searchQuery,
+              search,
             ),
           );
         },
@@ -225,7 +228,13 @@ class _PodcastsPageState extends State<PodcastsPage> {
                 style: widget.showWindowControls
                     ? YaruTitleBarStyle.normal
                     : YaruTitleBarStyle.undecorated,
-                title: const PodcastSearchField(),
+                title: SearchField(
+                  text: searchQuery,
+                  onSubmitted: (value) {
+                    setSearchQuery(value);
+                    search(searchQuery: value);
+                  },
+                ),
               ),
               body: page,
             ),
@@ -237,7 +246,13 @@ class _PodcastsPageState extends State<PodcastsPage> {
                   style: widget.showWindowControls
                       ? YaruTitleBarStyle.normal
                       : YaruTitleBarStyle.undecorated,
-                  title: const PodcastSearchField(),
+                  title: SearchField(
+                    text: searchQuery,
+                    onSubmitted: (value) {
+                      setSearchQuery(value);
+                      search(searchQuery: value);
+                    },
+                  ),
                   leading: YaruBackButton(
                     style: YaruBackButtonStyle.rounded,
                     onPressed: () {
@@ -293,6 +308,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
     ThemeData theme,
     void Function(String name) removePodcast,
     void Function(String name, Set<Audio> audios) addPodcast,
+    void Function(String?) setSearchQuery,
+    String? searchQuery,
+    void Function({String? searchQuery}) search,
   ) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -345,7 +363,13 @@ class _PodcastsPageState extends State<PodcastsPage> {
                 filterQuality: FilterQuality.medium,
               ),
             ),
-            title: const PodcastSearchField(),
+            title: SearchField(
+              text: searchQuery,
+              onSubmitted: (value) {
+                setSearchQuery(value);
+                search(searchQuery: value);
+              },
+            ),
             deletable: false,
             editableName: false,
             audios: podcast,

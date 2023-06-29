@@ -8,7 +8,7 @@ import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/radio/radio_model.dart';
-import 'package:musicpod/app/radio/radio_search_field.dart';
+import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/radio/station_page.dart';
 import 'package:musicpod/app/radio/tag_popup.dart';
 import 'package:musicpod/l10n/l10n.dart';
@@ -94,7 +94,7 @@ class _RadioPageState extends State<RadioPage> {
           style: widget.showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
-          title: RadioSearchField(
+          title: SearchField(
             text: searchQuery,
             onSubmitted: (value) {
               setSearchQuery(value);

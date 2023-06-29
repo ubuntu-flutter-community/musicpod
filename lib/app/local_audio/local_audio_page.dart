@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/common/tabbed_page.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/local_audio/artists_view.dart';
 import 'package:musicpod/app/local_audio/failed_imports_content.dart';
 import 'package:musicpod/app/local_audio/local_audio_model.dart';
-import 'package:musicpod/app/local_audio/local_audio_search_field.dart';
 import 'package:musicpod/app/local_audio/local_audio_search_page.dart';
 import 'package:musicpod/app/local_audio/titles_view.dart';
 import 'package:musicpod/l10n/l10n.dart';
@@ -106,8 +106,12 @@ class StartPage extends StatelessWidget {
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
-        title: LocalAudioSearchField(
+        title: SearchField(
           key: ValueKey(searchQuery),
+          onSubmitted: (value) {
+            setSearchQuery(value);
+            search();
+          },
         ),
       ),
       body: TabbedPage(

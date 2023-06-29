@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/l10n/l10n.dart';
-import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-class PodcastSearchField extends StatefulWidget {
-  const PodcastSearchField({
+class SearchField extends StatefulWidget {
+  const SearchField({
     super.key,
+    this.text,
+    this.onSubmitted,
+    this.hintText,
   });
 
+  final String? text;
+  final String? hintText;
+  final void Function(String? value)? onSubmitted;
+
   @override
-  State<PodcastSearchField> createState() => _PodcastSearchFieldState();
+  State<SearchField> createState() => _SearchFieldState();
 }
 
-class _PodcastSearchFieldState extends State<PodcastSearchField> {
+class _SearchFieldState extends State<SearchField> {
   late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
-    final text = context.read<PodcastModel>().searchQuery;
-    _controller = TextEditingController(text: text);
+    _controller = TextEditingController(text: widget.text);
   }
 
   @override
@@ -34,7 +38,6 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
-    final model = context.read<PodcastModel>();
 
     return SizedBox(
       height: 35,
@@ -46,10 +49,7 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
         ),
         textAlignVertical: TextAlignVertical.center,
         cursorWidth: 1,
-        onSubmitted: (value) {
-          model.setSearchQuery(value);
-          model.search(searchQuery: value);
-        },
+        onSubmitted: widget.onSubmitted,
         controller: _controller,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 18),
@@ -59,13 +59,16 @@ class _PodcastSearchFieldState extends State<PodcastSearchField> {
           ),
           prefixIconConstraints:
               const BoxConstraints(minWidth: 34, minHeight: 30),
-          hintText: context.l10n.search,
+          hintText: widget.hintText ?? context.l10n.search,
           suffixIconConstraints:
               const BoxConstraints(maxHeight: 35, maxWidth: 35),
           suffixIcon: _controller.text.isEmpty
               ? null
               : YaruIconButton(
-                  onPressed: () => _controller.clear(),
+                  onPressed: () {
+                    _controller.clear();
+                    widget.onSubmitted?.call(null);
+                  },
                   icon: const Icon(
                     YaruIcons.edit_clear,
                   ),

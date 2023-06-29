@@ -2,17 +2,17 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
-import 'package:musicpod/app/common/audio_tile_header.dart';
 import 'package:musicpod/app/common/audio_tile.dart';
+import 'package:musicpod/app/common/audio_tile_header.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/loading_tile.dart';
 import 'package:musicpod/app/common/round_image_container.dart';
+import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/common/spaced_divider.dart';
+import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
 import 'package:musicpod/app/local_audio/artist_page.dart';
-import 'package:musicpod/app/local_audio/local_audio_search_field.dart';
 import 'package:musicpod/app/player/player_model.dart';
-import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
@@ -81,9 +81,13 @@ class LocalAudioSearchPage extends StatelessWidget {
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
-        title: LocalAudioSearchField(
+        title: SearchField(
           key: ValueKey(searchQuery),
           text: searchQuery,
+          onSubmitted: (value) {
+            setSearchQuery(value);
+            search();
+          },
         ),
         leading: Navigator.canPop(context)
             ? YaruBackButton(

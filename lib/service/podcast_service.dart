@@ -84,11 +84,11 @@ class PodcastService {
     Country country = Country.unitedKingdom,
     Language language = Language.none,
   }) async {
-    if (searchQuery?.isEmpty == true) return;
+    if (searchQuery == null || searchQuery.isEmpty == true) return;
     _updateSearchResult(null);
 
     SearchResult results = await _search.search(
-      searchQuery!,
+      searchQuery,
       country: country,
       language: language,
       limit: 10,

@@ -4,10 +4,10 @@ import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
+import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
-import 'package:musicpod/app/podcasts/podcast_search_field.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -32,6 +32,7 @@ class PodcastSearchPage extends StatelessWidget {
     final addPodcast = context.read<LibraryModel>().addPodcast;
     final search = model.search;
     final setSearchQuery = model.setSearchQuery;
+    final searchQuery = context.select((PodcastModel m) => m.searchQuery);
 
     void onTapText(String text) {
       setSearchQuery(text);
@@ -67,6 +68,9 @@ class PodcastSearchPage extends StatelessWidget {
               theme,
               removePodcast,
               addPodcast,
+              setSearchQuery,
+              searchQuery,
+              search,
             );
           },
         );
@@ -82,6 +86,11 @@ class PodcastSearchPage extends StatelessWidget {
     ThemeData theme,
     void Function(String name) removePodcast,
     void Function(String name, Set<Audio> audios) addPodcast,
+    void Function(String?) setSearchQuery,
+    String? searchQuery,
+    void Function({
+      String? searchQuery,
+    }) search,
   ) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -139,7 +148,13 @@ class PodcastSearchPage extends StatelessWidget {
                             );
                           },
                   ),
-            title: const PodcastSearchField(),
+            title: SearchField(
+              text: searchQuery,
+              onSubmitted: (value) {
+                setSearchQuery(value);
+                search(searchQuery: value);
+              },
+            ),
             deletable: false,
             editableName: false,
             audios: podcast,
