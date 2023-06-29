@@ -414,7 +414,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                   YaruWindowTitleBar(),
                   Expanded(
                     child: PlayerView(
-                      expandHeight: true,
+                      isSideBarPlayer: true,
                     ),
                   ),
                 ],
