@@ -290,7 +290,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> loadColor() async {
     if (audio == null) return;
-    if (audio?.path != null && audio?.pictureData == null) {
+    if (audio?.path != null && audio?.pictureData != null) {
       final image = MemoryImage(
         audio!.pictureData!,
       );
