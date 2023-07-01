@@ -136,24 +136,24 @@ class BottomPlayer extends StatelessWidget {
                   ),
                 )
               else
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 10,
-                    ),
-                    child: Center(
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Center(
                       child: SizedBox(
-                        width: 100,
-                        height: 100,
+                        width: 120,
+                        height: 120,
                         child: Icon(
                           iconData,
                           size: 80,
-                          color: theme.hintColor.withOpacity(0.4),
+                          color: theme.hintColor,
                         ),
                       ),
                     ),
-                  ),
+                    const VerticalDivider(
+                      width: 0,
+                    )
+                  ],
                 ),
               Expanded(
                 child: Padding(
