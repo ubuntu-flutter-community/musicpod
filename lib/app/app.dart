@@ -101,7 +101,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final localAudioModel = context.watch<LocalAudioModel>();
+    final localAudioModel = context.read<LocalAudioModel>();
     final searchLocal = localAudioModel.search;
     final setLocalSearchQuery = localAudioModel.setSearchQuery;
 

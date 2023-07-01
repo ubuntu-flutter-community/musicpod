@@ -84,12 +84,13 @@ class StartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audios = context.read<LocalAudioModel>().audios;
-    final artists = context.read<LocalAudioModel>().findAllArtists();
-    final albums = context.read<LocalAudioModel>().findAllAlbums();
+    final model = context.read<LocalAudioModel>();
+    final audios = context.select((LocalAudioModel m) => m.audios);
+    final artists = model.findAllArtists();
+    final albums = model.findAllAlbums();
     final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
-    final setSearchQuery = context.read<LocalAudioModel>().setSearchQuery;
-    final search = context.read<LocalAudioModel>().search;
+    final setSearchQuery = model.setSearchQuery;
+    final search = model.search;
 
     final theme = Theme.of(context);
 
