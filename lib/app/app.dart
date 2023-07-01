@@ -345,8 +345,14 @@ class _AppState extends State<App> with TickerProviderStateMixin {
         if (index == 3) {
           column = Column(
             children: [
+              const SizedBox(
+                height: 10,
+              ),
               const Divider(
-                height: 30,
+                height: 0,
+              ),
+              const SizedBox(
+                height: 15,
               ),
               tile
             ],
@@ -362,7 +368,13 @@ class _AppState extends State<App> with TickerProviderStateMixin {
           );
         }
 
-        return column ?? tile;
+        return column ??
+            (index == 0
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: tile,
+                  )
+                : tile);
       },
       pageBuilder: (context, index) => YaruDetailPage(
         body: masterItems[index].builder(context),

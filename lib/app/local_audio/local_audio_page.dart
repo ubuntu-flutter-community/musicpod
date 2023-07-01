@@ -118,9 +118,9 @@ class StartPage extends StatelessWidget {
         initialIndex: selectedIndex,
         onTap: onIndexSelected,
         tabTitles: [
-          context.l10n.titles,
-          context.l10n.artists,
-          context.l10n.albums,
+          Text(context.l10n.titles),
+          Text(context.l10n.artists),
+          Text(context.l10n.albums),
         ],
         views: [
           TitlesView(

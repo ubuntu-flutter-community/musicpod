@@ -68,7 +68,7 @@ class _CompactMasterTile extends StatelessWidget {
           borderRadius:
               const BorderRadius.all(Radius.circular(kYaruButtonRadius)),
           child: Padding(
-            padding: const EdgeInsets.all(6),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: leading != null ? [leading!] : [],

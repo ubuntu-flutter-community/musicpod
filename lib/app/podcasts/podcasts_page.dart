@@ -53,6 +53,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final model = context.read<PodcastModel>();
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
     final theme = Theme.of(context);
+    final light = theme.brightness == Brightness.light;
     final podcastSubscribed = context.read<LibraryModel>().podcastSubscribed;
     final removePodcast = context.read<LibraryModel>().removePodcast;
     final addPodcast = context.read<LibraryModel>().addPodcast;
@@ -141,7 +142,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     }
 
     final controlPanel = Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 11),
       child: Row(
         children: [
           Text(
@@ -224,6 +225,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
         pages: [
           MaterialPage(
             child: YaruDetailPage(
+              backgroundColor: light ? kBackGroundLight : kBackgroundDark,
               appBar: YaruWindowTitleBar(
                 style: widget.showWindowControls
                     ? YaruTitleBarStyle.normal

@@ -82,6 +82,7 @@ class _RadioPageState extends State<RadioPage> {
     final isStarredStation = context.read<LibraryModel>().isStarredStation;
 
     final theme = Theme.of(context);
+    final light = theme.brightness == Brightness.light;
 
     final textStyle =
         theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w100);
@@ -90,6 +91,7 @@ class _RadioPageState extends State<RadioPage> {
       return const OfflinePage();
     } else {
       return YaruDetailPage(
+        backgroundColor: light ? kBackGroundLight : kBackgroundDark,
         appBar: YaruWindowTitleBar(
           style: widget.showWindowControls
               ? YaruTitleBarStyle.normal
@@ -106,10 +108,10 @@ class _RadioPageState extends State<RadioPage> {
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                top: 20,
-                left: 20,
+                top: 12,
+                left: 15,
                 right: 20,
-                bottom: 15,
+                bottom: 10,
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
@@ -151,6 +153,15 @@ class _RadioPageState extends State<RadioPage> {
                   )
                 ],
               ),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            const Divider(
+              height: 0,
+            ),
+            const SizedBox(
+              height: 15,
             ),
             Expanded(
               child: GridView.builder(

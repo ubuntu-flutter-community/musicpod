@@ -13,10 +13,9 @@ class TabbedPage extends StatefulWidget {
     required this.views,
     this.width,
     this.padding = const EdgeInsets.only(
-      bottom: 10,
-      top: kYaruPagePadding / 2,
-      right: kYaruPagePadding,
-      left: kYaruPagePadding,
+      top: 10,
+      right: 20,
+      left: 20,
     ),
     this.initialIndex = 0,
     this.onTap,
@@ -26,7 +25,7 @@ class TabbedPage extends StatefulWidget {
   final List<Widget>? tabIcons;
 
   /// The list of titles as [String]s - must have the same length as [tabIcons] and [views].
-  final List<String> tabTitles;
+  final List<Widget> tabTitles;
 
   /// The list of [Widget]-views  - must have the same length as [tabTitles] and [tabIcons].
   final List<Widget> views;
@@ -75,7 +74,7 @@ class _TabbedPageState extends State<TabbedPage> with TickerProviderStateMixin {
           padding: widget.padding,
           child: Container(
             width: widget.width,
-            height: 50,
+            height: 43,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(kYaruContainerRadius),
             ),
@@ -90,8 +89,8 @@ class _TabbedPageState extends State<TabbedPage> with TickerProviderStateMixin {
               tabs: [
                 for (var i = 0; i < widget.views.length; i++)
                   Tab(
-                    text: widget.tabTitles[i],
                     icon: widget.tabIcons?[i],
+                    child: widget.tabTitles[i],
                   )
               ],
             ),
