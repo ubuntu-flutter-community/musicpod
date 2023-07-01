@@ -412,7 +412,10 @@ class _AppState extends State<App> with TickerProviderStateMixin {
               width: 500,
               child: Column(
                 children: [
-                  const YaruWindowTitleBar(),
+                  const YaruWindowTitleBar(
+                    backgroundColor: Colors.transparent,
+                    border: BorderSide.none,
+                  ),
                   Expanded(
                     child: PlayerView(
                       isSideBarPlayer: true,
