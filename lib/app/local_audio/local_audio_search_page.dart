@@ -93,6 +93,7 @@ class LocalAudioSearchPage extends StatelessWidget {
           onSearchActive: () {
             Navigator.of(context).pop();
             setSearchActive(false);
+            setSearchQuery(null);
           },
         ),
         leading: Navigator.canPop(context)

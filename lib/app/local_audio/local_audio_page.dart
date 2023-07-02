@@ -46,6 +46,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   @override
   Widget build(BuildContext context) {
     final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
+    final searchActive = context.select((LocalAudioModel m) => m.searchActive);
 
     return Navigator(
       onPopPage: (route, result) => route.didPop(result),
@@ -59,7 +60,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             }),
           ),
         ),
-        if (searchQuery?.isNotEmpty == true)
+        if (searchQuery?.isNotEmpty == true && searchActive)
           MaterialPage(
             child: LocalAudioSearchPage(
               showWindowControls: widget.showWindowControls,
