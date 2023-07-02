@@ -26,7 +26,7 @@ class CountryPopup extends StatelessWidget {
       ),
     );
     final fallBackTextStyle =
-        theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w100);
+        theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
     return YaruPopupMenuButton<Country>(
       style: buttonStyle,
       onSelected: onSelected,

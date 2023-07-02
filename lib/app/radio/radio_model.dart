@@ -104,6 +104,14 @@ class RadioModel extends SafeChangeNotifier {
   String? get searchQuery => _radioService.searchQuery;
   void setSearchQuery(String? value) => _radioService.setSearchQuery(value);
 
+  bool _searchActive = false;
+  bool get searchActive => _searchActive;
+  void setSearchActive(bool value) {
+    if (value == _searchActive) return;
+    _searchActive = value;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _stationsSub?.cancel();

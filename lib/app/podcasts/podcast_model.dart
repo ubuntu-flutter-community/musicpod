@@ -29,6 +29,14 @@ class PodcastModel extends SafeChangeNotifier {
   Set<Set<Audio>>? get charts => _podcastService.chartsPodcasts;
   Set<Set<Audio>>? get podcastSearchResult => _podcastService.searchResult;
 
+  bool _searchActive = false;
+  bool get searchActive => _searchActive;
+  void setSearchActive(bool value) {
+    if (value == _searchActive) return;
+    _searchActive = value;
+    notifyListeners();
+  }
+
   String? _searchQuery;
   String? get searchQuery => _searchQuery;
   void setSearchQuery(String? value) {
