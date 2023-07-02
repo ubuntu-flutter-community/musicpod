@@ -119,21 +119,29 @@ class _RadioPageState extends State<RadioPage> {
           style: widget.showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
+          titleSpacing: 0,
+          leading: Center(
+            child: SizedBox(
+              height: kHeaderBarItemHeight,
+              width: kHeaderBarItemHeight,
+              child: YaruIconButton(
+                isSelected: searchActive,
+                selectedIcon: Icon(
+                  YaruIcons.search,
+                  size: 16,
+                  color: theme.colorScheme.onSurface,
+                ),
+                icon: const Icon(
+                  YaruIcons.search,
+                  size: 16,
+                ),
+                onPressed: () => setSearchActive(!searchActive),
+              ),
+            ),
+          ),
           title: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (!searchActive)
-                SizedBox(
-                  height: kHeaderBarItemHeight,
-                  width: kHeaderBarItemHeight,
-                  child: YaruIconButton(
-                    icon: const Icon(
-                      YaruIcons.search,
-                      size: 16,
-                    ),
-                    onPressed: () => setSearchActive(!searchActive),
-                  ),
-                ),
               if (searchActive)
                 Expanded(
                   child: SearchField(

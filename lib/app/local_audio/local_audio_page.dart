@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/search_field.dart';
-import 'package:musicpod/app/common/tabbed_page.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/local_audio/artists_view.dart';
 import 'package:musicpod/app/local_audio/failed_imports_content.dart';
@@ -91,7 +91,8 @@ class StartPage extends StatelessWidget {
     final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
     final setSearchQuery = model.setSearchQuery;
     final search = model.search;
-
+    final searchActive = context.select((LocalAudioModel m) => m.searchActive);
+    final setSearchActive = model.setSearchActive;
     final theme = Theme.of(context);
 
     void onTap(text) {
@@ -99,50 +100,98 @@ class StartPage extends StatelessWidget {
       search();
     }
 
-    return YaruDetailPage(
-      backgroundColor: theme.brightness == Brightness.dark
-          ? const Color.fromARGB(255, 37, 37, 37)
-          : Colors.white,
-      appBar: YaruWindowTitleBar(
-        style: showWindowControls
-            ? YaruTitleBarStyle.normal
-            : YaruTitleBarStyle.undecorated,
-        title: SearchField(
-          key: ValueKey(searchQuery),
-          onSubmitted: (value) {
-            setSearchQuery(value);
-            search();
-          },
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        backgroundColor: theme.brightness == Brightness.dark
+            ? const Color.fromARGB(255, 37, 37, 37)
+            : Colors.white,
+        appBar: YaruWindowTitleBar(
+          style: showWindowControls
+              ? YaruTitleBarStyle.normal
+              : YaruTitleBarStyle.undecorated,
+          leading: Center(
+            child: SizedBox(
+              height: kHeaderBarItemHeight,
+              width: kHeaderBarItemHeight,
+              child: YaruIconButton(
+                isSelected: searchActive,
+                selectedIcon: Icon(
+                  YaruIcons.search,
+                  size: 16,
+                  color: theme.colorScheme.onSurface,
+                ),
+                icon: const Icon(
+                  YaruIcons.search,
+                  size: 16,
+                ),
+                onPressed: () => setSearchActive(!searchActive),
+              ),
+            ),
+          ),
+          titleSpacing: 0,
+          title: Row(
+            children: [
+              if (searchActive)
+                Expanded(
+                  child: SearchField(
+                    key: ValueKey(searchQuery),
+                    onSubmitted: (value) {
+                      setSearchQuery(value);
+                      search();
+                    },
+                    onSearchActive: () {
+                      setSearchActive(false);
+                    },
+                  ),
+                )
+              else
+                Expanded(
+                  child: TabBar(
+                    labelStyle: theme.textTheme.bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w500),
+                    // indicatorColor: Colors.transparent,
+                    dividerColor: Colors.transparent,
+
+                    onTap: onIndexSelected,
+                    tabs: [
+                      Tab(
+                        child: Text(context.l10n.titles),
+                      ),
+                      Tab(
+                        child: Text(context.l10n.artists),
+                      ),
+                      Tab(
+                        child: Text(context.l10n.albums),
+                      ),
+                    ],
+                  ),
+                )
+            ],
+          ),
         ),
-      ),
-      body: TabbedPage(
-        initialIndex: selectedIndex,
-        onTap: onIndexSelected,
-        tabTitles: [
-          Text(context.l10n.titles),
-          Text(context.l10n.artists),
-          Text(context.l10n.albums),
-        ],
-        views: [
-          TitlesView(
-            onArtistTap: onTap,
-            onAlbumTap: onTap,
-            audios: audios,
-            showWindowControls: showWindowControls,
-          ),
-          ArtistsView(
-            showWindowControls: showWindowControls,
-            similarArtistsSearchResult: artists,
-            onArtistTap: onTap,
-            onAlbumTap: onTap,
-          ),
-          AlbumsView(
-            showWindowControls: showWindowControls,
-            albums: albums,
-            onArtistTap: onTap,
-            onAlbumTap: onTap,
-          ),
-        ],
+        body: TabBarView(
+          children: [
+            TitlesView(
+              onArtistTap: onTap,
+              onAlbumTap: onTap,
+              audios: audios,
+              showWindowControls: showWindowControls,
+            ),
+            ArtistsView(
+              showWindowControls: showWindowControls,
+              similarArtistsSearchResult: artists,
+              onArtistTap: onTap,
+              onAlbumTap: onTap,
+            ),
+            AlbumsView(
+              showWindowControls: showWindowControls,
+              albums: albums,
+              onArtistTap: onTap,
+              onAlbumTap: onTap,
+            ),
+          ],
+        ),
       ),
     );
   }

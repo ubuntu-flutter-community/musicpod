@@ -209,24 +209,32 @@ class _PodcastsPageState extends State<PodcastsPage> {
             child: YaruDetailPage(
               backgroundColor: light ? kBackGroundLight : kBackgroundDark,
               appBar: YaruWindowTitleBar(
+                leading: Center(
+                  child: SizedBox(
+                    height: kHeaderBarItemHeight,
+                    width: kHeaderBarItemHeight,
+                    child: YaruIconButton(
+                      isSelected: searchActive,
+                      selectedIcon: Icon(
+                        YaruIcons.search,
+                        size: 16,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                      icon: const Icon(
+                        YaruIcons.search,
+                        size: 16,
+                      ),
+                      onPressed: () => setSearchActive(!searchActive),
+                    ),
+                  ),
+                ),
+                titleSpacing: 0,
                 style: widget.showWindowControls
                     ? YaruTitleBarStyle.normal
                     : YaruTitleBarStyle.undecorated,
                 title: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (!searchActive)
-                      SizedBox(
-                        height: kHeaderBarItemHeight,
-                        width: kHeaderBarItemHeight,
-                        child: YaruIconButton(
-                          icon: const Icon(
-                            YaruIcons.search,
-                            size: 16,
-                          ),
-                          onPressed: () => setSearchActive(!searchActive),
-                        ),
-                      ),
                     if (searchActive)
                       Expanded(
                         child: SearchField(

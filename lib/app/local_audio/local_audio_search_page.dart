@@ -35,6 +35,7 @@ class LocalAudioSearchPage extends StatelessWidget {
     final setSearchQuery = context.read<LocalAudioModel>().setSearchQuery;
     final search = context.read<LocalAudioModel>().search;
     final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
+    final setSearchActive = context.read<LocalAudioModel>().setSearchActive;
 
     void onTapWithPop(text) {
       setSearchQuery(text);
@@ -81,12 +82,17 @@ class LocalAudioSearchPage extends StatelessWidget {
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
+        titleSpacing: 0,
         title: SearchField(
           key: ValueKey(searchQuery),
           text: searchQuery,
           onSubmitted: (value) {
             setSearchQuery(value);
             search();
+          },
+          onSearchActive: () {
+            Navigator.of(context).pop();
+            setSearchActive(false);
           },
         ),
         leading: Navigator.canPop(context)
