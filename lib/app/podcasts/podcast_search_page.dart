@@ -38,7 +38,7 @@ class PodcastSearchPage extends StatelessWidget {
 
     return GridView.builder(
       itemCount: searchResultCount,
-      padding: kGridPadding,
+      padding: kPodcastGridPadding,
       gridDelegate: kImageGridDelegate,
       itemBuilder: (context, index) {
         if (searchResultCount == 0) {

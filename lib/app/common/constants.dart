@@ -5,12 +5,21 @@ const kRepoUrl = 'http://github.com/ubuntu-flutter-community/musicpod';
 
 const kSideBarIconSize = 23.0;
 
+const kHeaderBarItemHeight = 35.0;
+
 const kPagePadding = 20.0;
 const kGridPadding = EdgeInsets.only(
   bottom: kPagePadding,
   left: kPagePadding - 5,
   right: kPagePadding - 5,
 );
+const kPodcastGridPadding = EdgeInsets.only(
+  top: 15,
+  bottom: kPagePadding,
+  left: kPagePadding - 5,
+  right: kPagePadding - 5,
+);
+
 const kHeaderPadding = EdgeInsets.only(
   top: kPagePadding,
   left: kPagePadding,

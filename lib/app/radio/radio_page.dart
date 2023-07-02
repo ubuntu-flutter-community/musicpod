@@ -4,14 +4,13 @@ import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/country_popup.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
+import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/radio/radio_model.dart';
-import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/radio/station_page.dart';
 import 'package:musicpod/app/radio/tag_popup.dart';
-import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/radio_service.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
@@ -81,11 +80,35 @@ class _RadioPageState extends State<RadioPage> {
     final unstarStation = context.select((LibraryModel m) => m.unStarStation);
     final isStarredStation = context.read<LibraryModel>().isStarredStation;
 
+    final searchActive = context.select((RadioModel m) => m.searchActive);
+    final setSearchActive = context.read<RadioModel>().setSearchActive;
+
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
 
-    final textStyle =
-        theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w100);
+    var controlPanel = SizedBox(
+      height: kHeaderBarItemHeight,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          CountryPopup(
+            value: country,
+            onSelected: (country) {
+              setCountry(country);
+              loadStationsByCountry();
+            },
+          ),
+          TagPopup(
+            value: tag,
+            onSelected: (tag) {
+              setTag(tag);
+              loadStationsByTag();
+            },
+            tags: tags,
+          )
+        ],
+      ),
+    );
 
     if (!widget.isOnline) {
       return const OfflinePage();
@@ -96,124 +119,90 @@ class _RadioPageState extends State<RadioPage> {
           style: widget.showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
-          title: SearchField(
-            text: searchQuery,
-            onSubmitted: (value) {
-              setSearchQuery(value);
-              search(name: value);
-            },
+          titleSpacing: 0,
+          leading: Center(
+            child: SizedBox(
+              height: kHeaderBarItemHeight,
+              width: kHeaderBarItemHeight,
+              child: YaruIconButton(
+                isSelected: searchActive,
+                selectedIcon: Icon(
+                  YaruIcons.search,
+                  size: 16,
+                  color: theme.colorScheme.onSurface,
+                ),
+                icon: const Icon(
+                  YaruIcons.search,
+                  size: 16,
+                ),
+                onPressed: () => setSearchActive(!searchActive),
+              ),
+            ),
+          ),
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (searchActive)
+                Expanded(
+                  child: SearchField(
+                    onSearchActive: () => setSearchActive(false),
+                    text: searchQuery,
+                    onSubmitted: (value) {
+                      setSearchQuery(value);
+                      search(name: value);
+                    },
+                  ),
+                ),
+              controlPanel
+            ],
           ),
         ),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 12,
-                left: 15,
-                right: 20,
-                bottom: 10,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Text(
-                    '${context.l10n.country}:',
-                    style: textStyle,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  CountryPopup(
-                    value: country,
-                    onSelected: (country) {
-                      setCountry(country);
-                      loadStationsByCountry();
-                    },
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Text(
-                    '${context.l10n.tag}:',
-                    style: textStyle,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  TagPopup(
-                    value: tag,
-                    onSelected: (tag) {
-                      setTag(tag);
-                      loadStationsByTag();
-                    },
-                    tags: tags,
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            const Divider(
-              height: 0,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Expanded(
-              child: GridView.builder(
-                padding: kGridPadding,
-                gridDelegate: kImageGridDelegate,
-                itemCount: stationsCount,
-                itemBuilder: (context, index) {
-                  final station = stations?.elementAt(index);
-                  return AudioCard(
-                    bottom: AudioCardBottom(text: station?.title ?? ''),
-                    onPlay: () => play(newAudio: station),
-                    onTap: station == null
-                        ? null
-                        : () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  final starred = isStarredStation(
-                                    station.title ?? station.toString(),
-                                  );
-                                  return StationPage(
-                                    showWindowControls:
-                                        widget.showWindowControls,
-                                    onTextTap: widget.onTextTap,
-                                    station: station,
-                                    name: station.title ?? station.toString(),
-                                    unStarStation: (s) => unstarStation(
-                                      station.title ?? station.toString(),
-                                    ),
-                                    starStation: (s) => starStation(
-                                      station.title!,
-                                      {station},
-                                    ),
-                                    onPlay: (audio) => play(newAudio: station),
-                                    isStarred: starred,
-                                  );
-                                },
+        body: GridView.builder(
+          padding: kPodcastGridPadding,
+          gridDelegate: kImageGridDelegate,
+          itemCount: stationsCount,
+          itemBuilder: (context, index) {
+            final station = stations?.elementAt(index);
+            return AudioCard(
+              bottom: AudioCardBottom(text: station?.title ?? ''),
+              onPlay: () => play(newAudio: station),
+              onTap: station == null
+                  ? null
+                  : () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            final starred = isStarredStation(
+                              station.title ?? station.toString(),
+                            );
+                            return StationPage(
+                              showWindowControls: widget.showWindowControls,
+                              onTextTap: widget.onTextTap,
+                              station: station,
+                              name: station.title ?? station.toString(),
+                              unStarStation: (s) => unstarStation(
+                                station.title ?? station.toString(),
                               ),
+                              starStation: (s) => starStation(
+                                station.title!,
+                                {station},
+                              ),
+                              onPlay: (audio) => play(newAudio: station),
+                              isStarred: starred,
                             );
                           },
-                    image: SizedBox.expand(
-                      child: SafeNetworkImage(
-                        fit: BoxFit.cover,
-                        fallBackIcon: const RadioFallBackIcon(),
-                        url: station?.imageUrl,
-                      ),
-                    ),
-                  );
-                },
+                        ),
+                      );
+                    },
+              image: SizedBox.expand(
+                child: SafeNetworkImage(
+                  fit: BoxFit.cover,
+                  fallBackIcon: const RadioFallBackIcon(),
+                  url: station?.imageUrl,
+                ),
               ),
-            ),
-          ],
+            );
+          },
         ),
       );
     }

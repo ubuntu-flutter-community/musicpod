@@ -89,10 +89,10 @@ class _TitlesViewState extends State<TitlesView> {
       children: [
         Padding(
           padding: const EdgeInsets.only(
-            top: 10,
+            top: 20,
             left: 20,
             right: 20,
-            bottom: 10,
+            bottom: 15,
           ),
           child: AudioPageControlPanel(
             resume: resume,
