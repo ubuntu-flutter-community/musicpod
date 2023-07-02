@@ -153,7 +153,10 @@ class StartPage extends StatelessWidget {
                     // indicatorColor: Colors.transparent,
                     dividerColor: Colors.transparent,
 
-                    onTap: onIndexSelected,
+                    onTap: (value) {
+                      onIndexSelected?.call(value);
+                      setSearchActive(false);
+                    },
                     tabs: [
                       Tab(
                         child: Text(context.l10n.titles),
