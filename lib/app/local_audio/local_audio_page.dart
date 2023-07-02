@@ -156,6 +156,7 @@ class StartPage extends StatelessWidget {
                     onTap: (value) {
                       onIndexSelected?.call(value);
                       setSearchActive(false);
+                      setSearchQuery(null);
                     },
                     tabs: [
                       Tab(
