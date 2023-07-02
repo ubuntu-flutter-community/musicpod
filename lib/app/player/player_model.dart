@@ -205,19 +205,19 @@ class PlayerModel extends SafeChangeNotifier {
 
     await _readLastAudio();
 
-    _playerSub = _player.streams.playing.listen((p) {
+    _playerSub = _player.stream.playing.listen((p) {
       isPlaying = p;
       _mediaControlService.playbackStatus =
           isPlaying ? MPRISPlaybackStatus.playing : MPRISPlaybackStatus.paused;
     });
-    _durationSub = _player.streams.duration.listen((newDuration) {
+    _durationSub = _player.stream.duration.listen((newDuration) {
       setDuration(newDuration);
     });
-    _positionSub = _player.streams.position.listen((newPosition) {
+    _positionSub = _player.stream.position.listen((newPosition) {
       setPosition(newPosition);
     });
 
-    _isCompletedSub = _player.streams.completed.listen((value) async {
+    _isCompletedSub = _player.stream.completed.listen((value) async {
       if (value) {
         if (repeatSingle == false) {
           await playNext();
