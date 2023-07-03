@@ -66,6 +66,7 @@ class _RadioPageState extends State<RadioPage> {
     final searchQuery = context.select((RadioModel m) => m.searchQuery);
     final setSearchQuery = context.read<RadioModel>().setSearchQuery;
     final country = context.select((RadioModel m) => m.country);
+    final sortedCountries = context.select((RadioModel m) => m.sortedCountries);
     final setCountry = context.read<RadioModel>().setCountry;
     final loadStationsByCountry =
         context.read<RadioModel>().loadStationsByCountry;
@@ -86,7 +87,7 @@ class _RadioPageState extends State<RadioPage> {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
 
-    var controlPanel = SizedBox(
+    final controlPanel = SizedBox(
       height: kHeaderBarItemHeight,
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -97,6 +98,10 @@ class _RadioPageState extends State<RadioPage> {
               setCountry(country);
               loadStationsByCountry();
             },
+            countries: sortedCountries,
+          ),
+          const SizedBox(
+            width: 5,
           ),
           TagPopup(
             value: tag,

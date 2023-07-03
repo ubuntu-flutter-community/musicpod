@@ -45,9 +45,9 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Country _country = Country.unitedStates;
-  Country get country => _country;
-  void setCountry(Country value) {
+  Country? _country;
+  Country? get country => _country;
+  void setCountry(Country? value) {
     if (value == _country) return;
     _country = value;
     notifyListeners();
@@ -77,11 +77,12 @@ class PodcastModel extends SafeChangeNotifier {
   }
 
   List<Country> get sortedCountries {
+    if (_country == null) return Country.values;
     final notSelected =
-        Country.values.where((c) => c != country).toList().sorted(
+        Country.values.where((c) => c != _country).toList().sorted(
               (a, b) => a.name.compareTo(b.name),
             );
-    final list = <Country>[country, ...notSelected];
+    final list = <Country>[_country!, ...notSelected];
 
     return list;
   }

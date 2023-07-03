@@ -28,7 +28,7 @@ class PodcastService {
 
   void loadCharts({
     PodcastGenre podcastGenre = PodcastGenre.all,
-    Country country = Country.unitedKingdom,
+    Country? country,
   }) async {
     _chartsPodcasts = null;
     _chartsChangedController.add(true);
@@ -36,7 +36,7 @@ class PodcastService {
     SearchResult chartsSearch = await _search.charts(
       genre: podcastGenre == PodcastGenre.all ? '' : podcastGenre.id,
       limit: 10,
-      country: country,
+      country: country ?? Country.none,
     );
 
     if (chartsSearch.successful && chartsSearch.items.isNotEmpty) {
@@ -81,7 +81,7 @@ class PodcastService {
   Future<void> search({
     String? searchQuery,
     PodcastGenre podcastGenre = PodcastGenre.science,
-    Country country = Country.unitedKingdom,
+    Country? country,
     Language language = Language.none,
   }) async {
     if (searchQuery == null || searchQuery.isEmpty == true) return;
@@ -89,7 +89,7 @@ class PodcastService {
 
     SearchResult results = await _search.search(
       searchQuery,
-      country: country,
+      country: country ?? Country.none,
       language: language,
       limit: 10,
     );

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/app/common/country_popup.dart';
 import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
@@ -14,8 +15,6 @@ import 'package:musicpod/app/podcasts/podcast_search_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
 import 'package:musicpod/l10n/l10n.dart';
-import 'package:musicpod/string_x.dart';
-import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -143,61 +142,45 @@ class _PodcastsPageState extends State<PodcastsPage> {
       );
     }
 
-    final controlPanel = Row(
-      children: [
-        if (searchQuery == null || searchQuery.isEmpty)
-          SizedBox(
-            height: kHeaderBarItemHeight,
-            child: YaruPopupMenuButton<PodcastGenre>(
-              style: buttonStyle,
+    final controlPanel = SizedBox(
+      height: kHeaderBarItemHeight,
+      child: Row(
+        children: [
+          if (searchQuery == null || searchQuery.isEmpty)
+            CountryPopup(
               onSelected: (value) {
-                setPodcastGenre(value);
+                setCountry(value);
                 loadCharts();
               },
-              initialValue: podcastGenre,
-              child: Text(
-                podcastGenre.localize(context.l10n),
-                style: textStyle,
-              ),
-              itemBuilder: (context) {
-                return [
-                  for (final genre in sortedGenres)
-                    PopupMenuItem(
-                      value: genre,
-                      child: Text(genre.localize(context.l10n)),
-                    )
-                ];
-              },
+              value: country,
+              countries: sortedCountries,
             ),
+          const SizedBox(
+            width: 5,
           ),
-        const SizedBox(
-          width: 5,
-        ),
-        SizedBox(
-          height: kHeaderBarItemHeight,
-          child: YaruPopupMenuButton<Country>(
+          YaruPopupMenuButton<PodcastGenre>(
             style: buttonStyle,
             onSelected: (value) {
-              setCountry(value);
+              setPodcastGenre(value);
               loadCharts();
             },
-            initialValue: country,
+            initialValue: podcastGenre,
             child: Text(
-              country.name.capitalize(),
+              podcastGenre.localize(context.l10n),
               style: textStyle,
             ),
             itemBuilder: (context) {
               return [
-                for (final c in sortedCountries)
+                for (final genre in sortedGenres)
                   PopupMenuItem(
-                    value: c,
-                    child: Text(c.name.capitalize()),
+                    value: genre,
+                    child: Text(genre.localize(context.l10n)),
                   )
               ];
             },
           ),
-        ),
-      ],
+        ],
+      ),
     );
 
     if (!widget.isOnline) {

@@ -25,6 +25,17 @@ class RadioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  List<Country> get sortedCountries {
+    if (_country == null) return Country.values;
+    final notSelected =
+        Country.values.where((c) => c != _country).toList().sorted(
+              (a, b) => a.name.compareTo(b.name),
+            );
+    final list = <Country>[_country!, ...notSelected];
+
+    return list;
+  }
+
   List<Tag>? get tags => _radioService.tags;
   Tag? _tag;
   Tag? get tag => _tag;
