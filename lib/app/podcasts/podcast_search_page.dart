@@ -8,6 +8,7 @@ import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcasts_page.dart';
 import 'package:provider/provider.dart';
+import 'package:yaru_icons/yaru_icons.dart';
 
 class PodcastSearchPage extends StatelessWidget {
   const PodcastSearchPage({super.key, required this.showWindowControls});
@@ -37,7 +38,7 @@ class PodcastSearchPage extends StatelessWidget {
 
     return GridView.builder(
       itemCount: searchResultCount,
-      padding: kGridPadding,
+      padding: kPodcastGridPadding,
       gridDelegate: kImageGridDelegate,
       itemBuilder: (context, index) {
         if (searchResultCount == 0) {
@@ -49,6 +50,11 @@ class PodcastSearchPage extends StatelessWidget {
             url: podcast.firstOrNull?.albumArtUrl ??
                 podcast.firstOrNull?.imageUrl,
             fit: BoxFit.contain,
+            fallBackIcon: Icon(
+              YaruIcons.podcast,
+              size: 70,
+              color: theme.hintColor,
+            ),
           ),
           onPlay: podcast.firstOrNull?.album == null
               ? null

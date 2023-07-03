@@ -29,6 +29,14 @@ class PodcastModel extends SafeChangeNotifier {
   Set<Set<Audio>>? get charts => _podcastService.chartsPodcasts;
   Set<Set<Audio>>? get podcastSearchResult => _podcastService.searchResult;
 
+  bool _searchActive = false;
+  bool get searchActive => _searchActive;
+  void setSearchActive(bool value) {
+    if (value == _searchActive) return;
+    _searchActive = value;
+    notifyListeners();
+  }
+
   String? _searchQuery;
   String? get searchQuery => _searchQuery;
   void setSearchQuery(String? value) {
@@ -37,9 +45,9 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Country _country = Country.unitedStates;
-  Country get country => _country;
-  void setCountry(Country value) {
+  Country? _country;
+  Country? get country => _country;
+  void setCountry(Country? value) {
     if (value == _country) return;
     _country = value;
     notifyListeners();
@@ -69,11 +77,12 @@ class PodcastModel extends SafeChangeNotifier {
   }
 
   List<Country> get sortedCountries {
+    if (_country == null) return Country.values;
     final notSelected =
-        Country.values.where((c) => c != country).toList().sorted(
+        Country.values.where((c) => c != _country).toList().sorted(
               (a, b) => a.name.compareTo(b.name),
             );
-    final list = <Country>[country, ...notSelected];
+    final list = <Country>[_country!, ...notSelected];
 
     return list;
   }

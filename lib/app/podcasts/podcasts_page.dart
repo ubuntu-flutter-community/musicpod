@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/app/common/country_popup.dart';
 import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
@@ -14,8 +15,6 @@ import 'package:musicpod/app/podcasts/podcast_search_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
 import 'package:musicpod/l10n/l10n.dart';
-import 'package:musicpod/string_x.dart';
-import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -51,6 +50,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
   @override
   Widget build(BuildContext context) {
     final model = context.read<PodcastModel>();
+    final searchActive = context.select((PodcastModel m) => m.searchActive);
+    final setSearchActive = model.setSearchActive;
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
@@ -58,7 +59,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final removePodcast = context.read<LibraryModel>().removePodcast;
     final addPodcast = context.read<LibraryModel>().addPodcast;
     final textStyle =
-        theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w100);
+        theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
     final buttonStyle = TextButton.styleFrom(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(6),
@@ -94,7 +95,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     if (charts == null) {
       grid = GridView(
         gridDelegate: kImageGridDelegate,
-        padding: kGridPadding,
+        padding: kPodcastGridPadding,
         children: List.generate(30, (index) => Audio())
             .map((e) => const AudioCard())
             .toList(),
@@ -105,7 +106,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
       );
     } else {
       grid = GridView.builder(
-        padding: kGridPadding,
+        padding: kPodcastGridPadding,
         itemCount: chartsCount,
         gridDelegate: kImageGridDelegate,
         itemBuilder: (context, index) {
@@ -141,81 +142,45 @@ class _PodcastsPageState extends State<PodcastsPage> {
       );
     }
 
-    final controlPanel = Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 11),
+    final controlPanel = SizedBox(
+      height: kHeaderBarItemHeight,
       child: Row(
         children: [
-          Text(
-            searchQuery?.isNotEmpty == true
-                ? 'Search:     "${searchQuery!}"'
-                : 'Top 10 Charts:',
-            style: textStyle,
-          ),
-          const SizedBox(
-            width: 10,
-          ),
           if (searchQuery == null || searchQuery.isEmpty)
-            YaruPopupMenuButton<PodcastGenre>(
-              style: buttonStyle,
+            CountryPopup(
               onSelected: (value) {
-                setPodcastGenre(value);
+                setCountry(value);
                 loadCharts();
               },
-              initialValue: podcastGenre,
-              child: Text(
-                podcastGenre.localize(context.l10n),
-                style: textStyle,
-              ),
-              itemBuilder: (context) {
-                return [
-                  for (final genre in sortedGenres)
-                    PopupMenuItem(
-                      value: genre,
-                      child: Text(genre.localize(context.l10n)),
-                    )
-                ];
-              },
+              value: country,
+              countries: sortedCountries,
             ),
           const SizedBox(
-            width: 10,
+            width: 5,
           ),
-          YaruPopupMenuButton<Country>(
+          YaruPopupMenuButton<PodcastGenre>(
             style: buttonStyle,
             onSelected: (value) {
-              setCountry(value);
+              setPodcastGenre(value);
               loadCharts();
             },
-            initialValue: country,
+            initialValue: podcastGenre,
             child: Text(
-              country.name.capitalize(),
+              podcastGenre.localize(context.l10n),
               style: textStyle,
             ),
             itemBuilder: (context) {
               return [
-                for (final c in sortedCountries)
+                for (final genre in sortedGenres)
                   PopupMenuItem(
-                    value: c,
-                    child: Text(c.name.capitalize()),
+                    value: genre,
+                    child: Text(genre.localize(context.l10n)),
                   )
               ];
             },
           ),
         ],
       ),
-    );
-
-    final page = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        controlPanel,
-        const Divider(
-          height: 0,
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-        Expanded(child: grid),
-      ],
     );
 
     if (!widget.isOnline) {
@@ -227,19 +192,49 @@ class _PodcastsPageState extends State<PodcastsPage> {
             child: YaruDetailPage(
               backgroundColor: light ? kBackGroundLight : kBackgroundDark,
               appBar: YaruWindowTitleBar(
+                leading: Center(
+                  child: SizedBox(
+                    height: kHeaderBarItemHeight,
+                    width: kHeaderBarItemHeight,
+                    child: YaruIconButton(
+                      isSelected: searchActive,
+                      selectedIcon: Icon(
+                        YaruIcons.search,
+                        size: 16,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                      icon: const Icon(
+                        YaruIcons.search,
+                        size: 16,
+                      ),
+                      onPressed: () => setSearchActive(!searchActive),
+                    ),
+                  ),
+                ),
+                titleSpacing: 0,
                 style: widget.showWindowControls
                     ? YaruTitleBarStyle.normal
                     : YaruTitleBarStyle.undecorated,
-                title: SearchField(
-                  key: ValueKey(searchQuery),
-                  text: searchQuery,
-                  onSubmitted: (value) {
-                    setSearchQuery(value);
-                    search(searchQuery: value);
-                  },
+                title: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (searchActive)
+                      Expanded(
+                        child: SearchField(
+                          onSearchActive: () => setSearchActive(false),
+                          key: ValueKey(searchQuery),
+                          text: searchQuery,
+                          onSubmitted: (value) {
+                            setSearchQuery(value);
+                            search(searchQuery: value);
+                          },
+                        ),
+                      ),
+                    controlPanel,
+                  ],
                 ),
               ),
-              body: page,
+              body: grid,
             ),
           ),
           if (searchQuery?.isNotEmpty == true)
@@ -265,36 +260,22 @@ class _PodcastsPageState extends State<PodcastsPage> {
                     },
                   ),
                 ),
-                body: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    controlPanel,
-                    const Divider(
-                      height: 0,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Expanded(
-                      child: podcastSearchResult == null
-                          ? GridView(
-                              padding: kGridPadding,
-                              gridDelegate: kImageGridDelegate,
-                              children: List.generate(
-                                30,
-                                (index) => const AudioCard(),
-                              ).toList(),
-                            )
-                          : podcastSearchResult.isEmpty
-                              ? NoSearchResultPage(
-                                  message: context.l10n.noPodcastFound,
-                                )
-                              : PodcastSearchPage(
-                                  showWindowControls: widget.showWindowControls,
-                                ),
-                    )
-                  ],
-                ),
+                body: podcastSearchResult == null
+                    ? GridView(
+                        padding: kPodcastGridPadding,
+                        gridDelegate: kImageGridDelegate,
+                        children: List.generate(
+                          30,
+                          (index) => const AudioCard(),
+                        ).toList(),
+                      )
+                    : podcastSearchResult.isEmpty
+                        ? NoSearchResultPage(
+                            message: context.l10n.noPodcastFound,
+                          )
+                        : PodcastSearchPage(
+                            showWindowControls: widget.showWindowControls,
+                          ),
               ),
             )
         ],
@@ -369,13 +350,10 @@ void pushPodcastPage({
             fit: BoxFit.fitWidth,
             filterQuality: FilterQuality.medium,
           ),
-          title: SearchField(
-            key: ValueKey(searchQuery),
-            text: searchQuery,
-            onSubmitted: (value) {
-              setSearchQuery(value);
-              search(searchQuery: value);
-            },
+          title: Text(
+            podcast.firstOrNull?.album ??
+                podcast.firstOrNull?.title ??
+                podcast.toString(),
           ),
           deletable: false,
           editableName: false,

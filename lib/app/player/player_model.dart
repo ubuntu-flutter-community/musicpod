@@ -25,6 +25,7 @@ class PlayerModel extends SafeChangeNotifier {
   StreamSubscription<Duration>? _durationSub;
   StreamSubscription<Duration>? _positionSub;
   StreamSubscription<bool>? _isCompletedSub;
+  StreamSubscription<double>? _volumeSub;
 
   String? _queueName;
   String? get queueName => _queueName;
@@ -126,6 +127,13 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  double _volume = 100.0;
+  double get volume => _volume;
+  Future<void> setVolume(double value) async {
+    if (value == _volume) return;
+    await _player.setVolume(value);
+  }
+
   Future<void> play({bool bigPlay = false, Audio? newAudio}) async {
     if (newAudio != null) {
       setAudio(newAudio);
@@ -205,24 +213,29 @@ class PlayerModel extends SafeChangeNotifier {
 
     await _readLastAudio();
 
-    _playerSub = _player.streams.playing.listen((p) {
+    _playerSub = _player.stream.playing.listen((p) {
       isPlaying = p;
       _mediaControlService.playbackStatus =
           isPlaying ? MPRISPlaybackStatus.playing : MPRISPlaybackStatus.paused;
     });
-    _durationSub = _player.streams.duration.listen((newDuration) {
+    _durationSub = _player.stream.duration.listen((newDuration) {
       setDuration(newDuration);
     });
-    _positionSub = _player.streams.position.listen((newPosition) {
+    _positionSub = _player.stream.position.listen((newPosition) {
       setPosition(newPosition);
     });
 
-    _isCompletedSub = _player.streams.completed.listen((value) async {
+    _isCompletedSub = _player.stream.completed.listen((value) async {
       if (value) {
         if (repeatSingle == false) {
           await playNext();
         }
       }
+    });
+
+    _volumeSub = _player.stream.volume.listen((value) {
+      _volume = value;
+      notifyListeners();
     });
 
     notifyListeners();
@@ -346,6 +359,7 @@ class PlayerModel extends SafeChangeNotifier {
     await _positionSub?.cancel();
     await _durationSub?.cancel();
     await _isCompletedSub?.cancel();
+    await _volumeSub?.cancel();
     await _player.dispose();
     super.dispose();
   }

@@ -34,6 +34,8 @@ class BottomPlayer extends StatelessWidget {
     required this.removeLikedAudio,
     required this.addLikedAudio,
     required this.onTextTap,
+    required this.setVolume,
+    required this.volume,
   });
 
   final Audio? audio;
@@ -64,6 +66,9 @@ class BottomPlayer extends StatelessWidget {
   final void Function(bool?) setFullScreen;
 
   final void Function({required String text, AudioType audioType}) onTextTap;
+
+  final double volume;
+  final Future<void> Function(double value) setVolume;
 
   @override
   Widget build(BuildContext context) {
@@ -136,24 +141,24 @@ class BottomPlayer extends StatelessWidget {
                   ),
                 )
               else
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 10,
-                    ),
-                    child: Center(
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Center(
                       child: SizedBox(
-                        width: 100,
-                        height: 100,
+                        width: 120,
+                        height: 120,
                         child: Icon(
                           iconData,
                           size: 80,
-                          color: theme.hintColor.withOpacity(0.4),
+                          color: theme.hintColor,
                         ),
                       ),
                     ),
-                  ),
+                    const VerticalDivider(
+                      width: 0,
+                    )
+                  ],
                 ),
               Expanded(
                 child: Padding(
@@ -182,6 +187,8 @@ class BottomPlayer extends StatelessWidget {
                           removeStarredStation: removeStarredStation,
                           addLikedAudio: addLikedAudio,
                           removeLikedAudio: removeLikedAudio,
+                          volume: volume,
+                          setVolume: setVolume,
                         ),
                       ),
                       Expanded(

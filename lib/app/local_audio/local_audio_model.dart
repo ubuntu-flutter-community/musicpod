@@ -13,6 +13,14 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   final LocalAudioService _service;
 
+  bool _searchActive = false;
+  bool get searchActive => _searchActive;
+  void setSearchActive(bool value) {
+    if (value == _searchActive) return;
+    _searchActive = value;
+    notifyListeners();
+  }
+
   String? _searchQuery;
 
   String? get searchQuery => _searchQuery;

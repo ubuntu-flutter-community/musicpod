@@ -39,6 +39,8 @@ class FullHeightPlayer extends StatelessWidget {
     required this.fullScreen,
     required this.expandHeight,
     required this.onTextTap,
+    required this.volume,
+    required this.setVolume,
   });
 
   final Audio? audio;
@@ -76,6 +78,9 @@ class FullHeightPlayer extends StatelessWidget {
   final bool expandHeight;
 
   final void Function({required String text, AudioType audioType}) onTextTap;
+
+  final double volume;
+  final Future<void> Function(double value) setVolume;
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +139,8 @@ class FullHeightPlayer extends StatelessWidget {
       removeStarredStation: removeStarredStation,
       addLikedAudio: addLikedAudio,
       removeLikedAudio: removeLikedAudio,
+      volume: volume,
+      setVolume: setVolume,
     );
 
     final sliderAndTime = PlayerTrack(
