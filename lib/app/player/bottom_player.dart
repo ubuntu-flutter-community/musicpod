@@ -34,6 +34,8 @@ class BottomPlayer extends StatelessWidget {
     required this.removeLikedAudio,
     required this.addLikedAudio,
     required this.onTextTap,
+    required this.setVolume,
+    required this.volume,
   });
 
   final Audio? audio;
@@ -64,6 +66,9 @@ class BottomPlayer extends StatelessWidget {
   final void Function(bool?) setFullScreen;
 
   final void Function({required String text, AudioType audioType}) onTextTap;
+
+  final double volume;
+  final Future<void> Function(double value) setVolume;
 
   @override
   Widget build(BuildContext context) {
@@ -182,6 +187,8 @@ class BottomPlayer extends StatelessWidget {
                           removeStarredStation: removeStarredStation,
                           addLikedAudio: addLikedAudio,
                           removeLikedAudio: removeLikedAudio,
+                          volume: volume,
+                          setVolume: setVolume,
                         ),
                       ),
                       Expanded(

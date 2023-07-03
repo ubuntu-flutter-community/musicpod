@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/player/volume_popup.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -23,6 +24,8 @@ class PlayerControls extends StatelessWidget {
     required this.addStarredStation,
     required this.removeLikedAudio,
     required this.addLikedAudio,
+    required this.setVolume,
+    required this.volume,
   });
 
   final Audio? audio;
@@ -43,6 +46,8 @@ class PlayerControls extends StatelessWidget {
 
   final void Function(Audio audio, bool notify) removeLikedAudio;
   final void Function(Audio audio, bool notify) addLikedAudio;
+  final double volume;
+  final Future<void> Function(double value) setVolume;
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +92,7 @@ class PlayerControls extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        VolumeSliderPopup(volume: volume, setVolume: setVolume),
         YaruIconButton(
           icon: likeIcon,
           onPressed: onLike,

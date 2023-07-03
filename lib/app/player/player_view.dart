@@ -62,6 +62,9 @@ class PlayerView extends StatelessWidget {
 
     final showFullHeightPlayer = isSideBarPlayer || fullScreen == true;
 
+    final volume = context.select((PlayerModel m) => m.volume);
+    final setVolume = playerModel.setVolume;
+
     if (showFullHeightPlayer) {
       return FullHeightPlayer(
         onTextTap: onTextTap,
@@ -93,6 +96,8 @@ class PlayerView extends StatelessWidget {
         removeStarredStation: removeStarredStation,
         addLikedAudio: addLikedAudio,
         removeLikedAudio: removeLikedAudio,
+        volume: volume,
+        setVolume: setVolume,
       );
     }
 
@@ -121,6 +126,8 @@ class PlayerView extends StatelessWidget {
       removeStarredStation: removeStarredStation,
       addLikedAudio: addLikedAudio,
       removeLikedAudio: removeLikedAudio,
+      volume: volume,
+      setVolume: setVolume,
     );
   }
 }

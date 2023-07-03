@@ -25,6 +25,7 @@ class PlayerModel extends SafeChangeNotifier {
   StreamSubscription<Duration>? _durationSub;
   StreamSubscription<Duration>? _positionSub;
   StreamSubscription<bool>? _isCompletedSub;
+  StreamSubscription<double>? _volumeSub;
 
   String? _queueName;
   String? get queueName => _queueName;
@@ -126,6 +127,13 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  double _volume = 100.0;
+  double get volume => _volume;
+  Future<void> setVolume(double value) async {
+    if (value == _volume) return;
+    await _player.setVolume(value);
+  }
+
   Future<void> play({bool bigPlay = false, Audio? newAudio}) async {
     if (newAudio != null) {
       setAudio(newAudio);
@@ -223,6 +231,11 @@ class PlayerModel extends SafeChangeNotifier {
           await playNext();
         }
       }
+    });
+
+    _volumeSub = _player.stream.volume.listen((value) {
+      _volume = value;
+      notifyListeners();
     });
 
     notifyListeners();
@@ -346,6 +359,7 @@ class PlayerModel extends SafeChangeNotifier {
     await _positionSub?.cancel();
     await _durationSub?.cancel();
     await _isCompletedSub?.cancel();
+    await _volumeSub?.cancel();
     await _player.dispose();
     super.dispose();
   }
