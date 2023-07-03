@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_linux
+  flutter_media_metadata
   gtk
   handy_window
   media_kit_libs_linux
@@ -14,7 +15,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
-  metadata_god
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

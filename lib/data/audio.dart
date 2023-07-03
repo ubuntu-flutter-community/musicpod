@@ -25,7 +25,7 @@ class Audio {
   final String? title;
 
   /// The ID3-Tag duration of the audio file. It can be null if was not set
-  final double? durationMs;
+  final int? durationMs;
 
   /// The ID3-Tag artist(s) of the audio file.
   final String? artist;
@@ -99,7 +99,7 @@ class Audio {
     String? description,
     String? website,
     String? title,
-    double? durationMs,
+    int? durationMs,
     String? artist,
     String? album,
     String? albumArtist,
@@ -220,7 +220,7 @@ class Audio {
       description: map['description'],
       website: map['website'],
       title: map['title'],
-      durationMs: map['durationMs']?.toDouble(),
+      durationMs: map['durationMs']?.toInt(),
       artist: map['artist'],
       album: map['album'],
       albumArtist: map['albumArtist'],

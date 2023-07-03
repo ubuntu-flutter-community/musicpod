@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
-import 'package:metadata_god/metadata_god.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/data/audio.dart';
@@ -43,7 +45,8 @@ class LocalAudioService {
     _directory = await readSetting(kDirectoryProperty);
     _directory ??= getUserDirectory('MUSIC')?.path;
 
-    final result = await compute(_init, directory);
+    final token = ServicesBinding.rootIsolateToken!;
+    final result = await Isolate.run(() => _init(directory, token));
 
     _audios = result.$2;
 
@@ -54,11 +57,14 @@ class LocalAudioService {
   }
 }
 
-FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
-  MetadataGod.initialize();
-
+FutureOr<(List<String>, Set<Audio>?)> _init(
+  String? directory,
+  RootIsolateToken isolateToken,
+) async {
   Set<Audio>? newAudios;
   List<String> failedImports = [];
+
+  BackgroundIsolateBinaryMessenger.ensureInitialized(isolateToken);
 
   if (directory != null) {
     newAudios = {};
@@ -76,13 +82,16 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
       }
     }
     for (var e in onlyFiles) {
-      try {
-        final metadata = await MetadataGod.readMetadata(file: e.path);
-        final audio = _createAudio(e.path, metadata);
+      if (e is File) {
+        try {
+          final metadata = await MetadataRetriever.fromFile(e);
+          final audio = _createAudio(e, metadata);
 
-        newAudios.add(audio);
-      } catch (error) {
-        failedImports.add(e.path);
+          newAudios.add(audio);
+        } catch (error) {
+          print(error);
+          failedImports.add(e.path);
+        }
       }
     }
   }
@@ -90,23 +99,26 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
   return (failedImports, newAudios);
 }
 
-Audio _createAudio(String path, Metadata metadata) {
+Audio _createAudio(File file, Metadata metadata) {
   return Audio(
-    path: path,
+    path: file.path,
     audioType: AudioType.local,
-    artist: metadata.artist ?? '',
-    title: metadata.title ?? path,
-    album: metadata.album == null
+    artist: metadata.authorName ??
+        metadata.albumArtistName ??
+        metadata.trackArtistNames?.join(', ') ??
+        '',
+    title: metadata.trackName ?? file.path,
+    album: metadata.albumName == null
         ? ''
-        : '${metadata.album} ${metadata.discTotal != null && metadata.discTotal! > 1 ? metadata.discNumber : ''}',
-    albumArtist: metadata.albumArtist,
+        : '${metadata.albumName} ${metadata.discNumber ?? ''}',
+    albumArtist: metadata.albumArtistName,
     discNumber: metadata.discNumber,
-    discTotal: metadata.discTotal,
-    durationMs: metadata.durationMs,
-    fileSize: metadata.fileSize,
+    discTotal: metadata.discNumber,
+    durationMs: metadata.trackDuration,
+    fileSize: file.lengthSync(),
     genre: metadata.genre,
-    pictureData: metadata.picture?.data,
-    pictureMimeType: metadata.picture?.mimeType,
+    pictureData: metadata.albumArt,
+    pictureMimeType: null,
     trackNumber: metadata.trackNumber,
     year: metadata.year,
   );

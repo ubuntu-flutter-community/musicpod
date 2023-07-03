@@ -24,7 +24,9 @@ dependencies:
   intl: ^0.18.0
   media_kit: ^0.0.11
   media_kit_libs_linux: ^1.0.2
-  metadata_god: ^0.4.1
+  flutter_media_metadata:
+    git:
+      url: https://github.com/aleksrutins/flutter_media_metadata
   mime_type: ^1.0.0
   mpris_service:
     git:
