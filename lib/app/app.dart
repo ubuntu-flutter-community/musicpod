@@ -83,6 +83,8 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  int _selectedLocalAudioIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -159,6 +161,8 @@ class _AppState extends State<App> {
       MasterItem(
         tileBuilder: (context) => Text(context.l10n.localAudio),
         builder: (context) => LocalAudioPage(
+          selectedIndex: _selectedLocalAudioIndex,
+          onIndexSelected: (i) => setState(() => _selectedLocalAudioIndex = i),
           showWindowControls: !playerToTheRight,
         ),
         iconBuilder: (context, selected) => LocalAudioPageIcon(

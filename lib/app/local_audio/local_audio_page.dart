@@ -13,17 +13,22 @@ import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class LocalAudioPage extends StatefulWidget {
-  const LocalAudioPage({super.key, this.showWindowControls = true});
+  const LocalAudioPage({
+    super.key,
+    this.showWindowControls = true,
+    required this.selectedIndex,
+    required this.onIndexSelected,
+  });
 
   final bool showWindowControls;
+  final int selectedIndex;
+  final void Function(int index) onIndexSelected;
 
   @override
   State<LocalAudioPage> createState() => _LocalAudioPageState();
 }
 
 class _LocalAudioPageState extends State<LocalAudioPage> {
-  int _selectedIndex = 0;
-
   @override
   void initState() {
     super.initState();
@@ -54,10 +59,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
         MaterialPage(
           child: StartPage(
             showWindowControls: widget.showWindowControls,
-            selectedIndex: _selectedIndex,
-            onIndexSelected: (index) => setState(() {
-              _selectedIndex = index;
-            }),
+            selectedIndex: widget.selectedIndex,
+            onIndexSelected: widget.onIndexSelected,
           ),
         ),
         if (searchQuery?.isNotEmpty == true && searchActive)
@@ -102,6 +105,7 @@ class StartPage extends StatelessWidget {
     }
 
     return DefaultTabController(
+      initialIndex: selectedIndex,
       length: 3,
       child: Scaffold(
         backgroundColor: theme.brightness == Brightness.dark
