@@ -111,6 +111,7 @@ parts:
       - libpostproc55
       - libswscale5
       - libsrt1.4-gnutls
+      - libmediainfo0v5
       - ocl-icd-libopencl1
       - on amd64:
         - libmfx1
@@ -174,6 +175,10 @@ parts:
       - usr/lib/*/libavcodec.so*
       - usr/lib/*/libavutil.so*
       - usr/lib/*/libswresample.so*
+      - usr/lib/*/libmediainfo.so*
+      - usr/lib/*/libmms.so*
+      - usr/lib/*/libtinyxml2.so*
+      - usr/lib/*/libzen.so*
 
   # Find files provided by the base and platform snap and ensure they aren't
   # duplicated in this snap
