@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:mime_type/mime_type.dart';
@@ -89,7 +88,6 @@ FutureOr<(List<String>, Set<Audio>?)> _init(
 
           newAudios.add(audio);
         } catch (error) {
-          print(error);
           failedImports.add(e.path);
         }
       }
