@@ -104,12 +104,15 @@ class _AppState extends State<App> {
     final localAudioModel = context.read<LocalAudioModel>();
     final searchLocal = localAudioModel.search;
     final setLocalSearchQuery = localAudioModel.setSearchQuery;
+    final setLocalSearchActive = localAudioModel.setSearchActive;
 
     final searchPodcasts = context.read<PodcastModel>().search;
     final setPodcastSearchQuery = context.read<PodcastModel>().setSearchQuery;
+    final setPodcastSearchActive = context.read<PodcastModel>().setSearchActive;
 
     final searchRadio = context.read<RadioModel>().search;
     final setRadioQuery = context.read<RadioModel>().setSearchQuery;
+    final setRadioSearchActive = context.read<RadioModel>().setSearchActive;
 
     final play = context.read<PlayerModel>().play;
     final audioType = context.select((PlayerModel m) => m.audio?.audioType);
@@ -130,11 +133,13 @@ class _AppState extends State<App> {
     }) {
       switch (audioType) {
         case AudioType.local:
+          setLocalSearchActive(true);
           setLocalSearchQuery(text);
           searchLocal();
           library.index = 0;
           break;
         case AudioType.podcast:
+          setPodcastSearchActive(true);
           setPodcastSearchQuery(
             text,
           );
@@ -142,6 +147,7 @@ class _AppState extends State<App> {
           library.index = 2;
           break;
         case AudioType.radio:
+          setRadioSearchActive(true);
           setRadioQuery(text);
           searchRadio(tag: text);
           library.index = 1;
