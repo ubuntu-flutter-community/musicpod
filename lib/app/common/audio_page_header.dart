@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AudioPageHeader extends StatelessWidget {
@@ -93,6 +94,10 @@ class AudioPageHeader extends StatelessWidget {
                             ),
                             child: Html(
                               data: description,
+                              onAnchorTap: (url, attributes, element) {
+                                if (url == null) return;
+                                launchUrl(Uri.parse(url));
+                              },
                               style: {
                                 'html': Style(
                                   margin: Margins.zero,
@@ -153,6 +158,10 @@ class _DescriptionDialog extends StatelessWidget {
           width: 400,
           height: 200,
           child: Html(
+            onAnchorTap: (url, attributes, element) {
+              if (url == null) return;
+              launchUrl(Uri.parse(url));
+            },
             data: description,
             style: {
               'html': Style(
