@@ -2,11 +2,13 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcasts_page.dart';
+import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 
@@ -34,6 +36,12 @@ class PodcastSearchPage extends StatelessWidget {
     void onTapText(String text) {
       setSearchQuery(text);
       search(searchQuery: text);
+    }
+
+    if (searchResult?.isEmpty == true) {
+      return NoSearchResultPage(
+        message: context.l10n.noPodcastFound,
+      );
     }
 
     return GridView.builder(

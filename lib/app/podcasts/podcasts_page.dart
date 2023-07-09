@@ -269,13 +269,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
                           (index) => const AudioCard(),
                         ).toList(),
                       )
-                    : podcastSearchResult.isEmpty
-                        ? NoSearchResultPage(
-                            message: context.l10n.noPodcastFound,
-                          )
-                        : PodcastSearchPage(
-                            showWindowControls: widget.showWindowControls,
-                          ),
+                    : PodcastSearchPage(
+                        showWindowControls: widget.showWindowControls,
+                      ),
               ),
             )
         ],

@@ -31,7 +31,6 @@ class PodcastService {
     Country? country,
   }) async {
     _chartsPodcasts = null;
-    _chartsChangedController.add(true);
 
     SearchResult chartsSearch = await _search.charts(
       genre: podcastGenre == PodcastGenre.all ? '' : podcastGenre.id,
@@ -54,9 +53,7 @@ class PodcastService {
                   .toSet();
 
               _chartsPodcasts?.add(chartsPodcast);
-              _chartsChangedController.add(true);
             }
-            _chartsChangedController.add(true);
           } on PodcastFailedException {
             _chartsChangedController.add(true);
           }
@@ -64,19 +61,14 @@ class PodcastService {
       }
     } else {
       _chartsPodcasts = {};
-      _chartsChangedController.add(true);
     }
+    _chartsChangedController.add(true);
   }
 
   final _searchChangedController = StreamController<bool>.broadcast();
   Stream<bool> get searchChanged => _searchChangedController.stream;
   Set<Set<Audio>>? _searchResult;
   Set<Set<Audio>>? get searchResult => _searchResult;
-
-  void _updateSearchResult(Set<Set<Audio>>? value) {
-    _searchResult = value;
-    _searchChangedController.add(true);
-  }
 
   Future<void> search({
     String? searchQuery,
@@ -85,7 +77,7 @@ class PodcastService {
     Language language = Language.none,
   }) async {
     if (searchQuery == null || searchQuery.isEmpty == true) return;
-    _updateSearchResult(null);
+    _searchResult = null;
 
     SearchResult results = await _search.search(
       searchQuery,
@@ -96,7 +88,6 @@ class PodcastService {
 
     if (results.successful && results.items.isNotEmpty) {
       _searchResult ??= {};
-      _searchResult?.clear();
 
       for (var item in results.items) {
         if (item.feedUrl != null) {
@@ -106,7 +97,7 @@ class PodcastService {
             if (podcast?.episodes.isNotEmpty == true) {
               final episodes = <Audio>{};
 
-              for (var episode in podcast?.episodes ?? <Episode>[]) {
+              for (var episode in podcast!.episodes) {
                 if (episode.contentUrl != null) {
                   final audio = _createAudio(episode, podcast);
 
@@ -114,7 +105,6 @@ class PodcastService {
                 }
               }
               _searchResult?.add(episodes);
-              _searchChangedController.add(true);
             }
           } on PodcastFailedException {
             _searchChangedController.add(true);
@@ -122,8 +112,9 @@ class PodcastService {
         }
       }
     } else {
-      _updateSearchResult({});
+      _searchResult = {};
     }
+    _searchChangedController.add(true);
   }
 
   Audio _createAudio(Episode episode, Podcast? podcast) {
