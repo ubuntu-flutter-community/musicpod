@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/data/audio.dart';
@@ -20,12 +21,14 @@ class PlayerModel extends SafeChangeNotifier {
         _mediaControlService = mpris;
 
   final Player _player;
+  late final VideoController controller;
   final MPRIS _mediaControlService;
   StreamSubscription<bool>? _playerSub;
   StreamSubscription<Duration>? _durationSub;
   StreamSubscription<Duration>? _positionSub;
   StreamSubscription<bool>? _isCompletedSub;
   StreamSubscription<double>? _volumeSub;
+  StreamSubscription<Tracks>? _tracksSub;
 
   String? _queueName;
   String? get queueName => _queueName;
@@ -74,6 +77,14 @@ class PlayerModel extends SafeChangeNotifier {
       );
     }
 
+    notifyListeners();
+  }
+
+  bool? _isVideo;
+  bool? get isVideo => _isVideo;
+  void setIsVideo(bool? value) {
+    if (value == _isVideo) return;
+    _isVideo = value;
     notifyListeners();
   }
 
@@ -238,6 +249,12 @@ class PlayerModel extends SafeChangeNotifier {
       notifyListeners();
     });
 
+    _tracksSub = _player.stream.tracks.listen((event) {
+      setIsVideo(event.video.any((track) => track.language != null));
+    });
+
+    controller = VideoController(_player);
+
     notifyListeners();
   }
 
@@ -360,6 +377,7 @@ class PlayerModel extends SafeChangeNotifier {
     await _durationSub?.cancel();
     await _isCompletedSub?.cancel();
     await _volumeSub?.cancel();
+    await _tracksSub?.cancel();
     await _player.dispose();
     super.dispose();
   }

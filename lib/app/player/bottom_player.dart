@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/player/player_track.dart';
 import 'package:musicpod/data/audio.dart';
@@ -36,6 +37,8 @@ class BottomPlayer extends StatelessWidget {
     required this.onTextTap,
     required this.setVolume,
     required this.volume,
+    this.isVideo,
+    required this.videoController,
   });
 
   final Audio? audio;
@@ -69,6 +72,9 @@ class BottomPlayer extends StatelessWidget {
 
   final double volume;
   final Future<void> Function(double value) setVolume;
+
+  final bool? isVideo;
+  final VideoController videoController;
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +124,19 @@ class BottomPlayer extends StatelessWidget {
           ),
           Row(
             children: [
-              if (audio?.pictureData != null)
+              if (isVideo == true)
+                RepaintBoundary(
+                  child: Video(
+                    height: 120,
+                    width: 120,
+                    filterQuality: FilterQuality.medium,
+                    controller: videoController,
+                    controls: (state) {
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                )
+              else if (audio?.pictureData != null)
                 AnimatedContainer(
                   height: 120,
                   width: 120,
