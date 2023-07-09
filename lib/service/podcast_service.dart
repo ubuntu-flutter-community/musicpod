@@ -50,7 +50,7 @@ class PodcastService {
 
             if (podcast?.episodes.isNotEmpty == true) {
               final chartsPodcast = podcast!.episodes
-                  .map((e) => _createAudio(e, podcast, item))
+                  .map((e) => _createAudio(e, podcast))
                   .toSet();
 
               _chartsPodcasts?.add(chartsPodcast);
@@ -108,7 +108,7 @@ class PodcastService {
 
               for (var episode in podcast?.episodes ?? <Episode>[]) {
                 if (episode.contentUrl != null) {
-                  final audio = _createAudio(episode, podcast, item);
+                  final audio = _createAudio(episode, podcast);
 
                   episodes.add(audio);
                 }
@@ -126,15 +126,15 @@ class PodcastService {
     }
   }
 
-  Audio _createAudio(Episode episode, Podcast? podcast, Item item) {
+  Audio _createAudio(Episode episode, Podcast? podcast) {
     return Audio(
       url: episode.contentUrl,
       audioType: AudioType.podcast,
       imageUrl: episode.imageUrl,
       albumArtUrl: podcast?.image,
       title: episode.title,
-      album: item.collectionName,
-      artist: item.artistName,
+      album: podcast?.title,
+      artist: podcast?.copyright,
       description: podcast?.description,
       website: podcast?.url,
     );
@@ -147,16 +147,7 @@ class PodcastService {
     if (podcast?.episodes.isNotEmpty == true) {
       for (var episode in podcast?.episodes ?? []) {
         if (episode.contentUrl != null) {
-          final audio = Audio(
-            url: episode.contentUrl,
-            audioType: AudioType.podcast,
-            imageUrl: podcast?.image ?? episode.imageUrl,
-            title: episode.title,
-            album: podcast?.title,
-            artist: podcast?.copyright,
-            description: podcast?.description,
-            website: podcast?.url,
-          );
+          final audio = _createAudio(episode, podcast);
           episodes.add(audio);
         }
       }
