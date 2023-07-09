@@ -65,8 +65,12 @@ class PlayerView extends StatelessWidget {
     final volume = context.select((PlayerModel m) => m.volume);
     final setVolume = playerModel.setVolume;
 
+    final isVideo = context.select((PlayerModel m) => m.isVideo);
+
     if (showFullHeightPlayer) {
       return FullHeightPlayer(
+        isVideo: isVideo == true,
+        videoController: playerModel.controller,
         onTextTap: onTextTap,
         expandHeight: isSideBarPlayer,
         fullScreen: showFullHeightPlayer,
@@ -102,6 +106,8 @@ class PlayerView extends StatelessWidget {
     }
 
     return BottomPlayer(
+      isVideo: isVideo,
+      videoController: playerModel.controller,
       onTextTap: onTextTap,
       setFullScreen: setFullScreen,
       audio: audio,
