@@ -10,13 +10,15 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class PodcastPage extends StatelessWidget {
   const PodcastPage({
     super.key,
-    this.onControlButtonPressed,
     this.onAlbumTap,
     this.onArtistTap,
     this.imageUrl,
     required this.pageId,
     required this.showWindowControls,
     this.audios,
+    this.subscribed = true,
+    required this.removePodcast,
+    required this.addPodcast,
   });
 
   static Widget createIcon({
@@ -48,16 +50,19 @@ class PodcastPage extends StatelessWidget {
     );
   }
 
-  final void Function()? onControlButtonPressed;
+  final void Function(String name) removePodcast;
+  final void Function(String name, Set<Audio> audios) addPodcast;
   final void Function(String)? onAlbumTap;
   final void Function(String)? onArtistTap;
   final String? imageUrl;
   final String pageId;
   final bool showWindowControls;
   final Set<Audio>? audios;
+  final bool subscribed;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return AudioPage(
       sort: false,
       onAlbumTap: onAlbumTap,
@@ -91,9 +96,15 @@ class PodcastPage extends StatelessWidget {
       controlPageButton: YaruIconButton(
         icon: Icon(
           YaruIcons.rss,
-          color: Theme.of(context).primaryColor,
+          color: subscribed ? theme.primaryColor : theme.colorScheme.onSurface,
         ),
-        onPressed: onControlButtonPressed,
+        onPressed: () {
+          if (subscribed) {
+            removePodcast(pageId);
+          } else if (audios?.isNotEmpty == true) {
+            addPodcast(pageId, audios!);
+          }
+        },
       ),
     );
   }

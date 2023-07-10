@@ -228,8 +228,8 @@ class _AppState extends State<App> {
                         onTextTap(text: album, audioType: AudioType.podcast),
                     onArtistTap: (artist) =>
                         onTextTap(text: artist, audioType: AudioType.podcast),
-                    onControlButtonPressed: () =>
-                        library.removePodcast(podcast.key),
+                    addPodcast: library.addPodcast,
+                    removePodcast: library.removePodcast,
                     imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
                         podcast.value.firstOrNull?.imageUrl,
                   )
