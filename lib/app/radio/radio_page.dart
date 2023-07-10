@@ -158,7 +158,8 @@ class _RadioPageState extends State<RadioPage> {
                     },
                   ),
                 ),
-              controlPanel
+              controlPanel,
+              const SizedBox(width: 10)
             ],
           ),
         ),

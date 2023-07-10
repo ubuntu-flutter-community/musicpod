@@ -231,6 +231,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                         ),
                       ),
                     controlPanel,
+                    const SizedBox(width: 10)
                   ],
                 ),
               ),
