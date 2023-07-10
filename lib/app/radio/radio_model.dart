@@ -40,7 +40,7 @@ class RadioModel extends SafeChangeNotifier {
   Tag? _tag;
   Tag? get tag => _tag;
   void setTag(Tag? value) {
-    if (value == null || value == _tag) return;
+    if (value == _tag) return;
     _tag = value;
     notifyListeners();
   }
@@ -104,7 +104,12 @@ class RadioModel extends SafeChangeNotifier {
 
   Future<void> search({String? name, String? tag}) async {
     if (name != null) {
-      await _radioService.loadStations(name: name);
+      if (name.trim().isEmpty) {
+        setTag(null);
+        await loadStationsByCountry();
+      } else {
+        await _radioService.loadStations(name: name);
+      }
     } else if (tag != null) {
       await _radioService.loadStations(tag: Tag(name: tag, stationCount: 1));
     } else {
