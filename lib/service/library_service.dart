@@ -234,24 +234,29 @@ Future<void> _write(Map<String, Set<Audio>> map, String fileName) async {
 Future<Map<String, Set<Audio>>> _read(String fileName) async {
   final workingDir = '${configHome.path}/musicpod';
   final path = '$workingDir/$fileName';
-  final file = File(path);
 
-  if (file.existsSync()) {
-    final jsonStr = await file.readAsString();
+  try {
+    final file = File(path);
 
-    final map = jsonDecode(jsonStr) as Map<String, dynamic>;
+    if (file.existsSync()) {
+      final jsonStr = await file.readAsString();
 
-    final m = map.map(
-      (key, value) => MapEntry<String, Set<Audio>>(
-        key,
-        Set.from(
-          (value as List<dynamic>).map((e) => Audio.fromMap(e)),
+      final map = jsonDecode(jsonStr) as Map<String, dynamic>;
+
+      final m = map.map(
+        (key, value) => MapEntry<String, Set<Audio>>(
+          key,
+          Set.from(
+            (value as List<dynamic>).map((e) => Audio.fromMap(e)),
+          ),
         ),
-      ),
-    );
+      );
 
-    return m;
-  } else {
+      return m;
+    } else {
+      return <String, Set<Audio>>{};
+    }
+  } on Exception catch (_) {
     return <String, Set<Audio>>{};
   }
 }
