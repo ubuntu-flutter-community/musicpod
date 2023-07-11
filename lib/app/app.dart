@@ -151,7 +151,7 @@ class _AppState extends State<App> {
         case AudioType.radio:
           setRadioSearchActive(true);
           setRadioQuery(text);
-          searchRadio(tag: text);
+          searchRadio(name: text);
           library.index = 1;
           break;
       }
