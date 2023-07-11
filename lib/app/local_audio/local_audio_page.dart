@@ -102,6 +102,7 @@ class StartPage extends StatelessWidget {
     void onTap(text) {
       setSearchQuery(text);
       search();
+      setSearchActive(true);
     }
 
     return DefaultTabController(

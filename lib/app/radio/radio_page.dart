@@ -11,6 +11,7 @@ import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/radio/radio_model.dart';
 import 'package:musicpod/app/radio/station_page.dart';
 import 'package:musicpod/app/radio/tag_popup.dart';
+import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/service/radio_service.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
@@ -158,7 +159,8 @@ class _RadioPageState extends State<RadioPage> {
                     },
                   ),
                 ),
-              controlPanel
+              controlPanel,
+              const SizedBox(width: 10)
             ],
           ),
         ),
@@ -168,44 +170,16 @@ class _RadioPageState extends State<RadioPage> {
           itemCount: stationsCount,
           itemBuilder: (context, index) {
             final station = stations?.elementAt(index);
-            return AudioCard(
-              bottom: AudioCardBottom(text: station?.title ?? ''),
-              onPlay: () => play(newAudio: station),
-              onTap: station == null
-                  ? null
-                  : () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            final starred = isStarredStation(
-                              station.title ?? station.toString(),
-                            );
-                            return StationPage(
-                              showWindowControls: widget.showWindowControls,
-                              onTextTap: widget.onTextTap,
-                              station: station,
-                              name: station.title ?? station.toString(),
-                              unStarStation: (s) => unstarStation(
-                                station.title ?? station.toString(),
-                              ),
-                              starStation: (s) => starStation(
-                                station.title!,
-                                {station},
-                              ),
-                              onPlay: (audio) => play(newAudio: station),
-                              isStarred: starred,
-                            );
-                          },
-                        ),
-                      );
-                    },
-              image: SizedBox.expand(
-                child: SafeNetworkImage(
-                  fit: BoxFit.cover,
-                  fallBackIcon: const RadioFallBackIcon(),
-                  url: station?.imageUrl,
-                ),
-              ),
+            final onTextTap = widget.onTextTap;
+            final showWindowControls = widget.showWindowControls;
+            return _StationCard(
+              station: station,
+              play: play,
+              isStarredStation: isStarredStation,
+              showWindowControls: showWindowControls,
+              onTextTap: onTextTap,
+              unstarStation: unstarStation,
+              starStation: starStation,
             );
           },
         ),
@@ -214,17 +188,86 @@ class _RadioPageState extends State<RadioPage> {
   }
 }
 
+class _StationCard extends StatelessWidget {
+  const _StationCard({
+    required this.station,
+    required this.play,
+    required this.isStarredStation,
+    required this.showWindowControls,
+    required this.onTextTap,
+    required this.unstarStation,
+    required this.starStation,
+  });
+
+  final Audio? station;
+  final Future<void> Function({bool bigPlay, Audio? newAudio}) play;
+  final bool Function(String name) isStarredStation;
+  final bool showWindowControls;
+  final void Function(String text)? onTextTap;
+  final void Function(String name) unstarStation;
+  final void Function(String name, Set<Audio> audios) starStation;
+
+  @override
+  Widget build(BuildContext context) {
+    return AudioCard(
+      bottom: AudioCardBottom(text: station?.title ?? ''),
+      onPlay: () => play(newAudio: station),
+      onTap: station == null ? null : () => onTap(context),
+      image: SizedBox.expand(
+        child: SafeNetworkImage(
+          fallBackIcon: RadioFallBackIcon(
+            station: station,
+          ),
+          errorIcon: RadioFallBackIcon(station: station),
+          url: station?.imageUrl,
+        ),
+      ),
+    );
+  }
+
+  void onTap(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          final starred = isStarredStation(
+            station!.title ?? station.toString(),
+          );
+          return StationPage(
+            showWindowControls: showWindowControls,
+            onTextTap: onTextTap,
+            station: station!,
+            name: station!.title ?? station.toString(),
+            unStarStation: (s) => unstarStation(
+              station!.title ?? station.toString(),
+            ),
+            starStation: (s) => starStation(
+              station!.title!,
+              {station!},
+            ),
+            onPlay: (audio) => play(newAudio: station),
+            isStarred: starred,
+          );
+        },
+      ),
+    );
+  }
+}
+
 class RadioFallBackIcon extends StatelessWidget {
   const RadioFallBackIcon({
     super.key,
     this.iconSize,
+    required this.station,
   });
 
   final double? iconSize;
+  final Audio? station;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final light = theme.brightness == Brightness.light;
+    final fallBackColor = light ? theme.dividerColor : Colors.black38;
     return Container(
       height: double.infinity,
       width: double.infinity,
@@ -233,8 +276,14 @@ class RadioFallBackIcon extends StatelessWidget {
           begin: Alignment.bottomLeft,
           end: Alignment.topRight,
           colors: [
-            theme.primaryColor.withOpacity(0.3),
-            theme.primaryColor.withOpacity(0.7)
+            getColor(
+              station?.title ?? station?.album ?? '',
+              fallBackColor,
+            ).withOpacity(0.5),
+            getColor(
+              station?.title ?? station?.album ?? '',
+              fallBackColor,
+            ).withOpacity(0.9)
           ],
         ),
       ),
@@ -243,10 +292,59 @@ class RadioFallBackIcon extends StatelessWidget {
         child: Icon(
           YaruIcons.radio,
           size: iconSize ?? 70,
-          color: contrastColor(theme.colorScheme.background).withOpacity(0.5),
+          color: contrastColor(
+            getColor(
+              station?.title ?? station?.album ?? '',
+              fallBackColor,
+            ),
+          ).withOpacity(0.7),
         ),
       ),
     );
+  }
+}
+
+Color getColor(String name, Color fallBackColor) {
+  if (name.toLowerCase().contains('lofi') ||
+      name.toLowerCase().contains('lounge') ||
+      name.toLowerCase().contains('chill')) {
+    return Colors.purple;
+  } else if (name.toLowerCase().contains('rap') ||
+      name.toLowerCase().contains('hip-hop') ||
+      name.toLowerCase().contains('hop') ||
+      name.toLowerCase().contains('jam') ||
+      name.toLowerCase().contains('soul') ||
+      name.toLowerCase().contains('rnb') ||
+      name.toLowerCase().contains('deutschrap')) {
+    return Colors.black87;
+  } else if (name.toLowerCase().contains('xmas') ||
+      name.toLowerCase().contains('christmas') ||
+      name.toLowerCase().contains('weihnacht')) {
+    return Colors.limeAccent;
+  } else if (name.toLowerCase().contains('pop') ||
+      name.toLowerCase().contains('charts')) {
+    return Colors.greenAccent;
+  } else if (name.toLowerCase().contains('house')) {
+    return Colors.white38;
+  } else if (name.toLowerCase().contains('techno')) {
+    return Colors.pink;
+  } else if (name.toLowerCase().contains('metal') ||
+      name.toLowerCase().contains('punk')) {
+    return Colors.yellow;
+  } else if (name.toLowerCase().contains('rock')) {
+    return Colors.blue;
+  } else if (name.toLowerCase().contains('classic') ||
+      name.toLowerCase().contains('klassik')) {
+    return Colors.amber;
+  } else if (name.toLowerCase().contains('arab') ||
+      name.toLowerCase().contains('orient') ||
+      name.toLowerCase().contains('schlager') ||
+      name.toLowerCase().contains('volk') ||
+      name.toLowerCase().contains('deutsch') ||
+      name.toLowerCase().contains('islam')) {
+    return Colors.brown;
+  } else {
+    return fallBackColor;
   }
 }
 

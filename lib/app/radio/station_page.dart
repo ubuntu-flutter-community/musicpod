@@ -118,11 +118,11 @@ class StationPage extends StatelessWidget {
                       height: size,
                       width: size,
                       child: SafeNetworkImage(
-                        fallBackIcon: const RadioFallBackIcon(
+                        fallBackIcon: RadioFallBackIcon(
                           iconSize: size / 2,
+                          station: station,
                         ),
                         url: station.imageUrl,
-                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -282,7 +282,7 @@ class SimpleStationPage extends StatelessWidget {
               child: SafeNetworkImage(
                 url: station.imageUrl,
                 fit: BoxFit.fitWidth,
-                fallBackIcon: const RadioFallBackIcon(),
+                fallBackIcon: RadioFallBackIcon(station: station),
               ),
             ),
           ),

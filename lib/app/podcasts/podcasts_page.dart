@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
-import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/country_popup.dart';
 import 'package:musicpod/app/common/no_search_result_page.dart';
@@ -11,6 +10,7 @@ import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
+import 'package:musicpod/app/podcasts/podcast_page.dart';
 import 'package:musicpod/app/podcasts/podcast_search_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
@@ -129,12 +129,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
               podcast: podcast,
               podcastSubscribed: podcastSubscribed,
               onTapText: onTapText,
-              theme: theme,
               removePodcast: removePodcast,
               addPodcast: addPodcast,
-              setSearchQuery: setSearchQuery,
-              searchQuery: searchQuery,
-              search: search,
               showWindowControls: widget.showWindowControls,
             ),
           );
@@ -231,6 +227,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                         ),
                       ),
                     controlPanel,
+                    const SizedBox(width: 10)
                   ],
                 ),
               ),
@@ -286,12 +283,8 @@ void pushPodcastPage({
   required Set<Audio> podcast,
   required bool Function(String name) podcastSubscribed,
   required void Function(String text) onTapText,
-  required ThemeData theme,
   required void Function(String name) removePodcast,
   required void Function(String name, Set<Audio> audios) addPodcast,
-  required void Function(String?) setSearchQuery,
-  String? searchQuery,
-  required void Function({String? searchQuery}) search,
   required bool showWindowControls,
 }) {
   Navigator.of(context).push(
@@ -303,60 +296,21 @@ void pushPodcastPage({
                 podcast.first.album!,
               );
 
-        return AudioPage(
+        final id = podcast.firstOrNull?.album ??
+            podcast.firstOrNull?.title ??
+            podcast.toString();
+
+        return PodcastPage(
+          subscribed: subscribed,
+          imageUrl:
+              podcast.firstOrNull?.albumArtUrl ?? podcast.firstOrNull?.imageUrl,
+          addPodcast: addPodcast,
+          removePodcast: removePodcast,
           onAlbumTap: onTapText,
           onArtistTap: onTapText,
-          audioPageType: AudioPageType.podcast,
           showWindowControls: showWindowControls,
-          sort: false,
-          showTrack: false,
-          controlPageButton: YaruIconButton(
-            icon: Icon(
-              YaruIcons.rss,
-              color: subscribed ? theme.primaryColor : null,
-            ),
-            onPressed: podcast.firstOrNull?.album == null
-                ? null
-                : () {
-                    if (subscribed) {
-                      removePodcast(
-                        podcast.first.album!,
-                      );
-                    } else {
-                      addPodcast(
-                        podcast.first.album!,
-                        podcast,
-                      );
-                    }
-                  },
-          ),
-          image: SafeNetworkImage(
-            fallBackIcon: SizedBox(
-              width: 200,
-              child: Center(
-                child: Icon(
-                  YaruIcons.podcast,
-                  size: 80,
-                  color: theme.hintColor,
-                ),
-              ),
-            ),
-            url: podcast.firstOrNull?.albumArtUrl ??
-                podcast.firstOrNull?.imageUrl,
-            fit: BoxFit.fitWidth,
-            filterQuality: FilterQuality.medium,
-          ),
-          title: Text(
-            podcast.firstOrNull?.album ??
-                podcast.firstOrNull?.title ??
-                podcast.toString(),
-          ),
-          deletable: false,
-          editableName: false,
           audios: podcast,
-          pageId: podcast.firstOrNull?.album ??
-              podcast.firstOrNull?.title ??
-              podcast.toString(),
+          pageId: id,
         );
       },
     ),

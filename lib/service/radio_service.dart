@@ -32,44 +32,44 @@ class RadioService {
     String? name,
     String? state,
     Tag? tag,
+    int limit = 100,
   }) async {
     if (radioBrowserApi == null) return;
     RadioBrowserListResponse<Station>? response;
-    if (radioBrowserApi == null) return;
     if (name?.isEmpty == false) {
       response = await radioBrowserApi!.getStationsByName(
         name: name!,
-        parameters: const InputParameters(
+        parameters: InputParameters(
           hidebroken: true,
           order: 'stationcount',
-          limit: 100,
+          limit: limit,
         ),
       );
     } else if (country?.isEmpty == false) {
       response = await radioBrowserApi!.getStationsByCountry(
         country: country!,
-        parameters: const InputParameters(
+        parameters: InputParameters(
           hidebroken: true,
           order: 'stationcount',
-          limit: 100,
+          limit: limit,
         ),
       );
     } else if (tag != null) {
       response = await radioBrowserApi!.getStationsByTag(
         tag: tag.name,
-        parameters: const InputParameters(
+        parameters: InputParameters(
           hidebroken: true,
           order: 'stationcount',
-          limit: 100,
+          limit: limit,
         ),
       );
     } else if (state?.isEmpty == false) {
       response = await radioBrowserApi!.getStationsByState(
-        state: country!,
-        parameters: const InputParameters(
+        state: state!,
+        parameters: InputParameters(
           hidebroken: true,
           order: 'stationcount',
-          limit: 100,
+          limit: limit,
         ),
       );
     }

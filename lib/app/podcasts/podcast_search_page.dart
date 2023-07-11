@@ -31,11 +31,12 @@ class PodcastSearchPage extends StatelessWidget {
     final addPodcast = context.read<LibraryModel>().addPodcast;
     final search = model.search;
     final setSearchQuery = model.setSearchQuery;
-    final searchQuery = context.select((PodcastModel m) => m.searchQuery);
+    final setSearchActive = model.setSearchActive;
 
     void onTapText(String text) {
       setSearchQuery(text);
       search(searchQuery: text);
+      setSearchActive(true);
     }
 
     if (searchResult?.isEmpty == true) {
@@ -75,12 +76,8 @@ class PodcastSearchPage extends StatelessWidget {
               podcast: podcast,
               podcastSubscribed: podcastSubscribed,
               onTapText: onTapText,
-              theme: theme,
               removePodcast: removePodcast,
               addPodcast: addPodcast,
-              setSearchQuery: setSearchQuery,
-              searchQuery: searchQuery,
-              search: search,
               showWindowControls: showWindowControls,
             );
           },
