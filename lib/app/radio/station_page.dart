@@ -85,7 +85,7 @@ class StationPage extends StatelessWidget {
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
-        title: Text(name),
+        title: Text(name.replaceAll('_', '')),
         leading: Navigator.canPop(context)
             ? const YaruBackButton(
                 style: YaruBackButtonStyle.rounded,
@@ -128,7 +128,7 @@ class StationPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 SizedBox(
                   width: size * 0.95,
@@ -156,7 +156,7 @@ class StationPage extends StatelessWidget {
                           ),
                           Expanded(
                             child: Text(
-                              station.title ?? '',
+                              station.title?.replaceAll('_', '') ?? '',
                               style: theme.textTheme.headlineSmall,
                             ),
                           ),
@@ -176,6 +176,9 @@ class StationPage extends StatelessWidget {
                           }
                         },
                       ),
+                      const SizedBox(
+                        height: 20,
+                      )
                     ],
                   ),
                 )

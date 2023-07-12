@@ -210,9 +210,9 @@ class _StationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AudioCard(
-      bottom: AudioCardBottom(text: station?.title ?? ''),
+      bottom: AudioCardBottom(text: station?.title?.replaceAll('_', '') ?? ''),
       onPlay: () => play(newAudio: station),
-      onTap: station == null ? null : () => onTap(context),
+      onTap: station == null ? null : () => onTap(context, station!),
       image: SizedBox.expand(
         child: SafeNetworkImage(
           fallBackIcon: RadioFallBackIcon(
@@ -225,24 +225,24 @@ class _StationCard extends StatelessWidget {
     );
   }
 
-  void onTap(BuildContext context) {
+  void onTap(BuildContext context, Audio station) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
           final starred = isStarredStation(
-            station!.title ?? station.toString(),
+            station.title ?? station.toString(),
           );
           return StationPage(
             showWindowControls: showWindowControls,
             onTextTap: onTextTap,
-            station: station!,
-            name: station!.title ?? station.toString(),
+            station: station,
+            name: station.title ?? station.toString(),
             unStarStation: (s) => unstarStation(
-              station!.title ?? station.toString(),
+              station.title ?? station.toString(),
             ),
             starStation: (s) => starStation(
-              station!.title!,
-              {station!},
+              station.title ?? station.toString(),
+              {station},
             ),
             onPlay: (audio) => play(newAudio: station),
             isStarred: starred,
