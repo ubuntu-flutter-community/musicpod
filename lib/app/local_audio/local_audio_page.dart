@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/app/common/search_button.dart';
 import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/local_audio/artists_view.dart';
@@ -116,24 +116,9 @@ class StartPage extends StatelessWidget {
           style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
-          leading: Center(
-            child: SizedBox(
-              height: kHeaderBarItemHeight,
-              width: kHeaderBarItemHeight,
-              child: YaruIconButton(
-                isSelected: searchActive,
-                selectedIcon: Icon(
-                  YaruIcons.search,
-                  size: 16,
-                  color: theme.colorScheme.onSurface,
-                ),
-                icon: const Icon(
-                  YaruIcons.search,
-                  size: 16,
-                ),
-                onPressed: () => setSearchActive(!searchActive),
-              ),
-            ),
+          leading: SearchButton(
+            searchActive: searchActive,
+            setSearchActive: setSearchActive,
           ),
           titleSpacing: 0,
           title: Row(
