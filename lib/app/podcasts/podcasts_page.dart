@@ -16,6 +16,8 @@ import 'package:musicpod/app/podcasts/podcast_search_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:musicpod/service/podcast_service.dart';
+import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -112,22 +114,22 @@ class _PodcastsPageState extends State<PodcastsPage> {
         gridDelegate: kImageGridDelegate,
         itemBuilder: (context, index) {
           final podcast = charts.elementAt(index);
-          final name = podcast.firstOrNull?.album ?? '';
 
           final image = SafeNetworkImage(
-            url: podcast.firstOrNull?.albumArtUrl ??
-                podcast.firstOrNull?.imageUrl,
+            url: podcast.artworkUrl600,
             fit: BoxFit.contain,
           );
 
           return AudioCard(
             image: image,
-            onPlay: () {
-              startPlaylist(podcast, name);
+            onPlay: () async {
+              if (podcast.feedUrl == null) return;
+              final feed = await findEpisodes(url: podcast.feedUrl!);
+              startPlaylist(feed, podcast.collectionName!);
             },
             onTap: () => pushPodcastPage(
               context: context,
-              podcast: podcast,
+              podcastItem: podcast,
               podcastSubscribed: podcastSubscribed,
               onTapText: onTapText,
               removePodcast: removePodcast,
@@ -264,43 +266,44 @@ class _PodcastsPageState extends State<PodcastsPage> {
   }
 }
 
-void pushPodcastPage({
+Future<void> pushPodcastPage({
   required BuildContext context,
-  required Set<Audio> podcast,
+  required Item podcastItem,
   required bool Function(String name) podcastSubscribed,
   required void Function(String text) onTapText,
   required void Function(String name) removePodcast,
   required void Function(String name, Set<Audio> audios) addPodcast,
   required bool showWindowControls,
-}) {
-  Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (context) {
-        final subscribed = podcast.firstOrNull?.album == null
-            ? false
-            : podcastSubscribed(
-                podcast.first.album!,
-              );
+}) async {
+  if (podcastItem.feedUrl == null) return;
 
-        final id = podcast.firstOrNull?.album ??
-            podcast.firstOrNull?.title ??
-            podcast.toString();
+  await findEpisodes(url: podcastItem.feedUrl!).then((podcast) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          final subscribed = podcast.firstOrNull?.album == null
+              ? false
+              : podcastSubscribed(
+                  podcast.first.album!,
+                );
 
-        return PodcastPage(
-          subscribed: subscribed,
-          imageUrl:
-              podcast.firstOrNull?.albumArtUrl ?? podcast.firstOrNull?.imageUrl,
-          addPodcast: addPodcast,
-          removePodcast: removePodcast,
-          onAlbumTap: onTapText,
-          onArtistTap: onTapText,
-          showWindowControls: showWindowControls,
-          audios: podcast,
-          pageId: id,
-        );
-      },
-    ),
-  );
+          final id = podcastItem.collectionName ?? podcast.toString();
+
+          return PodcastPage(
+            subscribed: subscribed,
+            imageUrl: podcastItem.artworkUrl600,
+            addPodcast: addPodcast,
+            removePodcast: removePodcast,
+            onAlbumTap: onTapText,
+            onArtistTap: onTapText,
+            showWindowControls: showWindowControls,
+            audios: podcast,
+            pageId: id,
+          );
+        },
+      ),
+    );
+  });
 }
 
 class PodcastsPageIcon extends StatelessWidget {

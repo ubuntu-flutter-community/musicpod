@@ -64,6 +64,9 @@ class PodcastPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AudioPage(
+      titleFlex: 8,
+      albumFlex: 3,
+      artistFlex: 4,
       sort: false,
       onAlbumTap: onAlbumTap,
       onArtistTap: onArtistTap,

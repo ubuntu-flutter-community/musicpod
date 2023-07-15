@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/constants.dart';
@@ -9,6 +8,7 @@ import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcasts_page.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:musicpod/service/podcast_service.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 
@@ -56,8 +56,7 @@ class PodcastSearchPage extends StatelessWidget {
         final podcast = searchResult!.elementAt(index);
         return AudioCard(
           image: SafeNetworkImage(
-            url: podcast.firstOrNull?.albumArtUrl ??
-                podcast.firstOrNull?.imageUrl,
+            url: podcast.artworkUrl600,
             fit: BoxFit.contain,
             fallBackIcon: Icon(
               YaruIcons.podcast,
@@ -65,15 +64,15 @@ class PodcastSearchPage extends StatelessWidget {
               color: theme.hintColor,
             ),
           ),
-          onPlay: podcast.firstOrNull?.album == null
-              ? null
-              : () {
-                  startPlaylist(podcast, podcast.firstOrNull?.album ?? '');
-                },
+          onPlay: () async {
+            if (podcast.feedUrl == null) return;
+            final feed = await findEpisodes(url: podcast.feedUrl!);
+            startPlaylist(feed, podcast.collectionName!);
+          },
           onTap: () {
             pushPodcastPage(
               context: context,
-              podcast: podcast,
+              podcastItem: podcast,
               podcastSubscribed: podcastSubscribed,
               onTapText: onTapText,
               removePodcast: removePodcast,
