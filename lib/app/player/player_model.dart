@@ -299,7 +299,7 @@ class PlayerModel extends SafeChangeNotifier {
   Color? _color;
   void resetColor() => _color = null;
   Color? get color => _color;
-  Color? get surfaceTintColor => _color?.withOpacity(0.1);
+  Color? get surfaceTintColor => _color?.withOpacity(0.05);
 
   Future<void> loadColor() async {
     if (audio == null) return;
