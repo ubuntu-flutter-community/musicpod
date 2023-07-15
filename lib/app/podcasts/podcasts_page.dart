@@ -6,6 +6,7 @@ import 'package:musicpod/app/common/country_popup.dart';
 import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
+import 'package:musicpod/app/common/search_button.dart';
 import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/player_model.dart';
@@ -188,24 +189,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
             child: YaruDetailPage(
               backgroundColor: light ? kBackGroundLight : kBackgroundDark,
               appBar: YaruWindowTitleBar(
-                leading: Center(
-                  child: SizedBox(
-                    height: kHeaderBarItemHeight,
-                    width: kHeaderBarItemHeight,
-                    child: YaruIconButton(
-                      isSelected: searchActive,
-                      selectedIcon: Icon(
-                        YaruIcons.search,
-                        size: 16,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                      icon: const Icon(
-                        YaruIcons.search,
-                        size: 16,
-                      ),
-                      onPressed: () => setSearchActive(!searchActive),
-                    ),
-                  ),
+                leading: SearchButton(
+                  searchActive: searchActive,
+                  setSearchActive: setSearchActive,
                 ),
                 titleSpacing: 0,
                 style: widget.showWindowControls

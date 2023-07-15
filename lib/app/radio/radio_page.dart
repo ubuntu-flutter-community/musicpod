@@ -4,6 +4,7 @@ import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/country_popup.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
+import 'package:musicpod/app/common/search_button.dart';
 import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
@@ -126,24 +127,9 @@ class _RadioPageState extends State<RadioPage> {
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
           titleSpacing: 0,
-          leading: Center(
-            child: SizedBox(
-              height: kHeaderBarItemHeight,
-              width: kHeaderBarItemHeight,
-              child: YaruIconButton(
-                isSelected: searchActive,
-                selectedIcon: Icon(
-                  YaruIcons.search,
-                  size: 16,
-                  color: theme.colorScheme.onSurface,
-                ),
-                icon: const Icon(
-                  YaruIcons.search,
-                  size: 16,
-                ),
-                onPressed: () => setSearchActive(!searchActive),
-              ),
-            ),
+          leading: SearchButton(
+            searchActive: searchActive,
+            setSearchActive: setSearchActive,
           ),
           title: Row(
             mainAxisSize: MainAxisSize.min,
