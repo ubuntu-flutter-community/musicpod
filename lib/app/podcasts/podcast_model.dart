@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
-import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
@@ -26,8 +25,8 @@ class PodcastModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _chartsChangedSub;
   StreamSubscription<bool>? _searchChangedSub;
 
-  Set<Set<Audio>>? get charts => _podcastService.chartsPodcasts;
-  Set<Set<Audio>>? get podcastSearchResult => _podcastService.searchResult;
+  List<Item>? get charts => _podcastService.chartsPodcasts;
+  List<Item>? get podcastSearchResult => _podcastService.searchResult;
 
   bool _searchActive = false;
   bool get searchActive => _searchActive;
