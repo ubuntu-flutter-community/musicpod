@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/player/player_controls.dart';
 import 'package:musicpod/app/player/player_track.dart';
+import 'package:musicpod/app/player/player_view.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -36,8 +37,7 @@ class FullHeightPlayer extends StatelessWidget {
     required this.setPosition,
     required this.seek,
     required this.setFullScreen,
-    required this.fullScreen,
-    required this.expandHeight,
+    required this.playerViewMode,
     required this.onTextTap,
     required this.volume,
     required this.setVolume,
@@ -74,8 +74,7 @@ class FullHeightPlayer extends StatelessWidget {
 
   final void Function(bool?) setFullScreen;
 
-  final bool fullScreen;
-  final bool expandHeight;
+  final PlayerViewMode playerViewMode;
 
   final void Function({required String text, AudioType audioType}) onTextTap;
 
@@ -199,13 +198,13 @@ class FullHeightPlayer extends StatelessWidget {
           padding: const EdgeInsets.all(kYaruPagePadding),
           child: YaruIconButton(
             icon: Icon(
-              fullScreen && !expandHeight
+              playerViewMode == PlayerViewMode.fullWindow
                   ? YaruIcons.fullscreen_exit
                   : YaruIcons.fullscreen,
               color: theme.colorScheme.onSurface,
             ),
             onPressed: () => setFullScreen(
-              fullScreen == true && !expandHeight ? false : true,
+              playerViewMode == PlayerViewMode.fullWindow ? false : true,
             ),
           ),
         ),

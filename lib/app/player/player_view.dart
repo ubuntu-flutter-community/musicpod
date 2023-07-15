@@ -9,11 +9,11 @@ import 'package:provider/provider.dart';
 class PlayerView extends StatelessWidget {
   const PlayerView({
     super.key,
-    this.isSideBarPlayer = false,
+    required this.playerViewMode,
     required this.onTextTap,
   });
 
-  final bool isSideBarPlayer;
+  final PlayerViewMode playerViewMode;
   final void Function({required String text, AudioType audioType}) onTextTap;
 
   @override
@@ -36,7 +36,6 @@ class PlayerView extends StatelessWidget {
         context.select((PlayerModel m) => m.isUpNextExpanded);
     final setUpNextExpanded = playerModel.setUpNextExpanded;
     final isPlaying = context.select((PlayerModel m) => m.isPlaying);
-    final fullScreen = context.select((PlayerModel m) => m.fullScreen);
     final setFullScreen = playerModel.setFullScreen;
     final playPrevious = playerModel.playPrevious;
     final playNext = playerModel.playNext;
@@ -60,16 +59,13 @@ class PlayerView extends StatelessWidget {
             ),
           );
 
-    final showFullHeightPlayer = isSideBarPlayer || fullScreen == true;
-
     final volume = context.select((PlayerModel m) => m.volume);
     final setVolume = playerModel.setVolume;
 
-    if (showFullHeightPlayer) {
+    if (playerViewMode != PlayerViewMode.bottom) {
       return FullHeightPlayer(
+        playerViewMode: playerViewMode,
         onTextTap: onTextTap,
-        expandHeight: isSideBarPlayer,
-        fullScreen: showFullHeightPlayer,
         setFullScreen: setFullScreen,
         isUpNextExpanded: isUpNextExpanded,
         nextAudio: nextAudio,
@@ -99,35 +95,41 @@ class PlayerView extends StatelessWidget {
         volume: volume,
         setVolume: setVolume,
       );
+    } else {
+      return BottomPlayer(
+        onTextTap: onTextTap,
+        setFullScreen: setFullScreen,
+        audio: audio,
+        width: width,
+        color: color,
+        duration: duration,
+        position: position,
+        setPosition: setPosition,
+        seek: seek,
+        setRepeatSingle: setRepeatSingle,
+        repeatSingle: repeatSingle,
+        shuffle: shuffle,
+        setShuffle: setShuffle,
+        isPlaying: isPlaying,
+        playPrevious: playPrevious,
+        playNext: playNext,
+        pause: pause,
+        playOrPause: playOrPause,
+        liked: liked,
+        isStarredStation: isStarredStation,
+        addStarredStation: addStarredStation,
+        removeStarredStation: removeStarredStation,
+        addLikedAudio: addLikedAudio,
+        removeLikedAudio: removeLikedAudio,
+        volume: volume,
+        setVolume: setVolume,
+      );
     }
-
-    return BottomPlayer(
-      onTextTap: onTextTap,
-      setFullScreen: setFullScreen,
-      audio: audio,
-      width: width,
-      color: color,
-      duration: duration,
-      position: position,
-      setPosition: setPosition,
-      seek: seek,
-      setRepeatSingle: setRepeatSingle,
-      repeatSingle: repeatSingle,
-      shuffle: shuffle,
-      setShuffle: setShuffle,
-      isPlaying: isPlaying,
-      playPrevious: playPrevious,
-      playNext: playNext,
-      pause: pause,
-      playOrPause: playOrPause,
-      liked: liked,
-      isStarredStation: isStarredStation,
-      addStarredStation: addStarredStation,
-      removeStarredStation: removeStarredStation,
-      addLikedAudio: addLikedAudio,
-      removeLikedAudio: removeLikedAudio,
-      volume: volume,
-      setVolume: setVolume,
-    );
   }
+}
+
+enum PlayerViewMode {
+  bottom,
+  sideBar,
+  fullWindow,
 }

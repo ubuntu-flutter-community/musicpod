@@ -402,26 +402,13 @@ class _AppState extends State<App> {
           Expanded(
             child: PlayerView(
               onTextTap: onTextTap,
+              playerViewMode: PlayerViewMode.fullWindow,
             ),
           )
         ],
       );
     } else {
-      if (!playerToTheRight) {
-        body = Column(
-          children: [
-            Expanded(
-              child: yaruMasterDetailPage,
-            ),
-            const Divider(
-              height: 0,
-            ),
-            PlayerView(
-              onTextTap: onTextTap,
-            )
-          ],
-        );
-      } else {
+      if (playerToTheRight) {
         body = Row(
           children: [
             Expanded(
@@ -440,12 +427,27 @@ class _AppState extends State<App> {
                   ),
                   Expanded(
                     child: PlayerView(
-                      isSideBarPlayer: true,
+                      playerViewMode: PlayerViewMode.sideBar,
                       onTextTap: onTextTap,
                     ),
                   ),
                 ],
               ),
+            )
+          ],
+        );
+      } else {
+        body = Column(
+          children: [
+            Expanded(
+              child: yaruMasterDetailPage,
+            ),
+            const Divider(
+              height: 0,
+            ),
+            PlayerView(
+              onTextTap: onTextTap,
+              playerViewMode: PlayerViewMode.bottom,
             )
           ],
         );
