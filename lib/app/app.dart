@@ -103,6 +103,7 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final localAudioModel = context.read<LocalAudioModel>();
     final searchLocal = localAudioModel.search;
     final setLocalSearchQuery = localAudioModel.setSearchQuery;
@@ -391,73 +392,83 @@ class _AppState extends State<App> {
       ),
     );
 
-    final Widget body;
-    if (isFullScreen == true) {
-      body = Column(
-        children: [
-          const YaruWindowTitleBar(
-            border: BorderSide.none,
-            backgroundColor: Colors.transparent,
-          ),
-          Expanded(
-            child: PlayerView(
-              onTextTap: onTextTap,
-              playerViewMode: PlayerViewMode.fullWindow,
-            ),
-          )
-        ],
-      );
-    } else {
-      if (playerToTheRight) {
-        body = Row(
+    final Widget body = Stack(
+      alignment: Alignment.center,
+      children: [
+        Row(
           children: [
             Expanded(
-              child: yaruMasterDetailPage,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: yaruMasterDetailPage,
+                  ),
+                  if (!playerToTheRight)
+                    const Divider(
+                      height: 0,
+                    ),
+                  if (!playerToTheRight)
+                    Material(
+                      color: surfaceTintColor,
+                      child: PlayerView(
+                        onTextTap: onTextTap,
+                        playerViewMode: PlayerViewMode.bottom,
+                      ),
+                    )
+                ],
+              ),
             ),
-            const VerticalDivider(
-              width: 0,
-            ),
-            SizedBox(
-              width: 500,
+            if (playerToTheRight)
+              const VerticalDivider(
+                width: 0,
+              ),
+            if (playerToTheRight)
+              SizedBox(
+                width: 500,
+                child: Column(
+                  children: [
+                    const YaruWindowTitleBar(
+                      backgroundColor: Colors.transparent,
+                      border: BorderSide.none,
+                    ),
+                    Expanded(
+                      child: PlayerView(
+                        playerViewMode: PlayerViewMode.sideBar,
+                        onTextTap: onTextTap,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+          ],
+        ),
+        if (isFullScreen == true)
+          Material(
+            child: Material(
+              color: surfaceTintColor ?? theme.colorScheme.background,
               child: Column(
                 children: [
                   const YaruWindowTitleBar(
-                    backgroundColor: Colors.transparent,
                     border: BorderSide.none,
+                    backgroundColor: Colors.transparent,
                   ),
                   Expanded(
                     child: PlayerView(
-                      playerViewMode: PlayerViewMode.sideBar,
                       onTextTap: onTextTap,
+                      playerViewMode: PlayerViewMode.fullWindow,
                     ),
-                  ),
+                  )
                 ],
               ),
-            )
-          ],
-        );
-      } else {
-        body = Column(
-          children: [
-            Expanded(
-              child: yaruMasterDetailPage,
             ),
-            const Divider(
-              height: 0,
-            ),
-            PlayerView(
-              onTextTap: onTextTap,
-              playerViewMode: PlayerViewMode.bottom,
-            )
-          ],
-        );
-      }
-    }
+          )
+      ],
+    );
 
-    return Scaffold(
+    return Material(
+      color: surfaceTintColor,
       key: ValueKey(shrinkSidebar),
-      backgroundColor: surfaceTintColor,
-      body: library.ready ? body : const SplashScreen(),
+      child: library.ready ? body : const SplashScreen(),
     );
   }
 }
