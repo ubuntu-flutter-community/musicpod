@@ -191,6 +191,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
             child: YaruDetailPage(
               backgroundColor: light ? kBackGroundLight : kBackgroundDark,
               appBar: YaruWindowTitleBar(
+                backgroundColor: Colors.transparent,
                 leading: SearchButton(
                   searchActive: searchActive,
                   setSearchActive: setSearchActive,
@@ -226,6 +227,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
             MaterialPage(
               child: YaruDetailPage(
                 appBar: YaruWindowTitleBar(
+                  backgroundColor: Colors.transparent,
                   style: widget.showWindowControls
                       ? YaruTitleBarStyle.normal
                       : YaruTitleBarStyle.undecorated,

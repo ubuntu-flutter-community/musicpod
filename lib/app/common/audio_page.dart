@@ -101,6 +101,7 @@ class AudioPage extends StatelessWidget {
           ? kBackgroundDark
           : kBackGroundLight,
       appBar: YaruWindowTitleBar(
+        backgroundColor: Colors.transparent,
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,

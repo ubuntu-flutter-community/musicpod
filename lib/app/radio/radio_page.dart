@@ -123,6 +123,7 @@ class _RadioPageState extends State<RadioPage> {
       return YaruDetailPage(
         backgroundColor: light ? kBackGroundLight : kBackgroundDark,
         appBar: YaruWindowTitleBar(
+          backgroundColor: Colors.transparent,
           style: widget.showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
