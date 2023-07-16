@@ -8,14 +8,14 @@ Music, Radio and Podcast player for Ubuntu made with Flutter.
 
 
 
-| | |
+|Dark | Light|
 |-|-|
+|![](.github/local_dark.png)|![](.github/local_light.png)|
+|![](.github/radio_dark.png)|![](.github/radio_light.png)|
+|![](.github/podcast_dark.png)|![](.github/podcast_light.png)|
 |![](.github/album_dark.png)|![](.github/album_light.png)|
-|![](.github/full_screen_dark.png)|![](.github/full_screen_light.png)|
-|![](.github/wide_dark.png)|![](.github/wide_light.png)|
-|![](.github/local.png)|![](.github/search.png)|
-|![](.github/radio.png)|![](.github/podcasts.png)|
-|![](.github/fullwin.png.png) | ![](.github/fullwin.png.png) |
+|![](.github/full_window_dark.png)|![](.github/full_window_light.png)|
+|![](.github/wide_window_dark.png)|![](.github/wide_window_light.png)|
 
 ## Credits
 
