@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -32,7 +33,7 @@ class AudioPageHeader extends StatelessWidget {
           end: Alignment.topCenter,
           colors: [
             light ? Colors.white : Colors.transparent,
-            light ? const Color(0xFFfafafa) : theme.cardColor
+            light ? kBackGroundLight : kBackgroundDark
           ],
         ),
       ),

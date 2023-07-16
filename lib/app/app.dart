@@ -104,6 +104,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final light = theme.brightness == Brightness.light;
     final localAudioModel = context.read<LocalAudioModel>();
     final searchLocal = localAudioModel.search;
     final setLocalSearchQuery = localAudioModel.setSearchQuery;
@@ -311,9 +312,14 @@ class _AppState extends State<App> {
           )
     ];
 
+    final playerBg =
+        surfaceTintColor ?? (light ? kBackGroundLight : kBackgroundDark);
+
     final yaruMasterDetailPage = YaruMasterDetailPage(
       onSelected: (value) => library.index = value ?? 0,
-      appBar: const YaruWindowTitleBar(),
+      appBar: const YaruWindowTitleBar(
+        backgroundColor: Colors.transparent,
+      ),
       bottomBar: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: SettingsTile(
@@ -409,7 +415,7 @@ class _AppState extends State<App> {
                     ),
                   if (!playerToTheRight)
                     Material(
-                      color: surfaceTintColor,
+                      color: playerBg,
                       child: PlayerView(
                         onTextTap: onTextTap,
                         playerViewMode: PlayerViewMode.bottom,
@@ -445,7 +451,7 @@ class _AppState extends State<App> {
         if (isFullScreen == true)
           Material(
             child: Material(
-              color: surfaceTintColor ?? theme.colorScheme.background,
+              color: playerBg,
               child: Column(
                 children: [
                   const YaruWindowTitleBar(
@@ -466,7 +472,7 @@ class _AppState extends State<App> {
     );
 
     return Material(
-      color: surfaceTintColor,
+      color: playerBg,
       key: ValueKey(shrinkSidebar),
       child: library.ready ? body : const SplashScreen(),
     );

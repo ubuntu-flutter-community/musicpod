@@ -113,6 +113,7 @@ class StartPage extends StatelessWidget {
             ? const Color.fromARGB(255, 37, 37, 37)
             : Colors.white,
         appBar: YaruWindowTitleBar(
+          backgroundColor: Colors.transparent,
           style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,

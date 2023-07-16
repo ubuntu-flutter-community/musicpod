@@ -82,6 +82,7 @@ class StationPage extends StatelessWidget {
           ? kBackgroundDark
           : kBackGroundLight,
       appBar: YaruWindowTitleBar(
+        backgroundColor: Colors.transparent,
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
@@ -268,6 +269,7 @@ class SimpleStationPage extends StatelessWidget {
 
     return YaruDetailPage(
       appBar: YaruWindowTitleBar(
+        backgroundColor: Colors.transparent,
         title: Text(name),
         style: showWindowControls
             ? YaruTitleBarStyle.normal
