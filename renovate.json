@@ -1,6 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "local>ubuntu-flutter-community/renovate-config"
+  "extends": ["config:base"],
+  "enabledManagers": [
+    "github-actions",
+    "pub"
   ]
 }
