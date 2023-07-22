@@ -91,20 +91,22 @@ class PlayerControls extends StatelessWidget {
       }
     }
 
+    const spacing = 7.0;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         VolumeSliderPopup(volume: volume, setVolume: setVolume),
         const SizedBox(
-          width: 10,
+          width: spacing,
         ),
         YaruIconButton(
           icon: likeIcon,
           onPressed: onLike,
         ),
         const SizedBox(
-          width: 10,
+          width: spacing,
         ),
         YaruIconButton(
           onPressed: audio?.website == null
@@ -123,14 +125,14 @@ class PlayerControls extends StatelessWidget {
           icon: const Icon(YaruIcons.share),
         ),
         const SizedBox(
-          width: 10,
+          width: spacing,
         ),
         YaruIconButton(
           onPressed: () => playPrevious(),
           icon: const Icon(YaruIcons.skip_backward),
         ),
         const SizedBox(
-          width: 10,
+          width: spacing,
         ),
         YaruIconButton(
           onPressed: audio == null
@@ -147,14 +149,14 @@ class PlayerControls extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          width: 10,
+          width: spacing,
         ),
         YaruIconButton(
           onPressed: () => playNext(),
           icon: const Icon(YaruIcons.skip_forward),
         ),
         const SizedBox(
-          width: 10,
+          width: spacing,
         ),
         YaruIconButton(
           icon: Icon(
@@ -165,7 +167,7 @@ class PlayerControls extends StatelessWidget {
           onPressed: () => setRepeatSingle(!(repeatSingle)),
         ),
         const SizedBox(
-          width: 10,
+          width: spacing,
         ),
         YaruIconButton(
           icon: Icon(
@@ -176,7 +178,7 @@ class PlayerControls extends StatelessWidget {
           onPressed: () => setShuffle(!(shuffle)),
         ),
         const SizedBox(
-          width: 10,
+          width: spacing,
         ),
         QueuePopup(
           audio: audio,
