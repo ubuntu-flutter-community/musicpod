@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
@@ -9,10 +11,8 @@ import 'package:musicpod/app/common/loading_tile.dart';
 import 'package:musicpod/app/common/round_image_container.dart';
 import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/common/spaced_divider.dart';
-import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
 import 'package:musicpod/app/local_audio/artist_page.dart';
-import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
@@ -25,17 +25,53 @@ class LocalAudioSearchPage extends StatelessWidget {
   const LocalAudioSearchPage({
     super.key,
     this.showWindowControls = true,
+    required this.setSearchQuery,
+    required this.search,
+    required this.setSearchActive,
+    required this.findArtist,
+    required this.findImages,
+    required this.findAlbum,
+    required this.startPlaylist,
+    required this.isPinnedAlbum,
+    required this.removePinnedAlbum,
+    required this.addPinnedAlbum,
+    required this.isPlaying,
+    required this.setAudio,
+    required this.play,
+    required this.pause,
+    required this.resume,
+    this.currentAudio,
+    this.similarArtistsSearchResult,
+    this.titlesResult,
+    this.searchQuery,
   });
 
   final bool showWindowControls;
+  final void Function(String?) setSearchQuery;
+  final void Function() search;
+  final String? searchQuery;
+  final void Function(bool) setSearchActive;
+
+  final Set<Audio>? similarArtistsSearchResult;
+  final Set<Audio>? titlesResult;
+  final Set<Audio>? Function(Audio, [AudioFilter]) findArtist;
+  final Set<Uint8List>? Function(Set<Audio>) findImages;
+  final Set<Audio>? Function(Audio, [AudioFilter]) findAlbum;
+  final Future<void> Function(Set<Audio>, String) startPlaylist;
+  final bool Function(String) isPinnedAlbum;
+  final void Function(String) removePinnedAlbum;
+  final void Function(String, Set<Audio>) addPinnedAlbum;
+
+  final bool isPlaying;
+  final void Function(Audio?) setAudio;
+  final Audio? currentAudio;
+  final Future<void> Function({bool bigPlay, Audio? newAudio}) play;
+  final Future<void> Function() pause;
+  final Future<void> Function() resume;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final setSearchQuery = context.read<LocalAudioModel>().setSearchQuery;
-    final search = context.read<LocalAudioModel>().search;
-    final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
-    final setSearchActive = context.read<LocalAudioModel>().setSearchActive;
 
     void onTapWithPop(text) {
       setSearchQuery(text);
@@ -54,6 +90,13 @@ class LocalAudioSearchPage extends StatelessWidget {
         _Titles(
           onAlbumTap: onTap,
           onArtistTap: onTap,
+          isPlaying: isPlaying,
+          pause: pause,
+          play: play,
+          setAudio: setAudio,
+          resume: resume,
+          currentAudio: currentAudio,
+          titlesResult: titlesResult,
         ),
         const SizedBox(
           height: 10,
@@ -62,6 +105,11 @@ class LocalAudioSearchPage extends StatelessWidget {
           showWindowControls: showWindowControls,
           onArtistTap: onTapWithPop,
           onAlbumTap: onTapWithPop,
+          findAlbum: findAlbum,
+          addPinnedAlbum: addPinnedAlbum,
+          removePinnedAlbum: removePinnedAlbum,
+          isPinnedAlbum: isPinnedAlbum,
+          startPlaylist: startPlaylist,
         ),
         const SizedBox(
           height: 10,
@@ -70,6 +118,9 @@ class LocalAudioSearchPage extends StatelessWidget {
           showWindowControls: showWindowControls,
           onAlbumTap: onTapWithPop,
           onArtistTap: onTapWithPop,
+          findArtist: findArtist,
+          findImages: findImages,
+          similarArtistsSearchResult: similarArtistsSearchResult,
         ),
       ],
     );
@@ -115,23 +166,31 @@ class LocalAudioSearchPage extends StatelessWidget {
 }
 
 class _Titles extends StatelessWidget {
-  const _Titles({this.onArtistTap, this.onAlbumTap});
+  const _Titles({
+    this.onArtistTap,
+    this.onAlbumTap,
+    required this.isPlaying,
+    required this.setAudio,
+    this.currentAudio,
+    required this.play,
+    required this.pause,
+    required this.resume,
+    this.titlesResult,
+  });
 
   final void Function(String artist)? onArtistTap;
   final void Function(String album)? onAlbumTap;
 
+  final bool isPlaying;
+  final void Function(Audio?) setAudio;
+  final Audio? currentAudio;
+  final Future<void> Function({bool bigPlay, Audio? newAudio}) play;
+  final Future<void> Function() pause;
+  final Future<void> Function() resume;
+  final Set<Audio>? titlesResult;
+
   @override
   Widget build(BuildContext context) {
-    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
-    final setAudio = context.read<PlayerModel>().setAudio;
-    final currentAudio = context.select((PlayerModel m) => m.audio);
-    final play = context.read<PlayerModel>().play;
-    final pause = context.read<PlayerModel>().pause;
-    final resume = context.read<PlayerModel>().resume;
-
-    final Set<Audio>? titlesResult =
-        context.select((LocalAudioModel m) => m.titlesSearchResult);
-
     final theme = Theme.of(context);
 
     return Column(
@@ -172,10 +231,12 @@ class _Titles extends StatelessWidget {
                 )
             ],
           )
+        else if (titlesResult?.isEmpty == true)
+          const SizedBox.shrink()
         else
           Column(
-            children: List.generate(titlesResult.take(5).length, (index) {
-              final audio = titlesResult.take(5).elementAt(index);
+            children: List.generate(titlesResult!.take(5).length, (index) {
+              final audio = titlesResult!.take(5).elementAt(index);
               final audioSelected = currentAudio == audio;
 
               return Padding(
@@ -212,6 +273,11 @@ class _Albums extends StatelessWidget {
     required this.showWindowControls,
     this.onArtistTap,
     this.onAlbumTap,
+    required this.findAlbum,
+    required this.addPinnedAlbum,
+    required this.removePinnedAlbum,
+    required this.isPinnedAlbum,
+    required this.startPlaylist,
   });
 
   final bool showWindowControls;
@@ -219,14 +285,14 @@ class _Albums extends StatelessWidget {
   final void Function(String artist)? onArtistTap;
   final void Function(String album)? onAlbumTap;
 
+  final Set<Audio>? Function(Audio, [AudioFilter]) findAlbum;
+  final void Function(String, Set<Audio>) addPinnedAlbum;
+  final void Function(String) removePinnedAlbum;
+  final bool Function(String) isPinnedAlbum;
+  final Future<void> Function(Set<Audio>, String) startPlaylist;
+
   @override
   Widget build(BuildContext context) {
-    final startPlaylist = context.read<PlayerModel>().startPlaylist;
-    final isPinnedAlbum = context.read<LibraryModel>().isPinnedAlbum;
-    final removePinnedAlbum = context.read<LibraryModel>().removePinnedAlbum;
-    final addPinnedAlbum = context.read<LibraryModel>().addPinnedAlbum;
-    final findAlbum = context.read<LocalAudioModel>().findAlbum;
-
     final Set<Audio>? similarAlbumsResult =
         context.select((LocalAudioModel m) => m.similarAlbumsSearchResult);
 
@@ -348,6 +414,9 @@ class _Artists extends StatelessWidget {
     required this.showWindowControls,
     this.onArtistTap,
     this.onAlbumTap,
+    required this.findImages,
+    required this.findArtist,
+    this.similarArtistsSearchResult,
   });
 
   final bool showWindowControls;
@@ -355,13 +424,12 @@ class _Artists extends StatelessWidget {
   final void Function(String artist)? onArtistTap;
   final void Function(String album)? onAlbumTap;
 
+  final Set<Uint8List>? Function(Set<Audio>) findImages;
+  final Set<Audio>? Function(Audio, [AudioFilter]) findArtist;
+  final Set<Audio>? similarArtistsSearchResult;
+
   @override
   Widget build(BuildContext context) {
-    final Set<Audio>? similarArtistsSearchResult =
-        context.select((LocalAudioModel m) => m.similarArtistsSearchResult);
-    final findArtist = context.read<LocalAudioModel>().findArtist;
-    final findImages = context.read<LocalAudioModel>().findImages;
-
     final theme = Theme.of(context);
 
     return Column(
@@ -385,19 +453,19 @@ class _Artists extends StatelessWidget {
         const SpacedDivider(),
         if (similarArtistsSearchResult != null)
           GridView.builder(
-            itemCount: similarArtistsSearchResult.length,
+            itemCount: similarArtistsSearchResult!.length,
             padding: kGridPadding,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: kImageGridDelegate,
             itemBuilder: (context, index) {
               final artistAudios = findArtist(
-                similarArtistsSearchResult.elementAt(index),
+                similarArtistsSearchResult!.elementAt(index),
               );
               final images = findImages(artistAudios ?? {});
 
               final artistName =
-                  similarArtistsSearchResult.elementAt(index).artist ??
+                  similarArtistsSearchResult!.elementAt(index).artist ??
                       context.l10n.unknown;
 
               return YaruSelectableContainer(

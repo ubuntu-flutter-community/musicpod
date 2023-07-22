@@ -3,35 +3,42 @@ import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
-import 'package:musicpod/app/library_model.dart';
-import 'package:musicpod/app/player/player_model.dart';
-import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcasts_page.dart';
+import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/podcast_service.dart';
-import 'package:provider/provider.dart';
+import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 
 class PodcastSearchPage extends StatelessWidget {
-  const PodcastSearchPage({super.key, required this.showWindowControls});
+  const PodcastSearchPage({
+    super.key,
+    required this.showWindowControls,
+    this.searchResult,
+    this.searchResultCount,
+    required this.startPlaylist,
+    required this.podcastSubscribed,
+    required this.removePodcast,
+    required this.addPodcast,
+    required this.search,
+    required this.setSearchQuery,
+    required this.setSearchActive,
+  });
 
   final bool showWindowControls;
+  final List<Item>? searchResult;
+  final int? searchResultCount;
+  final Future<void> Function(Set<Audio>, String) startPlaylist;
+  final bool Function(String) podcastSubscribed;
+  final void Function(String) removePodcast;
+  final void Function(String, Set<Audio>) addPodcast;
+  final void Function({String? searchQuery}) search;
+  final void Function(String?) setSearchQuery;
+  final void Function(bool) setSearchActive;
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<PodcastModel>();
-    final searchResult =
-        context.select((PodcastModel m) => m.podcastSearchResult);
-    final searchResultCount =
-        context.select((PodcastModel m) => m.podcastSearchResult?.length);
-    final startPlaylist = context.read<PlayerModel>().startPlaylist;
     final theme = Theme.of(context);
-    final podcastSubscribed = context.read<LibraryModel>().podcastSubscribed;
-    final removePodcast = context.read<LibraryModel>().removePodcast;
-    final addPodcast = context.read<LibraryModel>().addPodcast;
-    final search = model.search;
-    final setSearchQuery = model.setSearchQuery;
-    final setSearchActive = model.setSearchActive;
 
     void onTapText(String text) {
       setSearchQuery(text);
