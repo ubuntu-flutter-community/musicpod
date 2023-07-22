@@ -396,15 +396,9 @@ class _Artists extends StatelessWidget {
               );
               final images = findImages(artistAudios ?? {});
 
-              var text = Text(
-                similarArtistsSearchResult.elementAt(index).artist ?? 'unknown',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w100,
-                  fontSize: 20,
-                  color: theme.colorScheme.onInverseSurface,
-                ),
-                textAlign: TextAlign.center,
-              );
+              final artistName =
+                  similarArtistsSearchResult.elementAt(index).artist ??
+                      context.l10n.unknown;
 
               return YaruSelectableContainer(
                 selected: false,
@@ -422,8 +416,10 @@ class _Artists extends StatelessWidget {
                   ),
                 ),
                 borderRadius: BorderRadius.circular(300),
-                child:
-                    RoundImageContainer(image: images?.firstOrNull, text: text),
+                child: RoundImageContainer(
+                  image: images?.firstOrNull,
+                  text: artistName,
+                ),
               );
             },
           )

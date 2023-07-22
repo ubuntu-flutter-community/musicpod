@@ -1,7 +1,7 @@
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:musicpod/utils.dart';
 
 class RoundImageContainer extends StatelessWidget {
   const RoundImageContainer({
@@ -11,7 +11,7 @@ class RoundImageContainer extends StatelessWidget {
   });
 
   final Uint8List? image;
-  final Text text;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -19,21 +19,25 @@ class RoundImageContainer extends StatelessWidget {
 
     Color? bg;
     if (image == null) {
-      Random random = Random();
-      bg = Color.fromRGBO(
-        random.nextInt(255),
-        random.nextInt(255),
-        random.nextInt(255),
-        1,
-      ).withOpacity(0.7);
+      bg = (getColorFromName(text) ?? theme.colorScheme.background)
+          .withOpacity(0.7);
     }
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: bg,
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(0, 1),
+            color: Colors.black.withOpacity(0.5),
+            blurRadius: 3,
+            spreadRadius: 3,
+          )
+        ],
         image: image != null
             ? DecorationImage(
                 image: MemoryImage(image!),
+                fit: BoxFit.cover,
               )
             : null,
         gradient: bg == null
@@ -50,11 +54,19 @@ class RoundImageContainer extends StatelessWidget {
       child: Center(
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(5.0),
           decoration: BoxDecoration(
             color: theme.colorScheme.inverseSurface,
           ),
-          child: text,
+          child: Text(
+            text,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w100,
+              fontSize: 15,
+              color: theme.colorScheme.onInverseSurface,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
       ),
     );
