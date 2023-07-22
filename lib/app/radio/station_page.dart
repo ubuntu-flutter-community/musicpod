@@ -39,33 +39,37 @@ class StationPage extends StatelessWidget {
     required String? imageUrl,
     required bool selected,
     required bool isOnline,
+    required bool enabled,
   }) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: SizedBox(
-        height: kSideBarIconSize,
-        width: kSideBarIconSize,
-        child: isOnline
-            ? SafeNetworkImage(
-                fallBackIcon: selected
-                    ? const Icon(
-                        YaruIcons.star_filled,
-                      )
-                    : const Icon(
-                        YaruIcons.star,
-                      ),
-                errorIcon: selected
-                    ? const Icon(
-                        YaruIcons.star_filled,
-                      )
-                    : const Icon(
-                        YaruIcons.star,
-                      ),
-                fit: BoxFit.fitHeight,
-                url: imageUrl,
-                filterQuality: FilterQuality.medium,
-              )
-            : const Icon(YaruIcons.network_offline),
+    return Opacity(
+      opacity: enabled ? 1 : 0.5,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: SizedBox(
+          height: kSideBarIconSize,
+          width: kSideBarIconSize,
+          child: isOnline
+              ? SafeNetworkImage(
+                  fallBackIcon: selected
+                      ? const Icon(
+                          YaruIcons.star_filled,
+                        )
+                      : const Icon(
+                          YaruIcons.star,
+                        ),
+                  errorIcon: selected
+                      ? const Icon(
+                          YaruIcons.star_filled,
+                        )
+                      : const Icon(
+                          YaruIcons.star,
+                        ),
+                  fit: BoxFit.fitHeight,
+                  url: imageUrl,
+                  filterQuality: FilterQuality.medium,
+                )
+              : const Icon(YaruIcons.network_offline),
+        ),
       ),
     );
   }
