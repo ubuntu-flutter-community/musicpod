@@ -61,6 +61,13 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final podcastSubscribed = context.read<LibraryModel>().podcastSubscribed;
     final removePodcast = context.read<LibraryModel>().removePodcast;
     final addPodcast = context.read<LibraryModel>().addPodcast;
+    final searchResult =
+        context.select((PodcastModel m) => m.podcastSearchResult);
+    final searchResultCount =
+        context.select((PodcastModel m) => m.podcastSearchResult?.length);
+
+    final search = model.search;
+    final setSearchQuery = model.setSearchQuery;
     final textStyle =
         theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
     final buttonStyle = TextButton.styleFrom(
@@ -69,8 +76,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
       ),
     );
 
-    final search = model.search;
-    final setSearchQuery = model.setSearchQuery;
     final searchQuery = context.select((PodcastModel m) => m.searchQuery);
 
     final charts = context.select((PodcastModel m) => m.charts);
@@ -258,6 +263,15 @@ class _PodcastsPageState extends State<PodcastsPage> {
                       )
                     : PodcastSearchPage(
                         showWindowControls: widget.showWindowControls,
+                        search: search,
+                        setSearchActive: setSearchActive,
+                        setSearchQuery: setSearchQuery,
+                        addPodcast: addPodcast,
+                        removePodcast: removePodcast,
+                        podcastSubscribed: podcastSubscribed,
+                        startPlaylist: startPlaylist,
+                        searchResult: searchResult,
+                        searchResultCount: searchResultCount,
                       ),
               ),
             )
