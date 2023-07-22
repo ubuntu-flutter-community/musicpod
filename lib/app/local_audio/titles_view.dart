@@ -45,6 +45,8 @@ class TitlesView extends StatelessWidget {
       audioFilter: AudioFilter.album,
       showTrack: true,
       showWindowControls: showWindowControls,
+      onAlbumTap: onArtistTap,
+      onArtistTap: onArtistTap,
     );
   }
 }

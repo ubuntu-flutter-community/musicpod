@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/player/queue_popup.dart';
 import 'package:musicpod/app/player/volume_popup.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,9 +27,11 @@ class PlayerControls extends StatelessWidget {
     required this.addLikedAudio,
     required this.setVolume,
     required this.volume,
+    required this.queue,
   });
 
   final Audio? audio;
+  final List<Audio> queue;
   final bool repeatSingle;
   final void Function(bool) setRepeatSingle;
   final bool shuffle;
@@ -93,9 +96,15 @@ class PlayerControls extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         VolumeSliderPopup(volume: volume, setVolume: setVolume),
+        const SizedBox(
+          width: 10,
+        ),
         YaruIconButton(
           icon: likeIcon,
           onPressed: onLike,
+        ),
+        const SizedBox(
+          width: 10,
         ),
         YaruIconButton(
           onPressed: audio?.website == null
@@ -113,47 +122,50 @@ class PlayerControls extends StatelessWidget {
                   ),
           icon: const Icon(YaruIcons.share),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: YaruIconButton(
-            onPressed: () => playPrevious(),
-            icon: const Icon(YaruIcons.skip_backward),
+        const SizedBox(
+          width: 10,
+        ),
+        YaruIconButton(
+          onPressed: () => playPrevious(),
+          icon: const Icon(YaruIcons.skip_backward),
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        YaruIconButton(
+          onPressed: audio == null
+              ? null
+              : () {
+                  if (isPlaying) {
+                    pause();
+                  } else {
+                    playOrPause();
+                  }
+                },
+          icon: Icon(
+            isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: YaruIconButton(
-            onPressed: audio == null
-                ? null
-                : () {
-                    if (isPlaying) {
-                      pause();
-                    } else {
-                      playOrPause();
-                    }
-                  },
-            icon: Icon(
-              isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
-            ),
-          ),
+        const SizedBox(
+          width: 10,
         ),
-        Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: YaruIconButton(
-            onPressed: () => playNext(),
-            icon: const Icon(YaruIcons.skip_forward),
-          ),
+        YaruIconButton(
+          onPressed: () => playNext(),
+          icon: const Icon(YaruIcons.skip_forward),
         ),
-        Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: YaruIconButton(
-            icon: Icon(
-              YaruIcons.repeat_single,
-              color: theme.colorScheme.onSurface,
-            ),
-            isSelected: repeatSingle == true,
-            onPressed: () => setRepeatSingle(!(repeatSingle)),
+        const SizedBox(
+          width: 10,
+        ),
+        YaruIconButton(
+          icon: Icon(
+            YaruIcons.repeat_single,
+            color: theme.colorScheme.onSurface,
           ),
+          isSelected: repeatSingle == true,
+          onPressed: () => setRepeatSingle(!(repeatSingle)),
+        ),
+        const SizedBox(
+          width: 10,
         ),
         YaruIconButton(
           icon: Icon(
@@ -162,7 +174,14 @@ class PlayerControls extends StatelessWidget {
           ),
           isSelected: shuffle,
           onPressed: () => setShuffle(!(shuffle)),
-        )
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        QueuePopup(
+          audio: audio,
+          queue: queue,
+        ),
       ],
     );
   }

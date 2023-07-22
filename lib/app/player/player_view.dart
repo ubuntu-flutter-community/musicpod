@@ -123,6 +123,7 @@ class PlayerView extends StatelessWidget {
         removeLikedAudio: removeLikedAudio,
         volume: volume,
         setVolume: setVolume,
+        queue: queue,
       );
     }
   }

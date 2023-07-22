@@ -69,5 +69,7 @@
     "tag": "Tag",
     "all": "All",
     "failedToImport": "Failed to import the following files:",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "volume": "Volume",
+    "queue": "Queue"
 }
