@@ -39,9 +39,11 @@ class BottomPlayer extends StatelessWidget {
     required this.volume,
     this.isVideo,
     required this.videoController,
+    required this.queue,
   });
 
   final Audio? audio;
+  final List<Audio> queue;
   final double width;
   final Color? color;
   final Duration? duration;
@@ -112,8 +114,8 @@ class BottomPlayer extends StatelessWidget {
         alignment: Alignment.topRight,
         children: [
           Positioned(
-            top: 12,
-            right: 20,
+            top: 14,
+            right: 10,
             child: YaruIconButton(
               icon: Icon(
                 YaruIcons.fullscreen,
@@ -207,6 +209,7 @@ class BottomPlayer extends StatelessWidget {
                           removeLikedAudio: removeLikedAudio,
                           volume: volume,
                           setVolume: setVolume,
+                          queue: queue,
                         ),
                       ),
                       Expanded(

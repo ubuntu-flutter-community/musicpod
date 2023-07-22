@@ -21,7 +21,11 @@ class AlbumPage extends StatelessWidget {
     this.onAlbumTap,
   });
 
-  static Widget createIcon(BuildContext context, Uint8List? picture) {
+  static Widget createIcon(
+    BuildContext context,
+    Uint8List? picture,
+    bool enabled,
+  ) {
     Widget? albumArt;
     if (picture != null) {
       albumArt = SizedBox(
@@ -38,10 +42,13 @@ class AlbumPage extends StatelessWidget {
         ),
       );
     }
-    return albumArt ??
-        const Icon(
-          YaruIcons.playlist_play,
-        );
+    return Opacity(
+      opacity: enabled ? 1 : 0.5,
+      child: albumArt ??
+          const Icon(
+            YaruIcons.playlist_play,
+          ),
+    );
   }
 
   final String? name;

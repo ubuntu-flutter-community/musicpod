@@ -101,16 +101,31 @@ class _AudioPageBodyState extends State<AudioPageBody> {
   @override
   Widget build(BuildContext context) {
     final isPlaying = context.select((PlayerModel m) => m.isPlaying);
-    final startPlaylist = context.read<PlayerModel>().startPlaylist;
+    final playerModel = context.read<PlayerModel>();
+    final startPlaylist = playerModel.startPlaylist;
 
     final queueName = context.select((PlayerModel m) => m.queueName);
-    final setAudio = context.read<PlayerModel>().setAudio;
+    final setAudio = playerModel.setAudio;
     final currentAudio = context.select((PlayerModel m) => m.audio);
-    final play = context.read<PlayerModel>().play;
-    final pause = context.read<PlayerModel>().pause;
-    final resume = context.read<PlayerModel>().resume;
+    final play = playerModel.play;
+    final pause = playerModel.pause;
+    final resume = playerModel.resume;
 
     final libraryModel = context.read<LibraryModel>();
+    final liked = libraryModel.liked;
+    final removeLikedAudio = libraryModel.removeLikedAudio;
+    final addLikedAudio = libraryModel.addLikedAudio;
+    final isStarredStation = libraryModel.isStarredStation;
+    final addStarredStation = libraryModel.addStarredStation;
+    final void Function(String) unStarStation = libraryModel.unStarStation;
+    final void Function(String, Audio) removeAudioFromPlaylist =
+        libraryModel.removeAudioFromPlaylist;
+    final List<String> Function() getTopFivePlaylistNames =
+        libraryModel.getTopFivePlaylistNames;
+    final void Function(String, Audio) addAudioToPlaylist =
+        libraryModel.addAudioToPlaylist;
+    final void Function(String, Set<Audio>) addPlaylist =
+        libraryModel.addPlaylist;
 
     final removePlaylist = libraryModel.removePlaylist;
     final updatePlaylistName = libraryModel.updatePlaylistName;
@@ -221,16 +236,16 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   audio: audio,
                   audioSelected: audioSelected,
                   audioPageType: widget.audioPageType,
-                  isLiked: libraryModel.liked,
-                  removeLikedAudio: libraryModel.removeLikedAudio,
-                  addLikedAudio: libraryModel.addLikedAudio,
-                  isStarredStation: libraryModel.isStarredStation,
-                  addStarredStation: libraryModel.addStarredStation,
-                  unStarStation: libraryModel.unStarStation,
-                  removeAudioFromPlaylist: libraryModel.removeAudioFromPlaylist,
-                  getTopFivePlaylistNames: libraryModel.getTopFivePlaylistNames,
-                  addAudioToPlaylist: libraryModel.addAudioToPlaylist,
-                  addPlaylist: libraryModel.addPlaylist,
+                  isLiked: liked,
+                  removeLikedAudio: removeLikedAudio,
+                  addLikedAudio: addLikedAudio,
+                  isStarredStation: isStarredStation,
+                  addStarredStation: addStarredStation,
+                  unStarStation: unStarStation,
+                  removeAudioFromPlaylist: removeAudioFromPlaylist,
+                  getTopFivePlaylistNames: getTopFivePlaylistNames,
+                  addAudioToPlaylist: addAudioToPlaylist,
+                  addPlaylist: addPlaylist,
                 );
 
                 return AudioTile(

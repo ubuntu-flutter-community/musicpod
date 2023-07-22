@@ -44,22 +44,12 @@ class LibraryModel extends SafeChangeNotifier {
 
   int get totalListAmount {
     const fix = 5;
-    switch (_audioPageType) {
-      case AudioPageType.album:
-        return pinnedAlbumsLength + fix;
-      case AudioPageType.playlist:
-        return playlistsLength + fix;
-      case AudioPageType.podcast:
-        return podcastsLength + fix;
-      case AudioPageType.radio:
-        return starredStationsLength + 5;
-      default:
-        return starredStationsLength +
-            podcastsLength +
-            playlistsLength +
-            pinnedAlbumsLength +
-            fix;
-    }
+
+    return starredStationsLength +
+        podcastsLength +
+        playlistsLength +
+        pinnedAlbumsLength +
+        fix;
   }
 
   AudioPageType? _audioPageType;

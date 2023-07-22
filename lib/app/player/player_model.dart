@@ -38,8 +38,8 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  List<Audio>? _queue;
-  List<Audio>? get queue => _queue;
+  List<Audio> _queue = [];
+  List<Audio> get queue => _queue;
   set queue(List<Audio>? value) {
     if (value == null) return;
     _queue = value;
@@ -150,9 +150,12 @@ class PlayerModel extends SafeChangeNotifier {
       setAudio(newAudio);
     }
     if (audio == null) return;
-    queue ??= [];
-    if (!queue!.contains(audio)) {
-      queue!.insert(0, audio!);
+
+    if (!queue.contains(audio)) {
+      queue.insert(0, audio!);
+      if (queue.length > 1) {
+        nextAudio = queue[1];
+      }
     }
     final playList = Playlist([
       if (audio!.path != null)
@@ -267,9 +270,9 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   void estimateNext() {
-    if (queue?.isNotEmpty == true && audio != null && queue!.contains(audio)) {
-      final currentIndex = queue!.indexOf(audio!);
-      final max = queue!.length;
+    if (queue.isNotEmpty == true && audio != null && queue.contains(audio)) {
+      final currentIndex = queue.indexOf(audio!);
+      final max = queue.length;
 
       if (shuffle) {
         final random = Random();
@@ -277,26 +280,26 @@ class PlayerModel extends SafeChangeNotifier {
         while (randomIndex == currentIndex) {
           randomIndex = random.nextInt(max);
         }
-        nextAudio = queue!.elementAt(randomIndex);
+        nextAudio = queue.elementAt(randomIndex);
       } else {
-        if (currentIndex == queue!.length - 1) {
-          nextAudio = queue!.elementAt(0);
+        if (currentIndex == queue.length - 1) {
+          nextAudio = queue.elementAt(0);
         } else {
-          nextAudio = queue?.elementAt(queue!.indexOf(audio!) + 1);
+          nextAudio = queue.elementAt(queue.indexOf(audio!) + 1);
         }
       }
     }
   }
 
   Future<void> playPrevious() async {
-    if (queue?.isNotEmpty == true && audio != null && queue!.contains(audio)) {
-      final currentIndex = queue!.indexOf(audio!);
+    if (queue.isNotEmpty == true && audio != null && queue.contains(audio)) {
+      final currentIndex = queue.indexOf(audio!);
 
       if (currentIndex == 0) {
         return;
       }
 
-      nextAudio = queue?.elementAt(currentIndex - 1);
+      nextAudio = queue.elementAt(currentIndex - 1);
 
       if (nextAudio == null) return;
       setAudio(nextAudio);

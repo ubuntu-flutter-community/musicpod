@@ -1,20 +1,22 @@
-import 'package:collection/collection.dart';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/round_image_container.dart';
 import 'package:musicpod/app/local_audio/artist_page.dart';
-import 'package:musicpod/app/local_audio/local_audio_model.dart';
 import 'package:musicpod/data/audio.dart';
-import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-class ArtistsView extends StatefulWidget {
+class ArtistsView extends StatelessWidget {
   const ArtistsView({
     super.key,
     required this.similarArtistsSearchResult,
     required this.showWindowControls,
     this.onArtistTap,
     this.onAlbumTap,
+    required this.findArtist,
+    required this.findImages,
   });
 
   final Set<Audio> similarArtistsSearchResult;
@@ -22,31 +24,24 @@ class ArtistsView extends StatefulWidget {
 
   final void Function(String artist)? onArtistTap;
   final void Function(String album)? onAlbumTap;
+  final Set<Audio>? Function(Audio, [AudioFilter]) findArtist;
+  final Set<Uint8List>? Function(Set<Audio>) findImages;
 
-  @override
-  State<ArtistsView> createState() => _ArtistsViewState();
-}
-
-class _ArtistsViewState extends State<ArtistsView> {
   @override
   Widget build(BuildContext context) {
-    final findArtist = context.read<LocalAudioModel>().findArtist;
-    final findImages = context.read<LocalAudioModel>().findImages;
-
     return GridView.builder(
-      itemCount: widget.similarArtistsSearchResult.length,
+      itemCount: similarArtistsSearchResult.length,
       padding: const EdgeInsets.all(kYaruPagePadding),
       shrinkWrap: true,
       gridDelegate: kImageGridDelegate,
       itemBuilder: (context, index) {
         final artistAudios = findArtist(
-          widget.similarArtistsSearchResult.elementAt(index),
+          similarArtistsSearchResult.elementAt(index),
         );
         final images = findImages(artistAudios ?? {});
 
         final artistname =
-            widget.similarArtistsSearchResult.elementAt(index).artist ??
-                'unknown';
+            similarArtistsSearchResult.elementAt(index).artist ?? 'unknown';
 
         return YaruSelectableContainer(
           selected: false,
@@ -54,11 +49,11 @@ class _ArtistsViewState extends State<ArtistsView> {
             MaterialPageRoute(
               builder: (context) {
                 return ArtistPage(
-                  onAlbumTap: widget.onAlbumTap,
-                  onArtistTap: widget.onArtistTap,
+                  onAlbumTap: onAlbumTap,
+                  onArtistTap: onArtistTap,
                   images: images,
                   artistAudios: artistAudios,
-                  showWindowControls: widget.showWindowControls,
+                  showWindowControls: showWindowControls,
                 );
               },
             ),

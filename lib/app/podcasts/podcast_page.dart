@@ -25,28 +25,49 @@ class PodcastPage extends StatelessWidget {
     required BuildContext context,
     String? imageUrl,
     required bool isOnline,
+    required bool enabled,
   }) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: SizedBox(
-        width: kSideBarIconSize,
-        height: kSideBarIconSize,
-        child: isOnline
-            ? SafeNetworkImage(
-                url: imageUrl,
-                fit: BoxFit.fitHeight,
-                filterQuality: FilterQuality.medium,
-                fallBackIcon: const Icon(
-                  YaruIcons.rss,
-                  size: kSideBarIconSize,
-                ),
-                errorIcon: const Icon(
-                  YaruIcons.rss,
-                  size: kSideBarIconSize,
-                ),
-              )
-            : const Icon(YaruIcons.network_offline),
-      ),
+    var clipRRect = isOnline
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: SizedBox(
+              width: kSideBarIconSize,
+              height: kSideBarIconSize,
+              child: isOnline
+                  ? SafeNetworkImage(
+                      url: imageUrl,
+                      fit: BoxFit.fitHeight,
+                      filterQuality: FilterQuality.medium,
+                      fallBackIcon: const Icon(
+                        YaruIcons.rss,
+                        size: kSideBarIconSize,
+                      ),
+                      errorIcon: const Icon(
+                        YaruIcons.rss,
+                        size: kSideBarIconSize,
+                      ),
+                    )
+                  : const Icon(YaruIcons.network_offline),
+            ),
+          )
+        : const Icon(
+            YaruIcons.network_offline,
+          );
+    return enabled
+        ? clipRRect
+        : Opacity(
+            opacity: 0.5,
+            child: clipRRect,
+          );
+  }
+
+  static Widget createTitle({
+    required bool enabled,
+    required String title,
+  }) {
+    return Opacity(
+      opacity: enabled ? 1 : 0.5,
+      child: Text(title),
     );
   }
 

@@ -125,6 +125,8 @@ class _AppState extends State<App> {
     final isFullScreen = context.select((PlayerModel m) => m.fullScreen);
 
     final library = context.watch<LibraryModel>();
+    final audioPageType = context.select((LibraryModel m) => m.audioPageType);
+    final setAudioPageType = library.setAudioPageType;
     final width = MediaQuery.of(context).size.width;
     final shrinkSidebar = (width < 700);
     final playerToTheRight = width > 1700;
@@ -217,99 +219,104 @@ class _AppState extends State<App> {
         iconBuilder: (context, selected) =>
             LikedAudioPage.createIcon(context: context, selected: selected),
       ),
-      if (library.showSubbedPodcasts)
-        for (final podcast in library.podcasts.entries)
-          MasterItem(
-            tileBuilder: (context) => Text(podcast.key),
-            builder: (context) => isOnline
-                ? PodcastPage(
-                    pageId: podcast.key,
-                    audios: podcast.value,
-                    showWindowControls: !playerToTheRight,
-                    onAlbumTap: (album) =>
-                        onTextTap(text: album, audioType: AudioType.podcast),
-                    onArtistTap: (artist) =>
-                        onTextTap(text: artist, audioType: AudioType.podcast),
-                    addPodcast: library.addPodcast,
-                    removePodcast: library.removePodcast,
-                    imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
-                        podcast.value.firstOrNull?.imageUrl,
-                  )
-                : const OfflinePage(),
-            iconBuilder: (context, selected) => isOnline
-                ? PodcastPage.createIcon(
-                    context: context,
-                    imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
-                        podcast.value.firstOrNull?.imageUrl,
-                    isOnline: isOnline,
-                  )
-                : const Icon(
-                    YaruIcons.network_offline,
-                  ),
+      for (final podcast in library.podcasts.entries)
+        MasterItem(
+          tileBuilder: (context) => PodcastPage.createTitle(
+            title: podcast.key,
+            enabled: library.showSubbedPodcasts,
           ),
-      if (library.showPlaylists)
-        for (final playlist in library.playlists.entries)
-          MasterItem(
-            tileBuilder: (context) => Text(playlist.key),
-            builder: (context) => PlaylistPage(
-              onAlbumTap: (album) => onTextTap(text: album),
-              onArtistTap: (artist) => onTextTap(text: artist),
-              playlist: playlist,
-              showWindowControls: !playerToTheRight,
-              unPinPlaylist: library.removePlaylist,
-            ),
-            iconBuilder: (context, selected) => const Icon(
+          builder: (context) => isOnline
+              ? PodcastPage(
+                  pageId: podcast.key,
+                  audios: podcast.value,
+                  showWindowControls: !playerToTheRight,
+                  onAlbumTap: (album) =>
+                      onTextTap(text: album, audioType: AudioType.podcast),
+                  onArtistTap: (artist) =>
+                      onTextTap(text: artist, audioType: AudioType.podcast),
+                  addPodcast: library.addPodcast,
+                  removePodcast: library.removePodcast,
+                  imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
+                      podcast.value.firstOrNull?.imageUrl,
+                )
+              : const OfflinePage(),
+          iconBuilder: (context, selected) => PodcastPage.createIcon(
+            context: context,
+            imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
+                podcast.value.firstOrNull?.imageUrl,
+            isOnline: isOnline,
+            enabled: library.showSubbedPodcasts,
+          ),
+        ),
+      for (final playlist in library.playlists.entries)
+        MasterItem(
+          tileBuilder: (context) => Opacity(
+            opacity: library.showPlaylists ? 1 : 0.5,
+            child: Text(playlist.key),
+          ),
+          builder: (context) => PlaylistPage(
+            onAlbumTap: (album) => onTextTap(text: album),
+            onArtistTap: (artist) => onTextTap(text: artist),
+            playlist: playlist,
+            showWindowControls: !playerToTheRight,
+            unPinPlaylist: library.removePlaylist,
+          ),
+          iconBuilder: (context, selected) => Opacity(
+            opacity: library.showPlaylists ? 1 : 0.5,
+            child: const Icon(
               YaruIcons.playlist,
             ),
           ),
-      if (library.showPinnedAlbums)
-        for (final album in library.pinnedAlbums.entries)
-          MasterItem(
-            tileBuilder: (context) =>
-                Text(createPlaylistName(album.key, context)),
-            builder: (context) => AlbumPage(
-              onArtistTap: (artist) => onTextTap(text: artist),
-              onAlbumTap: (album) => onTextTap(text: album),
-              showWindowControls: !playerToTheRight,
-              album: album.value,
-              name: album.key,
-              addPinnedAlbum: library.addPinnedAlbum,
-              isPinnedAlbum: library.isPinnedAlbum,
-              removePinnedAlbum: library.removePinnedAlbum,
-            ),
-            iconBuilder: (context, selected) => AlbumPage.createIcon(
-              context,
-              album.value.firstOrNull?.pictureData,
-            ),
+        ),
+      for (final album in library.pinnedAlbums.entries)
+        MasterItem(
+          tileBuilder: (context) => Opacity(
+            opacity: library.showPinnedAlbums ? 1 : 0.5,
+            child: Text(createPlaylistName(album.key, context)),
           ),
-      if (library.showStarredStations)
-        for (final station in library.starredStations.entries)
-          MasterItem(
-            tileBuilder: (context) => Text(station.key),
-            builder: (context) => isOnline
-                ? StationPage(
-                    showWindowControls: !playerToTheRight,
-                    isStarred: true,
-                    starStation: (station) {},
-                    onTextTap: (text) =>
-                        onTextTap(text: text, audioType: AudioType.radio),
-                    unStarStation: library.unStarStation,
-                    name: station.key,
-                    station: station.value.first,
-                    onPlay: (audio) => play(newAudio: audio),
-                  )
-                : const OfflinePage(),
-            iconBuilder: (context, selected) => isOnline
-                ? StationPage.createIcon(
-                    context: context,
-                    imageUrl: station.value.first.imageUrl,
-                    selected: selected,
-                    isOnline: isOnline,
-                  )
-                : const Icon(
-                    YaruIcons.network_offline,
-                  ),
-          )
+          builder: (context) => AlbumPage(
+            onArtistTap: (artist) => onTextTap(text: artist),
+            onAlbumTap: (album) => onTextTap(text: album),
+            showWindowControls: !playerToTheRight,
+            album: album.value,
+            name: album.key,
+            addPinnedAlbum: library.addPinnedAlbum,
+            isPinnedAlbum: library.isPinnedAlbum,
+            removePinnedAlbum: library.removePinnedAlbum,
+          ),
+          iconBuilder: (context, selected) => AlbumPage.createIcon(
+            context,
+            album.value.firstOrNull?.pictureData,
+            library.showPinnedAlbums,
+          ),
+        ),
+      for (final station in library.starredStations.entries)
+        MasterItem(
+          tileBuilder: (context) => Opacity(
+            opacity: library.showStarredStations ? 1 : 0.5,
+            child: Text(station.key),
+          ),
+          builder: (context) => isOnline
+              ? StationPage(
+                  showWindowControls: !playerToTheRight,
+                  isStarred: true,
+                  starStation: (station) {},
+                  onTextTap: (text) =>
+                      onTextTap(text: text, audioType: AudioType.radio),
+                  unStarStation: library.unStarStation,
+                  name: station.key,
+                  station: station.value.first,
+                  onPlay: (audio) => play(newAudio: audio),
+                )
+              : const OfflinePage(),
+          iconBuilder: (context, selected) => StationPage.createIcon(
+            context: context,
+            imageUrl: station.value.first.imageUrl,
+            selected: selected,
+            isOnline: isOnline,
+            enabled: library.showStarredStations,
+          ),
+        )
     ];
 
     final playerBg =
@@ -380,7 +387,11 @@ class _AppState extends State<App> {
           column = Column(
             children: [
               tile,
-              AudioPageFilterBar(mainPageType: mainPageType),
+              AudioPageFilterBar(
+                mainPageType: mainPageType,
+                audioPageType: audioPageType,
+                setAudioPageType: setAudioPageType,
+              ),
             ],
           );
         }
