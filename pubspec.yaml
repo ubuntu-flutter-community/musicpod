@@ -35,7 +35,7 @@ dependencies:
   podcast_search: ^0.6.0
   provider: ^6.0.5
   radio_browser_api: ^0.1.0+4
-  safe_change_notifier: ^0.2.0
+  safe_change_notifier: ^0.3.0
   shimmer: ^3.0.0
   ubuntu_service: ^0.2.0
   url_launcher: ^6.1.10
