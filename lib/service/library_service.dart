@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/data/audio.dart';
-import 'package:xdg_directories/xdg_directories.dart';
+import 'package:musicpod/utils.dart';
 
 class LibraryService {
   //
@@ -216,10 +216,7 @@ Future<void> _write(Map<String, Set<Audio>> map, String fileName) async {
 
   final jsonStr = jsonEncode(dynamicMap);
 
-  final workingDir = '${configHome.path}/$kMusicPodConfigSubDir';
-  if (!Directory(workingDir).existsSync()) {
-    await Directory(workingDir).create();
-  }
+  final workingDir = await getWorkingDir();
   final path = '$workingDir/$fileName';
 
   final file = File(path);
@@ -232,7 +229,7 @@ Future<void> _write(Map<String, Set<Audio>> map, String fileName) async {
 }
 
 Future<Map<String, Set<Audio>>> _read(String fileName) async {
-  final workingDir = '${configHome.path}/musicpod';
+  final workingDir = await getWorkingDir();
   final path = '$workingDir/$fileName';
 
   try {
