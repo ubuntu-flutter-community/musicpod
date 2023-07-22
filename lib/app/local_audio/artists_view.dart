@@ -30,8 +30,6 @@ class ArtistsView extends StatefulWidget {
 class _ArtistsViewState extends State<ArtistsView> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     final findArtist = context.read<LocalAudioModel>().findArtist;
     final findImages = context.read<LocalAudioModel>().findImages;
 
@@ -46,16 +44,9 @@ class _ArtistsViewState extends State<ArtistsView> {
         );
         final images = findImages(artistAudios ?? {});
 
-        var text = Text(
-          widget.similarArtistsSearchResult.elementAt(index).artist ??
-              'unknown',
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w100,
-            fontSize: 20,
-            color: theme.colorScheme.onInverseSurface,
-          ),
-          textAlign: TextAlign.center,
-        );
+        final artistname =
+            widget.similarArtistsSearchResult.elementAt(index).artist ??
+                'unknown';
 
         return YaruSelectableContainer(
           selected: false,
@@ -73,7 +64,8 @@ class _ArtistsViewState extends State<ArtistsView> {
             ),
           ),
           borderRadius: BorderRadius.circular(300),
-          child: RoundImageContainer(image: images?.firstOrNull, text: text),
+          child:
+              RoundImageContainer(image: images?.firstOrNull, text: artistname),
         );
       },
     );
