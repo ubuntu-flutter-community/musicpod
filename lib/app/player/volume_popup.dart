@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_icons/yaru_icons.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 class VolumeSliderPopup extends StatefulWidget {
   const VolumeSliderPopup({
@@ -32,13 +32,9 @@ class _VolumeSliderPopupState extends State<VolumeSliderPopup> {
 
     return StatefulBuilder(
       builder: (context, stateSetter) {
-        return YaruPopupMenuButton<double>(
-          style: TextButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100),
-            ),
-          ),
-          child: Icon(iconData),
+        return PopupMenuButton<double>(
+          tooltip: context.l10n.volume,
+          icon: Icon(iconData),
           itemBuilder: (context) {
             return [
               PopupMenuItem(

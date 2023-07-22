@@ -45,7 +45,7 @@ class FullHeightPlayer extends StatelessWidget {
 
   final Audio? audio;
   final Audio? nextAudio;
-  final List<Audio>? queue;
+  final List<Audio> queue;
   final bool isUpNextExpanded;
   final void Function(bool value) setUpNextExpanded;
   final bool repeatSingle;
@@ -140,6 +140,7 @@ class FullHeightPlayer extends StatelessWidget {
       removeLikedAudio: removeLikedAudio,
       volume: volume,
       setVolume: setVolume,
+      queue: queue,
     );
 
     final sliderAndTime = PlayerTrack(
