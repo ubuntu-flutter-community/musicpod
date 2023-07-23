@@ -57,24 +57,28 @@ class PlayerModel extends SafeChangeNotifier {
     if (value == null || value == _audio) return;
     _audio = value;
 
-    if (audio!.path != null || audio!.url != null) {
-      _mediaControlService.metadata = MPRISMetadata(
-        audio!.path != null ? Uri.file(audio!.path!) : Uri.parse(audio!.url!),
-        artUrl: _audio!.imageUrl == null
-            ? null
-            : Uri.parse(
-                _audio!.imageUrl!,
-              ),
-        album: _audio?.album,
-        albumArtist: [_audio?.albumArtist ?? ''],
-        artist: [_audio?.albumArtist ?? ''],
-        discNumber: _audio?.discNumber,
-        title: _audio?.title,
-        trackNumber: _audio?.trackNumber,
-      );
+    if (_audio!.path != null || _audio!.url != null) {
+      _mediaControlService.metadata = _createMprisMetadata(_audio!);
     }
 
     notifyListeners();
+  }
+
+  MPRISMetadata _createMprisMetadata(Audio audio) {
+    return MPRISMetadata(
+      audio.path != null ? Uri.file(audio.path!) : Uri.parse(audio.url!),
+      artUrl: _audio!.imageUrl == null
+          ? null
+          : Uri.parse(
+              _audio!.imageUrl!,
+            ),
+      album: _audio?.album,
+      albumArtist: [_audio?.albumArtist ?? ''],
+      artist: [_audio?.albumArtist ?? ''],
+      discNumber: _audio?.discNumber,
+      title: _audio?.title,
+      trackNumber: _audio?.trackNumber,
+    );
   }
 
   Audio? _nextAudio;
@@ -350,6 +354,9 @@ class PlayerModel extends SafeChangeNotifier {
       _audio = Audio.fromJson(maybeAudio);
       if (durationAsString != null) {
         setDuration(parseDuration(durationAsString));
+      }
+      if (_audio != null && (_audio!.path != null || _audio!.url != null)) {
+        _mediaControlService.metadata = _createMprisMetadata(_audio!);
       }
     }
   }
