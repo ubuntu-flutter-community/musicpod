@@ -260,6 +260,15 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                     setAudio(audio);
                     await play();
                   },
+                  startPlaylist: widget.audios == null
+                      ? null
+                      : () => startPlaylist(
+                            widget.audios!.skip(index).toSet(),
+                            queueName ??
+                                audio.artist ??
+                                audio.album ??
+                                widget.audios.toString(),
+                          ),
                   resume: resume,
                   key: ValueKey(audio),
                   selected: audioSelected,
