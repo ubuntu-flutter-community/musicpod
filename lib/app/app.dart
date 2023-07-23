@@ -83,14 +83,15 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  int _selectedLocalAudioIndex = 0;
-
   @override
   void initState() {
     super.initState();
     YaruWindow.of(context).onClose(
       () async {
-        await context.read<PlayerModel>().dispose();
+        await context.read<PlayerModel>().dispose().then((_) async {
+          await context.read<LibraryModel>().dispose();
+        });
+
         return true;
       },
     );
@@ -165,8 +166,8 @@ class _AppState extends State<App> {
       MasterItem(
         tileBuilder: (context) => Text(context.l10n.localAudio),
         builder: (context) => LocalAudioPage(
-          selectedIndex: _selectedLocalAudioIndex,
-          onIndexSelected: (i) => setState(() => _selectedLocalAudioIndex = i),
+          selectedIndex: library.localAudioindex ?? 0,
+          onIndexSelected: (i) => library.localAudioindex = i,
           showWindowControls: !playerToTheRight,
         ),
         iconBuilder: (context, selected) => LocalAudioPageIcon(

@@ -197,12 +197,27 @@ class LibraryService {
   }
 
   Future<void> init() async {
+    final indexOrNull = await readSetting(kLocalAudioIndex);
+    _localAudioIndex = indexOrNull == null ? 0 : int.parse(indexOrNull);
     _playlists = await _read(kPlaylistsFileName);
     _pinnedAlbums = await _read(kPinnedAlbumsFileName);
     _podcasts = await _read(kPodcastsFileName);
     _starredStations = await _read(kStarredStationsFileName);
     _likedAudios =
         (await _read(kLikedAudios)).entries.firstOrNull?.value ?? <Audio>{};
+  }
+
+  int? _localAudioIndex;
+  int? get localAudioIndex => _localAudioIndex;
+  final localAudioIndexController = StreamController<int?>.broadcast();
+  Stream<int?> get localAudioIndexStream => localAudioIndexController.stream;
+  void setLocalAudioIndex(int? value) {
+    _localAudioIndex = value;
+    localAudioIndexController.add(value);
+  }
+
+  Future<void> dispose() async {
+    await writeSetting(kLocalAudioIndex, _localAudioIndex.toString());
   }
 }
 
