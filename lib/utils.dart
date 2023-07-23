@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -153,6 +154,33 @@ Duration? parseDuration(String? durationAsString) {
   }
   micros = (double.parse(parts[parts.length - 1]) * 1000000).round();
   return Duration(hours: hours, minutes: minutes, microseconds: micros);
+}
+
+Future<Uri?> createUriFromAudio(Audio audio) async {
+  if (audio.imageUrl != null || audio.albumArtUrl != null) {
+    return Uri.parse(
+      audio.albumArtUrl ?? audio.imageUrl!,
+    );
+  } else if (audio.pictureData != null) {
+    Uint8List imageInUnit8List = audio.pictureData!;
+    final workingDir = await getWorkingDir();
+
+    final now = DateTime.now().toUtc().toString();
+    final dir = Directory(workingDir);
+    var stream = dir.list(recursive: true);
+    final sub = stream.listen((e) async {
+      if (e is File && e.path.endsWith('.png')) {
+        await e.delete();
+      }
+    });
+    sub.cancel();
+    final file = File('$workingDir$now.png');
+    final newFile = await file.writeAsBytes(imageInUnit8List);
+
+    return Uri.file(newFile.path);
+  } else {
+    return null;
+  }
 }
 
 Color? getColorFromName(String name) {
