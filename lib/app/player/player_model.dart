@@ -53,28 +53,24 @@ class PlayerModel extends SafeChangeNotifier {
 
   Audio? _audio;
   Audio? get audio => _audio;
-  void setAudio(Audio? value) {
+  Future<void> setAudio(Audio? value) async {
     if (value == null || value == _audio) return;
     _audio = value;
 
-    if (_audio!.path != null || _audio!.url != null) {
-      _mediaControlService.metadata = _createMprisMetadata(_audio!);
-    }
-
     notifyListeners();
+
+    if (_audio!.path != null || _audio!.url != null) {
+      _mediaControlService.metadata = await _createMprisMetadata(_audio!);
+    }
   }
 
-  MPRISMetadata _createMprisMetadata(Audio audio) {
+  Future<MPRISMetadata> _createMprisMetadata(Audio audio) async {
     return MPRISMetadata(
       audio.path != null ? Uri.file(audio.path!) : Uri.parse(audio.url!),
-      artUrl: _audio!.imageUrl == null
-          ? null
-          : Uri.parse(
-              _audio!.imageUrl!,
-            ),
+      artUrl: await createUriFromAudio(audio),
       album: _audio?.album,
       albumArtist: [_audio?.albumArtist ?? ''],
-      artist: [_audio?.albumArtist ?? ''],
+      artist: [_audio?.artist ?? ''],
       discNumber: _audio?.discNumber,
       title: _audio?.title,
       trackNumber: _audio?.trackNumber,
@@ -356,7 +352,7 @@ class PlayerModel extends SafeChangeNotifier {
         setDuration(parseDuration(durationAsString));
       }
       if (_audio != null && (_audio!.path != null || _audio!.url != null)) {
-        _mediaControlService.metadata = _createMprisMetadata(_audio!);
+        _mediaControlService.metadata = await _createMprisMetadata(_audio!);
       }
     }
   }
