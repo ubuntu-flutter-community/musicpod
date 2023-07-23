@@ -20,6 +20,7 @@ class AudioTile extends StatelessWidget {
     this.titleFlex = 5,
     this.artistFlex = 5,
     this.albumFlex = 4,
+    this.startPlaylist,
   });
 
   final Audio audio;
@@ -29,6 +30,7 @@ class AudioTile extends StatelessWidget {
   final bool isPlayerPlaying;
   final Future<void> Function() play;
   final Future<void> Function() resume;
+  final void Function()? startPlaylist;
   final void Function() pause;
   final bool showTrack;
   final void Function(String artist)? onArtistTap;
@@ -55,7 +57,11 @@ class AudioTile extends StatelessWidget {
           if (selected) {
             resume();
           } else {
-            play();
+            if (startPlaylist != null) {
+              startPlaylist!();
+            } else {
+              play();
+            }
           }
         }
       },

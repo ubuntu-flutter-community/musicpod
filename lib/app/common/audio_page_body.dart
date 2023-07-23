@@ -199,7 +199,12 @@ class _AudioPageBodyState extends State<AudioPageBody> {
               subTitle: widget.pageSubTitle,
               label: widget.pageLabel,
             ),
-          audioControlPanel,
+          Padding(
+            padding: widget.showAudioPageHeader == false
+                ? const EdgeInsets.only(top: 10)
+                : EdgeInsets.zero,
+            child: audioControlPanel,
+          ),
           Padding(
             padding: const EdgeInsets.only(
               left: 20,
@@ -260,6 +265,15 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                     setAudio(audio);
                     await play();
                   },
+                  startPlaylist: widget.audios == null
+                      ? null
+                      : () => startPlaylist(
+                            widget.audios!.skip(index).toSet(),
+                            queueName ??
+                                audio.artist ??
+                                audio.album ??
+                                widget.audios.toString(),
+                          ),
                   resume: resume,
                   key: ValueKey(audio),
                   selected: audioSelected,

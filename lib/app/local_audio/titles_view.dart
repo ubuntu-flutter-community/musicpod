@@ -3,6 +3,7 @@ import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/audio_page_body.dart';
 import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/utils.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -38,7 +39,7 @@ class TitlesView extends StatelessWidget {
     return AudioPageBody(
       audios: Set.from(sortedAudios),
       audioPageType: AudioPageType.immutable,
-      pageId: 'localAudio',
+      pageId: context.l10n.localAudio,
       editableName: false,
       showAudioPageHeader: false,
       sort: true,
