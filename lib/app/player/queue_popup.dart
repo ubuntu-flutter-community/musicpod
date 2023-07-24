@@ -12,60 +12,56 @@ class QueuePopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return StatefulBuilder(
-      key: ObjectKey(audio),
-      builder: (context, stateSetter) {
-        return PopupMenuButton<double>(
-          tooltip: context.l10n.queue,
-          icon: const Icon(
-            YaruIcons.playlist,
-          ),
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem(
-                child: SizedBox(
-                  height: 200,
-                  width: 300,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5, bottom: 5),
-                        child: Text(
-                          context.l10n.upNext,
-                          style: theme.textTheme.labelSmall,
-                        ),
-                      ),
-                      Expanded(
-                        child: ListView(
-                          children: [
-                            for (final e in queue ?? [])
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 5,
-                                  right: 5,
-                                ),
-                                child: Text(
-                                  '${e.title ?? ''} • ${e.artist ?? ''}',
-                                  style: theme.textTheme.labelMedium?.copyWith(
-                                    color: theme.colorScheme.onSurface,
-                                    fontWeight: e == audio
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              )
-                          ],
-                        ),
-                      )
-                    ],
+    return PopupMenuButton<double>(
+      tooltip: context.l10n.queue,
+      icon: const Icon(
+        YaruIcons.playlist,
+      ),
+      itemBuilder: (context) {
+        return [
+          PopupMenuItem(
+            padding: EdgeInsets.zero,
+            child: SizedBox(
+              height: 200,
+              width: 300,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5, bottom: 5, left: 20),
+                    child: Text(
+                      context.l10n.queue,
+                      style: theme.textTheme.labelMedium,
+                    ),
                   ),
-                ),
-              )
-            ];
-          },
-        );
+                  Expanded(
+                    child: ListView(
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                      ),
+                      children: [
+                        for (final e in queue ?? [])
+                          Text(
+                            '${e.title ?? ''} • ${e.artist ?? ''}',
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: e == audio
+                                  ? theme.colorScheme.onSurface
+                                  : theme.hintColor,
+                              fontWeight: e == audio
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )
+        ];
       },
     );
   }
