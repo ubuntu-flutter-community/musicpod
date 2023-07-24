@@ -57,6 +57,14 @@ class RoundImageContainer extends StatelessWidget {
           padding: const EdgeInsets.all(5.0),
           decoration: BoxDecoration(
             color: theme.colorScheme.inverseSurface,
+            boxShadow: [
+              BoxShadow(
+                offset: const Offset(0, 1),
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 3,
+                spreadRadius: 0.1,
+              )
+            ],
           ),
           child: Text(
             text,
