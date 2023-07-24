@@ -25,12 +25,18 @@ class PlayerTrack extends StatelessWidget {
         position != null &&
         duration!.inSeconds > position!.inSeconds;
 
+    const textStyle = TextStyle(fontSize: 12);
     return Row(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            RepaintBoundary(child: Text(formatTime(position ?? Duration.zero))),
+            RepaintBoundary(
+              child: Text(
+                formatTime(position ?? Duration.zero),
+                style: textStyle,
+              ),
+            ),
           ],
         ),
         Expanded(
@@ -40,16 +46,25 @@ class PlayerTrack extends StatelessWidget {
               data: theme.sliderTheme.copyWith(
                 thumbColor: Colors.white,
                 thumbShape: const RoundSliderThumbShape(
-                  elevation: 4,
+                  elevation: 0,
+                  enabledThumbRadius: 0,
+                  disabledThumbRadius: 0,
                 ),
+                trackHeight: 2,
                 inactiveTrackColor: color != null
                     ? theme.colorScheme.onSurface.withOpacity(0.35)
                     : theme.primaryColor.withOpacity(0.5),
                 activeTrackColor: color != null
                     ? theme.colorScheme.onSurface.withOpacity(0.8)
                     : theme.primaryColor,
-                overlayColor: color?.withOpacity(0.3) ??
-                    theme.primaryColor.withOpacity(0.5),
+                overlayColor: color != null
+                    ? theme.colorScheme.onSurface
+                    : theme.primaryColor,
+                overlayShape: const RoundSliderThumbShape(
+                  elevation: 3,
+                  enabledThumbRadius: 8,
+                  disabledThumbRadius: 8,
+                ),
               ),
               child: RepaintBoundary(
                 child: Slider(
@@ -70,7 +85,12 @@ class PlayerTrack extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            RepaintBoundary(child: Text(formatTime(duration ?? Duration.zero))),
+            RepaintBoundary(
+              child: Text(
+                formatTime(duration ?? Duration.zero),
+                style: textStyle,
+              ),
+            ),
           ],
         ),
       ],
