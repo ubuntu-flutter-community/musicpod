@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/player/like_icon_button.dart';
 import 'package:musicpod/app/player/queue_popup.dart';
 import 'package:musicpod/app/player/volume_popup.dart';
 import 'package:musicpod/data/audio.dart';
@@ -6,8 +7,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-class PlayerControls extends StatelessWidget {
-  const PlayerControls({
+class FullHeightPlayerControls extends StatelessWidget {
+  const FullHeightPlayerControls({
     super.key,
     this.audio,
     required this.setRepeatSingle,
@@ -56,54 +57,20 @@ class PlayerControls extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final void Function()? onLike;
-    if (audio == null) {
-      onLike = null;
-    } else {
-      if (audio?.audioType == AudioType.radio) {
-        onLike = () {
-          isStarredStation
-              ? removeStarredStation(audio?.title ?? audio.toString())
-              : addStarredStation(
-                  audio?.title ?? audio.toString(),
-                  {audio!},
-                );
-        };
-      } else {
-        onLike = () {
-          liked ? removeLikedAudio(audio!, true) : addLikedAudio(audio!, true);
-        };
-      }
-    }
-
-    Icon likeIcon;
-    if (audio?.audioType == AudioType.radio) {
-      if (isStarredStation) {
-        likeIcon = const Icon(YaruIcons.star_filled);
-      } else {
-        likeIcon = const Icon(YaruIcons.star);
-      }
-    } else {
-      if (liked) {
-        likeIcon = const Icon(YaruIcons.heart_filled);
-      } else {
-        likeIcon = const Icon(YaruIcons.heart);
-      }
-    }
-
     const spacing = 7.0;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        VolumeSliderPopup(volume: volume, setVolume: setVolume),
-        const SizedBox(
-          width: spacing,
-        ),
-        YaruIconButton(
-          icon: likeIcon,
-          onPressed: onLike,
+        LikeIconButton(
+          audio: audio,
+          liked: liked,
+          isStarredStation: isStarredStation,
+          removeStarredStation: removeStarredStation,
+          addStarredStation: addStarredStation,
+          removeLikedAudio: removeLikedAudio,
+          addLikedAudio: addLikedAudio,
         ),
         const SizedBox(
           width: spacing,
@@ -123,6 +90,17 @@ class PlayerControls extends StatelessWidget {
                     ),
                   ),
           icon: const Icon(YaruIcons.share),
+        ),
+        const SizedBox(
+          width: spacing,
+        ),
+        YaruIconButton(
+          icon: Icon(
+            YaruIcons.shuffle,
+            color: theme.colorScheme.onSurface,
+          ),
+          isSelected: shuffle,
+          onPressed: () => setShuffle(!(shuffle)),
         ),
         const SizedBox(
           width: spacing,
@@ -169,14 +147,7 @@ class PlayerControls extends StatelessWidget {
         const SizedBox(
           width: spacing,
         ),
-        YaruIconButton(
-          icon: Icon(
-            YaruIcons.shuffle,
-            color: theme.colorScheme.onSurface,
-          ),
-          isSelected: shuffle,
-          onPressed: () => setShuffle(!(shuffle)),
-        ),
+        VolumeSliderPopup(volume: volume, setVolume: setVolume),
         const SizedBox(
           width: spacing,
         ),

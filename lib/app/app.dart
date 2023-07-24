@@ -129,7 +129,7 @@ class _AppState extends State<App> {
     final audioPageType = context.select((LibraryModel m) => m.audioPageType);
     final setAudioPageType = library.setAudioPageType;
     final width = MediaQuery.of(context).size.width;
-    final shrinkSidebar = (width < 700);
+    final shrinkSidebar = (width < 720);
     final playerToTheRight = width > 1700;
 
     final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
