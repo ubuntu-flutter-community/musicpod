@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/country_popup.dart';
@@ -25,11 +26,9 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class PodcastsPage extends StatefulWidget {
   const PodcastsPage({
     super.key,
-    this.showWindowControls = true,
     required this.isOnline,
   });
 
-  final bool showWindowControls;
   final bool isOnline;
 
   @override
@@ -94,6 +93,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final podcastSearchResult =
         context.select((PodcastModel m) => m.podcastSearchResult);
 
+    final showWindowControls =
+        context.select((AppModel a) => a.showWindowControls);
+
     void onTapText(String text) {
       setSearchQuery(text);
       search(searchQuery: text);
@@ -139,7 +141,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
               onTapText: onTapText,
               removePodcast: removePodcast,
               addPodcast: addPodcast,
-              showWindowControls: widget.showWindowControls,
             ),
           );
         },
@@ -202,7 +203,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                   setSearchActive: setSearchActive,
                 ),
                 titleSpacing: 0,
-                style: widget.showWindowControls
+                style: showWindowControls
                     ? YaruTitleBarStyle.normal
                     : YaruTitleBarStyle.undecorated,
                 title: Row(
@@ -233,7 +234,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               child: YaruDetailPage(
                 appBar: YaruWindowTitleBar(
                   backgroundColor: Colors.transparent,
-                  style: widget.showWindowControls
+                  style: showWindowControls
                       ? YaruTitleBarStyle.normal
                       : YaruTitleBarStyle.undecorated,
                   title: SearchField(
@@ -262,7 +263,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
                         ).toList(),
                       )
                     : PodcastSearchPage(
-                        showWindowControls: widget.showWindowControls,
                         search: search,
                         setSearchActive: setSearchActive,
                         setSearchQuery: setSearchQuery,
@@ -289,7 +289,6 @@ Future<void> pushPodcastPage({
   required void Function(String text) onTapText,
   required void Function(String name) removePodcast,
   required void Function(String name, Set<Audio> audios) addPodcast,
-  required bool showWindowControls,
 }) async {
   if (podcastItem.feedUrl == null) return;
 
@@ -312,7 +311,6 @@ Future<void> pushPodcastPage({
             removePodcast: removePodcast,
             onAlbumTap: onTapText,
             onArtistTap: onTapText,
-            showWindowControls: showWindowControls,
             audios: podcast,
             pageId: id,
           );

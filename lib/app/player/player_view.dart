@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/bottom_player.dart';
 import 'package:musicpod/app/player/full_height_player.dart';
@@ -6,7 +7,7 @@ import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:provider/provider.dart';
 
-class PlayerView extends StatelessWidget {
+class PlayerView extends StatefulWidget {
   const PlayerView({
     super.key,
     required this.playerViewMode,
@@ -15,6 +16,23 @@ class PlayerView extends StatelessWidget {
 
   final PlayerViewMode playerViewMode;
   final void Function({required String text, AudioType audioType}) onTextTap;
+
+  @override
+  State<PlayerView> createState() => _PlayerViewState();
+}
+
+class _PlayerViewState extends State<PlayerView> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (!mounted) return;
+      context.read<AppModel>().setShowWindowControls(
+            widget.playerViewMode != PlayerViewMode.sideBar,
+          );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +80,10 @@ class PlayerView extends StatelessWidget {
     final volume = context.select((PlayerModel m) => m.volume);
     final setVolume = playerModel.setVolume;
 
-    if (playerViewMode != PlayerViewMode.bottom) {
+    if (widget.playerViewMode != PlayerViewMode.bottom) {
       return FullHeightPlayer(
-        playerViewMode: playerViewMode,
-        onTextTap: onTextTap,
+        playerViewMode: widget.playerViewMode,
+        onTextTap: widget.onTextTap,
         setFullScreen: setFullScreen,
         isUpNextExpanded: isUpNextExpanded,
         nextAudio: nextAudio,
@@ -97,7 +115,7 @@ class PlayerView extends StatelessWidget {
       );
     } else {
       return BottomPlayer(
-        onTextTap: onTextTap,
+        onTextTap: widget.onTextTap,
         setFullScreen: setFullScreen,
         audio: audio,
         width: width,

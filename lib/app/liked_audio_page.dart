@@ -10,7 +10,6 @@ class LikedAudioPage extends StatelessWidget {
     this.onArtistTap,
     this.onAlbumTap,
     this.likedAudios,
-    required this.showWindowControls,
   });
 
   static Widget createIcon({
@@ -25,7 +24,6 @@ class LikedAudioPage extends StatelessWidget {
   final void Function(String)? onArtistTap;
   final void Function(String)? onAlbumTap;
   final Set<Audio>? likedAudios;
-  final bool showWindowControls;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +32,6 @@ class LikedAudioPage extends StatelessWidget {
       onAlbumTap: onAlbumTap,
       audioPageType: AudioPageType.likedAudio,
       showAudioPageHeader: false,
-      showWindowControls: showWindowControls,
       audios: likedAudios,
       pageId: 'likedAudio',
       pageTitle: context.l10n.likedSongs,

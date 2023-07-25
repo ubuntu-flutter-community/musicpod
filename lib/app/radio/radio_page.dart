@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/country_popup.dart';
@@ -23,24 +24,20 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class RadioPage extends StatefulWidget {
   const RadioPage({
     super.key,
-    this.showWindowControls = true,
     this.onTextTap,
     required this.isOnline,
   });
 
-  final bool showWindowControls;
   final void Function(String text)? onTextTap;
   final bool isOnline;
 
   static Widget create({
     required BuildContext context,
-    bool showWindowControls = true,
     required bool isOnline,
   }) {
     return ChangeNotifierProvider(
       create: (_) => RadioModel(getService<RadioService>()),
       child: RadioPage(
-        showWindowControls: showWindowControls,
         isOnline: isOnline,
       ),
     );
@@ -89,6 +86,9 @@ class _RadioPageState extends State<RadioPage> {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
 
+    final showWindowControls =
+        context.select((AppModel a) => a.showWindowControls);
+
     final controlPanel = SizedBox(
       height: kHeaderBarItemHeight,
       child: Row(
@@ -124,7 +124,7 @@ class _RadioPageState extends State<RadioPage> {
         backgroundColor: light ? kBackGroundLight : kBackgroundDark,
         appBar: YaruWindowTitleBar(
           backgroundColor: Colors.transparent,
-          style: widget.showWindowControls
+          style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
           titleSpacing: 0,
@@ -158,7 +158,6 @@ class _RadioPageState extends State<RadioPage> {
           itemBuilder: (context, index) {
             final station = stations?.elementAt(index);
             final onTextTap = widget.onTextTap;
-            final showWindowControls = widget.showWindowControls;
             return _StationCard(
               station: station,
               play: play,
@@ -220,7 +219,6 @@ class _StationCard extends StatelessWidget {
             station.title ?? station.toString(),
           );
           return StationPage(
-            showWindowControls: showWindowControls,
             onTextTap: onTextTap,
             station: station,
             name: station.title ?? station.toString(),

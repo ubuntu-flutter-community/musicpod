@@ -13,7 +13,6 @@ import 'package:yaru_icons/yaru_icons.dart';
 class PodcastSearchPage extends StatelessWidget {
   const PodcastSearchPage({
     super.key,
-    required this.showWindowControls,
     this.searchResult,
     this.searchResultCount,
     required this.startPlaylist,
@@ -25,7 +24,6 @@ class PodcastSearchPage extends StatelessWidget {
     required this.setSearchActive,
   });
 
-  final bool showWindowControls;
   final List<Item>? searchResult;
   final int? searchResultCount;
   final Future<void> Function(Set<Audio>, String) startPlaylist;
@@ -84,7 +82,6 @@ class PodcastSearchPage extends StatelessWidget {
               onTapText: onTapText,
               removePodcast: removePodcast,
               addPodcast: addPodcast,
-              showWindowControls: showWindowControls,
             );
           },
         );

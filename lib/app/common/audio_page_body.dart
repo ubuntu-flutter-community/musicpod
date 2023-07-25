@@ -29,7 +29,6 @@ class AudioPageBody extends StatefulWidget {
     this.likePageButton,
     required this.sort,
     required this.showTrack,
-    required this.showWindowControls,
     this.image,
     this.showAudioPageHeader,
     required this.audioFilter,
@@ -58,7 +57,6 @@ class AudioPageBody extends StatefulWidget {
   final Widget? likePageButton;
   final bool sort;
   final bool showTrack;
-  final bool showWindowControls;
   final Widget? image;
   final bool? showAudioPageHeader;
   final AudioFilter audioFilter;

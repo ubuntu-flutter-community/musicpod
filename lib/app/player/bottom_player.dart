@@ -226,7 +226,7 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
               : () =>
                   onTextTap(text: audio!.title!, audioType: audio!.audioType!),
           child: Tooltip(
-            message: audio?.title,
+            message: audio?.title ?? ' ',
             child: Text(
               audio?.title?.isNotEmpty == true ? audio!.title! : ' ',
               style: const TextStyle(
@@ -248,7 +248,7 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
                       audioType: audio!.audioType!,
                     ),
             child: Tooltip(
-              message: audio?.artist,
+              message: audio?.artist ?? ' ',
               child: Text(
                 audio?.artist ?? ' ',
                 style: const TextStyle(
