@@ -362,6 +362,7 @@ class _Albums extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) {
                       return AlbumPage(
+                        key: ValueKey(showWindowControls == false),
                         onAlbumTap: onAlbumTap,
                         onArtistTap: onArtistTap,
                         name: name,
@@ -369,7 +370,6 @@ class _Albums extends StatelessWidget {
                         removePinnedAlbum: removePinnedAlbum,
                         album: album,
                         addPinnedAlbum: addPinnedAlbum,
-                        showWindowControls: showWindowControls,
                       );
                     },
                   ),

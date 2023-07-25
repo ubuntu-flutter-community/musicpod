@@ -10,14 +10,12 @@ class PlaylistPage extends StatelessWidget {
   const PlaylistPage({
     super.key,
     required this.playlist,
-    required this.showWindowControls,
     required this.unPinPlaylist,
     this.onArtistTap,
     this.onAlbumTap,
   });
 
   final MapEntry<String, Set<Audio>> playlist;
-  final bool showWindowControls;
   final void Function(String playlist) unPinPlaylist;
   final void Function(String artist)? onArtistTap;
   final void Function(String album)? onAlbumTap;
@@ -64,7 +62,6 @@ class PlaylistPage extends StatelessWidget {
       pageTitle: playlist.key,
       pageDescription: '',
       pageSubtile: '',
-      showWindowControls: showWindowControls,
       audios: playlist.value,
       pageId: playlist.key,
       showTrack: playlist.value.firstOrNull?.trackNumber != null,

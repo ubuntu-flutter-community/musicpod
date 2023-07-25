@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/search_button.dart';
 import 'package:musicpod/app/common/search_field.dart';
@@ -21,12 +22,10 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class LocalAudioPage extends StatefulWidget {
   const LocalAudioPage({
     super.key,
-    this.showWindowControls = true,
     required this.selectedIndex,
     required this.onIndexSelected,
   });
 
-  final bool showWindowControls;
   final int selectedIndex;
   final void Function(int index) onIndexSelected;
 
@@ -92,12 +91,15 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     final Set<Audio>? titlesResult =
         context.select((LocalAudioModel m) => m.titlesSearchResult);
 
+    final showWindowControls =
+        context.select((AppModel a) => a.showWindowControls);
+
     return Navigator(
       onPopPage: (route, result) => route.didPop(result),
       pages: [
         MaterialPage(
           child: StartPage(
-            showWindowControls: widget.showWindowControls,
+            showWindowControls: showWindowControls,
             selectedIndex: widget.selectedIndex,
             onIndexSelected: widget.onIndexSelected,
             audios: audios,
@@ -119,7 +121,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
         if (searchQuery?.isNotEmpty == true && searchActive)
           MaterialPage(
             child: LocalAudioSearchPage(
-              showWindowControls: widget.showWindowControls,
+              showWindowControls: showWindowControls,
               searchQuery: searchQuery,
               setSearchActive: setSearchActive,
               search: search,

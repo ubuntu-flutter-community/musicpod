@@ -78,7 +78,6 @@ class AlbumsView extends StatelessWidget {
                   removePinnedAlbum: removePinnedAlbum,
                   album: album,
                   addPinnedAlbum: addPinnedAlbum,
-                  showWindowControls: showWindowControls,
                 );
               },
             ),

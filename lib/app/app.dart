@@ -3,6 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
+import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/audio_page_filter_bar.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/constants.dart';
@@ -48,6 +49,9 @@ class App extends StatefulWidget {
   }) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (_) => AppModel(),
+        ),
         ChangeNotifierProvider(
           create: (_) => RadioModel(getService<RadioService>()),
         ),
@@ -168,7 +172,6 @@ class _AppState extends State<App> {
         builder: (context) => LocalAudioPage(
           selectedIndex: library.localAudioindex ?? 0,
           onIndexSelected: (i) => library.localAudioindex = i,
-          showWindowControls: !playerToTheRight,
         ),
         iconBuilder: (context, selected) => LocalAudioPageIcon(
           selected: selected,
@@ -179,7 +182,6 @@ class _AppState extends State<App> {
         tileBuilder: (context) => Text(context.l10n.radio),
         builder: (context) => RadioPage(
           isOnline: isOnline,
-          showWindowControls: !playerToTheRight,
           onTextTap: (text) =>
               onTextTap(text: text, audioType: AudioType.radio),
         ),
@@ -192,7 +194,6 @@ class _AppState extends State<App> {
         tileBuilder: (context) => Text(context.l10n.podcasts),
         builder: (context) {
           return PodcastsPage(
-            showWindowControls: !playerToTheRight,
             isOnline: isOnline,
           );
         },
@@ -214,7 +215,6 @@ class _AppState extends State<App> {
         builder: (context) => LikedAudioPage(
           onArtistTap: (artist) => onTextTap(text: artist),
           onAlbumTap: (album) => onTextTap(text: album),
-          showWindowControls: !playerToTheRight,
           likedAudios: library.likedAudios,
         ),
         iconBuilder: (context, selected) =>
@@ -230,7 +230,6 @@ class _AppState extends State<App> {
               ? PodcastPage(
                   pageId: podcast.key,
                   audios: podcast.value,
-                  showWindowControls: !playerToTheRight,
                   onAlbumTap: (album) =>
                       onTextTap(text: album, audioType: AudioType.podcast),
                   onArtistTap: (artist) =>
@@ -259,7 +258,6 @@ class _AppState extends State<App> {
             onAlbumTap: (album) => onTextTap(text: album),
             onArtistTap: (artist) => onTextTap(text: artist),
             playlist: playlist,
-            showWindowControls: !playerToTheRight,
             unPinPlaylist: library.removePlaylist,
           ),
           iconBuilder: (context, selected) => Opacity(
@@ -278,7 +276,6 @@ class _AppState extends State<App> {
           builder: (context) => AlbumPage(
             onArtistTap: (artist) => onTextTap(text: artist),
             onAlbumTap: (album) => onTextTap(text: album),
-            showWindowControls: !playerToTheRight,
             album: album.value,
             name: album.key,
             addPinnedAlbum: library.addPinnedAlbum,
@@ -299,7 +296,6 @@ class _AppState extends State<App> {
           ),
           builder: (context) => isOnline
               ? StationPage(
-                  showWindowControls: !playerToTheRight,
                   isStarred: true,
                   starStation: (station) {},
                   onTextTap: (text) =>
