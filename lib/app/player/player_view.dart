@@ -84,7 +84,10 @@ class _PlayerViewState extends State<PlayerView> {
       return FullHeightPlayer(
         playerViewMode: widget.playerViewMode,
         onTextTap: widget.onTextTap,
-        setFullScreen: setFullScreen,
+        setFullScreen: (v) {
+          setFullScreen(v);
+          context.read<AppModel>().setShowWindowControls(false);
+        },
         isUpNextExpanded: isUpNextExpanded,
         nextAudio: nextAudio,
         queue: queue,
