@@ -5,8 +5,6 @@ import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/country_popup.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
-import 'package:musicpod/app/common/search_button.dart';
-import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/player/player_model.dart';
@@ -92,7 +90,7 @@ class _RadioPageState extends State<RadioPage> {
     final controlPanel = SizedBox(
       height: kHeaderBarItemHeight,
       child: Row(
-        mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.min,
         children: [
           CountryPopup(
             value: country,
@@ -128,27 +126,25 @@ class _RadioPageState extends State<RadioPage> {
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
           titleSpacing: 0,
-          leading: SearchButton(
-            searchActive: searchActive,
-            setSearchActive: setSearchActive,
-          ),
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (searchActive)
-                Expanded(
-                  child: SearchField(
-                    onClear: () => setSearchActive(false),
-                    text: searchQuery,
-                    onSubmitted: (value) {
-                      setSearchQuery(value);
-                      search(name: value);
-                    },
-                  ),
-                ),
-              controlPanel,
-              const SizedBox(width: 10)
-            ],
+          leading: Navigator.of(context).canPop()
+              ? const YaruBackButton(
+                  style: YaruBackButtonStyle.rounded,
+                )
+              : const SizedBox.shrink(),
+          title: Padding(
+            padding: const EdgeInsets.only(right: 40),
+            child: YaruSearchTitleField(
+              width: kSearchBarWidth,
+              title: controlPanel,
+              searchActive: searchActive,
+              onSearchActive: () => setSearchActive(!searchActive),
+              onClear: () => setSearchActive(false),
+              text: searchQuery,
+              onSubmitted: (value) {
+                setSearchQuery(value);
+                search(name: value);
+              },
+            ),
           ),
         ),
         body: GridView.builder(

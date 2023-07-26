@@ -7,8 +7,6 @@ import 'package:musicpod/app/common/country_popup.dart';
 import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
-import 'package:musicpod/app/common/search_button.dart';
-import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
@@ -159,41 +157,38 @@ class _PodcastsPageState extends State<PodcastsPage> {
         backgroundColor: light ? kBackGroundLight : kBackgroundDark,
         appBar: YaruWindowTitleBar(
           backgroundColor: Colors.transparent,
-          leading: SearchButton(
-            searchActive: searchActive,
-            setSearchActive: setSearchActive,
-          ),
+          leading: (Navigator.canPop(context))
+              ? const YaruBackButton(
+                  style: YaruBackButtonStyle.rounded,
+                )
+              : const SizedBox.shrink(),
           titleSpacing: 0,
           style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (searchActive)
-                Expanded(
-                  child: SearchField(
-                    onClear: () {
-                      setSearchActive(false);
-                      setSearchQuery('');
-                      search();
-                    },
-                    key: ValueKey(searchQuery),
-                    text: searchQuery,
-                    onSubmitted: (value) {
-                      setSearchQuery(value);
+          title: Padding(
+            padding: const EdgeInsets.only(right: 40),
+            child: YaruSearchTitleField(
+              width: kSearchBarWidth,
+              searchActive: searchActive,
+              title: controlPanel,
+              onSearchActive: () => setSearchActive(!searchActive),
+              onClear: () {
+                setSearchActive(false);
+                setSearchQuery('');
+                search();
+              },
+              text: searchQuery,
+              onSubmitted: (value) {
+                setSearchQuery(value);
 
-                      if (value?.isEmpty == true) {
-                        search();
-                      } else {
-                        search(searchQuery: value);
-                      }
-                    },
-                  ),
-                ),
-              controlPanel,
-              const SizedBox(width: 10)
-            ],
+                if (value?.isEmpty == true) {
+                  search();
+                } else {
+                  search(searchQuery: value);
+                }
+              },
+            ),
           ),
         ),
         body: grid,
@@ -232,6 +227,7 @@ class _PodcastsControlPanel extends StatelessWidget {
     return SizedBox(
       height: kHeaderBarItemHeight,
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           CountryPopup(
             onSelected: (value) {
