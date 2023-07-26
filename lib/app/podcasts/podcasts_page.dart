@@ -13,7 +13,6 @@ import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcast_page.dart';
-import 'package:musicpod/app/podcasts/podcast_search_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
 import 'package:musicpod/l10n/l10n.dart';
@@ -60,10 +59,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final podcastSubscribed = context.read<LibraryModel>().podcastSubscribed;
     final removePodcast = context.read<LibraryModel>().removePodcast;
     final addPodcast = context.read<LibraryModel>().addPodcast;
-    final searchResult =
-        context.select((PodcastModel m) => m.podcastSearchResult);
-    final searchResultCount =
-        context.select((PodcastModel m) => m.podcastSearchResult?.length);
 
     final search = model.search;
     final setSearchQuery = model.setSearchQuery;
@@ -77,9 +72,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
     final searchQuery = context.select((PodcastModel m) => m.searchQuery);
 
-    final charts = context.select((PodcastModel m) => m.charts);
-    final chartsCount = context.select((PodcastModel m) => m.charts?.length);
-
     final country = context.select((PodcastModel m) => m.country);
     final sortedCountries =
         context.select((PodcastModel m) => m.sortedCountries);
@@ -89,9 +81,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final podcastGenre = context.select((PodcastModel m) => m.podcastGenre);
     final sortedGenres = context.select((PodcastModel m) => m.sortedGenres);
     final setPodcastGenre = model.setPodcastGenre;
-    final loadCharts = model.loadCharts;
-    final podcastSearchResult =
-        context.select((PodcastModel m) => m.podcastSearchResult);
+    final searchResult = context.select((PodcastModel m) => m.searchResult);
+    final searchResultCount =
+        context.select((PodcastModel m) => m.searchResult?.length);
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
@@ -102,7 +94,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     }
 
     Widget grid;
-    if (charts == null) {
+    if (searchResult == null) {
       grid = GridView(
         gridDelegate: kImageGridDelegate,
         padding: kPodcastGridPadding,
@@ -110,17 +102,17 @@ class _PodcastsPageState extends State<PodcastsPage> {
             .map((e) => const AudioCard())
             .toList(),
       );
-    } else if (charts.isEmpty == true) {
+    } else if (searchResult.isEmpty == true) {
       grid = NoSearchResultPage(
         message: context.l10n.noPodcastChartsFound,
       );
     } else {
       grid = GridView.builder(
         padding: kPodcastGridPadding,
-        itemCount: chartsCount,
+        itemCount: searchResultCount,
         gridDelegate: kImageGridDelegate,
         itemBuilder: (context, index) {
-          final podcast = charts.elementAt(index);
+          final podcast = searchResult.elementAt(index);
 
           final image = SafeNetworkImage(
             url: podcast.artworkUrl600,
@@ -147,19 +139,108 @@ class _PodcastsPageState extends State<PodcastsPage> {
       );
     }
 
-    final controlPanel = SizedBox(
+    final controlPanel = _PodcastsControlPanel(
+      search: search,
+      searchQuery: searchQuery,
+      setCountry: setCountry,
+      country: country,
+      sortedCountries: sortedCountries,
+      buttonStyle: buttonStyle,
+      setPodcastGenre: setPodcastGenre,
+      podcastGenre: podcastGenre,
+      textStyle: textStyle,
+      sortedGenres: sortedGenres,
+    );
+
+    if (!widget.isOnline) {
+      return const OfflinePage();
+    } else {
+      return YaruDetailPage(
+        backgroundColor: light ? kBackGroundLight : kBackgroundDark,
+        appBar: YaruWindowTitleBar(
+          backgroundColor: Colors.transparent,
+          leading: SearchButton(
+            searchActive: searchActive,
+            setSearchActive: setSearchActive,
+          ),
+          titleSpacing: 0,
+          style: showWindowControls
+              ? YaruTitleBarStyle.normal
+              : YaruTitleBarStyle.undecorated,
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (searchActive)
+                Expanded(
+                  child: SearchField(
+                    onClear: () {
+                      setSearchActive(false);
+                      setSearchQuery('');
+                      search();
+                    },
+                    key: ValueKey(searchQuery),
+                    text: searchQuery,
+                    onSubmitted: (value) {
+                      setSearchQuery(value);
+
+                      if (value?.isEmpty == true) {
+                        search();
+                      } else {
+                        search(searchQuery: value);
+                      }
+                    },
+                  ),
+                ),
+              controlPanel,
+              const SizedBox(width: 10)
+            ],
+          ),
+        ),
+        body: grid,
+      );
+    }
+  }
+}
+
+class _PodcastsControlPanel extends StatelessWidget {
+  const _PodcastsControlPanel({
+    required this.searchQuery,
+    required this.setCountry,
+    required this.country,
+    required this.sortedCountries,
+    required this.buttonStyle,
+    required this.setPodcastGenre,
+    required this.podcastGenre,
+    required this.textStyle,
+    required this.sortedGenres,
+    required this.search,
+  });
+
+  final String? searchQuery;
+  final void Function(Country? value) setCountry;
+  final void Function({String? searchQuery}) search;
+  final Country? country;
+  final List<Country> sortedCountries;
+  final ButtonStyle buttonStyle;
+  final void Function(PodcastGenre value) setPodcastGenre;
+  final PodcastGenre podcastGenre;
+  final TextStyle? textStyle;
+  final List<PodcastGenre> sortedGenres;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
       height: kHeaderBarItemHeight,
       child: Row(
         children: [
-          if (searchQuery == null || searchQuery.isEmpty)
-            CountryPopup(
-              onSelected: (value) {
-                setCountry(value);
-                loadCharts();
-              },
-              value: country,
-              countries: sortedCountries,
-            ),
+          CountryPopup(
+            onSelected: (value) {
+              setCountry(value);
+              search(searchQuery: searchQuery);
+            },
+            value: country,
+            countries: sortedCountries,
+          ),
           const SizedBox(
             width: 5,
           ),
@@ -167,7 +248,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
             style: buttonStyle,
             onSelected: (value) {
               setPodcastGenre(value);
-              loadCharts();
+              search(searchQuery: searchQuery);
             },
             initialValue: podcastGenre,
             child: Text(
@@ -187,98 +268,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
         ],
       ),
     );
-
-    if (!widget.isOnline) {
-      return const OfflinePage();
-    } else {
-      return Navigator(
-        pages: [
-          MaterialPage(
-            child: YaruDetailPage(
-              backgroundColor: light ? kBackGroundLight : kBackgroundDark,
-              appBar: YaruWindowTitleBar(
-                backgroundColor: Colors.transparent,
-                leading: SearchButton(
-                  searchActive: searchActive,
-                  setSearchActive: setSearchActive,
-                ),
-                titleSpacing: 0,
-                style: showWindowControls
-                    ? YaruTitleBarStyle.normal
-                    : YaruTitleBarStyle.undecorated,
-                title: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (searchActive)
-                      Expanded(
-                        child: SearchField(
-                          onSearchActive: () => setSearchActive(false),
-                          key: ValueKey(searchQuery),
-                          text: searchQuery,
-                          onSubmitted: (value) {
-                            setSearchQuery(value);
-                            search(searchQuery: value);
-                          },
-                        ),
-                      ),
-                    controlPanel,
-                    const SizedBox(width: 10)
-                  ],
-                ),
-              ),
-              body: grid,
-            ),
-          ),
-          if (searchQuery?.isNotEmpty == true)
-            MaterialPage(
-              child: YaruDetailPage(
-                appBar: YaruWindowTitleBar(
-                  backgroundColor: Colors.transparent,
-                  style: showWindowControls
-                      ? YaruTitleBarStyle.normal
-                      : YaruTitleBarStyle.undecorated,
-                  title: SearchField(
-                    key: ValueKey(searchQuery),
-                    text: searchQuery,
-                    onSubmitted: (value) {
-                      setSearchQuery(value);
-                      search(searchQuery: value);
-                    },
-                  ),
-                  leading: YaruBackButton(
-                    style: YaruBackButtonStyle.rounded,
-                    onPressed: () {
-                      setSearchQuery('');
-                      Navigator.maybePop(context);
-                    },
-                  ),
-                ),
-                body: podcastSearchResult == null
-                    ? GridView(
-                        padding: kPodcastGridPadding,
-                        gridDelegate: kImageGridDelegate,
-                        children: List.generate(
-                          30,
-                          (index) => const AudioCard(),
-                        ).toList(),
-                      )
-                    : PodcastSearchPage(
-                        search: search,
-                        setSearchActive: setSearchActive,
-                        setSearchQuery: setSearchQuery,
-                        addPodcast: addPodcast,
-                        removePodcast: removePodcast,
-                        podcastSubscribed: podcastSubscribed,
-                        startPlaylist: startPlaylist,
-                        searchResult: searchResult,
-                        searchResultCount: searchResultCount,
-                      ),
-              ),
-            )
-        ],
-        onPopPage: (route, result) => route.didPop(result),
-      );
-    }
   }
 }
 

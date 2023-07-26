@@ -142,7 +142,7 @@ class LocalAudioSearchPage extends StatelessWidget {
             setSearchQuery(value);
             search();
           },
-          onSearchActive: () {
+          onClear: () {
             Navigator.of(context).pop();
             setSearchActive(false);
             setSearchQuery(null);

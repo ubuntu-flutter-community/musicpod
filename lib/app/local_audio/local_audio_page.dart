@@ -227,7 +227,7 @@ class StartPage extends StatelessWidget {
                       setSearchQuery(value);
                       search();
                     },
-                    onSearchActive: () {
+                    onClear: () {
                       setSearchActive(false);
                     },
                   ),

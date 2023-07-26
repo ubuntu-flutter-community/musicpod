@@ -9,13 +9,13 @@ class SearchField extends StatefulWidget {
     this.text,
     this.onSubmitted,
     this.hintText,
-    this.onSearchActive,
+    this.onClear,
   });
 
   final String? text;
   final String? hintText;
   final void Function(String? value)? onSubmitted;
-  final void Function()? onSearchActive;
+  final void Function()? onClear;
 
   @override
   State<SearchField> createState() => _SearchFieldState();
@@ -47,7 +47,7 @@ class _SearchFieldState extends State<SearchField> {
       focusNode: focusNode,
       onKeyEvent: (value) {
         if (value.logicalKey == LogicalKeyboardKey.escape) {
-          widget.onSearchActive?.call();
+          widget.onClear?.call();
         }
       },
       child: SizedBox(
