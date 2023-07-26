@@ -22,11 +22,9 @@ class PodcastModel extends SafeChangeNotifier {
   final Connectivity _connectivity;
   final NotificationsClient _notificationsClient;
 
-  StreamSubscription<bool>? _chartsChangedSub;
   StreamSubscription<bool>? _searchChangedSub;
 
-  List<Item>? get charts => _podcastService.chartsPodcasts;
-  List<Item>? get podcastSearchResult => _podcastService.searchResult;
+  List<Item>? get searchResult => _podcastService.searchResult;
 
   bool _searchActive = false;
   bool get searchActive => _searchActive;
@@ -90,20 +88,17 @@ class PodcastModel extends SafeChangeNotifier {
     String? countryCode,
     required String updateMessage,
   }) async {
-    _chartsChangedSub = _podcastService.chartsChanged.listen((_) {
-      notifyListeners();
-    });
     _searchChangedSub = _podcastService.searchChanged.listen((_) {
       notifyListeners();
     });
-    if (_podcastService.chartsPodcasts?.isNotEmpty == true) return;
+    if (_podcastService.searchResult?.isNotEmpty == true) return;
     final c = Country.values.firstWhereOrNull((c) => c.code == countryCode);
     if (c != null) {
       _country = c;
     }
-    if (_podcastService.chartsPodcasts == null ||
-        _podcastService.chartsPodcasts?.isEmpty == true) {
-      loadCharts();
+    if (_podcastService.searchResult == null ||
+        _podcastService.searchResult?.isEmpty == true) {
+      search();
     }
 
     final result = await _connectivity.checkConnectivity();
@@ -118,21 +113,17 @@ class PodcastModel extends SafeChangeNotifier {
 
   @override
   void dispose() {
-    _chartsChangedSub?.cancel();
     _searchChangedSub?.cancel();
     super.dispose();
   }
-
-  void loadCharts() =>
-      _podcastService.loadCharts(podcastGenre: podcastGenre, country: country);
 
   void search({
     String? searchQuery,
   }) {
     _podcastService.search(
-      language: _language,
       searchQuery: searchQuery,
       country: _country,
+      podcastGenre: podcastGenre,
     );
   }
 }

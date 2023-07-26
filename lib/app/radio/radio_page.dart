@@ -138,7 +138,7 @@ class _RadioPageState extends State<RadioPage> {
               if (searchActive)
                 Expanded(
                   child: SearchField(
-                    onSearchActive: () => setSearchActive(false),
+                    onClear: () => setSearchActive(false),
                     text: searchQuery,
                     onSubmitted: (value) {
                       setSearchQuery(value);
