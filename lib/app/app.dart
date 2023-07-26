@@ -26,7 +26,6 @@ import 'package:musicpod/app/podcasts/podcasts_page.dart';
 import 'package:musicpod/app/radio/radio_model.dart';
 import 'package:musicpod/app/radio/radio_page.dart';
 import 'package:musicpod/app/radio/station_page.dart';
-import 'package:musicpod/app/responsive_master_tile.dart';
 import 'package:musicpod/app/settings/settings_tile.dart';
 import 'package:musicpod/app/splash_screen.dart';
 import 'package:musicpod/data/audio.dart';
@@ -133,7 +132,6 @@ class _AppState extends State<App> {
     final audioPageType = context.select((LibraryModel m) => m.audioPageType);
     final setAudioPageType = library.setAudioPageType;
     final width = MediaQuery.of(context).size.width;
-    final shrinkSidebar = (width < 720);
     final playerToTheRight = width > 1700;
 
     final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
@@ -203,6 +201,15 @@ class _AppState extends State<App> {
         ),
       ),
       MasterItem(
+        tileBuilder: (context) => const Padding(
+          padding: EdgeInsets.only(top: 10, bottom: 10),
+          child: Divider(
+            height: 0,
+          ),
+        ),
+        builder: (context) => const SizedBox.shrink(),
+      ),
+      MasterItem(
         iconBuilder: (context, selected) => const Icon(YaruIcons.plus),
         tileBuilder: (context) => Text(context.l10n.playlistDialogTitleNew),
         builder: (context) => ChangeNotifierProvider.value(
@@ -219,6 +226,14 @@ class _AppState extends State<App> {
         ),
         iconBuilder: (context, selected) =>
             LikedAudioPage.createIcon(context: context, selected: selected),
+      ),
+      MasterItem(
+        tileBuilder: (context) => AudioPageFilterBar(
+          mainPageType: mainPageType,
+          audioPageType: audioPageType,
+          setAudioPageType: setAudioPageType,
+        ),
+        builder: (context) => const SizedBox.shrink(),
       ),
       for (final podcast in library.podcasts.entries)
         MasterItem(
@@ -320,9 +335,11 @@ class _AppState extends State<App> {
         surfaceTintColor ?? (light ? kBackGroundLight : kBackgroundDark);
 
     final yaruMasterDetailPage = YaruMasterDetailPage(
+      key: ValueKey(library.index),
       onSelected: (value) => library.index = value ?? 0,
       appBar: const YaruWindowTitleBar(
         backgroundColor: Colors.transparent,
+        title: Text('MusicPod'),
       ),
       bottomBar: Padding(
         padding: const EdgeInsets.only(bottom: 10),
@@ -344,62 +361,30 @@ class _AppState extends State<App> {
           },
         ),
       ),
-      layoutDelegate: shrinkSidebar ? delegateSmall : delegateBig,
+      layoutDelegate: const YaruMasterFixedPaneDelegate(
+        paneWidth: 250,
+      ),
+      breakpoint: 740,
       controller: YaruPageController(
         length: library.totalListAmount,
         initialIndex: library.index ?? 0,
       ),
       tileBuilder: (context, index, selected, availableWidth) {
-        final tile = ResponsiveMasterTile(
-          title: masterItems[index].tileBuilder(context),
-          leading: masterItems[index].iconBuilder == null
-              ? null
-              : masterItems[index].iconBuilder!(
-                  context,
-                  selected,
-                ),
-          availableWidth: availableWidth,
-        );
-
-        Widget? column;
-
-        if (index == 3) {
-          column = Column(
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              const Divider(
-                height: 0,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              tile
-            ],
-          );
-        } else if (index == 4 &&
-            availableWidth >= 130 &&
-            (library.totalListAmount > 5 || library.audioPageType != null)) {
-          column = Column(
-            children: [
-              tile,
-              AudioPageFilterBar(
-                mainPageType: mainPageType,
-                audioPageType: audioPageType,
-                setAudioPageType: setAudioPageType,
-              ),
-            ],
-          );
+        if (index == 3 || index == 6) {
+          return masterItems[index].tileBuilder(context);
         }
-
-        return column ??
-            (index == 0
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: tile,
-                  )
-                : tile);
+        return Padding(
+          padding: index == 0 ? const EdgeInsets.only(top: 5) : EdgeInsets.zero,
+          child: YaruMasterTile(
+            title: masterItems[index].tileBuilder(context),
+            leading: masterItems[index].iconBuilder == null
+                ? null
+                : masterItems[index].iconBuilder!(
+                    context,
+                    selected,
+                  ),
+          ),
+        );
       },
       pageBuilder: (context, index) => YaruDetailPage(
         body: masterItems[index].builder(context),
@@ -481,7 +466,6 @@ class _AppState extends State<App> {
 
     return Material(
       color: playerBg,
-      key: ValueKey(shrinkSidebar),
       child: library.ready ? body : const SplashScreen(),
     );
   }

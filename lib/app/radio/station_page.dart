@@ -96,9 +96,7 @@ class StationPage extends StatelessWidget {
             ? const YaruBackButton(
                 style: YaruBackButtonStyle.rounded,
               )
-            : const SizedBox(
-                width: 40,
-              ),
+            : const SizedBox.shrink(),
       ),
       body: Center(
         child: SingleChildScrollView(

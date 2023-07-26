@@ -1,9 +1,9 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:musicpod/app/responsive_master_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
+import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../common/constants.dart';
 
@@ -100,10 +100,9 @@ class SettingsTile extends StatelessWidget {
     ];
 
     return LayoutBuilder(
-      builder: (context, constraints) => ResponsiveMasterTile(
+      builder: (context, constraints) => YaruMasterTile(
         title: const Text('Settings'),
         leading: const Icon(YaruIcons.settings),
-        availableWidth: constraints.maxWidth,
         onTap: () {
           return showAboutDialog(
             applicationIcon: Image.asset(
