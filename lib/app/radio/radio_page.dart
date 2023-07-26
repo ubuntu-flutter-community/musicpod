@@ -134,6 +134,7 @@ class _RadioPageState extends State<RadioPage> {
           title: Padding(
             padding: const EdgeInsets.only(right: 40),
             child: YaruSearchTitleField(
+              alignment: Alignment.center,
               width: kSearchBarWidth,
               title: controlPanel,
               searchActive: searchActive,
