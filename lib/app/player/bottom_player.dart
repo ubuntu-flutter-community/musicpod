@@ -233,14 +233,17 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
               ? null
               : () =>
                   onTextTap(text: audio!.title!, audioType: audio!.audioType!),
-          child: Text(
-            audio?.title?.isNotEmpty == true ? audio!.title! : ' ',
-            style: const TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 14,
+          child: Tooltip(
+            message: audio?.title ?? ' ',
+            child: Text(
+              audio?.title?.isNotEmpty == true ? audio!.title! : ' ',
+              style: const TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
         ),
         if (audio?.artist?.trim().isNotEmpty == true)
@@ -252,14 +255,17 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
                       text: audio!.artist!,
                       audioType: audio!.audioType!,
                     ),
-            child: Text(
-              audio?.artist ?? ' ',
-              style: const TextStyle(
-                fontWeight: FontWeight.w100,
-                fontSize: 12,
+            child: Tooltip(
+              message: audio?.artist ?? ' ',
+              child: Text(
+                audio?.artist ?? ' ',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w100,
+                  fontSize: 12,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
             ),
           ),
       ],

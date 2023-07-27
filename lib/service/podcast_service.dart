@@ -10,52 +10,35 @@ import 'package:podcast_search/podcast_search.dart';
 class PodcastService {
   PodcastService() : _search = Search();
 
-  final _chartsChangedController = StreamController<bool>.broadcast();
-  Stream<bool> get chartsChanged => _chartsChangedController.stream;
-  List<Item>? _chartsPodcasts;
-  List<Item>? get chartsPodcasts => _chartsPodcasts;
-  final Search _search;
-
-  void loadCharts({
-    PodcastGenre podcastGenre = PodcastGenre.all,
-    Country? country,
-  }) async {
-    _chartsPodcasts = null;
-
-    SearchResult chartsSearch = await _search.charts(
-      genre: podcastGenre == PodcastGenre.all ? '' : podcastGenre.id,
-      limit: 10,
-      country: country ?? Country.none,
-    );
-
-    if (chartsSearch.successful && chartsSearch.items.isNotEmpty) {
-      _chartsPodcasts = chartsSearch.items;
-    } else {
-      _chartsPodcasts = [];
-    }
-    _chartsChangedController.add(true);
-  }
-
   final _searchChangedController = StreamController<bool>.broadcast();
   Stream<bool> get searchChanged => _searchChangedController.stream;
   List<Item>? _searchResult;
   List<Item>? get searchResult => _searchResult;
+  final Search _search;
 
   Future<void> search({
     String? searchQuery,
     PodcastGenre podcastGenre = PodcastGenre.science,
     Country? country,
-    Language language = Language.none,
+    int limit = 10,
   }) async {
-    if (searchQuery == null || searchQuery.isEmpty == true) return;
     _searchResult = null;
 
-    SearchResult results = await _search.search(
-      searchQuery,
-      country: country ?? Country.none,
-      language: language,
-      limit: 10,
-    );
+    SearchResult results;
+    if (searchQuery == null || searchQuery.isEmpty == true) {
+      results = await _search.charts(
+        genre: podcastGenre == PodcastGenre.all ? '' : podcastGenre.id,
+        limit: limit,
+        country: country ?? Country.none,
+      );
+    } else {
+      results = await _search.search(
+        searchQuery,
+        country: country ?? Country.none,
+        language: Language.none,
+        limit: limit,
+      );
+    }
 
     if (results.successful && results.items.isNotEmpty) {
       _searchResult = results.items;

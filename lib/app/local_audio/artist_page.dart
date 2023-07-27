@@ -38,7 +38,6 @@ class ArtistPage extends StatelessWidget {
       image: ArtistImage(images: images),
       pageSubtile: artistAudios?.firstOrNull?.genre,
       controlPageButton: const SizedBox.shrink(),
-      showWindowControls: showWindowControls,
       deletable: false,
       audios: artistAudios,
       pageId: artistAudios?.firstOrNull?.artist ?? artistAudios.toString(),

@@ -9,7 +9,6 @@ import 'package:musicpod/app/common/audio_tile_header.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/loading_tile.dart';
 import 'package:musicpod/app/common/round_image_container.dart';
-import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/common/spaced_divider.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
 import 'package:musicpod/app/local_audio/artist_page.dart';
@@ -71,8 +70,6 @@ class LocalAudioSearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     void onTapWithPop(text) {
       setSearchQuery(text);
       search();
@@ -84,7 +81,7 @@ class LocalAudioSearchPage extends StatelessWidget {
       search();
     }
 
-    final body = ListView(
+    return ListView(
       shrinkWrap: true,
       children: [
         _Titles(
@@ -123,44 +120,6 @@ class LocalAudioSearchPage extends StatelessWidget {
           similarArtistsSearchResult: similarArtistsSearchResult,
         ),
       ],
-    );
-
-    return YaruDetailPage(
-      backgroundColor: theme.brightness == Brightness.dark
-          ? const Color.fromARGB(255, 37, 37, 37)
-          : Colors.white,
-      appBar: YaruWindowTitleBar(
-        backgroundColor: Colors.transparent,
-        style: showWindowControls
-            ? YaruTitleBarStyle.normal
-            : YaruTitleBarStyle.undecorated,
-        titleSpacing: 0,
-        title: SearchField(
-          key: ValueKey(searchQuery),
-          text: searchQuery,
-          onSubmitted: (value) {
-            setSearchQuery(value);
-            search();
-          },
-          onSearchActive: () {
-            Navigator.of(context).pop();
-            setSearchActive(false);
-            setSearchQuery(null);
-          },
-        ),
-        leading: Navigator.canPop(context)
-            ? YaruBackButton(
-                style: YaruBackButtonStyle.rounded,
-                onPressed: () {
-                  setSearchQuery('');
-                  Navigator.maybePop(context);
-                },
-              )
-            : const SizedBox(
-                width: 40,
-              ),
-      ),
-      body: body,
     );
   }
 }
@@ -362,6 +321,7 @@ class _Albums extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) {
                       return AlbumPage(
+                        key: ValueKey(showWindowControls == false),
                         onAlbumTap: onAlbumTap,
                         onArtistTap: onArtistTap,
                         name: name,
@@ -369,7 +329,6 @@ class _Albums extends StatelessWidget {
                         removePinnedAlbum: removePinnedAlbum,
                         album: album,
                         addPinnedAlbum: addPinnedAlbum,
-                        showWindowControls: showWindowControls,
                       );
                     },
                   ),

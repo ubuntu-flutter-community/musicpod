@@ -1,9 +1,6 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:musicpod/app/common/audio_filter.dart';
-import 'package:musicpod/app/common/search_button.dart';
-import 'package:musicpod/app/common/search_field.dart';
+import 'package:musicpod/app/app_model.dart';
+import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/local_audio/artists_view.dart';
@@ -21,12 +18,10 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class LocalAudioPage extends StatefulWidget {
   const LocalAudioPage({
     super.key,
-    this.showWindowControls = true,
     required this.selectedIndex,
     required this.onIndexSelected,
   });
 
-  final bool showWindowControls;
   final int selectedIndex;
   final void Function(int index) onIndexSelected;
 
@@ -34,7 +29,8 @@ class LocalAudioPage extends StatefulWidget {
   State<LocalAudioPage> createState() => _LocalAudioPageState();
 }
 
-class _LocalAudioPageState extends State<LocalAudioPage> {
+class _LocalAudioPageState extends State<LocalAudioPage>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -92,104 +88,9 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     final Set<Audio>? titlesResult =
         context.select((LocalAudioModel m) => m.titlesSearchResult);
 
-    return Navigator(
-      onPopPage: (route, result) => route.didPop(result),
-      pages: [
-        MaterialPage(
-          child: StartPage(
-            showWindowControls: widget.showWindowControls,
-            selectedIndex: widget.selectedIndex,
-            onIndexSelected: widget.onIndexSelected,
-            audios: audios,
-            artists: artists,
-            albums: albums,
-            addPinnedAlbum: addPinnedAlbum,
-            removePinnedAlbum: removePinnedAlbum,
-            findArtist: findArtist,
-            findAlbum: findAlbum,
-            findImages: findImages,
-            isPinnedAlbum: isPinnedAlbum,
-            search: search,
-            searchActive: searchActive,
-            setSearchActive: setSearchActive,
-            setSearchQuery: setSearchQuery,
-            startPlaylist: startPlaylist,
-          ),
-        ),
-        if (searchQuery?.isNotEmpty == true && searchActive)
-          MaterialPage(
-            child: LocalAudioSearchPage(
-              showWindowControls: widget.showWindowControls,
-              searchQuery: searchQuery,
-              setSearchActive: setSearchActive,
-              search: search,
-              setSearchQuery: setSearchQuery,
-              currentAudio: currentAudio,
-              titlesResult: titlesResult,
-              similarArtistsSearchResult: similarArtistsSearchResult,
-              setAudio: setAudio,
-              addPinnedAlbum: addPinnedAlbum,
-              findAlbum: findAlbum,
-              findArtist: findArtist,
-              findImages: findImages,
-              isPinnedAlbum: isPinnedAlbum,
-              isPlaying: isPlaying,
-              pause: pause,
-              play: play,
-              resume: resume,
-              removePinnedAlbum: removePinnedAlbum,
-              startPlaylist: startPlaylist,
-            ),
-          )
-      ],
-    );
-  }
-}
+    final showWindowControls =
+        context.select((AppModel a) => a.showWindowControls);
 
-class StartPage extends StatelessWidget {
-  const StartPage({
-    super.key,
-    required this.showWindowControls,
-    required this.selectedIndex,
-    this.onIndexSelected,
-    this.audios,
-    required this.artists,
-    required this.albums,
-    required this.setSearchQuery,
-    this.searchQuery,
-    required this.search,
-    required this.searchActive,
-    required this.setSearchActive,
-    required this.findArtist,
-    required this.findImages,
-    required this.startPlaylist,
-    required this.isPinnedAlbum,
-    required this.removePinnedAlbum,
-    required this.addPinnedAlbum,
-    required this.findAlbum,
-  });
-
-  final bool showWindowControls;
-  final int selectedIndex;
-  final void Function(int index)? onIndexSelected;
-  final Set<Audio>? audios;
-  final Set<Audio> artists;
-  final Set<Audio> albums;
-  final void Function(String?) setSearchQuery;
-  final String? searchQuery;
-  final void Function() search;
-  final bool searchActive;
-  final void Function(bool) setSearchActive;
-  final Set<Audio>? Function(Audio, [AudioFilter]) findArtist;
-  final Set<Audio>? Function(Audio, [AudioFilter]) findAlbum;
-  final Set<Uint8List>? Function(Set<Audio>) findImages;
-  final Future<void> Function(Set<Audio>, String) startPlaylist;
-  final bool Function(String) isPinnedAlbum;
-  final void Function(String) removePinnedAlbum;
-  final void Function(String, Set<Audio>) addPinnedAlbum;
-
-  @override
-  Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     void onTap(text) {
@@ -198,8 +99,88 @@ class StartPage extends StatelessWidget {
       setSearchActive(true);
     }
 
+    final tabBar = TabBar(
+      labelStyle:
+          theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+      dividerColor: Colors.transparent,
+      onTap: (value) {
+        widget.onIndexSelected.call(value);
+        setSearchActive(false);
+        setSearchQuery(null);
+      },
+      tabs: [
+        Tab(
+          text: context.l10n.titles,
+        ),
+        Tab(
+          text: context.l10n.artists,
+        ),
+        Tab(
+          text: context.l10n.albums,
+        ),
+      ],
+    );
+
+    final tabBarView = TabBarView(
+      children: [
+        TitlesView(
+          onArtistTap: onTap,
+          onAlbumTap: onTap,
+          audios: audios,
+          showWindowControls: showWindowControls,
+        ),
+        ArtistsView(
+          showWindowControls: showWindowControls,
+          similarArtistsSearchResult: artists,
+          onArtistTap: onTap,
+          onAlbumTap: onTap,
+          findArtist: findArtist,
+          findImages: findImages,
+        ),
+        AlbumsView(
+          showWindowControls: showWindowControls,
+          albums: albums,
+          onArtistTap: onTap,
+          onAlbumTap: onTap,
+          addPinnedAlbum: addPinnedAlbum,
+          findAlbum: findAlbum,
+          isPinnedAlbum: isPinnedAlbum,
+          removePinnedAlbum: removePinnedAlbum,
+          startPlaylist: startPlaylist,
+        ),
+      ],
+    );
+
+    Widget body;
+    if (searchQuery?.isNotEmpty == true && searchActive) {
+      body = LocalAudioSearchPage(
+        showWindowControls: showWindowControls,
+        searchQuery: searchQuery,
+        setSearchActive: setSearchActive,
+        search: search,
+        setSearchQuery: setSearchQuery,
+        currentAudio: currentAudio,
+        titlesResult: titlesResult,
+        similarArtistsSearchResult: similarArtistsSearchResult,
+        setAudio: setAudio,
+        addPinnedAlbum: addPinnedAlbum,
+        findAlbum: findAlbum,
+        findArtist: findArtist,
+        findImages: findImages,
+        isPinnedAlbum: isPinnedAlbum,
+        isPlaying: isPlaying,
+        pause: pause,
+        play: play,
+        resume: resume,
+        removePinnedAlbum: removePinnedAlbum,
+        startPlaylist: startPlaylist,
+      );
+    } else {
+      body = tabBarView;
+    }
+
     return DefaultTabController(
-      initialIndex: selectedIndex,
+      initialIndex: widget.selectedIndex,
       length: 3,
       child: Scaffold(
         backgroundColor: theme.brightness == Brightness.dark
@@ -210,84 +191,40 @@ class StartPage extends StatelessWidget {
           style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
-          leading: SearchButton(
-            searchActive: searchActive,
-            setSearchActive: setSearchActive,
+          leading: SizedBox(
+            width: 120,
+            child: (Navigator.of(context).canPop())
+                ? const YaruBackButton(
+                    style: YaruBackButtonStyle.rounded,
+                  )
+                : const SizedBox.shrink(),
           ),
           titleSpacing: 0,
-          title: Row(
-            children: [
-              if (searchActive)
-                Expanded(
-                  child: SearchField(
-                    key: ValueKey(searchQuery),
-                    onSubmitted: (value) {
-                      setSearchQuery(value);
-                      search();
-                    },
-                    onSearchActive: () {
-                      setSearchActive(false);
-                    },
-                  ),
-                )
-              else
-                Expanded(
-                  child: TabBar(
-                    labelStyle: theme.textTheme.bodyMedium
-                        ?.copyWith(fontWeight: FontWeight.w500),
-                    // indicatorColor: Colors.transparent,
-                    dividerColor: Colors.transparent,
-
-                    onTap: (value) {
-                      onIndexSelected?.call(value);
-                      setSearchActive(false);
-                      setSearchQuery(null);
-                    },
-                    tabs: [
-                      Tab(
-                        child: Text(context.l10n.titles),
-                      ),
-                      Tab(
-                        child: Text(context.l10n.artists),
-                      ),
-                      Tab(
-                        child: Text(context.l10n.albums),
-                      ),
-                    ],
-                  ),
-                )
-            ],
+          title: Padding(
+            padding: const EdgeInsets.only(right: 40),
+            child: YaruSearchTitleField(
+              key: ValueKey(searchActive),
+              width: kSearchBarWidth,
+              searchActive: searchActive,
+              title: tabBar,
+              text: searchQuery,
+              onSearchActive: () {
+                setSearchActive(!searchActive);
+                setSearchQuery('');
+              },
+              onSubmitted: (value) {
+                setSearchActive(true);
+                setSearchQuery(value);
+                search();
+              },
+              onClear: () {
+                setSearchActive(false);
+                setSearchQuery('');
+              },
+            ),
           ),
         ),
-        body: TabBarView(
-          children: [
-            TitlesView(
-              onArtistTap: onTap,
-              onAlbumTap: onTap,
-              audios: audios,
-              showWindowControls: showWindowControls,
-            ),
-            ArtistsView(
-              showWindowControls: showWindowControls,
-              similarArtistsSearchResult: artists,
-              onArtistTap: onTap,
-              onAlbumTap: onTap,
-              findArtist: findArtist,
-              findImages: findImages,
-            ),
-            AlbumsView(
-              showWindowControls: showWindowControls,
-              albums: albums,
-              onArtistTap: onTap,
-              onAlbumTap: onTap,
-              addPinnedAlbum: addPinnedAlbum,
-              findAlbum: findAlbum,
-              isPinnedAlbum: isPinnedAlbum,
-              removePinnedAlbum: removePinnedAlbum,
-              startPlaylist: startPlaylist,
-            ),
-          ],
-        ),
+        body: body,
       ),
     );
   }

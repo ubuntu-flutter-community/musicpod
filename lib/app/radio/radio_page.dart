@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/country_popup.dart';
+import 'package:musicpod/app/common/limit_popup.dart';
+import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
-import 'package:musicpod/app/common/search_button.dart';
-import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/player/player_model.dart';
@@ -13,6 +14,7 @@ import 'package:musicpod/app/radio/radio_model.dart';
 import 'package:musicpod/app/radio/station_page.dart';
 import 'package:musicpod/app/radio/tag_popup.dart';
 import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/radio_service.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
@@ -23,24 +25,20 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class RadioPage extends StatefulWidget {
   const RadioPage({
     super.key,
-    this.showWindowControls = true,
     this.onTextTap,
     required this.isOnline,
   });
 
-  final bool showWindowControls;
   final void Function(String text)? onTextTap;
   final bool isOnline;
 
   static Widget create({
     required BuildContext context,
-    bool showWindowControls = true,
     required bool isOnline,
   }) {
     return ChangeNotifierProvider(
       create: (_) => RadioModel(getService<RadioService>()),
       child: RadioPage(
-        showWindowControls: showWindowControls,
         isOnline: isOnline,
       ),
     );
@@ -62,20 +60,22 @@ class _RadioPageState extends State<RadioPage> {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<RadioModel>();
     final stations = context.select((RadioModel m) => m.stations);
     final stationsCount = context.select((RadioModel m) => m.stations?.length);
-    final search = context.read<RadioModel>().search;
+    final search = model.search;
     final searchQuery = context.select((RadioModel m) => m.searchQuery);
-    final setSearchQuery = context.read<RadioModel>().setSearchQuery;
+    final setSearchQuery = model.setSearchQuery;
     final country = context.select((RadioModel m) => m.country);
     final sortedCountries = context.select((RadioModel m) => m.sortedCountries);
-    final setCountry = context.read<RadioModel>().setCountry;
-    final loadStationsByCountry =
-        context.read<RadioModel>().loadStationsByCountry;
+    final setCountry = model.setCountry;
+    final loadStationsByCountry = model.loadStationsByCountry;
     final tag = context.select((RadioModel m) => m.tag);
-    final setTag = context.read<RadioModel>().setTag;
+    final setTag = model.setTag;
     final tags = context.select((RadioModel m) => m.tags);
-    final loadStationsByTag = context.read<RadioModel>().loadStationsByTag;
+    final loadStationsByTag = model.loadStationsByTag;
+    final limit = context.select((RadioModel m) => m.limit);
+    final setLimit = model.setLimit;
 
     final play = context.select((PlayerModel m) => m.play);
 
@@ -84,36 +84,54 @@ class _RadioPageState extends State<RadioPage> {
     final isStarredStation = context.read<LibraryModel>().isStarredStation;
 
     final searchActive = context.select((RadioModel m) => m.searchActive);
-    final setSearchActive = context.read<RadioModel>().setSearchActive;
+    final setSearchActive = model.setSearchActive;
 
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
 
-    final controlPanel = SizedBox(
-      height: kHeaderBarItemHeight,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          CountryPopup(
-            value: country,
-            onSelected: (country) {
-              setCountry(country);
-              loadStationsByCountry();
-            },
-            countries: sortedCountries,
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          TagPopup(
-            value: tag,
-            onSelected: (tag) {
-              setTag(tag);
-              loadStationsByTag();
-            },
-            tags: tags,
-          )
-        ],
+    final showWindowControls =
+        context.select((AppModel a) => a.showWindowControls);
+
+    final controlPanel = SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: SizedBox(
+        height: kHeaderBarItemHeight,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            LimitPopup(
+              value: limit,
+              onSelected: (value) {
+                setLimit(value);
+                if (searchQuery?.isEmpty == true) {
+                  if (tag == null) {
+                    loadStationsByCountry();
+                  } else {
+                    loadStationsByTag();
+                  }
+                } else {
+                  search(name: searchQuery);
+                }
+              },
+            ),
+            CountryPopup(
+              value: country,
+              onSelected: (country) {
+                setCountry(country);
+                loadStationsByCountry();
+              },
+              countries: sortedCountries,
+            ),
+            TagPopup(
+              value: tag,
+              onSelected: (tag) {
+                setTag(tag);
+                loadStationsByTag();
+              },
+              tags: tags,
+            )
+          ],
+        ),
       ),
     );
 
@@ -124,52 +142,51 @@ class _RadioPageState extends State<RadioPage> {
         backgroundColor: light ? kBackGroundLight : kBackgroundDark,
         appBar: YaruWindowTitleBar(
           backgroundColor: Colors.transparent,
-          style: widget.showWindowControls
+          style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
           titleSpacing: 0,
-          leading: SearchButton(
-            searchActive: searchActive,
-            setSearchActive: setSearchActive,
-          ),
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (searchActive)
-                Expanded(
-                  child: SearchField(
-                    onSearchActive: () => setSearchActive(false),
-                    text: searchQuery,
-                    onSubmitted: (value) {
-                      setSearchQuery(value);
-                      search(name: value);
-                    },
-                  ),
-                ),
-              controlPanel,
-              const SizedBox(width: 10)
-            ],
+          leading: Navigator.of(context).canPop()
+              ? const YaruBackButton(
+                  style: YaruBackButtonStyle.rounded,
+                )
+              : const SizedBox.shrink(),
+          title: Padding(
+            padding: const EdgeInsets.only(right: 40),
+            child: YaruSearchTitleField(
+              alignment: Alignment.center,
+              width: kSearchBarWidth,
+              title: controlPanel,
+              searchActive: searchActive,
+              onSearchActive: () => setSearchActive(!searchActive),
+              onClear: () => setSearchActive(false),
+              onSubmitted: (value) {
+                setSearchQuery(value);
+                search(name: value);
+              },
+            ),
           ),
         ),
-        body: GridView.builder(
-          padding: kPodcastGridPadding,
-          gridDelegate: kImageGridDelegate,
-          itemCount: stationsCount,
-          itemBuilder: (context, index) {
-            final station = stations?.elementAt(index);
-            final onTextTap = widget.onTextTap;
-            final showWindowControls = widget.showWindowControls;
-            return _StationCard(
-              station: station,
-              play: play,
-              isStarredStation: isStarredStation,
-              showWindowControls: showWindowControls,
-              onTextTap: onTextTap,
-              unstarStation: unstarStation,
-              starStation: starStation,
-            );
-          },
-        ),
+        body: stationsCount == 0
+            ? NoSearchResultPage(message: context.l10n.noStationFound)
+            : GridView.builder(
+                padding: kPodcastGridPadding,
+                gridDelegate: kImageGridDelegate,
+                itemCount: stationsCount,
+                itemBuilder: (context, index) {
+                  final station = stations?.elementAt(index);
+                  final onTextTap = widget.onTextTap;
+                  return _StationCard(
+                    station: station,
+                    play: play,
+                    isStarredStation: isStarredStation,
+                    showWindowControls: showWindowControls,
+                    onTextTap: onTextTap,
+                    unstarStation: unstarStation,
+                    starStation: starStation,
+                  );
+                },
+              ),
       );
     }
   }
@@ -220,7 +237,6 @@ class _StationCard extends StatelessWidget {
             station.title ?? station.toString(),
           );
           return StationPage(
-            showWindowControls: showWindowControls,
             onTextTap: onTextTap,
             station: station,
             name: station.title ?? station.toString(),

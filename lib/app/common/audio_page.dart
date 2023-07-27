@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_page_body.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AudioPage extends StatelessWidget {
@@ -16,9 +18,9 @@ class AudioPage extends StatelessWidget {
     required this.deletable,
     this.title,
     this.controlPageButton,
-    this.sort = true,
+    // TODO: fix sorting
+    this.sort = false,
     this.showTrack = true,
-    this.showWindowControls = true,
     this.pageLabel,
     this.pageDescription,
     this.pageTitle,
@@ -52,7 +54,7 @@ class AudioPage extends StatelessWidget {
   final Widget? title;
   final bool sort;
   final bool showTrack;
-  final bool showWindowControls;
+
   final Widget? image;
   final bool? showAudioPageHeader;
   final AudioFilter audioFilter;
@@ -67,7 +69,11 @@ class AudioPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    final showWindowControls =
+        context.select((AppModel a) => a.showWindowControls);
+
     final body = AudioPageBody(
+      key: ValueKey(audios?.length),
       albumFlex: albumFlex,
       titleFlex: titleFlex,
       artistFlex: artistFlex,
@@ -83,7 +89,6 @@ class AudioPage extends StatelessWidget {
       editableName: editableName,
       sort: sort,
       showTrack: showTrack,
-      showWindowControls: showWindowControls,
       audioFilter: audioFilter,
       image: image,
       pageDescription: pageDescription,
@@ -110,9 +115,7 @@ class AudioPage extends StatelessWidget {
             ? const YaruBackButton(
                 style: YaruBackButtonStyle.rounded,
               )
-            : const SizedBox(
-                width: 40,
-              ),
+            : const SizedBox.shrink(),
       ),
       body: body,
     );

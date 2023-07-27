@@ -71,5 +71,6 @@
     "failedToImport": "Failed to import the following files:",
     "unknown": "Unknown",
     "volume": "Volume",
-    "queue": "Queue"
+    "queue": "Queue",
+    "limit": "Limit"
 }

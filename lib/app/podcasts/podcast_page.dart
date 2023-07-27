@@ -14,7 +14,6 @@ class PodcastPage extends StatelessWidget {
     this.onArtistTap,
     this.imageUrl,
     required this.pageId,
-    required this.showWindowControls,
     this.audios,
     this.subscribed = true,
     required this.removePodcast,
@@ -77,7 +76,6 @@ class PodcastPage extends StatelessWidget {
   final void Function(String)? onArtistTap;
   final String? imageUrl;
   final String pageId;
-  final bool showWindowControls;
   final Set<Audio>? audios;
   final bool subscribed;
 
@@ -111,7 +109,6 @@ class PodcastPage extends StatelessWidget {
             ),
       pageLabel: context.l10n.podcast,
       pageTitle: pageId,
-      showWindowControls: showWindowControls,
       audios: audios,
       pageId: pageId,
       showTrack: false,

@@ -22,7 +22,7 @@ class LibraryModel extends SafeChangeNotifier {
     await _service.init();
 
     _localAudioIndexSub = _service.localAudioIndexStream
-        .listen((index) => localAudioindex = index);
+        .listen((index) => setLocalAudioindex(index));
     _likedAudiosSub =
         _service.likedAudiosChanged.listen((event) => notifyListeners());
     _playlistsSub =
@@ -51,7 +51,7 @@ class LibraryModel extends SafeChangeNotifier {
   }
 
   int get totalListAmount {
-    const fix = 5;
+    const fix = 7;
 
     return starredStationsLength +
         podcastsLength +
@@ -173,7 +173,7 @@ class LibraryModel extends SafeChangeNotifier {
 
   int? _index;
   int? get index => _index;
-  set index(int? value) {
+  void setIndex(int? value) {
     if (value == null || value == _index) return;
     _index = value;
     notifyListeners();
@@ -183,7 +183,7 @@ class LibraryModel extends SafeChangeNotifier {
       audioPageType == null || audioPageType == AudioPageType.album;
 
   int? get localAudioindex => _service.localAudioIndex;
-  set localAudioindex(int? value) {
+  void setLocalAudioindex(int? value) {
     if (value == null || value == _service.localAudioIndex) return;
     _service.setLocalAudioIndex(value);
   }

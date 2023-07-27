@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/bottom_player.dart';
 import 'package:musicpod/app/player/full_height_player.dart';
@@ -6,7 +7,7 @@ import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:provider/provider.dart';
 
-class PlayerView extends StatelessWidget {
+class PlayerView extends StatefulWidget {
   const PlayerView({
     super.key,
     required this.playerViewMode,
@@ -15,6 +16,23 @@ class PlayerView extends StatelessWidget {
 
   final PlayerViewMode playerViewMode;
   final void Function({required String text, AudioType audioType}) onTextTap;
+
+  @override
+  State<PlayerView> createState() => _PlayerViewState();
+}
+
+class _PlayerViewState extends State<PlayerView> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (!mounted) return;
+      context.read<AppModel>().setShowWindowControls(
+            widget.playerViewMode != PlayerViewMode.sideBar,
+          );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +88,10 @@ class PlayerView extends StatelessWidget {
         videoController: playerModel.controller,
         playerViewMode: playerViewMode,
         onTextTap: onTextTap,
-        setFullScreen: setFullScreen,
+        setFullScreen: (v) {
+          setFullScreen(v);
+          context.read<AppModel>().setShowWindowControls(false);
+        },
         isUpNextExpanded: isUpNextExpanded,
         nextAudio: nextAudio,
         queue: queue,
@@ -103,7 +124,7 @@ class PlayerView extends StatelessWidget {
       return BottomPlayer(
         isVideo: isVideo,
         videoController: playerModel.controller,
-        onTextTap: onTextTap,
+        onTextTap: widget.onTextTap,
         setFullScreen: setFullScreen,
         audio: audio,
         width: width,
