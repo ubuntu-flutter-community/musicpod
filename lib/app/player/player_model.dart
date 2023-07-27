@@ -124,6 +124,9 @@ class PlayerModel extends SafeChangeNotifier {
   void setShuffle(bool value) {
     if (value == _shuffle) return;
     _shuffle = value;
+    if (value) {
+      _randomNext();
+    }
     notifyListeners();
   }
 
@@ -255,15 +258,9 @@ class PlayerModel extends SafeChangeNotifier {
   void estimateNext() {
     if (queue.isNotEmpty == true && audio != null && queue.contains(audio)) {
       final currentIndex = queue.indexOf(audio!);
-      final max = queue.length;
 
       if (shuffle) {
-        final random = Random();
-        var randomIndex = random.nextInt(max);
-        while (randomIndex == currentIndex) {
-          randomIndex = random.nextInt(max);
-        }
-        nextAudio = queue.elementAt(randomIndex);
+        _randomNext();
       } else {
         if (currentIndex == queue.length - 1) {
           nextAudio = queue.elementAt(0);
@@ -272,6 +269,18 @@ class PlayerModel extends SafeChangeNotifier {
         }
       }
     }
+  }
+
+  void _randomNext() {
+    if (audio == null) return;
+    final currentIndex = queue.indexOf(audio!);
+    final max = queue.length;
+    final random = Random();
+    var randomIndex = random.nextInt(max);
+    while (randomIndex == currentIndex) {
+      randomIndex = random.nextInt(max);
+    }
+    nextAudio = queue.elementAt(randomIndex);
   }
 
   Future<void> playPrevious() async {
