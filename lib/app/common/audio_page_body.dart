@@ -103,7 +103,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     final startPlaylist = playerModel.startPlaylist;
 
     final queueName = context.select((PlayerModel m) => m.queueName);
-    final setAudio = playerModel.setAudio;
     final currentAudio = context.select((PlayerModel m) => m.audio);
     final play = playerModel.play;
     final pause = playerModel.pause;
@@ -263,8 +262,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   isPlayerPlaying: isPlaying,
                   pause: pause,
                   play: () async {
-                    setAudio(audio);
-                    await play();
+                    await play(newAudio: audio);
                   },
                   startPlaylist: widget.audios == null
                       ? null
