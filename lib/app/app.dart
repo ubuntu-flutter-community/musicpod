@@ -160,6 +160,9 @@ class _AppState extends State<App> {
         context.select((LibraryModel m) => m.showPinnedAlbums);
     final audioPageType = context.select((LibraryModel m) => m.audioPageType);
     final ready = context.select((LibraryModel m) => m.ready);
+    context.select((LibraryModel m) => m.podcasts.length);
+    context.select((LibraryModel m) => m.pinnedAlbums.length);
+    context.select((LibraryModel m) => m.starredStations.length);
 
     // Reading methods
     final totalListAmount = libraryModel.totalListAmount;
