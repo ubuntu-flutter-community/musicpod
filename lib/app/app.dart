@@ -371,7 +371,6 @@ class _AppState extends State<App> {
         surfaceTintColor ?? (light ? kBackGroundLight : kBackgroundDark);
 
     final yaruMasterDetailPage = YaruMasterDetailPage(
-      key: ValueKey(index),
       onSelected: (value) => setIndex(value ?? 0),
       appBar: const YaruWindowTitleBar(
         backgroundColor: Colors.transparent,
