@@ -63,27 +63,29 @@ class AudioTileHeader extends StatelessWidget {
           ),
         ],
       ),
-      trailing: YaruPopupMenuButton<AudioFilter>(
-        initialValue: audioFilter,
-        onSelected: onAudioFilterSelected,
-        style: TextButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            side: BorderSide.none,
-            borderRadius: BorderRadius.circular(kYaruButtonRadius),
-          ),
-        ),
-        child: Icon(
-          YaruIcons.ordered_list,
-          color: theme.colorScheme.onSurface,
-        ),
-        itemBuilder: (a) => [
-          for (final filter in AudioFilter.values)
-            PopupMenuItem(
-              value: filter,
-              child: Text(filter.name),
-            )
-        ],
-      ),
+      trailing: onAudioFilterSelected == null
+          ? const SizedBox(width: 65.5)
+          : YaruPopupMenuButton<AudioFilter>(
+              initialValue: audioFilter,
+              onSelected: onAudioFilterSelected,
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  side: BorderSide.none,
+                  borderRadius: BorderRadius.circular(kYaruButtonRadius),
+                ),
+              ),
+              child: Icon(
+                YaruIcons.ordered_list,
+                color: theme.colorScheme.onSurface,
+              ),
+              itemBuilder: (a) => [
+                for (final filter in AudioFilter.values)
+                  PopupMenuItem(
+                    value: filter,
+                    child: Text(filter.name),
+                  )
+              ],
+            ),
     );
   }
 }
@@ -103,8 +105,10 @@ class _HeaderElement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const textStyle = TextStyle(
+    final theme = Theme.of(context);
+    final textStyle = TextStyle(
       fontWeight: FontWeight.w100,
+      color: onAudioFilterSelected == null ? theme.hintColor : null,
     );
     return Expanded(
       flex: flex,

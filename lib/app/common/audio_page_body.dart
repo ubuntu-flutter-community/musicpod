@@ -109,6 +109,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     final pause = playerModel.pause;
     final resume = playerModel.resume;
 
+    context.select((LibraryModel m) => m.likedAudios.length);
     final libraryModel = context.read<LibraryModel>();
     final liked = libraryModel.liked;
     final removeLikedAudio = libraryModel.removeLikedAudio;
@@ -128,7 +129,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     final removePlaylist = libraryModel.removePlaylist;
     final updatePlaylistName = libraryModel.updatePlaylistName;
 
-    var sortedAudios = widget.audios?.toList() ?? [];
+    final sortedAudios = widget.audios?.toList() ?? [];
 
     final audioControlPanel = Padding(
       padding: const EdgeInsets.only(
@@ -217,9 +218,11 @@ class _AudioPageBodyState extends State<AudioPageBody> {
               albumLabel: widget.albumLabel,
               showTrack: widget.showTrack,
               audioFilter: AudioFilter.title,
-              onAudioFilterSelected: (audioFilter) => setState(() {
-                _filter = audioFilter;
-              }),
+              onAudioFilterSelected: widget.sort == false
+                  ? null
+                  : (audioFilter) => setState(() {
+                        _filter = audioFilter;
+                      }),
             ),
           ),
           const Divider(

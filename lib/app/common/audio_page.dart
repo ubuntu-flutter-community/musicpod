@@ -18,7 +18,8 @@ class AudioPage extends StatelessWidget {
     required this.deletable,
     this.title,
     this.controlPageButton,
-    this.sort = true,
+    // TODO: fix sorting
+    this.sort = false,
     this.showTrack = true,
     this.pageLabel,
     this.pageDescription,
@@ -72,6 +73,7 @@ class AudioPage extends StatelessWidget {
         context.select((AppModel a) => a.showWindowControls);
 
     final body = AudioPageBody(
+      key: ValueKey(audios?.length),
       albumFlex: albumFlex,
       titleFlex: titleFlex,
       artistFlex: artistFlex,
