@@ -84,6 +84,14 @@ class PodcastModel extends SafeChangeNotifier {
     return list;
   }
 
+  int _limit = 20;
+  int get limit => _limit;
+  void setLimit(int? value) {
+    if (value == null || value == _limit) return;
+    _limit = value;
+    notifyListeners();
+  }
+
   Future<void> init({
     String? countryCode,
     required String updateMessage,
@@ -124,6 +132,7 @@ class PodcastModel extends SafeChangeNotifier {
       searchQuery: searchQuery,
       country: _country,
       podcastGenre: podcastGenre,
+      limit: limit,
     );
   }
 }

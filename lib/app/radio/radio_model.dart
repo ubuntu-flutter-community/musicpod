@@ -69,6 +69,14 @@ class RadioModel extends SafeChangeNotifier {
     }
   }
 
+  int _limit = 100;
+  int get limit => _limit;
+  void setLimit(int? value) {
+    if (value == null || value == _limit) return;
+    _limit = value;
+    notifyListeners();
+  }
+
   Future<void> init(String? countryCode) async {
     await _radioService.init();
 
@@ -95,11 +103,12 @@ class RadioModel extends SafeChangeNotifier {
   Future<void> loadStationsByCountry() {
     return _radioService.loadStations(
       country: country?.name.camelToSentence(),
+      limit: limit,
     );
   }
 
   Future<void> loadStationsByTag() async {
-    await _radioService.loadStations(tag: tag);
+    await _radioService.loadStations(tag: tag, limit: limit);
   }
 
   Future<void> search({String? name, String? tag}) async {
@@ -108,10 +117,13 @@ class RadioModel extends SafeChangeNotifier {
         setTag(null);
         await loadStationsByCountry();
       } else {
-        await _radioService.loadStations(name: name);
+        await _radioService.loadStations(name: name, limit: limit);
       }
     } else if (tag != null) {
-      await _radioService.loadStations(tag: Tag(name: tag, stationCount: 1));
+      await _radioService.loadStations(
+        tag: Tag(name: tag, stationCount: 1),
+        limit: limit,
+      );
     } else {
       await loadStationsByCountry();
     }
