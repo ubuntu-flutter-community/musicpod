@@ -140,12 +140,18 @@ class _RadioPageState extends State<RadioPage> {
           title: Padding(
             padding: const EdgeInsets.only(right: 40),
             child: YaruSearchTitleField(
+              key: ValueKey(searchQuery),
+              text: searchQuery,
               alignment: Alignment.center,
               width: kSearchBarWidth,
               title: controlPanel,
               searchActive: searchActive,
               onSearchActive: () => setSearchActive(!searchActive),
-              onClear: () => setSearchActive(false),
+              onClear: () {
+                setSearchActive(false);
+                setSearchQuery(null);
+                search();
+              },
               onSubmitted: (value) {
                 setSearchQuery(value);
                 search(name: value);

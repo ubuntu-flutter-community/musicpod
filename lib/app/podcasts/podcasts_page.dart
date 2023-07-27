@@ -211,6 +211,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
           title: Padding(
             padding: const EdgeInsets.only(right: 40),
             child: YaruSearchTitleField(
+              key: ValueKey(searchQuery),
+              text: searchQuery,
               alignment: Alignment.center,
               width: kSearchBarWidth,
               searchActive: searchActive,
