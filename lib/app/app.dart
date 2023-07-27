@@ -169,6 +169,7 @@ class _AppState extends State<App> {
     context.select((LibraryModel m) => m.podcasts.length);
     context.select((LibraryModel m) => m.pinnedAlbums.length);
     context.select((LibraryModel m) => m.starredStations.length);
+    context.select((LibraryModel m) => m.playlists.length);
 
     // Reading methods
     final totalListAmount = libraryModel.totalListAmount;
