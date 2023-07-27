@@ -148,6 +148,7 @@ class _RadioPageState extends State<RadioPage> {
               searchActive: searchActive,
               onSearchActive: () => setSearchActive(!searchActive),
               onClear: () {
+                setTag(null);
                 setSearchActive(false);
                 setSearchQuery(null);
                 search();
