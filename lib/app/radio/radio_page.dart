@@ -112,7 +112,12 @@ class _RadioPageState extends State<RadioPage> {
               value: tag,
               onSelected: (tag) {
                 setTag(tag);
-                loadStationsByTag();
+                if (tag != null) {
+                  loadStationsByTag();
+                } else {
+                  setSearchQuery(null);
+                  search();
+                }
               },
               tags: tags,
             )
@@ -160,26 +165,34 @@ class _RadioPageState extends State<RadioPage> {
             ),
           ),
         ),
-        body: stationsCount == 0
-            ? NoSearchResultPage(message: context.l10n.noStationFound)
-            : GridView.builder(
-                padding: kPodcastGridPadding,
+        body: stations == null
+            ? GridView(
                 gridDelegate: kImageGridDelegate,
-                itemCount: stationsCount,
-                itemBuilder: (context, index) {
-                  final station = stations?.elementAt(index);
-                  final onTextTap = widget.onTextTap;
-                  return _StationCard(
-                    station: station,
-                    play: play,
-                    isStarredStation: isStarredStation,
-                    showWindowControls: showWindowControls,
-                    onTextTap: onTextTap,
-                    unstarStation: unstarStation,
-                    starStation: starStation,
-                  );
-                },
-              ),
+                padding: kPodcastGridPadding,
+                children: List.generate(30, (index) => Audio())
+                    .map((e) => const AudioCard())
+                    .toList(),
+              )
+            : stationsCount == 0
+                ? NoSearchResultPage(message: context.l10n.noStationFound)
+                : GridView.builder(
+                    padding: kPodcastGridPadding,
+                    gridDelegate: kImageGridDelegate,
+                    itemCount: stationsCount,
+                    itemBuilder: (context, index) {
+                      final station = stations.elementAt(index);
+                      final onTextTap = widget.onTextTap;
+                      return _StationCard(
+                        station: station,
+                        play: play,
+                        isStarredStation: isStarredStation,
+                        showWindowControls: showWindowControls,
+                        onTextTap: onTextTap,
+                        unstarStation: unstarStation,
+                        starStation: starStation,
+                      );
+                    },
+                  ),
       );
     }
   }
