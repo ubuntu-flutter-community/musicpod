@@ -20,6 +20,7 @@ class PodcastService {
     String? searchQuery,
     PodcastGenre podcastGenre = PodcastGenre.science,
     Country? country,
+    int limit = 10,
   }) async {
     _searchResult = null;
 
@@ -27,7 +28,7 @@ class PodcastService {
     if (searchQuery == null || searchQuery.isEmpty == true) {
       results = await _search.charts(
         genre: podcastGenre == PodcastGenre.all ? '' : podcastGenre.id,
-        limit: 10,
+        limit: limit,
         country: country ?? Country.none,
       );
     } else {
@@ -35,7 +36,7 @@ class PodcastService {
         searchQuery,
         country: country ?? Country.none,
         language: Language.none,
-        limit: 10,
+        limit: limit,
       );
     }
 

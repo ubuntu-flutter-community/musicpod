@@ -4,6 +4,7 @@ import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/country_popup.dart';
+import 'package:musicpod/app/common/limit_popup.dart';
 import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
@@ -57,6 +58,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final podcastSubscribed = context.read<LibraryModel>().podcastSubscribed;
     final removePodcast = context.read<LibraryModel>().removePodcast;
     final addPodcast = context.read<LibraryModel>().addPodcast;
+    final setLimit = model.setLimit;
+    final limit = context.select((PodcastModel m) => m.limit);
 
     final search = model.search;
     final setSearchQuery = model.setSearchQuery;
@@ -137,17 +140,51 @@ class _PodcastsPageState extends State<PodcastsPage> {
       );
     }
 
-    final controlPanel = _PodcastsControlPanel(
-      search: search,
-      searchQuery: searchQuery,
-      setCountry: setCountry,
-      country: country,
-      sortedCountries: sortedCountries,
-      buttonStyle: buttonStyle,
-      setPodcastGenre: setPodcastGenre,
-      podcastGenre: podcastGenre,
-      textStyle: textStyle,
-      sortedGenres: sortedGenres,
+    final controlPanel = SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: SizedBox(
+        height: kHeaderBarItemHeight,
+        child: Row(
+          children: [
+            LimitPopup(
+              value: limit,
+              onSelected: (value) {
+                setLimit(value);
+                search(searchQuery: searchQuery);
+              },
+            ),
+            CountryPopup(
+              onSelected: (value) {
+                setCountry(value);
+                search(searchQuery: searchQuery);
+              },
+              value: country,
+              countries: sortedCountries,
+            ),
+            YaruPopupMenuButton<PodcastGenre>(
+              style: buttonStyle,
+              onSelected: (value) {
+                setPodcastGenre(value);
+                search(searchQuery: searchQuery);
+              },
+              initialValue: podcastGenre,
+              child: Text(
+                podcastGenre.localize(context.l10n),
+                style: textStyle,
+              ),
+              itemBuilder: (context) {
+                return [
+                  for (final genre in sortedGenres)
+                    PopupMenuItem(
+                      value: genre,
+                      child: Text(genre.localize(context.l10n)),
+                    )
+                ];
+              },
+            )
+          ],
+        ),
+      ),
     );
 
     if (!widget.isOnline) {
@@ -179,7 +216,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
                 setSearchQuery('');
                 search();
               },
-              text: searchQuery,
               onSubmitted: (value) {
                 setSearchQuery(value);
 
@@ -195,76 +231,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
         body: grid,
       );
     }
-  }
-}
-
-class _PodcastsControlPanel extends StatelessWidget {
-  const _PodcastsControlPanel({
-    required this.searchQuery,
-    required this.setCountry,
-    required this.country,
-    required this.sortedCountries,
-    required this.buttonStyle,
-    required this.setPodcastGenre,
-    required this.podcastGenre,
-    required this.textStyle,
-    required this.sortedGenres,
-    required this.search,
-  });
-
-  final String? searchQuery;
-  final void Function(Country? value) setCountry;
-  final void Function({String? searchQuery}) search;
-  final Country? country;
-  final List<Country> sortedCountries;
-  final ButtonStyle buttonStyle;
-  final void Function(PodcastGenre value) setPodcastGenre;
-  final PodcastGenre podcastGenre;
-  final TextStyle? textStyle;
-  final List<PodcastGenre> sortedGenres;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: kHeaderBarItemHeight,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CountryPopup(
-            onSelected: (value) {
-              setCountry(value);
-              search(searchQuery: searchQuery);
-            },
-            value: country,
-            countries: sortedCountries,
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          YaruPopupMenuButton<PodcastGenre>(
-            style: buttonStyle,
-            onSelected: (value) {
-              setPodcastGenre(value);
-              search(searchQuery: searchQuery);
-            },
-            initialValue: podcastGenre,
-            child: Text(
-              podcastGenre.localize(context.l10n),
-              style: textStyle,
-            ),
-            itemBuilder: (context) {
-              return [
-                for (final genre in sortedGenres)
-                  PopupMenuItem(
-                    value: genre,
-                    child: Text(genre.localize(context.l10n)),
-                  )
-              ];
-            },
-          ),
-        ],
-      ),
-    );
   }
 }
 
