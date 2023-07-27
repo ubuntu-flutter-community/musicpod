@@ -212,10 +212,7 @@ class _AppState extends State<App> {
       MasterItem(
         iconBuilder: (context, selected) => const Icon(YaruIcons.plus),
         tileBuilder: (context) => Text(context.l10n.playlistDialogTitleNew),
-        builder: (context) => ChangeNotifierProvider.value(
-          value: library,
-          child: const CreatePlaylistPage(),
-        ),
+        builder: (context) => const SizedBox.shrink(),
       ),
       MasterItem(
         tileBuilder: (context) => Text(context.l10n.likedSongs),
@@ -372,6 +369,21 @@ class _AppState extends State<App> {
       tileBuilder: (context, index, selected, availableWidth) {
         if (index == 3 || index == 6) {
           return masterItems[index].tileBuilder(context);
+        } else if (index == 4) {
+          return YaruMasterTile(
+            selected: false,
+            title: masterItems[index].tileBuilder(context),
+            leading: masterItems[index].iconBuilder?.call(context, false),
+            onTap: () => showDialog(
+              context: context,
+              builder: (context) {
+                return PlaylistDialog(
+                  playlistName: context.l10n.createNewPlaylist,
+                  onCreateNewPlaylist: library.addPlaylist,
+                );
+              },
+            ),
+          );
         }
         return Padding(
           padding: index == 0 ? const EdgeInsets.only(top: 5) : EdgeInsets.zero,

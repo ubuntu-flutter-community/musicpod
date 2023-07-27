@@ -51,7 +51,7 @@ class LibraryModel extends SafeChangeNotifier {
   }
 
   int get totalListAmount {
-    const fix = 5;
+    const fix = 7;
 
     return starredStationsLength +
         podcastsLength +
