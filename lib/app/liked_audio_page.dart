@@ -28,6 +28,7 @@ class LikedAudioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AudioPage(
+      sort: false,
       onArtistTap: onArtistTap,
       onAlbumTap: onAlbumTap,
       audioPageType: AudioPageType.likedAudio,
