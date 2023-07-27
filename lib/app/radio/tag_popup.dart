@@ -27,7 +27,7 @@ class TagPopup extends StatelessWidget {
     );
     final fallBackTextStyle =
         theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
-    return YaruPopupMenuButton<Tag>(
+    return YaruPopupMenuButton<Tag?>(
       style: buttonStyle,
       onSelected: onSelected,
       initialValue: value,
@@ -37,10 +37,11 @@ class TagPopup extends StatelessWidget {
       ),
       itemBuilder: (context) {
         return [
-          for (final t in tags ?? <Tag>[])
+          for (final t in [null, ...?tags])
             PopupMenuItem(
               value: t,
-              child: Text(t.name),
+              onTap: t != null ? null : () => onSelected?.call(t),
+              child: Text(t?.name ?? context.l10n.all),
             )
         ];
       },

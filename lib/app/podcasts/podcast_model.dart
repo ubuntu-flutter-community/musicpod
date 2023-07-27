@@ -92,6 +92,14 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  String? _selectedFeedUrl;
+  String? get selectedFeedUrl => _selectedFeedUrl;
+  void setSelectedFeedUrl(String? value) {
+    if (value == _selectedFeedUrl) return;
+    _selectedFeedUrl = value;
+    notifyListeners();
+  }
+
   Future<void> init({
     String? countryCode,
     required String updateMessage,

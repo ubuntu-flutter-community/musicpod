@@ -15,9 +15,7 @@ import 'package:musicpod/app/radio/station_page.dart';
 import 'package:musicpod/app/radio/tag_popup.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
-import 'package:musicpod/service/radio_service.dart';
 import 'package:provider/provider.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -27,22 +25,12 @@ class RadioPage extends StatefulWidget {
     super.key,
     this.onTextTap,
     required this.isOnline,
+    this.countryCode,
   });
 
   final void Function(String text)? onTextTap;
   final bool isOnline;
-
-  static Widget create({
-    required BuildContext context,
-    required bool isOnline,
-  }) {
-    return ChangeNotifierProvider(
-      create: (_) => RadioModel(getService<RadioService>()),
-      child: RadioPage(
-        isOnline: isOnline,
-      ),
-    );
-  }
+  final String? countryCode;
 
   @override
   State<RadioPage> createState() => _RadioPageState();
@@ -52,10 +40,8 @@ class _RadioPageState extends State<RadioPage> {
   @override
   void initState() {
     super.initState();
-    final countryCode = WidgetsBinding
-        .instance.platformDispatcher.locale.countryCode
-        ?.toLowerCase();
-    context.read<RadioModel>().init(countryCode);
+
+    context.read<RadioModel>().init(widget.countryCode);
   }
 
   @override
@@ -126,7 +112,12 @@ class _RadioPageState extends State<RadioPage> {
               value: tag,
               onSelected: (tag) {
                 setTag(tag);
-                loadStationsByTag();
+                if (tag != null) {
+                  loadStationsByTag();
+                } else {
+                  setSearchQuery(null);
+                  search();
+                }
               },
               tags: tags,
             )
@@ -154,12 +145,19 @@ class _RadioPageState extends State<RadioPage> {
           title: Padding(
             padding: const EdgeInsets.only(right: 40),
             child: YaruSearchTitleField(
+              key: ValueKey(searchQuery),
+              text: searchQuery,
               alignment: Alignment.center,
               width: kSearchBarWidth,
               title: controlPanel,
               searchActive: searchActive,
               onSearchActive: () => setSearchActive(!searchActive),
-              onClear: () => setSearchActive(false),
+              onClear: () {
+                setTag(null);
+                setSearchActive(false);
+                setSearchQuery(null);
+                search();
+              },
               onSubmitted: (value) {
                 setSearchQuery(value);
                 search(name: value);
@@ -167,26 +165,34 @@ class _RadioPageState extends State<RadioPage> {
             ),
           ),
         ),
-        body: stationsCount == 0
-            ? NoSearchResultPage(message: context.l10n.noStationFound)
-            : GridView.builder(
-                padding: kPodcastGridPadding,
+        body: stations == null
+            ? GridView(
                 gridDelegate: kImageGridDelegate,
-                itemCount: stationsCount,
-                itemBuilder: (context, index) {
-                  final station = stations?.elementAt(index);
-                  final onTextTap = widget.onTextTap;
-                  return _StationCard(
-                    station: station,
-                    play: play,
-                    isStarredStation: isStarredStation,
-                    showWindowControls: showWindowControls,
-                    onTextTap: onTextTap,
-                    unstarStation: unstarStation,
-                    starStation: starStation,
-                  );
-                },
-              ),
+                padding: kPodcastGridPadding,
+                children: List.generate(30, (index) => Audio())
+                    .map((e) => const AudioCard())
+                    .toList(),
+              )
+            : stationsCount == 0
+                ? NoSearchResultPage(message: context.l10n.noStationFound)
+                : GridView.builder(
+                    padding: kPodcastGridPadding,
+                    gridDelegate: kImageGridDelegate,
+                    itemCount: stationsCount,
+                    itemBuilder: (context, index) {
+                      final station = stations.elementAt(index);
+                      final onTextTap = widget.onTextTap;
+                      return _StationCard(
+                        station: station,
+                        play: play,
+                        isStarredStation: isStarredStation,
+                        showWindowControls: showWindowControls,
+                        onTextTap: onTextTap,
+                        unstarStation: unstarStation,
+                        starStation: starStation,
+                      );
+                    },
+                  ),
       );
     }
   }
