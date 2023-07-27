@@ -15,9 +15,7 @@ import 'package:musicpod/app/radio/station_page.dart';
 import 'package:musicpod/app/radio/tag_popup.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
-import 'package:musicpod/service/radio_service.dart';
 import 'package:provider/provider.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -27,22 +25,12 @@ class RadioPage extends StatefulWidget {
     super.key,
     this.onTextTap,
     required this.isOnline,
+    this.countryCode,
   });
 
   final void Function(String text)? onTextTap;
   final bool isOnline;
-
-  static Widget create({
-    required BuildContext context,
-    required bool isOnline,
-  }) {
-    return ChangeNotifierProvider(
-      create: (_) => RadioModel(getService<RadioService>()),
-      child: RadioPage(
-        isOnline: isOnline,
-      ),
-    );
-  }
+  final String? countryCode;
 
   @override
   State<RadioPage> createState() => _RadioPageState();
@@ -52,10 +40,8 @@ class _RadioPageState extends State<RadioPage> {
   @override
   void initState() {
     super.initState();
-    final countryCode = WidgetsBinding
-        .instance.platformDispatcher.locale.countryCode
-        ?.toLowerCase();
-    context.read<RadioModel>().init(countryCode);
+
+    context.read<RadioModel>().init(widget.countryCode);
   }
 
   @override

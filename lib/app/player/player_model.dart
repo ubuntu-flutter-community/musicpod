@@ -53,7 +53,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   Audio? _audio;
   Audio? get audio => _audio;
-  Future<void> setAudio(Audio? value) async {
+  Future<void> _setAudio(Audio? value) async {
     if (value == null || value == _audio) return;
     _audio = value;
 
@@ -136,7 +136,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> play({bool bigPlay = false, Audio? newAudio}) async {
     if (newAudio != null) {
-      setAudio(newAudio);
+      _setAudio(newAudio);
     }
     if (audio == null) return;
 
@@ -246,7 +246,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> playNext() async {
     if (nextAudio == null) return;
-    setAudio(nextAudio);
+    _setAudio(nextAudio);
     estimateNext();
 
     await play();
@@ -285,7 +285,7 @@ class PlayerModel extends SafeChangeNotifier {
       nextAudio = queue.elementAt(currentIndex - 1);
 
       if (nextAudio == null) return;
-      setAudio(nextAudio);
+      _setAudio(nextAudio);
 
       await play();
     }
@@ -294,7 +294,7 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> startPlaylist(Set<Audio> audios, String listName) async {
     queue = audios.toList();
     setQueueName(listName);
-    setAudio(audios.first);
+    _setAudio(audios.first);
     estimateNext();
     await play();
   }

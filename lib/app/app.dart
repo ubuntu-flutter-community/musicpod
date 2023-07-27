@@ -86,9 +86,15 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  String? _code;
+
   @override
   void initState() {
     super.initState();
+
+    _code = WidgetsBinding.instance.platformDispatcher.locale.countryCode
+        ?.toLowerCase();
+
     YaruWindow.of(context).onClose(
       () async {
         await context.read<PlayerModel>().dispose().then((_) async {
@@ -98,6 +104,7 @@ class _AppState extends State<App> {
         return true;
       },
     );
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (mounted) {
         context.read<PlayerModel>().init();
@@ -109,8 +116,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
-    final width = MediaQuery.of(context).size.width;
-    final playerToTheRight = width > 1700;
+    final playerToTheRight = MediaQuery.of(context).size.width > 1700;
 
     // Connectivity
     final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
@@ -221,6 +227,7 @@ class _AppState extends State<App> {
       MasterItem(
         tileBuilder: (context) => Text(context.l10n.radio),
         builder: (context) => RadioPage(
+          countryCode: _code,
           isOnline: isOnline,
           onTextTap: (text) =>
               onTextTap(text: text, audioType: AudioType.radio),
@@ -235,6 +242,7 @@ class _AppState extends State<App> {
         builder: (context) {
           return PodcastsPage(
             isOnline: isOnline,
+            countryCode: _code,
           );
         },
         iconBuilder: (context, selected) => PodcastsPageIcon(

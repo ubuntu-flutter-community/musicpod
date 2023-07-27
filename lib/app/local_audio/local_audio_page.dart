@@ -66,8 +66,11 @@ class _LocalAudioPageState extends State<LocalAudioPage>
     final findImages = model.findImages;
     final findAlbum = model.findAlbum;
 
-    final Set<Audio>? similarArtistsSearchResult =
+    final similarArtistsSearchResult =
         context.select((LocalAudioModel m) => m.similarArtistsSearchResult);
+
+    final similarAlbumsSearchResult =
+        context.select((LocalAudioModel m) => m.similarAlbumsSearchResult);
 
     final libraryModel = context.read<LibraryModel>();
 
@@ -79,7 +82,6 @@ class _LocalAudioPageState extends State<LocalAudioPage>
     final startPlaylist = playerModel.startPlaylist;
 
     final isPlaying = context.select((PlayerModel m) => m.isPlaying);
-    final setAudio = playerModel.setAudio;
     final currentAudio = context.select((PlayerModel m) => m.audio);
     final play = playerModel.play;
     final pause = playerModel.pause;
@@ -154,6 +156,7 @@ class _LocalAudioPageState extends State<LocalAudioPage>
     Widget body;
     if (searchQuery?.isNotEmpty == true && searchActive) {
       body = LocalAudioSearchPage(
+        similarAlbumsSearchResult: similarAlbumsSearchResult,
         showWindowControls: showWindowControls,
         searchQuery: searchQuery,
         setSearchActive: setSearchActive,
@@ -162,7 +165,6 @@ class _LocalAudioPageState extends State<LocalAudioPage>
         currentAudio: currentAudio,
         titlesResult: titlesResult,
         similarArtistsSearchResult: similarArtistsSearchResult,
-        setAudio: setAudio,
         addPinnedAlbum: addPinnedAlbum,
         findAlbum: findAlbum,
         findArtist: findArtist,

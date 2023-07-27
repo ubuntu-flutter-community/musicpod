@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_card.dart';
@@ -25,9 +24,11 @@ class PodcastsPage extends StatefulWidget {
   const PodcastsPage({
     super.key,
     required this.isOnline,
+    this.countryCode,
   });
 
   final bool isOnline;
+  final String? countryCode;
 
   @override
   State<PodcastsPage> createState() => _PodcastsPageState();
@@ -38,10 +39,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final code = WidgetsBinding.instance.platformDispatcher.locale.countryCode
-          ?.toLowerCase();
       context.read<PodcastModel>().init(
-            countryCode: code,
+            countryCode: widget.countryCode,
             updateMessage: context.l10n.newEpisodeAvailable,
           );
     });
@@ -55,10 +54,14 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
-    final podcastSubscribed = context.read<LibraryModel>().podcastSubscribed;
-    final removePodcast = context.read<LibraryModel>().removePodcast;
-    final addPodcast = context.read<LibraryModel>().addPodcast;
+    final libraryModel = context.read<LibraryModel>();
+    final podcastSubscribed = libraryModel.podcastSubscribed;
+    final removePodcast = libraryModel.removePodcast;
+    final addPodcast = libraryModel.addPodcast;
     final setLimit = model.setLimit;
+    final setSelectedFeedUrl = model.setSelectedFeedUrl;
+    final selectedFeedUrl =
+        context.select((PodcastModel m) => m.selectedFeedUrl);
     final limit = context.select((PodcastModel m) => m.limit);
 
     final search = model.search;
@@ -127,13 +130,15 @@ class _PodcastsPageState extends State<PodcastsPage> {
               final feed = await findEpisodes(url: podcast.feedUrl!);
               startPlaylist(feed, podcast.collectionName!);
             },
-            onTap: () => pushPodcastPage(
+            onTap: () async => await pushPodcastPage(
               context: context,
               podcastItem: podcast,
               podcastSubscribed: podcastSubscribed,
               onTapText: onTapText,
               removePodcast: removePodcast,
               addPodcast: addPodcast,
+              setFeedUrl: setSelectedFeedUrl,
+              oldFeedUrl: selectedFeedUrl,
             ),
           );
         },
@@ -237,23 +242,24 @@ class _PodcastsPageState extends State<PodcastsPage> {
 Future<void> pushPodcastPage({
   required BuildContext context,
   required Item podcastItem,
-  required bool Function(String name) podcastSubscribed,
+  required bool Function(String? name) podcastSubscribed,
   required void Function(String text) onTapText,
   required void Function(String name) removePodcast,
   required void Function(String name, Set<Audio> audios) addPodcast,
+  required void Function(String? feedUrl) setFeedUrl,
+  required String? oldFeedUrl,
 }) async {
   if (podcastItem.feedUrl == null) return;
 
-  await findEpisodes(url: podcastItem.feedUrl!).then((podcast) {
-    Navigator.of(context).push(
+  setFeedUrl(podcastItem.feedUrl);
+
+  await findEpisodes(url: podcastItem.feedUrl!).then((podcast) async {
+    if (oldFeedUrl == podcastItem.feedUrl) return;
+
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          final subscribed = podcast.firstOrNull?.album == null
-              ? false
-              : podcastSubscribed(
-                  podcast.first.album!,
-                );
-
+          final subscribed = podcastSubscribed(podcast.first.album);
           final id = podcastItem.collectionName ?? podcast.toString();
 
           return PodcastPage(
@@ -268,7 +274,7 @@ Future<void> pushPodcastPage({
           );
         },
       ),
-    );
+    ).then((_) => setFeedUrl(null));
   });
 }
 

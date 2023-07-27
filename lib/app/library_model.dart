@@ -147,7 +147,8 @@ class LibraryModel extends SafeChangeNotifier {
 
   void removePodcast(String name) => _service.removePodcast(name);
 
-  bool podcastSubscribed(String name) => podcasts.containsKey(name);
+  bool podcastSubscribed(String? name) =>
+      name == null ? false : podcasts.containsKey(name);
 
   Map<String, String> get podcastsToFeedUrls => _service.podcastsToFeedUrls;
   void addPlaylistFeed(String playlist, String feedUrl) =>
