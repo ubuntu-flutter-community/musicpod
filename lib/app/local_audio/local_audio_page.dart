@@ -205,7 +205,7 @@ class _LocalAudioPageState extends State<LocalAudioPage>
           title: Padding(
             padding: const EdgeInsets.only(right: 40),
             child: YaruSearchTitleField(
-              key: ValueKey(searchActive),
+              key: ValueKey(searchQuery),
               width: kSearchBarWidth,
               searchActive: searchActive,
               title: tabBar,
