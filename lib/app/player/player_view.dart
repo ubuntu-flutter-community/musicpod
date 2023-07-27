@@ -82,12 +82,12 @@ class _PlayerViewState extends State<PlayerView> {
 
     final isVideo = context.select((PlayerModel m) => m.isVideo);
 
-    if (playerViewMode != PlayerViewMode.bottom) {
+    if (widget.playerViewMode != PlayerViewMode.bottom) {
       return FullHeightPlayer(
         isVideo: isVideo == true,
         videoController: playerModel.controller,
-        playerViewMode: playerViewMode,
-        onTextTap: onTextTap,
+        playerViewMode: widget.playerViewMode,
+        onTextTap: widget.onTextTap,
         setFullScreen: (v) {
           setFullScreen(v);
           context.read<AppModel>().setShowWindowControls(false);
