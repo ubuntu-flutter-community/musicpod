@@ -17,6 +17,12 @@ class RadioService {
     }
   }
 
+  Future<void> dispose() async {
+    _searchController.close();
+    _tagsChangedController.close();
+    _stationsChangedController.close();
+  }
+
   List<Station>? _stations;
   List<Station>? get stations => _stations;
   void setStations(List<Station>? value) {
