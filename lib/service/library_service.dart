@@ -218,6 +218,11 @@ class LibraryService {
 
   Future<void> dispose() async {
     await writeSetting(kLocalAudioIndex, _localAudioIndex.toString());
+    await _albumsController.close();
+    await _podcastsController.close();
+    await _likedAudiosController.close();
+    await _playlistsController.close();
+    await _starredStationsController.close();
   }
 }
 

@@ -16,6 +16,10 @@ class PodcastService {
   List<Item>? get searchResult => _searchResult;
   final Search _search;
 
+  Future<void> dispose() async {
+    _searchChangedController.close();
+  }
+
   Future<void> search({
     String? searchQuery,
     PodcastGenre podcastGenre = PodcastGenre.science,

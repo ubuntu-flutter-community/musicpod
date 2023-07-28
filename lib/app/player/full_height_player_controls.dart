@@ -97,9 +97,8 @@ class FullHeightPlayerControls extends StatelessWidget {
         YaruIconButton(
           icon: Icon(
             YaruIcons.shuffle,
-            color: theme.colorScheme.onSurface,
+            color: shuffle ? theme.primaryColor : theme.colorScheme.onSurface,
           ),
-          isSelected: shuffle,
           onPressed: () => setShuffle(!(shuffle)),
         ),
         const SizedBox(
@@ -139,9 +138,9 @@ class FullHeightPlayerControls extends StatelessWidget {
         YaruIconButton(
           icon: Icon(
             YaruIcons.repeat_single,
-            color: theme.colorScheme.onSurface,
+            color:
+                repeatSingle ? theme.primaryColor : theme.colorScheme.onSurface,
           ),
-          isSelected: repeatSingle == true,
           onPressed: () => setRepeatSingle(!(repeatSingle)),
         ),
         const SizedBox(

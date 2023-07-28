@@ -71,8 +71,18 @@ class AlbumsView extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) {
                 return AlbumPage(
-                  onAlbumTap: onAlbumTap,
-                  onArtistTap: onArtistTap,
+                  onAlbumTap: (album) {
+                    if (onAlbumTap != null) {
+                      onAlbumTap!(album);
+                      Navigator.of(context).maybePop();
+                    }
+                  },
+                  onArtistTap: (artist) {
+                    if (onArtistTap != null) {
+                      onArtistTap!(artist);
+                      Navigator.of(context).maybePop();
+                    }
+                  },
                   name: name,
                   isPinnedAlbum: isPinnedAlbum,
                   removePinnedAlbum: removePinnedAlbum,
