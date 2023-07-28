@@ -46,7 +46,6 @@ class LibraryModel extends SafeChangeNotifier {
     _podcastsSub?.cancel();
     _stationsSub?.cancel();
 
-    await _service.dispose();
     super.dispose();
   }
 

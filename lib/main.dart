@@ -22,13 +22,30 @@ Future<void> main() async {
     desktopEntry: '/var/lib/snapd/desktop/applications/musicpod',
   );
 
-  registerService<MPRIS>(() => mpris);
-  registerService<LibraryService>(LibraryService.new);
-  registerService<LocalAudioService>(LocalAudioService.new);
-  registerService<PodcastService>(PodcastService.new);
+  registerService<MPRIS>(
+    () => mpris,
+    dispose: (s) async => await s.dispose(),
+  );
+  registerService<LibraryService>(
+    LibraryService.new,
+    dispose: (s) async => await s.dispose(),
+  );
+  registerService<LocalAudioService>(
+    LocalAudioService.new,
+    dispose: (s) async => await s.dispose(),
+  );
+  registerService<PodcastService>(
+    PodcastService.new,
+    dispose: (s) async => await s.dispose(),
+  );
   final connectivity = Connectivity();
-  registerService<Connectivity>(() => connectivity);
-  registerService<NotificationsClient>(NotificationsClient.new);
+  registerService<Connectivity>(
+    () => connectivity,
+  );
+  registerService<NotificationsClient>(
+    NotificationsClient.new,
+    dispose: (s) async => await s.close(),
+  );
 
   registerService<RadioService>(() => RadioService(connectivity));
 
