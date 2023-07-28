@@ -49,8 +49,18 @@ class ArtistsView extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) {
                 return ArtistPage(
-                  onAlbumTap: onAlbumTap,
-                  onArtistTap: onArtistTap,
+                  onAlbumTap: (album) {
+                    if (onAlbumTap != null) {
+                      onAlbumTap!(album);
+                      Navigator.of(context).maybePop();
+                    }
+                  },
+                  onArtistTap: (artist) {
+                    if (onArtistTap != null) {
+                      onArtistTap!(artist);
+                      Navigator.of(context).maybePop();
+                    }
+                  },
                   images: images,
                   artistAudios: artistAudios,
                   showWindowControls: showWindowControls,
