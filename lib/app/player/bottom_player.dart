@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
+import 'package:musicpod/app/globals.dart';
 import 'package:musicpod/app/player/like_icon_button.dart';
 import 'package:musicpod/app/player/player_track.dart';
 import 'package:musicpod/app/player/queue_popup.dart';
@@ -110,7 +111,13 @@ class BottomPlayer extends StatelessWidget {
                   flex: 3,
                   child: _BottomPlayerTitleArtist(
                     audio: audio,
-                    onTextTap: onTextTap,
+                    onTextTap: (audioType, text) {
+                      onTextTap(
+                        text: text,
+                        audioType: audio?.audioType ?? AudioType.local,
+                      );
+                      navigatorKey.currentState?.maybePop();
+                    },
                   ),
                 ),
                 const SizedBox(
@@ -211,7 +218,7 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
   });
 
   final Audio? audio;
-  final void Function({AudioType audioType, required String text}) onTextTap;
+  final void Function(AudioType audioType, String text) onTextTap;
 
   @override
   Widget build(BuildContext context) {
@@ -223,8 +230,10 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
           onTap: audio?.audioType == null || audio?.title == null
               ? null
-              : () =>
-                  onTextTap(text: audio!.title!, audioType: audio!.audioType!),
+              : () => onTextTap(
+                    audio!.audioType!,
+                    audio!.title!,
+                  ),
           child: Tooltip(
             message: audio?.title ?? ' ',
             child: Text(
@@ -244,8 +253,8 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
             onTap: audio?.audioType == null || audio?.artist == null
                 ? null
                 : () => onTextTap(
-                      text: audio!.artist!,
-                      audioType: audio!.audioType!,
+                      audio!.audioType!,
+                      audio!.artist!,
                     ),
             child: Tooltip(
               message: audio?.artist ?? ' ',

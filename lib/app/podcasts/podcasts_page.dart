@@ -269,8 +269,14 @@ Future<void> pushPodcastPage({
             imageUrl: podcastItem.artworkUrl600,
             addPodcast: addPodcast,
             removePodcast: removePodcast,
-            onAlbumTap: onTapText,
-            onArtistTap: onTapText,
+            onAlbumTap: (v) {
+              onTapText(v);
+              Navigator.of(context).maybePop();
+            },
+            onArtistTap: (v) {
+              onTapText(v);
+              Navigator.of(context).maybePop();
+            },
             audios: podcast,
             pageId: id,
           );
