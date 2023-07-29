@@ -35,6 +35,18 @@ class _PlayerViewState extends State<PlayerView> {
   }
 
   @override
+  void didUpdateWidget(covariant PlayerView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (!mounted) return;
+      context.read<AppModel>().setShowWindowControls(
+            widget.playerViewMode != PlayerViewMode.sideBar,
+          );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final playerModel = context.read<PlayerModel>();
     final audio = context.select((PlayerModel m) => m.audio);
@@ -88,10 +100,7 @@ class _PlayerViewState extends State<PlayerView> {
         videoController: playerModel.controller,
         playerViewMode: widget.playerViewMode,
         onTextTap: widget.onTextTap,
-        setFullScreen: (v) {
-          setFullScreen(v);
-          context.read<AppModel>().setShowWindowControls(false);
-        },
+        setFullScreen: setFullScreen,
         isUpNextExpanded: isUpNextExpanded,
         nextAudio: nextAudio,
         queue: queue,
