@@ -243,7 +243,10 @@ class _StationCard extends StatelessWidget {
             station.title ?? station.toString(),
           );
           return StationPage(
-            onTextTap: onTextTap,
+            onTextTap: (v) {
+              onTextTap?.call(v);
+              Navigator.of(context).maybePop();
+            },
             station: station,
             name: station.title ?? station.toString(),
             unStarStation: (s) => unstarStation(

@@ -9,6 +9,7 @@ import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/connectivity_notifier.dart';
+import 'package:musicpod/app/globals.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/liked_audio_page.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
@@ -385,6 +386,7 @@ class _AppState extends State<App> {
         surfaceTintColor ?? (light ? kBackGroundLight : kBackgroundDark);
 
     final yaruMasterDetailPage = YaruMasterDetailPage(
+      navigatorKey: navigatorKey,
       onSelected: (value) => setIndex(value ?? 0),
       appBar: const YaruWindowTitleBar(
         backgroundColor: Colors.transparent,
