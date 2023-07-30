@@ -27,19 +27,21 @@ class LikeIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Icon likeIcon;
+    Widget likeIcon;
     if (audio?.audioType == AudioType.radio) {
-      if (isStarredStation) {
-        likeIcon = const Icon(YaruIcons.star_filled);
-      } else {
-        likeIcon = const Icon(YaruIcons.star);
-      }
+      likeIcon = YaruAnimatedIcon(
+        isStarredStation
+            ? const YaruAnimatedStarIcon(filled: true)
+            : const YaruAnimatedStarIcon(filled: false),
+        initialProgress: 1.0,
+      );
     } else {
-      if (liked) {
-        likeIcon = const Icon(YaruIcons.heart_filled);
-      } else {
-        likeIcon = const Icon(YaruIcons.heart);
-      }
+      likeIcon = YaruAnimatedIcon(
+        liked
+            ? const YaruAnimatedHeartIcon(filled: true)
+            : const YaruAnimatedHeartIcon(filled: false),
+        initialProgress: 1.0,
+      );
     }
 
     final void Function()? onLike;

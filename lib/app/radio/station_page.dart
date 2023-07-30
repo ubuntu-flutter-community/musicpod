@@ -147,10 +147,11 @@ class StationPage extends StatelessWidget {
                               onPressed: isStarred
                                   ? () => unStarStation(name)
                                   : () => starStation(name),
-                              icon: Icon(
+                              icon: YaruAnimatedIcon(
                                 isStarred
-                                    ? YaruIcons.star_filled
-                                    : YaruIcons.star,
+                                    ? const YaruAnimatedStarIcon(filled: true)
+                                    : const YaruAnimatedStarIcon(filled: false),
+                                initialProgress: 1.0,
                                 color: theme.colorScheme.onPrimary,
                               ),
                             ),
