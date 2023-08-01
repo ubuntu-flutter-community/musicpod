@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-import '../common/constants.dart';
+import '../../constants.dart';
 
 Future<String> loadAsset(BuildContext context) async {
   return await DefaultAssetBundle.of(context)

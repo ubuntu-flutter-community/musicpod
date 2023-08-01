@@ -6,7 +6,7 @@ import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_tile.dart';
 import 'package:musicpod/app/common/audio_tile_header.dart';
-import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/app/common/loading_tile.dart';
 import 'package:musicpod/app/common/round_image_container.dart';
 import 'package:musicpod/app/common/spaced_divider.dart';

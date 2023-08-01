@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/app_model.dart';
-import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/local_audio/artists_view.dart';

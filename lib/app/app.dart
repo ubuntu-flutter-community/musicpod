@@ -6,7 +6,7 @@ import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/audio_page_filter_bar.dart';
 import 'package:musicpod/app/common/audio_page.dart';
-import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/connectivity_notifier.dart';
 import 'package:musicpod/app/globals.dart';

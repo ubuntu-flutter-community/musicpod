@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/app.dart';
-import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru/yaru.dart';
 

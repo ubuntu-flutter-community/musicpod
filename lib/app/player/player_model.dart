@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:mpris_service/mpris_service.dart';
-import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/utils.dart';
 import 'package:palette_generator/palette_generator.dart';
