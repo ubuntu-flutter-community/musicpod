@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yaru_widgets/constants.dart';
 
-import 'constants.dart';
+import '../../constants.dart';
 
 class LoadingTile extends StatelessWidget {
   const LoadingTile({super.key});

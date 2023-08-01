@@ -10,7 +10,7 @@ import 'package:musicpod/l10n/l10n.dart';
 import 'package:xdg_directories/xdg_directories.dart';
 import 'package:yaru/yaru.dart';
 
-import 'app/common/constants.dart';
+import 'constants.dart';
 
 String formatTime(Duration duration) {
   String twoDigits(int n) => n.toString().padLeft(2, '0');

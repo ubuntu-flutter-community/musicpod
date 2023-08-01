@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
-import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:yaru_icons/yaru_icons.dart';
