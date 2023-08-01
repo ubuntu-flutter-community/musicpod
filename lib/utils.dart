@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:xdg_directories/xdg_directories.dart';
+import 'package:yaru/yaru.dart';
 
 import 'app/common/constants.dart';
 
@@ -152,4 +154,64 @@ Duration? parseDuration(String? durationAsString) {
   }
   micros = (double.parse(parts[parts.length - 1]) * 1000000).round();
   return Duration(hours: hours, minutes: minutes, microseconds: micros);
+}
+
+Future<Uri?> createUriFromAudio(Audio audio) async {
+  if (audio.imageUrl != null || audio.albumArtUrl != null) {
+    return Uri.parse(
+      audio.albumArtUrl ?? audio.imageUrl!,
+    );
+  } else if (audio.pictureData != null) {
+    Uint8List imageInUnit8List = audio.pictureData!;
+    final workingDir = await getWorkingDir();
+
+    final now = DateTime.now().toUtc().toString();
+    final dir = Directory(workingDir);
+    var stream = dir.list(recursive: true);
+    final sub = stream.listen((e) async {
+      if (e is File && e.path.endsWith('.png')) {
+        await e.delete();
+      }
+    });
+    sub.cancel();
+    final file = File('$workingDir$now.png');
+    final newFile = await file.writeAsBytes(imageInUnit8List);
+
+    return Uri.file(newFile.path);
+  } else {
+    return null;
+  }
+}
+
+Color? getColorFromName(String name) {
+  final firstChar = name.isEmpty ? 'a' : name.substring(0, 1);
+
+  return <String, Color>{
+    'a': Colors.red,
+    'b': Colors.green,
+    'c': Colors.blue,
+    'd': Colors.yellow,
+    'e': Colors.orange,
+    'f': Colors.purple,
+    'g': Colors.pink,
+    'h': Colors.brown,
+    'i': Colors.black,
+    'j': Colors.white,
+    'k': Colors.grey,
+    'l': Colors.cyan,
+    'm': YaruColors.magenta,
+    'n': YaruColors.olive,
+    'o': Colors.teal,
+    'p': Colors.lime,
+    'q': Colors.lightBlue,
+    'r': Colors.blueGrey,
+    's': Colors.orangeAccent,
+    't': Colors.amberAccent,
+    'u': Colors.greenAccent,
+    'v': Colors.lightGreen,
+    'w': Colors.indigo,
+    'x': Colors.lightGreenAccent,
+    'y': Colors.purpleAccent,
+    'z': Colors.deepPurple,
+  }[firstChar];
 }

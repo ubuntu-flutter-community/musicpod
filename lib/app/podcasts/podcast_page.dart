@@ -10,55 +10,82 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class PodcastPage extends StatelessWidget {
   const PodcastPage({
     super.key,
-    this.onControlButtonPressed,
     this.onAlbumTap,
     this.onArtistTap,
     this.imageUrl,
     required this.pageId,
-    required this.showWindowControls,
     this.audios,
+    this.subscribed = true,
+    required this.removePodcast,
+    required this.addPodcast,
   });
 
   static Widget createIcon({
     required BuildContext context,
     String? imageUrl,
     required bool isOnline,
+    required bool enabled,
   }) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: SizedBox(
-        width: kSideBarIconSize,
-        height: kSideBarIconSize,
-        child: isOnline
-            ? SafeNetworkImage(
-                url: imageUrl,
-                fit: BoxFit.fitHeight,
-                filterQuality: FilterQuality.medium,
-                fallBackIcon: const Icon(
-                  YaruIcons.rss,
-                  size: kSideBarIconSize,
-                ),
-                errorIcon: const Icon(
-                  YaruIcons.rss,
-                  size: kSideBarIconSize,
-                ),
-              )
-            : const Icon(YaruIcons.network_offline),
-      ),
+    var clipRRect = isOnline
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: SizedBox(
+              width: kSideBarIconSize,
+              height: kSideBarIconSize,
+              child: isOnline
+                  ? SafeNetworkImage(
+                      url: imageUrl,
+                      fit: BoxFit.fitHeight,
+                      filterQuality: FilterQuality.medium,
+                      fallBackIcon: const Icon(
+                        YaruIcons.rss,
+                        size: kSideBarIconSize,
+                      ),
+                      errorIcon: const Icon(
+                        YaruIcons.rss,
+                        size: kSideBarIconSize,
+                      ),
+                    )
+                  : const Icon(YaruIcons.network_offline),
+            ),
+          )
+        : const Icon(
+            YaruIcons.network_offline,
+          );
+    return enabled
+        ? clipRRect
+        : Opacity(
+            opacity: 0.5,
+            child: clipRRect,
+          );
+  }
+
+  static Widget createTitle({
+    required bool enabled,
+    required String title,
+  }) {
+    return Opacity(
+      opacity: enabled ? 1 : 0.5,
+      child: Text(title),
     );
   }
 
-  final void Function()? onControlButtonPressed;
+  final void Function(String name) removePodcast;
+  final void Function(String name, Set<Audio> audios) addPodcast;
   final void Function(String)? onAlbumTap;
   final void Function(String)? onArtistTap;
   final String? imageUrl;
   final String pageId;
-  final bool showWindowControls;
   final Set<Audio>? audios;
+  final bool subscribed;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return AudioPage(
+      titleFlex: 8,
+      albumFlex: 3,
+      artistFlex: 4,
       sort: false,
       onAlbumTap: onAlbumTap,
       onArtistTap: onArtistTap,
@@ -82,7 +109,6 @@ class PodcastPage extends StatelessWidget {
             ),
       pageLabel: context.l10n.podcast,
       pageTitle: pageId,
-      showWindowControls: showWindowControls,
       audios: audios,
       pageId: pageId,
       showTrack: false,
@@ -91,9 +117,15 @@ class PodcastPage extends StatelessWidget {
       controlPageButton: YaruIconButton(
         icon: Icon(
           YaruIcons.rss,
-          color: Theme.of(context).primaryColor,
+          color: subscribed ? theme.primaryColor : theme.colorScheme.onSurface,
         ),
-        onPressed: onControlButtonPressed,
+        onPressed: () {
+          if (subscribed) {
+            removePodcast(pageId);
+          } else if (audios?.isNotEmpty == true) {
+            addPodcast(pageId, audios!);
+          }
+        },
       ),
     );
   }

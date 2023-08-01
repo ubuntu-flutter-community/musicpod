@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/country_popup.dart';
+import 'package:musicpod/app/common/limit_popup.dart';
+import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
-import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/radio/radio_model.dart';
 import 'package:musicpod/app/radio/station_page.dart';
 import 'package:musicpod/app/radio/tag_popup.dart';
-import 'package:musicpod/service/radio_service.dart';
+import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -21,28 +23,14 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class RadioPage extends StatefulWidget {
   const RadioPage({
     super.key,
-    this.showWindowControls = true,
     this.onTextTap,
     required this.isOnline,
+    this.countryCode,
   });
 
-  final bool showWindowControls;
   final void Function(String text)? onTextTap;
   final bool isOnline;
-
-  static Widget create({
-    required BuildContext context,
-    bool showWindowControls = true,
-    required bool isOnline,
-  }) {
-    return ChangeNotifierProvider(
-      create: (_) => RadioModel(getService<RadioService>()),
-      child: RadioPage(
-        showWindowControls: showWindowControls,
-        isOnline: isOnline,
-      ),
-    );
-  }
+  final String? countryCode;
 
   @override
   State<RadioPage> createState() => _RadioPageState();
@@ -52,28 +40,28 @@ class _RadioPageState extends State<RadioPage> {
   @override
   void initState() {
     super.initState();
-    final countryCode = WidgetsBinding
-        .instance.platformDispatcher.locale.countryCode
-        ?.toLowerCase();
-    context.read<RadioModel>().init(countryCode);
+
+    context.read<RadioModel>().init(widget.countryCode);
   }
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<RadioModel>();
     final stations = context.select((RadioModel m) => m.stations);
     final stationsCount = context.select((RadioModel m) => m.stations?.length);
-    final search = context.read<RadioModel>().search;
+    final search = model.search;
     final searchQuery = context.select((RadioModel m) => m.searchQuery);
-    final setSearchQuery = context.read<RadioModel>().setSearchQuery;
+    final setSearchQuery = model.setSearchQuery;
     final country = context.select((RadioModel m) => m.country);
     final sortedCountries = context.select((RadioModel m) => m.sortedCountries);
-    final setCountry = context.read<RadioModel>().setCountry;
-    final loadStationsByCountry =
-        context.read<RadioModel>().loadStationsByCountry;
+    final setCountry = model.setCountry;
+    final loadStationsByCountry = model.loadStationsByCountry;
     final tag = context.select((RadioModel m) => m.tag);
-    final setTag = context.read<RadioModel>().setTag;
+    final setTag = model.setTag;
     final tags = context.select((RadioModel m) => m.tags);
-    final loadStationsByTag = context.read<RadioModel>().loadStationsByTag;
+    final loadStationsByTag = model.loadStationsByTag;
+    final limit = context.select((RadioModel m) => m.limit);
+    final setLimit = model.setLimit;
 
     final play = context.select((PlayerModel m) => m.play);
 
@@ -82,36 +70,59 @@ class _RadioPageState extends State<RadioPage> {
     final isStarredStation = context.read<LibraryModel>().isStarredStation;
 
     final searchActive = context.select((RadioModel m) => m.searchActive);
-    final setSearchActive = context.read<RadioModel>().setSearchActive;
+    final setSearchActive = model.setSearchActive;
 
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
 
-    final controlPanel = SizedBox(
-      height: kHeaderBarItemHeight,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          CountryPopup(
-            value: country,
-            onSelected: (country) {
-              setCountry(country);
-              loadStationsByCountry();
-            },
-            countries: sortedCountries,
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          TagPopup(
-            value: tag,
-            onSelected: (tag) {
-              setTag(tag);
-              loadStationsByTag();
-            },
-            tags: tags,
-          )
-        ],
+    final showWindowControls =
+        context.select((AppModel a) => a.showWindowControls);
+
+    final controlPanel = SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: SizedBox(
+        height: kHeaderBarItemHeight,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            LimitPopup(
+              value: limit,
+              onSelected: (value) {
+                setLimit(value);
+                if (searchQuery?.isEmpty == true) {
+                  if (tag == null) {
+                    loadStationsByCountry();
+                  } else {
+                    loadStationsByTag();
+                  }
+                } else {
+                  search(name: searchQuery);
+                }
+              },
+            ),
+            CountryPopup(
+              value: country,
+              onSelected: (country) {
+                setCountry(country);
+                loadStationsByCountry();
+              },
+              countries: sortedCountries,
+            ),
+            TagPopup(
+              value: tag,
+              onSelected: (tag) {
+                setTag(tag);
+                if (tag != null) {
+                  loadStationsByTag();
+                } else {
+                  setSearchQuery(null);
+                  search();
+                }
+              },
+              tags: tags,
+            )
+          ],
+        ),
       ),
     );
 
@@ -121,96 +132,136 @@ class _RadioPageState extends State<RadioPage> {
       return YaruDetailPage(
         backgroundColor: light ? kBackGroundLight : kBackgroundDark,
         appBar: YaruWindowTitleBar(
-          style: widget.showWindowControls
+          backgroundColor: Colors.transparent,
+          style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
           titleSpacing: 0,
-          leading: Center(
-            child: SizedBox(
-              height: kHeaderBarItemHeight,
-              width: kHeaderBarItemHeight,
-              child: YaruIconButton(
-                isSelected: searchActive,
-                selectedIcon: Icon(
-                  YaruIcons.search,
-                  size: 16,
-                  color: theme.colorScheme.onSurface,
-                ),
-                icon: const Icon(
-                  YaruIcons.search,
-                  size: 16,
-                ),
-                onPressed: () => setSearchActive(!searchActive),
-              ),
+          leading: Navigator.of(context).canPop()
+              ? const YaruBackButton(
+                  style: YaruBackButtonStyle.rounded,
+                )
+              : const SizedBox.shrink(),
+          title: Padding(
+            padding: const EdgeInsets.only(right: 40),
+            child: YaruSearchTitleField(
+              key: ValueKey(searchQuery),
+              text: searchQuery,
+              alignment: Alignment.center,
+              width: kSearchBarWidth,
+              title: controlPanel,
+              searchActive: searchActive,
+              onSearchActive: () => setSearchActive(!searchActive),
+              onClear: () {
+                setTag(null);
+                setSearchActive(false);
+                setSearchQuery(null);
+                search();
+              },
+              onSubmitted: (value) {
+                setSearchQuery(value);
+                search(name: value);
+              },
             ),
           ),
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (searchActive)
-                Expanded(
-                  child: SearchField(
-                    onSearchActive: () => setSearchActive(false),
-                    text: searchQuery,
-                    onSubmitted: (value) {
-                      setSearchQuery(value);
-                      search(name: value);
-                    },
-                  ),
-                ),
-              controlPanel
-            ],
-          ),
         ),
-        body: GridView.builder(
-          padding: kPodcastGridPadding,
-          gridDelegate: kImageGridDelegate,
-          itemCount: stationsCount,
-          itemBuilder: (context, index) {
-            final station = stations?.elementAt(index);
-            return AudioCard(
-              bottom: AudioCardBottom(text: station?.title ?? ''),
-              onPlay: () => play(newAudio: station),
-              onTap: station == null
-                  ? null
-                  : () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            final starred = isStarredStation(
-                              station.title ?? station.toString(),
-                            );
-                            return StationPage(
-                              showWindowControls: widget.showWindowControls,
-                              onTextTap: widget.onTextTap,
-                              station: station,
-                              name: station.title ?? station.toString(),
-                              unStarStation: (s) => unstarStation(
-                                station.title ?? station.toString(),
-                              ),
-                              starStation: (s) => starStation(
-                                station.title!,
-                                {station},
-                              ),
-                              onPlay: (audio) => play(newAudio: station),
-                              isStarred: starred,
-                            );
-                          },
-                        ),
+        body: stations == null
+            ? GridView(
+                gridDelegate: kImageGridDelegate,
+                padding: kPodcastGridPadding,
+                children: List.generate(30, (index) => Audio())
+                    .map((e) => const AudioCard())
+                    .toList(),
+              )
+            : stationsCount == 0
+                ? NoSearchResultPage(message: context.l10n.noStationFound)
+                : GridView.builder(
+                    padding: kPodcastGridPadding,
+                    gridDelegate: kImageGridDelegate,
+                    itemCount: stationsCount,
+                    itemBuilder: (context, index) {
+                      final station = stations.elementAt(index);
+                      final onTextTap = widget.onTextTap;
+                      return _StationCard(
+                        station: station,
+                        play: play,
+                        isStarredStation: isStarredStation,
+                        showWindowControls: showWindowControls,
+                        onTextTap: onTextTap,
+                        unstarStation: unstarStation,
+                        starStation: starStation,
                       );
                     },
-              image: SizedBox.expand(
-                child: SafeNetworkImage(
-                  fit: BoxFit.cover,
-                  fallBackIcon: const RadioFallBackIcon(),
-                  url: station?.imageUrl,
-                ),
-              ),
-            );
-          },
-        ),
+                  ),
       );
     }
+  }
+}
+
+class _StationCard extends StatelessWidget {
+  const _StationCard({
+    required this.station,
+    required this.play,
+    required this.isStarredStation,
+    required this.showWindowControls,
+    required this.onTextTap,
+    required this.unstarStation,
+    required this.starStation,
+  });
+
+  final Audio? station;
+  final Future<void> Function({bool bigPlay, Audio? newAudio}) play;
+  final bool Function(String name) isStarredStation;
+  final bool showWindowControls;
+  final void Function(String text)? onTextTap;
+  final void Function(String name) unstarStation;
+  final void Function(String name, Set<Audio> audios) starStation;
+
+  @override
+  Widget build(BuildContext context) {
+    return AudioCard(
+      bottom: AudioCardBottom(text: station?.title?.replaceAll('_', '') ?? ''),
+      onPlay: () => play(newAudio: station),
+      onTap: station == null ? null : () => onTap(context, station!),
+      image: SizedBox.expand(
+        child: SafeNetworkImage(
+          fallBackIcon: RadioFallBackIcon(
+            station: station,
+          ),
+          errorIcon: RadioFallBackIcon(station: station),
+          url: station?.imageUrl,
+        ),
+      ),
+    );
+  }
+
+  void onTap(BuildContext context, Audio station) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          final starred = isStarredStation(
+            station.title ?? station.toString(),
+          );
+          return StationPage(
+            onTextTap: (v) {
+              onTextTap?.call(v);
+              Navigator.of(context).maybePop();
+            },
+            station: station,
+            name: station.title ?? station.toString(),
+            unStarStation: (s) => unstarStation(
+              station.title ?? station.toString(),
+            ),
+            starStation: (s) => starStation(
+              station.title ?? station.toString(),
+              {station},
+            ),
+            onPlay: (audio) => play(newAudio: station),
+            isStarred: starred,
+          );
+        },
+      ),
+    );
   }
 }
 
@@ -218,13 +269,17 @@ class RadioFallBackIcon extends StatelessWidget {
   const RadioFallBackIcon({
     super.key,
     this.iconSize,
+    required this.station,
   });
 
   final double? iconSize;
+  final Audio? station;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final light = theme.brightness == Brightness.light;
+    final fallBackColor = light ? theme.dividerColor : Colors.black38;
     return Container(
       height: double.infinity,
       width: double.infinity,
@@ -233,8 +288,14 @@ class RadioFallBackIcon extends StatelessWidget {
           begin: Alignment.bottomLeft,
           end: Alignment.topRight,
           colors: [
-            theme.primaryColor.withOpacity(0.3),
-            theme.primaryColor.withOpacity(0.7)
+            getColor(
+              station?.title ?? station?.album ?? '',
+              fallBackColor,
+            ).withOpacity(0.5),
+            getColor(
+              station?.title ?? station?.album ?? '',
+              fallBackColor,
+            ).withOpacity(0.9)
           ],
         ),
       ),
@@ -243,10 +304,59 @@ class RadioFallBackIcon extends StatelessWidget {
         child: Icon(
           YaruIcons.radio,
           size: iconSize ?? 70,
-          color: contrastColor(theme.colorScheme.background).withOpacity(0.5),
+          color: contrastColor(
+            getColor(
+              station?.title ?? station?.album ?? '',
+              fallBackColor,
+            ),
+          ).withOpacity(0.7),
         ),
       ),
     );
+  }
+}
+
+Color getColor(String name, Color fallBackColor) {
+  if (name.toLowerCase().contains('lofi') ||
+      name.toLowerCase().contains('lounge') ||
+      name.toLowerCase().contains('chill')) {
+    return Colors.purple;
+  } else if (name.toLowerCase().contains('rap') ||
+      name.toLowerCase().contains('hip-hop') ||
+      name.toLowerCase().contains('hop') ||
+      name.toLowerCase().contains('jam') ||
+      name.toLowerCase().contains('soul') ||
+      name.toLowerCase().contains('rnb') ||
+      name.toLowerCase().contains('deutschrap')) {
+    return Colors.black87;
+  } else if (name.toLowerCase().contains('xmas') ||
+      name.toLowerCase().contains('christmas') ||
+      name.toLowerCase().contains('weihnacht')) {
+    return Colors.limeAccent;
+  } else if (name.toLowerCase().contains('pop') ||
+      name.toLowerCase().contains('charts')) {
+    return Colors.greenAccent;
+  } else if (name.toLowerCase().contains('house')) {
+    return Colors.white38;
+  } else if (name.toLowerCase().contains('techno')) {
+    return Colors.pink;
+  } else if (name.toLowerCase().contains('metal') ||
+      name.toLowerCase().contains('punk')) {
+    return Colors.yellow;
+  } else if (name.toLowerCase().contains('rock')) {
+    return Colors.blue;
+  } else if (name.toLowerCase().contains('classic') ||
+      name.toLowerCase().contains('klassik')) {
+    return Colors.amber;
+  } else if (name.toLowerCase().contains('arab') ||
+      name.toLowerCase().contains('orient') ||
+      name.toLowerCase().contains('schlager') ||
+      name.toLowerCase().contains('volk') ||
+      name.toLowerCase().contains('deutsch') ||
+      name.toLowerCase().contains('islam')) {
+    return Colors.brown;
+  } else {
+    return fallBackColor;
   }
 }
 

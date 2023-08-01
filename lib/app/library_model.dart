@@ -14,13 +14,15 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _albumsSub;
   StreamSubscription<bool>? _podcastsSub;
   StreamSubscription<bool>? _stationsSub;
+  StreamSubscription<int?>? _localAudioIndexSub;
 
   bool ready = false;
 
   Future<void> init() async {
     await _service.init();
-    ready = true;
-    notifyListeners();
+
+    _localAudioIndexSub = _service.localAudioIndexStream
+        .listen((index) => setLocalAudioindex(index));
     _likedAudiosSub =
         _service.likedAudiosChanged.listen((event) => notifyListeners());
     _playlistsSub =
@@ -30,36 +32,31 @@ class LibraryModel extends SafeChangeNotifier {
         _service.podcastsChanged.listen((event) => notifyListeners());
     _stationsSub =
         _service.starredStationsChanged.listen((event) => notifyListeners());
+
+    ready = true;
+    notifyListeners();
   }
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
+    _localAudioIndexSub?.cancel();
     _likedAudiosSub?.cancel();
     _playlistsSub?.cancel();
     _albumsSub?.cancel();
     _podcastsSub?.cancel();
     _stationsSub?.cancel();
+
     super.dispose();
   }
 
   int get totalListAmount {
-    const fix = 5;
-    switch (_audioPageType) {
-      case AudioPageType.album:
-        return pinnedAlbumsLength + fix;
-      case AudioPageType.playlist:
-        return playlistsLength + fix;
-      case AudioPageType.podcast:
-        return podcastsLength + fix;
-      case AudioPageType.radio:
-        return starredStationsLength + 5;
-      default:
-        return starredStationsLength +
-            podcastsLength +
-            playlistsLength +
-            pinnedAlbumsLength +
-            fix;
-    }
+    const fix = 7;
+
+    return starredStationsLength +
+        podcastsLength +
+        playlistsLength +
+        pinnedAlbumsLength +
+        fix;
   }
 
   AudioPageType? _audioPageType;
@@ -149,7 +146,8 @@ class LibraryModel extends SafeChangeNotifier {
 
   void removePodcast(String name) => _service.removePodcast(name);
 
-  bool podcastSubscribed(String name) => podcasts.containsKey(name);
+  bool podcastSubscribed(String? name) =>
+      name == null ? false : podcasts.containsKey(name);
 
   Map<String, String> get podcastsToFeedUrls => _service.podcastsToFeedUrls;
   void addPlaylistFeed(String playlist, String feedUrl) =>
@@ -175,7 +173,7 @@ class LibraryModel extends SafeChangeNotifier {
 
   int? _index;
   int? get index => _index;
-  set index(int? value) {
+  void setIndex(int? value) {
     if (value == null || value == _index) return;
     _index = value;
     notifyListeners();
@@ -183,4 +181,10 @@ class LibraryModel extends SafeChangeNotifier {
 
   bool get showPinnedAlbums =>
       audioPageType == null || audioPageType == AudioPageType.album;
+
+  int? get localAudioindex => _service.localAudioIndex;
+  void setLocalAudioindex(int? value) {
+    if (value == null || value == _service.localAudioIndex) return;
+    _service.setLocalAudioIndex(value);
+  }
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 const kRepoUrl = 'http://github.com/ubuntu-flutter-community/musicpod';
 
 const kSideBarIconSize = 23.0;
 
 const kHeaderBarItemHeight = 35.0;
+
+const kSearchBarWidth = 350.0;
 
 const kPagePadding = 20.0;
 const kGridPadding = EdgeInsets.only(
@@ -29,22 +30,8 @@ const kHeaderPadding = EdgeInsets.only(
 
 const kImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
   maxCrossAxisExtent: 250,
-  // childAspectRatio: 0.9,
-  // mainAxisExtent: 250,
   mainAxisSpacing: 10,
   crossAxisSpacing: 10,
-);
-
-const delegateSmall = YaruMasterResizablePaneDelegate(
-  initialPaneWidth: 60,
-  minPaneWidth: 60,
-  minPageWidth: kYaruMasterDetailBreakpoint / 2,
-);
-
-const delegateBig = YaruMasterResizablePaneDelegate(
-  initialPaneWidth: 250,
-  minPaneWidth: 60,
-  minPageWidth: kYaruMasterDetailBreakpoint / 2,
 );
 
 const kShimmerBaseLight = Color.fromARGB(120, 230, 230, 230);
@@ -65,3 +52,4 @@ const kRadioUrl = 'de1.api.radio-browser.info';
 const kLastAudio = 'lastAudio';
 const kLastPositionAsString = 'lastPositionAsString';
 const kLastDurationAsString = 'lastDurationAsString';
+const kLocalAudioIndex = 'localAudioIndex';

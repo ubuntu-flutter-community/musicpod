@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
+import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
-import 'package:musicpod/app/local_audio/local_audio_model.dart';
-import 'package:musicpod/app/player/player_model.dart';
-import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/data/audio.dart';
-import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/constants.dart';
 
-class AlbumsView extends StatefulWidget {
+class AlbumsView extends StatelessWidget {
   const AlbumsView({
     super.key,
     required this.albums,
     required this.showWindowControls,
     this.onArtistTap,
     this.onAlbumTap,
+    required this.startPlaylist,
+    required this.isPinnedAlbum,
+    required this.removePinnedAlbum,
+    required this.addPinnedAlbum,
+    required this.findAlbum,
   });
 
   final Set<Audio> albums;
@@ -24,28 +26,23 @@ class AlbumsView extends StatefulWidget {
   final void Function(String artist)? onArtistTap;
   final void Function(String album)? onAlbumTap;
 
-  @override
-  State<AlbumsView> createState() => _AlbumsViewState();
-}
+  final Future<void> Function(Set<Audio>, String) startPlaylist;
+  final bool Function(String) isPinnedAlbum;
+  final void Function(String) removePinnedAlbum;
+  final void Function(String, Set<Audio>) addPinnedAlbum;
+  final Set<Audio>? Function(Audio, [AudioFilter]) findAlbum;
 
-class _AlbumsViewState extends State<AlbumsView> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final startPlaylist = context.read<PlayerModel>().startPlaylist;
-    final isPinnedAlbum = context.read<LibraryModel>().isPinnedAlbum;
-    final removePinnedAlbum = context.read<LibraryModel>().removePinnedAlbum;
-    final addPinnedAlbum = context.read<LibraryModel>().addPinnedAlbum;
-
-    final findAlbum = context.read<LocalAudioModel>().findAlbum;
 
     return GridView.builder(
       shrinkWrap: true,
       padding: const EdgeInsets.all(kYaruPagePadding),
-      itemCount: widget.albums.length,
+      itemCount: albums.length,
       gridDelegate: kImageGridDelegate,
       itemBuilder: (context, index) {
-        final audio = widget.albums.elementAt(index);
+        final audio = albums.elementAt(index);
         final name = audio.album;
         final album = findAlbum(audio);
 
@@ -74,14 +71,23 @@ class _AlbumsViewState extends State<AlbumsView> {
             MaterialPageRoute(
               builder: (context) {
                 return AlbumPage(
-                  onAlbumTap: widget.onAlbumTap,
-                  onArtistTap: widget.onArtistTap,
+                  onAlbumTap: (album) {
+                    if (onAlbumTap != null) {
+                      onAlbumTap!(album);
+                      Navigator.of(context).maybePop();
+                    }
+                  },
+                  onArtistTap: (artist) {
+                    if (onArtistTap != null) {
+                      onArtistTap!(artist);
+                      Navigator.of(context).maybePop();
+                    }
+                  },
                   name: name,
                   isPinnedAlbum: isPinnedAlbum,
                   removePinnedAlbum: removePinnedAlbum,
                   album: album,
                   addPinnedAlbum: addPinnedAlbum,
-                  showWindowControls: widget.showWindowControls,
                 );
               },
             ),

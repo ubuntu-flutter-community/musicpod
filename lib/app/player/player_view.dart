@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/bottom_player.dart';
 import 'package:musicpod/app/player/full_height_player.dart';
@@ -6,15 +7,44 @@ import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:provider/provider.dart';
 
-class PlayerView extends StatelessWidget {
+class PlayerView extends StatefulWidget {
   const PlayerView({
     super.key,
-    this.isSideBarPlayer = false,
+    required this.playerViewMode,
     required this.onTextTap,
   });
 
-  final bool isSideBarPlayer;
+  final PlayerViewMode playerViewMode;
   final void Function({required String text, AudioType audioType}) onTextTap;
+
+  @override
+  State<PlayerView> createState() => _PlayerViewState();
+}
+
+class _PlayerViewState extends State<PlayerView> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (!mounted) return;
+      context.read<AppModel>().setShowWindowControls(
+            widget.playerViewMode != PlayerViewMode.sideBar,
+          );
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant PlayerView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (!mounted) return;
+      context.read<AppModel>().setShowWindowControls(
+            widget.playerViewMode != PlayerViewMode.sideBar,
+          );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +66,6 @@ class PlayerView extends StatelessWidget {
         context.select((PlayerModel m) => m.isUpNextExpanded);
     final setUpNextExpanded = playerModel.setUpNextExpanded;
     final isPlaying = context.select((PlayerModel m) => m.isPlaying);
-    final fullScreen = context.select((PlayerModel m) => m.fullScreen);
     final setFullScreen = playerModel.setFullScreen;
     final playPrevious = playerModel.playPrevious;
     final playNext = playerModel.playNext;
@@ -60,16 +89,13 @@ class PlayerView extends StatelessWidget {
             ),
           );
 
-    final showFullHeightPlayer = isSideBarPlayer || fullScreen == true;
-
     final volume = context.select((PlayerModel m) => m.volume);
     final setVolume = playerModel.setVolume;
 
-    if (showFullHeightPlayer) {
+    if (widget.playerViewMode != PlayerViewMode.bottom) {
       return FullHeightPlayer(
-        onTextTap: onTextTap,
-        expandHeight: isSideBarPlayer,
-        fullScreen: showFullHeightPlayer,
+        playerViewMode: widget.playerViewMode,
+        onTextTap: widget.onTextTap,
         setFullScreen: setFullScreen,
         isUpNextExpanded: isUpNextExpanded,
         nextAudio: nextAudio,
@@ -99,35 +125,42 @@ class PlayerView extends StatelessWidget {
         volume: volume,
         setVolume: setVolume,
       );
+    } else {
+      return BottomPlayer(
+        onTextTap: widget.onTextTap,
+        setFullScreen: setFullScreen,
+        audio: audio,
+        width: width,
+        color: color,
+        duration: duration,
+        position: position,
+        setPosition: setPosition,
+        seek: seek,
+        setRepeatSingle: setRepeatSingle,
+        repeatSingle: repeatSingle,
+        shuffle: shuffle,
+        setShuffle: setShuffle,
+        isPlaying: isPlaying,
+        playPrevious: playPrevious,
+        playNext: playNext,
+        pause: pause,
+        playOrPause: playOrPause,
+        liked: liked,
+        isStarredStation: isStarredStation,
+        addStarredStation: addStarredStation,
+        removeStarredStation: removeStarredStation,
+        addLikedAudio: addLikedAudio,
+        removeLikedAudio: removeLikedAudio,
+        volume: volume,
+        setVolume: setVolume,
+        queue: queue,
+      );
     }
-
-    return BottomPlayer(
-      onTextTap: onTextTap,
-      setFullScreen: setFullScreen,
-      audio: audio,
-      width: width,
-      color: color,
-      duration: duration,
-      position: position,
-      setPosition: setPosition,
-      seek: seek,
-      setRepeatSingle: setRepeatSingle,
-      repeatSingle: repeatSingle,
-      shuffle: shuffle,
-      setShuffle: setShuffle,
-      isPlaying: isPlaying,
-      playPrevious: playPrevious,
-      playNext: playNext,
-      pause: pause,
-      playOrPause: playOrPause,
-      liked: liked,
-      isStarredStation: isStarredStation,
-      addStarredStation: addStarredStation,
-      removeStarredStation: removeStarredStation,
-      addLikedAudio: addLikedAudio,
-      removeLikedAudio: removeLikedAudio,
-      volume: volume,
-      setVolume: setVolume,
-    );
   }
+}
+
+enum PlayerViewMode {
+  bottom,
+  sideBar,
+  fullWindow,
 }

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_card.dart';
-import 'package:musicpod/app/common/audio_page_control_panel.dart';
-import 'package:musicpod/app/common/audio_page_header.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/radio/radio_page.dart';
 import 'package:musicpod/data/audio.dart';
-import 'package:musicpod/l10n/l10n.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -21,7 +20,6 @@ class StationPage extends StatelessWidget {
     required this.starStation,
     this.onTextTap,
     required this.isStarred,
-    required this.showWindowControls,
   });
 
   final Audio station;
@@ -30,7 +28,6 @@ class StationPage extends StatelessWidget {
   final void Function(String station) unStarStation;
   final void Function(String station) starStation;
   final bool isStarred;
-  final bool showWindowControls;
 
   final void Function(String text)? onTextTap;
 
@@ -39,33 +36,37 @@ class StationPage extends StatelessWidget {
     required String? imageUrl,
     required bool selected,
     required bool isOnline,
+    required bool enabled,
   }) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: SizedBox(
-        height: kSideBarIconSize,
-        width: kSideBarIconSize,
-        child: isOnline
-            ? SafeNetworkImage(
-                fallBackIcon: selected
-                    ? const Icon(
-                        YaruIcons.star_filled,
-                      )
-                    : const Icon(
-                        YaruIcons.star,
-                      ),
-                errorIcon: selected
-                    ? const Icon(
-                        YaruIcons.star_filled,
-                      )
-                    : const Icon(
-                        YaruIcons.star,
-                      ),
-                fit: BoxFit.fitHeight,
-                url: imageUrl,
-                filterQuality: FilterQuality.medium,
-              )
-            : const Icon(YaruIcons.network_offline),
+    return Opacity(
+      opacity: enabled ? 1 : 0.5,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: SizedBox(
+          height: kSideBarIconSize,
+          width: kSideBarIconSize,
+          child: isOnline
+              ? SafeNetworkImage(
+                  fallBackIcon: selected
+                      ? const Icon(
+                          YaruIcons.star_filled,
+                        )
+                      : const Icon(
+                          YaruIcons.star,
+                        ),
+                  errorIcon: selected
+                      ? const Icon(
+                          YaruIcons.star_filled,
+                        )
+                      : const Icon(
+                          YaruIcons.star,
+                        ),
+                  fit: BoxFit.fitHeight,
+                  url: imageUrl,
+                  filterQuality: FilterQuality.medium,
+                )
+              : const Icon(YaruIcons.network_offline),
+        ),
       ),
     );
   }
@@ -77,22 +78,25 @@ class StationPage extends StatelessWidget {
       for (final tag in station.album?.split(',') ?? <String>[]) tag
     ];
     const size = 350.0;
+
+    final showWindowControls =
+        context.select((AppModel a) => a.showWindowControls);
+
     return YaruDetailPage(
       backgroundColor: theme.brightness == Brightness.dark
           ? kBackgroundDark
           : kBackGroundLight,
       appBar: YaruWindowTitleBar(
+        backgroundColor: Colors.transparent,
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
-        title: Text(name),
+        title: Text(name.replaceAll('_', '')),
         leading: Navigator.canPop(context)
             ? const YaruBackButton(
                 style: YaruBackButtonStyle.rounded,
               )
-            : const SizedBox(
-                width: 40,
-              ),
+            : const SizedBox.shrink(),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -118,17 +122,17 @@ class StationPage extends StatelessWidget {
                       height: size,
                       width: size,
                       child: SafeNetworkImage(
-                        fallBackIcon: const RadioFallBackIcon(
+                        fallBackIcon: RadioFallBackIcon(
                           iconSize: size / 2,
+                          station: station,
                         ),
                         url: station.imageUrl,
-                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 SizedBox(
                   width: size * 0.95,
@@ -143,10 +147,11 @@ class StationPage extends StatelessWidget {
                               onPressed: isStarred
                                   ? () => unStarStation(name)
                                   : () => starStation(name),
-                              icon: Icon(
+                              icon: YaruAnimatedIcon(
                                 isStarred
-                                    ? YaruIcons.star_filled
-                                    : YaruIcons.star,
+                                    ? const YaruAnimatedStarIcon(filled: true)
+                                    : const YaruAnimatedStarIcon(filled: false),
+                                initialProgress: 1.0,
                                 color: theme.colorScheme.onPrimary,
                               ),
                             ),
@@ -156,7 +161,7 @@ class StationPage extends StatelessWidget {
                           ),
                           Expanded(
                             child: Text(
-                              station.title ?? '',
+                              station.title?.replaceAll('_', '') ?? '',
                               style: theme.textTheme.headlineSmall,
                             ),
                           ),
@@ -176,6 +181,9 @@ class StationPage extends StatelessWidget {
                           }
                         },
                       ),
+                      const SizedBox(
+                        height: 20,
+                      )
                     ],
                   ),
                 )
@@ -183,158 +191,6 @@ class StationPage extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class SimpleStationPage extends StatelessWidget {
-  const SimpleStationPage({
-    super.key,
-    required this.station,
-    this.onPlay,
-    required this.name,
-    required this.unStarStation,
-    required this.starStation,
-    this.onTextTap,
-    required this.isStarred,
-    required this.showWindowControls,
-  });
-
-  final Audio station;
-  final String name;
-  final void Function(Audio? audio)? onPlay;
-  final void Function(String station) unStarStation;
-  final void Function(String station) starStation;
-  final bool isStarred;
-  final bool showWindowControls;
-
-  final void Function(String text)? onTextTap;
-
-  static Widget createIcon({
-    required BuildContext context,
-    required Audio station,
-    required bool selected,
-  }) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: SizedBox(
-        height: kSideBarIconSize,
-        width: kSideBarIconSize,
-        child: SafeNetworkImage(
-          fallBackIcon: selected
-              ? const Icon(
-                  YaruIcons.star_filled,
-                )
-              : const Icon(
-                  YaruIcons.star,
-                ),
-          errorIcon: selected
-              ? const Icon(
-                  YaruIcons.star_filled,
-                )
-              : const Icon(
-                  YaruIcons.star,
-                ),
-          fit: BoxFit.fitHeight,
-          url: station.imageUrl,
-          filterQuality: FilterQuality.medium,
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    final tags = <String>[
-      for (final tag in station.album?.split(',') ?? <String>[]) tag
-    ];
-    var yaruChoiceChipBar = YaruChoiceChipBar(
-      yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-      labels: tags.map((e) => Text(e)).toList(),
-      isSelected: tags.map((e) => false).toList(),
-      onSelected: (index) {
-        onTextTap?.call(tags[index]);
-        if (Navigator.canPop(context)) {
-          Navigator.of(context).pop();
-        }
-      },
-    );
-
-    return YaruDetailPage(
-      appBar: YaruWindowTitleBar(
-        title: Text(name),
-        style: showWindowControls
-            ? YaruTitleBarStyle.normal
-            : YaruTitleBarStyle.undecorated,
-      ),
-      body: Column(
-        children: [
-          AudioPageHeader(
-            title: name,
-            label: context.l10n.station,
-            subTitle: station.artist,
-            image: SizedBox(
-              width: 200,
-              height: 200,
-              child: SafeNetworkImage(
-                url: station.imageUrl,
-                fit: BoxFit.fitWidth,
-                fallBackIcon: const RadioFallBackIcon(),
-              ),
-            ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 30),
-            child: AudioPageControlPanel(
-              audios: {station},
-              pinButton: YaruIconButton(
-                icon: Icon(
-                  isStarred ? YaruIcons.star_filled : YaruIcons.star,
-                  color: theme.primaryColor,
-                ),
-                onPressed: () =>
-                    isStarred ? unStarStation(name) : starStation(name),
-              ),
-              listName: name,
-              isPlaying: true,
-              editableName: false,
-              startPlaylist: (audios, listName) => onPlay?.call(station),
-              pause: () => onPlay?.call(station),
-              resume: () {},
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 25),
-            child: Row(
-              children: [
-                Text(
-                  context.l10n.tags,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w100,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(top: 10, bottom: 20),
-            child: Divider(
-              height: 0,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: yaruChoiceChipBar,
-            ),
-          )
-        ],
       ),
     );
   }

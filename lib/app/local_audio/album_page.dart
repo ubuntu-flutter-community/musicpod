@@ -16,12 +16,15 @@ class AlbumPage extends StatelessWidget {
     required this.removePinnedAlbum,
     required this.album,
     required this.addPinnedAlbum,
-    required this.showWindowControls,
     this.onArtistTap,
     this.onAlbumTap,
   });
 
-  static Widget createIcon(BuildContext context, Uint8List? picture) {
+  static Widget createIcon(
+    BuildContext context,
+    Uint8List? picture,
+    bool enabled,
+  ) {
     Widget? albumArt;
     if (picture != null) {
       albumArt = SizedBox(
@@ -38,10 +41,13 @@ class AlbumPage extends StatelessWidget {
         ),
       );
     }
-    return albumArt ??
-        const Icon(
-          YaruIcons.playlist_play,
-        );
+    return Opacity(
+      opacity: enabled ? 1 : 0.5,
+      child: albumArt ??
+          const Icon(
+            YaruIcons.playlist_play,
+          ),
+    );
   }
 
   final String? name;
@@ -49,7 +55,6 @@ class AlbumPage extends StatelessWidget {
   final void Function(String name) removePinnedAlbum;
   final Set<Audio>? album;
   final void Function(String name, Set<Audio> audios) addPinnedAlbum;
-  final bool showWindowControls;
   final void Function(String artist)? onArtistTap;
   final void Function(String album)? onAlbumTap;
 
@@ -92,7 +97,6 @@ class AlbumPage extends StatelessWidget {
                             album!,
                           ),
                 ),
-      showWindowControls: showWindowControls,
       deletable: false,
       audios: album,
       pageId: name!,

@@ -54,6 +54,11 @@ class LocalAudioService {
 
     return result.$1;
   }
+
+  Future<void> dispose() async {
+    await _audiosController.close();
+    await _directoryController.close();
+  }
 }
 
 FutureOr<(List<String>, Set<Audio>?)> _init(

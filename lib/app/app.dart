@@ -3,11 +3,13 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:mpris_service/mpris_service.dart';
+import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/audio_page_filter_bar.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/connectivity_notifier.dart';
+import 'package:musicpod/app/globals.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/liked_audio_page.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
@@ -25,7 +27,6 @@ import 'package:musicpod/app/podcasts/podcasts_page.dart';
 import 'package:musicpod/app/radio/radio_model.dart';
 import 'package:musicpod/app/radio/radio_page.dart';
 import 'package:musicpod/app/radio/station_page.dart';
-import 'package:musicpod/app/responsive_master_tile.dart';
 import 'package:musicpod/app/settings/settings_tile.dart';
 import 'package:musicpod/app/splash_screen.dart';
 import 'package:musicpod/data/audio.dart';
@@ -48,6 +49,9 @@ class App extends StatefulWidget {
   }) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (_) => AppModel(),
+        ),
         ChangeNotifierProvider(
           create: (_) => RadioModel(getService<RadioService>()),
         ),
@@ -83,15 +87,27 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  String? _code;
+
   @override
   void initState() {
     super.initState();
+
+    _code = WidgetsBinding.instance.platformDispatcher.locale.countryCode
+        ?.toLowerCase();
+
     YaruWindow.of(context).onClose(
       () async {
-        await context.read<PlayerModel>().dispose();
+        await context.read<PlayerModel>().dispose().then((_) async {
+          await context.read<LibraryModel>().dispose().then((_) async {
+            await resetAllServices();
+          });
+        });
+
         return true;
       },
     );
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (mounted) {
         context.read<PlayerModel>().init();
@@ -101,31 +117,76 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final light = theme.brightness == Brightness.light;
+    final playerToTheRight = MediaQuery.of(context).size.width > 1700;
+
+    // Connectivity
+    final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
+
+    // Local Audio
     final localAudioModel = context.read<LocalAudioModel>();
     final searchLocal = localAudioModel.search;
     final setLocalSearchQuery = localAudioModel.setSearchQuery;
     final setLocalSearchActive = localAudioModel.setSearchActive;
 
-    final searchPodcasts = context.read<PodcastModel>().search;
-    final setPodcastSearchQuery = context.read<PodcastModel>().setSearchQuery;
-    final setPodcastSearchActive = context.read<PodcastModel>().setSearchActive;
+    // Podcasts
+    final podcastModel = context.read<PodcastModel>();
+    final searchPodcasts = podcastModel.search;
+    final setPodcastSearchQuery = podcastModel.setSearchQuery;
+    final setPodcastSearchActive = podcastModel.setSearchActive;
 
+    // Radio
     final searchRadio = context.read<RadioModel>().search;
     final setRadioQuery = context.read<RadioModel>().setSearchQuery;
     final setRadioSearchActive = context.read<RadioModel>().setSearchActive;
 
+    // Player
     final play = context.read<PlayerModel>().play;
     final audioType = context.select((PlayerModel m) => m.audio?.audioType);
     final surfaceTintColor =
         context.select((PlayerModel m) => m.surfaceTintColor);
     final isFullScreen = context.select((PlayerModel m) => m.fullScreen);
 
-    final library = context.watch<LibraryModel>();
-    final width = MediaQuery.of(context).size.width;
-    final shrinkSidebar = (width < 700);
-    final playerToTheRight = width > 1700;
+    // Library
+    // Watching values
+    final libraryModel = context.read<LibraryModel>();
+    final localAudioIndex =
+        context.select((LibraryModel m) => m.localAudioindex);
+    final index = context.select((LibraryModel m) => m.index);
+    final likedAudios = context.select((LibraryModel m) => m.likedAudios);
+    final subbedPodcasts = context.select((LibraryModel m) => m.podcasts);
+    final playlists = context.select((LibraryModel m) => m.playlists);
+    final showPlaylists = context.select((LibraryModel m) => m.showPlaylists);
+    final starredStations =
+        context.select((LibraryModel m) => m.starredStations);
+    final pinnedAlbums = context.select((LibraryModel m) => m.pinnedAlbums);
+    final showSubbedPodcasts =
+        context.select((LibraryModel m) => m.showSubbedPodcasts);
+    final showStarredStations =
+        context.select((LibraryModel m) => m.showStarredStations);
+    final showPinnedAlbums =
+        context.select((LibraryModel m) => m.showPinnedAlbums);
+    final audioPageType = context.select((LibraryModel m) => m.audioPageType);
+    final ready = context.select((LibraryModel m) => m.ready);
+    context.select((LibraryModel m) => m.podcasts.length);
+    context.select((LibraryModel m) => m.pinnedAlbums.length);
+    context.select((LibraryModel m) => m.starredStations.length);
+    context.select((LibraryModel m) => m.playlists.length);
 
-    final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
+    // Reading methods
+    final totalListAmount = libraryModel.totalListAmount;
+    final setIndex = libraryModel.setIndex;
+    final setLocalAudioindex = libraryModel.setLocalAudioindex;
+    final addPlaylist = libraryModel.addPlaylist;
+    final addPodcast = libraryModel.addPodcast;
+    final removePodcast = libraryModel.removePodcast;
+    final removePlaylist = libraryModel.removePlaylist;
+    final addPinnedAlbum = libraryModel.addPinnedAlbum;
+    final isPinnedAlbum = libraryModel.isPinnedAlbum;
+    final removePinnedAlbum = libraryModel.removePinnedAlbum;
+    final unStarStation = libraryModel.unStarStation;
+    final setAudioPageType = libraryModel.setAudioPageType;
 
     void onTextTap({
       required String text,
@@ -136,7 +197,7 @@ class _AppState extends State<App> {
           setLocalSearchActive(true);
           setLocalSearchQuery(text);
           searchLocal();
-          library.index = 0;
+          setIndex(0);
           break;
         case AudioType.podcast:
           setPodcastSearchActive(true);
@@ -144,13 +205,13 @@ class _AppState extends State<App> {
             text,
           );
           searchPodcasts(searchQuery: text);
-          library.index = 2;
+          setIndex(2);
           break;
         case AudioType.radio:
           setRadioSearchActive(true);
           setRadioQuery(text);
-          searchRadio(tag: text);
-          library.index = 1;
+          searchRadio(name: text);
+          setIndex(1);
           break;
       }
     }
@@ -159,7 +220,8 @@ class _AppState extends State<App> {
       MasterItem(
         tileBuilder: (context) => Text(context.l10n.localAudio),
         builder: (context) => LocalAudioPage(
-          showWindowControls: !playerToTheRight,
+          selectedIndex: localAudioIndex ?? 0,
+          onIndexSelected: (i) => setLocalAudioindex(i),
         ),
         iconBuilder: (context, selected) => LocalAudioPageIcon(
           selected: selected,
@@ -169,8 +231,8 @@ class _AppState extends State<App> {
       MasterItem(
         tileBuilder: (context) => Text(context.l10n.radio),
         builder: (context) => RadioPage(
+          countryCode: _code,
           isOnline: isOnline,
-          showWindowControls: !playerToTheRight,
           onTextTap: (text) =>
               onTextTap(text: text, audioType: AudioType.radio),
         ),
@@ -183,8 +245,8 @@ class _AppState extends State<App> {
         tileBuilder: (context) => Text(context.l10n.podcasts),
         builder: (context) {
           return PodcastsPage(
-            showWindowControls: !playerToTheRight,
             isOnline: isOnline,
+            countryCode: _code,
           );
         },
         iconBuilder: (context, selected) => PodcastsPageIcon(
@@ -193,122 +255,143 @@ class _AppState extends State<App> {
         ),
       ),
       MasterItem(
+        tileBuilder: (context) => const Padding(
+          padding: EdgeInsets.only(top: 10, bottom: 10),
+          child: Divider(
+            height: 0,
+          ),
+        ),
+        builder: (context) => const SizedBox.shrink(),
+      ),
+      MasterItem(
         iconBuilder: (context, selected) => const Icon(YaruIcons.plus),
         tileBuilder: (context) => Text(context.l10n.playlistDialogTitleNew),
-        builder: (context) => ChangeNotifierProvider.value(
-          value: library,
-          child: const CreatePlaylistPage(),
-        ),
+        builder: (context) => const SizedBox.shrink(),
       ),
       MasterItem(
         tileBuilder: (context) => Text(context.l10n.likedSongs),
         builder: (context) => LikedAudioPage(
           onArtistTap: (artist) => onTextTap(text: artist),
           onAlbumTap: (album) => onTextTap(text: album),
-          showWindowControls: !playerToTheRight,
-          likedAudios: library.likedAudios,
+          likedAudios: likedAudios,
         ),
         iconBuilder: (context, selected) =>
             LikedAudioPage.createIcon(context: context, selected: selected),
       ),
-      if (library.showSubbedPodcasts)
-        for (final podcast in library.podcasts.entries)
-          MasterItem(
-            tileBuilder: (context) => Text(podcast.key),
-            builder: (context) => isOnline
-                ? PodcastPage(
-                    pageId: podcast.key,
-                    audios: podcast.value,
-                    showWindowControls: !playerToTheRight,
-                    onAlbumTap: (album) =>
-                        onTextTap(text: album, audioType: AudioType.podcast),
-                    onArtistTap: (artist) =>
-                        onTextTap(text: artist, audioType: AudioType.podcast),
-                    onControlButtonPressed: () =>
-                        library.removePodcast(podcast.key),
-                    imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
-                        podcast.value.firstOrNull?.imageUrl,
-                  )
-                : const OfflinePage(),
-            iconBuilder: (context, selected) => isOnline
-                ? PodcastPage.createIcon(
-                    context: context,
-                    imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
-                        podcast.value.firstOrNull?.imageUrl,
-                    isOnline: isOnline,
-                  )
-                : const Icon(
-                    YaruIcons.network_offline,
-                  ),
+      MasterItem(
+        tileBuilder: (context) => AudioPageFilterBar(
+          mainPageType: mainPageType,
+          audioPageType: audioPageType,
+          setAudioPageType: setAudioPageType,
+        ),
+        builder: (context) => const SizedBox.shrink(),
+      ),
+      for (final podcast in subbedPodcasts.entries)
+        MasterItem(
+          tileBuilder: (context) => PodcastPage.createTitle(
+            title: podcast.key,
+            enabled: showSubbedPodcasts,
           ),
-      if (library.showPlaylists)
-        for (final playlist in library.playlists.entries)
-          MasterItem(
-            tileBuilder: (context) => Text(playlist.key),
-            builder: (context) => PlaylistPage(
-              onAlbumTap: (album) => onTextTap(text: album),
-              onArtistTap: (artist) => onTextTap(text: artist),
-              playlist: playlist,
-              showWindowControls: !playerToTheRight,
-              unPinPlaylist: library.removePlaylist,
-            ),
-            iconBuilder: (context, selected) => const Icon(
+          builder: (context) => isOnline
+              ? PodcastPage(
+                  pageId: podcast.key,
+                  audios: podcast.value,
+                  onAlbumTap: (album) =>
+                      onTextTap(text: album, audioType: AudioType.podcast),
+                  onArtistTap: (artist) =>
+                      onTextTap(text: artist, audioType: AudioType.podcast),
+                  addPodcast: addPodcast,
+                  removePodcast: removePodcast,
+                  imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
+                      podcast.value.firstOrNull?.imageUrl,
+                )
+              : const OfflinePage(),
+          iconBuilder: (context, selected) => PodcastPage.createIcon(
+            context: context,
+            imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
+                podcast.value.firstOrNull?.imageUrl,
+            isOnline: isOnline,
+            enabled: showSubbedPodcasts,
+          ),
+        ),
+      for (final playlist in playlists.entries)
+        MasterItem(
+          tileBuilder: (context) => Opacity(
+            opacity: showPlaylists ? 1 : 0.5,
+            child: Text(playlist.key),
+          ),
+          builder: (context) => PlaylistPage(
+            onAlbumTap: (album) => onTextTap(text: album),
+            onArtistTap: (artist) => onTextTap(text: artist),
+            playlist: playlist,
+            unPinPlaylist: removePlaylist,
+          ),
+          iconBuilder: (context, selected) => Opacity(
+            opacity: showPlaylists ? 1 : 0.5,
+            child: const Icon(
               YaruIcons.playlist,
             ),
           ),
-      if (library.showPinnedAlbums)
-        for (final album in library.pinnedAlbums.entries)
-          MasterItem(
-            tileBuilder: (context) =>
-                Text(createPlaylistName(album.key, context)),
-            builder: (context) => AlbumPage(
-              onArtistTap: (artist) => onTextTap(text: artist),
-              onAlbumTap: (album) => onTextTap(text: album),
-              showWindowControls: !playerToTheRight,
-              album: album.value,
-              name: album.key,
-              addPinnedAlbum: library.addPinnedAlbum,
-              isPinnedAlbum: library.isPinnedAlbum,
-              removePinnedAlbum: library.removePinnedAlbum,
-            ),
-            iconBuilder: (context, selected) => AlbumPage.createIcon(
-              context,
-              album.value.firstOrNull?.pictureData,
-            ),
+        ),
+      for (final album in pinnedAlbums.entries)
+        MasterItem(
+          tileBuilder: (context) => Opacity(
+            opacity: showPinnedAlbums ? 1 : 0.5,
+            child: Text(createPlaylistName(album.key, context)),
           ),
-      if (library.showStarredStations)
-        for (final station in library.starredStations.entries)
-          MasterItem(
-            tileBuilder: (context) => Text(station.key),
-            builder: (context) => isOnline
-                ? StationPage(
-                    showWindowControls: !playerToTheRight,
-                    isStarred: true,
-                    starStation: (station) {},
-                    onTextTap: (text) =>
-                        onTextTap(text: text, audioType: AudioType.radio),
-                    unStarStation: library.unStarStation,
-                    name: station.key,
-                    station: station.value.first,
-                    onPlay: (audio) => play(newAudio: audio),
-                  )
-                : const OfflinePage(),
-            iconBuilder: (context, selected) => isOnline
-                ? StationPage.createIcon(
-                    context: context,
-                    imageUrl: station.value.first.imageUrl,
-                    selected: selected,
-                    isOnline: isOnline,
-                  )
-                : const Icon(
-                    YaruIcons.network_offline,
-                  ),
-          )
+          builder: (context) => AlbumPage(
+            onArtistTap: (artist) => onTextTap(text: artist),
+            onAlbumTap: (album) => onTextTap(text: album),
+            album: album.value,
+            name: album.key,
+            addPinnedAlbum: addPinnedAlbum,
+            isPinnedAlbum: isPinnedAlbum,
+            removePinnedAlbum: removePinnedAlbum,
+          ),
+          iconBuilder: (context, selected) => AlbumPage.createIcon(
+            context,
+            album.value.firstOrNull?.pictureData,
+            showPinnedAlbums,
+          ),
+        ),
+      for (final station in starredStations.entries)
+        MasterItem(
+          tileBuilder: (context) => Opacity(
+            opacity: showStarredStations ? 1 : 0.5,
+            child: Text(station.key),
+          ),
+          builder: (context) => isOnline
+              ? StationPage(
+                  isStarred: true,
+                  starStation: (station) {},
+                  onTextTap: (text) =>
+                      onTextTap(text: text, audioType: AudioType.radio),
+                  unStarStation: unStarStation,
+                  name: station.key,
+                  station: station.value.first,
+                  onPlay: (audio) => play(newAudio: audio),
+                )
+              : const OfflinePage(),
+          iconBuilder: (context, selected) => StationPage.createIcon(
+            context: context,
+            imageUrl: station.value.first.imageUrl,
+            selected: selected,
+            isOnline: isOnline,
+            enabled: showStarredStations,
+          ),
+        )
     ];
 
+    final playerBg =
+        surfaceTintColor ?? (light ? kBackGroundLight : kBackgroundDark);
+
     final yaruMasterDetailPage = YaruMasterDetailPage(
-      onSelected: (value) => library.index = value ?? 0,
-      appBar: const YaruWindowTitleBar(),
+      navigatorKey: navigatorKey,
+      onSelected: (value) => setIndex(value ?? 0),
+      appBar: const YaruWindowTitleBar(
+        backgroundColor: Colors.transparent,
+        title: Text('MusicPod'),
+      ),
       bottomBar: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: SettingsTile(
@@ -329,129 +412,127 @@ class _AppState extends State<App> {
           },
         ),
       ),
-      layoutDelegate: shrinkSidebar ? delegateSmall : delegateBig,
+      layoutDelegate: const YaruMasterFixedPaneDelegate(
+        paneWidth: 250,
+      ),
+      breakpoint: 740,
       controller: YaruPageController(
-        length: library.totalListAmount,
-        initialIndex: library.index ?? 0,
+        length: totalListAmount,
+        initialIndex: index ?? 0,
       ),
       tileBuilder: (context, index, selected, availableWidth) {
-        final tile = ResponsiveMasterTile(
-          title: masterItems[index].tileBuilder(context),
-          leading: masterItems[index].iconBuilder == null
-              ? null
-              : masterItems[index].iconBuilder!(
-                  context,
-                  selected,
-                ),
-          availableWidth: availableWidth,
-        );
-
-        Widget? column;
-
-        if (index == 3) {
-          column = Column(
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              const Divider(
-                height: 0,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              tile
-            ],
-          );
-        } else if (index == 4 &&
-            availableWidth >= 130 &&
-            (library.totalListAmount > 5 || library.audioPageType != null)) {
-          column = Column(
-            children: [
-              tile,
-              AudioPageFilterBar(mainPageType: mainPageType),
-            ],
+        if (index == 3 || index == 6) {
+          return masterItems[index].tileBuilder(context);
+        } else if (index == 4) {
+          return YaruMasterTile(
+            selected: false,
+            title: masterItems[index].tileBuilder(context),
+            leading: masterItems[index].iconBuilder?.call(context, false),
+            onTap: () => showDialog(
+              context: context,
+              builder: (context) {
+                return PlaylistDialog(
+                  playlistName: context.l10n.createNewPlaylist,
+                  onCreateNewPlaylist: addPlaylist,
+                );
+              },
+            ),
           );
         }
-
-        return column ??
-            (index == 0
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: tile,
-                  )
-                : tile);
+        return Padding(
+          padding: index == 0 ? const EdgeInsets.only(top: 5) : EdgeInsets.zero,
+          child: YaruMasterTile(
+            title: masterItems[index].tileBuilder(context),
+            leading: masterItems[index].iconBuilder == null
+                ? null
+                : masterItems[index].iconBuilder!(
+                    context,
+                    selected,
+                  ),
+          ),
+        );
       },
       pageBuilder: (context, index) => YaruDetailPage(
         body: masterItems[index].builder(context),
       ),
     );
 
-    final Widget body;
-    if (isFullScreen == true) {
-      body = Column(
-        children: [
-          const YaruWindowTitleBar(
-            border: BorderSide.none,
-            backgroundColor: Colors.transparent,
-          ),
-          Expanded(
-            child: PlayerView(
-              onTextTap: onTextTap,
-            ),
-          )
-        ],
-      );
-    } else {
-      if (!playerToTheRight) {
-        body = Column(
+    final Widget body = Stack(
+      alignment: Alignment.center,
+      children: [
+        Row(
           children: [
             Expanded(
-              child: yaruMasterDetailPage,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: yaruMasterDetailPage,
+                  ),
+                  if (!playerToTheRight)
+                    const Divider(
+                      height: 0,
+                    ),
+                  if (!playerToTheRight)
+                    Material(
+                      color: playerBg,
+                      child: PlayerView(
+                        onTextTap: onTextTap,
+                        playerViewMode: PlayerViewMode.bottom,
+                      ),
+                    )
+                ],
+              ),
             ),
-            const Divider(
-              height: 0,
-            ),
-            PlayerView(
-              onTextTap: onTextTap,
-            )
+            if (playerToTheRight)
+              const VerticalDivider(
+                width: 0,
+              ),
+            if (playerToTheRight)
+              SizedBox(
+                width: 500,
+                child: Column(
+                  children: [
+                    const YaruWindowTitleBar(
+                      backgroundColor: Colors.transparent,
+                      border: BorderSide.none,
+                    ),
+                    Expanded(
+                      child: PlayerView(
+                        playerViewMode: PlayerViewMode.sideBar,
+                        onTextTap: onTextTap,
+                      ),
+                    ),
+                  ],
+                ),
+              )
           ],
-        );
-      } else {
-        body = Row(
-          children: [
-            Expanded(
-              child: yaruMasterDetailPage,
-            ),
-            const VerticalDivider(
-              width: 0,
-            ),
-            SizedBox(
-              width: 500,
+        ),
+        if (isFullScreen == true)
+          Material(
+            child: Material(
+              color: playerBg,
               child: Column(
                 children: [
                   const YaruWindowTitleBar(
-                    backgroundColor: Colors.transparent,
                     border: BorderSide.none,
+                    backgroundColor: Colors.transparent,
                   ),
                   Expanded(
                     child: PlayerView(
-                      isSideBarPlayer: true,
                       onTextTap: onTextTap,
+                      playerViewMode: PlayerViewMode.fullWindow,
                     ),
-                  ),
+                  )
                 ],
               ),
-            )
-          ],
-        );
-      }
-    }
+            ),
+          )
+      ],
+    );
 
-    return Scaffold(
-      key: ValueKey(shrinkSidebar),
-      backgroundColor: surfaceTintColor,
-      body: library.ready ? body : const SplashScreen(),
+    return Material(
+      color: playerBg,
+      child: ready ? body : const SplashScreen(),
     );
   }
 }

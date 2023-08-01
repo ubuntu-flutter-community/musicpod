@@ -6,7 +6,7 @@ class SafeNetworkImage extends StatelessWidget {
     super.key,
     required this.url,
     this.filterQuality = FilterQuality.medium,
-    this.fit = BoxFit.fitHeight,
+    this.fit = BoxFit.fitWidth,
     this.fallBackIcon,
     this.errorIcon,
   });

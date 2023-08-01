@@ -1,20 +1,21 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_card.dart';
-import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/app/common/country_popup.dart';
+import 'package:musicpod/app/common/limit_popup.dart';
 import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/offline_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
-import 'package:musicpod/app/common/search_field.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
-import 'package:musicpod/app/podcasts/podcast_search_page.dart';
+import 'package:musicpod/app/podcasts/podcast_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:musicpod/service/podcast_service.dart';
+import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -22,12 +23,12 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class PodcastsPage extends StatefulWidget {
   const PodcastsPage({
     super.key,
-    this.showWindowControls = true,
     required this.isOnline,
+    this.countryCode,
   });
 
-  final bool showWindowControls;
   final bool isOnline;
+  final String? countryCode;
 
   @override
   State<PodcastsPage> createState() => _PodcastsPageState();
@@ -38,10 +39,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final code = WidgetsBinding.instance.platformDispatcher.locale.countryCode
-          ?.toLowerCase();
       context.read<PodcastModel>().init(
-            countryCode: code,
+            countryCode: widget.countryCode,
             updateMessage: context.l10n.newEpisodeAvailable,
           );
     });
@@ -55,9 +54,18 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
-    final podcastSubscribed = context.read<LibraryModel>().podcastSubscribed;
-    final removePodcast = context.read<LibraryModel>().removePodcast;
-    final addPodcast = context.read<LibraryModel>().addPodcast;
+    final libraryModel = context.read<LibraryModel>();
+    final podcastSubscribed = libraryModel.podcastSubscribed;
+    final removePodcast = libraryModel.removePodcast;
+    final addPodcast = libraryModel.addPodcast;
+    final setLimit = model.setLimit;
+    final setSelectedFeedUrl = model.setSelectedFeedUrl;
+    final selectedFeedUrl =
+        context.select((PodcastModel m) => m.selectedFeedUrl);
+    final limit = context.select((PodcastModel m) => m.limit);
+
+    final search = model.search;
+    final setSearchQuery = model.setSearchQuery;
     final textStyle =
         theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
     final buttonStyle = TextButton.styleFrom(
@@ -66,12 +74,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
       ),
     );
 
-    final search = model.search;
-    final setSearchQuery = model.setSearchQuery;
     final searchQuery = context.select((PodcastModel m) => m.searchQuery);
-
-    final charts = context.select((PodcastModel m) => m.charts);
-    final chartsCount = context.select((PodcastModel m) => m.charts?.length);
 
     final country = context.select((PodcastModel m) => m.country);
     final sortedCountries =
@@ -82,9 +85,12 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final podcastGenre = context.select((PodcastModel m) => m.podcastGenre);
     final sortedGenres = context.select((PodcastModel m) => m.sortedGenres);
     final setPodcastGenre = model.setPodcastGenre;
-    final loadCharts = model.loadCharts;
-    final podcastSearchResult =
-        context.select((PodcastModel m) => m.podcastSearchResult);
+    final searchResult = context.select((PodcastModel m) => m.searchResult);
+    final searchResultCount =
+        context.select((PodcastModel m) => m.searchResult?.length);
+
+    final showWindowControls =
+        context.select((AppModel a) => a.showWindowControls);
 
     void onTapText(String text) {
       setSearchQuery(text);
@@ -92,7 +98,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     }
 
     Widget grid;
-    if (charts == null) {
+    if (searchResult == null) {
       grid = GridView(
         gridDelegate: kImageGridDelegate,
         padding: kPodcastGridPadding,
@@ -100,271 +106,184 @@ class _PodcastsPageState extends State<PodcastsPage> {
             .map((e) => const AudioCard())
             .toList(),
       );
-    } else if (charts.isEmpty == true) {
+    } else if (searchResult.isEmpty == true) {
       grid = NoSearchResultPage(
         message: context.l10n.noPodcastChartsFound,
       );
     } else {
       grid = GridView.builder(
         padding: kPodcastGridPadding,
-        itemCount: chartsCount,
+        itemCount: searchResultCount,
         gridDelegate: kImageGridDelegate,
         itemBuilder: (context, index) {
-          final podcast = charts.elementAt(index);
-          final name = podcast.firstOrNull?.album ?? '';
+          final podcast = searchResult.elementAt(index);
 
           final image = SafeNetworkImage(
-            url: podcast.firstOrNull?.albumArtUrl ??
-                podcast.firstOrNull?.imageUrl,
+            url: podcast.artworkUrl600,
             fit: BoxFit.contain,
           );
 
           return AudioCard(
             image: image,
-            onPlay: () {
-              startPlaylist(podcast, name);
+            onPlay: () async {
+              if (podcast.feedUrl == null) return;
+              final feed = await findEpisodes(url: podcast.feedUrl!);
+              startPlaylist(feed, podcast.collectionName!);
             },
-            onTap: () => pushPodcastPage(
+            onTap: () async => await pushPodcastPage(
               context: context,
-              podcast: podcast,
+              podcastItem: podcast,
               podcastSubscribed: podcastSubscribed,
               onTapText: onTapText,
-              theme: theme,
               removePodcast: removePodcast,
               addPodcast: addPodcast,
-              setSearchQuery: setSearchQuery,
-              searchQuery: searchQuery,
-              search: search,
-              showWindowControls: widget.showWindowControls,
+              setFeedUrl: setSelectedFeedUrl,
+              oldFeedUrl: selectedFeedUrl,
             ),
           );
         },
       );
     }
 
-    final controlPanel = SizedBox(
-      height: kHeaderBarItemHeight,
-      child: Row(
-        children: [
-          if (searchQuery == null || searchQuery.isEmpty)
+    final controlPanel = SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: SizedBox(
+        height: kHeaderBarItemHeight,
+        child: Row(
+          children: [
+            LimitPopup(
+              value: limit,
+              onSelected: (value) {
+                setLimit(value);
+                search(searchQuery: searchQuery);
+              },
+            ),
             CountryPopup(
               onSelected: (value) {
                 setCountry(value);
-                loadCharts();
+                search(searchQuery: searchQuery);
               },
               value: country,
               countries: sortedCountries,
             ),
-          const SizedBox(
-            width: 5,
-          ),
-          YaruPopupMenuButton<PodcastGenre>(
-            style: buttonStyle,
-            onSelected: (value) {
-              setPodcastGenre(value);
-              loadCharts();
-            },
-            initialValue: podcastGenre,
-            child: Text(
-              podcastGenre.localize(context.l10n),
-              style: textStyle,
-            ),
-            itemBuilder: (context) {
-              return [
-                for (final genre in sortedGenres)
-                  PopupMenuItem(
-                    value: genre,
-                    child: Text(genre.localize(context.l10n)),
-                  )
-              ];
-            },
-          ),
-        ],
+            YaruPopupMenuButton<PodcastGenre>(
+              style: buttonStyle,
+              onSelected: (value) {
+                setPodcastGenre(value);
+                search(searchQuery: searchQuery);
+              },
+              initialValue: podcastGenre,
+              child: Text(
+                podcastGenre.localize(context.l10n),
+                style: textStyle,
+              ),
+              itemBuilder: (context) {
+                return [
+                  for (final genre in sortedGenres)
+                    PopupMenuItem(
+                      value: genre,
+                      child: Text(genre.localize(context.l10n)),
+                    )
+                ];
+              },
+            )
+          ],
+        ),
       ),
     );
 
     if (!widget.isOnline) {
       return const OfflinePage();
     } else {
-      return Navigator(
-        pages: [
-          MaterialPage(
-            child: YaruDetailPage(
-              backgroundColor: light ? kBackGroundLight : kBackgroundDark,
-              appBar: YaruWindowTitleBar(
-                leading: Center(
-                  child: SizedBox(
-                    height: kHeaderBarItemHeight,
-                    width: kHeaderBarItemHeight,
-                    child: YaruIconButton(
-                      isSelected: searchActive,
-                      selectedIcon: Icon(
-                        YaruIcons.search,
-                        size: 16,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                      icon: const Icon(
-                        YaruIcons.search,
-                        size: 16,
-                      ),
-                      onPressed: () => setSearchActive(!searchActive),
-                    ),
-                  ),
-                ),
-                titleSpacing: 0,
-                style: widget.showWindowControls
-                    ? YaruTitleBarStyle.normal
-                    : YaruTitleBarStyle.undecorated,
-                title: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (searchActive)
-                      Expanded(
-                        child: SearchField(
-                          onSearchActive: () => setSearchActive(false),
-                          key: ValueKey(searchQuery),
-                          text: searchQuery,
-                          onSubmitted: (value) {
-                            setSearchQuery(value);
-                            search(searchQuery: value);
-                          },
-                        ),
-                      ),
-                    controlPanel,
-                  ],
-                ),
-              ),
-              body: grid,
+      return YaruDetailPage(
+        backgroundColor: light ? kBackGroundLight : kBackgroundDark,
+        appBar: YaruWindowTitleBar(
+          backgroundColor: Colors.transparent,
+          leading: (Navigator.canPop(context))
+              ? const YaruBackButton(
+                  style: YaruBackButtonStyle.rounded,
+                )
+              : const SizedBox.shrink(),
+          titleSpacing: 0,
+          style: showWindowControls
+              ? YaruTitleBarStyle.normal
+              : YaruTitleBarStyle.undecorated,
+          title: Padding(
+            padding: const EdgeInsets.only(right: 40),
+            child: YaruSearchTitleField(
+              key: ValueKey(searchQuery),
+              text: searchQuery,
+              alignment: Alignment.center,
+              width: kSearchBarWidth,
+              searchActive: searchActive,
+              title: controlPanel,
+              onSearchActive: () => setSearchActive(!searchActive),
+              onClear: () {
+                setSearchActive(false);
+                setSearchQuery('');
+                search();
+              },
+              onSubmitted: (value) {
+                setSearchQuery(value);
+
+                if (value?.isEmpty == true) {
+                  search();
+                } else {
+                  search(searchQuery: value);
+                }
+              },
             ),
           ),
-          if (searchQuery?.isNotEmpty == true)
-            MaterialPage(
-              child: YaruDetailPage(
-                appBar: YaruWindowTitleBar(
-                  style: widget.showWindowControls
-                      ? YaruTitleBarStyle.normal
-                      : YaruTitleBarStyle.undecorated,
-                  title: SearchField(
-                    key: ValueKey(searchQuery),
-                    text: searchQuery,
-                    onSubmitted: (value) {
-                      setSearchQuery(value);
-                      search(searchQuery: value);
-                    },
-                  ),
-                  leading: YaruBackButton(
-                    style: YaruBackButtonStyle.rounded,
-                    onPressed: () {
-                      setSearchQuery('');
-                      Navigator.maybePop(context);
-                    },
-                  ),
-                ),
-                body: podcastSearchResult == null
-                    ? GridView(
-                        padding: kPodcastGridPadding,
-                        gridDelegate: kImageGridDelegate,
-                        children: List.generate(
-                          30,
-                          (index) => const AudioCard(),
-                        ).toList(),
-                      )
-                    : podcastSearchResult.isEmpty
-                        ? NoSearchResultPage(
-                            message: context.l10n.noPodcastFound,
-                          )
-                        : PodcastSearchPage(
-                            showWindowControls: widget.showWindowControls,
-                          ),
-              ),
-            )
-        ],
-        onPopPage: (route, result) => route.didPop(result),
+        ),
+        body: grid,
       );
     }
   }
 }
 
-void pushPodcastPage({
+Future<void> pushPodcastPage({
   required BuildContext context,
-  required Set<Audio> podcast,
-  required bool Function(String name) podcastSubscribed,
+  required Item podcastItem,
+  required bool Function(String? name) podcastSubscribed,
   required void Function(String text) onTapText,
-  required ThemeData theme,
   required void Function(String name) removePodcast,
   required void Function(String name, Set<Audio> audios) addPodcast,
-  required void Function(String?) setSearchQuery,
-  String? searchQuery,
-  required void Function({String? searchQuery}) search,
-  required bool showWindowControls,
-}) {
-  Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (context) {
-        final subscribed = podcast.firstOrNull?.album == null
-            ? false
-            : podcastSubscribed(
-                podcast.first.album!,
-              );
+  required void Function(String? feedUrl) setFeedUrl,
+  required String? oldFeedUrl,
+}) async {
+  if (podcastItem.feedUrl == null) return;
 
-        return AudioPage(
-          onAlbumTap: onTapText,
-          onArtistTap: onTapText,
-          audioPageType: AudioPageType.podcast,
-          showWindowControls: showWindowControls,
-          sort: false,
-          showTrack: false,
-          controlPageButton: YaruIconButton(
-            icon: Icon(
-              YaruIcons.rss,
-              color: subscribed ? theme.primaryColor : null,
-            ),
-            onPressed: podcast.firstOrNull?.album == null
-                ? null
-                : () {
-                    if (subscribed) {
-                      removePodcast(
-                        podcast.first.album!,
-                      );
-                    } else {
-                      addPodcast(
-                        podcast.first.album!,
-                        podcast,
-                      );
-                    }
-                  },
-          ),
-          image: SafeNetworkImage(
-            fallBackIcon: SizedBox(
-              width: 200,
-              child: Center(
-                child: Icon(
-                  YaruIcons.podcast,
-                  size: 80,
-                  color: theme.hintColor,
-                ),
-              ),
-            ),
-            url: podcast.firstOrNull?.albumArtUrl ??
-                podcast.firstOrNull?.imageUrl,
-            fit: BoxFit.fitWidth,
-            filterQuality: FilterQuality.medium,
-          ),
-          title: Text(
-            podcast.firstOrNull?.album ??
-                podcast.firstOrNull?.title ??
-                podcast.toString(),
-          ),
-          deletable: false,
-          editableName: false,
-          audios: podcast,
-          pageId: podcast.firstOrNull?.album ??
-              podcast.firstOrNull?.title ??
-              podcast.toString(),
-        );
-      },
-    ),
-  );
+  setFeedUrl(podcastItem.feedUrl);
+
+  await findEpisodes(url: podcastItem.feedUrl!).then((podcast) async {
+    if (oldFeedUrl == podcastItem.feedUrl) return;
+
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          final subscribed = podcastSubscribed(podcast.first.album);
+          final id = podcastItem.collectionName ?? podcast.toString();
+
+          return PodcastPage(
+            subscribed: subscribed,
+            imageUrl: podcastItem.artworkUrl600,
+            addPodcast: addPodcast,
+            removePodcast: removePodcast,
+            onAlbumTap: (v) {
+              onTapText(v);
+              Navigator.of(context).maybePop();
+            },
+            onArtistTap: (v) {
+              onTapText(v);
+              Navigator.of(context).maybePop();
+            },
+            audios: podcast,
+            pageId: id,
+          );
+        },
+      ),
+    ).then((_) => setFeedUrl(null));
+  });
 }
 
 class PodcastsPageIcon extends StatelessWidget {

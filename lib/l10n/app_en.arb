@@ -68,5 +68,9 @@
     "country": "Country",
     "tag": "Tag",
     "all": "All",
-    "failedToImport": "Failed to import the following files:"
+    "failedToImport": "Failed to import the following files:",
+    "unknown": "Unknown",
+    "volume": "Volume",
+    "queue": "Queue",
+    "limit": "Limit"
 }

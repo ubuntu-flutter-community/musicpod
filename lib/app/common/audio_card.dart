@@ -34,12 +34,11 @@ class _AudioCardState extends State<AudioCard> {
       onHover: (value) => setState(() {
         _hovered = value;
       }),
-      child: Stack(
-        children: [
-          ClipRRect(
-            clipBehavior: Clip.hardEdge,
-            borderRadius: BorderRadius.circular(10),
-            child: widget.image ??
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Stack(
+          children: [
+            widget.image ??
                 Shimmer.fromColors(
                   baseColor: light ? kShimmerBaseLight : kShimmerBaseDark,
                   highlightColor:
@@ -48,24 +47,24 @@ class _AudioCardState extends State<AudioCard> {
                     color: light ? kShimmerBaseLight : kShimmerBaseDark,
                   ),
                 ),
-          ),
-          if (widget.bottom != null) widget.bottom!,
-          if (_hovered && widget.onPlay != null)
-            Positioned(
-              bottom: 15,
-              right: 15,
-              child: CircleAvatar(
-                backgroundColor: theme.primaryColor,
-                child: IconButton(
-                  onPressed: widget.onPlay,
-                  icon: Icon(
-                    YaruIcons.media_play,
-                    color: theme.colorScheme.onPrimary,
+            if (widget.bottom != null) widget.bottom!,
+            if (_hovered && widget.onPlay != null)
+              Positioned(
+                bottom: 15,
+                right: 15,
+                child: CircleAvatar(
+                  backgroundColor: theme.primaryColor,
+                  child: IconButton(
+                    onPressed: widget.onPlay,
+                    icon: Icon(
+                      YaruIcons.media_play,
+                      color: theme.colorScheme.onPrimary,
+                    ),
                   ),
                 ),
-              ),
-            )
-        ],
+              )
+          ],
+        ),
       ),
     );
   }

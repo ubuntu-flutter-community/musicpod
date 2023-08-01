@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/player/like_icon_button.dart';
+import 'package:musicpod/app/player/queue_popup.dart';
 import 'package:musicpod/app/player/volume_popup.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-class PlayerControls extends StatelessWidget {
-  const PlayerControls({
+class FullHeightPlayerControls extends StatelessWidget {
+  const FullHeightPlayerControls({
     super.key,
     this.audio,
     required this.setRepeatSingle,
@@ -26,9 +28,11 @@ class PlayerControls extends StatelessWidget {
     required this.addLikedAudio,
     required this.setVolume,
     required this.volume,
+    required this.queue,
   });
 
   final Audio? audio;
+  final List<Audio> queue;
   final bool repeatSingle;
   final void Function(bool) setRepeatSingle;
   final bool shuffle;
@@ -53,49 +57,23 @@ class PlayerControls extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final void Function()? onLike;
-    if (audio == null) {
-      onLike = null;
-    } else {
-      if (audio?.audioType == AudioType.radio) {
-        onLike = () {
-          isStarredStation
-              ? removeStarredStation(audio?.title ?? audio.toString())
-              : addStarredStation(
-                  audio?.title ?? audio.toString(),
-                  {audio!},
-                );
-        };
-      } else {
-        onLike = () {
-          liked ? removeLikedAudio(audio!, true) : addLikedAudio(audio!, true);
-        };
-      }
-    }
-
-    Icon likeIcon;
-    if (audio?.audioType == AudioType.radio) {
-      if (isStarredStation) {
-        likeIcon = const Icon(YaruIcons.star_filled);
-      } else {
-        likeIcon = const Icon(YaruIcons.star);
-      }
-    } else {
-      if (liked) {
-        likeIcon = const Icon(YaruIcons.heart_filled);
-      } else {
-        likeIcon = const Icon(YaruIcons.heart);
-      }
-    }
+    const spacing = 7.0;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        VolumeSliderPopup(volume: volume, setVolume: setVolume),
-        YaruIconButton(
-          icon: likeIcon,
-          onPressed: onLike,
+        LikeIconButton(
+          audio: audio,
+          liked: liked,
+          isStarredStation: isStarredStation,
+          removeStarredStation: removeStarredStation,
+          addStarredStation: addStarredStation,
+          removeLikedAudio: removeLikedAudio,
+          addLikedAudio: addLikedAudio,
+        ),
+        const SizedBox(
+          width: spacing,
         ),
         YaruIconButton(
           onPressed: audio?.website == null
@@ -113,56 +91,69 @@ class PlayerControls extends StatelessWidget {
                   ),
           icon: const Icon(YaruIcons.share),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: YaruIconButton(
-            onPressed: () => playPrevious(),
-            icon: const Icon(YaruIcons.skip_backward),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: YaruIconButton(
-            onPressed: audio == null
-                ? null
-                : () {
-                    if (isPlaying) {
-                      pause();
-                    } else {
-                      playOrPause();
-                    }
-                  },
-            icon: Icon(
-              isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: YaruIconButton(
-            onPressed: () => playNext(),
-            icon: const Icon(YaruIcons.skip_forward),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: YaruIconButton(
-            icon: Icon(
-              YaruIcons.repeat_single,
-              color: theme.colorScheme.onSurface,
-            ),
-            isSelected: repeatSingle == true,
-            onPressed: () => setRepeatSingle(!(repeatSingle)),
-          ),
+        const SizedBox(
+          width: spacing,
         ),
         YaruIconButton(
           icon: Icon(
             YaruIcons.shuffle,
-            color: theme.colorScheme.onSurface,
+            color: shuffle ? theme.primaryColor : theme.colorScheme.onSurface,
           ),
-          isSelected: shuffle,
           onPressed: () => setShuffle(!(shuffle)),
-        )
+        ),
+        const SizedBox(
+          width: spacing,
+        ),
+        YaruIconButton(
+          onPressed: () => playPrevious(),
+          icon: const Icon(YaruIcons.skip_backward),
+        ),
+        const SizedBox(
+          width: spacing,
+        ),
+        YaruIconButton(
+          onPressed: audio == null
+              ? null
+              : () {
+                  if (isPlaying) {
+                    pause();
+                  } else {
+                    playOrPause();
+                  }
+                },
+          icon: Icon(
+            isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
+          ),
+        ),
+        const SizedBox(
+          width: spacing,
+        ),
+        YaruIconButton(
+          onPressed: () => playNext(),
+          icon: const Icon(YaruIcons.skip_forward),
+        ),
+        const SizedBox(
+          width: spacing,
+        ),
+        YaruIconButton(
+          icon: Icon(
+            YaruIcons.repeat_single,
+            color:
+                repeatSingle ? theme.primaryColor : theme.colorScheme.onSurface,
+          ),
+          onPressed: () => setRepeatSingle(!(repeatSingle)),
+        ),
+        const SizedBox(
+          width: spacing,
+        ),
+        VolumeSliderPopup(volume: volume, setVolume: setVolume),
+        const SizedBox(
+          width: spacing,
+        ),
+        QueuePopup(
+          audio: audio,
+          queue: queue,
+        ),
       ],
     );
   }

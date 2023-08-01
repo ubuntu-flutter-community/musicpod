@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
-import 'package:musicpod/app/player/player_controls.dart';
+import 'package:musicpod/app/player/full_height_player_controls.dart';
 import 'package:musicpod/app/player/player_track.dart';
+import 'package:musicpod/app/player/player_view.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -36,8 +37,7 @@ class FullHeightPlayer extends StatelessWidget {
     required this.setPosition,
     required this.seek,
     required this.setFullScreen,
-    required this.fullScreen,
-    required this.expandHeight,
+    required this.playerViewMode,
     required this.onTextTap,
     required this.volume,
     required this.setVolume,
@@ -45,7 +45,7 @@ class FullHeightPlayer extends StatelessWidget {
 
   final Audio? audio;
   final Audio? nextAudio;
-  final List<Audio>? queue;
+  final List<Audio> queue;
   final bool isUpNextExpanded;
   final void Function(bool value) setUpNextExpanded;
   final bool repeatSingle;
@@ -74,8 +74,7 @@ class FullHeightPlayer extends StatelessWidget {
 
   final void Function(bool?) setFullScreen;
 
-  final bool fullScreen;
-  final bool expandHeight;
+  final PlayerViewMode playerViewMode;
 
   final void Function({required String text, AudioType audioType}) onTextTap;
 
@@ -95,7 +94,7 @@ class FullHeightPlayer extends StatelessWidget {
         audio?.title?.isNotEmpty == true ? audio!.title! : '',
         style: TextStyle(
           fontWeight: FontWeight.w200,
-          fontSize: 45,
+          fontSize: 30,
           color: theme.colorScheme.onSurface.withOpacity(0.7),
         ),
         textAlign: TextAlign.center,
@@ -113,7 +112,7 @@ class FullHeightPlayer extends StatelessWidget {
         audio?.artist ?? '',
         style: TextStyle(
           fontWeight: FontWeight.w100,
-          fontSize: 25,
+          fontSize: 20,
           color: theme.colorScheme.onSurface.withOpacity(0.7),
         ),
         textAlign: TextAlign.center,
@@ -122,7 +121,7 @@ class FullHeightPlayer extends StatelessWidget {
       ),
     );
 
-    final controls = PlayerControls(
+    final controls = FullHeightPlayerControls(
       audio: audio,
       setRepeatSingle: setRepeatSingle,
       repeatSingle: repeatSingle,
@@ -141,6 +140,7 @@ class FullHeightPlayer extends StatelessWidget {
       removeLikedAudio: removeLikedAudio,
       volume: volume,
       setVolume: setVolume,
+      queue: queue,
     );
 
     final sliderAndTime = PlayerTrack(
@@ -157,7 +157,7 @@ class FullHeightPlayer extends StatelessWidget {
         Center(
           child: SingleChildScrollView(
             child: SizedBox(
-              height: 800,
+              height: 700,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 40,
@@ -179,6 +179,7 @@ class FullHeightPlayer extends StatelessWidget {
                     controls,
                     SizedBox(
                       width: 600,
+                      height: 20,
                       child: sliderAndTime,
                     ),
                     if (audio != null)
@@ -186,9 +187,6 @@ class FullHeightPlayer extends StatelessWidget {
                         child: title,
                       ),
                     artist,
-                    const SizedBox(
-                      height: 10,
-                    )
                   ],
                 ),
               ),
@@ -199,13 +197,13 @@ class FullHeightPlayer extends StatelessWidget {
           padding: const EdgeInsets.all(kYaruPagePadding),
           child: YaruIconButton(
             icon: Icon(
-              fullScreen && !expandHeight
+              playerViewMode == PlayerViewMode.fullWindow
                   ? YaruIcons.fullscreen_exit
                   : YaruIcons.fullscreen,
               color: theme.colorScheme.onSurface,
             ),
             onPressed: () => setFullScreen(
-              fullScreen == true && !expandHeight ? false : true,
+              playerViewMode == PlayerViewMode.fullWindow ? false : true,
             ),
           ),
         ),

@@ -8,12 +8,14 @@ Music, Radio and Podcast player for Ubuntu made with Flutter.
 
 
 
-| | |
+|Dark | Light|
 |-|-|
-|![](.github/album_light.png)|![](.github/album_dark.png)|
-|![](.github/fullscreen_light.png)|![](.github/fullscreen_dark.png)|
-|![](.github/wide_light.png) | ![](.github/wide_dark.png) |
-|![](.github/slim_light.png)|![](.github/slim_dark.png)|
+|![](.github/local_dark.png)|![](.github/local_light.png)|
+|![](.github/radio_dark.png)|![](.github/radio_light.png)|
+|![](.github/podcast_dark.png)|![](.github/podcast_light.png)|
+|![](.github/album_dark.png)|![](.github/album_light.png)|
+|![](.github/full_window_dark.png)|![](.github/full_window_light.png)|
+|![](.github/wide_window_dark.png)|![](.github/wide_window_light.png)|
 
 ## Credits
 
@@ -45,6 +47,7 @@ Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https
 
 ## MusicPod Level 2
 
+- [ ] Video Podcasts WIP
 - [ ] Big feature: add a shop to buy digital audio for your collection
 - [ ] streaming provider agnostic sharing links
 - [X] tag-grid view for the radio page

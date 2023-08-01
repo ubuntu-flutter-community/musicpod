@@ -29,7 +29,6 @@ class AudioPageBody extends StatefulWidget {
     this.likePageButton,
     required this.sort,
     required this.showTrack,
-    required this.showWindowControls,
     this.image,
     this.showAudioPageHeader,
     required this.audioFilter,
@@ -58,7 +57,6 @@ class AudioPageBody extends StatefulWidget {
   final Widget? likePageButton;
   final bool sort;
   final bool showTrack;
-  final bool showWindowControls;
   final Widget? image;
   final bool? showAudioPageHeader;
   final AudioFilter audioFilter;
@@ -101,21 +99,36 @@ class _AudioPageBodyState extends State<AudioPageBody> {
   @override
   Widget build(BuildContext context) {
     final isPlaying = context.select((PlayerModel m) => m.isPlaying);
-    final startPlaylist = context.read<PlayerModel>().startPlaylist;
+    final playerModel = context.read<PlayerModel>();
+    final startPlaylist = playerModel.startPlaylist;
 
     final queueName = context.select((PlayerModel m) => m.queueName);
-    final setAudio = context.read<PlayerModel>().setAudio;
     final currentAudio = context.select((PlayerModel m) => m.audio);
-    final play = context.read<PlayerModel>().play;
-    final pause = context.read<PlayerModel>().pause;
-    final resume = context.read<PlayerModel>().resume;
+    final play = playerModel.play;
+    final pause = playerModel.pause;
+    final resume = playerModel.resume;
 
+    context.select((LibraryModel m) => m.likedAudios.length);
     final libraryModel = context.read<LibraryModel>();
+    final liked = libraryModel.liked;
+    final removeLikedAudio = libraryModel.removeLikedAudio;
+    final addLikedAudio = libraryModel.addLikedAudio;
+    final isStarredStation = libraryModel.isStarredStation;
+    final addStarredStation = libraryModel.addStarredStation;
+    final void Function(String) unStarStation = libraryModel.unStarStation;
+    final void Function(String, Audio) removeAudioFromPlaylist =
+        libraryModel.removeAudioFromPlaylist;
+    final List<String> Function() getTopFivePlaylistNames =
+        libraryModel.getTopFivePlaylistNames;
+    final void Function(String, Audio) addAudioToPlaylist =
+        libraryModel.addAudioToPlaylist;
+    final void Function(String, Set<Audio>) addPlaylist =
+        libraryModel.addPlaylist;
 
     final removePlaylist = libraryModel.removePlaylist;
     final updatePlaylistName = libraryModel.updatePlaylistName;
 
-    var sortedAudios = widget.audios?.toList() ?? [];
+    final sortedAudios = widget.audios?.toList() ?? [];
 
     final audioControlPanel = Padding(
       padding: const EdgeInsets.only(
@@ -184,7 +197,12 @@ class _AudioPageBodyState extends State<AudioPageBody> {
               subTitle: widget.pageSubTitle,
               label: widget.pageLabel,
             ),
-          audioControlPanel,
+          Padding(
+            padding: widget.showAudioPageHeader == false
+                ? const EdgeInsets.only(top: 10)
+                : EdgeInsets.zero,
+            child: audioControlPanel,
+          ),
           Padding(
             padding: const EdgeInsets.only(
               left: 20,
@@ -199,9 +217,11 @@ class _AudioPageBodyState extends State<AudioPageBody> {
               albumLabel: widget.albumLabel,
               showTrack: widget.showTrack,
               audioFilter: AudioFilter.title,
-              onAudioFilterSelected: (audioFilter) => setState(() {
-                _filter = audioFilter;
-              }),
+              onAudioFilterSelected: widget.sort == false
+                  ? null
+                  : (audioFilter) => setState(() {
+                        _filter = audioFilter;
+                      }),
             ),
           ),
           const Divider(
@@ -221,16 +241,16 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   audio: audio,
                   audioSelected: audioSelected,
                   audioPageType: widget.audioPageType,
-                  isLiked: libraryModel.liked,
-                  removeLikedAudio: libraryModel.removeLikedAudio,
-                  addLikedAudio: libraryModel.addLikedAudio,
-                  isStarredStation: libraryModel.isStarredStation,
-                  addStarredStation: libraryModel.addStarredStation,
-                  unStarStation: libraryModel.unStarStation,
-                  removeAudioFromPlaylist: libraryModel.removeAudioFromPlaylist,
-                  getTopFivePlaylistNames: libraryModel.getTopFivePlaylistNames,
-                  addAudioToPlaylist: libraryModel.addAudioToPlaylist,
-                  addPlaylist: libraryModel.addPlaylist,
+                  isLiked: liked,
+                  removeLikedAudio: removeLikedAudio,
+                  addLikedAudio: addLikedAudio,
+                  isStarredStation: isStarredStation,
+                  addStarredStation: addStarredStation,
+                  unStarStation: unStarStation,
+                  removeAudioFromPlaylist: removeAudioFromPlaylist,
+                  getTopFivePlaylistNames: getTopFivePlaylistNames,
+                  addAudioToPlaylist: addAudioToPlaylist,
+                  addPlaylist: addPlaylist,
                 );
 
                 return AudioTile(
@@ -242,9 +262,17 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   isPlayerPlaying: isPlaying,
                   pause: pause,
                   play: () async {
-                    setAudio(audio);
-                    await play();
+                    await play(newAudio: audio);
                   },
+                  startPlaylist: widget.audios == null
+                      ? null
+                      : () => startPlaylist(
+                            widget.audios!.skip(index).toSet(),
+                            queueName ??
+                                audio.artist ??
+                                audio.album ??
+                                widget.audios.toString(),
+                          ),
                   resume: resume,
                   key: ValueKey(audio),
                   selected: audioSelected,

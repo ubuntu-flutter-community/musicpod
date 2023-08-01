@@ -35,8 +35,8 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  List<Audio>? _queue;
-  List<Audio>? get queue => _queue;
+  List<Audio> _queue = [];
+  List<Audio> get queue => _queue;
   set queue(List<Audio>? value) {
     if (value == null) return;
     _queue = value;
@@ -53,28 +53,28 @@ class PlayerModel extends SafeChangeNotifier {
 
   Audio? _audio;
   Audio? get audio => _audio;
-  void setAudio(Audio? value) {
+  Future<void> _setAudio(Audio? value) async {
     if (value == null || value == _audio) return;
     _audio = value;
 
-    if (audio!.path != null || audio!.url != null) {
-      _mediaControlService.metadata = MPRISMetadata(
-        audio!.path != null ? Uri.file(audio!.path!) : Uri.parse(audio!.url!),
-        artUrl: _audio!.imageUrl == null
-            ? null
-            : Uri.parse(
-                _audio!.imageUrl!,
-              ),
-        album: _audio?.album,
-        albumArtist: [_audio?.albumArtist ?? ''],
-        artist: [_audio?.albumArtist ?? ''],
-        discNumber: _audio?.discNumber,
-        title: _audio?.title,
-        trackNumber: _audio?.trackNumber,
-      );
-    }
-
     notifyListeners();
+
+    if (_audio!.path != null || _audio!.url != null) {
+      _mediaControlService.metadata = await _createMprisMetadata(_audio!);
+    }
+  }
+
+  Future<MPRISMetadata> _createMprisMetadata(Audio audio) async {
+    return MPRISMetadata(
+      audio.path != null ? Uri.file(audio.path!) : Uri.parse(audio.url!),
+      artUrl: await createUriFromAudio(audio),
+      album: _audio?.album,
+      albumArtist: [_audio?.albumArtist ?? ''],
+      artist: [_audio?.artist ?? ''],
+      discNumber: _audio?.discNumber,
+      title: _audio?.title,
+      trackNumber: _audio?.trackNumber,
+    );
   }
 
   Audio? _nextAudio;
@@ -124,6 +124,9 @@ class PlayerModel extends SafeChangeNotifier {
   void setShuffle(bool value) {
     if (value == _shuffle) return;
     _shuffle = value;
+    if (value) {
+      _randomNext();
+    }
     notifyListeners();
   }
 
@@ -136,12 +139,15 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> play({bool bigPlay = false, Audio? newAudio}) async {
     if (newAudio != null) {
-      setAudio(newAudio);
+      _setAudio(newAudio);
     }
     if (audio == null) return;
-    queue ??= [];
-    if (!queue!.contains(audio)) {
-      queue!.insert(0, audio!);
+
+    if (!queue.contains(audio)) {
+      queue.insert(0, audio!);
+      if (queue.length > 1) {
+        nextAudio = queue[1];
+      }
     }
     final playList = Playlist([
       if (audio!.path != null)
@@ -243,46 +249,52 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> playNext() async {
     if (nextAudio == null) return;
-    setAudio(nextAudio);
+    _setAudio(nextAudio);
     estimateNext();
 
     await play();
   }
 
   void estimateNext() {
-    if (queue?.isNotEmpty == true && audio != null && queue!.contains(audio)) {
-      final currentIndex = queue!.indexOf(audio!);
-      final max = queue!.length;
+    if (queue.isNotEmpty == true && audio != null && queue.contains(audio)) {
+      final currentIndex = queue.indexOf(audio!);
 
       if (shuffle) {
-        final random = Random();
-        var randomIndex = random.nextInt(max);
-        while (randomIndex == currentIndex) {
-          randomIndex = random.nextInt(max);
-        }
-        nextAudio = queue!.elementAt(randomIndex);
+        _randomNext();
       } else {
-        if (currentIndex == queue!.length - 1) {
-          nextAudio = queue!.elementAt(0);
+        if (currentIndex == queue.length - 1) {
+          nextAudio = queue.elementAt(0);
         } else {
-          nextAudio = queue?.elementAt(queue!.indexOf(audio!) + 1);
+          nextAudio = queue.elementAt(queue.indexOf(audio!) + 1);
         }
       }
     }
   }
 
+  void _randomNext() {
+    if (audio == null) return;
+    final currentIndex = queue.indexOf(audio!);
+    final max = queue.length;
+    final random = Random();
+    var randomIndex = random.nextInt(max);
+    while (randomIndex == currentIndex) {
+      randomIndex = random.nextInt(max);
+    }
+    nextAudio = queue.elementAt(randomIndex);
+  }
+
   Future<void> playPrevious() async {
-    if (queue?.isNotEmpty == true && audio != null && queue!.contains(audio)) {
-      final currentIndex = queue!.indexOf(audio!);
+    if (queue.isNotEmpty == true && audio != null && queue.contains(audio)) {
+      final currentIndex = queue.indexOf(audio!);
 
       if (currentIndex == 0) {
         return;
       }
 
-      nextAudio = queue?.elementAt(currentIndex - 1);
+      nextAudio = queue.elementAt(currentIndex - 1);
 
       if (nextAudio == null) return;
-      setAudio(nextAudio);
+      _setAudio(nextAudio);
 
       await play();
     }
@@ -291,7 +303,7 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> startPlaylist(Set<Audio> audios, String listName) async {
     queue = audios.toList();
     setQueueName(listName);
-    setAudio(audios.first);
+    _setAudio(audios.first);
     estimateNext();
     await play();
   }
@@ -299,7 +311,7 @@ class PlayerModel extends SafeChangeNotifier {
   Color? _color;
   void resetColor() => _color = null;
   Color? get color => _color;
-  Color? get surfaceTintColor => _color?.withOpacity(0.1);
+  Color? get surfaceTintColor => _color?.withOpacity(0.05);
 
   Future<void> loadColor() async {
     if (audio == null) return;
@@ -347,6 +359,9 @@ class PlayerModel extends SafeChangeNotifier {
       _audio = Audio.fromJson(maybeAudio);
       if (durationAsString != null) {
         setDuration(parseDuration(durationAsString));
+      }
+      if (_audio != null && (_audio!.path != null || _audio!.url != null)) {
+        _mediaControlService.metadata = await _createMprisMetadata(_audio!);
       }
     }
   }

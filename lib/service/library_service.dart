@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:musicpod/app/common/constants.dart';
 import 'package:musicpod/data/audio.dart';
-import 'package:xdg_directories/xdg_directories.dart';
+import 'package:musicpod/utils.dart';
 
 class LibraryService {
   //
@@ -197,12 +197,32 @@ class LibraryService {
   }
 
   Future<void> init() async {
+    final indexOrNull = await readSetting(kLocalAudioIndex);
+    _localAudioIndex = indexOrNull == null ? 0 : int.parse(indexOrNull);
     _playlists = await _read(kPlaylistsFileName);
     _pinnedAlbums = await _read(kPinnedAlbumsFileName);
     _podcasts = await _read(kPodcastsFileName);
     _starredStations = await _read(kStarredStationsFileName);
     _likedAudios =
         (await _read(kLikedAudios)).entries.firstOrNull?.value ?? <Audio>{};
+  }
+
+  int? _localAudioIndex;
+  int? get localAudioIndex => _localAudioIndex;
+  final localAudioIndexController = StreamController<int?>.broadcast();
+  Stream<int?> get localAudioIndexStream => localAudioIndexController.stream;
+  void setLocalAudioIndex(int? value) {
+    _localAudioIndex = value;
+    localAudioIndexController.add(value);
+  }
+
+  Future<void> dispose() async {
+    await writeSetting(kLocalAudioIndex, _localAudioIndex.toString());
+    await _albumsController.close();
+    await _podcastsController.close();
+    await _likedAudiosController.close();
+    await _playlistsController.close();
+    await _starredStationsController.close();
   }
 }
 
@@ -216,10 +236,7 @@ Future<void> _write(Map<String, Set<Audio>> map, String fileName) async {
 
   final jsonStr = jsonEncode(dynamicMap);
 
-  final workingDir = '${configHome.path}/$kMusicPodConfigSubDir';
-  if (!Directory(workingDir).existsSync()) {
-    await Directory(workingDir).create();
-  }
+  final workingDir = await getWorkingDir();
   final path = '$workingDir/$fileName';
 
   final file = File(path);
@@ -232,26 +249,31 @@ Future<void> _write(Map<String, Set<Audio>> map, String fileName) async {
 }
 
 Future<Map<String, Set<Audio>>> _read(String fileName) async {
-  final workingDir = '${configHome.path}/musicpod';
+  final workingDir = await getWorkingDir();
   final path = '$workingDir/$fileName';
-  final file = File(path);
 
-  if (file.existsSync()) {
-    final jsonStr = await file.readAsString();
+  try {
+    final file = File(path);
 
-    final map = jsonDecode(jsonStr) as Map<String, dynamic>;
+    if (file.existsSync()) {
+      final jsonStr = await file.readAsString();
 
-    final m = map.map(
-      (key, value) => MapEntry<String, Set<Audio>>(
-        key,
-        Set.from(
-          (value as List<dynamic>).map((e) => Audio.fromMap(e)),
+      final map = jsonDecode(jsonStr) as Map<String, dynamic>;
+
+      final m = map.map(
+        (key, value) => MapEntry<String, Set<Audio>>(
+          key,
+          Set.from(
+            (value as List<dynamic>).map((e) => Audio.fromMap(e)),
+          ),
         ),
-      ),
-    );
+      );
 
-    return m;
-  } else {
+      return m;
+    } else {
+      return <String, Set<Audio>>{};
+    }
+  } on Exception catch (_) {
     return <String, Set<Audio>>{};
   }
 }
