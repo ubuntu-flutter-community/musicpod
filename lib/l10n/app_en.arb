@@ -72,5 +72,6 @@
     "unknown": "Unknown",
     "volume": "Volume",
     "queue": "Queue",
-    "limit": "Limit"
+    "limit": "Limit",
+    "decreaseSearchLimit": "Please decrease the search limit for"
 }
