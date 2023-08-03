@@ -38,12 +38,9 @@ class PodcastAudioTile extends StatelessWidget {
     final theme = Theme.of(context);
     final textStyle = TextStyle(
       color: selected ? theme.colorScheme.onSurface : theme.hintColor,
-      fontWeight: selected ? FontWeight.w500 : FontWeight.normal,
+      fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
+      fontSize: 16,
     );
-
-    // , ${audio.year != null ? DateFormat.MMMEd(
-    //             WidgetsBinding.instance.platformDispatcher.locale.countryCode,
-    //           ).format(DateTime.fromMillisecondsSinceEpoch(audio.year!)) : ''}
 
     return YaruExpandable(
       isExpanded: isExpanded,
@@ -54,8 +51,8 @@ class PodcastAudioTile extends StatelessWidget {
           padding: const EdgeInsets.only(
             top: 15,
             bottom: 10,
-            right: 5,
-            left: 5,
+            right: 2,
+            left: 2,
           ),
           child: Text(
             audio.title ?? '',
@@ -206,7 +203,7 @@ class _Bottom extends StatelessWidget {
           ],
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 15, left: 5),
+          padding: const EdgeInsets.only(top: 10, bottom: 15, left: 2),
           child: _Description(
             description: audio.description,
             title: audio.title,
