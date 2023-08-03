@@ -262,6 +262,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
 
                 if (audio.audioType == AudioType.podcast) {
                   return PodcastAudioTile(
+                    isExpanded: audioSelected,
                     audio: audio,
                     isPlayerPlaying: isPlaying,
                     selected: audioSelected,

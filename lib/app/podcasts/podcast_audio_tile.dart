@@ -18,6 +18,7 @@ class PodcastAudioTile extends StatelessWidget {
     required this.startPlaylist,
     required this.play,
     required this.lastPosition,
+    this.isExpanded = false,
   });
 
   final Audio audio;
@@ -28,6 +29,7 @@ class PodcastAudioTile extends StatelessWidget {
   final void Function()? startPlaylist;
   final Future<void> Function() play;
   final Duration? lastPosition;
+  final bool isExpanded;
 
   @override
   Widget build(BuildContext context) {
@@ -36,33 +38,30 @@ class PodcastAudioTile extends StatelessWidget {
       color: selected ? theme.colorScheme.onSurface : theme.hintColor,
       fontWeight: selected ? FontWeight.w500 : FontWeight.normal,
     );
+
+    // , ${audio.year != null ? DateFormat.MMMEd(
+    //             WidgetsBinding.instance.platformDispatcher.locale.countryCode,
+    //           ).format(DateTime.fromMillisecondsSinceEpoch(audio.year!)) : ''}
+
     return YaruExpandable(
+      isExpanded: isExpanded,
       gapHeight: 0,
-      header: Padding(
-        padding: const EdgeInsets.only(
-          top: 15,
-          bottom: 10,
-          right: 8,
-          left: 8,
+      header: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: 15,
+            bottom: 10,
+            right: 5,
+            left: 5,
+          ),
+          child: Text(
+            audio.title ?? '',
+            style: textStyle,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
-        child: Text(
-          audio.title ?? 'unknown',
-          style: textStyle,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-      collapsedChild: _Bottom(
-        isPlayerPlaying: isPlayerPlaying,
-        selected: selected,
-        pause: pause,
-        resume: resume,
-        startPlaylist: startPlaylist,
-        play: play,
-        audio: audio,
-        theme: theme,
-        lastPosition: lastPosition,
-        maxLines: 2,
       ),
       child: _Bottom(
         isPlayerPlaying: isPlayerPlaying,
@@ -74,7 +73,6 @@ class PodcastAudioTile extends StatelessWidget {
         audio: audio,
         theme: theme,
         lastPosition: lastPosition,
-        maxLines: 10,
       ),
     );
   }
@@ -91,7 +89,6 @@ class _Bottom extends StatelessWidget {
     required this.audio,
     required this.theme,
     required this.lastPosition,
-    this.maxLines,
   });
 
   final bool isPlayerPlaying;
@@ -103,7 +100,6 @@ class _Bottom extends StatelessWidget {
   final Audio audio;
   final ThemeData theme;
   final Duration? lastPosition;
-  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -153,19 +149,26 @@ class _Bottom extends StatelessWidget {
                       color: theme.hintColor,
                     ),
                   ),
-                if (audio.durationMs != null)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15),
-                    child: Text(
-                      formatTime(
-                        Duration(milliseconds: audio.durationMs!.toInt()),
-                      ),
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        fontWeight: FontWeight.w100,
-                        color: theme.hintColor,
-                      ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: SizedBox(
+                    height: 15,
+                    child: VerticalDivider(
+                      width: 0,
                     ),
                   ),
+                ),
+                Text(
+                  formatTime(
+                    audio.durationMs != null
+                        ? Duration(milliseconds: audio.durationMs!.toInt())
+                        : Duration.zero,
+                  ),
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w100,
+                    color: theme.hintColor,
+                  ),
+                ),
                 SizedBox(
                   width: 150,
                   child: Padding(
@@ -214,10 +217,10 @@ class _Bottom extends StatelessWidget {
           ],
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 16),
+          padding: const EdgeInsets.only(top: 10, bottom: 15, left: 5),
           child: _Description(
             description: audio.description,
-            maxLines: maxLines,
+            title: audio.title,
           ),
         )
       ],
@@ -228,15 +231,65 @@ class _Bottom extends StatelessWidget {
 class _Description extends StatelessWidget {
   const _Description({
     required this.description,
-    this.maxLines,
+    required this.title,
   });
 
   final String? description;
-  final int? maxLines;
+  final String? title;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (c) {
+            return SimpleDialog(
+              titlePadding: EdgeInsets.zero,
+              title: YaruDialogTitleBar(
+                backgroundColor: theme.dialogBackgroundColor,
+                border: BorderSide.none,
+                title: Text(title ?? ''),
+              ),
+              contentPadding: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+                bottom: 20,
+              ),
+              children: [
+                SizedBox(
+                  height: 400,
+                  width: 400,
+                  child: _createHtml(
+                    color: theme.colorScheme.onSurface,
+                    maxLines: 200,
+                    paddings: HtmlPaddings.zero,
+                  ),
+                )
+              ],
+            );
+          },
+        );
+      },
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxHeight: 100),
+        child: _createHtml(
+          color: theme.hintColor,
+          maxLines: 6,
+          paddings: HtmlPaddings.only(right: 90),
+        ),
+      ),
+    );
+  }
+
+  Widget _createHtml({
+    required Color color,
+    int? maxLines,
+    TextAlign? textAlign,
+    HtmlPaddings? paddings,
+  }) {
     return Html(
       data: description,
       onAnchorTap: (url, attributes, element) {
@@ -248,15 +301,15 @@ class _Description extends StatelessWidget {
         'html': Style(
           margin: Margins.zero,
           padding: HtmlPaddings.zero,
-          textAlign: TextAlign.start,
+          textAlign: textAlign ?? TextAlign.start,
         ),
         'body': Style(
           margin: Margins.zero,
-          padding: HtmlPaddings.only(top: 5),
-          color: theme.hintColor,
+          padding: paddings,
+          color: color,
           textOverflow: TextOverflow.ellipsis,
           maxLines: maxLines,
-          textAlign: TextAlign.start,
+          textAlign: textAlign ?? TextAlign.start,
         )
       },
     );
