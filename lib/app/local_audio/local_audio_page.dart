@@ -190,6 +190,7 @@ class _LocalAudioPageState extends State<LocalAudioPage>
             : Colors.white,
         appBar: YaruWindowTitleBar(
           backgroundColor: Colors.transparent,
+          border: BorderSide.none,
           style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,

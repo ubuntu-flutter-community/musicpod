@@ -390,6 +390,7 @@ class _AppState extends State<App> {
       onSelected: (value) => setIndex(value ?? 0),
       appBar: const YaruWindowTitleBar(
         backgroundColor: Colors.transparent,
+        border: BorderSide.none,
         title: Text('MusicPod'),
       ),
       bottomBar: Padding(
