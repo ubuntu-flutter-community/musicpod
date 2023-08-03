@@ -6,12 +6,12 @@ import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_tile.dart';
 import 'package:musicpod/app/common/audio_tile_header.dart';
-import 'package:musicpod/constants.dart';
-import 'package:musicpod/app/common/loading_tile.dart';
+import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/round_image_container.dart';
 import 'package:musicpod/app/common/spaced_divider.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
 import 'package:musicpod/app/local_audio/artist_page.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -78,44 +78,53 @@ class LocalAudioSearchPage extends StatelessWidget {
       search();
     }
 
+    if ((titlesResult?.isEmpty ?? true) &&
+        (similarAlbumsSearchResult?.isEmpty ?? true) &&
+        (similarArtistsSearchResult?.isEmpty ?? true)) {
+      return NoSearchResultPage(message: context.l10n.nothingFound);
+    }
+
     return ListView(
       shrinkWrap: true,
       children: [
-        _Titles(
-          onAlbumTap: onTap,
-          onArtistTap: onTap,
-          isPlaying: isPlaying,
-          pause: pause,
-          play: play,
-          resume: resume,
-          currentAudio: currentAudio,
-          titlesResult: titlesResult,
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        _Albums(
-          similarAlbumsResult: similarAlbumsSearchResult,
-          showWindowControls: showWindowControls,
-          onArtistTap: onTapWithPop,
-          onAlbumTap: onTapWithPop,
-          findAlbum: findAlbum,
-          addPinnedAlbum: addPinnedAlbum,
-          removePinnedAlbum: removePinnedAlbum,
-          isPinnedAlbum: isPinnedAlbum,
-          startPlaylist: startPlaylist,
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        _Artists(
-          showWindowControls: showWindowControls,
-          onAlbumTap: onTapWithPop,
-          onArtistTap: onTapWithPop,
-          findArtist: findArtist,
-          findImages: findImages,
-          similarArtistsSearchResult: similarArtistsSearchResult,
-        ),
+        if (titlesResult?.isNotEmpty == true)
+          _Titles(
+            onAlbumTap: onTap,
+            onArtistTap: onTap,
+            isPlaying: isPlaying,
+            pause: pause,
+            play: play,
+            resume: resume,
+            currentAudio: currentAudio,
+            titlesResult: titlesResult!,
+          ),
+        if (similarAlbumsSearchResult?.isNotEmpty == true)
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: _Albums(
+              similarAlbumsResult: similarAlbumsSearchResult!,
+              showWindowControls: showWindowControls,
+              onArtistTap: onTapWithPop,
+              onAlbumTap: onTapWithPop,
+              findAlbum: findAlbum,
+              addPinnedAlbum: addPinnedAlbum,
+              removePinnedAlbum: removePinnedAlbum,
+              isPinnedAlbum: isPinnedAlbum,
+              startPlaylist: startPlaylist,
+            ),
+          ),
+        if (similarArtistsSearchResult?.isNotEmpty == true)
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: _Artists(
+              showWindowControls: showWindowControls,
+              onAlbumTap: onTapWithPop,
+              onArtistTap: onTapWithPop,
+              findArtist: findArtist,
+              findImages: findImages,
+              similarArtistsSearchResult: similarArtistsSearchResult!,
+            ),
+          ),
       ],
     );
   }
@@ -130,7 +139,7 @@ class _Titles extends StatelessWidget {
     required this.play,
     required this.pause,
     required this.resume,
-    this.titlesResult,
+    required this.titlesResult,
   });
 
   final void Function(String artist)? onArtistTap;
@@ -141,7 +150,7 @@ class _Titles extends StatelessWidget {
   final Future<void> Function({bool bigPlay, Audio? newAudio}) play;
   final Future<void> Function() pause;
   final Future<void> Function() resume;
-  final Set<Audio>? titlesResult;
+  final Set<Audio> titlesResult;
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +163,7 @@ class _Titles extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                '${context.l10n.titles}  •  ${titlesResult?.length ?? 0}',
+                '${context.l10n.titles}  •  ${titlesResult.length}',
                 style: theme.textTheme.headlineSmall
                     ?.copyWith(fontWeight: FontWeight.w100),
               )
@@ -170,27 +179,14 @@ class _Titles extends StatelessWidget {
         ),
         const SpacedDivider(
           top: 0,
+          bottom: 0,
         ),
-        if (titlesResult == null)
-          Column(
-            children: [
-              for (var i = 0; i < 5; i++)
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    bottom: i == 4 ? 0 : 15,
-                  ),
-                  child: const LoadingTile(),
-                )
-            ],
-          )
-        else if (titlesResult?.isEmpty == true)
+        if (titlesResult.isEmpty == true)
           const SizedBox.shrink()
         else
           Column(
-            children: List.generate(titlesResult!.take(5).length, (index) {
-              final audio = titlesResult!.take(5).elementAt(index);
+            children: List.generate(titlesResult.take(5).length, (index) {
+              final audio = titlesResult.take(5).elementAt(index);
               final audioSelected = currentAudio == audio;
 
               return Padding(
@@ -244,94 +240,96 @@ class _Albums extends StatelessWidget {
   final void Function(String) removePinnedAlbum;
   final bool Function(String) isPinnedAlbum;
   final Future<void> Function(Set<Audio>, String) startPlaylist;
-  final Set<Audio>? similarAlbumsResult;
+  final Set<Audio> similarAlbumsResult;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final albumGrid = similarAlbumsResult?.isNotEmpty == false
-        ? const SizedBox.shrink()
-        : GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            itemCount: similarAlbumsResult!.length,
-            gridDelegate: kImageGridDelegate,
-            itemBuilder: (context, index) {
-              final audio = similarAlbumsResult!.elementAt(index);
-              final name = audio.album;
-              final album = findAlbum(audio);
+    final albums = ListView.builder(
+      itemExtent: kCardHeight + 10,
+      cacheExtent: kCardHeight + 10,
+      shrinkWrap: true,
+      padding: EdgeInsets.zero,
+      itemCount: similarAlbumsResult.length,
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (context, index) {
+        final audio = similarAlbumsResult.elementAt(index);
+        final name = audio.album;
+        final album = findAlbum(audio);
 
-              final image = audio.pictureData == null
-                  ? Center(
-                      child: Icon(
-                        YaruIcons.music_note,
-                        size: 140,
-                        color: theme.hintColor,
-                      ),
-                    )
-                  : Image.memory(
-                      audio.pictureData!,
-                      fit: BoxFit.fitWidth,
-                      filterQuality: FilterQuality.medium,
-                    );
+        final image = audio.pictureData == null
+            ? Center(
+                child: Icon(
+                  YaruIcons.music_note,
+                  size: 140,
+                  color: theme.hintColor,
+                ),
+              )
+            : Image.memory(
+                audio.pictureData!,
+                fit: BoxFit.fitWidth,
+                filterQuality: FilterQuality.medium,
+              );
 
-              return AudioCard(
-                bottom: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Tooltip(
-                    message: audio.album == null ? '' : audio.album!,
-                    child: Container(
-                      width: double.infinity,
-                      height: 30,
-                      margin: const EdgeInsets.all(1),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 5,
-                        horizontal: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.inverseSurface,
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(kYaruContainerRadius),
-                          bottomRight: Radius.circular(kYaruContainerRadius),
-                        ),
-                      ),
-                      child: Text(
-                        audio.album == null ? '' : audio.album!,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                          color: theme.colorScheme.onInverseSurface,
-                        ),
-                      ),
+        return Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: AudioCard(
+            bottom: Align(
+              alignment: Alignment.bottomCenter,
+              child: Tooltip(
+                message: audio.album == null ? '' : audio.album!,
+                child: Container(
+                  width: double.infinity,
+                  height: 30,
+                  margin: const EdgeInsets.all(1),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5,
+                    horizontal: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.inverseSurface,
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(kYaruContainerRadius),
+                      bottomRight: Radius.circular(kYaruContainerRadius),
+                    ),
+                  ),
+                  child: Text(
+                    audio.album == null ? '' : audio.album!,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: theme.colorScheme.onInverseSurface,
                     ),
                   ),
                 ),
-                image: image,
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return AlbumPage(
-                        key: ValueKey(showWindowControls == false),
-                        onAlbumTap: onAlbumTap,
-                        onArtistTap: onArtistTap,
-                        name: name,
-                        isPinnedAlbum: isPinnedAlbum,
-                        removePinnedAlbum: removePinnedAlbum,
-                        album: album,
-                        addPinnedAlbum: addPinnedAlbum,
-                      );
-                    },
-                  ),
-                ),
-                onPlay: album == null || album.isEmpty || name == null
-                    ? null
-                    : () => startPlaylist(album, name),
-              );
-            },
-          );
+              ),
+            ),
+            image: image,
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return AlbumPage(
+                    key: ValueKey(showWindowControls == false),
+                    onAlbumTap: onAlbumTap,
+                    onArtistTap: onArtistTap,
+                    name: name,
+                    isPinnedAlbum: isPinnedAlbum,
+                    removePinnedAlbum: removePinnedAlbum,
+                    album: album,
+                    addPinnedAlbum: addPinnedAlbum,
+                  );
+                },
+              ),
+            ),
+            onPlay: album == null || album.isEmpty || name == null
+                ? null
+                : () => startPlaylist(album, name),
+          ),
+        );
+      },
+    );
 
     return Column(
       children: [
@@ -344,7 +342,7 @@ class _Albums extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                '${context.l10n.albums}  •  ${similarAlbumsResult?.length ?? 0}',
+                '${context.l10n.albums}  •  ${similarAlbumsResult.length}',
                 style: theme.textTheme.headlineSmall
                     ?.copyWith(fontWeight: FontWeight.w100),
               )
@@ -354,7 +352,13 @@ class _Albums extends StatelessWidget {
         const SpacedDivider(),
         Padding(
           padding: const EdgeInsets.only(left: 15, right: 15),
-          child: albumGrid,
+          child: SizedBox(
+            height: kCardHeight,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: albums,
+            ),
+          ),
         )
       ],
     );
@@ -368,7 +372,7 @@ class _Artists extends StatelessWidget {
     this.onAlbumTap,
     required this.findImages,
     required this.findArtist,
-    this.similarArtistsSearchResult,
+    required this.similarArtistsSearchResult,
   });
 
   final bool showWindowControls;
@@ -378,7 +382,7 @@ class _Artists extends StatelessWidget {
 
   final Set<Uint8List>? Function(Set<Audio>) findImages;
   final Set<Audio>? Function(Audio, [AudioFilter]) findArtist;
-  final Set<Audio>? similarArtistsSearchResult;
+  final Set<Audio> similarArtistsSearchResult;
 
   @override
   Widget build(BuildContext context) {
@@ -395,7 +399,7 @@ class _Artists extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                '${context.l10n.artists}  •  ${similarArtistsSearchResult?.length ?? 0}',
+                '${context.l10n.artists}  •  ${similarArtistsSearchResult.length}',
                 style: theme.textTheme.headlineSmall
                     ?.copyWith(fontWeight: FontWeight.w100),
               )
@@ -403,46 +407,55 @@ class _Artists extends StatelessWidget {
           ),
         ),
         const SpacedDivider(),
-        if (similarArtistsSearchResult != null)
-          GridView.builder(
-            itemCount: similarArtistsSearchResult!.length,
-            padding: kGridPadding,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: kImageGridDelegate,
-            itemBuilder: (context, index) {
-              final artistAudios = findArtist(
-                similarArtistsSearchResult!.elementAt(index),
-              );
-              final images = findImages(artistAudios ?? {});
+        SizedBox(
+          height: kCardHeight + 10,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemExtent: kCardHeight,
+              cacheExtent: kCardHeight,
+              itemCount: similarArtistsSearchResult.length,
+              padding: kGridPadding,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                final artistAudios = findArtist(
+                  similarArtistsSearchResult.elementAt(index),
+                );
+                final images = findImages(artistAudios ?? {});
 
-              final artistName =
-                  similarArtistsSearchResult!.elementAt(index).artist ??
-                      context.l10n.unknown;
+                final artistName =
+                    similarArtistsSearchResult.elementAt(index).artist ??
+                        context.l10n.unknown;
 
-              return YaruSelectableContainer(
-                selected: false,
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ArtistPage(
-                        onAlbumTap: onAlbumTap,
-                        onArtistTap: onArtistTap,
-                        images: images,
-                        artistAudios: artistAudios,
-                        showWindowControls: showWindowControls,
-                      );
-                    },
+                return Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: YaruSelectableContainer(
+                    selected: false,
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return ArtistPage(
+                            onAlbumTap: onAlbumTap,
+                            onArtistTap: onArtistTap,
+                            images: images,
+                            artistAudios: artistAudios,
+                            showWindowControls: showWindowControls,
+                          );
+                        },
+                      ),
+                    ),
+                    borderRadius: BorderRadius.circular(300),
+                    child: RoundImageContainer(
+                      image: images?.firstOrNull,
+                      text: artistName,
+                    ),
                   ),
-                ),
-                borderRadius: BorderRadius.circular(300),
-                child: RoundImageContainer(
-                  image: images?.firstOrNull,
-                  text: artistName,
-                ),
-              );
-            },
-          )
+                );
+              },
+            ),
+          ),
+        )
       ],
     );
   }
