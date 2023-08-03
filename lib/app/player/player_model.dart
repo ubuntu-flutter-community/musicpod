@@ -124,7 +124,7 @@ class PlayerModel extends SafeChangeNotifier {
   void setShuffle(bool value) {
     if (value == _shuffle) return;
     _shuffle = value;
-    if (value) {
+    if (value && queue.length > 1) {
       _randomNext();
     }
     notifyListeners();
@@ -259,7 +259,7 @@ class PlayerModel extends SafeChangeNotifier {
     if (queue.isNotEmpty == true && audio != null && queue.contains(audio)) {
       final currentIndex = queue.indexOf(audio!);
 
-      if (shuffle) {
+      if (shuffle && queue.length > 1) {
         _randomNext();
       } else {
         if (currentIndex == queue.length - 1) {
