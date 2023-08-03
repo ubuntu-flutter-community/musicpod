@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:mime_type/mime_type.dart';
-import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/utils.dart';
 import 'package:xdg_directories/xdg_directories.dart';
@@ -83,7 +83,8 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
     for (var e in onlyFiles) {
       try {
         final metadata = await MetadataGod.readMetadata(file: e.path);
-        final audio = _createAudio(e.path, metadata);
+        final audio =
+            _createAudio(e.path, metadata, File(e.path).uri.pathSegments.last);
 
         newAudios.add(audio);
       } catch (error) {
@@ -95,12 +96,13 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
   return (failedImports, newAudios);
 }
 
-Audio _createAudio(String path, Metadata metadata) {
+Audio _createAudio(String path, Metadata metadata, [String? fileName]) {
   return Audio(
     path: path,
     audioType: AudioType.local,
     artist: metadata.artist ?? '',
-    title: metadata.title ?? path,
+    title: (metadata.title?.isNotEmpty == true ? metadata.title : fileName) ??
+        path,
     album: metadata.album == null
         ? ''
         : '${metadata.album} ${metadata.discTotal != null && metadata.discTotal! > 1 ? metadata.discNumber : ''}',

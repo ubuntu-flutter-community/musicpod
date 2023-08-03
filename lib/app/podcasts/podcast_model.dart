@@ -24,7 +24,7 @@ class PodcastModel extends SafeChangeNotifier {
 
   StreamSubscription<bool>? _searchChangedSub;
 
-  List<Item>? get searchResult => _podcastService.searchResult;
+  SearchResult? get searchResult => _podcastService.searchResult;
 
   bool _searchActive = false;
   bool get searchActive => _searchActive;
@@ -107,13 +107,13 @@ class PodcastModel extends SafeChangeNotifier {
     _searchChangedSub = _podcastService.searchChanged.listen((_) {
       notifyListeners();
     });
-    if (_podcastService.searchResult?.isNotEmpty == true) return;
+    if (_podcastService.searchResult?.items.isNotEmpty == true) return;
     final c = Country.values.firstWhereOrNull((c) => c.code == countryCode);
     if (c != null) {
       _country = c;
     }
     if (_podcastService.searchResult == null ||
-        _podcastService.searchResult?.isEmpty == true) {
+        _podcastService.searchResult?.items.isEmpty == true) {
       search();
     }
 

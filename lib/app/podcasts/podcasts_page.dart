@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_card.dart';
-import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/app/common/country_popup.dart';
 import 'package:musicpod/app/common/limit_popup.dart';
 import 'package:musicpod/app/common/no_search_result_page.dart';
@@ -15,6 +15,7 @@ import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/podcast_service.dart';
+import 'package:musicpod/string_x.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -87,7 +88,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final setPodcastGenre = model.setPodcastGenre;
     final searchResult = context.select((PodcastModel m) => m.searchResult);
     final searchResultCount =
-        context.select((PodcastModel m) => m.searchResult?.length);
+        context.select((PodcastModel m) => m.searchResult?.resultCount);
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
@@ -106,17 +107,21 @@ class _PodcastsPageState extends State<PodcastsPage> {
             .map((e) => const AudioCard())
             .toList(),
       );
-    } else if (searchResult.isEmpty == true) {
-      grid = NoSearchResultPage(
-        message: context.l10n.noPodcastChartsFound,
-      );
+    } else if (searchResult.items.isEmpty == true) {
+      final noResultMessage = searchResult.lastError.isEmpty
+          ? context.l10n.noPodcastChartsFound
+          : (searchResult.lastError.contains('RangeError')
+              ? '${context.l10n.decreaseSearchLimit} ${country?.name.capitalize()}'
+              : searchResult.lastError);
+
+      grid = NoSearchResultPage(message: noResultMessage);
     } else {
       grid = GridView.builder(
         padding: kPodcastGridPadding,
         itemCount: searchResultCount,
         gridDelegate: kImageGridDelegate,
         itemBuilder: (context, index) {
-          final podcast = searchResult.elementAt(index);
+          final podcast = searchResult.items.elementAt(index);
 
           final image = SafeNetworkImage(
             url: podcast.artworkUrl600,

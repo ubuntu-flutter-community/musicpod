@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_page_body.dart';
-import 'package:musicpod/app/common/constants.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
