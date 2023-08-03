@@ -102,7 +102,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
   @override
   Widget build(BuildContext context) {
     final isPlaying = context.select((PlayerModel m) => m.isPlaying);
-    final position = context.select((PlayerModel m) => m.position);
 
     final playerModel = context.read<PlayerModel>();
     final startPlaylist = playerModel.startPlaylist;
@@ -278,7 +277,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                                   widget.audios.toString(),
                             ),
                     play: play,
-                    lastPosition: audioSelected ? position : null,
+                    lastPosition: null,
                   );
                 }
 

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
+import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/utils.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -161,13 +163,12 @@ class _Bottom extends StatelessWidget {
                   width: 150,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: RepaintBoundary(
-                      child: _AudioProgress(
-                        lastPosition: lastPosition,
-                        duration: audio.durationMs == null
-                            ? null
-                            : Duration(milliseconds: audio.durationMs!.toInt()),
-                      ),
+                    child: _AudioProgress(
+                      selected: selected,
+                      lastPosition: lastPosition,
+                      duration: audio.durationMs == null
+                          ? null
+                          : Duration(milliseconds: audio.durationMs!.toInt()),
                     ),
                   ),
                 ),
@@ -308,37 +309,45 @@ class _AudioProgress extends StatelessWidget {
   const _AudioProgress({
     this.lastPosition,
     this.duration,
+    required this.selected,
   });
 
   final Duration? lastPosition;
   final Duration? duration;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    bool sliderActive = duration != null &&
-        lastPosition != null &&
-        duration!.inSeconds > lastPosition!.inSeconds;
-    return SliderTheme(
-      data: theme.sliderTheme.copyWith(
-        thumbColor: Colors.white,
-        thumbShape: const RoundSliderThumbShape(
-          elevation: 0,
-          enabledThumbRadius: 0,
-          disabledThumbRadius: 0,
+    final position = context.select((PlayerModel m) => m.position);
+
+    final pos = lastPosition ?? (selected ? position : Duration.zero);
+
+    bool sliderActive =
+        duration != null && pos != null && duration!.inSeconds > pos.inSeconds;
+
+    return RepaintBoundary(
+      child: SliderTheme(
+        data: theme.sliderTheme.copyWith(
+          thumbColor: Colors.white,
+          thumbShape: const RoundSliderThumbShape(
+            elevation: 0,
+            enabledThumbRadius: 0,
+            disabledThumbRadius: 0,
+          ),
+          trackHeight: 1,
+          overlayShape: const RoundSliderThumbShape(
+            elevation: 0,
+            enabledThumbRadius: 0,
+            disabledThumbRadius: 0,
+          ),
         ),
-        trackHeight: 1,
-        overlayShape: const RoundSliderThumbShape(
-          elevation: 0,
-          enabledThumbRadius: 0,
-          disabledThumbRadius: 0,
+        child: Slider(
+          min: 0,
+          max: sliderActive ? duration!.inSeconds.toDouble() : 1.0,
+          value: sliderActive ? pos.inSeconds.toDouble() : 0,
+          onChanged: (value) {},
         ),
-      ),
-      child: Slider(
-        min: 0,
-        max: sliderActive ? duration!.inSeconds.toDouble() : 1.0,
-        value: sliderActive ? lastPosition!.inSeconds.toDouble() : 0,
-        onChanged: (value) {},
       ),
     );
   }
