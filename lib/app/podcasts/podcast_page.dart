@@ -108,6 +108,7 @@ class PodcastPage extends StatelessWidget {
       pageLabel: context.l10n.podcast,
       pageTitle: pageId,
       pageSubtile: audios?.firstOrNull?.artist,
+      pageDescription: audios?.firstOrNull?.albumArtist,
       audios: audios,
       pageId: pageId,
       showTrack: false,
