@@ -134,13 +134,17 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> play({bool bigPlay = false, Audio? newAudio}) async {
+    final currentIndex =
+        (audio == null || queue.isEmpty || !queue.contains(audio!))
+            ? 0
+            : queue.indexOf(audio!);
     if (newAudio != null) {
       _setAudio(newAudio);
     }
     if (audio == null) return;
 
     if (!queue.contains(audio)) {
-      queue.insert(0, audio!);
+      queue.insert(currentIndex, audio!);
       if (queue.length > 1) {
         nextAudio = queue[1];
       }
