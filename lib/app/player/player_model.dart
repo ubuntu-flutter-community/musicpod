@@ -229,9 +229,7 @@ class PlayerModel extends SafeChangeNotifier {
 
     _isCompletedSub = _player.stream.completed.listen((value) async {
       if (value) {
-        if (repeatSingle == false) {
-          await playNext();
-        }
+        await playNext();
       }
     });
 
@@ -244,30 +242,26 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> playNext() async {
-    if (nextAudio == null) return;
-    _setAudio(nextAudio);
-    _estimateNext();
-
+    if (!repeatSingle && nextAudio != null) {
+      _setAudio(nextAudio);
+      _estimateNext();
+    }
     await play();
   }
 
   void _estimateNext() {
     if (audio == null) return;
 
-    if (repeatSingle) {
-      nextAudio = audio;
-    } else {
-      if (queue.isNotEmpty == true && queue.contains(audio)) {
-        final currentIndex = queue.indexOf(audio!);
+    if (queue.isNotEmpty == true && queue.contains(audio)) {
+      final currentIndex = queue.indexOf(audio!);
 
-        if (shuffle && queue.length > 1) {
-          _randomNext();
+      if (shuffle && queue.length > 1) {
+        _randomNext();
+      } else {
+        if (currentIndex == queue.length - 1) {
+          nextAudio = queue.elementAt(0);
         } else {
-          if (currentIndex == queue.length - 1) {
-            nextAudio = queue.elementAt(0);
-          } else {
-            nextAudio = queue.elementAt(queue.indexOf(audio!) + 1);
-          }
+          nextAudio = queue.elementAt(queue.indexOf(audio!) + 1);
         }
       }
     }
