@@ -45,7 +45,7 @@ class AudioTile extends StatelessWidget {
       fontWeight: selected ? FontWeight.w500 : FontWeight.normal,
     );
 
-    return ListTile(
+    final listTile = ListTile(
       contentPadding: const EdgeInsets.only(left: 8, right: 4),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(kYaruButtonRadius),
@@ -112,5 +112,7 @@ class AudioTile extends StatelessWidget {
       ),
       trailing: likeIcon,
     );
+
+    return listTile;
   }
 }

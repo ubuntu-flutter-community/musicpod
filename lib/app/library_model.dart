@@ -15,6 +15,7 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _podcastsSub;
   StreamSubscription<bool>? _stationsSub;
   StreamSubscription<int?>? _localAudioIndexSub;
+  StreamSubscription<bool>? _lastPositionsSub;
 
   bool ready = false;
 
@@ -32,6 +33,8 @@ class LibraryModel extends SafeChangeNotifier {
         _service.podcastsChanged.listen((event) => notifyListeners());
     _stationsSub =
         _service.starredStationsChanged.listen((event) => notifyListeners());
+    _lastPositionsSub =
+        _service.lastPositionsChanged.listen((_) => notifyListeners());
 
     ready = true;
     notifyListeners();
@@ -45,6 +48,7 @@ class LibraryModel extends SafeChangeNotifier {
     _albumsSub?.cancel();
     _podcastsSub?.cancel();
     _stationsSub?.cancel();
+    _lastPositionsSub?.cancel();
 
     super.dispose();
   }
@@ -187,4 +191,8 @@ class LibraryModel extends SafeChangeNotifier {
     if (value == null || value == _service.localAudioIndex) return;
     _service.setLocalAudioIndex(value);
   }
+
+  Duration? getLastPosition(String guid) => _service.getLastPosition(guid);
+  void addLastPosition(String guid, Duration lastPosition) =>
+      _service.addLastPosition(guid, lastPosition);
 }

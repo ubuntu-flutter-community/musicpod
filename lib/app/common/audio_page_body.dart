@@ -9,6 +9,7 @@ import 'package:musicpod/app/common/audio_tile_header.dart';
 import 'package:musicpod/app/common/like_button.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/player_model.dart';
+import 'package:musicpod/app/podcasts/podcast_audio_tile.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/utils.dart';
@@ -42,6 +43,7 @@ class AudioPageBody extends StatefulWidget {
     this.titleFlex = 5,
     this.artistFlex = 5,
     this.albumFlex = 4,
+    this.showAudioTileHeader = true,
   });
 
   final Set<Audio>? audios;
@@ -59,6 +61,7 @@ class AudioPageBody extends StatefulWidget {
   final bool showTrack;
   final Widget? image;
   final bool? showAudioPageHeader;
+  final bool showAudioTileHeader;
   final AudioFilter audioFilter;
   final String? noResultMessage;
   final String? titleLabel, artistLabel, albumLabel;
@@ -99,6 +102,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
   @override
   Widget build(BuildContext context) {
     final isPlaying = context.select((PlayerModel m) => m.isPlaying);
+
     final playerModel = context.read<PlayerModel>();
     final startPlaylist = playerModel.startPlaylist;
 
@@ -203,30 +207,32 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                 : EdgeInsets.zero,
             child: audioControlPanel,
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 20,
-              right: 20,
+          if (widget.showAudioTileHeader)
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+              ),
+              child: AudioTileHeader(
+                titleFlex: widget.titleFlex,
+                artistFlex: widget.artistFlex,
+                albumFlex: widget.albumFlex,
+                titleLabel: widget.titleLabel,
+                artistLabel: widget.artistLabel,
+                albumLabel: widget.albumLabel,
+                showTrack: widget.showTrack,
+                audioFilter: AudioFilter.title,
+                onAudioFilterSelected: widget.sort == false
+                    ? null
+                    : (audioFilter) => setState(() {
+                          _filter = audioFilter;
+                        }),
+              ),
             ),
-            child: AudioTileHeader(
-              titleFlex: widget.titleFlex,
-              artistFlex: widget.artistFlex,
-              albumFlex: widget.albumFlex,
-              titleLabel: widget.titleLabel,
-              artistLabel: widget.artistLabel,
-              albumLabel: widget.albumLabel,
-              showTrack: widget.showTrack,
-              audioFilter: AudioFilter.title,
-              onAudioFilterSelected: widget.sort == false
-                  ? null
-                  : (audioFilter) => setState(() {
-                        _filter = audioFilter;
-                      }),
+          if (widget.showAudioTileHeader)
+            const Divider(
+              height: 0,
             ),
-          ),
-          const Divider(
-            height: 0,
-          ),
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
             child: Column(
@@ -252,6 +258,28 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   addAudioToPlaylist: addAudioToPlaylist,
                   addPlaylist: addPlaylist,
                 );
+
+                if (audio.audioType == AudioType.podcast) {
+                  return PodcastAudioTile(
+                    isExpanded: audioSelected,
+                    audio: audio,
+                    isPlayerPlaying: isPlaying,
+                    selected: audioSelected,
+                    pause: pause,
+                    resume: resume,
+                    startPlaylist: widget.audios == null
+                        ? null
+                        : () => startPlaylist(
+                              widget.audios!.skip(index).toSet(),
+                              queueName ??
+                                  audio.artist ??
+                                  audio.album ??
+                                  widget.audios.toString(),
+                            ),
+                    play: play,
+                    lastPosition: null,
+                  );
+                }
 
                 return AudioTile(
                   titleFlex: widget.titleFlex,
