@@ -122,11 +122,7 @@ class PlayerModel extends SafeChangeNotifier {
   void setRepeatSingle(bool value) {
     if (value == _repeatSingle) return;
     _repeatSingle = value;
-    if (value) {
-      _player.setPlaylistMode(PlaylistMode.single);
-    } else {
-      _player.setPlaylistMode(PlaylistMode.none);
-    }
+    _estimateNext();
     notifyListeners();
   }
 
@@ -135,7 +131,7 @@ class PlayerModel extends SafeChangeNotifier {
   void setShuffle(bool value) {
     if (value == _shuffle) return;
     _shuffle = value;
-    if (value) {
+    if (value && queue.length > 1) {
       _randomNext();
     }
     notifyListeners();
@@ -244,9 +240,7 @@ class PlayerModel extends SafeChangeNotifier {
 
     _isCompletedSub = _player.stream.completed.listen((value) async {
       if (value) {
-        if (repeatSingle == false) {
-          await playNext();
-        }
+        await playNext();
       }
     });
 
@@ -265,18 +259,20 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> playNext() async {
-    if (nextAudio == null) return;
-    _setAudio(nextAudio);
-    estimateNext();
-
+    if (!repeatSingle && nextAudio != null) {
+      _setAudio(nextAudio);
+      _estimateNext();
+    }
     await play();
   }
 
-  void estimateNext() {
-    if (queue.isNotEmpty == true && audio != null && queue.contains(audio)) {
+  void _estimateNext() {
+    if (audio == null) return;
+
+    if (queue.isNotEmpty == true && queue.contains(audio)) {
       final currentIndex = queue.indexOf(audio!);
 
-      if (shuffle) {
+      if (shuffle && queue.length > 1) {
         _randomNext();
       } else {
         if (currentIndex == queue.length - 1) {
@@ -321,7 +317,7 @@ class PlayerModel extends SafeChangeNotifier {
     queue = audios.toList();
     setQueueName(listName);
     _setAudio(audios.first);
-    estimateNext();
+    _estimateNext();
     await play();
   }
 

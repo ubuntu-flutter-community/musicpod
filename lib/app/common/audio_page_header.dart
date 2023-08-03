@@ -100,6 +100,7 @@ class AudioPageHeader extends StatelessWidget {
                                 launchUrl(Uri.parse(url));
                               },
                               style: {
+                                'img': Style(display: Display.none),
                                 'html': Style(
                                   margin: Margins.zero,
                                   padding: HtmlPaddings.zero,
