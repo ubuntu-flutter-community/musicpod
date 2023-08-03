@@ -110,9 +110,6 @@ class _Bottom extends StatelessWidget {
           children: [
             Row(
               children: [
-                const SizedBox(
-                  width: 4,
-                ),
                 CircleAvatar(
                   child: YaruIconButton(
                     icon: (isPlayerPlaying && selected)
@@ -140,24 +137,15 @@ class _Bottom extends StatelessWidget {
                 ),
                 if (audio.year != null)
                   Text(
-                    DateFormat.MMMEd(
+                    '${DateFormat.MMMEd(
                       WidgetsBinding
                           .instance.platformDispatcher.locale.countryCode,
-                    ).format(DateTime.fromMillisecondsSinceEpoch(audio.year!)),
+                    ).format(DateTime.fromMillisecondsSinceEpoch(audio.year!))}, ',
                     style: theme.textTheme.labelMedium?.copyWith(
                       fontWeight: FontWeight.w100,
                       color: theme.hintColor,
                     ),
                   ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: SizedBox(
-                    height: 15,
-                    child: VerticalDivider(
-                      width: 0,
-                    ),
-                  ),
-                ),
                 Text(
                   formatTime(
                     audio.durationMs != null
