@@ -204,6 +204,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
         backgroundColor: light ? kBackGroundLight : kBackgroundDark,
         appBar: YaruWindowTitleBar(
           backgroundColor: Colors.transparent,
+          border: BorderSide.none,
           leading: (Navigator.canPop(context))
               ? const YaruBackButton(
                   style: YaruBackButtonStyle.rounded,

@@ -88,6 +88,7 @@ class StationPage extends StatelessWidget {
           : kBackGroundLight,
       appBar: YaruWindowTitleBar(
         backgroundColor: Colors.transparent,
+        border: BorderSide.none,
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,

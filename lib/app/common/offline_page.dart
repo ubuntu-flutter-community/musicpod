@@ -12,6 +12,7 @@ class OfflinePage extends StatelessWidget {
       appBar: YaruWindowTitleBar(
         title: Text(context.l10n.offline),
         backgroundColor: Colors.transparent,
+        border: BorderSide.none,
       ),
       body: Center(
         child: Column(

@@ -131,6 +131,7 @@ class _CreatePlaylistPageState extends State<CreatePlaylistPage> {
     return YaruDetailPage(
       appBar: YaruWindowTitleBar(
         backgroundColor: Colors.transparent,
+        border: BorderSide.none,
         title: Text(context.l10n.createNewPlaylist),
       ),
       body: ListView(
