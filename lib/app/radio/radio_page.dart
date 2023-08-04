@@ -47,6 +47,7 @@ class _RadioPageState extends State<RadioPage> {
   @override
   Widget build(BuildContext context) {
     final model = context.read<RadioModel>();
+    final connected = context.select((RadioModel m) => m.connected);
     final stations = context.select((RadioModel m) => m.stations);
     final stationsCount = context.select((RadioModel m) => m.stations?.length);
     final search = model.search;
@@ -129,6 +130,46 @@ class _RadioPageState extends State<RadioPage> {
     if (!widget.isOnline) {
       return const OfflinePage();
     } else {
+      Widget body;
+      if (connected == false) {
+        body = const Center(
+          child: Text('Not connected'),
+        );
+      } else {
+        if (stations == null) {
+          body = GridView(
+            gridDelegate: kImageGridDelegate,
+            padding: kPodcastGridPadding,
+            children: List.generate(30, (index) => Audio())
+                .map((e) => const AudioCard())
+                .toList(),
+          );
+        } else {
+          if (stationsCount == 0) {
+            body = NoSearchResultPage(message: context.l10n.noStationFound);
+          } else {
+            body = GridView.builder(
+              padding: kPodcastGridPadding,
+              gridDelegate: kImageGridDelegate,
+              itemCount: stationsCount,
+              itemBuilder: (context, index) {
+                final station = stations.elementAt(index);
+                final onTextTap = widget.onTextTap;
+                return _StationCard(
+                  station: station,
+                  play: play,
+                  isStarredStation: isStarredStation,
+                  showWindowControls: showWindowControls,
+                  onTextTap: onTextTap,
+                  unstarStation: unstarStation,
+                  starStation: starStation,
+                );
+              },
+            );
+          }
+        }
+      }
+
       return YaruDetailPage(
         backgroundColor: light ? kBackGroundLight : kBackgroundDark,
         appBar: YaruWindowTitleBar(
@@ -166,34 +207,7 @@ class _RadioPageState extends State<RadioPage> {
             ),
           ),
         ),
-        body: stations == null
-            ? GridView(
-                gridDelegate: kImageGridDelegate,
-                padding: kPodcastGridPadding,
-                children: List.generate(30, (index) => Audio())
-                    .map((e) => const AudioCard())
-                    .toList(),
-              )
-            : stationsCount == 0
-                ? NoSearchResultPage(message: context.l10n.noStationFound)
-                : GridView.builder(
-                    padding: kPodcastGridPadding,
-                    gridDelegate: kImageGridDelegate,
-                    itemCount: stationsCount,
-                    itemBuilder: (context, index) {
-                      final station = stations.elementAt(index);
-                      final onTextTap = widget.onTextTap;
-                      return _StationCard(
-                        station: station,
-                        play: play,
-                        isStarredStation: isStarredStation,
-                        showWindowControls: showWindowControls,
-                        onTextTap: onTextTap,
-                        unstarStation: unstarStation,
-                        starStation: starStation,
-                      );
-                    },
-                  ),
+        body: body,
       );
     }
   }
