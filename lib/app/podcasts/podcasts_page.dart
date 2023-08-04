@@ -139,7 +139,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
               context: context,
               podcastItem: podcast,
               podcastSubscribed: podcastSubscribed,
-              onTapText: onTapText,
+              onTapText: ({required audioType, required text}) =>
+                  onTapText(text),
               removePodcast: removePodcast,
               addPodcast: addPodcast,
               setFeedUrl: setSelectedFeedUrl,
@@ -251,7 +252,10 @@ Future<void> pushPodcastPage({
   required BuildContext context,
   required Item podcastItem,
   required bool Function(String? name) podcastSubscribed,
-  required void Function(String text) onTapText,
+  required void Function({
+    required String text,
+    required AudioType audioType,
+  }) onTapText,
   required void Function(String name) removePodcast,
   required void Function(String name, Set<Audio> audios) addPodcast,
   required void Function(String? feedUrl) setFeedUrl,
@@ -275,14 +279,7 @@ Future<void> pushPodcastPage({
             imageUrl: podcastItem.artworkUrl600,
             addPodcast: addPodcast,
             removePodcast: removePodcast,
-            onAlbumTap: (v) {
-              onTapText(v);
-              Navigator.of(context).maybePop();
-            },
-            onArtistTap: (v) {
-              onTapText(v);
-              Navigator.of(context).maybePop();
-            },
+            onTextTap: onTapText,
             audios: podcast,
             pageId: id,
           );

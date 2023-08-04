@@ -190,7 +190,7 @@ class _AppState extends State<App> {
 
     void onTextTap({
       required String text,
-      AudioType audioType = AudioType.local,
+      required AudioType audioType,
     }) {
       switch (audioType) {
         case AudioType.local:
@@ -271,8 +271,7 @@ class _AppState extends State<App> {
       MasterItem(
         tileBuilder: (context) => Text(context.l10n.likedSongs),
         builder: (context) => LikedAudioPage(
-          onArtistTap: (artist) => onTextTap(text: artist),
-          onAlbumTap: (album) => onTextTap(text: album),
+          onTextTap: onTextTap,
           likedAudios: likedAudios,
         ),
         iconBuilder: (context, selected) =>
@@ -296,10 +295,7 @@ class _AppState extends State<App> {
               ? PodcastPage(
                   pageId: podcast.key,
                   audios: podcast.value,
-                  onAlbumTap: (album) =>
-                      onTextTap(text: album, audioType: AudioType.podcast),
-                  onArtistTap: (artist) =>
-                      onTextTap(text: artist, audioType: AudioType.podcast),
+                  onTextTap: onTextTap,
                   addPodcast: addPodcast,
                   removePodcast: removePodcast,
                   imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
@@ -321,8 +317,7 @@ class _AppState extends State<App> {
             child: Text(playlist.key),
           ),
           builder: (context) => PlaylistPage(
-            onAlbumTap: (album) => onTextTap(text: album),
-            onArtistTap: (artist) => onTextTap(text: artist),
+            onTextTap: onTextTap,
             playlist: playlist,
             unPinPlaylist: removePlaylist,
           ),
@@ -340,8 +335,7 @@ class _AppState extends State<App> {
             child: Text(createPlaylistName(album.key, context)),
           ),
           builder: (context) => AlbumPage(
-            onArtistTap: (artist) => onTextTap(text: artist),
-            onAlbumTap: (album) => onTextTap(text: album),
+            onTextTap: onTextTap,
             album: album.value,
             name: album.key,
             addPinnedAlbum: addPinnedAlbum,

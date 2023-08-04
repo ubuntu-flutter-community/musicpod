@@ -16,8 +16,7 @@ class AlbumPage extends StatelessWidget {
     required this.removePinnedAlbum,
     required this.album,
     required this.addPinnedAlbum,
-    this.onArtistTap,
-    this.onAlbumTap,
+    this.onTextTap,
   });
 
   static Widget createIcon(
@@ -55,14 +54,15 @@ class AlbumPage extends StatelessWidget {
   final void Function(String name) removePinnedAlbum;
   final Set<Audio>? album;
   final void Function(String name, Set<Audio> audios) addPinnedAlbum;
-  final void Function(String artist)? onArtistTap;
-  final void Function(String album)? onAlbumTap;
+  final void Function({
+    required String text,
+    required AudioType audioType,
+  })? onTextTap;
 
   @override
   Widget build(BuildContext context) {
     return AudioPage(
-      onAlbumTap: onAlbumTap,
-      onArtistTap: onArtistTap,
+      onTextTap: onTextTap,
       audioPageType: AudioPageType.album,
       pageLabel: context.l10n.album,
       pageSubtile: album?.firstOrNull?.artist,

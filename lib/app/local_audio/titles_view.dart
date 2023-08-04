@@ -12,14 +12,15 @@ class TitlesView extends StatelessWidget {
     super.key,
     required this.audios,
     required this.showWindowControls,
-    this.onArtistTap,
-    this.onAlbumTap,
+    this.onTextTap,
   });
 
   final Set<Audio>? audios;
   final bool showWindowControls;
-  final void Function(String artist)? onArtistTap;
-  final void Function(String album)? onAlbumTap;
+  final void Function({
+    required String text,
+    required AudioType audioType,
+  })? onTextTap;
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +46,7 @@ class TitlesView extends StatelessWidget {
       sort: true,
       audioFilter: AudioFilter.album,
       showTrack: true,
-      onAlbumTap: onArtistTap,
-      onArtistTap: onArtistTap,
+      onTextTap: onTextTap,
     );
   }
 }

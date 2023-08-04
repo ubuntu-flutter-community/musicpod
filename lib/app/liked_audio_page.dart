@@ -7,8 +7,7 @@ import 'package:yaru_icons/yaru_icons.dart';
 class LikedAudioPage extends StatelessWidget {
   const LikedAudioPage({
     super.key,
-    this.onArtistTap,
-    this.onAlbumTap,
+    this.onTextTap,
     this.likedAudios,
   });
 
@@ -21,16 +20,17 @@ class LikedAudioPage extends StatelessWidget {
         : const Icon(YaruIcons.heart);
   }
 
-  final void Function(String)? onArtistTap;
-  final void Function(String)? onAlbumTap;
+  final void Function({
+    required String text,
+    required AudioType audioType,
+  })? onTextTap;
   final Set<Audio>? likedAudios;
 
   @override
   Widget build(BuildContext context) {
     return AudioPage(
       sort: false,
-      onArtistTap: onArtistTap,
-      onAlbumTap: onAlbumTap,
+      onTextTap: onTextTap,
       audioPageType: AudioPageType.likedAudio,
       showAudioPageHeader: false,
       audios: likedAudios,
