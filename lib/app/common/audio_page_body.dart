@@ -118,9 +118,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     final liked = libraryModel.liked;
     final removeLikedAudio = libraryModel.removeLikedAudio;
     final addLikedAudio = libraryModel.addLikedAudio;
-    final isStarredStation = libraryModel.isStarredStation;
-    final addStarredStation = libraryModel.addStarredStation;
-    final void Function(String) unStarStation = libraryModel.unStarStation;
     final void Function(String, Audio) removeAudioFromPlaylist =
         libraryModel.removeAudioFromPlaylist;
     final List<String> Function() getTopFivePlaylistNames =
@@ -251,9 +248,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   isLiked: liked,
                   removeLikedAudio: removeLikedAudio,
                   addLikedAudio: addLikedAudio,
-                  isStarredStation: isStarredStation,
-                  addStarredStation: addStarredStation,
-                  unStarStation: unStarStation,
                   removeAudioFromPlaylist: removeAudioFromPlaylist,
                   getTopFivePlaylistNames: getTopFivePlaylistNames,
                   addAudioToPlaylist: addAudioToPlaylist,
