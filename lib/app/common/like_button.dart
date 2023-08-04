@@ -15,9 +15,6 @@ class LikeButton extends StatelessWidget {
     required this.isLiked,
     required this.removeLikedAudio,
     required this.addLikedAudio,
-    required this.isStarredStation,
-    required this.addStarredStation,
-    required this.unStarStation,
     required this.removeAudioFromPlaylist,
     required this.getTopFivePlaylistNames,
     required this.addAudioToPlaylist,
@@ -31,9 +28,6 @@ class LikeButton extends StatelessWidget {
   final bool Function(Audio) isLiked;
   final void Function(Audio, [bool]) removeLikedAudio;
   final void Function(Audio, [bool]) addLikedAudio;
-  final bool Function(String) isStarredStation;
-  final void Function(String, Set<Audio>) addStarredStation;
-  final void Function(String) unStarStation;
   final void Function(String, Audio) removeAudioFromPlaylist;
   final List<String> Function() getTopFivePlaylistNames;
   final void Function(String, Audio) addAudioToPlaylist;
@@ -42,26 +36,6 @@ class LikeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    final starred =
-        audio.title == null ? false : isStarredStation(audio.title!);
-    final starStationButton = InkWell(
-      borderRadius: BorderRadius.circular(10),
-      onTap: audio.title == null
-          ? null
-          : () {
-              !starred
-                  ? addStarredStation(audio.title!, {audio})
-                  : unStarStation(audio.title!);
-            },
-      child: YaruAnimatedIcon(
-        starred
-            ? const YaruAnimatedStarIcon(filled: true)
-            : const YaruAnimatedStarIcon(filled: false),
-        initialProgress: 1.0,
-        color: audioSelected ? theme.colorScheme.onSurface : theme.hintColor,
-      ),
-    );
 
     final Widget likeButton;
     if (audioPageType != AudioPageType.podcast &&
@@ -95,6 +69,8 @@ class LikeButton extends StatelessWidget {
                 ? const YaruAnimatedHeartIcon(filled: true)
                 : const YaruAnimatedHeartIcon(filled: false),
             initialProgress: 1.0,
+            color:
+                audioSelected ? theme.colorScheme.onSurface : theme.hintColor,
           ),
         ),
       );
@@ -103,22 +79,18 @@ class LikeButton extends StatelessWidget {
 
       likeButton = Padding(
         padding: const EdgeInsets.only(right: 30, left: 10),
-        child: audioPageType == AudioPageType.radio
-            ? starStationButton
-            : InkWell(
-                borderRadius: BorderRadius.circular(10),
-                onTap: () =>
-                    liked ? removeLikedAudio(audio) : addLikedAudio(audio),
-                child: YaruAnimatedIcon(
-                  liked
-                      ? const YaruAnimatedHeartIcon(filled: true)
-                      : const YaruAnimatedHeartIcon(filled: false),
-                  initialProgress: 1.0,
-                  color: audioSelected
-                      ? theme.colorScheme.onSurface
-                      : theme.hintColor,
-                ),
-              ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          onTap: () => liked ? removeLikedAudio(audio) : addLikedAudio(audio),
+          child: YaruAnimatedIcon(
+            liked
+                ? const YaruAnimatedHeartIcon(filled: true)
+                : const YaruAnimatedHeartIcon(filled: false),
+            initialProgress: 1.0,
+            color:
+                audioSelected ? theme.colorScheme.onSurface : theme.hintColor,
+          ),
+        ),
       );
     }
 
