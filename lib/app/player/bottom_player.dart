@@ -120,9 +120,7 @@ class BottomPlayer extends StatelessWidget {
                   flex: 3,
                   child: _BottomPlayerTitleArtist(
                     audio: audio,
-                    onTextTap: audio == null ||
-                            audio?.audioType == null ||
-                            audio?.audioType == AudioType.radio
+                    onTextTap: audio == null || audio?.audioType == null
                         ? null
                         : (audioType, text) {
                             onTextTap(
@@ -241,7 +239,9 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
       children: [
         InkWell(
           borderRadius: BorderRadius.circular(4),
-          onTap: audio?.audioType == null || audio?.title == null
+          onTap: audio?.audioType == null ||
+                  audio?.title == null ||
+                  audio?.audioType == AudioType.podcast
               ? null
               : () => onTextTap?.call(
                     audio!.audioType!,

@@ -42,6 +42,15 @@ class PodcastAudioTile extends StatelessWidget {
       fontSize: 16,
     );
 
+    final date = DateFormat.MMMEd(
+      WidgetsBinding.instance.platformDispatcher.locale.countryCode,
+    ).format(DateTime.fromMillisecondsSinceEpoch(audio.year!));
+    final duration = formatTime(
+      audio.durationMs != null
+          ? Duration(milliseconds: audio.durationMs!.toInt())
+          : Duration.zero,
+    );
+
     return YaruExpandable(
       expandIcon: const SizedBox.shrink(),
       isExpanded: isExpanded,
@@ -55,11 +64,24 @@ class PodcastAudioTile extends StatelessWidget {
             right: 2,
             left: 2,
           ),
-          child: Text(
-            audio.title ?? '',
-            style: textStyle,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                audio.title ?? '',
+                style: textStyle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                '$date, $duration',
+                style: theme.textTheme.labelMedium
+                    ?.copyWith(color: selected ? null : theme.hintColor),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+            ],
           ),
         ),
       ),
@@ -104,6 +126,8 @@ class _Bottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
@@ -160,47 +184,23 @@ class _Bottom extends StatelessWidget {
             const SizedBox(
               width: 5,
             ),
-            if (audio.year != null)
-              Text(
-                '${DateFormat.MMMEd(
-                  WidgetsBinding.instance.platformDispatcher.locale.countryCode,
-                ).format(DateTime.fromMillisecondsSinceEpoch(audio.year!))}, ',
-                style: theme.textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.w100,
-                  color: theme.hintColor,
-                ),
-              ),
-            Text(
-              formatTime(
-                audio.durationMs != null
-                    ? Duration(milliseconds: audio.durationMs!.toInt())
-                    : Duration.zero,
-              ),
-              style: theme.textTheme.labelMedium?.copyWith(
-                fontWeight: FontWeight.w100,
-                color: theme.hintColor,
-              ),
-            ),
-            SizedBox(
-              width: 150,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: _AudioProgress(
-                  selected: selected,
-                  lastPosition: lastPosition,
-                  duration: audio.durationMs == null
-                      ? null
-                      : Duration(milliseconds: audio.durationMs!.toInt()),
-                ),
-              ),
+            _AudioProgress(
+              selected: selected,
+              lastPosition: lastPosition,
+              duration: audio.durationMs == null
+                  ? null
+                  : Duration(milliseconds: audio.durationMs!.toInt()),
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 15, left: 2),
-          child: _Description(
-            description: audio.description,
-            title: audio.title,
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1000),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 15, left: 2),
+            child: _Description(
+              description: audio.description,
+              title: audio.title,
+            ),
           ),
         )
       ],
@@ -318,26 +318,15 @@ class _AudioProgress extends StatelessWidget {
         duration != null && pos != null && duration!.inSeconds > pos.inSeconds;
 
     return RepaintBoundary(
-      child: SliderTheme(
-        data: theme.sliderTheme.copyWith(
-          thumbColor: Colors.white,
-          thumbShape: const RoundSliderThumbShape(
-            elevation: 0,
-            enabledThumbRadius: 0,
-            disabledThumbRadius: 0,
-          ),
-          trackHeight: 1,
-          overlayShape: const RoundSliderThumbShape(
-            elevation: 0,
-            enabledThumbRadius: 0,
-            disabledThumbRadius: 0,
-          ),
-        ),
-        child: Slider(
-          min: 0,
-          max: sliderActive ? duration!.inSeconds.toDouble() : 1.0,
-          value: sliderActive ? pos.inSeconds.toDouble() : 0,
-          onChanged: (value) {},
+      child: SizedBox(
+        width: 25,
+        height: 25,
+        child: YaruCircularProgressIndicator(
+          color: selected ? theme.primaryColor : theme.hintColor,
+          value: sliderActive
+              ? (pos.inSeconds.toDouble() / duration!.inSeconds.toDouble())
+              : 0,
+          strokeWidth: 3,
         ),
       ),
     );
