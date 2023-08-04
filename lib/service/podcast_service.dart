@@ -108,7 +108,7 @@ Audio _createAudio(Episode episode, Podcast? podcast) {
     album: podcast?.title,
     artist: podcast?.copyright,
     albumArtist: podcast?.description,
-    durationMs: episode.duration?.inMilliseconds.toDouble(),
+    durationMs: episode.duration?.inMilliseconds,
     year: episode.publicationDate?.millisecondsSinceEpoch,
     description: episode.description,
     website: podcast?.url,

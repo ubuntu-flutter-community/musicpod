@@ -89,8 +89,7 @@ FutureOr<(List<String>, Set<Audio>?)> _init(
       if (e is File) {
         try {
           final metadata = await MetadataRetriever.fromFile(e);
-          final audio =
-            _createAudio(e.path, metadata, File(e.path).uri.pathSegments.last);
+          final audio = _createAudio(e, metadata);
 
           newAudios.add(audio);
         } catch (error) {
@@ -103,8 +102,7 @@ FutureOr<(List<String>, Set<Audio>?)> _init(
   return (failedImports, newAudios);
 }
 
-
-Audio _createAudio(String path, Metadata metadata, [String? fileName]) {
+Audio _createAudio(File file, Metadata metadata) {
   return Audio(
     path: file.path,
     audioType: AudioType.local,
@@ -112,8 +110,10 @@ Audio _createAudio(String path, Metadata metadata, [String? fileName]) {
         metadata.albumArtistName ??
         metadata.trackArtistNames?.join(', ') ??
         '',
-    title: (metadata.trackName?.isNotEmpty == true ? metadata.trackName : fileName) ??
-        path,
+    title: (metadata.trackName?.isNotEmpty == true
+            ? metadata.trackName
+            : file.uri.pathSegments.last) ??
+        file.path,
     album: metadata.albumName == null
         ? ''
         : '${metadata.albumName} ${metadata.discNumber ?? ''}',
