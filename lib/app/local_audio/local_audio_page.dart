@@ -126,24 +126,21 @@ class _LocalAudioPageState extends State<LocalAudioPage>
     final tabBarView = TabBarView(
       children: [
         TitlesView(
-          onArtistTap: onTap,
-          onAlbumTap: onTap,
+          onTextTap: ({required audioType, required text}) => onTap(text),
           audios: audios,
           showWindowControls: showWindowControls,
         ),
         ArtistsView(
           showWindowControls: showWindowControls,
           similarArtistsSearchResult: artists,
-          onArtistTap: onTap,
-          onAlbumTap: onTap,
+          onTextTap: ({required audioType, required text}) => onTap(text),
           findArtist: findArtist,
           findImages: findImages,
         ),
         AlbumsView(
           showWindowControls: showWindowControls,
           albums: albums,
-          onArtistTap: onTap,
-          onAlbumTap: onTap,
+          onTextTap: ({required audioType, required text}) => onTap(text),
           addPinnedAlbum: addPinnedAlbum,
           findAlbum: findAlbum,
           isPinnedAlbum: isPinnedAlbum,

@@ -76,7 +76,8 @@ class BottomPlayer extends StatelessWidget {
 
   final void Function(bool?) setFullScreen;
 
-  final void Function({required String text, AudioType audioType}) onTextTap;
+  final void Function({required String text, required AudioType audioType})
+      onTextTap;
 
   final double volume;
   final Future<void> Function(double value) setVolume;
@@ -119,13 +120,17 @@ class BottomPlayer extends StatelessWidget {
                   flex: 3,
                   child: _BottomPlayerTitleArtist(
                     audio: audio,
-                    onTextTap: (audioType, text) {
-                      onTextTap(
-                        text: text,
-                        audioType: audio?.audioType ?? AudioType.local,
-                      );
-                      navigatorKey.currentState?.maybePop();
-                    },
+                    onTextTap: audio == null ||
+                            audio?.audioType == null ||
+                            audio?.audioType == AudioType.radio
+                        ? null
+                        : (audioType, text) {
+                            onTextTap(
+                              text: text,
+                              audioType: audio!.audioType!,
+                            );
+                            navigatorKey.currentState?.maybePop();
+                          },
                   ),
                 ),
                 const SizedBox(
@@ -226,7 +231,7 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
   });
 
   final Audio? audio;
-  final void Function(AudioType audioType, String text) onTextTap;
+  final void Function(AudioType audioType, String text)? onTextTap;
 
   @override
   Widget build(BuildContext context) {
@@ -238,7 +243,7 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
           onTap: audio?.audioType == null || audio?.title == null
               ? null
-              : () => onTextTap(
+              : () => onTextTap?.call(
                     audio!.audioType!,
                     audio!.title!,
                   ),
@@ -258,12 +263,16 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
         if (audio?.artist?.trim().isNotEmpty == true)
           InkWell(
             borderRadius: BorderRadius.circular(4),
-            onTap: audio?.audioType == null || audio?.artist == null
+            onTap: audio?.audioType == null ||
+                    audio?.audioType == AudioType.radio ||
+                    audio?.artist == null
                 ? null
-                : () => onTextTap(
+                : () {
+                    onTextTap?.call(
                       audio!.audioType!,
                       audio!.artist!,
-                    ),
+                    );
+                  },
             child: Tooltip(
               message: audio?.artist ?? ' ',
               child: Text(

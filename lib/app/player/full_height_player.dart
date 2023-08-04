@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
+import 'package:musicpod/app/globals.dart';
 import 'package:musicpod/app/player/full_height_player_controls.dart';
 import 'package:musicpod/app/player/player_track.dart';
 import 'package:musicpod/app/player/player_view.dart';
@@ -79,7 +80,8 @@ class FullHeightPlayer extends StatelessWidget {
 
   final PlayerViewMode playerViewMode;
 
-  final void Function({required String text, AudioType audioType}) onTextTap;
+  final void Function({required String text, required AudioType audioType})
+      onTextTap;
 
   final double volume;
   final Future<void> Function(double value) setVolume;
@@ -93,9 +95,15 @@ class FullHeightPlayer extends StatelessWidget {
 
     final title = InkWell(
       borderRadius: BorderRadius.circular(4),
-      onTap: audio?.audioType == null || audio?.title == null
+      onTap: audio?.audioType == null ||
+              audio?.title == null ||
+              audio?.audioType == AudioType.podcast
           ? null
-          : () => onTextTap(text: audio!.title!, audioType: audio!.audioType!),
+          : () {
+              setFullScreen(false);
+              navigatorKey.currentState?.maybePop();
+              onTextTap(text: audio!.title!, audioType: audio!.audioType!);
+            },
       child: Text(
         audio?.title?.isNotEmpty == true ? audio!.title! : '',
         style: TextStyle(
@@ -113,7 +121,11 @@ class FullHeightPlayer extends StatelessWidget {
       borderRadius: BorderRadius.circular(4),
       onTap: audio?.audioType == null || audio?.artist == null
           ? null
-          : () => onTextTap(text: audio!.artist!, audioType: audio!.audioType!),
+          : () {
+              setFullScreen(false);
+              navigatorKey.currentState?.maybePop();
+              onTextTap(text: audio!.artist!, audioType: audio!.audioType!);
+            },
       child: Text(
         audio?.artist ?? '',
         style: TextStyle(

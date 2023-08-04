@@ -11,14 +11,15 @@ class PlaylistPage extends StatelessWidget {
     super.key,
     required this.playlist,
     required this.unPinPlaylist,
-    this.onArtistTap,
-    this.onAlbumTap,
+    this.onTextTap,
   });
 
   final MapEntry<String, Set<Audio>> playlist;
   final void Function(String playlist) unPinPlaylist;
-  final void Function(String artist)? onArtistTap;
-  final void Function(String album)? onAlbumTap;
+  final void Function({
+    required String text,
+    required AudioType audioType,
+  })? onTextTap;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +32,7 @@ class PlaylistPage extends StatelessWidget {
         playlist.value.firstOrNull!.imageUrl == null;
 
     return AudioPage(
-      onArtistTap: onArtistTap,
-      onAlbumTap: onAlbumTap,
+      onTextTap: onTextTap,
       audioPageType: AudioPageType.playlist,
       image: !noPicture
           ? Image.memory(
