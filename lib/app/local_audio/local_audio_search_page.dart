@@ -89,8 +89,7 @@ class LocalAudioSearchPage extends StatelessWidget {
       children: [
         if (titlesResult?.isNotEmpty == true)
           _Titles(
-            onAlbumTap: onTap,
-            onArtistTap: onTap,
+            onTextTap: ({required audioType, required text}) => onTap(text),
             isPlaying: isPlaying,
             pause: pause,
             play: play,
@@ -104,8 +103,8 @@ class LocalAudioSearchPage extends StatelessWidget {
             child: _Albums(
               similarAlbumsResult: similarAlbumsSearchResult!,
               showWindowControls: showWindowControls,
-              onArtistTap: onTapWithPop,
-              onAlbumTap: onTapWithPop,
+              onTextTap: ({required audioType, required text}) =>
+                  onTapWithPop(text),
               findAlbum: findAlbum,
               addPinnedAlbum: addPinnedAlbum,
               removePinnedAlbum: removePinnedAlbum,
@@ -118,8 +117,8 @@ class LocalAudioSearchPage extends StatelessWidget {
             padding: const EdgeInsets.only(top: 10),
             child: _Artists(
               showWindowControls: showWindowControls,
-              onAlbumTap: onTapWithPop,
-              onArtistTap: onTapWithPop,
+              onTextTap: ({required audioType, required text}) =>
+                  onTapWithPop(text),
               findArtist: findArtist,
               findImages: findImages,
               similarArtistsSearchResult: similarArtistsSearchResult!,
@@ -132,8 +131,7 @@ class LocalAudioSearchPage extends StatelessWidget {
 
 class _Titles extends StatelessWidget {
   const _Titles({
-    this.onArtistTap,
-    this.onAlbumTap,
+    this.onTextTap,
     required this.isPlaying,
     this.currentAudio,
     required this.play,
@@ -142,8 +140,10 @@ class _Titles extends StatelessWidget {
     required this.titlesResult,
   });
 
-  final void Function(String artist)? onArtistTap;
-  final void Function(String album)? onAlbumTap;
+  final void Function({
+    required String text,
+    required AudioType audioType,
+  })? onTextTap;
 
   final bool isPlaying;
   final Audio? currentAudio;
@@ -195,8 +195,7 @@ class _Titles extends StatelessWidget {
                   right: 15,
                 ),
                 child: AudioTile(
-                  onAlbumTap: onAlbumTap,
-                  onArtistTap: onArtistTap,
+                  onTextTap: onTextTap,
                   showTrack: false,
                   isPlayerPlaying: isPlaying,
                   pause: pause,
@@ -220,8 +219,7 @@ class _Titles extends StatelessWidget {
 class _Albums extends StatelessWidget {
   const _Albums({
     required this.showWindowControls,
-    this.onArtistTap,
-    this.onAlbumTap,
+    this.onTextTap,
     required this.findAlbum,
     required this.addPinnedAlbum,
     required this.removePinnedAlbum,
@@ -232,8 +230,10 @@ class _Albums extends StatelessWidget {
 
   final bool showWindowControls;
 
-  final void Function(String artist)? onArtistTap;
-  final void Function(String album)? onAlbumTap;
+  final void Function({
+    required String text,
+    required AudioType audioType,
+  })? onTextTap;
 
   final Set<Audio>? Function(Audio, [AudioFilter]) findAlbum;
   final void Function(String, Set<Audio>) addPinnedAlbum;
@@ -312,8 +312,7 @@ class _Albums extends StatelessWidget {
                 builder: (context) {
                   return AlbumPage(
                     key: ValueKey(showWindowControls == false),
-                    onAlbumTap: onAlbumTap,
-                    onArtistTap: onArtistTap,
+                    onTextTap: onTextTap,
                     name: name,
                     isPinnedAlbum: isPinnedAlbum,
                     removePinnedAlbum: removePinnedAlbum,
@@ -368,8 +367,7 @@ class _Albums extends StatelessWidget {
 class _Artists extends StatelessWidget {
   const _Artists({
     required this.showWindowControls,
-    this.onArtistTap,
-    this.onAlbumTap,
+    this.onTextTap,
     required this.findImages,
     required this.findArtist,
     required this.similarArtistsSearchResult,
@@ -377,8 +375,10 @@ class _Artists extends StatelessWidget {
 
   final bool showWindowControls;
 
-  final void Function(String artist)? onArtistTap;
-  final void Function(String album)? onAlbumTap;
+  final void Function({
+    required String text,
+    required AudioType audioType,
+  })? onTextTap;
 
   final Set<Uint8List>? Function(Set<Audio>) findImages;
   final Set<Audio>? Function(Audio, [AudioFilter]) findArtist;
@@ -436,8 +436,7 @@ class _Artists extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) {
                           return ArtistPage(
-                            onAlbumTap: onAlbumTap,
-                            onArtistTap: onArtistTap,
+                            onTextTap: onTextTap,
                             images: images,
                             artistAudios: artistAudios,
                             showWindowControls: showWindowControls,

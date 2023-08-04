@@ -15,7 +15,8 @@ class PlayerView extends StatefulWidget {
   });
 
   final PlayerViewMode playerViewMode;
-  final void Function({required String text, AudioType audioType}) onTextTap;
+  final void Function({required String text, required AudioType audioType})
+      onTextTap;
 
   @override
   State<PlayerView> createState() => _PlayerViewState();

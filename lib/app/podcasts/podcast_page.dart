@@ -10,8 +10,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class PodcastPage extends StatelessWidget {
   const PodcastPage({
     super.key,
-    this.onAlbumTap,
-    this.onArtistTap,
+    this.onTextTap,
     this.imageUrl,
     required this.pageId,
     this.audios,
@@ -72,8 +71,10 @@ class PodcastPage extends StatelessWidget {
 
   final void Function(String name) removePodcast;
   final void Function(String name, Set<Audio> audios) addPodcast;
-  final void Function(String)? onAlbumTap;
-  final void Function(String)? onArtistTap;
+  final void Function({
+    required String text,
+    required AudioType audioType,
+  })? onTextTap;
   final String? imageUrl;
   final String pageId;
   final Set<Audio>? audios;
@@ -85,8 +86,7 @@ class PodcastPage extends StatelessWidget {
     return AudioPage(
       showAudioTileHeader: false,
       sort: false,
-      onAlbumTap: onAlbumTap,
-      onArtistTap: onArtistTap,
+      onTextTap: onTextTap,
       audioPageType: AudioPageType.podcast,
       image: imageUrl == null
           ? null

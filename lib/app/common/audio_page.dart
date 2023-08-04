@@ -28,8 +28,7 @@ class AudioPage extends StatelessWidget {
     this.image,
     this.showAudioPageHeader = true,
     this.audioFilter = AudioFilter.trackNumber,
-    this.onArtistTap,
-    this.onAlbumTap,
+    this.onTextTap,
     this.noResultMessage,
     this.titleLabel,
     this.artistLabel,
@@ -64,8 +63,10 @@ class AudioPage extends StatelessWidget {
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
 
-  final void Function(String artist)? onArtistTap;
-  final void Function(String album)? onAlbumTap;
+  final void Function({
+    required String text,
+    required AudioType audioType,
+  })? onTextTap;
 
   @override
   Widget build(BuildContext context) {
@@ -83,8 +84,7 @@ class AudioPage extends StatelessWidget {
       artistLabel: artistLabel,
       albumLabel: albumLabel,
       noResultMessage: noResultMessage,
-      onAlbumTap: onAlbumTap,
-      onArtistTap: onArtistTap,
+      onTextTap: onTextTap,
       audios: audios,
       audioPageType: audioPageType,
       pageId: pageId,
