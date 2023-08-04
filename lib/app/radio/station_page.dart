@@ -14,7 +14,7 @@ class StationPage extends StatelessWidget {
   const StationPage({
     super.key,
     required this.station,
-    this.onPlay,
+    required this.play,
     required this.name,
     required this.unStarStation,
     required this.starStation,
@@ -24,7 +24,7 @@ class StationPage extends StatelessWidget {
 
   final Audio station;
   final String name;
-  final void Function(Audio? audio)? onPlay;
+  final Future<void> Function({bool bigPlay, Audio? newAudio}) play;
   final void Function(String station) unStarStation;
   final void Function(String station) starStation;
   final bool isStarred;
@@ -117,8 +117,8 @@ class StationPage extends StatelessWidget {
                     bottom: station.imageUrl == null
                         ? AudioCardBottom(text: name)
                         : null,
-                    onTap: () => onPlay?.call(station),
-                    onPlay: () => onPlay?.call(station),
+                    onTap: () => play(newAudio: station),
+                    onPlay: () => play(newAudio: station),
                     image: SizedBox(
                       height: size,
                       width: size,
