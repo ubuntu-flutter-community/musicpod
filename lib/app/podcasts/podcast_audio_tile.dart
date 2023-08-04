@@ -43,6 +43,7 @@ class PodcastAudioTile extends StatelessWidget {
     );
 
     return YaruExpandable(
+      expandIcon: const SizedBox.shrink(),
       isExpanded: isExpanded,
       gapHeight: 0,
       header: MouseRegion(
@@ -105,100 +106,93 @@ class _Bottom extends StatelessWidget {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  child: YaruIconButton(
-                    icon: (isPlayerPlaying && selected)
-                        ? const Icon(YaruIcons.media_pause)
-                        : const Icon(YaruIcons.media_play),
-                    onPressed: () {
-                      if (isPlayerPlaying && selected) {
-                        pause();
+            CircleAvatar(
+              child: YaruIconButton(
+                icon: (isPlayerPlaying && selected)
+                    ? const Icon(YaruIcons.media_pause)
+                    : const Icon(YaruIcons.media_play),
+                onPressed: () {
+                  if (isPlayerPlaying && selected) {
+                    pause();
+                  } else {
+                    if (selected) {
+                      resume();
+                    } else {
+                      if (startPlaylist != null) {
+                        startPlaylist!();
                       } else {
-                        if (selected) {
-                          resume();
-                        } else {
-                          if (startPlaylist != null) {
-                            startPlaylist!();
-                          } else {
-                            play();
-                          }
-                        }
+                        play();
                       }
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                if (audio.year != null)
-                  Text(
-                    '${DateFormat.MMMEd(
-                      WidgetsBinding
-                          .instance.platformDispatcher.locale.countryCode,
-                    ).format(DateTime.fromMillisecondsSinceEpoch(audio.year!))}, ',
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.w100,
-                      color: theme.hintColor,
-                    ),
-                  ),
-                Text(
-                  formatTime(
-                    audio.durationMs != null
-                        ? Duration(milliseconds: audio.durationMs!.toInt())
-                        : Duration.zero,
-                  ),
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.w100,
-                    color: theme.hintColor,
-                  ),
-                ),
-                SizedBox(
-                  width: 150,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: _AudioProgress(
-                      selected: selected,
-                      lastPosition: lastPosition,
-                      duration: audio.durationMs == null
-                          ? null
-                          : Duration(milliseconds: audio.durationMs!.toInt()),
-                    ),
-                  ),
-                ),
-              ],
+                    }
+                  }
+                },
+              ),
             ),
-            Row(
-              children: [
-                YaruIconButton(
-                  onPressed: audio.website == null
-                      ? null
-                      : () => ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              behavior: SnackBarBehavior.floating,
-                              content: TextButton(
-                                child: Text(
-                                  'Copied to clipboard: ${audio.website}',
-                                ),
-                                onPressed: () =>
-                                    launchUrl(Uri.parse(audio.website!)),
-                              ),
+            const SizedBox(
+              width: 5,
+            ),
+            YaruIconButton(
+              onPressed: audio.website == null
+                  ? null
+                  : () => ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          content: TextButton(
+                            child: Text(
+                              'Copied to clipboard: ${audio.website}',
                             ),
+                            onPressed: () =>
+                                launchUrl(Uri.parse(audio.website!)),
                           ),
-                  icon: Icon(
-                    YaruIcons.share,
-                    color: selected ? null : theme.hintColor,
-                  ),
+                        ),
+                      ),
+              icon: Icon(
+                YaruIcons.share,
+                color: selected ? null : theme.hintColor,
+              ),
+            ),
+            const YaruIconButton(
+              icon: Icon(YaruIcons.download),
+              //TODO: implement download
+              onPressed: null,
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            if (audio.year != null)
+              Text(
+                '${DateFormat.MMMEd(
+                  WidgetsBinding.instance.platformDispatcher.locale.countryCode,
+                ).format(DateTime.fromMillisecondsSinceEpoch(audio.year!))}, ',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  fontWeight: FontWeight.w100,
+                  color: theme.hintColor,
                 ),
-                const YaruIconButton(
-                  icon: Icon(YaruIcons.download),
-                  //TODO: implement download
-                  onPressed: null,
+              ),
+            Text(
+              formatTime(
+                audio.durationMs != null
+                    ? Duration(milliseconds: audio.durationMs!.toInt())
+                    : Duration.zero,
+              ),
+              style: theme.textTheme.labelMedium?.copyWith(
+                fontWeight: FontWeight.w100,
+                color: theme.hintColor,
+              ),
+            ),
+            SizedBox(
+              width: 150,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: _AudioProgress(
+                  selected: selected,
+                  lastPosition: lastPosition,
+                  duration: audio.durationMs == null
+                      ? null
+                      : Duration(milliseconds: audio.durationMs!.toInt()),
                 ),
-              ],
+              ),
             ),
           ],
         ),
