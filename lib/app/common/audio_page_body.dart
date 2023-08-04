@@ -33,8 +33,7 @@ class AudioPageBody extends StatefulWidget {
     this.image,
     this.showAudioPageHeader,
     required this.audioFilter,
-    this.onArtistTap,
-    this.onAlbumTap,
+    this.onTextTap,
     this.noResultMessage,
     this.titleLabel,
     this.artistLabel,
@@ -67,8 +66,10 @@ class AudioPageBody extends StatefulWidget {
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
 
-  final void Function(String artist)? onArtistTap;
-  final void Function(String album)? onAlbumTap;
+  final void Function({
+    required String text,
+    required AudioType audioType,
+  })? onTextTap;
 
   @override
   State<AudioPageBody> createState() => _AudioPageBodyState();
@@ -285,8 +286,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   titleFlex: widget.titleFlex,
                   artistFlex: widget.artistFlex,
                   albumFlex: widget.albumFlex,
-                  onAlbumTap: widget.onAlbumTap,
-                  onArtistTap: widget.onArtistTap,
+                  onTextTap: widget.onTextTap,
                   isPlayerPlaying: isPlaying,
                   pause: pause,
                   play: () async {
