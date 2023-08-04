@@ -9,6 +9,18 @@ import 'package:musicpod/utils.dart';
 
 class LibraryService {
   //
+  // last positions
+  //
+  final Map<String, Duration> _lastPositions = {};
+  final _lastPositionsController = StreamController<bool>.broadcast();
+  Stream<bool> get lastPositionsChanged => _lastPositionsController.stream;
+  void addLastPosition(String guid, Duration lastPosition) {
+    _lastPositions.putIfAbsent(guid, () => lastPosition);
+  }
+
+  Duration? getLastPosition(String guid) => _lastPositions[guid];
+
+  //
   // Liked Audios
   //
   Set<Audio> _likedAudios = {};
@@ -223,6 +235,7 @@ class LibraryService {
     await _likedAudiosController.close();
     await _playlistsController.close();
     await _starredStationsController.close();
+    await _lastPositionsController.close();
   }
 }
 

@@ -15,6 +15,7 @@ import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/podcast_service.dart';
+import 'package:musicpod/string_x.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -87,7 +88,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final setPodcastGenre = model.setPodcastGenre;
     final searchResult = context.select((PodcastModel m) => m.searchResult);
     final searchResultCount =
-        context.select((PodcastModel m) => m.searchResult?.length);
+        context.select((PodcastModel m) => m.searchResult?.resultCount);
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
@@ -106,17 +107,21 @@ class _PodcastsPageState extends State<PodcastsPage> {
             .map((e) => const AudioCard())
             .toList(),
       );
-    } else if (searchResult.isEmpty == true) {
-      grid = NoSearchResultPage(
-        message: context.l10n.noPodcastChartsFound,
-      );
+    } else if (searchResult.items.isEmpty == true) {
+      final noResultMessage = searchResult.lastError.isEmpty
+          ? context.l10n.noPodcastChartsFound
+          : (searchResult.lastError.contains('RangeError')
+              ? '${context.l10n.decreaseSearchLimit} ${country?.name.capitalize()}'
+              : searchResult.lastError);
+
+      grid = NoSearchResultPage(message: noResultMessage);
     } else {
       grid = GridView.builder(
         padding: kPodcastGridPadding,
         itemCount: searchResultCount,
         gridDelegate: kImageGridDelegate,
         itemBuilder: (context, index) {
-          final podcast = searchResult.elementAt(index);
+          final podcast = searchResult.items.elementAt(index);
 
           final image = SafeNetworkImage(
             url: podcast.artworkUrl600,
@@ -199,6 +204,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
         backgroundColor: light ? kBackGroundLight : kBackgroundDark,
         appBar: YaruWindowTitleBar(
           backgroundColor: Colors.transparent,
+          border: BorderSide.none,
           leading: (Navigator.canPop(context))
               ? const YaruBackButton(
                   style: YaruBackButtonStyle.rounded,

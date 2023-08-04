@@ -12,8 +12,8 @@ class PodcastService {
 
   final _searchChangedController = StreamController<bool>.broadcast();
   Stream<bool> get searchChanged => _searchChangedController.stream;
-  List<Item>? _searchResult;
-  List<Item>? get searchResult => _searchResult;
+  SearchResult? _searchResult;
+  SearchResult? get searchResult => _searchResult;
   final Search _search;
 
   Future<void> dispose() async {
@@ -28,26 +28,32 @@ class PodcastService {
   }) async {
     _searchResult = null;
 
-    SearchResult results;
-    if (searchQuery == null || searchQuery.isEmpty == true) {
-      results = await _search.charts(
-        genre: podcastGenre == PodcastGenre.all ? '' : podcastGenre.id,
-        limit: limit,
-        country: country ?? Country.none,
-      );
-    } else {
-      results = await _search.search(
-        searchQuery,
-        country: country ?? Country.none,
-        language: Language.none,
-        limit: limit,
-      );
+    SearchResult? result;
+    String? error;
+    try {
+      if (searchQuery == null || searchQuery.isEmpty == true) {
+        result = await _search.charts(
+          genre: podcastGenre == PodcastGenre.all ? '' : podcastGenre.id,
+          limit: limit,
+          country: country ?? Country.none,
+        );
+      } else {
+        result = await _search.search(
+          searchQuery,
+          country: country ?? Country.none,
+          language: Language.none,
+          limit: limit,
+        );
+      }
+    } catch (e) {
+      error = e.toString();
     }
 
-    if (results.successful && results.items.isNotEmpty) {
-      _searchResult = results.items;
+    if (result != null && result.successful) {
+      _searchResult = result;
     } else {
-      _searchResult = [];
+      _searchResult =
+          SearchResult.fromError(lastError: error ?? 'Something went wrong');
     }
     _searchChangedController.add(true);
   }
@@ -101,7 +107,10 @@ Audio _createAudio(Episode episode, Podcast? podcast) {
     title: episode.title,
     album: podcast?.title,
     artist: podcast?.copyright,
-    description: podcast?.description,
+    albumArtist: podcast?.description,
+    durationMs: episode.duration?.inMilliseconds.toDouble(),
+    year: episode.publicationDate?.millisecondsSinceEpoch,
+    description: episode.description,
     website: podcast?.url,
   );
 }

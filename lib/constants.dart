@@ -28,8 +28,10 @@ const kHeaderPadding = EdgeInsets.only(
   bottom: kPagePadding - 5,
 );
 
+const kCardHeight = 200.0;
+
 const kImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
-  maxCrossAxisExtent: 250,
+  maxCrossAxisExtent: kCardHeight,
   mainAxisSpacing: 10,
   crossAxisSpacing: 10,
 );
@@ -49,6 +51,7 @@ const kStarredStationsFileName = 'starredStations.json';
 const kMusicPodConfigSubDir = 'musicpod';
 const kDirectoryProperty = 'directory';
 const kRadioUrl = 'de1.api.radio-browser.info';
+const kRadioBrowserBaseUrl = 'all.api.radio-browser.info';
 const kLastAudio = 'lastAudio';
 const kLastPositionAsString = 'lastPositionAsString';
 const kLastDurationAsString = 'lastDurationAsString';
