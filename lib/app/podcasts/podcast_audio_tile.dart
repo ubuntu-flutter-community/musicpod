@@ -202,6 +202,12 @@ class _Bottom extends StatelessWidget {
               title: audio.title,
             ),
           ),
+        ),
+        const Padding(
+          padding: EdgeInsets.only(top: 10, bottom: 10, right: 50),
+          child: Divider(
+            height: 0,
+          ),
         )
       ],
     );
