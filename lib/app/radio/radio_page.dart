@@ -271,7 +271,7 @@ class _StationCard extends StatelessWidget {
               station.title ?? station.toString(),
               {station},
             ),
-            onPlay: (audio) => play(newAudio: station),
+            play: play,
             isStarred: starred,
           );
         },
