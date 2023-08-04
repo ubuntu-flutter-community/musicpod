@@ -93,8 +93,12 @@ class _PlayerViewState extends State<PlayerView> {
     final volume = context.select((PlayerModel m) => m.volume);
     final setVolume = playerModel.setVolume;
 
+    final isVideo = context.select((PlayerModel m) => m.isVideo);
+
     if (widget.playerViewMode != PlayerViewMode.bottom) {
       return FullHeightPlayer(
+        isVideo: isVideo == true,
+        videoController: playerModel.controller,
         playerViewMode: widget.playerViewMode,
         onTextTap: widget.onTextTap,
         setFullScreen: setFullScreen,
@@ -128,6 +132,8 @@ class _PlayerViewState extends State<PlayerView> {
       );
     } else {
       return BottomPlayer(
+        isVideo: isVideo,
+        videoController: playerModel.controller,
         onTextTap: widget.onTextTap,
         setFullScreen: setFullScreen,
         audio: audio,
