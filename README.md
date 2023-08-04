@@ -47,7 +47,8 @@ Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https
 
 ## MusicPod Level 2
 
-- [ ] Video Podcasts WIP
+- [X] Video Podcasts ([#71](https://github.com/ubuntu-flutter-community/musicpod/issues/71))
+- [ ] Chromecast Support ([#91](https://github.com/ubuntu-flutter-community/musicpod/issues/91))
 - [ ] Big feature: add a shop to buy digital audio for your collection
 - [ ] streaming provider agnostic sharing links
 - [X] tag-grid view for the radio page
