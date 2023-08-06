@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/globals.dart';
 import 'package:musicpod/app/player/full_height_player_controls.dart';
@@ -42,6 +43,8 @@ class FullHeightPlayer extends StatelessWidget {
     required this.onTextTap,
     required this.volume,
     required this.setVolume,
+    required this.videoController,
+    required this.isVideo,
   });
 
   final Audio? audio;
@@ -82,6 +85,9 @@ class FullHeightPlayer extends StatelessWidget {
 
   final double volume;
   final Future<void> Function(double value) setVolume;
+
+  final VideoController videoController;
+  final bool isVideo;
 
   @override
   Widget build(BuildContext context) {
@@ -184,6 +190,8 @@ class FullHeightPlayer extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: _FullHeightPlayerImage(
+                          isVideo: isVideo,
+                          videoController: videoController,
                           audio: audio,
                         ),
                       ),
@@ -325,9 +333,15 @@ class _UpNextBubble extends StatelessWidget {
 }
 
 class _FullHeightPlayerImage extends StatelessWidget {
-  const _FullHeightPlayerImage({this.audio});
+  const _FullHeightPlayerImage({
+    this.audio,
+    required this.videoController,
+    required this.isVideo,
+  });
 
   final Audio? audio;
+  final VideoController videoController;
+  final bool isVideo;
 
   @override
   Widget build(BuildContext context) {
@@ -340,6 +354,19 @@ class _FullHeightPlayerImage extends StatelessWidget {
       iconData = YaruIcons.podcast;
     } else {
       iconData = YaruIcons.music_note;
+    }
+
+    if (isVideo) {
+      return RepaintBoundary(
+        child: Padding(
+          padding: const EdgeInsets.all(28.0),
+          child: Video(
+            height: 400,
+            width: 400,
+            controller: videoController,
+          ),
+        ),
+      );
     }
 
     Widget image;

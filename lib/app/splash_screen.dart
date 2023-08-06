@@ -4,7 +4,10 @@ import 'package:yaru_icons/yaru_icons.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({
     super.key,
+    this.color,
   });
+
+  final Color? color;
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -34,23 +37,26 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Center(
-      child: AnimatedOpacity(
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.bounceIn,
-        opacity: _animationController.value,
-        child: SizedBox(
-          child: Container(
-            width: 350,
-            height: 350,
-            decoration: BoxDecoration(
-              color: theme.primaryColor,
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: const Icon(
-              YaruIcons.music_note,
-              size: 250,
-              color: Colors.white,
+    return Material(
+      color: widget.color,
+      child: Center(
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 100),
+          curve: Curves.bounceIn,
+          opacity: _animationController.value,
+          child: SizedBox(
+            child: Container(
+              width: 350,
+              height: 350,
+              decoration: BoxDecoration(
+                color: theme.primaryColor,
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: const Icon(
+                YaruIcons.music_note,
+                size: 250,
+                color: Colors.white,
+              ),
             ),
           ),
         ),

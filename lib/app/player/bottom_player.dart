@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/globals.dart';
 import 'package:musicpod/app/player/like_icon_button.dart';
@@ -42,6 +43,8 @@ class BottomPlayer extends StatelessWidget {
     required this.onTextTap,
     required this.setVolume,
     required this.volume,
+    this.isVideo,
+    required this.videoController,
     required this.queue,
   });
 
@@ -79,6 +82,9 @@ class BottomPlayer extends StatelessWidget {
   final double volume;
   final Future<void> Function(double value) setVolume;
 
+  final bool? isVideo;
+  final VideoController videoController;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -100,6 +106,8 @@ class BottomPlayer extends StatelessWidget {
             iconData: iconData,
             audio: audio,
             size: _kBottomPlayerHeight,
+            videoController: videoController,
+            isVideo: isVideo,
           ),
           const SizedBox(
             width: 20,
@@ -112,9 +120,7 @@ class BottomPlayer extends StatelessWidget {
                   flex: 3,
                   child: _BottomPlayerTitleArtist(
                     audio: audio,
-                    onTextTap: audio == null ||
-                            audio?.audioType == null ||
-                            audio?.audioType == AudioType.radio
+                    onTextTap: audio == null || audio?.audioType == null
                         ? null
                         : (audioType, text) {
                             onTextTap(
@@ -233,7 +239,9 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
       children: [
         InkWell(
           borderRadius: BorderRadius.circular(4),
-          onTap: audio?.audioType == null || audio?.title == null
+          onTap: audio?.audioType == null ||
+                  audio?.title == null ||
+                  audio?.audioType == AudioType.podcast
               ? null
               : () => onTextTap?.call(
                     audio!.audioType!,
@@ -288,15 +296,31 @@ class _BottomPlayerImage extends StatelessWidget {
     this.audio,
     required this.iconData,
     required this.size,
+    this.isVideo,
+    required this.videoController,
   });
   final Audio? audio;
   final IconData iconData;
   final double size;
+  final bool? isVideo;
+  final VideoController videoController;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    if (audio?.pictureData != null) {
+    if (isVideo == true) {
+      return RepaintBoundary(
+        child: Video(
+          height: size,
+          width: size,
+          filterQuality: FilterQuality.medium,
+          controller: videoController,
+          controls: (state) {
+            return const SizedBox.shrink();
+          },
+        ),
+      );
+    } else if (audio?.pictureData != null) {
       return AnimatedContainer(
         height: size,
         width: size,
