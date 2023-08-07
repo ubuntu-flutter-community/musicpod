@@ -14,7 +14,6 @@ import 'package:musicpod/app/player/player_view.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/radio/radio_model.dart';
 import 'package:musicpod/app/splash_screen.dart';
-import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/local_audio_service.dart';
@@ -101,7 +100,6 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final light = theme.brightness == Brightness.light;
     final playerToTheRight = MediaQuery.of(context).size.width > 1700;
 
     // Connectivity
@@ -122,8 +120,7 @@ class _AppState extends State<App> {
     final surfaceTintColor =
         context.select((PlayerModel m) => m.surfaceTintColor);
     final isFullScreen = context.select((PlayerModel m) => m.fullScreen);
-    final playerBg =
-        surfaceTintColor ?? (light ? kBackGroundLight : kBackgroundDark);
+    final playerBg = surfaceTintColor ?? (theme.scaffoldBackgroundColor);
 
     // Library
     // Watching values

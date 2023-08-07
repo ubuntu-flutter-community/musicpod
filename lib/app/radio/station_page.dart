@@ -83,11 +83,8 @@ class StationPage extends StatelessWidget {
         context.select((AppModel a) => a.showWindowControls);
 
     return YaruDetailPage(
-      backgroundColor: theme.brightness == Brightness.dark
-          ? kBackgroundDark
-          : kBackGroundLight,
       appBar: YaruWindowTitleBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: theme.scaffoldBackgroundColor,
         border: BorderSide.none,
         style: showWindowControls
             ? YaruTitleBarStyle.normal
