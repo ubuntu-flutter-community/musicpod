@@ -74,7 +74,6 @@ class _RadioPageState extends State<RadioPage> {
     final setSearchActive = model.setSearchActive;
 
     final theme = Theme.of(context);
-    final light = theme.brightness == Brightness.light;
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
@@ -171,9 +170,8 @@ class _RadioPageState extends State<RadioPage> {
       }
 
       return YaruDetailPage(
-        backgroundColor: light ? kBackGroundLight : kBackgroundDark,
         appBar: YaruWindowTitleBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: theme.scaffoldBackgroundColor,
           border: BorderSide.none,
           style: showWindowControls
               ? YaruTitleBarStyle.normal

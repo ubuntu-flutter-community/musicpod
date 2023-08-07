@@ -54,7 +54,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final setSearchActive = model.setSearchActive;
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
     final theme = Theme.of(context);
-    final light = theme.brightness == Brightness.light;
     final libraryModel = context.read<LibraryModel>();
     final podcastSubscribed = libraryModel.podcastSubscribed;
     final removePodcast = libraryModel.removePodcast;
@@ -202,9 +201,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
       return const OfflinePage();
     } else {
       return YaruDetailPage(
-        backgroundColor: light ? kBackGroundLight : kBackgroundDark,
         appBar: YaruWindowTitleBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: theme.scaffoldBackgroundColor,
           border: BorderSide.none,
           leading: (Navigator.canPop(context))
               ? const YaruBackButton(

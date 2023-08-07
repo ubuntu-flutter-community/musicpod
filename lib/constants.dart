@@ -40,8 +40,6 @@ const kShimmerBaseLight = Color.fromARGB(120, 230, 230, 230);
 const kShimmerBaseDark = Color.fromARGB(255, 51, 51, 51);
 const kShimmerHighLightLight = Color.fromARGB(197, 218, 218, 218);
 const kShimmerHighLightDark = Color.fromARGB(255, 57, 57, 57);
-const kBackgroundDark = Color.fromARGB(255, 37, 37, 37);
-const kBackGroundLight = Colors.white;
 
 const kLikedAudios = 'likedAudios.json';
 const kPlaylistsFileName = 'playlists.json';
