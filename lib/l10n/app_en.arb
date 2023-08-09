@@ -73,5 +73,6 @@
     "volume": "Volume",
     "queue": "Queue",
     "limit": "Limit",
-    "decreaseSearchLimit": "Please decrease the search limit for"
+    "decreaseSearchLimit": "Please decrease the search limit for",
+    "podcastFeedIsEmpty": "Sorry, this podcast's feed is empty."
 }

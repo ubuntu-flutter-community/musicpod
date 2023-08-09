@@ -195,4 +195,8 @@ class LibraryModel extends SafeChangeNotifier {
   Duration? getLastPosition(String guid) => _service.getLastPosition(guid);
   void addLastPosition(String guid, Duration lastPosition) =>
       _service.addLastPosition(guid, lastPosition);
+
+  Future<void> disposePatchNotes() async => await _service.disposePatchNotes();
+
+  bool get recentPatchNotesDisposed => _service.recentPatchNotesDisposed;
 }

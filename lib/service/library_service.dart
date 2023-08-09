@@ -209,6 +209,7 @@ class LibraryService {
   }
 
   Future<void> init() async {
+    await _readRecentPatchNotesDisposed();
     final indexOrNull = await readSetting(kLocalAudioIndex);
     _localAudioIndex = indexOrNull == null ? 0 : int.parse(indexOrNull);
     _playlists = await _read(kPlaylistsFileName);
@@ -236,6 +237,23 @@ class LibraryService {
     await _playlistsController.close();
     await _starredStationsController.close();
     await _lastPositionsController.close();
+  }
+
+  Future<void> disposePatchNotes() async {
+    await writeSetting(
+      kRecentPatchNotesDisposed,
+      DateTime.now().toUtc().toString(),
+    );
+  }
+
+  bool _recentPatchNotesDisposed = false;
+  bool get recentPatchNotesDisposed => _recentPatchNotesDisposed;
+
+  Future<void> _readRecentPatchNotesDisposed() async {
+    String? value = await readSetting(kRecentPatchNotesDisposed);
+    if (value != null) {
+      _recentPatchNotesDisposed = true;
+    }
   }
 }
 

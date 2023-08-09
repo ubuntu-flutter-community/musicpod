@@ -120,23 +120,30 @@ class _PodcastsPageState extends State<PodcastsPage> {
         itemCount: searchResultCount,
         gridDelegate: kImageGridDelegate,
         itemBuilder: (context, index) {
-          final podcast = searchResult.items.elementAt(index);
+          final podcastItem = searchResult.items.elementAt(index);
 
           final image = SafeNetworkImage(
-            url: podcast.artworkUrl600,
+            url: podcastItem.artworkUrl600,
             fit: BoxFit.contain,
           );
 
           return AudioCard(
             image: image,
-            onPlay: () async {
-              if (podcast.feedUrl == null) return;
-              final feed = await findEpisodes(url: podcast.feedUrl!);
-              startPlaylist(feed, podcast.collectionName!);
+            onPlay: () {
+              if (podcastItem.feedUrl == null) return;
+              findEpisodes(feedUrl: podcastItem.feedUrl!).then((feed) {
+                if (feed.isNotEmpty) {
+                  startPlaylist(feed, podcastItem.feedUrl!);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(context.l10n.podcastFeedIsEmpty)),
+                  );
+                }
+              });
             },
             onTap: () async => await pushPodcastPage(
               context: context,
-              podcastItem: podcast,
+              podcastItem: podcastItem,
               podcastSubscribed: podcastSubscribed,
               onTapText: ({required audioType, required text}) =>
                   onTapText(text),
@@ -263,14 +270,16 @@ Future<void> pushPodcastPage({
 
   setFeedUrl(podcastItem.feedUrl);
 
-  await findEpisodes(url: podcastItem.feedUrl!).then((podcast) async {
-    if (oldFeedUrl == podcastItem.feedUrl) return;
+  await findEpisodes(feedUrl: podcastItem.feedUrl!).then((podcast) async {
+    if (oldFeedUrl == podcastItem.feedUrl || podcast.isEmpty) {
+      return;
+    }
 
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          final subscribed = podcastSubscribed(podcast.first.album);
-          final id = podcastItem.collectionName ?? podcast.toString();
+          final subscribed = podcastSubscribed(podcastItem.feedUrl);
+          final id = podcastItem.feedUrl;
 
           return PodcastPage(
             subscribed: subscribed,
@@ -279,7 +288,10 @@ Future<void> pushPodcastPage({
             removePodcast: removePodcast,
             onTextTap: onTapText,
             audios: podcast,
-            pageId: id,
+            pageId: id!,
+            title: podcast.firstOrNull?.album ??
+                podcast.firstOrNull?.title ??
+                podcastItem.feedUrl!,
           );
         },
       ),
