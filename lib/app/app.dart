@@ -14,6 +14,7 @@ import 'package:musicpod/app/player/player_view.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/radio/radio_model.dart';
 import 'package:musicpod/app/splash_screen.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/local_audio_service.dart';
@@ -44,7 +45,7 @@ class App extends StatefulWidget {
           create: (_) => LocalAudioModel(getService<LocalAudioService>()),
         ),
         ChangeNotifierProvider(
-          create: (_) => LibraryModel(getService<LibraryService>())..init(),
+          create: (_) => LibraryModel(getService<LibraryService>()),
         ),
         ChangeNotifierProvider(
           create: (_) => PodcastModel(
@@ -93,8 +94,39 @@ class _AppState extends State<App> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (mounted) {
         context.read<PlayerModel>().init();
+        final lm = context.read<LibraryModel>();
+        lm.init().then((value) {
+          if (lm.recentPatchNotesDisposed == false) {
+            _showPatchNotes(lm.disposePatchNotes);
+          }
+        });
       }
     });
+  }
+
+  Future<dynamic> _showPatchNotes(Future<void> Function() disposePatchNotes) {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(kRecentPatchNotesTitle),
+          content: Text(
+            kRecentPatchNotes,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () async {
+                await disposePatchNotes()
+                    .then((value) => Navigator.of(context).pop());
+              },
+              child: const Text('OK I understand'),
+            )
+          ],
+        );
+      },
+    );
   }
 
   @override

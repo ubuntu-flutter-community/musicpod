@@ -17,6 +17,7 @@ class PodcastPage extends StatelessWidget {
     this.subscribed = true,
     required this.removePodcast,
     required this.addPodcast,
+    required this.title,
   });
 
   static Widget createIcon({
@@ -77,6 +78,7 @@ class PodcastPage extends StatelessWidget {
   })? onTextTap;
   final String? imageUrl;
   final String pageId;
+  final String title;
   final Set<Audio>? audios;
   final bool subscribed;
 
@@ -106,11 +108,12 @@ class PodcastPage extends StatelessWidget {
               filterQuality: FilterQuality.medium,
             ),
       pageLabel: context.l10n.podcast,
-      pageTitle: pageId,
+      pageTitle: title,
       pageSubtile: audios?.firstOrNull?.artist,
       pageDescription: audios?.firstOrNull?.albumArtist,
       audios: audios,
       pageId: pageId,
+      title: Text(title),
       showTrack: false,
       editableName: false,
       deletable: false,

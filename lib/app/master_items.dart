@@ -116,12 +116,17 @@ List<MasterItem> createMasterItems({
     for (final podcast in subbedPodcasts.entries)
       MasterItem(
         tileBuilder: (context) => PodcastPage.createTitle(
-          title: podcast.key,
+          title: podcast.value.firstOrNull?.album ??
+              podcast.value.firstOrNull?.title ??
+              podcast.value.firstOrNull.toString(),
           enabled: showSubbedPodcasts,
         ),
         builder: (context) => isOnline
             ? PodcastPage(
                 pageId: podcast.key,
+                title: podcast.value.firstOrNull?.album ??
+                    podcast.value.firstOrNull?.title ??
+                    podcast.value.firstOrNull.toString(),
                 audios: podcast.value,
                 onTextTap: onTextTap,
                 addPodcast: addPodcast,

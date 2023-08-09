@@ -78,7 +78,7 @@ class PodcastService {
     for (final oldPodcast in oldPodcasts.entries) {
       if (oldPodcast.value.firstOrNull?.website != null) {
         findEpisodes(
-          url: oldPodcast.value.firstOrNull!.website!,
+          feedUrl: oldPodcast.value.firstOrNull!.website!,
         ).then((audios) {
           if (!listsAreEqual(
             audios.toList(),
@@ -115,9 +115,9 @@ Audio _createAudio(Episode episode, Podcast? podcast) {
   );
 }
 
-Future<Set<Audio>> findEpisodes({required String url}) async {
+Future<Set<Audio>> findEpisodes({required String feedUrl}) async {
   final episodes = <Audio>{};
-  final Podcast? podcast = await compute(loadPodcast, url);
+  final Podcast? podcast = await compute(loadPodcast, feedUrl);
 
   if (podcast?.episodes.isNotEmpty == true) {
     for (var episode in podcast?.episodes ?? []) {

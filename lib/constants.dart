@@ -54,3 +54,22 @@ const kLastAudio = 'lastAudio';
 const kLastPositionAsString = 'lastPositionAsString';
 const kLastDurationAsString = 'lastDurationAsString';
 const kLocalAudioIndex = 'localAudioIndex';
+
+// Bug fix notes
+
+// 2023 08 09
+const kPatchNotes20230809disposed = 'patchNotes20230809disposed';
+const kPatchNotesTitle20230809 = 'Patch notes: 2023-09-08';
+const kPatchNotes20230809 = 'Hello there :) \n\n'
+    'I hope you are enjoying MusicPod.'
+    ' There was a bug in how to subscribe to podcasts.'
+    ' This bug is now fixed but with this bugfix MusicPod will not find'
+    ' your podcast subscriptions you made until now.'
+    ' Sadly this can only be fixed by unsubscribing'
+    ' and then resubscribing again to your favorite podcasts.'
+    ' Please unsubscribe and subscribe to your favorite podcasts now.'
+    ' Thank you very much and have fun with MusicPod.';
+
+const kRecentPatchNotesDisposed = kPatchNotes20230809disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20230809;
+const kRecentPatchNotes = kPatchNotes20230809;
