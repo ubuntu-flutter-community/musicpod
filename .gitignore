@@ -45,7 +45,7 @@ app.*.map.json
 
 .vscode/
 musicpod_0.1.0_amd64.snap
-pubspec.lock
+#pubspec.lock
 pinnedAlbums.json
 playlists.json
 podcasts.json
