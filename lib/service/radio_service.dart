@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:basic_utils/basic_utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:musicpod/constants.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
@@ -11,42 +10,11 @@ class RadioService {
 
   RadioService(this.connectivity);
 
-  Future<bool> init() async {
+  Future<void> init() async {
     final result = await connectivity.checkConnectivity();
-    if (result != ConnectivityResult.none) {
-      if (radioBrowserApi == null) {
-        final hosts = await _findHost();
-
-        for (var host in hosts) {
-          try {
-            radioBrowserApi = RadioBrowserApi.fromHost(host);
-            return true;
-            // ignore: unused_catch_clause
-          } on Exception catch (e) {
-            return false;
-          }
-        }
-      } else {
-        return true;
-      }
+    if (result != ConnectivityResult.none && radioBrowserApi == null) {
+      radioBrowserApi = const RadioBrowserApi.fromHost(kRadioUrl);
     }
-    return false;
-  }
-
-  Future<List<String>> _findHost() async {
-    final hosts = <String>[];
-    final records = await DnsUtils.lookupRecord(
-      kRadioBrowserBaseUrl,
-      RRecordType.A,
-    );
-
-    for (RRecord record in records ?? <RRecord>[]) {
-      final reverse = await DnsUtils.reverseDns(record.data);
-      for (RRecord r in reverse ?? <RRecord>[]) {
-        hosts.add(r.data.replaceAll('info.', 'info'));
-      }
-    }
-    return hosts;
   }
 
   Future<void> dispose() async {

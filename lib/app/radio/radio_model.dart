@@ -77,11 +77,8 @@ class RadioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  bool? _connected;
-  bool? get connected => _connected;
-
   Future<void> init(String? countryCode) async {
-    _connected = await _radioService.init();
+    await _radioService.init();
 
     _stationsSub =
         _radioService.stationsChanged.listen((_) => notifyListeners());
@@ -91,14 +88,12 @@ class RadioModel extends SafeChangeNotifier {
 
     _tagsSub = _radioService.tagsChanged.listen((_) => notifyListeners());
 
-    if (connected == true) {
-      await _radioService.loadTags();
-    }
+    await _radioService.loadTags();
 
     final c = Country.values.firstWhereOrNull((c) => c.code == countryCode);
     _country = c;
 
-    if (stations == null && connected == true) {
+    if (stations == null) {
       await loadStationsByCountry();
     }
 
