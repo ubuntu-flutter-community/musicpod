@@ -21,7 +21,7 @@ environment:
 
 apps:
   musicpod:
-    command: musicpod
+    command: bin/musicpod
     extensions: [gnome]
     plugs:
       - network
@@ -57,14 +57,41 @@ parts:
     prime:
       - usr/lib/*/libmpv*
 
+  flutter-git:
+    source: https://github.com/flutter/flutter.git
+    source-tag: 3.10.5
+    source-depth: 1
+    plugin: nil
+    override-build: |
+      mkdir -p $CRAFT_PART_INSTALL/usr/bin
+      mkdir -p $CRAFT_PART_INSTALL/usr/libexec
+      cp -r $CRAFT_PART_SRC $CRAFT_PART_INSTALL/usr/libexec/flutter
+      ln -s $CRAFT_PART_INSTALL/usr/libexec/flutter/bin/flutter $CRAFT_PART_INSTALL/usr/bin/flutter
+      $CRAFT_PART_INSTALL/usr/bin/flutter doctor
+    build-packages:
+      - clang
+      - cmake
+      - curl
+      - libgtk-3-dev
+      - ninja-build
+      - unzip
+      - xz-utils
+      - zip
+    override-prime: ''
+
   musicpod:
-    after: [mpv]
+    after: [flutter-git, mpv]
     source: .
     source-type: git
-    plugin: flutter
-    flutter-target: lib/main.dart
+    plugin: nil
     build-environment:
       - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET:/snap/gnome-42-2204-sdk/current/lib/$CRAFT_ARCH_TRIPLET:/snap/gnome-42-2204-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET:/snap/gnome-42-2204-sdk/current/usr/lib:/snap/gnome-42-2204-sdk/current/usr/lib/vala-current:/snap/gnome-42-2204-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET/pulseaudio${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+    override-build: |
+      set -eux
+      mkdir -p $CRAFT_PART_INSTALL/bin/lib
+      flutter pub get
+      flutter build linux --release -v
+      cp -r build/linux/*/release/bundle/* $CRAFT_PART_INSTALL/bin/
 
   deps:
     plugin: nil
