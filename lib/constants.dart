@@ -49,7 +49,6 @@ const kStarredStationsFileName = 'starredStations.json';
 const kMusicPodConfigSubDir = 'musicpod';
 const kDirectoryProperty = 'directory';
 const kRadioUrl = 'de1.api.radio-browser.info';
-const kRadioBrowserBaseUrl = 'all.api.radio-browser.info';
 const kLastAudio = 'lastAudio';
 const kLastPositionAsString = 'lastPositionAsString';
 const kLastDurationAsString = 'lastDurationAsString';
