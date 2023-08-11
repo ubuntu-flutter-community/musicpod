@@ -135,6 +135,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               findEpisodes(
                 feedUrl: podcastItem.feedUrl!,
                 itemImageUrl: artworkUrl600,
+                genre: podcastItem.primaryGenreName,
               ).then((feed) {
                 if (feed.isNotEmpty) {
                   startPlaylist(feed, podcastItem.feedUrl!);
@@ -156,6 +157,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               setFeedUrl: setSelectedFeedUrl,
               oldFeedUrl: selectedFeedUrl,
               itemImageUrl: artworkUrl600,
+              genre: podcastItem.primaryGenreName,
             ),
           );
         },
@@ -271,13 +273,17 @@ Future<void> pushPodcastPage({
   required void Function(String? feedUrl) setFeedUrl,
   required String? oldFeedUrl,
   String? itemImageUrl,
+  String? genre,
 }) async {
   if (podcastItem.feedUrl == null) return;
 
   setFeedUrl(podcastItem.feedUrl);
 
-  await findEpisodes(feedUrl: podcastItem.feedUrl!, itemImageUrl: itemImageUrl)
-      .then((podcast) async {
+  await findEpisodes(
+    feedUrl: podcastItem.feedUrl!,
+    itemImageUrl: itemImageUrl,
+    genre: genre,
+  ).then((podcast) async {
     if (oldFeedUrl == podcastItem.feedUrl || podcast.isEmpty) {
       return;
     }

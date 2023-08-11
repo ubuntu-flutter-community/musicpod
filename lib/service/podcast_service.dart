@@ -4,7 +4,6 @@ import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
-import 'package:musicpod/utils.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 class PodcastService {
@@ -75,22 +74,27 @@ class PodcastService {
     }) notify,
   }) async {
     if (_checkedForUpdates == true) return;
-    for (final oldPodcast in oldPodcasts.entries) {
-      if (oldPodcast.value.firstOrNull?.website != null) {
+
+    for (final old in oldPodcasts.entries) {
+      final firstOld = old.value.firstOrNull;
+      final podcast = firstOld?.album;
+      if (podcast == null || podcast.isEmpty) break;
+
+      final result = (await _search.search(podcast, limit: 1));
+      final items = result.items;
+      final date = items.firstOrNull?.releaseDate?.millisecondsSinceEpoch;
+
+      if (!result.successful || (date != null && date == firstOld?.year)) break;
+      if (firstOld?.website != null) {
         findEpisodes(
-          feedUrl: oldPodcast.value.firstOrNull!.website!,
+          feedUrl: firstOld!.website!,
         ).then((audios) {
-          if (!listsAreEqual(
-            audios.toList(),
-            oldPodcast.value.toList(),
-          )) {
-            updatePodcast(oldPodcast.key, audios);
-            notify(
-              'New episodes available: ${oldPodcast.key}',
-              appIcon: 'music-app',
-              appName: 'MusicPod',
-            );
-          }
+          updatePodcast(old.key, audios);
+          notify(
+            'New episodes available: ${firstOld.album ?? old.value}',
+            appIcon: 'music-app',
+            appName: 'MusicPod',
+          );
         });
       }
     }
@@ -98,7 +102,12 @@ class PodcastService {
   }
 }
 
-Audio _createAudio(Episode episode, Podcast? podcast, [String? itemImageUrl]) {
+Audio _createAudio(
+  Episode episode,
+  Podcast? podcast, [
+  String? itemImageUrl,
+  String? genre,
+]) {
   return Audio(
     url: episode.contentUrl,
     audioType: AudioType.podcast,
@@ -112,12 +121,14 @@ Audio _createAudio(Episode episode, Podcast? podcast, [String? itemImageUrl]) {
     year: episode.publicationDate?.millisecondsSinceEpoch,
     description: episode.description,
     website: podcast?.url,
+    genre: genre,
   );
 }
 
 Future<Set<Audio>> findEpisodes({
   required String feedUrl,
   String? itemImageUrl,
+  String? genre,
 }) async {
   final episodes = <Audio>{};
   final Podcast? podcast = await compute(loadPodcast, feedUrl);
@@ -125,7 +136,12 @@ Future<Set<Audio>> findEpisodes({
   if (podcast?.episodes.isNotEmpty == true) {
     for (var episode in podcast?.episodes ?? []) {
       if (episode.contentUrl != null) {
-        final audio = _createAudio(episode, podcast, itemImageUrl);
+        final audio = _createAudio(
+          episode,
+          podcast,
+          itemImageUrl,
+          genre,
+        );
         episodes.add(audio);
       }
     }

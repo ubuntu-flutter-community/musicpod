@@ -16,6 +16,7 @@ import 'package:musicpod/app/radio/radio_model.dart';
 import 'package:musicpod/app/splash_screen.dart';
 import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/local_audio_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
@@ -121,7 +122,7 @@ class _AppState extends State<App> {
                 await disposePatchNotes()
                     .then((value) => Navigator.of(context).pop());
               },
-              child: const Text('OK I understand'),
+              child: Text(context.l10n.ok),
             )
           ],
         );

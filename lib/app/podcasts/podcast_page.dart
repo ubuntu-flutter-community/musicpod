@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/constants.dart';
@@ -85,6 +86,7 @@ class PodcastPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final genre = audios?.firstWhereOrNull((e) => e.genre != null)?.genre;
     return AudioPage(
       showAudioTileHeader: false,
       sort: false,
@@ -107,7 +109,7 @@ class PodcastPage extends StatelessWidget {
               fit: BoxFit.fitWidth,
               filterQuality: FilterQuality.medium,
             ),
-      pageLabel: context.l10n.podcast,
+      pageLabel: genre ?? context.l10n.podcast,
       pageTitle: title,
       pageSubtile: audios?.firstOrNull?.artist,
       pageDescription: audios?.firstOrNull?.albumArtist,

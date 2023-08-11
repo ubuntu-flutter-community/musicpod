@@ -74,5 +74,7 @@
     "queue": "Queue",
     "limit": "Limit",
     "decreaseSearchLimit": "Please decrease the search limit for",
-    "podcastFeedIsEmpty": "Sorry, this podcast's feed is empty."
+    "podcastFeedIsEmpty": "Sorry, this podcast's feed is empty.",
+    "video": "Video",
+    "ok": "OK"
 }
