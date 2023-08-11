@@ -241,8 +241,8 @@ class LibraryService {
 
   Future<void> disposePatchNotes() async {
     await writeSetting(
+      kPatchNotesDisposed,
       kRecentPatchNotesDisposed,
-      DateTime.now().toUtc().toString(),
     );
   }
 
@@ -250,8 +250,8 @@ class LibraryService {
   bool get recentPatchNotesDisposed => _recentPatchNotesDisposed;
 
   Future<void> _readRecentPatchNotesDisposed() async {
-    String? value = await readSetting(kRecentPatchNotesDisposed);
-    if (value != null) {
+    String? value = await readSetting(kPatchNotesDisposed);
+    if (value == kRecentPatchNotesDisposed) {
       _recentPatchNotesDisposed = true;
     }
   }

@@ -70,6 +70,16 @@ const kPatchNotes20230809 = 'Hello there :) \n\n'
     ' Please unsubscribe and subscribe to your favorite podcasts now.'
     ' Thank you very much and have fun with MusicPod.';
 
-const kRecentPatchNotesDisposed = kPatchNotes20230809disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20230809;
-const kRecentPatchNotes = kPatchNotes20230809;
+// 2023 08 11
+const kPatchNotes20230811disposed = 'patchNotes20230809disposed';
+const kPatchNotesTitle20230811 = 'Patch notes: 2023-09-11';
+const kPatchNotes20230811 = 'Hello there :) \n\n'
+    'The podcast genre is now shown in the top of each page.'
+    ' If it does not show up for an already subscribed podcast, resubscribe to update.'
+    '\nThe notification for new episodes of one of your subscribed podcasts now shows the podcast name again.';
+
+const kRecentPatchNotesDisposed = kPatchNotes20230811disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20230811;
+const kRecentPatchNotes = kPatchNotes20230811;
+
+const kPatchNotesDisposed = 'kPatchNotesDisposed';
