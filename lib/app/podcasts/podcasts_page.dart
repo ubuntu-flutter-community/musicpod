@@ -122,8 +122,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
         itemBuilder: (context, index) {
           final podcastItem = searchResult.items.elementAt(index);
 
+          final artworkUrl600 = podcastItem.artworkUrl600;
           final image = SafeNetworkImage(
-            url: podcastItem.artworkUrl600,
+            url: artworkUrl600,
             fit: BoxFit.contain,
           );
 
@@ -131,7 +132,10 @@ class _PodcastsPageState extends State<PodcastsPage> {
             image: image,
             onPlay: () {
               if (podcastItem.feedUrl == null) return;
-              findEpisodes(feedUrl: podcastItem.feedUrl!).then((feed) {
+              findEpisodes(
+                feedUrl: podcastItem.feedUrl!,
+                itemImageUrl: artworkUrl600,
+              ).then((feed) {
                 if (feed.isNotEmpty) {
                   startPlaylist(feed, podcastItem.feedUrl!);
                 } else {
@@ -151,6 +155,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               addPodcast: addPodcast,
               setFeedUrl: setSelectedFeedUrl,
               oldFeedUrl: selectedFeedUrl,
+              itemImageUrl: artworkUrl600,
             ),
           );
         },
@@ -265,12 +270,14 @@ Future<void> pushPodcastPage({
   required void Function(String name, Set<Audio> audios) addPodcast,
   required void Function(String? feedUrl) setFeedUrl,
   required String? oldFeedUrl,
+  String? itemImageUrl,
 }) async {
   if (podcastItem.feedUrl == null) return;
 
   setFeedUrl(podcastItem.feedUrl);
 
-  await findEpisodes(feedUrl: podcastItem.feedUrl!).then((podcast) async {
+  await findEpisodes(feedUrl: podcastItem.feedUrl!, itemImageUrl: itemImageUrl)
+      .then((podcast) async {
     if (oldFeedUrl == podcastItem.feedUrl || podcast.isEmpty) {
       return;
     }
