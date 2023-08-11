@@ -98,12 +98,12 @@ class PodcastService {
   }
 }
 
-Audio _createAudio(Episode episode, Podcast? podcast) {
+Audio _createAudio(Episode episode, Podcast? podcast, [String? itemImageUrl]) {
   return Audio(
     url: episode.contentUrl,
     audioType: AudioType.podcast,
     imageUrl: episode.imageUrl,
-    albumArtUrl: podcast?.image,
+    albumArtUrl: itemImageUrl ?? podcast?.image,
     title: episode.title,
     album: podcast?.title,
     artist: podcast?.copyright,
@@ -115,14 +115,17 @@ Audio _createAudio(Episode episode, Podcast? podcast) {
   );
 }
 
-Future<Set<Audio>> findEpisodes({required String feedUrl}) async {
+Future<Set<Audio>> findEpisodes({
+  required String feedUrl,
+  String? itemImageUrl,
+}) async {
   final episodes = <Audio>{};
   final Podcast? podcast = await compute(loadPodcast, feedUrl);
 
   if (podcast?.episodes.isNotEmpty == true) {
     for (var episode in podcast?.episodes ?? []) {
       if (episode.contentUrl != null) {
-        final audio = _createAudio(episode, podcast);
+        final audio = _createAudio(episode, podcast, itemImageUrl);
         episodes.add(audio);
       }
     }
