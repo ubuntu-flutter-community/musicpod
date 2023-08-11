@@ -28,7 +28,6 @@ class PlayerModel extends SafeChangeNotifier {
   StreamSubscription<Duration>? _positionSub;
   StreamSubscription<bool>? _isCompletedSub;
   StreamSubscription<double>? _volumeSub;
-  StreamSubscription<Tracks>? _tracksSub;
 
   String? _queueName;
   String? get queueName => _queueName;
@@ -59,6 +58,14 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> _setAudio(Audio? value) async {
     if (value == null || value == _audio) return;
     _audio = value;
+
+    _isVideo = false;
+    for (var t in _videoTypes) {
+      if (audio?.url?.contains(t) == true) {
+        _isVideo = true;
+        break;
+      }
+    }
 
     notifyListeners();
 
@@ -253,10 +260,6 @@ class PlayerModel extends SafeChangeNotifier {
       notifyListeners();
     });
 
-    _tracksSub = _player.stream.tracks.listen((event) {
-      setIsVideo(event.video.any((track) => track.language != null));
-    });
-
     controller = VideoController(_player);
 
     notifyListeners();
@@ -392,8 +395,44 @@ class PlayerModel extends SafeChangeNotifier {
     await _durationSub?.cancel();
     await _isCompletedSub?.cancel();
     await _volumeSub?.cancel();
-    await _tracksSub?.cancel();
     await _player.dispose();
     super.dispose();
   }
 }
+
+Set<String> _videoTypes = {
+  '.3g2',
+  '.3gp',
+  '.aaf',
+  '.asf',
+  '.avchd',
+  '.avi',
+  '.drc',
+  '.flv',
+  '.m2v',
+  '.m3u8',
+  '.m4p',
+  '.m4v',
+  '.mkv',
+  '.mng',
+  '.mov',
+  '.mp2',
+  '.mp4',
+  '.mpe',
+  '.mpeg',
+  '.mpg',
+  '.mpv',
+  '.mxf',
+  '.nsv',
+  '.ogg',
+  '.ogv',
+  '.qt',
+  '.rm',
+  '.rmvb',
+  '.roq',
+  '.svi',
+  '.vob',
+  '.webm',
+  '.wmv',
+  '.yuv'
+};
