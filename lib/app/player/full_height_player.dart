@@ -172,47 +172,52 @@ class FullHeightPlayer extends StatelessWidget {
     return Stack(
       alignment: Alignment.topRight,
       children: [
-        Center(
-          child: SingleChildScrollView(
-            child: SizedBox(
-              height: 700,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 40,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(
-                      height: 400,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: _FullHeightPlayerImage(
-                          isVideo: isVideo,
-                          videoController: videoController,
-                          audio: audio,
+        if (isVideo)
+          RepaintBoundary(
+            child: Video(
+              controller: videoController,
+            ),
+          )
+        else
+          Center(
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: 700,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 40,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SizedBox(
+                        height: 400,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: _FullHeightPlayerImage(
+                            audio: audio,
+                          ),
                         ),
                       ),
-                    ),
-                    controls,
-                    SizedBox(
-                      width: 600,
-                      height: 20,
-                      child: sliderAndTime,
-                    ),
-                    if (audio != null)
-                      FittedBox(
-                        child: title,
+                      controls,
+                      SizedBox(
+                        width: 600,
+                        height: 20,
+                        child: sliderAndTime,
                       ),
-                    artist,
-                  ],
+                      if (audio != null)
+                        FittedBox(
+                          child: title,
+                        ),
+                      artist,
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
         Padding(
           padding: const EdgeInsets.all(kYaruPagePadding),
           child: YaruIconButton(
@@ -335,13 +340,9 @@ class _UpNextBubble extends StatelessWidget {
 class _FullHeightPlayerImage extends StatelessWidget {
   const _FullHeightPlayerImage({
     this.audio,
-    required this.videoController,
-    required this.isVideo,
   });
 
   final Audio? audio;
-  final VideoController videoController;
-  final bool isVideo;
 
   @override
   Widget build(BuildContext context) {
@@ -354,19 +355,6 @@ class _FullHeightPlayerImage extends StatelessWidget {
       iconData = YaruIcons.podcast;
     } else {
       iconData = YaruIcons.music_note;
-    }
-
-    if (isVideo) {
-      return RepaintBoundary(
-        child: Padding(
-          padding: const EdgeInsets.all(28.0),
-          child: Video(
-            height: 400,
-            width: 400,
-            controller: videoController,
-          ),
-        ),
-      );
     }
 
     Widget image;
