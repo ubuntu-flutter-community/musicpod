@@ -88,14 +88,6 @@ class BottomPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    IconData iconData;
-    if (audio?.audioType == AudioType.radio) {
-      iconData = YaruIcons.radio;
-    } else if (audio?.audioType == AudioType.podcast) {
-      iconData = YaruIcons.podcast;
-    } else {
-      iconData = YaruIcons.music_note;
-    }
 
     return SizedBox(
       height: _kBottomPlayerHeight,
@@ -103,7 +95,6 @@ class BottomPlayer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _BottomPlayerImage(
-            iconData: iconData,
             audio: audio,
             size: _kBottomPlayerHeight,
             videoController: videoController,
@@ -294,13 +285,11 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
 class _BottomPlayerImage extends StatelessWidget {
   const _BottomPlayerImage({
     this.audio,
-    required this.iconData,
     required this.size,
     this.isVideo,
     required this.videoController,
   });
   final Audio? audio;
-  final IconData iconData;
   final double size;
   final bool? isVideo;
   final VideoController videoController;
@@ -308,6 +297,14 @@ class _BottomPlayerImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    IconData iconData;
+    if (audio?.audioType == AudioType.radio) {
+      iconData = YaruIcons.radio;
+    } else if (audio?.audioType == AudioType.podcast) {
+      iconData = YaruIcons.podcast;
+    } else {
+      iconData = YaruIcons.music_note;
+    }
     if (isVideo == true) {
       return RepaintBoundary(
         child: Video(
@@ -353,7 +350,7 @@ class _BottomPlayerImage extends StatelessWidget {
                 height: size,
                 child: Icon(
                   iconData,
-                  size: 80,
+                  size: 50,
                   color: theme.hintColor,
                 ),
               ),
