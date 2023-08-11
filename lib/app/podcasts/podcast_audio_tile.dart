@@ -37,7 +37,7 @@ class PodcastAudioTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textStyle = TextStyle(
-      color: selected ? theme.colorScheme.onSurface : theme.hintColor,
+      color: theme.colorScheme.onSurface,
       fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
       fontSize: 16,
     );
@@ -61,37 +61,60 @@ class PodcastAudioTile extends StatelessWidget {
           padding: const EdgeInsets.only(
             top: 15,
             bottom: 10,
-            right: 2,
-            left: 2,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Text(
-                audio.title ?? '',
-                style: textStyle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                '$date, $duration',
-                style: theme.textTheme.labelMedium
-                    ?.copyWith(color: selected ? null : theme.hintColor),
+              CircleAvatar(
+                child: YaruIconButton(
+                  icon: (isPlayerPlaying && selected)
+                      ? Icon(
+                          YaruIcons.media_pause,
+                          color: theme.primaryColor,
+                        )
+                      : const Icon(YaruIcons.media_play),
+                  onPressed: () {
+                    if (isPlayerPlaying && selected) {
+                      pause();
+                    } else {
+                      if (selected) {
+                        resume();
+                      } else {
+                        if (startPlaylist != null) {
+                          startPlaylist!();
+                        } else {
+                          play();
+                        }
+                      }
+                    }
+                  },
+                ),
               ),
               const SizedBox(
-                height: 5,
+                width: 20,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      audio.title ?? '',
+                      style: textStyle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      '$date, $duration',
+                      style: theme.textTheme.labelMedium,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
       ),
       child: _Bottom(
-        isPlayerPlaying: isPlayerPlaying,
         selected: selected,
-        pause: pause,
-        resume: resume,
-        startPlaylist: startPlaylist,
-        play: play,
         audio: audio,
         theme: theme,
         lastPosition: lastPosition,
@@ -102,23 +125,13 @@ class PodcastAudioTile extends StatelessWidget {
 
 class _Bottom extends StatelessWidget {
   const _Bottom({
-    required this.isPlayerPlaying,
     required this.selected,
-    required this.pause,
-    required this.resume,
-    required this.startPlaylist,
-    required this.play,
     required this.audio,
     required this.theme,
     required this.lastPosition,
   });
 
-  final bool isPlayerPlaying;
   final bool selected;
-  final void Function() pause;
-  final Future<void> Function() resume;
-  final void Function()? startPlaylist;
-  final Future<void> Function() play;
   final Audio audio;
   final ThemeData theme;
   final Duration? lastPosition;
@@ -131,31 +144,6 @@ class _Bottom extends StatelessWidget {
       children: [
         Row(
           children: [
-            CircleAvatar(
-              child: YaruIconButton(
-                icon: (isPlayerPlaying && selected)
-                    ? const Icon(YaruIcons.media_pause)
-                    : const Icon(YaruIcons.media_play),
-                onPressed: () {
-                  if (isPlayerPlaying && selected) {
-                    pause();
-                  } else {
-                    if (selected) {
-                      resume();
-                    } else {
-                      if (startPlaylist != null) {
-                        startPlaylist!();
-                      } else {
-                        play();
-                      }
-                    }
-                  }
-                },
-              ),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
             YaruIconButton(
               onPressed: audio.website == null
                   ? null
@@ -171,9 +159,8 @@ class _Bottom extends StatelessWidget {
                           ),
                         ),
                       ),
-              icon: Icon(
+              icon: const Icon(
                 YaruIcons.share,
-                color: selected ? null : theme.hintColor,
               ),
             ),
             const YaruIconButton(
@@ -200,15 +187,10 @@ class _Bottom extends StatelessWidget {
             child: _Description(
               description: audio.description,
               title: audio.title,
+              selected: selected,
             ),
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.only(top: 10, bottom: 10, right: 50),
-          child: Divider(
-            height: 0,
-          ),
-        )
       ],
     );
   }
@@ -218,10 +200,12 @@ class _Description extends StatelessWidget {
   const _Description({
     required this.description,
     required this.title,
+    required this.selected,
   });
 
   final String? description;
   final String? title;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
@@ -262,7 +246,7 @@ class _Description extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxHeight: 100),
         child: _createHtml(
-          color: theme.hintColor,
+          color: theme.colorScheme.onSurface,
           maxLines: 6,
           paddings: HtmlPaddings.only(right: 90),
         ),
@@ -328,7 +312,7 @@ class _AudioProgress extends StatelessWidget {
         width: 25,
         height: 25,
         child: YaruCircularProgressIndicator(
-          color: selected ? theme.primaryColor : theme.hintColor,
+          color: selected ? theme.primaryColor : theme.colorScheme.onSurface,
           value: sliderActive
               ? (pos.inSeconds.toDouble() / duration!.inSeconds.toDouble())
               : 0,
