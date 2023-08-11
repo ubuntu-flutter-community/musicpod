@@ -169,7 +169,7 @@ class FullHeightPlayer extends StatelessWidget {
       seek: seek,
     );
 
-    return Stack(
+    final stack = Stack(
       alignment: Alignment.topRight,
       children: [
         if (isVideo)
@@ -225,7 +225,7 @@ class FullHeightPlayer extends StatelessWidget {
               playerViewMode == PlayerViewMode.fullWindow
                   ? YaruIcons.fullscreen_exit
                   : YaruIcons.fullscreen,
-              color: theme.colorScheme.onSurface,
+              color: isVideo ? Colors.white : theme.colorScheme.onSurface,
             ),
             onPressed: () => setFullScreen(
               playerViewMode == PlayerViewMode.fullWindow ? false : true,
@@ -245,6 +245,19 @@ class FullHeightPlayer extends StatelessWidget {
               nextAudio: nextAudio,
             ),
           )
+      ],
+    );
+
+    return Column(
+      children: [
+        YaruWindowTitleBar(
+          border: BorderSide.none,
+          foregroundColor: isVideo == true ? Colors.white : null,
+          backgroundColor: isVideo == true ? Colors.black : Colors.transparent,
+        ),
+        Expanded(
+          child: stack,
+        )
       ],
     );
   }

@@ -299,19 +299,9 @@ class _AppState extends State<App> {
               if (playerToTheRight)
                 SizedBox(
                   width: 500,
-                  child: Column(
-                    children: [
-                      const YaruWindowTitleBar(
-                        backgroundColor: Colors.transparent,
-                        border: BorderSide.none,
-                      ),
-                      Expanded(
-                        child: PlayerView(
-                          playerViewMode: PlayerViewMode.sideBar,
-                          onTextTap: onTextTap,
-                        ),
-                      ),
-                    ],
+                  child: PlayerView(
+                    playerViewMode: PlayerViewMode.sideBar,
+                    onTextTap: onTextTap,
                   ),
                 )
             ],
@@ -320,19 +310,9 @@ class _AppState extends State<App> {
             Material(
               child: Material(
                 color: playerBg,
-                child: Column(
-                  children: [
-                    const YaruWindowTitleBar(
-                      border: BorderSide.none,
-                      backgroundColor: Colors.transparent,
-                    ),
-                    Expanded(
-                      child: PlayerView(
-                        onTextTap: onTextTap,
-                        playerViewMode: PlayerViewMode.fullWindow,
-                      ),
-                    )
-                  ],
+                child: PlayerView(
+                  onTextTap: onTextTap,
+                  playerViewMode: PlayerViewMode.fullWindow,
                 ),
               ),
             )

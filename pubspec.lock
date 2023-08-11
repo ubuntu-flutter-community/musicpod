@@ -1006,10 +1006,11 @@ packages:
   yaru_widgets:
     dependency: "direct main"
     description:
-      name: yaru_widgets
-      sha256: "2406fd6453befacfefa4f3aa40c6f02cdcc2803b6ebc959a8309353ca7e08fd8"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: "8675ed1807dfec1a5b1180e30a66a1466bfafb4e"
+      resolved-ref: "8675ed1807dfec1a5b1180e30a66a1466bfafb4e"
+      url: "https://github.com/ubuntu/yaru_widgets.dart"
+    source: git
     version: "2.7.0"
   yaru_window:
     dependency: "direct main"
