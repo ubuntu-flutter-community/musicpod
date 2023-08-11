@@ -196,19 +196,14 @@ class _Bottom extends StatelessWidget {
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1000),
           child: Padding(
-            padding: const EdgeInsets.only(top: 10, bottom: 15, left: 2),
+            padding: const EdgeInsets.only(top: 10, bottom: 25, left: 2),
             child: _Description(
               description: audio.description,
               title: audio.title,
+              selected: selected,
             ),
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.only(top: 10, bottom: 10, right: 50),
-          child: Divider(
-            height: 0,
-          ),
-        )
       ],
     );
   }
@@ -218,10 +213,12 @@ class _Description extends StatelessWidget {
   const _Description({
     required this.description,
     required this.title,
+    required this.selected,
   });
 
   final String? description;
   final String? title;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
@@ -262,7 +259,7 @@ class _Description extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxHeight: 100),
         child: _createHtml(
-          color: theme.hintColor,
+          color: selected ? theme.colorScheme.onSurface : theme.hintColor,
           maxLines: 6,
           paddings: HtmlPaddings.only(right: 90),
         ),
