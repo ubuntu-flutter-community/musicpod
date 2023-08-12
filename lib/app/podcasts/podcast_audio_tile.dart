@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
@@ -44,7 +46,7 @@ class PodcastAudioTile extends StatelessWidget {
       fontSize: 16,
     );
 
-    final date = DateFormat.MMMEd(countryCode)
+    final date = DateFormat.MMMEd(Platform.localeName)
         .format(DateTime.fromMillisecondsSinceEpoch(audio.year!));
     final duration = formatTime(
       audio.durationMs != null
