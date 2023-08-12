@@ -8,6 +8,7 @@ import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -68,6 +69,7 @@ class PodcastAudioTile extends StatelessWidget {
           child: Row(
             children: [
               CircleAvatar(
+                backgroundColor: theme.colorScheme.onSurface.withOpacity(0.08),
                 child: YaruIconButton(
                   icon: (isPlayerPlaying && selected)
                       ? Icon(
@@ -185,13 +187,10 @@ class _Bottom extends StatelessWidget {
         ),
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1000),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 10, bottom: 15, left: 2),
-            child: _Description(
-              description: audio.description,
-              title: audio.title,
-              selected: selected,
-            ),
+          child: _Description(
+            description: audio.description,
+            title: audio.title,
+            selected: selected,
           ),
         ),
       ],
@@ -246,13 +245,10 @@ class _Description extends StatelessWidget {
           },
         );
       },
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxHeight: 100),
-        child: _createHtml(
-          color: theme.colorScheme.onSurface,
-          maxLines: 6,
-          paddings: HtmlPaddings.only(right: 90),
-        ),
+      child: _createHtml(
+        color: theme.colorScheme.onSurface.scale(lightness: -0.2),
+        maxLines: 5,
+        paddings: HtmlPaddings.only(top: 10, left: 5, right: 5, bottom: 10),
       ),
     );
   }
@@ -271,11 +267,6 @@ class _Description extends StatelessWidget {
       },
       style: {
         'img': Style(display: Display.none),
-        'html': Style(
-          margin: Margins.zero,
-          padding: HtmlPaddings.zero,
-          textAlign: textAlign ?? TextAlign.start,
-        ),
         'body': Style(
           margin: Margins.zero,
           padding: paddings,
