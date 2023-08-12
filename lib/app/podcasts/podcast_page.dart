@@ -19,6 +19,7 @@ class PodcastPage extends StatelessWidget {
     required this.removePodcast,
     required this.addPodcast,
     required this.title,
+    this.countryCode,
   });
 
   static Widget createIcon({
@@ -82,12 +83,14 @@ class PodcastPage extends StatelessWidget {
   final String title;
   final Set<Audio>? audios;
   final bool subscribed;
+  final String? countryCode;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final genre = audios?.firstWhereOrNull((e) => e.genre != null)?.genre;
     return AudioPage(
+      countryCode: countryCode,
       showAudioTileHeader: false,
       sort: false,
       onTextTap: onTextTap,

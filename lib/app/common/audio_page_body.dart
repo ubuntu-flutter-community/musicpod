@@ -43,6 +43,7 @@ class AudioPageBody extends StatefulWidget {
     this.artistFlex = 5,
     this.albumFlex = 4,
     this.showAudioTileHeader = true,
+    this.countryCode,
   });
 
   final Set<Audio>? audios;
@@ -65,6 +66,7 @@ class AudioPageBody extends StatefulWidget {
   final String? noResultMessage;
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
+  final String? countryCode;
 
   final void Function({
     required String text,
@@ -267,6 +269,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                         : () => play(newAudio: audio),
                     play: play,
                     lastPosition: null,
+                    countryCode: widget.countryCode,
                   );
                 }
 
