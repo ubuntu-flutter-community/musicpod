@@ -55,6 +55,14 @@ const kLastPositionAsString = 'lastPositionAsString';
 const kLastDurationAsString = 'lastDurationAsString';
 const kLocalAudioIndex = 'localAudioIndex';
 
+const shops = <String, String>{
+  'https://us.7digital.com/': '7digital',
+  'https://www.hdtracks.com/': 'hdtracks',
+  'https://www.qobuz.com': 'qobuz',
+  'https://www.amazon.com/music/player': 'Amazon Music',
+  'https://bandcamp.com/tag/buy': 'Bandcamp',
+};
+
 // Bug fix notes
 
 // 2023 08 09

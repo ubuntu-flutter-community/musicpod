@@ -59,7 +59,7 @@ class AudioPage extends StatelessWidget {
   final bool? showAudioPageHeader;
   final bool showAudioTileHeader;
   final AudioFilter audioFilter;
-  final String? noResultMessage;
+  final Widget? noResultMessage;
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
   final String? countryCode;
