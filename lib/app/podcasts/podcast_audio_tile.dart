@@ -46,7 +46,7 @@ class PodcastAudioTile extends StatelessWidget {
       fontSize: 16,
     );
 
-    final date = DateFormat.MMMEd(Platform.localeName)
+    final date = DateFormat.yMMMEd(Platform.localeName)
         .format(DateTime.fromMillisecondsSinceEpoch(audio.year!));
     final duration = formatTime(
       audio.durationMs != null
