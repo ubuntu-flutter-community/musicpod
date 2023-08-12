@@ -158,6 +158,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               oldFeedUrl: selectedFeedUrl,
               itemImageUrl: artworkUrl600,
               genre: podcastItem.primaryGenreName,
+              countryCode: widget.countryCode,
             ),
           );
         },
@@ -274,6 +275,7 @@ Future<void> pushPodcastPage({
   required String? oldFeedUrl,
   String? itemImageUrl,
   String? genre,
+  String? countryCode,
 }) async {
   if (podcastItem.feedUrl == null) return;
 
@@ -305,6 +307,7 @@ Future<void> pushPodcastPage({
             title: podcast.firstOrNull?.album ??
                 podcast.firstOrNull?.title ??
                 podcastItem.feedUrl!,
+            countryCode: countryCode,
           );
         },
       ),

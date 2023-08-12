@@ -21,6 +21,7 @@ class PodcastAudioTile extends StatelessWidget {
     required this.play,
     required this.lastPosition,
     this.isExpanded = false,
+    this.countryCode,
   });
 
   final Audio audio;
@@ -32,6 +33,7 @@ class PodcastAudioTile extends StatelessWidget {
   final Future<void> Function() play;
   final Duration? lastPosition;
   final bool isExpanded;
+  final String? countryCode;
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +44,8 @@ class PodcastAudioTile extends StatelessWidget {
       fontSize: 16,
     );
 
-    final date = DateFormat.MMMEd(
-      WidgetsBinding.instance.platformDispatcher.locale.countryCode
-          ?.toLowerCase(),
-    ).format(DateTime.fromMillisecondsSinceEpoch(audio.year!));
+    final date = DateFormat.MMMEd(countryCode)
+        .format(DateTime.fromMillisecondsSinceEpoch(audio.year!));
     final duration = formatTime(
       audio.durationMs != null
           ? Duration(milliseconds: audio.durationMs!.toInt())
