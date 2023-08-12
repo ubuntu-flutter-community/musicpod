@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
-import 'package:musicpod/constants.dart';
+import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
+import 'package:musicpod/app/local_audio/shop_recommendations.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_icons/yaru_icons.dart';
-import 'package:yaru_widgets/constants.dart';
+import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AlbumsView extends StatelessWidget {
   const AlbumsView({
@@ -20,7 +23,7 @@ class AlbumsView extends StatelessWidget {
     required this.findAlbum,
   });
 
-  final Set<Audio> albums;
+  final Set<Audio>? albums;
   final bool showWindowControls;
   final void Function({
     required String text,
@@ -37,13 +40,31 @@ class AlbumsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    if (albums == null) {
+      return const Center(
+        child: YaruCircularProgressIndicator(),
+      );
+    }
+
+    if (albums!.isEmpty) {
+      return NoSearchResultPage(
+        message: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(context.l10n.noLocalTitlesFound),
+            const ShopRecommendations()
+          ],
+        ),
+      );
+    }
+
     return GridView.builder(
       shrinkWrap: true,
       padding: const EdgeInsets.all(kYaruPagePadding),
-      itemCount: albums.length,
+      itemCount: albums!.length,
       gridDelegate: kImageGridDelegate,
       itemBuilder: (context, index) {
-        final audio = albums.elementAt(index);
+        final audio = albums!.elementAt(index);
         final name = audio.album;
         final album = findAlbum(audio);
 

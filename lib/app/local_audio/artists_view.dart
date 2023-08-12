@@ -2,23 +2,26 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
-import 'package:musicpod/constants.dart';
+import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/common/round_image_container.dart';
 import 'package:musicpod/app/local_audio/artist_page.dart';
+import 'package:musicpod/app/local_audio/shop_recommendations.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class ArtistsView extends StatelessWidget {
   const ArtistsView({
     super.key,
-    required this.similarArtistsSearchResult,
+    this.artists,
     required this.showWindowControls,
     this.onTextTap,
     required this.findArtist,
     required this.findImages,
   });
 
-  final Set<Audio> similarArtistsSearchResult;
+  final Set<Audio>? artists;
   final bool showWindowControls;
 
   final void Function({required String text, required AudioType audioType})?
@@ -28,19 +31,36 @@ class ArtistsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (artists == null) {
+      return const Center(
+        child: YaruCircularProgressIndicator(),
+      );
+    }
+
+    if (artists!.isEmpty) {
+      return NoSearchResultPage(
+        message: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(context.l10n.noLocalTitlesFound),
+            const ShopRecommendations()
+          ],
+        ),
+      );
+    }
+
     return GridView.builder(
-      itemCount: similarArtistsSearchResult.length,
+      itemCount: artists!.length,
       padding: const EdgeInsets.all(kYaruPagePadding),
       shrinkWrap: true,
       gridDelegate: kImageGridDelegate,
       itemBuilder: (context, index) {
         final artistAudios = findArtist(
-          similarArtistsSearchResult.elementAt(index),
+          artists!.elementAt(index),
         );
         final images = findImages(artistAudios ?? {});
 
-        final artistname =
-            similarArtistsSearchResult.elementAt(index).artist ?? 'unknown';
+        final artistname = artists!.elementAt(index).artist ?? 'unknown';
 
         return YaruSelectableContainer(
           selected: false,

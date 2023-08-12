@@ -80,15 +80,13 @@ class PodcastService {
       final podcast = firstOld?.album;
       if (podcast == null || podcast.isEmpty) break;
 
-      final result = (await _search.search(podcast, limit: 1));
-      final items = result.items;
-      final date = items.firstOrNull?.releaseDate?.millisecondsSinceEpoch;
-
-      if (!result.successful || (date != null && date == firstOld?.year)) break;
       if (firstOld?.website != null) {
-        findEpisodes(
+        await findEpisodes(
           feedUrl: firstOld!.website!,
         ).then((audios) {
+          if (firstOld.year != null &&
+              audios.firstOrNull?.year == firstOld.year) return;
+
           updatePodcast(old.key, audios);
           notify(
             'New episodes available: ${firstOld.album ?? old.value}',

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/app_model.dart';
-import 'package:musicpod/constants.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/local_audio/artists_view.dart';
@@ -9,6 +8,7 @@ import 'package:musicpod/app/local_audio/local_audio_model.dart';
 import 'package:musicpod/app/local_audio/local_audio_search_page.dart';
 import 'package:musicpod/app/local_audio/titles_view.dart';
 import 'package:musicpod/app/player/player_model.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:provider/provider.dart';
@@ -132,7 +132,7 @@ class _LocalAudioPageState extends State<LocalAudioPage>
         ),
         ArtistsView(
           showWindowControls: showWindowControls,
-          similarArtistsSearchResult: artists,
+          artists: artists,
           onTextTap: ({required audioType, required text}) => onTap(text),
           findArtist: findArtist,
           findImages: findImages,

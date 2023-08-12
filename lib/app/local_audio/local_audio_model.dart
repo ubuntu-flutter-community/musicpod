@@ -100,27 +100,25 @@ class LocalAudioModel extends SafeChangeNotifier {
     setSimilarArtistsSearchResult(artistsResult);
   }
 
-  Set<Audio> findAllArtists() {
+  Set<Audio>? findAllArtists() {
+    if (audios == null) return null;
     final artistsResult = <Audio>{};
-    if (audios != null) {
-      for (var a in audios!) {
-        if (artistsResult.none(
-          (e) => e.artist == a.artist,
-        )) {
-          artistsResult.add(a);
-        }
+    for (var a in audios!) {
+      if (artistsResult.none(
+        (e) => e.artist == a.artist,
+      )) {
+        artistsResult.add(a);
       }
     }
     return artistsResult;
   }
 
-  Set<Audio> findAllAlbums() {
+  Set<Audio>? findAllAlbums() {
+    if (audios == null) return null;
     final albumsResult = <Audio>{};
-    if (audios != null) {
-      for (var a in audios!) {
-        if (albumsResult.none((element) => element.album == a.album)) {
-          albumsResult.add(a);
-        }
+    for (var a in audios!) {
+      if (albumsResult.none((element) => element.album == a.album)) {
+        albumsResult.add(a);
       }
     }
     return albumsResult;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/audio_page_body.dart';
+import 'package:musicpod/app/local_audio/shop_recommendations.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/utils.dart';
@@ -38,6 +39,13 @@ class TitlesView extends StatelessWidget {
     );
 
     return AudioPageBody(
+      noResultMessage: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(context.l10n.noLocalTitlesFound),
+          const ShopRecommendations()
+        ],
+      ),
       audios: Set.from(sortedAudios),
       audioPageType: AudioPageType.immutable,
       pageId: context.l10n.localAudio,

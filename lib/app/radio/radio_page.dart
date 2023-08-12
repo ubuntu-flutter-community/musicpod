@@ -139,13 +139,14 @@ class _RadioPageState extends State<RadioPage> {
           body = GridView(
             gridDelegate: kImageGridDelegate,
             padding: kPodcastGridPadding,
-            children: List.generate(30, (index) => Audio())
+            children: List.generate(limit, (index) => Audio())
                 .map((e) => const AudioCard())
                 .toList(),
           );
         } else {
           if (stationsCount == 0) {
-            body = NoSearchResultPage(message: context.l10n.noStationFound);
+            body =
+                NoSearchResultPage(message: Text(context.l10n.noStationFound));
           } else {
             body = GridView.builder(
               padding: kPodcastGridPadding,

@@ -81,7 +81,7 @@ class LocalAudioSearchPage extends StatelessWidget {
     if ((titlesResult?.isEmpty ?? true) &&
         (similarAlbumsSearchResult?.isEmpty ?? true) &&
         (similarArtistsSearchResult?.isEmpty ?? true)) {
-      return NoSearchResultPage(message: context.l10n.nothingFound);
+      return NoSearchResultPage(message: Text(context.l10n.noLocalSearchFound));
     }
 
     return ListView(

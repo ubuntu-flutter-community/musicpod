@@ -215,3 +215,8 @@ Color? getColorFromName(String name) {
     'z': Colors.deepPurple,
   }[firstChar];
 }
+
+Future<String> loadAsset(BuildContext context) async {
+  return await DefaultAssetBundle.of(context)
+      .loadString('assets/contributors.md');
+}

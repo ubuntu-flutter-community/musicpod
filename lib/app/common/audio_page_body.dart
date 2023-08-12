@@ -7,11 +7,11 @@ import 'package:musicpod/app/common/audio_page_header.dart';
 import 'package:musicpod/app/common/audio_tile.dart';
 import 'package:musicpod/app/common/audio_tile_header.dart';
 import 'package:musicpod/app/common/like_button.dart';
+import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/podcasts/podcast_audio_tile.dart';
 import 'package:musicpod/data/audio.dart';
-import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -63,7 +63,7 @@ class AudioPageBody extends StatefulWidget {
   final bool? showAudioPageHeader;
   final bool showAudioTileHeader;
   final AudioFilter audioFilter;
-  final String? noResultMessage;
+  final Widget? noResultMessage;
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
   final String? countryCode;
@@ -170,16 +170,8 @@ class _AudioPageBodyState extends State<AudioPageBody> {
       );
     } else {
       if (widget.audios!.isEmpty) {
-        return Column(
-          children: [
-            audioControlPanel,
-            Expanded(
-              child: Center(
-                child:
-                    Text(widget.noResultMessage ?? context.l10n.nothingFound),
-              ),
-            ),
-          ],
+        return NoSearchResultPage(
+          message: widget.noResultMessage,
         );
       }
     }

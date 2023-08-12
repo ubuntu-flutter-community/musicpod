@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:musicpod/app/globals.dart';
 import 'package:musicpod/app/master_item.dart';
 import 'package:musicpod/app/playlists/playlist_dialog.dart';
+import 'package:musicpod/app/settings/about_tile.dart';
 import 'package:musicpod/app/settings/settings_tile.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
@@ -30,16 +31,17 @@ class MasterDetailPage extends StatelessWidget {
     return YaruMasterDetailPage(
       navigatorKey: navigatorKey,
       onSelected: (value) => setIndex(value ?? 0),
-      appBar: const YaruWindowTitleBar(
+      appBar: YaruWindowTitleBar(
         backgroundColor: Colors.transparent,
         border: BorderSide.none,
-        title: Text('MusicPod'),
-      ),
-      bottomBar: Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: SettingsTile(
-          onDirectorySelected: onDirectorySelected,
-        ),
+        title: const Text('MusicPod'),
+        leading: const AboutTile(),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: SettingsTile(onDirectorySelected: onDirectorySelected),
+          )
+        ],
       ),
       layoutDelegate: const YaruMasterFixedPaneDelegate(
         paneWidth: 250,

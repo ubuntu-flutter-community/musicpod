@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_card.dart';
-import 'package:musicpod/constants.dart';
 import 'package:musicpod/app/common/country_popup.dart';
 import 'package:musicpod/app/common/limit_popup.dart';
 import 'package:musicpod/app/common/no_search_result_page.dart';
@@ -11,11 +10,11 @@ import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/podcasts/podcast_page.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/podcast_service.dart';
-import 'package:musicpod/string_x.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -102,18 +101,12 @@ class _PodcastsPageState extends State<PodcastsPage> {
       grid = GridView(
         gridDelegate: kImageGridDelegate,
         padding: kPodcastGridPadding,
-        children: List.generate(30, (index) => Audio())
+        children: List.generate(limit, (index) => Audio())
             .map((e) => const AudioCard())
             .toList(),
       );
     } else if (searchResult.items.isEmpty == true) {
-      final noResultMessage = searchResult.lastError.isEmpty
-          ? context.l10n.noPodcastChartsFound
-          : (searchResult.lastError.contains('RangeError')
-              ? '${context.l10n.decreaseSearchLimit} ${country?.name.capitalize()}'
-              : searchResult.lastError);
-
-      grid = NoSearchResultPage(message: noResultMessage);
+      grid = NoSearchResultPage(message: Text(context.l10n.noPodcastFound));
     } else {
       grid = GridView.builder(
         padding: kPodcastGridPadding,
