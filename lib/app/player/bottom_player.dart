@@ -335,30 +335,27 @@ class _BottomPlayerImage extends StatelessWidget {
           height: size,
           width: size,
           child: SafeNetworkImage(
+            errorIcon: Icon(
+              iconData,
+              size: 50,
+              color: theme.hintColor,
+            ),
             url: audio?.imageUrl ?? audio?.albumArtUrl,
             filterQuality: FilterQuality.medium,
             fit: BoxFit.cover,
           ),
         );
       } else {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Center(
-              child: SizedBox(
-                width: size,
-                height: size,
-                child: Icon(
-                  iconData,
-                  size: 50,
-                  color: theme.hintColor,
-                ),
-              ),
+        return Center(
+          child: SizedBox(
+            width: size,
+            height: size,
+            child: Icon(
+              iconData,
+              size: 50,
+              color: theme.hintColor,
             ),
-            const VerticalDivider(
-              width: 0,
-            )
-          ],
+          ),
         );
       }
     }

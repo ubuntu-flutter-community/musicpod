@@ -22,6 +22,8 @@ class LibraryModel extends SafeChangeNotifier {
   Future<void> init() async {
     await _service.init();
 
+    _index = _service.appIndex;
+
     _localAudioIndexSub = _service.localAudioIndexStream
         .listen((index) => setLocalAudioindex(index));
     _likedAudiosSub =
@@ -181,6 +183,7 @@ class LibraryModel extends SafeChangeNotifier {
     if (value == null || value == _index) return;
     _index = value;
     notifyListeners();
+    _service.setAppIndex(value);
   }
 
   bool get showPinnedAlbums =>

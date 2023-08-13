@@ -210,8 +210,14 @@ class LibraryService {
 
   Future<void> init() async {
     await _readRecentPatchNotesDisposed();
-    final indexOrNull = await readSetting(kLocalAudioIndex);
-    _localAudioIndex = indexOrNull == null ? 0 : int.parse(indexOrNull);
+
+    final appIndexOrNull = await readSetting(kAppIndex);
+    _appIndex = appIndexOrNull == null ? 0 : int.parse(appIndexOrNull);
+
+    final localAudioIndexOrNull = await readSetting(kLocalAudioIndex);
+    _localAudioIndex =
+        localAudioIndexOrNull == null ? 0 : int.parse(localAudioIndexOrNull);
+
     _playlists = await _read(kPlaylistsFileName);
     _pinnedAlbums = await _read(kPinnedAlbumsFileName);
     _podcasts = await _read(kPodcastsFileName);
@@ -222,21 +228,28 @@ class LibraryService {
 
   int? _localAudioIndex;
   int? get localAudioIndex => _localAudioIndex;
-  final localAudioIndexController = StreamController<int?>.broadcast();
-  Stream<int?> get localAudioIndexStream => localAudioIndexController.stream;
+  final _localAudioIndexController = StreamController<int?>.broadcast();
+  Stream<int?> get localAudioIndexStream => _localAudioIndexController.stream;
   void setLocalAudioIndex(int? value) {
     _localAudioIndex = value;
-    localAudioIndexController.add(value);
+  }
+
+  int? _appIndex;
+  int? get appIndex => _appIndex;
+  void setAppIndex(int? value) {
+    _appIndex = value;
   }
 
   Future<void> dispose() async {
     await writeSetting(kLocalAudioIndex, _localAudioIndex.toString());
+    await writeSetting(kAppIndex, _appIndex.toString());
     await _albumsController.close();
     await _podcastsController.close();
     await _likedAudiosController.close();
     await _playlistsController.close();
     await _starredStationsController.close();
     await _lastPositionsController.close();
+    await _localAudioIndexController.close();
   }
 
   Future<void> disposePatchNotes() async {
