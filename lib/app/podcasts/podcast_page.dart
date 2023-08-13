@@ -27,56 +27,45 @@ class PodcastPage extends StatelessWidget {
     required BuildContext context,
     String? imageUrl,
     required bool isOnline,
-    required bool enabled,
   }) {
-    var clipRRect = isOnline
-        ? ClipRRect(
-            borderRadius: BorderRadius.circular(5),
-            child: SizedBox(
-              width: kSideBarIconSize,
-              height: kSideBarIconSize,
-              child: isOnline
-                  ? SafeNetworkImage(
-                      url: imageUrl,
-                      fit: BoxFit.fitHeight,
-                      filterQuality: FilterQuality.medium,
-                      fallBackIcon: const Icon(
-                        YaruIcons.rss,
-                        size: kSideBarIconSize,
-                      ),
-                      errorIcon: const Icon(
-                        YaruIcons.rss,
-                        size: kSideBarIconSize,
-                      ),
-                    )
-                  : const Icon(YaruIcons.network_offline),
-            ),
-          )
-        : const Icon(
-            YaruIcons.network_offline,
-          );
-    return enabled
-        ? clipRRect
-        : Opacity(
-            opacity: 0.5,
-            child: clipRRect,
-          );
+    final Widget icon;
+    if (isOnline) {
+      icon = SafeNetworkImage(
+        url: imageUrl,
+        fit: BoxFit.fitHeight,
+        filterQuality: FilterQuality.medium,
+        fallBackIcon: const Icon(
+          YaruIcons.rss,
+          size: kSideBarIconSize,
+        ),
+        errorIcon: const Icon(
+          YaruIcons.rss,
+          size: kSideBarIconSize,
+        ),
+      );
+    } else {
+      icon = const Icon(YaruIcons.network_offline);
+    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: SizedBox(
+        width: kSideBarIconSize,
+        height: kSideBarIconSize,
+        child: icon,
+      ),
+    );
   }
 
   static Widget createTitle({
     required BuildContext context,
-    required bool enabled,
     required String title,
     required update,
   }) {
-    return Opacity(
-      opacity: enabled ? 1 : 0.5,
-      child: Badge(
-        alignment: Alignment.centerRight,
-        isLabelVisible: update,
-        label: Text(context.l10n.newEpisode),
-        child: Text(title),
-      ),
+    return Badge(
+      alignment: Alignment.centerRight,
+      isLabelVisible: update,
+      label: Text(context.l10n.newEpisode),
+      child: Text(title),
     );
   }
 

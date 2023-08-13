@@ -22,7 +22,6 @@ class AlbumPage extends StatelessWidget {
   static Widget createIcon(
     BuildContext context,
     Uint8List? picture,
-    bool enabled,
   ) {
     Widget? albumArt;
     if (picture != null) {
@@ -40,13 +39,10 @@ class AlbumPage extends StatelessWidget {
         ),
       );
     }
-    return Opacity(
-      opacity: enabled ? 1 : 0.5,
-      child: albumArt ??
-          const Icon(
-            YaruIcons.playlist_play,
-          ),
-    );
+    return albumArt ??
+        const Icon(
+          YaruIcons.playlist_play,
+        );
   }
 
   final String? name;
