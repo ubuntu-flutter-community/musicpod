@@ -199,9 +199,7 @@ class _Titles extends StatelessWidget {
                   showTrack: false,
                   isPlayerPlaying: isPlaying,
                   pause: pause,
-                  play: () async {
-                    await play(newAudio: audio);
-                  },
+                  play: play,
                   resume: resume,
                   key: ValueKey(audio),
                   selected: audioSelected,

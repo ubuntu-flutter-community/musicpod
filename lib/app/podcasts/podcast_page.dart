@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_page.dart';
-import 'package:musicpod/constants.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -20,6 +20,7 @@ class PodcastPage extends StatelessWidget {
     required this.addPodcast,
     required this.title,
     this.countryCode,
+    required this.removePodcastUpdate,
   });
 
   static Widget createIcon({
@@ -63,17 +64,25 @@ class PodcastPage extends StatelessWidget {
   }
 
   static Widget createTitle({
+    required BuildContext context,
     required bool enabled,
     required String title,
+    required update,
   }) {
     return Opacity(
       opacity: enabled ? 1 : 0.5,
-      child: Text(title),
+      child: Badge(
+        alignment: Alignment.centerRight,
+        isLabelVisible: update,
+        label: Text(context.l10n.newEpisode),
+        child: Text(title),
+      ),
     );
   }
 
-  final void Function(String name) removePodcast;
-  final void Function(String name, Set<Audio> audios) addPodcast;
+  final void Function(String feedUrl) removePodcast;
+  final void Function(String feedUrl, Set<Audio> audios) addPodcast;
+  final void Function(String feedUrl) removePodcastUpdate;
   final void Function({
     required String text,
     required AudioType audioType,
@@ -90,6 +99,7 @@ class PodcastPage extends StatelessWidget {
     final theme = Theme.of(context);
     final genre = audios?.firstWhereOrNull((e) => e.genre != null)?.genre;
     return AudioPage(
+      removeUpdate: removePodcastUpdate,
       countryCode: countryCode,
       showAudioTileHeader: false,
       sort: false,

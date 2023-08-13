@@ -16,6 +16,7 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _stationsSub;
   StreamSubscription<int?>? _localAudioIndexSub;
   StreamSubscription<bool>? _lastPositionsSub;
+  StreamSubscription<bool>? _updatesChangedSub;
 
   bool ready = false;
 
@@ -37,6 +38,8 @@ class LibraryModel extends SafeChangeNotifier {
         _service.starredStationsChanged.listen((event) => notifyListeners());
     _lastPositionsSub =
         _service.lastPositionsChanged.listen((_) => notifyListeners());
+    _updatesChangedSub =
+        _service.updatesChanged.listen((_) => notifyListeners());
 
     ready = true;
     notifyListeners();
@@ -51,6 +54,7 @@ class LibraryModel extends SafeChangeNotifier {
     _podcastsSub?.cancel();
     _stationsSub?.cancel();
     _lastPositionsSub?.cancel();
+    _updatesChangedSub?.cancel();
 
     super.dispose();
   }
@@ -145,15 +149,15 @@ class LibraryModel extends SafeChangeNotifier {
 
   Map<String, Set<Audio>> get podcasts => _service.podcasts;
   int get podcastsLength => podcasts.length;
-  void addPodcast(String name, Set<Audio> audios) =>
-      _service.addPodcast(name, audios);
-  void updatePodcast(String name, Set<Audio> audios) =>
-      _service.updatePodcast(name, audios);
+  void addPodcast(String feedUrl, Set<Audio> audios) =>
+      _service.addPodcast(feedUrl, audios);
+  void updatePodcast(String feedUrl, Set<Audio> audios) =>
+      _service.updatePodcast(feedUrl, audios);
 
-  void removePodcast(String name) => _service.removePodcast(name);
+  void removePodcast(String feedUrl) => _service.removePodcast(feedUrl);
 
-  bool podcastSubscribed(String? name) =>
-      name == null ? false : podcasts.containsKey(name);
+  bool podcastSubscribed(String? feedUrl) =>
+      feedUrl == null ? false : podcasts.containsKey(feedUrl);
 
   Map<String, String> get podcastsToFeedUrls => _service.podcastsToFeedUrls;
   void addPlaylistFeed(String playlist, String feedUrl) =>
@@ -161,6 +165,13 @@ class LibraryModel extends SafeChangeNotifier {
 
   bool get showSubbedPodcasts =>
       audioPageType == null || audioPageType == AudioPageType.podcast;
+
+  bool podcastUpdateAvailable(String feedUrl) =>
+      _service.updateAvailable(feedUrl);
+
+  Set<String> get podcastUpdates => _service.podcastUpdates;
+
+  void removePodcastUpdate(String feedUrl) => _service.removeUpdate(feedUrl);
 
   //
   // Albums

@@ -44,6 +44,7 @@ class AudioPageBody extends StatefulWidget {
     this.albumFlex = 4,
     this.showAudioTileHeader = true,
     this.countryCode,
+    this.removeUpdate,
   });
 
   final Set<Audio>? audios;
@@ -67,6 +68,7 @@ class AudioPageBody extends StatefulWidget {
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
   final String? countryCode;
+  final void Function()? removeUpdate;
 
   final void Function({
     required String text,
@@ -233,23 +235,9 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                 final audio = sortedAudios.elementAt(index);
                 final audioSelected = currentAudio == audio;
 
-                final likeButton = LikeButton(
-                  key: ObjectKey(audio),
-                  pageId: widget.pageId,
-                  audio: audio,
-                  audioSelected: audioSelected,
-                  audioPageType: widget.audioPageType,
-                  isLiked: liked,
-                  removeLikedAudio: removeLikedAudio,
-                  addLikedAudio: addLikedAudio,
-                  removeAudioFromPlaylist: removeAudioFromPlaylist,
-                  getTopFivePlaylistNames: getTopFivePlaylistNames,
-                  addAudioToPlaylist: addAudioToPlaylist,
-                  addPlaylist: addPlaylist,
-                );
-
                 if (audio.audioType == AudioType.podcast) {
                   return PodcastAudioTile(
+                    removeUpdate: () => widget.removeUpdate?.call(),
                     isExpanded: audioSelected,
                     audio: audio,
                     isPlayerPlaying: isPlaying,
@@ -265,6 +253,21 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   );
                 }
 
+                final likeButton = LikeButton(
+                  key: ObjectKey(audio),
+                  pageId: widget.pageId,
+                  audio: audio,
+                  audioSelected: audioSelected,
+                  audioPageType: widget.audioPageType,
+                  isLiked: liked,
+                  removeLikedAudio: removeLikedAudio,
+                  addLikedAudio: addLikedAudio,
+                  removeAudioFromPlaylist: removeAudioFromPlaylist,
+                  getTopFivePlaylistNames: getTopFivePlaylistNames,
+                  addAudioToPlaylist: addAudioToPlaylist,
+                  addPlaylist: addPlaylist,
+                );
+
                 return AudioTile(
                   titleFlex: widget.titleFlex,
                   artistFlex: widget.artistFlex,
@@ -272,9 +275,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   onTextTap: widget.onTextTap,
                   isPlayerPlaying: isPlaying,
                   pause: pause,
-                  play: () async {
-                    await play(newAudio: audio);
-                  },
+                  play: play,
                   startPlaylist: widget.audios == null
                       ? null
                       : () => startPlaylist(

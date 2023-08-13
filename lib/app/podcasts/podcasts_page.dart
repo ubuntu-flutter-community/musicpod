@@ -152,6 +152,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               itemImageUrl: artworkUrl600,
               genre: podcastItem.primaryGenreName,
               countryCode: widget.countryCode,
+              removePodcastUpdate: libraryModel.removePodcastUpdate,
             ),
           );
         },
@@ -257,13 +258,14 @@ class _PodcastsPageState extends State<PodcastsPage> {
 Future<void> pushPodcastPage({
   required BuildContext context,
   required Item podcastItem,
-  required bool Function(String? name) podcastSubscribed,
+  required bool Function(String? feedUrl) podcastSubscribed,
+  required void Function(String feedUrl) removePodcastUpdate,
   required void Function({
     required String text,
     required AudioType audioType,
   }) onTapText,
-  required void Function(String name) removePodcast,
-  required void Function(String name, Set<Audio> audios) addPodcast,
+  required void Function(String feedUrl) removePodcast,
+  required void Function(String feedUrl, Set<Audio> audios) addPodcast,
   required void Function(String? feedUrl) setFeedUrl,
   required String? oldFeedUrl,
   String? itemImageUrl,
@@ -301,6 +303,7 @@ Future<void> pushPodcastPage({
                 podcast.firstOrNull?.title ??
                 podcastItem.feedUrl!,
             countryCode: countryCode,
+            removePodcastUpdate: removePodcastUpdate,
           );
         },
       ),
