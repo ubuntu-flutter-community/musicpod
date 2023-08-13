@@ -255,13 +255,19 @@ class _AppState extends State<App> {
         localAudioModel.setDirectory(directoryPath).then(
               (value) async => await localAudioModel.init(
                 forceInit: true,
-                onFail: (failedImports) =>
-                    ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    duration: const Duration(seconds: 10),
-                    content: FailedImportsContent(failedImports: failedImports),
-                  ),
-                ),
+                onFail: (failedImports) {
+                  if (libraryModel.neverShowFailedImports) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      duration: const Duration(seconds: 10),
+                      content: FailedImportsContent(
+                        failedImports: failedImports,
+                        onNeverShowFailedImports:
+                            libraryModel.setNeverShowLocalImports,
+                      ),
+                    ),
+                  );
+                },
               ),
             );
       },

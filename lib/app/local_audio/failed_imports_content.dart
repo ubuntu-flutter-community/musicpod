@@ -5,9 +5,11 @@ class FailedImportsContent extends StatelessWidget {
   const FailedImportsContent({
     super.key,
     required this.failedImports,
+    required this.onNeverShowFailedImports,
   });
 
   final List<String> failedImports;
+  final void Function() onNeverShowFailedImports;
 
   @override
   Widget build(BuildContext context) {
@@ -18,16 +20,31 @@ class FailedImportsContent extends StatelessWidget {
       child: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text(
-                  context.l10n.failedToImport,
-                  style: TextStyle(
-                    color: theme.colorScheme.onInverseSurface,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    context.l10n.failedToImport,
+                    style: TextStyle(
+                      color: theme.colorScheme.onInverseSurface,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
+                ),
+              ),
+              OutlinedButton(
+                onPressed: () {
+                  onNeverShowFailedImports();
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                },
+                child: Text(
+                  context.l10n.dontShowAgain,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: theme.colorScheme.onInverseSurface),
                 ),
               )
             ],

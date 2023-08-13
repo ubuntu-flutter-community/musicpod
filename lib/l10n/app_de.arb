@@ -84,5 +84,6 @@
     "findUsOnGitHub": "Finde uns auf GitHub",
     "musicPodSubTitle": "Dein Musik, Radio und Podcast Player",
     "pickMusicCollection": "Wähle deine Musiksammlung aus",
-    "newEpisode": "Neu"
+    "newEpisode": "Neu",
+    "dontShowAgain": "Nicht erneut zeigen"
 }
