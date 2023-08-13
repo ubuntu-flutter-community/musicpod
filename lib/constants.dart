@@ -54,6 +54,7 @@ const kLastAudio = 'lastAudio';
 const kLastPositionAsString = 'lastPositionAsString';
 const kLastDurationAsString = 'lastDurationAsString';
 const kLocalAudioIndex = 'localAudioIndex';
+const kAppIndex = 'appIndex';
 
 const shops = <String, String>{
   'https://us.7digital.com/': '7digital',

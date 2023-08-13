@@ -59,18 +59,22 @@ class PlayerModel extends SafeChangeNotifier {
     if (value == null || value == _audio) return;
     _audio = value;
 
+    _setIsVideo();
+
+    notifyListeners();
+
+    if (_audio!.path != null || _audio!.url != null) {
+      _mediaControlService.metadata = await _createMprisMetadata(_audio!);
+    }
+  }
+
+  void _setIsVideo() {
     _isVideo = false;
     for (var t in _videoTypes) {
       if (audio?.url?.contains(t) == true) {
         _isVideo = true;
         break;
       }
-    }
-
-    notifyListeners();
-
-    if (_audio!.path != null || _audio!.url != null) {
-      _mediaControlService.metadata = await _createMprisMetadata(_audio!);
     }
   }
 
@@ -383,6 +387,7 @@ class PlayerModel extends SafeChangeNotifier {
       if (_audio != null && (_audio!.path != null || _audio!.url != null)) {
         _mediaControlService.metadata = await _createMprisMetadata(_audio!);
       }
+      _setIsVideo();
     }
   }
 
