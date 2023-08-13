@@ -37,16 +37,20 @@ class _LocalAudioPageState extends State<LocalAudioPage>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
       context.read<LocalAudioModel>().init(
-            onFail: (failedImports) =>
-                ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                duration: const Duration(seconds: 10),
-                content: FailedImportsContent(
-                  failedImports: failedImports,
-                ),
+        onFail: (failedImports) {
+          if (context.read<LibraryModel>().neverShowFailedImports) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              duration: const Duration(seconds: 10),
+              content: FailedImportsContent(
+                onNeverShowFailedImports:
+                    context.read<LibraryModel>().setNeverShowLocalImports,
+                failedImports: failedImports,
               ),
             ),
           );
+        },
+      );
     });
   }
 

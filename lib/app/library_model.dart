@@ -17,13 +17,20 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<int?>? _localAudioIndexSub;
   StreamSubscription<bool>? _lastPositionsSub;
   StreamSubscription<bool>? _updatesChangedSub;
+  StreamSubscription<bool>? _neverShowFailedImportsSub;
 
   bool ready = false;
+
+  bool get neverShowFailedImports => _service.neverShowFailedImports;
+  Future<void> setNeverShowLocalImports() async =>
+      await _service.setNeverShowFailedImports();
 
   Future<void> init() async {
     await _service.init();
 
-    _index = _service.appIndex;
+    if (_service.appIndex != null && totalListAmount - 1 < _service.appIndex!) {
+      _index = _service.appIndex;
+    }
 
     _localAudioIndexSub = _service.localAudioIndexStream
         .listen((index) => setLocalAudioindex(index));
@@ -40,6 +47,8 @@ class LibraryModel extends SafeChangeNotifier {
         _service.lastPositionsChanged.listen((_) => notifyListeners());
     _updatesChangedSub =
         _service.updatesChanged.listen((_) => notifyListeners());
+    _neverShowFailedImportsSub =
+        _service.neverShowFailedImportsChanged.listen((_) => notifyListeners());
 
     ready = true;
     notifyListeners();
@@ -55,6 +64,7 @@ class LibraryModel extends SafeChangeNotifier {
     _stationsSub?.cancel();
     _lastPositionsSub?.cancel();
     _updatesChangedSub?.cancel();
+    _neverShowFailedImportsSub?.cancel();
 
     super.dispose();
   }
