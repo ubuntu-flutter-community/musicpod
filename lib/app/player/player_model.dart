@@ -5,24 +5,26 @@ import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
-import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/utils.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class PlayerModel extends SafeChangeNotifier {
-  PlayerModel(MPRIS mpris)
+  PlayerModel({required MPRIS mpris, required LibraryService libraryService})
       : _player = Player(
           configuration: const PlayerConfiguration(
             title: 'MusicPod',
           ),
         ),
-        _mediaControlService = mpris;
+        _mpris = mpris,
+        _libraryService = libraryService;
 
   final Player _player;
   late final VideoController controller;
-  final MPRIS _mediaControlService;
+  final MPRIS _mpris;
+  final LibraryService _libraryService;
   StreamSubscription<bool>? _playerSub;
   StreamSubscription<Duration>? _durationSub;
   StreamSubscription<Duration>? _positionSub;
@@ -58,13 +60,13 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> _setAudio(Audio? value) async {
     if (value == null || value == _audio) return;
     _audio = value;
-
+    _libraryService.setLastAudio(value);
     _setIsVideo();
 
     notifyListeners();
 
     if (_audio!.path != null || _audio!.url != null) {
-      _mediaControlService.metadata = await _createMprisMetadata(_audio!);
+      _mpris.metadata = await _createMprisMetadata(_audio!);
     }
   }
 
@@ -82,12 +84,12 @@ class PlayerModel extends SafeChangeNotifier {
     return MPRISMetadata(
       audio.path != null ? Uri.file(audio.path!) : Uri.parse(audio.url!),
       artUrl: await createUriFromAudio(audio),
-      album: _audio?.album,
-      albumArtist: [_audio?.albumArtist ?? ''],
-      artist: [_audio?.artist ?? ''],
-      discNumber: _audio?.discNumber,
-      title: _audio?.title,
-      trackNumber: _audio?.trackNumber,
+      album: audio.album,
+      albumArtist: [audio.albumArtist ?? ''],
+      artist: [audio.artist ?? ''],
+      discNumber: audio.discNumber,
+      title: audio.title,
+      trackNumber: audio.trackNumber,
     );
   }
 
@@ -118,6 +120,7 @@ class PlayerModel extends SafeChangeNotifier {
   Duration? get duration => _duration;
   void setDuration(Duration? value) {
     _duration = value;
+    _libraryService.setDuration(value);
     notifyListeners();
   }
 
@@ -125,6 +128,7 @@ class PlayerModel extends SafeChangeNotifier {
   Duration? get position => _position;
   void setPosition(Duration? value) {
     _position = value;
+    _libraryService.setPosition(value);
     notifyListeners();
   }
 
@@ -155,6 +159,7 @@ class PlayerModel extends SafeChangeNotifier {
     await _player.setVolume(value);
   }
 
+  bool _firstPlay = true;
   Future<void> play({bool bigPlay = false, Audio? newAudio}) async {
     final currentIndex =
         (audio == null || queue.isEmpty || !queue.contains(audio!))
@@ -215,11 +220,11 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> init() async {
-    _mediaControlService.setEventHandler(
+    _mpris.setEventHandler(
       MPRISEventHandler(
         playPause: () async {
           isPlaying ? pause() : playOrPause();
-          _mediaControlService.playbackStatus = (isPlaying
+          _mpris.playbackStatus = (isPlaying
               ? MPRISPlaybackStatus.paused
               : MPRISPlaybackStatus.playing);
         },
@@ -228,7 +233,7 @@ class PlayerModel extends SafeChangeNotifier {
         },
         pause: () async {
           pause();
-          _mediaControlService.playbackStatus = MPRISPlaybackStatus.paused;
+          _mpris.playbackStatus = MPRISPlaybackStatus.paused;
         },
         next: () async {
           playNext();
@@ -239,11 +244,11 @@ class PlayerModel extends SafeChangeNotifier {
       ),
     );
 
-    await _readLastAudio();
+    await _readPlayerState();
 
     _playerSub = _player.stream.playing.listen((p) {
       isPlaying = p;
-      _mediaControlService.playbackStatus =
+      _mpris.playbackStatus =
           isPlaying ? MPRISPlaybackStatus.playing : MPRISPlaybackStatus.paused;
     });
     _durationSub = _player.stream.duration.listen((newDuration) {
@@ -365,27 +370,20 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _writeLastAudio() async {
-    await writeSetting(kLastPositionAsString, _position.toString());
-    await writeSetting(kLastDurationAsString, _duration.toString());
-    await writeSetting(kLastAudio, _audio?.toJson());
-  }
+  Future<void> _readPlayerState() async {
+    final playerState = await _libraryService.readPlayerState();
 
-  bool _firstPlay = true;
-  Future<void> _readLastAudio() async {
-    final positionAsString = await readSetting(kLastPositionAsString);
-    final durationAsString = await readSetting(kLastDurationAsString);
-    if (positionAsString != null) {
-      setPosition(parseDuration(positionAsString));
+    if (playerState.$1 != null) {
+      setPosition(playerState.$1!);
     }
-    final maybeAudio = await readSetting(kLastAudio);
-    if (maybeAudio != null) {
-      _audio = Audio.fromJson(maybeAudio);
-      if (durationAsString != null) {
-        setDuration(parseDuration(durationAsString));
-      }
+    if (playerState.$2 != null) {
+      setDuration(playerState.$2);
+    }
+    if (playerState.$3 != null) {
+      _audio = playerState.$3;
+
       if (_audio != null && (_audio!.path != null || _audio!.url != null)) {
-        _mediaControlService.metadata = await _createMprisMetadata(_audio!);
+        _mpris.metadata = await _createMprisMetadata(_audio!);
       }
       _setIsVideo();
     }
@@ -393,8 +391,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   @override
   Future<void> dispose() async {
-    await _writeLastAudio();
-    await _mediaControlService.dispose();
+    await _mpris.dispose();
     await _playerSub?.cancel();
     await _positionSub?.cancel();
     await _durationSub?.cancel();

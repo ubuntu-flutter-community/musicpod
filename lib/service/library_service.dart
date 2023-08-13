@@ -243,6 +243,7 @@ class LibraryService {
   Future<void> dispose() async {
     await writeSetting(kLocalAudioIndex, _localAudioIndex.toString());
     await writeSetting(kAppIndex, _appIndex.toString());
+    await writePlayerState();
     await _albumsController.close();
     await _podcastsController.close();
     await _likedAudiosController.close();
@@ -267,6 +268,38 @@ class LibraryService {
     if (value == kRecentPatchNotesDisposed) {
       _recentPatchNotesDisposed = true;
     }
+  }
+
+  Future<void> writePlayerState() async {
+    await writeSetting(kLastPositionAsString, _position.toString());
+    await writeSetting(kLastDurationAsString, _duration.toString());
+    await writeSetting(kLastAudio, _lastAudio?.toJson());
+  }
+
+  Duration? _duration;
+  void setDuration(Duration? duration) => _duration = duration;
+  Duration? _position;
+  void setPosition(Duration? position) => _position = position;
+  Audio? _lastAudio;
+  void setLastAudio(Audio? audio) => _lastAudio = audio;
+
+  Future<(Duration?, Duration?, Audio?)> readPlayerState() async {
+    Duration? position, duration;
+    Audio? audio;
+    final positionAsString = await readSetting(kLastPositionAsString);
+    final durationAsString = await readSetting(kLastDurationAsString);
+    if (positionAsString != null) {
+      position = parseDuration(positionAsString);
+    }
+    if (durationAsString != null) {
+      duration = parseDuration(durationAsString);
+    }
+    final maybeAudio = await readSetting(kLastAudio);
+    if (maybeAudio != null) {
+      audio = Audio.fromJson(maybeAudio);
+    }
+
+    return (position, duration, audio);
   }
 }
 

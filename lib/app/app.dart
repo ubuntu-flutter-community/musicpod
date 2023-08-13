@@ -40,7 +40,10 @@ class App extends StatefulWidget {
           create: (_) => RadioModel(getService<RadioService>()),
         ),
         ChangeNotifierProvider(
-          create: (_) => PlayerModel(getService<MPRIS>()),
+          create: (_) => PlayerModel(
+            mpris: getService<MPRIS>(),
+            libraryService: getService<LibraryService>(),
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => LocalAudioModel(getService<LocalAudioService>()),
