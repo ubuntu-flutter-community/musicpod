@@ -216,7 +216,11 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> resume() async {
     if (audio == null) return;
-    await _player.playOrPause();
+    if (_firstPlay) {
+      play(bigPlay: true);
+    } else {
+      await _player.playOrPause();
+    }
   }
 
   Future<void> init() async {

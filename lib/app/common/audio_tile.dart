@@ -27,7 +27,7 @@ class AudioTile extends StatelessWidget {
   final void Function()? onLike;
   final Widget? likeIcon;
   final bool isPlayerPlaying;
-  final Future<void> Function() play;
+  final Future<void> Function({bool bigPlay, Audio? newAudio}) play;
   final Future<void> Function() resume;
   final void Function()? startPlaylist;
   final void Function() pause;
@@ -53,17 +53,17 @@ class AudioTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(kYaruButtonRadius),
       ),
       onTap: () {
-        if (isPlayerPlaying && selected) {
-          pause();
-        } else {
-          if (selected) {
-            resume();
+        if (selected) {
+          if (isPlayerPlaying) {
+            pause();
           } else {
-            if (startPlaylist != null) {
-              startPlaylist!();
-            } else {
-              play();
-            }
+            resume();
+          }
+        } else {
+          if (startPlaylist != null) {
+            startPlaylist!();
+          } else {
+            play(newAudio: audio);
           }
         }
       },

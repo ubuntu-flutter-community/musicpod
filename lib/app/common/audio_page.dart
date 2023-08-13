@@ -38,6 +38,7 @@ class AudioPage extends StatelessWidget {
     this.albumFlex = 4,
     this.showAudioTileHeader = true,
     this.countryCode,
+    this.removeUpdate,
   });
 
   final Set<Audio>? audios;
@@ -63,6 +64,7 @@ class AudioPage extends StatelessWidget {
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
   final String? countryCode;
+  final void Function(String id)? removeUpdate;
 
   final void Function({
     required String text,
@@ -102,6 +104,7 @@ class AudioPage extends StatelessWidget {
       pageTitleWidget: pageTitleWidget,
       showAudioPageHeader: showAudioPageHeader,
       showAudioTileHeader: showAudioTileHeader,
+      removeUpdate: () => removeUpdate?.call(pageId),
     );
 
     return YaruDetailPage(

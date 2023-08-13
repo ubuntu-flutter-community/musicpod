@@ -44,6 +44,8 @@ List<MasterItem> createMasterItems({
   required void Function(String name) unStarStation,
   required Future<void> Function({bool bigPlay, Audio? newAudio}) play,
   String? countryCode,
+  required bool Function(String feedUrl) podcastUpdateAvailable,
+  required void Function(String feedUrl) removePodcastUpdate,
 }) {
   return [
     MasterItem(
@@ -116,10 +118,12 @@ List<MasterItem> createMasterItems({
     for (final podcast in subbedPodcasts.entries)
       MasterItem(
         tileBuilder: (context) => PodcastPage.createTitle(
+          context: context,
           title: podcast.value.firstOrNull?.album ??
               podcast.value.firstOrNull?.title ??
               podcast.value.firstOrNull.toString(),
           enabled: showSubbedPodcasts,
+          update: podcastUpdateAvailable(podcast.key),
         ),
         builder: (context) => isOnline
             ? PodcastPage(
@@ -133,6 +137,7 @@ List<MasterItem> createMasterItems({
                 removePodcast: removePodcast,
                 imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
                     podcast.value.firstOrNull?.imageUrl,
+                removePodcastUpdate: removePodcastUpdate,
               )
             : const OfflinePage(),
         iconBuilder: (context, selected) => PodcastPage.createIcon(

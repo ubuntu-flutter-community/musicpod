@@ -154,17 +154,29 @@ class LibraryService {
   final _podcastsController = StreamController<bool>.broadcast();
   Stream<bool> get podcastsChanged => _podcastsController.stream;
 
-  void addPodcast(String name, Set<Audio> audios) {
-    _podcasts.putIfAbsent(name, () => audios);
+  void addPodcast(String feedUrl, Set<Audio> audios) {
+    _podcasts.putIfAbsent(feedUrl, () => audios);
     _write(_podcasts, kPodcastsFileName)
         .then((_) => _podcastsController.add(true));
   }
 
-  void updatePodcast(String name, Set<Audio> audios) {
-    _podcasts.update(name, (value) => audios);
+  void updatePodcast(String feedUrl, Set<Audio> audios) {
+    _podcasts.update(feedUrl, (value) => audios);
     _write(_podcasts, kPodcastsFileName)
-        .then((_) => _podcastsController.add(true));
+        .then((_) => _podcastsController.add(true))
+        .then((_) => podcastUpdates.add(feedUrl))
+        .then((_) => _updateController.add(true));
   }
+
+  final Set<String> podcastUpdates = {};
+  bool updateAvailable(String feedUrl) => podcastUpdates.contains(feedUrl);
+  void removeUpdate(String feedUrl) {
+    podcastUpdates.remove(feedUrl);
+    _updateController.add(true);
+  }
+
+  final _updateController = StreamController<bool>.broadcast();
+  Stream<bool> get updatesChanged => _updateController.stream;
 
   void removePodcast(String name) {
     _podcasts.remove(name);
@@ -251,6 +263,7 @@ class LibraryService {
     await _starredStationsController.close();
     await _lastPositionsController.close();
     await _localAudioIndexController.close();
+    _updateController.close();
   }
 
   Future<void> disposePatchNotes() async {

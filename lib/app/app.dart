@@ -183,6 +183,7 @@ class _AppState extends State<App> {
     context.select((LibraryModel m) => m.pinnedAlbums.length);
     context.select((LibraryModel m) => m.starredStations.length);
     context.select((LibraryModel m) => m.playlists.length);
+    context.select<LibraryModel, int>((m) => m.podcastUpdates.length);
 
     if (!ready) {
       return SplashScreen(
@@ -244,6 +245,8 @@ class _AppState extends State<App> {
       unStarStation: libraryModel.unStarStation,
       play: play,
       countryCode: _countryCode,
+      podcastUpdateAvailable: libraryModel.podcastUpdateAvailable,
+      removePodcastUpdate: libraryModel.removePodcastUpdate,
     );
 
     final yaruMasterDetailPage = MasterDetailPage(

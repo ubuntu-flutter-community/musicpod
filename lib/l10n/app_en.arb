@@ -83,5 +83,6 @@
     "settings": "Settings",
     "findUsOnGitHub": "Find us on GitHub",
     "musicPodSubTitle": "Your Music, Radio and Podcast Player",
-    "pickMusicCollection": "Pick your music collection"
+    "pickMusicCollection": "Pick your music collection",
+    "newEpisode": "New"
 }

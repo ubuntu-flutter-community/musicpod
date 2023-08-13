@@ -25,6 +25,7 @@ class PodcastAudioTile extends StatelessWidget {
     required this.lastPosition,
     this.isExpanded = false,
     this.countryCode,
+    this.removeUpdate,
   });
 
   final Audio audio;
@@ -33,7 +34,9 @@ class PodcastAudioTile extends StatelessWidget {
   final void Function() pause;
   final Future<void> Function() resume;
   final void Function()? startPlaylist;
-  final Future<void> Function() play;
+  final Future<void> Function({bool bigPlay, Audio? newAudio}) play;
+  final void Function()? removeUpdate;
+
   final Duration? lastPosition;
   final bool isExpanded;
   final String? countryCode;
@@ -78,18 +81,19 @@ class PodcastAudioTile extends StatelessWidget {
                         )
                       : const Icon(YaruIcons.media_play),
                   onPressed: () {
-                    if (isPlayerPlaying && selected) {
-                      pause();
-                    } else {
-                      if (selected) {
-                        resume();
+                    if (selected) {
+                      if (isPlayerPlaying) {
+                        pause();
                       } else {
-                        if (startPlaylist != null) {
-                          startPlaylist!();
-                        } else {
-                          play();
-                        }
+                        resume();
                       }
+                    } else {
+                      if (startPlaylist != null) {
+                        startPlaylist!();
+                      } else {
+                        play(newAudio: audio);
+                      }
+                      removeUpdate?.call();
                     }
                   },
                 ),
