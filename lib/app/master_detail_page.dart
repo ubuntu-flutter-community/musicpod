@@ -48,7 +48,7 @@ class MasterDetailPage extends StatelessWidget {
       layoutDelegate: const YaruMasterFixedPaneDelegate(
         paneWidth: 250,
       ),
-      breakpoint: 740,
+      breakpoint: 720,
       controller: YaruPageController(
         length: totalListAmount,
         initialIndex: index ?? 0,

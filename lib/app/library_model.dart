@@ -62,20 +62,45 @@ class LibraryModel extends SafeChangeNotifier {
   int get totalListAmount {
     const fix = 7;
 
-    return starredStationsLength +
-        podcastsLength +
-        playlistsLength +
-        pinnedAlbumsLength +
-        fix;
+    switch (_audioPageType) {
+      case AudioPageType.album:
+        return pinnedAlbumsLength + fix;
+      case AudioPageType.playlist:
+        return playlistsLength + fix;
+      case AudioPageType.podcast:
+        return podcastsLength + fix;
+      case AudioPageType.radio:
+        return starredStationsLength + fix;
+      default:
+        return starredStationsLength +
+            podcastsLength +
+            playlistsLength +
+            pinnedAlbumsLength +
+            fix;
+    }
   }
 
   AudioPageType? _audioPageType;
   AudioPageType? get audioPageType => _audioPageType;
+  int? _oldIndex;
   void setAudioPageType(AudioPageType? value) {
     if (value == _audioPageType) {
       _audioPageType = null;
+      _index = _oldIndex ?? 0;
     } else {
       _audioPageType = value;
+      _oldIndex = _index;
+      switch (value) {
+        case AudioPageType.radio:
+          _index = 1;
+          break;
+        case AudioPageType.podcast:
+          _index = 2;
+          break;
+        default:
+          _index = 0;
+          break;
+      }
     }
     notifyListeners();
   }
