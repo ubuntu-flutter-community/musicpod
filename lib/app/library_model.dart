@@ -26,8 +26,6 @@ class LibraryModel extends SafeChangeNotifier {
       await _service.setNeverShowFailedImports();
 
   Future<void> init() async {
-    await _service.init();
-
     if (_service.appIndex != null &&
         totalListAmount - 1 >= _service.appIndex!) {
       _index = _service.appIndex;

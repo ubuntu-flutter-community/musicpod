@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/musicpod.dart';
 import 'package:musicpod/service/library_service.dart';
@@ -16,6 +17,19 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
 
+  final libraryService = LibraryService();
+  await libraryService.init();
+
+  final player = Player(
+    configuration: const PlayerConfiguration(title: 'MusicPod'),
+  );
+  registerService<Player>(
+    () => player,
+    dispose: (p) => p.dispose(),
+  );
+
+  registerService<VideoController>(() => VideoController(player));
+
   final mpris = await MPRIS.create(
     busName: 'org.mpris.MediaPlayer2.musicpod',
     identity: 'Musicpod',
@@ -26,8 +40,9 @@ Future<void> main() async {
     () => mpris,
     dispose: (s) async => await s.dispose(),
   );
+
   registerService<LibraryService>(
-    LibraryService.new,
+    () => libraryService,
     dispose: (s) async => await s.dispose(),
   );
   registerService<LocalAudioService>(

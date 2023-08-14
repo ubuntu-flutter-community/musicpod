@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/connectivity_notifier.dart';
@@ -41,6 +42,7 @@ class App extends StatefulWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => PlayerModel(
+            videoController: getService<VideoController>(),
             mpris: getService<MPRIS>(),
             libraryService: getService<LibraryService>(),
           ),
@@ -62,7 +64,7 @@ class App extends StatefulWidget {
         ChangeNotifierProvider(
           create: (_) => ConnectivityNotifier(
             getService<Connectivity>(),
-          )..init(),
+          ),
         )
       ],
       child: const App(),
@@ -95,15 +97,17 @@ class _AppState extends State<App> {
       },
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (mounted) {
-        context.read<PlayerModel>().init();
         final lm = context.read<LibraryModel>();
-        lm.init().then((value) {
-          if (lm.recentPatchNotesDisposed == false) {
-            _showPatchNotes(lm.disposePatchNotes);
-          }
-        });
+        final pm = context.read<PlayerModel>();
+        final c = context.read<ConnectivityNotifier>();
+        await lm.init();
+        await pm.init();
+        await c.init();
+        if (lm.recentPatchNotesDisposed == false) {
+          _showPatchNotes(lm.disposePatchNotes);
+        }
       }
     });
   }
