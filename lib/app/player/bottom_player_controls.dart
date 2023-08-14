@@ -20,6 +20,7 @@ class BottomPlayerControls extends StatelessWidget {
     required this.volume,
     required this.queue,
     required this.onFullScreenTap,
+    required this.isOnline,
   });
 
   final Audio? audio;
@@ -38,9 +39,12 @@ class BottomPlayerControls extends StatelessWidget {
   final Future<void> Function(double value) setVolume;
   final void Function() onFullScreenTap;
 
+  final bool isOnline;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final active = audio?.path != null || isOnline;
 
     final children = [
       Row(
@@ -48,19 +52,23 @@ class BottomPlayerControls extends StatelessWidget {
           YaruIconButton(
             icon: Icon(
               YaruIcons.shuffle,
-              color: shuffle ? theme.primaryColor : theme.colorScheme.onSurface,
+              color: !active
+                  ? theme.disabledColor
+                  : (shuffle
+                      ? theme.primaryColor
+                      : theme.colorScheme.onSurface),
             ),
-            onPressed: () => setShuffle(!(shuffle)),
+            onPressed: !active ? null : () => setShuffle(!(shuffle)),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: YaruIconButton(
-              onPressed: () => playPrevious(),
+              onPressed: !active ? null : () => playPrevious(),
               icon: const Icon(YaruIcons.skip_backward),
             ),
           ),
           YaruIconButton(
-            onPressed: audio == null
+            onPressed: !active || audio == null
                 ? null
                 : () {
                     if (isPlaying) {
@@ -76,18 +84,20 @@ class BottomPlayerControls extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: YaruIconButton(
-              onPressed: () => playNext(),
+              onPressed: !active ? null : () => playNext(),
               icon: const Icon(YaruIcons.skip_forward),
             ),
           ),
           YaruIconButton(
             icon: Icon(
               YaruIcons.repeat_single,
-              color: repeatSingle
-                  ? theme.primaryColor
-                  : theme.colorScheme.onSurface,
+              color: !active
+                  ? theme.disabledColor
+                  : (repeatSingle
+                      ? theme.primaryColor
+                      : theme.colorScheme.onSurface),
             ),
-            onPressed: () => setRepeatSingle(!(repeatSingle)),
+            onPressed: !active ? null : () => setRepeatSingle(!(repeatSingle)),
           ),
         ],
       ),

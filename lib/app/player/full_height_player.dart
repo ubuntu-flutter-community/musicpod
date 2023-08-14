@@ -45,6 +45,7 @@ class FullHeightPlayer extends StatelessWidget {
     required this.setVolume,
     required this.videoController,
     required this.isVideo,
+    required this.isOnline,
   });
 
   final Audio? audio;
@@ -88,6 +89,7 @@ class FullHeightPlayer extends StatelessWidget {
 
   final VideoController videoController;
   final bool isVideo;
+  final bool isOnline;
 
   @override
   Widget build(BuildContext context) {
@@ -159,6 +161,7 @@ class FullHeightPlayer extends StatelessWidget {
       volume: volume,
       setVolume: setVolume,
       queue: queue,
+      isOnline: isOnline,
     );
 
     final sliderAndTime = PlayerTrack(
@@ -198,6 +201,7 @@ class FullHeightPlayer extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                           child: _FullHeightPlayerImage(
                             audio: audio,
+                            isOnline: isOnline,
                           ),
                         ),
                       ),
@@ -353,9 +357,11 @@ class _UpNextBubble extends StatelessWidget {
 class _FullHeightPlayerImage extends StatelessWidget {
   const _FullHeightPlayerImage({
     this.audio,
+    required this.isOnline,
   });
 
   final Audio? audio;
+  final bool isOnline;
 
   @override
   Widget build(BuildContext context) {
@@ -378,7 +384,15 @@ class _FullHeightPlayerImage extends StatelessWidget {
         fit: BoxFit.fitHeight,
       );
     } else {
-      if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
+      if (!isOnline) {
+        image = SizedBox(
+          child: Icon(
+            iconData,
+            size: 200,
+            color: theme.hintColor,
+          ),
+        );
+      } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
         image = SafeNetworkImage(
           url: audio?.imageUrl ?? audio?.albumArtUrl,
           filterQuality: FilterQuality.medium,

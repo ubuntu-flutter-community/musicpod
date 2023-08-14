@@ -24,7 +24,6 @@ class PodcastAudioTile extends StatelessWidget {
     required this.play,
     required this.lastPosition,
     this.isExpanded = false,
-    this.countryCode,
     this.removeUpdate,
   });
 
@@ -39,7 +38,6 @@ class PodcastAudioTile extends StatelessWidget {
 
   final Duration? lastPosition;
   final bool isExpanded;
-  final String? countryCode;
 
   @override
   Widget build(BuildContext context) {

@@ -19,9 +19,7 @@ class MusicPod extends StatelessWidget {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: supportedLocales,
           onGenerateTitle: (context) => 'MusicPod',
-          home: App.create(
-            context: context,
-          ),
+          home: App.create(),
           scrollBehavior: const MaterialScrollBehavior().copyWith(
             dragDevices: {
               PointerDeviceKind.mouse,

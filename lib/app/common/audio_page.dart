@@ -37,7 +37,6 @@ class AudioPage extends StatelessWidget {
     this.artistFlex = 5,
     this.albumFlex = 4,
     this.showAudioTileHeader = true,
-    this.countryCode,
     this.removeUpdate,
   });
 
@@ -63,7 +62,6 @@ class AudioPage extends StatelessWidget {
   final Widget? noResultMessage;
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
-  final String? countryCode;
   final void Function(String id)? removeUpdate;
 
   final void Function({

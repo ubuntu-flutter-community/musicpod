@@ -46,6 +46,7 @@ class BottomPlayer extends StatelessWidget {
     this.isVideo,
     required this.videoController,
     required this.queue,
+    required this.isOnline,
   });
 
   final Audio? audio;
@@ -84,6 +85,7 @@ class BottomPlayer extends StatelessWidget {
 
   final bool? isVideo;
   final VideoController videoController;
+  final bool isOnline;
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +101,7 @@ class BottomPlayer extends StatelessWidget {
             size: _kBottomPlayerHeight,
             videoController: videoController,
             isVideo: isVideo,
+            isOnline: isOnline,
           ),
           const SizedBox(
             width: 20,
@@ -165,6 +168,7 @@ class BottomPlayer extends StatelessWidget {
                       setVolume: setVolume,
                       queue: queue,
                       onFullScreenTap: () => setFullScreen(true),
+                      isOnline: isOnline,
                     ),
                   ),
                   SizedBox(
@@ -288,11 +292,13 @@ class _BottomPlayerImage extends StatelessWidget {
     required this.size,
     this.isVideo,
     required this.videoController,
+    required this.isOnline,
   });
   final Audio? audio;
   final double size;
   final bool? isVideo;
   final VideoController videoController;
+  final bool isOnline;
 
   @override
   Widget build(BuildContext context) {
@@ -330,7 +336,17 @@ class _BottomPlayerImage extends StatelessWidget {
         ),
       );
     } else {
-      if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
+      if (!isOnline) {
+        return SizedBox(
+          width: size,
+          height: size,
+          child: Icon(
+            iconData,
+            size: 50,
+            color: theme.hintColor,
+          ),
+        );
+      } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
         return SizedBox(
           height: size,
           width: size,

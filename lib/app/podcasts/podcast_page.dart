@@ -19,7 +19,6 @@ class PodcastPage extends StatelessWidget {
     required this.removePodcast,
     required this.addPodcast,
     required this.title,
-    this.countryCode,
     required this.removePodcastUpdate,
   });
 
@@ -81,7 +80,6 @@ class PodcastPage extends StatelessWidget {
   final String title;
   final Set<Audio>? audios;
   final bool subscribed;
-  final String? countryCode;
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +87,6 @@ class PodcastPage extends StatelessWidget {
     final genre = audios?.firstWhereOrNull((e) => e.genre != null)?.genre;
     return AudioPage(
       removeUpdate: removePodcastUpdate,
-      countryCode: countryCode,
       showAudioTileHeader: false,
       sort: false,
       onTextTap: onTextTap,

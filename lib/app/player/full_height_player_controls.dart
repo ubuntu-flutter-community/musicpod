@@ -29,6 +29,7 @@ class FullHeightPlayerControls extends StatelessWidget {
     required this.setVolume,
     required this.volume,
     required this.queue,
+    required this.isOnline,
   });
 
   final Audio? audio;
@@ -52,10 +53,13 @@ class FullHeightPlayerControls extends StatelessWidget {
   final void Function(Audio audio, bool notify) addLikedAudio;
   final double volume;
   final Future<void> Function(double value) setVolume;
+  final bool isOnline;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final active = audio?.path != null || isOnline;
 
     const spacing = 7.0;
 
@@ -76,7 +80,7 @@ class FullHeightPlayerControls extends StatelessWidget {
           width: spacing,
         ),
         YaruIconButton(
-          onPressed: audio?.website == null
+          onPressed: !active || audio?.website == null
               ? null
               : () => ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -97,22 +101,24 @@ class FullHeightPlayerControls extends StatelessWidget {
         YaruIconButton(
           icon: Icon(
             YaruIcons.shuffle,
-            color: shuffle ? theme.primaryColor : theme.colorScheme.onSurface,
+            color: !active
+                ? theme.disabledColor
+                : (shuffle ? theme.primaryColor : theme.colorScheme.onSurface),
           ),
-          onPressed: () => setShuffle(!(shuffle)),
+          onPressed: !active ? null : () => setShuffle(!(shuffle)),
         ),
         const SizedBox(
           width: spacing,
         ),
         YaruIconButton(
-          onPressed: () => playPrevious(),
+          onPressed: !active ? null : () => playPrevious(),
           icon: const Icon(YaruIcons.skip_backward),
         ),
         const SizedBox(
           width: spacing,
         ),
         YaruIconButton(
-          onPressed: audio == null
+          onPressed: !active || audio == null
               ? null
               : () {
                   if (isPlaying) {
@@ -129,7 +135,7 @@ class FullHeightPlayerControls extends StatelessWidget {
           width: spacing,
         ),
         YaruIconButton(
-          onPressed: () => playNext(),
+          onPressed: !active ? null : () => playNext(),
           icon: const Icon(YaruIcons.skip_forward),
         ),
         const SizedBox(
@@ -138,10 +144,13 @@ class FullHeightPlayerControls extends StatelessWidget {
         YaruIconButton(
           icon: Icon(
             YaruIcons.repeat_single,
-            color:
-                repeatSingle ? theme.primaryColor : theme.colorScheme.onSurface,
+            color: !active
+                ? theme.disabledColor
+                : (repeatSingle
+                    ? theme.primaryColor
+                    : theme.colorScheme.onSurface),
           ),
-          onPressed: () => setRepeatSingle(!(repeatSingle)),
+          onPressed: !active ? null : () => setRepeatSingle(!(repeatSingle)),
         ),
         const SizedBox(
           width: spacing,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/app_model.dart';
+import 'package:musicpod/app/common/patch_notes_dialog.dart';
 import 'package:musicpod/app/connectivity_notifier.dart';
 import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/local_audio/failed_imports_content.dart';
@@ -15,9 +16,7 @@ import 'package:musicpod/app/player/player_view.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/radio/radio_model.dart';
 import 'package:musicpod/app/splash_screen.dart';
-import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
-import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/local_audio_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
@@ -29,9 +28,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class App extends StatefulWidget {
   const App({super.key});
 
-  static Widget create({
-    required BuildContext context,
-  }) {
+  static Widget create() {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -85,10 +82,14 @@ class _AppState extends State<App> {
     _countryCode = WidgetsBinding.instance.platformDispatcher.locale.countryCode
         ?.toLowerCase();
 
+    final lm = context.read<LibraryModel>();
+    final pm = context.read<PlayerModel>();
+    final c = context.read<ConnectivityNotifier>();
+
     YaruWindow.of(context).onClose(
       () async {
-        await context.read<PlayerModel>().dispose().then((_) async {
-          await context.read<LibraryModel>().dispose().then((_) async {
+        await pm.dispose().then((_) async {
+          await lm.dispose().then((_) async {
             await resetAllServices();
           });
         });
@@ -97,44 +98,22 @@ class _AppState extends State<App> {
       },
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (mounted) {
-        final lm = context.read<LibraryModel>();
-        final pm = context.read<PlayerModel>();
-        final c = context.read<ConnectivityNotifier>();
-        await lm.init();
-        await pm.init();
-        await c.init();
-        if (lm.recentPatchNotesDisposed == false) {
-          _showPatchNotes(lm.disposePatchNotes);
-        }
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      c.init().then(
+        (_) {
+          lm.init().then(
+            (_) {
+              pm.init().then((_) {
+                if (lm.recentPatchNotesDisposed == false) {
+                  showPatchNotes(context, lm.disposePatchNotes);
+                }
+              });
+            },
+          );
+        },
+      );
     });
-  }
-
-  Future<dynamic> _showPatchNotes(Future<void> Function() disposePatchNotes) {
-    return showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text(kRecentPatchNotesTitle),
-          content: Text(
-            kRecentPatchNotes,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () async {
-                await disposePatchNotes()
-                    .then((value) => Navigator.of(context).pop());
-              },
-              child: Text(context.l10n.ok),
-            )
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -304,6 +283,7 @@ class _AppState extends State<App> {
                         child: PlayerView(
                           onTextTap: onTextTap,
                           playerViewMode: PlayerViewMode.bottom,
+                          isOnline: isOnline,
                         ),
                       )
                   ],
@@ -319,6 +299,7 @@ class _AppState extends State<App> {
                   child: PlayerView(
                     playerViewMode: PlayerViewMode.sideBar,
                     onTextTap: onTextTap,
+                    isOnline: isOnline,
                   ),
                 )
             ],
@@ -330,6 +311,7 @@ class _AppState extends State<App> {
                 child: PlayerView(
                   onTextTap: onTextTap,
                   playerViewMode: PlayerViewMode.fullWindow,
+                  isOnline: isOnline,
                 ),
               ),
             )

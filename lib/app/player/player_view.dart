@@ -12,11 +12,13 @@ class PlayerView extends StatefulWidget {
     super.key,
     required this.playerViewMode,
     required this.onTextTap,
+    required this.isOnline,
   });
 
   final PlayerViewMode playerViewMode;
   final void Function({required String text, required AudioType audioType})
       onTextTap;
+  final bool isOnline;
 
   @override
   State<PlayerView> createState() => _PlayerViewState();
@@ -129,6 +131,7 @@ class _PlayerViewState extends State<PlayerView> {
         removeLikedAudio: removeLikedAudio,
         volume: volume,
         setVolume: setVolume,
+        isOnline: widget.isOnline,
       );
     } else {
       return BottomPlayer(
@@ -161,6 +164,7 @@ class _PlayerViewState extends State<PlayerView> {
         volume: volume,
         setVolume: setVolume,
         queue: queue,
+        isOnline: widget.isOnline,
       );
     }
   }

@@ -302,7 +302,6 @@ Future<void> pushPodcastPage({
             title: podcast.firstOrNull?.album ??
                 podcast.firstOrNull?.title ??
                 podcastItem.feedUrl!,
-            countryCode: countryCode,
             removePodcastUpdate: removePodcastUpdate,
           );
         },
