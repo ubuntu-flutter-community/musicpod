@@ -28,7 +28,8 @@ class LibraryModel extends SafeChangeNotifier {
   Future<void> init() async {
     await _service.init();
 
-    if (_service.appIndex != null && totalListAmount - 1 < _service.appIndex!) {
+    if (_service.appIndex != null &&
+        totalListAmount - 1 >= _service.appIndex!) {
       _index = _service.appIndex;
     }
 
@@ -228,8 +229,8 @@ class LibraryModel extends SafeChangeNotifier {
   void setIndex(int? value) {
     if (value == null || value == _index) return;
     _index = value;
-    notifyListeners();
     _service.setAppIndex(value);
+    notifyListeners();
   }
 
   bool get showPinnedAlbums =>
