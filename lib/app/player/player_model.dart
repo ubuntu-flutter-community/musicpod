@@ -12,17 +12,17 @@ import 'package:palette_generator/palette_generator.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class PlayerModel extends SafeChangeNotifier {
-  PlayerModel({required MPRIS mpris, required LibraryService libraryService})
-      : _player = Player(
-          configuration: const PlayerConfiguration(
-            title: 'MusicPod',
-          ),
-        ),
+  PlayerModel({
+    required VideoController videoController,
+    required MPRIS mpris,
+    required LibraryService libraryService,
+  })  : controller = videoController,
+        _player = videoController.player,
         _mpris = mpris,
         _libraryService = libraryService;
 
   final Player _player;
-  late final VideoController controller;
+  final VideoController controller;
   final MPRIS _mpris;
   final LibraryService _libraryService;
   StreamSubscription<bool>? _playerSub;
@@ -273,8 +273,6 @@ class PlayerModel extends SafeChangeNotifier {
       notifyListeners();
     });
 
-    controller = VideoController(_player);
-
     notifyListeners();
   }
 
@@ -395,13 +393,11 @@ class PlayerModel extends SafeChangeNotifier {
 
   @override
   Future<void> dispose() async {
-    await _mpris.dispose();
     await _playerSub?.cancel();
     await _positionSub?.cancel();
     await _durationSub?.cancel();
     await _isCompletedSub?.cancel();
     await _volumeSub?.cancel();
-    await _player.dispose();
     super.dispose();
   }
 }
