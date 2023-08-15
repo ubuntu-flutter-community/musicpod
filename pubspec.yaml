@@ -42,7 +42,7 @@ dependencies:
   ubuntu_service: ^0.2.0
   url_launcher: ^6.1.10
   xdg_directories: ^1.0.0
-  yaru: ^0.10.0
+  yaru: ^1.0.0
   yaru_icons: ^2.1.0
   yaru_widgets:
     git:
