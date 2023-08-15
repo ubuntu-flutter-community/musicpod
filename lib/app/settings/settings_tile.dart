@@ -13,38 +13,34 @@ class SettingsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SizedBox(
-        height: kYaruTitleBarItemHeight,
-        width: kYaruTitleBarItemHeight,
-        child: PopupMenuButton(
-          icon: const Icon(
-            YaruIcons.menu,
-            size: 19,
-          ),
-          itemBuilder: (BuildContext context) {
-            return [
-              PopupMenuItem(
-                child: Column(
-                  children: [
-                    const ShopRecommendations(),
-                    ElevatedButton(
-                      onPressed: () async {
-                        final directoryPath = await getDirectoryPath();
-
-                        await onDirectorySelected(directoryPath)
-                            .then((value) => Navigator.of(context).pop());
-                      },
-                      child: Text(context.l10n.pickMusicCollection),
-                    ),
-                    const SizedBox(
-                      height: kYaruPagePadding,
-                    )
-                  ],
-                ),
-              ),
-            ];
-          },
+      child: PopupMenuButton(
+        padding: EdgeInsets.zero,
+        icon: const Icon(
+          YaruIcons.menu,
         ),
+        itemBuilder: (BuildContext context) {
+          return [
+            PopupMenuItem(
+              child: Column(
+                children: [
+                  const ShopRecommendations(),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final directoryPath = await getDirectoryPath();
+
+                      await onDirectorySelected(directoryPath)
+                          .then((value) => Navigator.of(context).pop());
+                    },
+                    child: Text(context.l10n.pickMusicCollection),
+                  ),
+                  const SizedBox(
+                    height: kYaruPagePadding,
+                  )
+                ],
+              ),
+            ),
+          ];
+        },
       ),
     );
   }

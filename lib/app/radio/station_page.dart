@@ -136,6 +136,7 @@ class StationPage extends StatelessWidget {
                       Row(
                         children: [
                           CircleAvatar(
+                            radius: kYaruTitleBarItemHeight / 2,
                             backgroundColor: theme.primaryColor,
                             child: IconButton(
                               onPressed: isStarred

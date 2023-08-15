@@ -197,10 +197,10 @@ packages:
     dependency: transitive
     description:
       name: file_selector_ios
-      sha256: "54542b6b35e3ced6246df5fae13cf0b879d14669d0fdff1a53a098f16e23328b"
+      sha256: "507af301b21b1dbb6fd0615ba21190b2b4574edb672929f32ce7f610c40a9bd9"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.1+4"
+    version: "0.5.1+5"
   file_selector_linux:
     dependency: "direct main"
     description:
@@ -279,10 +279,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_rust_bridge
-      sha256: ff90d5ddd0cda6d94ed048cc9c4a4d993d1a4bb11605d60a1282fc1bbf173c77
+      sha256: a2ff791f96ed03be0d4a8d249130688371ab3612ef95efeddef23600b904a1ef
       url: "https://pub.dev"
     source: hosted
-    version: "1.80.1"
+    version: "1.81.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -991,10 +991,10 @@ packages:
     dependency: "direct main"
     description:
       name: yaru
-      sha256: e20cbab2e057731bcc22b661d207e762c9c40dc4ca4a8e223aad7657b88dd923
+      sha256: "5b5292f141b78974e6614441cbfb11c08dbdf343b6f87eb97f2dad8737f15091"
       url: "https://pub.dev"
     source: hosted
-    version: "0.10.0"
+    version: "1.0.0"
   yaru_icons:
     dependency: "direct main"
     description:
@@ -1006,12 +1006,11 @@ packages:
   yaru_widgets:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "8675ed1807dfec1a5b1180e30a66a1466bfafb4e"
-      resolved-ref: "8675ed1807dfec1a5b1180e30a66a1466bfafb4e"
-      url: "https://github.com/ubuntu/yaru_widgets.dart"
-    source: git
-    version: "2.7.0"
+      name: yaru_widgets
+      sha256: "700254821fd230ddf8766cf3a11fac5cc82bbbab7624672a1bd0796141252f19"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   yaru_window:
     dependency: "direct main"
     description:

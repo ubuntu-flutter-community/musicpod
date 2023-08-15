@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 const kRepoUrl = 'http://github.com/ubuntu-flutter-community/musicpod';
 
-const kSideBarIconSize = 23.0;
-
-const kHeaderBarItemHeight = 35.0;
+const kSideBarIconSize = 20.0;
 
 const kSearchBarWidth = 350.0;
 

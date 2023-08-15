@@ -81,7 +81,7 @@ class _RadioPageState extends State<RadioPage> {
     final controlPanel = SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: SizedBox(
-        height: kHeaderBarItemHeight,
+        height: kYaruTitleBarItemHeight,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
