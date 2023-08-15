@@ -13,6 +13,7 @@ class QueuePopup extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return PopupMenuButton<double>(
+      padding: EdgeInsets.zero,
       tooltip: context.l10n.queue,
       icon: const Icon(
         YaruIcons.playlist,

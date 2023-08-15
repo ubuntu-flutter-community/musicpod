@@ -33,6 +33,7 @@ class _VolumeSliderPopupState extends State<VolumeSliderPopup> {
     return StatefulBuilder(
       builder: (context, stateSetter) {
         return PopupMenuButton<double>(
+          padding: EdgeInsets.zero,
           tooltip: context.l10n.volume,
           icon: Icon(iconData),
           itemBuilder: (context) {

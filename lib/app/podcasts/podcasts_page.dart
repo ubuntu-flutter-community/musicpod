@@ -162,7 +162,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final controlPanel = SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: SizedBox(
-        height: kHeaderBarItemHeight,
+        height: kYaruTitleBarItemHeight,
         child: Row(
           children: [
             LimitPopup(

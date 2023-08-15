@@ -53,6 +53,7 @@ class _AudioCardState extends State<AudioCard> {
                 bottom: 15,
                 right: 15,
                 child: CircleAvatar(
+                  radius: kYaruTitleBarItemHeight / 2,
                   backgroundColor: theme.primaryColor,
                   child: IconButton(
                     onPressed: widget.onPlay,

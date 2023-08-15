@@ -46,6 +46,7 @@ class AudioPageControlPanel extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: CircleAvatar(
+              radius: kYaruTitleBarItemHeight / 2,
               backgroundColor: theme.colorScheme.inverseSurface,
               child: IconButton(
                 onPressed: () {
