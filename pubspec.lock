@@ -999,10 +999,10 @@ packages:
     dependency: "direct main"
     description:
       name: yaru_icons
-      sha256: "6094c54ff42e4633df09f5efcd63cea1e2398b0633251430206b0df71ec7d389"
+      sha256: be4f7379ba13c4903fcb73f9abf761d3aa8e8f38b2913daab40f031cf78af80d
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.0"
   yaru_widgets:
     dependency: "direct main"
     description:
