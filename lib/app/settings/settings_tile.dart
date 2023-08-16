@@ -23,7 +23,9 @@ class SettingsTile extends StatelessWidget {
             PopupMenuItem(
               child: Column(
                 children: [
-                  const ShopRecommendations(),
+                  const SizedBox(
+                    height: kYaruPagePadding,
+                  ),
                   ElevatedButton(
                     onPressed: () async {
                       final directoryPath = await getDirectoryPath();
@@ -33,9 +35,7 @@ class SettingsTile extends StatelessWidget {
                     },
                     child: Text(context.l10n.pickMusicCollection),
                   ),
-                  const SizedBox(
-                    height: kYaruPagePadding,
-                  )
+                  const ShopRecommendations(),
                 ],
               ),
             ),

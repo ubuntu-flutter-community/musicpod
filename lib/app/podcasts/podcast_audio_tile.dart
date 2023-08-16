@@ -72,7 +72,7 @@ class PodcastAudioTile extends StatelessWidget {
               CircleAvatar(
                 radius: kYaruTitleBarItemHeight / 2,
                 backgroundColor: theme.colorScheme.onSurface.withOpacity(0.08),
-                child: YaruIconButton(
+                child: IconButton(
                   icon: (isPlayerPlaying && selected)
                       ? Icon(
                           YaruIcons.media_pause,
@@ -152,7 +152,7 @@ class _Bottom extends StatelessWidget {
       children: [
         Row(
           children: [
-            YaruIconButton(
+            IconButton(
               onPressed: audio.website == null
                   ? null
                   : () => ScaffoldMessenger.of(context).showSnackBar(
@@ -171,7 +171,7 @@ class _Bottom extends StatelessWidget {
                 YaruIcons.share,
               ),
             ),
-            const YaruIconButton(
+            const IconButton(
               icon: Icon(YaruIcons.download),
               //TODO: implement download
               onPressed: null,
@@ -306,8 +306,8 @@ class _AudioProgress extends StatelessWidget {
 
     return RepaintBoundary(
       child: SizedBox(
-        width: 25,
-        height: 25,
+        width: kYaruIconSize,
+        height: kYaruIconSize,
         child: YaruCircularProgressIndicator(
           color: selected ? theme.primaryColor : theme.colorScheme.onSurface,
           value: sliderActive

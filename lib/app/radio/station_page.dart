@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_card.dart';
-import 'package:musicpod/constants.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/radio/radio_page.dart';
@@ -37,32 +36,34 @@ class StationPage extends StatelessWidget {
     required bool selected,
     required bool isOnline,
   }) {
+    if (!isOnline) {
+      return const Icon(YaruIcons.network_offline);
+    }
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(
-        height: kSideBarIconSize,
-        width: kSideBarIconSize,
-        child: isOnline
-            ? SafeNetworkImage(
-                fallBackIcon: selected
-                    ? const Icon(
-                        YaruIcons.star_filled,
-                      )
-                    : const Icon(
-                        YaruIcons.star,
-                      ),
-                errorIcon: selected
-                    ? const Icon(
-                        YaruIcons.star_filled,
-                      )
-                    : const Icon(
-                        YaruIcons.star,
-                      ),
-                fit: BoxFit.fitHeight,
-                url: imageUrl,
-                filterQuality: FilterQuality.medium,
-              )
-            : const Icon(YaruIcons.network_offline),
+        height: kYaruIconSize,
+        width: kYaruIconSize,
+        child: SafeNetworkImage(
+          fallBackIcon: selected
+              ? const Icon(
+                  YaruIcons.star_filled,
+                )
+              : const Icon(
+                  YaruIcons.star,
+                ),
+          errorIcon: selected
+              ? const Icon(
+                  YaruIcons.star_filled,
+                )
+              : const Icon(
+                  YaruIcons.star,
+                ),
+          fit: BoxFit.fitHeight,
+          url: imageUrl,
+          filterQuality: FilterQuality.medium,
+        ),
       ),
     );
   }
@@ -148,6 +149,7 @@ class StationPage extends StatelessWidget {
                                     : const YaruAnimatedStarIcon(filled: false),
                                 initialProgress: 1.0,
                                 color: theme.colorScheme.onPrimary,
+                                size: kYaruIconSize,
                               ),
                             ),
                           ),

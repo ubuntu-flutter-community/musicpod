@@ -5,7 +5,6 @@ import 'package:musicpod/app/player/volume_popup.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 class FullHeightPlayerControls extends StatelessWidget {
   const FullHeightPlayerControls({
@@ -79,7 +78,7 @@ class FullHeightPlayerControls extends StatelessWidget {
         const SizedBox(
           width: spacing,
         ),
-        YaruIconButton(
+        IconButton(
           onPressed: !active || audio?.website == null
               ? null
               : () => ScaffoldMessenger.of(context).showSnackBar(
@@ -98,7 +97,7 @@ class FullHeightPlayerControls extends StatelessWidget {
         const SizedBox(
           width: spacing,
         ),
-        YaruIconButton(
+        IconButton(
           icon: Icon(
             YaruIcons.shuffle,
             color: !active
@@ -110,14 +109,14 @@ class FullHeightPlayerControls extends StatelessWidget {
         const SizedBox(
           width: spacing,
         ),
-        YaruIconButton(
+        IconButton(
           onPressed: !active ? null : () => playPrevious(),
           icon: const Icon(YaruIcons.skip_backward),
         ),
         const SizedBox(
           width: spacing,
         ),
-        YaruIconButton(
+        IconButton(
           onPressed: !active || audio == null
               ? null
               : () {
@@ -134,14 +133,14 @@ class FullHeightPlayerControls extends StatelessWidget {
         const SizedBox(
           width: spacing,
         ),
-        YaruIconButton(
+        IconButton(
           onPressed: !active ? null : () => playNext(),
           icon: const Icon(YaruIcons.skip_forward),
         ),
         const SizedBox(
           width: spacing,
         ),
-        YaruIconButton(
+        IconButton(
           icon: Icon(
             YaruIcons.repeat_single,
             color: !active

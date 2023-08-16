@@ -4,7 +4,6 @@ import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_icons/yaru_icons.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 class PlaylistPage extends StatelessWidget {
   const PlaylistPage({
@@ -67,7 +66,7 @@ class PlaylistPage extends StatelessWidget {
       showTrack: playlist.value.firstOrNull?.trackNumber != null,
       editableName: true,
       deletable: true,
-      controlPageButton: YaruIconButton(
+      controlPageButton: IconButton(
         icon: Icon(
           YaruIcons.star_filled,
           color: theme.primaryColor,

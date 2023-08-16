@@ -86,10 +86,9 @@ class AboutTile extends StatelessWidget {
       child: SizedBox(
         height: kYaruTitleBarItemHeight,
         width: kYaruTitleBarItemHeight,
-        child: YaruIconButton(
+        child: IconButton(
           icon: const Icon(
             YaruIcons.music_note,
-            size: 19,
           ),
           onPressed: () {
             return showAboutDialog(

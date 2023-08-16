@@ -224,7 +224,7 @@ class FullHeightPlayer extends StatelessWidget {
           ),
         Padding(
           padding: const EdgeInsets.all(kYaruPagePadding),
-          child: YaruIconButton(
+          child: IconButton(
             icon: Icon(
               playerViewMode == PlayerViewMode.fullWindow
                   ? YaruIcons.fullscreen_exit

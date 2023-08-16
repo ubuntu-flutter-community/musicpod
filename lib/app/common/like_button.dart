@@ -4,6 +4,7 @@ import 'package:musicpod/app/common/super_like_button.dart';
 import 'package:musicpod/app/playlists/playlist_dialog.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:yaru_icons/yaru_icons.dart';
+import 'package:yaru_widgets/yaru_widgets.dart';
 
 class LikeButton extends StatelessWidget {
   const LikeButton({
@@ -71,6 +72,7 @@ class LikeButton extends StatelessWidget {
             initialProgress: 1.0,
             color:
                 audioSelected ? theme.colorScheme.onSurface : theme.hintColor,
+            size: kYaruIconSize,
           ),
         ),
       );
@@ -89,6 +91,7 @@ class LikeButton extends StatelessWidget {
             initialProgress: 1.0,
             color:
                 audioSelected ? theme.colorScheme.onSurface : theme.hintColor,
+            size: kYaruIconSize,
           ),
         ),
       );

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:yaru_icons/yaru_icons.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 class BottomPlayerControls extends StatelessWidget {
   const BottomPlayerControls({
@@ -49,7 +48,7 @@ class BottomPlayerControls extends StatelessWidget {
     final children = [
       Row(
         children: [
-          YaruIconButton(
+          IconButton(
             icon: Icon(
               YaruIcons.shuffle,
               color: !active
@@ -62,12 +61,12 @@ class BottomPlayerControls extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: YaruIconButton(
+            child: IconButton(
               onPressed: !active ? null : () => playPrevious(),
               icon: const Icon(YaruIcons.skip_backward),
             ),
           ),
-          YaruIconButton(
+          IconButton(
             onPressed: !active || audio == null
                 ? null
                 : () {
@@ -83,12 +82,12 @@ class BottomPlayerControls extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: YaruIconButton(
+            child: IconButton(
               onPressed: !active ? null : () => playNext(),
               icon: const Icon(YaruIcons.skip_forward),
             ),
           ),
-          YaruIconButton(
+          IconButton(
             icon: Icon(
               YaruIcons.repeat_single,
               color: !active

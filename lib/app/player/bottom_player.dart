@@ -8,7 +8,6 @@ import 'package:musicpod/app/player/queue_popup.dart';
 import 'package:musicpod/app/player/volume_popup.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:yaru_icons/yaru_icons.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import 'bottom_player_controls.dart';
 
@@ -151,28 +150,24 @@ class BottomPlayer extends StatelessWidget {
               padding: const EdgeInsets.only(top: 10, bottom: 10, right: 8),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: 45,
-                    child: BottomPlayerControls(
-                      audio: audio,
-                      setRepeatSingle: setRepeatSingle,
-                      repeatSingle: repeatSingle,
-                      shuffle: shuffle,
-                      setShuffle: setShuffle,
-                      isPlaying: isPlaying,
-                      playPrevious: playPrevious,
-                      playNext: playNext,
-                      pause: pause,
-                      playOrPause: playOrPause,
-                      volume: volume,
-                      setVolume: setVolume,
-                      queue: queue,
-                      onFullScreenTap: () => setFullScreen(true),
-                      isOnline: isOnline,
-                    ),
+                  BottomPlayerControls(
+                    audio: audio,
+                    setRepeatSingle: setRepeatSingle,
+                    repeatSingle: repeatSingle,
+                    shuffle: shuffle,
+                    setShuffle: setShuffle,
+                    isPlaying: isPlaying,
+                    playPrevious: playPrevious,
+                    playNext: playNext,
+                    pause: pause,
+                    playOrPause: playOrPause,
+                    volume: volume,
+                    setVolume: setVolume,
+                    queue: queue,
+                    onFullScreenTap: () => setFullScreen(true),
+                    isOnline: isOnline,
                   ),
-                  SizedBox(
-                    height: 25,
+                  Expanded(
                     child: PlayerTrack(
                       color: color,
                       duration: duration,
@@ -198,7 +193,7 @@ class BottomPlayer extends StatelessWidget {
                     queue: queue,
                   ),
                 ),
-                YaruIconButton(
+                IconButton(
                   icon: Icon(
                     YaruIcons.fullscreen,
                     color: theme.colorScheme.onSurface,

@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_page.dart';
-import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -26,13 +25,13 @@ class AlbumPage extends StatelessWidget {
     Widget? albumArt;
     if (picture != null) {
       albumArt = SizedBox(
-        width: kSideBarIconSize,
-        height: kSideBarIconSize,
+        width: kYaruIconSize,
+        height: kYaruIconSize,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(5),
           child: Image.memory(
             picture,
-            height: kSideBarIconSize,
+            height: kYaruIconSize,
             fit: BoxFit.fitHeight,
             filterQuality: FilterQuality.medium,
           ),
@@ -73,7 +72,7 @@ class AlbumPage extends StatelessWidget {
       controlPageButton: name == null
           ? null
           : isPinnedAlbum(name!)
-              ? YaruIconButton(
+              ? IconButton(
                   icon: Icon(
                     YaruIcons.pin,
                     color: Theme.of(context).primaryColor,
@@ -82,7 +81,7 @@ class AlbumPage extends StatelessWidget {
                     name!,
                   ),
                 )
-              : YaruIconButton(
+              : IconButton(
                   icon: const Icon(
                     YaruIcons.pin,
                   ),
