@@ -10,11 +10,11 @@ class ShopRecommendations extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final style = theme.textTheme.bodyLarge?.copyWith(
+    final style = theme.textTheme.bodySmall?.copyWith(
       fontWeight: FontWeight.w100,
       color: theme.colorScheme.onSurface,
     );
-    final linkStyle = theme.textTheme.bodyLarge?.copyWith(
+    final linkStyle = theme.textTheme.bodySmall?.copyWith(
       fontWeight: FontWeight.w100,
       color: Colors.blueAccent,
     );

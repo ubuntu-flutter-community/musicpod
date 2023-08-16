@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:yaru_widgets/constants.dart';
 
 const kRepoUrl = 'http://github.com/ubuntu-flutter-community/musicpod';
 
-const kSideBarIconSize = 20.0;
-
 const kSearchBarWidth = 350.0;
 
-const kPagePadding = 20.0;
 const kGridPadding = EdgeInsets.only(
-  bottom: kPagePadding,
-  left: kPagePadding - 5,
-  right: kPagePadding - 5,
+  bottom: kYaruPagePadding,
+  left: kYaruPagePadding - 5,
+  right: kYaruPagePadding - 5,
 );
 const kPodcastGridPadding = EdgeInsets.only(
   top: 15,
-  bottom: kPagePadding,
-  left: kPagePadding - 5,
-  right: kPagePadding - 5,
+  bottom: kYaruPagePadding,
+  left: kYaruPagePadding - 5,
+  right: kYaruPagePadding - 5,
 );
 
 const kHeaderPadding = EdgeInsets.only(
-  top: kPagePadding,
-  left: kPagePadding,
-  right: kPagePadding,
-  bottom: kPagePadding - 5,
+  top: kYaruPagePadding,
+  left: kYaruPagePadding,
+  right: kYaruPagePadding,
+  bottom: kYaruPagePadding - 5,
 );
 
 const kCardHeight = 200.0;

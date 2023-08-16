@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
-import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -27,30 +26,26 @@ class PodcastPage extends StatelessWidget {
     String? imageUrl,
     required bool isOnline,
   }) {
-    final Widget icon;
-    if (isOnline) {
-      icon = SafeNetworkImage(
-        url: imageUrl,
-        fit: BoxFit.fitHeight,
-        filterQuality: FilterQuality.medium,
-        fallBackIcon: const Icon(
-          YaruIcons.rss,
-          size: kSideBarIconSize,
-        ),
-        errorIcon: const Icon(
-          YaruIcons.rss,
-          size: kSideBarIconSize,
-        ),
-      );
-    } else {
-      icon = const Icon(YaruIcons.network_offline);
+    if (!isOnline) {
+      return const Icon(YaruIcons.network_offline);
     }
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(
-        width: kSideBarIconSize,
-        height: kSideBarIconSize,
-        child: icon,
+        width: kYaruIconSize,
+        height: kYaruIconSize,
+        child: SafeNetworkImage(
+          url: imageUrl,
+          fit: BoxFit.fitHeight,
+          filterQuality: FilterQuality.medium,
+          fallBackIcon: const Icon(
+            YaruIcons.rss,
+          ),
+          errorIcon: const Icon(
+            YaruIcons.rss,
+          ),
+        ),
       ),
     );
   }
@@ -118,7 +113,7 @@ class PodcastPage extends StatelessWidget {
       showTrack: false,
       editableName: false,
       deletable: false,
-      controlPageButton: YaruIconButton(
+      controlPageButton: IconButton(
         icon: Icon(
           YaruIcons.rss,
           color: subscribed ? theme.primaryColor : theme.colorScheme.onSurface,

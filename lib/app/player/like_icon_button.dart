@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -34,6 +34,7 @@ class LikeIconButton extends StatelessWidget {
             ? const YaruAnimatedStarIcon(filled: true)
             : const YaruAnimatedStarIcon(filled: false),
         initialProgress: 1.0,
+        size: kYaruIconSize,
       );
     } else {
       likeIcon = YaruAnimatedIcon(
@@ -41,6 +42,7 @@ class LikeIconButton extends StatelessWidget {
             ? const YaruAnimatedHeartIcon(filled: true)
             : const YaruAnimatedHeartIcon(filled: false),
         initialProgress: 1.0,
+        size: kYaruIconSize,
       );
     }
 
@@ -63,7 +65,7 @@ class LikeIconButton extends StatelessWidget {
         };
       }
     }
-    return YaruIconButton(
+    return IconButton(
       icon: likeIcon,
       onPressed: onLike,
     );
