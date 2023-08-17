@@ -37,6 +37,8 @@ const kShimmerBaseDark = Color.fromARGB(255, 51, 51, 51);
 const kShimmerHighLightLight = Color.fromARGB(197, 218, 218, 218);
 const kShimmerHighLightDark = Color.fromARGB(255, 57, 57, 57);
 
+const kAudioQueueThreshHold = 100;
+
 const kLikedAudios = 'likedAudios.json';
 const kPlaylistsFileName = 'playlists.json';
 const kPinnedAlbumsFileName = 'pinnedAlbums.json';
