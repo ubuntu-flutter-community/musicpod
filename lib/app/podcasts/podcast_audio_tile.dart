@@ -25,6 +25,7 @@ class PodcastAudioTile extends StatelessWidget {
     required this.lastPosition,
     this.isExpanded = false,
     this.removeUpdate,
+    required this.safeLastPosition,
   });
 
   final Audio audio;
@@ -33,8 +34,9 @@ class PodcastAudioTile extends StatelessWidget {
   final void Function() pause;
   final Future<void> Function() resume;
   final void Function()? startPlaylist;
-  final Future<void> Function({bool bigPlay, Audio? newAudio}) play;
+  final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
   final void Function()? removeUpdate;
+  final void Function() safeLastPosition;
 
   final Duration? lastPosition;
   final bool isExpanded;
@@ -87,12 +89,8 @@ class PodcastAudioTile extends StatelessWidget {
                         resume();
                       }
                     } else {
-                      if (startPlaylist != null) {
-                        startPlaylist!();
-                      } else {
-                        play(newAudio: audio);
-                      }
-                      removeUpdate?.call();
+                      safeLastPosition();
+                      play(newAudio: audio, newPosition: lastPosition);
                     }
                   },
                 ),
@@ -171,9 +169,9 @@ class _Bottom extends StatelessWidget {
                 YaruIcons.share,
               ),
             ),
+            // TODO: implement download
             const IconButton(
               icon: Icon(YaruIcons.download),
-              //TODO: implement download
               onPressed: null,
             ),
             const SizedBox(
@@ -299,10 +297,9 @@ class _AudioProgress extends StatelessWidget {
     final theme = Theme.of(context);
     final position = context.select((PlayerModel m) => m.position);
 
-    final pos = lastPosition ?? (selected ? position : Duration.zero);
+    final pos = (selected ? position : lastPosition) ?? Duration.zero;
 
-    bool sliderActive =
-        duration != null && pos != null && duration!.inSeconds > pos.inSeconds;
+    bool sliderActive = duration != null && duration!.inSeconds > pos.inSeconds;
 
     return RepaintBoundary(
       child: SizedBox(

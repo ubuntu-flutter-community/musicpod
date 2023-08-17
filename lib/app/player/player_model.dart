@@ -160,7 +160,7 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   bool _firstPlay = true;
-  Future<void> play({bool bigPlay = false, Audio? newAudio}) async {
+  Future<void> play({Duration? newPosition, Audio? newAudio}) async {
     final currentIndex =
         (audio == null || queue.isEmpty || !queue.contains(audio!))
             ? 0
@@ -183,26 +183,22 @@ class PlayerModel extends SafeChangeNotifier {
         Media(audio!.url!),
     ]);
 
-    Duration? firstPlayPosition = _position;
     _player.open(playList);
-    if (bigPlay &&
-        _firstPlay &&
-        firstPlayPosition != null &&
-        _audio!.audioType != AudioType.radio) {
+    if (newPosition != null && _audio!.audioType != AudioType.radio) {
       _player.setVolume(0).then(
-            (_) => Future.delayed(const Duration(seconds: 1)).then(
+            (_) => Future.delayed(const Duration(seconds: 3)).then(
               (_) => _player
-                  .seek(firstPlayPosition)
+                  .seek(newPosition)
                   .then((_) => _player.setVolume(100.0)),
             ),
           );
     }
-    _firstPlay = false;
     loadColor();
+    _firstPlay = false;
   }
 
   Future<void> playOrPause() async {
-    return _firstPlay ? play(bigPlay: true) : _player.playOrPause();
+    return _firstPlay ? play(newPosition: _position) : _player.playOrPause();
   }
 
   Future<void> pause() async {
@@ -211,16 +207,13 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> seek() async {
     if (position == null) return;
+    safeLastPosition();
     await _player.seek(position!);
   }
 
   Future<void> resume() async {
     if (audio == null) return;
-    if (_firstPlay) {
-      play(bigPlay: true);
-    } else {
-      await _player.playOrPause();
-    }
+    await _player.playOrPause();
   }
 
   Future<void> init() async {
@@ -277,6 +270,7 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> playNext() async {
+    safeLastPosition();
     if (!repeatSingle && nextAudio != null) {
       _setAudio(nextAudio);
       _estimateNext();
@@ -335,8 +329,9 @@ class PlayerModel extends SafeChangeNotifier {
     queue = audios.toList();
     setQueueName(listName);
     _setAudio(audios.first);
+    _position = _libraryService.getLastPosition.call(_audio?.url);
     _estimateNext();
-    await play();
+    await play(newPosition: _position);
   }
 
   Color? _color;
@@ -389,6 +384,13 @@ class PlayerModel extends SafeChangeNotifier {
       }
       _setIsVideo();
     }
+  }
+
+  void safeLastPosition() {
+    if (_audio?.audioType == AudioType.radio ||
+        _audio!.url == null ||
+        _position == null) return;
+    _libraryService.addLastPosition(_audio!.url!, _position!);
   }
 
   @override

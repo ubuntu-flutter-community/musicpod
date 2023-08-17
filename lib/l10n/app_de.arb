@@ -85,5 +85,13 @@
     "musicPodSubTitle": "Dein Musik, Radio und Podcast Player",
     "pickMusicCollection": "Wähle deine Musiksammlung aus",
     "newEpisode": "Neu",
-    "dontShowAgain": "Nicht erneut zeigen"
+    "dontShowAgain": "Nicht erneut zeigen",
+    "queueConfirmMessage": "Willst du wirklich {length} Medien in die Warteschlange aufnehmen?",
+    "@queueConfirmMessage": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }
 }

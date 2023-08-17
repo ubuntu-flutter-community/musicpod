@@ -246,7 +246,8 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                         ? null
                         : () => play(newAudio: audio),
                     play: play,
-                    lastPosition: null,
+                    lastPosition: libraryModel.getLastPosition.call(audio.url),
+                    safeLastPosition: playerModel.safeLastPosition,
                   );
                 }
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/common/confirmation_dialog.dart';
 import 'package:musicpod/app/playlists/playlist_dialog.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -50,17 +52,36 @@ class AudioPageControlPanel extends StatelessWidget {
               backgroundColor: theme.colorScheme.inverseSurface,
               child: IconButton(
                 onPressed: () {
-                  if (isPlaying) {
-                    if (queueName == listName) {
-                      pause();
+                  if (queueName != listName) {
+                    if (audios.length > kAudioQueueThreshHold) {
+                      showDialog<bool>(
+                        context: context,
+                        builder: (context) {
+                          return ConfirmationDialog(
+                            message: SizedBox(
+                              width: 300,
+                              child: Text(
+                                context.l10n.queueConfirmMessage(
+                                  audios.length.toString(),
+                                ),
+                                style: theme.textTheme.bodyLarge,
+                              ),
+                            ),
+                          );
+                        },
+                      ).then((value) {
+                        if (value == true) {
+                          startPlaylist!(audios, listName);
+                        }
+                      });
                     } else {
                       startPlaylist!(audios, listName);
                     }
                   } else {
-                    if (queueName == listName) {
-                      resume();
+                    if (isPlaying) {
+                      pause();
                     } else {
-                      startPlaylist!(audios, listName);
+                      resume();
                     }
                   }
                 },

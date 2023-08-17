@@ -27,7 +27,7 @@ class AudioTile extends StatelessWidget {
   final void Function()? onLike;
   final Widget? likeIcon;
   final bool isPlayerPlaying;
-  final Future<void> Function({bool bigPlay, Audio? newAudio}) play;
+  final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
   final Future<void> Function() resume;
   final void Function()? startPlaylist;
   final void Function() pause;

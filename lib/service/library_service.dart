@@ -11,14 +11,22 @@ class LibraryService {
   //
   // last positions
   //
-  final Map<String, Duration> _lastPositions = {};
+  Map<String, Duration>? _lastPositions = {};
+  Map<String, Duration>? get lastPositions => _lastPositions;
   final _lastPositionsController = StreamController<bool>.broadcast();
   Stream<bool> get lastPositionsChanged => _lastPositionsController.stream;
-  void addLastPosition(String guid, Duration lastPosition) {
-    _lastPositions.putIfAbsent(guid, () => lastPosition);
+  void addLastPosition(String url, Duration lastPosition) {
+    if (_lastPositions?.containsKey(url) == true) {
+      _lastPositions?.update(url, (value) => lastPosition);
+    } else {
+      _lastPositions?.putIfAbsent(url, () => lastPosition);
+    }
+
+    writeSetting(url, lastPosition.toString(), kLastPositionsFileName)
+        .then((_) => _lastPositionsController.add(true));
   }
 
-  Duration? getLastPosition(String guid) => _lastPositions[guid];
+  Duration? getLastPosition(String? url) => _lastPositions?[url];
 
   //
   // Liked Audios
@@ -180,15 +188,6 @@ class LibraryService {
 
   void removePodcast(String name) {
     _podcasts.remove(name);
-    _podcastsToFeedUrls.remove(name);
-    _write(_podcasts, kPodcastsFileName)
-        .then((_) => _podcastsController.add(true));
-  }
-
-  final Map<String, String> _podcastsToFeedUrls = {};
-  Map<String, String> get podcastsToFeedUrls => _podcastsToFeedUrls;
-  void addPlaylistFeed(String playlist, String feedUrl) {
-    _podcastsToFeedUrls.putIfAbsent(playlist, () => feedUrl);
     _write(_podcasts, kPodcastsFileName)
         .then((_) => _podcastsController.add(true));
   }
@@ -253,6 +252,10 @@ class LibraryService {
     _pinnedAlbums = await _read(kPinnedAlbumsFileName);
     _podcasts = await _read(kPodcastsFileName);
     _starredStations = await _read(kStarredStationsFileName);
+    _lastPositions = (await getSettings(kLastPositionsFileName)).map(
+      (key, value) => MapEntry(key, parseDuration(value) ?? Duration.zero),
+    );
+
     _likedAudios =
         (await _read(kLikedAudios)).entries.firstOrNull?.value ?? <Audio>{};
   }

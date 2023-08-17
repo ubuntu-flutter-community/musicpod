@@ -224,7 +224,7 @@ class _StationCard extends StatelessWidget {
   });
 
   final Audio? station;
-  final Future<void> Function({bool bigPlay, Audio? newAudio}) play;
+  final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
   final bool Function(String name) isStarredStation;
   final bool showWindowControls;
   final void Function(String text)? onTextTap;
