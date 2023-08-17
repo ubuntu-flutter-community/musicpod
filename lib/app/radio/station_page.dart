@@ -23,7 +23,7 @@ class StationPage extends StatelessWidget {
 
   final Audio station;
   final String name;
-  final Future<void> Function({bool bigPlay, Audio? newAudio}) play;
+  final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
   final void Function(String station) unStarStation;
   final void Function(String station) starStation;
   final bool isStarred;

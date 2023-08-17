@@ -193,10 +193,6 @@ class LibraryModel extends SafeChangeNotifier {
   bool podcastSubscribed(String? feedUrl) =>
       feedUrl == null ? false : podcasts.containsKey(feedUrl);
 
-  Map<String, String> get podcastsToFeedUrls => _service.podcastsToFeedUrls;
-  void addPlaylistFeed(String playlist, String feedUrl) =>
-      _service.addPlaylistFeed(playlist, feedUrl);
-
   bool get showSubbedPodcasts =>
       audioPageType == null || audioPageType == AudioPageType.podcast;
 
@@ -240,9 +236,10 @@ class LibraryModel extends SafeChangeNotifier {
     _service.setLocalAudioIndex(value);
   }
 
-  Duration? getLastPosition(String guid) => _service.getLastPosition(guid);
-  void addLastPosition(String guid, Duration lastPosition) =>
-      _service.addLastPosition(guid, lastPosition);
+  Map<String, Duration>? get lastPositions => _service.lastPositions;
+  Duration? getLastPosition(String url) => _service.getLastPosition(url);
+  void addLastPosition(String url, Duration lastPosition) =>
+      _service.addLastPosition(url, lastPosition);
 
   Future<void> disposePatchNotes() async => await _service.disposePatchNotes();
 

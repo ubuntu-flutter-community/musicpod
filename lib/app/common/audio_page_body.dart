@@ -44,8 +44,10 @@ class AudioPageBody extends StatefulWidget {
     this.albumFlex = 4,
     this.showAudioTileHeader = true,
     this.removeUpdate,
+    this.lastPositions,
   });
 
+  final Map<String, Duration>? lastPositions;
   final Set<Audio>? audios;
   final AudioPageType audioPageType;
   final String? pageLabel;
@@ -246,7 +248,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                         ? null
                         : () => play(newAudio: audio),
                     play: play,
-                    lastPosition: null,
+                    lastPosition: widget.lastPositions?[audio.url],
                   );
                 }
 

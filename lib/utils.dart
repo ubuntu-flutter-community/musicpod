@@ -89,10 +89,11 @@ Future<String> getWorkingDir() async {
 
 Future<void> writeSetting(
   String? key,
-  dynamic value,
-) async {
+  dynamic value, [
+  String filename = kSettingsFileName,
+]) async {
   if (key == null || value == null) return;
-  final oldSettings = await getSettings();
+  final oldSettings = await getSettings(filename);
   if (oldSettings.containsKey(key)) {
     oldSettings.update(key, (v) => value);
   } else {
@@ -102,7 +103,7 @@ Future<void> writeSetting(
 
   final workingDir = await getWorkingDir();
 
-  final file = File('$workingDir/settings.json');
+  final file = File('$workingDir/$filename');
 
   if (!file.existsSync()) {
     file.create();
@@ -111,16 +112,21 @@ Future<void> writeSetting(
   await file.writeAsString(jsonStr);
 }
 
-Future<dynamic> readSetting(dynamic key) async {
+Future<dynamic> readSetting(
+  dynamic key, [
+  String filename = kSettingsFileName,
+]) async {
   if (key == null) return null;
-  final oldSettings = await getSettings();
+  final oldSettings = await getSettings(filename);
   return oldSettings[key];
 }
 
-Future<Map<String, String>> getSettings() async {
+Future<Map<String, String>> getSettings([
+  String filename = kSettingsFileName,
+]) async {
   final workingDir = await getWorkingDir();
 
-  final file = File('$workingDir/settings.json');
+  final file = File('$workingDir/$filename');
 
   if (file.existsSync()) {
     final jsonStr = await file.readAsString();

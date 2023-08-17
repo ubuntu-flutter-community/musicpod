@@ -42,7 +42,7 @@ List<MasterItem> createMasterItems({
   required Map<String, Set<Audio>> starredStations,
   required bool showStarredStations,
   required void Function(String name) unStarStation,
-  required Future<void> Function({bool bigPlay, Audio? newAudio}) play,
+  required Future<void> Function({Duration? newPosition, Audio? newAudio}) play,
   String? countryCode,
   required bool Function(String feedUrl) podcastUpdateAvailable,
   required void Function(String feedUrl) removePodcastUpdate,

@@ -2,8 +2,10 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
+import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -80,10 +82,13 @@ class PodcastPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final genre = audios?.firstWhereOrNull((e) => e.genre != null)?.genre;
+
+    context.select((LibraryModel m) => m.lastPositions?.length);
+
     return AudioPage(
+      lastPositions: context.read<LibraryModel>().lastPositions,
       removeUpdate: removePodcastUpdate,
       showAudioTileHeader: false,
-      sort: false,
       onTextTap: onTextTap,
       audioPageType: AudioPageType.podcast,
       image: imageUrl == null

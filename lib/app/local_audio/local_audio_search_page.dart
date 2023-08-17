@@ -61,7 +61,7 @@ class LocalAudioSearchPage extends StatelessWidget {
 
   final bool isPlaying;
   final Audio? currentAudio;
-  final Future<void> Function({bool bigPlay, Audio? newAudio}) play;
+  final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
   final Future<void> Function() pause;
   final Future<void> Function() resume;
 
@@ -147,7 +147,7 @@ class _Titles extends StatelessWidget {
 
   final bool isPlaying;
   final Audio? currentAudio;
-  final Future<void> Function({bool bigPlay, Audio? newAudio}) play;
+  final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
   final Future<void> Function() pause;
   final Future<void> Function() resume;
   final Set<Audio> titlesResult;
