@@ -237,7 +237,7 @@ class LibraryModel extends SafeChangeNotifier {
   }
 
   Map<String, Duration>? get lastPositions => _service.lastPositions;
-  Duration? getLastPosition(String url) => _service.getLastPosition(url);
+  Duration? getLastPosition(String? url) => _service.getLastPosition(url);
   void addLastPosition(String url, Duration lastPosition) =>
       _service.addLastPosition(url, lastPosition);
 

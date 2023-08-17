@@ -38,10 +38,8 @@ class AudioPage extends StatelessWidget {
     this.albumFlex = 4,
     this.showAudioTileHeader = true,
     this.removeUpdate,
-    this.lastPositions,
   });
 
-  final Map<String, Duration>? lastPositions;
   final Set<Audio>? audios;
   final AudioPageType audioPageType;
   final String? pageLabel;
@@ -89,7 +87,6 @@ class AudioPage extends StatelessWidget {
       noResultMessage: noResultMessage,
       onTextTap: onTextTap,
       audios: audios,
-      lastPositions: lastPositions,
       audioPageType: audioPageType,
       pageId: pageId,
       editableName: editableName,

@@ -25,6 +25,7 @@ class PodcastAudioTile extends StatelessWidget {
     required this.lastPosition,
     this.isExpanded = false,
     this.removeUpdate,
+    required this.safeLastPosition,
   });
 
   final Audio audio;
@@ -35,6 +36,7 @@ class PodcastAudioTile extends StatelessWidget {
   final void Function()? startPlaylist;
   final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
   final void Function()? removeUpdate;
+  final void Function() safeLastPosition;
 
   final Duration? lastPosition;
   final bool isExpanded;
@@ -87,7 +89,7 @@ class PodcastAudioTile extends StatelessWidget {
                         resume();
                       }
                     } else {
-                      context.read<PlayerModel>().safeLastPosition();
+                      safeLastPosition();
                       play(newAudio: audio, newPosition: lastPosition);
                     }
                   },

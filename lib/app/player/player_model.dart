@@ -207,6 +207,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> seek() async {
     if (position == null) return;
+    safeLastPosition();
     await _player.seek(position!);
   }
 
@@ -269,6 +270,7 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> playNext() async {
+    safeLastPosition();
     if (!repeatSingle && nextAudio != null) {
       _setAudio(nextAudio);
       _estimateNext();
@@ -327,8 +329,9 @@ class PlayerModel extends SafeChangeNotifier {
     queue = audios.toList();
     setQueueName(listName);
     _setAudio(audios.first);
+    _position = _libraryService.getLastPosition.call(_audio?.url);
     _estimateNext();
-    await play();
+    await play(newPosition: _position);
   }
 
   Color? _color;
@@ -384,7 +387,7 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   void safeLastPosition() {
-    if (_audio?.audioType != AudioType.podcast ||
+    if (_audio?.audioType == AudioType.radio ||
         _audio!.url == null ||
         _position == null) return;
     _libraryService.addLastPosition(_audio!.url!, _position!);

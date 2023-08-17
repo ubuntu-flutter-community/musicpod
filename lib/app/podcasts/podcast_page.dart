@@ -86,7 +86,6 @@ class PodcastPage extends StatelessWidget {
     context.select((LibraryModel m) => m.lastPositions?.length);
 
     return AudioPage(
-      lastPositions: context.read<LibraryModel>().lastPositions,
       removeUpdate: removePodcastUpdate,
       showAudioTileHeader: false,
       onTextTap: onTextTap,

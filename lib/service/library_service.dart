@@ -26,7 +26,7 @@ class LibraryService {
         .then((_) => _lastPositionsController.add(true));
   }
 
-  Duration? getLastPosition(String url) => _lastPositions?[url];
+  Duration? getLastPosition(String? url) => _lastPositions?[url];
 
   //
   // Liked Audios
