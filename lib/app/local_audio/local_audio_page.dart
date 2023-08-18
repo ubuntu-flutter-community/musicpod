@@ -61,8 +61,8 @@ class _LocalAudioPageState extends State<LocalAudioPage>
 
     final model = context.read<LocalAudioModel>();
     final audios = context.select((LocalAudioModel m) => m.audios);
-    final artists = model.findAllArtists();
-    final albums = model.findAllAlbums();
+    final artists = model.allArtists;
+    final albums = model.allAlbums;
     final setSearchQuery = model.setSearchQuery;
     final search = model.search;
     final setSearchActive = model.setSearchActive;

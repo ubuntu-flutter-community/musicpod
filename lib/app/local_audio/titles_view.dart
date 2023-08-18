@@ -8,7 +8,7 @@ import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/utils.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-class TitlesView extends StatelessWidget {
+class TitlesView extends StatefulWidget {
   const TitlesView({
     super.key,
     required this.audios,
@@ -24,19 +24,40 @@ class TitlesView extends StatelessWidget {
   })? onTextTap;
 
   @override
+  State<TitlesView> createState() => _TitlesViewState();
+}
+
+class _TitlesViewState extends State<TitlesView> {
+  List<Audio>? _titles;
+
+  void _initTitles() {
+    _titles = widget.audios?.toList();
+    if (_titles == null) return;
+    sortListByAudioFilter(
+      audioFilter: AudioFilter.album,
+      audios: _titles!,
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initTitles();
+  }
+
+  @override
+  void didUpdateWidget(covariant TitlesView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _initTitles();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (audios == null) {
+    if (widget.audios == null) {
       return const Center(
         child: YaruCircularProgressIndicator(),
       );
     }
-
-    final sortedAudios = audios!.toList();
-
-    sortListByAudioFilter(
-      audioFilter: AudioFilter.album,
-      audios: sortedAudios,
-    );
 
     return AudioPageBody(
       noResultMessage: Column(
@@ -46,15 +67,12 @@ class TitlesView extends StatelessWidget {
           const ShopRecommendations(),
         ],
       ),
-      audios: Set.from(sortedAudios),
+      audios: _titles == null ? null : Set.from(_titles!),
       audioPageType: AudioPageType.immutable,
       pageId: context.l10n.localAudio,
-      editableName: false,
       showAudioPageHeader: false,
-      sort: true,
-      audioFilter: AudioFilter.album,
       showTrack: true,
-      onTextTap: onTextTap,
+      onTextTap: widget.onTextTap,
     );
   }
 }

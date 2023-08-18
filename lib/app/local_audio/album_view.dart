@@ -65,8 +65,8 @@ class AlbumsView extends StatelessWidget {
       gridDelegate: kImageGridDelegate,
       itemBuilder: (context, index) {
         final audio = albums!.elementAt(index);
-        final name = audio.album;
-        final album = findAlbum(audio);
+        final albumName = audio.album;
+        final albumAudios = findAlbum(audio);
 
         final image = audio.pictureData == null
             ? Center(
@@ -89,26 +89,29 @@ class AlbumsView extends StatelessWidget {
                 AudioCardBottom(text: audio.album == null ? '' : audio.album!),
           ),
           image: image,
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return AlbumPage(
-                  onTextTap: ({required audioType, required text}) {
-                    onTextTap?.call(text: text, audioType: audioType);
-                    Navigator.of(context).maybePop();
-                  },
-                  name: name,
-                  isPinnedAlbum: isPinnedAlbum,
-                  removePinnedAlbum: removePinnedAlbum,
-                  album: album,
-                  addPinnedAlbum: addPinnedAlbum,
-                );
-              },
-            ),
-          ),
-          onPlay: album == null || album.isEmpty || name == null
+          onTap: albumName == null
               ? null
-              : () => startPlaylist(album, name),
+              : () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return AlbumPage(
+                          onTextTap: ({required audioType, required text}) {
+                            onTextTap?.call(text: text, audioType: audioType);
+                            Navigator.of(context).maybePop();
+                          },
+                          name: albumName,
+                          isPinnedAlbum: isPinnedAlbum,
+                          removePinnedAlbum: removePinnedAlbum,
+                          album: albumAudios,
+                          addPinnedAlbum: addPinnedAlbum,
+                        );
+                      },
+                    ),
+                  ),
+          onPlay:
+              albumAudios == null || albumAudios.isEmpty || albumName == null
+                  ? null
+                  : () => startPlaylist(albumAudios, albumName),
         );
       },
     );

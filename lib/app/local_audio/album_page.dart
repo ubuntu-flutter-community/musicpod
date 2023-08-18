@@ -44,7 +44,7 @@ class AlbumPage extends StatelessWidget {
         );
   }
 
-  final String? name;
+  final String name;
   final bool Function(String name) isPinnedAlbum;
   final void Function(String name) removePinnedAlbum;
   final Set<Audio>? album;
@@ -69,33 +69,29 @@ class AlbumPage extends StatelessWidget {
               filterQuality: FilterQuality.medium,
             )
           : null,
-      controlPageButton: name == null
-          ? null
-          : isPinnedAlbum(name!)
-              ? IconButton(
-                  icon: Icon(
-                    YaruIcons.pin,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  onPressed: () => removePinnedAlbum(
-                    name!,
-                  ),
-                )
-              : IconButton(
-                  icon: const Icon(
-                    YaruIcons.pin,
-                  ),
-                  onPressed: album == null
-                      ? null
-                      : () => addPinnedAlbum(
-                            name!,
-                            album!,
-                          ),
-                ),
-      deletable: false,
+      controlPageButton: isPinnedAlbum(name)
+          ? IconButton(
+              icon: Icon(
+                YaruIcons.pin,
+                color: Theme.of(context).primaryColor,
+              ),
+              onPressed: () => removePinnedAlbum(
+                name,
+              ),
+            )
+          : IconButton(
+              icon: const Icon(
+                YaruIcons.pin,
+              ),
+              onPressed: album == null
+                  ? null
+                  : () => addPinnedAlbum(
+                        name,
+                        album!,
+                      ),
+            ),
       audios: album,
-      pageId: name!,
-      editableName: false,
+      pageId: name,
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/app_model.dart';
-import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_page_body.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
@@ -13,12 +12,8 @@ class AudioPage extends StatelessWidget {
     required this.audios,
     required this.audioPageType,
     required this.pageId,
-    required this.editableName,
-    required this.deletable,
     this.title,
-    this.controlPageButton,
-    // TODO: fix sorting
-    this.sort = false,
+    required this.controlPageButton,
     this.showTrack = true,
     this.pageLabel,
     this.pageDescription,
@@ -26,7 +21,6 @@ class AudioPage extends StatelessWidget {
     this.pageSubtile,
     this.image,
     this.showAudioPageHeader = true,
-    this.audioFilter = AudioFilter.trackNumber,
     this.onTextTap,
     this.noResultMessage,
     this.titleLabel,
@@ -48,17 +42,13 @@ class AudioPage extends StatelessWidget {
   final Widget? pageTitleWidget;
   final String? pageDescription;
   final String? pageSubtile;
-  final bool editableName;
-  final bool deletable;
-  final Widget? controlPageButton;
+  final Widget controlPageButton;
   final Widget? title;
-  final bool sort;
   final bool showTrack;
 
   final Widget? image;
   final bool? showAudioPageHeader;
   final bool showAudioTileHeader;
-  final AudioFilter audioFilter;
   final Widget? noResultMessage;
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
@@ -89,13 +79,10 @@ class AudioPage extends StatelessWidget {
       audios: audios,
       audioPageType: audioPageType,
       pageId: pageId,
-      editableName: editableName,
-      sort: sort,
       showTrack: showTrack,
-      audioFilter: audioFilter,
       image: image,
       pageDescription: pageDescription,
-      likePageButton: controlPageButton,
+      pinButton: controlPageButton,
       pageLabel: pageLabel,
       pageSubTitle: pageSubtile,
       pageTitle: pageTitle,
