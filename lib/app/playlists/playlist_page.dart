@@ -64,8 +64,6 @@ class PlaylistPage extends StatelessWidget {
       audios: playlist.value,
       pageId: playlist.key,
       showTrack: playlist.value.firstOrNull?.trackNumber != null,
-      editableName: true,
-      deletable: true,
       controlPageButton: IconButton(
         icon: Icon(
           YaruIcons.star_filled,

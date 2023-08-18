@@ -166,7 +166,8 @@ class _AppState extends State<App> {
     context.select((LibraryModel m) => m.pinnedAlbums.length);
     context.select((LibraryModel m) => m.starredStations.length);
     context.select((LibraryModel m) => m.playlists.length);
-    context.select<LibraryModel, int>((m) => m.podcastUpdates.length);
+    context.select((LibraryModel m) => m.playlists.keys);
+    context.select((LibraryModel m) => m.podcastUpdates.length);
 
     if (!ready) {
       return SplashScreen(

@@ -115,8 +115,6 @@ class PodcastPage extends StatelessWidget {
       pageId: pageId,
       title: Text(title),
       showTrack: false,
-      editableName: false,
-      deletable: false,
       controlPageButton: IconButton(
         icon: Icon(
           YaruIcons.rss,

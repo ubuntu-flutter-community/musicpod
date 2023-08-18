@@ -100,7 +100,9 @@ class LocalAudioModel extends SafeChangeNotifier {
     setSimilarArtistsSearchResult(artistsResult);
   }
 
-  Set<Audio>? findAllArtists() {
+  Set<Audio>? _allArtists;
+  Set<Audio>? get allArtists => _allArtists;
+  Set<Audio>? _findAllArtists() {
     if (audios == null) return null;
     final artistsResult = <Audio>{};
     for (var a in audios!) {
@@ -113,7 +115,9 @@ class LocalAudioModel extends SafeChangeNotifier {
     return artistsResult;
   }
 
-  Set<Audio>? findAllAlbums() {
+  Set<Audio>? _allAlbums;
+  Set<Audio>? get allAlbums => _allAlbums;
+  Set<Audio>? _findAllAlbums() {
     if (audios == null) return null;
     final albumsResult = <Audio>{};
     for (var a in audios!) {
@@ -223,6 +227,9 @@ class LocalAudioModel extends SafeChangeNotifier {
         onFail(failedImports);
       }
     }
+
+    _allAlbums = _findAllAlbums();
+    _allArtists = _findAllArtists();
 
     _directoryChangedSub = _service.directoryChanged.listen((_) {
       notifyListeners();

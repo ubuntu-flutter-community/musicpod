@@ -12,7 +12,7 @@ class AudioPageControlPanel extends StatelessWidget {
     super.key,
     required this.audios,
     required this.listName,
-    this.editableName = true,
+    this.editableName = false,
     this.pinButton,
     required this.isPlaying,
     this.queueName,
@@ -94,25 +94,29 @@ class AudioPageControlPanel extends StatelessWidget {
               ),
             ),
           ),
-        if (pinButton != null) pinButton!,
-        const SizedBox(
-          width: 10,
-        ),
         if (editableName)
-          IconButton(
-            icon: const Icon(YaruIcons.pen),
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => PlaylistDialog(
-                playlistName: listName,
-                onDeletePlaylist: removePlaylist == null
-                    ? null
-                    : () => removePlaylist!(listName),
-                onUpdatePlaylistName: updatePlaylistName == null
-                    ? null
-                    : (name) => updatePlaylistName!(listName, name),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              icon: const Icon(YaruIcons.pen),
+              onPressed: () => showDialog(
+                context: context,
+                builder: (context) => PlaylistDialog(
+                  playlistName: listName,
+                  onDeletePlaylist: removePlaylist == null
+                      ? null
+                      : () => removePlaylist!(listName),
+                  onUpdatePlaylistName: updatePlaylistName == null
+                      ? null
+                      : (name) => updatePlaylistName!(listName, name),
+                ),
               ),
             ),
+          )
+        else if (pinButton != null)
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: pinButton!,
           ),
         Expanded(
           child: title ??

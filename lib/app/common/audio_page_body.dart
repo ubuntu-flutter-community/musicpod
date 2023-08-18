@@ -12,7 +12,6 @@ import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/app/podcasts/podcast_audio_tile.dart';
 import 'package:musicpod/data/audio.dart';
-import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -26,13 +25,10 @@ class AudioPageBody extends StatefulWidget {
     this.pageTitle,
     this.pageDescription,
     this.pageSubTitle,
-    required this.editableName,
-    this.likePageButton,
-    required this.sort,
+    this.pinButton,
     required this.showTrack,
     this.image,
     this.showAudioPageHeader,
-    required this.audioFilter,
     this.onTextTap,
     this.noResultMessage,
     this.titleLabel,
@@ -55,14 +51,11 @@ class AudioPageBody extends StatefulWidget {
   final String? pageTitle;
   final String? pageDescription;
   final String? pageSubTitle;
-  final bool editableName;
-  final Widget? likePageButton;
-  final bool sort;
+  final Widget? pinButton;
   final bool showTrack;
   final Widget? image;
   final bool? showAudioPageHeader;
   final bool showAudioTileHeader;
-  final AudioFilter audioFilter;
   final Widget? noResultMessage;
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
@@ -80,12 +73,10 @@ class AudioPageBody extends StatefulWidget {
 class _AudioPageBodyState extends State<AudioPageBody> {
   late ScrollController _controller;
   int _amount = 40;
-  late AudioFilter _filter;
 
   @override
   void initState() {
     super.initState();
-    _filter = widget.audioFilter;
     _controller = ScrollController();
     _controller.addListener(() {
       if (_controller.position.maxScrollExtent == _controller.offset) {
@@ -116,6 +107,10 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     final resume = playerModel.resume;
 
     context.select((LibraryModel m) => m.likedAudios.length);
+    if (widget.audioPageType == AudioPageType.playlist) {
+      context.select((LibraryModel m) => m.playlists[widget.pageId]?.length);
+    }
+
     final libraryModel = context.read<LibraryModel>();
     final liked = libraryModel.liked;
     final removeLikedAudio = libraryModel.removeLikedAudio;
@@ -151,8 +146,8 @@ class _AudioPageBodyState extends State<AudioPageBody> {
         isPlaying: isPlaying,
         queueName: queueName,
         listName: widget.pageTitle ?? widget.pageId,
-        pinButton: widget.likePageButton,
-        editableName: widget.editableName,
+        pinButton: widget.pinButton,
+        editableName: widget.audioPageType == AudioPageType.playlist,
         audios: sortedAudios.toSet(),
       ),
     );
@@ -170,14 +165,17 @@ class _AudioPageBodyState extends State<AudioPageBody> {
       );
     } else {
       if (widget.audios!.isEmpty) {
-        return NoSearchResultPage(
-          message: widget.noResultMessage,
+        return Column(
+          children: [
+            audioControlPanel,
+            Expanded(
+              child: NoSearchResultPage(
+                message: widget.noResultMessage,
+              ),
+            ),
+          ],
         );
       }
-    }
-
-    if (widget.sort) {
-      sortListByAudioFilter(audioFilter: _filter, audios: sortedAudios);
     }
 
     return SingleChildScrollView(
@@ -201,10 +199,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
           ),
           if (widget.showAudioTileHeader)
             Padding(
-              padding: const EdgeInsets.only(
-                left: 20,
-                right: 20,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: AudioTileHeader(
                 titleFlex: widget.titleFlex,
                 artistFlex: widget.artistFlex,
@@ -214,11 +209,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                 albumLabel: widget.albumLabel,
                 showTrack: widget.showTrack,
                 audioFilter: AudioFilter.title,
-                onAudioFilterSelected: widget.sort == false
-                    ? null
-                    : (audioFilter) => setState(() {
-                          _filter = audioFilter;
-                        }),
               ),
             ),
           if (widget.showAudioTileHeader)
@@ -253,15 +243,17 @@ class _AudioPageBodyState extends State<AudioPageBody> {
 
                 final likeButton = LikeButton(
                   key: ObjectKey(audio),
-                  pageId: widget.pageId,
+                  playlistId: widget.pageId,
                   audio: audio,
                   audioSelected: audioSelected,
-                  audioPageType: widget.audioPageType,
-                  isLiked: liked,
+                  liked: liked(audio),
                   removeLikedAudio: removeLikedAudio,
                   addLikedAudio: addLikedAudio,
-                  removeAudioFromPlaylist: removeAudioFromPlaylist,
-                  getTopFivePlaylistNames: getTopFivePlaylistNames,
+                  onRemoveFromPlaylist:
+                      widget.audioPageType != AudioPageType.playlist
+                          ? null
+                          : removeAudioFromPlaylist,
+                  topFivePlaylistNames: getTopFivePlaylistNames(),
                   addAudioToPlaylist: addAudioToPlaylist,
                   addPlaylist: addPlaylist,
                 );

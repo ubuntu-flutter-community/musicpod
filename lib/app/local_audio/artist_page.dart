@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/image_grid.dart';
 import 'package:musicpod/data/audio.dart';
@@ -31,17 +30,14 @@ class ArtistPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AudioPage(
       onTextTap: onTextTap,
-      audioFilter: AudioFilter.album,
       audioPageType: AudioPageType.artist,
       pageLabel: context.l10n.artist,
       pageTitle: artistAudios?.firstOrNull?.artist,
       image: ArtistImage(images: images),
       pageSubtile: artistAudios?.firstOrNull?.genre,
       controlPageButton: const SizedBox.shrink(),
-      deletable: false,
       audios: artistAudios,
       pageId: artistAudios?.firstOrNull?.artist ?? artistAudios.toString(),
-      editableName: false,
     );
   }
 }

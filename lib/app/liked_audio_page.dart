@@ -35,8 +35,6 @@ class LikedAudioPage extends StatelessWidget {
       audios: likedAudios,
       pageId: 'likedAudio',
       pageTitle: context.l10n.likedSongs,
-      editableName: false,
-      deletable: false,
       controlPageButton: const SizedBox.shrink(),
     );
   }

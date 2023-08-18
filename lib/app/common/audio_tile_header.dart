@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/l10n/l10n.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AudioTileHeader extends StatelessWidget {
@@ -26,8 +25,6 @@ class AudioTileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return ListTile(
       contentPadding: const EdgeInsets.only(left: 8, right: 4),
       shape: RoundedRectangleBorder(
@@ -63,29 +60,7 @@ class AudioTileHeader extends StatelessWidget {
           ),
         ],
       ),
-      trailing: onAudioFilterSelected == null
-          ? const SizedBox(width: 65.5)
-          : YaruPopupMenuButton<AudioFilter>(
-              initialValue: audioFilter,
-              onSelected: onAudioFilterSelected,
-              style: TextButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  side: BorderSide.none,
-                  borderRadius: BorderRadius.circular(kYaruButtonRadius),
-                ),
-              ),
-              child: Icon(
-                YaruIcons.ordered_list,
-                color: theme.colorScheme.onSurface,
-              ),
-              itemBuilder: (a) => [
-                for (final filter in AudioFilter.values)
-                  PopupMenuItem(
-                    value: filter,
-                    child: Text(filter.name),
-                  ),
-              ],
-            ),
+      trailing: const SizedBox(width: 61),
     );
   }
 }

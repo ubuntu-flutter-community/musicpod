@@ -253,8 +253,8 @@ class _Albums extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
         final audio = similarAlbumsResult.elementAt(index);
-        final name = audio.album;
-        final album = findAlbum(audio);
+        final albumName = audio.album;
+        final albumAudio = findAlbum(audio);
 
         final image = audio.pictureData == null
             ? Center(
@@ -305,24 +305,27 @@ class _Albums extends StatelessWidget {
               ),
             ),
             image: image,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return AlbumPage(
-                    key: ValueKey(showWindowControls == false),
-                    onTextTap: onTextTap,
-                    name: name,
-                    isPinnedAlbum: isPinnedAlbum,
-                    removePinnedAlbum: removePinnedAlbum,
-                    album: album,
-                    addPinnedAlbum: addPinnedAlbum,
-                  );
-                },
-              ),
-            ),
-            onPlay: album == null || album.isEmpty || name == null
+            onTap: albumName == null
                 ? null
-                : () => startPlaylist(album, name),
+                : () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return AlbumPage(
+                            key: ValueKey(showWindowControls == false),
+                            onTextTap: onTextTap,
+                            name: albumName,
+                            isPinnedAlbum: isPinnedAlbum,
+                            removePinnedAlbum: removePinnedAlbum,
+                            album: albumAudio,
+                            addPinnedAlbum: addPinnedAlbum,
+                          );
+                        },
+                      ),
+                    ),
+            onPlay:
+                albumAudio == null || albumAudio.isEmpty || albumName == null
+                    ? null
+                    : () => startPlaylist(albumAudio, albumName),
           ),
         );
       },
