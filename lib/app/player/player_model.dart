@@ -207,7 +207,6 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> seek() async {
     if (position == null) return;
-    safeLastPosition();
     await _player.seek(position!);
   }
 
