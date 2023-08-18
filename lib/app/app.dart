@@ -62,7 +62,7 @@ class App extends StatefulWidget {
           create: (_) => ConnectivityNotifier(
             getService<Connectivity>(),
           ),
-        )
+        ),
       ],
       child: const App(),
     );
@@ -285,7 +285,7 @@ class _AppState extends State<App> {
                           playerViewMode: PlayerViewMode.bottom,
                           isOnline: isOnline,
                         ),
-                      )
+                      ),
                   ],
                 ),
               ),
@@ -301,7 +301,7 @@ class _AppState extends State<App> {
                     onTextTap: onTextTap,
                     isOnline: isOnline,
                   ),
-                )
+                ),
             ],
           ),
           if (isFullScreen == true)
@@ -314,7 +314,7 @@ class _AppState extends State<App> {
                   isOnline: isOnline,
                 ),
               ),
-            )
+            ),
         ],
       ),
     );

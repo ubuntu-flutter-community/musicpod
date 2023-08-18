@@ -45,7 +45,7 @@ class ConfirmationDialog extends StatelessWidget {
               child: Text(context.l10n.ok),
             ),
           ].map((e) => Expanded(child: e)).toList(),
-        )
+        ),
       ],
     );
   }

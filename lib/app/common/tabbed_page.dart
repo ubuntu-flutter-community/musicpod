@@ -91,7 +91,7 @@ class _TabbedPageState extends State<TabbedPage> with TickerProviderStateMixin {
                   Tab(
                     icon: widget.tabIcons?[i],
                     child: widget.tabTitles[i],
-                  )
+                  ),
               ],
             ),
           ),

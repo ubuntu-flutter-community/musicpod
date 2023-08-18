@@ -240,7 +240,7 @@ class _Description extends StatelessWidget {
                     maxLines: 200,
                     paddings: HtmlPaddings.zero,
                   ),
-                )
+                ),
               ],
             );
           },
@@ -275,7 +275,7 @@ class _Description extends StatelessWidget {
           textOverflow: TextOverflow.ellipsis,
           maxLines: maxLines,
           textAlign: textAlign ?? TextAlign.start,
-        )
+        ),
       },
     );
   }

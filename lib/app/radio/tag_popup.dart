@@ -42,7 +42,7 @@ class TagPopup extends StatelessWidget {
               value: t,
               onTap: t != null ? null : () => onSelected?.call(t),
               child: Text(t?.name ?? context.l10n.all),
-            )
+            ),
         ];
       },
     );

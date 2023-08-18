@@ -63,7 +63,7 @@ class _AudioCardState extends State<AudioCard> {
                     ),
                   ),
                 ),
-              )
+              ),
           ],
         ),
       ),

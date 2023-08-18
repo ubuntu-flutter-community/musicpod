@@ -53,7 +53,7 @@ class SuperLikeButton extends StatelessWidget {
                 child: Text(
                   '${context.l10n.addTo} $playlist',
                 ),
-              )
+              ),
         ];
       },
       child: InkWell(

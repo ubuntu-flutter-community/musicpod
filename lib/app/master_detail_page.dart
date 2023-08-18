@@ -42,7 +42,7 @@ class MasterDetailPage extends StatelessWidget {
               padding: const EdgeInsets.only(right: 10),
               child: SettingsTile(onDirectorySelected: onDirectorySelected),
             ),
-          )
+          ),
         ],
       ),
       layoutDelegate: const YaruMasterFixedPaneDelegate(

@@ -268,7 +268,7 @@ class LocalAudioPageIcon extends StatelessWidget {
                 ? theme.colorScheme.surface
                 : theme.colorScheme.onSurface,
           ),
-        )
+        ),
       ],
     );
   }

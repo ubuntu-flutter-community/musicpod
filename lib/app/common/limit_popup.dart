@@ -40,7 +40,7 @@ class LimitPopup extends StatelessWidget {
             PopupMenuItem(
               value: c,
               child: Text('$c'),
-            )
+            ),
         ];
       },
     );

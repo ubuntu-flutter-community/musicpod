@@ -34,7 +34,7 @@ class ImageGrid extends StatelessWidget {
                   width: gridSize / 2,
                   fit: BoxFit.fill,
                   filterQuality: FilterQuality.medium,
-                )
+                ),
               ],
             ),
           ),
@@ -53,7 +53,7 @@ class ImageGrid extends StatelessWidget {
                   width: gridSize / 2,
                   fit: BoxFit.fill,
                   filterQuality: FilterQuality.medium,
-                )
+                ),
               ],
             ),
           ),

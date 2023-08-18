@@ -42,7 +42,7 @@ class CountryPopup extends StatelessWidget {
             PopupMenuItem(
               value: c,
               child: Text(c.name.capitalize().camelToSentence()),
-            )
+            ),
         ];
       },
     );

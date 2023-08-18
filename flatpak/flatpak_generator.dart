@@ -210,7 +210,7 @@ class FlatpakManifestGenerator {
                   'install -Dm644 $appName/icons/${icon.type}/${icon.getFilename(appId)} /app/share/icons/hicolor/${icon.type}/apps/${icon.getFilename(appId)}',
             ),
             'install -Dm644 $appName/$appId.desktop /app/share/applications/$appId.desktop',
-            'install -Dm644 $appName/$appId.appdata.xml /app/share/applications/$appId.appdata.xml'
+            'install -Dm644 $appName/$appId.appdata.xml /app/share/applications/$appId.appdata.xml',
           ],
           'sources': [
             {
@@ -219,7 +219,7 @@ class FlatpakManifestGenerator {
               'url':
                   'https://github.com/${specJson.githubReleaseOrganization}/${specJson.githubReleaseProject}/releases/download/${specJson.releases.first.version}/${specJson.lowercaseAppName}-linux-x86_64.tar.gz',
               'sha256': sha256x64,
-              'dest': specJson.lowercaseAppName
+              'dest': specJson.lowercaseAppName,
             },
             if (specJson.linuxArmReleaseBundleDirPath != null)
               {
@@ -228,11 +228,11 @@ class FlatpakManifestGenerator {
                 'url':
                     'https://github.com/${specJson.githubReleaseOrganization}/${specJson.githubReleaseProject}/releases/download/${specJson.releases.first.version}/${specJson.lowercaseAppName}-linux-aarch64.tar.gz',
                 'sha256': sha256aarch64,
-                'dest': specJson.lowercaseAppName
-              }
-          ]
+                'dest': specJson.lowercaseAppName,
+              },
+          ],
         }
-      ]
+      ],
     });
   }
 }
@@ -244,7 +244,7 @@ class FlathubJsonGenerator {
   static String generate() {
     const encoder = JsonEncoder.withIndent('     ');
     return encoder.convert({
-      'only-arches': ['x86_64']
+      'only-arches': ['x86_64'],
     });
   }
 }

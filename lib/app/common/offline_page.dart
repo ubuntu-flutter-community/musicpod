@@ -36,7 +36,7 @@ class OfflinePage extends StatelessWidget {
                       color: Theme.of(context).disabledColor,
                     ),
               ),
-            )
+            ),
           ],
         ),
       ),

@@ -438,5 +438,5 @@ Set<String> _videoTypes = {
   '.vob',
   '.webm',
   '.wmv',
-  '.yuv'
+  '.yuv',
 };

@@ -76,7 +76,7 @@ class AboutTile extends StatelessWidget {
               YaruIcons.external_link,
               color: Colors.blue,
               size: 18,
-            )
+            ),
           ],
         ),
       ),
