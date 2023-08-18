@@ -1015,8 +1015,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "update_to_3.13"
-      resolved-ref: bcc5932d5f5173b45e5d8998664e648ed14e7fa2
+      ref: "952d99b316affa9d07b34d25d4027a39a28d3103"
+      resolved-ref: "952d99b316affa9d07b34d25d4027a39a28d3103"
       url: "https://github.com/ubuntu/yaru_widgets.dart"
     source: git
     version: "3.0.1"
