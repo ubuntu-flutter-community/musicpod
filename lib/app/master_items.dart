@@ -203,6 +203,6 @@ List<MasterItem> createMasterItems({
             selected: selected,
             isOnline: isOnline,
           ),
-        )
+        ),
   ];
 }

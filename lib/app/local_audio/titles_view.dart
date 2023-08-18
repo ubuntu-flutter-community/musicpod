@@ -43,7 +43,7 @@ class TitlesView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(context.l10n.noLocalTitlesFound),
-          const ShopRecommendations()
+          const ShopRecommendations(),
         ],
       ),
       audios: Set.from(sortedAudios),

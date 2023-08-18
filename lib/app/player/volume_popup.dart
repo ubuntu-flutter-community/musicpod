@@ -54,7 +54,7 @@ class _VolumeSliderPopupState extends State<VolumeSliderPopup> {
                     );
                   },
                 ),
-              )
+              ),
             ];
           },
         );

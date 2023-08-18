@@ -93,7 +93,7 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
             child: Text(
               context.l10n.add,
             ),
-          )
+          ),
       ],
     );
   }
@@ -181,9 +181,9 @@ class _CreatePlaylistPageState extends State<CreatePlaylistPage> {
                     addPlaylist(_nameController.text, {});
                   },
                   child: Text(context.l10n.add),
-                )
+                ),
             ],
-          )
+          ),
         ],
       ),
     );

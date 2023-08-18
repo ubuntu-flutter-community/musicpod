@@ -120,7 +120,7 @@ class _RadioPageState extends State<RadioPage> {
                 }
               },
               tags: tags,
-            )
+            ),
           ],
         ),
       ),
@@ -309,7 +309,7 @@ class RadioFallBackIcon extends StatelessWidget {
             getColor(
               station?.title ?? station?.album ?? '',
               fallBackColor,
-            ).withOpacity(0.9)
+            ).withOpacity(0.9),
           ],
         ),
       ),

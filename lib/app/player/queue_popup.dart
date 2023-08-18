@@ -54,14 +54,14 @@ class QueuePopup extends StatelessWidget {
                                   : FontWeight.normal,
                             ),
                             overflow: TextOverflow.ellipsis,
-                          )
+                          ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
-          )
+          ),
         ];
       },
     );

@@ -197,10 +197,10 @@ class _PodcastsPageState extends State<PodcastsPage> {
                     PopupMenuItem(
                       value: genre,
                       child: Text(genre.localize(context.l10n)),
-                    )
+                    ),
                 ];
               },
-            )
+            ),
           ],
         ),
       ),

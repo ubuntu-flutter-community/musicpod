@@ -43,7 +43,7 @@ class ShopRecommendations extends StatelessWidget {
           ),
         const SizedBox(
           height: kYaruPagePadding,
-        )
+        ),
       ],
     );
   }

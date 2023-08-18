@@ -32,7 +32,7 @@ class AudioPageHeader extends StatelessWidget {
           end: Alignment.topCenter,
           colors: [
             light ? Colors.white : Colors.transparent,
-            theme.scaffoldBackgroundColor
+            theme.scaffoldBackgroundColor,
           ],
         ),
       ),
@@ -112,15 +112,15 @@ class AudioPageHeader extends StatelessWidget {
                                   textOverflow: TextOverflow.ellipsis,
                                   maxLines: 4,
                                   textAlign: TextAlign.start,
-                                )
+                                ),
                               },
                             ),
                           ),
                         ),
-                )
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -173,7 +173,7 @@ class _DescriptionDialog extends StatelessWidget {
                 margin: Margins.zero,
                 padding: HtmlPaddings.zero,
                 color: theme.hintColor,
-              )
+              ),
             },
           ),
         ),

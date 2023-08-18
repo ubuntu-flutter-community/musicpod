@@ -46,7 +46,7 @@ class FailedImportsContent extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: theme.colorScheme.onInverseSurface),
                 ),
-              )
+              ),
             ],
           ),
           Expanded(

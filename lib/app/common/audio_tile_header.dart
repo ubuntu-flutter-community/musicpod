@@ -83,7 +83,7 @@ class AudioTileHeader extends StatelessWidget {
                   PopupMenuItem(
                     value: filter,
                     child: Text(filter.name),
-                  )
+                  ),
               ],
             ),
     );

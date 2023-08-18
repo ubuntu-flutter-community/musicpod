@@ -166,7 +166,7 @@ class _Titles extends StatelessWidget {
                 '${context.l10n.titles}  •  ${titlesResult.length}',
                 style: theme.textTheme.headlineSmall
                     ?.copyWith(fontWeight: FontWeight.w100),
-              )
+              ),
             ],
           ),
         ),
@@ -208,7 +208,7 @@ class _Titles extends StatelessWidget {
                 ),
               );
             }),
-          )
+          ),
       ],
     );
   }
@@ -342,7 +342,7 @@ class _Albums extends StatelessWidget {
                 '${context.l10n.albums}  •  ${similarAlbumsResult.length}',
                 style: theme.textTheme.headlineSmall
                     ?.copyWith(fontWeight: FontWeight.w100),
-              )
+              ),
             ],
           ),
         ),
@@ -356,7 +356,7 @@ class _Albums extends StatelessWidget {
               child: albums,
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -400,7 +400,7 @@ class _Artists extends StatelessWidget {
                 '${context.l10n.artists}  •  ${similarArtistsSearchResult.length}',
                 style: theme.textTheme.headlineSmall
                     ?.copyWith(fontWeight: FontWeight.w100),
-              )
+              ),
             ],
           ),
         ),
@@ -452,7 +452,7 @@ class _Artists extends StatelessWidget {
               },
             ),
           ),
-        )
+        ),
       ],
     );
   }

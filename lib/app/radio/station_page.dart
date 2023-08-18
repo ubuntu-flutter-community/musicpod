@@ -72,7 +72,7 @@ class StationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tags = <String>[
-      for (final tag in station.album?.split(',') ?? <String>[]) tag
+      for (final tag in station.album?.split(',') ?? <String>[]) tag,
     ];
     const size = 350.0;
 
@@ -180,10 +180,10 @@ class StationPage extends StatelessWidget {
                       ),
                       const SizedBox(
                         height: 20,
-                      )
+                      ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),

@@ -32,7 +32,7 @@ class RoundImageContainer extends StatelessWidget {
             color: Colors.black.withOpacity(0.5),
             blurRadius: 3,
             spreadRadius: 3,
-          )
+          ),
         ],
         image: image != null
             ? DecorationImage(
@@ -63,7 +63,7 @@ class RoundImageContainer extends StatelessWidget {
                 color: Colors.black.withOpacity(0.3),
                 blurRadius: 3,
                 spreadRadius: 0.1,
-              )
+              ),
             ],
           ),
           child: Text(

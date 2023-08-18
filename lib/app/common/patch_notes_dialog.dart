@@ -25,7 +25,7 @@ class PatchNotesDialog extends StatelessWidget {
                 .then((value) => Navigator.of(context).pop());
           },
           child: Text(context.l10n.ok),
-        )
+        ),
       ],
     );
   }

@@ -248,7 +248,7 @@ class FullHeightPlayer extends StatelessWidget {
               audio: audio,
               nextAudio: nextAudio,
             ),
-          )
+          ),
       ],
     );
 
@@ -261,7 +261,7 @@ class FullHeightPlayer extends StatelessWidget {
         ),
         Expanded(
           child: stack,
-        )
+        ),
       ],
     );
   }
@@ -329,7 +329,7 @@ class _UpNextBubble extends StatelessWidget {
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
-                      )
+                      ),
                   ],
                 ),
               )
@@ -346,7 +346,7 @@ class _UpNextBubble extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),
-              )
+              ),
           ],
         ),
       ),
