@@ -88,8 +88,15 @@ const kPatchNotes20230811 = 'Hello there :) \n\n'
     ' If it does not show up for an already subscribed podcast, resubscribe to update.'
     '\nThe notification for new episodes of one of your subscribed podcasts now shows the podcast name again.';
 
-const kRecentPatchNotesDisposed = kPatchNotes20230811disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20230811;
-const kRecentPatchNotes = kPatchNotes20230811;
+const kPatchNotes20230819disposed = 'patchNotes20230819disposed';
+const kPatchNotesTitle20230819 = 'Patch notes: 2023-08-19';
+const kPatchNotes20230819 = 'Hello there :)\n\n'
+    'Albums should now be better categorized in a unique way.'
+    '\nSadly this once against needs you to'
+    '\nunpin and pin your favorite albums again.';
+
+const kRecentPatchNotesDisposed = kPatchNotes20230819disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20230819;
+const kRecentPatchNotes = kPatchNotes20230819;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';

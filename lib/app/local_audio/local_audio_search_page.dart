@@ -14,6 +14,7 @@ import 'package:musicpod/app/local_audio/artist_page.dart';
 import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:musicpod/utils.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -253,7 +254,7 @@ class _Albums extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
         final audio = similarAlbumsResult.elementAt(index);
-        final albumName = audio.album;
+        final id = generateAlbumId(audio);
         final albumAudio = findAlbum(audio);
 
         final image = audio.pictureData == null
@@ -305,7 +306,7 @@ class _Albums extends StatelessWidget {
               ),
             ),
             image: image,
-            onTap: albumName == null
+            onTap: id == null
                 ? null
                 : () => Navigator.of(context).push(
                       MaterialPageRoute(
@@ -313,7 +314,7 @@ class _Albums extends StatelessWidget {
                           return AlbumPage(
                             key: ValueKey(showWindowControls == false),
                             onTextTap: onTextTap,
-                            name: albumName,
+                            id: id,
                             isPinnedAlbum: isPinnedAlbum,
                             removePinnedAlbum: removePinnedAlbum,
                             album: albumAudio,
@@ -322,10 +323,9 @@ class _Albums extends StatelessWidget {
                         },
                       ),
                     ),
-            onPlay:
-                albumAudio == null || albumAudio.isEmpty || albumName == null
-                    ? null
-                    : () => startPlaylist(albumAudio, albumName),
+            onPlay: albumAudio == null || albumAudio.isEmpty || id == null
+                ? null
+                : () => startPlaylist(albumAudio, id),
           ),
         );
       },

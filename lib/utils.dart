@@ -3,12 +3,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/data/audio.dart';
-import 'package:musicpod/l10n/l10n.dart';
 import 'package:xdg_directories/xdg_directories.dart';
-import 'package:yaru/yaru.dart';
 
 import 'constants.dart';
 
@@ -19,13 +16,6 @@ String formatTime(Duration duration) {
   final seconds = twoDigits(duration.inSeconds.remainder(60));
 
   return <String>[if (duration.inHours > 0) hours, minutes, seconds].join(':');
-}
-
-String createPlaylistName(
-  String name,
-  BuildContext context,
-) {
-  return name == 'likedAudio' ? context.l10n.likedSongs : name;
 }
 
 bool listsAreEqual(List<dynamic>? list1, List<dynamic>? list2) =>
@@ -189,40 +179,11 @@ Future<Uri?> createUriFromAudio(Audio audio) async {
   }
 }
 
-Color? getColorFromName(String name) {
-  final firstChar = name.isEmpty ? 'a' : name.substring(0, 1);
-
-  return <String, Color>{
-    'a': Colors.red,
-    'b': Colors.green,
-    'c': Colors.blue,
-    'd': Colors.yellow,
-    'e': Colors.orange,
-    'f': Colors.purple,
-    'g': Colors.pink,
-    'h': Colors.brown,
-    'i': Colors.black,
-    'j': Colors.white,
-    'k': Colors.grey,
-    'l': Colors.cyan,
-    'm': YaruColors.magenta,
-    'n': YaruColors.olive,
-    'o': Colors.teal,
-    'p': Colors.lime,
-    'q': Colors.lightBlue,
-    'r': Colors.blueGrey,
-    's': Colors.orangeAccent,
-    't': Colors.amberAccent,
-    'u': Colors.greenAccent,
-    'v': Colors.lightGreen,
-    'w': Colors.indigo,
-    'x': Colors.lightGreenAccent,
-    'y': Colors.purpleAccent,
-    'z': Colors.deepPurple,
-  }[firstChar];
-}
-
-Future<String> loadAsset(BuildContext context) async {
-  return await DefaultAssetBundle.of(context)
-      .loadString('assets/contributors.md');
+String? generateAlbumId(Audio audio) {
+  final albumName = audio.album;
+  final artistName = audio.artist;
+  final id = albumName == null && artistName == null
+      ? null
+      : '${artistName ?? ''}:${albumName ?? ''}';
+  return id;
 }

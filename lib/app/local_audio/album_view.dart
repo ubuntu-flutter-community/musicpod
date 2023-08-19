@@ -7,6 +7,7 @@ import 'package:musicpod/app/local_audio/shop_recommendations.dart';
 import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:musicpod/utils.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -65,7 +66,7 @@ class AlbumsView extends StatelessWidget {
       gridDelegate: kImageGridDelegate,
       itemBuilder: (context, index) {
         final audio = albums!.elementAt(index);
-        final albumName = audio.album;
+        String? id = generateAlbumId(audio);
         final albumAudios = findAlbum(audio);
 
         final image = audio.pictureData == null
@@ -89,7 +90,7 @@ class AlbumsView extends StatelessWidget {
                 AudioCardBottom(text: audio.album == null ? '' : audio.album!),
           ),
           image: image,
-          onTap: albumName == null
+          onTap: id == null
               ? null
               : () => Navigator.of(context).push(
                     MaterialPageRoute(
@@ -99,7 +100,7 @@ class AlbumsView extends StatelessWidget {
                             onTextTap?.call(text: text, audioType: audioType);
                             Navigator.of(context).maybePop();
                           },
-                          name: albumName,
+                          id: id,
                           isPinnedAlbum: isPinnedAlbum,
                           removePinnedAlbum: removePinnedAlbum,
                           album: albumAudios,
@@ -108,10 +109,9 @@ class AlbumsView extends StatelessWidget {
                       },
                     ),
                   ),
-          onPlay:
-              albumAudios == null || albumAudios.isEmpty || albumName == null
-                  ? null
-                  : () => startPlaylist(albumAudios, albumName),
+          onPlay: albumAudios == null || albumAudios.isEmpty || id == null
+              ? null
+              : () => startPlaylist(albumAudios, id),
         );
       },
     );

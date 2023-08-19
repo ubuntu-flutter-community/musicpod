@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:musicpod/constants.dart';
 import 'package:musicpod/l10n/l10n.dart';
-import 'package:musicpod/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -105,5 +104,10 @@ class AboutTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<String> loadAsset(BuildContext context) async {
+    return await DefaultAssetBundle.of(context)
+        .loadString('assets/contributors.md');
   }
 }

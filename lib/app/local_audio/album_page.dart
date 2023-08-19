@@ -10,7 +10,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 class AlbumPage extends StatelessWidget {
   const AlbumPage({
     super.key,
-    required this.name,
+    required this.id,
     required this.isPinnedAlbum,
     required this.removePinnedAlbum,
     required this.album,
@@ -44,7 +44,7 @@ class AlbumPage extends StatelessWidget {
         );
   }
 
-  final String name;
+  final String id;
   final bool Function(String name) isPinnedAlbum;
   final void Function(String name) removePinnedAlbum;
   final Set<Audio>? album;
@@ -69,14 +69,14 @@ class AlbumPage extends StatelessWidget {
               filterQuality: FilterQuality.medium,
             )
           : null,
-      controlPageButton: isPinnedAlbum(name)
+      controlPageButton: isPinnedAlbum(id)
           ? IconButton(
               icon: Icon(
                 YaruIcons.pin,
                 color: Theme.of(context).primaryColor,
               ),
               onPressed: () => removePinnedAlbum(
-                name,
+                id,
               ),
             )
           : IconButton(
@@ -86,12 +86,13 @@ class AlbumPage extends StatelessWidget {
               onPressed: album == null
                   ? null
                   : () => addPinnedAlbum(
-                        name,
+                        id,
                         album!,
                       ),
             ),
       audios: album,
-      pageId: name,
+      pageId: id,
+      pageTitle: album?.firstOrNull?.album,
     );
   }
 }
