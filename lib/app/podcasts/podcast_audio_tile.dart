@@ -152,17 +152,18 @@ class _Bottom extends StatelessWidget {
         Row(
           children: [
             IconButton(
-              onPressed: audio.website == null
+              onPressed: audio.url == null
                   ? null
                   : () => ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           behavior: SnackBarBehavior.floating,
                           content: TextButton(
                             child: Text(
-                              'Copied to clipboard: ${audio.website}',
+                              '${audio.url}',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
-                            onPressed: () =>
-                                launchUrl(Uri.parse(audio.website!)),
+                            onPressed: () => launchUrl(Uri.parse(audio.url!)),
                           ),
                         ),
                       ),
