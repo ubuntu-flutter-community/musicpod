@@ -86,7 +86,9 @@ class FullHeightPlayerControls extends StatelessWidget {
                       behavior: SnackBarBehavior.floating,
                       content: TextButton(
                         child: Text(
-                          'Copied to clipboard: ${audio?.website}',
+                          '${audio?.url}',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                         onPressed: () => launchUrl(Uri.parse(audio!.url!)),
                       ),
