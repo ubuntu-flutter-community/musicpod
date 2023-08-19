@@ -33,6 +33,7 @@ List<MasterItem> createMasterItems({
   required Map<String, Set<Audio>> playlists,
   required bool showPlaylists,
   required void Function(String name) removePlaylist,
+  required void Function(String oldName, String newName)? updatePlaylistName,
   required Map<String, Set<Audio>> pinnedAlbums,
   required bool showPinnedAlbums,
   required void Function(String name, Set<Audio> audios) addPinnedAlbum,
@@ -157,6 +158,7 @@ List<MasterItem> createMasterItems({
             onTextTap: onTextTap,
             playlist: playlist,
             unPinPlaylist: removePlaylist,
+            updatePlaylistName: updatePlaylistName,
           ),
           iconBuilder: (context, selected) => const Icon(
             YaruIcons.playlist,

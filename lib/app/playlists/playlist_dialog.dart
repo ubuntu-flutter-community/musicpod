@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/app/library_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
-import 'package:provider/provider.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class PlaylistDialog extends StatefulWidget {
@@ -13,6 +10,7 @@ class PlaylistDialog extends StatefulWidget {
     this.onDeletePlaylist,
     this.onUpdatePlaylistName,
     this.playlistName,
+    this.initialValue,
     this.audios,
   });
 
@@ -21,6 +19,7 @@ class PlaylistDialog extends StatefulWidget {
   final void Function(String name)? onUpdatePlaylistName;
   final void Function()? onDeletePlaylist;
   final String? playlistName;
+  final String? initialValue;
 
   @override
   State<PlaylistDialog> createState() => _PlaylistDialogState();
@@ -32,7 +31,7 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.playlistName);
+    _controller = TextEditingController(text: widget.initialValue);
   }
 
   @override
@@ -95,97 +94,6 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
             ),
           ),
       ],
-    );
-  }
-}
-
-class CreatePlaylistPage extends StatefulWidget {
-  const CreatePlaylistPage({super.key, this.name});
-  final String? name;
-
-  @override
-  State<CreatePlaylistPage> createState() => _CreatePlaylistPageState();
-}
-
-class _CreatePlaylistPageState extends State<CreatePlaylistPage> {
-  late TextEditingController _nameController;
-
-  @override
-  void initState() {
-    super.initState();
-    _nameController = TextEditingController(text: widget.name);
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isPlaylistSaved = context.read<LibraryModel>().isPlaylistSaved;
-    final removePlaylist = context.read<LibraryModel>().removePlaylist;
-    final updatePlaylistName = context.read<LibraryModel>().updatePlaylistName;
-    final addPlaylist = context.read<LibraryModel>().addPlaylist;
-    return YaruDetailPage(
-      appBar: YaruWindowTitleBar(
-        backgroundColor: Colors.transparent,
-        border: BorderSide.none,
-        title: Text(context.l10n.createNewPlaylist),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(kYaruPagePadding),
-        children: [
-          Row(
-            children: [
-              SizedBox(
-                width: 300,
-                child: TextField(
-                  autofocus: true,
-                  controller: _nameController,
-                  decoration:
-                      const InputDecoration(label: Text('Playlist name')),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: kYaruPagePadding,
-          ),
-          Wrap(
-            spacing: 10,
-            children: [
-              if (isPlaylistSaved(widget.name))
-                OutlinedButton.icon(
-                  label: Text(context.l10n.deletePlaylist),
-                  icon: const Icon(YaruIcons.trash),
-                  onPressed: () {
-                    removePlaylist(widget.name!);
-                  },
-                ),
-              if (isPlaylistSaved(widget.name))
-                ElevatedButton(
-                  onPressed: () {
-                    updatePlaylistName(
-                      widget.name!,
-                      _nameController.text,
-                    );
-                  },
-                  child: Text(context.l10n.save),
-                )
-              else
-                ElevatedButton(
-                  onPressed: () {
-                    if (_nameController.text.isEmpty) return;
-                    addPlaylist(_nameController.text, {});
-                  },
-                  child: Text(context.l10n.add),
-                ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

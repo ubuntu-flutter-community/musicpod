@@ -107,15 +107,14 @@ class PodcastPage extends StatelessWidget {
               fit: BoxFit.fitWidth,
               filterQuality: FilterQuality.medium,
             ),
-      pageLabel: genre ?? context.l10n.podcast,
-      pageTitle: title,
-      pageSubtile: audios?.firstOrNull?.artist,
-      pageDescription: audios?.firstOrNull?.albumArtist,
+      headerLabel: genre ?? context.l10n.podcast,
+      headerTitle: title,
+      headerSubtile: audios?.firstOrNull?.artist,
+      headerDescription: audios?.firstOrNull?.albumArtist,
       audios: audios,
       pageId: pageId,
       title: Text(title),
-      showTrack: false,
-      controlPageButton: IconButton(
+      controlPanelButton: IconButton(
         icon: Icon(
           YaruIcons.rss,
           color: subscribed ? theme.primaryColor : theme.colorScheme.onSurface,

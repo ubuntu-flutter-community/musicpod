@@ -59,8 +59,8 @@ class AlbumPage extends StatelessWidget {
     return AudioPage(
       onTextTap: onTextTap,
       audioPageType: AudioPageType.album,
-      pageLabel: context.l10n.album,
-      pageSubtile: album?.firstOrNull?.artist,
+      headerLabel: context.l10n.album,
+      headerSubtile: album?.firstOrNull?.artist,
       image: album?.firstOrNull?.pictureData != null
           ? Image.memory(
               album!.firstOrNull!.pictureData!,
@@ -69,7 +69,7 @@ class AlbumPage extends StatelessWidget {
               filterQuality: FilterQuality.medium,
             )
           : null,
-      controlPageButton: isPinnedAlbum(id)
+      controlPanelButton: isPinnedAlbum(id)
           ? IconButton(
               icon: Icon(
                 YaruIcons.pin,
@@ -92,7 +92,7 @@ class AlbumPage extends StatelessWidget {
             ),
       audios: album,
       pageId: id,
-      pageTitle: album?.firstOrNull?.album,
+      headerTitle: album?.firstOrNull?.album,
     );
   }
 }

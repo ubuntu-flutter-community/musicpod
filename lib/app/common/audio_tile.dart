@@ -70,7 +70,7 @@ class AudioTile extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (audio.trackNumber != null && showTrack)
+          if (showTrack)
             Expanded(
               flex: 1,
               child: Text(

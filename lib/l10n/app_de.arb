@@ -30,8 +30,8 @@
     "years": "Jahre",
     "searchLocalAudioHint": "Suche lokale Musik",
     "library": "Bibliothek",
-    "playlists": "Playlists",
-    "playlist": "Playlist",
+    "playlists": "Wiedergabelisten",
+    "playlist": "Wiedergabeliste",
     "discover": "Erkunden",
     "forYou": "Für dich",
     "search": "Suche",
@@ -93,5 +93,6 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "emptyPlaylist": "🐣🔎🎵❓\n\nDiese Wiedergabeliste ist leer."
 }
