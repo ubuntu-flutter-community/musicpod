@@ -14,7 +14,6 @@ import 'package:musicpod/app/radio/radio_page.dart';
 import 'package:musicpod/app/radio/station_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
-import 'package:musicpod/utils.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 
 List<MasterItem> createMasterItems({
@@ -166,12 +165,13 @@ List<MasterItem> createMasterItems({
     if (showPinnedAlbums)
       for (final album in pinnedAlbums.entries)
         MasterItem(
-          tileBuilder: (context) =>
-              Text(createPlaylistName(album.key, context)),
+          tileBuilder: (context) => Text(
+            album.value.firstOrNull?.album ?? album.key,
+          ),
           builder: (context) => AlbumPage(
             onTextTap: onTextTap,
             album: album.value,
-            name: album.key,
+            id: album.key,
             addPinnedAlbum: addPinnedAlbum,
             isPinnedAlbum: isPinnedAlbum,
             removePinnedAlbum: removePinnedAlbum,
