@@ -50,8 +50,9 @@ class PodcastAudioTile extends StatelessWidget {
       fontSize: 16,
     );
 
-    final date = DateFormat.yMMMEd(Platform.localeName)
-        .format(DateTime.fromMillisecondsSinceEpoch(audio.year!));
+    final date = audio.year == null
+        ? ''
+        : '${DateFormat.yMMMEd(Platform.localeName).format(DateTime.fromMillisecondsSinceEpoch(audio.year!))}, ';
     final duration = formatTime(
       audio.durationMs != null
           ? Duration(milliseconds: audio.durationMs!.toInt())
@@ -109,7 +110,7 @@ class PodcastAudioTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      '$date, $duration',
+                      '$date$duration',
                       style: theme.textTheme.labelMedium,
                     ),
                   ],
