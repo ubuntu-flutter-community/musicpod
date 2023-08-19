@@ -79,7 +79,7 @@ class FullHeightPlayerControls extends StatelessWidget {
           width: spacing,
         ),
         IconButton(
-          onPressed: !active || audio?.website == null
+          onPressed: !active || audio?.url == null
               ? null
               : () => ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -88,7 +88,7 @@ class FullHeightPlayerControls extends StatelessWidget {
                         child: Text(
                           'Copied to clipboard: ${audio?.website}',
                         ),
-                        onPressed: () => launchUrl(Uri.parse(audio!.website!)),
+                        onPressed: () => launchUrl(Uri.parse(audio!.url!)),
                       ),
                     ),
                   ),
