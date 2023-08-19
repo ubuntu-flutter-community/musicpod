@@ -219,6 +219,7 @@ class _AppState extends State<App> {
       playlists: playlists,
       showPlaylists: showPlaylists,
       removePlaylist: libraryModel.removePlaylist,
+      updatePlaylistName: libraryModel.updatePlaylistName,
       pinnedAlbums: pinnedAlbums,
       showPinnedAlbums: showPinnedAlbums,
       addPinnedAlbum: libraryModel.addPinnedAlbum,

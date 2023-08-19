@@ -31,11 +31,10 @@ class ArtistPage extends StatelessWidget {
     return AudioPage(
       onTextTap: onTextTap,
       audioPageType: AudioPageType.artist,
-      pageLabel: context.l10n.artist,
-      pageTitle: artistAudios?.firstOrNull?.artist,
+      headerLabel: context.l10n.artist,
+      headerTitle: artistAudios?.firstOrNull?.artist,
       image: ArtistImage(images: images),
-      pageSubtile: artistAudios?.firstOrNull?.genre,
-      controlPageButton: const SizedBox.shrink(),
+      headerSubtile: artistAudios?.firstOrNull?.genre,
       audios: artistAudios,
       pageId: artistAudios?.firstOrNull?.artist ?? artistAudios.toString(),
     );

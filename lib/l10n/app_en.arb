@@ -93,5 +93,6 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "emptyPlaylist": "🐣🔎🎵❓\n\nThis playlist is empty."
 }

@@ -20,13 +20,12 @@ class AudioPageBody extends StatefulWidget {
     super.key,
     this.audios,
     required this.audioPageType,
-    this.pageLabel,
+    this.headerLabel,
     required this.pageId,
-    this.pageTitle,
-    this.pageDescription,
-    this.pageSubTitle,
-    this.pinButton,
-    required this.showTrack,
+    this.headerTitle,
+    this.headerDescription,
+    this.headerSubTitle,
+    this.controlPanelButton,
     this.image,
     this.showAudioPageHeader,
     this.onTextTap,
@@ -34,7 +33,8 @@ class AudioPageBody extends StatefulWidget {
     this.titleLabel,
     this.artistLabel,
     this.albumLabel,
-    this.pageTitleWidget,
+    this.controlPanelTitle,
+    this.showTrack = true,
     this.titleFlex = 5,
     this.artistFlex = 5,
     this.albumFlex = 4,
@@ -42,23 +42,22 @@ class AudioPageBody extends StatefulWidget {
     this.removeUpdate,
   });
 
+  final String pageId;
   final Set<Audio>? audios;
   final AudioPageType audioPageType;
-  final String? pageLabel;
-  final String pageId;
-  final Widget? pageTitleWidget;
-
-  final String? pageTitle;
-  final String? pageDescription;
-  final String? pageSubTitle;
-  final Widget? pinButton;
-  final bool showTrack;
+  final String? headerLabel;
+  final Widget? controlPanelTitle;
+  final String? headerTitle;
+  final String? headerDescription;
+  final String? headerSubTitle;
+  final Widget? controlPanelButton;
   final Widget? image;
   final bool? showAudioPageHeader;
   final bool showAudioTileHeader;
   final Widget? noResultMessage;
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
+  final bool showTrack;
   final void Function()? removeUpdate;
 
   final void Function({
@@ -124,9 +123,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     final void Function(String, Set<Audio>) addPlaylist =
         libraryModel.addPlaylist;
 
-    final removePlaylist = libraryModel.removePlaylist;
-    final updatePlaylistName = libraryModel.updatePlaylistName;
-
     final sortedAudios = widget.audios?.toList() ?? [];
 
     final audioControlPanel = Padding(
@@ -137,17 +133,14 @@ class _AudioPageBodyState extends State<AudioPageBody> {
         bottom: 15,
       ),
       child: AudioPageControlPanel(
-        title: widget.pageTitleWidget,
-        removePlaylist: removePlaylist,
-        updatePlaylistName: updatePlaylistName,
+        title: widget.controlPanelTitle,
         pause: pause,
         resume: resume,
         startPlaylist: startPlaylist,
         isPlaying: isPlaying,
         queueName: queueName,
-        listName: widget.pageTitle ?? widget.pageId,
-        pinButton: widget.pinButton,
-        editableName: widget.audioPageType == AudioPageType.playlist,
+        listName: widget.headerTitle ?? widget.pageId,
+        controlButton: widget.controlPanelButton,
         audios: sortedAudios.toSet(),
       ),
     );
@@ -184,12 +177,13 @@ class _AudioPageBodyState extends State<AudioPageBody> {
         children: [
           if (widget.showAudioPageHeader == true)
             AudioPageHeader(
-              title: widget.pageTitle ?? sortedAudios.firstOrNull?.album ?? '',
-              description: widget.pageDescription ??
+              title:
+                  widget.headerTitle ?? sortedAudios.firstOrNull?.album ?? '',
+              description: widget.headerDescription ??
                   sortedAudios.firstOrNull?.description,
               image: widget.image,
-              subTitle: widget.pageSubTitle,
-              label: widget.pageLabel,
+              subTitle: widget.headerSubTitle,
+              label: widget.headerLabel,
             ),
           Padding(
             padding: widget.showAudioPageHeader == false

@@ -71,7 +71,6 @@ class _TitlesViewState extends State<TitlesView> {
       audioPageType: AudioPageType.immutable,
       pageId: context.l10n.localAudio,
       showAudioPageHeader: false,
-      showTrack: true,
       onTextTap: widget.onTextTap,
     );
   }

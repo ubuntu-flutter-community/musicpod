@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/confirmation_dialog.dart';
-import 'package:musicpod/app/playlists/playlist_dialog.dart';
 import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
@@ -12,31 +11,25 @@ class AudioPageControlPanel extends StatelessWidget {
     super.key,
     required this.audios,
     required this.listName,
-    this.editableName = false,
-    this.pinButton,
+    this.controlButton,
     required this.isPlaying,
     this.queueName,
     required this.startPlaylist,
     required this.pause,
     required this.resume,
-    this.removePlaylist,
-    this.updatePlaylistName,
     this.title,
   });
 
   final Set<Audio> audios;
   final String listName;
   final Widget? title;
-  final bool editableName;
 
-  final Widget? pinButton;
+  final Widget? controlButton;
   final bool isPlaying;
   final String? queueName;
   final void Function(Set<Audio> audios, String listName)? startPlaylist;
   final void Function() pause;
   final void Function() resume;
-  final void Function(String name)? removePlaylist;
-  final void Function(String oldName, String newName)? updatePlaylistName;
 
   @override
   Widget build(BuildContext context) {
@@ -94,34 +87,19 @@ class AudioPageControlPanel extends StatelessWidget {
               ),
             ),
           ),
-        if (editableName)
+        if (controlButton != null)
           Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: IconButton(
-              icon: const Icon(YaruIcons.pen),
-              onPressed: () => showDialog(
-                context: context,
-                builder: (context) => PlaylistDialog(
-                  playlistName: listName,
-                  onDeletePlaylist: removePlaylist == null
-                      ? null
-                      : () => removePlaylist!(listName),
-                  onUpdatePlaylistName: updatePlaylistName == null
-                      ? null
-                      : (name) => updatePlaylistName!(listName, name),
-                ),
-              ),
-            ),
+            child: controlButton!,
           )
-        else if (pinButton != null)
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: pinButton!,
+        else
+          const SizedBox(
+            width: 10,
           ),
         Expanded(
           child: title ??
               Text(
-                '${listName == 'likedAudio' ? context.l10n.likedSongs : listName}  •  ${audios.length} ${context.l10n.titles}',
+                '$listName  •  ${audios.length} ${context.l10n.titles}',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.headlineSmall

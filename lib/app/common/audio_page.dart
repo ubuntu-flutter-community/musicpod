@@ -13,12 +13,11 @@ class AudioPage extends StatelessWidget {
     required this.audioPageType,
     required this.pageId,
     this.title,
-    required this.controlPageButton,
-    this.showTrack = true,
-    this.pageLabel,
-    this.pageDescription,
-    this.pageTitle,
-    this.pageSubtile,
+    this.controlPanelButton,
+    this.headerTitle,
+    this.headerSubtile,
+    this.headerLabel,
+    this.headerDescription,
     this.image,
     this.showAudioPageHeader = true,
     this.onTextTap,
@@ -26,32 +25,32 @@ class AudioPage extends StatelessWidget {
     this.titleLabel,
     this.artistLabel,
     this.albumLabel,
-    this.pageTitleWidget,
+    this.controlPanelTitle,
     this.titleFlex = 5,
     this.artistFlex = 5,
     this.albumFlex = 4,
+    this.showTrack = true,
     this.showAudioTileHeader = true,
     this.removeUpdate,
   });
 
   final Set<Audio>? audios;
   final AudioPageType audioPageType;
-  final String? pageLabel;
+  final String? headerLabel;
   final String pageId;
-  final String? pageTitle;
-  final Widget? pageTitleWidget;
-  final String? pageDescription;
-  final String? pageSubtile;
-  final Widget controlPageButton;
+  final String? headerTitle;
+  final Widget? controlPanelTitle;
+  final String? headerDescription;
+  final String? headerSubtile;
+  final Widget? controlPanelButton;
   final Widget? title;
-  final bool showTrack;
-
   final Widget? image;
-  final bool? showAudioPageHeader;
-  final bool showAudioTileHeader;
   final Widget? noResultMessage;
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
+  final bool showAudioPageHeader;
+  final bool showAudioTileHeader;
+  final bool showTrack;
   final void Function(String id)? removeUpdate;
 
   final void Function({
@@ -68,28 +67,28 @@ class AudioPage extends StatelessWidget {
 
     final body = AudioPageBody(
       key: ValueKey(audios?.length),
+      pageId: pageId,
+      audios: audios,
+      noResultMessage: noResultMessage,
+      onTextTap: onTextTap,
+      audioPageType: audioPageType,
+      image: image,
+      headerDescription: headerDescription,
+      controlPanelButton: controlPanelButton,
+      headerLabel: headerLabel,
+      headerSubTitle: headerSubtile,
+      headerTitle: headerTitle,
+      controlPanelTitle: controlPanelTitle,
+      showAudioPageHeader: showAudioPageHeader,
+      showAudioTileHeader: showAudioTileHeader,
+      removeUpdate: () => removeUpdate?.call(pageId),
       albumFlex: albumFlex,
       titleFlex: titleFlex,
       artistFlex: artistFlex,
       titleLabel: titleLabel,
       artistLabel: artistLabel,
       albumLabel: albumLabel,
-      noResultMessage: noResultMessage,
-      onTextTap: onTextTap,
-      audios: audios,
-      audioPageType: audioPageType,
-      pageId: pageId,
       showTrack: showTrack,
-      image: image,
-      pageDescription: pageDescription,
-      pinButton: controlPageButton,
-      pageLabel: pageLabel,
-      pageSubTitle: pageSubtile,
-      pageTitle: pageTitle,
-      pageTitleWidget: pageTitleWidget,
-      showAudioPageHeader: showAudioPageHeader,
-      showAudioTileHeader: showAudioTileHeader,
-      removeUpdate: () => removeUpdate?.call(pageId),
     );
 
     return YaruDetailPage(
@@ -100,7 +99,7 @@ class AudioPage extends StatelessWidget {
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
-        title: title ?? Text(pageTitle ?? pageId),
+        title: title ?? Text(headerTitle ?? pageId),
         leading: Navigator.canPop(context)
             ? const YaruBackButton(
                 style: YaruBackButtonStyle.rounded,
