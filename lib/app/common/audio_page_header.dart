@@ -27,14 +27,16 @@ class AudioPageHeader extends StatelessWidget {
     return Container(
       height: 240,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.bottomCenter,
-          end: Alignment.topCenter,
-          colors: [
-            light ? Colors.white : Colors.transparent,
-            theme.scaffoldBackgroundColor,
-          ],
-        ),
+        gradient: light
+            ? null
+            : LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  Colors.transparent,
+                  theme.scaffoldBackgroundColor,
+                ],
+              ),
       ),
       padding: const EdgeInsets.all(20),
       child: Row(
