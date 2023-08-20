@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/common/share_button.dart';
 import 'package:musicpod/app/player/like_icon_button.dart';
 import 'package:musicpod/app/player/queue_popup.dart';
 import 'package:musicpod/app/player/volume_popup.dart';
 import 'package:musicpod/data/audio.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 
 class FullHeightPlayerControls extends StatelessWidget {
@@ -78,23 +78,9 @@ class FullHeightPlayerControls extends StatelessWidget {
         const SizedBox(
           width: spacing,
         ),
-        IconButton(
-          onPressed: !active || audio?.url == null
-              ? null
-              : () => ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      behavior: SnackBarBehavior.floating,
-                      content: TextButton(
-                        child: Text(
-                          '${audio?.url}',
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                        onPressed: () => launchUrl(Uri.parse(audio!.url!)),
-                      ),
-                    ),
-                  ),
-          icon: const Icon(YaruIcons.share),
+        ShareButton(
+          active: active,
+          audio: audio,
         ),
         const SizedBox(
           width: spacing,

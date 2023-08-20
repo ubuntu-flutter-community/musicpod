@@ -94,5 +94,6 @@
             }
         }
     },
-    "emptyPlaylist": "🐣🔎🎵❓\n\nDiese Wiedergabeliste ist leer."
+    "emptyPlaylist": "🐣🔎🎵❓\n\nDiese Wiedergabeliste ist leer.",
+    "copiedToClipBoard": "In die Zwischenablage kopiert:"
 }

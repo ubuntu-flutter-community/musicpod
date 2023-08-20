@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
+import 'package:musicpod/app/common/share_button.dart';
 import 'package:musicpod/app/player/player_model.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/utils.dart';
@@ -151,25 +152,9 @@ class _Bottom extends StatelessWidget {
       children: [
         Row(
           children: [
-            IconButton(
-              onPressed: audio.url == null
-                  ? null
-                  : () => ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          content: TextButton(
-                            child: Text(
-                              '${audio.url}',
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                            onPressed: () => launchUrl(Uri.parse(audio.url!)),
-                          ),
-                        ),
-                      ),
-              icon: const Icon(
-                YaruIcons.share,
-              ),
+            ShareButton(
+              active: true,
+              audio: audio,
             ),
             // TODO: implement download
             const IconButton(
