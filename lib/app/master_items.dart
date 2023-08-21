@@ -46,6 +46,7 @@ List<MasterItem> createMasterItems({
   String? countryCode,
   required bool Function(String feedUrl) podcastUpdateAvailable,
   required void Function(String feedUrl) removePodcastUpdate,
+  required bool showFilter,
 }) {
   return [
     MasterItem(
@@ -108,11 +109,13 @@ List<MasterItem> createMasterItems({
           LikedAudioPage.createIcon(context: context, selected: selected),
     ),
     MasterItem(
-      tileBuilder: (context) => AudioPageFilterBar(
-        mainPageType: mainPageType,
-        audioPageType: audioPageType,
-        setAudioPageType: setAudioPageType,
-      ),
+      tileBuilder: (context) => showFilter
+          ? AudioPageFilterBar(
+              mainPageType: mainPageType,
+              audioPageType: audioPageType,
+              setAudioPageType: setAudioPageType,
+            )
+          : const SizedBox.shrink(),
       builder: (context) => const SizedBox.shrink(),
     ),
     if (showSubbedPodcasts)

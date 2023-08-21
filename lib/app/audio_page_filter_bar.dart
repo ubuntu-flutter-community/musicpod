@@ -21,7 +21,7 @@ class AudioPageFilterBar extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Padding(
         padding: const EdgeInsets.only(
-          top: 10,
+          top: 5,
           bottom: 5,
           right: 18,
           left: 28,
