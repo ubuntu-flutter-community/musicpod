@@ -204,6 +204,8 @@ class _AppState extends State<App> {
     }
 
     final masterItems = createMasterItems(
+      showFilter: libraryModel.totalListAmount > 7 ||
+          libraryModel.audioPageType != null,
       localAudioIndex: localAudioIndex,
       setLocalAudioindex: libraryModel.setLocalAudioindex,
       audioType: audioType,
