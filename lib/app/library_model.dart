@@ -197,11 +197,12 @@ class LibraryModel extends SafeChangeNotifier {
       audioPageType == null || audioPageType == AudioPageType.podcast;
 
   bool podcastUpdateAvailable(String feedUrl) =>
-      _service.updateAvailable(feedUrl);
+      _service.podcastUpdateAvailable(feedUrl);
 
   Set<String> get podcastUpdates => _service.podcastUpdates;
 
-  void removePodcastUpdate(String feedUrl) => _service.removeUpdate(feedUrl);
+  void removePodcastUpdate(String feedUrl) =>
+      _service.removePodcastUpdate(feedUrl);
 
   //
   // Albums

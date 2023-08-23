@@ -233,7 +233,6 @@ class _AppState extends State<App> {
       play: play,
       countryCode: _countryCode,
       podcastUpdateAvailable: libraryModel.podcastUpdateAvailable,
-      removePodcastUpdate: libraryModel.removePodcastUpdate,
     );
 
     final yaruMasterDetailPage = MasterDetailPage(

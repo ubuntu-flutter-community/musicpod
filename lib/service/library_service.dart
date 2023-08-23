@@ -177,8 +177,9 @@ class LibraryService {
   }
 
   final Set<String> podcastUpdates = {};
-  bool updateAvailable(String feedUrl) => podcastUpdates.contains(feedUrl);
-  void removeUpdate(String feedUrl) {
+  bool podcastUpdateAvailable(String feedUrl) =>
+      podcastUpdates.contains(feedUrl);
+  void removePodcastUpdate(String feedUrl) {
     podcastUpdates.remove(feedUrl);
     _updateController.add(true);
   }

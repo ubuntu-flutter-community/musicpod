@@ -31,7 +31,6 @@ class AudioPage extends StatelessWidget {
     this.albumFlex = 4,
     this.showTrack = true,
     this.showAudioTileHeader = true,
-    this.removeUpdate,
   });
 
   final Set<Audio>? audios;
@@ -51,7 +50,6 @@ class AudioPage extends StatelessWidget {
   final bool showAudioPageHeader;
   final bool showAudioTileHeader;
   final bool showTrack;
-  final void Function(String id)? removeUpdate;
 
   final void Function({
     required String text,
@@ -81,7 +79,6 @@ class AudioPage extends StatelessWidget {
       controlPanelTitle: controlPanelTitle,
       showAudioPageHeader: showAudioPageHeader,
       showAudioTileHeader: showAudioTileHeader,
-      removeUpdate: () => removeUpdate?.call(pageId),
       albumFlex: albumFlex,
       titleFlex: titleFlex,
       artistFlex: artistFlex,
