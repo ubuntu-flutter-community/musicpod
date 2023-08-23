@@ -39,7 +39,6 @@ class AudioPageBody extends StatefulWidget {
     this.artistFlex = 5,
     this.albumFlex = 4,
     this.showAudioTileHeader = true,
-    this.removeUpdate,
   });
 
   final String pageId;
@@ -58,7 +57,6 @@ class AudioPageBody extends StatefulWidget {
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
   final bool showTrack;
-  final void Function()? removeUpdate;
 
   final void Function({
     required String text,
@@ -219,7 +217,8 @@ class _AudioPageBodyState extends State<AudioPageBody> {
 
                 if (audio.audioType == AudioType.podcast) {
                   return PodcastAudioTile(
-                    removeUpdate: () => widget.removeUpdate?.call(),
+                    removeUpdate: () =>
+                        libraryModel.removePodcastUpdate(widget.pageId),
                     isExpanded: audioSelected,
                     audio: audio,
                     isPlayerPlaying: isPlaying,

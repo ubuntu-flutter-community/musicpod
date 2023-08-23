@@ -152,7 +152,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
               itemImageUrl: artworkUrl600,
               genre: podcastItem.primaryGenreName,
               countryCode: widget.countryCode,
-              removePodcastUpdate: libraryModel.removePodcastUpdate,
             ),
           );
         },
@@ -259,7 +258,6 @@ Future<void> pushPodcastPage({
   required BuildContext context,
   required Item podcastItem,
   required bool Function(String? feedUrl) podcastSubscribed,
-  required void Function(String feedUrl) removePodcastUpdate,
   required void Function({
     required String text,
     required AudioType audioType,
@@ -302,7 +300,6 @@ Future<void> pushPodcastPage({
             title: podcast.firstOrNull?.album ??
                 podcast.firstOrNull?.title ??
                 podcastItem.feedUrl!,
-            removePodcastUpdate: removePodcastUpdate,
           );
         },
       ),

@@ -20,7 +20,6 @@ class PodcastPage extends StatelessWidget {
     required this.removePodcast,
     required this.addPodcast,
     required this.title,
-    required this.removePodcastUpdate,
   });
 
   static Widget createIcon({
@@ -67,7 +66,6 @@ class PodcastPage extends StatelessWidget {
 
   final void Function(String feedUrl) removePodcast;
   final void Function(String feedUrl, Set<Audio> audios) addPodcast;
-  final void Function(String feedUrl) removePodcastUpdate;
   final void Function({
     required String text,
     required AudioType audioType,
@@ -86,7 +84,6 @@ class PodcastPage extends StatelessWidget {
     context.select((LibraryModel m) => m.lastPositions?.length);
 
     return AudioPage(
-      removeUpdate: removePodcastUpdate,
       showAudioTileHeader: false,
       onTextTap: onTextTap,
       audioPageType: AudioPageType.podcast,

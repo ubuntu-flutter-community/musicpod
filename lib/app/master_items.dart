@@ -45,7 +45,6 @@ List<MasterItem> createMasterItems({
   required Future<void> Function({Duration? newPosition, Audio? newAudio}) play,
   String? countryCode,
   required bool Function(String feedUrl) podcastUpdateAvailable,
-  required void Function(String feedUrl) removePodcastUpdate,
   required bool showFilter,
 }) {
   return [
@@ -140,7 +139,6 @@ List<MasterItem> createMasterItems({
                   removePodcast: removePodcast,
                   imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
                       podcast.value.firstOrNull?.imageUrl,
-                  removePodcastUpdate: removePodcastUpdate,
                 )
               : const OfflinePage(),
           iconBuilder: (context, selected) => PodcastPage.createIcon(

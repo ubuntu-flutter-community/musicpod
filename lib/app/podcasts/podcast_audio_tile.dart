@@ -93,6 +93,7 @@ class PodcastAudioTile extends StatelessWidget {
                     } else {
                       safeLastPosition();
                       play(newAudio: audio, newPosition: lastPosition);
+                      removeUpdate?.call();
                     }
                   },
                 ),
