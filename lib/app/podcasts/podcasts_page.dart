@@ -312,13 +312,25 @@ class PodcastsPageIcon extends StatelessWidget {
     super.key,
     required this.isPlaying,
     required this.selected,
+    required this.checkingForUpdates,
   });
 
-  final bool isPlaying, selected;
+  final bool isPlaying, selected, checkingForUpdates;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    if (checkingForUpdates) {
+      return const SizedBox(
+        height: 18,
+        width: 18,
+        child: YaruCircularProgressIndicator(
+          strokeWidth: 2,
+        ),
+      );
+    }
+
     if (isPlaying) {
       return Icon(
         YaruIcons.media_play,

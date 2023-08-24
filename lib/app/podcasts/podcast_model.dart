@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
+import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
@@ -25,6 +26,8 @@ class PodcastModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _searchChangedSub;
 
   SearchResult? get searchResult => _podcastService.searchResult;
+
+  StreamSubscription<ConnectivityResult>? _conSub;
 
   bool _searchActive = false;
   bool get searchActive => _searchActive;
@@ -104,32 +107,60 @@ class PodcastModel extends SafeChangeNotifier {
     String? countryCode,
     required String updateMessage,
   }) async {
-    _searchChangedSub = _podcastService.searchChanged.listen((_) {
-      notifyListeners();
-    });
-    if (_podcastService.searchResult?.items.isNotEmpty == true) return;
     final c = Country.values.firstWhereOrNull((c) => c.code == countryCode);
     if (c != null) {
       _country = c;
     }
+
+    _searchChangedSub = _podcastService.searchChanged.listen((_) {
+      notifyListeners();
+    });
+
+    _conSub = _connectivity.onConnectivityChanged.listen((result) {
+      if (_conResult == ConnectivityResult.none &&
+          result != ConnectivityResult.none) {
+        update(updateMessage);
+      }
+      _conResult = result;
+    });
+
+    final res = await _connectivity.checkConnectivity();
+    if (res == ConnectivityResult.none) return;
+
     if (_podcastService.searchResult == null ||
         _podcastService.searchResult?.items.isEmpty == true) {
       search();
     }
 
-    final result = await _connectivity.checkConnectivity();
-    if (result == ConnectivityResult.none) return;
-    _podcastService.updatePodcasts(
-      oldPodcasts: _libraryService.podcasts,
-      updatePodcast: _libraryService.updatePodcast,
-      notify: _notificationsClient.notify,
-      updateMessage: updateMessage,
-    );
+    update(updateMessage);
+  }
+
+  void update(String updateMessage, [Map<String, Set<Audio>>? podcasts]) {
+    if (_conResult == ConnectivityResult.none) return;
+    _setCheckingForUpdates(true);
+    _podcastService
+        .updatePodcasts(
+          oldPodcasts: podcasts ?? _libraryService.podcasts,
+          updatePodcast: _libraryService.updatePodcast,
+          notify: _notificationsClient.notify,
+          updateMessage: updateMessage,
+        )
+        .then((_) => _setCheckingForUpdates(false));
+  }
+
+  ConnectivityResult? _conResult;
+  bool _checkingForUpdates = false;
+  bool get checkingForUpdates => _checkingForUpdates;
+  void _setCheckingForUpdates(bool value) {
+    if (_checkingForUpdates == value) return;
+    _checkingForUpdates = value;
+    notifyListeners();
   }
 
   @override
   void dispose() {
     _searchChangedSub?.cancel();
+    _conSub?.cancel();
     super.dispose();
   }
 

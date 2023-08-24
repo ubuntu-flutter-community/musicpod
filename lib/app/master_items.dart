@@ -46,6 +46,7 @@ List<MasterItem> createMasterItems({
   String? countryCode,
   required bool Function(String feedUrl) podcastUpdateAvailable,
   required bool showFilter,
+  required bool checkingForPodcastUpdates,
 }) {
   return [
     MasterItem(
@@ -81,6 +82,7 @@ List<MasterItem> createMasterItems({
       },
       iconBuilder: (context, selected) => PodcastsPageIcon(
         selected: selected,
+        checkingForUpdates: checkingForPodcastUpdates,
         isPlaying: audioType == AudioType.podcast,
       ),
     ),
