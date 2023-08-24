@@ -57,7 +57,6 @@ class PodcastService {
     _searchChangedController.add(true);
   }
 
-  bool? _checkedForUpdates;
   Future<void> updatePodcasts({
     required Map<String, Set<Audio>> oldPodcasts,
     required void Function(String name, Set<Audio> audios) updatePodcast,
@@ -73,8 +72,6 @@ class PodcastService {
       List<NotificationAction> actions,
     }) notify,
   }) async {
-    if (_checkedForUpdates == true) return;
-
     for (final old in oldPodcasts.entries) {
       final firstOld = old.value.firstOrNull;
       final podcast = firstOld?.album;
@@ -89,14 +86,13 @@ class PodcastService {
 
           updatePodcast(old.key, audios);
           notify(
-            'New episodes available: ${firstOld.album ?? old.value}',
+            '$updateMessage: ${firstOld.album ?? old.value}',
             appIcon: 'music-app',
             appName: 'MusicPod',
           );
         });
       }
     }
-    _checkedForUpdates = true;
   }
 }
 

@@ -129,6 +129,8 @@ class _AppState extends State<App> {
 
     // Podcasts
     final podcastModel = context.read<PodcastModel>();
+    final checkingForPodcastUpdates =
+        context.select((PodcastModel m) => m.checkingForUpdates);
 
     // Radio
     final radioModel = context.read<RadioModel>();
@@ -233,6 +235,7 @@ class _AppState extends State<App> {
       play: play,
       countryCode: _countryCode,
       podcastUpdateAvailable: libraryModel.podcastUpdateAvailable,
+      checkingForPodcastUpdates: checkingForPodcastUpdates,
     );
 
     final yaruMasterDetailPage = MasterDetailPage(
