@@ -279,10 +279,7 @@ class _AppState extends State<App> {
                     Expanded(
                       child: yaruMasterDetailPage,
                     ),
-                    if (!playerToTheRight)
-                      const Divider(
-                        height: 0,
-                      ),
+                    if (!playerToTheRight) const Divider(),
                     if (!playerToTheRight)
                       Material(
                         color: playerBg,
@@ -295,10 +292,7 @@ class _AppState extends State<App> {
                   ],
                 ),
               ),
-              if (playerToTheRight)
-                const VerticalDivider(
-                  width: 0,
-                ),
+              if (playerToTheRight) const VerticalDivider(),
               if (playerToTheRight)
                 SizedBox(
                   width: 500,

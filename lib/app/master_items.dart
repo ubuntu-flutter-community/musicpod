@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:musicpod/app/audio_page_filter_bar.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/offline_page.dart';
+import 'package:musicpod/app/common/spaced_divider.dart';
 import 'package:musicpod/app/liked_audio_page.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
 import 'package:musicpod/app/local_audio/local_audio_page.dart';
@@ -87,11 +88,11 @@ List<MasterItem> createMasterItems({
       ),
     ),
     MasterItem(
-      tileBuilder: (context) => const Padding(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
-        child: Divider(
-          height: 0,
-        ),
+      tileBuilder: (context) => const SpacedDivider(
+        top: 10,
+        bottom: 10,
+        right: 0,
+        left: 0,
       ),
       builder: (context) => const SizedBox.shrink(),
     ),

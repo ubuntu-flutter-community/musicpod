@@ -5,23 +5,22 @@ class SpacedDivider extends StatelessWidget {
     super.key,
     this.top = 10,
     this.bottom = 20,
+    this.left = 20,
+    this.right = 20,
   });
 
-  final double top;
-  final double bottom;
+  final double top, bottom, left, right;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        left: 20,
-        right: 20,
+        left: left,
+        right: right,
         top: top,
         bottom: bottom,
       ),
-      child: const Divider(
-        height: 0,
-      ),
+      child: const Divider(),
     );
   }
 }
