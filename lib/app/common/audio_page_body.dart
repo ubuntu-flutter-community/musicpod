@@ -203,10 +203,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                 audioFilter: AudioFilter.title,
               ),
             ),
-          if (widget.showAudioTileHeader)
-            const Divider(
-              height: 0,
-            ),
+          if (widget.showAudioTileHeader) const Divider(),
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
             child: Column(

@@ -86,7 +86,7 @@ class PodcastService {
 
           updatePodcast(old.key, audios);
           notify(
-            '$updateMessage: ${firstOld.album ?? old.value}',
+            '$updateMessage ${firstOld.album ?? old.value}',
             appIcon: 'music-app',
             appName: 'MusicPod',
           );
