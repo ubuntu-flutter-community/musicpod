@@ -57,7 +57,7 @@ class PodcastPage extends StatelessWidget {
     required update,
   }) {
     return Badge(
-      alignment: Alignment.centerRight,
+      alignment: Alignment.bottomRight,
       isLabelVisible: update,
       label: Text(context.l10n.newEpisode),
       child: Text(title),
