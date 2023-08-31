@@ -149,7 +149,17 @@ class _AppState extends State<App> {
     final localAudioIndex =
         context.select((LibraryModel m) => m.localAudioindex);
     final index = context.select((LibraryModel m) => m.index);
-    final likedAudios = context.select((LibraryModel m) => m.likedAudios);
+    final likedLocalAudios = context.select(
+      (LibraryModel m) => Set<Audio>.from(
+        m.likedAudios.where((e) => e.audioType == AudioType.local),
+      ),
+    );
+    final likedPodcasts = context.select(
+      (LibraryModel m) => Set<Audio>.from(
+        m.likedAudios.where((e) => e.audioType == AudioType.podcast),
+      ),
+    );
+
     final subbedPodcasts = context.select((LibraryModel m) => m.podcasts);
     final playlists = context.select((LibraryModel m) => m.playlists);
     final showPlaylists = context.select((LibraryModel m) => m.showPlaylists);
@@ -213,7 +223,8 @@ class _AppState extends State<App> {
       audioType: audioType,
       isOnline: isOnline,
       onTextTap: onTextTap,
-      likedAudios: likedAudios,
+      likedLocalAudios: likedLocalAudios,
+      likedPodcasts: likedPodcasts,
       audioPageType: audioPageType,
       setAudioPageType: libraryModel.setAudioPageType,
       subbedPodcasts: subbedPodcasts,

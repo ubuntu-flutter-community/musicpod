@@ -24,7 +24,8 @@ List<MasterItem> createMasterItems({
   required bool isOnline,
   required void Function({required AudioType audioType, required String text})
       onTextTap,
-  required Set<Audio> likedAudios,
+  required Set<Audio> likedLocalAudios,
+  required Set<Audio> likedPodcasts,
   AudioPageType? audioPageType,
   required void Function(AudioPageType? value) setAudioPageType,
   required Map<String, Set<Audio>> subbedPodcasts,
@@ -105,7 +106,8 @@ List<MasterItem> createMasterItems({
       tileBuilder: (context) => Text(context.l10n.likedSongs),
       builder: (context) => LikedAudioPage(
         onTextTap: onTextTap,
-        likedAudios: likedAudios,
+        likedLocalAudios: likedLocalAudios,
+        likedPodcasts: likedPodcasts,
       ),
       iconBuilder: (context, selected) =>
           LikedAudioPage.createIcon(context: context, selected: selected),
