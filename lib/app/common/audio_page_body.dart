@@ -39,6 +39,7 @@ class AudioPageBody extends StatefulWidget {
     this.artistFlex = 5,
     this.albumFlex = 4,
     this.showAudioTileHeader = true,
+    this.padding,
   });
 
   final String pageId;
@@ -57,6 +58,7 @@ class AudioPageBody extends StatefulWidget {
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
   final bool showTrack;
+  final EdgeInsetsGeometry? padding;
 
   final void Function({
     required String text,
@@ -170,6 +172,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     }
 
     return SingleChildScrollView(
+      padding: widget.padding,
       controller: _controller,
       child: Column(
         children: [
