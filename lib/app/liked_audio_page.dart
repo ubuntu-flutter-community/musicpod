@@ -34,14 +34,17 @@ class LikedAudioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localFavs = AudioPageBody(
+      padding: const EdgeInsets.only(top: 10),
       key: ValueKey(likedLocalAudios),
       pageId: 'likedAudio',
+      headerTitle: context.l10n.likedSongs,
       audios: likedLocalAudios,
       onTextTap: onTextTap,
       audioPageType: AudioPageType.likedAudio,
     );
 
     final podcastFavs = AudioPageBody(
+      padding: const EdgeInsets.only(top: 10),
       showAudioTileHeader: false,
       key: ValueKey(likedPodcasts),
       pageId: 'likedAudio',
