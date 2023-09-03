@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
-import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/data/podcast_genre.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
@@ -119,7 +118,7 @@ class PodcastModel extends SafeChangeNotifier {
     _conSub = _connectivity.onConnectivityChanged.listen((result) {
       if (_conResult == ConnectivityResult.none &&
           result != ConnectivityResult.none) {
-        update(updateMessage);
+        // update(updateMessage);
       }
       _conResult = result;
     });
@@ -135,12 +134,12 @@ class PodcastModel extends SafeChangeNotifier {
     update(updateMessage);
   }
 
-  void update(String updateMessage, [Map<String, Set<Audio>>? podcasts]) {
+  void update(String updateMessage) {
     if (_conResult == ConnectivityResult.none) return;
     _setCheckingForUpdates(true);
     _podcastService
         .updatePodcasts(
-          oldPodcasts: podcasts ?? _libraryService.podcasts,
+          oldPodcasts: _libraryService.podcasts,
           updatePodcast: _libraryService.updatePodcast,
           notify: _notificationsClient.notify,
           updateMessage: updateMessage,
