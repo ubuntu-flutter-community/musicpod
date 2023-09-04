@@ -1,4 +1,5 @@
 {
+    "@@locale": "de",
     "play": "Wiedergabe",
     "pause": "Pause",
     "stop": "Stop",
@@ -67,7 +68,6 @@
     "station": "Station",
     "country": "Land",
     "tag": "Tag",
-    "all": "Alles",
     "failedToImport": "Folgende Dateien konnten nicht importiert werden:",
     "unknown": "Unbekannt",
     "volume": "Lautstärke",

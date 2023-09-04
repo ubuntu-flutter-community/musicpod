@@ -1,9 +1,10 @@
 {
+    "@@locale": "it",
     "play": "Riproduci",
     "pause": "Pausa",
     "stop": "Interrompi",
     "localAudio": "Audio Locale",
-    "localAudioDescription": "La tua libreria musicale, all'interno del tuo computer.",
+    "localAudioDescription": "La tua libreria musicale, all''interno del tuo computer.",
     "localAudioSubtitle": "Non richiede connessioni a internet",
     "music": "Musica",
     "radio": "Radio",

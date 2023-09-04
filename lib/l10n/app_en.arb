@@ -1,4 +1,5 @@
 {
+    "@@locale": "en",
     "play": "Play",
     "pause": "Pause",
     "stop": "Stop",
@@ -67,14 +68,13 @@
     "station": "Station",
     "country": "Country",
     "tag": "Tag",
-    "all": "All",
     "failedToImport": "Failed to import the following files:",
     "unknown": "Unknown",
     "volume": "Volume",
     "queue": "Queue",
     "limit": "Limit",
     "decreaseSearchLimit": "Please decrease the search limit for",
-    "podcastFeedIsEmpty": "Sorry, this podcast's feed is empty.",
+    "podcastFeedIsEmpty": "Sorry, this podcast''s feed is empty.",
     "video": "Video",
     "ok": "OK",
     "noLocalTitlesFound": "🐣🔎🎵❓\n\nIt looks like your local music collection is empty. Check your library location in the settings.",
@@ -85,7 +85,7 @@
     "musicPodSubTitle": "Your Music, Radio and Podcast Player",
     "pickMusicCollection": "Pick your music collection",
     "newEpisode": "New",
-    "dontShowAgain": "Don't show again",
+    "dontShowAgain": "Don''t show again",
     "queueConfirmMessage": "Do you really want to enqueue {length} medias?",
     "@queueConfirmMessage": {
         "placeholders": {
