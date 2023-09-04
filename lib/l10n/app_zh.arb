@@ -1,4 +1,5 @@
 {
+    "@@locale": "zh",
     "play": "播放",
     "pause": "暂停",
     "stop": "停止",
