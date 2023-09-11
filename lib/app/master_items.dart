@@ -18,15 +18,15 @@ import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 
 List<MasterItem> createMasterItems({
-  int? localAudioIndex,
+  required int? localAudioIndex,
   required void Function(int? value) setLocalAudioindex,
-  AudioType? audioType,
+  required AudioType? audioType,
   required bool isOnline,
   required void Function({required AudioType audioType, required String text})
       onTextTap,
   required Set<Audio> likedLocalAudios,
   required Set<Audio> likedPodcasts,
-  AudioPageType? audioPageType,
+  required AudioPageType? audioPageType,
   required void Function(AudioPageType? value) setAudioPageType,
   required Map<String, Set<Audio>> subbedPodcasts,
   required bool showSubbedPodcasts,
@@ -45,15 +45,15 @@ List<MasterItem> createMasterItems({
   required bool showStarredStations,
   required void Function(String name) unStarStation,
   required Future<void> Function({Duration? newPosition, Audio? newAudio}) play,
-  String? countryCode,
+  required String? countryCode,
   required bool Function(String feedUrl) podcastUpdateAvailable,
   required bool showFilter,
   required bool checkingForPodcastUpdates,
 }) {
   return [
     MasterItem(
-      tileBuilder: (context) => Text(context.l10n.localAudio),
-      builder: (context) => LocalAudioPage(
+      titleBuilder: (context) => Text(context.l10n.localAudio),
+      pageBuilder: (context) => LocalAudioPage(
         selectedIndex: localAudioIndex ?? 0,
         onIndexSelected: (i) => setLocalAudioindex(i),
       ),
@@ -63,8 +63,8 @@ List<MasterItem> createMasterItems({
       ),
     ),
     MasterItem(
-      tileBuilder: (context) => Text(context.l10n.radio),
-      builder: (context) => RadioPage(
+      titleBuilder: (context) => Text(context.l10n.radio),
+      pageBuilder: (context) => RadioPage(
         countryCode: countryCode,
         isOnline: isOnline,
         onTextTap: (text) => onTextTap(text: text, audioType: AudioType.radio),
@@ -75,8 +75,8 @@ List<MasterItem> createMasterItems({
       ),
     ),
     MasterItem(
-      tileBuilder: (context) => Text(context.l10n.podcasts),
-      builder: (context) {
+      titleBuilder: (context) => Text(context.l10n.podcasts),
+      pageBuilder: (context) {
         return PodcastsPage(
           isOnline: isOnline,
           countryCode: countryCode,
@@ -89,22 +89,22 @@ List<MasterItem> createMasterItems({
       ),
     ),
     MasterItem(
-      tileBuilder: (context) => const SpacedDivider(
+      titleBuilder: (context) => const SpacedDivider(
         top: 10,
         bottom: 10,
         right: 0,
         left: 0,
       ),
-      builder: (context) => const SizedBox.shrink(),
+      pageBuilder: (context) => const SizedBox.shrink(),
     ),
     MasterItem(
       iconBuilder: (context, selected) => const Icon(YaruIcons.plus),
-      tileBuilder: (context) => Text(context.l10n.playlistDialogTitleNew),
-      builder: (context) => const SizedBox.shrink(),
+      titleBuilder: (context) => Text(context.l10n.playlistDialogTitleNew),
+      pageBuilder: (context) => const SizedBox.shrink(),
     ),
     MasterItem(
-      tileBuilder: (context) => Text(context.l10n.likedSongs),
-      builder: (context) => LikedAudioPage(
+      titleBuilder: (context) => Text(context.l10n.likedSongs),
+      pageBuilder: (context) => LikedAudioPage(
         onTextTap: onTextTap,
         likedLocalAudios: likedLocalAudios,
         likedPodcasts: likedPodcasts,
@@ -113,26 +113,26 @@ List<MasterItem> createMasterItems({
           LikedAudioPage.createIcon(context: context, selected: selected),
     ),
     MasterItem(
-      tileBuilder: (context) => showFilter
+      titleBuilder: (context) => showFilter
           ? AudioPageFilterBar(
               mainPageType: mainPageType,
               audioPageType: audioPageType,
               setAudioPageType: setAudioPageType,
             )
           : const SizedBox.shrink(),
-      builder: (context) => const SizedBox.shrink(),
+      pageBuilder: (context) => const SizedBox.shrink(),
     ),
     if (showSubbedPodcasts)
       for (final podcast in subbedPodcasts.entries)
         MasterItem(
-          tileBuilder: (context) => PodcastPage.createTitle(
+          titleBuilder: (context) => PodcastPage.createTitle(
             context: context,
             title: podcast.value.firstOrNull?.album ??
                 podcast.value.firstOrNull?.title ??
                 podcast.value.firstOrNull.toString(),
             update: podcastUpdateAvailable(podcast.key),
           ),
-          builder: (context) => isOnline
+          pageBuilder: (context) => isOnline
               ? PodcastPage(
                   pageId: podcast.key,
                   title: podcast.value.firstOrNull?.album ??
@@ -156,11 +156,11 @@ List<MasterItem> createMasterItems({
     if (showPlaylists)
       for (final playlist in playlists.entries)
         MasterItem(
-          tileBuilder: (context) => Opacity(
+          titleBuilder: (context) => Opacity(
             opacity: showPlaylists ? 1 : 0.5,
             child: Text(playlist.key),
           ),
-          builder: (context) => PlaylistPage(
+          pageBuilder: (context) => PlaylistPage(
             onTextTap: onTextTap,
             playlist: playlist,
             unPinPlaylist: removePlaylist,
@@ -173,10 +173,10 @@ List<MasterItem> createMasterItems({
     if (showPinnedAlbums)
       for (final album in pinnedAlbums.entries)
         MasterItem(
-          tileBuilder: (context) => Text(
+          titleBuilder: (context) => Text(
             album.value.firstOrNull?.album ?? album.key,
           ),
-          builder: (context) => AlbumPage(
+          pageBuilder: (context) => AlbumPage(
             onTextTap: onTextTap,
             album: album.value,
             id: album.key,
@@ -192,8 +192,8 @@ List<MasterItem> createMasterItems({
     if (showStarredStations)
       for (final station in starredStations.entries)
         MasterItem(
-          tileBuilder: (context) => Text(station.key),
-          builder: (context) => isOnline
+          titleBuilder: (context) => Text(station.key),
+          pageBuilder: (context) => isOnline
               ? StationPage(
                   isStarred: true,
                   starStation: (station) {},
