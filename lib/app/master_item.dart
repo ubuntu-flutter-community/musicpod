@@ -2,12 +2,12 @@ import 'package:flutter/widgets.dart';
 
 class MasterItem {
   MasterItem({
-    required this.tileBuilder,
-    required this.builder,
+    required this.titleBuilder,
+    required this.pageBuilder,
     this.iconBuilder,
   });
 
-  final WidgetBuilder tileBuilder;
-  final WidgetBuilder builder;
+  final WidgetBuilder titleBuilder;
+  final WidgetBuilder pageBuilder;
   final Widget Function(BuildContext context, bool selected)? iconBuilder;
 }

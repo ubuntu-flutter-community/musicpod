@@ -169,6 +169,7 @@ class LibraryService {
   }
 
   void updatePodcast(String feedUrl, Set<Audio> audios) {
+    if (feedUrl.isEmpty || audios.isEmpty) return;
     _podcasts.update(feedUrl, (value) => audios);
     _write(_podcasts, kPodcastsFileName)
         .then((_) => _podcastsController.add(true))

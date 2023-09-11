@@ -82,7 +82,8 @@ class PodcastService {
           feedUrl: firstOld!.website!,
         ).then((audios) {
           if (firstOld.year != null &&
-              audios.firstOrNull?.year == firstOld.year) return;
+                  audios.firstOrNull?.year == firstOld.year ||
+              audios.isEmpty) return;
 
           updatePodcast(old.key, audios);
           notify(

@@ -55,11 +55,11 @@ class MasterDetailPage extends StatelessWidget {
       ),
       tileBuilder: (context, index, selected, availableWidth) {
         if (index == 3 || index == 6) {
-          return masterItems[index].tileBuilder(context);
+          return masterItems[index].titleBuilder(context);
         } else if (index == 4) {
           return YaruMasterTile(
             selected: false,
-            title: masterItems[index].tileBuilder(context),
+            title: masterItems[index].titleBuilder(context),
             leading: masterItems[index].iconBuilder?.call(context, false),
             onTap: () => showDialog(
               context: context,
@@ -75,7 +75,7 @@ class MasterDetailPage extends StatelessWidget {
         return Padding(
           padding: index == 0 ? const EdgeInsets.only(top: 5) : EdgeInsets.zero,
           child: YaruMasterTile(
-            title: masterItems[index].tileBuilder(context),
+            title: masterItems[index].titleBuilder(context),
             leading: masterItems[index].iconBuilder == null
                 ? null
                 : masterItems[index].iconBuilder!(
@@ -86,7 +86,7 @@ class MasterDetailPage extends StatelessWidget {
         );
       },
       pageBuilder: (context, index) => YaruDetailPage(
-        body: masterItems[index].builder(context),
+        body: masterItems[index].pageBuilder(context),
       ),
     );
   }
