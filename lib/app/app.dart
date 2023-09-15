@@ -82,14 +82,14 @@ class _AppState extends State<App> {
     _countryCode = WidgetsBinding.instance.platformDispatcher.locale.countryCode
         ?.toLowerCase();
 
-    final lm = context.read<LibraryModel>();
-    final pm = context.read<PlayerModel>();
-    final c = context.read<ConnectivityNotifier>();
+    final libraryModel = context.read<LibraryModel>();
+    final playerModel = context.read<PlayerModel>();
+    final connectivityNotifier = context.read<ConnectivityNotifier>();
 
     YaruWindow.of(context).onClose(
       () async {
-        await pm.dispose().then((_) async {
-          await lm.dispose().then((_) async {
+        await playerModel.dispose().then((_) async {
+          await libraryModel.dispose().then((_) async {
             await resetAllServices();
           });
         });
@@ -100,13 +100,13 @@ class _AppState extends State<App> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      c.init().then(
+      connectivityNotifier.init().then(
         (_) {
-          lm.init().then(
+          libraryModel.init().then(
             (_) {
-              pm.init().then((_) {
-                if (lm.recentPatchNotesDisposed == false) {
-                  showPatchNotes(context, lm.disposePatchNotes);
+              playerModel.init().then((_) {
+                if (libraryModel.recentPatchNotesDisposed == false) {
+                  showPatchNotes(context, libraryModel.disposePatchNotes);
                 }
               });
             },
