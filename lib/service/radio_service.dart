@@ -112,9 +112,16 @@ class RadioService {
           ),
         );
       }
-    } on FormatException catch (_) {}
-
-    setStations(response?.items);
+      // TODO: display error in UI, add reload button for radio
+      // if the service can not connect to any server for real
+      if (response != null) {
+        setStations(response.items);
+      } else {
+        setStations([]);
+      }
+    } on FormatException catch (_) {
+      setStations([]);
+    }
   }
 
   List<Tag>? _tags;
