@@ -14,6 +14,7 @@ class RadioModel extends SafeChangeNotifier {
   RadioModel(this._radioService);
 
   StreamSubscription<bool>? _stationsSub;
+  StreamSubscription<bool>? _statusCodeSub;
   StreamSubscription<bool>? _searchSub;
   StreamSubscription<bool>? _tagsSub;
 
@@ -69,6 +70,8 @@ class RadioModel extends SafeChangeNotifier {
     }
   }
 
+  String? get statusCode => _radioService.statusCode;
+
   int _limit = 100;
   int get limit => _limit;
   void setLimit(int? value) {
@@ -85,6 +88,9 @@ class RadioModel extends SafeChangeNotifier {
 
     _stationsSub =
         _radioService.stationsChanged.listen((_) => notifyListeners());
+
+    _statusCodeSub =
+        _radioService.statusCodeChanged.listen((_) => notifyListeners());
 
     _searchSub =
         _radioService.searchQueryChanged.listen((_) => notifyListeners());
@@ -150,6 +156,7 @@ class RadioModel extends SafeChangeNotifier {
     _stationsSub?.cancel();
     _searchSub?.cancel();
     _tagsSub?.cancel();
+    _statusCodeSub?.cancel();
     super.dispose();
   }
 }

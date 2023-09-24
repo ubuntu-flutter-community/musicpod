@@ -53,7 +53,18 @@ class RadioService {
     _searchController.close();
     _tagsChangedController.close();
     _stationsChangedController.close();
+    _statusCodeController.close();
   }
+
+  String? _statusCode;
+  String? get statusCode => _statusCode;
+  void setStatusCode(String? value) {
+    _statusCodeController.add(value != _statusCode);
+    _statusCode = value;
+  }
+
+  final _statusCodeController = StreamController<bool>.broadcast();
+  Stream<bool> get statusCodeChanged => _statusCodeController.stream;
 
   List<Station>? _stations;
   List<Station>? get stations => _stations;
@@ -72,7 +83,13 @@ class RadioService {
     Tag? tag,
     int limit = 100,
   }) async {
-    if (radioBrowserApi == null) return;
+    if (radioBrowserApi == null) {
+      setStatusCode('503');
+      setStations([]);
+      return;
+    }
+    setStatusCode(null);
+
     RadioBrowserListResponse<Station>? response;
     try {
       if (name?.isEmpty == false) {
@@ -112,16 +129,11 @@ class RadioService {
           ),
         );
       }
-      // TODO: display error in UI, add reload button for radio
-      // if the service can not connect to any server for real
       if (response != null) {
         setStations(response.items);
-      } else {
-        setStations([]);
+        setStatusCode(response.statusCode.toString());
       }
-    } on FormatException catch (_) {
-      setStations([]);
-    }
+    } on FormatException catch (_) {}
   }
 
   List<Tag>? _tags;
