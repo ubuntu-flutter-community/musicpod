@@ -49,6 +49,7 @@ class _RadioPageState extends State<RadioPage> {
     final model = context.read<RadioModel>();
     final connected = context.select((RadioModel m) => m.connected);
     final stations = context.select((RadioModel m) => m.stations);
+    final statusCode = context.select((RadioModel m) => m.statusCode);
     final stationsCount = context.select((RadioModel m) => m.stations?.length);
     final search = model.search;
     final searchQuery = context.select((RadioModel m) => m.searchQuery);
@@ -131,8 +132,9 @@ class _RadioPageState extends State<RadioPage> {
     } else {
       Widget body;
       if (connected == false) {
-        body = const Center(
-          child: Text('Not connected'),
+        body = _ReconnectPage(
+          text: 'Not connected to any radiobrowser server.',
+          init: () => model.init(widget.countryCode),
         );
       } else {
         if (stations == null) {
@@ -145,8 +147,16 @@ class _RadioPageState extends State<RadioPage> {
           );
         } else {
           if (stationsCount == 0) {
-            body =
-                NoSearchResultPage(message: Text(context.l10n.noStationFound));
+            if (statusCode != '200') {
+              body = _ReconnectPage(
+                text: statusCode,
+                init: () => model.init(widget.countryCode),
+              );
+            } else {
+              body = NoSearchResultPage(
+                message: Text(context.l10n.noStationFound),
+              );
+            }
           } else {
             body = GridView.builder(
               padding: kPodcastGridPadding,
@@ -209,6 +219,36 @@ class _RadioPageState extends State<RadioPage> {
         body: body,
       );
     }
+  }
+}
+
+class _ReconnectPage extends StatelessWidget {
+  const _ReconnectPage({
+    required this.text,
+    required this.init,
+  });
+
+  final String? text;
+  final Function() init;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(text ?? ''),
+          ),
+          OutlinedButton.icon(
+            onPressed: init,
+            label: const Text('Reconnect to server'),
+            icon: const Icon(YaruIcons.refresh),
+          ),
+        ],
+      ),
+    );
   }
 }
 
