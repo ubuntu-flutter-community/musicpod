@@ -105,10 +105,7 @@ class _LocalAudioPageState extends State<LocalAudioPage>
       setSearchActive(true);
     }
 
-    final tabBar = TabBar(
-      labelStyle:
-          theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
-      dividerColor: Colors.transparent,
+    final tabBar = YaruTabBar(
       onTap: (value) {
         widget.onIndexSelected.call(value);
         setSearchActive(false);

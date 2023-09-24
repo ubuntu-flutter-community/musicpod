@@ -60,7 +60,7 @@ class LikedAudioPage extends StatelessWidget {
         appBar: YaruWindowTitleBar(
           title: SizedBox(
             width: kSearchBarWidth,
-            child: TabBar(
+            child: YaruTabBar(
               tabs: [
                 Tab(text: context.l10n.localAudio),
                 Tab(text: context.l10n.podcasts),

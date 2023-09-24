@@ -74,43 +74,45 @@ class RadioService {
   }) async {
     if (radioBrowserApi == null) return;
     RadioBrowserListResponse<Station>? response;
-    if (name?.isEmpty == false) {
-      response = await radioBrowserApi!.getStationsByName(
-        name: name!,
-        parameters: InputParameters(
-          hidebroken: true,
-          order: 'stationcount',
-          limit: limit,
-        ),
-      );
-    } else if (country?.isEmpty == false) {
-      response = await radioBrowserApi!.getStationsByCountry(
-        country: country!,
-        parameters: InputParameters(
-          hidebroken: true,
-          order: 'stationcount',
-          limit: limit,
-        ),
-      );
-    } else if (tag != null) {
-      response = await radioBrowserApi!.getStationsByTag(
-        tag: tag.name,
-        parameters: InputParameters(
-          hidebroken: true,
-          order: 'stationcount',
-          limit: limit,
-        ),
-      );
-    } else if (state?.isEmpty == false) {
-      response = await radioBrowserApi!.getStationsByState(
-        state: state!,
-        parameters: InputParameters(
-          hidebroken: true,
-          order: 'stationcount',
-          limit: limit,
-        ),
-      );
-    }
+    try {
+      if (name?.isEmpty == false) {
+        response = await radioBrowserApi!.getStationsByName(
+          name: name!,
+          parameters: InputParameters(
+            hidebroken: true,
+            order: 'stationcount',
+            limit: limit,
+          ),
+        );
+      } else if (country?.isEmpty == false) {
+        response = await radioBrowserApi!.getStationsByCountry(
+          country: country!,
+          parameters: InputParameters(
+            hidebroken: true,
+            order: 'stationcount',
+            limit: limit,
+          ),
+        );
+      } else if (tag != null) {
+        response = await radioBrowserApi!.getStationsByTag(
+          tag: tag.name,
+          parameters: InputParameters(
+            hidebroken: true,
+            order: 'stationcount',
+            limit: limit,
+          ),
+        );
+      } else if (state?.isEmpty == false) {
+        response = await radioBrowserApi!.getStationsByState(
+          state: state!,
+          parameters: InputParameters(
+            hidebroken: true,
+            order: 'stationcount',
+            limit: limit,
+          ),
+        );
+      }
+    } on FormatException catch (_) {}
 
     setStations(response?.items);
   }
@@ -127,15 +129,17 @@ class RadioService {
 
   Future<void> loadTags() async {
     if (radioBrowserApi == null) return;
-    final response = await radioBrowserApi!.getTags(
-      parameters: const InputParameters(
-        hidebroken: true,
-        limit: 100,
-        order: 'stationcount',
-        reverse: true,
-      ),
-    );
-    _tags = response.items;
+    try {
+      final response = await radioBrowserApi!.getTags(
+        parameters: const InputParameters(
+          hidebroken: true,
+          limit: 100,
+          order: 'stationcount',
+          reverse: true,
+        ),
+      );
+      _tags = response.items;
+    } on FormatException catch (_) {}
   }
 
   String? _searchQuery;
