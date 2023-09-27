@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:gtk/gtk.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:mpris_service/mpris_service.dart';
@@ -29,11 +30,9 @@ import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class App extends StatefulWidget {
-  const App({super.key, this.path});
+  const App({super.key});
 
-  final String? path;
-
-  static Widget create(String? path) {
+  static Widget create() {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -69,9 +68,7 @@ class App extends StatefulWidget {
           ),
         ),
       ],
-      child: App(
-        path: path,
-      ),
+      child: const App(),
     );
   }
 
@@ -92,6 +89,14 @@ class _AppState extends State<App> {
     final libraryModel = context.read<LibraryModel>();
     final playerModel = context.read<PlayerModel>();
     final connectivityNotifier = context.read<ConnectivityNotifier>();
+    final gtkNotifier = getService<GtkApplicationNotifier>();
+
+    gtkNotifier.addCommandLineListener(
+      (args) => _playPath(
+        play: playerModel.play,
+        path: gtkNotifier.commandLine?.firstOrNull,
+      ),
+    );
 
     YaruWindow.of(context).onClose(
       () async {
@@ -115,9 +120,10 @@ class _AppState extends State<App> {
                 if (libraryModel.recentPatchNotesDisposed == false) {
                   showPatchNotes(context, libraryModel.disposePatchNotes);
                 }
-                if (widget.path != null) {
-                  _playPath(playerModel);
-                }
+                _playPath(
+                  play: playerModel.play,
+                  path: gtkNotifier.commandLine?.firstOrNull!,
+                );
               });
             },
           );
@@ -126,19 +132,36 @@ class _AppState extends State<App> {
     });
   }
 
-  void _playPath(PlayerModel playerModel) {
+  void _playPath({
+    required Future<void> Function({Duration? newPosition, Audio? newAudio})
+        play,
+    required String? path,
+  }) {
+    if (path == null || !_isValidAudio(path)) {
+      return;
+    }
+
     MetadataGod.initialize();
     try {
-      MetadataGod.readMetadata(file: widget.path!).then(
-        (metadata) => playerModel.play(
+      MetadataGod.readMetadata(file: path).then(
+        (metadata) => play(
           newAudio: createLocalAudio(
-            widget.path!,
+            path,
             metadata,
-            File(widget.path!).uri.pathSegments.last,
+            File(path).uri.pathSegments.last,
           ),
         ),
       );
     } catch (_) {}
+  }
+
+  bool _isValidAudio(String path) {
+    for (var t in ['.mp3', '.ogg', '.flac', '.m4a', '.mp4']) {
+      if (path.contains(t)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @override

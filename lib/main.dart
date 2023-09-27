@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
@@ -61,8 +62,12 @@ Future<void> main(List<String> args) async {
     NotificationsClient.new,
     dispose: (s) async => await s.close(),
   );
+  registerService<GtkApplicationNotifier>(
+    () => GtkApplicationNotifier(args),
+    dispose: (s) => s.dispose(),
+  );
 
   registerService<RadioService>(() => RadioService(connectivity));
 
-  runApp(MusicPod(path: args.firstOrNull));
+  runApp(const MusicPod());
 }
