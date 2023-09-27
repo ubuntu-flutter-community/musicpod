@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:metadata_god/metadata_god.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/patch_notes_dialog.dart';
@@ -26,9 +29,11 @@ import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class App extends StatefulWidget {
-  const App({super.key});
+  const App({super.key, this.path});
 
-  static Widget create() {
+  final String? path;
+
+  static Widget create(String? path) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -64,7 +69,9 @@ class App extends StatefulWidget {
           ),
         ),
       ],
-      child: const App(),
+      child: App(
+        path: path,
+      ),
     );
   }
 
@@ -108,12 +115,30 @@ class _AppState extends State<App> {
                 if (libraryModel.recentPatchNotesDisposed == false) {
                   showPatchNotes(context, libraryModel.disposePatchNotes);
                 }
+                if (widget.path != null) {
+                  _playPath(playerModel);
+                }
               });
             },
           );
         },
       );
     });
+  }
+
+  void _playPath(PlayerModel playerModel) {
+    MetadataGod.initialize();
+    try {
+      MetadataGod.readMetadata(file: widget.path!).then(
+        (metadata) => playerModel.play(
+          newAudio: createLocalAudio(
+            widget.path!,
+            metadata,
+            File(widget.path!).uri.pathSegments.last,
+          ),
+        ),
+      );
+    } catch (_) {}
   }
 
   @override

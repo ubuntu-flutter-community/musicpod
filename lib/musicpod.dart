@@ -6,7 +6,9 @@ import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru/yaru.dart';
 
 class MusicPod extends StatelessWidget {
-  const MusicPod({super.key});
+  const MusicPod({super.key, this.path});
+
+  final String? path;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class MusicPod extends StatelessWidget {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: supportedLocales,
           onGenerateTitle: (context) => 'MusicPod',
-          home: App.create(),
+          home: App.create(path),
           scrollBehavior: const MaterialScrollBehavior().copyWith(
             dragDevices: {
               PointerDeviceKind.mouse,

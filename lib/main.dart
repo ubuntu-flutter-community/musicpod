@@ -12,7 +12,7 @@ import 'package:musicpod/service/radio_service.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-Future<void> main() async {
+Future<void> main(List<String> args) async {
   await YaruWindowTitleBar.ensureInitialized();
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
@@ -64,5 +64,5 @@ Future<void> main() async {
 
   registerService<RadioService>(() => RadioService(connectivity));
 
-  runApp(const MusicPod());
+  runApp(MusicPod(path: args.firstOrNull));
 }
