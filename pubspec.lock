@@ -302,7 +302,7 @@ packages:
     source: hosted
     version: "7.6.4"
   gtk:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: gtk
       sha256: e8ce9ca4b1df106e4d72dad201d345ea1a036cc12c360f1a7d5a758f78ffa42c

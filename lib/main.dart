@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
@@ -12,7 +13,7 @@ import 'package:musicpod/service/radio_service.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-Future<void> main() async {
+Future<void> main(List<String> args) async {
   await YaruWindowTitleBar.ensureInitialized();
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
@@ -60,6 +61,10 @@ Future<void> main() async {
   registerService<NotificationsClient>(
     NotificationsClient.new,
     dispose: (s) async => await s.close(),
+  );
+  registerService<GtkApplicationNotifier>(
+    () => GtkApplicationNotifier(args),
+    dispose: (s) => s.dispose(),
   );
 
   registerService<RadioService>(() => RadioService(connectivity));

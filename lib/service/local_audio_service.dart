@@ -83,8 +83,11 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
     for (var e in onlyFiles) {
       try {
         final metadata = await MetadataGod.readMetadata(file: e.path);
-        final audio =
-            _createAudio(e.path, metadata, File(e.path).uri.pathSegments.last);
+        final audio = createLocalAudio(
+          e.path,
+          metadata,
+          File(e.path).uri.pathSegments.last,
+        );
 
         newAudios.add(audio);
       } catch (error) {
@@ -96,7 +99,7 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
   return (failedImports, newAudios);
 }
 
-Audio _createAudio(String path, Metadata metadata, [String? fileName]) {
+Audio createLocalAudio(String path, Metadata metadata, [String? fileName]) {
   return Audio(
     path: path,
     audioType: AudioType.local,

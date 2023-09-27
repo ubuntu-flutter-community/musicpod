@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:gtk/gtk.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:metadata_god/metadata_god.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/patch_notes_dialog.dart';
@@ -85,6 +89,14 @@ class _AppState extends State<App> {
     final libraryModel = context.read<LibraryModel>();
     final playerModel = context.read<PlayerModel>();
     final connectivityNotifier = context.read<ConnectivityNotifier>();
+    final gtkNotifier = getService<GtkApplicationNotifier>();
+
+    gtkNotifier.addCommandLineListener(
+      (args) => _playPath(
+        play: playerModel.play,
+        path: gtkNotifier.commandLine?.firstOrNull,
+      ),
+    );
 
     YaruWindow.of(context).onClose(
       () async {
@@ -108,12 +120,48 @@ class _AppState extends State<App> {
                 if (libraryModel.recentPatchNotesDisposed == false) {
                   showPatchNotes(context, libraryModel.disposePatchNotes);
                 }
+                _playPath(
+                  play: playerModel.play,
+                  path: gtkNotifier.commandLine?.firstOrNull!,
+                );
               });
             },
           );
         },
       );
     });
+  }
+
+  void _playPath({
+    required Future<void> Function({Duration? newPosition, Audio? newAudio})
+        play,
+    required String? path,
+  }) {
+    if (path == null || !_isValidAudio(path)) {
+      return;
+    }
+
+    MetadataGod.initialize();
+    try {
+      MetadataGod.readMetadata(file: path).then(
+        (metadata) => play(
+          newAudio: createLocalAudio(
+            path,
+            metadata,
+            File(path).uri.pathSegments.last,
+          ),
+        ),
+      );
+    } catch (_) {}
+  }
+
+  bool _isValidAudio(String path) {
+    for (var t in ['.mp3', '.ogg', '.flac', '.m4a', '.mp4']) {
+      if (path.contains(t)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @override
