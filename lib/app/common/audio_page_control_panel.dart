@@ -51,13 +51,9 @@ class AudioPageControlPanel extends StatelessWidget {
                         context: context,
                         builder: (context) {
                           return ConfirmationDialog(
-                            message: SizedBox(
-                              width: 300,
-                              child: Text(
-                                context.l10n.queueConfirmMessage(
-                                  audios.length.toString(),
-                                ),
-                                style: theme.textTheme.bodyLarge,
+                            message: Text(
+                              context.l10n.queueConfirmMessage(
+                                audios.length.toString(),
                               ),
                             ),
                           );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_card.dart';
+import 'package:musicpod/app/common/confirmation_dialog.dart';
 import 'package:musicpod/app/common/country_popup.dart';
 import 'package:musicpod/app/common/limit_popup.dart';
 import 'package:musicpod/app/common/no_search_result_page.dart';
@@ -131,7 +132,10 @@ class _PodcastsPageState extends State<PodcastsPage> {
                 genre: podcastItem.primaryGenreName,
               ).then((feed) {
                 if (feed.isNotEmpty) {
-                  startPlaylist(feed, podcastItem.feedUrl!);
+                  _playOrConfirm(
+                    amount: feed.length,
+                    play: () => startPlaylist(feed, podcastItem.feedUrl!),
+                  );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(context.l10n.podcastFeedIsEmpty)),
@@ -250,6 +254,29 @@ class _PodcastsPageState extends State<PodcastsPage> {
         ),
         body: grid,
       );
+    }
+  }
+
+  void _playOrConfirm({required int amount, required Function play}) {
+    if (amount < kAudioQueueThreshHold) {
+      play();
+    } else {
+      showDialog<bool>(
+        context: context,
+        builder: (context) {
+          return ConfirmationDialog(
+            message: Text(
+              context.l10n.queueConfirmMessage(
+                amount.toString(),
+              ),
+            ),
+          );
+        },
+      ).then((value) {
+        if (value == true) {
+          play();
+        }
+      });
     }
   }
 }

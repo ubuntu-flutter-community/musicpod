@@ -13,7 +13,13 @@ class ConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      content: message,
+      content: DefaultTextStyle(
+        style: Theme.of(context).textTheme.bodyLarge ?? const TextStyle(),
+        child: SizedBox(
+          width: 300,
+          child: message,
+        ),
+      ),
       actionsPadding: EdgeInsets.zero,
       actions: [
         Row(
