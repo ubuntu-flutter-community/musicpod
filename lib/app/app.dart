@@ -122,7 +122,7 @@ class _AppState extends State<App> {
                 }
                 _playPath(
                   play: playerModel.play,
-                  path: gtkNotifier.commandLine?.firstOrNull!,
+                  path: gtkNotifier.commandLine?.firstOrNull,
                 );
               });
             },
