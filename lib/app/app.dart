@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gtk/gtk.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:metadata_god/metadata_god.dart';
+import 'package:mime/mime.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/patch_notes_dialog.dart';
@@ -156,12 +157,8 @@ class _AppState extends State<App> {
   }
 
   bool _isValidAudio(String path) {
-    for (var t in ['.mp3', '.ogg', '.flac', '.m4a', '.mp4']) {
-      if (path.contains(t)) {
-        return true;
-      }
-    }
-    return false;
+    final mime = lookupMimeType(path);
+    return mime?.startsWith('audio/') ?? false;
   }
 
   @override
