@@ -162,10 +162,13 @@ Future<Uri?> createUriFromAudio(Audio audio) async {
     Uint8List imageInUnit8List = audio.pictureData!;
     final workingDir = await getWorkingDir();
 
-    Directory('$workingDir/images/').deleteSync(recursive: true);
-    Directory('$workingDir/images/').createSync();
+    final imagesDir = '$workingDir/images/';
+    if (Directory(imagesDir).existsSync()) {
+      Directory(imagesDir).deleteSync(recursive: true);
+    }
+    Directory(imagesDir).createSync();
     final now = DateTime.now().toUtc().toString();
-    final file = File('$workingDir/images/$now.png');
+    final file = File('$imagesDir$now.png');
     final newFile = await file.writeAsBytes(imageInUnit8List);
 
     return Uri.file(newFile.path);
