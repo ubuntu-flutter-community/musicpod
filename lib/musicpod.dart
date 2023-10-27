@@ -17,7 +17,14 @@ class MusicPod extends StatelessWidget {
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: yaruThemeData.theme,
-            darkTheme: yaruThemeData.darkTheme,
+            darkTheme: yaruThemeData.darkTheme?.copyWith(
+              // TODO: port to yaru.dart
+              dividerTheme: const DividerThemeData(
+                color: Color.fromARGB(255, 60, 60, 60),
+                space: 1.0,
+                thickness: 0.0,
+              ),
+            ),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: supportedLocales,
             onGenerateTitle: (context) => 'MusicPod',
