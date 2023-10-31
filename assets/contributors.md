@@ -10,3 +10,4 @@
 - [Mads Rosendahl](https://github.com/madsrh)
 - [Davide Bianco](https://github.com/HrX03)
 - [Phil Clifford](https://github.com/philclifford)
+- [Peter Vančo](petervanco347@gmail.com)
