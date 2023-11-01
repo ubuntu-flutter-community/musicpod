@@ -1,13 +1,9 @@
 name: publish
 
 on:
-# JUST TO TEST IN THIS PR,
-# TODO: CHANGE BACK TO
-# push:
-#   branches:
-#     - main
-  pull_request:
-    branches: [main]
+  push:
+    branches:
+      - main  
 
 
 env:
