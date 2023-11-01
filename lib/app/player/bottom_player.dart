@@ -264,7 +264,8 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
             ),
           ),
         ),
-        if (audio?.artist?.trim().isNotEmpty == true)
+        if (audio?.artist?.trim().isNotEmpty == true ||
+            icyName?.isNotEmpty == true)
           InkWell(
             borderRadius: BorderRadius.circular(4),
             onTap: audio?.audioType == null ||
