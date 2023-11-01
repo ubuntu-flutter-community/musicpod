@@ -46,9 +46,13 @@ class BottomPlayer extends StatelessWidget {
     required this.videoController,
     required this.queue,
     required this.isOnline,
+    this.icyTitle,
+    this.icyName,
   });
 
   final Audio? audio;
+  final String? icyTitle;
+  final String? icyName;
   final List<Audio> queue;
   final double width;
   final Color? color;
@@ -112,6 +116,8 @@ class BottomPlayer extends StatelessWidget {
                 Flexible(
                   flex: 3,
                   child: _BottomPlayerTitleArtist(
+                    icyName: icyName,
+                    icyTitle: icyTitle,
                     audio: audio,
                     onTextTap: audio == null || audio?.audioType == null
                         ? null
@@ -216,9 +222,13 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
   const _BottomPlayerTitleArtist({
     required this.audio,
     required this.onTextTap,
+    this.icyTitle,
+    this.icyName,
   });
 
   final Audio? audio;
+  final String? icyTitle;
+  final String? icyName;
   final void Function(AudioType audioType, String text)? onTextTap;
 
   @override
@@ -238,9 +248,13 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
                     audio!.title!,
                   ),
           child: Tooltip(
-            message: audio?.title ?? ' ',
+            message: icyTitle?.isNotEmpty == true
+                ? icyTitle!
+                : (audio?.title?.isNotEmpty == true ? audio!.title! : ' '),
             child: Text(
-              audio?.title?.isNotEmpty == true ? audio!.title! : ' ',
+              icyTitle?.isNotEmpty == true
+                  ? icyTitle!
+                  : (audio?.title?.isNotEmpty == true ? audio!.title! : ' '),
               style: const TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 14,
@@ -250,7 +264,8 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
             ),
           ),
         ),
-        if (audio?.artist?.trim().isNotEmpty == true)
+        if (audio?.artist?.trim().isNotEmpty == true ||
+            icyName?.isNotEmpty == true)
           InkWell(
             borderRadius: BorderRadius.circular(4),
             onTap: audio?.audioType == null ||
@@ -264,9 +279,11 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
                     );
                   },
             child: Tooltip(
-              message: audio?.artist ?? ' ',
+              message: icyName?.isNotEmpty == true
+                  ? icyName!
+                  : (audio?.artist ?? ' '),
               child: Text(
-                audio?.artist ?? ' ',
+                icyName?.isNotEmpty == true ? icyName! : (audio?.artist ?? ' '),
                 style: const TextStyle(
                   fontWeight: FontWeight.w100,
                   fontSize: 12,

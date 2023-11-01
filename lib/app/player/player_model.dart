@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
+import 'package:musicpod/app/player/mpv_meta_data.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/utils.dart';
@@ -44,6 +45,22 @@ class PlayerModel extends SafeChangeNotifier {
   set queue(List<Audio>? value) {
     if (value == null) return;
     _queue = value;
+    notifyListeners();
+  }
+
+  String? _icyName;
+  String? get icyName => _icyName;
+  void setIcyName(String value) {
+    if (value == _icyName) return;
+    _icyName = value;
+    notifyListeners();
+  }
+
+  String? _icyTitle;
+  String? get icyTitle => _icyTitle;
+  void setIcyTitle(String value) {
+    if (value == _icyTitle) return;
+    _icyTitle = value;
     notifyListeners();
   }
 
@@ -259,6 +276,16 @@ class PlayerModel extends SafeChangeNotifier {
         await playNext();
       }
     });
+
+    await (_player.platform as NativePlayer).observeProperty(
+      'metadata',
+      (data) async {
+        final metaData = MpvMetaData.fromJson(data);
+
+        setIcyName(metaData.icyName);
+        setIcyTitle(metaData.icyTitle);
+      },
+    );
 
     _volumeSub = _player.stream.volume.listen((value) {
       _volume = value;

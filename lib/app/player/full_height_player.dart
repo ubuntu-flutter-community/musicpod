@@ -46,9 +46,13 @@ class FullHeightPlayer extends StatelessWidget {
     required this.videoController,
     required this.isVideo,
     required this.isOnline,
+    this.icyTitle,
+    this.icyName,
   });
 
   final Audio? audio;
+  final String? icyTitle;
+  final String? icyName;
   final Audio? nextAudio;
   final List<Audio> queue;
   final bool isUpNextExpanded;
@@ -107,7 +111,9 @@ class FullHeightPlayer extends StatelessWidget {
               onTextTap(text: audio!.title!, audioType: audio!.audioType!);
             },
       child: Text(
-        audio?.title?.isNotEmpty == true ? audio!.title! : '',
+        icyTitle?.isNotEmpty == true
+            ? icyTitle!
+            : (audio?.title?.isNotEmpty == true ? audio!.title! : ''),
         style: TextStyle(
           fontWeight: FontWeight.w200,
           fontSize: 30,
@@ -129,7 +135,7 @@ class FullHeightPlayer extends StatelessWidget {
               onTextTap(text: audio!.artist!, audioType: audio!.audioType!);
             },
       child: Text(
-        audio?.artist ?? '',
+        icyName?.isNotEmpty == true ? icyName! : (audio?.artist ?? ''),
         style: TextStyle(
           fontWeight: FontWeight.w100,
           fontSize: 20,
