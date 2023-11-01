@@ -9,13 +9,16 @@ environment:
 
 dependencies:
   basic_utils: ^5.6.1
+  cached_network_image: ^3.3.0
   collection: ^1.17.0
   connectivity_plus: ^5.0.1
   desktop_notifications: ^0.6.3
+  file: ^7.0.0
   file_selector: ^1.0.0
   file_selector_linux: ^0.9.2
   flutter:
     sdk: flutter
+  flutter_cache_manager: ^3.3.1
   flutter_html: ^3.0.0-beta.2
   flutter_localizations:
     sdk: flutter
@@ -40,7 +43,6 @@ dependencies:
   provider: ^6.0.5
   radio_browser_api: ^1.0.0
   safe_change_notifier: ^0.3.0
-  shimmer: ^3.0.0
   ubuntu_service: ^0.2.0
   url_launcher: ^6.1.10
   xdg_directories: ^1.0.0
