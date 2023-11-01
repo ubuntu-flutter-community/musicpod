@@ -3,14 +3,15 @@ name: publish
 on:
   push:
     branches:
-      - main
+      - main  
+
 
 env:
   FLUTTER_VERSION: '3.13.x'
 
 jobs:
-  build:
-    runs-on: ubuntu-22.04
+  build_and_publish:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -20,15 +21,12 @@ jobs:
       - run: sudo apt update
       - run: sudo apt install -y clang cmake curl libgtk-3-dev ninja-build pkg-config unzip libunwind-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev libmpv-dev
       - run: flutter pub get
-      - run: flutter build linux -v        
-        id: build
       - uses: snapcore/action-build@v1
-        if: steps.build.outcome == 'success'
-        id: build_snap
+        id: build
       - uses: snapcore/action-publish@v1
-        if: steps.build_snap.outcome == 'success'
+        if: steps.build.outcome == 'success'
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
         with:
-          snap: ${{ steps.build_snap.outputs.snap }}
+          snap: ${{ steps.build.outputs.snap }}
           release: edge
