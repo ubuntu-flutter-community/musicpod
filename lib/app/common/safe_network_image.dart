@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/xdg_cache_manager.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 
 class SafeNetworkImage extends StatelessWidget {
@@ -38,18 +40,15 @@ class SafeNetworkImage extends StatelessWidget {
 
     if (url == null) return fallBack;
 
-    return Image.network(
-      url!,
-      filterQuality: filterQuality,
-      fit: fit,
-      frameBuilder: (context, child, frame, wasSyncLoaded) => AnimatedOpacity(
-        duration: const Duration(seconds: 1),
-        opacity: frame == null ? 0 : 1.0,
-        child: child,
+    return CachedNetworkImage(
+      cacheManager: XdgCacheManager(),
+      imageUrl: url!,
+      imageBuilder: (context, imageProvider) => Image(
+        image: imageProvider,
+        filterQuality: filterQuality,
+        fit: fit,
       ),
-      errorBuilder: (context, url, error) {
-        return errorWidget;
-      },
+      errorWidget: (context, url, error) => errorWidget,
     );
   }
 }
