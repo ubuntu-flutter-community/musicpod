@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_page.dart';
 import 'package:musicpod/app/common/audio_page_body.dart';
 import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -33,6 +35,8 @@ class LikedAudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final showWindowControls =
+        context.select((AppModel a) => a.showWindowControls);
     final localFavs = AudioPageBody(
       padding: const EdgeInsets.only(top: 10),
       key: ValueKey(likedLocalAudios),
@@ -69,6 +73,9 @@ class LikedAudioPage extends StatelessWidget {
           ),
           border: BorderSide.none,
           backgroundColor: Colors.transparent,
+          style: showWindowControls
+              ? YaruTitleBarStyle.normal
+              : YaruTitleBarStyle.undecorated,
         ),
         body: TabBarView(
           children: [
