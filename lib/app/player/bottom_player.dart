@@ -248,7 +248,9 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
                     audio!.title!,
                   ),
           child: Tooltip(
-            message: audio?.title ?? ' ',
+            message: icyTitle?.isNotEmpty == true
+                ? icyTitle!
+                : (audio?.title?.isNotEmpty == true ? audio!.title! : ' '),
             child: Text(
               icyTitle?.isNotEmpty == true
                   ? icyTitle!
@@ -276,7 +278,9 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
                     );
                   },
             child: Tooltip(
-              message: audio?.artist ?? ' ',
+              message: icyName?.isNotEmpty == true
+                  ? icyName!
+                  : (audio?.artist ?? ' '),
               child: Text(
                 icyName?.isNotEmpty == true ? icyName! : (audio?.artist ?? ' '),
                 style: const TextStyle(

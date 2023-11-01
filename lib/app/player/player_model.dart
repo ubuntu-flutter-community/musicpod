@@ -51,6 +51,7 @@ class PlayerModel extends SafeChangeNotifier {
   String? _icyName;
   String? get icyName => _icyName;
   void setIcyName(String value) {
+    if (value == _icyName) return;
     _icyName = value;
     notifyListeners();
   }
@@ -58,6 +59,7 @@ class PlayerModel extends SafeChangeNotifier {
   String? _icyTitle;
   String? get icyTitle => _icyTitle;
   void setIcyTitle(String value) {
+    if (value == _icyTitle) return;
     _icyTitle = value;
     notifyListeners();
   }
