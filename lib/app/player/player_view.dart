@@ -53,6 +53,8 @@ class _PlayerViewState extends State<PlayerView> {
   Widget build(BuildContext context) {
     final playerModel = context.read<PlayerModel>();
     final audio = context.select((PlayerModel m) => m.audio);
+    final icyTitle = context.select((PlayerModel m) => m.icyTitle);
+    final icyName = context.select((PlayerModel m) => m.icyName);
     final nextAudio = context.select((PlayerModel m) => m.nextAudio);
     final queue = context.select((PlayerModel m) => m.queue);
     final repeatSingle = context.select((PlayerModel m) => m.repeatSingle);
@@ -109,6 +111,8 @@ class _PlayerViewState extends State<PlayerView> {
         queue: queue,
         setUpNextExpanded: setUpNextExpanded,
         audio: audio,
+        icyName: icyName,
+        icyTitle: icyTitle,
         color: color,
         duration: duration,
         position: position,
@@ -140,6 +144,8 @@ class _PlayerViewState extends State<PlayerView> {
         onTextTap: widget.onTextTap,
         setFullScreen: setFullScreen,
         audio: audio,
+        icyName: icyName,
+        icyTitle: icyTitle,
         width: width,
         color: color,
         duration: duration,
