@@ -108,6 +108,8 @@ class StationPage extends StatelessWidget {
                   height: size,
                   width: size,
                   child: AudioCard(
+                    height: size,
+                    width: size,
                     bottom: station.imageUrl == null
                         ? AudioCardBottom(text: name)
                         : null,
