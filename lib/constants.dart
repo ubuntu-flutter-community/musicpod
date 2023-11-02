@@ -35,6 +35,8 @@ const kImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
 const kAudioQueueThreshHold = 100;
 
 const kLikedAudios = 'likedAudios.json';
+const kTagFavsFileName = 'tagFavs.json';
+const kTagFavs = 'tagFavs';
 const kPlaylistsFileName = 'playlists.json';
 const kPinnedAlbumsFileName = 'pinnedAlbums.json';
 const kPodcastsFileName = 'podcasts.json';

@@ -70,6 +70,10 @@ class _RadioPageState extends State<RadioPage> {
     final starStation = context.select((LibraryModel m) => m.addStarredStation);
     final unstarStation = context.select((LibraryModel m) => m.unStarStation);
     final isStarredStation = context.read<LibraryModel>().isStarredStation;
+    final addFavTag = context.read<LibraryModel>().addFavTag;
+    final removeFavTag = context.read<LibraryModel>().removeFavTag;
+    final favTags = context.select((LibraryModel m) => m.favTags);
+    context.select((LibraryModel m) => m.favTagsLength);
 
     final searchActive = context.select((RadioModel m) => m.searchActive);
     final setSearchActive = model.setSearchActive;
@@ -111,6 +115,15 @@ class _RadioPageState extends State<RadioPage> {
             ),
             TagPopup(
               value: tag,
+              addFav: (tag) {
+                if (tag?.name == null) return;
+                addFavTag(tag!.name);
+              },
+              removeFav: (tag) {
+                if (tag?.name == null) return;
+                removeFavTag(tag!.name);
+              },
+              favs: favTags,
               onSelected: (tag) {
                 setTag(tag);
                 if (tag != null) {
