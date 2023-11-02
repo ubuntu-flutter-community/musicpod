@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:musicpod/app/common/copy_clipboard_content.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/globals.dart';
 import 'package:musicpod/app/player/full_height_player_controls.dart';
@@ -111,7 +112,7 @@ class FullHeightPlayer extends StatelessWidget {
         Clipboard.setData(ClipboardData(text: icyTitle!));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${context.l10n.copiedToClipBoard} ${icyTitle!}'),
+            content: CopyClipboardContent(icyTitle: icyTitle),
           ),
         );
       } else {
