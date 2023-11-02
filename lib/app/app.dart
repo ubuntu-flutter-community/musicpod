@@ -21,13 +21,11 @@ import 'package:musicpod/app/player/player_view.dart';
 import 'package:musicpod/app/podcasts/podcast_model.dart';
 import 'package:musicpod/app/radio/radio_model.dart';
 import 'package:musicpod/app/splash_screen.dart';
-import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/service/library_service.dart';
 import 'package:musicpod/service/local_audio_service.dart';
 import 'package:musicpod/service/podcast_service.dart';
 import 'package:musicpod/service/radio_service.dart';
-import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -81,7 +79,6 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   String? _countryCode;
-  String? _lastRadioFav;
 
   @override
   void initState() {
@@ -120,18 +117,14 @@ class _AppState extends State<App> {
         (_) {
           libraryModel.init().then(
             (_) {
-              readSetting(kLastFav)
-                  .then((value) => _lastRadioFav = value)
-                  .then((_) {
-                playerModel.init().then((_) {
-                  if (libraryModel.recentPatchNotesDisposed == false) {
-                    showPatchNotes(context, libraryModel.disposePatchNotes);
-                  }
-                  _playPath(
-                    play: playerModel.play,
-                    path: gtkNotifier.commandLine?.firstOrNull,
-                  );
-                });
+              playerModel.init().then((_) {
+                if (libraryModel.recentPatchNotesDisposed == false) {
+                  showPatchNotes(context, libraryModel.disposePatchNotes);
+                }
+                _playPath(
+                  play: playerModel.play,
+                  path: gtkNotifier.commandLine?.firstOrNull,
+                );
               });
             },
           );
@@ -299,7 +292,6 @@ class _AppState extends State<App> {
       countryCode: _countryCode,
       podcastUpdateAvailable: libraryModel.podcastUpdateAvailable,
       checkingForPodcastUpdates: checkingForPodcastUpdates,
-      lastTagFav: _lastRadioFav,
     );
 
     final yaruMasterDetailPage = MasterDetailPage(

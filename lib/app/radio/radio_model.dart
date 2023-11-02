@@ -99,20 +99,17 @@ class RadioModel extends SafeChangeNotifier {
 
     if (connected == true) {
       await _radioService.loadTags();
-    }
 
-    final c = Country.values.firstWhereOrNull((c) => c.code == countryCode);
-    _country = c;
-
-    if (connected == true) {
       if (_tag == null) {
         _tag = lastFav == null || tags == null || tags!.isEmpty
             ? null
-            : tags!.firstWhere((t) => t.name == lastFav);
+            : tags!.firstWhere((t) => t.name.contains(lastFav));
         await loadStationsByTag();
       }
 
       if (stations == null) {
+        final c = Country.values.firstWhereOrNull((c) => c.code == countryCode);
+        _country = c;
         await loadStationsByCountry();
       }
     }

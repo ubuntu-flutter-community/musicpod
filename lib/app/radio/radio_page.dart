@@ -15,6 +15,7 @@ import 'package:musicpod/app/radio/station_page.dart';
 import 'package:musicpod/app/radio/tag_popup.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -26,13 +27,11 @@ class RadioPage extends StatefulWidget {
     this.onTextTap,
     required this.isOnline,
     this.countryCode,
-    this.lastFav,
   });
 
   final void Function(String text)? onTextTap;
   final bool isOnline;
   final String? countryCode;
-  final String? lastFav;
 
   @override
   State<RadioPage> createState() => _RadioPageState();
@@ -42,7 +41,10 @@ class _RadioPageState extends State<RadioPage> {
   @override
   void initState() {
     super.initState();
-    context.read<RadioModel>().init(widget.countryCode, widget.lastFav);
+    readSetting(kLastFav).then(
+      (value) =>
+          context.read<RadioModel>().init(widget.countryCode, value as String),
+    );
   }
 
   @override
@@ -154,7 +156,11 @@ class _RadioPageState extends State<RadioPage> {
       if (connected == false) {
         body = _ReconnectPage(
           text: 'Not connected to any radiobrowser server.',
-          init: () => model.init(widget.countryCode, widget.lastFav),
+          init: () => readSetting(kLastFav).then(
+            (value) => context
+                .read<RadioModel>()
+                .init(widget.countryCode, value as String),
+          ),
         );
       } else {
         if (stations == null) {
@@ -170,7 +176,11 @@ class _RadioPageState extends State<RadioPage> {
             if (statusCode != '200') {
               body = _ReconnectPage(
                 text: statusCode,
-                init: () => model.init(widget.countryCode, widget.lastFav),
+                init: () => readSetting(kLastFav).then(
+                  (value) => context
+                      .read<RadioModel>()
+                      .init(widget.countryCode, value as String),
+                ),
               );
             } else {
               body = NoSearchResultPage(
