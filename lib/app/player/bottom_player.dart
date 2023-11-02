@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:musicpod/app/common/copy_clipboard_content.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/globals.dart';
 import 'package:musicpod/app/player/like_icon_button.dart';
@@ -8,7 +9,6 @@ import 'package:musicpod/app/player/player_track.dart';
 import 'package:musicpod/app/player/queue_popup.dart';
 import 'package:musicpod/app/player/volume_popup.dart';
 import 'package:musicpod/data/audio.dart';
-import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 
 import 'bottom_player_controls.dart';
@@ -246,7 +246,8 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
         Clipboard.setData(ClipboardData(text: icyTitle!));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${context.l10n.copiedToClipBoard} ${icyTitle!}'),
+            width: 450,
+            content: CopyClipboardContent(icyTitle: icyTitle),
           ),
         );
       } else {

@@ -53,7 +53,7 @@ class ArtistsView extends StatelessWidget {
       itemCount: artists!.length,
       padding: const EdgeInsets.all(kYaruPagePadding),
       shrinkWrap: true,
-      gridDelegate: kImageGridDelegate,
+      gridDelegate: kDiskGridDelegate,
       itemBuilder: (context, index) {
         final artistAudios = findArtist(
           artists!.elementAt(index),
