@@ -11,11 +11,15 @@ class AudioCard extends StatefulWidget {
     this.onTap,
     this.onPlay,
     this.bottom,
+    this.height,
+    this.width,
   });
   final Widget? image;
   final void Function()? onTap;
   final void Function()? onPlay;
   final Widget? bottom;
+  final double? height;
+  final double? width;
 
   @override
   State<AudioCard> createState() => _AudioCardState();
@@ -31,8 +35,8 @@ class _AudioCardState extends State<AudioCard> {
     return Column(
       children: [
         SizedBox(
-          height: kCardHeight - 70,
-          width: kCardHeight - 70,
+          height: widget.height ?? kCardHeight - 70,
+          width: widget.width ?? kCardHeight - 70,
           child: YaruBanner(
             padding: EdgeInsets.zero,
             onTap: widget.onTap,
