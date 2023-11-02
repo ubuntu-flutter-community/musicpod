@@ -28,46 +28,55 @@ class _AudioCardState extends State<AudioCard> {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
 
-    return YaruBanner(
-      padding: EdgeInsets.zero,
-      onTap: widget.onTap,
-      onHover: (value) => setState(() {
-        _hovered = value;
-      }),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Stack(
-          children: [
-            widget.image ??
-                Shimmer.fromColors(
-                  baseColor: light ? kShimmerBaseLight : kShimmerBaseDark,
-                  highlightColor:
-                      light ? kShimmerHighLightLight : kShimmerHighLightDark,
-                  child: Container(
-                    color: light ? kShimmerBaseLight : kShimmerBaseDark,
-                  ),
-                ),
-            if (widget.image != null) widget.image!,
-            if (widget.bottom != null) widget.bottom!,
-            if (_hovered && widget.onPlay != null)
-              Positioned(
-                bottom: 15,
-                right: 15,
-                child: CircleAvatar(
-                  radius: kYaruTitleBarItemHeight / 2,
-                  backgroundColor: theme.primaryColor,
-                  child: IconButton(
-                    onPressed: widget.onPlay,
-                    icon: Icon(
-                      YaruIcons.media_play,
-                      color: theme.colorScheme.onPrimary,
+    return Column(
+      children: [
+        SizedBox(
+          height: kCardHeight - 70,
+          width: kCardHeight - 70,
+          child: YaruBanner(
+            padding: EdgeInsets.zero,
+            onTap: widget.onTap,
+            onHover: (value) => setState(() {
+              _hovered = value;
+            }),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Stack(
+                children: [
+                  widget.image ??
+                      Shimmer.fromColors(
+                        baseColor: light ? kShimmerBaseLight : kShimmerBaseDark,
+                        highlightColor: light
+                            ? kShimmerHighLightLight
+                            : kShimmerHighLightDark,
+                        child: Container(
+                          color: light ? kShimmerBaseLight : kShimmerBaseDark,
+                        ),
+                      ),
+                  if (widget.image != null) widget.image!,
+                  if (_hovered && widget.onPlay != null)
+                    Positioned(
+                      bottom: 10,
+                      right: 10,
+                      child: CircleAvatar(
+                        radius: kYaruTitleBarItemHeight / 2,
+                        backgroundColor: theme.primaryColor,
+                        child: IconButton(
+                          onPressed: widget.onPlay,
+                          icon: Icon(
+                            YaruIcons.media_play,
+                            color: theme.colorScheme.onPrimary,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                ],
               ),
-          ],
+            ),
+          ),
         ),
-      ),
+        if (widget.bottom != null) widget.bottom!,
+      ],
     );
   }
 }

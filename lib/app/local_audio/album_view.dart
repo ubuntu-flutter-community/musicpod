@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
+import 'package:musicpod/app/common/audio_card_bottom.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/no_search_result_page.dart';
 import 'package:musicpod/app/local_audio/album_page.dart';
@@ -79,7 +80,8 @@ class AlbumsView extends StatelessWidget {
               )
             : Image.memory(
                 audio.pictureData!,
-                fit: BoxFit.fitWidth,
+                fit: BoxFit.cover,
+                height: kCardHeight - 70,
                 filterQuality: FilterQuality.medium,
               );
 
@@ -114,51 +116,6 @@ class AlbumsView extends StatelessWidget {
               : () => startPlaylist(albumAudios, id),
         );
       },
-    );
-  }
-}
-
-class AudioCardBottom extends StatelessWidget {
-  const AudioCardBottom({
-    super.key,
-    required this.text,
-  });
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Tooltip(
-        message: text,
-        child: Container(
-          width: double.infinity,
-          height: 30,
-          margin: const EdgeInsets.all(1),
-          padding: const EdgeInsets.symmetric(
-            vertical: 5,
-            horizontal: 10,
-          ),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.inverseSurface,
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(kYaruContainerRadius),
-              bottomRight: Radius.circular(kYaruContainerRadius),
-            ),
-          ),
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-            style: TextStyle(
-              color: theme.colorScheme.onInverseSurface,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

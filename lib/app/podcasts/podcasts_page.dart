@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_card.dart';
+import 'package:musicpod/app/common/audio_card_bottom.dart';
 import 'package:musicpod/app/common/confirmation_dialog.dart';
 import 'package:musicpod/app/common/country_popup.dart';
 import 'package:musicpod/app/common/limit_popup.dart';
@@ -119,10 +120,11 @@ class _PodcastsPageState extends State<PodcastsPage> {
           final artworkUrl600 = podcastItem.artworkUrl600;
           final image = SafeNetworkImage(
             url: artworkUrl600,
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
           );
 
           return AudioCard(
+            bottom: AudioCardBottom(text: podcastItem.collectionName ?? ''),
             image: image,
             onPlay: () {
               if (podcastItem.feedUrl == null) return;

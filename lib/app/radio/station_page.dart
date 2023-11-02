@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_card.dart';
+import 'package:musicpod/app/common/audio_card_bottom.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
-import 'package:musicpod/app/local_audio/album_view.dart';
 import 'package:musicpod/app/radio/radio_page.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:provider/provider.dart';
