@@ -142,6 +142,7 @@ class RadioModel extends SafeChangeNotifier {
         limit: limit,
       );
     } else {
+      setTag(null);
       await loadStationsByCountry();
     }
   }

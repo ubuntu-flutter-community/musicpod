@@ -140,7 +140,6 @@ class _RadioPageState extends State<RadioPage> {
                 if (tag?.name.isNotEmpty == true) {
                   setLastFav(tag!.name);
                 }
-                setCountry(null);
               },
               tags: tags,
             ),
