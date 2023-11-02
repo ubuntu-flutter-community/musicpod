@@ -98,7 +98,7 @@ class LibraryService {
     return _starredStations.containsKey(name);
   }
 
-  final Set<String> _favTags = {};
+  Set<String> _favTags = {};
   Set<String> get favTags => _favTags;
   bool isFavTag(String value) => _favTags.contains(value);
   final _favTagsController = StreamController<bool>.broadcast();
@@ -107,16 +107,27 @@ class LibraryService {
   void addFavTag(String name) {
     if (favTags.contains(name)) return;
     _favTags.add(name);
-    writeSetting(kTagFavs, _favTags.toString(), kTagFavsFileName)
+    writeStringSet(set: _favTags, filename: kTagFavsFileName)
         .then((_) => _favTagsController.add(true));
   }
 
   void removeFavTag(String name) {
     if (!favTags.contains(name)) return;
     _favTags.remove(name);
-    writeSetting(kTagFavs, _favTags.toString(), kTagFavsFileName)
+    writeStringSet(set: _favTags, filename: kTagFavsFileName)
         .then((_) => _favTagsController.add(true));
   }
+
+  String? _lastFav;
+  String? get lastFav => _lastFav;
+  void setLastFav(String? value) {
+    if (value == _lastFav) return;
+    _lastFav = value;
+    writeSetting(kLastFav, value).then((_) => _lastFavController.add(true));
+  }
+
+  final _lastFavController = StreamController<bool>.broadcast();
+  Stream<bool> get lastFavChanged => _lastFavController.stream;
 
   //
   // Playlists
@@ -281,9 +292,7 @@ class LibraryService {
     _likedAudios =
         (await _read(kLikedAudios)).entries.firstOrNull?.value ?? <Audio>{};
 
-    final savedFavs = (await readSetting(kTagFavs, kTagFavsFileName));
-    jsonDecode(savedFavs) as Map;
-    // _favTags = Set.from(savedFavs.entries.map((e) => e.value as String));
+    _favTags = (await readStringSet(filename: kTagFavsFileName));
   }
 
   int? _localAudioIndex;
@@ -313,6 +322,7 @@ class LibraryService {
     await _lastPositionsController.close();
     await _localAudioIndexController.close();
     await _neverShowFailedImportsController.close();
+    await _lastFavController.close();
     _updateController.close();
   }
 

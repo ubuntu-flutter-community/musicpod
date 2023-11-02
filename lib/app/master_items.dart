@@ -49,6 +49,7 @@ List<MasterItem> createMasterItems({
   required bool Function(String feedUrl) podcastUpdateAvailable,
   required bool showFilter,
   required bool checkingForPodcastUpdates,
+  required String? lastTagFav,
 }) {
   return [
     MasterItem(
@@ -66,6 +67,7 @@ List<MasterItem> createMasterItems({
       titleBuilder: (context) => Text(context.l10n.radio),
       pageBuilder: (context) => RadioPage(
         countryCode: countryCode,
+        lastFav: lastTagFav,
         isOnline: isOnline,
         onTextTap: (text) => onTextTap(text: text, audioType: AudioType.radio),
       ),

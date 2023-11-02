@@ -26,11 +26,13 @@ class RadioPage extends StatefulWidget {
     this.onTextTap,
     required this.isOnline,
     this.countryCode,
+    this.lastFav,
   });
 
   final void Function(String text)? onTextTap;
   final bool isOnline;
   final String? countryCode;
+  final String? lastFav;
 
   @override
   State<RadioPage> createState() => _RadioPageState();
@@ -40,8 +42,7 @@ class _RadioPageState extends State<RadioPage> {
   @override
   void initState() {
     super.initState();
-
-    context.read<RadioModel>().init(widget.countryCode);
+    context.read<RadioModel>().init(widget.countryCode, widget.lastFav);
   }
 
   @override
@@ -74,6 +75,7 @@ class _RadioPageState extends State<RadioPage> {
     final removeFavTag = context.read<LibraryModel>().removeFavTag;
     final favTags = context.select((LibraryModel m) => m.favTags);
     context.select((LibraryModel m) => m.favTagsLength);
+    final setLastFav = context.read<LibraryModel>().setLastFav;
 
     final searchActive = context.select((RadioModel m) => m.searchActive);
     final setSearchActive = model.setSearchActive;
@@ -110,6 +112,7 @@ class _RadioPageState extends State<RadioPage> {
               onSelected: (country) {
                 setCountry(country);
                 loadStationsByCountry();
+                setTag(null);
               },
               countries: sortedCountries,
             ),
@@ -132,6 +135,10 @@ class _RadioPageState extends State<RadioPage> {
                   setSearchQuery(null);
                   search();
                 }
+                if (tag?.name.isNotEmpty == true) {
+                  setLastFav(tag!.name);
+                }
+                setCountry(null);
               },
               tags: tags,
             ),
@@ -147,7 +154,7 @@ class _RadioPageState extends State<RadioPage> {
       if (connected == false) {
         body = _ReconnectPage(
           text: 'Not connected to any radiobrowser server.',
-          init: () => model.init(widget.countryCode),
+          init: () => model.init(widget.countryCode, widget.lastFav),
         );
       } else {
         if (stations == null) {
@@ -163,7 +170,7 @@ class _RadioPageState extends State<RadioPage> {
             if (statusCode != '200') {
               body = _ReconnectPage(
                 text: statusCode,
-                init: () => model.init(widget.countryCode),
+                init: () => model.init(widget.countryCode, widget.lastFav),
               );
             } else {
               body = NoSearchResultPage(
@@ -297,6 +304,7 @@ class _StationCard extends StatelessWidget {
           ),
           errorIcon: RadioFallBackIcon(station: station),
           url: station?.imageUrl,
+          fit: BoxFit.scaleDown,
         ),
       ),
     );
