@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/globals.dart';
@@ -7,6 +8,7 @@ import 'package:musicpod/app/player/player_track.dart';
 import 'package:musicpod/app/player/queue_popup.dart';
 import 'package:musicpod/app/player/volume_popup.dart';
 import 'package:musicpod/data/audio.dart';
+import 'package:musicpod/l10n/l10n.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 
 import 'bottom_player_controls.dart';
@@ -233,20 +235,35 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void onTitleTap() {
+      if (audio?.audioType == null ||
+          audio?.title == null ||
+          audio?.audioType == AudioType.podcast) {
+        return;
+      }
+
+      if (icyTitle?.isNotEmpty == true) {
+        Clipboard.setData(ClipboardData(text: icyTitle!));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${context.l10n.copiedToClipBoard} ${icyTitle!}'),
+          ),
+        );
+      } else {
+        onTextTap?.call(
+          audio!.audioType!,
+          audio!.title!,
+        );
+      }
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
           borderRadius: BorderRadius.circular(4),
-          onTap: audio?.audioType == null ||
-                  audio?.title == null ||
-                  audio?.audioType == AudioType.podcast
-              ? null
-              : () => onTextTap?.call(
-                    audio!.audioType!,
-                    audio!.title!,
-                  ),
+          onTap: onTitleTap,
           child: Tooltip(
             message: icyTitle?.isNotEmpty == true
                 ? icyTitle!
@@ -268,14 +285,12 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
             icyName?.isNotEmpty == true)
           InkWell(
             borderRadius: BorderRadius.circular(4),
-            onTap: audio?.audioType == null ||
-                    audio?.audioType == AudioType.radio ||
-                    audio?.artist == null
+            onTap: audio?.audioType == null || audio?.artist == null
                 ? null
                 : () {
                     onTextTap?.call(
                       audio!.audioType!,
-                      audio!.artist!,
+                      audio!.title!,
                     );
                   },
             child: Tooltip(

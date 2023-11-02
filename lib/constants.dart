@@ -35,6 +35,8 @@ const kImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
 const kAudioQueueThreshHold = 100;
 
 const kLikedAudios = 'likedAudios.json';
+const kTagFavsFileName = 'tagFavs.json';
+const kLastFav = 'lastFav';
 const kPlaylistsFileName = 'playlists.json';
 const kPinnedAlbumsFileName = 'pinnedAlbums.json';
 const kPodcastsFileName = 'podcasts.json';
@@ -60,7 +62,7 @@ const shops = <String, String>{
   'https://bandcamp.com/tag/buy': 'Bandcamp',
 };
 
-// Bug fix notes
+// Patch notes
 
 // 2023 08 09
 const kPatchNotes20230809disposed = 'patchNotes20230809disposed';
@@ -83,6 +85,7 @@ const kPatchNotes20230811 = 'Hello there :) \n\n'
     ' If it does not show up for an already subscribed podcast, resubscribe to update.'
     '\nThe notification for new episodes of one of your subscribed podcasts now shows the podcast name again.';
 
+// 2023 08 19
 const kPatchNotes20230819disposed = 'patchNotes20230819disposed';
 const kPatchNotesTitle20230819 = 'Patch notes: 2023-08-19';
 const kPatchNotes20230819 = 'Hello there :)\n\n'
@@ -90,8 +93,18 @@ const kPatchNotes20230819 = 'Hello there :)\n\n'
     '\nSadly this once against needs you to'
     '\nunpin and pin your favorite albums again.';
 
-const kRecentPatchNotesDisposed = kPatchNotes20230819disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20230819;
-const kRecentPatchNotes = kPatchNotes20230819;
+// 2023 11 02
+const kPatchNotes20231102disposed = 'patchNotes20231102disposed';
+const kPatchNotesTitle20231102 = 'Patch notes: 2023-11-02';
+const kPatchNotes20231102 = 'Hello MusicPod Users :)\n\n'
+    'The Radio experience has been improved!'
+    '\n* the current title is now displayed (if provided by the station)'
+    '\n* the thumbnails are scaled to the grid'
+    '\n* save your favorite tags (genres) with the star button'
+    '\n* your last tag selection is now saved';
+
+const kRecentPatchNotesDisposed = kPatchNotes20231102disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20231102;
+const kRecentPatchNotes = kPatchNotes20231102;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';

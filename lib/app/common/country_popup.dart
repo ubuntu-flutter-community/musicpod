@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/l10n/l10n.dart';
 import 'package:musicpod/string_x.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -32,7 +33,7 @@ class CountryPopup extends StatelessWidget {
       onSelected: onSelected,
       initialValue: value,
       child: Text(
-        value?.name.capitalize().camelToSentence() ?? '',
+        value?.name.capitalize().camelToSentence() ?? context.l10n.all,
         style: textStyle ?? fallBackTextStyle,
       ),
       itemBuilder: (context) {

@@ -15,6 +15,7 @@ import 'package:musicpod/app/radio/station_page.dart';
 import 'package:musicpod/app/radio/tag_popup.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
+import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -40,8 +41,10 @@ class _RadioPageState extends State<RadioPage> {
   @override
   void initState() {
     super.initState();
-
-    context.read<RadioModel>().init(widget.countryCode);
+    readSetting(kLastFav).then(
+      (value) =>
+          context.read<RadioModel>().init(widget.countryCode, value as String),
+    );
   }
 
   @override
@@ -70,6 +73,11 @@ class _RadioPageState extends State<RadioPage> {
     final starStation = context.select((LibraryModel m) => m.addStarredStation);
     final unstarStation = context.select((LibraryModel m) => m.unStarStation);
     final isStarredStation = context.read<LibraryModel>().isStarredStation;
+    final addFavTag = context.read<LibraryModel>().addFavTag;
+    final removeFavTag = context.read<LibraryModel>().removeFavTag;
+    final favTags = context.select((LibraryModel m) => m.favTags);
+    context.select((LibraryModel m) => m.favTagsLength);
+    final setLastFav = context.read<LibraryModel>().setLastFav;
 
     final searchActive = context.select((RadioModel m) => m.searchActive);
     final setSearchActive = model.setSearchActive;
@@ -106,11 +114,21 @@ class _RadioPageState extends State<RadioPage> {
               onSelected: (country) {
                 setCountry(country);
                 loadStationsByCountry();
+                setTag(null);
               },
               countries: sortedCountries,
             ),
             TagPopup(
               value: tag,
+              addFav: (tag) {
+                if (tag?.name == null) return;
+                addFavTag(tag!.name);
+              },
+              removeFav: (tag) {
+                if (tag?.name == null) return;
+                removeFavTag(tag!.name);
+              },
+              favs: favTags,
               onSelected: (tag) {
                 setTag(tag);
                 if (tag != null) {
@@ -118,6 +136,9 @@ class _RadioPageState extends State<RadioPage> {
                 } else {
                   setSearchQuery(null);
                   search();
+                }
+                if (tag?.name.isNotEmpty == true) {
+                  setLastFav(tag!.name);
                 }
               },
               tags: tags,
@@ -134,7 +155,11 @@ class _RadioPageState extends State<RadioPage> {
       if (connected == false) {
         body = _ReconnectPage(
           text: 'Not connected to any radiobrowser server.',
-          init: () => model.init(widget.countryCode),
+          init: () => readSetting(kLastFav).then(
+            (value) => context
+                .read<RadioModel>()
+                .init(widget.countryCode, value as String),
+          ),
         );
       } else {
         if (stations == null) {
@@ -150,7 +175,11 @@ class _RadioPageState extends State<RadioPage> {
             if (statusCode != '200') {
               body = _ReconnectPage(
                 text: statusCode,
-                init: () => model.init(widget.countryCode),
+                init: () => readSetting(kLastFav).then(
+                  (value) => context
+                      .read<RadioModel>()
+                      .init(widget.countryCode, value as String),
+                ),
               );
             } else {
               body = NoSearchResultPage(
@@ -284,6 +313,7 @@ class _StationCard extends StatelessWidget {
           ),
           errorIcon: RadioFallBackIcon(station: station),
           url: station?.imageUrl,
+          fit: BoxFit.scaleDown,
         ),
       ),
     );

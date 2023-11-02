@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/globals.dart';
@@ -99,17 +100,33 @@ class FullHeightPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    void onTitleTap() {
+      if (audio?.audioType == null ||
+          audio?.title == null ||
+          audio?.audioType == AudioType.podcast) {
+        return;
+      }
+
+      if (icyTitle?.isNotEmpty == true) {
+        Clipboard.setData(ClipboardData(text: icyTitle!));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${context.l10n.copiedToClipBoard} ${icyTitle!}'),
+          ),
+        );
+      } else {
+        setFullScreen(false);
+        navigatorKey.currentState?.maybePop();
+        onTextTap.call(
+          audioType: audio!.audioType!,
+          text: audio!.title!,
+        );
+      }
+    }
+
     final title = InkWell(
       borderRadius: BorderRadius.circular(4),
-      onTap: audio?.audioType == null ||
-              audio?.title == null ||
-              audio?.audioType == AudioType.podcast
-          ? null
-          : () {
-              setFullScreen(false);
-              navigatorKey.currentState?.maybePop();
-              onTextTap(text: audio!.title!, audioType: audio!.audioType!);
-            },
+      onTap: onTitleTap,
       child: Text(
         icyTitle?.isNotEmpty == true
             ? icyTitle!

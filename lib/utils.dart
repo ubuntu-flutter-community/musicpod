@@ -137,6 +137,31 @@ Future<Map<String, String>> getSettings([
   }
 }
 
+Future<void> writeStringSet({
+  required Set<String> set,
+  required String filename,
+}) async {
+  final workingDir = await getWorkingDir();
+  final file = File('$workingDir/$filename');
+  if (!file.existsSync()) {
+    file.create();
+  }
+  await file.writeAsString(set.join('\n'));
+}
+
+Future<Set<String>> readStringSet({
+  required String filename,
+}) async {
+  final workingDir = await getWorkingDir();
+  final file = File('$workingDir/$filename');
+
+  if (!file.existsSync()) return Future.value(<String>{});
+
+  final content = await file.readAsLines();
+
+  return Set.from(content);
+}
+
 Duration? parseDuration(String? durationAsString) {
   if (durationAsString == null || durationAsString == 'null') return null;
   int hours = 0;

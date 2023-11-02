@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/l10n/l10n.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
+import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 class TagPopup extends StatelessWidget {
@@ -10,12 +11,18 @@ class TagPopup extends StatelessWidget {
     this.tags,
     required this.value,
     this.textStyle,
+    required this.addFav,
+    required this.removeFav,
+    this.favs,
   });
 
   final void Function(Tag? tag)? onSelected;
   final List<Tag>? tags;
+  final Set<String>? favs;
   final Tag? value;
   final TextStyle? textStyle;
+  final void Function(Tag? tag) addFav;
+  final void Function(Tag? tag) removeFav;
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +44,34 @@ class TagPopup extends StatelessWidget {
       ),
       itemBuilder: (context) {
         return [
-          for (final t in [null, ...?tags])
+          for (final t in [
+            ...[null, ...?tags].where((e) => favs?.contains(e?.name) == true),
+            ...[null, ...?tags].where((e) => favs?.contains(e?.name) == false),
+          ])
             PopupMenuItem(
               value: t,
               onTap: t != null ? null : () => onSelected?.call(t),
-              child: Text(t?.name ?? context.l10n.all),
+              child: StatefulBuilder(
+                builder: (context, stateSetter) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(t?.name ?? context.l10n.all),
+                      IconButton(
+                        onPressed: () {
+                          favs?.contains(t?.name) == false
+                              ? addFav(t)
+                              : removeFav(t);
+                          stateSetter(() {});
+                        },
+                        icon: favs?.contains(t?.name) == true
+                            ? const Icon(YaruIcons.star_filled)
+                            : const Icon(YaruIcons.star),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
         ];
       },

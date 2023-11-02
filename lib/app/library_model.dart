@@ -18,6 +18,8 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _lastPositionsSub;
   StreamSubscription<bool>? _updatesChangedSub;
   StreamSubscription<bool>? _neverShowFailedImportsSub;
+  StreamSubscription<bool>? _favTagsSub;
+  StreamSubscription<bool>? _lastFavSub;
 
   bool ready = false;
 
@@ -48,6 +50,8 @@ class LibraryModel extends SafeChangeNotifier {
         _service.updatesChanged.listen((_) => notifyListeners());
     _neverShowFailedImportsSub =
         _service.neverShowFailedImportsChanged.listen((_) => notifyListeners());
+    _favTagsSub = _service.favTagsChanged.listen((_) => notifyListeners());
+    _lastFavSub = _service.lastFavChanged.listen((_) => notifyListeners());
 
     ready = true;
     notifyListeners();
@@ -64,6 +68,8 @@ class LibraryModel extends SafeChangeNotifier {
     _lastPositionsSub?.cancel();
     _updatesChangedSub?.cancel();
     _neverShowFailedImportsSub?.cancel();
+    _favTagsSub?.cancel();
+    _lastFavSub?.cancel();
 
     super.dispose();
   }
@@ -147,6 +153,15 @@ class LibraryModel extends SafeChangeNotifier {
 
   bool get showStarredStations =>
       audioPageType == null || audioPageType == AudioPageType.radio;
+
+  Set<String> get favTags => _service.favTags;
+  int get favTagsLength => _service.favTags.length;
+
+  void addFavTag(String value) => _service.addFavTag(value);
+  void removeFavTag(String value) => _service.removeFavTag(value);
+
+  String? get lastFav => _service.lastFav;
+  void setLastFav(String? value) => _service.setLastFav(value);
 
   //
   // Playlists
