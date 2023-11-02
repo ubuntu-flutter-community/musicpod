@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/constants.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -24,6 +26,7 @@ class _AudioCardState extends State<AudioCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final light = theme.brightness == Brightness.light;
 
     return YaruBanner(
       padding: EdgeInsets.zero,
@@ -35,6 +38,15 @@ class _AudioCardState extends State<AudioCard> {
         borderRadius: BorderRadius.circular(10),
         child: Stack(
           children: [
+            widget.image ??
+                Shimmer.fromColors(
+                  baseColor: light ? kShimmerBaseLight : kShimmerBaseDark,
+                  highlightColor:
+                      light ? kShimmerHighLightLight : kShimmerHighLightDark,
+                  child: Container(
+                    color: light ? kShimmerBaseLight : kShimmerBaseDark,
+                  ),
+                ),
             if (widget.image != null) widget.image!,
             if (widget.bottom != null) widget.bottom!,
             if (_hovered && widget.onPlay != null)
