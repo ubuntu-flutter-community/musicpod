@@ -8,7 +8,9 @@ import 'package:musicpod/app/player/like_icon_button.dart';
 import 'package:musicpod/app/player/player_track.dart';
 import 'package:musicpod/app/player/queue_popup.dart';
 import 'package:musicpod/app/player/volume_popup.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 
 import 'bottom_player_controls.dart';
@@ -244,16 +246,50 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
 
       if (icyTitle?.isNotEmpty == true) {
         Clipboard.setData(ClipboardData(text: icyTitle!));
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            width: 450,
-            content: CopyClipboardContent(icyTitle: icyTitle),
+            width: kSnackBarWidth,
+            duration: kSnackBarDuration,
+            content: CopyClipboardContent(text: icyTitle),
           ),
         );
       } else {
         onTextTap?.call(
           audio!.audioType!,
           audio!.title!,
+        );
+      }
+    }
+
+    void onArtistTap() {
+      if (audio?.audioType == null || audio?.artist == null) {
+        return;
+      }
+      if (audio!.audioType == AudioType.radio &&
+          audio?.url?.isNotEmpty == true) {
+        Clipboard.setData(ClipboardData(text: audio!.url!));
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            width: kSnackBarWidth,
+            duration: kSnackBarDuration,
+            content: CopyClipboardContent(
+              text: audio!.url!,
+              onSearch: () {
+                if (audio?.url != null) {
+                  launchUrl(Uri.parse(audio!.url!));
+                }
+              },
+            ),
+          ),
+        );
+      } else {
+        onTextTap?.call(
+          audio!.audioType!,
+          audio!.audioType == AudioType.radio && audio?.title != null
+              ? audio!.title!
+              : audio!.artist!,
         );
       }
     }
@@ -286,14 +322,7 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
             icyName?.isNotEmpty == true)
           InkWell(
             borderRadius: BorderRadius.circular(4),
-            onTap: audio?.audioType == null || audio?.artist == null
-                ? null
-                : () {
-                    onTextTap?.call(
-                      audio!.audioType!,
-                      audio!.title!,
-                    );
-                  },
+            onTap: onArtistTap,
             child: Tooltip(
               message: icyName?.isNotEmpty == true
                   ? icyName!

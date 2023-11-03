@@ -5,12 +5,15 @@ class AudioCardBottom extends StatelessWidget {
   const AudioCardBottom({
     super.key,
     required this.text,
+    this.maxLines = 1,
   });
 
   final String text;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Align(
       alignment: Alignment.bottomCenter,
       child: Tooltip(
@@ -25,9 +28,11 @@ class AudioCardBottom extends StatelessWidget {
           ),
           child: Text(
             text,
+            style: theme.textTheme.bodyMedium
+                ?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.9)),
             textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
+            overflow: TextOverflow.visible,
+            maxLines: maxLines,
           ),
         ),
       ),

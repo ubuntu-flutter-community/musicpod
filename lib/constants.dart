@@ -5,6 +5,10 @@ const kRepoUrl = 'http://github.com/ubuntu-flutter-community/musicpod';
 
 const kSearchBarWidth = 350.0;
 
+const kSnackBarWidth = 450.0;
+
+const kSnackBarDuration = Duration(seconds: 5);
+
 const kGridPadding = EdgeInsets.only(
   bottom: kYaruPagePadding,
   left: kYaruPagePadding - 5,
