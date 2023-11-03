@@ -6,10 +6,12 @@ import 'package:yaru_icons/yaru_icons.dart';
 class CopyClipboardContent extends StatelessWidget {
   const CopyClipboardContent({
     super.key,
-    required this.icyTitle,
+    required this.text,
+    this.onSearch,
   });
 
-  final String? icyTitle;
+  final String? text;
+  final void Function()? onSearch;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class CopyClipboardContent extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  icyTitle!,
+                  text!,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
@@ -38,11 +40,12 @@ class CopyClipboardContent extends StatelessWidget {
           ),
           IconButton(
             tooltip: context.l10n.search,
-            onPressed: () => launchUrl(
-              Uri.parse(
-                'https://music.youtube.com/search?q=${icyTitle!}',
-              ),
-            ),
+            onPressed: onSearch ??
+                () => launchUrl(
+                      Uri.parse(
+                        'https://music.youtube.com/search?q=${text!}',
+                      ),
+                    ),
             icon: const Icon(
               YaruIcons.globe,
             ),

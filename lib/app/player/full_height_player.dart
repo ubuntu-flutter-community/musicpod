@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:musicpod/app/common/copy_clipboard_content.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
-import 'package:musicpod/app/globals.dart';
 import 'package:musicpod/app/player/full_height_player_controls.dart';
 import 'package:musicpod/app/player/player_track.dart';
 import 'package:musicpod/app/player/player_view.dart';
@@ -101,68 +98,30 @@ class FullHeightPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    void onTitleTap() {
-      if (audio?.audioType == null ||
-          audio?.title == null ||
-          audio?.audioType == AudioType.podcast) {
-        return;
-      }
-
-      if (icyTitle?.isNotEmpty == true) {
-        Clipboard.setData(ClipboardData(text: icyTitle!));
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: CopyClipboardContent(icyTitle: icyTitle),
-          ),
-        );
-      } else {
-        setFullScreen(false);
-        navigatorKey.currentState?.maybePop();
-        onTextTap.call(
-          audioType: audio!.audioType!,
-          text: audio!.title!,
-        );
-      }
-    }
-
-    final title = InkWell(
-      borderRadius: BorderRadius.circular(4),
-      onTap: onTitleTap,
-      child: Text(
-        icyTitle?.isNotEmpty == true
-            ? icyTitle!
-            : (audio?.title?.isNotEmpty == true ? audio!.title! : ''),
-        style: TextStyle(
-          fontWeight: FontWeight.w200,
-          fontSize: 30,
-          color: theme.colorScheme.onSurface.withOpacity(0.7),
-        ),
-        textAlign: TextAlign.center,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
+    final title = Text(
+      icyTitle?.isNotEmpty == true
+          ? icyTitle!
+          : (audio?.title?.isNotEmpty == true ? audio!.title! : ''),
+      style: TextStyle(
+        fontWeight: FontWeight.w200,
+        fontSize: 30,
+        color: theme.colorScheme.onSurface.withOpacity(0.7),
       ),
+      textAlign: TextAlign.center,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
 
-    final artist = InkWell(
-      borderRadius: BorderRadius.circular(4),
-      onTap: audio?.audioType == null || audio?.artist == null
-          ? null
-          : () {
-              setFullScreen(false);
-              navigatorKey.currentState?.maybePop();
-              onTextTap(text: audio!.artist!, audioType: audio!.audioType!);
-            },
-      child: Text(
-        icyName?.isNotEmpty == true ? icyName! : (audio?.artist ?? ''),
-        style: TextStyle(
-          fontWeight: FontWeight.w100,
-          fontSize: 20,
-          color: theme.colorScheme.onSurface.withOpacity(0.7),
-        ),
-        textAlign: TextAlign.center,
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
+    final artist = Text(
+      icyName?.isNotEmpty == true ? icyName! : (audio?.artist ?? ''),
+      style: TextStyle(
+        fontWeight: FontWeight.w100,
+        fontSize: 20,
+        color: theme.colorScheme.onSurface.withOpacity(0.7),
       ),
+      textAlign: TextAlign.center,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
     );
 
     final controls = FullHeightPlayerControls(

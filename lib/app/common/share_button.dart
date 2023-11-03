@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:musicpod/app/common/copy_clipboard_content.dart';
+import 'package:musicpod/constants.dart';
 import 'package:musicpod/data/audio.dart';
-import 'package:musicpod/l10n/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 
@@ -20,28 +21,15 @@ class ShareButton extends StatelessWidget {
               Clipboard.setData(ClipboardData(text: audio!.url!));
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  width: 500,
+                  width: kSnackBarWidth,
                   behavior: SnackBarBehavior.floating,
-                  content: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          '${context.l10n.copiedToClipBoard} ',
-                          maxLines: 1,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 250,
-                        child: TextButton(
-                          child: Text(
-                            audio!.url!,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                          onPressed: () => launchUrl(Uri.parse(audio!.url!)),
-                        ),
-                      ),
-                    ],
+                  content: CopyClipboardContent(
+                    text: audio?.url,
+                    onSearch: () {
+                      if (audio?.url != null) {
+                        launchUrl(Uri.parse(audio!.url!));
+                      }
+                    },
                   ),
                 ),
               );
