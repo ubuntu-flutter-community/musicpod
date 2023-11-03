@@ -3,6 +3,7 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/player/full_height_player_controls.dart';
 import 'package:musicpod/app/player/player_track.dart';
+import 'package:musicpod/app/player/player_utils.dart';
 import 'package:musicpod/app/player/player_view.dart';
 import 'package:musicpod/data/audio.dart';
 import 'package:musicpod/l10n/l10n.dart';
@@ -98,30 +99,50 @@ class FullHeightPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final title = Text(
-      icyTitle?.isNotEmpty == true
-          ? icyTitle!
-          : (audio?.title?.isNotEmpty == true ? audio!.title! : ''),
-      style: TextStyle(
-        fontWeight: FontWeight.w200,
-        fontSize: 30,
-        color: theme.colorScheme.onSurface.withOpacity(0.7),
+    final title = InkWell(
+      borderRadius: BorderRadius.circular(10),
+      onTap: () => onTitleTap(
+        audio: audio,
+        icyTitle: icyTitle,
+        context: context,
+        onTextTap: (audioType, text) =>
+            onTextTap(audioType: audioType, text: text),
       ),
-      textAlign: TextAlign.center,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
+      child: Text(
+        icyTitle?.isNotEmpty == true
+            ? icyTitle!
+            : (audio?.title?.isNotEmpty == true ? audio!.title! : ''),
+        style: TextStyle(
+          fontWeight: FontWeight.w200,
+          fontSize: 30,
+          color: theme.colorScheme.onSurface.withOpacity(0.7),
+        ),
+        textAlign: TextAlign.center,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
     );
 
-    final artist = Text(
-      icyName?.isNotEmpty == true ? icyName! : (audio?.artist ?? ''),
-      style: TextStyle(
-        fontWeight: FontWeight.w100,
-        fontSize: 20,
-        color: theme.colorScheme.onSurface.withOpacity(0.7),
+    final artist = InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () => onArtistTap(
+        audio: audio,
+        icyTitle: icyTitle,
+        context: context,
+        onTextTap: (audioType, text) =>
+            onTextTap(audioType: audioType, text: text),
       ),
-      textAlign: TextAlign.center,
-      overflow: TextOverflow.ellipsis,
-      maxLines: 1,
+      child: Text(
+        icyName?.isNotEmpty == true ? icyName! : (audio?.artist ?? ''),
+        style: TextStyle(
+          fontWeight: FontWeight.w100,
+          fontSize: 20,
+          color: theme.colorScheme.onSurface.withOpacity(0.7),
+        ),
+        textAlign: TextAlign.center,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+      ),
     );
 
     final controls = FullHeightPlayerControls(
