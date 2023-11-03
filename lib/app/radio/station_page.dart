@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/app_model.dart';
 import 'package:musicpod/app/common/audio_card.dart';
-import 'package:musicpod/app/common/audio_card_bottom.dart';
 import 'package:musicpod/app/common/safe_network_image.dart';
 import 'package:musicpod/app/radio/radio_page.dart';
 import 'package:musicpod/data/audio.dart';
@@ -71,9 +70,11 @@ class StationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final tags = <String>[
-      for (final tag in station.album?.split(',') ?? <String>[]) tag,
-    ];
+    final tags = station.album?.isNotEmpty == false
+        ? null
+        : <String>[
+            for (final tag in station.album?.split(',') ?? <String>[]) tag,
+          ];
     const size = 350.0;
 
     final showWindowControls =
@@ -110,9 +111,6 @@ class StationPage extends StatelessWidget {
                   child: AudioCard(
                     height: size,
                     width: size,
-                    bottom: station.imageUrl == null
-                        ? AudioCardBottom(text: name)
-                        : null,
                     onTap: () => play(newAudio: station),
                     onPlay: () => play(newAudio: station),
                     image: SizedBox(
@@ -124,6 +122,7 @@ class StationPage extends StatelessWidget {
                           station: station,
                         ),
                         url: station.imageUrl,
+                        fit: BoxFit.scaleDown,
                       ),
                     ),
                   ),
@@ -169,17 +168,18 @@ class StationPage extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
-                      YaruChoiceChipBar(
-                        yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.stack,
-                        labels: tags.map((e) => Text(e)).toList(),
-                        isSelected: tags.map((e) => false).toList(),
-                        onSelected: (index) {
-                          onTextTap?.call(tags[index]);
-                          if (Navigator.canPop(context)) {
-                            Navigator.of(context).pop();
-                          }
-                        },
-                      ),
+                      if (tags?.isNotEmpty == true)
+                        YaruChoiceChipBar(
+                          yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.stack,
+                          labels: tags!.map((e) => Text(e)).toList(),
+                          isSelected: tags.map((e) => false).toList(),
+                          onSelected: (index) {
+                            onTextTap?.call(tags[index]);
+                            if (Navigator.canPop(context)) {
+                              Navigator.of(context).pop();
+                            }
+                          },
+                        ),
                       const SizedBox(
                         height: 20,
                       ),
