@@ -44,13 +44,11 @@ class FullHeightPlayer extends StatelessWidget {
     required this.videoController,
     required this.isVideo,
     required this.isOnline,
-    this.icyTitle,
-    this.icyName,
+    this.mpvMetaData,
   });
 
   final Audio? audio;
-  final String? icyTitle;
-  final String? icyName;
+  final MpvMetaData? mpvMetaData;
   final Audio? nextAudio;
   final List<Audio> queue;
   final bool isUpNextExpanded;
@@ -101,14 +99,14 @@ class FullHeightPlayer extends StatelessWidget {
       borderRadius: BorderRadius.circular(10),
       onTap: () => onTitleTap(
         audio: audio,
-        icyTitle: icyTitle,
+        title: mpvMetaData?.icyTitle,
         context: context,
         onTextTap: (audioType, text) =>
             onTextTap(audioType: audioType, text: text),
       ),
       child: Text(
-        icyTitle?.isNotEmpty == true
-            ? icyTitle!
+        mpvMetaData?.icyTitle.isNotEmpty == true
+            ? mpvMetaData!.icyTitle
             : (audio?.title?.isNotEmpty == true ? audio!.title! : ''),
         style: TextStyle(
           fontWeight: FontWeight.w200,
@@ -125,13 +123,15 @@ class FullHeightPlayer extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       onTap: () => onArtistTap(
         audio: audio,
-        icyTitle: icyTitle,
+        artist: mpvMetaData?.icyName,
         context: context,
         onTextTap: (audioType, text) =>
             onTextTap(audioType: audioType, text: text),
       ),
       child: Text(
-        icyName?.isNotEmpty == true ? icyName! : (audio?.artist ?? ''),
+        mpvMetaData?.icyName.isNotEmpty == true
+            ? mpvMetaData!.icyName
+            : (audio?.artist ?? ''),
         style: TextStyle(
           fontWeight: FontWeight.w100,
           fontSize: 20,

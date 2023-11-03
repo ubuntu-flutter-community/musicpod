@@ -49,19 +49,11 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  String? _icyName;
-  String? get icyName => _icyName;
-  void setIcyName(String value) {
-    if (value == _icyName) return;
-    _icyName = value;
-    notifyListeners();
-  }
-
-  String? _icyTitle;
-  String? get icyTitle => _icyTitle;
-  void setIcyTitle(String value) {
-    if (value == _icyTitle) return;
-    _icyTitle = value;
+  MpvMetaData? _mpvMetaData;
+  MpvMetaData? get mpvMetaData => _mpvMetaData;
+  void setMpvMetaData(MpvMetaData value) {
+    if (value == _mpvMetaData) return;
+    _mpvMetaData = value;
     notifyListeners();
   }
 
@@ -280,12 +272,7 @@ class PlayerModel extends SafeChangeNotifier {
 
     await (_player.platform as NativePlayer).observeProperty(
       'metadata',
-      (data) async {
-        final metaData = MpvMetaData.fromJson(data);
-
-        setIcyName(metaData.icyName);
-        setIcyTitle(metaData.icyTitle);
-      },
+      (data) async => setMpvMetaData(MpvMetaData.fromJson(data)),
     );
 
     _volumeSub = _player.stream.volume.listen((value) {
