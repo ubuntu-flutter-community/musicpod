@@ -1,0 +1,101 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file/file.dart' hide FileSystem;
+import 'package:file/local.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+// ignore: implementation_imports
+import 'package:flutter_cache_manager/src/storage/file_system/file_system.dart';
+import 'package:path/path.dart' as p;
+import 'package:xdg_directories/xdg_directories.dart';
+import 'package:yaru_icons/yaru_icons.dart';
+
+class SafeNetworkImage extends StatelessWidget {
+  const SafeNetworkImage({
+    super.key,
+    required this.url,
+    this.filterQuality = FilterQuality.medium,
+    this.fit = BoxFit.fitWidth,
+    this.fallBackIcon,
+    this.errorIcon,
+  });
+
+  final String? url;
+  final FilterQuality filterQuality;
+  final BoxFit fit;
+  final Widget? fallBackIcon;
+  final Widget? errorIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    final fallBack = Center(
+      child: fallBackIcon ??
+          const Icon(
+            YaruIcons.music_note,
+            size: 70,
+          ),
+    );
+
+    final errorWidget = Center(
+      child: errorIcon ??
+          Icon(
+            YaruIcons.image_missing,
+            size: 70,
+            color: Theme.of(context).hintColor,
+          ),
+    );
+
+    if (url == null) return fallBack;
+
+    return CachedNetworkImage(
+      cacheManager: XdgCacheManager(),
+      imageUrl: url!,
+      imageBuilder: (context, imageProvider) => Image(
+        image: imageProvider,
+        filterQuality: filterQuality,
+        fit: fit,
+      ),
+      errorWidget: (context, url, error) => errorWidget,
+    );
+  }
+}
+
+// Code by @d-loose
+class _XdgFileSystem implements FileSystem {
+  final Future<Directory> _fileDir;
+  final String _cacheKey;
+
+  _XdgFileSystem(this._cacheKey) : _fileDir = createDirectory(_cacheKey);
+
+  static Future<Directory> createDirectory(String key) async {
+    final baseDir = cacheHome;
+    final path = p.join(baseDir.path, key, 'images');
+
+    const fs = LocalFileSystem();
+    final directory = fs.directory(path);
+    await directory.create(recursive: true);
+    return directory;
+  }
+
+  @override
+  Future<File> createFile(String name) async {
+    final directory = await _fileDir;
+    if (!(await directory.exists())) {
+      await createDirectory(_cacheKey);
+    }
+    return directory.childFile(name);
+  }
+}
+
+class XdgCacheManager extends CacheManager with ImageCacheManager {
+  static final key = p.basename(Platform.resolvedExecutable);
+
+  static final XdgCacheManager _instance = XdgCacheManager._();
+
+  factory XdgCacheManager() {
+    return _instance;
+  }
+
+  XdgCacheManager._() : super(Config(key, fileSystem: _XdgFileSystem(key)));
+}
