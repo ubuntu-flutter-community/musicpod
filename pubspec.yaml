@@ -23,6 +23,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.6.15
+  flutter_tabler_icons: ^1.7.0
   gtk: ^2.1.0
   handy_window: ^0.3.1
   intl: ^0.18.0
