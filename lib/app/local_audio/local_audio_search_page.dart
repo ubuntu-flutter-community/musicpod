@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:musicpod/app/common/audio_card.dart';
+import 'package:musicpod/app/common/audio_card_bottom.dart';
 import 'package:musicpod/app/common/audio_filter.dart';
 import 'package:musicpod/app/common/audio_tile.dart';
 import 'package:musicpod/app/common/audio_tile_header.dart';
@@ -246,8 +247,8 @@ class _Albums extends StatelessWidget {
     final theme = Theme.of(context);
 
     final albums = ListView.builder(
-      itemExtent: kCardHeight + 10,
-      cacheExtent: kCardHeight + 10,
+      itemExtent: 160,
+      cacheExtent: 160,
       shrinkWrap: true,
       padding: EdgeInsets.zero,
       itemCount: similarAlbumsResult.length,
@@ -271,62 +272,34 @@ class _Albums extends StatelessWidget {
                 filterQuality: FilterQuality.medium,
               );
 
-        return Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: AudioCard(
-            bottom: Align(
-              alignment: Alignment.bottomCenter,
-              child: Tooltip(
-                message: audio.album == null ? '' : audio.album!,
-                child: Container(
-                  width: double.infinity,
-                  height: 30,
-                  margin: const EdgeInsets.all(1),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5,
-                    horizontal: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.inverseSurface,
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(kYaruContainerRadius),
-                      bottomRight: Radius.circular(kYaruContainerRadius),
-                    ),
-                  ),
-                  child: Text(
-                    audio.album == null ? '' : audio.album!,
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(
-                      color: theme.colorScheme.onInverseSurface,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            image: image,
-            onTap: id == null
-                ? null
-                : () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return AlbumPage(
-                            key: ValueKey(showWindowControls == false),
-                            onTextTap: onTextTap,
-                            id: id,
-                            isPinnedAlbum: isPinnedAlbum,
-                            removePinnedAlbum: removePinnedAlbum,
-                            album: albumAudio,
-                            addPinnedAlbum: addPinnedAlbum,
-                          );
-                        },
-                      ),
-                    ),
-            onPlay: albumAudio == null || albumAudio.isEmpty || id == null
-                ? null
-                : () => startPlaylist(albumAudio, id),
+        return AudioCard(
+          height: 150,
+          width: 150,
+          bottom: AudioCardBottom(
+            text: audio.album == null ? '' : audio.album!,
+            maxLines: 3,
           ),
+          image: image,
+          onTap: id == null
+              ? null
+              : () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return AlbumPage(
+                          key: ValueKey(showWindowControls == false),
+                          onTextTap: onTextTap,
+                          id: id,
+                          isPinnedAlbum: isPinnedAlbum,
+                          removePinnedAlbum: removePinnedAlbum,
+                          album: albumAudio,
+                          addPinnedAlbum: addPinnedAlbum,
+                        );
+                      },
+                    ),
+                  ),
+          onPlay: albumAudio == null || albumAudio.isEmpty || id == null
+              ? null
+              : () => startPlaylist(albumAudio, id),
         );
       },
     );
