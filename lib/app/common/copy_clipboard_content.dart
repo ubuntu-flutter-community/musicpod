@@ -28,7 +28,7 @@ class CopyClipboardContent extends StatelessWidget {
                 Text(
                   context.l10n.copiedToClipBoard,
                   style: TextStyle(
-                    color: Theme.of(context).hintColor,
+                    color: Colors.white.withOpacity(0.7),
                   ),
                 ),
                 Text(
