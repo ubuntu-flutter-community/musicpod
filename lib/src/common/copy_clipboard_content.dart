@@ -32,11 +32,25 @@ class CopyClipboardContent extends StatelessWidget {
       tooltip: 'Spotify ${context.l10n.search}',
       onPressed: () => launchUrl(
         Uri.parse(
-          'https://open.spotify.com/search/artist:${artist!}%20track:${title!}',
+          'https://open.spotify.com/search/artist:$artist%20track:$title',
         ),
       ),
       icon: Icon(
         TablerIcons.brand_spotify,
+        color: Colors.white.withOpacity(0.9),
+      ),
+    );
+
+    //https://music.apple.com/us/search?term=
+    final appleButton = IconButton(
+      tooltip: 'Spotify ${context.l10n.search}',
+      onPressed: () => launchUrl(
+        Uri.parse(
+          'https://music.apple.com/us/search?term=$text',
+        ),
+      ),
+      icon: Icon(
+        TablerIcons.brand_apple,
         color: Colors.white.withOpacity(0.9),
       ),
     );
@@ -80,15 +94,14 @@ class CopyClipboardContent extends StatelessWidget {
               ],
             ),
           ),
-          if (artist?.isNotEmpty == true && title?.isNotEmpty == true)
-            Row(
-              children: [
+          Row(
+            children: [
+              if (artist?.isNotEmpty == true && title?.isNotEmpty == true)
                 spotifyButton,
-                searchButton,
-              ],
-            )
-          else
-            searchButton,
+              searchButton,
+              appleButton,
+            ],
+          ),
         ],
       ),
     );
