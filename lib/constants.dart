@@ -7,7 +7,7 @@ const kSearchBarWidth = 350.0;
 
 const kSnackBarWidth = 450.0;
 
-const kSnackBarDuration = Duration(seconds: 5);
+const kSnackBarDuration = Duration(seconds: 10);
 
 const kGridPadding = EdgeInsets.only(
   bottom: kYaruPagePadding,

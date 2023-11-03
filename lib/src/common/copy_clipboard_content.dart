@@ -22,15 +22,14 @@ class CopyClipboardContent extends StatelessWidget {
     if (text != null) {
       final split = text!.split('-');
 
-      //https://open.spotify.com/search/artist:Magnetic%20Ghost%20track:Sleeping%20Is%20Believing
       if (split.length == 2) {
-        artist = split.first.replaceAll(' ', '%20');
-        title = split.last;
+        artist = split.first.replaceAll(' ', '%20').trim();
+        title = split.last.trim();
       }
     }
 
-    var spotifyButton = IconButton(
-      tooltip: context.l10n.search,
+    final spotifyButton = IconButton(
+      tooltip: 'Spotify ${context.l10n.search}',
       onPressed: () => launchUrl(
         Uri.parse(
           'https://open.spotify.com/search/artist:${artist!}%20track:${title!}',
@@ -43,7 +42,9 @@ class CopyClipboardContent extends StatelessWidget {
     );
 
     final searchButton = IconButton(
-      tooltip: context.l10n.search,
+      tooltip: onSearch != null
+          ? context.l10n.search
+          : 'YouTubeMusic ${context.l10n.search}',
       onPressed: onSearch ??
           () => launchUrl(
                 Uri.parse(
