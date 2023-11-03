@@ -8,7 +8,7 @@ import '../../data.dart';
 
 void onTitleTap({
   required Audio? audio,
-  required String? icyTitle,
+  required String? title,
   required BuildContext context,
   required void Function(AudioType audioType, String text)? onTextTap,
 }) {
@@ -18,14 +18,14 @@ void onTitleTap({
     return;
   }
 
-  if (icyTitle?.isNotEmpty == true) {
-    Clipboard.setData(ClipboardData(text: icyTitle!));
+  if (title?.isNotEmpty == true) {
+    Clipboard.setData(ClipboardData(text: title!));
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         width: kSnackBarWidth,
         duration: kSnackBarDuration,
-        content: CopyClipboardContent(text: icyTitle),
+        content: CopyClipboardContent(text: title),
       ),
     );
   } else {
@@ -38,7 +38,7 @@ void onTitleTap({
 
 void onArtistTap({
   required Audio? audio,
-  required String? icyTitle,
+  required String? artist,
   required BuildContext context,
   required void Function(AudioType audioType, String text)? onTextTap,
 }) {

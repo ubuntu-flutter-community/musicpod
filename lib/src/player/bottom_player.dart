@@ -42,13 +42,11 @@ class BottomPlayer extends StatelessWidget {
     required this.videoController,
     required this.queue,
     required this.isOnline,
-    this.icyTitle,
-    this.icyName,
+    this.mpvMetaData,
   });
 
   final Audio? audio;
-  final String? icyTitle;
-  final String? icyName;
+  final MpvMetaData? mpvMetaData;
   final List<Audio> queue;
   final double width;
   final Color? color;
@@ -112,8 +110,8 @@ class BottomPlayer extends StatelessWidget {
                 Flexible(
                   flex: 3,
                   child: _BottomPlayerTitleArtist(
-                    icyName: icyName,
-                    icyTitle: icyTitle,
+                    icyName: mpvMetaData?.icyName,
+                    icyTitle: mpvMetaData?.icyTitle,
                     audio: audio,
                     onTextTap: audio == null || audio?.audioType == null
                         ? null
@@ -237,7 +235,7 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
           onTap: () => onTitleTap(
             audio: audio,
-            icyTitle: icyTitle,
+            title: icyTitle,
             context: context,
             onTextTap: onTextTap,
           ),
@@ -264,7 +262,7 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             onTap: () => onArtistTap(
               audio: audio,
-              icyTitle: icyTitle,
+              artist: icyTitle,
               context: context,
               onTextTap: onTextTap,
             ),
