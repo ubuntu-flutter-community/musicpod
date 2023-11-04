@@ -32,11 +32,16 @@ class StreamProviderShareButton extends StatelessWidget {
       StreamProvider.spotify => 'Spotify',
       StreamProvider.youTubeMusic => 'YouTube Music',
     };
+
+    final clearedText =
+        text?.replaceAll(RegExp(r"[:/?#\[\]@!$&'()*+,;=%]"), ' ') ?? '';
+
     final address = switch (streamProvider) {
-      StreamProvider.youTubeMusic => 'https://music.youtube.com/search?q=$text',
+      StreamProvider.youTubeMusic =>
+        'https://music.youtube.com/search?q=$clearedText',
       StreamProvider.appleMusic =>
-        'https://music.apple.com/us/search?term=$text',
-      StreamProvider.spotify => 'https://open.spotify.com/search/$text'
+        'https://music.apple.com/us/search?term=$clearedText',
+      StreamProvider.spotify => 'https://open.spotify.com/search/$clearedText'
     };
     return Padding(
       padding: padding,
