@@ -17,60 +17,6 @@ class CopyClipboardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? artist;
-    String? title;
-    if (text != null) {
-      final split = text!.split('-');
-
-      if (split.length == 2) {
-        artist = split.first.replaceAll(' ', '%20').trim();
-        title = split.last.trim();
-      }
-    }
-
-    final spotifyButton = IconButton(
-      tooltip: 'Spotify ${context.l10n.search}',
-      onPressed: () => launchUrl(
-        Uri.parse(
-          'https://open.spotify.com/search/artist:$artist%20track:$title',
-        ),
-      ),
-      icon: Icon(
-        TablerIcons.brand_spotify,
-        color: Colors.white.withOpacity(0.9),
-      ),
-    );
-
-    //https://music.apple.com/us/search?term=
-    final appleButton = IconButton(
-      tooltip: 'Spotify ${context.l10n.search}',
-      onPressed: () => launchUrl(
-        Uri.parse(
-          'https://music.apple.com/us/search?term=$text',
-        ),
-      ),
-      icon: Icon(
-        TablerIcons.brand_apple,
-        color: Colors.white.withOpacity(0.9),
-      ),
-    );
-
-    final searchButton = IconButton(
-      tooltip: onSearch != null
-          ? context.l10n.search
-          : 'YouTubeMusic ${context.l10n.search}',
-      onPressed: onSearch ??
-          () => launchUrl(
-                Uri.parse(
-                  'https://music.youtube.com/search?q=${text!}',
-                ),
-              ),
-      icon: Icon(
-        onSearch != null ? YaruIcons.globe : TablerIcons.brand_youtube,
-        color: Colors.white.withOpacity(0.9),
-      ),
-    );
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Row(
@@ -96,14 +42,83 @@ class CopyClipboardContent extends StatelessWidget {
           ),
           Row(
             children: [
-              if (artist?.isNotEmpty == true && title?.isNotEmpty == true)
-                spotifyButton,
-              searchButton,
-              appleButton,
+              const SizedBox(
+                width: 10,
+              ),
+              StreamProviderShareButton(
+                onSearch: onSearch,
+                text: text,
+                streamProvider: StreamProvider.youTubeMusic,
+              ),
+              if (onSearch == null)
+                StreamProviderShareButton(
+                  text: text,
+                  streamProvider: StreamProvider.spotify,
+                ),
+              if (onSearch == null)
+                StreamProviderShareButton(
+                  text: text,
+                  streamProvider: StreamProvider.appleMusic,
+                ),
             ],
           ),
         ],
       ),
     );
   }
+}
+
+class StreamProviderShareButton extends StatelessWidget {
+  const StreamProviderShareButton({
+    super.key,
+    this.onSearch,
+    required this.text,
+    required this.streamProvider,
+  });
+
+  final void Function()? onSearch;
+  final String? text;
+  final StreamProvider streamProvider;
+
+  @override
+  Widget build(BuildContext context) {
+    final iconData = switch (streamProvider) {
+      StreamProvider.appleMusic => TablerIcons.brand_apple,
+      StreamProvider.spotify => TablerIcons.brand_spotify,
+      StreamProvider.youTubeMusic => TablerIcons.brand_youtube,
+    };
+
+    final tooltip = switch (streamProvider) {
+      StreamProvider.appleMusic => 'Apple Music',
+      StreamProvider.spotify => 'Spotify',
+      StreamProvider.youTubeMusic => 'Apple Music',
+    };
+    final address = switch (streamProvider) {
+      StreamProvider.youTubeMusic => 'https://music.youtube.com/search?q=$text',
+      StreamProvider.appleMusic =>
+        'https://music.apple.com/us/search?term=$text',
+      StreamProvider.spotify => 'https://open.spotify.com/search/$text'
+    };
+    return IconButton(
+      tooltip: onSearch != null
+          ? context.l10n.search
+          : '$tooltip ${context.l10n.search}',
+      onPressed: onSearch ??
+          () => launchUrl(
+                Uri.parse(
+                  address,
+                ),
+              ),
+      icon: Icon(
+        onSearch != null ? YaruIcons.globe : iconData,
+        color: Colors.white.withOpacity(0.9),
+      ),
+    );
+  }
+}
+
+enum StreamProvider {
+  youTubeMusic,
+  spotify,
+  appleMusic,
 }
