@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:musicpod/src/common/stream_provider_share_button.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -70,8 +71,10 @@ class AlbumPage extends StatelessWidget {
               filterQuality: FilterQuality.medium,
             )
           : null,
-      controlPanelButton: isPinnedAlbum(id)
-          ? IconButton(
+      controlPanelButton: Row(
+        children: [
+          if (isPinnedAlbum(id))
+            IconButton(
               icon: Icon(
                 YaruIcons.pin,
                 color: Theme.of(context).primaryColor,
@@ -80,7 +83,8 @@ class AlbumPage extends StatelessWidget {
                 id,
               ),
             )
-          : IconButton(
+          else
+            IconButton(
               icon: const Icon(
                 YaruIcons.pin,
               ),
@@ -91,6 +95,13 @@ class AlbumPage extends StatelessWidget {
                         album!,
                       ),
             ),
+          StreamProviderRow(
+            spacing: const EdgeInsets.only(right: 10),
+            text:
+                '${album?.firstOrNull?.artist} - ${album?.firstOrNull?.album}',
+          ),
+        ],
+      ),
       audios: album,
       pageId: id,
       headerTitle: album?.firstOrNull?.album,
