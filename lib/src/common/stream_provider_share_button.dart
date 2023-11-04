@@ -12,12 +12,14 @@ class StreamProviderShareButton extends StatelessWidget {
     required this.text,
     required this.streamProvider,
     this.padding = EdgeInsets.zero,
+    this.color,
   });
 
   final void Function()? onSearch;
   final String? text;
   final StreamProvider streamProvider;
   final EdgeInsetsGeometry padding;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class StreamProviderShareButton extends StatelessWidget {
                 ),
         icon: Icon(
           onSearch != null ? YaruIcons.globe : iconData,
-          color: Colors.white.withOpacity(0.9),
+          color: color,
         ),
       ),
     );
@@ -71,6 +73,7 @@ class StreamProviderRow extends StatelessWidget {
     this.padding = const EdgeInsets.only(left: 10),
     this.onSearch,
     this.spacing = EdgeInsets.zero,
+    this.iconColor,
   });
 
   final String? text;
@@ -78,6 +81,7 @@ class StreamProviderRow extends StatelessWidget {
 
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry spacing;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +90,7 @@ class StreamProviderRow extends StatelessWidget {
       child: Row(
         children: [
           StreamProviderShareButton(
+            color: iconColor,
             padding: spacing,
             onSearch: onSearch,
             text: text,
@@ -93,12 +98,14 @@ class StreamProviderRow extends StatelessWidget {
           ),
           if (onSearch == null)
             StreamProviderShareButton(
+              color: iconColor,
               padding: spacing,
               text: text,
               streamProvider: StreamProvider.spotify,
             ),
           if (onSearch == null)
             StreamProviderShareButton(
+              color: iconColor,
               padding: spacing,
               text: text,
               streamProvider: StreamProvider.appleMusic,
