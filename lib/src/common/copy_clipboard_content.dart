@@ -39,6 +39,7 @@ class CopyClipboardContent extends StatelessWidget {
             ),
           ),
           StreamProviderRow(
+            iconColor: Colors.white.withOpacity(0.9),
             onSearch: onSearch,
             text: text,
           ),
