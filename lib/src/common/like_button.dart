@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/src/common/stream_provider_share_button.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -50,6 +51,8 @@ class LikeButton extends StatelessWidget {
     );
 
     return _Button(
+      artist: audio.artist ?? '',
+      title: audio.title ?? '',
       playlistId: playlistId,
       onRemoveFromPlaylist: onRemoveFromPlaylist == null
           ? null
@@ -80,6 +83,8 @@ class _Button extends StatelessWidget {
     this.playlistId,
     this.topFivePlaylistIds,
     required this.icon,
+    required this.artist,
+    required this.title,
   });
 
   final void Function()? onCreateNewPlaylist;
@@ -88,6 +93,8 @@ class _Button extends StatelessWidget {
   final String? playlistId;
   final List<String>? topFivePlaylistIds;
   final Widget icon;
+  final String artist;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +128,10 @@ class _Button extends StatelessWidget {
                   '${context.l10n.addTo} $playlist',
                 ),
               ),
+          PopupMenuItem(
+            padding: EdgeInsets.zero,
+            child: StreamProviderRow(text: '$artist - $title'),
+          ),
         ];
       },
       child: icon,
