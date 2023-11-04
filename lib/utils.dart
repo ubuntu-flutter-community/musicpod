@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:xdg_directories/xdg_directories.dart';
 
 import 'common.dart';
@@ -70,11 +71,29 @@ void sortListByAudioFilter({
 }
 
 Future<String> getWorkingDir() async {
-  final workingDir = '${configHome.path}/$kMusicPodConfigSubDir';
-  if (!Directory(workingDir).existsSync()) {
-    await Directory(workingDir).create();
+  if (Platform.isLinux) {
+    final workingDir = '${configHome.path}/$kMusicPodConfigSubDir';
+    if (!Directory(workingDir).existsSync()) {
+      await Directory(workingDir).create();
+    }
+    return workingDir;
+  } else {
+    Directory tempDir = await getTemporaryDirectory();
+    return tempDir.path; //C:\Users\USER_NAME\AppData\Local\Temp
+
+    // Directory appDocDir = await getApplicationDocumentsDirectory();
+    // String appDocPath = appDocDir.path; //C:\Users\USER_NAME\Documents
+//Warning: on debug mode this code get location project but in release mode will get your location app correctly
+    // String dir = Directory.current.path; // PATH_APP
   }
-  return workingDir;
+}
+
+Future<String?> getMusicDir() async {
+  if (Platform.isIOS) {
+    return getUserDirectory('MUSIC')?.path;
+  } else {
+    return (await getApplicationDocumentsDirectory()).path;
+  }
 }
 
 Future<void> writeSetting(

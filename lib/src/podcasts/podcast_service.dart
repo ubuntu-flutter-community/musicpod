@@ -70,7 +70,7 @@ class PodcastService {
       int replacesId,
       List<NotificationHint> hints,
       List<NotificationAction> actions,
-    }) notify,
+    })? notify,
   }) async {
     for (final old in oldPodcasts.entries) {
       final firstOld = old.value.firstOrNull;
@@ -86,7 +86,7 @@ class PodcastService {
               audios.isEmpty) return;
 
           updatePodcast(old.key, audios);
-          notify(
+          notify?.call(
             '$updateMessage ${firstOld.album ?? old.value}',
             appIcon: 'music-app',
             appName: 'MusicPod',

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
@@ -32,16 +34,17 @@ Future<void> main(List<String> args) async {
 
   registerService<VideoController>(() => VideoController(player));
 
-  final mpris = await MPRIS.create(
-    busName: 'org.mpris.MediaPlayer2.musicpod',
-    identity: 'Musicpod',
-    desktopEntry: '/var/lib/snapd/desktop/applications/musicpod',
-  );
-
-  registerService<MPRIS>(
-    () => mpris,
-    dispose: (s) async => await s.dispose(),
-  );
+  if (Platform.isLinux) {
+    final mpris = await MPRIS.create(
+      busName: 'org.mpris.MediaPlayer2.musicpod',
+      identity: 'Musicpod',
+      desktopEntry: '/var/lib/snapd/desktop/applications/musicpod',
+    );
+    registerService<MPRIS>(
+      () => mpris,
+      dispose: (s) async => await s.dispose(),
+    );
+  }
 
   registerService<LibraryService>(
     () => libraryService,
@@ -59,10 +62,12 @@ Future<void> main(List<String> args) async {
   registerService<Connectivity>(
     () => connectivity,
   );
-  registerService<NotificationsClient>(
-    NotificationsClient.new,
-    dispose: (s) async => await s.close(),
-  );
+  if (Platform.isLinux) {
+    registerService<NotificationsClient>(
+      NotificationsClient.new,
+      dispose: (s) async => await s.close(),
+    );
+  }
   registerService<GtkApplicationNotifier>(
     () => GtkApplicationNotifier(args),
     dispose: (s) => s.dispose(),

@@ -16,7 +16,7 @@ import '../../player.dart';
 class PlayerModel extends SafeChangeNotifier {
   PlayerModel({
     required VideoController videoController,
-    required MPRIS mpris,
+    MPRIS? mpris,
     required LibraryService libraryService,
   })  : controller = videoController,
         _player = videoController.player,
@@ -25,7 +25,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   final Player _player;
   final VideoController controller;
-  final MPRIS _mpris;
+  final MPRIS? _mpris;
   final LibraryService _libraryService;
   StreamSubscription<bool>? _playerSub;
   StreamSubscription<Duration>? _durationSub;
@@ -75,8 +75,8 @@ class PlayerModel extends SafeChangeNotifier {
 
     notifyListeners();
 
-    if (_audio!.path != null || _audio!.url != null) {
-      _mpris.metadata = await _createMprisMetadata(_audio!);
+    if (_audio!.path != null || _audio!.url != null && _mpris != null) {
+      _mpris?.metadata = await _createMprisMetadata(_audio!);
     }
   }
 
@@ -226,35 +226,37 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> init() async {
-    _mpris.setEventHandler(
-      MPRISEventHandler(
-        playPause: () async {
-          isPlaying ? pause() : playOrPause();
-          _mpris.playbackStatus = (isPlaying
-              ? MPRISPlaybackStatus.paused
-              : MPRISPlaybackStatus.playing);
-        },
-        play: () async {
-          play();
-        },
-        pause: () async {
-          pause();
-          _mpris.playbackStatus = MPRISPlaybackStatus.paused;
-        },
-        next: () async {
-          playNext();
-        },
-        previous: () async {
-          playPrevious();
-        },
-      ),
-    );
+    if (_mpris != null) {
+      _mpris!.setEventHandler(
+        MPRISEventHandler(
+          playPause: () async {
+            isPlaying ? pause() : playOrPause();
+            _mpris!.playbackStatus = (isPlaying
+                ? MPRISPlaybackStatus.paused
+                : MPRISPlaybackStatus.playing);
+          },
+          play: () async {
+            play();
+          },
+          pause: () async {
+            pause();
+            _mpris!.playbackStatus = MPRISPlaybackStatus.paused;
+          },
+          next: () async {
+            playNext();
+          },
+          previous: () async {
+            playPrevious();
+          },
+        ),
+      );
+    }
 
     await _readPlayerState();
 
     _playerSub = _player.stream.playing.listen((p) {
       isPlaying = p;
-      _mpris.playbackStatus =
+      _mpris?.playbackStatus =
           isPlaying ? MPRISPlaybackStatus.playing : MPRISPlaybackStatus.paused;
     });
     _durationSub = _player.stream.duration.listen((newDuration) {
@@ -394,7 +396,7 @@ class PlayerModel extends SafeChangeNotifier {
       _audio = playerState.$3;
 
       if (_audio != null && (_audio!.path != null || _audio!.url != null)) {
-        _mpris.metadata = await _createMprisMetadata(_audio!);
+        _mpris?.metadata = await _createMprisMetadata(_audio!);
       }
       _setIsVideo();
     }

@@ -39,7 +39,7 @@ class App extends StatefulWidget {
         ChangeNotifierProvider(
           create: (_) => PlayerModel(
             videoController: getService<VideoController>(),
-            mpris: getService<MPRIS>(),
+            mpris: Platform.isLinux ? getService<MPRIS>() : null,
             libraryService: getService<LibraryService>(),
           ),
         ),
@@ -54,7 +54,7 @@ class App extends StatefulWidget {
             getService<PodcastService>(),
             getService<LibraryService>(),
             getService<Connectivity>(),
-            getService<NotificationsClient>(),
+            Platform.isLinux ? getService<NotificationsClient>() : null,
           ),
         ),
         ChangeNotifierProvider(
@@ -180,7 +180,17 @@ class _AppState extends State<App> {
     final surfaceTintColor =
         context.select((PlayerModel m) => m.surfaceTintColor);
     final isFullScreen = context.select((PlayerModel m) => m.fullScreen);
-    final playerBg = surfaceTintColor ?? (theme.scaffoldBackgroundColor);
+    final Color playerBg;
+    if (surfaceTintColor != null) {
+      playerBg = (Platform.isLinux
+          ? surfaceTintColor
+          : Color.alphaBlend(
+              surfaceTintColor,
+              theme.scaffoldBackgroundColor,
+            ));
+    } else {
+      playerBg = (theme.scaffoldBackgroundColor);
+    }
 
     // Library
     // Watching values
