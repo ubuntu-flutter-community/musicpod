@@ -85,7 +85,7 @@ Future<String> getWorkingDir() async {
 }
 
 Future<String?> getMusicDir() async {
-  if (Platform.isIOS) {
+  if (Platform.isLinux) {
     return getUserDirectory('MUSIC')?.path;
   } else {
     return (await getApplicationDocumentsDirectory()).path;

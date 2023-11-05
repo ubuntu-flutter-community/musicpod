@@ -6,7 +6,6 @@ import 'package:metadata_god/metadata_god.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:musicpod/constants.dart';
 import 'package:musicpod/utils.dart';
-import 'package:xdg_directories/xdg_directories.dart';
 
 import '../../data.dart';
 
@@ -42,7 +41,7 @@ class LocalAudioService {
 
   Future<List<String>> init() async {
     _directory = await readSetting(kDirectoryProperty);
-    _directory ??= getUserDirectory('MUSIC')?.path;
+    _directory ??= await getMusicDir();
 
     final result = await compute(_init, directory);
 
