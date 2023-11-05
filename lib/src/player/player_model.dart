@@ -74,7 +74,9 @@ class PlayerModel extends SafeChangeNotifier {
 
     notifyListeners();
 
-    _mediaControlService.setMetaData(audio!);
+    if (audio != null) {
+      _mediaControlService.setMetaData(audio!);
+    }
   }
 
   void _setIsVideo() {
