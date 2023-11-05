@@ -26,23 +26,18 @@ class MediaControlService {
       _smtcSub = _smtc?.buttonPressStream.listen((event) {
         switch (event) {
           case PressedButton.play:
-            onPlay();
-            _smtc?.setPlaybackStatus(PlaybackStatus.Playing);
+            onPlay()
+                .then((_) => _smtc?.setPlaybackStatus(PlaybackStatus.Playing));
             break;
           case PressedButton.pause:
-            onPause();
-            _smtc?.setPlaybackStatus(PlaybackStatus.Paused);
+            onPause()
+                .then((_) => _smtc?.setPlaybackStatus(PlaybackStatus.Paused));
             break;
           case PressedButton.next:
             onNext();
             break;
           case PressedButton.previous:
             onPrevious();
-            break;
-          case PressedButton.stop:
-            onStop?.call();
-            _smtc?.setPlaybackStatus(PlaybackStatus.Stopped);
-            _smtc?.disableSmtc();
             break;
           default:
             break;
@@ -120,6 +115,7 @@ class MediaControlService {
   Future<void> dispose() async {
     await _smtcSub?.cancel();
     await _mpris?.dispose();
+    await _smtc?.disableSmtc();
     await _smtc?.dispose();
   }
 }
