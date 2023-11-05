@@ -74,9 +74,7 @@ class PlayerModel extends SafeChangeNotifier {
 
     notifyListeners();
 
-    if (_audio!.path != null || _audio!.url != null) {
-      _mediaControlService.setMetaData(audio!);
-    }
+    _mediaControlService.setMetaData(audio!);
   }
 
   void _setIsVideo() {
@@ -363,7 +361,7 @@ class PlayerModel extends SafeChangeNotifier {
     if (playerState.$3 != null) {
       _audio = playerState.$3;
 
-      if (_audio != null && (_audio!.path != null || _audio!.url != null)) {
+      if (_audio != null) {
         _mediaControlService.setMetaData(audio!);
       }
       _setIsVideo();
