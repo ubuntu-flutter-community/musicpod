@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:mpris_service/mpris_service.dart';
 import 'package:musicpod/utils.dart';
 import 'package:smtc_windows/smtc_windows.dart';
@@ -7,6 +9,7 @@ import '../../data.dart';
 class MediaControlService {
   final MPRIS? _mpris;
   final SMTCWindows? _smtc;
+  StreamSubscription<PressedButton>? _smtcSub;
 
   MediaControlService([this._mpris, this._smtc]);
 
@@ -20,7 +23,7 @@ class MediaControlService {
     required bool isPlaying,
   }) async {
     if (_smtc != null) {
-      _smtc?.buttonPressStream.listen((event) {
+      _smtcSub = _smtc?.buttonPressStream.listen((event) {
         switch (event) {
           case PressedButton.play:
             onPlay();
@@ -115,6 +118,7 @@ class MediaControlService {
   }
 
   Future<void> dispose() async {
+    await _smtcSub?.cancel();
     await _mpris?.dispose();
     await _smtc?.dispose();
   }

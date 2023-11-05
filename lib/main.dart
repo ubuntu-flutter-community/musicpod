@@ -46,21 +46,14 @@ Future<void> main(List<String> args) async {
     );
   } else if (Platform.isWindows) {
     smtc = SMTCWindows(
-      timeline: const PlaybackTimeline(
-        startTimeMs: 0,
-        endTimeMs: 1000,
-        positionMs: 0,
-        minSeekTimeMs: 0,
-        maxSeekTimeMs: 1000,
-      ),
       config: const SMTCConfig(
-        fastForwardEnabled: true,
+        fastForwardEnabled: false,
         nextEnabled: true,
         pauseEnabled: true,
         playEnabled: true,
-        rewindEnabled: true,
+        rewindEnabled: false,
         prevEnabled: true,
-        stopEnabled: true,
+        stopEnabled: false,
       ),
     );
   }

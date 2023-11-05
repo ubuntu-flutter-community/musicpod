@@ -494,7 +494,7 @@ packages:
     source: hosted
     version: "1.1.4"
   media_kit_libs_linux:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: media_kit_libs_linux
       sha256: e186891c31daa6bedab4d74dcdb4e8adfccc7d786bfed6ad81fe24a3b3010310
@@ -526,7 +526,7 @@ packages:
     source: hosted
     version: "1.0.9"
   media_kit_native_event_loop:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: media_kit_native_event_loop
       sha256: a605cf185499d14d58935b8784955a92a4bf0ff4e19a23de3d17a9106303930e
