@@ -49,7 +49,7 @@ class SafeNetworkImage extends StatelessWidget {
     if (url == null) return fallBack;
 
     return CachedNetworkImage(
-      cacheManager: XdgCacheManager(),
+      cacheManager: Platform.isLinux ? XdgCacheManager() : null,
       imageUrl: url!,
       imageBuilder: (context, imageProvider) => Image(
         image: imageProvider,

@@ -4,8 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:mpris_service/mpris_service.dart';
-import 'package:musicpod/utils.dart';
+import 'package:musicpod/src/media_control/media_control_service.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -16,16 +15,16 @@ import '../../player.dart';
 class PlayerModel extends SafeChangeNotifier {
   PlayerModel({
     required VideoController videoController,
-    required MPRIS mpris,
+    required MediaControlService mediaControlService,
     required LibraryService libraryService,
   })  : controller = videoController,
         _player = videoController.player,
-        _mpris = mpris,
+        _mediaControlService = mediaControlService,
         _libraryService = libraryService;
 
   final Player _player;
   final VideoController controller;
-  final MPRIS _mpris;
+  final MediaControlService _mediaControlService;
   final LibraryService _libraryService;
   StreamSubscription<bool>? _playerSub;
   StreamSubscription<Duration>? _durationSub;
@@ -75,8 +74,8 @@ class PlayerModel extends SafeChangeNotifier {
 
     notifyListeners();
 
-    if (_audio!.path != null || _audio!.url != null) {
-      _mpris.metadata = await _createMprisMetadata(_audio!);
+    if (audio != null) {
+      _mediaControlService.setMetaData(audio!);
     }
   }
 
@@ -88,19 +87,6 @@ class PlayerModel extends SafeChangeNotifier {
         break;
       }
     }
-  }
-
-  Future<MPRISMetadata> _createMprisMetadata(Audio audio) async {
-    return MPRISMetadata(
-      audio.path != null ? Uri.file(audio.path!) : Uri.parse(audio.url!),
-      artUrl: await createUriFromAudio(audio),
-      album: audio.album,
-      albumArtist: [audio.albumArtist ?? ''],
-      artist: [audio.artist ?? ''],
-      discNumber: audio.discNumber,
-      title: audio.title,
-      trackNumber: audio.trackNumber,
-    );
   }
 
   bool? _isVideo;
@@ -226,36 +212,20 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> init() async {
-    _mpris.setEventHandler(
-      MPRISEventHandler(
-        playPause: () async {
-          isPlaying ? pause() : playOrPause();
-          _mpris.playbackStatus = (isPlaying
-              ? MPRISPlaybackStatus.paused
-              : MPRISPlaybackStatus.playing);
-        },
-        play: () async {
-          play();
-        },
-        pause: () async {
-          pause();
-          _mpris.playbackStatus = MPRISPlaybackStatus.paused;
-        },
-        next: () async {
-          playNext();
-        },
-        previous: () async {
-          playPrevious();
-        },
-      ),
+    await _mediaControlService.init(
+      onPlay: play,
+      onPause: pause,
+      onNext: playNext,
+      onPrevious: playPrevious,
+      isPlaying: isPlaying,
+      onPlayPause: playOrPause,
     );
 
     await _readPlayerState();
 
     _playerSub = _player.stream.playing.listen((p) {
       isPlaying = p;
-      _mpris.playbackStatus =
-          isPlaying ? MPRISPlaybackStatus.playing : MPRISPlaybackStatus.paused;
+      _mediaControlService.setPlayBackStatus(isPlaying);
     });
     _durationSub = _player.stream.duration.listen((newDuration) {
       setDuration(newDuration);
@@ -393,8 +363,8 @@ class PlayerModel extends SafeChangeNotifier {
     if (playerState.$3 != null) {
       _audio = playerState.$3;
 
-      if (_audio != null && (_audio!.path != null || _audio!.url != null)) {
-        _mpris.metadata = await _createMprisMetadata(_audio!);
+      if (_audio != null) {
+        _mediaControlService.setMetaData(audio!);
       }
       _setIsVideo();
     }

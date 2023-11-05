@@ -14,14 +14,14 @@ class PodcastModel extends SafeChangeNotifier {
   PodcastModel(
     this._podcastService,
     this._libraryService,
-    this._connectivity,
+    this._connectivity, [
     this._notificationsClient,
-  );
+  ]);
 
   final PodcastService _podcastService;
   final LibraryService _libraryService;
   final Connectivity _connectivity;
-  final NotificationsClient _notificationsClient;
+  final NotificationsClient? _notificationsClient;
 
   StreamSubscription<bool>? _searchChangedSub;
 
@@ -142,7 +142,7 @@ class PodcastModel extends SafeChangeNotifier {
         .updatePodcasts(
           oldPodcasts: _libraryService.podcasts,
           updatePodcast: _libraryService.updatePodcast,
-          notify: _notificationsClient.notify,
+          notify: _notificationsClient?.notify,
           updateMessage: updateMessage,
         )
         .then((_) => _setCheckingForUpdates(false));

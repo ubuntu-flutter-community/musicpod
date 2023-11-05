@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:path/path.dart' as p;
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:xdg_directories/xdg_directories.dart';
 
 import 'common.dart';
@@ -70,11 +72,24 @@ void sortListByAudioFilter({
 }
 
 Future<String> getWorkingDir() async {
-  final workingDir = '${configHome.path}/$kMusicPodConfigSubDir';
-  if (!Directory(workingDir).existsSync()) {
-    await Directory(workingDir).create();
+  if (Platform.isLinux) {
+    final workingDir = p.join(configHome.path, kMusicPodConfigSubDir);
+    if (!Directory(workingDir).existsSync()) {
+      await Directory(workingDir).create();
+    }
+    return workingDir;
+  } else {
+    Directory tempDir = await getTemporaryDirectory();
+    return tempDir.path;
   }
-  return workingDir;
+}
+
+Future<String?> getMusicDir() async {
+  if (Platform.isLinux) {
+    return getUserDirectory('MUSIC')?.path;
+  } else {
+    return (await getApplicationDocumentsDirectory()).path;
+  }
 }
 
 Future<void> writeSetting(
@@ -186,16 +201,18 @@ Future<Uri?> createUriFromAudio(Audio audio) async {
     Uint8List imageInUnit8List = audio.pictureData!;
     final workingDir = await getWorkingDir();
 
-    final imagesDir = '$workingDir/images/';
+    final imagesDir = p.join(workingDir, 'images');
+
     if (Directory(imagesDir).existsSync()) {
       Directory(imagesDir).deleteSync(recursive: true);
     }
     Directory(imagesDir).createSync();
-    final now = DateTime.now().toUtc().toString();
-    final file = File('$imagesDir$now.png');
+    final now =
+        DateTime.now().toUtc().toString().replaceAll(RegExp(r'[^0-9]'), '');
+    final file = File(p.join(imagesDir, '$now.png'));
     final newFile = await file.writeAsBytes(imageInUnit8List);
 
-    return Uri.file(newFile.path);
+    return Uri.file(newFile.path, windows: Platform.isWindows);
   } else {
     return null;
   }
