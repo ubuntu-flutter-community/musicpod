@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:yaru_widgets/constants.dart';
 
+const kAppName = 'musicpod';
+
+const kBusName = 'org.mpris.MediaPlayer2.musicpod';
+
 const kRepoUrl = 'http://github.com/ubuntu-flutter-community/musicpod';
+
+const kSnapDesktopEntry = '/var/lib/snapd/desktop/applications/musicpod';
+
+// TODO: find the correct flatpak desktop entry path
+// and sed into line 16
+const kFlatPakDesktopEntry = '';
+
+const kDesktopEntry = kSnapDesktopEntry;
 
 const kSearchBarWidth = 350.0;
 
@@ -61,7 +73,6 @@ const kPodcastsFileName = 'podcasts.json';
 const kStarredStationsFileName = 'starredStations.json';
 const kSettingsFileName = 'settings.json';
 const kLastPositionsFileName = 'lastPositions.json';
-const kMusicPodConfigSubDir = 'musicpod';
 const kDirectoryProperty = 'directory';
 const kRadioUrl = 'de1.api.radio-browser.info';
 const kRadioBrowserBaseUrl = 'all.api.radio-browser.info';

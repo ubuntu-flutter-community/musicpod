@@ -73,7 +73,7 @@ void sortListByAudioFilter({
 
 Future<String> getWorkingDir() async {
   if (Platform.isLinux) {
-    final workingDir = p.join(configHome.path, kMusicPodConfigSubDir);
+    final workingDir = p.join(configHome.path, kAppName);
     if (!Directory(workingDir).existsSync()) {
       await Directory(workingDir).create();
     }
