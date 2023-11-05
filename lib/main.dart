@@ -7,6 +7,7 @@ import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
+import 'package:musicpod/constants.dart';
 import 'package:smtc_windows/smtc_windows.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -40,9 +41,9 @@ Future<void> main(List<String> args) async {
   MPRIS? mpris;
   if (Platform.isLinux) {
     mpris = await MPRIS.create(
-      busName: 'org.mpris.MediaPlayer2.musicpod',
-      identity: 'Musicpod',
-      desktopEntry: '/var/lib/snapd/desktop/applications/musicpod',
+      busName: kBusName,
+      identity: kAppName,
+      desktopEntry: kDesktopEntry,
     );
   } else if (Platform.isWindows) {
     smtc = SMTCWindows(
