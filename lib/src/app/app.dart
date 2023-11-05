@@ -84,26 +84,33 @@ class _AppState extends State<App> {
     final libraryModel = context.read<LibraryModel>();
     final playerModel = context.read<PlayerModel>();
     final connectivityNotifier = context.read<ConnectivityNotifier>();
-    final gtkNotifier = getService<GtkApplicationNotifier>();
 
-    gtkNotifier.addCommandLineListener(
-      (args) => _playPath(
-        play: playerModel.play,
-        path: gtkNotifier.commandLine?.firstOrNull,
-      ),
-    );
+    GtkApplicationNotifier? gtkNotifier;
 
-    YaruWindow.of(context).onClose(
-      () async {
-        await playerModel.dispose().then((_) async {
-          await libraryModel.dispose().then((_) async {
-            await resetAllServices();
+    if (Platform.isLinux) {
+      gtkNotifier = getService<GtkApplicationNotifier>();
+
+      gtkNotifier.addCommandLineListener(
+        (args) => _playPath(
+          play: playerModel.play,
+          path: gtkNotifier?.commandLine?.firstOrNull,
+        ),
+      );
+    }
+
+    if (!Platform.isAndroid && !Platform.isIOS) {
+      YaruWindow.of(context).onClose(
+        () async {
+          await playerModel.dispose().then((_) async {
+            await libraryModel.dispose().then((_) async {
+              await resetAllServices();
+            });
           });
-        });
 
-        return true;
-      },
-    );
+          return true;
+        },
+      );
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -117,7 +124,7 @@ class _AppState extends State<App> {
                 }
                 _playPath(
                   play: playerModel.play,
-                  path: gtkNotifier.commandLine?.firstOrNull,
+                  path: gtkNotifier?.commandLine?.firstOrNull,
                 );
               });
             },

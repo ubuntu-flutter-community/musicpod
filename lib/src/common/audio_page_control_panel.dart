@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../icons.dart';
 import '../l10n/l10n.dart';
 
 class AudioPageControlPanel extends StatelessWidget {
@@ -77,8 +77,8 @@ class AudioPageControlPanel extends StatelessWidget {
                 },
                 icon: Icon(
                   isPlaying && queueName == listName
-                      ? YaruIcons.media_pause
-                      : YaruIcons.playlist_play,
+                      ? Iconz().pause
+                      : Iconz().play,
                   color: theme.colorScheme.onInverseSurface,
                 ),
               ),

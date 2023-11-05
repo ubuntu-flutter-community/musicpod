@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 
 import '../../data.dart';
+import '../icons.dart';
 
 class BottomPlayerControls extends StatelessWidget {
   const BottomPlayerControls({
@@ -51,7 +51,7 @@ class BottomPlayerControls extends StatelessWidget {
         children: [
           IconButton(
             icon: Icon(
-              YaruIcons.shuffle,
+              Iconz().shuffle,
               color: !active
                   ? theme.disabledColor
                   : (shuffle
@@ -64,7 +64,7 @@ class BottomPlayerControls extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: IconButton(
               onPressed: !active ? null : () => playPrevious(),
-              icon: const Icon(YaruIcons.skip_backward),
+              icon: Icon(Iconz().skipBackward),
             ),
           ),
           IconButton(
@@ -78,19 +78,19 @@ class BottomPlayerControls extends StatelessWidget {
                     }
                   },
             icon: Icon(
-              isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
+              isPlaying ? Iconz().pause : Iconz().play,
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: IconButton(
               onPressed: !active ? null : () => playNext(),
-              icon: const Icon(YaruIcons.skip_forward),
+              icon: Icon(Iconz().skipForward),
             ),
           ),
           IconButton(
             icon: Icon(
-              YaruIcons.repeat_single,
+              Iconz().repeatSingle,
               color: !active
                   ? theme.disabledColor
                   : (repeatSingle

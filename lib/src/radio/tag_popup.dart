@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/src/icons.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../l10n/l10n.dart';
@@ -65,9 +65,11 @@ class TagPopup extends StatelessWidget {
                               : removeFav(t);
                           stateSetter(() {});
                         },
-                        icon: favs?.contains(t?.name) == true
-                            ? const Icon(YaruIcons.star_filled)
-                            : const Icon(YaruIcons.star),
+                        icon: Icon(
+                          favs?.contains(t?.name) == true
+                              ? Iconz().starFilled
+                              : Iconz().star,
+                        ),
                       ),
                     ],
                   );

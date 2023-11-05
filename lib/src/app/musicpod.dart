@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -12,36 +13,55 @@ class MusicPod extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return YaruTheme(
-      builder: (context, yaruThemeData, child) {
-        return GtkApplication(
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: yaruThemeData.theme,
-            darkTheme: yaruThemeData.darkTheme?.copyWith(
-              // TODO: port to yaru.dart
-              dividerTheme: const DividerThemeData(
-                color: Color.fromARGB(255, 60, 60, 60),
-                space: 1.0,
-                thickness: 0.0,
-              ),
-            ),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: supportedLocales,
-            onGenerateTitle: (context) => 'MusicPod',
-            home: App.create(),
-            scrollBehavior: const MaterialScrollBehavior().copyWith(
-              dragDevices: {
-                PointerDeviceKind.mouse,
-                PointerDeviceKind.touch,
-                PointerDeviceKind.stylus,
-                PointerDeviceKind.unknown,
-                PointerDeviceKind.trackpad,
-              },
-            ),
+    if (Platform.isLinux) {
+      return YaruTheme(
+        builder: (context, yaruThemeData, child) {
+          final materialApp =
+              _app(yaruThemeData.theme, yaruThemeData.darkTheme);
+          return GtkApplication(
+            child: materialApp,
+          );
+        },
+      );
+    } else {
+      return _app(
+        ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
+        ),
+        ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.purple,
+            brightness: Brightness.dark,
           ),
-        );
-      },
+        ),
+      );
+    }
+  }
+
+  MaterialApp _app(ThemeData? lightTheme, ThemeData? darkTheme) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: lightTheme,
+      darkTheme: darkTheme?.copyWith(
+        dividerTheme: const DividerThemeData(
+          color: Color.fromARGB(255, 85, 74, 74),
+          space: 1.0,
+          thickness: 0.0,
+        ),
+      ),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: supportedLocales,
+      onGenerateTitle: (context) => 'MusicPod',
+      home: App.create(),
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: {
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.touch,
+          PointerDeviceKind.stylus,
+          PointerDeviceKind.unknown,
+          PointerDeviceKind.trackpad,
+        },
+      ),
     );
   }
 }

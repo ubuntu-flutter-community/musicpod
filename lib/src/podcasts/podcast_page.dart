@@ -1,11 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:yaru_icons/yaru_icons.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../icons.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 
@@ -28,23 +27,23 @@ class PodcastPage extends StatelessWidget {
     required bool isOnline,
   }) {
     if (!isOnline) {
-      return const Icon(YaruIcons.network_offline);
+      return Icon(Iconz().offline);
     }
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(
-        width: kYaruIconSize,
-        height: kYaruIconSize,
+        width: iconSize(),
+        height: iconSize(),
         child: SafeNetworkImage(
           url: imageUrl,
           fit: BoxFit.fitHeight,
           filterQuality: FilterQuality.medium,
-          fallBackIcon: const Icon(
-            YaruIcons.rss,
+          fallBackIcon: Icon(
+            Iconz().rss,
           ),
-          errorIcon: const Icon(
-            YaruIcons.rss,
+          errorIcon: Icon(
+            Iconz().rss,
           ),
         ),
       ),
@@ -91,12 +90,12 @@ class PodcastPage extends StatelessWidget {
           ? null
           : SafeNetworkImage(
               fallBackIcon: Icon(
-                YaruIcons.podcast,
+                Iconz().podcast,
                 size: 80,
                 color: Theme.of(context).hintColor,
               ),
               errorIcon: Icon(
-                YaruIcons.podcast,
+                Iconz().podcast,
                 size: 80,
                 color: Theme.of(context).hintColor,
               ),
@@ -113,7 +112,7 @@ class PodcastPage extends StatelessWidget {
       title: Text(title),
       controlPanelButton: IconButton(
         icon: Icon(
-          YaruIcons.rss,
+          Iconz().rss,
           color: subscribed ? theme.primaryColor : theme.colorScheme.onSurface,
         ),
         onPressed: () {

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/constants.dart';
 import 'package:provider/provider.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
 import '../../player.dart';
+import '../icons.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 
@@ -242,20 +242,18 @@ class LocalAudioPageIcon extends StatelessWidget {
     final theme = Theme.of(context);
     if (isPlaying) {
       return Icon(
-        YaruIcons.media_play,
+        Iconz().play,
         color: theme.primaryColor,
       );
     }
     return Stack(
       children: [
-        selected
-            ? const Icon(YaruIcons.drive_harddisk_filled)
-            : const Icon(YaruIcons.drive_harddisk),
+        selected ? Icon(Iconz().localAudioFilled) : Icon(Iconz().localAudio),
         Positioned(
           left: 5,
           top: 1,
           child: Icon(
-            YaruIcons.music_note,
+            Iconz().musicNote,
             size: 10,
             color: selected
                 ? theme.colorScheme.surface

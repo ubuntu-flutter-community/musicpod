@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../icons.dart';
 import '../l10n/l10n.dart';
 import 'playlist_dialog.dart';
 
@@ -46,7 +46,7 @@ class PlaylistPage extends StatelessWidget {
                   width: 200,
                   child: Center(
                     child: Icon(
-                      YaruIcons.music_note,
+                      Iconz().musicNote,
                       size: 80,
                       color: theme.hintColor,
                     ),
@@ -68,7 +68,7 @@ class PlaylistPage extends StatelessWidget {
       pageId: playlist.key,
       noResultMessage: Text(context.l10n.emptyPlaylist),
       controlPanelButton: IconButton(
-        icon: const Icon(YaruIcons.pen),
+        icon: Icon(Iconz().pen),
         onPressed: () => showDialog(
           context: context,
           builder: (context) => PlaylistDialog(

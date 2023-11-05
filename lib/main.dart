@@ -20,7 +20,9 @@ import 'podcasts.dart';
 import 'radio.dart';
 
 Future<void> main(List<String> args) async {
-  await YaruWindowTitleBar.ensureInitialized();
+  if (!Platform.isAndroid) {
+    await YaruWindowTitleBar.ensureInitialized();
+  }
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
 
@@ -84,11 +86,11 @@ Future<void> main(List<String> args) async {
       NotificationsClient.new,
       dispose: (s) async => await s.close(),
     );
+    registerService<GtkApplicationNotifier>(
+      () => GtkApplicationNotifier(args),
+      dispose: (s) => s.dispose(),
+    );
   }
-  registerService<GtkApplicationNotifier>(
-    () => GtkApplicationNotifier(args),
-    dispose: (s) => s.dispose(),
-  );
 
   registerService<RadioService>(() => RadioService(connectivity));
 

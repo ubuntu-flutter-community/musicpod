@@ -2,11 +2,10 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:musicpod/src/common/stream_provider_share_button.dart';
-import 'package:yaru_icons/yaru_icons.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../icons.dart';
 import '../l10n/l10n.dart';
 
 class AlbumPage extends StatelessWidget {
@@ -27,13 +26,13 @@ class AlbumPage extends StatelessWidget {
     Widget? albumArt;
     if (picture != null) {
       albumArt = SizedBox(
-        width: kYaruIconSize,
-        height: kYaruIconSize,
+        width: iconSize(),
+        height: iconSize(),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(5),
           child: Image.memory(
             picture,
-            height: kYaruIconSize,
+            height: iconSize(),
             fit: BoxFit.fitHeight,
             filterQuality: FilterQuality.medium,
           ),
@@ -41,8 +40,8 @@ class AlbumPage extends StatelessWidget {
       );
     }
     return albumArt ??
-        const Icon(
-          YaruIcons.playlist_play,
+        Icon(
+          Iconz().startPlayList,
         );
   }
 
@@ -76,7 +75,7 @@ class AlbumPage extends StatelessWidget {
           if (isPinnedAlbum(id))
             IconButton(
               icon: Icon(
-                YaruIcons.pin,
+                Iconz().pin,
                 color: Theme.of(context).primaryColor,
               ),
               onPressed: () => removePinnedAlbum(
@@ -85,8 +84,8 @@ class AlbumPage extends StatelessWidget {
             )
           else
             IconButton(
-              icon: const Icon(
-                YaruIcons.pin,
+              icon: Icon(
+                Iconz().pin,
               ),
               onPressed: album == null
                   ? null

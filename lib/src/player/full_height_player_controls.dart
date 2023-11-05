@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
+import '../icons.dart';
 
 class FullHeightPlayerControls extends StatelessWidget {
   const FullHeightPlayerControls({
@@ -86,7 +86,7 @@ class FullHeightPlayerControls extends StatelessWidget {
         ),
         IconButton(
           icon: Icon(
-            YaruIcons.shuffle,
+            Iconz().shuffle,
             color: !active
                 ? theme.disabledColor
                 : (shuffle ? theme.primaryColor : theme.colorScheme.onSurface),
@@ -98,7 +98,7 @@ class FullHeightPlayerControls extends StatelessWidget {
         ),
         IconButton(
           onPressed: !active ? null : () => playPrevious(),
-          icon: const Icon(YaruIcons.skip_backward),
+          icon: Icon(Iconz().skipBackward),
         ),
         const SizedBox(
           width: spacing,
@@ -114,7 +114,7 @@ class FullHeightPlayerControls extends StatelessWidget {
                   }
                 },
           icon: Icon(
-            isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
+            isPlaying ? Iconz().pause : Iconz().play,
           ),
         ),
         const SizedBox(
@@ -122,14 +122,14 @@ class FullHeightPlayerControls extends StatelessWidget {
         ),
         IconButton(
           onPressed: !active ? null : () => playNext(),
-          icon: const Icon(YaruIcons.skip_forward),
+          icon: Icon(Iconz().skipForward),
         ),
         const SizedBox(
           width: spacing,
         ),
         IconButton(
           icon: Icon(
-            YaruIcons.repeat_single,
+            Iconz().repeatSingle,
             color: !active
                 ? theme.disabledColor
                 : (repeatSingle

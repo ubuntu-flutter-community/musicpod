@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../globals.dart';
+import '../icons.dart';
 
 const _kBottomPlayerHeight = 90.0;
 
@@ -180,29 +180,30 @@ class BottomPlayer extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
-            flex: 3,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                VolumeSliderPopup(volume: volume, setVolume: setVolume),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: QueuePopup(
-                    audio: audio,
-                    queue: queue,
+          if (MediaQuery.of(context).size.width > 700)
+            Expanded(
+              flex: 3,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  VolumeSliderPopup(volume: volume, setVolume: setVolume),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: QueuePopup(
+                      audio: audio,
+                      queue: queue,
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    YaruIcons.fullscreen,
-                    color: theme.colorScheme.onSurface,
+                  IconButton(
+                    icon: Icon(
+                      Iconz().fullScreen,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                    onPressed: () => setFullScreen(true),
                   ),
-                  onPressed: () => setFullScreen(true),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
           const SizedBox(
             width: 10,
           ),
@@ -305,11 +306,11 @@ class _BottomPlayerImage extends StatelessWidget {
     final theme = Theme.of(context);
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
-      iconData = YaruIcons.radio;
+      iconData = Iconz().radio;
     } else if (audio?.audioType == AudioType.podcast) {
-      iconData = YaruIcons.podcast;
+      iconData = Iconz().podcast;
     } else {
-      iconData = YaruIcons.music_note;
+      iconData = Iconz().musicNote;
     }
     if (isVideo == true) {
       return RepaintBoundary(

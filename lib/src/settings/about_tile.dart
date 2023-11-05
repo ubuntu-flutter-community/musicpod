@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:musicpod/constants.dart';
+import 'package:musicpod/src/icons.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../l10n/l10n.dart';
@@ -72,8 +72,8 @@ class AboutTile extends StatelessWidget {
             const SizedBox(
               width: 5,
             ),
-            const Icon(
-              YaruIcons.external_link,
+            Icon(
+              Iconz().external,
               color: Colors.blue,
               size: 18,
             ),
@@ -87,8 +87,8 @@ class AboutTile extends StatelessWidget {
         height: kYaruTitleBarItemHeight,
         width: kYaruTitleBarItemHeight,
         child: IconButton(
-          icon: const Icon(
-            YaruIcons.music_note,
+          icon: Icon(
+            Iconz().menu,
           ),
           onPressed: () {
             return showAboutDialog(

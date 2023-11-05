@@ -4,6 +4,7 @@ import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../data.dart';
+import '../icons.dart';
 import '../l10n/l10n.dart';
 import '../library/playlist_dialog.dart';
 
@@ -46,7 +47,7 @@ class LikeButton extends StatelessWidget {
             : const YaruAnimatedHeartIcon(filled: false),
         initialProgress: 1.0,
         color: audioSelected ? theme.colorScheme.onSurface : theme.hintColor,
-        size: kYaruIconSize,
+        size: iconSize(),
       ),
     );
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_icons/yaru_icons.dart';
+
+import '../icons.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({
@@ -52,8 +53,8 @@ class _SplashScreenState extends State<SplashScreen>
                 color: theme.primaryColor,
                 borderRadius: BorderRadius.circular(30),
               ),
-              child: const Icon(
-                YaruIcons.music_note,
+              child: Icon(
+                Iconz().musicNote,
                 size: 250,
                 color: Colors.white,
               ),

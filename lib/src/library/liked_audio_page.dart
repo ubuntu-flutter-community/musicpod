@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/constants.dart';
 import 'package:provider/provider.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../icons.dart';
 import '../l10n/l10n.dart';
 
 class LikedAudioPage extends StatelessWidget {
@@ -21,9 +21,7 @@ class LikedAudioPage extends StatelessWidget {
     required BuildContext context,
     required bool selected,
   }) {
-    return selected
-        ? const Icon(YaruIcons.heart_filled)
-        : const Icon(YaruIcons.heart);
+    return selected ? Icon(Iconz().heartFilled) : Icon(Iconz().heart);
   }
 
   final void Function({

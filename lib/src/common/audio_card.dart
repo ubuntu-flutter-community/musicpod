@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/constants.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
+
+import '../icons.dart';
 
 class AudioCard extends StatefulWidget {
   const AudioCard({
@@ -68,7 +69,7 @@ class _AudioCardState extends State<AudioCard> {
                         child: IconButton(
                           onPressed: widget.onPlay,
                           icon: Icon(
-                            YaruIcons.media_play,
+                            Iconz().play,
                             color: theme.colorScheme.onPrimary,
                           ),
                         ),

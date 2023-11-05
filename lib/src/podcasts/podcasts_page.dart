@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:musicpod/constants.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -10,6 +9,7 @@ import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
+import '../icons.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 
@@ -353,13 +353,11 @@ class PodcastsPageIcon extends StatelessWidget {
 
     if (isPlaying) {
       return Icon(
-        YaruIcons.media_play,
+        Iconz().play,
         color: theme.primaryColor,
       );
     }
 
-    return selected
-        ? const Icon(YaruIcons.podcast_filled)
-        : const Icon(YaruIcons.podcast);
+    return selected ? Icon(Iconz().podcastFilled) : Icon(Iconz().podcast);
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
+import '../icons.dart';
 import '../l10n/l10n.dart';
 
 class FullHeightPlayer extends StatelessWidget {
@@ -229,8 +229,8 @@ class FullHeightPlayer extends StatelessWidget {
           child: IconButton(
             icon: Icon(
               playerViewMode == PlayerViewMode.fullWindow
-                  ? YaruIcons.fullscreen_exit
-                  : YaruIcons.fullscreen,
+                  ? Iconz().fullScreenExit
+                  : Iconz().fullScreen,
               color: isVideo ? Colors.white : theme.colorScheme.onSurface,
             ),
             onPressed: () => setFullScreen(
@@ -371,11 +371,11 @@ class _FullHeightPlayerImage extends StatelessWidget {
 
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
-      iconData = YaruIcons.radio;
+      iconData = Iconz().radio;
     } else if (audio?.audioType == AudioType.podcast) {
-      iconData = YaruIcons.podcast;
+      iconData = Iconz().podcast;
     } else {
-      iconData = YaruIcons.music_note;
+      iconData = Iconz().musicNote;
     }
 
     Widget image;

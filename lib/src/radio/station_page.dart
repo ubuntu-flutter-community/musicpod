@@ -6,6 +6,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../icons.dart';
 import 'radio_page.dart';
 
 class StationPage extends StatelessWidget {
@@ -36,29 +37,24 @@ class StationPage extends StatelessWidget {
     required bool isOnline,
   }) {
     if (!isOnline) {
-      return const Icon(YaruIcons.network_offline);
+      return Icon(Iconz().offline);
     }
 
+    final icon = selected
+        ? Icon(
+            Iconz().starFilled,
+          )
+        : Icon(
+            Iconz().starFilled,
+          );
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(
-        height: kYaruIconSize,
-        width: kYaruIconSize,
+        height: iconSize(),
+        width: iconSize(),
         child: SafeNetworkImage(
-          fallBackIcon: selected
-              ? const Icon(
-                  YaruIcons.star_filled,
-                )
-              : const Icon(
-                  YaruIcons.star,
-                ),
-          errorIcon: selected
-              ? const Icon(
-                  YaruIcons.star_filled,
-                )
-              : const Icon(
-                  YaruIcons.star,
-                ),
+          fallBackIcon: icon,
+          errorIcon: icon,
           fit: BoxFit.fitHeight,
           url: imageUrl,
           filterQuality: FilterQuality.medium,
@@ -150,7 +146,7 @@ class StationPage extends StatelessWidget {
                                     : const YaruAnimatedStarIcon(filled: false),
                                 initialProgress: 1.0,
                                 color: theme.colorScheme.onPrimary,
-                                size: kYaruIconSize,
+                                size: iconSize(),
                               ),
                             ),
                           ),

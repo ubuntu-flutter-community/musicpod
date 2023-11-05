@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:yaru_icons/yaru_icons.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../data.dart';
+import '../icons.dart';
 
 class LikeIconButton extends StatelessWidget {
   const LikeIconButton({
@@ -35,7 +35,7 @@ class LikeIconButton extends StatelessWidget {
             ? const YaruAnimatedStarIcon(filled: true)
             : const YaruAnimatedStarIcon(filled: false),
         initialProgress: 1.0,
-        size: kYaruIconSize,
+        size: iconSize(),
       );
     } else {
       likeIcon = YaruAnimatedIcon(
@@ -43,7 +43,7 @@ class LikeIconButton extends StatelessWidget {
             ? const YaruAnimatedHeartIcon(filled: true)
             : const YaruAnimatedHeartIcon(filled: false),
         initialProgress: 1.0,
-        size: kYaruIconSize,
+        size: iconSize(),
       );
     }
 

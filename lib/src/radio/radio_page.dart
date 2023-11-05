@@ -3,13 +3,13 @@ import 'package:musicpod/constants.dart';
 import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru/yaru.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
+import '../icons.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import 'radio_model.dart';
@@ -271,7 +271,7 @@ class _ReconnectPage extends StatelessWidget {
           OutlinedButton.icon(
             onPressed: init,
             label: const Text('Reconnect to server'),
-            icon: const Icon(YaruIcons.refresh),
+            icon: Icon(Iconz().refresh),
           ),
         ],
       ),
@@ -384,7 +384,7 @@ class RadioFallBackIcon extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: Icon(
-          YaruIcons.radio,
+          Iconz().radio,
           size: iconSize ?? 70,
           color: contrastColor(
             getColor(
@@ -456,13 +456,11 @@ class RadioPageIcon extends StatelessWidget {
     final theme = Theme.of(context);
     if (isPlaying) {
       return Icon(
-        YaruIcons.media_play,
+        Iconz().play,
         color: theme.primaryColor,
       );
     }
 
-    return selected
-        ? const Icon(YaruIcons.radio_filled)
-        : const Icon(YaruIcons.radio);
+    return selected ? Icon(Iconz().radioFilled) : Icon(Iconz().radio);
   }
 }

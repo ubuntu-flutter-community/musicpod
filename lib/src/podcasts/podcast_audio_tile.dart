@@ -7,12 +7,12 @@ import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
+import '../icons.dart';
 
 class PodcastAudioTile extends StatelessWidget {
   const PodcastAudioTile({
@@ -80,10 +80,10 @@ class PodcastAudioTile extends StatelessWidget {
                 child: IconButton(
                   icon: (isPlayerPlaying && selected)
                       ? Icon(
-                          YaruIcons.media_pause,
+                          Iconz().pause,
                           color: theme.primaryColor,
                         )
-                      : const Icon(YaruIcons.media_play),
+                      : Icon(Iconz().play),
                   onPressed: () {
                     if (selected) {
                       if (isPlayerPlaying) {
@@ -159,8 +159,8 @@ class _Bottom extends StatelessWidget {
               audio: audio,
             ),
             // TODO: implement download
-            const IconButton(
-              icon: Icon(YaruIcons.download),
+            IconButton(
+              icon: Icon(Iconz().download),
               onPressed: null,
             ),
             const SizedBox(
@@ -292,8 +292,8 @@ class _AudioProgress extends StatelessWidget {
 
     return RepaintBoundary(
       child: SizedBox(
-        width: kYaruIconSize,
-        height: kYaruIconSize,
+        width: iconSize(),
+        height: iconSize(),
         child: YaruCircularProgressIndicator(
           color: selected ? theme.primaryColor : theme.colorScheme.onSurface,
           value: sliderActive
