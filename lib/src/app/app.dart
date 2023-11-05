@@ -7,7 +7,7 @@ import 'package:gtk/gtk.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:mime/mime.dart';
-import 'package:mpris_service/mpris_service.dart';
+import 'package:musicpod/src/media_control/media_control_service.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -39,7 +39,7 @@ class App extends StatefulWidget {
         ChangeNotifierProvider(
           create: (_) => PlayerModel(
             videoController: getService<VideoController>(),
-            mpris: Platform.isLinux ? getService<MPRIS>() : null,
+            mediaControlService: getService<MediaControlService>(),
             libraryService: getService<LibraryService>(),
           ),
         ),

@@ -7,12 +7,14 @@ import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
+import 'package:smtc_windows/smtc_windows.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import 'app.dart';
 import 'library.dart';
 import 'local_audio.dart';
+import 'media_control_service.dart';
 import 'podcasts.dart';
 import 'radio.dart';
 
@@ -34,17 +36,44 @@ Future<void> main(List<String> args) async {
 
   registerService<VideoController>(() => VideoController(player));
 
+  SMTCWindows? smtc;
+  MPRIS? mpris;
   if (Platform.isLinux) {
-    final mpris = await MPRIS.create(
+    mpris = await MPRIS.create(
       busName: 'org.mpris.MediaPlayer2.musicpod',
       identity: 'Musicpod',
       desktopEntry: '/var/lib/snapd/desktop/applications/musicpod',
     );
-    registerService<MPRIS>(
-      () => mpris,
-      dispose: (s) async => await s.dispose(),
+  } else if (Platform.isWindows) {
+    smtc = SMTCWindows(
+      metadata: const MusicMetadata(
+        title: '',
+        album: '',
+        albumArtist: '',
+        artist: '',
+      ),
+      timeline: const PlaybackTimeline(
+        startTimeMs: 0,
+        endTimeMs: 1000,
+        positionMs: 0,
+        minSeekTimeMs: 0,
+        maxSeekTimeMs: 1000,
+      ),
+      config: const SMTCConfig(
+        fastForwardEnabled: true,
+        nextEnabled: true,
+        pauseEnabled: true,
+        playEnabled: true,
+        rewindEnabled: true,
+        prevEnabled: true,
+        stopEnabled: true,
+      ),
     );
   }
+  registerService<MediaControlService>(
+    () => MediaControlService(mpris, smtc),
+    dispose: (s) => s.dispose(),
+  );
 
   registerService<LibraryService>(
     () => libraryService,

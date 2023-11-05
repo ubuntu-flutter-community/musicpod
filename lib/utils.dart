@@ -79,12 +79,7 @@ Future<String> getWorkingDir() async {
     return workingDir;
   } else {
     Directory tempDir = await getTemporaryDirectory();
-    return tempDir.path; //C:\Users\USER_NAME\AppData\Local\Temp
-
-    // Directory appDocDir = await getApplicationDocumentsDirectory();
-    // String appDocPath = appDocDir.path; //C:\Users\USER_NAME\Documents
-//Warning: on debug mode this code get location project but in release mode will get your location app correctly
-    // String dir = Directory.current.path; // PATH_APP
+    return tempDir.path;
   }
 }
 
@@ -205,19 +200,23 @@ Future<Uri?> createUriFromAudio(Audio audio) async {
     Uint8List imageInUnit8List = audio.pictureData!;
     final workingDir = await getWorkingDir();
 
-    final imagesDir = '$workingDir/images/';
+    final imagesDir = '$workingDir${pathSeparator}images';
     if (Directory(imagesDir).existsSync()) {
       Directory(imagesDir).deleteSync(recursive: true);
     }
     Directory(imagesDir).createSync();
     final now = DateTime.now().toUtc().toString();
-    final file = File('$imagesDir$now.png');
+    final file = File('$imagesDir$pathSeparator$now.png');
     final newFile = await file.writeAsBytes(imageInUnit8List);
 
     return Uri.file(newFile.path);
   } else {
     return null;
   }
+}
+
+String get pathSeparator {
+  return Platform.isWindows ? '\\' : '/';
 }
 
 String? generateAlbumId(Audio audio) {
