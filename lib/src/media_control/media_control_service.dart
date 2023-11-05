@@ -89,11 +89,16 @@ class MediaControlService {
   }
 
   Future<void> _setSmtcMetaData(Audio audio) async {
-    if (audio.album != null) _smtc?.setAlbum(audio.album!);
-    if (audio.title != null) _smtc?.setTitle(audio.title!);
-    if (audio.artist != null) _smtc?.setArtist(audio.artist!);
     final uri = await createUriFromAudio(audio);
-    if (uri != null) _smtc?.setThumbnail('\\$uri');
+    _smtc?.updateMetadata(
+      MusicMetadata(
+        title: audio.title,
+        album: audio.album,
+        albumArtist: audio.albumArtist,
+        artist: audio.artist,
+        thumbnail: '$uri',
+      ),
+    );
   }
 
   Future<MPRISMetadata> _createMprisMetadata(Audio audio) async {

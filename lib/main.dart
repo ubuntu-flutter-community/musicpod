@@ -46,12 +46,6 @@ Future<void> main(List<String> args) async {
     );
   } else if (Platform.isWindows) {
     smtc = SMTCWindows(
-      metadata: const MusicMetadata(
-        title: '',
-        album: '',
-        albumArtist: '',
-        artist: '',
-      ),
       timeline: const PlaybackTimeline(
         startTimeMs: 0,
         endTimeMs: 1000,
