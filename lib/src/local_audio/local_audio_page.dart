@@ -178,9 +178,7 @@ class _LocalAudioPageState extends State<LocalAudioPage>
       initialIndex: widget.selectedIndex,
       length: 3,
       child: Scaffold(
-        appBar: YaruWindowTitleBar(
-          backgroundColor: Colors.transparent,
-          border: BorderSide.none,
+        appBar: HeaderBar(
           style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,

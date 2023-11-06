@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/constants.dart';
+import 'package:musicpod/src/common/common_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -56,21 +57,25 @@ class LikedAudioPage extends StatelessWidget {
       audioPageType: AudioPageType.likedAudio,
     );
 
+    final leading = (Navigator.of(context).canPop())
+        ? const NavBackButton()
+        : const SizedBox.shrink();
+    final title = SizedBox(
+      width: kSearchBarWidth,
+      child: YaruTabBar(
+        tabs: [
+          Tab(text: context.l10n.localAudio),
+          Tab(text: context.l10n.podcasts),
+        ],
+      ),
+    );
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: YaruWindowTitleBar(
-          title: SizedBox(
-            width: kSearchBarWidth,
-            child: YaruTabBar(
-              tabs: [
-                Tab(text: context.l10n.localAudio),
-                Tab(text: context.l10n.podcasts),
-              ],
-            ),
-          ),
-          border: BorderSide.none,
-          backgroundColor: Colors.transparent,
+        appBar: HeaderBar(
+          leading: leading,
+          title: title,
           style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,

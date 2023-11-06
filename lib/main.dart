@@ -22,7 +22,7 @@ import 'podcasts.dart';
 import 'radio.dart';
 
 Future<void> main(List<String> args) async {
-  if (!Platform.isAndroid) {
+  if (!(Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)) {
     await YaruWindowTitleBar.ensureInitialized();
   }
   WidgetsFlutterBinding.ensureInitialized();

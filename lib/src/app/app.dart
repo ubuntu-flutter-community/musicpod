@@ -323,8 +323,8 @@ class _AppState extends State<App> {
             ],
           ),
           if (isFullScreen == true)
-            Material(
-              child: Material(
+            Scaffold(
+              body: Material(
                 color: playerBg,
                 child: PlayerView(
                   onTextTap: onTextTap,

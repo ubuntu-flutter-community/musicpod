@@ -209,9 +209,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
       return const OfflinePage();
     } else {
       return YaruDetailPage(
-        appBar: YaruWindowTitleBar(
-          backgroundColor: theme.scaffoldBackgroundColor,
-          border: BorderSide.none,
+        appBar: HeaderBar(
           leading: (Navigator.canPop(context))
               ? const NavBackButton()
               : const SizedBox.shrink(),

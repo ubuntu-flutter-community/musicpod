@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/src/common/colors.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../data.dart';
 import '../../library.dart';
 import '../../settings.dart';
+import '../common/colors.dart';
+import '../common/common_widgets.dart';
 import '../globals.dart';
 import '../l10n/l10n.dart';
 import 'master_item.dart';
@@ -36,9 +37,8 @@ class MasterDetailPage extends StatelessWidget {
       child: YaruMasterDetailPage(
         navigatorKey: navigatorKey,
         onSelected: (value) => setIndex(value ?? 0),
-        appBar: YaruWindowTitleBar(
-          backgroundColor: Colors.transparent,
-          border: BorderSide.none,
+        appBar: HeaderBar(
+          style: YaruTitleBarStyle.undecorated,
           title: const Text('MusicPod'),
           leading: const AboutTile(),
           actions: [

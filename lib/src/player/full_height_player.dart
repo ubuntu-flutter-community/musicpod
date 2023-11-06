@@ -260,8 +260,7 @@ class FullHeightPlayer extends StatelessWidget {
 
     return Column(
       children: [
-        YaruWindowTitleBar(
-          border: BorderSide.none,
+        HeaderBar(
           foregroundColor: isVideo == true ? Colors.white : null,
           backgroundColor: isVideo == true ? Colors.black : Colors.transparent,
         ),

@@ -92,9 +92,8 @@ class AudioPage extends StatelessWidget {
 
     return YaruDetailPage(
       key: ValueKey(pageId),
-      appBar: YaruWindowTitleBar(
+      appBar: HeaderBar(
         backgroundColor: theme.scaffoldBackgroundColor,
-        border: BorderSide.none,
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,

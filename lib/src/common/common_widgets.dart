@@ -24,7 +24,7 @@ class SideBarProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruApp
+    return _yaruStyled
         ? const SizedBox(
             height: 18,
             width: 18,
@@ -65,7 +65,7 @@ class Progress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = color ?? Theme.of(context).primaryColor.withOpacity(0.5);
-    return _yaruApp
+    return _yaruStyled
         ? YaruCircularProgressIndicator(
             strokeWidth: strokeWidth,
             value: value,
@@ -88,26 +88,74 @@ class Progress extends StatelessWidget {
   }
 }
 
-double? get avatarIconSize => _yaruApp ? kYaruTitleBarItemHeight / 2 : null;
+class HeaderBar extends StatelessWidget implements PreferredSizeWidget {
+  const HeaderBar({
+    super.key,
+    this.title,
+    this.leading,
+    this.actions,
+    this.style = YaruTitleBarStyle.normal,
+    this.titleSpacing,
+    this.backgroundColor = Colors.transparent,
+    this.foregroundColor,
+  });
 
-double? get snackBarWidth => _yaruApp ? kSnackBarWidth : null;
+  final Widget? title;
+  final Widget? leading;
+  final List<Widget>? actions;
+  final YaruTitleBarStyle style;
+  final double? titleSpacing;
+  final Color? foregroundColor;
+  final Color? backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return _yaruStyled
+        ? YaruWindowTitleBar(
+            titleSpacing: titleSpacing,
+            actions: actions,
+            leading: leading,
+            title: title,
+            border: BorderSide.none,
+            backgroundColor: backgroundColor,
+            style: style,
+          )
+        : AppBar(
+            leading: leading,
+            title: title,
+          );
+  }
+
+  @override
+  Size get preferredSize => Size(
+        0,
+        _mobile
+            ? (style == YaruTitleBarStyle.hidden ? 0 : kYaruTitleBarHeight)
+            : kToolbarHeight,
+      );
+}
+
+double? get avatarIconSize => _yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
+
+double? get snackBarWidth => _yaruStyled ? kSnackBarWidth : null;
 
 double get searchBarWidth => _mobile ? kSearchBarWidth : 600;
 
-bool get showSideBarFilter => _yaruApp ? true : false;
+bool get showSideBarFilter => _yaruStyled ? true : false;
 
 FontWeight get smallTextFontWeight =>
-    _yaruApp ? FontWeight.w100 : FontWeight.w400;
+    _yaruStyled ? FontWeight.w100 : FontWeight.w400;
 
-FontWeight get mediumTextWeight => _yaruApp ? FontWeight.w200 : FontWeight.w500;
+FontWeight get mediumTextWeight =>
+    _yaruStyled ? FontWeight.w200 : FontWeight.w500;
 
-bool get _yaruApp => Platform.isLinux;
+bool get _yaruStyled => Platform.isLinux;
 
-bool get _mobile => Platform.isAndroid || Platform.isIOS;
+bool get _mobile => Platform.isAndroid || Platform.isIOS || Platform.isFuchsia;
 
-bool get shrinkTitleBarItems => _yaruApp;
+bool get shrinkTitleBarItems => _yaruStyled;
 
-double get chipHeight => _yaruApp ? kYaruTitleBarItemHeight : 40;
+double get chipHeight => _yaruStyled ? kYaruTitleBarItemHeight : 40;
 
 EdgeInsetsGeometry get gridPadding =>
-    _yaruApp ? kPodcastGridPadding : kMobilePodcastGridPadding;
+    _yaruStyled ? kPodcastGridPadding : kMobilePodcastGridPadding;

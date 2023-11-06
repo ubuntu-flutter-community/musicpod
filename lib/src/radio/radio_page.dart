@@ -79,8 +79,6 @@ class _RadioPageState extends State<RadioPage> {
     final searchActive = context.select((RadioModel m) => m.searchActive);
     final setSearchActive = model.setSearchActive;
 
-    final theme = Theme.of(context);
-
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
 
@@ -209,9 +207,7 @@ class _RadioPageState extends State<RadioPage> {
       }
 
       return YaruDetailPage(
-        appBar: YaruWindowTitleBar(
-          backgroundColor: theme.scaffoldBackgroundColor,
-          border: BorderSide.none,
+        appBar: HeaderBar(
           style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
