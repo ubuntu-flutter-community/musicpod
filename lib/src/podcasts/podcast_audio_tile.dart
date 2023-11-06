@@ -12,6 +12,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
+import '../common/common_widgets.dart';
 import '../common/icons.dart';
 
 class PodcastAudioTile extends StatelessWidget {
@@ -75,7 +76,7 @@ class PodcastAudioTile extends StatelessWidget {
           child: Row(
             children: [
               CircleAvatar(
-                radius: Iconz().avatarIconSize,
+                radius: avatarIconSize,
                 backgroundColor: Iconz().getAvatarIconColor(theme),
                 child: IconButton(
                   icon: (isPlayerPlaying && selected)

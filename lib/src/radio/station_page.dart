@@ -132,7 +132,7 @@ class StationPage extends StatelessWidget {
                       Row(
                         children: [
                           CircleAvatar(
-                            radius: Iconz().avatarIconSize,
+                            radius: avatarIconSize,
                             backgroundColor: theme.primaryColor,
                             child: IconButton(
                               onPressed: isStarred

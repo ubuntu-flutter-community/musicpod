@@ -1,13 +1,11 @@
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:gtk/gtk.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:metadata_god/metadata_god.dart';
-import 'package:mime/mime.dart';
+import 'package:musicpod/src/common/colors.dart';
 import 'package:musicpod/src/common/common_widgets.dart';
+import 'package:musicpod/src/external_path/external_path_service.dart';
 import 'package:musicpod/src/media_control/media_control_service.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
@@ -55,7 +53,6 @@ class App extends StatefulWidget {
             getService<PodcastService>(),
             getService<LibraryService>(),
             getService<Connectivity>(),
-            Platform.isLinux ? getService<NotificationsClient>() : null,
           ),
         ),
         ChangeNotifierProvider(
@@ -86,18 +83,8 @@ class _AppState extends State<App> {
     final playerModel = context.read<PlayerModel>();
     final connectivityNotifier = context.read<ConnectivityNotifier>();
 
-    GtkApplicationNotifier? gtkNotifier;
-
-    if (Platform.isLinux) {
-      gtkNotifier = getService<GtkApplicationNotifier>();
-
-      gtkNotifier.addCommandLineListener(
-        (args) => _playPath(
-          play: playerModel.play,
-          path: gtkNotifier?.commandLine?.firstOrNull,
-        ),
-      );
-    }
+    final extPathService = getService<ExternalPathService>()
+      ..init(playerModel.play);
 
     if (!Platform.isAndroid && !Platform.isIOS) {
       YaruWindow.of(context).onClose(
@@ -123,9 +110,8 @@ class _AppState extends State<App> {
                 if (libraryModel.recentPatchNotesDisposed == false) {
                   showPatchNotes(context, libraryModel.disposePatchNotes);
                 }
-                _playPath(
+                extPathService.playPath(
                   play: playerModel.play,
-                  path: gtkNotifier?.commandLine?.firstOrNull,
                 );
               });
             },
@@ -133,34 +119,6 @@ class _AppState extends State<App> {
         },
       );
     });
-  }
-
-  void _playPath({
-    required Future<void> Function({Duration? newPosition, Audio? newAudio})
-        play,
-    required String? path,
-  }) {
-    if (path == null || !_isValidAudio(path)) {
-      return;
-    }
-
-    MetadataGod.initialize();
-    try {
-      MetadataGod.readMetadata(file: path).then(
-        (metadata) => play(
-          newAudio: createLocalAudio(
-            path,
-            metadata,
-            File(path).uri.pathSegments.last,
-          ),
-        ),
-      );
-    } catch (_) {}
-  }
-
-  bool _isValidAudio(String path) {
-    final mime = lookupMimeType(path);
-    return mime?.startsWith('audio/') ?? false;
   }
 
   @override
@@ -188,17 +146,8 @@ class _AppState extends State<App> {
     final surfaceTintColor =
         context.select((PlayerModel m) => m.surfaceTintColor);
     final isFullScreen = context.select((PlayerModel m) => m.fullScreen);
-    final Color playerBg;
-    if (surfaceTintColor != null) {
-      playerBg = (Platform.isLinux
-          ? surfaceTintColor
-          : Color.alphaBlend(
-              surfaceTintColor,
-              theme.scaffoldBackgroundColor,
-            ));
-    } else {
-      playerBg = (theme.scaffoldBackgroundColor);
-    }
+    final Color playerBg =
+        getPlayerBg(surfaceTintColor, theme.scaffoldBackgroundColor);
 
     // Library
     // Watching values
@@ -348,7 +297,7 @@ class _AppState extends State<App> {
                     Expanded(
                       child: yaruMasterDetailPage,
                     ),
-                    if (!playerToTheRight && Platform.isLinux) const Divider(),
+                    if (!playerToTheRight) const Divider(),
                     if (!playerToTheRight)
                       Material(
                         color: playerBg,

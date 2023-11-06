@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:path/path.dart' as p;
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
+import 'package:metadata_god/metadata_god.dart';
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:xdg_directories/xdg_directories.dart';
 
@@ -69,6 +70,29 @@ void sortListByAudioFilter({
       });
       break;
   }
+}
+
+Audio createLocalAudio(String path, Metadata metadata, [String? fileName]) {
+  return Audio(
+    path: path,
+    audioType: AudioType.local,
+    artist: metadata.artist ?? '',
+    title: (metadata.title?.isNotEmpty == true ? metadata.title : fileName) ??
+        path,
+    album: metadata.album == null
+        ? ''
+        : '${metadata.album} ${metadata.discTotal != null && metadata.discTotal! > 1 ? metadata.discNumber : ''}',
+    albumArtist: metadata.albumArtist,
+    discNumber: metadata.discNumber,
+    discTotal: metadata.discTotal,
+    durationMs: metadata.durationMs,
+    fileSize: metadata.fileSize,
+    genre: metadata.genre,
+    pictureData: metadata.picture?.data,
+    pictureMimeType: metadata.picture?.mimeType,
+    trackNumber: metadata.trackNumber,
+    year: metadata.year,
+  );
 }
 
 Future<String> getWorkingDir() async {

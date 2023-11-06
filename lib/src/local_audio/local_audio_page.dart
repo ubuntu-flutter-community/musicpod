@@ -94,8 +94,6 @@ class _LocalAudioPageState extends State<LocalAudioPage>
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
 
-    final theme = Theme.of(context);
-
     void onTap(text) {
       setSearchQuery(text);
       search();
@@ -180,9 +178,6 @@ class _LocalAudioPageState extends State<LocalAudioPage>
       initialIndex: widget.selectedIndex,
       length: 3,
       child: Scaffold(
-        backgroundColor: theme.brightness == Brightness.dark
-            ? const Color.fromARGB(255, 37, 37, 37)
-            : Colors.white,
         appBar: YaruWindowTitleBar(
           backgroundColor: Colors.transparent,
           border: BorderSide.none,
@@ -200,6 +195,7 @@ class _LocalAudioPageState extends State<LocalAudioPage>
             padding: const EdgeInsets.only(right: 40),
             child: YaruSearchTitleField(
               searchIcon: Iconz().searchIcon,
+              clearIcon: Iconz().clearIcon,
               key: ValueKey(searchQuery),
               width: kSearchBarWidth,
               searchActive: searchActive,

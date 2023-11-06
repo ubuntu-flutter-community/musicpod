@@ -4,6 +4,7 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../l10n/l10n.dart';
+import 'common_widgets.dart';
 import 'icons.dart';
 
 class AudioPageControlPanel extends StatelessWidget {
@@ -41,7 +42,7 @@ class AudioPageControlPanel extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: CircleAvatar(
-              radius: Iconz().avatarIconSize,
+              radius: avatarIconSize,
               backgroundColor: theme.colorScheme.inverseSurface,
               child: IconButton(
                 onPressed: () {

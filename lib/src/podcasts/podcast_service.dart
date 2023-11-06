@@ -1,13 +1,14 @@
 import 'dart:async';
 
-import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/foundation.dart';
+import 'package:musicpod/src/notifications/notifications_service.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 import '../../data.dart';
 
 class PodcastService {
-  PodcastService() : _search = Search();
+  final NotificationsService _notificationsService;
+  PodcastService(this._notificationsService) : _search = Search();
 
   final _searchChangedController = StreamController<bool>.broadcast();
   Stream<bool> get searchChanged => _searchChangedController.stream;
@@ -61,16 +62,6 @@ class PodcastService {
     required Map<String, Set<Audio>> oldPodcasts,
     required void Function(String name, Set<Audio> audios) updatePodcast,
     required String updateMessage,
-    required Future<Notification> Function(
-      String summary, {
-      String body,
-      String appName,
-      String appIcon,
-      int expireTimeoutMs,
-      int replacesId,
-      List<NotificationHint> hints,
-      List<NotificationAction> actions,
-    })? notify,
   }) async {
     for (final old in oldPodcasts.entries) {
       final firstOld = old.value.firstOrNull;
@@ -86,11 +77,8 @@ class PodcastService {
               audios.isEmpty) return;
 
           updatePodcast(old.key, audios);
-          notify?.call(
-            '$updateMessage ${firstOld.album ?? old.value}',
-            appIcon: 'music-app',
-            appName: 'MusicPod',
-          );
+          _notificationsService
+              .notifiy('$updateMessage ${firstOld.album ?? old.value}');
         });
       }
     }

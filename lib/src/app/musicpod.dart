@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -9,11 +8,13 @@ import '../l10n/l10n.dart';
 import 'app.dart';
 
 class MusicPod extends StatelessWidget {
-  const MusicPod({super.key});
+  const MusicPod({super.key, required this.yaruApp});
+
+  final bool yaruApp;
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isLinux) {
+    if (yaruApp) {
       return YaruTheme(
         builder: (context, yaruThemeData, child) {
           final materialApp =

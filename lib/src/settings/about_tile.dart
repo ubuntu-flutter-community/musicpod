@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:musicpod/constants.dart';
-import 'package:musicpod/src/common/icons.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../constants.dart';
+import '../common/common_widgets.dart';
+import '../common/icons.dart';
 import '../l10n/l10n.dart';
 
 class AboutTile extends StatelessWidget {
@@ -84,8 +86,8 @@ class AboutTile extends StatelessWidget {
 
     return Center(
       child: SizedBox(
-        height: kYaruTitleBarItemHeight,
-        width: kYaruTitleBarItemHeight,
+        height: shrinkTitleBarItems ? kYaruTitleBarItemHeight : null,
+        width: shrinkTitleBarItems ? kYaruTitleBarItemHeight : null,
         child: IconButton(
           icon: Icon(
             Iconz().musicNote,

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -14,14 +13,12 @@ class PodcastModel extends SafeChangeNotifier {
   PodcastModel(
     this._podcastService,
     this._libraryService,
-    this._connectivity, [
-    this._notificationsClient,
-  ]);
+    this._connectivity,
+  );
 
   final PodcastService _podcastService;
   final LibraryService _libraryService;
   final Connectivity _connectivity;
-  final NotificationsClient? _notificationsClient;
 
   StreamSubscription<bool>? _searchChangedSub;
 
@@ -142,7 +139,6 @@ class PodcastModel extends SafeChangeNotifier {
         .updatePodcasts(
           oldPodcasts: _libraryService.podcasts,
           updatePodcast: _libraryService.updatePodcast,
-          notify: _notificationsClient?.notify,
           updateMessage: updateMessage,
         )
         .then((_) => _setCheckingForUpdates(false));

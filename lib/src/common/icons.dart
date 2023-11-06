@@ -80,14 +80,17 @@ class Iconz {
     }
   }
 
-  double? get avatarIconSize => _l ? kYaruTitleBarItemHeight / 2 : null;
-
   Color? getAvatarIconColor(ThemeData theme) =>
       _l ? theme.colorScheme.onSurface.withOpacity(0.08) : null;
 
   Widget? get searchIcon => _l ? null : const Icon(Icons.search);
 
-  Widget? get clearIcon => _l ? null : const Icon(Icons.clear);
+  Widget? get clearIcon => _l
+      ? null
+      : const Icon(
+          Icons.clear,
+          size: 15,
+        );
 }
 
 double iconSize() => Platform.isLinux ? kYaruIconSize : 24.0;

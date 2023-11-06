@@ -221,10 +221,11 @@ class _PodcastsPageState extends State<PodcastsPage> {
             padding: const EdgeInsets.only(right: 40),
             child: YaruSearchTitleField(
               searchIcon: Iconz().searchIcon,
+              clearIcon: Iconz().clearIcon,
               key: ValueKey(searchQuery),
               text: searchQuery,
               alignment: Alignment.center,
-              width: kSearchBarWidth,
+              width: searchBarWidth,
               searchActive: searchActive,
               title: controlPanel,
               onSearchActive: () => setSearchActive(!searchActive),

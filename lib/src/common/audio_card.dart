@@ -3,6 +3,7 @@ import 'package:musicpod/constants.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import 'common_widgets.dart';
 import 'icons.dart';
 
 class AudioCard extends StatefulWidget {
@@ -64,7 +65,7 @@ class _AudioCardState extends State<AudioCard> {
                       bottom: 10,
                       right: 10,
                       child: CircleAvatar(
-                        radius: kYaruTitleBarItemHeight / 2,
+                        radius: avatarIconSize,
                         backgroundColor: theme.primaryColor,
                         child: IconButton(
                           onPressed: widget.onPlay,

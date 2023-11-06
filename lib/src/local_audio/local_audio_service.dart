@@ -99,29 +99,6 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
   return (failedImports, newAudios);
 }
 
-Audio createLocalAudio(String path, Metadata metadata, [String? fileName]) {
-  return Audio(
-    path: path,
-    audioType: AudioType.local,
-    artist: metadata.artist ?? '',
-    title: (metadata.title?.isNotEmpty == true ? metadata.title : fileName) ??
-        path,
-    album: metadata.album == null
-        ? ''
-        : '${metadata.album} ${metadata.discTotal != null && metadata.discTotal! > 1 ? metadata.discNumber : ''}',
-    albumArtist: metadata.albumArtist,
-    discNumber: metadata.discNumber,
-    discTotal: metadata.discTotal,
-    durationMs: metadata.durationMs,
-    fileSize: metadata.fileSize,
-    genre: metadata.genre,
-    pictureData: metadata.picture?.data,
-    pictureMimeType: metadata.picture?.mimeType,
-    trackNumber: metadata.trackNumber,
-    year: metadata.year,
-  );
-}
-
 bool _validType(String path) => mime(path)?.contains('audio') ?? false;
 
 Future<List<FileSystemEntity>> _getFlattenedFileSystemEntities({

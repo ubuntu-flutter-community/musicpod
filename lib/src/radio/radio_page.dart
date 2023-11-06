@@ -227,7 +227,7 @@ class _RadioPageState extends State<RadioPage> {
               key: ValueKey(searchQuery),
               text: searchQuery,
               alignment: Alignment.center,
-              width: kSearchBarWidth,
+              width: searchBarWidth,
               title: controlPanel,
               searchActive: searchActive,
               onSearchActive: () => setSearchActive(!searchActive),

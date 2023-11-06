@@ -88,10 +88,11 @@ class BottomPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final verySmall = width < 700;
 
     final bottomPlayerImage = _BottomPlayerImage(
       audio: audio,
-      size: _kBottomPlayerHeight - 20,
+      size: _kBottomPlayerHeight - (verySmall ? 20 : 0),
       videoController: videoController,
       isVideo: isVideo,
       isOnline: isOnline,
@@ -139,7 +140,7 @@ class BottomPlayer extends StatelessWidget {
       expand: true,
     );
 
-    if (width < 500) {
+    if (verySmall) {
       return InkWell(
         onTap: () => setFullScreen(true),
         child: SizedBox(
