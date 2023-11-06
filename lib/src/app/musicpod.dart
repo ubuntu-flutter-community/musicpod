@@ -56,12 +56,14 @@ class MusicPod extends StatelessWidget {
   }
 
   MaterialApp _app(ThemeData? lightTheme, ThemeData? darkTheme) {
+    const dividerColor = Color.fromARGB(28, 255, 255, 255);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
       darkTheme: darkTheme?.copyWith(
+        dividerColor: dividerColor,
         dividerTheme: const DividerThemeData(
-          color: Color.fromARGB(255, 85, 74, 74),
+          color: dividerColor,
           space: 1.0,
           thickness: 0.0,
         ),
