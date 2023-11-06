@@ -64,25 +64,16 @@ class Progress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = color ?? Theme.of(context).colorScheme.primary.withOpacity(0.5);
     return _yaruStyled
         ? YaruCircularProgressIndicator(
             strokeWidth: strokeWidth,
             value: value,
-            valueColor: valueColor,
-            semanticsLabel: semanticsLabel,
-            semanticsValue: semanticsValue,
-            trackColor: c,
           )
         : Padding(
             padding: padding ?? const EdgeInsets.all(4),
             child: CircularProgressIndicator(
               strokeWidth: strokeWidth,
               value: value,
-              valueColor: valueColor,
-              semanticsLabel: semanticsLabel,
-              semanticsValue: semanticsValue,
-              backgroundColor: c,
             ),
           );
   }
