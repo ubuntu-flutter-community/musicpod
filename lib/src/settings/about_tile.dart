@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:musicpod/constants.dart';
-import 'package:musicpod/src/icons.dart';
+import 'package:musicpod/src/common/icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -88,7 +88,7 @@ class AboutTile extends StatelessWidget {
         width: kYaruTitleBarItemHeight,
         child: IconButton(
           icon: Icon(
-            Iconz().menu,
+            Iconz().musicNote,
           ),
           onPressed: () {
             return showAboutDialog(

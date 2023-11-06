@@ -9,7 +9,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
-import '../icons.dart';
+import '../common/icons.dart';
 import '../l10n/l10n.dart';
 
 class LocalAudioSearchPage extends StatelessWidget {

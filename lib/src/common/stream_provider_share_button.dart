@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../icons.dart';
+import 'icons.dart';
 import '../l10n/l10n.dart';
 
 class StreamProviderShareButton extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 
 import '../../data.dart';
-import '../icons.dart';
+import '../common/icons.dart';
 
 class LikeIconButton extends StatelessWidget {
   const LikeIconButton({

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data.dart';
-import '../icons.dart';
+import '../common/icons.dart';
 
 class BottomPlayerControls extends StatelessWidget {
   const BottomPlayerControls({

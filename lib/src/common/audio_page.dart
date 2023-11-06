@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/src/common/common_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -99,9 +100,7 @@ class AudioPage extends StatelessWidget {
             : YaruTitleBarStyle.undecorated,
         title: title ?? Text(headerTitle ?? pageId),
         leading: Navigator.canPop(context)
-            ? const YaruBackButton(
-                style: YaruBackButtonStyle.rounded,
-              )
+            ? const NavBackButton()
             : const SizedBox.shrink(),
       ),
       body: body,

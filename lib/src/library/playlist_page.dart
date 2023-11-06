@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../common.dart';
 import '../../data.dart';
-import '../icons.dart';
+import '../common/icons.dart';
 import '../l10n/l10n.dart';
 import 'playlist_dialog.dart';
 

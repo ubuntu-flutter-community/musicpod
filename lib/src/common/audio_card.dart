@@ -3,7 +3,7 @@ import 'package:musicpod/constants.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-import '../icons.dart';
+import 'icons.dart';
 
 class AudioCard extends StatefulWidget {
   const AudioCard({

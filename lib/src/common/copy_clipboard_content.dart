@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/src/common/colors.dart';
 import 'package:musicpod/src/common/stream_provider_share_button.dart';
 
 import '../l10n/l10n.dart';
@@ -28,7 +29,7 @@ class CopyClipboardContent extends StatelessWidget {
                 Text(
                   context.l10n.copiedToClipBoard,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
+                    color: getSnackBarTextColor(Theme.of(context)),
                   ),
                 ),
                 Text(
@@ -39,7 +40,7 @@ class CopyClipboardContent extends StatelessWidget {
             ),
           ),
           StreamProviderRow(
-            iconColor: Colors.white.withOpacity(0.9),
+            iconColor: getSnackBarTextColor(Theme.of(context)),
             onSearch: onSearch,
             text: text,
           ),

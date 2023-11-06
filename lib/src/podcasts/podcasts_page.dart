@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/constants.dart';
+import 'package:musicpod/src/common/common_widgets.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -9,7 +10,7 @@ import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
-import '../icons.dart';
+import '../common/icons.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 
@@ -210,9 +211,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
           backgroundColor: theme.scaffoldBackgroundColor,
           border: BorderSide.none,
           leading: (Navigator.canPop(context))
-              ? const YaruBackButton(
-                  style: YaruBackButtonStyle.rounded,
-                )
+              ? const NavBackButton()
               : const SizedBox.shrink(),
           titleSpacing: 0,
           style: showWindowControls
@@ -221,6 +220,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
           title: Padding(
             padding: const EdgeInsets.only(right: 40),
             child: YaruSearchTitleField(
+              searchIcon: Iconz().searchIcon,
               key: ValueKey(searchQuery),
               text: searchQuery,
               alignment: Alignment.center,

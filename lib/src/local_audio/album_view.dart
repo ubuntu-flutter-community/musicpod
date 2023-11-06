@@ -5,7 +5,7 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../utils.dart';
 import '../data/audio.dart';
-import '../icons.dart';
+import '../common/icons.dart';
 import '../l10n/l10n.dart';
 import 'album_page.dart';
 import 'shop_recommendations.dart';

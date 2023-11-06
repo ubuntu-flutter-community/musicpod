@@ -12,7 +12,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
-import '../icons.dart';
+import '../common/icons.dart';
 
 class PodcastAudioTile extends StatelessWidget {
   const PodcastAudioTile({

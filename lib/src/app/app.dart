@@ -7,6 +7,7 @@ import 'package:gtk/gtk.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:mime/mime.dart';
+import 'package:musicpod/src/common/common_widgets.dart';
 import 'package:musicpod/src/media_control/media_control_service.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
@@ -272,8 +273,9 @@ class _AppState extends State<App> {
     }
 
     final masterItems = createMasterItems(
-      showFilter: libraryModel.totalListAmount > 7 ||
-          libraryModel.audioPageType != null,
+      showFilter: (libraryModel.totalListAmount > 7 ||
+              libraryModel.audioPageType != null) &&
+          showSideBarFilter,
       localAudioIndex: localAudioIndex,
       setLocalAudioindex: libraryModel.setLocalAudioindex,
       audioType: audioType,
@@ -346,7 +348,7 @@ class _AppState extends State<App> {
                     Expanded(
                       child: yaruMasterDetailPage,
                     ),
-                    if (!playerToTheRight) const Divider(),
+                    if (!playerToTheRight && Platform.isLinux) const Divider(),
                     if (!playerToTheRight)
                       Material(
                         color: playerBg,

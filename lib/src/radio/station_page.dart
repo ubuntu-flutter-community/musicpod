@@ -5,7 +5,8 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
-import '../icons.dart';
+import '../common/common_widgets.dart';
+import '../common/icons.dart';
 import 'radio_page.dart';
 
 class StationPage extends StatelessWidget {
@@ -84,9 +85,7 @@ class StationPage extends StatelessWidget {
             : YaruTitleBarStyle.undecorated,
         title: Text(name.replaceAll('_', '')),
         leading: Navigator.canPop(context)
-            ? const YaruBackButton(
-                style: YaruBackButtonStyle.rounded,
-              )
+            ? const NavBackButton()
             : const SizedBox.shrink(),
       ),
       body: Center(

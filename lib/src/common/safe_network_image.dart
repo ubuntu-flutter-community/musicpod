@@ -10,7 +10,7 @@ import 'package:flutter_cache_manager/src/storage/file_system/file_system.dart';
 import 'package:path/path.dart' as p;
 import 'package:xdg_directories/xdg_directories.dart';
 
-import '../icons.dart';
+import 'icons.dart';
 
 class SafeNetworkImage extends StatelessWidget {
   const SafeNetworkImage({

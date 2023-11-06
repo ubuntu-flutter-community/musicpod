@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data.dart';
-import '../icons.dart';
+import '../common/icons.dart';
 import '../l10n/l10n.dart';
 
 class QueuePopup extends StatelessWidget {

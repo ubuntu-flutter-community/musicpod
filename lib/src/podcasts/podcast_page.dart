@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../common.dart';
 import '../../data.dart';
-import '../icons.dart';
+import '../common/icons.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 

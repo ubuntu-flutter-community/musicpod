@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:musicpod/src/common/common_widgets.dart';
 
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../globals.dart';
-import '../icons.dart';
+import '../common/icons.dart';
 
 const _kBottomPlayerHeight = 90.0;
 
@@ -139,48 +140,50 @@ class BottomPlayer extends StatelessWidget {
     );
 
     if (width < 500) {
-      return SizedBox(
-        height: _kBottomPlayerHeight,
-        child: Column(
-          children: [
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  bottomPlayerImage,
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: titleAndArtist,
-                  ),
-                  IconButton(
-                    onPressed:
-                        !(audio?.path != null || isOnline) || audio == null
-                            ? null
-                            : () {
-                                if (isPlaying) {
-                                  pause();
-                                } else {
-                                  playOrPause();
-                                }
-                              },
-                    icon: Icon(
-                      isPlaying ? Iconz().pause : Iconz().play,
+      return InkWell(
+        onTap: () => setFullScreen(true),
+        child: SizedBox(
+          height: _kBottomPlayerHeight,
+          child: Column(
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: bottomPlayerImage,
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Iconz().fullScreen,
-                      color: theme.colorScheme.onSurface,
+                    const SizedBox(
+                      width: 20,
                     ),
-                    onPressed: () => setFullScreen(true),
-                  ),
-                ],
+                    Expanded(
+                      child: titleAndArtist,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: IconButton(
+                        onPressed:
+                            !(audio?.path != null || isOnline) || audio == null
+                                ? null
+                                : () {
+                                    if (isPlaying) {
+                                      pause();
+                                    } else {
+                                      playOrPause();
+                                    }
+                                  },
+                        icon: Icon(
+                          isPlaying ? Iconz().pause : Iconz().play,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            track,
-          ],
+              track,
+            ],
+          ),
         ),
       );
     }
@@ -328,8 +331,8 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
                   : (audio?.artist ?? ' '),
               child: Text(
                 icyName?.isNotEmpty == true ? icyName! : (audio?.artist ?? ' '),
-                style: const TextStyle(
-                  fontWeight: FontWeight.w100,
+                style: TextStyle(
+                  fontWeight: smallTextFontWeight,
                   fontSize: 12,
                 ),
                 overflow: TextOverflow.ellipsis,

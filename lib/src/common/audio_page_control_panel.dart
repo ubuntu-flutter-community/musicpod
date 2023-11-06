@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
-import '../icons.dart';
 import '../l10n/l10n.dart';
+import 'icons.dart';
 
 class AudioPageControlPanel extends StatelessWidget {
   const AudioPageControlPanel({

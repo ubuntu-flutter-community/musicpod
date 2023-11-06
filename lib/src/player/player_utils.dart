@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:musicpod/constants.dart';
@@ -23,7 +25,7 @@ void onTitleTap({
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        width: kSnackBarWidth,
+        width: Platform.isLinux ? kSnackBarWidth : null,
         duration: kSnackBarDuration,
         content: CopyClipboardContent(text: title),
       ),
@@ -50,7 +52,7 @@ void onArtistTap({
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        width: kSnackBarWidth,
+        width: Platform.isLinux ? kSnackBarWidth : null,
         duration: kSnackBarDuration,
         content: CopyClipboardContent(
           text: audio.url!,

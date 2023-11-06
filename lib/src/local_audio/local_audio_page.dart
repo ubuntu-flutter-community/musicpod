@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/constants.dart';
+import 'package:musicpod/src/common/common_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -7,7 +8,7 @@ import '../../app.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
 import '../../player.dart';
-import '../icons.dart';
+import '../common/icons.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 
@@ -191,15 +192,14 @@ class _LocalAudioPageState extends State<LocalAudioPage>
           leading: SizedBox(
             width: 120,
             child: (Navigator.of(context).canPop())
-                ? const YaruBackButton(
-                    style: YaruBackButtonStyle.rounded,
-                  )
+                ? const NavBackButton()
                 : const SizedBox.shrink(),
           ),
           titleSpacing: 0,
           title: Padding(
             padding: const EdgeInsets.only(right: 40),
             child: YaruSearchTitleField(
+              searchIcon: Iconz().searchIcon,
               key: ValueKey(searchQuery),
               width: kSearchBarWidth,
               searchActive: searchActive,

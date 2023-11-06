@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/src/icons.dart';
+import 'package:musicpod/src/common/icons.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 

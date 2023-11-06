@@ -4,7 +4,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../l10n.dart';
 import '../../local_audio.dart';
-import '../icons.dart';
+import '../common/icons.dart';
 
 class SettingsTile extends StatelessWidget {
   const SettingsTile({super.key, required this.onDirectorySelected});

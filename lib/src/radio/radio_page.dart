@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicpod/constants.dart';
+import 'package:musicpod/src/common/common_widgets.dart';
 import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru/yaru.dart';
@@ -9,7 +10,7 @@ import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
-import '../icons.dart';
+import '../common/icons.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import 'radio_model.dart';
@@ -216,13 +217,13 @@ class _RadioPageState extends State<RadioPage> {
               : YaruTitleBarStyle.undecorated,
           titleSpacing: 0,
           leading: Navigator.of(context).canPop()
-              ? const YaruBackButton(
-                  style: YaruBackButtonStyle.rounded,
-                )
+              ? const NavBackButton()
               : const SizedBox.shrink(),
           title: Padding(
             padding: const EdgeInsets.only(right: 40),
             child: YaruSearchTitleField(
+              searchIcon: Iconz().searchIcon,
+              clearIcon: Iconz().clearIcon,
               key: ValueKey(searchQuery),
               text: searchQuery,
               alignment: Alignment.center,
