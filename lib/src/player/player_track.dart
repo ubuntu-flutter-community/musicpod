@@ -88,10 +88,7 @@ class PlayerTrack extends StatelessWidget {
           ],
         ),
         Expanded(
-          child: SizedBox(
-            height: 50,
-            child: slider,
-          ),
+          child: slider,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

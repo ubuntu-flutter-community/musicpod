@@ -135,7 +135,7 @@ class BottomPlayer extends StatelessWidget {
       position: position,
       setPosition: setPosition,
       seek: seek,
-      expand: true,
+      expand: verySmall,
     );
 
     if (verySmall) {
@@ -231,9 +231,10 @@ class BottomPlayer extends StatelessWidget {
               child: Column(
                 children: [
                   bottomPlayerControls,
-                  Expanded(
-                    child: track,
+                  const SizedBox(
+                    height: 8,
                   ),
+                  track,
                 ],
               ),
             ),
