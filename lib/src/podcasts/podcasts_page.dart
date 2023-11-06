@@ -93,7 +93,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     Widget grid;
     if (searchResult == null) {
       grid = GridView(
-        gridDelegate: kImageGridDelegate,
+        gridDelegate: imageGridDelegate,
         padding: gridPadding,
         children: List.generate(limit, (index) => Audio())
             .map((e) => const AudioCard())
@@ -105,7 +105,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
       grid = GridView.builder(
         padding: gridPadding,
         itemCount: searchResultCount,
-        gridDelegate: kImageGridDelegate,
+        gridDelegate: imageGridDelegate,
         itemBuilder: (context, index) {
           final podcastItem = searchResult.items.elementAt(index);
 

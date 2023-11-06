@@ -240,21 +240,6 @@ class LocalAudioPageIcon extends StatelessWidget {
         color: theme.primaryColor,
       );
     }
-    return Stack(
-      children: [
-        selected ? Icon(Iconz().localAudioFilled) : Icon(Iconz().localAudio),
-        Positioned(
-          left: 5,
-          top: 1,
-          child: Icon(
-            Iconz().musicNote,
-            size: 10,
-            color: selected
-                ? theme.colorScheme.surface
-                : theme.colorScheme.onSurface,
-          ),
-        ),
-      ],
-    );
+    return selected ? Icon(Iconz().localAudioFilled) : Icon(Iconz().localAudio);
   }
 }

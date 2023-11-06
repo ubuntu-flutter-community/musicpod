@@ -160,7 +160,7 @@ class _RadioPageState extends State<RadioPage> {
       } else {
         if (stations == null) {
           body = GridView(
-            gridDelegate: kImageGridDelegate,
+            gridDelegate: imageGridDelegate,
             padding: gridPadding,
             children: List.generate(limit, (index) => Audio())
                 .map((e) => const AudioCard())
@@ -186,7 +186,7 @@ class _RadioPageState extends State<RadioPage> {
           } else {
             body = GridView.builder(
               padding: gridPadding,
-              gridDelegate: kImageGridDelegate,
+              gridDelegate: imageGridDelegate,
               itemCount: stationsCount,
               itemBuilder: (context, index) {
                 final station = stations.elementAt(index);

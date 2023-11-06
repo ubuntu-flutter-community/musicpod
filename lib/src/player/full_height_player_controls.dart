@@ -144,10 +144,11 @@ class FullHeightPlayerControls extends StatelessWidget {
         SizedBox(
           width: spacing,
         ),
-        if (!expand) VolumeSliderPopup(volume: volume, setVolume: setVolume),
-        SizedBox(
-          width: spacing,
-        ),
+        VolumeSliderPopup(volume: volume, setVolume: setVolume),
+        if (!expand)
+          SizedBox(
+            width: spacing,
+          ),
         if (!expand)
           QueuePopup(
             audio: audio,

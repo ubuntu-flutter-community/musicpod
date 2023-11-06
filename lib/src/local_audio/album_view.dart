@@ -63,7 +63,7 @@ class AlbumsView extends StatelessWidget {
       shrinkWrap: true,
       padding: const EdgeInsets.all(kYaruPagePadding),
       itemCount: albums!.length,
-      gridDelegate: kImageGridDelegate,
+      gridDelegate: imageGridDelegate,
       itemBuilder: (context, index) {
         final audio = albums!.elementAt(index);
         String? id = generateAlbumId(audio);

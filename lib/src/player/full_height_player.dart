@@ -193,8 +193,12 @@ class FullHeightPlayer extends StatelessWidget {
           SingleChildScrollView(
             child: Center(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+                padding: const EdgeInsets.only(
+                  left: 35,
+                  right: 35,
+                  bottom: 20,
+                  top: 150,
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -260,12 +264,18 @@ class FullHeightPlayer extends StatelessWidget {
 
     return Column(
       children: [
-        HeaderBar(
-          foregroundColor: isVideo == true ? Colors.white : null,
-          backgroundColor: isVideo == true ? Colors.black : Colors.transparent,
-        ),
+        if (!isMobile)
+          HeaderBar(
+            foregroundColor: isVideo == true ? Colors.white : null,
+            backgroundColor:
+                isVideo == true ? Colors.black : Colors.transparent,
+          ),
         Expanded(
-          child: stack,
+          child: Padding(
+            padding:
+                isMobile ? const EdgeInsets.only(top: 40) : EdgeInsets.zero,
+            child: stack,
+          ),
         ),
       ],
     );

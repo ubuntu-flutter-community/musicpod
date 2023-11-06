@@ -129,7 +129,7 @@ class HeaderBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size(
         0,
-        _mobile
+        isMobile
             ? (style == YaruTitleBarStyle.hidden ? 0 : kYaruTitleBarHeight)
             : kToolbarHeight,
       );
@@ -139,7 +139,7 @@ double? get avatarIconSize => _yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
 
 double? get snackBarWidth => _yaruStyled ? kSnackBarWidth : null;
 
-double get searchBarWidth => _mobile ? kSearchBarWidth : 600;
+double get searchBarWidth => isMobile ? kSearchBarWidth : 600;
 
 bool get showSideBarFilter => _yaruStyled ? true : false;
 
@@ -151,7 +151,7 @@ FontWeight get mediumTextWeight =>
 
 bool get _yaruStyled => Platform.isLinux;
 
-bool get _mobile => Platform.isAndroid || Platform.isIOS || Platform.isFuchsia;
+bool get isMobile => Platform.isAndroid || Platform.isIOS || Platform.isFuchsia;
 
 bool get shrinkTitleBarItems => _yaruStyled;
 
@@ -159,3 +159,6 @@ double get chipHeight => _yaruStyled ? kYaruTitleBarItemHeight : 40;
 
 EdgeInsetsGeometry get gridPadding =>
     _yaruStyled ? kPodcastGridPadding : kMobilePodcastGridPadding;
+
+SliverGridDelegate get imageGridDelegate =>
+    _yaruStyled ? kImageGridDelegate : kMobileImageGridDelegate;

@@ -324,6 +324,7 @@ class _AppState extends State<App> {
           ),
           if (isFullScreen == true)
             Scaffold(
+              backgroundColor: playerBg,
               body: Material(
                 color: playerBg,
                 child: PlayerView(
