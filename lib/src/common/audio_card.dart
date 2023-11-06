@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/constants.dart';
+import '../../constants.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
+
+import 'common_widgets.dart';
+import 'icons.dart';
 
 class AudioCard extends StatefulWidget {
   const AudioCard({
@@ -35,8 +37,8 @@ class _AudioCardState extends State<AudioCard> {
     return Column(
       children: [
         SizedBox(
-          height: widget.height ?? kCardHeight - 70,
-          width: widget.width ?? kCardHeight - 70,
+          height: widget.height ?? kSmallCardHeight,
+          width: widget.width ?? kSmallCardHeight,
           child: YaruBanner(
             padding: EdgeInsets.zero,
             onTap: widget.onTap,
@@ -63,13 +65,13 @@ class _AudioCardState extends State<AudioCard> {
                       bottom: 10,
                       right: 10,
                       child: CircleAvatar(
-                        radius: kYaruTitleBarItemHeight / 2,
-                        backgroundColor: theme.primaryColor,
+                        radius: avatarIconSize,
+                        backgroundColor: theme.colorScheme.primary,
                         child: IconButton(
                           onPressed: widget.onPlay,
                           icon: Icon(
-                            YaruIcons.media_play,
-                            color: theme.colorScheme.onPrimary,
+                            Iconz().play,
+                            color: Colors.white,
                           ),
                         ),
                       ),

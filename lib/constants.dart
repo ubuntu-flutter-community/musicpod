@@ -19,6 +19,8 @@ const kSearchBarWidth = 350.0;
 
 const kSnackBarWidth = 500.0;
 
+const fullHeightPlayerImageSize = 400.0;
+
 const kSnackBarDuration = Duration(seconds: 10);
 
 const kGridPadding = EdgeInsets.only(
@@ -32,6 +34,12 @@ const kPodcastGridPadding = EdgeInsets.only(
   left: kYaruPagePadding - 5,
   right: kYaruPagePadding - 5,
 );
+const kMobilePodcastGridPadding = EdgeInsets.only(
+  top: 25,
+  bottom: kYaruPagePadding,
+  left: kYaruPagePadding,
+  right: kYaruPagePadding,
+);
 
 const kHeaderPadding = EdgeInsets.only(
   top: kYaruPagePadding,
@@ -42,13 +50,22 @@ const kHeaderPadding = EdgeInsets.only(
 
 const kCardHeight = 200.0;
 
+const kSmallCardHeight = kCardHeight - 70;
+
 const kCardBottomHeight = 30.0;
 
 const kImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
   maxCrossAxisExtent: kCardHeight - 40,
   mainAxisExtent: kCardHeight - kCardBottomHeight,
-  mainAxisSpacing: 0,
+  mainAxisSpacing: 10,
   crossAxisSpacing: 10,
+);
+
+const kMobileImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
+  maxCrossAxisExtent: kSmallCardHeight + 90,
+  mainAxisExtent: kSmallCardHeight + 10 + kCardBottomHeight,
+  mainAxisSpacing: 10,
+  crossAxisSpacing: 0,
 );
 
 const kDiskGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(

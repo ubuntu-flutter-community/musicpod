@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:musicpod/constants.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
+
+import '../../constants.dart';
 
 class RadioService {
   RadioBrowserApi? radioBrowserApi;

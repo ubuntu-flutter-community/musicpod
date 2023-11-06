@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../l10n/l10n.dart';
@@ -44,6 +44,7 @@ class FullHeightPlayer extends StatelessWidget {
     required this.videoController,
     required this.isVideo,
     required this.isOnline,
+    required this.size,
     this.mpvMetaData,
   });
 
@@ -91,6 +92,8 @@ class FullHeightPlayer extends StatelessWidget {
   final bool isVideo;
   final bool isOnline;
 
+  final Size size;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -109,7 +112,7 @@ class FullHeightPlayer extends StatelessWidget {
             ? mpvMetaData!.icyTitle
             : (audio?.title?.isNotEmpty == true ? audio!.title! : ''),
         style: TextStyle(
-          fontWeight: FontWeight.w200,
+          fontWeight: mediumTextWeight,
           fontSize: 30,
           color: theme.colorScheme.onSurface.withOpacity(0.7),
         ),
@@ -133,7 +136,7 @@ class FullHeightPlayer extends StatelessWidget {
             ? mpvMetaData!.icyName
             : (audio?.artist ?? ''),
         style: TextStyle(
-          fontWeight: FontWeight.w100,
+          fontWeight: smallTextFontWeight,
           fontSize: 20,
           color: theme.colorScheme.onSurface.withOpacity(0.7),
         ),
@@ -144,6 +147,7 @@ class FullHeightPlayer extends StatelessWidget {
     );
 
     final controls = FullHeightPlayerControls(
+      expand: size.width < 600,
       audio: audio,
       setRepeatSingle: setRepeatSingle,
       repeatSingle: repeatSingle,
@@ -184,42 +188,44 @@ class FullHeightPlayer extends StatelessWidget {
             ),
           )
         else
-          Center(
-            child: SingleChildScrollView(
-              child: SizedBox(
-                height: 700,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 40,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SizedBox(
-                        height: 400,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: _FullHeightPlayerImage(
-                            audio: audio,
-                            isOnline: isOnline,
-                          ),
-                        ),
+          SingleChildScrollView(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 35,
+                  right: 35,
+                  bottom: 20,
+                  top: 150,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _FullHeightPlayerImage(
+                      size: size,
+                      audio: audio,
+                      isOnline: isOnline,
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    if (audio != null)
+                      FittedBox(
+                        child: title,
                       ),
-                      controls,
-                      SizedBox(
-                        width: 600,
-                        height: 20,
-                        child: sliderAndTime,
-                      ),
-                      if (audio != null)
-                        FittedBox(
-                          child: title,
-                        ),
-                      artist,
-                    ],
-                  ),
+                    artist,
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    SizedBox(
+                      height: 20,
+                      width: 400,
+                      child: sliderAndTime,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    controls,
+                  ],
                 ),
               ),
             ),
@@ -229,8 +235,8 @@ class FullHeightPlayer extends StatelessWidget {
           child: IconButton(
             icon: Icon(
               playerViewMode == PlayerViewMode.fullWindow
-                  ? YaruIcons.fullscreen_exit
-                  : YaruIcons.fullscreen,
+                  ? Iconz().fullScreenExit
+                  : Iconz().fullScreen,
               color: isVideo ? Colors.white : theme.colorScheme.onSurface,
             ),
             onPressed: () => setFullScreen(
@@ -256,13 +262,18 @@ class FullHeightPlayer extends StatelessWidget {
 
     return Column(
       children: [
-        YaruWindowTitleBar(
-          border: BorderSide.none,
-          foregroundColor: isVideo == true ? Colors.white : null,
-          backgroundColor: isVideo == true ? Colors.black : Colors.transparent,
-        ),
+        if (!isMobile)
+          HeaderBar(
+            foregroundColor: isVideo == true ? Colors.white : null,
+            backgroundColor:
+                isVideo == true ? Colors.black : Colors.transparent,
+          ),
         Expanded(
-          child: stack,
+          child: Padding(
+            padding:
+                isMobile ? const EdgeInsets.only(top: 40) : EdgeInsets.zero,
+            child: stack,
+          ),
         ),
       ],
     );
@@ -360,10 +371,12 @@ class _FullHeightPlayerImage extends StatelessWidget {
   const _FullHeightPlayerImage({
     this.audio,
     required this.isOnline,
+    required this.size,
   });
 
   final Audio? audio;
   final bool isOnline;
+  final Size size;
 
   @override
   Widget build(BuildContext context) {
@@ -371,52 +384,56 @@ class _FullHeightPlayerImage extends StatelessWidget {
 
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
-      iconData = YaruIcons.radio;
+      iconData = Iconz().radio;
     } else if (audio?.audioType == AudioType.podcast) {
-      iconData = YaruIcons.podcast;
+      iconData = Iconz().podcast;
     } else {
-      iconData = YaruIcons.music_note;
+      iconData = Iconz().musicNote;
     }
 
     Widget image;
     if (audio?.pictureData != null) {
       image = Image.memory(
         audio!.pictureData!,
-        height: 400.0,
-        fit: BoxFit.fitHeight,
+        height: size.height,
+        fit: BoxFit.fitWidth,
       );
     } else {
       if (!isOnline) {
-        image = SizedBox(
-          child: Icon(
-            iconData,
-            size: 200,
-            color: theme.hintColor,
-          ),
+        image = Icon(
+          iconData,
+          size: size.width / 2,
+          color: theme.hintColor,
         );
       } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
         image = SafeNetworkImage(
           url: audio?.imageUrl ?? audio?.albumArtUrl,
           filterQuality: FilterQuality.medium,
-          fit: BoxFit.fitHeight,
+          fit: BoxFit.cover,
           fallBackIcon: Icon(
             iconData,
-            size: 200,
+            size: size.width / 2,
             color: theme.hintColor,
           ),
+          height: size.width,
+          width: size.width,
         );
       } else {
-        image = SizedBox(
-          width: 400,
-          height: 400,
-          child: Icon(
-            iconData,
-            size: 300,
-            color: theme.hintColor.withOpacity(0.4),
-          ),
+        image = Icon(
+          iconData,
+          size: size.width / 2,
+          color: theme.hintColor.withOpacity(0.4),
         );
       }
     }
-    return image;
+
+    return SizedBox(
+      height: size.width > 1000 ? fullHeightPlayerImageSize : size.width / 1.7,
+      width: size.width > 1000 ? fullHeightPlayerImageSize : size.width / 1.7,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: image,
+      ),
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'common_widgets.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -10,10 +11,9 @@ class OfflinePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return YaruDetailPage(
-      appBar: YaruWindowTitleBar(
+      appBar: HeaderBar(
         title: Text(context.l10n.offline),
         backgroundColor: Colors.transparent,
-        border: BorderSide.none,
       ),
       body: Center(
         child: Column(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -36,29 +35,24 @@ class StationPage extends StatelessWidget {
     required bool isOnline,
   }) {
     if (!isOnline) {
-      return const Icon(YaruIcons.network_offline);
+      return Icon(Iconz().offline);
     }
 
+    final icon = selected
+        ? Icon(
+            Iconz().starFilled,
+          )
+        : Icon(
+            Iconz().starFilled,
+          );
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(
-        height: kYaruIconSize,
-        width: kYaruIconSize,
+        height: iconSize(),
+        width: iconSize(),
         child: SafeNetworkImage(
-          fallBackIcon: selected
-              ? const Icon(
-                  YaruIcons.star_filled,
-                )
-              : const Icon(
-                  YaruIcons.star,
-                ),
-          errorIcon: selected
-              ? const Icon(
-                  YaruIcons.star_filled,
-                )
-              : const Icon(
-                  YaruIcons.star,
-                ),
+          fallBackIcon: icon,
+          errorIcon: icon,
           fit: BoxFit.fitHeight,
           url: imageUrl,
           filterQuality: FilterQuality.medium,
@@ -75,27 +69,24 @@ class StationPage extends StatelessWidget {
         : <String>[
             for (final tag in station.album?.split(',') ?? <String>[]) tag,
           ];
-    const size = 350.0;
+    const size = 300.0;
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
 
     return YaruDetailPage(
-      appBar: YaruWindowTitleBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        border: BorderSide.none,
+      appBar: HeaderBar(
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
         title: Text(name.replaceAll('_', '')),
         leading: Navigator.canPop(context)
-            ? const YaruBackButton(
-                style: YaruBackButtonStyle.rounded,
-              )
+            ? const NavBackButton()
             : const SizedBox.shrink(),
       ),
       body: Center(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 50),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -123,6 +114,8 @@ class StationPage extends StatelessWidget {
                         ),
                         url: station.imageUrl,
                         fit: BoxFit.scaleDown,
+                        width: size,
+                        height: size,
                       ),
                     ),
                   ),
@@ -138,19 +131,16 @@ class StationPage extends StatelessWidget {
                       Row(
                         children: [
                           CircleAvatar(
-                            radius: kYaruTitleBarItemHeight / 2,
-                            backgroundColor: theme.primaryColor,
+                            radius: avatarIconSize,
+                            backgroundColor:
+                                theme.colorScheme.primary.withOpacity(0.4),
                             child: IconButton(
                               onPressed: isStarred
                                   ? () => unStarStation(name)
                                   : () => starStation(name),
-                              icon: YaruAnimatedIcon(
-                                isStarred
-                                    ? const YaruAnimatedStarIcon(filled: true)
-                                    : const YaruAnimatedStarIcon(filled: false),
-                                initialProgress: 1.0,
-                                color: theme.colorScheme.onPrimary,
-                                size: kYaruIconSize,
+                              icon: Iconz().getAnimatedStar(
+                                isStarred,
+                                theme.colorScheme.onPrimary,
                               ),
                             ),
                           ),
@@ -170,6 +160,7 @@ class StationPage extends StatelessWidget {
                       ),
                       if (tags?.isNotEmpty == true)
                         YaruChoiceChipBar(
+                          chipHeight: chipHeight,
                           yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.stack,
                           labels: tags!.map((e) => Text(e)).toList(),
                           isSelected: tags.map((e) => false).toList(),

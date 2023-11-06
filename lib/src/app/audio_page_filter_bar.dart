@@ -28,6 +28,7 @@ class AudioPageFilterBar extends StatelessWidget {
           left: 28,
         ),
         child: YaruChoiceChipBar(
+          chipHeight: chipHeight,
           yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.stack,
           labels:
               mainPageType.map((e) => Text(e.localize(context.l10n))).toList(),

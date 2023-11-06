@@ -3,16 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
-import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
+import '../../utils.dart';
 
 class PodcastAudioTile extends StatelessWidget {
   const PodcastAudioTile({
@@ -75,15 +74,14 @@ class PodcastAudioTile extends StatelessWidget {
           child: Row(
             children: [
               CircleAvatar(
-                radius: kYaruTitleBarItemHeight / 2,
-                backgroundColor: theme.colorScheme.onSurface.withOpacity(0.08),
+                radius: avatarIconSize,
+                backgroundColor: Iconz().getAvatarIconColor(theme),
                 child: IconButton(
                   icon: (isPlayerPlaying && selected)
                       ? Icon(
-                          YaruIcons.media_pause,
-                          color: theme.primaryColor,
+                          Iconz().pause,
                         )
-                      : const Icon(YaruIcons.media_play),
+                      : Icon(Iconz().play),
                   onPressed: () {
                     if (selected) {
                       if (isPlayerPlaying) {
@@ -159,8 +157,8 @@ class _Bottom extends StatelessWidget {
               audio: audio,
             ),
             // TODO: implement download
-            const IconButton(
-              icon: Icon(YaruIcons.download),
+            IconButton(
+              icon: Icon(Iconz().download),
               onPressed: null,
             ),
             const SizedBox(
@@ -292,10 +290,12 @@ class _AudioProgress extends StatelessWidget {
 
     return RepaintBoundary(
       child: SizedBox(
-        width: kYaruIconSize,
-        height: kYaruIconSize,
-        child: YaruCircularProgressIndicator(
-          color: selected ? theme.primaryColor : theme.colorScheme.onSurface,
+        width: iconSize(),
+        height: iconSize(),
+        child: Progress(
+          color: selected
+              ? theme.colorScheme.primary
+              : theme.colorScheme.onSurface,
           value: sliderActive
               ? (pos.inSeconds.toDouble() / duration!.inSeconds.toDouble())
               : 0,

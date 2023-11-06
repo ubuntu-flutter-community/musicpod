@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/constants.dart';
 import 'package:provider/provider.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../l10n/l10n.dart';
 
@@ -21,9 +20,7 @@ class LikedAudioPage extends StatelessWidget {
     required BuildContext context,
     required bool selected,
   }) {
-    return selected
-        ? const Icon(YaruIcons.heart_filled)
-        : const Icon(YaruIcons.heart);
+    return selected ? Icon(Iconz().heartFilled) : Icon(Iconz().heart);
   }
 
   final void Function({
@@ -58,21 +55,25 @@ class LikedAudioPage extends StatelessWidget {
       audioPageType: AudioPageType.likedAudio,
     );
 
+    final leading = (Navigator.of(context).canPop())
+        ? const NavBackButton()
+        : const SizedBox.shrink();
+    final title = SizedBox(
+      width: kSearchBarWidth,
+      child: TabsBar(
+        tabs: [
+          Tab(text: context.l10n.localAudio),
+          Tab(text: context.l10n.podcasts),
+        ],
+      ),
+    );
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: YaruWindowTitleBar(
-          title: SizedBox(
-            width: kSearchBarWidth,
-            child: YaruTabBar(
-              tabs: [
-                Tab(text: context.l10n.localAudio),
-                Tab(text: context.l10n.podcasts),
-              ],
-            ),
-          ),
-          border: BorderSide.none,
-          backgroundColor: Colors.transparent,
+        appBar: HeaderBar(
+          leading: leading,
+          title: title,
           style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,

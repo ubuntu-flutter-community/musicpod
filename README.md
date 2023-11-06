@@ -65,7 +65,7 @@ Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https
 - [X] Windows Support (Media Controls are WIP)
   - [ ] Windows Store
   - [ ] Direct Download
-- [ ] Android Support
+- [X] Android Support (Media Controls are WIP)
   - [ ] PlayStore
   - [ ] APK Download
 - [ ] MacOs Support

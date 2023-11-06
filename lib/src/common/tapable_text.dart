@@ -23,7 +23,7 @@ class TapAbleText extends StatelessWidget {
         Flexible(
           fit: FlexFit.loose,
           child: InkWell(
-            hoverColor: theme.primaryColor.withOpacity(0.3),
+            hoverColor: theme.colorScheme.primary.withOpacity(0.3),
             borderRadius: BorderRadius.circular(4),
             onTap: onTap == null ? null : () => onTap!(),
             child: Text(

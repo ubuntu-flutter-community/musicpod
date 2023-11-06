@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:musicpod/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 
 import '../../common.dart';
 import '../../data.dart';
@@ -22,8 +20,7 @@ class ShareButton extends StatelessWidget {
               Clipboard.setData(ClipboardData(text: audio!.url!));
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  width: kSnackBarWidth,
-                  behavior: SnackBarBehavior.floating,
+                  width: snackBarWidth,
                   content: CopyClipboardContent(
                     text: audio?.url,
                     onSearch: () {
@@ -35,7 +32,7 @@ class ShareButton extends StatelessWidget {
                 ),
               );
             },
-      icon: const Icon(YaruIcons.share),
+      icon: Icon(Iconz().share),
     );
   }
 }

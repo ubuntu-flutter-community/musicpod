@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
-import 'package:musicpod/constants.dart';
-import 'package:musicpod/utils.dart';
 
+import '../../constants.dart';
 import '../../data.dart';
 import '../../patch_notes.dart';
+import '../../utils.dart';
 
 class LibraryService {
   //

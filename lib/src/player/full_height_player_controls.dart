@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 
 import '../../common.dart';
 import '../../data.dart';
@@ -28,6 +27,7 @@ class FullHeightPlayerControls extends StatelessWidget {
     required this.volume,
     required this.queue,
     required this.isOnline,
+    this.expand = false,
   });
 
   final Audio? audio;
@@ -42,6 +42,7 @@ class FullHeightPlayerControls extends StatelessWidget {
   final Future<void> Function() pause;
   final Future<void> Function() playOrPause;
   final bool liked;
+  final bool expand;
 
   final bool isStarredStation;
   final void Function(String station) removeStarredStation;
@@ -59,7 +60,7 @@ class FullHeightPlayerControls extends StatelessWidget {
 
     final active = audio?.path != null || isOnline;
 
-    const spacing = 7.0;
+    final spacing = expand ? 0.0 : 7.0;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -74,33 +75,36 @@ class FullHeightPlayerControls extends StatelessWidget {
           removeLikedAudio: removeLikedAudio,
           addLikedAudio: addLikedAudio,
         ),
-        const SizedBox(
+        SizedBox(
           width: spacing,
         ),
-        ShareButton(
-          active: active,
-          audio: audio,
-        ),
-        const SizedBox(
+        if (!expand)
+          ShareButton(
+            active: active,
+            audio: audio,
+          ),
+        SizedBox(
           width: spacing,
         ),
         IconButton(
           icon: Icon(
-            YaruIcons.shuffle,
+            Iconz().shuffle,
             color: !active
                 ? theme.disabledColor
-                : (shuffle ? theme.primaryColor : theme.colorScheme.onSurface),
+                : (shuffle
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.onSurface),
           ),
           onPressed: !active ? null : () => setShuffle(!(shuffle)),
         ),
-        const SizedBox(
+        SizedBox(
           width: spacing,
         ),
         IconButton(
           onPressed: !active ? null : () => playPrevious(),
-          icon: const Icon(YaruIcons.skip_backward),
+          icon: Icon(Iconz().skipBackward),
         ),
-        const SizedBox(
+        SizedBox(
           width: spacing,
         ),
         IconButton(
@@ -114,41 +118,43 @@ class FullHeightPlayerControls extends StatelessWidget {
                   }
                 },
           icon: Icon(
-            isPlaying ? YaruIcons.media_pause : YaruIcons.media_play,
+            isPlaying ? Iconz().pause : Iconz().play,
           ),
         ),
-        const SizedBox(
+        SizedBox(
           width: spacing,
         ),
         IconButton(
           onPressed: !active ? null : () => playNext(),
-          icon: const Icon(YaruIcons.skip_forward),
+          icon: Icon(Iconz().skipForward),
         ),
-        const SizedBox(
+        SizedBox(
           width: spacing,
         ),
         IconButton(
           icon: Icon(
-            YaruIcons.repeat_single,
+            Iconz().repeatSingle,
             color: !active
                 ? theme.disabledColor
                 : (repeatSingle
-                    ? theme.primaryColor
+                    ? theme.colorScheme.primary
                     : theme.colorScheme.onSurface),
           ),
           onPressed: !active ? null : () => setRepeatSingle(!(repeatSingle)),
         ),
-        const SizedBox(
+        SizedBox(
           width: spacing,
         ),
         VolumeSliderPopup(volume: volume, setVolume: setVolume),
-        const SizedBox(
-          width: spacing,
-        ),
-        QueuePopup(
-          audio: audio,
-          queue: queue,
-        ),
+        if (!expand)
+          SizedBox(
+            width: spacing,
+          ),
+        if (!expand)
+          QueuePopup(
+            audio: audio,
+            queue: queue,
+          ),
       ],
     );
   }

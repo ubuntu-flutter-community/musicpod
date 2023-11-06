@@ -1,4 +1,4 @@
-import 'package:musicpod/string_x.dart';
+import '../../string_x.dart';
 
 import '../l10n/l10n.dart';
 

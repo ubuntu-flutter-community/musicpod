@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 
 import '../../data.dart';
+import '../common/icons.dart';
 import '../l10n/l10n.dart';
 
 class QueuePopup extends StatelessWidget {
@@ -16,8 +16,8 @@ class QueuePopup extends StatelessWidget {
     return PopupMenuButton<double>(
       padding: EdgeInsets.zero,
       tooltip: context.l10n.queue,
-      icon: const Icon(
-        YaruIcons.playlist,
+      icon: Icon(
+        Iconz().playlist,
       ),
       itemBuilder: (context) {
         return [

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/constants.dart';
-import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru/yaru.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
+import '../../utils.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import 'radio_model.dart';
@@ -77,8 +76,6 @@ class _RadioPageState extends State<RadioPage> {
 
     final searchActive = context.select((RadioModel m) => m.searchActive);
     final setSearchActive = model.setSearchActive;
-
-    final theme = Theme.of(context);
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
@@ -161,8 +158,8 @@ class _RadioPageState extends State<RadioPage> {
       } else {
         if (stations == null) {
           body = GridView(
-            gridDelegate: kImageGridDelegate,
-            padding: kPodcastGridPadding,
+            gridDelegate: imageGridDelegate,
+            padding: gridPadding,
             children: List.generate(limit, (index) => Audio())
                 .map((e) => const AudioCard())
                 .toList(),
@@ -186,8 +183,8 @@ class _RadioPageState extends State<RadioPage> {
             }
           } else {
             body = GridView.builder(
-              padding: kPodcastGridPadding,
-              gridDelegate: kImageGridDelegate,
+              padding: gridPadding,
+              gridDelegate: imageGridDelegate,
               itemCount: stationsCount,
               itemBuilder: (context, index) {
                 final station = stations.elementAt(index);
@@ -208,25 +205,23 @@ class _RadioPageState extends State<RadioPage> {
       }
 
       return YaruDetailPage(
-        appBar: YaruWindowTitleBar(
-          backgroundColor: theme.scaffoldBackgroundColor,
-          border: BorderSide.none,
+        appBar: HeaderBar(
           style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
           titleSpacing: 0,
           leading: Navigator.of(context).canPop()
-              ? const YaruBackButton(
-                  style: YaruBackButtonStyle.rounded,
-                )
+              ? const NavBackButton()
               : const SizedBox.shrink(),
           title: Padding(
             padding: const EdgeInsets.only(right: 40),
             child: YaruSearchTitleField(
+              searchIcon: Iconz().searchIcon,
+              clearIcon: Iconz().clearIcon,
               key: ValueKey(searchQuery),
               text: searchQuery,
               alignment: Alignment.center,
-              width: kSearchBarWidth,
+              width: searchBarWidth,
               title: controlPanel,
               searchActive: searchActive,
               onSearchActive: () => setSearchActive(!searchActive),
@@ -271,7 +266,7 @@ class _ReconnectPage extends StatelessWidget {
           OutlinedButton.icon(
             onPressed: init,
             label: const Text('Reconnect to server'),
-            icon: const Icon(YaruIcons.refresh),
+            icon: Icon(Iconz().refresh),
           ),
         ],
       ),
@@ -312,6 +307,8 @@ class _StationCard extends StatelessWidget {
           errorIcon: RadioFallBackIcon(station: station),
           url: station?.imageUrl,
           fit: BoxFit.scaleDown,
+          height: kSmallCardHeight,
+          width: kSmallCardHeight,
         ),
       ),
     );
@@ -384,7 +381,7 @@ class RadioFallBackIcon extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: Icon(
-          YaruIcons.radio,
+          Iconz().radio,
           size: iconSize ?? 70,
           color: contrastColor(
             getColor(
@@ -456,13 +453,11 @@ class RadioPageIcon extends StatelessWidget {
     final theme = Theme.of(context);
     if (isPlaying) {
       return Icon(
-        YaruIcons.media_play,
-        color: theme.primaryColor,
+        Iconz().play,
+        color: Iconz().getAvatarIconColor(theme),
       );
     }
 
-    return selected
-        ? const Icon(YaruIcons.radio_filled)
-        : const Icon(YaruIcons.radio);
+    return selected ? Icon(Iconz().radioFilled) : Icon(Iconz().radio);
   }
 }

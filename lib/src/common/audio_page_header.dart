@@ -25,6 +25,9 @@ class AudioPageHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
+    final size = MediaQuery.of(context).size;
+    final smallWindow = size.width < 600.0;
+
     return Container(
       height: 240,
       decoration: BoxDecoration(
@@ -42,6 +45,8 @@ class AudioPageHeader extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment:
+            smallWindow ? MainAxisAlignment.center : MainAxisAlignment.start,
         children: [
           if (image != null)
             Padding(
@@ -51,79 +56,80 @@ class AudioPageHeader extends StatelessWidget {
                 child: image!,
               ),
             ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  label ?? context.l10n.album,
-                  style: theme.textTheme.labelSmall,
-                ),
-                Text(
-                  title,
-                  style: theme.textTheme.headlineLarge?.copyWith(
-                    fontWeight: FontWeight.w300,
-                    fontSize: 50,
-                    color: theme.colorScheme.onSurface.withOpacity(0.8),
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                if (subTitle?.isNotEmpty == true)
+          if (!smallWindow)
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   Text(
-                    subTitle!,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.hintColor,
-                      fontStyle: FontStyle.italic,
-                    ),
+                    label ?? context.l10n.album,
+                    style: theme.textTheme.labelSmall,
                   ),
-                Expanded(
-                  child: description == null
-                      ? const SizedBox.expand()
-                      : SizedBox(
-                          width: 800,
-                          child: InkWell(
-                            borderRadius:
-                                BorderRadius.circular(kYaruButtonRadius),
-                            onTap: () => showDialog(
-                              context: context,
-                              builder: (context) => _DescriptionDialog(
-                                title: title,
-                                description: description!,
+                  Text(
+                    title,
+                    style: theme.textTheme.headlineLarge?.copyWith(
+                      fontWeight: FontWeight.w300,
+                      fontSize: 35,
+                      color: theme.colorScheme.onSurface.withOpacity(0.8),
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  if (subTitle?.isNotEmpty == true)
+                    Text(
+                      subTitle!,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.hintColor,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  Expanded(
+                    child: description == null
+                        ? const SizedBox.expand()
+                        : SizedBox(
+                            width: 800,
+                            child: InkWell(
+                              borderRadius:
+                                  BorderRadius.circular(kYaruButtonRadius),
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (context) => _DescriptionDialog(
+                                  title: title,
+                                  description: description!,
+                                ),
+                              ),
+                              child: Html(
+                                data: description,
+                                onAnchorTap: (url, attributes, element) {
+                                  if (url == null) return;
+                                  launchUrl(Uri.parse(url));
+                                },
+                                style: {
+                                  'img': Style(display: Display.none),
+                                  'html': Style(
+                                    margin: Margins.zero,
+                                    padding: HtmlPaddings.zero,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  'body': Style(
+                                    margin: Margins.zero,
+                                    padding: HtmlPaddings.only(top: 5),
+                                    color: theme.hintColor,
+                                    textOverflow: TextOverflow.ellipsis,
+                                    maxLines: 4,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                },
                               ),
                             ),
-                            child: Html(
-                              data: description,
-                              onAnchorTap: (url, attributes, element) {
-                                if (url == null) return;
-                                launchUrl(Uri.parse(url));
-                              },
-                              style: {
-                                'img': Style(display: Display.none),
-                                'html': Style(
-                                  margin: Margins.zero,
-                                  padding: HtmlPaddings.zero,
-                                  textAlign: TextAlign.start,
-                                ),
-                                'body': Style(
-                                  margin: Margins.zero,
-                                  padding: HtmlPaddings.only(top: 5),
-                                  color: theme.hintColor,
-                                  textOverflow: TextOverflow.ellipsis,
-                                  maxLines: 4,
-                                  textAlign: TextAlign.start,
-                                ),
-                              },
-                            ),
                           ),
-                        ),
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );

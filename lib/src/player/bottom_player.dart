@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 
 import '../../common.dart';
 import '../../data.dart';
@@ -87,19 +86,113 @@ class BottomPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final verySmall = width < 700;
+
+    final bottomPlayerImage = _BottomPlayerImage(
+      audio: audio,
+      size: _kBottomPlayerHeight - (verySmall ? 20 : 0),
+      videoController: videoController,
+      isVideo: isVideo,
+      isOnline: isOnline,
+    );
+
+    final titleAndArtist = _BottomPlayerTitleArtist(
+      icyName: mpvMetaData?.icyName,
+      icyTitle: mpvMetaData?.icyTitle,
+      audio: audio,
+      onTextTap: audio == null || audio?.audioType == null
+          ? null
+          : (audioType, text) {
+              onTextTap(
+                text: text,
+                audioType: audio!.audioType!,
+              );
+              navigatorKey.currentState?.maybePop();
+            },
+    );
+
+    final bottomPlayerControls = BottomPlayerControls(
+      audio: audio,
+      setRepeatSingle: setRepeatSingle,
+      repeatSingle: repeatSingle,
+      shuffle: shuffle,
+      setShuffle: setShuffle,
+      isPlaying: isPlaying,
+      playPrevious: playPrevious,
+      playNext: playNext,
+      pause: pause,
+      playOrPause: playOrPause,
+      volume: volume,
+      setVolume: setVolume,
+      queue: queue,
+      onFullScreenTap: () => setFullScreen(true),
+      isOnline: isOnline,
+    );
+
+    final track = PlayerTrack(
+      color: color,
+      duration: duration,
+      position: position,
+      setPosition: setPosition,
+      seek: seek,
+      expand: verySmall,
+    );
+
+    if (verySmall) {
+      return InkWell(
+        onTap: () => setFullScreen(true),
+        child: SizedBox(
+          height: _kBottomPlayerHeight,
+          child: Column(
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: bottomPlayerImage,
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Expanded(
+                      child: titleAndArtist,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: IconButton(
+                        onPressed:
+                            !(audio?.path != null || isOnline) || audio == null
+                                ? null
+                                : () {
+                                    if (isPlaying) {
+                                      pause();
+                                    } else {
+                                      playOrPause();
+                                    }
+                                  },
+                        icon: Icon(
+                          isPlaying ? Iconz().pause : Iconz().play,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              track,
+            ],
+          ),
+        ),
+      );
+    }
 
     return SizedBox(
       height: _kBottomPlayerHeight,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _BottomPlayerImage(
-            audio: audio,
-            size: _kBottomPlayerHeight,
-            videoController: videoController,
-            isVideo: isVideo,
-            isOnline: isOnline,
-          ),
+          bottomPlayerImage,
           const SizedBox(
             width: 20,
           ),
@@ -109,20 +202,7 @@ class BottomPlayer extends StatelessWidget {
               children: [
                 Flexible(
                   flex: 3,
-                  child: _BottomPlayerTitleArtist(
-                    icyName: mpvMetaData?.icyName,
-                    icyTitle: mpvMetaData?.icyTitle,
-                    audio: audio,
-                    onTextTap: audio == null || audio?.audioType == null
-                        ? null
-                        : (audioType, text) {
-                            onTextTap(
-                              text: text,
-                              audioType: audio!.audioType!,
-                            );
-                            navigatorKey.currentState?.maybePop();
-                          },
-                  ),
+                  child: titleAndArtist,
                 ),
                 const SizedBox(
                   width: 5,
@@ -150,32 +230,11 @@ class BottomPlayer extends StatelessWidget {
               padding: const EdgeInsets.only(top: 10, bottom: 10, right: 8),
               child: Column(
                 children: [
-                  BottomPlayerControls(
-                    audio: audio,
-                    setRepeatSingle: setRepeatSingle,
-                    repeatSingle: repeatSingle,
-                    shuffle: shuffle,
-                    setShuffle: setShuffle,
-                    isPlaying: isPlaying,
-                    playPrevious: playPrevious,
-                    playNext: playNext,
-                    pause: pause,
-                    playOrPause: playOrPause,
-                    volume: volume,
-                    setVolume: setVolume,
-                    queue: queue,
-                    onFullScreenTap: () => setFullScreen(true),
-                    isOnline: isOnline,
+                  bottomPlayerControls,
+                  const SizedBox(
+                    height: 8,
                   ),
-                  Expanded(
-                    child: PlayerTrack(
-                      color: color,
-                      duration: duration,
-                      position: position,
-                      setPosition: setPosition,
-                      seek: seek,
-                    ),
-                  ),
+                  track,
                 ],
               ),
             ),
@@ -195,7 +254,7 @@ class BottomPlayer extends StatelessWidget {
                 ),
                 IconButton(
                   icon: Icon(
-                    YaruIcons.fullscreen,
+                    Iconz().fullScreen,
                     color: theme.colorScheme.onSurface,
                   ),
                   onPressed: () => setFullScreen(true),
@@ -272,8 +331,8 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
                   : (audio?.artist ?? ' '),
               child: Text(
                 icyName?.isNotEmpty == true ? icyName! : (audio?.artist ?? ' '),
-                style: const TextStyle(
-                  fontWeight: FontWeight.w100,
+                style: TextStyle(
+                  fontWeight: smallTextFontWeight,
                   fontSize: 12,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -305,11 +364,11 @@ class _BottomPlayerImage extends StatelessWidget {
     final theme = Theme.of(context);
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
-      iconData = YaruIcons.radio;
+      iconData = Iconz().radio;
     } else if (audio?.audioType == AudioType.podcast) {
-      iconData = YaruIcons.podcast;
+      iconData = Iconz().podcast;
     } else {
-      iconData = YaruIcons.music_note;
+      iconData = Iconz().musicNote;
     }
     if (isVideo == true) {
       return RepaintBoundary(

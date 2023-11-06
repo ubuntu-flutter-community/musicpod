@@ -1,10 +1,10 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:musicpod/constants.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
 import '../l10n/l10n.dart';
@@ -31,7 +31,7 @@ class ArtistsView extends StatelessWidget {
   Widget build(BuildContext context) {
     if (artists == null) {
       return const Center(
-        child: YaruCircularProgressIndicator(),
+        child: Progress(),
       );
     }
 

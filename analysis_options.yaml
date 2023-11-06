@@ -14,3 +14,4 @@ linter:
     require_trailing_commas: true
     use_super_parameters: true
     close_sinks: true
+    prefer_relative_imports: true

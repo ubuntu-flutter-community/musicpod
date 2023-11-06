@@ -9,7 +9,8 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_cache_manager/src/storage/file_system/file_system.dart';
 import 'package:path/path.dart' as p;
 import 'package:xdg_directories/xdg_directories.dart';
-import 'package:yaru_icons/yaru_icons.dart';
+
+import 'icons.dart';
 
 class SafeNetworkImage extends StatelessWidget {
   const SafeNetworkImage({
@@ -19,6 +20,8 @@ class SafeNetworkImage extends StatelessWidget {
     this.fit = BoxFit.fitWidth,
     this.fallBackIcon,
     this.errorIcon,
+    this.height,
+    this.width,
   });
 
   final String? url;
@@ -26,13 +29,15 @@ class SafeNetworkImage extends StatelessWidget {
   final BoxFit fit;
   final Widget? fallBackIcon;
   final Widget? errorIcon;
+  final double? height;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
     final fallBack = Center(
       child: fallBackIcon ??
-          const Icon(
-            YaruIcons.music_note,
+          Icon(
+            Iconz().musicNote,
             size: 70,
           ),
     );
@@ -40,7 +45,7 @@ class SafeNetworkImage extends StatelessWidget {
     final errorWidget = Center(
       child: errorIcon ??
           Icon(
-            YaruIcons.image_missing,
+            Iconz().imageMissing,
             size: 70,
             color: Theme.of(context).hintColor,
           ),
@@ -55,6 +60,8 @@ class SafeNetworkImage extends StatelessWidget {
         image: imageProvider,
         filterQuality: filterQuality,
         fit: fit,
+        height: height,
+        width: width,
       ),
       errorWidget: (context, url, error) => errorWidget,
     );

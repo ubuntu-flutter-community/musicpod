@@ -2,14 +2,13 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:musicpod/constants.dart';
-import 'package:musicpod/utils.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
+import '../../utils.dart';
 import '../l10n/l10n.dart';
 
 class LocalAudioSearchPage extends StatelessWidget {
@@ -254,7 +253,7 @@ class _Albums extends StatelessWidget {
         final image = audio.pictureData == null
             ? Center(
                 child: Icon(
-                  YaruIcons.music_note,
+                  Iconz().musicNote,
                   size: 140,
                   color: theme.hintColor,
                 ),

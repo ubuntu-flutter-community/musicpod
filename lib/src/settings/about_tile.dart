@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:musicpod/constants.dart';
+
 import 'package:url_launcher/url_launcher.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../constants.dart';
+import '../common/common_widgets.dart';
+import '../common/icons.dart';
 import '../l10n/l10n.dart';
 
 class AboutTile extends StatelessWidget {
@@ -12,6 +14,8 @@ class AboutTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final linkColor = theme.colorScheme.primary;
     final content = [
       Padding(
         padding: const EdgeInsets.only(
@@ -20,17 +24,17 @@ class AboutTile extends StatelessWidget {
         ),
         child: InkWell(
           onTap: () => launchUrl(Uri.parse('https://github.com/Feichtmeier')),
-          child: const Text(
+          child: Text(
             'Copyright by Frederik Feichtmeier 2023 and onwards - all rights reserved',
-            style: TextStyle(color: Colors.blue),
+            style: TextStyle(color: linkColor),
           ),
         ),
       ),
       InkWell(
         onTap: () => launchUrl(Uri.parse('https://github.com/kenvandine')),
-        child: const Text(
+        child: Text(
           'Snap packaging by Ken VanDine',
-          style: TextStyle(color: Colors.blue),
+          style: TextStyle(color: linkColor),
         ),
       ),
       const SizedBox(
@@ -48,7 +52,7 @@ class AboutTile extends StatelessWidget {
                 onTapLink: (text, href, title) =>
                     href != null ? launchUrl(Uri.parse(href)) : null,
                 styleSheet: MarkdownStyleSheet(
-                  a: const TextStyle(color: Colors.blue),
+                  a: TextStyle(color: linkColor),
                 ),
               ),
             );
@@ -66,15 +70,15 @@ class AboutTile extends StatelessWidget {
             Text(
               context.l10n.findUsOnGitHub,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.blue,
+                    color: linkColor,
                   ),
             ),
             const SizedBox(
               width: 5,
             ),
-            const Icon(
-              YaruIcons.external_link,
-              color: Colors.blue,
+            Icon(
+              Iconz().external,
+              color: linkColor,
               size: 18,
             ),
           ],
@@ -84,11 +88,11 @@ class AboutTile extends StatelessWidget {
 
     return Center(
       child: SizedBox(
-        height: kYaruTitleBarItemHeight,
-        width: kYaruTitleBarItemHeight,
+        height: shrinkTitleBarItems ? kYaruTitleBarItemHeight : null,
+        width: shrinkTitleBarItems ? kYaruTitleBarItemHeight : null,
         child: IconButton(
-          icon: const Icon(
-            YaruIcons.music_note,
+          icon: Icon(
+            Iconz().musicNote,
           ),
           onPressed: () {
             return showAboutDialog(

@@ -7,20 +7,24 @@ import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
-import 'package:musicpod/constants.dart';
 import 'package:smtc_windows/smtc_windows.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import 'app.dart';
+import 'constants.dart';
+import 'external_path.dart';
 import 'library.dart';
 import 'local_audio.dart';
-import 'media_control_service.dart';
+import 'media_control.dart';
+import 'notifications.dart';
 import 'podcasts.dart';
 import 'radio.dart';
 
 Future<void> main(List<String> args) async {
-  await YaruWindowTitleBar.ensureInitialized();
+  if (!(Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)) {
+    await YaruWindowTitleBar.ensureInitialized();
+  }
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
 
@@ -37,9 +41,15 @@ Future<void> main(List<String> args) async {
 
   registerService<VideoController>(() => VideoController(player));
 
+  GtkApplicationNotifier? gtkApplicationNotifier;
+  NotificationsClient? notificationsClient;
   SMTCWindows? smtc;
   MPRIS? mpris;
   if (Platform.isLinux) {
+    gtkApplicationNotifier = GtkApplicationNotifier(args);
+
+    notificationsClient = NotificationsClient();
+
     mpris = await MPRIS.create(
       busName: kBusName,
       identity: kAppName,
@@ -71,26 +81,31 @@ Future<void> main(List<String> args) async {
     LocalAudioService.new,
     dispose: (s) async => await s.dispose(),
   );
+
+  final notificationsService = NotificationsService(notificationsClient);
+  registerService<NotificationsService>(
+    () => notificationsService,
+    dispose: (s) async => await s.dispose(),
+  );
   registerService<PodcastService>(
-    PodcastService.new,
+    () => PodcastService(notificationsService),
     dispose: (s) async => await s.dispose(),
   );
   final connectivity = Connectivity();
   registerService<Connectivity>(
     () => connectivity,
   );
-  if (Platform.isLinux) {
-    registerService<NotificationsClient>(
-      NotificationsClient.new,
-      dispose: (s) async => await s.close(),
-    );
-  }
-  registerService<GtkApplicationNotifier>(
-    () => GtkApplicationNotifier(args),
+
+  registerService<ExternalPathService>(
+    () => ExternalPathService(gtkApplicationNotifier),
     dispose: (s) => s.dispose(),
   );
 
   registerService<RadioService>(() => RadioService(connectivity));
 
-  runApp(const MusicPod());
+  runApp(
+    MusicPod(
+      yaruApp: Platform.isLinux,
+    ),
+  );
 }

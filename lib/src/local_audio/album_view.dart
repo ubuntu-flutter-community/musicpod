@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
@@ -42,7 +41,7 @@ class AlbumsView extends StatelessWidget {
 
     if (albums == null) {
       return const Center(
-        child: YaruCircularProgressIndicator(),
+        child: Progress(),
       );
     }
 
@@ -62,7 +61,7 @@ class AlbumsView extends StatelessWidget {
       shrinkWrap: true,
       padding: const EdgeInsets.all(kYaruPagePadding),
       itemCount: albums!.length,
-      gridDelegate: kImageGridDelegate,
+      gridDelegate: imageGridDelegate,
       itemBuilder: (context, index) {
         final audio = albums!.elementAt(index);
         String? id = generateAlbumId(audio);
@@ -71,7 +70,7 @@ class AlbumsView extends StatelessWidget {
         final image = audio.pictureData == null
             ? Center(
                 child: Icon(
-                  YaruIcons.music_note,
+                  Iconz().musicNote,
                   size: 140,
                   color: theme.hintColor,
                 ),
@@ -79,7 +78,7 @@ class AlbumsView extends StatelessWidget {
             : Image.memory(
                 audio.pictureData!,
                 fit: BoxFit.cover,
-                height: kCardHeight - 70,
+                height: kSmallCardHeight,
                 filterQuality: FilterQuality.medium,
               );
 

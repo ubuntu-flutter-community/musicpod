@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_icons/yaru_icons.dart';
+import '../common/icons.dart';
 
 import '../l10n/l10n.dart';
 
@@ -22,13 +22,13 @@ class _VolumeSliderPopupState extends State<VolumeSliderPopup> {
   Widget build(BuildContext context) {
     IconData iconData;
     if (widget.volume <= 20) {
-      iconData = YaruIcons.speaker_low_filled;
+      iconData = Iconz().speakerLowFilled;
     } else if (widget.volume <= 50 && widget.volume > 20) {
-      iconData = YaruIcons.speaker_medium_filled;
+      iconData = Iconz().speakerMediumFilled;
     } else if (widget.volume <= 0) {
-      iconData = YaruIcons.speaker_muted_filled;
+      iconData = Iconz().speakerMutedFilled;
     } else {
-      iconData = YaruIcons.speaker_high_filled;
+      iconData = Iconz().speakerHighFilled;
     }
 
     return StatefulBuilder(

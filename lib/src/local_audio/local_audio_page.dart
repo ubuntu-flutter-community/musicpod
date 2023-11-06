@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/constants.dart';
 import 'package:provider/provider.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
 import '../../player.dart';
+import '../../common.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 
@@ -93,15 +93,13 @@ class _LocalAudioPageState extends State<LocalAudioPage>
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
 
-    final theme = Theme.of(context);
-
     void onTap(text) {
       setSearchQuery(text);
       search();
       setSearchActive(true);
     }
 
-    final tabBar = YaruTabBar(
+    final tabBar = TabsBar(
       onTap: (value) {
         widget.onIndexSelected.call(value);
         setSearchActive(false);
@@ -179,27 +177,22 @@ class _LocalAudioPageState extends State<LocalAudioPage>
       initialIndex: widget.selectedIndex,
       length: 3,
       child: Scaffold(
-        backgroundColor: theme.brightness == Brightness.dark
-            ? const Color.fromARGB(255, 37, 37, 37)
-            : Colors.white,
-        appBar: YaruWindowTitleBar(
-          backgroundColor: Colors.transparent,
-          border: BorderSide.none,
+        appBar: HeaderBar(
           style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
           leading: SizedBox(
             width: 120,
             child: (Navigator.of(context).canPop())
-                ? const YaruBackButton(
-                    style: YaruBackButtonStyle.rounded,
-                  )
+                ? const NavBackButton()
                 : const SizedBox.shrink(),
           ),
           titleSpacing: 0,
           title: Padding(
             padding: const EdgeInsets.only(right: 40),
             child: YaruSearchTitleField(
+              searchIcon: Iconz().searchIcon,
+              clearIcon: Iconz().clearIcon,
               key: ValueKey(searchQuery),
               width: kSearchBarWidth,
               searchActive: searchActive,
@@ -242,27 +235,10 @@ class LocalAudioPageIcon extends StatelessWidget {
     final theme = Theme.of(context);
     if (isPlaying) {
       return Icon(
-        YaruIcons.media_play,
-        color: theme.primaryColor,
+        Iconz().play,
+        color: theme.colorScheme.primary,
       );
     }
-    return Stack(
-      children: [
-        selected
-            ? const Icon(YaruIcons.drive_harddisk_filled)
-            : const Icon(YaruIcons.drive_harddisk),
-        Positioned(
-          left: 5,
-          top: 1,
-          child: Icon(
-            YaruIcons.music_note,
-            size: 10,
-            color: selected
-                ? theme.colorScheme.surface
-                : theme.colorScheme.onSurface,
-          ),
-        ),
-      ],
-    );
+    return selected ? Icon(Iconz().localAudioFilled) : Icon(Iconz().localAudio);
   }
 }

@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 
 import '../../common.dart';
 import '../../data.dart';
@@ -93,7 +92,7 @@ List<MasterItem> createMasterItems({
       pageBuilder: (context) => const SizedBox.shrink(),
     ),
     MasterItem(
-      iconBuilder: (context, selected) => const Icon(YaruIcons.plus),
+      iconBuilder: (context, selected) => Icon(Iconz().plus),
       titleBuilder: (context) => Text(context.l10n.playlistDialogTitleNew),
       pageBuilder: (context) => const SizedBox.shrink(),
     ),
@@ -161,8 +160,8 @@ List<MasterItem> createMasterItems({
             unPinPlaylist: removePlaylist,
             updatePlaylistName: updatePlaylistName,
           ),
-          iconBuilder: (context, selected) => const Icon(
-            YaruIcons.playlist,
+          iconBuilder: (context, selected) => Icon(
+            Iconz().playlist,
           ),
         ),
     if (showPinnedAlbums)

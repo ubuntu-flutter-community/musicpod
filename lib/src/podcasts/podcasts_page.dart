@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/constants.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
@@ -92,8 +91,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
     Widget grid;
     if (searchResult == null) {
       grid = GridView(
-        gridDelegate: kImageGridDelegate,
-        padding: kPodcastGridPadding,
+        gridDelegate: imageGridDelegate,
+        padding: gridPadding,
         children: List.generate(limit, (index) => Audio())
             .map((e) => const AudioCard())
             .toList(),
@@ -102,9 +101,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
       grid = NoSearchResultPage(message: Text(context.l10n.noPodcastFound));
     } else {
       grid = GridView.builder(
-        padding: kPodcastGridPadding,
+        padding: gridPadding,
         itemCount: searchResultCount,
-        gridDelegate: kImageGridDelegate,
+        gridDelegate: imageGridDelegate,
         itemBuilder: (context, index) {
           final podcastItem = searchResult.items.elementAt(index);
 
@@ -112,6 +111,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
           final image = SafeNetworkImage(
             url: artworkUrl600,
             fit: BoxFit.cover,
+            height: kSmallCardHeight,
+            width: kSmallCardHeight,
           );
 
           return AudioCard(
@@ -206,13 +207,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
       return const OfflinePage();
     } else {
       return YaruDetailPage(
-        appBar: YaruWindowTitleBar(
-          backgroundColor: theme.scaffoldBackgroundColor,
-          border: BorderSide.none,
+        appBar: HeaderBar(
           leading: (Navigator.canPop(context))
-              ? const YaruBackButton(
-                  style: YaruBackButtonStyle.rounded,
-                )
+              ? const NavBackButton()
               : const SizedBox.shrink(),
           titleSpacing: 0,
           style: showWindowControls
@@ -221,10 +218,12 @@ class _PodcastsPageState extends State<PodcastsPage> {
           title: Padding(
             padding: const EdgeInsets.only(right: 40),
             child: YaruSearchTitleField(
+              searchIcon: Iconz().searchIcon,
+              clearIcon: Iconz().clearIcon,
               key: ValueKey(searchQuery),
               text: searchQuery,
               alignment: Alignment.center,
-              width: kSearchBarWidth,
+              width: searchBarWidth,
               searchActive: searchActive,
               title: controlPanel,
               onSearchActive: () => setSearchActive(!searchActive),
@@ -342,24 +341,16 @@ class PodcastsPageIcon extends StatelessWidget {
     final theme = Theme.of(context);
 
     if (checkingForUpdates) {
-      return const SizedBox(
-        height: 18,
-        width: 18,
-        child: YaruCircularProgressIndicator(
-          strokeWidth: 2,
-        ),
-      );
+      return const SideBarProgress();
     }
 
     if (isPlaying) {
       return Icon(
-        YaruIcons.media_play,
-        color: theme.primaryColor,
+        Iconz().play,
+        color: theme.colorScheme.primary,
       );
     }
 
-    return selected
-        ? const Icon(YaruIcons.podcast_filled)
-        : const Icon(YaruIcons.podcast);
+    return selected ? Icon(Iconz().podcastFilled) : Icon(Iconz().podcast);
   }
 }
