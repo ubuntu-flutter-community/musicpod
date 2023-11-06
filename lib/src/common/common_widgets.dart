@@ -64,7 +64,7 @@ class Progress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = color ?? Theme.of(context).primaryColor.withOpacity(0.5);
+    final c = color ?? Theme.of(context).colorScheme.primary.withOpacity(0.5);
     return _yaruStyled
         ? YaruCircularProgressIndicator(
             strokeWidth: strokeWidth,
@@ -133,6 +133,26 @@ class HeaderBar extends StatelessWidget implements PreferredSizeWidget {
             ? (style == YaruTitleBarStyle.hidden ? 0 : kYaruTitleBarHeight)
             : kToolbarHeight,
       );
+}
+
+class TabsBar extends StatelessWidget {
+  const TabsBar({super.key, required this.tabs, this.onTap});
+
+  final List<Widget> tabs;
+  final void Function(int)? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return _yaruStyled
+        ? YaruTabBar(
+            onTap: onTap,
+            tabs: tabs,
+          )
+        : TabBar(
+            onTap: onTap,
+            tabs: tabs,
+          );
+  }
 }
 
 double? get avatarIconSize => _yaruStyled ? kYaruTitleBarItemHeight / 2 : null;

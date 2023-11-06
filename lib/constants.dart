@@ -35,7 +35,7 @@ const kPodcastGridPadding = EdgeInsets.only(
   right: kYaruPagePadding - 5,
 );
 const kMobilePodcastGridPadding = EdgeInsets.only(
-  top: 15,
+  top: 25,
   bottom: kYaruPagePadding,
   left: kYaruPagePadding,
   right: kYaruPagePadding,

@@ -349,7 +349,7 @@ class PodcastsPageIcon extends StatelessWidget {
     if (isPlaying) {
       return Icon(
         Iconz().play,
-        color: theme.primaryColor,
+        color: theme.colorScheme.primary,
       );
     }
 

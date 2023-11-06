@@ -42,12 +42,13 @@ class PlayerTrack extends StatelessWidget {
         trackHeight: expand ? 4 : 2,
         inactiveTrackColor: color != null
             ? theme.colorScheme.onSurface.withOpacity(0.35)
-            : theme.primaryColor.withOpacity(0.5),
+            : theme.colorScheme.primary.withOpacity(0.5),
         activeTrackColor: color != null
             ? theme.colorScheme.onSurface.withOpacity(0.8)
-            : theme.primaryColor,
-        overlayColor:
-            color != null ? theme.colorScheme.onSurface : theme.primaryColor,
+            : theme.colorScheme.primary,
+        overlayColor: color != null
+            ? theme.colorScheme.onSurface
+            : theme.colorScheme.primary,
         overlayShape: RoundSliderThumbShape(
           elevation: 3,
           enabledThumbRadius: expand ? 0 : 5.0,

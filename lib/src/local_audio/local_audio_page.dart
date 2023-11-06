@@ -100,7 +100,7 @@ class _LocalAudioPageState extends State<LocalAudioPage>
       setSearchActive(true);
     }
 
-    final tabBar = YaruTabBar(
+    final tabBar = TabsBar(
       onTap: (value) {
         widget.onIndexSelected.call(value);
         setSearchActive(false);
@@ -237,7 +237,7 @@ class LocalAudioPageIcon extends StatelessWidget {
     if (isPlaying) {
       return Icon(
         Iconz().play,
-        color: theme.primaryColor,
+        color: theme.colorScheme.primary,
       );
     }
     return selected ? Icon(Iconz().localAudioFilled) : Icon(Iconz().localAudio);

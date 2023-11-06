@@ -76,7 +76,7 @@ class AlbumPage extends StatelessWidget {
             IconButton(
               icon: Icon(
                 Iconz().pin,
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () => removePinnedAlbum(
                 id,

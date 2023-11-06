@@ -62,7 +62,7 @@ class LikedAudioPage extends StatelessWidget {
         : const SizedBox.shrink();
     final title = SizedBox(
       width: kSearchBarWidth,
-      child: YaruTabBar(
+      child: TabsBar(
         tabs: [
           Tab(text: context.l10n.localAudio),
           Tab(text: context.l10n.podcasts),

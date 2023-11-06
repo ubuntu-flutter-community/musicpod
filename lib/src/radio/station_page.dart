@@ -71,7 +71,7 @@ class StationPage extends StatelessWidget {
         : <String>[
             for (final tag in station.album?.split(',') ?? <String>[]) tag,
           ];
-    const size = 350.0;
+    const size = 300.0;
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
@@ -88,6 +88,7 @@ class StationPage extends StatelessWidget {
       ),
       body: Center(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 50),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -115,6 +116,8 @@ class StationPage extends StatelessWidget {
                         ),
                         url: station.imageUrl,
                         fit: BoxFit.scaleDown,
+                        width: size,
+                        height: size,
                       ),
                     ),
                   ),
@@ -132,7 +135,7 @@ class StationPage extends StatelessWidget {
                           CircleAvatar(
                             radius: avatarIconSize,
                             backgroundColor:
-                                theme.primaryColor.withOpacity(0.4),
+                                theme.colorScheme.primary.withOpacity(0.4),
                             child: IconButton(
                               onPressed: isStarred
                                   ? () => unStarStation(name)

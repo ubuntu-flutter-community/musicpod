@@ -295,7 +295,9 @@ class _AudioProgress extends StatelessWidget {
         width: iconSize(),
         height: iconSize(),
         child: Progress(
-          color: selected ? theme.primaryColor : theme.colorScheme.onSurface,
+          color: selected
+              ? theme.colorScheme.primary
+              : theme.colorScheme.onSurface,
           value: sliderActive
               ? (pos.inSeconds.toDouble() / duration!.inSeconds.toDouble())
               : 0,

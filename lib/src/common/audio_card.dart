@@ -66,7 +66,7 @@ class _AudioCardState extends State<AudioCard> {
                       right: 10,
                       child: CircleAvatar(
                         radius: avatarIconSize,
-                        backgroundColor: theme.primaryColor,
+                        backgroundColor: theme.colorScheme.primary,
                         child: IconButton(
                           onPressed: widget.onPlay,
                           icon: Icon(

@@ -14,6 +14,8 @@ class AboutTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final linkColor = theme.colorScheme.primary;
     final content = [
       Padding(
         padding: const EdgeInsets.only(
@@ -22,17 +24,17 @@ class AboutTile extends StatelessWidget {
         ),
         child: InkWell(
           onTap: () => launchUrl(Uri.parse('https://github.com/Feichtmeier')),
-          child: const Text(
+          child: Text(
             'Copyright by Frederik Feichtmeier 2023 and onwards - all rights reserved',
-            style: TextStyle(color: Colors.blue),
+            style: TextStyle(color: linkColor),
           ),
         ),
       ),
       InkWell(
         onTap: () => launchUrl(Uri.parse('https://github.com/kenvandine')),
-        child: const Text(
+        child: Text(
           'Snap packaging by Ken VanDine',
-          style: TextStyle(color: Colors.blue),
+          style: TextStyle(color: linkColor),
         ),
       ),
       const SizedBox(
@@ -50,7 +52,7 @@ class AboutTile extends StatelessWidget {
                 onTapLink: (text, href, title) =>
                     href != null ? launchUrl(Uri.parse(href)) : null,
                 styleSheet: MarkdownStyleSheet(
-                  a: const TextStyle(color: Colors.blue),
+                  a: TextStyle(color: linkColor),
                 ),
               ),
             );
@@ -68,7 +70,7 @@ class AboutTile extends StatelessWidget {
             Text(
               context.l10n.findUsOnGitHub,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.blue,
+                    color: linkColor,
                   ),
             ),
             const SizedBox(
@@ -76,7 +78,7 @@ class AboutTile extends StatelessWidget {
             ),
             Icon(
               Iconz().external,
-              color: Colors.blue,
+              color: linkColor,
               size: 18,
             ),
           ],

@@ -55,7 +55,7 @@ class BottomPlayerControls extends StatelessWidget {
               color: !active
                   ? theme.disabledColor
                   : (shuffle
-                      ? theme.primaryColor
+                      ? theme.colorScheme.primary
                       : theme.colorScheme.onSurface),
             ),
             onPressed: !active ? null : () => setShuffle(!(shuffle)),
@@ -94,7 +94,7 @@ class BottomPlayerControls extends StatelessWidget {
               color: !active
                   ? theme.disabledColor
                   : (repeatSingle
-                      ? theme.primaryColor
+                      ? theme.colorScheme.primary
                       : theme.colorScheme.onSurface),
             ),
             onPressed: !active ? null : () => setRepeatSingle(!(repeatSingle)),

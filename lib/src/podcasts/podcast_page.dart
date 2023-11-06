@@ -113,7 +113,9 @@ class PodcastPage extends StatelessWidget {
       controlPanelButton: IconButton(
         icon: Icon(
           Iconz().rss,
-          color: subscribed ? theme.primaryColor : theme.colorScheme.onSurface,
+          color: subscribed
+              ? theme.colorScheme.primary
+              : theme.colorScheme.onSurface,
         ),
         onPressed: () {
           if (subscribed) {
