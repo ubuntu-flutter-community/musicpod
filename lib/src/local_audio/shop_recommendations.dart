@@ -18,7 +18,7 @@ class ShopRecommendations extends StatelessWidget {
     );
     final linkStyle = theme.textTheme.bodySmall?.copyWith(
       fontWeight: smallTextFontWeight,
-      color: Colors.blueAccent,
+      color: theme.colorScheme.primary,
     );
     final borderRadius = BorderRadius.circular(6);
 
