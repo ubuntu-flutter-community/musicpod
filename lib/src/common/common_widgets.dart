@@ -28,8 +28,12 @@ bool get showSideBarFilter => _yaruApp ? true : false;
 FontWeight get smallTextFontWeight =>
     _yaruApp ? FontWeight.w100 : FontWeight.w400;
 
+FontWeight get mediumTextWeight => _yaruApp ? FontWeight.w200 : FontWeight.w500;
+
 bool get _yaruApp => Platform.isLinux;
 
 bool get _mobile => Platform.isAndroid || Platform.isIOS;
 
 bool get shrinkTitleBarItems => _yaruApp;
+
+double get chipHeight => _yaruApp ? kYaruTitleBarItemHeight : 40;

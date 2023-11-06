@@ -79,7 +79,8 @@ class _PlayerViewState extends State<PlayerView> {
     final liked = audio == null
         ? false
         : context.select((LibraryModel m) => m.likedAudios.contains(audio));
-    final width = MediaQuery.of(context).size.width;
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
     final removeLikedAudio = library.removeLikedAudio;
     final addLikedAudio = library.addLikedAudio;
     final addStarredStation = library.addStarredStation;
@@ -133,6 +134,7 @@ class _PlayerViewState extends State<PlayerView> {
         volume: volume,
         setVolume: setVolume,
         isOnline: widget.isOnline,
+        size: size,
       );
     } else {
       return BottomPlayer(

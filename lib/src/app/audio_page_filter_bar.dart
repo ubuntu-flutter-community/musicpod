@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
+import '../common/common_widgets.dart';
 import '../l10n/l10n.dart';
 
 class AudioPageFilterBar extends StatelessWidget {
@@ -28,6 +29,7 @@ class AudioPageFilterBar extends StatelessWidget {
           left: 28,
         ),
         child: YaruChoiceChipBar(
+          chipHeight: chipHeight,
           yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.stack,
           labels:
               mainPageType.map((e) => Text(e.localize(context.l10n))).toList(),

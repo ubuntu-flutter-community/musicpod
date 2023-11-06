@@ -34,7 +34,7 @@ class MusicPod extends StatelessWidget {
 
   ThemeData _m3Theme({
     Brightness brightness = Brightness.light,
-    Color color = Colors.blueAccent,
+    Color color = Colors.greenAccent,
   }) {
     final dividerColor = brightness == Brightness.light
         ? const Color.fromARGB(48, 0, 0, 0)

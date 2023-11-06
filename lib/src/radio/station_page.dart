@@ -133,7 +133,8 @@ class StationPage extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             radius: avatarIconSize,
-                            backgroundColor: theme.primaryColor,
+                            backgroundColor:
+                                theme.primaryColor.withOpacity(0.4),
                             child: IconButton(
                               onPressed: isStarred
                                   ? () => unStarStation(name)
@@ -160,6 +161,7 @@ class StationPage extends StatelessWidget {
                       ),
                       if (tags?.isNotEmpty == true)
                         YaruChoiceChipBar(
+                          chipHeight: chipHeight,
                           yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.stack,
                           labels: tags!.map((e) => Text(e)).toList(),
                           isSelected: tags.map((e) => false).toList(),

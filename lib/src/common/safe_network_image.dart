@@ -20,6 +20,8 @@ class SafeNetworkImage extends StatelessWidget {
     this.fit = BoxFit.fitWidth,
     this.fallBackIcon,
     this.errorIcon,
+    this.height,
+    this.width,
   });
 
   final String? url;
@@ -27,6 +29,8 @@ class SafeNetworkImage extends StatelessWidget {
   final BoxFit fit;
   final Widget? fallBackIcon;
   final Widget? errorIcon;
+  final double? height;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +60,8 @@ class SafeNetworkImage extends StatelessWidget {
         image: imageProvider,
         filterQuality: filterQuality,
         fit: fit,
+        height: height,
+        width: width,
       ),
       errorWidget: (context, url, error) => errorWidget,
     );
