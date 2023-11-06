@@ -37,8 +37,8 @@ class _AudioCardState extends State<AudioCard> {
     return Column(
       children: [
         SizedBox(
-          height: widget.height ?? kCardHeight - 70,
-          width: widget.width ?? kCardHeight - 70,
+          height: widget.height ?? kSmallCardHeight,
+          width: widget.width ?? kSmallCardHeight,
           child: YaruBanner(
             padding: EdgeInsets.zero,
             onTap: widget.onTap,
@@ -71,7 +71,7 @@ class _AudioCardState extends State<AudioCard> {
                           onPressed: widget.onPlay,
                           icon: Icon(
                             Iconz().play,
-                            color: theme.colorScheme.onPrimary,
+                            color: Colors.white,
                           ),
                         ),
                       ),

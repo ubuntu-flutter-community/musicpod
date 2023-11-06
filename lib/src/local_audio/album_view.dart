@@ -4,8 +4,9 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../utils.dart';
-import '../data/audio.dart';
+import '../common/common_widgets.dart';
 import '../common/icons.dart';
+import '../data/audio.dart';
 import '../l10n/l10n.dart';
 import 'album_page.dart';
 import 'shop_recommendations.dart';
@@ -42,7 +43,7 @@ class AlbumsView extends StatelessWidget {
 
     if (albums == null) {
       return const Center(
-        child: YaruCircularProgressIndicator(),
+        child: Progress(),
       );
     }
 
@@ -79,7 +80,7 @@ class AlbumsView extends StatelessWidget {
             : Image.memory(
                 audio.pictureData!,
                 fit: BoxFit.cover,
-                height: kCardHeight - 70,
+                height: kSmallCardHeight,
                 filterQuality: FilterQuality.medium,
               );
 

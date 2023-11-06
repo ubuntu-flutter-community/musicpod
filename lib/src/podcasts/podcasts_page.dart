@@ -113,6 +113,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
           final image = SafeNetworkImage(
             url: artworkUrl600,
             fit: BoxFit.cover,
+            height: kSmallCardHeight,
+            width: kSmallCardHeight,
           );
 
           return AudioCard(
@@ -343,13 +345,7 @@ class PodcastsPageIcon extends StatelessWidget {
     final theme = Theme.of(context);
 
     if (checkingForUpdates) {
-      return const SizedBox(
-        height: 18,
-        width: 18,
-        child: YaruCircularProgressIndicator(
-          strokeWidth: 2,
-        ),
-      );
+      return const SideBarProgress();
     }
 
     if (isPlaying) {

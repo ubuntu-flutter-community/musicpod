@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/utils.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
+import '../../utils.dart';
+import '../common/common_widgets.dart';
 import '../l10n/l10n.dart';
 
 class TitlesView extends StatefulWidget {
@@ -54,7 +54,7 @@ class _TitlesViewState extends State<TitlesView> {
   Widget build(BuildContext context) {
     if (widget.audios == null) {
       return const Center(
-        child: YaruCircularProgressIndicator(),
+        child: Progress(),
       );
     }
 

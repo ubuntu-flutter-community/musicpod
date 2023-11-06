@@ -1,13 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import '../library/library_model.dart';
 import 'package:provider/provider.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
+import '../library/library_model.dart';
+import 'common_widgets.dart';
 
 class AudioPageBody extends StatefulWidget {
   const AudioPageBody({
@@ -145,7 +145,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
           audioControlPanel,
           const Expanded(
             child: Center(
-              child: YaruCircularProgressIndicator(),
+              child: Progress(),
             ),
           ),
         ],

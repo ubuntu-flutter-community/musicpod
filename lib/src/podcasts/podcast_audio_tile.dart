@@ -294,7 +294,7 @@ class _AudioProgress extends StatelessWidget {
       child: SizedBox(
         width: iconSize(),
         height: iconSize(),
-        child: YaruCircularProgressIndicator(
+        child: Progress(
           color: selected ? theme.primaryColor : theme.colorScheme.onSurface,
           value: sliderActive
               ? (pos.inSeconds.toDouble() / duration!.inSeconds.toDouble())

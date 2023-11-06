@@ -44,6 +44,8 @@ const kHeaderPadding = EdgeInsets.only(
 
 const kCardHeight = 200.0;
 
+const kSmallCardHeight = kCardHeight - 70;
+
 const kCardBottomHeight = 30.0;
 
 const kImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
