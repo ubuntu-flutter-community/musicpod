@@ -190,38 +190,41 @@ class FullHeightPlayer extends StatelessWidget {
             ),
           )
         else
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _FullHeightPlayerImage(
-                    size: size,
-                    audio: audio,
-                    isOnline: isOnline,
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  if (audio != null)
-                    FittedBox(
-                      child: title,
+          SingleChildScrollView(
+            child: Center(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _FullHeightPlayerImage(
+                      size: size,
+                      audio: audio,
+                      isOnline: isOnline,
                     ),
-                  artist,
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  SizedBox(
-                    height: 20,
-                    width: 400,
-                    child: sliderAndTime,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  controls,
-                ],
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    if (audio != null)
+                      FittedBox(
+                        child: title,
+                      ),
+                    artist,
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    SizedBox(
+                      height: 20,
+                      width: 400,
+                      child: sliderAndTime,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    controls,
+                  ],
+                ),
               ),
             ),
           ),
