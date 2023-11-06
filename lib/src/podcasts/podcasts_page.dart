@@ -94,7 +94,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     if (searchResult == null) {
       grid = GridView(
         gridDelegate: kImageGridDelegate,
-        padding: kPodcastGridPadding,
+        padding: gridPadding,
         children: List.generate(limit, (index) => Audio())
             .map((e) => const AudioCard())
             .toList(),
@@ -103,7 +103,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
       grid = NoSearchResultPage(message: Text(context.l10n.noPodcastFound));
     } else {
       grid = GridView.builder(
-        padding: kPodcastGridPadding,
+        padding: gridPadding,
         itemCount: searchResultCount,
         gridDelegate: kImageGridDelegate,
         itemBuilder: (context, index) {

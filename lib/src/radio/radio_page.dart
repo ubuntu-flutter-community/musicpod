@@ -163,7 +163,7 @@ class _RadioPageState extends State<RadioPage> {
         if (stations == null) {
           body = GridView(
             gridDelegate: kImageGridDelegate,
-            padding: kPodcastGridPadding,
+            padding: gridPadding,
             children: List.generate(limit, (index) => Audio())
                 .map((e) => const AudioCard())
                 .toList(),
@@ -187,7 +187,7 @@ class _RadioPageState extends State<RadioPage> {
             }
           } else {
             body = GridView.builder(
-              padding: kPodcastGridPadding,
+              padding: gridPadding,
               gridDelegate: kImageGridDelegate,
               itemCount: stationsCount,
               itemBuilder: (context, index) {

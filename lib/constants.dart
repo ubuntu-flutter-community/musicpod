@@ -34,6 +34,12 @@ const kPodcastGridPadding = EdgeInsets.only(
   left: kYaruPagePadding - 5,
   right: kYaruPagePadding - 5,
 );
+const kMobilePodcastGridPadding = EdgeInsets.only(
+  top: 15,
+  bottom: kYaruPagePadding,
+  left: kYaruPagePadding + 20,
+  right: kYaruPagePadding + 20,
+);
 
 const kHeaderPadding = EdgeInsets.only(
   top: kYaruPagePadding,
@@ -51,7 +57,7 @@ const kCardBottomHeight = 30.0;
 const kImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
   maxCrossAxisExtent: kCardHeight - 40,
   mainAxisExtent: kCardHeight - kCardBottomHeight,
-  mainAxisSpacing: 0,
+  mainAxisSpacing: 10,
   crossAxisSpacing: 10,
 );
 

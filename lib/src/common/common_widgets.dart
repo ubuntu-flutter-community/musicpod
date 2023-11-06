@@ -108,3 +108,6 @@ bool get _mobile => Platform.isAndroid || Platform.isIOS;
 bool get shrinkTitleBarItems => _yaruApp;
 
 double get chipHeight => _yaruApp ? kYaruTitleBarItemHeight : 40;
+
+EdgeInsetsGeometry get gridPadding =>
+    _yaruApp ? kPodcastGridPadding : kMobilePodcastGridPadding;
