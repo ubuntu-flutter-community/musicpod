@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
-import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
@@ -12,8 +11,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
-import '../common/common_widgets.dart';
-import '../common/icons.dart';
+import '../../utils.dart';
 
 class PodcastAudioTile extends StatelessWidget {
   const PodcastAudioTile({

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
-import '../common/icons.dart';
 
 class FullHeightPlayerControls extends StatelessWidget {
   const FullHeightPlayerControls({

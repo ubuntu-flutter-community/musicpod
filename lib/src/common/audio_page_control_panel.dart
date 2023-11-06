@@ -4,8 +4,6 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../l10n/l10n.dart';
-import 'common_widgets.dart';
-import 'icons.dart';
 
 class AudioPageControlPanel extends StatelessWidget {
   const AudioPageControlPanel({

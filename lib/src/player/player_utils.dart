@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:musicpod/constants.dart';
+import '../../constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common.dart';
 import '../../data.dart';
-import '../common/common_widgets.dart';
 
 void onTitleTap({
   required Audio? audio,

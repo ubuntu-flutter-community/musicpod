@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:musicpod/src/common/common_widgets.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
-import '../common/icons.dart';
 import '../l10n/l10n.dart';
 
 class FullHeightPlayer extends StatelessWidget {

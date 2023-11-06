@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/constants.dart';
+import '../../constants.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 

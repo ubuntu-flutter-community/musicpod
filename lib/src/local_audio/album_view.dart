@@ -4,8 +4,6 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../utils.dart';
-import '../common/common_widgets.dart';
-import '../common/icons.dart';
 import '../data/audio.dart';
 import '../l10n/l10n.dart';
 import 'album_page.dart';

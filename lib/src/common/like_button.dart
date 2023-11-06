@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/src/common/stream_provider_share_button.dart';
+import 'stream_provider_share_button.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 

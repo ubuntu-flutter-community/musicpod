@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/constants.dart';
+import '../../constants.dart';
 
 class AudioCardBottom extends StatelessWidget {
   const AudioCardBottom({

@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/constants.dart';
-import 'package:musicpod/src/common/common_widgets.dart';
-import 'package:musicpod/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
-import '../common/icons.dart';
+import '../../utils.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import 'radio_model.dart';

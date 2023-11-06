@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:musicpod/src/notifications/notifications_service.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 import '../../data.dart';
+import '../notifications/notifications_service.dart';
 
 class PodcastService {
   final NotificationsService _notificationsService;

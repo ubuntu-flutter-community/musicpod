@@ -7,7 +7,6 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
-import '../common/common_widgets.dart';
 import '../l10n/l10n.dart';
 
 class ArtistsView extends StatelessWidget {

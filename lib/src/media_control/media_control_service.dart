@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:mpris_service/mpris_service.dart';
-import 'package:musicpod/utils.dart';
 import 'package:smtc_windows/smtc_windows.dart';
 
 import '../../data.dart';
+import '../../utils.dart';
 
 class MediaControlService {
   final MPRIS? _mpris;

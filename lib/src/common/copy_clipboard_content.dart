@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/src/common/colors.dart';
-import 'package:musicpod/src/common/stream_provider_share_button.dart';
+import 'colors.dart';
+import 'stream_provider_share_button.dart';
 
 import '../l10n/l10n.dart';
 

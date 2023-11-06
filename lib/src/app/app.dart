@@ -3,10 +3,6 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:musicpod/src/common/colors.dart';
-import 'package:musicpod/src/common/common_widgets.dart';
-import 'package:musicpod/src/external_path/external_path_service.dart';
-import 'package:musicpod/src/media_control/media_control_service.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -19,6 +15,9 @@ import '../../patch_notes.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
 import '../../radio.dart';
+import '../common/colors.dart';
+import '../external_path/external_path_service.dart';
+import '../media_control/media_control_service.dart';
 import 'connectivity_notifier.dart';
 import 'master_detail_page.dart';
 import 'master_items.dart';
@@ -124,6 +123,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
     final playerToTheRight = MediaQuery.of(context).size.width > 1700;
 
     // Connectivity
@@ -224,7 +224,7 @@ class _AppState extends State<App> {
     final masterItems = createMasterItems(
       showFilter: (libraryModel.totalListAmount > 7 ||
               libraryModel.audioPageType != null) &&
-          showSideBarFilter,
+          width > 600.0,
       localAudioIndex: localAudioIndex,
       setLocalAudioindex: libraryModel.setLocalAudioindex,
       audioType: audioType,

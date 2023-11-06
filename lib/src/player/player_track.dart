@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/utils.dart';
+import '../../utils.dart';
 
 class PlayerTrack extends StatelessWidget {
   const PlayerTrack({

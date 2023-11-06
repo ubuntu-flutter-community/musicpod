@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:mime_type/mime_type.dart';
-import 'package:musicpod/constants.dart';
-import 'package:musicpod/utils.dart';
 
+import '../../constants.dart';
 import '../../data.dart';
+import '../../utils.dart';
 
 class LocalAudioService {
   String? _directory;

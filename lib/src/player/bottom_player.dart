@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:musicpod/src/common/common_widgets.dart';
 
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../globals.dart';
-import '../common/icons.dart';
 
 const _kBottomPlayerHeight = 90.0;
 

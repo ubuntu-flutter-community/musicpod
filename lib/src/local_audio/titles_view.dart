@@ -4,7 +4,6 @@ import '../../common.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
 import '../../utils.dart';
-import '../common/common_widgets.dart';
 import '../l10n/l10n.dart';
 
 class TitlesView extends StatefulWidget {

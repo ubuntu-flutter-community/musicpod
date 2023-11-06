@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:musicpod/src/common/icons.dart';
+import '../common/icons.dart';
 
 import '../l10n/l10n.dart';
 

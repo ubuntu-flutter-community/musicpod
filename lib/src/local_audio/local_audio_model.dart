@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:musicpod/utils.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
+import '../../utils.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
   LocalAudioModel(this._service);

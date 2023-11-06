@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
-import '../common/common_widgets.dart';
 import '../l10n/l10n.dart';
 
 class AudioPageFilterBar extends StatelessWidget {

@@ -5,8 +5,6 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
-import '../common/common_widgets.dart';
-import '../common/icons.dart';
 import 'radio_page.dart';
 
 class StationPage extends StatelessWidget {
