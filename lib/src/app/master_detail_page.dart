@@ -42,11 +42,9 @@ class MasterDetailPage extends StatelessWidget {
           title: const Text('MusicPod'),
           leading: const AboutTile(),
           actions: [
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: SettingsTile(onDirectorySelected: onDirectorySelected),
-              ),
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: SettingsTile(onDirectorySelected: onDirectorySelected),
             ),
           ],
         ),
