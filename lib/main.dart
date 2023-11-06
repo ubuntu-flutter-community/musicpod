@@ -7,17 +7,17 @@ import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
-import 'package:musicpod/constants.dart';
-import 'package:musicpod/src/external_path/external_path_service.dart';
-import 'package:musicpod/src/notifications/notifications_service.dart';
 import 'package:smtc_windows/smtc_windows.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import 'app.dart';
+import 'constants.dart';
+import 'external_path.dart';
 import 'library.dart';
 import 'local_audio.dart';
-import 'media_control_service.dart';
+import 'media_control.dart';
+import 'notifications.dart';
 import 'podcasts.dart';
 import 'radio.dart';
 
