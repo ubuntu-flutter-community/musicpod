@@ -457,7 +457,7 @@ class RadioPageIcon extends StatelessWidget {
     if (isPlaying) {
       return Icon(
         Iconz().play,
-        color: theme.primaryColor,
+        color: Iconz().getAvatarIconColor(theme),
       );
     }
 

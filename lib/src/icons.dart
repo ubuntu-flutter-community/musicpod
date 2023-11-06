@@ -40,8 +40,9 @@ class Iconz {
   IconData get speakerMutedFilled =>
       _l ? YaruIcons.speaker_muted_filled : Icons.volume_off;
   IconData get fullScreenExit =>
-      _l ? YaruIcons.fullscreen_exit : Icons.fullscreen_exit;
-  IconData get fullScreen => _l ? YaruIcons.fullscreen : Icons.fullscreen;
+      _l ? YaruIcons.fullscreen_exit : Icons.arrow_drop_down;
+  IconData get fullScreen =>
+      _l ? YaruIcons.fullscreen : Icons.arrow_drop_up_outlined;
   IconData get repeatSingle => _l ? YaruIcons.repeat_single : Icons.repeat_one;
   IconData get shuffle => _l ? YaruIcons.shuffle : Icons.shuffle;
   IconData get skipBackward =>
@@ -61,6 +62,28 @@ class Iconz {
   IconData get plus => _l ? YaruIcons.plus : Icons.add;
 
   bool get _l => Platform.isLinux;
+
+  Widget getAnimatedStar(bool isStarred, Color color) {
+    if (_l) {
+      return YaruAnimatedIcon(
+        isStarred
+            ? const YaruAnimatedStarIcon(filled: true)
+            : const YaruAnimatedStarIcon(filled: false),
+        initialProgress: 1.0,
+        color: color,
+        size: iconSize(),
+      );
+    } else {
+      return isStarred
+          ? const Icon(Icons.star)
+          : const Icon(Icons.star_outline);
+    }
+  }
+
+  double? get avatarIconSize => _l ? kYaruTitleBarItemHeight / 2 : null;
+
+  Color? getAvatarIconColor(ThemeData theme) =>
+      _l ? theme.colorScheme.onSurface.withOpacity(0.08) : null;
 }
 
 double iconSize() => Platform.isLinux ? kYaruIconSize : 24.0;

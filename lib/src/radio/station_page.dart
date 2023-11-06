@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -134,19 +133,15 @@ class StationPage extends StatelessWidget {
                       Row(
                         children: [
                           CircleAvatar(
-                            radius: kYaruTitleBarItemHeight / 2,
+                            radius: Iconz().avatarIconSize,
                             backgroundColor: theme.primaryColor,
                             child: IconButton(
                               onPressed: isStarred
                                   ? () => unStarStation(name)
                                   : () => starStation(name),
-                              icon: YaruAnimatedIcon(
-                                isStarred
-                                    ? const YaruAnimatedStarIcon(filled: true)
-                                    : const YaruAnimatedStarIcon(filled: false),
-                                initialProgress: 1.0,
-                                color: theme.colorScheme.onPrimary,
-                                size: iconSize(),
+                              icon: Iconz().getAnimatedStar(
+                                isStarred,
+                                theme.colorScheme.onPrimary,
                               ),
                             ),
                           ),

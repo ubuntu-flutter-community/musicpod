@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
@@ -42,7 +41,7 @@ class AudioPageControlPanel extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: CircleAvatar(
-              radius: kYaruTitleBarItemHeight / 2,
+              radius: Iconz().avatarIconSize,
               backgroundColor: theme.colorScheme.inverseSurface,
               child: IconButton(
                 onPressed: () {

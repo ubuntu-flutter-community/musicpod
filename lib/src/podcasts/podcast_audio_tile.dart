@@ -75,13 +75,12 @@ class PodcastAudioTile extends StatelessWidget {
           child: Row(
             children: [
               CircleAvatar(
-                radius: kYaruTitleBarItemHeight / 2,
-                backgroundColor: theme.colorScheme.onSurface.withOpacity(0.08),
+                radius: Iconz().avatarIconSize,
+                backgroundColor: Iconz().getAvatarIconColor(theme),
                 child: IconButton(
                   icon: (isPlayerPlaying && selected)
                       ? Icon(
                           Iconz().pause,
-                          color: theme.primaryColor,
                         )
                       : Icon(Iconz().play),
                   onPressed: () {

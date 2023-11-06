@@ -28,6 +28,7 @@ class FullHeightPlayerControls extends StatelessWidget {
     required this.volume,
     required this.queue,
     required this.isOnline,
+    this.expand = false,
   });
 
   final Audio? audio;
@@ -42,6 +43,7 @@ class FullHeightPlayerControls extends StatelessWidget {
   final Future<void> Function() pause;
   final Future<void> Function() playOrPause;
   final bool liked;
+  final bool expand;
 
   final bool isStarredStation;
   final void Function(String station) removeStarredStation;
@@ -59,7 +61,7 @@ class FullHeightPlayerControls extends StatelessWidget {
 
     final active = audio?.path != null || isOnline;
 
-    const spacing = 7.0;
+    final spacing = expand ? 0.0 : 7.0;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -74,14 +76,15 @@ class FullHeightPlayerControls extends StatelessWidget {
           removeLikedAudio: removeLikedAudio,
           addLikedAudio: addLikedAudio,
         ),
-        const SizedBox(
+        SizedBox(
           width: spacing,
         ),
-        ShareButton(
-          active: active,
-          audio: audio,
-        ),
-        const SizedBox(
+        if (!expand)
+          ShareButton(
+            active: active,
+            audio: audio,
+          ),
+        SizedBox(
           width: spacing,
         ),
         IconButton(
@@ -93,14 +96,14 @@ class FullHeightPlayerControls extends StatelessWidget {
           ),
           onPressed: !active ? null : () => setShuffle(!(shuffle)),
         ),
-        const SizedBox(
+        SizedBox(
           width: spacing,
         ),
         IconButton(
           onPressed: !active ? null : () => playPrevious(),
           icon: Icon(Iconz().skipBackward),
         ),
-        const SizedBox(
+        SizedBox(
           width: spacing,
         ),
         IconButton(
@@ -117,14 +120,14 @@ class FullHeightPlayerControls extends StatelessWidget {
             isPlaying ? Iconz().pause : Iconz().play,
           ),
         ),
-        const SizedBox(
+        SizedBox(
           width: spacing,
         ),
         IconButton(
           onPressed: !active ? null : () => playNext(),
           icon: Icon(Iconz().skipForward),
         ),
-        const SizedBox(
+        SizedBox(
           width: spacing,
         ),
         IconButton(
@@ -138,17 +141,18 @@ class FullHeightPlayerControls extends StatelessWidget {
           ),
           onPressed: !active ? null : () => setRepeatSingle(!(repeatSingle)),
         ),
-        const SizedBox(
+        SizedBox(
           width: spacing,
         ),
-        VolumeSliderPopup(volume: volume, setVolume: setVolume),
-        const SizedBox(
+        if (!expand) VolumeSliderPopup(volume: volume, setVolume: setVolume),
+        SizedBox(
           width: spacing,
         ),
-        QueuePopup(
-          audio: audio,
-          queue: queue,
-        ),
+        if (!expand)
+          QueuePopup(
+            audio: audio,
+            queue: queue,
+          ),
       ],
     );
   }

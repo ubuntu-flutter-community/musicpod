@@ -144,6 +144,7 @@ class FullHeightPlayer extends StatelessWidget {
     );
 
     final controls = FullHeightPlayerControls(
+      expand: MediaQuery.of(context).size.width < 500,
       audio: audio,
       setRepeatSingle: setRepeatSingle,
       repeatSingle: repeatSingle,
