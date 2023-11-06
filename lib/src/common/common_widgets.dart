@@ -15,7 +15,7 @@ class NavBackButton extends StatelessWidget {
         ? const YaruBackButton(
             style: YaruBackButtonStyle.rounded,
           )
-        : const BackButton();
+        : const Center(child: BackButton());
   }
 }
 
@@ -112,8 +112,10 @@ class HeaderBar extends StatelessWidget implements PreferredSizeWidget {
             style: style,
           )
         : AppBar(
+            centerTitle: true,
             leading: leading,
             title: title,
+            actions: actions,
           );
   }
 
