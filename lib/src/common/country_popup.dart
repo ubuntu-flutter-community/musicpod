@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../common.dart';
 import '../../string_x.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -30,6 +31,7 @@ class CountryPopup extends StatelessWidget {
     final fallBackTextStyle =
         theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
     return YaruPopupMenuButton<Country>(
+      icon: const DropDownArrow(),
       style: buttonStyle,
       onSelected: onSelected,
       initialValue: value,

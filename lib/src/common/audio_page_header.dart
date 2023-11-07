@@ -3,6 +3,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../common.dart';
 import '../l10n/l10n.dart';
 
 class AudioPageHeader extends StatelessWidget {
@@ -24,23 +25,13 @@ class AudioPageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final light = theme.brightness == Brightness.light;
     final size = MediaQuery.of(context).size;
     final smallWindow = size.width < 600.0;
 
     return Container(
       height: 240,
       decoration: BoxDecoration(
-        gradient: light
-            ? null
-            : LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Colors.transparent,
-                  theme.scaffoldBackgroundColor,
-                ],
-              ),
+        gradient: getAudioPageHeaderGradient(theme),
       ),
       padding: const EdgeInsets.all(20),
       child: Row(

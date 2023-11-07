@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../common.dart';
 import '../l10n/l10n.dart';
 
 class LimitPopup extends StatelessWidget {
@@ -28,6 +29,7 @@ class LimitPopup extends StatelessWidget {
     final fallBackTextStyle =
         theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
     return YaruPopupMenuButton<int>(
+      icon: const DropDownArrow(),
       style: buttonStyle,
       onSelected: onSelected,
       initialValue: value,

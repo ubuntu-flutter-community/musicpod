@@ -14,9 +14,9 @@ Color getSnackBarTextColor(ThemeData theme) => _yaruApp
 Color getPlayerBg(Color? surfaceTintColor, Color scaffoldBg) {
   if (surfaceTintColor != null) {
     return (Platform.isLinux
-        ? surfaceTintColor
+        ? surfaceTintColor.withOpacity(0.05)
         : Color.alphaBlend(
-            surfaceTintColor,
+            surfaceTintColor.withOpacity(0.2),
             scaffoldBg,
           ));
   } else {

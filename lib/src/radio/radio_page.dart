@@ -81,63 +81,61 @@ class _RadioPageState extends State<RadioPage> {
         context.select((AppModel a) => a.showWindowControls);
 
     final controlPanel = SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       scrollDirection: Axis.horizontal,
-      child: SizedBox(
-        height: kYaruTitleBarItemHeight,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            LimitPopup(
-              value: limit,
-              onSelected: (value) {
-                setLimit(value);
-                if (searchQuery?.isEmpty == true) {
-                  if (tag == null) {
-                    loadStationsByCountry();
-                  } else {
-                    loadStationsByTag();
-                  }
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          LimitPopup(
+            value: limit,
+            onSelected: (value) {
+              setLimit(value);
+              if (searchQuery?.isEmpty == true) {
+                if (tag == null) {
+                  loadStationsByCountry();
                 } else {
-                  search(name: searchQuery);
-                }
-              },
-            ),
-            CountryPopup(
-              value: country,
-              onSelected: (country) {
-                setCountry(country);
-                loadStationsByCountry();
-                setTag(null);
-              },
-              countries: sortedCountries,
-            ),
-            TagPopup(
-              value: tag,
-              addFav: (tag) {
-                if (tag?.name == null) return;
-                addFavTag(tag!.name);
-              },
-              removeFav: (tag) {
-                if (tag?.name == null) return;
-                removeFavTag(tag!.name);
-              },
-              favs: favTags,
-              onSelected: (tag) {
-                setTag(tag);
-                if (tag != null) {
                   loadStationsByTag();
-                } else {
-                  setSearchQuery(null);
-                  search();
                 }
-                if (tag?.name.isNotEmpty == true) {
-                  setLastFav(tag!.name);
-                }
-              },
-              tags: tags,
-            ),
-          ],
-        ),
+              } else {
+                search(name: searchQuery);
+              }
+            },
+          ),
+          CountryPopup(
+            value: country,
+            onSelected: (country) {
+              setCountry(country);
+              loadStationsByCountry();
+              setTag(null);
+            },
+            countries: sortedCountries,
+          ),
+          TagPopup(
+            value: tag,
+            addFav: (tag) {
+              if (tag?.name == null) return;
+              addFavTag(tag!.name);
+            },
+            removeFav: (tag) {
+              if (tag?.name == null) return;
+              removeFavTag(tag!.name);
+            },
+            favs: favTags,
+            onSelected: (tag) {
+              setTag(tag);
+              if (tag != null) {
+                loadStationsByTag();
+              } else {
+                setSearchQuery(null);
+                search();
+              }
+              if (tag?.name.isNotEmpty == true) {
+                setLastFav(tag!.name);
+              }
+            },
+            tags: tags,
+          ),
+        ],
       ),
     );
 
@@ -213,32 +211,41 @@ class _RadioPageState extends State<RadioPage> {
           leading: Navigator.of(context).canPop()
               ? const NavBackButton()
               : const SizedBox.shrink(),
-          title: Padding(
-            padding: const EdgeInsets.only(right: 40),
-            child: YaruSearchTitleField(
-              searchIcon: Iconz().searchIcon,
-              clearIcon: Iconz().clearIcon,
-              key: ValueKey(searchQuery),
-              text: searchQuery,
-              alignment: Alignment.center,
-              width: searchBarWidth,
-              title: controlPanel,
-              searchActive: searchActive,
-              onSearchActive: () => setSearchActive(!searchActive),
-              onClear: () {
-                setTag(null);
-                setSearchActive(false);
-                setSearchQuery(null);
-                search();
-              },
-              onSubmitted: (value) {
-                setSearchQuery(value);
-                search(name: value);
-              },
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: SearchButton(
+                active: searchActive,
+                onPressed: () => setSearchActive(!searchActive),
+              ),
             ),
-          ),
+          ],
+          title: searchActive
+              ? SearchingBar(
+                  key: ValueKey(searchQuery),
+                  text: searchQuery,
+                  onClear: () {
+                    setTag(null);
+                    setSearchActive(false);
+                    setSearchQuery(null);
+                    search();
+                  },
+                  onSubmitted: (value) {
+                    setSearchQuery(value);
+                    search(name: value);
+                  },
+                )
+              : Text(context.l10n.radio),
         ),
-        body: body,
+        body: Column(
+          children: [
+            controlPanel,
+            const SizedBox(
+              height: 15,
+            ),
+            Expanded(child: body),
+          ],
+        ),
       );
     }
   }
@@ -454,7 +461,7 @@ class RadioPageIcon extends StatelessWidget {
     if (isPlaying) {
       return Icon(
         Iconz().play,
-        color: Iconz().getAvatarIconColor(theme),
+        color: theme.colorScheme.primary,
       );
     }
 

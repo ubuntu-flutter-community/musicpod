@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
@@ -59,7 +58,7 @@ class AlbumsView extends StatelessWidget {
 
     return GridView.builder(
       shrinkWrap: true,
-      padding: const EdgeInsets.all(kYaruPagePadding),
+      padding: gridPadding,
       itemCount: albums!.length,
       gridDelegate: imageGridDelegate,
       itemBuilder: (context, index) {
