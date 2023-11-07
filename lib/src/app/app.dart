@@ -202,24 +202,22 @@ class _AppState extends State<App> {
     }) {
       switch (audioType) {
         case AudioType.local:
+          libraryModel.setIndex(0);
           localAudioModel.setSearchActive(true);
           localAudioModel.setSearchQuery(text);
           localAudioModel.search();
-          libraryModel.setIndex(0);
-          break;
-        case AudioType.podcast:
-          podcastModel.setSearchActive(true);
-          podcastModel.setSearchQuery(
-            text,
-          );
-          podcastModel.search(searchQuery: text);
-          libraryModel.setIndex(2);
           break;
         case AudioType.radio:
+          libraryModel.setIndex(1);
           radioModel.setSearchActive(true);
           radioModel.setSearchQuery(text);
           radioModel.search(name: text);
-          libraryModel.setIndex(1);
+          break;
+        case AudioType.podcast:
+          libraryModel.setIndex(2);
+          podcastModel.setSearchActive(true);
+          podcastModel.setSearchQuery(text);
+          podcastModel.search(searchQuery: text);
           break;
       }
     }
