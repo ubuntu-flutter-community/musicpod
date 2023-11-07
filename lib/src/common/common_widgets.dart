@@ -286,3 +286,28 @@ EdgeInsetsGeometry get gridPadding =>
 
 SliverGridDelegate get imageGridDelegate =>
     isMobile ? kMobileImageGridDelegate : kImageGridDelegate;
+
+Gradient? getAudioPageHeaderGradient(ThemeData theme) {
+  if (_yaruStyled) {
+    return theme.brightness == Brightness.light
+        ? null
+        : LinearGradient(
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+            colors: [
+              Colors.transparent,
+              theme.scaffoldBackgroundColor,
+            ],
+          );
+  }
+
+  return LinearGradient(
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+    colors: [
+      Colors.transparent,
+      theme.colorScheme.primary.withOpacity(0.15),
+      Colors.transparent,
+    ],
+  );
+}
