@@ -372,7 +372,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   void safeLastPosition() {
     if (_audio?.audioType == AudioType.radio ||
-        _audio!.url == null ||
+        _audio?.url == null ||
         _position == null) return;
     _libraryService.addLastPosition(_audio!.url!, _position!);
   }

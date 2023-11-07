@@ -101,7 +101,7 @@ class HeaderBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled
+    return !isMobile
         ? YaruWindowTitleBar(
             titleSpacing: titleSpacing,
             actions: actions,
