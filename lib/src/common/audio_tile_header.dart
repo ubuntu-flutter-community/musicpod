@@ -15,7 +15,7 @@ class AudioTileHeader extends StatelessWidget {
     this.titleLabel,
     this.artistLabel,
     this.albumLabel,
-    this.titleFlex = 1,
+    this.titleFlex = 5,
     this.albumFlex = 4,
     this.artistFlex = 5,
   });
