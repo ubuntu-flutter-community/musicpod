@@ -156,46 +156,51 @@ class _PodcastsPageState extends State<PodcastsPage> {
       );
     }
 
-    final controlPanel = Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        LimitPopup(
-          value: limit,
-          onSelected: (value) {
-            setLimit(value);
-            search(searchQuery: searchQuery);
-          },
-        ),
-        CountryPopup(
-          onSelected: (value) {
-            setCountry(value);
-            search(searchQuery: searchQuery);
-          },
-          value: country,
-          countries: sortedCountries,
-        ),
-        YaruPopupMenuButton<PodcastGenre>(
-          style: buttonStyle,
-          onSelected: (value) {
-            setPodcastGenre(value);
-            search(searchQuery: searchQuery);
-          },
-          initialValue: podcastGenre,
-          child: Text(
-            podcastGenre.localize(context.l10n),
-            style: textStyle,
+    final controlPanel = SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          LimitPopup(
+            value: limit,
+            onSelected: (value) {
+              setLimit(value);
+              search(searchQuery: searchQuery);
+            },
           ),
-          itemBuilder: (context) {
-            return [
-              for (final genre in sortedGenres)
-                PopupMenuItem(
-                  value: genre,
-                  child: Text(genre.localize(context.l10n)),
-                ),
-            ];
-          },
-        ),
-      ],
+          CountryPopup(
+            onSelected: (value) {
+              setCountry(value);
+              search(searchQuery: searchQuery);
+            },
+            value: country,
+            countries: sortedCountries,
+          ),
+          YaruPopupMenuButton<PodcastGenre>(
+            style: buttonStyle,
+            icon: const DropDownArrow(),
+            onSelected: (value) {
+              setPodcastGenre(value);
+              search(searchQuery: searchQuery);
+            },
+            initialValue: podcastGenre,
+            child: Text(
+              podcastGenre.localize(context.l10n),
+              style: textStyle,
+            ),
+            itemBuilder: (context) {
+              return [
+                for (final genre in sortedGenres)
+                  PopupMenuItem(
+                    value: genre,
+                    child: Text(genre.localize(context.l10n)),
+                  ),
+              ];
+            },
+          ),
+        ],
+      ),
     );
 
     if (!widget.isOnline) {

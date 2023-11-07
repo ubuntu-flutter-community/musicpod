@@ -30,10 +30,10 @@ const kGridPadding = EdgeInsets.only(
   right: kYaruPagePadding - 5,
 );
 const kMobileGridPadding = EdgeInsets.only(
-  top: 25,
+  top: 0,
   bottom: kYaruPagePadding,
-  left: kYaruPagePadding,
-  right: kYaruPagePadding,
+  left: kYaruPagePadding - 5,
+  right: kYaruPagePadding - 5,
 );
 
 const kHeaderPadding = EdgeInsets.only(
@@ -57,10 +57,10 @@ const kImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
 );
 
 const kMobileImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
-  maxCrossAxisExtent: kSmallCardHeight + 90,
-  mainAxisExtent: kSmallCardHeight + 10 + kCardBottomHeight,
-  mainAxisSpacing: 10,
-  crossAxisSpacing: 0,
+  maxCrossAxisExtent: kSmallCardHeight + 60,
+  mainAxisExtent: kSmallCardHeight + kCardBottomHeight + 10,
+  mainAxisSpacing: 0,
+  crossAxisSpacing: 10,
 );
 
 const kDiskGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../constants.dart';
@@ -244,6 +245,17 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
         ),
       ),
     );
+  }
+}
+
+class DropDownArrow extends StatelessWidget {
+  const DropDownArrow({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return _yaruStyled
+        ? const Icon(YaruIcons.pan_down)
+        : const Icon(Icons.arrow_drop_down);
   }
 }
 

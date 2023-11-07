@@ -80,59 +80,63 @@ class _RadioPageState extends State<RadioPage> {
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
 
-    final controlPanel = Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        LimitPopup(
-          value: limit,
-          onSelected: (value) {
-            setLimit(value);
-            if (searchQuery?.isEmpty == true) {
-              if (tag == null) {
-                loadStationsByCountry();
+    final controlPanel = SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          LimitPopup(
+            value: limit,
+            onSelected: (value) {
+              setLimit(value);
+              if (searchQuery?.isEmpty == true) {
+                if (tag == null) {
+                  loadStationsByCountry();
+                } else {
+                  loadStationsByTag();
+                }
               } else {
-                loadStationsByTag();
+                search(name: searchQuery);
               }
-            } else {
-              search(name: searchQuery);
-            }
-          },
-        ),
-        CountryPopup(
-          value: country,
-          onSelected: (country) {
-            setCountry(country);
-            loadStationsByCountry();
-            setTag(null);
-          },
-          countries: sortedCountries,
-        ),
-        TagPopup(
-          value: tag,
-          addFav: (tag) {
-            if (tag?.name == null) return;
-            addFavTag(tag!.name);
-          },
-          removeFav: (tag) {
-            if (tag?.name == null) return;
-            removeFavTag(tag!.name);
-          },
-          favs: favTags,
-          onSelected: (tag) {
-            setTag(tag);
-            if (tag != null) {
-              loadStationsByTag();
-            } else {
-              setSearchQuery(null);
-              search();
-            }
-            if (tag?.name.isNotEmpty == true) {
-              setLastFav(tag!.name);
-            }
-          },
-          tags: tags,
-        ),
-      ],
+            },
+          ),
+          CountryPopup(
+            value: country,
+            onSelected: (country) {
+              setCountry(country);
+              loadStationsByCountry();
+              setTag(null);
+            },
+            countries: sortedCountries,
+          ),
+          TagPopup(
+            value: tag,
+            addFav: (tag) {
+              if (tag?.name == null) return;
+              addFavTag(tag!.name);
+            },
+            removeFav: (tag) {
+              if (tag?.name == null) return;
+              removeFavTag(tag!.name);
+            },
+            favs: favTags,
+            onSelected: (tag) {
+              setTag(tag);
+              if (tag != null) {
+                loadStationsByTag();
+              } else {
+                setSearchQuery(null);
+                search();
+              }
+              if (tag?.name.isNotEmpty == true) {
+                setLastFav(tag!.name);
+              }
+            },
+            tags: tags,
+          ),
+        ],
+      ),
     );
 
     if (!widget.isOnline) {

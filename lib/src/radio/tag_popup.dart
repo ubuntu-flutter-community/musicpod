@@ -36,6 +36,7 @@ class TagPopup extends StatelessWidget {
     final fallBackTextStyle =
         theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
     return YaruPopupMenuButton<Tag?>(
+      icon: const DropDownArrow(),
       style: buttonStyle,
       onSelected: onSelected,
       initialValue: value,

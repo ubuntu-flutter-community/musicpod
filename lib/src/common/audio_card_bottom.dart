@@ -23,14 +23,14 @@ class AudioCardBottom extends StatelessWidget {
           margin: const EdgeInsets.all(1),
           padding: const EdgeInsets.symmetric(
             vertical: 5,
-            horizontal: 10,
+            horizontal: 5,
           ),
           child: Text(
             text,
             style: theme.textTheme.bodyMedium
                 ?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.9)),
             textAlign: TextAlign.center,
-            overflow: TextOverflow.visible,
+            overflow: TextOverflow.ellipsis,
             maxLines: maxLines,
           ),
         ),
