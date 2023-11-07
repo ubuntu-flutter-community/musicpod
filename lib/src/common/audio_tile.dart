@@ -19,7 +19,7 @@ class AudioTile extends StatelessWidget {
     this.showTrack = true,
     this.showAlbum = true,
     this.showArtist = true,
-    this.titleFlex = 1,
+    this.titleFlex = 5,
     this.artistFlex = 5,
     this.albumFlex = 4,
     this.startPlaylist,
