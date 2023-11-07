@@ -82,8 +82,14 @@ class _AppState extends State<App> {
     final playerModel = context.read<PlayerModel>();
     final connectivityNotifier = context.read<ConnectivityNotifier>();
 
-    final extPathService = getService<ExternalPathService>()
-      ..init(playerModel.play);
+    final extPathService = getService<ExternalPathService>();
+    //  final gtkNotifier = getService<GtkApplicationNotifier>();
+    // gtkNotifier.addCommandLineListener(
+    //   (args) => _playPath(
+    //     play: playerModel.play,
+    //     path: gtkNotifier.commandLine?.firstOrNull,
+    //   ),
+    // );
 
     if (!Platform.isAndroid && !Platform.isIOS) {
       YaruWindow.of(context).onClose(
@@ -109,9 +115,7 @@ class _AppState extends State<App> {
                 if (libraryModel.recentPatchNotesDisposed == false) {
                   showPatchNotes(context, libraryModel.disposePatchNotes);
                 }
-                extPathService.playPath(
-                  play: playerModel.play,
-                );
+                extPathService.init(playerModel.play);
               });
             },
           );

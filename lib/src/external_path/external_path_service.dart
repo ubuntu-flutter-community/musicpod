@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:gtk/gtk.dart';
 import 'package:metadata_god/metadata_god.dart';
-import 'package:mime/mime.dart';
 
 import '../../data.dart';
 import '../../utils.dart';
@@ -12,31 +12,31 @@ class ExternalPathService {
 
   ExternalPathService([this._gtkNotifier]);
 
-  Future<void> init(
+  void init(
     Future<void> Function({Duration? newPosition, Audio? newAudio}) play,
-  ) async {
+  ) {
     if (_gtkNotifier != null) {
-      _gtkNotifier?.addCommandLineListener(
+      _gtkNotifier!.addCommandLineListener(
         (args) => playPath(
-          play: play,
+          play,
+          _gtkNotifier?.commandLine?.firstOrNull,
         ),
       );
+      playPath(play, _gtkNotifier?.commandLine?.firstOrNull);
     }
   }
 
-  void playPath({
-    required Future<void> Function({Duration? newPosition, Audio? newAudio})
-        play,
-  }) {
-    final path = _gtkNotifier?.commandLine?.firstOrNull;
-    if (path == null || !_isValidAudio(path)) {
+  void playPath(
+    Future<void> Function({Audio? newAudio, Duration? newPosition}) play, [
+    String? path,
+  ]) {
+    if (path == null || !isValidAudio(path)) {
       return;
     }
-
     MetadataGod.initialize();
     try {
       MetadataGod.readMetadata(file: path).then(
-        (metadata) => play(
+        (metadata) => play.call(
           newAudio: createLocalAudio(
             path,
             metadata,
@@ -45,11 +45,6 @@ class ExternalPathService {
         ),
       );
     } catch (_) {}
-  }
-
-  bool _isValidAudio(String path) {
-    final mime = lookupMimeType(path);
-    return mime?.startsWith('audio/') ?? false;
   }
 
   Future<void> dispose() async {
