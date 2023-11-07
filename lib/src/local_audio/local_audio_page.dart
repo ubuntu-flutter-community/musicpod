@@ -190,7 +190,7 @@ class _LocalAudioPageState extends State<LocalAudioPage>
           titleSpacing: 0,
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 20),
+              padding: const EdgeInsets.only(right: 20, left: 20),
               child: SearchButton(
                 active: searchActive,
                 onPressed: () {

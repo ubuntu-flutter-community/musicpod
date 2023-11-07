@@ -185,6 +185,7 @@ class SearchingBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return _yaruStyled
         ? YaruSearchField(
+            radius: const Radius.circular(kYaruButtonRadius),
             clearIcon: Iconz().clearIcon,
             key: key,
             text: text,

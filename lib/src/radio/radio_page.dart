@@ -84,7 +84,6 @@ class _RadioPageState extends State<RadioPage> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       scrollDirection: Axis.horizontal,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           LimitPopup(
             value: limit,
@@ -213,7 +212,7 @@ class _RadioPageState extends State<RadioPage> {
               : const SizedBox.shrink(),
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 20),
+              padding: const EdgeInsets.only(right: 20, left: 20),
               child: SearchButton(
                 active: searchActive,
                 onPressed: () => setSearchActive(!searchActive),
@@ -238,6 +237,7 @@ class _RadioPageState extends State<RadioPage> {
               : Text(context.l10n.radio),
         ),
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             controlPanel,
             const SizedBox(
