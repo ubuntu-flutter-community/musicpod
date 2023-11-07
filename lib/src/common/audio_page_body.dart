@@ -28,6 +28,8 @@ class AudioPageBody extends StatefulWidget {
     this.albumLabel,
     this.controlPanelTitle,
     this.showTrack = true,
+    this.showAlbum = true,
+    this.showArtist = true,
     this.titleFlex = 5,
     this.artistFlex = 5,
     this.albumFlex = 4,
@@ -50,7 +52,7 @@ class AudioPageBody extends StatefulWidget {
   final Widget? noResultMessage;
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
-  final bool showTrack;
+  final bool showTrack, showAlbum, showArtist;
   final EdgeInsetsGeometry? padding;
 
   final void Function({
@@ -191,6 +193,8 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                 artistLabel: widget.artistLabel,
                 albumLabel: widget.albumLabel,
                 showTrack: widget.showTrack,
+                showAlbum: widget.showAlbum,
+                showArtist: widget.showArtist,
                 audioFilter: AudioFilter.title,
               ),
             ),
@@ -240,6 +244,9 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                 );
 
                 return AudioTile(
+                  showAlbum: widget.showAlbum,
+                  showArtist: widget.showArtist,
+                  showTrack: widget.showTrack,
                   titleFlex: widget.titleFlex,
                   artistFlex: widget.artistFlex,
                   albumFlex: widget.albumFlex,

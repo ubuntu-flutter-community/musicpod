@@ -56,6 +56,7 @@ class AlbumPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AudioPage(
+      showAlbum: false,
       onTextTap: onTextTap,
       audioPageType: AudioPageType.album,
       headerLabel: context.l10n.album,

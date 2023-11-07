@@ -10,10 +10,12 @@ class AudioTileHeader extends StatelessWidget {
     this.onAudioFilterSelected,
     required this.audioFilter,
     this.showTrack = true,
+    this.showArtist = true,
+    this.showAlbum = true,
     this.titleLabel,
     this.artistLabel,
     this.albumLabel,
-    this.titleFlex = 5,
+    this.titleFlex = 1,
     this.albumFlex = 4,
     this.artistFlex = 5,
   });
@@ -21,6 +23,8 @@ class AudioTileHeader extends StatelessWidget {
   final void Function(AudioFilter audioFilter)? onAudioFilterSelected;
   final AudioFilter audioFilter;
   final bool showTrack;
+  final bool showArtist;
+  final bool showAlbum;
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
 
@@ -47,18 +51,20 @@ class AudioTileHeader extends StatelessWidget {
             audioFilter: AudioFilter.title,
             flex: titleFlex,
           ),
-          _HeaderElement(
-            onAudioFilterSelected: onAudioFilterSelected,
-            label: artistLabel ?? context.l10n.artist,
-            audioFilter: AudioFilter.artist,
-            flex: artistFlex,
-          ),
-          _HeaderElement(
-            onAudioFilterSelected: onAudioFilterSelected,
-            label: albumLabel ?? context.l10n.album,
-            audioFilter: AudioFilter.album,
-            flex: albumFlex,
-          ),
+          if (showArtist)
+            _HeaderElement(
+              onAudioFilterSelected: onAudioFilterSelected,
+              label: artistLabel ?? context.l10n.artist,
+              audioFilter: AudioFilter.artist,
+              flex: artistFlex,
+            ),
+          if (showAlbum)
+            _HeaderElement(
+              onAudioFilterSelected: onAudioFilterSelected,
+              label: albumLabel ?? context.l10n.album,
+              audioFilter: AudioFilter.album,
+              flex: albumFlex,
+            ),
         ],
       ),
       trailing: const SizedBox(width: 61),
