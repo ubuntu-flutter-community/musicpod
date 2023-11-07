@@ -179,12 +179,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
               subTitle: widget.headerSubTitle,
               label: widget.headerLabel,
             ),
-          Padding(
-            padding: widget.showAudioPageHeader == false
-                ? const EdgeInsets.only(top: 10)
-                : EdgeInsets.zero,
-            child: audioControlPanel,
-          ),
+          audioControlPanel,
           if (widget.showAudioTileHeader)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
