@@ -92,31 +92,25 @@ class LocalAudioSearchPage extends StatelessWidget {
             titlesResult: titlesResult!,
           ),
         if (similarAlbumsSearchResult?.isNotEmpty == true)
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: _Albums(
-              similarAlbumsResult: similarAlbumsSearchResult!,
-              showWindowControls: showWindowControls,
-              onTextTap: ({required audioType, required text}) =>
-                  onTapWithPop(text),
-              findAlbum: findAlbum,
-              addPinnedAlbum: addPinnedAlbum,
-              removePinnedAlbum: removePinnedAlbum,
-              isPinnedAlbum: isPinnedAlbum,
-              startPlaylist: startPlaylist,
-            ),
+          _Albums(
+            similarAlbumsResult: similarAlbumsSearchResult!,
+            showWindowControls: showWindowControls,
+            onTextTap: ({required audioType, required text}) =>
+                onTapWithPop(text),
+            findAlbum: findAlbum,
+            addPinnedAlbum: addPinnedAlbum,
+            removePinnedAlbum: removePinnedAlbum,
+            isPinnedAlbum: isPinnedAlbum,
+            startPlaylist: startPlaylist,
           ),
         if (similarArtistsSearchResult?.isNotEmpty == true)
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: _Artists(
-              showWindowControls: showWindowControls,
-              onTextTap: ({required audioType, required text}) =>
-                  onTapWithPop(text),
-              findArtist: findArtist,
-              findImages: findImages,
-              similarArtistsSearchResult: similarArtistsSearchResult!,
-            ),
+          _Artists(
+            showWindowControls: showWindowControls,
+            onTextTap: ({required audioType, required text}) =>
+                onTapWithPop(text),
+            findArtist: findArtist,
+            findImages: findImages,
+            similarArtistsSearchResult: similarArtistsSearchResult!,
           ),
       ],
     );
@@ -238,13 +232,15 @@ class _Albums extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final albums = ListView.builder(
-      itemExtent: 160,
-      cacheExtent: 160,
+    final albums = ListView.separated(
+      cacheExtent: kSmallCardHeight,
       shrinkWrap: true,
       padding: EdgeInsets.zero,
       itemCount: similarAlbumsResult.length,
       scrollDirection: Axis.horizontal,
+      separatorBuilder: (context, index) => const SizedBox(
+        width: 10,
+      ),
       itemBuilder: (context, index) {
         final audio = similarAlbumsResult.elementAt(index);
         final id = generateAlbumId(audio);
@@ -265,11 +261,11 @@ class _Albums extends StatelessWidget {
               );
 
         return AudioCard(
-          height: 150,
-          width: 150,
+          height: kSmallCardHeight,
+          width: kSmallCardHeight,
           bottom: AudioCardBottom(
             text: audio.album == null ? '' : audio.album!,
-            maxLines: 3,
+            maxLines: 1,
           ),
           image: image,
           onTap: id == null
@@ -360,7 +356,6 @@ class _Artists extends StatelessWidget {
           padding: const EdgeInsets.only(
             left: 20,
             right: 20,
-            top: 20,
           ),
           child: Row(
             children: [
@@ -374,13 +369,13 @@ class _Artists extends StatelessWidget {
         ),
         const SpacedDivider(),
         SizedBox(
-          height: kCardHeight + 10,
+          height: kSmallCardHeight + 20,
           child: Align(
             alignment: Alignment.centerLeft,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemExtent: kCardHeight,
-              cacheExtent: kCardHeight,
+              itemExtent: kSmallCardHeight + 10,
+              cacheExtent: kSmallCardHeight + 10,
               itemCount: similarArtistsSearchResult.length,
               padding: gridPadding,
               shrinkWrap: true,
