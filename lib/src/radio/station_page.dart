@@ -4,6 +4,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import 'radio_page.dart';
 
@@ -69,7 +70,7 @@ class StationPage extends StatelessWidget {
         : <String>[
             for (final tag in station.album?.split(',') ?? <String>[]) tag,
           ];
-    const size = 300.0;
+    const size = fullHeightPlayerImageSize;
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);

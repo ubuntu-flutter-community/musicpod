@@ -274,6 +274,9 @@ FontWeight get smallTextFontWeight =>
 FontWeight get mediumTextWeight =>
     _yaruStyled ? FontWeight.w200 : FontWeight.w500;
 
+FontWeight get largeTextWeight =>
+    _yaruStyled ? FontWeight.w200 : FontWeight.w300;
+
 bool get _yaruStyled => Platform.isLinux;
 
 bool get isMobile => Platform.isAndroid || Platform.isIOS || Platform.isFuchsia;
