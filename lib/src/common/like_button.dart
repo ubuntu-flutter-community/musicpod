@@ -21,6 +21,7 @@ class LikeButton extends StatelessWidget {
     required this.topFivePlaylistNames,
     required this.addAudioToPlaylist,
     required this.addPlaylist,
+    this.insertIntoQueue,
   });
 
   final String playlistId;
@@ -33,6 +34,7 @@ class LikeButton extends StatelessWidget {
   final List<String>? topFivePlaylistNames;
   final void Function(String, Audio) addAudioToPlaylist;
   final void Function(String, Set<Audio>) addPlaylist;
+  final void Function()? insertIntoQueue;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +54,7 @@ class LikeButton extends StatelessWidget {
     );
 
     return _Button(
+      insertIntoQueue: insertIntoQueue,
       artist: audio.artist ?? '',
       title: audio.title ?? '',
       playlistId: playlistId,
@@ -86,8 +89,10 @@ class _Button extends StatelessWidget {
     required this.icon,
     required this.artist,
     required this.title,
+    this.insertIntoQueue,
   });
 
+  final void Function()? insertIntoQueue;
   final void Function()? onCreateNewPlaylist;
   final void Function(String playlistId)? onRemoveFromPlaylist;
   final void Function(String playlistId)? onAddToPlaylist;
@@ -111,6 +116,10 @@ class _Button extends StatelessWidget {
           PopupMenuItem(
             onTap: onCreateNewPlaylist,
             child: Text(context.l10n.createNewPlaylist),
+          ),
+          PopupMenuItem(
+            onTap: insertIntoQueue,
+            child: Text(context.l10n.insertIntoQueue),
           ),
           if (onRemoveFromPlaylist != null)
             PopupMenuItem(

@@ -95,5 +95,6 @@
         }
     },
     "emptyPlaylist": "🐣🔎🎵❓\n\nThis playlist is empty.",
-    "copiedToClipBoard": "Copied to clipboard:"
+    "copiedToClipBoard": "Copied to clipboard:",
+    "insertIntoQueue": "Insert into queue"
 }
