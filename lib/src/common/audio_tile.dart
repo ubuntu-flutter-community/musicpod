@@ -17,7 +17,9 @@ class AudioTile extends StatelessWidget {
     required this.resume,
     this.onTextTap,
     this.showTrack = true,
-    this.titleFlex = 5,
+    this.showAlbum = true,
+    this.showArtist = true,
+    this.titleFlex = 1,
     this.artistFlex = 5,
     this.albumFlex = 4,
     this.startPlaylist,
@@ -33,6 +35,8 @@ class AudioTile extends StatelessWidget {
   final void Function()? startPlaylist;
   final void Function() pause;
   final bool showTrack;
+  final bool showArtist;
+  final bool showAlbum;
   final void Function({
     required String text,
     required AudioType audioType,
@@ -90,7 +94,7 @@ class AudioTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          if (audio.artist != null)
+          if (audio.artist != null && showArtist)
             Expanded(
               flex: artistFlex,
               child: TapAbleText(
@@ -104,7 +108,7 @@ class AudioTile extends StatelessWidget {
                 selected: selected,
               ),
             ),
-          if (audio.album != null)
+          if (audio.album != null && showAlbum)
             Expanded(
               flex: albumFlex,
               child: TapAbleText(

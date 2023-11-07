@@ -56,6 +56,7 @@ class AlbumPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AudioPage(
+      showAlbum: false,
       onTextTap: onTextTap,
       audioPageType: AudioPageType.album,
       headerLabel: context.l10n.album,
@@ -64,7 +65,8 @@ class AlbumPage extends StatelessWidget {
           ? Image.memory(
               album!.firstOrNull!.pictureData!,
               width: 200.0,
-              fit: BoxFit.fitWidth,
+              height: 200.0,
+              fit: BoxFit.cover,
               filterQuality: FilterQuality.medium,
             )
           : null,

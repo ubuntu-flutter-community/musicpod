@@ -31,6 +31,8 @@ class AudioPage extends StatelessWidget {
     this.artistFlex = 5,
     this.albumFlex = 4,
     this.showTrack = true,
+    this.showAlbum = true,
+    this.showArtist = true,
     this.showAudioTileHeader = true,
   });
 
@@ -50,7 +52,7 @@ class AudioPage extends StatelessWidget {
   final int titleFlex, artistFlex, albumFlex;
   final bool showAudioPageHeader;
   final bool showAudioTileHeader;
-  final bool showTrack;
+  final bool showTrack, showAlbum, showArtist;
 
   final void Function({
     required String text,
@@ -87,6 +89,8 @@ class AudioPage extends StatelessWidget {
       artistLabel: artistLabel,
       albumLabel: albumLabel,
       showTrack: showTrack,
+      showAlbum: showAlbum,
+      showArtist: showArtist,
     );
 
     return YaruDetailPage(

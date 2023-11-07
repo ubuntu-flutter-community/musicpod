@@ -256,7 +256,9 @@ class _Albums extends StatelessWidget {
               )
             : Image.memory(
                 audio.pictureData!,
-                fit: BoxFit.fitWidth,
+                fit: BoxFit.cover,
+                height: kSmallCardHeight,
+                width: kSmallCardHeight,
                 filterQuality: FilterQuality.medium,
               );
 

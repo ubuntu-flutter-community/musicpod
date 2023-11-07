@@ -29,6 +29,7 @@ class ArtistPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AudioPage(
+      showArtist: false,
       onTextTap: onTextTap,
       audioPageType: AudioPageType.artist,
       headerLabel: context.l10n.artist,
