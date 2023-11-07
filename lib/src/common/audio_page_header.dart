@@ -41,7 +41,7 @@ class AudioPageHeader extends StatelessWidget {
         children: [
           if (image != null)
             Padding(
-              padding: const EdgeInsets.only(right: 20),
+              padding: EdgeInsets.only(right: smallWindow ? 0 : 20),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: image!,
