@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../common.dart';
 import '../l10n/l10n.dart';
 
 class NoSearchResultPage extends StatelessWidget {
@@ -15,11 +16,11 @@ class NoSearchResultPage extends StatelessWidget {
     final theme = Theme.of(context);
     final style = theme.textTheme.headlineSmall != null
         ? theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w100,
+            fontWeight: largeTextWeight,
             color: theme.colorScheme.onSurface,
           )
         : TextStyle(
-            fontWeight: FontWeight.w100,
+            fontWeight: largeTextWeight,
             color: theme.colorScheme.onSurface,
           );
     return Center(

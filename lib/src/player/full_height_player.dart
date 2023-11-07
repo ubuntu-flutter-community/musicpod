@@ -189,44 +189,42 @@ class FullHeightPlayer extends StatelessWidget {
           )
         else
           SingleChildScrollView(
+            padding: const EdgeInsets.only(
+              left: 35,
+              right: 35,
+              bottom: 111,
+              top: 111,
+            ),
             child: Center(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 35,
-                  right: 35,
-                  bottom: 20,
-                  top: 150,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _FullHeightPlayerImage(
-                      size: size,
-                      audio: audio,
-                      isOnline: isOnline,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _FullHeightPlayerImage(
+                    size: size,
+                    audio: audio,
+                    isOnline: isOnline,
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  if (audio != null)
+                    FittedBox(
+                      child: title,
                     ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    if (audio != null)
-                      FittedBox(
-                        child: title,
-                      ),
-                    artist,
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    SizedBox(
-                      height: 20,
-                      width: 400,
-                      child: sliderAndTime,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    controls,
-                  ],
-                ),
+                  artist,
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  SizedBox(
+                    height: 20,
+                    width: 400,
+                    child: sliderAndTime,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  controls,
+                ],
               ),
             ),
           ),
@@ -428,8 +426,8 @@ class _FullHeightPlayerImage extends StatelessWidget {
     }
 
     return SizedBox(
-      height: size.width > 1000 ? fullHeightPlayerImageSize : size.width / 1.7,
-      width: size.width > 1000 ? fullHeightPlayerImageSize : size.width / 1.7,
+      height: fullHeightPlayerImageSize,
+      width: fullHeightPlayerImageSize,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: image,

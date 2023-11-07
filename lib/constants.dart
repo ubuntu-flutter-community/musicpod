@@ -19,7 +19,7 @@ const kSearchBarWidth = 350.0;
 
 const kSnackBarWidth = 500.0;
 
-const fullHeightPlayerImageSize = 400.0;
+const fullHeightPlayerImageSize = 300.0;
 
 const kSnackBarDuration = Duration(seconds: 10);
 

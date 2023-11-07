@@ -109,6 +109,7 @@ class PodcastPage extends StatelessWidget {
       audios: audios,
       pageId: pageId,
       title: Text(title),
+      controlPanelTitle: Text(title),
       controlPanelButton: IconButton(
         icon: Icon(
           Iconz().rss,

@@ -34,6 +34,9 @@ class AudioPageControlPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    final textStyle =
+        theme.textTheme.headlineSmall?.copyWith(fontWeight: largeTextWeight) ??
+            const TextStyle(fontSize: 25);
     return Row(
       children: [
         if (startPlaylist != null)
@@ -92,14 +95,16 @@ class AudioPageControlPanel extends StatelessWidget {
             width: 10,
           ),
         Expanded(
-          child: title ??
-              Text(
-                '$listName  •  ${audios.length} ${context.l10n.titles}',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.w100),
-              ),
+          child: DefaultTextStyle(
+            style: textStyle,
+            child: title ??
+                Text(
+                  '$listName  •  ${audios.length} ${context.l10n.titles}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: textStyle,
+                ),
+          ),
         ),
       ],
     );
