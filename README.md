@@ -51,11 +51,9 @@ Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https
 
 - [X] Video Podcasts ([#71](https://github.com/ubuntu-flutter-community/musicpod/issues/71))
 - [ ] Chromecast Support ([#91](https://github.com/ubuntu-flutter-community/musicpod/issues/91))
-- [ ] Big feature: add a shop to buy digital audio for your collection
 - [X] streaming provider agnostic sharing links
-- [X] tag-grid view for the radio page
-- [ ] option to download podcasts
-- [ ] reduced memory allocation
+- [ ] option to download podcasts (#[240](https://github.com/ubuntu-flutter-community/musicpod/issues/240))
+- [X] reduced memory allocation
 
 ## Supported operating systems and package formats
 
@@ -64,8 +62,9 @@ Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https
   - [ ] Flatpak ([WIP](https://github.com/ubuntu-flutter-community/musicpod/issues/10))
 - [X] Windows Support (Media Controls are WIP)
   - [ ] Windows Store
-  - [ ] Direct Download
 - [X] Android Support (Media Controls are WIP)
   - [ ] PlayStore
-  - [ ] APK Download
 - [ ] MacOs Support
+  - [ ] Apple?Store?
+- [ ] iOS Support
+  - [ ] AppStore
