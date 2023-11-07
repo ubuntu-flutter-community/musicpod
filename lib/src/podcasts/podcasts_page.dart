@@ -156,51 +156,46 @@ class _PodcastsPageState extends State<PodcastsPage> {
       );
     }
 
-    final controlPanel = SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: SizedBox(
-        height: kYaruTitleBarItemHeight,
-        child: Row(
-          children: [
-            LimitPopup(
-              value: limit,
-              onSelected: (value) {
-                setLimit(value);
-                search(searchQuery: searchQuery);
-              },
-            ),
-            CountryPopup(
-              onSelected: (value) {
-                setCountry(value);
-                search(searchQuery: searchQuery);
-              },
-              value: country,
-              countries: sortedCountries,
-            ),
-            YaruPopupMenuButton<PodcastGenre>(
-              style: buttonStyle,
-              onSelected: (value) {
-                setPodcastGenre(value);
-                search(searchQuery: searchQuery);
-              },
-              initialValue: podcastGenre,
-              child: Text(
-                podcastGenre.localize(context.l10n),
-                style: textStyle,
-              ),
-              itemBuilder: (context) {
-                return [
-                  for (final genre in sortedGenres)
-                    PopupMenuItem(
-                      value: genre,
-                      child: Text(genre.localize(context.l10n)),
-                    ),
-                ];
-              },
-            ),
-          ],
+    final controlPanel = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        LimitPopup(
+          value: limit,
+          onSelected: (value) {
+            setLimit(value);
+            search(searchQuery: searchQuery);
+          },
         ),
-      ),
+        CountryPopup(
+          onSelected: (value) {
+            setCountry(value);
+            search(searchQuery: searchQuery);
+          },
+          value: country,
+          countries: sortedCountries,
+        ),
+        YaruPopupMenuButton<PodcastGenre>(
+          style: buttonStyle,
+          onSelected: (value) {
+            setPodcastGenre(value);
+            search(searchQuery: searchQuery);
+          },
+          initialValue: podcastGenre,
+          child: Text(
+            podcastGenre.localize(context.l10n),
+            style: textStyle,
+          ),
+          itemBuilder: (context) {
+            return [
+              for (final genre in sortedGenres)
+                PopupMenuItem(
+                  value: genre,
+                  child: Text(genre.localize(context.l10n)),
+                ),
+            ];
+          },
+        ),
+      ],
     );
 
     if (!widget.isOnline) {
@@ -215,36 +210,45 @@ class _PodcastsPageState extends State<PodcastsPage> {
           style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
-          title: Padding(
-            padding: const EdgeInsets.only(right: 40),
-            child: YaruSearchTitleField(
-              searchIcon: Iconz().searchIcon,
-              clearIcon: Iconz().clearIcon,
-              key: ValueKey(searchQuery),
-              text: searchQuery,
-              alignment: Alignment.center,
-              width: searchBarWidth,
-              searchActive: searchActive,
-              title: controlPanel,
-              onSearchActive: () => setSearchActive(!searchActive),
-              onClear: () {
-                setSearchActive(false);
-                setSearchQuery('');
-                search();
-              },
-              onSubmitted: (value) {
-                setSearchQuery(value);
-
-                if (value?.isEmpty == true) {
-                  search();
-                } else {
-                  search(searchQuery: value);
-                }
-              },
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: SearchButton(
+                active: searchActive,
+                onPressed: () => setSearchActive(!searchActive),
+              ),
             ),
-          ),
+          ],
+          title: searchActive
+              ? SearchingBar(
+                  key: ValueKey(searchQuery),
+                  text: searchQuery,
+                  onClear: () {
+                    setSearchActive(false);
+                    setSearchQuery('');
+                    search();
+                  },
+                  onSubmitted: (value) {
+                    setSearchQuery(value);
+
+                    if (value?.isEmpty == true) {
+                      search();
+                    } else {
+                      search(searchQuery: value);
+                    }
+                  },
+                )
+              : Text(context.l10n.podcasts),
         ),
-        body: grid,
+        body: Column(
+          children: [
+            controlPanel,
+            const SizedBox(
+              height: 15,
+            ),
+            Expanded(child: grid),
+          ],
+        ),
       );
     }
   }

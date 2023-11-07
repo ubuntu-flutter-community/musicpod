@@ -19,8 +19,7 @@ class AudioCardBottom extends StatelessWidget {
       child: Tooltip(
         message: text,
         child: Container(
-          width: double.infinity,
-          height: kCardBottomHeight,
+          width: kSmallCardHeight,
           margin: const EdgeInsets.all(1),
           padding: const EdgeInsets.symmetric(
             vertical: 5,

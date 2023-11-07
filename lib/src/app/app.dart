@@ -147,11 +147,10 @@ class _AppState extends State<App> {
     // Player
     final play = context.read<PlayerModel>().play;
     final audioType = context.select((PlayerModel m) => m.audio?.audioType);
-    final surfaceTintColor =
-        context.select((PlayerModel m) => m.surfaceTintColor);
+
+    final color = context.select((PlayerModel m) => m.color);
     final isFullScreen = context.select((PlayerModel m) => m.fullScreen);
-    final Color playerBg =
-        getPlayerBg(surfaceTintColor, theme.scaffoldBackgroundColor);
+    final Color playerBg = getPlayerBg(color, theme.scaffoldBackgroundColor);
 
     // Library
     // Watching values

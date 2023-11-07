@@ -49,7 +49,7 @@ class ArtistsView extends StatelessWidget {
 
     return GridView.builder(
       itemCount: artists!.length,
-      padding: const EdgeInsets.all(kYaruPagePadding),
+      padding: gridPadding,
       shrinkWrap: true,
       gridDelegate: kDiskGridDelegate,
       itemBuilder: (context, index) {

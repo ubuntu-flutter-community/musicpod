@@ -148,6 +148,105 @@ class TabsBar extends StatelessWidget {
   }
 }
 
+class SearchButton extends StatelessWidget {
+  const SearchButton({super.key, this.onPressed, this.active});
+
+  final void Function()? onPressed;
+  final bool? active;
+
+  @override
+  Widget build(BuildContext context) {
+    return _yaruStyled
+        ? YaruSearchButton(
+            searchActive: active,
+            onPressed: onPressed,
+          )
+        : IconButton(
+            isSelected: active,
+            onPressed: onPressed,
+            selectedIcon: Icon(
+              Icons.search,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            icon: const Icon(Icons.search),
+          );
+  }
+}
+
+class SearchingBar extends StatelessWidget {
+  const SearchingBar({super.key, this.text, this.onClear, this.onSubmitted});
+
+  final String? text;
+  final void Function()? onClear;
+  final void Function(String?)? onSubmitted;
+
+  @override
+  Widget build(BuildContext context) {
+    return _yaruStyled
+        ? YaruSearchField(
+            clearIcon: Iconz().clearIcon,
+            key: key,
+            text: text,
+            onClear: onClear,
+            onSubmitted: onSubmitted,
+          )
+        : MaterialSearchBar(
+            text: text,
+            key: key,
+            onSubmitted: onSubmitted,
+            onClear: onClear,
+          );
+  }
+}
+
+class MaterialSearchBar extends StatefulWidget {
+  const MaterialSearchBar({
+    super.key,
+    this.text,
+    this.onClear,
+    this.onSubmitted,
+  });
+  final String? text;
+  final void Function()? onClear;
+  final void Function(String?)? onSubmitted;
+
+  @override
+  State<MaterialSearchBar> createState() => _NormalSearchBarState();
+}
+
+class _NormalSearchBarState extends State<MaterialSearchBar> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.text);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      textAlign: TextAlign.center,
+      controller: _controller,
+      key: widget.key,
+      autofocus: true,
+      onSubmitted: widget.onSubmitted,
+      decoration: InputDecoration(
+        suffixIcon: IconButton(
+          onPressed: widget.onClear,
+          icon: const Icon(Icons.clear),
+        ),
+      ),
+    );
+  }
+}
+
 double? get avatarIconSize => _yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
 
 double? get snackBarWidth => _yaruStyled ? kSnackBarWidth : null;
@@ -171,7 +270,7 @@ bool get shrinkTitleBarItems => _yaruStyled;
 double get chipHeight => _yaruStyled ? kYaruTitleBarItemHeight : 40;
 
 EdgeInsetsGeometry get gridPadding =>
-    _yaruStyled ? kPodcastGridPadding : kMobilePodcastGridPadding;
+    isMobile ? kMobileGridPadding : kGridPadding;
 
 SliverGridDelegate get imageGridDelegate =>
-    _yaruStyled ? kImageGridDelegate : kMobileImageGridDelegate;
+    isMobile ? kMobileImageGridDelegate : kImageGridDelegate;

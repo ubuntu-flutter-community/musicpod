@@ -99,23 +99,26 @@ class _LocalAudioPageState extends State<LocalAudioPage>
       setSearchActive(true);
     }
 
-    final tabBar = TabsBar(
-      onTap: (value) {
-        widget.onIndexSelected.call(value);
-        setSearchActive(false);
-        setSearchQuery(null);
-      },
-      tabs: [
-        Tab(
-          text: context.l10n.titles,
-        ),
-        Tab(
-          text: context.l10n.artists,
-        ),
-        Tab(
-          text: context.l10n.albums,
-        ),
-      ],
+    final tabBar = SizedBox(
+      width: kSearchBarWidth,
+      child: TabsBar(
+        onTap: (value) {
+          widget.onIndexSelected.call(value);
+          setSearchActive(false);
+          setSearchQuery(null);
+        },
+        tabs: [
+          Tab(
+            text: context.l10n.titles,
+          ),
+          Tab(
+            text: context.l10n.artists,
+          ),
+          Tab(
+            text: context.l10n.albums,
+          ),
+        ],
+      ),
     );
 
     final tabBarView = TabBarView(
@@ -181,38 +184,37 @@ class _LocalAudioPageState extends State<LocalAudioPage>
           style: showWindowControls
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
-          leading: SizedBox(
-            width: 120,
-            child: (Navigator.of(context).canPop())
-                ? const NavBackButton()
-                : const SizedBox.shrink(),
-          ),
+          leading: (Navigator.of(context).canPop())
+              ? const NavBackButton()
+              : const SizedBox.shrink(),
           titleSpacing: 0,
-          title: Padding(
-            padding: const EdgeInsets.only(right: 40),
-            child: YaruSearchTitleField(
-              searchIcon: Iconz().searchIcon,
-              clearIcon: Iconz().clearIcon,
-              key: ValueKey(searchQuery),
-              width: kSearchBarWidth,
-              searchActive: searchActive,
-              title: tabBar,
-              text: searchQuery,
-              onSearchActive: () {
-                setSearchActive(!searchActive);
-                setSearchQuery('');
-              },
-              onSubmitted: (value) {
-                setSearchActive(true);
-                setSearchQuery(value);
-                search();
-              },
-              onClear: () {
-                setSearchActive(false);
-                setSearchQuery('');
-              },
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: SearchButton(
+                active: searchActive,
+                onPressed: () {
+                  setSearchActive(!searchActive);
+                  setSearchQuery('');
+                },
+              ),
             ),
-          ),
+          ],
+          title: searchActive
+              ? SearchingBar(
+                  key: ValueKey(searchQuery),
+                  text: searchQuery,
+                  onSubmitted: (value) {
+                    setSearchActive(true);
+                    setSearchQuery(value);
+                    search();
+                  },
+                  onClear: () {
+                    setSearchActive(false);
+                    setSearchQuery('');
+                  },
+                )
+              : tabBar,
         ),
         body: body,
       ),

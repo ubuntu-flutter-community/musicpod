@@ -382,7 +382,7 @@ class _Artists extends StatelessWidget {
               itemExtent: kCardHeight,
               cacheExtent: kCardHeight,
               itemCount: similarArtistsSearchResult.length,
-              padding: kGridPadding,
+              padding: gridPadding,
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 final artistAudios = findArtist(
