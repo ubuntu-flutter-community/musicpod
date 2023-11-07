@@ -11,7 +11,7 @@ class CopyClipboardContent extends StatelessWidget {
     this.onSearch,
   });
 
-  final String? text;
+  final String text;
   final void Function()? onSearch;
 
   @override
@@ -33,7 +33,7 @@ class CopyClipboardContent extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  text!,
+                  text,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
