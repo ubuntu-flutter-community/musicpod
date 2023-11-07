@@ -95,5 +95,6 @@
         }
     },
     "emptyPlaylist": "🐣🔎🎵❓\n\nDiese Wiedergabeliste ist leer.",
-    "copiedToClipBoard": "In die Zwischenablage kopiert:"
+    "copiedToClipBoard": "In die Zwischenablage kopiert:",
+    "insertIntoQueue": "In Warteschlange aufnehmen"
 }

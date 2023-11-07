@@ -262,6 +262,14 @@ class PlayerModel extends SafeChangeNotifier {
     await play();
   }
 
+  Future<void> insertIntoQueue(Audio audio) async {
+    if (_queue.isNotEmpty && !_queue.contains(audio)) {
+      _queue.insert(1, audio);
+      nextAudio = queue[1];
+      notifyListeners();
+    }
+  }
+
   void _estimateNext() {
     if (audio == null) return;
 

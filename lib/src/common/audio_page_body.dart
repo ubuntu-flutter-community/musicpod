@@ -99,6 +99,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     final play = playerModel.play;
     final pause = playerModel.pause;
     final resume = playerModel.resume;
+    final insertIntoQueue = playerModel.insertIntoQueue;
 
     context.select((LibraryModel m) => m.likedAudios.length);
     if (widget.audioPageType == AudioPageType.playlist) {
@@ -241,6 +242,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   topFivePlaylistNames: getTopFivePlaylistNames(),
                   addAudioToPlaylist: addAudioToPlaylist,
                   addPlaylist: addPlaylist,
+                  insertIntoQueue: () => insertIntoQueue(audio),
                 );
 
                 return AudioTile(
