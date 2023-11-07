@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
+import '../../constants.dart';
 import '../l10n/l10n.dart';
 
 class AudioPageHeader extends StatelessWidget {
@@ -29,7 +30,7 @@ class AudioPageHeader extends StatelessWidget {
     final smallWindow = size.width < 600.0;
 
     return Container(
-      height: 240,
+      height: kAudioPageHeaderHeight,
       decoration: BoxDecoration(
         gradient: getAudioPageHeaderGradient(theme),
       ),

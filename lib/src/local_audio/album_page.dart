@@ -65,7 +65,8 @@ class AlbumPage extends StatelessWidget {
           ? Image.memory(
               album!.firstOrNull!.pictureData!,
               width: 200.0,
-              fit: BoxFit.fitWidth,
+              height: 200.0,
+              fit: BoxFit.cover,
               filterQuality: FilterQuality.medium,
             )
           : null,
