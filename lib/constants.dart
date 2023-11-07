@@ -64,9 +64,9 @@ const kMobileImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
 );
 
 const kDiskGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
-  maxCrossAxisExtent: kCardHeight,
-  mainAxisSpacing: 20,
-  crossAxisSpacing: 20,
+  maxCrossAxisExtent: kSmallCardHeight + 10,
+  mainAxisSpacing: 10,
+  crossAxisSpacing: 10,
 );
 
 const kShimmerBaseLight = Color.fromARGB(120, 230, 230, 230);
