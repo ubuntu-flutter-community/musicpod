@@ -13,21 +13,29 @@ class ShareButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final content =
+        audio?.url ?? '${audio?.artist ?? ''} - ${audio?.title ?? ''}';
     return IconButton(
-      onPressed: !active || audio?.url == null
+      onPressed: !active
           ? null
           : () {
-              Clipboard.setData(ClipboardData(text: audio!.url!));
+              Clipboard.setData(
+                ClipboardData(
+                  text: content,
+                ),
+              );
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   width: snackBarWidth,
                   content: CopyClipboardContent(
-                    text: audio?.url,
-                    onSearch: () {
-                      if (audio?.url != null) {
-                        launchUrl(Uri.parse(audio!.url!));
-                      }
-                    },
+                    text: content,
+                    onSearch: audio?.url == null
+                        ? null
+                        : () {
+                            if (audio?.url != null) {
+                              launchUrl(Uri.parse(audio?.url ?? ''));
+                            }
+                          },
                   ),
                 ),
               );
