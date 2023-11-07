@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:metadata_god/metadata_god.dart';
+import 'package:mime/mime.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:xdg_directories/xdg_directories.dart';
@@ -249,4 +250,9 @@ String? generateAlbumId(Audio audio) {
       ? null
       : '${artistName ?? ''}:${albumName ?? ''}';
   return id;
+}
+
+bool isValidAudio(String path) {
+  final mime = lookupMimeType(path);
+  return mime?.startsWith('audio/') ?? false;
 }

@@ -41,13 +41,10 @@ Future<void> main(List<String> args) async {
 
   registerService<VideoController>(() => VideoController(player));
 
-  GtkApplicationNotifier? gtkApplicationNotifier;
   NotificationsClient? notificationsClient;
   SMTCWindows? smtc;
   MPRIS? mpris;
   if (Platform.isLinux) {
-    gtkApplicationNotifier = GtkApplicationNotifier(args);
-
     notificationsClient = NotificationsClient();
 
     mpris = await MPRIS.create(
@@ -97,7 +94,9 @@ Future<void> main(List<String> args) async {
   );
 
   registerService<ExternalPathService>(
-    () => ExternalPathService(gtkApplicationNotifier),
+    () => ExternalPathService(
+      Platform.isLinux ? GtkApplicationNotifier(args) : null,
+    ),
     dispose: (s) => s.dispose(),
   );
 
