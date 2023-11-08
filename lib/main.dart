@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs
+
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -42,6 +44,8 @@ Future<void> main(List<String> args) async {
   registerService<VideoController>(() => VideoController(player));
 
   NotificationsClient? notificationsClient;
+
+  // Media control
   SMTCWindows? smtc;
   MPRIS? mpris;
   if (Platform.isLinux) {
@@ -66,7 +70,12 @@ Future<void> main(List<String> args) async {
     );
   }
   registerService<MediaControlService>(
-    () => MediaControlService(mpris, smtc),
+    () => MediaControlService(
+      mpris: mpris,
+      smtc: smtc,
+      initAudioHandler:
+          Platform.isAndroid, // TODO: || Platform.isIOS || Platform.isMacOS
+    ),
     dispose: (s) => s.dispose(),
   );
 

@@ -219,6 +219,7 @@ class PlayerModel extends SafeChangeNotifier {
       onPrevious: playPrevious,
       isPlaying: isPlaying,
       onPlayPause: playOrPause,
+      playerStream: _player.stream,
     );
 
     await _readPlayerState();
