@@ -61,8 +61,6 @@ class AudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
 
@@ -96,7 +94,6 @@ class AudioPage extends StatelessWidget {
     return YaruDetailPage(
       key: ValueKey(pageId),
       appBar: HeaderBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,

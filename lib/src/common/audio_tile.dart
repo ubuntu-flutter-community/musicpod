@@ -48,8 +48,9 @@ class AudioTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textStyle = TextStyle(
-      color: selected ? theme.colorScheme.onSurface : theme.hintColor,
-      fontWeight: selected ? FontWeight.w500 : FontWeight.normal,
+      color: selected
+          ? theme.colorScheme.primary
+          : theme.colorScheme.onSurface.withOpacity(0.95),
     );
 
     final listTile = ListTile(

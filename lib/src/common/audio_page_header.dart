@@ -63,7 +63,7 @@ class AudioPageHeader extends StatelessWidget {
                     style: theme.textTheme.headlineLarge?.copyWith(
                       fontWeight: FontWeight.w300,
                       fontSize: 35,
-                      color: theme.colorScheme.onSurface.withOpacity(0.8),
+                      color: theme.colorScheme.onSurface.withOpacity(0.9),
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -74,7 +74,6 @@ class AudioPageHeader extends StatelessWidget {
                     Text(
                       subTitle!,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.hintColor,
                         fontStyle: FontStyle.italic,
                       ),
                     ),
@@ -109,7 +108,6 @@ class AudioPageHeader extends StatelessWidget {
                                   'body': Style(
                                     margin: Margins.zero,
                                     padding: HtmlPaddings.only(top: 5),
-                                    color: theme.hintColor,
                                     textOverflow: TextOverflow.ellipsis,
                                     maxLines: 4,
                                     textAlign: TextAlign.start,
