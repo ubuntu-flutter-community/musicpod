@@ -242,7 +242,10 @@ class FullHeightPlayer extends StatelessWidget {
             ),
           ),
         ),
-        if (nextAudio?.title != null && nextAudio?.artist != null && !isVideo)
+        if (nextAudio?.title != null &&
+            nextAudio?.artist != null &&
+            !isVideo &&
+            size.width > 600)
           Positioned(
             left: 10,
             bottom: 10,

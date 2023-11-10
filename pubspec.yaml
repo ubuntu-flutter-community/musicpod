@@ -48,6 +48,7 @@ dependencies:
   safe_change_notifier: ^0.3.0
   shimmer: ^3.0.0
   smtc_windows: ^0.1.1
+  stream_transform: ^2.1.0
   ubuntu_service: ^0.2.0
   url_launcher: ^6.1.10
   xdg_directories: ^1.0.0

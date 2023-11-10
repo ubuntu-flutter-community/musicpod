@@ -16,6 +16,7 @@ class MediaControlService {
   final bool? initAudioHandler;
   StreamSubscription<PressedButton>? _smtcSub;
   AudioSession? _audioSession;
+  MyAudioHandler? _audioService;
 
   MediaControlService({this.mpris, this.smtc, this.initAudioHandler});
 
@@ -25,7 +26,7 @@ class MediaControlService {
     required Future<void> Function() onNext,
     required Future<void> Function() onPrevious,
     Future<void> Function()? onStop,
-    Future<void> Function()? onPlayPause,
+    required Future<void> Function() onPlayPause,
     required bool isPlaying,
     required PlayerStream playerStream,
   }) async {
@@ -54,7 +55,7 @@ class MediaControlService {
       mpris?.setEventHandler(
         MPRISEventHandler(
           playPause: () async {
-            isPlaying ? onPause() : onPlayPause?.call();
+            isPlaying ? onPause() : onPlayPause();
             mpris?.playbackStatus = (isPlaying
                 ? MPRISPlaybackStatus.paused
                 : MPRISPlaybackStatus.playing);
@@ -75,40 +76,28 @@ class MediaControlService {
         ),
       );
     } else if (initAudioHandler == true) {
-      await AudioService.init(
+      _audioService = await AudioService.init(
         config: const AudioServiceConfig(
           androidNotificationChannelId:
               'org.feichtmeier.musicpod.channel.audio',
           androidNotificationChannelName: 'MusicPod',
         ),
-        builder: () => MyAudioHandler(
-          onPlay: onPlay,
-          onNext: onNext,
-          onPause: onPause,
-          onPrevious: onPrevious,
-          onPlayPause: onPlayPause,
-          isPlaying: isPlaying,
-          playerStream: playerStream,
-        ),
+        builder: () {
+          return MyAudioHandler(
+            onPlay: onPlay,
+            onNext: onNext,
+            onPause: onPause,
+            onPrevious: onPrevious,
+            onPlayPause: onPlayPause,
+            isPlaying: isPlaying,
+            playerStream: playerStream,
+          );
+        },
       );
-      _audioSession = await AudioSession.instance;
+
+      // _audioSession = await AudioSession.instance;
       await _audioSession?.configure(
-        const AudioSessionConfiguration(
-          avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
-          avAudioSessionCategoryOptions:
-              AVAudioSessionCategoryOptions.allowBluetooth,
-          avAudioSessionMode: AVAudioSessionMode.spokenAudio,
-          avAudioSessionRouteSharingPolicy:
-              AVAudioSessionRouteSharingPolicy.defaultPolicy,
-          avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
-          androidAudioAttributes: AndroidAudioAttributes(
-            contentType: AndroidAudioContentType.speech,
-            flags: AndroidAudioFlags.none,
-            usage: AndroidAudioUsage.voiceCommunication,
-          ),
-          androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
-          androidWillPauseWhenDucked: true,
-        ),
+        const AudioSessionConfiguration.music(),
       );
       // Activate the audio session before playing audio.
       if (_audioSession != null && await _audioSession!.setActive(true)) {
@@ -153,7 +142,20 @@ class MediaControlService {
       await _setMprisMetadata(audio);
     } else if (smtc != null) {
       await _setSmtcMetaData(audio);
+    } else if (_audioService != null) {
+      await _setAudioServiceMetaData(audio);
     }
+  }
+
+  Future<void> _setAudioServiceMetaData(Audio audio) async {
+    _audioService?.mediaItem.add(
+      MediaItem(
+        id: audio.toString(),
+        title: audio.title ?? '',
+        artist: audio.artist,
+        artUri: await createUriFromAudio(audio),
+      ),
+    );
   }
 
   Future<void> setPlayBackStatus(bool isPlaying) async {

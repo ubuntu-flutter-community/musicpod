@@ -125,11 +125,10 @@ class FullHeightPlayerControls extends StatelessWidget {
           onPressed: !active ? null : () => setRepeatSingle(!(repeatSingle)),
         ),
         VolumeSliderPopup(volume: volume, setVolume: setVolume),
-        if (!expand)
-          QueuePopup(
-            audio: audio,
-            queue: queue,
-          ),
+        QueuePopup(
+          audio: audio,
+          queue: queue,
+        ),
       ],
     );
   }

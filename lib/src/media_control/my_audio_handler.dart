@@ -1,5 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:stream_transform/stream_transform.dart';
 
 class MyAudioHandler extends BaseAudioHandler with SeekHandler {
   // mix in default seek callback implementations
@@ -9,7 +10,7 @@ class MyAudioHandler extends BaseAudioHandler with SeekHandler {
   final Future<void> Function() onNext;
   final Future<void> Function() onPrevious;
   final Future<void> Function()? onStop;
-  final Future<void> Function()? onPlayPause;
+  final Future<void> Function() onPlayPause;
   final bool isPlaying;
   final PlayerStream playerStream;
 
@@ -20,67 +21,57 @@ class MyAudioHandler extends BaseAudioHandler with SeekHandler {
     required this.onNext,
     required this.onPrevious,
     this.onStop,
-    this.onPlayPause,
+    required this.onPlayPause,
     required this.isPlaying,
     required this.playerStream,
   }) {
-    // So that our clients (the Flutter UI and the system notification) know
-    // what state to display, here we set up our audio handler to broadcast all
-    // playback state changes as they happen via playbackState...
-    playerStream.position
-        .map(
-          (e) => _transformEvent(
-            true,
-            e,
-          ),
-        )
-        .pipe(playbackState);
-
-    // ... and also the current media item via mediaItem.
-    // mediaItem.add(_item);
-
-    // Load the player.
-    // _player.setAudioSource(AudioSource.uri(Uri.parse(_item.id)));
+    _mergeStreams(
+      playerStream.playing,
+      playerStream.position,
+    ).map(_transformEvent).pipe(playbackState);
   }
 
-  // The most common callbacks:
   @override
   Future<void> play() async {
-    onPlayPause?.call();
+    await onPlayPause.call();
   }
 
   @override
   Future<void> pause() async {
-    onPause();
+    await onPause();
   }
 
   @override
-  Future<void> stop() async {}
+  Future<void> skipToNext() async {
+    await onNext();
+  }
 
-  /// Transform a just_audio event into an audio_service state.
-  ///
-  /// This method is used from the constructor. Every event received from the
-  /// just_audio player will be transformed into an audio_service state so that
-  /// it can be broadcast to audio_service clients.
-  PlaybackState _transformEvent(
-    bool isPlaying,
-    Duration position,
-  ) {
+  @override
+  Future<void> skipToPrevious() async {
+    await onPrevious();
+  }
+
+  PlaybackState _transformEvent((bool, Duration) e) {
     return PlaybackState(
       controls: [
-        // MediaControl.rewind,
-        if (isPlaying) MediaControl.pause else MediaControl.play,
-        // MediaControl.stop,
-        // MediaControl.fastForward,
+        MediaControl.skipToPrevious,
+        if (e.$1) MediaControl.pause else MediaControl.play,
+        MediaControl.skipToNext,
       ],
       systemActions: const {
-        // MediaAction.seek,
-        // MediaAction.seekForward,
-        // MediaAction.seekBackward,
+        MediaAction.seek,
       },
-      androidCompactActionIndices: const [0, 1, 3],
-      playing: isPlaying,
-      updatePosition: position,
+      androidCompactActionIndices: const [0, 1, 2],
+      playing: e.$1,
+      updatePosition: e.$2,
+      bufferedPosition: e.$2,
     );
   }
+}
+
+Stream<(bool, Duration)> _mergeStreams(
+  Stream<bool> playing,
+  Stream<Duration> position,
+) {
+  return playing.combineLatest(position, (a, b) => (a, b));
 }
