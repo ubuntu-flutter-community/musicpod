@@ -89,8 +89,10 @@ class _HeaderElement extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textStyle = TextStyle(
-      fontWeight: FontWeight.w100,
-      color: onAudioFilterSelected == null ? theme.hintColor : null,
+      fontWeight: mediumTextWeight,
+      color: onAudioFilterSelected == null
+          ? theme.colorScheme.onSurface.withOpacity(0.8)
+          : theme.colorScheme.onSurface,
     );
     return Expanded(
       flex: flex,

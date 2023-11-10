@@ -242,7 +242,10 @@ class FullHeightPlayer extends StatelessWidget {
             ),
           ),
         ),
-        if (nextAudio?.title != null && nextAudio?.artist != null && !isVideo)
+        if (nextAudio?.title != null &&
+            nextAudio?.artist != null &&
+            !isVideo &&
+            size.width > 600)
           Positioned(
             left: 10,
             bottom: 10,
@@ -400,7 +403,7 @@ class _FullHeightPlayerImage extends StatelessWidget {
       if (!isOnline) {
         image = Icon(
           iconData,
-          size: size.width / 2,
+          size: fullHeightPlayerImageSize * 0.7,
           color: theme.hintColor,
         );
       } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
@@ -410,7 +413,7 @@ class _FullHeightPlayerImage extends StatelessWidget {
           fit: BoxFit.cover,
           fallBackIcon: Icon(
             iconData,
-            size: size.width / 2,
+            size: fullHeightPlayerImageSize * 0.7,
             color: theme.hintColor,
           ),
           height: size.width,
@@ -419,7 +422,7 @@ class _FullHeightPlayerImage extends StatelessWidget {
       } else {
         image = Icon(
           iconData,
-          size: size.width / 2,
+          size: fullHeightPlayerImageSize * 0.7,
           color: theme.hintColor.withOpacity(0.4),
         );
       }

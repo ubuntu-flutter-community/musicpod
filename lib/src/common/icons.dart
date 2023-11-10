@@ -21,10 +21,8 @@ class Iconz {
   IconData get download => _l ? YaruIcons.download : Icons.download;
   IconData get podcast => _l ? YaruIcons.podcast : Icons.podcasts_outlined;
   IconData get podcastFilled => _l ? YaruIcons.podcast_filled : Icons.podcasts;
-  IconData get radio =>
-      _l ? YaruIcons.radio : Icons.settings_input_antenna_outlined;
-  IconData get radioFilled =>
-      _l ? YaruIcons.radio_filled : Icons.settings_input_antenna;
+  IconData get radio => _l ? YaruIcons.radio : Icons.radio_outlined;
+  IconData get radioFilled => _l ? YaruIcons.radio_filled : Icons.radio;
   IconData get localAudio =>
       _l ? YaruIcons.drive_harddisk : Icons.sd_storage_outlined;
   IconData get localAudioFilled =>
@@ -40,9 +38,8 @@ class Iconz {
   IconData get speakerMutedFilled =>
       _l ? YaruIcons.speaker_muted_filled : Icons.volume_off;
   IconData get fullScreenExit =>
-      _l ? YaruIcons.fullscreen_exit : Icons.arrow_drop_down;
-  IconData get fullScreen =>
-      _l ? YaruIcons.fullscreen : Icons.arrow_drop_up_outlined;
+      _l ? YaruIcons.fullscreen_exit : Icons.fullscreen_exit;
+  IconData get fullScreen => _l ? YaruIcons.fullscreen : Icons.fullscreen;
   IconData get repeatSingle => _l ? YaruIcons.repeat_single : Icons.repeat_one;
   IconData get shuffle => _l ? YaruIcons.shuffle : Icons.shuffle;
   IconData get skipBackward =>
@@ -53,7 +50,7 @@ class Iconz {
       _l ? YaruIcons.playlist_play : Icons.playlist_play;
   IconData get playlist => _l ? YaruIcons.playlist : Icons.list;
   IconData get pen => _l ? YaruIcons.pen : Icons.edit;
-  IconData get pin => _l ? YaruIcons.pin : Icons.sticky_note_2;
+  IconData get pin => _l ? YaruIcons.pin : Icons.push_pin;
   IconData get heart => _l ? YaruIcons.heart : Icons.favorite_outline;
   IconData get heartFilled => _l ? YaruIcons.heart_filled : Icons.favorite;
   IconData get globe => _l ? YaruIcons.globe : Icons.link;

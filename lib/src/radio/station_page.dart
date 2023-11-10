@@ -70,7 +70,7 @@ class StationPage extends StatelessWidget {
         : <String>[
             for (final tag in station.album?.split(',') ?? <String>[]) tag,
           ];
-    const size = fullHeightPlayerImageSize;
+    const size = fullHeightPlayerImageSize - 20;
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);

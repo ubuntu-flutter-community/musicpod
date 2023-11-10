@@ -62,9 +62,9 @@ class FullHeightPlayerControls extends StatelessWidget {
 
     final spacing = expand ? 0.0 : 7.0;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Wrap(
+      spacing: spacing,
+      runSpacing: spacing,
       children: [
         LikeIconButton(
           audio: audio,
@@ -75,17 +75,11 @@ class FullHeightPlayerControls extends StatelessWidget {
           removeLikedAudio: removeLikedAudio,
           addLikedAudio: addLikedAudio,
         ),
-        SizedBox(
-          width: spacing,
-        ),
         if (!expand)
           ShareButton(
             active: active,
             audio: audio,
           ),
-        SizedBox(
-          width: spacing,
-        ),
         IconButton(
           icon: Icon(
             Iconz().shuffle,
@@ -97,15 +91,9 @@ class FullHeightPlayerControls extends StatelessWidget {
           ),
           onPressed: !active ? null : () => setShuffle(!(shuffle)),
         ),
-        SizedBox(
-          width: spacing,
-        ),
         IconButton(
           onPressed: !active ? null : () => playPrevious(),
           icon: Icon(Iconz().skipBackward),
-        ),
-        SizedBox(
-          width: spacing,
         ),
         IconButton(
           onPressed: !active || audio == null
@@ -121,15 +109,9 @@ class FullHeightPlayerControls extends StatelessWidget {
             isPlaying ? Iconz().pause : Iconz().play,
           ),
         ),
-        SizedBox(
-          width: spacing,
-        ),
         IconButton(
           onPressed: !active ? null : () => playNext(),
           icon: Icon(Iconz().skipForward),
-        ),
-        SizedBox(
-          width: spacing,
         ),
         IconButton(
           icon: Icon(
@@ -142,19 +124,11 @@ class FullHeightPlayerControls extends StatelessWidget {
           ),
           onPressed: !active ? null : () => setRepeatSingle(!(repeatSingle)),
         ),
-        SizedBox(
-          width: spacing,
-        ),
         VolumeSliderPopup(volume: volume, setVolume: setVolume),
-        if (!expand)
-          SizedBox(
-            width: spacing,
-          ),
-        if (!expand)
-          QueuePopup(
-            audio: audio,
-            queue: queue,
-          ),
+        QueuePopup(
+          audio: audio,
+          queue: queue,
+        ),
       ],
     );
   }

@@ -306,11 +306,17 @@ Gradient? getAudioPageHeaderGradient(ThemeData theme) {
   }
 
   return LinearGradient(
-    begin: Alignment.bottomCenter,
-    end: Alignment.topCenter,
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
     colors: [
       Colors.transparent,
-      theme.colorScheme.primary.withOpacity(0.15),
+      theme.colorScheme.primary.withOpacity(0.01),
+      theme.colorScheme.primary.withOpacity(0.02),
+      theme.colorScheme.primary.withOpacity(0.03),
+      theme.colorScheme.primary.withOpacity(0.04),
+      theme.colorScheme.primary.withOpacity(0.05),
+      theme.colorScheme.primary.withOpacity(0.03),
+      theme.colorScheme.primary.withOpacity(0.01),
       Colors.transparent,
     ],
   );
