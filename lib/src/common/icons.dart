@@ -60,7 +60,7 @@ class Iconz {
 
   bool get _l => Platform.isLinux;
 
-  Widget getAnimatedStar(bool isStarred, Color color) {
+  Widget getAnimatedStar(bool isStarred, [Color? color]) {
     if (_l) {
       return YaruAnimatedIcon(
         isStarred
@@ -74,6 +74,24 @@ class Iconz {
       return isStarred
           ? const Icon(Icons.star)
           : const Icon(Icons.star_outline);
+    }
+  }
+
+  Widget getAnimatedHeartIcon({required bool liked, Color? color}) {
+    if (_l) {
+      return YaruAnimatedIcon(
+        liked
+            ? const YaruAnimatedHeartIcon(filled: true)
+            : const YaruAnimatedHeartIcon(filled: false),
+        initialProgress: 1.0,
+        color: color,
+        size: iconSize(),
+      );
+    } else {
+      return Icon(
+        liked ? Icons.favorite : Icons.favorite_outline,
+        color: color,
+      );
     }
   }
 

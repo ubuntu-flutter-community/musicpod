@@ -43,13 +43,9 @@ class LikeButton extends StatelessWidget {
     final heartButton = InkWell(
       borderRadius: BorderRadius.circular(10),
       onTap: () => liked ? removeLikedAudio(audio) : addLikedAudio(audio),
-      child: YaruAnimatedIcon(
-        liked
-            ? const YaruAnimatedHeartIcon(filled: true)
-            : const YaruAnimatedHeartIcon(filled: false),
-        initialProgress: 1.0,
-        color: audioSelected ? theme.colorScheme.onSurface : theme.hintColor,
-        size: iconSize(),
+      child: Iconz().getAnimatedHeartIcon(
+        liked: liked,
+        color: audioSelected ? theme.colorScheme.primary : theme.hintColor,
       ),
     );
 
