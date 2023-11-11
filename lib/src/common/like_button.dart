@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'stream_provider_share_button.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../data.dart';
-import 'icons.dart';
 import '../l10n/l10n.dart';
 import '../library/playlist_dialog.dart';
+import 'icons.dart';
+import 'stream_provider_share_button.dart';
 
 class LikeButton extends StatelessWidget {
   const LikeButton({
