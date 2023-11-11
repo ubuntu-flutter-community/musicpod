@@ -16,7 +16,8 @@ class TapAbleText extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final style = TextStyle(
-      color: selected ? theme.colorScheme.onSurface : theme.hintColor,
+      color: selected ? theme.colorScheme.primary : theme.hintColor,
+      fontWeight: selected ? FontWeight.bold : FontWeight.normal,
     );
     return Row(
       children: [

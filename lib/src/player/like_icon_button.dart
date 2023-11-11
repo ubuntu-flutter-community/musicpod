@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 
 import '../../data.dart';
 import '../common/icons.dart';
@@ -30,21 +29,11 @@ class LikeIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget likeIcon;
     if (audio?.audioType == AudioType.radio) {
-      likeIcon = YaruAnimatedIcon(
-        isStarredStation
-            ? const YaruAnimatedStarIcon(filled: true)
-            : const YaruAnimatedStarIcon(filled: false),
-        initialProgress: 1.0,
-        size: iconSize(),
+      likeIcon = Iconz().getAnimatedStar(
+        isStarredStation,
       );
     } else {
-      likeIcon = YaruAnimatedIcon(
-        liked
-            ? const YaruAnimatedHeartIcon(filled: true)
-            : const YaruAnimatedHeartIcon(filled: false),
-        initialProgress: 1.0,
-        size: iconSize(),
-      );
+      likeIcon = Iconz().getAnimatedHeartIcon(liked: liked);
     }
 
     final void Function()? onLike;
