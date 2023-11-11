@@ -44,7 +44,9 @@ class LikeButton extends StatelessWidget {
       onTap: () => liked ? removeLikedAudio(audio) : addLikedAudio(audio),
       child: Iconz().getAnimatedHeartIcon(
         liked: liked,
-        color: audioSelected ? theme.colorScheme.primary : theme.hintColor,
+        color: audioSelected
+            ? theme.colorScheme.primary
+            : theme.colorScheme.onSurface,
       ),
     );
 
