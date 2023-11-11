@@ -114,7 +114,7 @@ class FullHeightPlayer extends StatelessWidget {
         style: TextStyle(
           fontWeight: mediumTextWeight,
           fontSize: 30,
-          color: theme.colorScheme.onSurface.withOpacity(0.7),
+          color: theme.colorScheme.onSurface,
         ),
         textAlign: TextAlign.center,
         maxLines: 1,
@@ -138,7 +138,7 @@ class FullHeightPlayer extends StatelessWidget {
         style: TextStyle(
           fontWeight: smallTextFontWeight,
           fontSize: 20,
-          color: theme.colorScheme.onSurface.withOpacity(0.7),
+          color: theme.colorScheme.onSurface,
         ),
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
