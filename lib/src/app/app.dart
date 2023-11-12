@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../data.dart';
@@ -68,12 +65,14 @@ class App extends StatefulWidget {
   State<App> createState() => _AppState();
 }
 
-class _AppState extends State<App> {
+class _AppState extends State<App> with WidgetsBindingObserver {
   String? _countryCode;
 
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
 
     _countryCode = WidgetsBinding.instance.platformDispatcher.locale.countryCode
         ?.toLowerCase();
@@ -83,27 +82,20 @@ class _AppState extends State<App> {
     final connectivityNotifier = context.read<ConnectivityNotifier>();
 
     final extPathService = getService<ExternalPathService>();
-    //  final gtkNotifier = getService<GtkApplicationNotifier>();
-    // gtkNotifier.addCommandLineListener(
-    //   (args) => _playPath(
-    //     play: playerModel.play,
-    //     path: gtkNotifier.commandLine?.firstOrNull,
-    //   ),
-    // );
 
-    if (!Platform.isAndroid && !Platform.isIOS) {
-      YaruWindow.of(context).onClose(
-        () async {
-          await playerModel.dispose().then((_) async {
-            await libraryModel.dispose().then((_) async {
-              await resetAllServices();
-            });
-          });
+    // if (!Platform.isAndroid && !Platform.isIOS) {
+    //   YaruWindow.of(context).onClose(
+    //     () async {
+    //       await playerModel.dispose().then((_) async {
+    //         await libraryModel.dispose().then((_) async {
+    //           await resetAllServices();
+    //         });
+    //       });
 
-          return true;
-        },
-      );
-    }
+    //       return true;
+    //     },
+    //   );
+    // }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -122,6 +114,27 @@ class _AppState extends State<App> {
         },
       );
     });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        break;
+      case AppLifecycleState.paused:
+        resetAllServices();
+        break;
+      case AppLifecycleState.detached:
+        resetAllServices();
+      default:
+        break;
+    }
   }
 
   @override
