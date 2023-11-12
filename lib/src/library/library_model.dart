@@ -58,6 +58,10 @@ class LibraryModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> safeStates() async {
+    await _service.safeStates();
+  }
+
   @override
   Future<void> dispose() async {
     _localAudioIndexSub?.cancel();

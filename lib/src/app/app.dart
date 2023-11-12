@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
+import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../data.dart';
@@ -83,19 +86,14 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
     final extPathService = getService<ExternalPathService>();
 
-    // if (!Platform.isAndroid && !Platform.isIOS) {
-    //   YaruWindow.of(context).onClose(
-    //     () async {
-    //       await playerModel.dispose().then((_) async {
-    //         await libraryModel.dispose().then((_) async {
-    //           await resetAllServices();
-    //         });
-    //       });
-
-    //       return true;
-    //     },
-    //   );
-    // }
+    if (!Platform.isAndroid && !Platform.isIOS) {
+      YaruWindow.of(context).onClose(
+        () async {
+          await resetAllServices();
+          return true;
+        },
+      );
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -123,15 +121,17 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    final libraryModel = context.read<LibraryModel>();
     switch (state) {
       case AppLifecycleState.resumed:
         break;
       case AppLifecycleState.paused:
-        resetAllServices();
+        await libraryModel.safeStates();
         break;
       case AppLifecycleState.detached:
-        resetAllServices();
+        await libraryModel.safeStates();
+        break;
       default:
         break;
     }
