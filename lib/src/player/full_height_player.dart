@@ -98,6 +98,8 @@ class FullHeightPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    final activeControls = audio?.path != null || isOnline;
+
     final title = InkWell(
       borderRadius: BorderRadius.circular(10),
       onTap: () => onTitleTap(
@@ -147,7 +149,6 @@ class FullHeightPlayer extends StatelessWidget {
     );
 
     final controls = FullHeightPlayerControls(
-      expand: size.width < 600,
       audio: audio,
       setRepeatSingle: setRepeatSingle,
       repeatSingle: repeatSingle,
@@ -158,12 +159,6 @@ class FullHeightPlayer extends StatelessWidget {
       playNext: playNext,
       pause: pause,
       playOrPause: playOrPause,
-      liked: liked,
-      isStarredStation: isStarredStation,
-      addStarredStation: addStarredStation,
-      removeStarredStation: removeStarredStation,
-      addLikedAudio: addLikedAudio,
-      removeLikedAudio: removeLikedAudio,
       volume: volume,
       setVolume: setVolume,
       queue: queue,
@@ -189,11 +184,10 @@ class FullHeightPlayer extends StatelessWidget {
           )
         else
           SingleChildScrollView(
-            padding: const EdgeInsets.only(
+            padding: EdgeInsets.only(
               left: 35,
               right: 35,
-              bottom: 111,
-              top: 111,
+              top: size.height / 5.2,
             ),
             child: Center(
               child: Column(
@@ -205,7 +199,7 @@ class FullHeightPlayer extends StatelessWidget {
                     isOnline: isOnline,
                   ),
                   const SizedBox(
-                    height: 40,
+                    height: kYaruPagePadding,
                   ),
                   if (audio != null)
                     FittedBox(
@@ -213,15 +207,15 @@ class FullHeightPlayer extends StatelessWidget {
                     ),
                   artist,
                   const SizedBox(
-                    height: 40,
+                    height: kYaruPagePadding,
                   ),
                   SizedBox(
-                    height: 20,
+                    height: kYaruPagePadding,
                     width: 400,
                     child: sliderAndTime,
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: kYaruPagePadding,
                   ),
                   controls,
                 ],
@@ -230,33 +224,55 @@ class FullHeightPlayer extends StatelessWidget {
           ),
         Padding(
           padding: const EdgeInsets.all(kYaruPagePadding),
-          child: IconButton(
-            icon: Icon(
-              playerViewMode == PlayerViewMode.fullWindow
-                  ? Iconz().fullScreenExit
-                  : Iconz().fullScreen,
-              color: isVideo ? Colors.white : theme.colorScheme.onSurface,
-            ),
-            onPressed: () => setFullScreen(
-              playerViewMode == PlayerViewMode.fullWindow ? false : true,
-            ),
+          child: Wrap(
+            alignment: WrapAlignment.end,
+            spacing: 7.0,
+            children: [
+              LikeIconButton(
+                audio: audio,
+                liked: liked,
+                isStarredStation: isStarredStation,
+                removeStarredStation: removeStarredStation,
+                addStarredStation: addStarredStation,
+                removeLikedAudio: removeLikedAudio,
+                addLikedAudio: addLikedAudio,
+              ),
+              ShareButton(
+                audio: audio,
+                active: activeControls,
+              ),
+              VolumeSliderPopup(volume: volume, setVolume: setVolume),
+              IconButton(
+                icon: Icon(
+                  playerViewMode == PlayerViewMode.fullWindow
+                      ? Iconz().fullScreenExit
+                      : Iconz().fullScreen,
+                  color: isVideo ? Colors.white : theme.colorScheme.onSurface,
+                ),
+                onPressed: () => setFullScreen(
+                  playerViewMode == PlayerViewMode.fullWindow ? false : true,
+                ),
+              ),
+            ],
           ),
         ),
-        if (nextAudio?.title != null &&
-            nextAudio?.artist != null &&
-            !isVideo &&
-            size.width > 600)
+        if (nextAudio?.title != null && nextAudio?.artist != null && !isVideo)
           Positioned(
             left: 10,
             bottom: 10,
-            child: _UpNextBubble(
-              key: ObjectKey(queue),
-              isUpNextExpanded: isUpNextExpanded,
-              setUpNextExpanded: setUpNextExpanded,
-              queue: queue,
-              audio: audio,
-              nextAudio: nextAudio,
-            ),
+            child: size.width > 600
+                ? _UpNextBubble(
+                    key: ObjectKey(queue),
+                    isUpNextExpanded: isUpNextExpanded,
+                    setUpNextExpanded: setUpNextExpanded,
+                    queue: queue,
+                    audio: audio,
+                    nextAudio: nextAudio,
+                  )
+                : QueuePopup(
+                    audio: audio,
+                    queue: queue,
+                  ),
           ),
       ],
     );

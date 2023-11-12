@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../common.dart';
 import '../../data.dart';
-import '../../player.dart';
 
 class FullHeightPlayerControls extends StatelessWidget {
   const FullHeightPlayerControls({
@@ -17,17 +16,10 @@ class FullHeightPlayerControls extends StatelessWidget {
     required this.playNext,
     required this.pause,
     required this.playOrPause,
-    required this.liked,
-    required this.isStarredStation,
-    required this.removeStarredStation,
-    required this.addStarredStation,
-    required this.removeLikedAudio,
-    required this.addLikedAudio,
     required this.setVolume,
     required this.volume,
     required this.queue,
     required this.isOnline,
-    this.expand = false,
   });
 
   final Audio? audio;
@@ -41,15 +33,6 @@ class FullHeightPlayerControls extends StatelessWidget {
   final Future<void> Function() playNext;
   final Future<void> Function() pause;
   final Future<void> Function() playOrPause;
-  final bool liked;
-  final bool expand;
-
-  final bool isStarredStation;
-  final void Function(String station) removeStarredStation;
-  final void Function(String name, Set<Audio> stations) addStarredStation;
-
-  final void Function(Audio audio, bool notify) removeLikedAudio;
-  final void Function(Audio audio, bool notify) addLikedAudio;
   final double volume;
   final Future<void> Function(double value) setVolume;
   final bool isOnline;
@@ -60,26 +43,12 @@ class FullHeightPlayerControls extends StatelessWidget {
 
     final active = audio?.path != null || isOnline;
 
-    final spacing = expand ? 0.0 : 7.0;
+    const spacing = 7.0;
 
     return Wrap(
       spacing: spacing,
       runSpacing: spacing,
       children: [
-        LikeIconButton(
-          audio: audio,
-          liked: liked,
-          isStarredStation: isStarredStation,
-          removeStarredStation: removeStarredStation,
-          addStarredStation: addStarredStation,
-          removeLikedAudio: removeLikedAudio,
-          addLikedAudio: addLikedAudio,
-        ),
-        if (!expand)
-          ShareButton(
-            active: active,
-            audio: audio,
-          ),
         IconButton(
           icon: Icon(
             Iconz().shuffle,
@@ -95,18 +64,22 @@ class FullHeightPlayerControls extends StatelessWidget {
           onPressed: !active ? null : () => playPrevious(),
           icon: Icon(Iconz().skipBackward),
         ),
-        IconButton(
-          onPressed: !active || audio == null
-              ? null
-              : () {
-                  if (isPlaying) {
-                    pause();
-                  } else {
-                    playOrPause();
-                  }
-                },
-          icon: Icon(
-            isPlaying ? Iconz().pause : Iconz().play,
+        CircleAvatar(
+          backgroundColor: theme.colorScheme.inverseSurface,
+          child: IconButton(
+            color: theme.colorScheme.onInverseSurface,
+            onPressed: !active || audio == null
+                ? null
+                : () {
+                    if (isPlaying) {
+                      pause();
+                    } else {
+                      playOrPause();
+                    }
+                  },
+            icon: Icon(
+              isPlaying ? Iconz().pause : Iconz().play,
+            ),
           ),
         ),
         IconButton(
@@ -123,11 +96,6 @@ class FullHeightPlayerControls extends StatelessWidget {
                     : theme.colorScheme.onSurface),
           ),
           onPressed: !active ? null : () => setRepeatSingle(!(repeatSingle)),
-        ),
-        VolumeSliderPopup(volume: volume, setVolume: setVolume),
-        QueuePopup(
-          audio: audio,
-          queue: queue,
         ),
       ],
     );
