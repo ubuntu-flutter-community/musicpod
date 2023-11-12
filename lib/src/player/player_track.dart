@@ -9,7 +9,7 @@ class PlayerTrack extends StatelessWidget {
     this.position,
     required this.setPosition,
     required this.seek,
-    this.expand = false,
+    this.superNarrow = false,
   });
 
   final Color? color;
@@ -17,7 +17,7 @@ class PlayerTrack extends StatelessWidget {
   final Duration? position;
   final void Function(Duration?) setPosition;
   final Future<void> Function() seek;
-  final bool expand;
+  final bool superNarrow;
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +38,8 @@ class PlayerTrack extends StatelessWidget {
           pressedElevation: 0,
         ),
         minThumbSeparation: 0,
-        trackShape: const RectangularSliderTrackShape(),
-        trackHeight: expand ? 4 : 2,
+        trackShape: superNarrow ? const RectangularSliderTrackShape() : null,
+        trackHeight: superNarrow ? 4 : 2,
         inactiveTrackColor: color != null
             ? theme.colorScheme.onSurface.withOpacity(0.35)
             : theme.colorScheme.primary.withOpacity(0.5),
@@ -51,8 +51,8 @@ class PlayerTrack extends StatelessWidget {
             : theme.colorScheme.primary,
         overlayShape: RoundSliderThumbShape(
           elevation: 3,
-          enabledThumbRadius: expand ? 0 : 5.0,
-          disabledThumbRadius: expand ? 0 : 5.0,
+          enabledThumbRadius: superNarrow ? 0 : 5.0,
+          disabledThumbRadius: superNarrow ? 0 : 5.0,
         ),
       ),
       child: RepaintBoundary(
@@ -70,7 +70,7 @@ class PlayerTrack extends StatelessWidget {
       ),
     );
 
-    if (expand) {
+    if (superNarrow) {
       return SizedBox(width: 1000, child: slider);
     }
 
@@ -88,7 +88,10 @@ class PlayerTrack extends StatelessWidget {
           ],
         ),
         Expanded(
-          child: slider,
+          child: Padding(
+            padding: EdgeInsets.only(top: superNarrow ? 0 : 3),
+            child: slider,
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
