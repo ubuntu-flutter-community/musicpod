@@ -58,7 +58,6 @@ class MediaControlService {
           },
           pause: () async {
             onPause();
-            mpris?.playbackStatus = MPRISPlaybackStatus.paused;
           },
           next: () async {
             onNext();
