@@ -40,7 +40,6 @@ class MasterDetailPage extends StatelessWidget {
         appBar: HeaderBar(
           style: YaruTitleBarStyle.undecorated,
           title: const Text('MusicPod'),
-          leading: const AboutTile(),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 10),
