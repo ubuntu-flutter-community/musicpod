@@ -72,7 +72,7 @@ Future<void> main(List<String> args) async {
       mpris: mpris,
       smtc: smtc,
       initAudioHandler:
-          Platform.isAndroid, // TODO: || Platform.isIOS || Platform.isMacOS
+          Platform.isAndroid || Platform.isMacOS, // TODO: || Platform.isIOS
     ),
     dispose: (s) => s.dispose(),
   );

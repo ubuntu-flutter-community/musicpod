@@ -45,6 +45,7 @@ class Iconz {
   IconData get skipBackward =>
       _l ? YaruIcons.skip_backward : Icons.skip_previous;
   IconData get skipForward => _l ? YaruIcons.skip_forward : Icons.skip_next;
+  IconData get goBack => _l ? YaruIcons.go_previous : Icons.arrow_back;
   IconData get share => _l ? YaruIcons.share : Icons.share;
   IconData get startPlayList =>
       _l ? YaruIcons.playlist_play : Icons.playlist_play;

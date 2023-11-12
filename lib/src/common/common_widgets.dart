@@ -16,7 +16,24 @@ class NavBackButton extends StatelessWidget {
         ? const YaruBackButton(
             style: YaruBackButtonStyle.rounded,
           )
-        : const Center(child: BackButton());
+        : !Platform.isMacOS
+            ? const Center(child: BackButton())
+            : Padding(
+                padding: const EdgeInsets.only(top: 18.0),
+                child: Center(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () => Navigator.maybePop(context),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Icon(
+                        Iconz().goBack,
+                        size: 15,
+                      ),
+                    ),
+                  ),
+                ),
+              );
   }
 }
 
@@ -321,3 +338,7 @@ Gradient? getAudioPageHeaderGradient(ThemeData theme) {
     ],
   );
 }
+
+EdgeInsetsGeometry get appBarActionSpacing => Platform.isMacOS
+    ? const EdgeInsets.only(right: 5, left: 20)
+    : const EdgeInsets.only(right: 20, left: 20);

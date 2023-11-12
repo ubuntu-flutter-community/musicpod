@@ -5,7 +5,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../constants.dart';
-import '../common/common_widgets.dart';
 import '../common/icons.dart';
 import '../l10n/l10n.dart';
 
@@ -86,28 +85,23 @@ class AboutTile extends StatelessWidget {
       ),
     ];
 
-    return Center(
-      child: SizedBox(
-        height: shrinkTitleBarItems ? kYaruTitleBarItemHeight : null,
-        width: shrinkTitleBarItems ? kYaruTitleBarItemHeight : null,
-        child: IconButton(
-          icon: Icon(
-            Iconz().musicNote,
-          ),
-          onPressed: () {
-            return showAboutDialog(
-              applicationIcon: Image.asset(
-                'snap/gui/musicpod.png',
-                width: 64,
-                height: 64,
-              ),
-              applicationVersion: context.l10n.musicPodSubTitle,
-              context: context,
-              children: content,
-            );
-          },
-        ),
+    return TextButton.icon(
+      label: Text('${context.l10n.about} $kAppName'),
+      icon: Icon(
+        Iconz().musicNote,
       ),
+      onPressed: () {
+        return showAboutDialog(
+          applicationIcon: Image.asset(
+            'snap/gui/musicpod.png',
+            width: 64,
+            height: 64,
+          ),
+          applicationVersion: context.l10n.musicPodSubTitle,
+          context: context,
+          children: content,
+        );
+      },
     );
   }
 

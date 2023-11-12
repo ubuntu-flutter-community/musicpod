@@ -212,7 +212,7 @@ class _RadioPageState extends State<RadioPage> {
               : const SizedBox.shrink(),
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 20, left: 20),
+              padding: appBarActionSpacing,
               child: SearchButton(
                 active: searchActive,
                 onPressed: () => setSearchActive(!searchActive),
