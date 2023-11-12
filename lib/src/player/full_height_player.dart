@@ -97,6 +97,7 @@ class FullHeightPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
 
     final title = InkWell(
       borderRadius: BorderRadius.circular(10),
@@ -189,11 +190,11 @@ class FullHeightPlayer extends StatelessWidget {
           )
         else
           SingleChildScrollView(
-            padding: const EdgeInsets.only(
+            padding: EdgeInsets.only(
               left: 35,
               right: 35,
-              bottom: 111,
-              top: 111,
+              bottom: size.height / 6,
+              top: size.height / 5,
             ),
             child: Center(
               child: Column(
