@@ -192,7 +192,10 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> playOrPause() async {
-    return _firstPlay ? play(newPosition: _position) : _player.playOrPause();
+    return _firstPlay
+        ? play(newPosition: _position)
+            .then((_) => _mediaControlService.setPlayBackStatus(true))
+        : _player.playOrPause();
   }
 
   Future<void> pause() async {

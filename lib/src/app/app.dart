@@ -122,19 +122,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    final libraryModel = context.read<LibraryModel>();
-    switch (state) {
-      case AppLifecycleState.resumed:
-        break;
-      case AppLifecycleState.paused:
-        await libraryModel.safeStates();
-        break;
-      case AppLifecycleState.detached:
-        await libraryModel.safeStates();
-        break;
-      default:
-        await libraryModel.safeStates();
-        break;
+    if (state == AppLifecycleState.paused) {
+      await context.read<LibraryModel>().safeStates();
     }
   }
 
