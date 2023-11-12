@@ -161,6 +161,8 @@ class StationPage extends StatelessWidget {
                       ),
                       if (tags?.isNotEmpty == true)
                         YaruChoiceChipBar(
+                          goNextIcon: Icon(Iconz().goNext),
+                          goPreviousIcon: Icon(Iconz().goBack),
                           chipHeight: chipHeight,
                           yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.stack,
                           labels: tags!.map((e) => Text(e)).toList(),

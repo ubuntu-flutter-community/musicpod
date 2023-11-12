@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -28,6 +29,8 @@ class AudioPageFilterBar extends StatelessWidget {
           left: 28,
         ),
         child: YaruChoiceChipBar(
+          goNextIcon: Icon(Iconz().goNext),
+          goPreviousIcon: Icon(Iconz().goBack),
           chipHeight: chipHeight,
           yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.stack,
           labels:
