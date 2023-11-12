@@ -135,7 +135,7 @@ class BottomPlayer extends StatelessWidget {
       position: position,
       setPosition: setPosition,
       seek: seek,
-      expand: verySmall,
+      superNarrow: verySmall,
     );
 
     if (verySmall) {

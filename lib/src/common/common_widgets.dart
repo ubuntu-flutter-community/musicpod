@@ -303,7 +303,7 @@ bool get isMobile => Platform.isAndroid || Platform.isIOS || Platform.isFuchsia;
 
 bool get shrinkTitleBarItems => _yaruStyled;
 
-double get chipHeight => _yaruStyled ? kYaruTitleBarItemHeight : 40;
+double get chipHeight => _yaruStyled ? kYaruTitleBarItemHeight : 35;
 
 EdgeInsetsGeometry get gridPadding =>
     isMobile ? kMobileGridPadding : kGridPadding;
