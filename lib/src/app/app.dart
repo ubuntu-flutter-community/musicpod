@@ -133,6 +133,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         await libraryModel.safeStates();
         break;
       default:
+        await libraryModel.safeStates();
         break;
     }
   }
