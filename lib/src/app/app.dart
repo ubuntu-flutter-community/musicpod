@@ -68,12 +68,14 @@ class App extends StatefulWidget {
   State<App> createState() => _AppState();
 }
 
-class _AppState extends State<App> {
+class _AppState extends State<App> with WidgetsBindingObserver {
   String? _countryCode;
 
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
 
     _countryCode = WidgetsBinding.instance.platformDispatcher.locale.countryCode
         ?.toLowerCase();
@@ -83,23 +85,11 @@ class _AppState extends State<App> {
     final connectivityNotifier = context.read<ConnectivityNotifier>();
 
     final extPathService = getService<ExternalPathService>();
-    //  final gtkNotifier = getService<GtkApplicationNotifier>();
-    // gtkNotifier.addCommandLineListener(
-    //   (args) => _playPath(
-    //     play: playerModel.play,
-    //     path: gtkNotifier.commandLine?.firstOrNull,
-    //   ),
-    // );
 
     if (!Platform.isAndroid && !Platform.isIOS) {
       YaruWindow.of(context).onClose(
         () async {
-          await playerModel.dispose().then((_) async {
-            await libraryModel.dispose().then((_) async {
-              await resetAllServices();
-            });
-          });
-
+          await resetAllServices();
           return true;
         },
       );
@@ -122,6 +112,19 @@ class _AppState extends State<App> {
         },
       );
     });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.paused) {
+      await context.read<LibraryModel>().safeStates();
+    }
   }
 
   @override

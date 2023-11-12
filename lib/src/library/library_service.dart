@@ -312,9 +312,7 @@ class LibraryService {
   }
 
   Future<void> dispose() async {
-    await writeSetting(kLocalAudioIndex, _localAudioIndex.toString());
-    await writeSetting(kAppIndex, _appIndex.toString());
-    await writePlayerState();
+    await safeStates();
     await _albumsController.close();
     await _podcastsController.close();
     await _likedAudiosController.close();
@@ -325,7 +323,13 @@ class LibraryService {
     await _localAudioIndexController.close();
     await _neverShowFailedImportsController.close();
     await _lastFavController.close();
-    _updateController.close();
+    await _updateController.close();
+  }
+
+  Future<void> safeStates() async {
+    await writeSetting(kLocalAudioIndex, _localAudioIndex.toString());
+    await writeSetting(kAppIndex, _appIndex.toString());
+    await writePlayerState();
   }
 
   Future<void> disposePatchNotes() async {

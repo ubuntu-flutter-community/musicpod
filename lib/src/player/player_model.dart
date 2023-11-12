@@ -192,7 +192,10 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   Future<void> playOrPause() async {
-    return _firstPlay ? play(newPosition: _position) : _player.playOrPause();
+    return _firstPlay
+        ? play(newPosition: _position)
+            .then((_) => _mediaControlService.setPlayBackStatus(true))
+        : _player.playOrPause();
   }
 
   Future<void> pause() async {
@@ -211,13 +214,14 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> init() async {
     await _mediaControlService.init(
-      onPlay: play,
-      onPause: pause,
+      onPlay: playOrPause,
+      onPause: playOrPause,
       onNext: playNext,
       onPrevious: playPrevious,
-      isPlaying: isPlaying,
-      onPlayPause: playOrPause,
-      playerStream: _player.stream,
+      onSeek: (position) async {
+        setPosition(position);
+        await seek();
+      },
     );
 
     await _readPlayerState();
@@ -231,6 +235,7 @@ class PlayerModel extends SafeChangeNotifier {
     });
     _positionSub = _player.stream.position.listen((newPosition) {
       setPosition(newPosition);
+      _mediaControlService.setPosition(newPosition);
     });
 
     _isCompletedSub = _player.stream.completed.listen((value) async {

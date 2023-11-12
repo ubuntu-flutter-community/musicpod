@@ -9,7 +9,6 @@ environment:
 
 dependencies:
   audio_service: ^0.18.12
-  audio_session: ^0.1.16
   basic_utils: ^5.6.1
   cached_network_image: ^3.3.0
   collection: ^1.17.0

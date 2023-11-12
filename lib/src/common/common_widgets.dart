@@ -92,6 +92,9 @@ class Progress extends StatelessWidget {
             child: CircularProgressIndicator(
               strokeWidth: strokeWidth,
               value: value,
+              backgroundColor: value == null
+                  ? null
+                  : Theme.of(context).colorScheme.primary.withOpacity(0.3),
             ),
           );
   }

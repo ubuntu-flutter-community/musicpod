@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
-import 'package:audio_session/audio_session.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:smtc_windows/smtc_windows.dart';
 
@@ -15,7 +13,6 @@ class MediaControlService {
   final SMTCWindows? smtc;
   final bool? initAudioHandler;
   StreamSubscription<PressedButton>? _smtcSub;
-  AudioSession? _audioSession;
   MyAudioHandler? _audioService;
 
   MediaControlService({this.mpris, this.smtc, this.initAudioHandler});
@@ -25,10 +22,7 @@ class MediaControlService {
     required Future<void> Function() onPause,
     required Future<void> Function() onNext,
     required Future<void> Function() onPrevious,
-    Future<void> Function()? onStop,
-    required Future<void> Function() onPlayPause,
-    required bool isPlaying,
-    required PlayerStream playerStream,
+    required Future<void> Function(Duration position) onSeek,
   }) async {
     if (smtc != null) {
       _smtcSub = smtc?.buttonPressStream.listen((event) {
@@ -55,17 +49,15 @@ class MediaControlService {
       mpris?.setEventHandler(
         MPRISEventHandler(
           playPause: () async {
-            isPlaying ? onPause() : onPlayPause();
-            mpris?.playbackStatus = (isPlaying
-                ? MPRISPlaybackStatus.paused
-                : MPRISPlaybackStatus.playing);
+            mpris?.playbackStatus == MPRISPlaybackStatus.playing
+                ? onPause()
+                : onPlay();
           },
           play: () async {
             onPlay();
           },
           pause: () async {
             onPause();
-            mpris?.playbackStatus = MPRISPlaybackStatus.paused;
           },
           next: () async {
             onNext();
@@ -88,52 +80,10 @@ class MediaControlService {
             onNext: onNext,
             onPause: onPause,
             onPrevious: onPrevious,
-            onPlayPause: onPlayPause,
-            isPlaying: isPlaying,
-            playerStream: playerStream,
+            onSeek: onSeek,
           );
         },
       );
-
-      // _audioSession = await AudioSession.instance;
-      await _audioSession?.configure(
-        const AudioSessionConfiguration.music(),
-      );
-      // Activate the audio session before playing audio.
-      if (_audioSession != null && await _audioSession!.setActive(true)) {
-        // Now play audio.
-      } else {
-        // The request was denied and the app should not play audio
-      }
-
-      _audioSession?.interruptionEventStream.listen((event) {
-        if (event.begin) {
-          switch (event.type) {
-            case AudioInterruptionType.duck:
-              // Another app started playing audio and we should duck.
-              break;
-            case AudioInterruptionType.pause:
-            case AudioInterruptionType.unknown:
-              // Another app started playing audio and we should pause.
-              break;
-          }
-        } else {
-          switch (event.type) {
-            case AudioInterruptionType.duck:
-              // The interruption ended and we should unduck.
-              break;
-            case AudioInterruptionType.pause:
-            // The interruption ended and we should resume.
-            case AudioInterruptionType.unknown:
-              // The interruption ended but we should not resume.
-              break;
-          }
-        }
-      });
-
-      _audioSession?.becomingNoisyEventStream.listen((_) {
-        // The user unplugged the headphones, so we should pause or lower the volume.
-      });
     }
   }
 
@@ -147,23 +97,19 @@ class MediaControlService {
     }
   }
 
-  Future<void> _setAudioServiceMetaData(Audio audio) async {
-    _audioService?.mediaItem.add(
-      MediaItem(
-        id: audio.toString(),
-        title: audio.title ?? '',
-        artist: audio.artist,
-        artUri: await createUriFromAudio(audio),
-      ),
+  Future<void> setPlayBackStatus(bool playing) async {
+    mpris?.playbackStatus =
+        playing ? MPRISPlaybackStatus.playing : MPRISPlaybackStatus.paused;
+    smtc?.setPlaybackStatus(
+      playing ? PlaybackStatus.Playing : PlaybackStatus.Paused,
+    );
+    _audioService?.playbackState.add(
+      PlaybackState(playing: !playing),
     );
   }
 
-  Future<void> setPlayBackStatus(bool isPlaying) async {
-    mpris?.playbackStatus =
-        isPlaying ? MPRISPlaybackStatus.playing : MPRISPlaybackStatus.paused;
-    smtc?.setPlaybackStatus(
-      isPlaying ? PlaybackStatus.Playing : PlaybackStatus.Paused,
-    );
+  Future<void> setPosition(Duration position) async {
+    _audioService?.playbackState.add(PlaybackState(updatePosition: position));
   }
 
   Future<void> _setSmtcMetaData(Audio audio) async {
@@ -190,6 +136,20 @@ class MediaControlService {
       discNumber: audio.discNumber,
       title: audio.title,
       trackNumber: audio.trackNumber,
+    );
+  }
+
+  Future<void> _setAudioServiceMetaData(Audio audio) async {
+    _audioService?.mediaItem.add(
+      MediaItem(
+        id: audio.toString(),
+        duration: audio.durationMs == null
+            ? null
+            : Duration(milliseconds: audio.durationMs!.toInt()),
+        title: audio.title ?? '',
+        artist: audio.artist,
+        artUri: await createUriFromAudio(audio),
+      ),
     );
   }
 
