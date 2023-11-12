@@ -17,12 +17,11 @@ class MyAudioHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> play() async {
-    await onPlay.call();
+    await onPlay();
   }
 
   @override
   Future<void> pause() async {
-    print('blbalbalbala');
     await onPause();
   }
 
