@@ -54,6 +54,8 @@ Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https
 - [X] streaming provider agnostic sharing links
 - [ ] option to download podcasts (#[240](https://github.com/ubuntu-flutter-community/musicpod/issues/240))
 - [X] reduced memory allocation
+- [ ] WebDav support (#[248](https://github.com/ubuntu-flutter-community/musicpod/issues/248))
+- [ ] upnp/dlna support (#[248](https://github.com/ubuntu-flutter-community/musicpod/issues/247))
 
 ## Supported operating systems and package formats
 
