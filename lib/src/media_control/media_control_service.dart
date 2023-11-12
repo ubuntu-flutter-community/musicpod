@@ -104,7 +104,7 @@ class MediaControlService {
       playing ? PlaybackStatus.Playing : PlaybackStatus.Paused,
     );
     _audioService?.playbackState.add(
-      PlaybackState(playing: playing),
+      PlaybackState(playing: !playing),
     );
   }
 
