@@ -122,42 +122,42 @@ class StationPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 SizedBox(
-                  width: size * 0.95,
+                  width: size,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          CircleAvatar(
-                            radius: avatarIconSize,
-                            backgroundColor:
-                                theme.colorScheme.primary.withOpacity(0.4),
-                            child: IconButton(
-                              onPressed: isStarred
-                                  ? () => unStarStation(name)
-                                  : () => starStation(name),
-                              icon: Iconz().getAnimatedStar(
-                                isStarred,
-                                theme.colorScheme.onPrimary,
-                              ),
+                          IconButton(
+                            onPressed: isStarred
+                                ? () => unStarStation(name)
+                                : () => starStation(name),
+                            icon: Iconz().getAnimatedStar(
+                              isStarred,
                             ),
                           ),
                           const SizedBox(
-                            width: 10,
+                            width: 5,
                           ),
                           Expanded(
-                            child: Text(
-                              station.title?.replaceAll('_', '') ?? '',
-                              style: theme.textTheme.headlineSmall,
+                            child: Tooltip(
+                              message:
+                                  station.title?.replaceAll('_', '').trim() ??
+                                      '',
+                              child: Text(
+                                station.title?.replaceAll('_', '').trim() ?? '',
+                                style: theme.textTheme.bodyLarge,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 5,
                       ),
                       if (tags?.isNotEmpty == true)
                         YaruChoiceChipBar(
