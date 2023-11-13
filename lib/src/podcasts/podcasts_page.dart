@@ -94,7 +94,11 @@ class _PodcastsPageState extends State<PodcastsPage> {
         gridDelegate: imageGridDelegate,
         padding: gridPadding,
         children: List.generate(limit, (index) => Audio())
-            .map((e) => const AudioCard())
+            .map(
+              (e) => const AudioCard(
+                bottom: AudioCardBottom(),
+              ),
+            )
             .toList(),
       );
     } else if (searchResult.items.isEmpty == true) {
@@ -116,7 +120,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
           );
 
           return AudioCard(
-            bottom: AudioCardBottom(text: podcastItem.collectionName ?? ''),
+            bottom: AudioCardBottom(text: podcastItem.collectionName),
             image: image,
             onPlay: () {
               if (podcastItem.feedUrl == null) return;
