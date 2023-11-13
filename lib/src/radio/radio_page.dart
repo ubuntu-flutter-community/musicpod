@@ -158,7 +158,11 @@ class _RadioPageState extends State<RadioPage> {
             gridDelegate: imageGridDelegate,
             padding: gridPadding,
             children: List.generate(limit, (index) => Audio())
-                .map((e) => const AudioCard())
+                .map(
+                  (e) => const AudioCard(
+                    bottom: AudioCardBottom(),
+                  ),
+                )
                 .toList(),
           );
         } else {
