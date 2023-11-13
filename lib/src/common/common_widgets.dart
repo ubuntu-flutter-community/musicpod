@@ -12,28 +12,33 @@ class NavBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Platform.isLinux
-        ? const YaruBackButton(
-            style: YaruBackButtonStyle.rounded,
-          )
-        : !Platform.isMacOS
-            ? const Center(child: BackButton())
-            : Padding(
-                padding: const EdgeInsets.only(top: 18.0),
-                child: Center(
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    onTap: () => Navigator.maybePop(context),
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Icon(
-                        Iconz().goBack,
-                        size: 15,
-                      ),
-                    ),
-                  ),
+    if (Platform.isLinux) {
+      return const YaruBackButton(
+        style: YaruBackButtonStyle.rounded,
+      );
+    } else {
+      if (Platform.isMacOS) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 16, left: 13),
+          child: Center(
+            child: SizedBox(
+              height: 13,
+              width: 13,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(20),
+                onTap: () => Navigator.maybePop(context),
+                child: Icon(
+                  Iconz().goBack,
+                  size: 12,
                 ),
-              );
+              ),
+            ),
+          ),
+        );
+      } else {
+        return const Center(child: BackButton());
+      }
+    }
   }
 }
 
