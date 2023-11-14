@@ -1,5 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- ADD THESE TWO PERMISSIONS -->
+    <!--
+      Internet access permissions.
+      -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--
+        Media access permissions.
+        Android 13 or higher.
+        https://developer.android.com/about/versions/13/behavior-changes-13#granular-media-permissions
+        -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!-- Permissions options for the `storage` group -->
