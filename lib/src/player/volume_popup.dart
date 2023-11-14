@@ -8,10 +8,12 @@ class VolumeSliderPopup extends StatefulWidget {
     super.key,
     required this.volume,
     required this.setVolume,
+    this.color,
   });
 
   final double volume;
   final Future<void> Function(double value) setVolume;
+  final Color? color;
 
   @override
   State<VolumeSliderPopup> createState() => _VolumeSliderPopupState();
@@ -36,7 +38,10 @@ class _VolumeSliderPopupState extends State<VolumeSliderPopup> {
         return PopupMenuButton<double>(
           padding: EdgeInsets.zero,
           tooltip: context.l10n.volume,
-          icon: Icon(iconData),
+          icon: Icon(
+            iconData,
+            color: widget.color,
+          ),
           itemBuilder: (context) {
             return [
               PopupMenuItem(

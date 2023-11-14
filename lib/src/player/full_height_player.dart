@@ -173,6 +173,7 @@ class FullHeightPlayer extends StatelessWidget {
       seek: seek,
     );
 
+    final iconColor = isVideo ? Colors.white : theme.colorScheme.onSurface;
     final stack = Stack(
       alignment: Alignment.topRight,
       children: [
@@ -236,18 +237,24 @@ class FullHeightPlayer extends StatelessWidget {
                 addStarredStation: addStarredStation,
                 removeLikedAudio: removeLikedAudio,
                 addLikedAudio: addLikedAudio,
+                color: iconColor,
               ),
               ShareButton(
                 audio: audio,
                 active: activeControls,
+                color: iconColor,
               ),
-              VolumeSliderPopup(volume: volume, setVolume: setVolume),
+              VolumeSliderPopup(
+                volume: volume,
+                setVolume: setVolume,
+                color: iconColor,
+              ),
               IconButton(
                 icon: Icon(
                   playerViewMode == PlayerViewMode.fullWindow
                       ? Iconz().fullScreenExit
                       : Iconz().fullScreen,
-                  color: isVideo ? Colors.white : theme.colorScheme.onSurface,
+                  color: iconColor,
                 ),
                 onPressed: () => setFullScreen(
                   playerViewMode == PlayerViewMode.fullWindow ? false : true,
