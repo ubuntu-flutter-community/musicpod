@@ -13,6 +13,7 @@ class LikeIconButton extends StatelessWidget {
     required this.addStarredStation,
     required this.removeLikedAudio,
     required this.addLikedAudio,
+    this.color,
   });
 
   final Audio? audio;
@@ -24,6 +25,8 @@ class LikeIconButton extends StatelessWidget {
 
   final void Function(Audio audio, bool notify) removeLikedAudio;
   final void Function(Audio audio, bool notify) addLikedAudio;
+
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +61,7 @@ class LikeIconButton extends StatelessWidget {
     return IconButton(
       icon: likeIcon,
       onPressed: onLike,
+      color: color,
     );
   }
 }
