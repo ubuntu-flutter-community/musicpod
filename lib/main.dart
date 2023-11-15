@@ -77,7 +77,7 @@ Future<void> main(List<String> args) async {
     dispose: (s) => s.dispose(),
   );
 
-  registerService<RadioService>(() => RadioService(connectivity));
+  registerService<RadioService>(() => RadioService());
 
   runApp(
     MusicPod(yaruApp: Platform.isLinux),

@@ -47,7 +47,6 @@ class App extends StatefulWidget {
           create: (_) => PodcastModel(
             getService<PodcastService>(),
             getService<LibraryService>(),
-            getService<Connectivity>(),
           ),
         ),
         ChangeNotifierProvider(
