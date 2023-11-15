@@ -219,7 +219,7 @@ class PlayerService {
             ),
           );
     }
-    loadColor();
+    _loadColor();
     _firstPlay = false;
   }
 
@@ -250,41 +250,6 @@ class PlayerService {
         identity: kAppName,
         desktopEntry: kDesktopEntry,
       );
-    } else if (Platform.isWindows) {
-      _smtc = SMTCWindows(
-        config: const SMTCConfig(
-          fastForwardEnabled: false,
-          nextEnabled: true,
-          pauseEnabled: true,
-          playEnabled: true,
-          rewindEnabled: false,
-          prevEnabled: true,
-          stopEnabled: false,
-        ),
-      );
-    }
-    if (_smtc != null) {
-      _smtcSub = _smtc?.buttonPressStream.listen((event) {
-        switch (event) {
-          case PressedButton.play:
-            play()
-                .then((_) => _smtc?.setPlaybackStatus(PlaybackStatus.Playing));
-            break;
-          case PressedButton.pause:
-            pause()
-                .then((_) => _smtc?.setPlaybackStatus(PlaybackStatus.Paused));
-            break;
-          case PressedButton.next:
-            playNext();
-            break;
-          case PressedButton.previous:
-            playPrevious();
-            break;
-          default:
-            break;
-        }
-      });
-    } else if (_mpris != null) {
       _mpris?.setEventHandler(
         MPRISEventHandler(
           playPause: () async {
@@ -306,6 +271,38 @@ class PlayerService {
           },
         ),
       );
+    } else if (Platform.isWindows) {
+      _smtc = SMTCWindows(
+        config: const SMTCConfig(
+          fastForwardEnabled: false,
+          nextEnabled: true,
+          pauseEnabled: true,
+          playEnabled: true,
+          rewindEnabled: false,
+          prevEnabled: true,
+          stopEnabled: false,
+        ),
+      );
+      _smtcSub = _smtc?.buttonPressStream.listen((event) {
+        switch (event) {
+          case PressedButton.play:
+            play()
+                .then((_) => _smtc?.setPlaybackStatus(PlaybackStatus.Playing));
+            break;
+          case PressedButton.pause:
+            pause()
+                .then((_) => _smtc?.setPlaybackStatus(PlaybackStatus.Paused));
+            break;
+          case PressedButton.next:
+            playNext();
+            break;
+          case PressedButton.previous:
+            playPrevious();
+            break;
+          default:
+            break;
+        }
+      });
     } else if (Platform.isAndroid || Platform.isMacOS) {
       _audioService = await AudioService.init(
         config: const AudioServiceConfig(
@@ -435,12 +432,10 @@ class PlayerService {
     await play(newPosition: _position);
   }
 
-  final _colorController = StreamController<bool>.broadcast();
   Color? _color;
-  void resetColor() => _color = null;
   Color? get color => _color;
 
-  Future<void> loadColor() async {
+  Future<void> _loadColor() async {
     if (audio == null) return;
     if (audio?.path != null && audio?.pictureData != null) {
       final image = MemoryImage(
@@ -457,7 +452,6 @@ class PlayerService {
       final generator = await PaletteGenerator.fromImageProvider(image);
       _color = generator.dominantColor?.color;
     }
-    _colorController.add(true);
   }
 
   final _isUpNextExpandedController = StreamController<bool>.broadcast();
@@ -580,7 +574,6 @@ class PlayerService {
     await _isPlayingController.close();
     await _isUpNextExpandedController.close();
     await _repeatSingleController.close();
-    await _colorController.close();
     await _playerSub?.cancel();
     await _positionSub?.cancel();
     await _durationSub?.cancel();
