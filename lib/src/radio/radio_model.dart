@@ -84,8 +84,12 @@ class RadioModel extends SafeChangeNotifier {
   bool? _connected;
   bool? get connected => _connected;
 
-  Future<void> init(String? countryCode, String? lastFav) async {
-    _connected = await _radioService.init();
+  Future<void> init({
+    required String? countryCode,
+    required String? lastFav,
+    required bool isOnline,
+  }) async {
+    _connected = await _radioService.init(isOnline);
 
     _stationsSub =
         _radioService.stationsChanged.listen((_) => notifyListeners());

@@ -36,9 +36,11 @@ class _RadioPageState extends State<RadioPage> {
   void initState() {
     super.initState();
     readSetting(kLastFav).then(
-      (value) => context
-          .read<RadioModel>()
-          .init(widget.countryCode, value == null ? null : value as String),
+      (value) => context.read<RadioModel>().init(
+            isOnline: widget.isOnline,
+            countryCode: widget.countryCode,
+            lastFav: value == null ? null : value as String,
+          ),
     );
   }
 
@@ -147,8 +149,9 @@ class _RadioPageState extends State<RadioPage> {
           text: 'Not connected to any radiobrowser server.',
           init: () => readSetting(kLastFav).then(
             (value) => context.read<RadioModel>().init(
-                  widget.countryCode,
-                  value == null ? null : value as String,
+                  isOnline: widget.isOnline,
+                  countryCode: widget.countryCode,
+                  lastFav: value == null ? null : value as String,
                 ),
           ),
         );
@@ -172,8 +175,9 @@ class _RadioPageState extends State<RadioPage> {
                 text: statusCode,
                 init: () => readSetting(kLastFav).then(
                   (value) => context.read<RadioModel>().init(
-                        widget.countryCode,
-                        value == null ? null : value as String,
+                        isOnline: widget.isOnline,
+                        countryCode: widget.countryCode,
+                        lastFav: value == null ? null : value as String,
                       ),
                 ),
               );

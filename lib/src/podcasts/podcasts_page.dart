@@ -34,6 +34,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
       context.read<PodcastModel>().init(
             countryCode: widget.countryCode,
             updateMessage: context.l10n.newEpisodeAvailable,
+            isOnline: widget.isOnline,
           );
     });
   }
