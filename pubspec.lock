@@ -505,10 +505,10 @@ packages:
     dependency: "direct main"
     description:
       name: media_kit
-      sha256: f7abf466fc893021dbc90654c9f9588983bc30f8b7847e76db366a2adddf5ecb
+      sha256: "3289062540e3b8b9746e5c50d95bd78a9289826b7227e253dff806d002b9e67a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.10"
+    version: "1.1.10+1"
   media_kit_libs_android_video:
     dependency: transitive
     description:
