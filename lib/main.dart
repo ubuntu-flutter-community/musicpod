@@ -6,18 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:mpris_service/mpris_service.dart';
-import 'package:smtc_windows/smtc_windows.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import 'app.dart';
-import 'constants.dart';
 import 'external_path.dart';
 import 'library.dart';
 import 'local_audio.dart';
-import 'media_control.dart';
 import 'notifications.dart';
+import 'player.dart';
 import 'podcasts.dart';
 import 'radio.dart';
 
@@ -28,53 +25,24 @@ Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
 
-  final libraryService = LibraryService();
-  await libraryService.init();
-
   final player = Player(
     configuration: const PlayerConfiguration(title: 'MusicPod'),
   );
-  registerService<Player>(
-    () => player,
-    dispose: (p) => p.dispose(),
+
+  final controller = VideoController(player);
+
+  final libraryService = LibraryService();
+  await libraryService.init();
+
+  final playerService = PlayerService(
+    player,
+    controller,
+    libraryService: libraryService,
   );
+  await playerService.init();
 
-  registerService<VideoController>(() => VideoController(player));
-
-  NotificationsClient? notificationsClient;
-
-  // Media control
-  SMTCWindows? smtc;
-  MPRIS? mpris;
-  if (Platform.isLinux) {
-    notificationsClient = NotificationsClient();
-
-    mpris = await MPRIS.create(
-      busName: kBusName,
-      identity: kAppName,
-      desktopEntry: kDesktopEntry,
-    );
-  } else if (Platform.isWindows) {
-    smtc = SMTCWindows(
-      config: const SMTCConfig(
-        fastForwardEnabled: false,
-        nextEnabled: true,
-        pauseEnabled: true,
-        playEnabled: true,
-        rewindEnabled: false,
-        prevEnabled: true,
-        stopEnabled: false,
-      ),
-    );
-  }
-  registerService<MediaControlService>(
-    () => MediaControlService(
-      mpris: mpris,
-      smtc: smtc,
-      initAudioHandler:
-          Platform.isAndroid || Platform.isMacOS, // TODO: || Platform.isIOS
-    ),
-    dispose: (s) => s.dispose(),
+  registerService<PlayerService>(
+    () => playerService,
   );
 
   registerService<LibraryService>(
@@ -86,7 +54,9 @@ Future<void> main(List<String> args) async {
     dispose: (s) async => await s.dispose(),
   );
 
-  final notificationsService = NotificationsService(notificationsClient);
+  final notificationsService =
+      NotificationsService(Platform.isLinux ? NotificationsClient() : null);
+
   registerService<NotificationsService>(
     () => notificationsService,
     dispose: (s) async => await s.dispose(),

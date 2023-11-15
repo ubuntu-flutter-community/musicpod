@@ -98,8 +98,9 @@ class _PlayerViewState extends State<PlayerView> {
 
     final isVideo = context.select((PlayerModel m) => m.isVideo);
 
+    Widget player;
     if (widget.playerViewMode != PlayerViewMode.bottom) {
-      return FullHeightPlayer(
+      player = FullHeightPlayer(
         isVideo: isVideo == true,
         videoController: playerModel.controller,
         playerViewMode: widget.playerViewMode,
@@ -137,7 +138,7 @@ class _PlayerViewState extends State<PlayerView> {
         size: size,
       );
     } else {
-      return BottomPlayer(
+      player = BottomPlayer(
         isVideo: isVideo,
         videoController: playerModel.controller,
         onTextTap: widget.onTextTap,
@@ -171,6 +172,9 @@ class _PlayerViewState extends State<PlayerView> {
         isOnline: widget.isOnline,
       );
     }
+
+    // VERY important to reduce CPU usage
+    return RepaintBoundary(child: player);
   }
 }
 
