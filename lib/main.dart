@@ -35,8 +35,8 @@ Future<void> main(List<String> args) async {
   await libraryService.init();
 
   final playerService = PlayerService(
-    player,
-    controller,
+    player: player,
+    controller: controller,
     libraryService: libraryService,
   );
   await playerService.init();
@@ -80,8 +80,6 @@ Future<void> main(List<String> args) async {
   registerService<RadioService>(() => RadioService(connectivity));
 
   runApp(
-    MusicPod(
-      yaruApp: Platform.isLinux,
-    ),
+    MusicPod(yaruApp: Platform.isLinux),
   );
 }

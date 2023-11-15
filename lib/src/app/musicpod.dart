@@ -6,6 +6,7 @@ import 'package:yaru/yaru.dart';
 
 import '../l10n/l10n.dart';
 import 'app.dart';
+import 'theme.dart';
 
 class MusicPod extends StatelessWidget {
   const MusicPod({super.key, required this.yaruApp});
@@ -17,45 +18,35 @@ class MusicPod extends StatelessWidget {
     if (yaruApp) {
       return YaruTheme(
         builder: (context, yaruThemeData, child) {
-          final materialApp =
-              _app(yaruThemeData.theme, yaruThemeData.darkTheme);
+          final materialApp = MusicPodApp(
+            lightTheme: yaruThemeData.theme,
+            darkTheme: yaruThemeData.darkTheme,
+          );
           return GtkApplication(
             child: materialApp,
           );
         },
       );
     } else {
-      return _app(
-        _m3Theme(),
-        _m3Theme(brightness: Brightness.dark),
+      return MusicPodApp(
+        lightTheme: m3Theme(),
+        darkTheme: m3Theme(brightness: Brightness.dark),
       );
     }
   }
+}
 
-  ThemeData _m3Theme({
-    Brightness brightness = Brightness.light,
-    Color color = Colors.greenAccent,
-  }) {
-    final dividerColor = brightness == Brightness.light
-        ? const Color.fromARGB(48, 0, 0, 0)
-        : const Color.fromARGB(18, 255, 255, 255);
-    return ThemeData(
-      useMaterial3: true,
-      dividerColor: dividerColor,
-      dividerTheme: DividerThemeData(
-        color: dividerColor,
-        space: 1.0,
-        thickness: 0.0,
-      ),
-      colorScheme: ColorScheme.fromSeed(
-        surfaceTint: Colors.transparent,
-        seedColor: color,
-        brightness: brightness,
-      ),
-    );
-  }
+class MusicPodApp extends StatelessWidget {
+  const MusicPodApp({
+    super.key,
+    this.lightTheme,
+    this.darkTheme,
+  });
 
-  MaterialApp _app(ThemeData? lightTheme, ThemeData? darkTheme) {
+  final ThemeData? lightTheme, darkTheme;
+
+  @override
+  Widget build(BuildContext context) {
     const dividerColor = Color.fromARGB(28, 255, 255, 255);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
