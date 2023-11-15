@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -17,7 +16,6 @@ import '../../podcasts.dart';
 import '../../radio.dart';
 import '../common/colors.dart';
 import '../external_path/external_path_service.dart';
-import '../media_control/media_control_service.dart';
 import 'connectivity_notifier.dart';
 import 'master_detail_page.dart';
 import 'master_items.dart';
@@ -36,9 +34,7 @@ class App extends StatefulWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => PlayerModel(
-            videoController: getService<VideoController>(),
-            mediaControlService: getService<MediaControlService>(),
-            libraryService: getService<LibraryService>(),
+            service: getService<PlayerService>(),
           ),
         ),
         ChangeNotifierProvider(
