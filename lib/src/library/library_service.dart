@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
+import 'package:path/path.dart' as p;
 
 import '../../constants.dart';
 import '../../data.dart';
@@ -8,15 +10,17 @@ import '../../patch_notes.dart';
 import '../../utils.dart';
 
 class LibraryService {
-  //
-  // Local Audios "Cache"
-  //
-  Set<Audio>? _localAudioCache;
-  Set<Audio>? get localAudioCache => _localAudioCache;
-  final _localAudioCacheController = StreamController<bool>.broadcast();
-  Stream<bool> get localAudioCacheChanged => _localAudioCacheController.stream;
-
-  Future<void> writeLocalAudioCache(Set<Audio> audios) async {
+  Future<void> writeLocalAudioCache({
+    required Set<Audio> audios,
+    bool delete = false,
+  }) async {
+    if (delete) {
+      final workingDir = await getWorkingDir();
+      final file = File(p.join(workingDir, kLocalAudioCacheFileName));
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
+    }
     await writeAudioMap(
       {
         kLocalAudioCache: audios,
@@ -25,20 +29,25 @@ class LibraryService {
     );
   }
 
-  Future<void> _readLocalAudioCache() async {
+  Future<Set<Audio>?> readLocalAudioCache() async {
     final map = await readAudioMap(kLocalAudioCacheFileName);
-    _localAudioCache = map[kLocalAudioCache];
+    return map[kLocalAudioCache];
   }
 
-  Future<void> disposeCacheSuggestion() async {
+  Future<void> disposeCacheSuggestion(bool value) async {
     await writeSetting(
       kCacheSuggestionDisposed,
       'true',
     );
+    _cacheSuggestionDisposed = value;
+    _cacheSuggestionDisposedController.add(true);
   }
 
   bool _cacheSuggestionDisposed = false;
   bool get cacheSuggestionDisposed => _cacheSuggestionDisposed;
+  final _cacheSuggestionDisposedController = StreamController<bool>.broadcast();
+  Stream<bool> get cacheSuggestionDisposedChanged =>
+      _cacheSuggestionDisposedController.stream;
 
   Future<void> _readCacheSuggestionDisposed() async {
     String? value = await readSetting(kCacheSuggestionDisposed);
@@ -308,7 +317,7 @@ class LibraryService {
   Future<void> init() async {
     await _readRecentPatchNotesDisposed();
     await _readCacheSuggestionDisposed();
-    await _readLocalAudioCache();
+    await readLocalAudioCache();
 
     var neverShowImportsOrNull = await readSetting(kNeverShowImportFails);
     _neverShowFailedImports = neverShowImportsOrNull == null
@@ -353,7 +362,8 @@ class LibraryService {
 
   Future<void> dispose() async {
     await safeStates();
-    await _localAudioCacheController.close();
+    // await _localAudioCacheController.close();
+    await _cacheSuggestionDisposedController.close();
     await _albumsController.close();
     await _podcastsController.close();
     await _likedAudiosController.close();

@@ -133,7 +133,7 @@ Future<void> writeSetting(
 
   final workingDir = await getWorkingDir();
 
-  final file = File('$workingDir/$filename');
+  final file = File(p.join(workingDir, filename));
 
   if (!file.existsSync()) {
     file.create();
@@ -156,7 +156,7 @@ Future<Map<String, String>> getSettings([
 ]) async {
   final workingDir = await getWorkingDir();
 
-  final file = File('$workingDir/$filename');
+  final file = File(p.join(workingDir, filename));
 
   if (file.existsSync()) {
     final jsonStr = await file.readAsString();
@@ -192,7 +192,7 @@ Future<Set<String>> readStringSet({
   required String filename,
 }) async {
   final workingDir = await getWorkingDir();
-  final file = File('$workingDir/$filename');
+  final file = File(p.join(workingDir, filename));
 
   if (!file.existsSync()) return Future.value(<String>{});
 
@@ -212,9 +212,8 @@ Future<void> writeAudioMap(Map<String, Set<Audio>> map, String fileName) async {
   final jsonStr = jsonEncode(dynamicMap);
 
   final workingDir = await getWorkingDir();
-  final path = '$workingDir/$fileName';
 
-  final file = File(path);
+  final file = File(p.join(workingDir, fileName));
 
   if (!file.existsSync()) {
     file.create();
@@ -225,10 +224,9 @@ Future<void> writeAudioMap(Map<String, Set<Audio>> map, String fileName) async {
 
 Future<Map<String, Set<Audio>>> readAudioMap(String fileName) async {
   final workingDir = await getWorkingDir();
-  final path = '$workingDir/$fileName';
 
   try {
-    final file = File(path);
+    final file = File(p.join(workingDir, fileName));
 
     if (file.existsSync()) {
       final jsonStr = await file.readAsString();

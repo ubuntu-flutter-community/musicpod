@@ -39,18 +39,23 @@ class LocalAudioService {
     _audiosController.add(true);
   }
 
-  Future<List<String>> init() async {
-    _directory = await readSetting(kDirectoryProperty);
-    _directory ??= await getMusicDir();
+  Future<List<String>> init({Set<Audio>? cache}) async {
+    if (cache == null || cache.isEmpty) {
+      _directory = await readSetting(kDirectoryProperty);
+      _directory ??= await getMusicDir();
 
-    final result = await compute(_init, directory);
+      final result = await compute(_init, directory);
 
-    _audios = result.$2;
+      _audios = result.$2;
 
-    _audiosController.add(true);
-    _directoryController.add(true);
+      _audiosController.add(true);
+      _directoryController.add(true);
 
-    return result.$1;
+      return result.$1;
+    } else {
+      _audios = cache;
+      return [];
+    }
   }
 
   Future<void> dispose() async {

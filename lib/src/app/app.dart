@@ -280,6 +280,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
               ),
             );
       },
+      createLocalAudioCache: localAudioModel.createLocalAudioCache,
       totalListAmount: libraryModel.totalListAmount,
       index: index,
       masterItems: masterItems,

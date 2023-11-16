@@ -10,8 +10,8 @@ class CacheDialog extends StatelessWidget {
     required this.localAudioLength,
   });
 
-  final Future<void> Function() disposeCacheSuggestion;
-  final Future<void> Function() createCache;
+  final Future<void> Function(bool value) disposeCacheSuggestion;
+  final Future<void> Function({required bool delete}) createCache;
   final int localAudioLength;
 
   @override
@@ -24,15 +24,15 @@ class CacheDialog extends StatelessWidget {
       actions: [
         OutlinedButton(
           onPressed: () async {
-            await disposeCacheSuggestion()
+            await disposeCacheSuggestion(true)
                 .then((value) => Navigator.of(context).pop());
           },
           child: Text(context.l10n.noThankYou),
         ),
         ElevatedButton(
           onPressed: () async {
-            await createCache();
-            await disposeCacheSuggestion()
+            await createCache(delete: false);
+            await disposeCacheSuggestion(true)
                 .then((_) => Navigator.of(context).pop());
           },
           child: Text(context.l10n.ok),
@@ -44,8 +44,8 @@ class CacheDialog extends StatelessWidget {
 
 Future<void> showCacheSuggestion({
   required BuildContext context,
-  required Future<void> Function() disposeCacheSuggestion,
-  required Future<void> Function() createCache,
+  required Future<void> Function(bool value) disposeCacheSuggestion,
+  required Future<void> Function({required bool delete}) createCache,
   required int localAudioLength,
 }) {
   return showDialog(

@@ -147,10 +147,6 @@ class LocalAudioModel extends SafeChangeNotifier {
       localAudioService.setDirectory(value);
 
   Set<Audio>? get audios {
-    if (libraryService.localAudioCache?.isNotEmpty == true) {
-      return libraryService.localAudioCache;
-    }
-
     return localAudioService.audios;
   }
 
@@ -219,12 +215,14 @@ class LocalAudioModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _directoryChangedSub;
   StreamSubscription<bool>? _audiosChangedSub;
   StreamSubscription<bool>? _localAudioCacheChangedSub;
+  StreamSubscription<bool>? _cacheSuggestionDisposedChangedSub;
 
   @override
   Future<void> dispose() async {
     _directoryChangedSub?.cancel();
     _audiosChangedSub?.cancel();
     _localAudioCacheChangedSub?.cancel();
+    _cacheSuggestionDisposedChangedSub?.cancel();
     super.dispose();
   }
 
@@ -235,7 +233,8 @@ class LocalAudioModel extends SafeChangeNotifier {
     if (forceInit ||
         (localAudioService.audios == null ||
             localAudioService.audios?.isEmpty == true)) {
-      final failedImports = await localAudioService.init();
+      final cache = await libraryService.readLocalAudioCache();
+      final failedImports = await localAudioService.init(cache: cache);
 
       if (failedImports.isNotEmpty) {
         onFail(failedImports);
@@ -251,23 +250,30 @@ class LocalAudioModel extends SafeChangeNotifier {
     _audiosChangedSub = localAudioService.audiosChanged.listen((_) {
       notifyListeners();
     });
-    _localAudioCacheChangedSub =
-        libraryService.localAudioCacheChanged.listen((_) {
-      notifyListeners();
-    });
+
+    _cacheSuggestionDisposedChangedSub = libraryService
+        .cacheSuggestionDisposedChanged
+        .listen((_) => notifyListeners());
 
     notifyListeners();
   }
 
-  Future<void> disposeCacheSuggestion() async =>
-      await libraryService.disposeCacheSuggestion();
+  Future<void> disposeCacheSuggestion(bool value) async =>
+      await libraryService.disposeCacheSuggestion(value);
 
   bool get cacheSuggestionDisposed => libraryService.cacheSuggestionDisposed;
 
-  Future<void> createLocalAudioCache() async {
+  Future<void> createLocalAudioCache({required bool delete}) async {
     if (localAudioService.audios == null || localAudioService.audios!.isEmpty) {
       return;
     }
-    await libraryService.writeLocalAudioCache(localAudioService.audios!);
+    await libraryService.writeLocalAudioCache(
+      audios: localAudioService.audios!,
+      delete: delete,
+    );
+    final cache = await libraryService.readLocalAudioCache();
+    if (cache?.isNotEmpty == true) {
+      localAudioService.audios = cache!;
+    }
   }
 }
