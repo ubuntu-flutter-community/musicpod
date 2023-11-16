@@ -18,7 +18,7 @@ class SettingsTile extends StatelessWidget {
   });
 
   final Future<void> Function(String? directoryPath) onDirectorySelected;
-  final Future<void> Function({required bool delete}) createLocalAudioCache;
+  final Future<void> Function() createLocalAudioCache;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class SettingsTile extends StatelessWidget {
                     ),
                   ),
                   const SpacedDivider(
-                    top: 20,
+                    top: 0,
                     bottom: 0,
                   ),
                   const ShopRecommendations(),
@@ -64,19 +64,15 @@ class SettingsTile extends StatelessWidget {
                     bottom: 10,
                     top: 0,
                   ),
-                  const AboutTile(),
-                  const SpacedDivider(
-                    bottom: 10,
-                    top: 0,
-                  ),
                   TextButton.icon(
-                    onPressed: () async {
-                      await createLocalAudioCache(delete: true);
-                      await writeSetting(kCacheSuggestionDisposed, 'false');
+                    onPressed: () {
+                      createLocalAudioCache();
+                      writeSetting(kCacheSuggestionDisposed, 'false');
                     },
                     icon: Icon(Iconz().refresh),
                     label: Text(context.l10n.recreateLocalAudioCache),
                   ),
+                  const AboutTile(),
                 ],
               ),
             ),

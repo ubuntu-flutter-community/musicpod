@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:collection/collection.dart';
-import 'package:path/path.dart' as p;
 
 import '../../constants.dart';
 import '../../data.dart';
@@ -10,17 +8,7 @@ import '../../patch_notes.dart';
 import '../../utils.dart';
 
 class LibraryService {
-  Future<void> writeLocalAudioCache({
-    required Set<Audio> audios,
-    bool delete = false,
-  }) async {
-    if (delete) {
-      final workingDir = await getWorkingDir();
-      final file = File(p.join(workingDir, kLocalAudioCacheFileName));
-      if (file.existsSync()) {
-        file.deleteSync();
-      }
-    }
+  Future<void> writeLocalAudioCache({required Set<Audio> audios}) async {
     await writeAudioMap(
       {
         kLocalAudioCache: audios,
@@ -317,7 +305,10 @@ class LibraryService {
     _neverShowFailedImportsController.add(true);
   }
 
+  bool _initialized = false;
   Future<void> init() async {
+    if (_initialized) return;
+
     await _readRecentPatchNotesDisposed();
     await _readCacheSuggestionDisposed();
     await readLocalAudioCache();
@@ -347,6 +338,8 @@ class LibraryService {
             <Audio>{};
 
     _favTags = (await readStringSet(filename: kTagFavsFileName));
+
+    _initialized = true;
   }
 
   int? _localAudioIndex;
@@ -365,7 +358,6 @@ class LibraryService {
 
   Future<void> dispose() async {
     await safeStates();
-    // await _localAudioCacheController.close();
     await _cacheSuggestionDisposedController.close();
     await _albumsController.close();
     await _podcastsController.close();
