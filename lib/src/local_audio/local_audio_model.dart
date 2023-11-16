@@ -233,8 +233,8 @@ class LocalAudioModel extends SafeChangeNotifier {
     if (forceInit ||
         (localAudioService.audios == null ||
             localAudioService.audios?.isEmpty == true)) {
-      final cache = await libraryService.readLocalAudioCache();
-      final failedImports = await localAudioService.init(cache: cache);
+      final failedImports =
+          await localAudioService.init(cache: libraryService.localAudioCache);
 
       if (failedImports.isNotEmpty) {
         onFail(failedImports);
