@@ -11,7 +11,7 @@ class CacheDialog extends StatelessWidget {
   });
 
   final Future<void> Function(bool value) disposeCacheSuggestion;
-  final Future<void> Function({required bool delete}) createCache;
+  final Future<void> Function() createCache;
   final int localAudioLength;
 
   @override
@@ -31,7 +31,7 @@ class CacheDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            createCache(delete: false);
+            createCache();
             disposeCacheSuggestion(true)
                 .then((_) => Navigator.of(context).pop());
           },
@@ -45,7 +45,7 @@ class CacheDialog extends StatelessWidget {
 Future<void> showCacheSuggestion({
   required BuildContext context,
   required Future<void> Function(bool value) disposeCacheSuggestion,
-  required Future<void> Function({required bool delete}) createCache,
+  required Future<void> Function() createCache,
   required int localAudioLength,
 }) {
   return showDialog(

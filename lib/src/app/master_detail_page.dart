@@ -28,7 +28,7 @@ class MasterDetailPage extends StatelessWidget {
   final List<MasterItem> masterItems;
   final void Function(String name, Set<Audio> audios) addPlaylist;
   final Future<void> Function(String?) onDirectorySelected;
-  final Future<void> Function({required bool delete}) createLocalAudioCache;
+  final Future<void> Function() createLocalAudioCache;
 
   @override
   Widget build(BuildContext context) {

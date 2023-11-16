@@ -67,10 +67,10 @@ class MusicPodApp extends StatelessWidget {
       home: FutureBuilder(
         future: getService<LibraryService>().init(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SplashScreen();
+          if (snapshot.connectionState == ConnectionState.done) {
+            return App.create();
           }
-          return App.create();
+          return const SplashScreen();
         },
       ),
       scrollBehavior: const MaterialScrollBehavior().copyWith(
