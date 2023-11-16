@@ -23,16 +23,16 @@ class CacheDialog extends StatelessWidget {
       ),
       actions: [
         OutlinedButton(
-          onPressed: () async {
-            await disposeCacheSuggestion(true)
+          onPressed: () {
+            disposeCacheSuggestion(true)
                 .then((value) => Navigator.of(context).pop());
           },
           child: Text(context.l10n.noThankYou),
         ),
         ElevatedButton(
-          onPressed: () async {
-            await createCache(delete: false);
-            await disposeCacheSuggestion(true)
+          onPressed: () {
+            createCache(delete: false);
+            disposeCacheSuggestion(true)
                 .then((_) => Navigator.of(context).pop());
           },
           child: Text(context.l10n.ok),

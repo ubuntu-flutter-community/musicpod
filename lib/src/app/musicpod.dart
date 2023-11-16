@@ -2,8 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:gtk/gtk.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app.dart';
+import '../../library.dart';
 import '../l10n/l10n.dart';
 import 'app.dart';
 import 'theme.dart';
@@ -18,12 +21,11 @@ class MusicPod extends StatelessWidget {
     if (yaruApp) {
       return YaruTheme(
         builder: (context, yaruThemeData, child) {
-          final materialApp = MusicPodApp(
-            lightTheme: yaruThemeData.theme,
-            darkTheme: yaruThemeData.darkTheme,
-          );
           return GtkApplication(
-            child: materialApp,
+            child: MusicPodApp(
+              lightTheme: yaruThemeData.theme,
+              darkTheme: yaruThemeData.darkTheme,
+            ),
           );
         },
       );
@@ -62,7 +64,15 @@ class MusicPodApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => 'MusicPod',
-      home: App.create(),
+      home: FutureBuilder(
+        future: getService<LibraryService>().init(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SplashScreen();
+          }
+          return App.create();
+        },
+      ),
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,

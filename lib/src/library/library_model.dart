@@ -22,8 +22,6 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _favTagsSub;
   StreamSubscription<bool>? _lastFavSub;
 
-  bool ready = false;
-
   bool get neverShowFailedImports => _service.neverShowFailedImports;
   Future<void> setNeverShowLocalImports() async =>
       await _service.setNeverShowFailedImports();
@@ -54,7 +52,6 @@ class LibraryModel extends SafeChangeNotifier {
     _favTagsSub = _service.favTagsChanged.listen((_) => notifyListeners());
     _lastFavSub = _service.lastFavChanged.listen((_) => notifyListeners());
 
-    ready = true;
     notifyListeners();
   }
 
