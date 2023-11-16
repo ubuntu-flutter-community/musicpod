@@ -29,9 +29,12 @@ class LibraryService {
     );
   }
 
+  Set<Audio>? _localAudioCache;
+  Set<Audio>? get localAudioCache => _localAudioCache;
   Future<Set<Audio>?> readLocalAudioCache() async {
     final map = await readAudioMap(kLocalAudioCacheFileName);
-    return map[kLocalAudioCache];
+    _localAudioCache = map[kLocalAudioCache];
+    return _localAudioCache;
   }
 
   Future<void> disposeCacheSuggestion(bool value) async {
