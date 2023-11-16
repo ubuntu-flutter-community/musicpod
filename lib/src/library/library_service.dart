@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:collection/collection.dart';
 
@@ -10,6 +8,45 @@ import '../../patch_notes.dart';
 import '../../utils.dart';
 
 class LibraryService {
+  //
+  // Local Audios "Cache"
+  //
+  Map<String, Set<Audio>>? _localAudioCache;
+  Map<String, Set<Audio>>? get localAudioCache => _localAudioCache;
+  final _localAudioCacheController = StreamController<bool>.broadcast();
+  Stream<bool> get localAudioCacheChanged => _localAudioCacheController.stream;
+
+  Future<void> writeLocalAudioCache(Set<Audio> audios) async {
+    await writeAudioMap(
+      {
+        kLocalAudioCache: audios,
+      },
+      kLocalAudioCacheFileName,
+    );
+  }
+
+  Future<Set<Audio>> readLocalAudioCache() async {
+    final map = await readAudioMap(kLocalAudioCacheFileName);
+    return map[kLocalAudioCache] ?? <Audio>{};
+  }
+
+  Future<void> disposeCacheSuggestion() async {
+    await writeSetting(
+      kCacheSuggestionDisposed,
+      true,
+    );
+  }
+
+  bool _cacheSuggestionDisposed = false;
+  bool get cacheSuggestionDisposed => _cacheSuggestionDisposed;
+
+  Future<void> _readCacheSuggestionDisposed() async {
+    bool? value = await readSetting(kCacheSuggestionDisposed);
+    if (value == true) {
+      _cacheSuggestionDisposed = true;
+    }
+  }
+
   //
   // last positions
   //
@@ -41,7 +78,7 @@ class LibraryService {
   void addLikedAudio(Audio audio, [bool notify = true]) {
     _likedAudios.add(audio);
     if (notify) {
-      _write({'likedAudios': _likedAudios}, kLikedAudios)
+      writeAudioMap({'likedAudios': _likedAudios}, kLikedAudios)
           .then((value) => _likedAudiosController.add(true));
     }
   }
@@ -50,7 +87,7 @@ class LibraryService {
     for (var audio in audios) {
       addLikedAudio(audio, false);
     }
-    _write({'likedAudios': _likedAudios}, kLikedAudios)
+    writeAudioMap({'likedAudios': _likedAudios}, kLikedAudios)
         .then((value) => _likedAudiosController.add(true));
   }
 
@@ -61,7 +98,7 @@ class LibraryService {
   void removeLikedAudio(Audio audio, [bool notify = true]) {
     _likedAudios.remove(audio);
     if (notify) {
-      _write({'likedAudios': _likedAudios}, kLikedAudios)
+      writeAudioMap({'likedAudios': _likedAudios}, kLikedAudios)
           .then((value) => _likedAudiosController.add(true));
     }
   }
@@ -70,7 +107,7 @@ class LibraryService {
     for (var audio in audios) {
       removeLikedAudio(audio, false);
     }
-    _write({'likedAudios': _likedAudios}, kLikedAudios)
+    writeAudioMap({'likedAudios': _likedAudios}, kLikedAudios)
         .then((value) => _likedAudiosController.add(true));
   }
 
@@ -86,13 +123,13 @@ class LibraryService {
 
   void addStarredStation(String name, Set<Audio> audios) {
     _starredStations.putIfAbsent(name, () => audios);
-    _write(_starredStations, kStarredStationsFileName)
+    writeAudioMap(_starredStations, kStarredStationsFileName)
         .then((_) => _starredStationsController.add(true));
   }
 
   void unStarStation(String name) {
     _starredStations.remove(name);
-    _write(_starredStations, kStarredStationsFileName)
+    writeAudioMap(_starredStations, kStarredStationsFileName)
         .then((_) => _starredStationsController.add(true));
   }
 
@@ -142,13 +179,13 @@ class LibraryService {
 
   void addPlaylist(String name, Set<Audio> audios) {
     _playlists.putIfAbsent(name, () => audios);
-    _write(_playlists, kPlaylistsFileName)
+    writeAudioMap(_playlists, kPlaylistsFileName)
         .then((_) => _playlistsController.add(true));
   }
 
   void removePlaylist(String name) {
     _playlists.remove(name);
-    _write(_playlists, kPlaylistsFileName)
+    writeAudioMap(_playlists, kPlaylistsFileName)
         .then((_) => _playlistsController.add(true));
   }
 
@@ -160,7 +197,7 @@ class LibraryService {
       _playlists.putIfAbsent(newName, () => oldList);
     }
 
-    _write(_playlists, kPlaylistsFileName)
+    writeAudioMap(_playlists, kPlaylistsFileName)
         .then((_) => _playlistsController.add(true));
   }
 
@@ -174,7 +211,7 @@ class LibraryService {
       }
       p.add(audio);
     }
-    _write(_playlists, kPlaylistsFileName)
+    writeAudioMap(_playlists, kPlaylistsFileName)
         .then((_) => _playlistsController.add(true));
   }
 
@@ -183,7 +220,7 @@ class LibraryService {
     if (p != null && p.contains(audio)) {
       p.remove(audio);
     }
-    _write(_playlists, kPlaylistsFileName)
+    writeAudioMap(_playlists, kPlaylistsFileName)
         .then((_) => _playlistsController.add(true));
   }
 
@@ -197,14 +234,14 @@ class LibraryService {
 
   void addPodcast(String feedUrl, Set<Audio> audios) {
     _podcasts.putIfAbsent(feedUrl, () => audios);
-    _write(_podcasts, kPodcastsFileName)
+    writeAudioMap(_podcasts, kPodcastsFileName)
         .then((_) => _podcastsController.add(true));
   }
 
   void updatePodcast(String feedUrl, Set<Audio> audios) {
     if (feedUrl.isEmpty || audios.isEmpty) return;
     _podcasts.update(feedUrl, (value) => audios);
-    _write(_podcasts, kPodcastsFileName)
+    writeAudioMap(_podcasts, kPodcastsFileName)
         .then((_) => _podcastsController.add(true))
         .then((_) => podcastUpdates.add(feedUrl))
         .then((_) => _updateController.add(true));
@@ -223,7 +260,7 @@ class LibraryService {
 
   void removePodcast(String name) {
     _podcasts.remove(name);
-    _write(_podcasts, kPodcastsFileName)
+    writeAudioMap(_podcasts, kPodcastsFileName)
         .then((_) => _podcastsController.add(true));
   }
 
@@ -244,13 +281,13 @@ class LibraryService {
 
   void addPinnedAlbum(String name, Set<Audio> audios) {
     _pinnedAlbums.putIfAbsent(name, () => audios);
-    _write(_pinnedAlbums, kPinnedAlbumsFileName)
+    writeAudioMap(_pinnedAlbums, kPinnedAlbumsFileName)
         .then((_) => _albumsController.add(true));
   }
 
   void removePinnedAlbum(String name) {
     _pinnedAlbums.remove(name);
-    _write(_pinnedAlbums, kPinnedAlbumsFileName)
+    writeAudioMap(_pinnedAlbums, kPinnedAlbumsFileName)
         .then((_) => _albumsController.add(true));
   }
 
@@ -270,6 +307,7 @@ class LibraryService {
 
   Future<void> init() async {
     await _readRecentPatchNotesDisposed();
+    await _readCacheSuggestionDisposed();
 
     var neverShowImportsOrNull = await readSetting(kNeverShowImportFails);
     _neverShowFailedImports = neverShowImportsOrNull == null
@@ -283,16 +321,17 @@ class LibraryService {
     _localAudioIndex =
         localAudioIndexOrNull == null ? 0 : int.parse(localAudioIndexOrNull);
 
-    _playlists = await _read(kPlaylistsFileName);
-    _pinnedAlbums = await _read(kPinnedAlbumsFileName);
-    _podcasts = await _read(kPodcastsFileName);
-    _starredStations = await _read(kStarredStationsFileName);
+    _playlists = await readAudioMap(kPlaylistsFileName);
+    _pinnedAlbums = await readAudioMap(kPinnedAlbumsFileName);
+    _podcasts = await readAudioMap(kPodcastsFileName);
+    _starredStations = await readAudioMap(kStarredStationsFileName);
     _lastPositions = (await getSettings(kLastPositionsFileName)).map(
       (key, value) => MapEntry(key, parseDuration(value) ?? Duration.zero),
     );
 
     _likedAudios =
-        (await _read(kLikedAudios)).entries.firstOrNull?.value ?? <Audio>{};
+        (await readAudioMap(kLikedAudios)).entries.firstOrNull?.value ??
+            <Audio>{};
 
     _favTags = (await readStringSet(filename: kTagFavsFileName));
   }
@@ -313,6 +352,7 @@ class LibraryService {
 
   Future<void> dispose() async {
     await safeStates();
+    await _localAudioCacheController.close();
     await _albumsController.close();
     await _podcastsController.close();
     await _likedAudiosController.close();
@@ -379,57 +419,5 @@ class LibraryService {
     }
 
     return (position, duration, audio);
-  }
-}
-
-Future<void> _write(Map<String, Set<Audio>> map, String fileName) async {
-  final dynamicMap = map.map(
-    (key, value) => MapEntry<String, List<dynamic>>(
-      key,
-      value.map((audio) => audio.toMap()).toList(),
-    ),
-  );
-
-  final jsonStr = jsonEncode(dynamicMap);
-
-  final workingDir = await getWorkingDir();
-  final path = '$workingDir/$fileName';
-
-  final file = File(path);
-
-  if (!file.existsSync()) {
-    file.create();
-  }
-
-  await file.writeAsString(jsonStr);
-}
-
-Future<Map<String, Set<Audio>>> _read(String fileName) async {
-  final workingDir = await getWorkingDir();
-  final path = '$workingDir/$fileName';
-
-  try {
-    final file = File(path);
-
-    if (file.existsSync()) {
-      final jsonStr = await file.readAsString();
-
-      final map = jsonDecode(jsonStr) as Map<String, dynamic>;
-
-      final m = map.map(
-        (key, value) => MapEntry<String, Set<Audio>>(
-          key,
-          Set.from(
-            (value as List<dynamic>).map((e) => Audio.fromMap(e)),
-          ),
-        ),
-      );
-
-      return m;
-    } else {
-      return <String, Set<Audio>>{};
-    }
-  } on Exception catch (_) {
-    return <String, Set<Audio>>{};
   }
 }

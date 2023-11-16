@@ -201,6 +201,58 @@ Future<Set<String>> readStringSet({
   return Set.from(content);
 }
 
+Future<void> writeAudioMap(Map<String, Set<Audio>> map, String fileName) async {
+  final dynamicMap = map.map(
+    (key, value) => MapEntry<String, List<dynamic>>(
+      key,
+      value.map((audio) => audio.toMap()).toList(),
+    ),
+  );
+
+  final jsonStr = jsonEncode(dynamicMap);
+
+  final workingDir = await getWorkingDir();
+  final path = '$workingDir/$fileName';
+
+  final file = File(path);
+
+  if (!file.existsSync()) {
+    file.create();
+  }
+
+  await file.writeAsString(jsonStr);
+}
+
+Future<Map<String, Set<Audio>>> readAudioMap(String fileName) async {
+  final workingDir = await getWorkingDir();
+  final path = '$workingDir/$fileName';
+
+  try {
+    final file = File(path);
+
+    if (file.existsSync()) {
+      final jsonStr = await file.readAsString();
+
+      final map = jsonDecode(jsonStr) as Map<String, dynamic>;
+
+      final m = map.map(
+        (key, value) => MapEntry<String, Set<Audio>>(
+          key,
+          Set.from(
+            (value as List<dynamic>).map((e) => Audio.fromMap(e)),
+          ),
+        ),
+      );
+
+      return m;
+    } else {
+      return <String, Set<Audio>>{};
+    }
+  } on Exception catch (_) {
+    return <String, Set<Audio>>{};
+  }
+}
+
 Duration? parseDuration(String? durationAsString) {
   if (durationAsString == null || durationAsString == 'null') return null;
   int hours = 0;

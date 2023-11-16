@@ -38,7 +38,10 @@ class App extends StatefulWidget {
           ),
         ),
         ChangeNotifierProvider(
-          create: (_) => LocalAudioModel(getService<LocalAudioService>()),
+          create: (_) => LocalAudioModel(
+            localAudioService: getService<LocalAudioService>(),
+            libraryService: getService<LibraryService>(),
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => LibraryModel(getService<LibraryService>()),
