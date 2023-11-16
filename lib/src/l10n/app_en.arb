@@ -107,5 +107,6 @@
         }
     },
     "noThankYou": "No, thank you.",
-    "recreateLocalAudioCache": "Recreate local audio cache"
+    "recreateLocalAudioCache": "Recreate local audio cache",
+    "useALocalAudioCache": "Use local audio cache"
 }

@@ -65,7 +65,7 @@ class MusicPodApp extends StatelessWidget {
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => 'MusicPod',
       home: FutureBuilder(
-        future: getService<LibraryService>().init(),
+        future: getService<LibraryService>().initSettings(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return App.create();

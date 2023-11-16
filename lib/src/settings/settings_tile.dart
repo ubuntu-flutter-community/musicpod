@@ -2,24 +2,31 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-import '../../constants.dart';
 import '../../l10n.dart';
 import '../../local_audio.dart';
 import '../../settings.dart';
-import '../../utils.dart';
 import '../common/icons.dart';
 import '../common/spaced_divider.dart';
 
-class SettingsTile extends StatelessWidget {
+class SettingsTile extends StatefulWidget {
   const SettingsTile({
     super.key,
     required this.onDirectorySelected,
     required this.createLocalAudioCache,
+    required this.useLocalAudioCache,
+    required this.setUseLocalAudioCache,
   });
 
   final Future<void> Function(String? directoryPath) onDirectorySelected;
   final Future<void> Function() createLocalAudioCache;
+  final bool? useLocalAudioCache;
+  final Future<void> Function(bool value) setUseLocalAudioCache;
 
+  @override
+  State<SettingsTile> createState() => _SettingsTileState();
+}
+
+class _SettingsTileState extends State<SettingsTile> {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -41,7 +48,8 @@ class SettingsTile extends StatelessWidget {
                     onPressed: () async {
                       final directoryPath = await getDirectoryPath();
 
-                      await onDirectorySelected(directoryPath)
+                      await widget
+                          .onDirectorySelected(directoryPath)
                           .then((value) => Navigator.of(context).pop());
                     },
                     child: Padding(
@@ -64,10 +72,22 @@ class SettingsTile extends StatelessWidget {
                     bottom: 10,
                     top: 0,
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(context.l10n.useALocalAudioCache),
+                      YaruSwitch(
+                        value: widget.useLocalAudioCache ?? false,
+                        onChanged: (value) =>
+                            widget.setUseLocalAudioCache(value).then(
+                                  (_) => setState(() {}),
+                                ),
+                      ),
+                    ],
+                  ),
                   TextButton.icon(
                     onPressed: () {
-                      createLocalAudioCache();
-                      writeSetting(kCacheSuggestionDisposed, 'false');
+                      widget.createLocalAudioCache();
                     },
                     icon: Icon(Iconz().refresh),
                     label: Text(context.l10n.recreateLocalAudioCache),

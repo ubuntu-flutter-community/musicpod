@@ -20,6 +20,8 @@ class MasterDetailPage extends StatelessWidget {
     required this.masterItems,
     required this.addPlaylist,
     required this.createLocalAudioCache,
+    required this.useLocalAudioCache,
+    required this.setUseLocalAudioCache,
   });
 
   final void Function(int? value) setIndex;
@@ -29,6 +31,8 @@ class MasterDetailPage extends StatelessWidget {
   final void Function(String name, Set<Audio> audios) addPlaylist;
   final Future<void> Function(String?) onDirectorySelected;
   final Future<void> Function() createLocalAudioCache;
+  final bool? useLocalAudioCache;
+  final Future<void> Function(bool value) setUseLocalAudioCache;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +52,8 @@ class MasterDetailPage extends StatelessWidget {
               child: SettingsTile(
                 onDirectorySelected: onDirectorySelected,
                 createLocalAudioCache: createLocalAudioCache,
+                useLocalAudioCache: useLocalAudioCache,
+                setUseLocalAudioCache: setUseLocalAudioCache,
               ),
             ),
           ],

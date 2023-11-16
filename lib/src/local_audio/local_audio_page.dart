@@ -49,12 +49,13 @@ class _LocalAudioPageState extends State<LocalAudioPage>
           );
         },
       ).then((_) {
-        if (!model.cacheSuggestionDisposed &&
+        if (model.useLocalAudioCache != false &&
             model.audios != null &&
-            model.audios!.length > kCreateCacheLimit) {
+            model.audios!.length > kCreateCacheLimit &&
+            model.localAudioCache == null) {
           showCacheSuggestion(
             context: context,
-            disposeCacheSuggestion: model.disposeCacheSuggestion,
+            onUseLocalAudioCache: model.setUseLocalAudioCache,
             createCache: model.createLocalAudioCache,
             localAudioLength: model.audios!.length,
           );
