@@ -252,6 +252,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     );
 
     final yaruMasterDetailPage = MasterDetailPage(
+      useLocalAudioCache: localAudioModel.useLocalAudioCache,
+      setUseLocalAudioCache: localAudioModel.setUseLocalAudioCache,
       setIndex: libraryModel.setIndex,
       onDirectorySelected: (directoryPath) async {
         localAudioModel.setDirectory(directoryPath).then(

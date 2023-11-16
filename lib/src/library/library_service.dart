@@ -25,25 +25,22 @@ class LibraryService {
     return _localAudioCache;
   }
 
-  Future<void> disposeCacheSuggestion(bool value) async {
-    await writeSetting(
-      kCacheSuggestionDisposed,
-      'true',
-    );
-    _cacheSuggestionDisposed = value;
-    _cacheSuggestionDisposedController.add(true);
+  Future<void> setUseLocalCache(bool value) async {
+    await writeSetting(kUseLocalAudioCache, value ? 'true' : 'false');
+    _useLocalAudioCache = value;
+    _useLocalAudioCacheController.add(true);
   }
 
-  bool _cacheSuggestionDisposed = false;
-  bool get cacheSuggestionDisposed => _cacheSuggestionDisposed;
-  final _cacheSuggestionDisposedController = StreamController<bool>.broadcast();
-  Stream<bool> get cacheSuggestionDisposedChanged =>
-      _cacheSuggestionDisposedController.stream;
+  bool? _useLocalAudioCache;
+  bool? get useLocalAudioCache => _useLocalAudioCache;
+  final _useLocalAudioCacheController = StreamController<bool>.broadcast();
+  Stream<bool> get useLocalAudioCacheChanged =>
+      _useLocalAudioCacheController.stream;
 
-  Future<void> _readCacheSuggestionDisposed() async {
-    String? value = await readSetting(kCacheSuggestionDisposed);
-    if (value?.contains('true') == true) {
-      _cacheSuggestionDisposed = true;
+  Future<void> _readUseLocalAudioCache() async {
+    String? value = await readSetting(kUseLocalAudioCache);
+    if (value != null) {
+      _useLocalAudioCache = bool.parse(value);
     }
   }
 
@@ -305,13 +302,27 @@ class LibraryService {
     _neverShowFailedImportsController.add(true);
   }
 
-  bool _initialized = false;
-  Future<void> init() async {
-    if (_initialized) return;
+  Future<void> initLibrary() async {
+    await readLocalAudioCache();
+    _playlists = await readAudioMap(kPlaylistsFileName);
+    _pinnedAlbums = await readAudioMap(kPinnedAlbumsFileName);
+    _podcasts = await readAudioMap(kPodcastsFileName);
+    _starredStations = await readAudioMap(kStarredStationsFileName);
+    _lastPositions = (await getSettings(kLastPositionsFileName)).map(
+      (key, value) => MapEntry(key, parseDuration(value) ?? Duration.zero),
+    );
+    _likedAudios =
+        (await readAudioMap(kLikedAudios)).entries.firstOrNull?.value ??
+            <Audio>{};
+    _favTags = (await readStringSet(filename: kTagFavsFileName));
+  }
+
+  bool _settingsInitialized = false;
+  Future<void> initSettings() async {
+    if (_settingsInitialized) return;
 
     await _readRecentPatchNotesDisposed();
-    await _readCacheSuggestionDisposed();
-    await readLocalAudioCache();
+    await _readUseLocalAudioCache();
 
     var neverShowImportsOrNull = await readSetting(kNeverShowImportFails);
     _neverShowFailedImports = neverShowImportsOrNull == null
@@ -325,21 +336,7 @@ class LibraryService {
     _localAudioIndex =
         localAudioIndexOrNull == null ? 0 : int.parse(localAudioIndexOrNull);
 
-    _playlists = await readAudioMap(kPlaylistsFileName);
-    _pinnedAlbums = await readAudioMap(kPinnedAlbumsFileName);
-    _podcasts = await readAudioMap(kPodcastsFileName);
-    _starredStations = await readAudioMap(kStarredStationsFileName);
-    _lastPositions = (await getSettings(kLastPositionsFileName)).map(
-      (key, value) => MapEntry(key, parseDuration(value) ?? Duration.zero),
-    );
-
-    _likedAudios =
-        (await readAudioMap(kLikedAudios)).entries.firstOrNull?.value ??
-            <Audio>{};
-
-    _favTags = (await readStringSet(filename: kTagFavsFileName));
-
-    _initialized = true;
+    _settingsInitialized = true;
   }
 
   int? _localAudioIndex;
@@ -358,7 +355,7 @@ class LibraryService {
 
   Future<void> dispose() async {
     await safeStates();
-    await _cacheSuggestionDisposedController.close();
+    await _useLocalAudioCacheController.close();
     await _albumsController.close();
     await _podcastsController.close();
     await _likedAudiosController.close();

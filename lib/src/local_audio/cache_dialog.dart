@@ -5,12 +5,12 @@ import '../../l10n.dart';
 class CacheDialog extends StatelessWidget {
   const CacheDialog({
     super.key,
-    required this.disposeCacheSuggestion,
+    required this.onUseLocalAudioCache,
     required this.createCache,
     required this.localAudioLength,
   });
 
-  final Future<void> Function(bool value) disposeCacheSuggestion;
+  final Future<void> Function(bool value) onUseLocalAudioCache;
   final Future<void> Function() createCache;
   final int localAudioLength;
 
@@ -24,7 +24,7 @@ class CacheDialog extends StatelessWidget {
       actions: [
         OutlinedButton(
           onPressed: () {
-            disposeCacheSuggestion(true)
+            onUseLocalAudioCache(false)
                 .then((value) => Navigator.of(context).pop());
           },
           child: Text(context.l10n.noThankYou),
@@ -32,8 +32,7 @@ class CacheDialog extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             createCache();
-            disposeCacheSuggestion(true)
-                .then((_) => Navigator.of(context).pop());
+            onUseLocalAudioCache(true).then((_) => Navigator.of(context).pop());
           },
           child: Text(context.l10n.ok),
         ),
@@ -44,7 +43,7 @@ class CacheDialog extends StatelessWidget {
 
 Future<void> showCacheSuggestion({
   required BuildContext context,
-  required Future<void> Function(bool value) disposeCacheSuggestion,
+  required Future<void> Function(bool value) onUseLocalAudioCache,
   required Future<void> Function() createCache,
   required int localAudioLength,
 }) {
@@ -53,7 +52,7 @@ Future<void> showCacheSuggestion({
     context: context,
     builder: (context) {
       return CacheDialog(
-        disposeCacheSuggestion: disposeCacheSuggestion,
+        onUseLocalAudioCache: onUseLocalAudioCache,
         localAudioLength: localAudioLength,
         createCache: createCache,
       );

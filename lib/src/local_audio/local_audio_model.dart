@@ -215,12 +215,14 @@ class LocalAudioModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _directoryChangedSub;
   StreamSubscription<bool>? _audiosChangedSub;
   StreamSubscription<bool>? _localAudioCacheChangedSub;
+  StreamSubscription<bool>? _useLocalAudioCacheChangedSub;
 
   @override
   Future<void> dispose() async {
     _directoryChangedSub?.cancel();
     _audiosChangedSub?.cancel();
     _localAudioCacheChangedSub?.cancel();
+    _useLocalAudioCacheChangedSub?.cancel();
     super.dispose();
   }
 
@@ -248,14 +250,18 @@ class LocalAudioModel extends SafeChangeNotifier {
     _audiosChangedSub = localAudioService.audiosChanged.listen((_) {
       notifyListeners();
     });
+    _useLocalAudioCacheChangedSub = libraryService.useLocalAudioCacheChanged
+        .listen((_) => notifyListeners());
 
     notifyListeners();
   }
 
-  Future<void> disposeCacheSuggestion(bool value) async =>
-      await libraryService.disposeCacheSuggestion(value);
+  Future<void> setUseLocalAudioCache(bool value) async =>
+      await libraryService.setUseLocalCache(value);
 
-  bool get cacheSuggestionDisposed => libraryService.cacheSuggestionDisposed;
+  bool? get useLocalAudioCache => libraryService.useLocalAudioCache;
+
+  Set<Audio>? get localAudioCache => libraryService.localAudioCache;
 
   Future<void> createLocalAudioCache() async {
     if (localAudioService.audios == null || localAudioService.audios!.isEmpty) {
