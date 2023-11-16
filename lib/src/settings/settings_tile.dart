@@ -2,16 +2,23 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../constants.dart';
 import '../../l10n.dart';
 import '../../local_audio.dart';
 import '../../settings.dart';
+import '../../utils.dart';
 import '../common/icons.dart';
 import '../common/spaced_divider.dart';
 
 class SettingsTile extends StatelessWidget {
-  const SettingsTile({super.key, required this.onDirectorySelected});
+  const SettingsTile({
+    super.key,
+    required this.onDirectorySelected,
+    required this.createLocalAudioCache,
+  });
 
   final Future<void> Function(String? directoryPath) onDirectorySelected;
+  final Future<void> Function({required bool delete}) createLocalAudioCache;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +65,18 @@ class SettingsTile extends StatelessWidget {
                     top: 0,
                   ),
                   const AboutTile(),
+                  const SpacedDivider(
+                    bottom: 10,
+                    top: 0,
+                  ),
+                  TextButton.icon(
+                    onPressed: () async {
+                      await createLocalAudioCache(delete: true);
+                      await writeSetting(kCacheSuggestionDisposed, 'false');
+                    },
+                    icon: Icon(Iconz().refresh),
+                    label: Text(context.l10n.recreateLocalAudioCache),
+                  ),
                 ],
               ),
             ),

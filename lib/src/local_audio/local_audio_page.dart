@@ -10,6 +10,7 @@ import '../../player.dart';
 import '../../common.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
+import 'cache_dialog.dart';
 
 class LocalAudioPage extends StatefulWidget {
   const LocalAudioPage({
@@ -30,9 +31,10 @@ class _LocalAudioPageState extends State<LocalAudioPage>
   @override
   void initState() {
     super.initState();
+    final model = context.read<LocalAudioModel>();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
-      context.read<LocalAudioModel>().init(
+      model.init(
         onFail: (failedImports) {
           if (context.read<LibraryModel>().neverShowFailedImports) return;
           ScaffoldMessenger.of(context).showSnackBar(
@@ -46,7 +48,18 @@ class _LocalAudioPageState extends State<LocalAudioPage>
             ),
           );
         },
-      );
+      ).then((_) {
+        if (!model.cacheSuggestionDisposed &&
+            model.audios != null &&
+            model.audios!.length > kCreateCacheLimit) {
+          showCacheSuggestion(
+            context: context,
+            disposeCacheSuggestion: model.disposeCacheSuggestion,
+            createCache: model.createLocalAudioCache,
+            localAudioLength: model.audios!.length,
+          );
+        }
+      });
     });
   }
 

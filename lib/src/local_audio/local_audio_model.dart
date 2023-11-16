@@ -6,13 +6,18 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../../library.dart';
 import '../../local_audio.dart';
 import '../../utils.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
-  LocalAudioModel(this._service);
+  LocalAudioModel({
+    required this.localAudioService,
+    required this.libraryService,
+  });
 
-  final LocalAudioService _service;
+  final LocalAudioService localAudioService;
+  final LibraryService libraryService;
 
   bool _searchActive = false;
   bool get searchActive => _searchActive;
@@ -137,12 +142,13 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  String? get directory => _service.directory;
+  String? get directory => localAudioService.directory;
   Future<void> setDirectory(String? value) async =>
-      _service.setDirectory(value);
+      localAudioService.setDirectory(value);
 
-  Set<Audio>? get audios => _service.audios;
-  set audios(Set<Audio>? value) => _service.audios = value;
+  Set<Audio>? get audios {
+    return localAudioService.audios;
+  }
 
   Set<Audio>? findAlbum(
     Audio audio, [
@@ -208,11 +214,15 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   StreamSubscription<bool>? _directoryChangedSub;
   StreamSubscription<bool>? _audiosChangedSub;
+  StreamSubscription<bool>? _localAudioCacheChangedSub;
+  StreamSubscription<bool>? _cacheSuggestionDisposedChangedSub;
 
   @override
   Future<void> dispose() async {
     _directoryChangedSub?.cancel();
     _audiosChangedSub?.cancel();
+    _localAudioCacheChangedSub?.cancel();
+    _cacheSuggestionDisposedChangedSub?.cancel();
     super.dispose();
   }
 
@@ -221,8 +231,10 @@ class LocalAudioModel extends SafeChangeNotifier {
     bool forceInit = false,
   }) async {
     if (forceInit ||
-        (_service.audios == null || _service.audios?.isEmpty == true)) {
-      final failedImports = await _service.init();
+        (localAudioService.audios == null ||
+            localAudioService.audios?.isEmpty == true)) {
+      final cache = await libraryService.readLocalAudioCache();
+      final failedImports = await localAudioService.init(cache: cache);
 
       if (failedImports.isNotEmpty) {
         onFail(failedImports);
@@ -232,13 +244,36 @@ class LocalAudioModel extends SafeChangeNotifier {
     _allAlbums = _findAllAlbums();
     _allArtists = _findAllArtists();
 
-    _directoryChangedSub = _service.directoryChanged.listen((_) {
+    _directoryChangedSub = localAudioService.directoryChanged.listen((_) {
       notifyListeners();
     });
-    _audiosChangedSub = _service.audiosChanged.listen((_) {
+    _audiosChangedSub = localAudioService.audiosChanged.listen((_) {
       notifyListeners();
     });
 
+    _cacheSuggestionDisposedChangedSub = libraryService
+        .cacheSuggestionDisposedChanged
+        .listen((_) => notifyListeners());
+
     notifyListeners();
+  }
+
+  Future<void> disposeCacheSuggestion(bool value) async =>
+      await libraryService.disposeCacheSuggestion(value);
+
+  bool get cacheSuggestionDisposed => libraryService.cacheSuggestionDisposed;
+
+  Future<void> createLocalAudioCache({required bool delete}) async {
+    if (localAudioService.audios == null || localAudioService.audios!.isEmpty) {
+      return;
+    }
+    await libraryService.writeLocalAudioCache(
+      audios: localAudioService.audios!,
+      delete: delete,
+    );
+    final cache = await libraryService.readLocalAudioCache();
+    if (cache?.isNotEmpty == true) {
+      localAudioService.audios = cache!;
+    }
   }
 }

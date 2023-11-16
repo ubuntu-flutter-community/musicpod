@@ -97,5 +97,15 @@
     "emptyPlaylist": "🐣🔎🎵❓\n\nThis playlist is empty.",
     "copiedToClipBoard": "Copied to clipboard:",
     "insertIntoQueue": "Insert into queue",
-    "about": "About"
+    "about": "About",
+    "localAudioCacheSuggestion": "You have {length} local audio files. Do you want to create a cache to improve start-up time?",
+    "@localAudioCacheSuggestion": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "noThankYou": "No, thank you.",
+    "recreateLocalAudioCache": "Recreate local audio cache"
 }
