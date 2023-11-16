@@ -11,8 +11,8 @@ class LibraryService {
   //
   // Local Audios "Cache"
   //
-  Map<String, Set<Audio>>? _localAudioCache;
-  Map<String, Set<Audio>>? get localAudioCache => _localAudioCache;
+  Set<Audio>? _localAudioCache;
+  Set<Audio>? get localAudioCache => _localAudioCache;
   final _localAudioCacheController = StreamController<bool>.broadcast();
   Stream<bool> get localAudioCacheChanged => _localAudioCacheController.stream;
 
@@ -25,9 +25,9 @@ class LibraryService {
     );
   }
 
-  Future<Set<Audio>> readLocalAudioCache() async {
+  Future<void> _readLocalAudioCache() async {
     final map = await readAudioMap(kLocalAudioCacheFileName);
-    return map[kLocalAudioCache] ?? <Audio>{};
+    _localAudioCache = map[kLocalAudioCache];
   }
 
   Future<void> disposeCacheSuggestion() async {
@@ -308,6 +308,7 @@ class LibraryService {
   Future<void> init() async {
     await _readRecentPatchNotesDisposed();
     await _readCacheSuggestionDisposed();
+    await _readLocalAudioCache();
 
     var neverShowImportsOrNull = await readSetting(kNeverShowImportFails);
     _neverShowFailedImports = neverShowImportsOrNull == null

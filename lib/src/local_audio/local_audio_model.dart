@@ -146,8 +146,13 @@ class LocalAudioModel extends SafeChangeNotifier {
   Future<void> setDirectory(String? value) async =>
       localAudioService.setDirectory(value);
 
-  Set<Audio>? get audios => localAudioService.audios;
-  set audios(Set<Audio>? value) => localAudioService.audios = value;
+  Set<Audio>? get audios {
+    if (libraryService.localAudioCache?.isNotEmpty == true) {
+      return libraryService.localAudioCache;
+    }
+
+    return localAudioService.audios;
+  }
 
   Set<Audio>? findAlbum(
     Audio audio, [
@@ -259,6 +264,8 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   bool get cacheSuggestionDisposed => libraryService.cacheSuggestionDisposed;
 
-  Future<void> createLocalAudioCache() async =>
-      await libraryService.writeLocalAudioCache(audios ?? {});
+  Future<void> createLocalAudioCache() async {
+    if (audios?.isNotEmpty == false) return;
+    await libraryService.writeLocalAudioCache(audios!);
+  }
 }
