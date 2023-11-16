@@ -33,7 +33,7 @@ class LibraryService {
   Future<void> disposeCacheSuggestion() async {
     await writeSetting(
       kCacheSuggestionDisposed,
-      true,
+      'true',
     );
   }
 
@@ -41,8 +41,8 @@ class LibraryService {
   bool get cacheSuggestionDisposed => _cacheSuggestionDisposed;
 
   Future<void> _readCacheSuggestionDisposed() async {
-    bool? value = await readSetting(kCacheSuggestionDisposed);
-    if (value == true) {
+    String? value = await readSetting(kCacheSuggestionDisposed);
+    if (value?.contains('true') == true) {
       _cacheSuggestionDisposed = true;
     }
   }
