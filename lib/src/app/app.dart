@@ -183,19 +183,12 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     final showPinnedAlbums =
         context.select((LibraryModel m) => m.showPinnedAlbums);
     final audioPageType = context.select((LibraryModel m) => m.audioPageType);
-    final ready = context.select((LibraryModel m) => m.ready);
     context.select((LibraryModel m) => m.podcasts.length);
     context.select((LibraryModel m) => m.pinnedAlbums.length);
     context.select((LibraryModel m) => m.starredStations.length);
     context.select((LibraryModel m) => m.playlists.length);
     context.select((LibraryModel m) => m.playlists.keys);
     context.select((LibraryModel m) => m.podcastUpdates.length);
-
-    if (!ready) {
-      return SplashScreen(
-        color: playerBg,
-      );
-    }
 
     void onTextTap({
       required String text,
