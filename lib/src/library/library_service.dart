@@ -308,7 +308,10 @@ class LibraryService {
   }
 
   Future<void> initLibrary() async {
-    await compute((message) => readLocalAudioCache(), 'readLocalAudioCache');
+    await _readUseLocalAudioCache();
+    if (_useLocalAudioCache == true) {
+      await compute((message) => readLocalAudioCache(), 'readLocalAudioCache');
+    }
     _playlists = await readAudioMap(kPlaylistsFileName);
     _pinnedAlbums = await readAudioMap(kPinnedAlbumsFileName);
     _podcasts = await readAudioMap(kPodcastsFileName);
@@ -327,7 +330,6 @@ class LibraryService {
     if (_settingsInitialized) return;
 
     await _readRecentPatchNotesDisposed();
-    await _readUseLocalAudioCache();
 
     var neverShowImportsOrNull = await readSetting(kNeverShowImportFails);
     _neverShowFailedImports = neverShowImportsOrNull == null
