@@ -31,8 +31,12 @@ class CacheDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            createCache();
-            onUseLocalAudioCache(true).then((_) => Navigator.of(context).pop());
+            onUseLocalAudioCache(true).then((_) {
+              onUseLocalAudioCache(true).then((_) {
+                createCache();
+                Navigator.of(context).pop();
+              });
+            });
           },
           child: Text(context.l10n.ok),
         ),
