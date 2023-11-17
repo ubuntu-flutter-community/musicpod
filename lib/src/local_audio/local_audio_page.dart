@@ -49,10 +49,10 @@ class _LocalAudioPageState extends State<LocalAudioPage>
           );
         },
       ).then((_) {
-        if (model.useLocalAudioCache != false &&
+        if ((model.localAudioCache == null &&
+                model.useLocalAudioCache == null) &&
             model.audios != null &&
-            model.audios!.length > kCreateCacheLimit &&
-            model.localAudioCache == null) {
+            model.audios!.length > kCreateCacheLimit) {
           showCacheSuggestion(
             context: context,
             onUseLocalAudioCache: model.setUseLocalAudioCache,
@@ -87,6 +87,8 @@ class _LocalAudioPageState extends State<LocalAudioPage>
         context.select((LocalAudioModel m) => m.similarAlbumsSearchResult);
 
     final libraryModel = context.read<LibraryModel>();
+
+    context.select((LocalAudioModel m) => m.useLocalAudioCache);
 
     final isPinnedAlbum = libraryModel.isPinnedAlbum;
     final removePinnedAlbum = libraryModel.removePinnedAlbum;

@@ -8,7 +8,7 @@ import '../../settings.dart';
 import '../common/icons.dart';
 import '../common/spaced_divider.dart';
 
-class SettingsTile extends StatefulWidget {
+class SettingsTile extends StatelessWidget {
   const SettingsTile({
     super.key,
     required this.onDirectorySelected,
@@ -22,11 +22,6 @@ class SettingsTile extends StatefulWidget {
   final bool? useLocalAudioCache;
   final Future<void> Function(bool value) setUseLocalAudioCache;
 
-  @override
-  State<SettingsTile> createState() => _SettingsTileState();
-}
-
-class _SettingsTileState extends State<SettingsTile> {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -48,8 +43,7 @@ class _SettingsTileState extends State<SettingsTile> {
                     onPressed: () async {
                       final directoryPath = await getDirectoryPath();
 
-                      await widget
-                          .onDirectorySelected(directoryPath)
+                      await onDirectorySelected(directoryPath)
                           .then((value) => Navigator.of(context).pop());
                     },
                     child: Padding(
@@ -77,17 +71,16 @@ class _SettingsTileState extends State<SettingsTile> {
                     children: [
                       Text(context.l10n.useALocalAudioCache),
                       YaruSwitch(
-                        value: widget.useLocalAudioCache ?? false,
-                        onChanged: (value) =>
-                            widget.setUseLocalAudioCache(value).then(
-                                  (_) => setState(() {}),
-                                ),
+                        value: useLocalAudioCache ?? false,
+                        onChanged: (value) {
+                          setUseLocalAudioCache(value);
+                        },
                       ),
                     ],
                   ),
                   TextButton.icon(
                     onPressed: () {
-                      widget.createLocalAudioCache();
+                      createLocalAudioCache();
                     },
                     icon: Icon(Iconz().refresh),
                     label: Text(context.l10n.recreateLocalAudioCache),

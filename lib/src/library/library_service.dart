@@ -1,20 +1,25 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
 import '../../patch_notes.dart';
 import '../../utils.dart';
 
+Future<void> _writeCache(Set<Audio> audios) async {
+  await writeAudioMap(
+    {
+      kLocalAudioCache: audios,
+    },
+    kLocalAudioCacheFileName,
+  );
+}
+
 class LibraryService {
   Future<void> writeLocalAudioCache({required Set<Audio> audios}) async {
-    await writeAudioMap(
-      {
-        kLocalAudioCache: audios,
-      },
-      kLocalAudioCacheFileName,
-    );
+    await compute(_writeCache, audios);
   }
 
   Set<Audio>? _localAudioCache;
@@ -303,7 +308,7 @@ class LibraryService {
   }
 
   Future<void> initLibrary() async {
-    await readLocalAudioCache();
+    await compute((message) => readLocalAudioCache(), 'readLocalAudioCache');
     _playlists = await readAudioMap(kPlaylistsFileName);
     _pinnedAlbums = await readAudioMap(kPinnedAlbumsFileName);
     _podcasts = await readAudioMap(kPodcastsFileName);
