@@ -42,9 +42,11 @@ class StationPage extends StatelessWidget {
     final icon = selected
         ? Icon(
             Iconz().starFilled,
+            size: iconSize(),
           )
         : Icon(
-            Iconz().starFilled,
+            Iconz().star,
+            size: iconSize(),
           );
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 ThemeData m3Theme({
@@ -20,5 +22,7 @@ ThemeData m3Theme({
       seedColor: color,
       brightness: brightness,
     ),
+    splashFactory:
+        Platform.isMacOS || Platform.isIOS ? NoSplash.splashFactory : null,
   );
 }

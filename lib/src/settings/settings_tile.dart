@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../common.dart';
 import '../../l10n.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
 import '../../settings.dart';
-import '../common/icons.dart';
-import '../common/spaced_divider.dart';
 
 class SettingsTile extends StatelessWidget {
   const SettingsTile({
@@ -64,7 +63,7 @@ class SettingsTile extends StatelessWidget {
                   const SizedBox(
                     height: kYaruPagePadding,
                   ),
-                  ElevatedButton(
+                  ImportantButton(
                     onPressed: () async {
                       final directoryPath = await getDirectoryPath();
 
@@ -95,7 +94,7 @@ class SettingsTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(context.l10n.useALocalAudioCache),
-                      YaruSwitch(
+                      CommonSwitch(
                         value: useLocalAudioCache == true,
                         onChanged: (value) {
                           setUseLocalAudioCache(value)
