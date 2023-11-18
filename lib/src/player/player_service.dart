@@ -491,7 +491,7 @@ class PlayerService {
         return MyAudioHandler(
           onPlay: playOrPause,
           onNext: playNext,
-          onPause: playOrPause,
+          onPause: pause,
           onPrevious: playPrevious,
           onSeek: (position) async {
             setPosition(position);
@@ -552,7 +552,7 @@ class PlayerService {
     if (_audioService != null) {
       _audioService!.playbackState.add(
         _audioService!.playbackState.value.copyWith(
-          playing: !playing,
+          playing: playing,
         ),
       );
     }

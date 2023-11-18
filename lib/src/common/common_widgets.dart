@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -162,7 +163,7 @@ class TabsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled
+    return _yaruStyled || _cupertino
         ? YaruTabBar(
             onTap: onTap,
             tabs: tabs,
@@ -191,10 +192,10 @@ class SearchButton extends StatelessWidget {
             isSelected: active,
             onPressed: onPressed,
             selectedIcon: Icon(
-              Icons.search,
+              Iconz().search,
               color: Theme.of(context).colorScheme.primary,
             ),
-            icon: const Icon(Icons.search),
+            icon: Icon(Iconz().search),
           );
   }
 }
@@ -211,7 +212,7 @@ class SearchingBar extends StatelessWidget {
     return _yaruStyled
         ? YaruSearchField(
             radius: const Radius.circular(kYaruButtonRadius),
-            clearIcon: Iconz().clearIcon,
+            clearIcon: _yaruStyled ? null : Icon(Iconz().clear),
             key: key,
             text: text,
             onClear: onClear,
@@ -304,6 +305,8 @@ FontWeight get largeTextWeight =>
 
 bool get _yaruStyled => Platform.isLinux;
 
+bool get _cupertino => Platform.isIOS || Platform.isMacOS;
+
 bool get isMobile => Platform.isAndroid || Platform.isIOS || Platform.isFuchsia;
 
 bool get shrinkTitleBarItems => _yaruStyled;
@@ -350,3 +353,43 @@ Gradient? getAudioPageHeaderGradient(ThemeData theme) {
 EdgeInsetsGeometry get appBarActionSpacing => Platform.isMacOS
     ? const EdgeInsets.only(right: 5, left: 20)
     : const EdgeInsets.only(right: 20, left: 20);
+
+class CommonSwitch extends StatelessWidget {
+  const CommonSwitch({super.key, required this.value, this.onChanged});
+
+  final bool value;
+  final void Function(bool)? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return _yaruStyled
+        ? YaruSwitch(
+            value: value,
+            onChanged: onChanged,
+          )
+        : _cupertino
+            ? CupertinoSwitch(value: value, onChanged: onChanged)
+            : Switch(value: value, onChanged: onChanged);
+  }
+}
+
+class ImportantButton extends StatelessWidget {
+  const ImportantButton({
+    super.key,
+    required this.onPressed,
+    required this.child,
+  });
+
+  final void Function()? onPressed;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return _cupertino
+        ? CupertinoButton.filled(
+            onPressed: onPressed,
+            child: child,
+          )
+        : ElevatedButton(onPressed: onPressed, child: child);
+  }
+}
