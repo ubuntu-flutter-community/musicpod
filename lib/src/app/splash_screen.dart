@@ -21,12 +21,15 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     _animationController = AnimationController(
+      value: 0,
       vsync: this,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(seconds: 5),
+      lowerBound: 0,
+      upperBound: 1,
     );
 
     _animationController.addListener(() => setState(() {}));
-    _animationController.forward();
+    _animationController.repeat();
   }
 
   @override

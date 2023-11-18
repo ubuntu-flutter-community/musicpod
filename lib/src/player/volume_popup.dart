@@ -33,37 +33,34 @@ class _VolumeSliderPopupState extends State<VolumeSliderPopup> {
       iconData = Iconz().speakerHighFilled;
     }
 
-    return StatefulBuilder(
-      builder: (context, stateSetter) {
-        return PopupMenuButton<double>(
-          padding: EdgeInsets.zero,
-          tooltip: context.l10n.volume,
-          icon: Icon(
-            iconData,
-            color: widget.color,
-          ),
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem(
-                child: StatefulBuilder(
-                  builder: (context, stateSetter) {
-                    return Slider(
-                      value: widget.volume,
-                      onChanged: (value) async {
-                        await widget.setVolume(value);
-                        stateSetter(
-                          () {},
-                        );
-                      },
-                      max: 100,
-                      min: 0,
+    return PopupMenuButton<double>(
+      padding: EdgeInsets.zero,
+      tooltip: context.l10n.volume,
+      icon: Icon(
+        iconData,
+        color: widget.color,
+      ),
+      itemBuilder: (context) {
+        return [
+          PopupMenuItem(
+            enabled: false,
+            child: StatefulBuilder(
+              builder: (context, stateSetter) {
+                return Slider(
+                  value: widget.volume,
+                  onChanged: (value) async {
+                    await widget.setVolume(value);
+                    stateSetter(
+                      () {},
                     );
                   },
-                ),
-              ),
-            ];
-          },
-        );
+                  max: 100,
+                  min: 0,
+                );
+              },
+            ),
+          ),
+        ];
       },
     );
   }

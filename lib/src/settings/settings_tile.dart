@@ -1,8 +1,10 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../l10n.dart';
+import '../../library.dart';
 import '../../local_audio.dart';
 import '../../settings.dart';
 import '../common/icons.dart';
@@ -11,19 +13,42 @@ import '../common/spaced_divider.dart';
 class SettingsTile extends StatelessWidget {
   const SettingsTile({
     super.key,
-    required this.onDirectorySelected,
-    required this.createLocalAudioCache,
-    required this.useLocalAudioCache,
-    required this.setUseLocalAudioCache,
   });
-
-  final Future<void> Function(String? directoryPath) onDirectorySelected;
-  final Future<void> Function() createLocalAudioCache;
-  final bool? useLocalAudioCache;
-  final Future<void> Function(bool value) setUseLocalAudioCache;
 
   @override
   Widget build(BuildContext context) {
+    final libraryModel = context.read<LibraryModel>();
+    final localAudioModel = context.read<LocalAudioModel>();
+
+    final useLocalAudioCache =
+        context.select((LocalAudioModel m) => m.useLocalAudioCache);
+
+    final Future<void> Function() createLocalAudioCache =
+        localAudioModel.createLocalAudioCache;
+    final Future<void> Function(bool value) setUseLocalAudioCache =
+        localAudioModel.setUseLocalAudioCache;
+
+    Future<void> onDirectorySelected(String? directoryPath) async {
+      localAudioModel.setDirectory(directoryPath).then(
+            (value) async => await localAudioModel.init(
+              forceInit: true,
+              onFail: (failedImports) {
+                if (libraryModel.neverShowFailedImports) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    duration: const Duration(seconds: 10),
+                    content: FailedImportsContent(
+                      failedImports: failedImports,
+                      onNeverShowFailedImports:
+                          libraryModel.setNeverShowLocalImports,
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+    }
+
     return Center(
       child: PopupMenuButton(
         padding: EdgeInsets.zero,
@@ -71,9 +96,10 @@ class SettingsTile extends StatelessWidget {
                     children: [
                       Text(context.l10n.useALocalAudioCache),
                       YaruSwitch(
-                        value: useLocalAudioCache ?? false,
+                        value: useLocalAudioCache == true,
                         onChanged: (value) {
-                          setUseLocalAudioCache(value);
+                          setUseLocalAudioCache(value)
+                              .then((_) => Navigator.of(context).pop());
                         },
                       ),
                     ],

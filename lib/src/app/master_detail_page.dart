@@ -14,14 +14,10 @@ class MasterDetailPage extends StatelessWidget {
   const MasterDetailPage({
     super.key,
     required this.setIndex,
-    required this.onDirectorySelected,
     required this.totalListAmount,
     required this.index,
     required this.masterItems,
     required this.addPlaylist,
-    required this.createLocalAudioCache,
-    required this.useLocalAudioCache,
-    required this.setUseLocalAudioCache,
   });
 
   final void Function(int? value) setIndex;
@@ -29,10 +25,6 @@ class MasterDetailPage extends StatelessWidget {
   final int? index;
   final List<MasterItem> masterItems;
   final void Function(String name, Set<Audio> audios) addPlaylist;
-  final Future<void> Function(String?) onDirectorySelected;
-  final Future<void> Function() createLocalAudioCache;
-  final bool? useLocalAudioCache;
-  final Future<void> Function(bool value) setUseLocalAudioCache;
 
   @override
   Widget build(BuildContext context) {
@@ -43,18 +35,13 @@ class MasterDetailPage extends StatelessWidget {
       child: YaruMasterDetailPage(
         navigatorKey: navigatorKey,
         onSelected: (value) => setIndex(value ?? 0),
-        appBar: HeaderBar(
+        appBar: const HeaderBar(
           style: YaruTitleBarStyle.undecorated,
-          title: const Text('MusicPod'),
+          title: Text('MusicPod'),
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: SettingsTile(
-                onDirectorySelected: onDirectorySelected,
-                createLocalAudioCache: createLocalAudioCache,
-                useLocalAudioCache: useLocalAudioCache,
-                setUseLocalAudioCache: setUseLocalAudioCache,
-              ),
+              padding: EdgeInsets.only(right: 10),
+              child: SettingsTile(),
             ),
           ],
         ),
