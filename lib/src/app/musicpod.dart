@@ -6,6 +6,7 @@ import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
+import '../../common.dart';
 import '../../library.dart';
 import '../l10n/l10n.dart';
 import 'app.dart';
@@ -65,12 +66,12 @@ class MusicPodApp extends StatelessWidget {
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => 'MusicPod',
       home: FutureBuilder(
-        future: getService<LibraryService>().initSettings(),
+        future: getService<LibraryService>().init(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return App.create();
           }
-          return const SplashScreen();
+          return const Scaffold(appBar: HeaderBar(), body: SplashScreen());
         },
       ),
       scrollBehavior: const MaterialScrollBehavior().copyWith(

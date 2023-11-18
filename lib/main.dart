@@ -32,7 +32,6 @@ Future<void> main(List<String> args) async {
   final controller = VideoController(player);
 
   final libraryService = LibraryService();
-  await libraryService.initLibrary();
 
   final playerService = PlayerService(
     player: player,

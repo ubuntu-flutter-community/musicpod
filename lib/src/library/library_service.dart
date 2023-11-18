@@ -17,6 +17,11 @@ Future<void> _writeCache(Set<Audio> audios) async {
   );
 }
 
+Future<void> _readCache(Set<Audio>? localAudioCache) async {
+  localAudioCache =
+      (await readAudioMap(kLocalAudioCacheFileName))[kLocalAudioCache];
+}
+
 class LibraryService {
   Future<void> writeLocalAudioCache({required Set<Audio> audios}) async {
     await compute(_writeCache, audios);
@@ -24,10 +29,9 @@ class LibraryService {
 
   Set<Audio>? _localAudioCache;
   Set<Audio>? get localAudioCache => _localAudioCache;
-  Future<Set<Audio>?> readLocalAudioCache() async {
-    final map = await readAudioMap(kLocalAudioCacheFileName);
-    _localAudioCache = map[kLocalAudioCache];
-    return _localAudioCache;
+  Future<Set<Audio>?> _readLocalAudioCache() async {
+    await compute(_readCache, _localAudioCache);
+    return (await readAudioMap(kLocalAudioCacheFileName))[kLocalAudioCache];
   }
 
   Future<void> setUseLocalCache(bool value) async {
@@ -307,10 +311,16 @@ class LibraryService {
     _neverShowFailedImportsController.add(true);
   }
 
-  Future<void> initLibrary() async {
-    await _readUseLocalAudioCache();
+  Future<void> init() async {
+    await _initSettings();
+    await _initLibrary();
+  }
+
+  bool _libraryInitialized = false;
+  Future<void> _initLibrary() async {
+    if (_libraryInitialized) return;
     if (_useLocalAudioCache == true) {
-      await compute((message) => readLocalAudioCache(), 'readLocalAudioCache');
+      await _readLocalAudioCache();
     }
     _playlists = await readAudioMap(kPlaylistsFileName);
     _pinnedAlbums = await readAudioMap(kPinnedAlbumsFileName);
@@ -323,11 +333,14 @@ class LibraryService {
         (await readAudioMap(kLikedAudios)).entries.firstOrNull?.value ??
             <Audio>{};
     _favTags = (await readStringSet(filename: kTagFavsFileName));
+    _libraryInitialized = true;
   }
 
   bool _settingsInitialized = false;
-  Future<void> initSettings() async {
+  Future<void> _initSettings() async {
     if (_settingsInitialized) return;
+
+    await _readUseLocalAudioCache();
 
     await _readRecentPatchNotesDisposed();
 

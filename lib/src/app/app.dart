@@ -183,6 +183,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     final showPinnedAlbums =
         context.select((LibraryModel m) => m.showPinnedAlbums);
     final audioPageType = context.select((LibraryModel m) => m.audioPageType);
+
     context.select((LibraryModel m) => m.podcasts.length);
     context.select((LibraryModel m) => m.pinnedAlbums.length);
     context.select((LibraryModel m) => m.starredStations.length);
@@ -252,30 +253,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     );
 
     final yaruMasterDetailPage = MasterDetailPage(
-      useLocalAudioCache: localAudioModel.useLocalAudioCache,
-      setUseLocalAudioCache: localAudioModel.setUseLocalAudioCache,
       setIndex: libraryModel.setIndex,
-      onDirectorySelected: (directoryPath) async {
-        localAudioModel.setDirectory(directoryPath).then(
-              (value) async => await localAudioModel.init(
-                forceInit: true,
-                onFail: (failedImports) {
-                  if (libraryModel.neverShowFailedImports) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      duration: const Duration(seconds: 10),
-                      content: FailedImportsContent(
-                        failedImports: failedImports,
-                        onNeverShowFailedImports:
-                            libraryModel.setNeverShowLocalImports,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            );
-      },
-      createLocalAudioCache: localAudioModel.createLocalAudioCache,
       totalListAmount: libraryModel.totalListAmount,
       index: index,
       masterItems: masterItems,
