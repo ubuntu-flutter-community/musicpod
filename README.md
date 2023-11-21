@@ -62,7 +62,7 @@ Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https
 - [X] Ubuntu Desktop
   - [X] [snap package](https://snapcraft.io/musicpod) (this is the primary supported package!)
   - [ ] Flatpak ([WIP](https://github.com/ubuntu-flutter-community/musicpod/issues/10))
-- [X] Windows Support (Media Controls are WIP)
+- [X] Windows Support
   - [ ] Windows Store
 - [X] Android Support (Media Controls are WIP)
   - [ ] PlayStore
