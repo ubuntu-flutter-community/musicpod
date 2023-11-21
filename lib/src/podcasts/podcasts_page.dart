@@ -9,6 +9,7 @@ import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
+import '../globals.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 
@@ -41,6 +42,10 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.isOnline) {
+      return const OfflinePage();
+    }
+
     final model = context.read<PodcastModel>();
     final searchActive = context.select((PodcastModel m) => m.searchActive);
     final setSearchActive = model.setSearchActive;
@@ -50,6 +55,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final podcastSubscribed = libraryModel.podcastSubscribed;
     final removePodcast = libraryModel.removePodcast;
     final addPodcast = libraryModel.addPodcast;
+    final subs = context.select((LibraryModel m) => m.podcasts);
+    final subsLength = context.select((LibraryModel m) => m.podcastsLength);
+
     final setLimit = model.setLimit;
     final setSelectedFeedUrl = model.setSelectedFeedUrl;
     final selectedFeedUrl =
@@ -207,10 +215,78 @@ class _PodcastsPageState extends State<PodcastsPage> {
       ),
     );
 
-    if (!widget.isOnline) {
-      return const OfflinePage();
-    } else {
-      return YaruDetailPage(
+    final searchBody = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        controlPanel,
+        const SizedBox(
+          height: 15,
+        ),
+        Expanded(child: grid),
+      ],
+    );
+
+    final subsBody = subsLength == 0
+        ? NoSearchResultPage(
+            message: Text(context.l10n.noPodcastSubsFound),
+          )
+        : Padding(
+            padding: const EdgeInsets.only(top: 15),
+            child: GridView.builder(
+              padding: gridPadding,
+              itemCount: subsLength,
+              gridDelegate: imageGridDelegate,
+              itemBuilder: (context, index) {
+                final podcast = subs.entries.elementAt(index);
+
+                final artworkUrl600 = podcast.value.firstOrNull?.albumArtUrl ??
+                    podcast.value.firstOrNull?.imageUrl;
+                final image = SafeNetworkImage(
+                  url: artworkUrl600,
+                  fit: BoxFit.cover,
+                  height: kSmallCardHeight,
+                  width: kSmallCardHeight,
+                );
+
+                return AudioCard(
+                  image: image,
+                  onPlay: () => startPlaylist(
+                    podcast.value,
+                    podcast.key,
+                  ),
+                  onTap: () => navigatorKey.currentState?.push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return widget.isOnline
+                            ? PodcastPage(
+                                pageId: podcast.key,
+                                title: podcast.value.firstOrNull?.album ??
+                                    podcast.value.firstOrNull?.title ??
+                                    podcast.value.firstOrNull.toString(),
+                                audios: podcast.value,
+                                onTextTap: ({
+                                  required audioType,
+                                  required text,
+                                }) =>
+                                    onTapText(text),
+                                addPodcast: addPodcast,
+                                removePodcast: removePodcast,
+                                imageUrl:
+                                    podcast.value.firstOrNull?.albumArtUrl ??
+                                        podcast.value.firstOrNull?.imageUrl,
+                              )
+                            : const OfflinePage();
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
         appBar: HeaderBar(
           leading: (Navigator.canPop(context))
               ? const NavBackButton()
@@ -228,39 +304,28 @@ class _PodcastsPageState extends State<PodcastsPage> {
               ),
             ),
           ],
-          title: searchActive
-              ? SearchingBar(
-                  key: ValueKey(searchQuery),
-                  text: searchQuery,
-                  onClear: () {
-                    setSearchActive(false);
-                    setSearchQuery('');
-                    search();
-                  },
-                  onSubmitted: (value) {
-                    setSearchQuery(value);
-
-                    if (value?.isEmpty == true) {
-                      search();
-                    } else {
-                      search(searchQuery: value);
-                    }
-                  },
-                )
-              : Text(context.l10n.podcasts),
+          title: _Title(
+            chartsFirst: subsLength == 0,
+            searchActive: searchActive,
+            searchQuery: searchQuery,
+            setSearchActive: setSearchActive,
+            setSearchQuery: setSearchQuery,
+            search: search,
+          ),
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            controlPanel,
-            const SizedBox(
-              height: 15,
-            ),
-            Expanded(child: grid),
-          ],
+        body: TabBarView(
+          children: subsLength == 0
+              ? [
+                  searchBody,
+                  subsBody,
+                ]
+              : [
+                  subsBody,
+                  searchBody,
+                ],
         ),
-      );
-    }
+      ),
+    );
   }
 
   void _playOrConfirm({required int amount, required Function play}) {
@@ -284,6 +349,71 @@ class _PodcastsPageState extends State<PodcastsPage> {
         }
       });
     }
+  }
+}
+
+class _Title extends StatelessWidget {
+  const _Title({
+    required this.searchActive,
+    required this.searchQuery,
+    required this.setSearchActive,
+    required this.setSearchQuery,
+    required this.search,
+    required this.chartsFirst,
+  });
+
+  final bool searchActive;
+  final String? searchQuery;
+  final void Function(bool value) setSearchActive;
+  final void Function(String? value) setSearchQuery;
+  final void Function({String? searchQuery}) search;
+  final bool chartsFirst;
+
+  @override
+  Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) {
+        return searchActive
+            ? SearchingBar(
+                key: ValueKey(searchQuery),
+                text: searchQuery,
+                onClear: () {
+                  setSearchActive(false);
+                  setSearchQuery('');
+                  search();
+                },
+                onSubmitted: (value) {
+                  DefaultTabController.of(context).index = 1;
+
+                  setSearchQuery(value);
+
+                  if (value?.isEmpty == true) {
+                    search();
+                  } else {
+                    search(searchQuery: value);
+                  }
+                },
+              )
+            : SizedBox(
+                width: kSearchBarWidth,
+                child: TabsBar(
+                  tabs: chartsFirst
+                      ? [
+                          Tab(text: context.l10n.charts),
+                          Tab(
+                            text: context.l10n.library,
+                          ),
+                        ]
+                      : [
+                          Tab(
+                            text: context.l10n.library,
+                          ),
+                          Tab(text: context.l10n.charts),
+                        ],
+                ),
+              );
+      },
+    );
   }
 }
 
