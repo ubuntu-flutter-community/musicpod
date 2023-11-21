@@ -40,6 +40,7 @@
     "noPodcastChartsFound": "🐣🔎🎙❓\n\nSorry, no charts available for this country or category.",
     "noPodcastSubsFound": "🐣🔎🎙❓\n\nYou haven't subscribed to any podcast yet.",
     "charts": "Charts",
+    "discover": "Discover",
     "upNext": "Up next",
     "all": "All",
     "arts": "Arts",
@@ -110,5 +111,6 @@
     },
     "noThankYou": "No, thank you.",
     "recreateLocalAudioCache": "Recreate local audio cache",
-    "useALocalAudioCache": "Use local audio cache"
+    "useALocalAudioCache": "Use local audio cache",
+    "newEpisodes": "New episodes"
 }
