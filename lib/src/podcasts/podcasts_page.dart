@@ -55,10 +55,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final podcastSubscribed = libraryModel.podcastSubscribed;
     final removePodcast = libraryModel.removePodcast;
     final addPodcast = libraryModel.addPodcast;
-    final subs = context.select((LibraryModel m) => m.podcasts);
-    final updates = context.select((LibraryModel m) => m.podcastUpdates);
-    final updatesLength =
-        context.select((LibraryModel m) => m.podcastUpdates.length);
 
     final subsLength = context.select((LibraryModel m) => m.podcastsLength);
 
@@ -95,9 +91,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
-
-    final updatesOnly = context.select((PodcastModel m) => m.updatesOnly);
-    final setUpdatesOnly = model.setUpdatesOnly;
 
     void onTapText(String text) {
       setSearchQuery(text);
@@ -233,98 +226,13 @@ class _PodcastsPageState extends State<PodcastsPage> {
       ],
     );
 
-    final subsBody = subsLength == 0
-        ? NoSearchResultPage(
-            message: Text(context.l10n.noPodcastSubsFound),
-          )
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const SizedBox(
-                    width: 25,
-                  ),
-                  ChoiceChip(
-                    selected: updatesOnly,
-                    onSelected: (v) => setUpdatesOnly(v),
-                    label: Text(context.l10n.newEpisodes),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Expanded(
-                child: GridView.builder(
-                  padding: gridPadding,
-                  itemCount: updatesOnly ? updatesLength : subsLength,
-                  gridDelegate: imageGridDelegate,
-                  itemBuilder: (context, index) {
-                    final podcast = updatesOnly
-                        ? subs.entries
-                            .where((e) => updates.contains(e.key))
-                            .elementAt(index)
-                        : subs.entries.elementAt(index);
-
-                    final artworkUrl600 =
-                        podcast.value.firstOrNull?.albumArtUrl ??
-                            podcast.value.firstOrNull?.imageUrl;
-                    final image = SafeNetworkImage(
-                      url: artworkUrl600,
-                      fit: BoxFit.cover,
-                      height: kSmallCardHeight,
-                      width: kSmallCardHeight,
-                    );
-
-                    return AudioCard(
-                      image: image,
-                      bottom: Stack(
-                        children: [
-                          AudioCardBottom(
-                            text: podcast.value.firstOrNull?.album ??
-                                podcast.value.firstOrNull?.title ??
-                                podcast.value.firstOrNull.toString(),
-                          ),
-                          if (updates.contains(podcast.key))
-                            const Positioned(right: 5, top: 5, child: Badge()),
-                        ],
-                      ),
-                      onPlay: () => startPlaylist(
-                        podcast.value,
-                        podcast.key,
-                      ),
-                      onTap: () => navigatorKey.currentState?.push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return widget.isOnline
-                                ? PodcastPage(
-                                    pageId: podcast.key,
-                                    title: podcast.value.firstOrNull?.album ??
-                                        podcast.value.firstOrNull?.title ??
-                                        podcast.value.firstOrNull.toString(),
-                                    audios: podcast.value,
-                                    onTextTap: ({
-                                      required audioType,
-                                      required text,
-                                    }) =>
-                                        onTapText(text),
-                                    addPodcast: addPodcast,
-                                    removePodcast: removePodcast,
-                                    imageUrl: podcast
-                                            .value.firstOrNull?.albumArtUrl ??
-                                        podcast.value.firstOrNull?.imageUrl,
-                                  )
-                                : const OfflinePage();
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
+    final subsBody = _SubsBody(
+      isOnline: widget.isOnline,
+      startPlaylist: startPlaylist,
+      onTapText: onTapText,
+      addPodcast: addPodcast,
+      removePodcast: removePodcast,
+    );
 
     return DefaultTabController(
       length: 2,
@@ -355,16 +263,19 @@ class _PodcastsPageState extends State<PodcastsPage> {
             search: search,
           ),
         ),
-        body: TabBarView(
-          children: subsLength == 0
-              ? [
-                  searchBody,
-                  subsBody,
-                ]
-              : [
-                  subsBody,
-                  searchBody,
-                ],
+        body: Padding(
+          padding: tabViewPadding,
+          child: TabBarView(
+            children: subsLength == 0
+                ? [
+                    searchBody,
+                    subsBody,
+                  ]
+                : [
+                    subsBody,
+                    searchBody,
+                  ],
+          ),
         ),
       ),
     );
@@ -456,6 +367,126 @@ class _Title extends StatelessWidget {
               );
       },
     );
+  }
+}
+
+class _SubsBody extends StatelessWidget {
+  const _SubsBody({
+    required this.isOnline,
+    required this.startPlaylist,
+    required this.onTapText,
+    required this.addPodcast,
+    required this.removePodcast,
+  });
+
+  final bool isOnline;
+  final Future<void> Function(Set<Audio>, String) startPlaylist;
+  final void Function(String text) onTapText;
+  final void Function(String, Set<Audio>) addPodcast;
+  final void Function(String) removePodcast;
+
+  @override
+  Widget build(BuildContext context) {
+    final subs = context.select((LibraryModel m) => m.podcasts);
+    final updates = context.select((LibraryModel m) => m.podcastUpdates);
+    final updatesLength =
+        context.select((LibraryModel m) => m.podcastUpdates.length);
+    final updatesOnly = context.select((PodcastModel m) => m.updatesOnly);
+    final subsLength = context.select((LibraryModel m) => m.podcastsLength);
+    final setUpdatesOnly = context.read<PodcastModel>().setUpdatesOnly;
+
+    return subsLength == 0
+        ? NoSearchResultPage(
+            message: Text(context.l10n.noPodcastSubsFound),
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 25,
+                  ),
+                  ChoiceChip(
+                    selected: updatesOnly,
+                    onSelected: (v) => setUpdatesOnly(v),
+                    label: Text(context.l10n.newEpisodes),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Expanded(
+                child: GridView.builder(
+                  padding: gridPadding,
+                  itemCount: updatesOnly ? updatesLength : subsLength,
+                  gridDelegate: imageGridDelegate,
+                  itemBuilder: (context, index) {
+                    final podcast = updatesOnly
+                        ? subs.entries
+                            .where((e) => updates.contains(e.key))
+                            .elementAt(index)
+                        : subs.entries.elementAt(index);
+
+                    final artworkUrl600 =
+                        podcast.value.firstOrNull?.albumArtUrl ??
+                            podcast.value.firstOrNull?.imageUrl;
+                    final image = SafeNetworkImage(
+                      url: artworkUrl600,
+                      fit: BoxFit.cover,
+                      height: kSmallCardHeight,
+                      width: kSmallCardHeight,
+                    );
+
+                    return AudioCard(
+                      image: image,
+                      bottom: Stack(
+                        children: [
+                          AudioCardBottom(
+                            text: podcast.value.firstOrNull?.album ??
+                                podcast.value.firstOrNull?.title ??
+                                podcast.value.firstOrNull.toString(),
+                          ),
+                          if (updates.contains(podcast.key))
+                            const Positioned(right: 5, top: 5, child: Badge()),
+                        ],
+                      ),
+                      onPlay: () => startPlaylist(
+                        podcast.value,
+                        podcast.key,
+                      ),
+                      onTap: () => navigatorKey.currentState?.push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return isOnline
+                                ? PodcastPage(
+                                    pageId: podcast.key,
+                                    title: podcast.value.firstOrNull?.album ??
+                                        podcast.value.firstOrNull?.title ??
+                                        podcast.value.firstOrNull.toString(),
+                                    audios: podcast.value,
+                                    onTextTap: ({
+                                      required audioType,
+                                      required text,
+                                    }) =>
+                                        onTapText(text),
+                                    addPodcast: addPodcast,
+                                    removePodcast: removePodcast,
+                                    imageUrl: podcast
+                                            .value.firstOrNull?.albumArtUrl ??
+                                        podcast.value.firstOrNull?.imageUrl,
+                                  )
+                                : const OfflinePage();
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
   }
 }
 
