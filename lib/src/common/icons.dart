@@ -66,7 +66,7 @@ class Iconz {
           : Icons.podcasts_outlined;
   IconData get podcastFilled => _l
       ? YaruIcons.podcast_filled
-      : _l
+      : _a
           ? CupertinoIcons.dot_radiowaves_left_right
           : Icons.podcasts;
   IconData get radio => _l
