@@ -1039,10 +1039,10 @@ packages:
     dependency: "direct main"
     description:
       name: ubuntu_service
-      sha256: f6ad4dfb099af41e750c59aad00d67a96e22df00f4962d2e25d56ae3db78be49
+      sha256: d402a302f6d6a4a3c2fa3daee82d002f7eb1d99e82cc1e36835d49b58f7ead4d
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.4"
+    version: "0.3.0"
   universal_platform:
     dependency: transitive
     description:
