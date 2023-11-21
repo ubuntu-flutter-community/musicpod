@@ -40,6 +40,7 @@ class _AudioCardState extends State<AudioCard> {
           height: widget.height ?? kSmallCardHeight,
           width: widget.width ?? kSmallCardHeight,
           child: YaruBanner(
+            color: light ? theme.dividerColor : Colors.black,
             padding: EdgeInsets.zero,
             onTap: widget.onTap,
             onHover: (value) => setState(() {

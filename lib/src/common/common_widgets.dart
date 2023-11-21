@@ -313,6 +313,9 @@ bool get shrinkTitleBarItems => _yaruStyled;
 
 double get chipHeight => _yaruStyled ? kYaruTitleBarItemHeight : 35;
 
+EdgeInsetsGeometry get tabViewPadding =>
+    isMobile ? const EdgeInsets.only(top: 15) : const EdgeInsets.only(top: 5);
+
 EdgeInsetsGeometry get gridPadding =>
     isMobile ? kMobileGridPadding : kGridPadding;
 
