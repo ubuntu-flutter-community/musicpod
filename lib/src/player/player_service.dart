@@ -421,6 +421,7 @@ class PlayerService {
 
   void _initSmtc() {
     _smtc = SMTCWindows(
+      enabled: true,
       config: const SMTCConfig(
         fastForwardEnabled: false,
         nextEnabled: true,

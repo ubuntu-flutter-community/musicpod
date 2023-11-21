@@ -40,6 +40,7 @@ class RadioPageTitle extends StatelessWidget {
                   search();
                 },
                 onSubmitted: (value) {
+                  DefaultTabController.of(context).index = 1;
                   setSearchQuery(value);
                   search(name: value);
                 },
