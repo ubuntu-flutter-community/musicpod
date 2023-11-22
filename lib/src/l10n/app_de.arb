@@ -66,6 +66,7 @@
     "newEpisodeAvailable": "Neue Episode verfügbar:",
     "noStationFound": "🐣🔎📻❓\n\nEntschuldigung, es wurde kein Sender mit diesem Suchbegriff gefunden.",
     "nothingFound": "🐣🔎❓\n\nNichts gefunden",
+    "noStarredStations": "🐣🔎📻❓\n\nDu hast noch keine Radiosender mit dem Stern-Button favorisiert.",
     "tags": "Tags",
     "quality": "Qualität",
     "station": "Station",

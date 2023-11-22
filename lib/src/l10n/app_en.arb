@@ -66,6 +66,7 @@
     "newEpisodeAvailable": "New episode available:",
     "noStationFound": "🐣🔎📻❓\n\nSorry, no stations found with this search query",
     "nothingFound": "🐣🔎❓\n\nNothing found",
+    "noStarredStations": "🐣🔎📻❓\n\nYou haven't starred any stations yet.",
     "tags": "Tags",
     "quality": "Quality",
     "station": "Station",
