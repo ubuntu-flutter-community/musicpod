@@ -259,16 +259,25 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      textAlign: TextAlign.center,
-      controller: _controller,
-      key: widget.key,
-      autofocus: true,
-      onSubmitted: widget.onSubmitted,
-      decoration: InputDecoration(
-        suffixIcon: IconButton(
-          onPressed: widget.onClear,
-          icon: const Icon(Icons.clear),
+    return SizedBox(
+      height: 38,
+      child: TextField(
+        controller: _controller,
+        key: widget.key,
+        autofocus: true,
+        onSubmitted: widget.onSubmitted,
+        decoration: InputDecoration(
+          border: const OutlineInputBorder(),
+          contentPadding:
+              const EdgeInsets.only(top: 10, bottom: 8, left: 10, right: 10),
+          filled: true,
+          suffixIcon: IconButton(
+            onPressed: () {
+              widget.onClear?.call();
+              _controller.clear();
+            },
+            icon: const Icon(Icons.clear),
+          ),
         ),
       ),
     );
@@ -354,8 +363,8 @@ Gradient? getAudioPageHeaderGradient(ThemeData theme) {
 }
 
 EdgeInsetsGeometry get appBarActionSpacing => Platform.isMacOS
-    ? const EdgeInsets.only(right: 5, left: 20)
-    : const EdgeInsets.only(right: 20, left: 20);
+    ? const EdgeInsets.only(right: 5, left: 40)
+    : const EdgeInsets.only(right: 20, left: 40);
 
 class CommonSwitch extends StatelessWidget {
   const CommonSwitch({super.key, required this.value, this.onChanged});

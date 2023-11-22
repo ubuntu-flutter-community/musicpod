@@ -30,22 +30,23 @@ class RadioPageTitle extends StatelessWidget {
     return Builder(
       builder: (context) {
         return searchActive
-            ? SearchingBar(
-                key: ValueKey(searchQuery),
-                text: searchQuery,
-                onClear: () {
-                  setTag(null);
-                  setSearchActive(false);
-                  setSearchQuery(null);
-                  search();
-                },
-                onSubmitted: (value) {
-                  if (!discoverFirst) {
-                    DefaultTabController.of(context).index = 1;
-                  }
-                  setSearchQuery(value);
-                  search(name: value);
-                },
+            ? SizedBox(
+                width: kSearchBarWidth,
+                child: SearchingBar(
+                  key: ValueKey(searchQuery),
+                  text: searchQuery,
+                  onClear: () {
+                    setSearchQuery(null);
+                    search(tag: null, name: null);
+                  },
+                  onSubmitted: (value) {
+                    if (!discoverFirst) {
+                      DefaultTabController.of(context).index = 1;
+                    }
+                    setSearchQuery(value);
+                    search(name: value);
+                  },
+                ),
               )
             : SizedBox(
                 width: kSearchBarWidth,
