@@ -109,9 +109,9 @@ class _RadioPageState extends State<RadioPage> {
     if (!widget.isOnline) {
       return const OfflinePage();
     } else {
-      Widget disoverGrid;
+      Widget discoverGrid;
       if (connected == false) {
-        disoverGrid = _ReconnectPage(
+        discoverGrid = _ReconnectPage(
           text: 'Not connected to any radiobrowser server.',
           init: () => readSetting(kLastFav).then(
             (value) => context.read<RadioModel>().init(
@@ -123,7 +123,7 @@ class _RadioPageState extends State<RadioPage> {
         );
       } else {
         if (stations == null) {
-          disoverGrid = GridView(
+          discoverGrid = GridView(
             gridDelegate: imageGridDelegate,
             padding: gridPadding,
             children: List.generate(limit, (index) => Audio())
@@ -137,7 +137,7 @@ class _RadioPageState extends State<RadioPage> {
         } else {
           if (stationsCount == 0) {
             if (statusCode != '200') {
-              disoverGrid = _ReconnectPage(
+              discoverGrid = _ReconnectPage(
                 text: statusCode,
                 init: () => readSetting(kLastFav).then(
                   (value) => context.read<RadioModel>().init(
@@ -148,12 +148,12 @@ class _RadioPageState extends State<RadioPage> {
                 ),
               );
             } else {
-              disoverGrid = NoSearchResultPage(
+              discoverGrid = NoSearchResultPage(
                 message: Text(context.l10n.noStationFound),
               );
             }
           } else {
-            disoverGrid = GridView.builder(
+            discoverGrid = GridView.builder(
               padding: gridPadding,
               gridDelegate: imageGridDelegate,
               itemCount: stationsCount,
@@ -181,7 +181,7 @@ class _RadioPageState extends State<RadioPage> {
           const SizedBox(
             height: 15,
           ),
-          Expanded(child: disoverGrid),
+          Expanded(child: discoverGrid),
         ],
       );
 

@@ -336,7 +336,9 @@ class _Title extends StatelessWidget {
                   search();
                 },
                 onSubmitted: (value) {
-                  DefaultTabController.of(context).index = 1;
+                  if (!chartsFirst) {
+                    DefaultTabController.of(context).index = 1;
+                  }
 
                   setSearchQuery(value);
 
@@ -387,6 +389,7 @@ class _SubsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final subs = context.select((LibraryModel m) => m.podcasts);
     final updates = context.select((LibraryModel m) => m.podcastUpdates);
     final updatesLength =
@@ -441,16 +444,20 @@ class _SubsBody extends StatelessWidget {
 
                     return AudioCard(
                       image: image,
-                      bottom: Stack(
-                        children: [
-                          AudioCardBottom(
-                            text: podcast.value.firstOrNull?.album ??
-                                podcast.value.firstOrNull?.title ??
-                                podcast.value.firstOrNull.toString(),
-                          ),
-                          if (updates.contains(podcast.key))
-                            const Positioned(right: 5, top: 5, child: Badge()),
-                        ],
+                      bottom: AudioCardBottom(
+                        style: updates.contains(podcast.key)
+                            ? theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                ) ??
+                                TextStyle(
+                                  color: theme.colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                )
+                            : null,
+                        text: podcast.value.firstOrNull?.album ??
+                            podcast.value.firstOrNull?.title ??
+                            podcast.value.firstOrNull.toString(),
                       ),
                       onPlay: () => startPlaylist(
                         podcast.value,
