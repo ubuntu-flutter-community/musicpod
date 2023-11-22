@@ -113,5 +113,8 @@
     "noThankYou": "No, thank you.",
     "recreateLocalAudioCache": "Recreate local audio cache",
     "useALocalAudioCache": "Use local audio cache",
-    "newEpisodes": "New episodes"
+    "newEpisodes": "New Episodes",
+    "collection": "Collection",
+    "addToCollection": "Add to collection",
+    "removeFromCollection": "Remove from collection"
 }

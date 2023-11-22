@@ -89,11 +89,16 @@ class Iconz {
       : _a
           ? CupertinoIcons.device_laptop
           : Icons.sd_storage;
-  IconData get rss => _l
-      ? YaruIcons.rss
+  IconData get addToLibrary => _l
+      ? YaruIcons.plus
       : _a
-          ? CupertinoIcons.radiowaves_right
-          : Icons.rss_feed_outlined;
+          ? CupertinoIcons.plus
+          : Icons.add;
+  IconData get removeFromLibrary => _l
+      ? YaruIcons.checkmark
+      : _a
+          ? CupertinoIcons.check_mark
+          : Icons.check;
   IconData get refresh => _l
       ? YaruIcons.refresh
       : _a

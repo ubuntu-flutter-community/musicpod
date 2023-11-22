@@ -54,10 +54,10 @@ class RadioPageTitle extends StatelessWidget {
                   tabs: discoverFirst
                       ? [
                           Tab(text: context.l10n.discover),
-                          Tab(text: context.l10n.library),
+                          Tab(text: context.l10n.collection),
                         ]
                       : [
-                          Tab(text: context.l10n.library),
+                          Tab(text: context.l10n.collection),
                           Tab(text: context.l10n.discover),
                         ],
                 ),
