@@ -114,7 +114,7 @@ class SettingsTile extends StatelessWidget {
           Iconz().menu,
         ),
         onPressed: () =>
-            showStyledPopover(context: context, content: content, height: 430),
+            showStyledPopover(context: context, content: content, height: 450),
       ),
     );
   }

@@ -49,6 +49,7 @@ class _LocalAudioPageState extends State<LocalAudioPage>
           );
         },
       ).then((_) {
+        if (!mounted) return;
         if ((model.localAudioCache == null &&
                 model.useLocalAudioCache == null) &&
             model.audios != null &&
