@@ -10,11 +10,13 @@ class VolumeSliderPopup extends StatefulWidget {
     required this.volume,
     required this.setVolume,
     this.color,
+    required this.direction,
   });
 
   final double volume;
   final Future<void> Function(double value) setVolume;
   final Color? color;
+  final PopoverDirection direction;
 
   @override
   State<VolumeSliderPopup> createState() => _VolumeSliderPopupState();
@@ -36,16 +38,19 @@ class _VolumeSliderPopupState extends State<VolumeSliderPopup> {
 
     final content = StatefulBuilder(
       builder: (context, stateSetter) {
-        return Slider(
-          value: widget.volume,
-          onChanged: (value) async {
-            await widget.setVolume(value);
-            stateSetter(
-              () {},
-            );
-          },
-          max: 100,
-          min: 0,
+        return Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: Slider(
+            value: widget.volume,
+            onChanged: (value) async {
+              await widget.setVolume(value);
+              stateSetter(
+                () {},
+              );
+            },
+            max: 100,
+            min: 0,
+          ),
         );
       },
     );
@@ -61,7 +66,7 @@ class _VolumeSliderPopupState extends State<VolumeSliderPopup> {
         context: context,
         content: content,
         height: 50,
-        direction: PopoverDirection.top,
+        direction: widget.direction,
       ),
     );
   }

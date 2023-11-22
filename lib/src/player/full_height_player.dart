@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:popover/popover.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
@@ -245,6 +246,7 @@ class FullHeightPlayer extends StatelessWidget {
                 color: iconColor,
               ),
               VolumeSliderPopup(
+                direction: PopoverDirection.bottom,
                 volume: volume,
                 setVolume: setVolume,
                 color: iconColor,

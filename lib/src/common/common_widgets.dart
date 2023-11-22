@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:popover/popover.dart';
+import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -426,20 +427,19 @@ Future<Object?> showStyledPopover({
     direction: direction,
     shadow: [
       BoxShadow(
-        color: light ? theme.dividerColor : Colors.white.withOpacity(0.2),
+        color: Colors.black.withOpacity(0.2),
         offset: const Offset(0, 0),
-        spreadRadius: 1,
-        blurRadius: light ? 3 : 0,
+        spreadRadius: 2,
+        blurRadius: 4,
       ),
     ],
-    backgroundColor: theme.dialogBackgroundColor,
+    backgroundColor:
+        light ? Colors.white : theme.colorScheme.surface.scale(lightness: 0.05),
     barrierColor: Colors.transparent,
     width: 230,
     height: height,
     arrowHeight: 15,
     arrowWidth: 30,
-    arrowDxOffset: -1,
-    arrowDyOffset: -1,
     bodyBuilder: (context) {
       return content;
     },
