@@ -69,16 +69,6 @@ class PlayerService {
     _mpvMetaDataController.add(true);
   }
 
-  final _fullScreenController = StreamController<bool>.broadcast();
-  Stream<bool> get fullScreenChanged => _fullScreenController.stream;
-  bool? _fullScreen;
-  bool? get fullScreen => _fullScreen;
-  void setFullScreen(bool? value) {
-    if (value == null || value == _fullScreen) return;
-    _fullScreen = value;
-    _fullScreenController.add(true);
-  }
-
   final _audioController = StreamController<bool>.broadcast();
   Stream<bool> get audioChanged => _audioController.stream;
   Audio? _audio;
@@ -374,15 +364,6 @@ class PlayerService {
     }
   }
 
-  final _isUpNextExpandedController = StreamController<bool>.broadcast();
-  bool _isUpNextExpanded = false;
-  bool get isUpNextExpanded => _isUpNextExpanded;
-  void setUpNextExpanded(bool value) {
-    if (value == _isUpNextExpanded) return;
-    _isUpNextExpanded = value;
-    _isUpNextExpandedController.add(true);
-  }
-
   Future<void> _readPlayerState() async {
     final playerState = await libraryService.readPlayerState();
 
@@ -614,11 +595,9 @@ class PlayerService {
     await _volumeController.close();
     await _shuffleController.close();
     await _durationController.close();
-    await _fullScreenController.close();
     await _isVideoController.close();
     await _positionController.close();
     await _isPlayingController.close();
-    await _isUpNextExpandedController.close();
     await _repeatSingleController.close();
     await _isPlayingSub?.cancel();
     await _positionSub?.cancel();

@@ -327,27 +327,30 @@ class _Title extends StatelessWidget {
     return Builder(
       builder: (context) {
         return searchActive
-            ? SearchingBar(
-                key: ValueKey(searchQuery),
-                text: searchQuery,
-                onClear: () {
-                  setSearchActive(false);
-                  setSearchQuery('');
-                  search();
-                },
-                onSubmitted: (value) {
-                  if (!chartsFirst) {
-                    DefaultTabController.of(context).index = 1;
-                  }
-
-                  setSearchQuery(value);
-
-                  if (value?.isEmpty == true) {
+            ? SizedBox(
+                width: kSearchBarWidth,
+                child: SearchingBar(
+                  key: ValueKey(searchQuery),
+                  text: searchQuery,
+                  onClear: () {
+                    setSearchActive(false);
+                    setSearchQuery('');
                     search();
-                  } else {
-                    search(searchQuery: value);
-                  }
-                },
+                  },
+                  onSubmitted: (value) {
+                    if (!chartsFirst) {
+                      DefaultTabController.of(context).index = 1;
+                    }
+
+                    setSearchQuery(value);
+
+                    if (value?.isEmpty == true) {
+                      search();
+                    } else {
+                      search(searchQuery: value);
+                    }
+                  },
+                ),
               )
             : SizedBox(
                 width: kSearchBarWidth,
