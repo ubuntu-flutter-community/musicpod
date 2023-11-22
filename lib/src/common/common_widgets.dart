@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:popover/popover.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -402,6 +403,46 @@ class ImportantButton extends StatelessWidget {
             onPressed: onPressed,
             child: child,
           )
-        : ElevatedButton(onPressed: onPressed, child: child);
+        : _yaruStyled
+            ? ElevatedButton(
+                onPressed: onPressed,
+                child: child,
+              )
+            : FilledButton(onPressed: onPressed, child: child);
   }
+}
+
+Future<Object?> showStyledPopover({
+  required BuildContext context,
+  required Widget content,
+  PopoverDirection direction = PopoverDirection.bottom,
+  double? height,
+}) {
+  final theme = Theme.of(context);
+  final light = theme.brightness == Brightness.light;
+  return showPopover(
+    context: context,
+    // onPop: () => print('Popover was popped!'),
+    direction: direction,
+    shadow: [
+      BoxShadow(
+        color: light ? theme.dividerColor : Colors.white.withOpacity(0.2),
+        offset: const Offset(0, 0),
+        spreadRadius: 1,
+        blurRadius: light ? 3 : 0,
+      ),
+    ],
+    backgroundColor: theme.dialogBackgroundColor,
+    barrierColor: Colors.transparent,
+    width: 230,
+    height: height,
+    arrowHeight: 15,
+    arrowWidth: 30,
+    arrowDxOffset: -1,
+    arrowDyOffset: -1,
+    bodyBuilder: (context) {
+      return content;
+    },
+    transitionDuration: Duration.zero,
+  );
 }

@@ -48,74 +48,73 @@ class SettingsTile extends StatelessWidget {
           );
     }
 
+    final content = Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Column(
+        children: [
+          const SizedBox(
+            height: kYaruPagePadding,
+          ),
+          ImportantButton(
+            onPressed: () async {
+              final directoryPath = await getDirectoryPath();
+
+              await onDirectorySelected(directoryPath)
+                  .then((value) => Navigator.of(context).pop());
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Text(
+                context.l10n.pickMusicCollection,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          const SpacedDivider(
+            top: 0,
+            bottom: 0,
+          ),
+          const ShopRecommendations(),
+          const SizedBox(
+            height: kYaruPagePadding,
+          ),
+          const SpacedDivider(
+            bottom: 10,
+            top: 0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(context.l10n.useALocalAudioCache),
+              CommonSwitch(
+                value: useLocalAudioCache == true,
+                onChanged: (value) {
+                  setUseLocalAudioCache(value)
+                      .then((_) => Navigator.of(context).pop());
+                },
+              ),
+            ],
+          ),
+          TextButton.icon(
+            onPressed: () {
+              createLocalAudioCache();
+            },
+            icon: Icon(Iconz().refresh),
+            label: Text(context.l10n.recreateLocalAudioCache),
+          ),
+          const AboutTile(),
+        ],
+      ),
+    );
+
     return Center(
-      child: PopupMenuButton(
+      child: IconButton(
         padding: EdgeInsets.zero,
         icon: Icon(
           Iconz().menu,
         ),
-        itemBuilder: (BuildContext context) {
-          return [
-            PopupMenuItem(
-              enabled: false,
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: kYaruPagePadding,
-                  ),
-                  ImportantButton(
-                    onPressed: () async {
-                      final directoryPath = await getDirectoryPath();
-
-                      await onDirectorySelected(directoryPath)
-                          .then((value) => Navigator.of(context).pop());
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Text(
-                        context.l10n.pickMusicCollection,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                  const SpacedDivider(
-                    top: 0,
-                    bottom: 0,
-                  ),
-                  const ShopRecommendations(),
-                  const SizedBox(
-                    height: kYaruPagePadding,
-                  ),
-                  const SpacedDivider(
-                    bottom: 10,
-                    top: 0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(context.l10n.useALocalAudioCache),
-                      CommonSwitch(
-                        value: useLocalAudioCache == true,
-                        onChanged: (value) {
-                          setUseLocalAudioCache(value)
-                              .then((_) => Navigator.of(context).pop());
-                        },
-                      ),
-                    ],
-                  ),
-                  TextButton.icon(
-                    onPressed: () {
-                      createLocalAudioCache();
-                    },
-                    icon: Icon(Iconz().refresh),
-                    label: Text(context.l10n.recreateLocalAudioCache),
-                  ),
-                  const AboutTile(),
-                ],
-              ),
-            ),
-          ];
-        },
+        onPressed: () =>
+            showStyledPopover(context: context, content: content, height: 430),
       ),
     );
   }

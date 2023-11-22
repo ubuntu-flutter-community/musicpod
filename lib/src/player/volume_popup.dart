@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../common/icons.dart';
+import 'package:popover/popover.dart';
 
+import '../../common.dart';
 import '../l10n/l10n.dart';
 
 class VolumeSliderPopup extends StatefulWidget {
@@ -33,35 +34,35 @@ class _VolumeSliderPopupState extends State<VolumeSliderPopup> {
       iconData = Iconz().speakerHighFilled;
     }
 
-    return PopupMenuButton<double>(
+    final content = StatefulBuilder(
+      builder: (context, stateSetter) {
+        return Slider(
+          value: widget.volume,
+          onChanged: (value) async {
+            await widget.setVolume(value);
+            stateSetter(
+              () {},
+            );
+          },
+          max: 100,
+          min: 0,
+        );
+      },
+    );
+
+    return IconButton(
       padding: EdgeInsets.zero,
       tooltip: context.l10n.volume,
       icon: Icon(
         iconData,
         color: widget.color,
       ),
-      itemBuilder: (context) {
-        return [
-          PopupMenuItem(
-            enabled: false,
-            child: StatefulBuilder(
-              builder: (context, stateSetter) {
-                return Slider(
-                  value: widget.volume,
-                  onChanged: (value) async {
-                    await widget.setVolume(value);
-                    stateSetter(
-                      () {},
-                    );
-                  },
-                  max: 100,
-                  min: 0,
-                );
-              },
-            ),
-          ),
-        ];
-      },
+      onPressed: () => showStyledPopover(
+        context: context,
+        content: content,
+        height: 50,
+        direction: PopoverDirection.top,
+      ),
     );
   }
 }

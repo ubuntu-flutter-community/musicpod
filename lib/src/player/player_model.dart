@@ -17,7 +17,6 @@ class PlayerModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _queueNameChangedSub;
   StreamSubscription<bool>? _queueChangedSub;
   StreamSubscription<bool>? _mpvMetaDataChangedSub;
-  StreamSubscription<bool>? _fullScreenChanged;
   StreamSubscription<bool>? _audioChangedSub;
   StreamSubscription<bool>? _isVideoChangedSub;
   StreamSubscription<bool>? _nextAudioChangedSub;
@@ -82,8 +81,7 @@ class PlayerModel extends SafeChangeNotifier {
     _queueChangedSub = service.queueChanged.listen((_) => notifyListeners());
     _mpvMetaDataChangedSub =
         service.mpvMetaDataChanged.listen((_) => notifyListeners());
-    _fullScreenChanged =
-        service.fullScreenChanged.listen((_) => notifyListeners());
+
     _audioChangedSub = service.audioChanged.listen((_) => notifyListeners());
     _isVideoChangedSub =
         service.isVideoChanged.listen((_) => notifyListeners());
@@ -116,8 +114,13 @@ class PlayerModel extends SafeChangeNotifier {
 
   Color? get color => service.color;
 
-  bool get isUpNextExpanded => service.isUpNextExpanded;
-  void setUpNextExpanded(bool value) => service.setUpNextExpanded(value);
+  bool _isUpNextExpanded = false;
+  bool get isUpNextExpanded => _isUpNextExpanded;
+  void setUpNextExpanded(bool value) {
+    if (value == _isUpNextExpanded) return;
+    _isUpNextExpanded = value;
+    notifyListeners();
+  }
 
   void safeLastPosition() => service.safeLastPosition();
 
@@ -126,7 +129,6 @@ class PlayerModel extends SafeChangeNotifier {
     await _queueNameChangedSub?.cancel();
     await _queueChangedSub?.cancel();
     await _mpvMetaDataChangedSub?.cancel();
-    await _fullScreenChanged?.cancel();
     await _audioChangedSub?.cancel();
     await _isVideoChangedSub?.cancel();
     await _nextAudioChangedSub?.cancel();
