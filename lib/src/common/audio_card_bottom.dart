@@ -7,10 +7,12 @@ class AudioCardBottom extends StatelessWidget {
     super.key,
     this.text,
     this.maxLines = 1,
+    this.style,
   });
 
   final String? text;
   final int maxLines;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +49,10 @@ class AudioCardBottom extends StatelessWidget {
                 )
               : Text(
                   text ?? '',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.9),
-                  ),
+                  style: style ??
+                      theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.9),
+                      ),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   maxLines: maxLines,
