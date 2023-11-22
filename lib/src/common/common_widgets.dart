@@ -399,17 +399,12 @@ class ImportantButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _cupertino
-        ? CupertinoButton.filled(
+    return _yaruStyled
+        ? ElevatedButton(
             onPressed: onPressed,
             child: child,
           )
-        : _yaruStyled
-            ? ElevatedButton(
-                onPressed: onPressed,
-                child: child,
-              )
-            : FilledButton(onPressed: onPressed, child: child);
+        : FilledButton(onPressed: onPressed, child: child);
   }
 }
 
@@ -436,7 +431,7 @@ Future<Object?> showStyledPopover({
     backgroundColor:
         light ? Colors.white : theme.colorScheme.surface.scale(lightness: 0.05),
     barrierColor: Colors.transparent,
-    width: 230,
+    width: 250,
     height: height,
     arrowHeight: 15,
     arrowWidth: 30,

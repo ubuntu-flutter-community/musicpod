@@ -39,10 +39,10 @@ class PodcastPage extends StatelessWidget {
           fit: BoxFit.fitHeight,
           filterQuality: FilterQuality.medium,
           fallBackIcon: Icon(
-            Iconz().rss,
+            Iconz().podcast,
           ),
           errorIcon: Icon(
-            Iconz().rss,
+            Iconz().podcast,
           ),
         ),
       ),
@@ -111,12 +111,18 @@ class PodcastPage extends StatelessWidget {
       title: Text(title),
       controlPanelTitle: Text(title),
       controlPanelButton: IconButton(
-        icon: Icon(
-          Iconz().rss,
-          color: subscribed
-              ? theme.colorScheme.primary
-              : theme.colorScheme.onSurface,
-        ),
+        tooltip: subscribed
+            ? context.l10n.removeFromCollection
+            : context.l10n.addToCollection,
+        icon: subscribed
+            ? Icon(
+                Iconz().removeFromLibrary,
+                color: theme.colorScheme.primary,
+              )
+            : Icon(
+                Iconz().addToLibrary,
+                color: theme.colorScheme.onSurface,
+              ),
         onPressed: () {
           if (subscribed) {
             removePodcast(pageId);

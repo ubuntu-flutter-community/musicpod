@@ -359,12 +359,12 @@ class _Title extends StatelessWidget {
                       ? [
                           Tab(text: context.l10n.discover),
                           Tab(
-                            text: context.l10n.library,
+                            text: context.l10n.collection,
                           ),
                         ]
                       : [
                           Tab(
-                            text: context.l10n.library,
+                            text: context.l10n.collection,
                           ),
                           Tab(text: context.l10n.discover),
                         ],
@@ -400,6 +400,7 @@ class _SubsBody extends StatelessWidget {
     final updatesOnly = context.select((PodcastModel m) => m.updatesOnly);
     final subsLength = context.select((LibraryModel m) => m.podcastsLength);
     final setUpdatesOnly = context.read<PodcastModel>().setUpdatesOnly;
+    final subscribed = context.read<LibraryModel>().podcastSubscribed;
 
     return subsLength == 0
         ? NoSearchResultPage(
@@ -469,8 +470,11 @@ class _SubsBody extends StatelessWidget {
                       onTap: () => navigatorKey.currentState?.push(
                         MaterialPageRoute(
                           builder: (context) {
+                            final subbed = subscribed(podcast.key);
+
                             return isOnline
                                 ? PodcastPage(
+                                    subscribed: subbed,
                                     pageId: podcast.key,
                                     title: podcast.value.firstOrNull?.album ??
                                         podcast.value.firstOrNull?.title ??
