@@ -101,6 +101,9 @@ class FullHeightPlayer extends StatelessWidget {
 
     final activeControls = audio?.path != null || isOnline;
 
+    final label = mpvMetaData?.icyTitle.isNotEmpty == true
+        ? mpvMetaData!.icyTitle
+        : (audio?.title?.isNotEmpty == true ? audio!.title! : '');
     final title = InkWell(
       borderRadius: BorderRadius.circular(10),
       onTap: () => onTitleTap(
@@ -110,18 +113,19 @@ class FullHeightPlayer extends StatelessWidget {
         onTextTap: (audioType, text) =>
             onTextTap(audioType: audioType, text: text),
       ),
-      child: Text(
-        mpvMetaData?.icyTitle.isNotEmpty == true
-            ? mpvMetaData!.icyTitle
-            : (audio?.title?.isNotEmpty == true ? audio!.title! : ''),
-        style: TextStyle(
-          fontWeight: mediumTextWeight,
-          fontSize: 30,
-          color: theme.colorScheme.onSurface,
+      child: Tooltip(
+        message: label,
+        child: Text(
+          label,
+          style: TextStyle(
+            fontWeight: mediumTextWeight,
+            fontSize: 30,
+            color: theme.colorScheme.onSurface,
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
-        textAlign: TextAlign.center,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
       ),
     );
 
@@ -203,10 +207,7 @@ class FullHeightPlayer extends StatelessWidget {
                   const SizedBox(
                     height: kYaruPagePadding,
                   ),
-                  if (audio != null)
-                    FittedBox(
-                      child: title,
-                    ),
+                  if (audio != null) title,
                   artist,
                   const SizedBox(
                     height: kYaruPagePadding,
