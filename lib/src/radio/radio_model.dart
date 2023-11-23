@@ -100,16 +100,16 @@ class RadioModel extends SafeChangeNotifier {
 
     _tagsSub = _radioService.tagsChanged.listen((_) => notifyListeners());
 
+    _country ??= Country.values.firstWhereOrNull((c) => c.code == countryCode);
+
     if (connected == true) {
       await _radioService.loadTags();
+      _tag ??= lastFav == null || tags == null || tags!.isEmpty
+          ? null
+          : tags!.firstWhere((t) => t.name.contains(lastFav));
 
       if (stations == null) {
-        final c = Country.values.firstWhereOrNull((c) => c.code == countryCode);
-        _country = c;
-        if (_tag == null) {
-          _tag = lastFav == null || tags == null || tags!.isEmpty
-              ? null
-              : tags!.firstWhere((t) => t.name.contains(lastFav));
+        if (_tag != null) {
           await loadStationsByTag();
         } else {
           await loadStationsByCountry();

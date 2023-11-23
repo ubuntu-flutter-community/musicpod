@@ -25,14 +25,14 @@ class NavBackButton extends StatelessWidget {
           padding: const EdgeInsets.only(top: 16, left: 13),
           child: Center(
             child: SizedBox(
-              height: 13,
-              width: 13,
+              height: 15,
+              width: 15,
               child: InkWell(
                 borderRadius: BorderRadius.circular(20),
                 onTap: () => Navigator.maybePop(context),
                 child: Icon(
                   Iconz().goBack,
-                  size: 12,
+                  size: 10,
                 ),
               ),
             ),
