@@ -562,14 +562,15 @@ class PodcastsPageIcon extends StatelessWidget {
     super.key,
     required this.isPlaying,
     required this.selected,
-    required this.checkingForUpdates,
   });
 
-  final bool isPlaying, selected, checkingForUpdates;
+  final bool isPlaying, selected;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final checkingForUpdates =
+        context.select((PodcastModel m) => m.checkingForUpdates);
 
     if (checkingForUpdates) {
       return const SideBarProgress();

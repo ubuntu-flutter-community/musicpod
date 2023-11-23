@@ -139,8 +139,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
     // Podcasts
     final podcastModel = context.read<PodcastModel>();
-    final checkingForPodcastUpdates =
-        context.select((PodcastModel m) => m.checkingForUpdates);
 
     // Radio
     final radioModel = context.read<RadioModel>();
@@ -189,7 +187,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     context.select((LibraryModel m) => m.starredStations.length);
     context.select((LibraryModel m) => m.playlists.length);
     context.select((LibraryModel m) => m.playlists.keys);
-    context.select((LibraryModel m) => m.podcastUpdates.length);
 
     void onTextTap({
       required String text,
@@ -248,8 +245,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       unStarStation: libraryModel.unStarStation,
       play: play,
       countryCode: _countryCode,
-      podcastUpdateAvailable: libraryModel.podcastUpdateAvailable,
-      checkingForPodcastUpdates: checkingForPodcastUpdates,
     );
 
     final yaruMasterDetailPage = MasterDetailPage(
