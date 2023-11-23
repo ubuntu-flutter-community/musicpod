@@ -40,9 +40,7 @@ List<MasterItem> createMasterItems({
   required void Function(String name) unStarStation,
   required Future<void> Function({Duration? newPosition, Audio? newAudio}) play,
   required String? countryCode,
-  required bool Function(String feedUrl) podcastUpdateAvailable,
   required bool showFilter,
-  required bool checkingForPodcastUpdates,
 }) {
   return [
     MasterItem(
@@ -78,7 +76,6 @@ List<MasterItem> createMasterItems({
       },
       iconBuilder: (context, selected) => PodcastsPageIcon(
         selected: selected,
-        checkingForUpdates: checkingForPodcastUpdates,
         isPlaying: audioType == AudioType.podcast,
       ),
     ),
@@ -119,12 +116,11 @@ List<MasterItem> createMasterItems({
     if (showSubbedPodcasts)
       for (final podcast in subbedPodcasts.entries)
         MasterItem(
-          titleBuilder: (context) => PodcastPage.createTitle(
-            context: context,
+          titleBuilder: (context) => PodcastPageTitle(
+            feedUrl: podcast.key,
             title: podcast.value.firstOrNull?.album ??
                 podcast.value.firstOrNull?.title ??
                 podcast.value.firstOrNull.toString(),
-            update: podcastUpdateAvailable(podcast.key),
           ),
           pageBuilder: (context) => isOnline
               ? PodcastPage(

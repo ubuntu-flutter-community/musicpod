@@ -49,19 +49,6 @@ class PodcastPage extends StatelessWidget {
     );
   }
 
-  static Widget createTitle({
-    required BuildContext context,
-    required String title,
-    required update,
-  }) {
-    return Badge(
-      alignment: Alignment.bottomRight,
-      isLabelVisible: update,
-      label: Text(context.l10n.newEpisode),
-      child: Text(title),
-    );
-  }
-
   final void Function(String feedUrl) removePodcast;
   final void Function(String feedUrl, Set<Audio> audios) addPodcast;
   final void Function({
@@ -131,6 +118,30 @@ class PodcastPage extends StatelessWidget {
           }
         },
       ),
+    );
+  }
+}
+
+class PodcastPageTitle extends StatelessWidget {
+  const PodcastPageTitle({
+    super.key,
+    required this.feedUrl,
+    required this.title,
+  });
+
+  final String feedUrl;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    context.select((LibraryModel m) => m.podcastUpdates);
+
+    return Badge(
+      isLabelVisible:
+          context.read<LibraryModel>().podcastUpdateAvailable(feedUrl),
+      alignment: Alignment.bottomRight,
+      label: Text(context.l10n.newEpisode),
+      child: Text(title),
     );
   }
 }
