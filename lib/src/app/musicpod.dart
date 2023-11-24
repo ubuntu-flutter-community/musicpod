@@ -8,18 +8,16 @@ import 'package:yaru/yaru.dart';
 import '../../app.dart';
 import '../../common.dart';
 import '../../library.dart';
+import '../../theme.dart';
 import '../l10n/l10n.dart';
 import 'app.dart';
-import 'theme.dart';
 
 class MusicPod extends StatelessWidget {
-  const MusicPod({super.key, required this.yaruApp});
-
-  final bool yaruApp;
+  const MusicPod({super.key});
 
   @override
   Widget build(BuildContext context) {
-    if (yaruApp) {
+    if (yaruStyled) {
       return YaruTheme(
         builder: (context, yaruThemeData, child) {
           return GtkApplication(

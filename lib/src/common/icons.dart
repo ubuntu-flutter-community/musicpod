@@ -1,9 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/constants.dart';
+
+import '../../theme.dart';
 
 class Iconz {
   static final Iconz _instance = Iconz._internal();
@@ -12,225 +12,226 @@ class Iconz {
   Iconz._internal();
 
   IconData get menu {
-    return _l
+    return yaruStyled
         ? YaruIcons.menu
-        : _a
+        : appleStyled
             ? CupertinoIcons.bars
             : Icons.menu;
   }
 
-  IconData get musicNote => _l
+  IconData get musicNote => yaruStyled
       ? YaruIcons.music_note
-      : _a
+      : appleStyled
           ? CupertinoIcons.double_music_note
           : Icons.music_note;
-  IconData get external => _l
+  IconData get external => yaruStyled
       ? YaruIcons.external_link
-      : _a
+      : appleStyled
           ? CupertinoIcons.link
           : Icons.link;
-  IconData get starFilled => _l
+  IconData get starFilled => yaruStyled
       ? YaruIcons.star_filled
-      : _a
+      : appleStyled
           ? CupertinoIcons.star_fill
           : Icons.star;
-  IconData get star => _l
+  IconData get star => yaruStyled
       ? YaruIcons.star
-      : _a
+      : appleStyled
           ? CupertinoIcons.star
           : Icons.star_outline;
-  IconData get offline => _l
+  IconData get offline => yaruStyled
       ? YaruIcons.network_offline
-      : _a
+      : appleStyled
           ? CupertinoIcons.wifi_slash
           : Icons.offline_bolt;
-  IconData get pause => _l
+  IconData get pause => yaruStyled
       ? YaruIcons.media_pause
-      : _a
+      : appleStyled
           ? CupertinoIcons.pause
           : Icons.pause;
-  IconData get play => _l
+  IconData get play => yaruStyled
       ? YaruIcons.media_play
-      : _a
+      : appleStyled
           ? CupertinoIcons.play
           : Icons.play_arrow;
-  IconData get download => _l
+  IconData get download => yaruStyled
       ? YaruIcons.download
-      : _a
+      : appleStyled
           ? CupertinoIcons.down_arrow
           : Icons.download;
-  IconData get podcast => _l
+  IconData get podcast => yaruStyled
       ? YaruIcons.podcast
-      : _a
+      : appleStyled
           ? CupertinoIcons.dot_radiowaves_left_right
           : Icons.podcasts_outlined;
-  IconData get podcastFilled => _l
+  IconData get podcastFilled => yaruStyled
       ? YaruIcons.podcast_filled
-      : _a
+      : appleStyled
           ? CupertinoIcons.dot_radiowaves_left_right
           : Icons.podcasts;
-  IconData get radio => _l
+  IconData get radio => yaruStyled
       ? YaruIcons.radio
-      : _a
+      : appleStyled
           ? CupertinoIcons.antenna_radiowaves_left_right
           : Icons.radio_outlined;
-  IconData get radioFilled => _l
+  IconData get radioFilled => yaruStyled
       ? YaruIcons.radio_filled
-      : _a
+      : appleStyled
           ? CupertinoIcons.antenna_radiowaves_left_right
           : Icons.radio;
-  IconData get localAudio => _l
+  IconData get localAudio => yaruStyled
       ? YaruIcons.drive_harddisk
-      : _a
+      : appleStyled
           ? CupertinoIcons.device_laptop
           : Icons.sd_storage_outlined;
-  IconData get localAudioFilled => _l
+  IconData get localAudioFilled => yaruStyled
       ? YaruIcons.drive_harddisk_filled
-      : _a
+      : appleStyled
           ? CupertinoIcons.device_laptop
           : Icons.sd_storage;
-  IconData get addToLibrary => _l
+  IconData get addToLibrary => yaruStyled
       ? YaruIcons.plus
-      : _a
+      : appleStyled
           ? CupertinoIcons.plus
           : Icons.add;
-  IconData get removeFromLibrary => _l
+  IconData get removeFromLibrary => yaruStyled
       ? YaruIcons.checkmark
-      : _a
+      : appleStyled
           ? CupertinoIcons.check_mark
           : Icons.check;
-  IconData get refresh => _l
+  IconData get refresh => yaruStyled
       ? YaruIcons.refresh
-      : _a
+      : appleStyled
           ? CupertinoIcons.refresh
           : Icons.refresh;
-  IconData get speakerLowFilled => _l
+  IconData get speakerLowFilled => yaruStyled
       ? YaruIcons.speaker_low_filled
-      : _a
+      : appleStyled
           ? CupertinoIcons.volume_off
           : Icons.volume_down;
-  IconData get speakerMediumFilled => _l
+  IconData get speakerMediumFilled => yaruStyled
       ? YaruIcons.speaker_medium_filled
-      : _a
+      : appleStyled
           ? CupertinoIcons.volume_down
           : Icons.volume_up;
-  IconData get speakerHighFilled => _l
+  IconData get speakerHighFilled => yaruStyled
       ? YaruIcons.speaker_high_filled
-      : _a
+      : appleStyled
           ? CupertinoIcons.volume_up
           : Icons.volume_up;
-  IconData get speakerMutedFilled => _l
+  IconData get speakerMutedFilled => yaruStyled
       ? YaruIcons.speaker_muted_filled
-      : _a
+      : appleStyled
           ? CupertinoIcons.volume_mute
           : Icons.volume_off;
-  IconData get fullScreenExit => _l
+  IconData get fullScreenExit => yaruStyled
       ? YaruIcons.fullscreen_exit
-      : _a
+      : appleStyled
           ? CupertinoIcons.fullscreen_exit
           : Icons.fullscreen_exit;
-  IconData get fullScreen => _l
+  IconData get fullScreen => yaruStyled
       ? YaruIcons.fullscreen
-      : _a
+      : appleStyled
           ? CupertinoIcons.fullscreen
           : Icons.fullscreen;
-  IconData get repeatSingle => _l
+  IconData get repeatSingle => yaruStyled
       ? YaruIcons.repeat_single
-      : _a
+      : appleStyled
           ? CupertinoIcons.repeat_1
           : Icons.repeat_one;
-  IconData get shuffle => _l
+  IconData get shuffle => yaruStyled
       ? YaruIcons.shuffle
-      : _a
+      : appleStyled
           ? CupertinoIcons.shuffle
           : Icons.shuffle;
-  IconData get skipBackward => _l
+  IconData get skipBackward => yaruStyled
       ? YaruIcons.skip_backward
-      : _a
+      : appleStyled
           ? CupertinoIcons.backward_end
           : Icons.skip_previous;
-  IconData get skipForward => _l
+  IconData get skipForward => yaruStyled
       ? YaruIcons.skip_forward
-      : _a
+      : appleStyled
           ? CupertinoIcons.forward_end
           : Icons.skip_next;
-  IconData get goBack => _l
+  IconData get goBack => yaruStyled
       ? YaruIcons.go_previous
-      : _a
+      : appleStyled
           ? CupertinoIcons.back
           : Icons.arrow_back;
-  IconData get goNext => _l
+  IconData get goNext => yaruStyled
       ? YaruIcons.go_next
-      : _a
+      : appleStyled
           ? CupertinoIcons.forward
           : Icons.arrow_forward;
-  IconData get share => _l
+  IconData get share => yaruStyled
       ? YaruIcons.share
-      : _a
+      : appleStyled
           ? CupertinoIcons.share
           : Icons.share;
-  IconData get startPlayList => _l
+  IconData get startPlayList => yaruStyled
       ? YaruIcons.playlist_play
-      : _a
+      : appleStyled
           ? CupertinoIcons.play_circle
           : Icons.playlist_play;
-  IconData get playlist => _l
+  IconData get playlist => yaruStyled
       ? YaruIcons.playlist
-      : _a
+      : appleStyled
           ? CupertinoIcons.music_note_list
           : Icons.list;
-  IconData get pen => _l
+  IconData get pen => yaruStyled
       ? YaruIcons.pen
-      : _a
+      : appleStyled
           ? CupertinoIcons.pen
           : Icons.edit;
-  IconData get pin => _l
+  IconData get pin => yaruStyled
       ? YaruIcons.pin
-      : _a
+      : appleStyled
           ? CupertinoIcons.pin
+          : Icons.push_pin_outlined;
+  IconData get pinFilled => yaruStyled
+      ? YaruIcons.pin
+      : appleStyled
+          ? CupertinoIcons.pin_fill
           : Icons.push_pin;
-  IconData get heart => _l
+  IconData get heart => yaruStyled
       ? YaruIcons.heart
-      : _a
+      : appleStyled
           ? CupertinoIcons.heart
           : Icons.favorite_outline;
-  IconData get heartFilled => _l
+  IconData get heartFilled => yaruStyled
       ? YaruIcons.heart_filled
-      : _a
+      : appleStyled
           ? CupertinoIcons.heart_fill
           : Icons.favorite;
-  IconData get globe => _l
+  IconData get globe => yaruStyled
       ? YaruIcons.globe
-      : _a
+      : appleStyled
           ? CupertinoIcons.globe
           : Icons.link;
-  IconData get imageMissing => _l
+  IconData get imageMissing => yaruStyled
       ? YaruIcons.image_missing
-      : _a
+      : appleStyled
           ? CupertinoIcons.question_diamond
           : Icons.image_not_supported;
-  IconData get plus => _l
+  IconData get plus => yaruStyled
       ? YaruIcons.plus
-      : _a
+      : appleStyled
           ? CupertinoIcons.plus
           : Icons.add;
-  IconData get search => _l
+  IconData get search => yaruStyled
       ? YaruIcons.search
-      : _a
+      : appleStyled
           ? CupertinoIcons.search
           : Icons.search;
-  IconData? get clear => _l
+  IconData? get clear => yaruStyled
       ? YaruIcons.edit_clear
-      : _a
+      : appleStyled
           ? CupertinoIcons.clear
           : Icons.clear;
 
-  bool get _l => Platform.isLinux;
-
-  bool get _a => Platform.isMacOS || Platform.isIOS;
-
   Widget getAnimatedStar(bool isStarred, [Color? color]) {
-    if (_l) {
+    if (yaruStyled) {
       return YaruAnimatedIcon(
         isStarred
             ? const YaruAnimatedStarIcon(filled: true)
@@ -253,7 +254,7 @@ class Iconz {
   }
 
   Widget getAnimatedHeartIcon({required bool liked, Color? color}) {
-    if (_l) {
+    if (yaruStyled) {
       return YaruAnimatedIcon(
         liked
             ? const YaruAnimatedHeartIcon(filled: true)
@@ -271,11 +272,11 @@ class Iconz {
   }
 
   Color? getAvatarIconColor(ThemeData theme) =>
-      _l ? theme.colorScheme.onSurface.withOpacity(0.08) : null;
+      yaruStyled ? theme.colorScheme.onSurface.withOpacity(0.08) : null;
 }
 
-double iconSize() => Platform.isLinux
+double iconSize() => yaruStyled
     ? kYaruIconSize
-    : Platform.isMacOS
-        ? 22.0
+    : appleStyled
+        ? 24.0
         : 24.0;

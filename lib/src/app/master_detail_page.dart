@@ -4,7 +4,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../data.dart';
 import '../../library.dart';
 import '../../settings.dart';
-import '../common/colors.dart';
+import '../../theme.dart';
 import '../common/common_widgets.dart';
 import '../globals.dart';
 import '../l10n/l10n.dart';
