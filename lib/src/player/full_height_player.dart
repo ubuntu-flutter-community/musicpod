@@ -6,6 +6,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../globals.dart';
 import '../../player.dart';
 import '../l10n/l10n.dart';
 

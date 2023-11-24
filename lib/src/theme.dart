@@ -26,3 +26,27 @@ ThemeData m3Theme({
         Platform.isMacOS || Platform.isIOS ? NoSplash.splashFactory : null,
   );
 }
+
+Color? getSideBarColor(ThemeData theme) =>
+    yaruStyled ? null : theme.scaffoldBackgroundColor;
+
+Color getSnackBarTextColor(ThemeData theme) => yaruStyled
+    ? Colors.white.withOpacity(0.7)
+    : theme.colorScheme.onInverseSurface;
+
+Color getPlayerBg(Color? surfaceTintColor, Color scaffoldBg) {
+  if (surfaceTintColor != null) {
+    return (Platform.isLinux
+        ? surfaceTintColor.withOpacity(0.05)
+        : Color.alphaBlend(
+            surfaceTintColor.withOpacity(0.2),
+            scaffoldBg,
+          ));
+  } else {
+    return scaffoldBg;
+  }
+}
+
+bool get yaruStyled => Platform.isLinux;
+
+bool get appleStyled => Platform.isMacOS || Platform.isIOS;

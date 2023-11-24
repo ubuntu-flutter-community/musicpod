@@ -11,6 +11,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import 'app.dart';
 import 'external_path.dart';
+import 'globals.dart';
 import 'library.dart';
 import 'local_audio.dart';
 import 'notifications.dart';
@@ -19,7 +20,7 @@ import 'podcasts.dart';
 import 'radio.dart';
 
 Future<void> main(List<String> args) async {
-  if (!(Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)) {
+  if (!isMobile) {
     await YaruWindowTitleBar.ensureInitialized();
   }
   WidgetsFlutterBinding.ensureInitialized();
@@ -79,6 +80,6 @@ Future<void> main(List<String> args) async {
   registerService<RadioService>(() => RadioService());
 
   runApp(
-    MusicPod(yaruApp: Platform.isLinux),
+    const MusicPod(),
   );
 }

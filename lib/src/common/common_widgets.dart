@@ -8,6 +8,7 @@ import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../constants.dart';
+import '../../theme.dart';
 import 'icons.dart';
 
 class NavBackButton extends StatelessWidget {
@@ -15,7 +16,7 @@ class NavBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isLinux) {
+    if (yaruStyled) {
       return const YaruBackButton(
         style: YaruBackButtonStyle.rounded,
       );
@@ -50,7 +51,7 @@ class SideBarProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled
+    return yaruStyled
         ? const SizedBox(
             height: 18,
             width: 18,
@@ -90,7 +91,7 @@ class Progress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled
+    return yaruStyled
         ? YaruCircularProgressIndicator(
             strokeWidth: strokeWidth,
             value: value,
@@ -165,7 +166,7 @@ class TabsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled || _cupertino
+    return yaruStyled || appleStyled
         ? YaruTabBar(
             onTap: onTap,
             tabs: tabs,
@@ -185,7 +186,7 @@ class SearchButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled
+    return yaruStyled
         ? YaruSearchButton(
             searchActive: active,
             onPressed: onPressed,
@@ -211,10 +212,10 @@ class SearchingBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled
+    return yaruStyled
         ? YaruSearchField(
             radius: const Radius.circular(kYaruButtonRadius),
-            clearIcon: _yaruStyled ? null : Icon(Iconz().clear),
+            clearIcon: yaruStyled ? null : Icon(Iconz().clear),
             key: key,
             text: text,
             onClear: onClear,
@@ -291,38 +292,32 @@ class DropDownArrow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled
+    return yaruStyled
         ? const Icon(YaruIcons.pan_down)
         : const Icon(Icons.arrow_drop_down);
   }
 }
 
-double? get avatarIconSize => _yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
+double? get avatarIconSize => yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
 
-double? get snackBarWidth => _yaruStyled ? kSnackBarWidth : null;
+double? get snackBarWidth => yaruStyled ? kSnackBarWidth : null;
 
 double get searchBarWidth => isMobile ? kSearchBarWidth : 600;
 
-bool get showSideBarFilter => _yaruStyled ? true : false;
+bool get showSideBarFilter => yaruStyled ? true : false;
 
 FontWeight get smallTextFontWeight =>
-    _yaruStyled ? FontWeight.w100 : FontWeight.w400;
+    yaruStyled ? FontWeight.w100 : FontWeight.w400;
 
 FontWeight get mediumTextWeight =>
-    _yaruStyled ? FontWeight.w400 : FontWeight.w500;
+    yaruStyled ? FontWeight.w400 : FontWeight.w500;
 
 FontWeight get largeTextWeight =>
-    _yaruStyled ? FontWeight.w200 : FontWeight.w300;
+    yaruStyled ? FontWeight.w200 : FontWeight.w300;
 
-bool get _yaruStyled => Platform.isLinux;
+bool get shrinkTitleBarItems => yaruStyled;
 
-bool get _cupertino => Platform.isIOS || Platform.isMacOS;
-
-bool get isMobile => Platform.isAndroid || Platform.isIOS || Platform.isFuchsia;
-
-bool get shrinkTitleBarItems => _yaruStyled;
-
-double get chipHeight => _yaruStyled ? kYaruTitleBarItemHeight : 35;
+double get chipHeight => yaruStyled ? kYaruTitleBarItemHeight : 35;
 
 EdgeInsetsGeometry get tabViewPadding =>
     isMobile ? const EdgeInsets.only(top: 15) : const EdgeInsets.only(top: 5);
@@ -334,7 +329,7 @@ SliverGridDelegate get imageGridDelegate =>
     isMobile ? kMobileImageGridDelegate : kImageGridDelegate;
 
 Gradient? getAudioPageHeaderGradient(ThemeData theme) {
-  if (_yaruStyled) {
+  if (yaruStyled) {
     return theme.brightness == Brightness.light
         ? null
         : LinearGradient(
@@ -376,12 +371,12 @@ class CommonSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled
+    return yaruStyled
         ? YaruSwitch(
             value: value,
             onChanged: onChanged,
           )
-        : _cupertino
+        : appleStyled
             ? CupertinoSwitch(value: value, onChanged: onChanged)
             : Switch(value: value, onChanged: onChanged);
   }
@@ -399,7 +394,7 @@ class ImportantButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled
+    return yaruStyled
         ? ElevatedButton(
             onPressed: onPressed,
             child: child,

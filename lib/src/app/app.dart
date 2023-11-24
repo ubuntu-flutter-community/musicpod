@@ -14,7 +14,7 @@ import '../../patch_notes.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
 import '../../radio.dart';
-import '../common/colors.dart';
+import '../../theme.dart';
 import '../external_path/external_path_service.dart';
 import 'connectivity_notifier.dart';
 import 'master_detail_page.dart';

@@ -7,7 +7,6 @@ export 'src/common/audio_page_control_panel.dart';
 export 'src/common/audio_page_header.dart';
 export 'src/common/audio_tile.dart';
 export 'src/common/audio_tile_header.dart';
-export 'src/common/colors.dart';
 export 'src/common/common_widgets.dart';
 export 'src/common/confirmation_dialog.dart';
 export 'src/common/copy_clipboard_content.dart';
