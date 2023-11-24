@@ -86,7 +86,7 @@ class FullHeightPlayerControls extends StatelessWidget {
                     padding: appleStyled
                         ? const EdgeInsets.only(left: 3)
                         : EdgeInsets.zero,
-                    child: Icon(Iconz().play),
+                    child: Icon(Iconz().playFilled),
                   ),
           ),
         ),
