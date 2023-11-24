@@ -59,8 +59,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final setPodcastIndex = libraryModel.setPodcastIndex;
     final podcastIndex = context.select((LibraryModel m) => m.podcastIndex);
 
-    final subsLength = context.select((LibraryModel m) => m.podcastsLength);
-
     final setLimit = model.setLimit;
     final setSelectedFeedUrl = model.setSelectedFeedUrl;
     final selectedFeedUrl =
@@ -270,15 +268,10 @@ class _PodcastsPageState extends State<PodcastsPage> {
         body: Padding(
           padding: tabViewPadding,
           child: TabBarView(
-            children: subsLength == 0
-                ? [
-                    searchBody,
-                    subsBody,
-                  ]
-                : [
-                    subsBody,
-                    searchBody,
-                  ],
+            children: [
+              subsBody,
+              searchBody,
+            ],
           ),
         ),
       ),
