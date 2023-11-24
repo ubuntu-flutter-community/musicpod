@@ -99,6 +99,8 @@ const kLastPositionAsString = 'lastPositionAsString';
 const kLastDurationAsString = 'lastDurationAsString';
 const kLocalAudioIndex = 'localAudioIndex';
 const kAppIndex = 'appIndex';
+const kRadioIndex = 'radioIndex';
+const kPodcastIndex = 'podcastIndex';
 const kNeverShowImportFails = 'neverShowImportFails';
 
 const shops = <String, String>{

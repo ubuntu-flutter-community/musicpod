@@ -367,6 +367,22 @@ class LibraryService {
     _localAudioIndex = value;
   }
 
+  int? _radioIndex;
+  int? get radioIndex => _radioIndex;
+  final _radioIndexController = StreamController<int?>.broadcast();
+  Stream<int?> get radioIndexStream => _radioIndexController.stream;
+  void setRadioIndex(int? value) {
+    _radioIndex = value;
+  }
+
+  int? _podcastIndex;
+  int? get podcastIndex => _podcastIndex;
+  final _podcastIndexController = StreamController<int?>.broadcast();
+  Stream<int?> get podcastIndexStream => _podcastIndexController.stream;
+  void setPodcastIndex(int? value) {
+    _podcastIndex = value;
+  }
+
   int? _appIndex;
   int? get appIndex => _appIndex;
   void setAppIndex(int? value) {
@@ -384,6 +400,8 @@ class LibraryService {
     await _favTagsController.close();
     await _lastPositionsController.close();
     await _localAudioIndexController.close();
+    await _radioIndexController.close();
+    await _podcastIndexController.close();
     await _neverShowFailedImportsController.close();
     await _lastFavController.close();
     await _updateController.close();
@@ -391,6 +409,8 @@ class LibraryService {
 
   Future<void> safeStates() async {
     await writeSetting(kLocalAudioIndex, _localAudioIndex.toString());
+    await writeSetting(kRadioIndex, _radioIndex.toString());
+    await writeSetting(kPodcastIndex, _podcastIndex.toString());
     await writeSetting(kAppIndex, _appIndex.toString());
     await writePlayerState();
   }

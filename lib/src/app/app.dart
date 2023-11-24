@@ -201,12 +201,14 @@ class _AppState extends State<App> with WidgetsBindingObserver {
           break;
         case AudioType.radio:
           libraryModel.setIndex(1);
+          libraryModel.setRadioIndex(1);
           radioModel.setSearchActive(true);
           radioModel.setSearchQuery(text);
-          radioModel.search(name: text);
+          radioModel.search(tag: text);
           break;
         case AudioType.podcast:
           libraryModel.setIndex(2);
+          libraryModel.setPodcastIndex(1);
           podcastModel.setSearchActive(true);
           podcastModel.setSearchQuery(text);
           podcastModel.search(searchQuery: text);

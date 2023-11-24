@@ -91,18 +91,43 @@ class StationPage extends StatelessWidget {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 50),
           child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  height: size,
-                  width: size,
-                  child: AudioCard(
+            child: SizedBox(
+              width: size,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 5,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Tooltip(
+                            message:
+                                station.title?.replaceAll('_', '').trim() ?? '',
+                            child: Text(
+                              station.title?.replaceAll('_', '').trim() ?? '',
+                              style: theme.textTheme.bodyLarge,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: isStarred
+                              ? () => unStarStation(name)
+                              : () => starStation(name),
+                          icon: Iconz().getAnimatedStar(
+                            isStarred,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  AudioCard(
                     height: size,
                     width: size,
                     onTap: () => play(newAudio: station),
@@ -122,67 +147,32 @@ class StationPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                SizedBox(
-                  width: size,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: isStarred
-                                ? () => unStarStation(name)
-                                : () => starStation(name),
-                            icon: Iconz().getAnimatedStar(
-                              isStarred,
-                            ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 15,
+                      left: 5,
+                      right: 5,
+                    ),
+                    child: (tags?.isNotEmpty == true)
+                        ? YaruChoiceChipBar(
+                            goNextIcon: Icon(Iconz().goNext),
+                            goPreviousIcon: Icon(Iconz().goBack),
+                            chipHeight: chipHeight,
+                            yaruChoiceChipBarStyle:
+                                YaruChoiceChipBarStyle.stack,
+                            labels: tags!.map((e) => Text(e)).toList(),
+                            isSelected: tags.map((e) => false).toList(),
+                            onSelected: (index) {
+                              onTextTap?.call(tags[index]);
+                              Navigator.of(context).maybePop();
+                            },
+                          )
+                        : SizedBox(
+                            height: chipHeight,
                           ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: Tooltip(
-                              message:
-                                  station.title?.replaceAll('_', '').trim() ??
-                                      '',
-                              child: Text(
-                                station.title?.replaceAll('_', '').trim() ?? '',
-                                style: theme.textTheme.bodyLarge,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      if (tags?.isNotEmpty == true)
-                        YaruChoiceChipBar(
-                          goNextIcon: Icon(Iconz().goNext),
-                          goPreviousIcon: Icon(Iconz().goBack),
-                          chipHeight: chipHeight,
-                          yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.stack,
-                          labels: tags!.map((e) => Text(e)).toList(),
-                          isSelected: tags.map((e) => false).toList(),
-                          onSelected: (index) {
-                            onTextTap?.call(tags[index]);
-                            if (Navigator.canPop(context)) {
-                              Navigator.of(context).pop();
-                            }
-                          },
-                        ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

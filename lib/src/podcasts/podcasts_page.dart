@@ -9,9 +9,10 @@ import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
-import '../globals.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
+import 'podcasts_collection_body.dart';
+import 'podcasts_page_title.dart';
 
 class PodcastsPage extends StatefulWidget {
   const PodcastsPage({
@@ -55,6 +56,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final podcastSubscribed = libraryModel.podcastSubscribed;
     final removePodcast = libraryModel.removePodcast;
     final addPodcast = libraryModel.addPodcast;
+    final setPodcastIndex = libraryModel.setPodcastIndex;
+    final podcastIndex = context.select((LibraryModel m) => m.podcastIndex);
 
     final subsLength = context.select((LibraryModel m) => m.podcastsLength);
 
@@ -226,7 +229,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
       ],
     );
 
-    final subsBody = _SubsBody(
+    final subsBody = PodcastsCollectionBody(
       isOnline: widget.isOnline,
       startPlaylist: startPlaylist,
       onTapText: onTapText,
@@ -235,6 +238,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     );
 
     return DefaultTabController(
+      initialIndex: podcastIndex ?? 1,
       length: 2,
       child: Scaffold(
         appBar: HeaderBar(
@@ -254,8 +258,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
               ),
             ),
           ],
-          title: _Title(
-            chartsFirst: subsLength == 0,
+          title: PodcastsPageTitle(
+            onIndexSelected: setPodcastIndex,
             searchActive: searchActive,
             searchQuery: searchQuery,
             setSearchActive: setSearchActive,
@@ -302,205 +306,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
         }
       });
     }
-  }
-}
-
-class _Title extends StatelessWidget {
-  const _Title({
-    required this.searchActive,
-    required this.searchQuery,
-    required this.setSearchActive,
-    required this.setSearchQuery,
-    required this.search,
-    required this.chartsFirst,
-  });
-
-  final bool searchActive;
-  final String? searchQuery;
-  final void Function(bool value) setSearchActive;
-  final void Function(String? value) setSearchQuery;
-  final void Function({String? searchQuery}) search;
-  final bool chartsFirst;
-
-  @override
-  Widget build(BuildContext context) {
-    return Builder(
-      builder: (context) {
-        return searchActive
-            ? SizedBox(
-                width: kSearchBarWidth,
-                child: SearchingBar(
-                  key: ValueKey(searchQuery),
-                  text: searchQuery,
-                  onClear: () {
-                    setSearchActive(false);
-                    setSearchQuery('');
-                    search();
-                  },
-                  onSubmitted: (value) {
-                    if (!chartsFirst) {
-                      DefaultTabController.of(context).index = 1;
-                    }
-
-                    setSearchQuery(value);
-
-                    if (value?.isEmpty == true) {
-                      search();
-                    } else {
-                      search(searchQuery: value);
-                    }
-                  },
-                ),
-              )
-            : SizedBox(
-                width: kSearchBarWidth,
-                child: TabsBar(
-                  tabs: chartsFirst
-                      ? [
-                          Tab(text: context.l10n.discover),
-                          Tab(
-                            text: context.l10n.collection,
-                          ),
-                        ]
-                      : [
-                          Tab(
-                            text: context.l10n.collection,
-                          ),
-                          Tab(text: context.l10n.discover),
-                        ],
-                ),
-              );
-      },
-    );
-  }
-}
-
-class _SubsBody extends StatelessWidget {
-  const _SubsBody({
-    required this.isOnline,
-    required this.startPlaylist,
-    required this.onTapText,
-    required this.addPodcast,
-    required this.removePodcast,
-  });
-
-  final bool isOnline;
-  final Future<void> Function(Set<Audio>, String) startPlaylist;
-  final void Function(String text) onTapText;
-  final void Function(String, Set<Audio>) addPodcast;
-  final void Function(String) removePodcast;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final subs = context.select((LibraryModel m) => m.podcasts);
-    final updates = context.select((LibraryModel m) => m.podcastUpdates);
-    final updatesLength =
-        context.select((LibraryModel m) => m.podcastUpdates.length);
-    final updatesOnly = context.select((PodcastModel m) => m.updatesOnly);
-    final subsLength = context.select((LibraryModel m) => m.podcastsLength);
-    final setUpdatesOnly = context.read<PodcastModel>().setUpdatesOnly;
-    final subscribed = context.read<LibraryModel>().podcastSubscribed;
-
-    return subsLength == 0
-        ? NoSearchResultPage(
-            message: Text(context.l10n.noPodcastSubsFound),
-          )
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const SizedBox(
-                    width: 25,
-                  ),
-                  ChoiceChip(
-                    selected: updatesOnly,
-                    onSelected: (v) => setUpdatesOnly(v),
-                    label: Text(context.l10n.newEpisodes),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Expanded(
-                child: GridView.builder(
-                  padding: gridPadding,
-                  itemCount: updatesOnly ? updatesLength : subsLength,
-                  gridDelegate: imageGridDelegate,
-                  itemBuilder: (context, index) {
-                    final podcast = updatesOnly
-                        ? subs.entries
-                            .where((e) => updates.contains(e.key))
-                            .elementAt(index)
-                        : subs.entries.elementAt(index);
-
-                    final artworkUrl600 =
-                        podcast.value.firstOrNull?.albumArtUrl ??
-                            podcast.value.firstOrNull?.imageUrl;
-                    final image = SafeNetworkImage(
-                      url: artworkUrl600,
-                      fit: BoxFit.cover,
-                      height: kSmallCardHeight,
-                      width: kSmallCardHeight,
-                    );
-
-                    return AudioCard(
-                      image: image,
-                      bottom: AudioCardBottom(
-                        style: updates.contains(podcast.key)
-                            ? theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                ) ??
-                                TextStyle(
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                )
-                            : null,
-                        text: podcast.value.firstOrNull?.album ??
-                            podcast.value.firstOrNull?.title ??
-                            podcast.value.firstOrNull.toString(),
-                      ),
-                      onPlay: () => startPlaylist(
-                        podcast.value,
-                        podcast.key,
-                      ),
-                      onTap: () => navigatorKey.currentState?.push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            final subbed = subscribed(podcast.key);
-
-                            return isOnline
-                                ? PodcastPage(
-                                    subscribed: subbed,
-                                    pageId: podcast.key,
-                                    title: podcast.value.firstOrNull?.album ??
-                                        podcast.value.firstOrNull?.title ??
-                                        podcast.value.firstOrNull.toString(),
-                                    audios: podcast.value,
-                                    onTextTap: ({
-                                      required audioType,
-                                      required text,
-                                    }) =>
-                                        onTapText(text),
-                                    addPodcast: addPodcast,
-                                    removePodcast: removePodcast,
-                                    imageUrl: podcast
-                                            .value.firstOrNull?.albumArtUrl ??
-                                        podcast.value.firstOrNull?.imageUrl,
-                                  )
-                                : const OfflinePage();
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
   }
 }
 
