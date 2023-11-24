@@ -103,6 +103,13 @@ Future<String> getWorkingDir() async {
       await Directory(workingDir).create();
     }
     return workingDir;
+  } else if (Platform.isMacOS || Platform.isIOS) {
+    final libDirPath = (await getLibraryDirectory()).path;
+    final workingDirPath = p.join(libDirPath, kAppName);
+    if (!Directory(workingDirPath).existsSync()) {
+      await Directory(workingDirPath).create();
+    }
+    return workingDirPath;
   } else {
     Directory tempDir = await getTemporaryDirectory();
     return tempDir.path;
@@ -112,6 +119,9 @@ Future<String> getWorkingDir() async {
 Future<String?> getMusicDir() async {
   if (Platform.isLinux) {
     return getUserDirectory('MUSIC')?.path;
+  }
+  if (Platform.isMacOS) {
+    return null;
   } else {
     return (await getApplicationDocumentsDirectory()).path;
   }
