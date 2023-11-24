@@ -77,8 +77,9 @@ class _RadioPageState extends State<RadioPage> {
     final favTags = context.select((LibraryModel m) => m.favTags);
     context.select((LibraryModel m) => m.favTagsLength);
     final setLastFav = context.read<LibraryModel>().setLastFav;
-    final starredStationsLength =
-        context.select((LibraryModel m) => m.starredStationsLength);
+
+    final radioIndex = context.select((LibraryModel m) => m.radioindex);
+    final setRadioIndex = context.read<LibraryModel>().setRadioIndex;
 
     final searchActive = context.select((RadioModel m) => m.searchActive);
     final setSearchActive = model.setSearchActive;
@@ -136,7 +137,7 @@ class _RadioPageState extends State<RadioPage> {
           );
         } else {
           if (stationsCount == 0) {
-            if (statusCode != '200') {
+            if (statusCode != null && statusCode != '200') {
               discoverGrid = _ReconnectPage(
                 text: statusCode,
                 init: () => readSetting(kLastFav).then(
@@ -194,6 +195,7 @@ class _RadioPageState extends State<RadioPage> {
       );
 
       return DefaultTabController(
+        initialIndex: radioIndex ?? 1,
         length: 2,
         child: Scaffold(
           appBar: HeaderBar(
@@ -214,7 +216,7 @@ class _RadioPageState extends State<RadioPage> {
               ),
             ],
             title: RadioPageTitle(
-              discoverFirst: starredStationsLength == 0,
+              onIndexSelected: setRadioIndex,
               searchActive: searchActive,
               setSearchActive: setSearchActive,
               search: search,
@@ -224,15 +226,10 @@ class _RadioPageState extends State<RadioPage> {
             ),
           ),
           body: TabBarView(
-            children: starredStationsLength == 0
-                ? [
-                    discoverBody,
-                    radioLibPage,
-                  ]
-                : [
-                    radioLibPage,
-                    discoverBody,
-                  ],
+            children: [
+              radioLibPage,
+              discoverBody,
+            ],
           ),
         ),
       );
