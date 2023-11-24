@@ -6,6 +6,7 @@ import '../../app.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../theme.dart';
 import 'radio_page.dart';
 
 class StationPage extends StatelessWidget {
@@ -155,8 +156,18 @@ class StationPage extends StatelessWidget {
                     ),
                     child: (tags?.isNotEmpty == true)
                         ? YaruChoiceChipBar(
-                            goNextIcon: Icon(Iconz().goNext),
-                            goPreviousIcon: Icon(Iconz().goBack),
+                            goNextIcon: Padding(
+                              padding: appleStyled
+                                  ? const EdgeInsets.only(left: 3)
+                                  : EdgeInsets.zero,
+                              child: Icon(Iconz().goNext),
+                            ),
+                            goPreviousIcon: Padding(
+                              padding: appleStyled
+                                  ? const EdgeInsets.only(right: 3)
+                                  : EdgeInsets.zero,
+                              child: Icon(Iconz().goBack),
+                            ),
                             chipHeight: chipHeight,
                             yaruChoiceChipBarStyle:
                                 YaruChoiceChipBarStyle.stack,

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../constants.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../constants.dart';
+import '../../theme.dart';
 import 'common_widgets.dart';
 import 'icons.dart';
 
@@ -67,12 +68,17 @@ class _AudioCardState extends State<AudioCard> {
                       right: 10,
                       child: CircleAvatar(
                         radius: avatarIconSize,
-                        backgroundColor: theme.colorScheme.primary,
+                        backgroundColor: Colors.black,
                         child: IconButton(
                           onPressed: widget.onPlay,
-                          icon: Icon(
-                            Iconz().play,
-                            color: Colors.white,
+                          icon: Padding(
+                            padding: appleStyled
+                                ? const EdgeInsets.only(left: 3)
+                                : EdgeInsets.zero,
+                            child: Icon(
+                              Iconz().playFilled,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),

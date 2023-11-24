@@ -11,6 +11,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
+import '../../theme.dart';
 import '../../utils.dart';
 
 class PodcastAudioTile extends StatelessWidget {
@@ -81,7 +82,12 @@ class PodcastAudioTile extends StatelessWidget {
                       ? Icon(
                           Iconz().pause,
                         )
-                      : Icon(Iconz().play),
+                      : Padding(
+                          padding: appleStyled
+                              ? const EdgeInsets.only(left: 3)
+                              : EdgeInsets.zero,
+                          child: Icon(Iconz().playFilled),
+                        ),
                   onPressed: () {
                     if (selected) {
                       if (isPlayerPlaying) {
