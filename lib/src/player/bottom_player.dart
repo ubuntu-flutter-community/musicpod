@@ -5,6 +5,7 @@ import 'package:popover/popover.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
+import '../../theme.dart';
 import '../globals.dart';
 
 const _kBottomPlayerHeight = 90.0;
@@ -173,8 +174,13 @@ class BottomPlayer extends StatelessWidget {
                                       playOrPause();
                                     }
                                   },
-                        icon: Icon(
-                          isPlaying ? Iconz().pause : Iconz().play,
+                        icon: Padding(
+                          padding: appleStyled
+                              ? const EdgeInsets.only(left: 3)
+                              : EdgeInsets.zero,
+                          child: Icon(
+                            isPlaying ? Iconz().pause : Iconz().play,
+                          ),
                         ),
                       ),
                     ),

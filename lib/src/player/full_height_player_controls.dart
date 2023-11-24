@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../../theme.dart';
 
 class FullHeightPlayerControls extends StatelessWidget {
   const FullHeightPlayerControls({
@@ -77,9 +78,16 @@ class FullHeightPlayerControls extends StatelessWidget {
                       playOrPause();
                     }
                   },
-            icon: Icon(
-              isPlaying ? Iconz().pause : Iconz().play,
-            ),
+            icon: isPlaying
+                ? Icon(
+                    Iconz().pause,
+                  )
+                : Padding(
+                    padding: appleStyled
+                        ? const EdgeInsets.only(left: 3)
+                        : EdgeInsets.zero,
+                    child: Icon(Iconz().playFilled),
+                  ),
           ),
         ),
         IconButton(

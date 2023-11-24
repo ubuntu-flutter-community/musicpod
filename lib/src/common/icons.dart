@@ -53,6 +53,11 @@ class Iconz {
       ? YaruIcons.media_play
       : appleStyled
           ? CupertinoIcons.play
+          : Icons.play_arrow_outlined;
+  IconData get playFilled => yaruStyled
+      ? YaruIcons.media_play
+      : appleStyled
+          ? CupertinoIcons.play_fill
           : Icons.play_arrow;
   IconData get download => yaruStyled
       ? YaruIcons.download
