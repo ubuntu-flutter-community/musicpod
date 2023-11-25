@@ -1,12 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../podcasts.dart';
 import '../globals.dart';
-import '../l10n/l10n.dart';
+import '../../l10n.dart';
 import '../library/library_model.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class PodcastsCollectionBody extends StatelessWidget {
   const PodcastsCollectionBody({
@@ -36,6 +37,7 @@ class PodcastsCollectionBody extends StatelessWidget {
     final setUpdatesOnly = context.read<PodcastModel>().setUpdatesOnly;
     var libraryModel = context.read<LibraryModel>();
     final subscribed = libraryModel.podcastSubscribed;
+    final removeUpdate = libraryModel.removePodcastUpdate;
 
     return subsLength == 0
         ? NoSearchResultPage(
@@ -98,35 +100,41 @@ class PodcastsCollectionBody extends StatelessWidget {
                             podcast.value.firstOrNull?.title ??
                             podcast.value.firstOrNull.toString(),
                       ),
-                      onPlay: () => startPlaylist(
-                        podcast.value,
-                        podcast.key,
-                      ),
+                      onPlay: () {
+                        runOrConfirm(
+                          context: context,
+                          noConfirm:
+                              podcast.value.length < kAudioQueueThreshHold,
+                          message: podcast.value.length.toString(),
+                          run: () => startPlaylist(
+                            podcast.value,
+                            podcast.key,
+                          ).then((_) => removeUpdate(podcast.key)),
+                        );
+                      },
                       onTap: () => navigatorKey.currentState?.push(
                         MaterialPageRoute(
                           builder: (context) {
-                            final subbed = subscribed(podcast.key);
+                            if (!isOnline) return const OfflinePage();
 
-                            return isOnline
-                                ? PodcastPage(
-                                    subscribed: subbed,
-                                    pageId: podcast.key,
-                                    title: podcast.value.firstOrNull?.album ??
-                                        podcast.value.firstOrNull?.title ??
-                                        podcast.value.firstOrNull.toString(),
-                                    audios: podcast.value,
-                                    onTextTap: ({
-                                      required audioType,
-                                      required text,
-                                    }) =>
-                                        onTapText(text),
-                                    addPodcast: addPodcast,
-                                    removePodcast: removePodcast,
-                                    imageUrl: podcast
-                                            .value.firstOrNull?.albumArtUrl ??
-                                        podcast.value.firstOrNull?.imageUrl,
-                                  )
-                                : const OfflinePage();
+                            return PodcastPage(
+                              subscribed: subscribed(podcast.key),
+                              pageId: podcast.key,
+                              title: podcast.value.firstOrNull?.album ??
+                                  podcast.value.firstOrNull?.title ??
+                                  podcast.value.firstOrNull.toString(),
+                              audios: podcast.value,
+                              onTextTap: ({
+                                required audioType,
+                                required text,
+                              }) =>
+                                  onTapText(text),
+                              addPodcast: addPodcast,
+                              removePodcast: removePodcast,
+                              imageUrl:
+                                  podcast.value.firstOrNull?.albumArtUrl ??
+                                      podcast.value.firstOrNull?.imageUrl,
+                            );
                           },
                         ),
                       ),
