@@ -116,5 +116,6 @@
     "newEpisodes": "Neue Folgen",
     "collection": "Sammlung",
     "addToCollection": "Zur Sammlung hinzufügen",
-    "removeFromCollection": "Aus Sammlung entfernen"
+    "removeFromCollection": "Aus Sammlung entfernen",
+    "loadingPodcastFeed": "Lade Podcast-Feed..."
 }

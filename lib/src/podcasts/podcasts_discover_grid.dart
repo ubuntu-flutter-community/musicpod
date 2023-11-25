@@ -113,8 +113,12 @@ Future<void> searchAndPushPodcastPage({
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(context.l10n.search),
-          const Progress(),
+          Text(context.l10n.loadingPodcastFeed),
+          SizedBox(
+            height: iconSize(),
+            width: iconSize(),
+            child: const Progress(),
+          ),
         ],
       ),
     ),
