@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../common.dart';
-import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import 'podcasts_collection_body.dart';
+import 'podcasts_control_panel.dart';
+import 'podcasts_discover_grid.dart';
 import 'podcasts_page_title.dart';
 
 class PodcastsPage extends StatefulWidget {
@@ -87,8 +87,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final sortedGenres = context.select((PodcastModel m) => m.sortedGenres);
     final setPodcastGenre = model.setPodcastGenre;
     final searchResult = context.select((PodcastModel m) => m.searchResult);
-    final searchResultCount =
-        context.select((PodcastModel m) => m.searchResult?.resultCount);
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
@@ -114,106 +112,31 @@ class _PodcastsPageState extends State<PodcastsPage> {
     } else if (searchResult.items.isEmpty == true) {
       grid = NoSearchResultPage(message: Text(context.l10n.noPodcastFound));
     } else {
-      grid = GridView.builder(
-        padding: gridPadding,
-        itemCount: searchResultCount,
-        gridDelegate: imageGridDelegate,
-        itemBuilder: (context, index) {
-          final podcastItem = searchResult.items.elementAt(index);
-
-          final artworkUrl600 = podcastItem.artworkUrl600;
-          final image = SafeNetworkImage(
-            url: artworkUrl600,
-            fit: BoxFit.cover,
-            height: kSmallCardHeight,
-            width: kSmallCardHeight,
-          );
-
-          return AudioCard(
-            bottom: AudioCardBottom(text: podcastItem.collectionName),
-            image: image,
-            onPlay: () {
-              if (podcastItem.feedUrl == null) return;
-              findEpisodes(
-                feedUrl: podcastItem.feedUrl!,
-                itemImageUrl: artworkUrl600,
-                genre: podcastItem.primaryGenreName,
-              ).then((feed) {
-                if (feed.isNotEmpty) {
-                  _playOrConfirm(
-                    amount: feed.length,
-                    play: () => startPlaylist(feed, podcastItem.feedUrl!),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(context.l10n.podcastFeedIsEmpty)),
-                  );
-                }
-              });
-            },
-            onTap: () async => await pushPodcastPage(
-              context: context,
-              podcastItem: podcastItem,
-              podcastSubscribed: podcastSubscribed,
-              onTapText: ({required audioType, required text}) =>
-                  onTapText(text),
-              removePodcast: removePodcast,
-              addPodcast: addPodcast,
-              setFeedUrl: setSelectedFeedUrl,
-              oldFeedUrl: selectedFeedUrl,
-              itemImageUrl: artworkUrl600,
-              genre: podcastItem.primaryGenreName,
-              countryCode: widget.countryCode,
-            ),
-          );
-        },
+      grid = PodcastsDiscoverGrid(
+        searchResult: searchResult,
+        startPlaylist: startPlaylist,
+        podcastSubscribed: podcastSubscribed,
+        removePodcast: removePodcast,
+        addPodcast: addPodcast,
+        setSelectedFeedUrl: setSelectedFeedUrl,
+        selectedFeedUrl: selectedFeedUrl,
+        onTapText: onTapText,
       );
     }
 
-    final controlPanel = SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          LimitPopup(
-            value: limit,
-            onSelected: (value) {
-              setLimit(value);
-              search(searchQuery: searchQuery);
-            },
-          ),
-          CountryPopup(
-            onSelected: (value) {
-              setCountry(value);
-              search(searchQuery: searchQuery);
-            },
-            value: country,
-            countries: sortedCountries,
-          ),
-          YaruPopupMenuButton<PodcastGenre>(
-            style: buttonStyle,
-            icon: const DropDownArrow(),
-            onSelected: (value) {
-              setPodcastGenre(value);
-              search(searchQuery: searchQuery);
-            },
-            initialValue: podcastGenre,
-            child: Text(
-              podcastGenre.localize(context.l10n),
-              style: textStyle,
-            ),
-            itemBuilder: (context) {
-              return [
-                for (final genre in sortedGenres)
-                  PopupMenuItem(
-                    value: genre,
-                    child: Text(genre.localize(context.l10n)),
-                  ),
-              ];
-            },
-          ),
-        ],
-      ),
+    final controlPanel = PodcastsControlPanel(
+      limit: limit,
+      setLimit: setLimit,
+      search: search,
+      searchQuery: searchQuery,
+      setCountry: setCountry,
+      country: country,
+      sortedCountries: sortedCountries,
+      buttonStyle: buttonStyle,
+      setPodcastGenre: setPodcastGenre,
+      podcastGenre: podcastGenre,
+      textStyle: textStyle,
+      sortedGenres: sortedGenres,
     );
 
     final searchBody = Column(
@@ -277,82 +200,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
       ),
     );
   }
-
-  void _playOrConfirm({required int amount, required Function play}) {
-    if (amount < kAudioQueueThreshHold) {
-      play();
-    } else {
-      showDialog<bool>(
-        context: context,
-        builder: (context) {
-          return ConfirmationDialog(
-            message: Text(
-              context.l10n.queueConfirmMessage(
-                amount.toString(),
-              ),
-            ),
-          );
-        },
-      ).then((value) {
-        if (value == true) {
-          play();
-        }
-      });
-    }
-  }
-}
-
-Future<void> pushPodcastPage({
-  required BuildContext context,
-  required Item podcastItem,
-  required bool Function(String? feedUrl) podcastSubscribed,
-  required void Function({
-    required String text,
-    required AudioType audioType,
-  }) onTapText,
-  required void Function(String feedUrl) removePodcast,
-  required void Function(String feedUrl, Set<Audio> audios) addPodcast,
-  required void Function(String? feedUrl) setFeedUrl,
-  required String? oldFeedUrl,
-  String? itemImageUrl,
-  String? genre,
-  String? countryCode,
-}) async {
-  if (podcastItem.feedUrl == null) return;
-
-  setFeedUrl(podcastItem.feedUrl);
-
-  await findEpisodes(
-    feedUrl: podcastItem.feedUrl!,
-    itemImageUrl: itemImageUrl,
-    genre: genre,
-  ).then((podcast) async {
-    if (oldFeedUrl == podcastItem.feedUrl || podcast.isEmpty) {
-      return;
-    }
-
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) {
-          final subscribed = podcastSubscribed(podcastItem.feedUrl);
-          final id = podcastItem.feedUrl;
-
-          return PodcastPage(
-            subscribed: subscribed,
-            imageUrl: podcastItem.artworkUrl600,
-            addPodcast: addPodcast,
-            removePodcast: removePodcast,
-            onTextTap: onTapText,
-            audios: podcast,
-            pageId: id!,
-            title: podcast.firstOrNull?.album ??
-                podcast.firstOrNull?.title ??
-                podcastItem.feedUrl!,
-          );
-        },
-      ),
-    ).then((_) => setFeedUrl(null));
-  });
 }
 
 class PodcastsPageIcon extends StatelessWidget {
