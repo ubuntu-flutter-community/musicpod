@@ -212,8 +212,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   return PodcastAudioTile(
                     removeUpdate: () =>
                         libraryModel.removePodcastUpdate(widget.pageId),
-                    updateAvailable:
-                        libraryModel.podcastUpdateAvailable(widget.pageId),
                     isExpanded: audioSelected,
                     audio: audio,
                     isPlayerPlaying: isPlaying,

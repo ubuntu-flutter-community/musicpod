@@ -28,7 +28,6 @@ class PodcastAudioTile extends StatelessWidget {
     this.isExpanded = false,
     this.removeUpdate,
     required this.safeLastPosition,
-    this.updateAvailable = false,
   });
 
   final Audio audio;
@@ -43,15 +42,12 @@ class PodcastAudioTile extends StatelessWidget {
 
   final Duration? lastPosition;
   final bool isExpanded;
-  final bool updateAvailable;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textStyle = TextStyle(
-      color: updateAvailable
-          ? theme.colorScheme.primary
-          : theme.colorScheme.onSurface,
+      color: theme.colorScheme.onSurface,
       fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
       fontSize: 16,
     );

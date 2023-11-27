@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -21,11 +20,7 @@ Future<void> _readCache(Set<Audio>? localAudioCache) async {
 class LibraryService {
   Future<void> writeLocalAudioCache({required Set<Audio>? audios}) async {
     if (audios == null || audios.isEmpty == true) return;
-    if (Platform.isWindows) {
-      await _writeCache(audios);
-    } else {
-      await compute(_writeCache, audios);
-    }
+    await _writeCache(audios);
   }
 
   Set<Audio>? _localAudioCache;
