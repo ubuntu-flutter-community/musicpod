@@ -417,10 +417,18 @@ class PlayerService {
     _smtcSub = _smtc?.buttonPressStream.listen((event) {
       switch (event) {
         case PressedButton.play:
-          play().then((_) => _smtc?.setPlaybackStatus(PlaybackStatus.Playing));
+          playOrPause().then(
+            (_) => _smtc?.setPlaybackStatus(
+              _isPlaying ? PlaybackStatus.Playing : PlaybackStatus.Paused,
+            ),
+          );
           break;
         case PressedButton.pause:
-          pause().then((_) => _smtc?.setPlaybackStatus(PlaybackStatus.Paused));
+          playOrPause().then(
+            (_) => _smtc?.setPlaybackStatus(
+              _isPlaying ? PlaybackStatus.Playing : PlaybackStatus.Paused,
+            ),
+          );
           break;
         case PressedButton.next:
           playNext();
@@ -546,9 +554,11 @@ class PlayerService {
       MusicMetadata(
         title: audio.title,
         album: audio.album,
-        albumArtist: audio.albumArtist,
+        albumArtist: audio.artist,
         artist: audio.artist,
-        thumbnail: '$artUri',
+        thumbnail: audio.audioType == AudioType.local
+            ? artUri?.toFilePath(windows: true)
+            : '$artUri',
       ),
     );
   }

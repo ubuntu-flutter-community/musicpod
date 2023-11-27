@@ -263,12 +263,6 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   Set<Audio>? get localAudioCache => libraryService.localAudioCache;
 
-  Future<void> createLocalAudioCache() async {
-    if (localAudioService.audios == null || localAudioService.audios!.isEmpty) {
-      return;
-    }
-    await libraryService.writeLocalAudioCache(
-      audios: localAudioService.audios!,
-    );
-  }
+  Future<void> createLocalAudioCache() async => await libraryService
+      .writeLocalAudioCache(audios: localAudioService.audios);
 }
