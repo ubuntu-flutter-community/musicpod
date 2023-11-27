@@ -67,6 +67,7 @@ class PodcastPage extends StatelessWidget {
     final genre = audios?.firstWhereOrNull((e) => e.genre != null)?.genre;
 
     context.select((LibraryModel m) => m.lastPositions?.length);
+    context.select((LibraryModel m) => m.podcastUpdates.length);
 
     return AudioPage(
       showAudioTileHeader: false,
@@ -135,13 +136,16 @@ class PodcastPageTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.select((LibraryModel m) => m.podcastUpdates.length);
-
+    final visible =
+        context.read<LibraryModel>().podcastUpdateAvailable(feedUrl);
     return Badge(
-      isLabelVisible:
-          context.read<LibraryModel>().podcastUpdateAvailable(feedUrl),
-      alignment: Alignment.bottomRight,
-      label: Text(context.l10n.newEpisode),
-      child: Text(title),
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      isLabelVisible: visible,
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: EdgeInsets.only(right: visible ? 10 : 0),
+        child: Text(title),
+      ),
     );
   }
 }

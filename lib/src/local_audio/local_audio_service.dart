@@ -67,12 +67,10 @@ class LocalAudioService {
 FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
   MetadataGod.initialize();
 
-  Set<Audio>? newAudios;
+  Set<Audio>? newAudios = {};
   List<String> failedImports = [];
 
   if (directory != null) {
-    newAudios = {};
-
     final allFileSystemEntities = Set<FileSystemEntity>.from(
       await _getFlattenedFileSystemEntities(path: directory),
     );

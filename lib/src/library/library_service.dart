@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -9,12 +10,7 @@ import '../../patch_notes.dart';
 import '../../utils.dart';
 
 Future<void> _writeCache(Set<Audio> audios) async {
-  await writeAudioMap(
-    {
-      kLocalAudioCache: audios,
-    },
-    kLocalAudioCacheFileName,
-  );
+  await writeAudioMap({kLocalAudioCache: audios}, kLocalAudioCacheFileName);
 }
 
 Future<void> _readCache(Set<Audio>? localAudioCache) async {
@@ -23,15 +19,20 @@ Future<void> _readCache(Set<Audio>? localAudioCache) async {
 }
 
 class LibraryService {
-  Future<void> writeLocalAudioCache({required Set<Audio> audios}) async {
-    await compute(_writeCache, audios);
+  Future<void> writeLocalAudioCache({required Set<Audio>? audios}) async {
+    if (audios == null || audios.isEmpty == true) return;
+    if (Platform.isWindows) {
+      await _writeCache(audios);
+    } else {
+      await compute(_writeCache, audios);
+    }
   }
 
   Set<Audio>? _localAudioCache;
   Set<Audio>? get localAudioCache => _localAudioCache;
   Future<Set<Audio>?> _readLocalAudioCache() async {
     await compute(_readCache, _localAudioCache);
-    return (await readAudioMap(kLocalAudioCacheFileName))[kLocalAudioCache];
+    return _localAudioCache;
   }
 
   Future<void> setUseLocalCache(bool value) async {
