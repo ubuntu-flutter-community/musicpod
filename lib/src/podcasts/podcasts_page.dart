@@ -164,7 +164,11 @@ class _PodcastsPageState extends State<PodcastsPage> {
       child: Scaffold(
         appBar: HeaderBar(
           leading: (Navigator.canPop(context))
-              ? const NavBackButton()
+              ? NavBackButton(
+                  onPressed: () {
+                    setSearchActive(false);
+                  },
+                )
               : const SizedBox.shrink(),
           titleSpacing: 0,
           style: showWindowControls
