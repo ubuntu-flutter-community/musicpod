@@ -326,7 +326,7 @@ FontWeight get smallTextFontWeight =>
     yaruStyled ? FontWeight.w100 : FontWeight.w400;
 
 FontWeight get mediumTextWeight =>
-    yaruStyled ? FontWeight.w400 : FontWeight.w500;
+    yaruStyled ? FontWeight.w400 : FontWeight.w400;
 
 FontWeight get largeTextWeight =>
     yaruStyled ? FontWeight.w200 : FontWeight.w300;

@@ -128,7 +128,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final width = MediaQuery.of(context).size.width;
     final playerToTheRight = MediaQuery.of(context).size.width > 1700;
 
     // Connectivity
@@ -217,9 +216,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     }
 
     final masterItems = createMasterItems(
-      showFilter: (libraryModel.totalListAmount > 7 ||
-              libraryModel.audioPageType != null) &&
-          width > 600.0,
       localAudioIndex: localAudioIndex,
       setLocalAudioindex: libraryModel.setLocalAudioindex,
       audioType: audioType,
