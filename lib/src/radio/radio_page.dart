@@ -204,7 +204,11 @@ class _RadioPageState extends State<RadioPage> {
                 : YaruTitleBarStyle.undecorated,
             titleSpacing: 0,
             leading: Navigator.of(context).canPop()
-                ? const NavBackButton()
+                ? NavBackButton(
+                    onPressed: () {
+                      setSearchActive(false);
+                    },
+                  )
                 : const SizedBox.shrink(),
             actions: [
               Padding(

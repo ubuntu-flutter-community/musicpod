@@ -12,10 +12,22 @@ import '../../theme.dart';
 import 'icons.dart';
 
 class NavBackButton extends StatelessWidget {
-  const NavBackButton({super.key});
+  const NavBackButton({super.key, this.onPressed});
+
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
+    void onTap() {
+      if (onPressed == null) {
+        Navigator.maybePop(context);
+      } else {
+        onPressed?.call();
+        Future.delayed(const Duration(milliseconds: 400))
+            .then((value) => Navigator.maybePop(context));
+      }
+    }
+
     if (yaruStyled) {
       return const YaruBackButton(
         style: YaruBackButtonStyle.rounded,
@@ -30,7 +42,7 @@ class NavBackButton extends StatelessWidget {
               width: 15,
               child: InkWell(
                 borderRadius: BorderRadius.circular(20),
-                onTap: () => Navigator.maybePop(context),
+                onTap: onTap,
                 child: Icon(
                   Iconz().goBack,
                   size: 10,
@@ -40,7 +52,11 @@ class NavBackButton extends StatelessWidget {
           ),
         );
       } else {
-        return const Center(child: BackButton());
+        return Center(
+          child: BackButton(
+            onPressed: onTap,
+          ),
+        );
       }
     }
   }

@@ -202,7 +202,11 @@ class _LocalAudioPageState extends State<LocalAudioPage>
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
           leading: (Navigator.of(context).canPop())
-              ? const NavBackButton()
+              ? NavBackButton(
+                  onPressed: () {
+                    setSearchActive(false);
+                  },
+                )
               : const SizedBox.shrink(),
           titleSpacing: 0,
           actions: [
@@ -218,18 +222,21 @@ class _LocalAudioPageState extends State<LocalAudioPage>
             ),
           ],
           title: searchActive
-              ? SearchingBar(
-                  key: ValueKey(searchQuery),
-                  text: searchQuery,
-                  onSubmitted: (value) {
-                    setSearchActive(true);
-                    setSearchQuery(value);
-                    search();
-                  },
-                  onClear: () {
-                    setSearchActive(false);
-                    setSearchQuery('');
-                  },
+              ? SizedBox(
+                  width: kSearchBarWidth,
+                  child: SearchingBar(
+                    key: ValueKey(searchQuery),
+                    text: searchQuery,
+                    onSubmitted: (value) {
+                      setSearchActive(true);
+                      setSearchQuery(value);
+                      search();
+                    },
+                    onClear: () {
+                      setSearchActive(false);
+                      setSearchQuery('');
+                    },
+                  ),
                 )
               : tabBar,
         ),
