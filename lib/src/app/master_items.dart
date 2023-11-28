@@ -8,7 +8,6 @@ import '../../local_audio.dart';
 import '../../podcasts.dart';
 import '../../radio.dart';
 import '../l10n/l10n.dart';
-import 'audio_page_filter_bar.dart';
 import 'master_item.dart';
 
 List<MasterItem> createMasterItems({
@@ -40,7 +39,6 @@ List<MasterItem> createMasterItems({
   required void Function(String name) unStarStation,
   required Future<void> Function({Duration? newPosition, Audio? newAudio}) play,
   required String? countryCode,
-  required bool showFilter,
 }) {
   return [
     MasterItem(
@@ -104,13 +102,12 @@ List<MasterItem> createMasterItems({
           LikedAudioPage.createIcon(context: context, selected: selected),
     ),
     MasterItem(
-      titleBuilder: (context) => showFilter
-          ? AudioPageFilterBar(
-              mainPageType: mainPageType,
-              audioPageType: audioPageType,
-              setAudioPageType: setAudioPageType,
-            )
-          : const SizedBox.shrink(),
+      titleBuilder: (context) => const SpacedDivider(
+        top: 10,
+        bottom: 10,
+        right: 0,
+        left: 0,
+      ),
       pageBuilder: (context) => const SizedBox.shrink(),
     ),
     if (showSubbedPodcasts)

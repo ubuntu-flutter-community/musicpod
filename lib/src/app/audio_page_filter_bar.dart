@@ -30,6 +30,7 @@ class AudioPageFilterBar extends StatelessWidget {
           left: 28,
         ),
         child: YaruChoiceChipBar(
+          clearOnSelect: false,
           goNextIcon: Padding(
             padding:
                 appleStyled ? const EdgeInsets.only(left: 3) : EdgeInsets.zero,

@@ -119,7 +119,7 @@ class FullHeightPlayer extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            fontWeight: mediumTextWeight,
+            fontWeight: largeTextWeight,
             fontSize: 30,
             color: theme.colorScheme.onSurface,
           ),
