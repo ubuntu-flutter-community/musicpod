@@ -94,6 +94,24 @@
             }
         }
     },
-    "emptyPlaylist": "🐣🔎🎵❓\n\nDenna spellista är tom.",
-    "copiedToClipBoard": "Kopierat till urklipp:"
+"emptyPlaylist": "🐣🔎🎵❓\n\nDenna spellista är tom.",
+"copiedToClipBoard": "Kopierat till urklipp:",
+"insertIntoQueue": "Lägg in i kö",
+"about": "Om",
+"localAudioCacheSuggestion": "Du har {length} lokala ljudfiler. Vill du skapa en cache för att förbättra uppstartstiden?",
+    "@localAudioCacheSuggestion": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+"noThankYou": "Nej, tack.",
+"recreateLocalAudioCache": "Återskapa lokal ljudcache",
+"useALocalAudioCache": "Använd lokal ljudcache",
+"newEpisodes": "Nya avsnitt",
+"collection": "Samling",
+"addToCollection": "Lägga till i samling",
+"removeFromCollection": "Ta bort från samling",
+"loadingPodcastFeed": "Laddar in podcastflöde..."
 }
