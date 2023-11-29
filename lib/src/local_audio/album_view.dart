@@ -70,7 +70,7 @@ class AlbumsView extends StatelessWidget {
             ? Center(
                 child: Icon(
                   Iconz().musicNote,
-                  size: 140,
+                  size: 70,
                   color: theme.hintColor,
                 ),
               )

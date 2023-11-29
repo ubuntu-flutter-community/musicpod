@@ -32,7 +32,6 @@ class PodcastsPageTitle extends StatelessWidget {
                   key: ValueKey(searchQuery),
                   text: searchQuery,
                   onClear: () {
-                    setSearchActive(false);
                     setSearchQuery('');
                     search();
                   },
