@@ -84,8 +84,11 @@ class AlbumsView extends StatelessWidget {
         return AudioCard(
           bottom: Align(
             alignment: Alignment.bottomCenter,
-            child:
-                AudioCardBottom(text: audio.album == null ? '' : audio.album!),
+            child: AudioCardBottom(
+              text: audio.album?.isNotEmpty == false
+                  ? context.l10n.unknown
+                  : audio.album!,
+            ),
           ),
           image: image,
           onTap: id == null

@@ -58,7 +58,8 @@ class ArtistsView extends StatelessWidget {
         );
         final images = findImages(artistAudios ?? {});
 
-        final artistname = artists!.elementAt(index).artist ?? 'unknown';
+        final artistname =
+            artists!.elementAt(index).artist ?? context.l10n.unknown;
 
         return YaruSelectableContainer(
           selected: false,
@@ -78,8 +79,10 @@ class ArtistsView extends StatelessWidget {
             ),
           ),
           borderRadius: BorderRadius.circular(300),
-          child:
-              RoundImageContainer(image: images?.firstOrNull, text: artistname),
+          child: RoundImageContainer(
+            image: images?.firstOrNull,
+            text: artistname.isNotEmpty ? artistname : context.l10n.unknown,
+          ),
         );
       },
     );
