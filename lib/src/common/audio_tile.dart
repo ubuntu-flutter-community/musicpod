@@ -3,6 +3,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../../l10n.dart';
 
 class AudioTile extends StatelessWidget {
   const AudioTile({
@@ -88,13 +89,13 @@ class AudioTile extends StatelessWidget {
           Expanded(
             flex: titleFlex,
             child: Text(
-              audio.title ?? 'unknown',
+              audio.title ?? context.l10n.unknown,
               style: textStyle,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          if (audio.artist != null && showArtist)
+          if (showArtist)
             Expanded(
               flex: artistFlex,
               child: TapAbleText(
@@ -104,11 +105,13 @@ class AudioTile extends StatelessWidget {
                           text: audio.artist!,
                           audioType: audio.audioType!,
                         ),
-                text: audio.artist!,
+                text: audio.artist?.isNotEmpty == false
+                    ? context.l10n.unknown
+                    : audio.artist!,
                 selected: selected,
               ),
             ),
-          if (audio.album != null && showAlbum)
+          if (showAlbum)
             Expanded(
               flex: albumFlex,
               child: TapAbleText(
@@ -120,7 +123,9 @@ class AudioTile extends StatelessWidget {
                           text: audio.album!,
                           audioType: audio.audioType!,
                         ),
-                text: audio.album!,
+                text: audio.album?.isNotEmpty == false
+                    ? context.l10n.unknown
+                    : audio.album!,
                 selected: selected,
               ),
             ),
