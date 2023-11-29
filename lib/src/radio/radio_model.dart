@@ -133,6 +133,7 @@ class RadioModel extends SafeChangeNotifier {
 
   Future<void> search({String? name, String? tag}) async {
     if (name?.isNotEmpty == true) {
+      setTag(null);
       await _radioService.loadStations(name: name, limit: limit);
     } else if (tag?.isNotEmpty == true) {
       await _radioService.loadStations(
