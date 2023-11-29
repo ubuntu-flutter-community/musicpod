@@ -95,7 +95,7 @@
         }
     },
 "emptyPlaylist": "🐣🔎🎵❓\n\nDenna spellista är tom.",
-"copiedToClipBoard": "Kopierat till urklipp:"
+"copiedToClipBoard": "Kopierat till urklipp:",
 "insertIntoQueue": "Lägg in i kö",
 "about": "Om",
 "localAudioCacheSuggestion": "Du har {length} lokala ljudfiler. Vill du skapa en cache för att förbättra uppstartstiden?",
