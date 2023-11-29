@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -201,9 +202,10 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         case AudioType.radio:
           libraryModel.setIndex(1);
           libraryModel.setRadioIndex(1);
-          radioModel.setSearchActive(true);
-          radioModel.setSearchQuery(text);
+          // radioModel.setSearchActive(true);
+          // radioModel.setSearchQuery(text);
           radioModel.search(tag: text);
+          radioModel.setTag(Tag(name: text, stationCount: 1));
           break;
         case AudioType.podcast:
           libraryModel.setIndex(2);

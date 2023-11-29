@@ -37,6 +37,7 @@ class RadioPageTitle extends StatelessWidget {
                   text: searchQuery,
                   onClear: () {
                     setSearchQuery(null);
+                    setTag(null);
                     search(tag: null, name: null);
                   },
                   onSubmitted: (value) {
