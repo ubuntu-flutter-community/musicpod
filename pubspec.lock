@@ -801,10 +801,11 @@ packages:
   radio_browser_api:
     dependency: "direct main"
     description:
-      name: radio_browser_api
-      sha256: c5a831679d7ce68556031840b3142bc5bbae5d971a938d4628309be0b41a4fac
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: utf8
+      resolved-ref: c411338eade04ba3c2e614b325970d2df22bbe66
+      url: "https://github.com/Feichtmeier/radio-browser-api.dart"
+    source: git
     version: "1.0.0"
   rss_dart:
     dependency: transitive
