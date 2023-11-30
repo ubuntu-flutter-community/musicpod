@@ -49,6 +49,7 @@ class TagPopup extends StatelessWidget {
           child: LayoutBuilder(
             builder: (_, constraints) {
               return Autocomplete<Tag>(
+                key: ValueKey(value?.name),
                 initialValue: TextEditingValue(
                   text: value?.name ?? context.l10n.all,
                 ),
@@ -60,10 +61,15 @@ class TagPopup extends StatelessWidget {
                   onFieldSubmitted,
                 ) {
                   return TextFormField(
+                    onTap: () {
+                      textEditingController.selection = TextSelection(
+                        baseOffset: 0,
+                        extentOffset: textEditingController.value.text.length,
+                      );
+                    },
                     style: fallBackTextStyle,
-                    autofocus: true,
                     decoration: const InputDecoration(
-                      constraints: BoxConstraints(maxHeight: 10),
+                      constraints: BoxConstraints(maxHeight: 12),
                       contentPadding: EdgeInsets.zero,
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
@@ -80,7 +86,7 @@ class TagPopup extends StatelessWidget {
                   return Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
+                      padding: const EdgeInsets.only(top: 5.0),
                       child: SizedBox(
                         width: constraints.maxWidth,
                         height: (options.length * 40) > 400
@@ -113,34 +119,15 @@ class TagPopup extends StatelessWidget {
                                     });
                                   }
                                   final t = options.elementAt(index);
-                                  return ListTile(
-                                    contentPadding: const EdgeInsets.only(
-                                      left: 10,
-                                      right: 5,
-                                    ),
-                                    dense: true,
-                                    titleTextStyle: fallBackTextStyle?.copyWith(
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                    hoverColor:
-                                        highlight ? theme.focusColor : null,
-                                    tileColor:
-                                        highlight ? theme.focusColor : null,
-                                    onTap: () => onSelected(t),
-                                    title: Text(t.name),
-                                    trailing: IconButton(
-                                      onPressed: () {
-                                        favs?.contains(t.name) == false
-                                            ? addFav(t)
-                                            : removeFav(t);
-                                        // stateSetter(() {});
-                                      },
-                                      icon: Icon(
-                                        favs?.contains(t.name) == true
-                                            ? Iconz().starFilled
-                                            : Iconz().star,
-                                      ),
-                                    ),
+                                  return _TagTile(
+                                    onSelected: (v) => onSelected(v),
+                                    fallBackTextStyle: fallBackTextStyle,
+                                    highlight: highlight,
+                                    theme: theme,
+                                    t: t,
+                                    favs: favs,
+                                    addFav: addFav,
+                                    removeFav: removeFav,
                                   );
                                 },
                               );
@@ -168,6 +155,54 @@ class TagPopup extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _TagTile extends StatelessWidget {
+  const _TagTile({
+    required this.fallBackTextStyle,
+    required this.highlight,
+    required this.theme,
+    required this.t,
+    required this.favs,
+    required this.addFav,
+    required this.removeFav,
+    required this.onSelected,
+  });
+
+  final TextStyle? fallBackTextStyle;
+  final bool highlight;
+  final ThemeData theme;
+  final Tag t;
+  final Set<String>? favs;
+  final void Function(Tag? tag) addFav;
+  final void Function(Tag? tag) removeFav;
+  final void Function(Tag tag) onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: const EdgeInsets.only(
+        left: 10,
+        right: 5,
+      ),
+      dense: true,
+      titleTextStyle: fallBackTextStyle?.copyWith(
+        fontWeight: FontWeight.normal,
+      ),
+      hoverColor: highlight ? theme.focusColor : null,
+      tileColor: highlight ? theme.focusColor : null,
+      onTap: () => onSelected(t),
+      title: Text(t.name),
+      trailing: IconButton(
+        onPressed: () {
+          favs?.contains(t.name) == false ? addFav(t) : removeFav(t);
+        },
+        icon: Icon(
+          favs?.contains(t.name) == true ? Iconz().starFilled : Iconz().star,
+        ),
+      ),
     );
   }
 }
