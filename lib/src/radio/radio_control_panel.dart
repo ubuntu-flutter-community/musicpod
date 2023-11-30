@@ -98,7 +98,10 @@ class RadioControlPanel extends StatelessWidget {
                 setLastFav(tag!.name);
               }
             },
-            tags: tags,
+            tags: [
+              ...[...?tags].where((e) => favTags.contains(e.name) == true),
+              ...[...?tags].where((e) => favTags.contains(e.name) == false),
+            ],
           ),
         ],
       ),
