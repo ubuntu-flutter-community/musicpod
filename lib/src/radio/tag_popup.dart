@@ -100,9 +100,9 @@ class TagPopup extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 5.0),
                       child: SizedBox(
                         width: constraints.maxWidth,
-                        height: (options.length * 40) > 400
+                        height: (options.length * 50) > 400
                             ? 400
-                            : options.length * 40,
+                            : options.length * 50,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(6),
                           child: Material(
