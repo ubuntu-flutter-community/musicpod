@@ -36,7 +36,7 @@ class CountryPopup extends StatelessWidget {
       onSelected: onSelected,
       initialValue: value,
       child: Text(
-        value?.name.capitalize().camelToSentence() ?? context.l10n.all,
+        '${context.l10n.country}: ${value?.name.capitalize().camelToSentence() ?? context.l10n.all}',
         style: textStyle ?? fallBackTextStyle,
       ),
       itemBuilder: (context) {
