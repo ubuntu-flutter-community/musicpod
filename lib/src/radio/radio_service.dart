@@ -159,7 +159,7 @@ class RadioService {
       final response = await radioBrowserApi!.getTags(
         parameters: const InputParameters(
           hidebroken: true,
-          limit: 100,
+          limit: 300,
           order: 'stationcount',
           reverse: true,
         ),

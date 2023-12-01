@@ -4,6 +4,7 @@ import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 
 import '../../common.dart';
 import '../l10n/l10n.dart';
+import '../theme.dart';
 
 class TagPopup extends StatelessWidget {
   const TagPopup({
@@ -60,26 +61,36 @@ class TagPopup extends StatelessWidget {
                   focusNode,
                   onFieldSubmitted,
                 ) {
-                  return TextFormField(
-                    onTap: () {
-                      textEditingController.selection = TextSelection(
-                        baseOffset: 0,
-                        extentOffset: textEditingController.value.text.length,
-                      );
-                    },
-                    style: fallBackTextStyle,
-                    decoration: const InputDecoration(
-                      constraints: BoxConstraints(maxHeight: 12),
-                      contentPadding: EdgeInsets.zero,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
+                  const outlineInputBorder = OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  );
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: yaruStyled ? 3 : 0),
+                    child: TextFormField(
+                      onTap: () {
+                        textEditingController.selection = TextSelection(
+                          baseOffset: 0,
+                          extentOffset: textEditingController.value.text.length,
+                        );
+                      },
+                      style: fallBackTextStyle,
+                      decoration: const InputDecoration(
+                        constraints: BoxConstraints(maxHeight: 12),
+                        contentPadding: EdgeInsets.zero,
+                        filled: false,
+                        border: outlineInputBorder,
+                        errorBorder: outlineInputBorder,
+                        enabledBorder: outlineInputBorder,
+                        focusedBorder: outlineInputBorder,
+                        disabledBorder: outlineInputBorder,
+                        focusedErrorBorder: outlineInputBorder,
                       ),
+                      controller: textEditingController,
+                      focusNode: focusNode,
+                      onFieldSubmitted: (String value) {
+                        onFieldSubmitted();
+                      },
                     ),
-                    controller: textEditingController,
-                    focusNode: focusNode,
-                    onFieldSubmitted: (String value) {
-                      onFieldSubmitted();
-                    },
                   );
                 },
                 optionsViewBuilder: (context, onSelected, options) {
@@ -92,46 +103,55 @@ class TagPopup extends StatelessWidget {
                         height: (options.length * 40) > 400
                             ? 400
                             : options.length * 40,
-                        child: Material(
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(6),
-                            bottomRight: Radius.circular(6),
-                          ),
-                          elevation: 3,
-                          child: ListView.builder(
-                            itemCount: options.length,
-                            itemBuilder: (context, index) {
-                              return Builder(
-                                builder: (BuildContext context) {
-                                  final bool highlight =
-                                      AutocompleteHighlightedOption.of(
-                                            context,
-                                          ) ==
-                                          index;
-                                  if (highlight) {
-                                    SchedulerBinding.instance
-                                        .addPostFrameCallback(
-                                            (Duration timeStamp) {
-                                      Scrollable.ensureVisible(
-                                        context,
-                                        alignment: 0.5,
-                                      );
-                                    });
-                                  }
-                                  final t = options.elementAt(index);
-                                  return _TagTile(
-                                    onSelected: (v) => onSelected(v),
-                                    fallBackTextStyle: fallBackTextStyle,
-                                    highlight: highlight,
-                                    theme: theme,
-                                    t: t,
-                                    favs: favs,
-                                    addFav: addFav,
-                                    removeFav: removeFav,
-                                  );
-                                },
-                              );
-                            },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: Material(
+                            color: theme.brightness == Brightness.light
+                                ? theme.colorScheme.surface
+                                : theme.colorScheme.surfaceVariant,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              side: BorderSide(
+                                color: theme.dividerColor,
+                                width: 1,
+                              ),
+                            ),
+                            elevation: 1,
+                            child: ListView.builder(
+                              itemCount: options.length,
+                              itemBuilder: (context, index) {
+                                return Builder(
+                                  builder: (BuildContext context) {
+                                    final bool highlight =
+                                        AutocompleteHighlightedOption.of(
+                                              context,
+                                            ) ==
+                                            index;
+                                    if (highlight) {
+                                      SchedulerBinding.instance
+                                          .addPostFrameCallback(
+                                              (Duration timeStamp) {
+                                        Scrollable.ensureVisible(
+                                          context,
+                                          alignment: 0.5,
+                                        );
+                                      });
+                                    }
+                                    final t = options.elementAt(index);
+                                    return _TagTile(
+                                      onSelected: (v) => onSelected(v),
+                                      fallBackTextStyle: fallBackTextStyle,
+                                      highlight: highlight,
+                                      theme: theme,
+                                      t: t,
+                                      favs: favs,
+                                      addFav: addFav,
+                                      removeFav: removeFav,
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -187,7 +207,6 @@ class _TagTile extends StatelessWidget {
         left: 10,
         right: 5,
       ),
-      dense: true,
       titleTextStyle: fallBackTextStyle?.copyWith(
         fontWeight: FontWeight.normal,
       ),
