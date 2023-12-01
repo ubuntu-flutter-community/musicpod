@@ -8,7 +8,7 @@ import '../../data.dart';
 
 void onTitleTap({
   required Audio? audio,
-  required String? title,
+  required String? text,
   required BuildContext context,
   required void Function(AudioType audioType, String text)? onTextTap,
 }) {
@@ -18,14 +18,32 @@ void onTitleTap({
     return;
   }
 
-  if (title?.isNotEmpty == true) {
-    Clipboard.setData(ClipboardData(text: title!));
+  if (text?.isNotEmpty == true) {
+    Clipboard.setData(ClipboardData(text: text!));
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         width: snackBarWidth,
         duration: kSnackBarDuration,
-        content: CopyClipboardContent(text: title),
+        content: CopyClipboardContent(text: text),
+      ),
+    );
+  } else if (audio?.audioType == AudioType.radio &&
+      audio?.url?.isNotEmpty == true) {
+    Clipboard.setData(ClipboardData(text: audio!.url!));
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        width: snackBarWidth,
+        duration: kSnackBarDuration,
+        content: CopyClipboardContent(
+          text: audio.url!,
+          onSearch: () {
+            if (audio.url != null) {
+              launchUrl(Uri.parse(audio.url ?? ''));
+            }
+          },
+        ),
       ),
     );
   } else {

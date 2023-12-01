@@ -109,7 +109,7 @@ class FullHeightPlayer extends StatelessWidget {
       borderRadius: BorderRadius.circular(10),
       onTap: () => onTitleTap(
         audio: audio,
-        title: mpvMetaData?.icyTitle,
+        text: mpvMetaData?.icyTitle,
         context: context,
         onTextTap: (audioType, text) =>
             onTextTap(audioType: audioType, text: text),

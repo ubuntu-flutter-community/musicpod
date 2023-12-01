@@ -305,7 +305,7 @@ class _BottomPlayerTitleArtist extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
           onTap: () => onTitleTap(
             audio: audio,
-            title: icyTitle,
+            text: icyTitle,
             context: context,
             onTextTap: onTextTap,
           ),

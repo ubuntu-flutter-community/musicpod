@@ -53,6 +53,18 @@ class SafeNetworkImage extends StatelessWidget {
 
     if (url == null) return fallBack;
 
+    if (url?.endsWith('svg') == true) {
+      return Image.network(
+        url!,
+        fit: fit,
+        height: height,
+        width: width,
+        filterQuality: filterQuality,
+        errorBuilder: (a, b, c) => errorWidget,
+        frameBuilder: (a, child, frame, d) => frame == null ? fallBack : child,
+      );
+    }
+
     return CachedNetworkImage(
       cacheManager: Platform.isLinux ? XdgCacheManager() : null,
       imageUrl: url!,
