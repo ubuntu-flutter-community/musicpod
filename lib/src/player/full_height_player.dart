@@ -228,43 +228,49 @@ class FullHeightPlayer extends StatelessWidget {
           ),
         Padding(
           padding: const EdgeInsets.all(kYaruPagePadding),
-          child: Wrap(
-            alignment: WrapAlignment.end,
-            spacing: 7.0,
-            children: [
-              LikeIconButton(
-                audio: audio,
-                liked: liked,
-                isStarredStation: isStarredStation,
-                removeStarredStation: removeStarredStation,
-                addStarredStation: addStarredStation,
-                removeLikedAudio: removeLikedAudio,
-                addLikedAudio: addLikedAudio,
-                color: iconColor,
-              ),
-              ShareButton(
-                audio: audio,
-                active: activeControls,
-                color: iconColor,
-              ),
-              VolumeSliderPopup(
-                direction: PopoverDirection.bottom,
-                volume: volume,
-                setVolume: setVolume,
-                color: iconColor,
-              ),
-              IconButton(
-                icon: Icon(
-                  playerViewMode == PlayerViewMode.fullWindow
-                      ? Iconz().fullScreenExit
-                      : Iconz().fullScreen,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              color: isVideo ? Colors.black.withOpacity(0.6) : null,
+            ),
+            child: Wrap(
+              alignment: WrapAlignment.end,
+              spacing: 7.0,
+              children: [
+                LikeIconButton(
+                  audio: audio,
+                  liked: liked,
+                  isStarredStation: isStarredStation,
+                  removeStarredStation: removeStarredStation,
+                  addStarredStation: addStarredStation,
+                  removeLikedAudio: removeLikedAudio,
+                  addLikedAudio: addLikedAudio,
                   color: iconColor,
                 ),
-                onPressed: () => setFullScreen(
-                  playerViewMode == PlayerViewMode.fullWindow ? false : true,
+                ShareButton(
+                  audio: audio,
+                  active: activeControls,
+                  color: iconColor,
                 ),
-              ),
-            ],
+                VolumeSliderPopup(
+                  direction: PopoverDirection.bottom,
+                  volume: volume,
+                  setVolume: setVolume,
+                  color: iconColor,
+                ),
+                IconButton(
+                  icon: Icon(
+                    playerViewMode == PlayerViewMode.fullWindow
+                        ? Iconz().fullScreenExit
+                        : Iconz().fullScreen,
+                    color: iconColor,
+                  ),
+                  onPressed: () => setFullScreen(
+                    playerViewMode == PlayerViewMode.fullWindow ? false : true,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         if (nextAudio?.title != null && nextAudio?.artist != null && !isVideo)
