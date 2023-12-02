@@ -1,3 +1,4 @@
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 
 import '../../common.dart';
@@ -7,9 +8,11 @@ class NoSearchResultPage extends StatelessWidget {
   const NoSearchResultPage({
     super.key,
     this.message,
+    this.icons,
   });
 
   final Widget? message;
+  final Widget? icons;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +32,21 @@ class NoSearchResultPage extends StatelessWidget {
         child: DefaultTextStyle(
           style: style!,
           textAlign: TextAlign.center,
-          child: message ??
-              Text(
-                context.l10n.nothingFound,
-                style: style,
-                textAlign: TextAlign.center,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              icons ?? const AnimatedEmoji(AnimatedEmojis.thinkingFace),
+              const SizedBox(
+                height: 20,
               ),
+              message ??
+                  Text(
+                    context.l10n.nothingFound,
+                    style: style,
+                    textAlign: TextAlign.center,
+                  ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -37,6 +38,7 @@ class ArtistsView extends StatelessWidget {
 
     if (artists!.isEmpty) {
       return NoSearchResultPage(
+        icons: const AnimatedEmoji(AnimatedEmojis.eyes),
         message: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
