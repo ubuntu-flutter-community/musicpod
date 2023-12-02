@@ -56,16 +56,21 @@ class RadioModel extends SafeChangeNotifier {
 
     return Set.from(
       _radioService.stations!.map(
-        (e) => Audio(
-          url: e.urlResolved,
-          title: e.name,
-          artist:
-              '${e.bitrate == 0 ? '' : '${e.bitrate}kb/s, '}${e.language ?? ''}',
-          album: e.tags ?? '',
-          audioType: AudioType.radio,
-          imageUrl: e.favicon,
-          website: e.homepage,
-        ),
+        (e) {
+          var artist = e.bitrate == 0 ? '' : '${e.bitrate} kb/s';
+          if (e.language?.isNotEmpty == true) {
+            artist += ', ${e.language}';
+          }
+          return Audio(
+            url: e.urlResolved,
+            title: e.name,
+            artist: artist,
+            album: e.tags ?? '',
+            audioType: AudioType.radio,
+            imageUrl: e.favicon,
+            website: e.homepage,
+          );
+        },
       ),
     );
   }
