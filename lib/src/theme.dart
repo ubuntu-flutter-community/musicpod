@@ -47,6 +47,6 @@ Color getPlayerBg(Color? surfaceTintColor, Color scaffoldBg) {
   }
 }
 
-bool get yaruStyled => false;
+bool get yaruStyled => Platform.isLinux;
 
 bool get appleStyled => Platform.isMacOS || Platform.isIOS;
