@@ -59,7 +59,8 @@ class RadioModel extends SafeChangeNotifier {
         (e) => Audio(
           url: e.urlResolved,
           title: e.name,
-          artist: e.bitrate == 0 ? ' ' : '${e.bitrate.toString()} kb/s',
+          artist:
+              '${e.bitrate == 0 ? '' : '${e.bitrate}kb/s, '}${e.language ?? ''}',
           album: e.tags ?? '',
           audioType: AudioType.radio,
           imageUrl: e.favicon,
