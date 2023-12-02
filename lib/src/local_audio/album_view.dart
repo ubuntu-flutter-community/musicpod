@@ -1,3 +1,4 @@
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 
 import '../../common.dart';
@@ -46,6 +47,7 @@ class AlbumsView extends StatelessWidget {
 
     if (albums!.isEmpty) {
       return NoSearchResultPage(
+        icons: const AnimatedEmoji(AnimatedEmojis.eyes),
         message: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

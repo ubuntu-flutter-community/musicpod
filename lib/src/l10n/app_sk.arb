@@ -36,9 +36,9 @@
     "discover": "Objavte",
     "forYou": "Pre vás",
     "search": "Nájsť",
-    "noPodcastFound": "🐣🔎🎙❓\n\nĽutujeme, s týmto vyhľadávacím dopytom sa nenašiel žiadny podcast.",
-    "noPodcastChartsFound": "🐣🔎🎙❓\n\nĽutujeme, pre túto krajinu alebo kategóriu nie sú k dispozícii žiadne rebríčky.",
-    "noPodcastSubsFound": "🐣🔎🎙❓\n\nZatiaľ ste sa neprihlásili na odber žiadneho podcastu.",
+    "noPodcastFound": "Ľutujeme, s týmto vyhľadávacím dopytom sa nenašiel žiadny podcast.",
+    "noPodcastChartsFound": "Ľutujeme, pre túto krajinu alebo kategóriu nie sú k dispozícii žiadne rebríčky.",
+    "noPodcastSubsFound": "Zatiaľ ste sa neprihlásili na odber žiadneho podcastu.",
     "charts": "Rebríčky",
     "discover": "Objavte",
     "upNext": "Nasledujúce",
@@ -64,9 +64,9 @@
     "offline": "bez pripojenia",
     "offlineDescription": "Zdá sa, že váš počítač nie je pripojený k internetu.",
     "newEpisodeAvailable": "K dispozícii je nová epizóda:",
-    "noStationFound": "🐣🔎📻❓\n\nĽutujeme, na tento vyhľadávací dopyt sa nenašli žiadne stanice",
-    "nothingFound": "🐣🔎❓\n\nNič sa nenašlo",
-    "noStarredStations": "🐣🔎📻❓\n\nZatiaľ ste nezaradili medzi obľúbené žiadne rozhlasové stanice s tlačidlom s hviezdičkou.",
+    "noStationFound": "Ľutujeme, na tento vyhľadávací dopyt sa nenašli žiadne stanice.",
+    "nothingFound": "Nič sa nenašlo.",
+    "noStarredStations": "Zatiaľ ste nezaradili medzi obľúbené žiadne rozhlasové stanice s tlačidlom s hviezdičkou.",
     "tags": "Tagy",
     "quality": "Kvalita",
     "station": "Stanica",
@@ -81,8 +81,8 @@
     "podcastFeedIsEmpty": "Ľutujeme, informačný kanál tohto podcastu je prázdny.",
     "video": "Video",
     "ok": "OK",
-    "noLocalTitlesFound": "🐣🔎🎵❓\n\nZdá sa, že vaša lokálna audio zbierka je prázdna. V nastaveniach skontrolujte umiestnenie knižnice.",
-    "noLocalSearchFound": "🐣🔎🎵❓\n\nĽutujeme, pre tento vyhľadávací dopyt sa nenašlo žiadne lokálne audio.",
+    "noLocalTitlesFound": "Zdá sa, že vaša lokálna audio zbierka je prázdna. V nastaveniach skontrolujte umiestnenie knižnice.",
+    "noLocalSearchFound": "Ľutujeme, pre tento vyhľadávací dopyt sa nenašlo žiadne lokálne audio.",
     "buyMusicOnline": "Možno tu nájdete hudbu, ktorú by ste si chceli kúpiť:",
     "settings": "Nastavenia",
     "findUsOnGitHub": "Nájdete nás na GitHube",
@@ -98,11 +98,11 @@
             }
         }
     },
-    "emptyPlaylist": "🐣🔎🎵❓\n\nTento playlist je prázdny.",
+    "emptyPlaylist": "Tento playlist je prázdny.",
     "copiedToClipBoard": "Skopírované do schránky:",
     "insertIntoQueue": "Pridať do poradia",
-    "about": "O apke",
-    "localAudioCacheSuggestion": "Máte {length} lokálnych audio súborov. Chcete vytvoriť vyrovnávaciu pamäť na urýchlenie spustenia aplikácie?",
+    "about": "O",
+    "localAudioCacheSuggestion": "Máte {length} lokálnych audio súborov. Chcete vytvoriť medzipamäť na urýchlenie spustenia aplikácie?",
     "@localAudioCacheSuggestion": {
         "placeholders": {
             "length": {
@@ -111,10 +111,11 @@
         }
     },
     "noThankYou": "Nie, ďakujem.",
-    "recreateLocalAudioCache": "Obnoviť vyrovnávaciu pamäť",
-    "useALocalAudioCache": "Použiť lokálnu audio pamäť",
+    "recreateLocalAudioCache": "Obnoviť medzipamäť",
+    "useALocalAudioCache": "Použiť medzipamäť",
     "newEpisodes": "Nové epizódy",
     "collection": "Zbierka",
     "addToCollection": "Pridať do zbierky",
-    "removeFromCollection": "Odstrániť zo zbierky"
+    "removeFromCollection": "Odstrániť zo zbierky",
+    "loadingPodcastFeed": "Načítava sa kanál podcastov..."
 }

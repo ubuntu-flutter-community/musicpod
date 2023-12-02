@@ -1,3 +1,4 @@
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -159,6 +160,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
             audioControlPanel,
             Expanded(
               child: NoSearchResultPage(
+                icons: const AnimatedEmoji(AnimatedEmojis.eyes),
                 message: widget.noResultMessage,
               ),
             ),
