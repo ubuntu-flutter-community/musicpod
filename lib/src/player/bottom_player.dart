@@ -19,15 +19,8 @@ class BottomPlayer extends StatelessWidget {
     required this.audio,
     required this.width,
     this.color,
-    required this.repeatSingle,
-    required this.setRepeatSingle,
-    required this.shuffle,
-    required this.setShuffle,
-    required this.isPlaying,
     required this.playPrevious,
     required this.playNext,
-    required this.pause,
-    required this.playOrPause,
     required this.liked,
     required this.isStarredStation,
     required this.removeStarredStation,
@@ -37,26 +30,15 @@ class BottomPlayer extends StatelessWidget {
     required this.onTextTap,
     this.isVideo,
     required this.videoController,
-    required this.queue,
     required this.isOnline,
-    this.mpvMetaData,
   });
 
   final Audio? audio;
-  final MpvMetaData? mpvMetaData;
-  final List<Audio> queue;
   final double width;
   final Color? color;
 
-  final bool repeatSingle;
-  final void Function(bool) setRepeatSingle;
-  final bool shuffle;
-  final void Function(bool) setShuffle;
-  final bool isPlaying;
   final Future<void> Function() playPrevious;
   final Future<void> Function() playNext;
-  final Future<void> Function() pause;
-  final Future<void> Function() playOrPause;
   final bool liked;
 
   final bool isStarredStation;
@@ -79,6 +61,7 @@ class BottomPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final veryNarrow = width < 700;
+    final active = audio?.path != null || isOnline;
 
     final bottomPlayerImage = BottomPlayerImage(
       audio: audio,
@@ -89,8 +72,6 @@ class BottomPlayer extends StatelessWidget {
     );
 
     final titleAndArtist = BottomPlayerTitleArtist(
-      icyName: mpvMetaData?.icyName,
-      icyTitle: mpvMetaData?.icyTitle,
       audio: audio,
       onTextTap: audio == null || audio?.audioType == null
           ? null
@@ -105,16 +86,8 @@ class BottomPlayer extends StatelessWidget {
 
     final bottomPlayerControls = BottomPlayerControls(
       audio: audio,
-      setRepeatSingle: setRepeatSingle,
-      repeatSingle: repeatSingle,
-      shuffle: shuffle,
-      setShuffle: setShuffle,
-      isPlaying: isPlaying,
       playPrevious: playPrevious,
       playNext: playNext,
-      pause: pause,
-      playOrPause: playOrPause,
-      queue: queue,
       onFullScreenTap: () => setFullScreen(true),
       isOnline: isOnline,
     );
@@ -128,11 +101,8 @@ class BottomPlayer extends StatelessWidget {
         setFullScreen: setFullScreen,
         bottomPlayerImage: bottomPlayerImage,
         titleAndArtist: titleAndArtist,
-        audio: audio,
+        active: active,
         isOnline: isOnline,
-        isPlaying: isPlaying,
-        pause: pause,
-        playOrPause: playOrPause,
         track: track,
       );
     }
@@ -199,10 +169,7 @@ class BottomPlayer extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: QueuePopup(
-                    audio: audio,
-                    queue: queue,
-                  ),
+                  child: QueuePopup(audio: audio),
                 ),
                 IconButton(
                   icon: Icon(

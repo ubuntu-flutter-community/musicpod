@@ -118,7 +118,7 @@ class Iconz {
       ? YaruIcons.speaker_medium_filled
       : appleStyled
           ? CupertinoIcons.volume_down
-          : Icons.volume_up;
+          : Icons.volume_down;
   IconData get speakerHighFilled => yaruStyled
       ? YaruIcons.speaker_high_filled
       : appleStyled
@@ -127,7 +127,7 @@ class Iconz {
   IconData get speakerMutedFilled => yaruStyled
       ? YaruIcons.speaker_muted_filled
       : appleStyled
-          ? CupertinoIcons.volume_mute
+          ? CupertinoIcons.volume_off
           : Icons.volume_off;
   IconData get fullScreenExit => yaruStyled
       ? YaruIcons.fullscreen_exit

@@ -1,3 +1,5 @@
+import 'package:provider/provider.dart';
+
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
@@ -8,17 +10,17 @@ class BottomPlayerTitleArtist extends StatelessWidget {
     super.key,
     required this.audio,
     required this.onTextTap,
-    this.icyTitle,
-    this.icyName,
   });
 
   final Audio? audio;
-  final String? icyTitle;
-  final String? icyName;
   final void Function(AudioType audioType, String text)? onTextTap;
 
   @override
   Widget build(BuildContext context) {
+    final mpvMetaData = context.select((PlayerModel m) => m.mpvMetaData);
+    final icyName = mpvMetaData?.icyName;
+    final icyTitle = mpvMetaData?.icyTitle;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
