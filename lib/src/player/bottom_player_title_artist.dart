@@ -11,9 +11,9 @@ class BottomPlayerTitleArtist extends StatelessWidget {
     required this.audio,
     required this.onTextTap,
   });
-
   final Audio? audio;
-  final void Function(AudioType audioType, String text)? onTextTap;
+  final void Function({required String text, required AudioType audioType})
+      onTextTap;
 
   @override
   Widget build(BuildContext context) {

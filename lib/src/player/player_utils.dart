@@ -5,12 +5,14 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../../globals.dart';
 
 void onTitleTap({
   required Audio? audio,
   required String? text,
   required BuildContext context,
-  required void Function(AudioType audioType, String text)? onTextTap,
+  required void Function({required String text, required AudioType audioType})
+      onTextTap,
 }) {
   if (audio?.audioType == null ||
       audio?.title == null ||
@@ -47,10 +49,11 @@ void onTitleTap({
       ),
     );
   } else {
-    onTextTap?.call(
-      audio!.audioType!,
-      audio.title!,
+    onTextTap.call(
+      audioType: audio!.audioType!,
+      text: audio.title!,
     );
+    navigatorKey.currentState?.pop();
   }
 }
 
@@ -58,7 +61,8 @@ void onArtistTap({
   required Audio? audio,
   required String? artist,
   required BuildContext context,
-  required void Function(AudioType audioType, String text)? onTextTap,
+  required void Function({required String text, required AudioType audioType})
+      onTextTap,
 }) {
   if (audio?.audioType == null || audio?.artist == null) {
     return;
@@ -81,11 +85,12 @@ void onArtistTap({
       ),
     );
   } else {
-    onTextTap?.call(
-      audio.audioType!,
-      audio.audioType == AudioType.radio && audio.title != null
+    onTextTap.call(
+      audioType: audio.audioType!,
+      text: audio.audioType == AudioType.radio && audio.title != null
           ? audio.title!
           : audio.artist!,
     );
+    navigatorKey.currentState?.pop();
   }
 }
