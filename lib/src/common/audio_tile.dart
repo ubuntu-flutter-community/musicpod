@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../data.dart';
@@ -54,10 +53,7 @@ class AudioTile extends StatelessWidget {
     );
 
     final listTile = ListTile(
-      contentPadding: const EdgeInsets.only(left: 8, right: 4),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(kYaruButtonRadius),
-      ),
+      contentPadding: const EdgeInsets.only(left: 25, right: 25),
       onTap: () {
         if (selected) {
           if (isPlayerPlaying) {
@@ -77,8 +73,8 @@ class AudioTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (showTrack)
-            Expanded(
-              flex: 1,
+            Padding(
+              padding: const EdgeInsets.only(right: 25),
               child: Text(
                 audio.trackNumber != null ? '${audio.trackNumber}' : ' ',
                 style: textStyle,

@@ -147,22 +147,13 @@ class _Titles extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-          child: Row(
-            children: [
-              Text(
-                '${context.l10n.titles}  •  ${titlesResult.length}',
-                style: theme.textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.w100),
-              ),
-            ],
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.only(left: 15, right: 15),
+          padding: const EdgeInsets.only(left: 18, right: 20),
           child: AudioTileHeader(
+            textStyle: theme.textTheme.headlineSmall
+                ?.copyWith(fontWeight: FontWeight.w100),
             showTrack: false,
             audioFilter: AudioFilter.trackNumber,
+            titleLabel: '${context.l10n.titles}  •  ${titlesResult.length}',
           ),
         ),
         const SpacedDivider(
@@ -177,23 +168,17 @@ class _Titles extends StatelessWidget {
               final audio = titlesResult.take(5).elementAt(index);
               final audioSelected = currentAudio == audio;
 
-              return Padding(
-                padding: const EdgeInsets.only(
-                  left: 15,
-                  right: 15,
-                ),
-                child: AudioTile(
-                  onTextTap: onTextTap,
-                  showTrack: false,
-                  isPlayerPlaying: isPlaying,
-                  pause: pause,
-                  play: play,
-                  resume: resume,
-                  key: ValueKey(audio),
-                  selected: audioSelected,
-                  audio: audio,
-                  likeIcon: const SizedBox(width: 65),
-                ),
+              return AudioTile(
+                onTextTap: onTextTap,
+                showTrack: false,
+                isPlayerPlaying: isPlaying,
+                pause: pause,
+                play: play,
+                resume: resume,
+                key: ValueKey(audio),
+                selected: audioSelected,
+                audio: audio,
+                likeIcon: const SizedBox(width: 65),
               );
             }),
           ),

@@ -71,6 +71,8 @@ class PodcastAudioTile extends StatelessWidget {
           padding: const EdgeInsets.only(
             top: 15,
             bottom: 10,
+            left: 20,
+            right: 20,
           ),
           child: Row(
             children: [
@@ -152,42 +154,48 @@ class _Bottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            ShareButton(
-              active: true,
-              audio: audio,
-            ),
-            // TODO: implement download
-            IconButton(
-              icon: Icon(Iconz().download),
-              onPressed: null,
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            _AudioProgress(
-              selected: selected,
-              lastPosition: lastPosition,
-              duration: audio.durationMs == null
-                  ? null
-                  : Duration(milliseconds: audio.durationMs!.toInt()),
-            ),
-          ],
-        ),
-        ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1000),
-          child: _Description(
-            description: audio.description,
-            title: audio.title,
-            selected: selected,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              ShareButton(
+                active: true,
+                audio: audio,
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              // TODO: implement download
+              IconButton(
+                icon: Icon(Iconz().download),
+                onPressed: null,
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              _AudioProgress(
+                selected: selected,
+                lastPosition: lastPosition,
+                duration: audio.durationMs == null
+                    ? null
+                    : Duration(milliseconds: audio.durationMs!.toInt()),
+              ),
+            ],
           ),
-        ),
-      ],
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1000),
+            child: _Description(
+              description: audio.description,
+              title: audio.title,
+              selected: selected,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
