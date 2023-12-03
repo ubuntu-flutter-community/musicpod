@@ -90,9 +90,6 @@ class _PlayerViewState extends State<PlayerView> {
             ),
           );
 
-    final volume = context.select((PlayerModel m) => m.volume);
-    final setVolume = playerModel.setVolume;
-
     final isVideo = context.select((PlayerModel m) => m.isVideo);
 
     Widget player;
@@ -125,8 +122,6 @@ class _PlayerViewState extends State<PlayerView> {
         removeStarredStation: removeStarredStation,
         addLikedAudio: addLikedAudio,
         removeLikedAudio: removeLikedAudio,
-        volume: volume,
-        setVolume: setVolume,
         isOnline: widget.isOnline,
         size: size,
       );
@@ -155,8 +150,6 @@ class _PlayerViewState extends State<PlayerView> {
         removeStarredStation: removeStarredStation,
         addLikedAudio: addLikedAudio,
         removeLikedAudio: removeLikedAudio,
-        volume: volume,
-        setVolume: setVolume,
         queue: queue,
         isOnline: widget.isOnline,
       );

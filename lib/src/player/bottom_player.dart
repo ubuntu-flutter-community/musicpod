@@ -35,8 +35,6 @@ class BottomPlayer extends StatelessWidget {
     required this.removeLikedAudio,
     required this.addLikedAudio,
     required this.onTextTap,
-    required this.setVolume,
-    required this.volume,
     this.isVideo,
     required this.videoController,
     required this.queue,
@@ -72,9 +70,6 @@ class BottomPlayer extends StatelessWidget {
 
   final void Function({required String text, required AudioType audioType})
       onTextTap;
-
-  final double volume;
-  final Future<void> Function(double value) setVolume;
 
   final bool? isVideo;
   final VideoController videoController;
@@ -119,8 +114,6 @@ class BottomPlayer extends StatelessWidget {
       playNext: playNext,
       pause: pause,
       playOrPause: playOrPause,
-      volume: volume,
-      setVolume: setVolume,
       queue: queue,
       onFullScreenTap: () => setFullScreen(true),
       isOnline: isOnline,
@@ -201,9 +194,7 @@ class BottomPlayer extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                VolumeSliderPopup(
-                  volume: volume,
-                  setVolume: setVolume,
+                const VolumeSliderPopup(
                   direction: PopoverDirection.top,
                 ),
                 Padding(

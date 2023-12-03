@@ -37,8 +37,6 @@ class FullHeightPlayer extends StatelessWidget {
     required this.setFullScreen,
     required this.playerViewMode,
     required this.onTextTap,
-    required this.volume,
-    required this.setVolume,
     required this.videoController,
     required this.isVideo,
     required this.isOnline,
@@ -78,9 +76,6 @@ class FullHeightPlayer extends StatelessWidget {
 
   final void Function({required String text, required AudioType audioType})
       onTextTap;
-
-  final double volume;
-  final Future<void> Function(double value) setVolume;
 
   final VideoController videoController;
   final bool isVideo;
@@ -157,8 +152,6 @@ class FullHeightPlayer extends StatelessWidget {
       playNext: playNext,
       pause: pause,
       playOrPause: playOrPause,
-      volume: volume,
-      setVolume: setVolume,
       queue: queue,
       isOnline: isOnline,
     );
@@ -240,8 +233,6 @@ class FullHeightPlayer extends StatelessWidget {
                 ),
                 VolumeSliderPopup(
                   direction: PopoverDirection.bottom,
-                  volume: volume,
-                  setVolume: setVolume,
                   color: iconColor,
                 ),
                 IconButton(

@@ -16,8 +16,6 @@ class BottomPlayerControls extends StatelessWidget {
     required this.playNext,
     required this.pause,
     required this.playOrPause,
-    required this.setVolume,
-    required this.volume,
     required this.queue,
     required this.onFullScreenTap,
     required this.isOnline,
@@ -35,8 +33,6 @@ class BottomPlayerControls extends StatelessWidget {
   final Future<void> Function() pause;
   final Future<void> Function() playOrPause;
 
-  final double volume;
-  final Future<void> Function(double value) setVolume;
   final void Function() onFullScreenTap;
 
   final bool isOnline;
