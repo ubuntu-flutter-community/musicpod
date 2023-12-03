@@ -59,11 +59,8 @@ class _PlayerViewState extends State<PlayerView> {
     final setRepeatSingle = playerModel.setRepeatSingle;
     final shuffle = context.select((PlayerModel m) => m.shuffle);
     final setShuffle = playerModel.setShuffle;
-    final position = context.select((PlayerModel m) => m.position);
-    final setPosition = playerModel.setPosition;
-    final duration = context.select((PlayerModel m) => m.duration);
+
     final color = context.select((PlayerModel m) => m.color);
-    final seek = playerModel.seek;
 
     final isUpNextExpanded =
         context.select((PlayerModel m) => m.isUpNextExpanded);
@@ -93,9 +90,6 @@ class _PlayerViewState extends State<PlayerView> {
             ),
           );
 
-    final volume = context.select((PlayerModel m) => m.volume);
-    final setVolume = playerModel.setVolume;
-
     final isVideo = context.select((PlayerModel m) => m.isVideo);
 
     Widget player;
@@ -113,10 +107,6 @@ class _PlayerViewState extends State<PlayerView> {
         audio: audio,
         mpvMetaData: mpvMetaData,
         color: color,
-        duration: duration,
-        position: position,
-        setPosition: setPosition,
-        seek: seek,
         setRepeatSingle: setRepeatSingle,
         repeatSingle: repeatSingle,
         shuffle: shuffle,
@@ -132,8 +122,6 @@ class _PlayerViewState extends State<PlayerView> {
         removeStarredStation: removeStarredStation,
         addLikedAudio: addLikedAudio,
         removeLikedAudio: removeLikedAudio,
-        volume: volume,
-        setVolume: setVolume,
         isOnline: widget.isOnline,
         size: size,
       );
@@ -147,10 +135,6 @@ class _PlayerViewState extends State<PlayerView> {
         mpvMetaData: mpvMetaData,
         width: width,
         color: color,
-        duration: duration,
-        position: position,
-        setPosition: setPosition,
-        seek: seek,
         setRepeatSingle: setRepeatSingle,
         repeatSingle: repeatSingle,
         shuffle: shuffle,
@@ -166,8 +150,6 @@ class _PlayerViewState extends State<PlayerView> {
         removeStarredStation: removeStarredStation,
         addLikedAudio: addLikedAudio,
         removeLikedAudio: removeLikedAudio,
-        volume: volume,
-        setVolume: setVolume,
         queue: queue,
         isOnline: widget.isOnline,
       );

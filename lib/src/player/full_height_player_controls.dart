@@ -17,8 +17,6 @@ class FullHeightPlayerControls extends StatelessWidget {
     required this.playNext,
     required this.pause,
     required this.playOrPause,
-    required this.setVolume,
-    required this.volume,
     required this.queue,
     required this.isOnline,
   });
@@ -34,8 +32,6 @@ class FullHeightPlayerControls extends StatelessWidget {
   final Future<void> Function() playNext;
   final Future<void> Function() pause;
   final Future<void> Function() playOrPause;
-  final double volume;
-  final Future<void> Function(double value) setVolume;
   final bool isOnline;
 
   @override

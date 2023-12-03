@@ -34,15 +34,9 @@ class FullHeightPlayer extends StatelessWidget {
     required this.removeLikedAudio,
     required this.addLikedAudio,
     this.color,
-    this.duration,
-    this.position,
-    required this.setPosition,
-    required this.seek,
     required this.setFullScreen,
     required this.playerViewMode,
     required this.onTextTap,
-    required this.volume,
-    required this.setVolume,
     required this.videoController,
     required this.isVideo,
     required this.isOnline,
@@ -75,10 +69,6 @@ class FullHeightPlayer extends StatelessWidget {
   final void Function(Audio audio, bool notify) addLikedAudio;
 
   final Color? color;
-  final Duration? duration;
-  final Duration? position;
-  final void Function(Duration?) setPosition;
-  final Future<void> Function() seek;
 
   final void Function(bool?) setFullScreen;
 
@@ -86,9 +76,6 @@ class FullHeightPlayer extends StatelessWidget {
 
   final void Function({required String text, required AudioType audioType})
       onTextTap;
-
-  final double volume;
-  final Future<void> Function(double value) setVolume;
 
   final VideoController videoController;
   final bool isVideo;
@@ -165,19 +152,11 @@ class FullHeightPlayer extends StatelessWidget {
       playNext: playNext,
       pause: pause,
       playOrPause: playOrPause,
-      volume: volume,
-      setVolume: setVolume,
       queue: queue,
       isOnline: isOnline,
     );
 
-    final sliderAndTime = PlayerTrack(
-      color: color,
-      duration: duration,
-      position: position,
-      setPosition: setPosition,
-      seek: seek,
-    );
+    const sliderAndTime = PlayerTrack();
 
     final iconColor = isVideo ? Colors.white : theme.colorScheme.onSurface;
     final stack = Stack(
@@ -213,7 +192,7 @@ class FullHeightPlayer extends StatelessWidget {
                   const SizedBox(
                     height: kYaruPagePadding,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: kYaruPagePadding,
                     width: 400,
                     child: sliderAndTime,
@@ -254,8 +233,6 @@ class FullHeightPlayer extends StatelessWidget {
                 ),
                 VolumeSliderPopup(
                   direction: PopoverDirection.bottom,
-                  volume: volume,
-                  setVolume: setVolume,
                   color: iconColor,
                 ),
                 IconButton(
