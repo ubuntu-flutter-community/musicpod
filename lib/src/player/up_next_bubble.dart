@@ -25,7 +25,7 @@ class UpNextBubble extends StatelessWidget {
     final queue = context.select((PlayerModel m) => m.queue);
 
     return SizedBox(
-      height: isUpNextExpanded ? 180 : 60,
+      height: isUpNextExpanded ? 180 : 70,
       width: 250,
       child: YaruBanner(
         onTap: () => setUpNextExpanded(!isUpNextExpanded),
@@ -76,6 +76,7 @@ class UpNextBubble extends StatelessWidget {
                 padding: const EdgeInsets.only(
                   left: 10,
                   right: 10,
+                  bottom: 10,
                 ),
                 child: Text(
                   '${nextAudio!.title!} • ${nextAudio?.artist!}',

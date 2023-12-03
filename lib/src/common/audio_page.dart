@@ -5,6 +5,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../globals.dart';
 import '../l10n/l10n.dart';
 
 class AudioPage extends StatelessWidget {
@@ -97,7 +98,7 @@ class AudioPage extends StatelessWidget {
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
-        title: title ?? Text(headerTitle ?? pageId),
+        title: isMobile ? null : (title ?? Text(headerTitle ?? pageId)),
         leading: Navigator.canPop(context)
             ? const NavBackButton()
             : const SizedBox.shrink(),

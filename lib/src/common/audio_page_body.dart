@@ -203,7 +203,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
             ),
           if (widget.showAudioTileHeader) const Divider(),
           Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            padding: const EdgeInsets.only(bottom: 20),
             child: Column(
               children:
                   List.generate(sortedAudios.take(_amount).length, (index) {

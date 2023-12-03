@@ -18,6 +18,7 @@ class AudioTileHeader extends StatelessWidget {
     this.titleFlex = 5,
     this.albumFlex = 4,
     this.artistFlex = 5,
+    this.textStyle,
   });
 
   final void Function(AudioFilter audioFilter)? onAudioFilterSelected;
@@ -27,11 +28,12 @@ class AudioTileHeader extends StatelessWidget {
   final bool showAlbum;
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: const EdgeInsets.only(left: 8, right: 4),
+      contentPadding: const EdgeInsets.only(left: 5, right: 10),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(kYaruButtonRadius),
       ),
@@ -39,31 +41,43 @@ class AudioTileHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (showTrack)
-            _HeaderElement(
-              onAudioFilterSelected: onAudioFilterSelected,
-              label: '#',
-              audioFilter: AudioFilter.trackNumber,
-              flex: 1,
+            Padding(
+              padding: const EdgeInsets.only(right: kYaruPagePadding),
+              child: _HeaderElement(
+                onAudioFilterSelected: onAudioFilterSelected,
+                label: '#',
+                audioFilter: AudioFilter.trackNumber,
+                style: textStyle,
+              ),
             ),
-          _HeaderElement(
-            onAudioFilterSelected: onAudioFilterSelected,
-            label: titleLabel ?? context.l10n.title,
-            audioFilter: AudioFilter.title,
+          Expanded(
             flex: titleFlex,
+            child: _HeaderElement(
+              onAudioFilterSelected: onAudioFilterSelected,
+              label: titleLabel ?? context.l10n.title,
+              audioFilter: AudioFilter.title,
+              style: textStyle,
+            ),
           ),
           if (showArtist)
-            _HeaderElement(
-              onAudioFilterSelected: onAudioFilterSelected,
-              label: artistLabel ?? context.l10n.artist,
-              audioFilter: AudioFilter.artist,
+            Expanded(
               flex: artistFlex,
+              child: _HeaderElement(
+                onAudioFilterSelected: onAudioFilterSelected,
+                label: artistLabel ?? context.l10n.artist,
+                audioFilter: AudioFilter.artist,
+                style: textStyle,
+              ),
             ),
           if (showAlbum)
-            _HeaderElement(
-              onAudioFilterSelected: onAudioFilterSelected,
-              label: albumLabel ?? context.l10n.album,
-              audioFilter: AudioFilter.album,
+            Expanded(
               flex: albumFlex,
+              child: _HeaderElement(
+                onAudioFilterSelected: onAudioFilterSelected,
+                label: albumLabel ?? context.l10n.album,
+                audioFilter: AudioFilter.album,
+                style: textStyle,
+              ),
             ),
         ],
       ),
@@ -77,40 +91,34 @@ class _HeaderElement extends StatelessWidget {
     this.onAudioFilterSelected,
     required this.label,
     required this.audioFilter,
-    this.flex = 1,
+    this.style,
   });
 
   final void Function(AudioFilter audioFilter)? onAudioFilterSelected;
   final AudioFilter audioFilter;
   final String label;
-  final int flex;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textStyle = TextStyle(
-      fontWeight: mediumTextWeight,
-      color: onAudioFilterSelected == null
-          ? theme.colorScheme.onSurface.withOpacity(0.8)
-          : theme.colorScheme.onSurface,
-    );
-    return Expanded(
-      flex: flex,
-      child: Row(
-        children: [
-          InkWell(
-            borderRadius: BorderRadius.circular(5),
-            onTap: onAudioFilterSelected == null
-                ? null
-                : () => onAudioFilterSelected!(audioFilter),
-            child: Text(
-              label,
-              style: textStyle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
+    final textStyle = style ??
+        TextStyle(
+          fontWeight: mediumTextWeight,
+          color: onAudioFilterSelected == null
+              ? theme.colorScheme.onSurface.withOpacity(0.8)
+              : theme.colorScheme.onSurface,
+        );
+    return InkWell(
+      borderRadius: BorderRadius.circular(5),
+      onTap: onAudioFilterSelected == null
+          ? null
+          : () => onAudioFilterSelected!(audioFilter),
+      child: Text(
+        label,
+        style: textStyle,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
