@@ -5,10 +5,12 @@ import 'package:popover/popover.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
-import '../../theme.dart';
 import '../globals.dart';
+import 'bottom_player_image.dart';
+import 'bottom_player_title_artist.dart';
+import 'very_narrow_bottom_player.dart';
 
-const _kBottomPlayerHeight = 90.0;
+const kBottomPlayerHeight = 90.0;
 
 class BottomPlayer extends StatelessWidget {
   const BottomPlayer({
@@ -88,17 +90,17 @@ class BottomPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final verySmall = width < 700;
+    final veryNarrow = width < 700;
 
-    final bottomPlayerImage = _BottomPlayerImage(
+    final bottomPlayerImage = BottomPlayerImage(
       audio: audio,
-      size: _kBottomPlayerHeight - (verySmall ? 20 : 0),
+      size: kBottomPlayerHeight - (veryNarrow ? 20 : 0),
       videoController: videoController,
       isVideo: isVideo,
       isOnline: isOnline,
     );
 
-    final titleAndArtist = _BottomPlayerTitleArtist(
+    final titleAndArtist = BottomPlayerTitleArtist(
       icyName: mpvMetaData?.icyName,
       icyTitle: mpvMetaData?.icyTitle,
       audio: audio,
@@ -137,65 +139,25 @@ class BottomPlayer extends StatelessWidget {
       position: position,
       setPosition: setPosition,
       seek: seek,
-      superNarrow: verySmall,
+      superNarrow: veryNarrow,
     );
 
-    if (verySmall) {
-      return InkWell(
-        onTap: () => setFullScreen(true),
-        child: SizedBox(
-          height: _kBottomPlayerHeight,
-          child: Column(
-            children: [
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: bottomPlayerImage,
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                      child: titleAndArtist,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20),
-                      child: IconButton(
-                        onPressed:
-                            !(audio?.path != null || isOnline) || audio == null
-                                ? null
-                                : () {
-                                    if (isPlaying) {
-                                      pause();
-                                    } else {
-                                      playOrPause();
-                                    }
-                                  },
-                        icon: Padding(
-                          padding: appleStyled
-                              ? const EdgeInsets.only(left: 3)
-                              : EdgeInsets.zero,
-                          child: Icon(
-                            isPlaying ? Iconz().pause : Iconz().play,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              track,
-            ],
-          ),
-        ),
+    if (veryNarrow) {
+      return VeryNarrowBottomPlayer(
+        setFullScreen: setFullScreen,
+        bottomPlayerImage: bottomPlayerImage,
+        titleAndArtist: titleAndArtist,
+        audio: audio,
+        isOnline: isOnline,
+        isPlaying: isPlaying,
+        pause: pause,
+        playOrPause: playOrPause,
+        track: track,
       );
     }
 
     return SizedBox(
-      height: _kBottomPlayerHeight,
+      height: kBottomPlayerHeight,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -279,171 +241,5 @@ class BottomPlayer extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class _BottomPlayerTitleArtist extends StatelessWidget {
-  const _BottomPlayerTitleArtist({
-    required this.audio,
-    required this.onTextTap,
-    this.icyTitle,
-    this.icyName,
-  });
-
-  final Audio? audio;
-  final String? icyTitle;
-  final String? icyName;
-  final void Function(AudioType audioType, String text)? onTextTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        InkWell(
-          borderRadius: BorderRadius.circular(4),
-          onTap: () => onTitleTap(
-            audio: audio,
-            text: icyTitle,
-            context: context,
-            onTextTap: onTextTap,
-          ),
-          child: Tooltip(
-            message: icyTitle?.isNotEmpty == true
-                ? icyTitle!
-                : (audio?.title?.isNotEmpty == true ? audio!.title! : ' '),
-            child: Text(
-              icyTitle?.isNotEmpty == true
-                  ? icyTitle!
-                  : (audio?.title?.isNotEmpty == true ? audio!.title! : ' '),
-              style: const TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 14,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ),
-        if (audio?.artist?.trim().isNotEmpty == true ||
-            icyName?.isNotEmpty == true)
-          InkWell(
-            borderRadius: BorderRadius.circular(4),
-            onTap: () => onArtistTap(
-              audio: audio,
-              artist: icyTitle,
-              context: context,
-              onTextTap: onTextTap,
-            ),
-            child: Tooltip(
-              message: icyName?.isNotEmpty == true
-                  ? icyName!
-                  : (audio?.artist ?? ' '),
-              child: Text(
-                icyName?.isNotEmpty == true ? icyName! : (audio?.artist ?? ' '),
-                style: TextStyle(
-                  fontWeight: smallTextFontWeight,
-                  fontSize: 12,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _BottomPlayerImage extends StatelessWidget {
-  const _BottomPlayerImage({
-    this.audio,
-    required this.size,
-    this.isVideo,
-    required this.videoController,
-    required this.isOnline,
-  });
-  final Audio? audio;
-  final double size;
-  final bool? isVideo;
-  final VideoController videoController;
-  final bool isOnline;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    IconData iconData;
-    if (audio?.audioType == AudioType.radio) {
-      iconData = Iconz().radio;
-    } else if (audio?.audioType == AudioType.podcast) {
-      iconData = Iconz().podcast;
-    } else {
-      iconData = Iconz().musicNote;
-    }
-    if (isVideo == true) {
-      return RepaintBoundary(
-        child: Video(
-          height: size,
-          width: size,
-          filterQuality: FilterQuality.medium,
-          controller: videoController,
-          controls: (state) {
-            return const SizedBox.shrink();
-          },
-        ),
-      );
-    } else if (audio?.pictureData != null) {
-      return AnimatedContainer(
-        height: size,
-        width: size,
-        duration: const Duration(milliseconds: 300),
-        child: Image.memory(
-          filterQuality: FilterQuality.medium,
-          fit: BoxFit.cover,
-          audio!.pictureData!,
-          height: size,
-        ),
-      );
-    } else {
-      if (!isOnline) {
-        return SizedBox(
-          width: size,
-          height: size,
-          child: Icon(
-            iconData,
-            size: 50,
-            color: theme.hintColor,
-          ),
-        );
-      } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
-        return SizedBox(
-          height: size,
-          width: size,
-          child: SafeNetworkImage(
-            errorIcon: Icon(
-              iconData,
-              size: 50,
-              color: theme.hintColor,
-            ),
-            url: audio?.imageUrl ?? audio?.albumArtUrl,
-            filterQuality: FilterQuality.medium,
-            fit: BoxFit.cover,
-          ),
-        );
-      } else {
-        return Center(
-          child: SizedBox(
-            width: size,
-            height: size,
-            child: Icon(
-              iconData,
-              size: 50,
-              color: theme.hintColor,
-            ),
-          ),
-        );
-      }
-    }
   }
 }
