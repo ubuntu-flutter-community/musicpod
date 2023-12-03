@@ -19,10 +19,6 @@ class BottomPlayer extends StatelessWidget {
     required this.audio,
     required this.width,
     this.color,
-    this.duration,
-    this.position,
-    required this.setPosition,
-    required this.seek,
     required this.repeatSingle,
     required this.setRepeatSingle,
     required this.shuffle,
@@ -53,10 +49,7 @@ class BottomPlayer extends StatelessWidget {
   final List<Audio> queue;
   final double width;
   final Color? color;
-  final Duration? duration;
-  final Duration? position;
-  final void Function(Duration?) setPosition;
-  final Future<void> Function() seek;
+
   final bool repeatSingle;
   final void Function(bool) setRepeatSingle;
   final bool shuffle;
@@ -134,11 +127,6 @@ class BottomPlayer extends StatelessWidget {
     );
 
     final track = PlayerTrack(
-      color: color,
-      duration: duration,
-      position: position,
-      setPosition: setPosition,
-      seek: seek,
       superNarrow: veryNarrow,
     );
 

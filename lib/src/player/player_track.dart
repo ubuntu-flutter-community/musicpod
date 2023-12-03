@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../../utils.dart';
+import 'player_model.dart';
 
 class PlayerTrack extends StatelessWidget {
   const PlayerTrack({
     super.key,
-    this.color,
-    this.duration,
-    this.position,
-    required this.setPosition,
-    required this.seek,
     this.superNarrow = false,
   });
 
-  final Color? color;
-  final Duration? duration;
-  final Duration? position;
-  final void Function(Duration?) setPosition;
-  final Future<void> Function() seek;
   final bool superNarrow;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    final playerModel = context.read<PlayerModel>();
+
+    final position = context.select((PlayerModel m) => m.position);
+    final setPosition = playerModel.setPosition;
+    final duration = context.select((PlayerModel m) => m.duration);
+    final color = context.select((PlayerModel m) => m.color);
+    final seek = playerModel.seek;
+
     bool sliderActive = duration != null &&
         position != null &&
-        duration!.inSeconds > position!.inSeconds;
+        duration.inSeconds > position.inSeconds;
 
     const textStyle = TextStyle(fontSize: 12);
     final slider = SliderTheme(
@@ -58,8 +59,8 @@ class PlayerTrack extends StatelessWidget {
       child: RepaintBoundary(
         child: Slider(
           min: 0,
-          max: sliderActive ? duration!.inSeconds.toDouble() : 1.0,
-          value: sliderActive ? position!.inSeconds.toDouble() : 0,
+          max: sliderActive ? duration.inSeconds.toDouble() : 1.0,
+          value: sliderActive ? position.inSeconds.toDouble() : 0,
           onChanged: sliderActive
               ? (v) async {
                   setPosition(Duration(seconds: v.toInt()));

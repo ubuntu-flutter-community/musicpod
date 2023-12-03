@@ -34,10 +34,6 @@ class FullHeightPlayer extends StatelessWidget {
     required this.removeLikedAudio,
     required this.addLikedAudio,
     this.color,
-    this.duration,
-    this.position,
-    required this.setPosition,
-    required this.seek,
     required this.setFullScreen,
     required this.playerViewMode,
     required this.onTextTap,
@@ -75,10 +71,6 @@ class FullHeightPlayer extends StatelessWidget {
   final void Function(Audio audio, bool notify) addLikedAudio;
 
   final Color? color;
-  final Duration? duration;
-  final Duration? position;
-  final void Function(Duration?) setPosition;
-  final Future<void> Function() seek;
 
   final void Function(bool?) setFullScreen;
 
@@ -171,13 +163,7 @@ class FullHeightPlayer extends StatelessWidget {
       isOnline: isOnline,
     );
 
-    final sliderAndTime = PlayerTrack(
-      color: color,
-      duration: duration,
-      position: position,
-      setPosition: setPosition,
-      seek: seek,
-    );
+    const sliderAndTime = PlayerTrack();
 
     final iconColor = isVideo ? Colors.white : theme.colorScheme.onSurface;
     final stack = Stack(
@@ -213,7 +199,7 @@ class FullHeightPlayer extends StatelessWidget {
                   const SizedBox(
                     height: kYaruPagePadding,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: kYaruPagePadding,
                     width: 400,
                     child: sliderAndTime,
