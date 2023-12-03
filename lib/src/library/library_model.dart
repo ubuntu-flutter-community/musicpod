@@ -140,7 +140,7 @@ class LibraryModel extends SafeChangeNotifier {
 
   void addLikedAudios(Set<Audio> audios) => _service.addLikedAudios(audios);
 
-  bool liked(Audio audio) => _service.liked(audio);
+  bool liked(Audio? audio) => audio == null ? false : _service.liked(audio);
 
   void removeLikedAudio(Audio audio, [bool notify = true]) =>
       _service.removeLikedAudio(audio, notify);
@@ -159,7 +159,8 @@ class LibraryModel extends SafeChangeNotifier {
 
   void unStarStation(String name) => _service.unStarStation(name);
 
-  bool isStarredStation(String name) => _service.isStarredStation(name);
+  bool isStarredStation(String? name) =>
+      name?.isNotEmpty == false ? false : _service.isStarredStation(name);
 
   bool get showStarredStations =>
       audioPageType == null || audioPageType == AudioPageType.radio;

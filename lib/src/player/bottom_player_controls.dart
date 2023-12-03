@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../data.dart';
 import '../common/icons.dart';
 import 'play_button.dart';
 import 'repeat_button.dart';
@@ -9,25 +8,21 @@ import 'shuffle_button.dart';
 class BottomPlayerControls extends StatelessWidget {
   const BottomPlayerControls({
     super.key,
-    this.audio,
+    required this.active,
     required this.playPrevious,
     required this.playNext,
     required this.onFullScreenTap,
-    required this.isOnline,
   });
 
-  final Audio? audio;
   final Future<void> Function() playPrevious;
   final Future<void> Function() playNext;
 
   final void Function() onFullScreenTap;
 
-  final bool isOnline;
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
-    final active = audio?.path != null || isOnline;
-
     final children = [
       Row(
         children: [

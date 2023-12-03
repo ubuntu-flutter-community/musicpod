@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:popover/popover.dart';
-import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
-import '../../constants.dart';
 import '../../data.dart';
 import '../../globals.dart';
 import '../../player.dart';
+import 'full_height_player_image.dart';
+import 'full_height_title_and_artist.dart';
 import 'up_next_bubble.dart';
 
 class FullHeightPlayer extends StatelessWidget {
@@ -65,66 +65,19 @@ class FullHeightPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final active = audio?.path != null || isOnline;
     final activeControls = audio?.path != null || isOnline;
-    final mpvMetaData = context.select((PlayerModel m) => m.mpvMetaData);
 
-    final label = mpvMetaData?.icyTitle.isNotEmpty == true
-        ? mpvMetaData!.icyTitle
-        : (audio?.title?.isNotEmpty == true ? audio!.title! : '');
-    final title = InkWell(
-      borderRadius: BorderRadius.circular(10),
-      onTap: () => onTitleTap(
-        audio: audio,
-        text: mpvMetaData?.icyTitle,
-        context: context,
-        onTextTap: (audioType, text) =>
-            onTextTap(audioType: audioType, text: text),
-      ),
-      child: Tooltip(
-        message: label,
-        child: Text(
-          label,
-          style: TextStyle(
-            fontWeight: largeTextWeight,
-            fontSize: 30,
-            color: theme.colorScheme.onSurface,
-          ),
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-    );
-
-    final artist = InkWell(
-      borderRadius: BorderRadius.circular(8),
-      onTap: () => onArtistTap(
-        audio: audio,
-        artist: mpvMetaData?.icyName,
-        context: context,
-        onTextTap: (audioType, text) =>
-            onTextTap(audioType: audioType, text: text),
-      ),
-      child: Text(
-        mpvMetaData?.icyName.isNotEmpty == true
-            ? mpvMetaData!.icyName
-            : (audio?.artist ?? ''),
-        style: TextStyle(
-          fontWeight: smallTextFontWeight,
-          fontSize: 20,
-          color: theme.colorScheme.onSurface,
-        ),
-        textAlign: TextAlign.center,
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
-      ),
+    final titleAndArtist = FullHeightTitleAndArtist(
+      audio: audio,
+      onTextTap: onTextTap,
     );
 
     final controls = FullHeightPlayerControls(
       audio: audio,
       playPrevious: playPrevious,
       playNext: playNext,
-      isOnline: isOnline,
+      active: active,
     );
 
     const sliderAndTime = PlayerTrack();
@@ -150,7 +103,7 @@ class FullHeightPlayer extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _FullHeightPlayerImage(
+                  FullHeightPlayerImage(
                     size: size,
                     audio: audio,
                     isOnline: isOnline,
@@ -158,8 +111,7 @@ class FullHeightPlayer extends StatelessWidget {
                   const SizedBox(
                     height: kYaruPagePadding,
                   ),
-                  if (audio != null) title,
-                  artist,
+                  titleAndArtist,
                   const SizedBox(
                     height: kYaruPagePadding,
                   ),
@@ -251,77 +203,6 @@ class FullHeightPlayer extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _FullHeightPlayerImage extends StatelessWidget {
-  const _FullHeightPlayerImage({
-    this.audio,
-    required this.isOnline,
-    required this.size,
-  });
-
-  final Audio? audio;
-  final bool isOnline;
-  final Size size;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    IconData iconData;
-    if (audio?.audioType == AudioType.radio) {
-      iconData = Iconz().radio;
-    } else if (audio?.audioType == AudioType.podcast) {
-      iconData = Iconz().podcast;
-    } else {
-      iconData = Iconz().musicNote;
-    }
-
-    Widget image;
-    if (audio?.pictureData != null) {
-      image = Image.memory(
-        audio!.pictureData!,
-        height: size.height,
-        fit: BoxFit.fitWidth,
-      );
-    } else {
-      if (!isOnline) {
-        image = Icon(
-          iconData,
-          size: fullHeightPlayerImageSize * 0.7,
-          color: theme.hintColor,
-        );
-      } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
-        image = SafeNetworkImage(
-          url: audio?.imageUrl ?? audio?.albumArtUrl,
-          filterQuality: FilterQuality.medium,
-          fit: BoxFit.cover,
-          fallBackIcon: Icon(
-            iconData,
-            size: fullHeightPlayerImageSize * 0.7,
-            color: theme.hintColor,
-          ),
-          height: size.width,
-          width: size.width,
-        );
-      } else {
-        image = Icon(
-          iconData,
-          size: fullHeightPlayerImageSize * 0.7,
-          color: theme.hintColor.withOpacity(0.4),
-        );
-      }
-    }
-
-    return SizedBox(
-      height: fullHeightPlayerImageSize,
-      width: fullHeightPlayerImageSize,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: image,
-      ),
     );
   }
 }

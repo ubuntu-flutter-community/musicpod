@@ -12,19 +12,17 @@ class FullHeightPlayerControls extends StatelessWidget {
     this.audio,
     required this.playPrevious,
     required this.playNext,
-    required this.isOnline,
+    required this.active,
   });
 
   final Audio? audio;
   final Future<void> Function() playPrevious;
   final Future<void> Function() playNext;
-  final bool isOnline;
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    final active = audio?.path != null || isOnline;
 
     const spacing = 7.0;
 

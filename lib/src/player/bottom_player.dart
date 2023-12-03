@@ -5,7 +5,6 @@ import 'package:popover/popover.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
-import '../globals.dart';
 import 'bottom_player_image.dart';
 import 'bottom_player_title_artist.dart';
 import 'very_narrow_bottom_player.dart';
@@ -73,23 +72,14 @@ class BottomPlayer extends StatelessWidget {
 
     final titleAndArtist = BottomPlayerTitleArtist(
       audio: audio,
-      onTextTap: audio == null || audio?.audioType == null
-          ? null
-          : (audioType, text) {
-              onTextTap(
-                text: text,
-                audioType: audio!.audioType!,
-              );
-              navigatorKey.currentState?.maybePop();
-            },
+      onTextTap: onTextTap,
     );
 
     final bottomPlayerControls = BottomPlayerControls(
-      audio: audio,
       playPrevious: playPrevious,
       playNext: playNext,
       onFullScreenTap: () => setFullScreen(true),
-      isOnline: isOnline,
+      active: active,
     );
 
     final track = PlayerTrack(

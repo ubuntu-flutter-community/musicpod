@@ -50,33 +50,25 @@ class _PlayerViewState extends State<PlayerView> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+
     final playerModel = context.read<PlayerModel>();
-    final audio = context.select((PlayerModel m) => m.audio);
     final nextAudio = context.select((PlayerModel m) => m.nextAudio);
-
     final color = context.select((PlayerModel m) => m.color);
-
     final setFullScreen = playerModel.setFullScreen;
     final playPrevious = playerModel.playPrevious;
     final playNext = playerModel.playNext;
+    final audio = context.select((PlayerModel m) => m.audio);
 
     final library = context.read<LibraryModel>();
-    final liked = audio == null
-        ? false
-        : context.select((LibraryModel m) => m.likedAudios.contains(audio));
-    final size = MediaQuery.of(context).size;
-    final width = size.width;
+    final liked = library.liked(audio);
+
     final removeLikedAudio = library.removeLikedAudio;
     final addLikedAudio = library.addLikedAudio;
     final addStarredStation = library.addStarredStation;
     final removeStarredStation = library.unStarStation;
-    final isStarredStation = audio == null
-        ? false
-        : context.select(
-            (LibraryModel m) => m.starredStations.containsKey(
-              audio.title,
-            ),
-          );
+    final isStarredStation = library.isStarredStation(audio?.title);
 
     final isVideo = context.select((PlayerModel m) => m.isVideo);
 
