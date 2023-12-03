@@ -52,25 +52,13 @@ class _PlayerViewState extends State<PlayerView> {
   Widget build(BuildContext context) {
     final playerModel = context.read<PlayerModel>();
     final audio = context.select((PlayerModel m) => m.audio);
-    final mpvMetaData = context.select((PlayerModel m) => m.mpvMetaData);
     final nextAudio = context.select((PlayerModel m) => m.nextAudio);
-    final queue = context.select((PlayerModel m) => m.queue);
-    final repeatSingle = context.select((PlayerModel m) => m.repeatSingle);
-    final setRepeatSingle = playerModel.setRepeatSingle;
-    final shuffle = context.select((PlayerModel m) => m.shuffle);
-    final setShuffle = playerModel.setShuffle;
 
     final color = context.select((PlayerModel m) => m.color);
 
-    final isUpNextExpanded =
-        context.select((PlayerModel m) => m.isUpNextExpanded);
-    final setUpNextExpanded = playerModel.setUpNextExpanded;
-    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
     final setFullScreen = playerModel.setFullScreen;
     final playPrevious = playerModel.playPrevious;
     final playNext = playerModel.playNext;
-    final pause = playerModel.pause;
-    final playOrPause = playerModel.playOrPause;
 
     final library = context.read<LibraryModel>();
     final liked = audio == null
@@ -100,22 +88,11 @@ class _PlayerViewState extends State<PlayerView> {
         playerViewMode: widget.playerViewMode,
         onTextTap: widget.onTextTap,
         setFullScreen: setFullScreen,
-        isUpNextExpanded: isUpNextExpanded,
         nextAudio: nextAudio,
-        queue: queue,
-        setUpNextExpanded: setUpNextExpanded,
         audio: audio,
-        mpvMetaData: mpvMetaData,
         color: color,
-        setRepeatSingle: setRepeatSingle,
-        repeatSingle: repeatSingle,
-        shuffle: shuffle,
-        setShuffle: setShuffle,
-        isPlaying: isPlaying,
         playPrevious: playPrevious,
         playNext: playNext,
-        pause: pause,
-        playOrPause: playOrPause,
         liked: liked,
         isStarredStation: isStarredStation,
         addStarredStation: addStarredStation,
@@ -132,25 +109,16 @@ class _PlayerViewState extends State<PlayerView> {
         onTextTap: widget.onTextTap,
         setFullScreen: setFullScreen,
         audio: audio,
-        mpvMetaData: mpvMetaData,
         width: width,
         color: color,
-        setRepeatSingle: setRepeatSingle,
-        repeatSingle: repeatSingle,
-        shuffle: shuffle,
-        setShuffle: setShuffle,
-        isPlaying: isPlaying,
         playPrevious: playPrevious,
         playNext: playNext,
-        pause: pause,
-        playOrPause: playOrPause,
         liked: liked,
         isStarredStation: isStarredStation,
         addStarredStation: addStarredStation,
         removeStarredStation: removeStarredStation,
         addLikedAudio: addLikedAudio,
         removeLikedAudio: removeLikedAudio,
-        queue: queue,
         isOnline: widget.isOnline,
       );
     }

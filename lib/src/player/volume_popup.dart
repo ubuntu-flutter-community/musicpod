@@ -22,12 +22,12 @@ class VolumeSliderPopup extends StatelessWidget {
     final volume = context.select((PlayerModel m) => m.volume);
     final setVolume = playerModel.setVolume;
     IconData iconData;
-    if (volume <= 20) {
+    if (volume <= 0) {
+      iconData = Iconz().speakerMutedFilled;
+    } else if (volume <= 20) {
       iconData = Iconz().speakerLowFilled;
     } else if (volume <= 50 && volume > 20) {
       iconData = Iconz().speakerMediumFilled;
-    } else if (volume <= 0) {
-      iconData = Iconz().speakerMutedFilled;
     } else {
       iconData = Iconz().speakerHighFilled;
     }

@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:popover/popover.dart';
+import 'package:provider/provider.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../../player.dart';
 import '../l10n/l10n.dart';
 
 class QueuePopup extends StatelessWidget {
-  const QueuePopup({super.key, this.queue, this.audio});
+  const QueuePopup({super.key, this.audio});
 
-  final List<Audio>? queue;
   final Audio? audio;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final queue = context.select((PlayerModel m) => m.queue);
 
     final content = SizedBox(
       height: 200,
@@ -35,7 +37,7 @@ class QueuePopup extends StatelessWidget {
                 right: 20,
               ),
               children: [
-                for (final e in queue ?? [])
+                for (final e in queue)
                   Text(
                     '${e.title ?? ''} • ${e.artist ?? ''}',
                     style: theme.textTheme.labelMedium?.copyWith(

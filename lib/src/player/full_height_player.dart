@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:popover/popover.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
@@ -8,25 +9,15 @@ import '../../constants.dart';
 import '../../data.dart';
 import '../../globals.dart';
 import '../../player.dart';
-import '../l10n/l10n.dart';
+import 'up_next_bubble.dart';
 
 class FullHeightPlayer extends StatelessWidget {
   const FullHeightPlayer({
     super.key,
     required this.audio,
     required this.nextAudio,
-    required this.queue,
-    required this.isUpNextExpanded,
-    required this.setUpNextExpanded,
-    required this.repeatSingle,
-    required this.setRepeatSingle,
-    required this.shuffle,
-    required this.setShuffle,
-    required this.isPlaying,
     required this.playPrevious,
     required this.playNext,
-    required this.pause,
-    required this.playOrPause,
     required this.liked,
     required this.isStarredStation,
     required this.removeStarredStation,
@@ -41,24 +32,12 @@ class FullHeightPlayer extends StatelessWidget {
     required this.isVideo,
     required this.isOnline,
     required this.size,
-    this.mpvMetaData,
   });
 
   final Audio? audio;
-  final MpvMetaData? mpvMetaData;
   final Audio? nextAudio;
-  final List<Audio> queue;
-  final bool isUpNextExpanded;
-  final void Function(bool value) setUpNextExpanded;
-  final bool repeatSingle;
-  final void Function(bool) setRepeatSingle;
-  final bool shuffle;
-  final void Function(bool) setShuffle;
-  final bool isPlaying;
   final Future<void> Function() playPrevious;
   final Future<void> Function() playNext;
-  final Future<void> Function() pause;
-  final Future<void> Function() playOrPause;
   final bool liked;
 
   final bool isStarredStation;
@@ -86,8 +65,8 @@ class FullHeightPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     final activeControls = audio?.path != null || isOnline;
+    final mpvMetaData = context.select((PlayerModel m) => m.mpvMetaData);
 
     final label = mpvMetaData?.icyTitle.isNotEmpty == true
         ? mpvMetaData!.icyTitle
@@ -143,16 +122,8 @@ class FullHeightPlayer extends StatelessWidget {
 
     final controls = FullHeightPlayerControls(
       audio: audio,
-      setRepeatSingle: setRepeatSingle,
-      repeatSingle: repeatSingle,
-      shuffle: shuffle,
-      setShuffle: setShuffle,
-      isPlaying: isPlaying,
       playPrevious: playPrevious,
       playNext: playNext,
-      pause: pause,
-      playOrPause: playOrPause,
-      queue: queue,
       isOnline: isOnline,
     );
 
@@ -255,18 +226,11 @@ class FullHeightPlayer extends StatelessWidget {
             left: 10,
             bottom: 10,
             child: size.width > 600
-                ? _UpNextBubble(
-                    key: ObjectKey(queue),
-                    isUpNextExpanded: isUpNextExpanded,
-                    setUpNextExpanded: setUpNextExpanded,
-                    queue: queue,
+                ? UpNextBubble(
                     audio: audio,
                     nextAudio: nextAudio,
                   )
-                : QueuePopup(
-                    audio: audio,
-                    queue: queue,
-                  ),
+                : QueuePopup(audio: audio),
           ),
       ],
     );
@@ -287,93 +251,6 @@ class FullHeightPlayer extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _UpNextBubble extends StatelessWidget {
-  const _UpNextBubble({
-    super.key,
-    required this.isUpNextExpanded,
-    required this.setUpNextExpanded,
-    required this.queue,
-    required this.audio,
-    required this.nextAudio,
-  });
-
-  final bool isUpNextExpanded;
-  final void Function(bool value) setUpNextExpanded;
-  final List<Audio>? queue;
-  final Audio? audio;
-  final Audio? nextAudio;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return SizedBox(
-      height: isUpNextExpanded ? 180 : 60,
-      width: 250,
-      child: YaruBanner(
-        onTap: () => setUpNextExpanded(!isUpNextExpanded),
-        color: theme.cardColor,
-        padding: EdgeInsets.zero,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 10,
-                top: 10,
-                bottom: 5,
-                right: 10,
-              ),
-              child: Text(
-                context.l10n.upNext,
-                style: theme.textTheme.labelSmall,
-              ),
-            ),
-            if (isUpNextExpanded && queue?.isNotEmpty == true && audio != null)
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  children: [
-                    for (final e in queue!)
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 10,
-                          right: 10,
-                        ),
-                        child: Text(
-                          '${e.title ?? ''} • ${e.artist ?? ''}',
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            color: theme.colorScheme.onSurface,
-                            fontWeight: e == audio
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                  ],
-                ),
-              )
-            else
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                ),
-                child: Text(
-                  '${nextAudio!.title!} • ${nextAudio?.artist!}',
-                  style: theme.textTheme.labelMedium
-                      ?.copyWith(color: theme.colorScheme.onSurface),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ),
-          ],
-        ),
-      ),
     );
   }
 }
