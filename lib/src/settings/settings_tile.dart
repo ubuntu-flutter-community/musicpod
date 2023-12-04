@@ -49,12 +49,9 @@ class SettingsTile extends StatelessWidget {
     }
 
     final content = Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Column(
+      padding: const EdgeInsets.all(25),
+      child: ListView(
         children: [
-          const SizedBox(
-            height: kYaruPagePadding,
-          ),
           ImportantButton(
             onPressed: () async {
               final directoryPath = await getDirectoryPath();
@@ -113,8 +110,12 @@ class SettingsTile extends StatelessWidget {
         icon: Icon(
           Iconz().menu,
         ),
-        onPressed: () =>
-            showStyledPopover(context: context, content: content, height: 450),
+        onPressed: () => showStyledPopover(
+          context: context,
+          content: content,
+          height: 480,
+          width: 260,
+        ),
       ),
     );
   }
