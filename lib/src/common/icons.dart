@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/constants.dart';
 
+import '../../globals.dart';
 import '../../theme.dart';
 
 class Iconz {
@@ -67,12 +68,12 @@ class Iconz {
   IconData get podcast => yaruStyled
       ? YaruIcons.podcast
       : appleStyled
-          ? CupertinoIcons.dot_radiowaves_left_right
+          ? CupertinoIcons.mic
           : Icons.podcasts_outlined;
   IconData get podcastFilled => yaruStyled
       ? YaruIcons.podcast_filled
       : appleStyled
-          ? CupertinoIcons.dot_radiowaves_left_right
+          ? CupertinoIcons.mic_fill
           : Icons.podcasts;
   IconData get radio => yaruStyled
       ? YaruIcons.radio
@@ -84,16 +85,34 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.antenna_radiowaves_left_right
           : Icons.radio;
-  IconData get localAudio => yaruStyled
-      ? YaruIcons.drive_harddisk
-      : appleStyled
-          ? CupertinoIcons.device_laptop
-          : Icons.sd_storage_outlined;
-  IconData get localAudioFilled => yaruStyled
-      ? YaruIcons.drive_harddisk_filled
-      : appleStyled
-          ? CupertinoIcons.device_laptop
-          : Icons.sd_storage;
+  IconData get localAudio {
+    if (appleStyled) {
+      if (isMobile) {
+        return CupertinoIcons.device_phone_portrait;
+      }
+      return CupertinoIcons.device_laptop;
+    }
+    return yaruStyled
+        ? YaruIcons.drive_harddisk
+        : isMobile
+            ? Icons.sd_storage_outlined
+            : Icons.computer;
+  }
+
+  IconData get localAudioFilled {
+    if (appleStyled) {
+      if (isMobile) {
+        return CupertinoIcons.device_phone_portrait;
+      }
+      return CupertinoIcons.device_laptop;
+    }
+    return yaruStyled
+        ? YaruIcons.drive_harddisk_filled
+        : isMobile
+            ? Icons.sd_storage
+            : Icons.computer;
+  }
+
   IconData get addToLibrary => yaruStyled
       ? YaruIcons.plus
       : appleStyled
