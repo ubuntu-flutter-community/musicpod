@@ -424,6 +424,7 @@ Future<Object?> showStyledPopover({
   required Widget content,
   PopoverDirection direction = PopoverDirection.bottom,
   double? height,
+  double? width,
 }) {
   final theme = Theme.of(context);
   final light = theme.brightness == Brightness.light;
@@ -442,7 +443,7 @@ Future<Object?> showStyledPopover({
     backgroundColor:
         light ? Colors.white : theme.colorScheme.surface.scale(lightness: 0.05),
     barrierColor: Colors.transparent,
-    width: 250,
+    width: width ?? 250,
     height: height,
     arrowHeight: 15,
     arrowWidth: 30,

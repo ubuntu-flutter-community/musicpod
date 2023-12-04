@@ -75,6 +75,9 @@ class RadioControlPanel extends StatelessWidget {
             },
             countries: sortedCountries,
           ),
+          const SizedBox(
+            width: 10,
+          ),
           TagPopup(
             value: tag,
             addFav: (tag) {

@@ -29,152 +29,145 @@ class TagPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final fallBackTextStyle =
-        theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
+    final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(
+      fontWeight: FontWeight.w500,
+    );
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const SizedBox(
-          width: 5,
-        ),
-        Text(
-          '${context.l10n.tag}:',
-          style: fallBackTextStyle,
-        ),
-        const SizedBox(
-          width: 5,
-        ),
-        SizedBox(
-          width: 180,
-          child: LayoutBuilder(
-            builder: (_, constraints) {
-              return Autocomplete<Tag>(
-                key: ValueKey(value?.name),
-                initialValue: TextEditingValue(
-                  text: value?.name ?? context.l10n.all,
+    return SizedBox(
+      width: 120,
+      height: 20,
+      child: LayoutBuilder(
+        builder: (_, constraints) {
+          return Autocomplete<Tag>(
+            key: ValueKey(value?.name),
+            initialValue: TextEditingValue(
+              text: value?.name ?? context.l10n.all,
+            ),
+            displayStringForOption: (option) => option.name,
+            fieldViewBuilder: (
+              context,
+              textEditingController,
+              focusNode,
+              onFieldSubmitted,
+            ) {
+              const outlineInputBorder = OutlineInputBorder(
+                borderSide: BorderSide.none,
+              );
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: yaruStyled ? 3 : 0,
                 ),
-                displayStringForOption: (option) => option.name,
-                fieldViewBuilder: (
-                  context,
-                  textEditingController,
-                  focusNode,
-                  onFieldSubmitted,
-                ) {
-                  const outlineInputBorder = OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                  );
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: yaruStyled ? 3 : 0),
-                    child: TextFormField(
-                      onTap: () {
-                        textEditingController.selection = TextSelection(
-                          baseOffset: 0,
-                          extentOffset: textEditingController.value.text.length,
-                        );
-                      },
-                      style: fallBackTextStyle,
-                      decoration: const InputDecoration(
-                        constraints: BoxConstraints(maxHeight: 12),
-                        contentPadding: EdgeInsets.zero,
-                        filled: false,
-                        border: outlineInputBorder,
-                        errorBorder: outlineInputBorder,
-                        enabledBorder: outlineInputBorder,
-                        focusedBorder: outlineInputBorder,
-                        disabledBorder: outlineInputBorder,
-                        focusedErrorBorder: outlineInputBorder,
-                      ),
-                      controller: textEditingController,
-                      focusNode: focusNode,
-                      onFieldSubmitted: (String value) {
-                        onFieldSubmitted();
-                      },
+                child: Center(
+                  heightFactor: 20,
+                  child: TextFormField(
+                    maxLines: 1,
+                    cursorHeight: 20,
+                    onTap: () {
+                      textEditingController.selection = TextSelection(
+                        baseOffset: 0,
+                        extentOffset: textEditingController.value.text.length,
+                      );
+                    },
+                    style: fallBackTextStyle,
+                    decoration: const InputDecoration(
+                      constraints: BoxConstraints(maxHeight: 20),
+                      contentPadding: EdgeInsets.zero,
+                      filled: false,
+                      border: outlineInputBorder,
+                      errorBorder: outlineInputBorder,
+                      enabledBorder: outlineInputBorder,
+                      focusedBorder: outlineInputBorder,
+                      disabledBorder: outlineInputBorder,
+                      focusedErrorBorder: outlineInputBorder,
                     ),
-                  );
-                },
-                optionsViewBuilder: (context, onSelected, options) {
-                  return Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: SizedBox(
-                        width: constraints.maxWidth,
-                        height: (options.length * 50) > 400
-                            ? 400
-                            : options.length * 50,
-                        child: ClipRRect(
+                    controller: textEditingController,
+                    focusNode: focusNode,
+                    onFieldSubmitted: (String value) {
+                      onFieldSubmitted();
+                    },
+                  ),
+                ),
+              );
+            },
+            optionsViewBuilder: (context, onSelected, options) {
+              return Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: SizedBox(
+                    width: constraints.maxWidth + 30,
+                    height:
+                        (options.length * 50) > 400 ? 400 : options.length * 50,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: Material(
+                        color: theme.brightness == Brightness.light
+                            ? theme.colorScheme.surface
+                            : theme.colorScheme.surfaceVariant,
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6),
-                          child: Material(
-                            color: theme.brightness == Brightness.light
-                                ? theme.colorScheme.surface
-                                : theme.colorScheme.surfaceVariant,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6),
-                              side: BorderSide(
-                                color: theme.dividerColor,
-                                width: 1,
-                              ),
-                            ),
-                            elevation: 1,
-                            child: ListView.builder(
-                              itemCount: options.length,
-                              itemBuilder: (context, index) {
-                                return Builder(
-                                  builder: (BuildContext context) {
-                                    final bool highlight =
-                                        AutocompleteHighlightedOption.of(
-                                              context,
-                                            ) ==
-                                            index;
-                                    if (highlight) {
-                                      SchedulerBinding.instance
-                                          .addPostFrameCallback(
-                                              (Duration timeStamp) {
-                                        Scrollable.ensureVisible(
+                          side: BorderSide(
+                            color: theme.dividerColor,
+                            width: 1,
+                          ),
+                        ),
+                        elevation: 1,
+                        child: ListView.builder(
+                          itemCount: options.length,
+                          itemBuilder: (context, index) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                final bool highlight =
+                                    AutocompleteHighlightedOption.of(
                                           context,
-                                          alignment: 0.5,
-                                        );
-                                      });
-                                    }
-                                    final t = options.elementAt(index);
-                                    return _TagTile(
-                                      onSelected: (v) => onSelected(v),
-                                      fallBackTextStyle: fallBackTextStyle,
-                                      highlight: highlight,
-                                      theme: theme,
-                                      t: t,
-                                      favs: favs,
-                                      addFav: addFav,
-                                      removeFav: removeFav,
+                                        ) ==
+                                        index;
+                                if (highlight) {
+                                  SchedulerBinding.instance
+                                      .addPostFrameCallback(
+                                          (Duration timeStamp) {
+                                    Scrollable.ensureVisible(
+                                      context,
+                                      alignment: 0.5,
                                     );
-                                  },
+                                  });
+                                }
+                                final t = options.elementAt(index);
+                                return _TagTile(
+                                  onSelected: (v) => onSelected(v),
+                                  fallBackTextStyle: fallBackTextStyle,
+                                  highlight: highlight,
+                                  theme: theme,
+                                  t: t,
+                                  favs: favs,
+                                  addFav: addFav,
+                                  removeFav: removeFav,
                                 );
                               },
-                            ),
-                          ),
+                            );
+                          },
                         ),
                       ),
                     ),
-                  );
-                },
-                optionsBuilder: (textEditingValue) {
-                  if (textEditingValue.text.isEmpty) {
-                    return tags ?? [];
-                  }
-                  return tags?.where(
-                        (e) => e.name
-                            .toLowerCase()
-                            .contains(textEditingValue.text.toLowerCase()),
-                      ) ??
-                      [];
-                },
-                onSelected: (option) => onSelected?.call(option),
+                  ),
+                ),
               );
             },
-          ),
-        ),
-      ],
+            optionsBuilder: (textEditingValue) {
+              if (textEditingValue.text.isEmpty) {
+                return tags ?? [];
+              }
+              return tags?.where(
+                    (e) => e.name
+                        .toLowerCase()
+                        .contains(textEditingValue.text.toLowerCase()),
+                  ) ??
+                  [];
+            },
+            onSelected: (option) => onSelected?.call(option),
+          );
+        },
+      ),
     );
   }
 }
