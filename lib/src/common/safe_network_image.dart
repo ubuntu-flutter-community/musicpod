@@ -53,7 +53,7 @@ class SafeNetworkImage extends StatelessWidget {
 
     if (url == null) return fallBack;
 
-    if (url?.endsWith('svg') == true) {
+    if (url?.endsWith('.svg') == true || url?.endsWith('.ico') == true) {
       return Image.network(
         url!,
         fit: fit,
@@ -65,18 +65,22 @@ class SafeNetworkImage extends StatelessWidget {
       );
     }
 
-    return CachedNetworkImage(
-      cacheManager: Platform.isLinux ? XdgCacheManager() : null,
-      imageUrl: url!,
-      imageBuilder: (context, imageProvider) => Image(
-        image: imageProvider,
-        filterQuality: filterQuality,
-        fit: fit,
-        height: height,
-        width: width,
-      ),
-      errorWidget: (context, url, error) => errorWidget,
-    );
+    try {
+      return CachedNetworkImage(
+        cacheManager: Platform.isLinux ? XdgCacheManager() : null,
+        imageUrl: url!,
+        imageBuilder: (context, imageProvider) => Image(
+          image: imageProvider,
+          filterQuality: filterQuality,
+          fit: fit,
+          height: height,
+          width: width,
+        ),
+        errorWidget: (context, url, error) => errorWidget,
+      );
+    } on Exception catch (_) {
+      return fallBack;
+    }
   }
 }
 

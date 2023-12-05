@@ -14,9 +14,7 @@ void onTitleTap({
   required void Function({required String text, required AudioType audioType})
       onTextTap,
 }) {
-  if (audio?.audioType == null ||
-      audio?.title == null ||
-      audio?.audioType == AudioType.podcast) {
+  if (audio?.audioType == null || audio?.title == null) {
     return;
   }
 
@@ -30,7 +28,8 @@ void onTitleTap({
         content: CopyClipboardContent(text: text),
       ),
     );
-  } else if (audio?.audioType == AudioType.radio &&
+  } else if ((audio?.audioType == AudioType.radio ||
+          audio?.audioType == AudioType.podcast) &&
       audio?.url?.isNotEmpty == true) {
     Clipboard.setData(ClipboardData(text: audio!.url!));
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -53,7 +52,7 @@ void onTitleTap({
       audioType: audio!.audioType!,
       text: audio.title!,
     );
-    navigatorKey.currentState?.pop();
+    navigatorKey.currentState?.maybePop();
   }
 }
 
@@ -91,6 +90,6 @@ void onArtistTap({
           ? audio.title!
           : audio.artist!,
     );
-    navigatorKey.currentState?.pop();
+    navigatorKey.currentState?.maybePop();
   }
 }

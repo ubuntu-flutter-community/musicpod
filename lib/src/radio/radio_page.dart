@@ -37,13 +37,16 @@ class _RadioPageState extends State<RadioPage> {
   @override
   void initState() {
     super.initState();
-    readSetting(kLastFav).then(
-      (value) => context.read<RadioModel>().init(
-            isOnline: widget.isOnline,
-            countryCode: widget.countryCode,
-            lastFav: value == null ? null : value as String,
-          ),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      readSetting(kLastFav).then(
+        (value) => context.read<RadioModel>().init(
+              isOnline: widget.isOnline,
+              countryCode: widget.countryCode,
+              lastFav: value == null ? null : value as String,
+            ),
+      );
+    });
   }
 
   @override
