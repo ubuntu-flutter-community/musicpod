@@ -84,6 +84,7 @@ const kLastFav = 'lastFav';
 const kPlaylistsFileName = 'playlists.json';
 const kPinnedAlbumsFileName = 'pinnedAlbums.json';
 const kPodcastsFileName = 'podcasts.json';
+const kPodcastsUpdates = 'podcastsupdates.json';
 const kStarredStationsFileName = 'starredStations.json';
 const kSettingsFileName = 'settings.json';
 const kLastPositionsFileName = 'lastPositions.json';

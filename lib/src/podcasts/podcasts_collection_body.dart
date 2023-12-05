@@ -29,9 +29,11 @@ class PodcastsCollectionBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final subs = context.select((LibraryModel m) => m.podcasts);
-    final updates = context.select((LibraryModel m) => m.podcastUpdates);
+    context.select((LibraryModel m) => m.podcastUpdatesLength);
+    final podcastUpdateAvailable =
+        context.read<LibraryModel>().podcastUpdateAvailable;
     final updatesLength =
-        context.select((LibraryModel m) => m.podcastUpdates.length);
+        context.select((LibraryModel m) => m.podcastUpdatesLength);
     final updatesOnly = context.select((PodcastModel m) => m.updatesOnly);
     final subsLength = context.select((LibraryModel m) => m.podcastsLength);
     final setUpdatesOnly = context.read<PodcastModel>().setUpdatesOnly;
@@ -69,7 +71,7 @@ class PodcastsCollectionBody extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final podcast = updatesOnly
                         ? subs.entries
-                            .where((e) => updates.contains(e.key))
+                            .where((e) => podcastUpdateAvailable(e.key))
                             .elementAt(index)
                         : subs.entries.elementAt(index);
 
@@ -86,7 +88,7 @@ class PodcastsCollectionBody extends StatelessWidget {
                     return AudioCard(
                       image: image,
                       bottom: AudioCardBottom(
-                        style: updates.contains(podcast.key)
+                        style: podcastUpdateAvailable(podcast.key)
                             ? theme.textTheme.bodyMedium?.copyWith(
                                   color: theme.colorScheme.primary,
                                   fontWeight: FontWeight.bold,

@@ -242,19 +242,30 @@ class LibraryService {
 
   void updatePodcast(String feedUrl, Set<Audio> audios) {
     if (feedUrl.isEmpty || audios.isEmpty) return;
+    _addPodcastUpdate(feedUrl);
     _podcasts.update(feedUrl, (value) => audios);
     writeAudioMap(_podcasts, kPodcastsFileName)
-        .then((_) => _podcastsController.add(true))
-        .then((_) => podcastUpdates.add(feedUrl))
+        .then((_) => _podcastsController.add(true));
+  }
+
+  void _addPodcastUpdate(String feedUrl) {
+    if (_podcastUpdates?.contains(feedUrl) == true) return;
+    _podcastUpdates?.add(feedUrl);
+    writeStringSet(set: _podcastUpdates!, filename: kPodcastsUpdates)
         .then((_) => _updateController.add(true));
   }
 
-  final Set<String> podcastUpdates = {};
+  Set<String>? _podcastUpdates;
+  int? get podcastUpdatesLength => _podcastUpdates?.length;
+
   bool podcastUpdateAvailable(String feedUrl) =>
-      podcastUpdates.contains(feedUrl);
+      _podcastUpdates?.contains(feedUrl) == true;
+
   void removePodcastUpdate(String feedUrl) {
-    podcastUpdates.remove(feedUrl);
-    _updateController.add(true);
+    if (_podcastUpdates?.isNotEmpty == false) return;
+    _podcastUpdates?.remove(feedUrl);
+    writeStringSet(set: _podcastUpdates!, filename: kPodcastsUpdates)
+        .then((_) => _updateController.add(true));
   }
 
   final _updateController = StreamController<bool>.broadcast();
@@ -321,6 +332,8 @@ class LibraryService {
     _playlists = await readAudioMap(kPlaylistsFileName);
     _pinnedAlbums = await readAudioMap(kPinnedAlbumsFileName);
     _podcasts = await readAudioMap(kPodcastsFileName);
+    _podcastUpdates = await readStringSet(filename: kPodcastsUpdates);
+    _podcastUpdates ??= {};
     _starredStations = await readAudioMap(kStarredStationsFileName);
     _lastPositions = (await getSettings(kLastPositionsFileName)).map(
       (key, value) => MapEntry(key, parseDuration(value) ?? Duration.zero),
