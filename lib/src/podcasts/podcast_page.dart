@@ -134,7 +134,7 @@ class PodcastPageTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.select((LibraryModel m) => m.podcastUpdates.length);
+    context.select((LibraryModel m) => m.podcastUpdatesLength);
     final visible =
         context.read<LibraryModel>().podcastUpdateAvailable(feedUrl);
     return Badge(
