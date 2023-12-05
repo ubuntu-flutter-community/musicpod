@@ -111,15 +111,19 @@ class Progress extends StatelessWidget {
         ? YaruCircularProgressIndicator(
             strokeWidth: strokeWidth,
             value: value,
+            color: color,
+            trackColor: backgroundColor,
           )
         : Padding(
             padding: padding ?? const EdgeInsets.all(4),
             child: CircularProgressIndicator(
               strokeWidth: strokeWidth,
               value: value,
+              color: color,
               backgroundColor: value == null
                   ? null
-                  : Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  : (backgroundColor ??
+                      Theme.of(context).colorScheme.primary.withOpacity(0.3)),
             ),
           );
   }
@@ -313,6 +317,8 @@ class DropDownArrow extends StatelessWidget {
         : const Icon(Icons.arrow_drop_down);
   }
 }
+
+double get podcastProgressSize => yaruStyled ? 34 : 45;
 
 double? get avatarIconSize => yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
 

@@ -71,39 +71,53 @@ class PodcastAudioTile extends StatelessWidget {
           padding: const EdgeInsets.only(
             top: 15,
             bottom: 10,
-            left: 20,
+            left: 19,
             right: 20,
           ),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: avatarIconSize,
-                backgroundColor: Iconz().getAvatarIconColor(theme),
-                child: IconButton(
-                  icon: (isPlayerPlaying && selected)
-                      ? Icon(
-                          Iconz().pause,
-                        )
-                      : Padding(
-                          padding: appleStyled
-                              ? const EdgeInsets.only(left: 3)
-                              : EdgeInsets.zero,
-                          child: Icon(Iconz().playFilled),
-                        ),
-                  onPressed: () {
-                    if (selected) {
-                      if (isPlayerPlaying) {
-                        pause();
-                      } else {
-                        resume();
-                      }
-                    } else {
-                      safeLastPosition();
-                      play(newAudio: audio, newPosition: lastPosition);
-                      removeUpdate?.call();
-                    }
-                  },
-                ),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  _AudioProgress(
+                    selected: selected,
+                    lastPosition: lastPosition,
+                    duration: audio.durationMs == null
+                        ? null
+                        : Duration(milliseconds: audio.durationMs!.toInt()),
+                  ),
+                  CircleAvatar(
+                    radius: avatarIconSize,
+                    backgroundColor: selected
+                        ? theme.colorScheme.primary.withOpacity(0.08)
+                        : theme.colorScheme.onSurface.withOpacity(0.09),
+                    child: IconButton(
+                      icon: (isPlayerPlaying && selected)
+                          ? Icon(
+                              Iconz().pause,
+                            )
+                          : Padding(
+                              padding: appleStyled
+                                  ? const EdgeInsets.only(left: 3)
+                                  : EdgeInsets.zero,
+                              child: Icon(Iconz().playFilled),
+                            ),
+                      onPressed: () {
+                        if (selected) {
+                          if (isPlayerPlaying) {
+                            pause();
+                          } else {
+                            resume();
+                          }
+                        } else {
+                          safeLastPosition();
+                          play(newAudio: audio, newPosition: lastPosition);
+                          removeUpdate?.call();
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(
                 width: 20,
@@ -167,22 +181,12 @@ class _Bottom extends StatelessWidget {
                 audio: audio,
               ),
               const SizedBox(
-                width: 5,
+                width: 10,
               ),
               // TODO: implement download
               IconButton(
                 icon: Icon(Iconz().download),
                 onPressed: null,
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              _AudioProgress(
-                selected: selected,
-                lastPosition: lastPosition,
-                duration: audio.durationMs == null
-                    ? null
-                    : Duration(milliseconds: audio.durationMs!.toInt()),
               ),
             ],
           ),
@@ -296,23 +300,26 @@ class _AudioProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final position = context.select((PlayerModel m) => m.position);
 
-    final pos = (selected ? position : lastPosition) ?? Duration.zero;
+    final pos = (selected
+            ? context.select((PlayerModel m) => m.position)
+            : lastPosition) ??
+        Duration.zero;
 
     bool sliderActive = duration != null && duration!.inSeconds > pos.inSeconds;
 
     return RepaintBoundary(
       child: SizedBox(
-        width: iconSize(),
-        height: iconSize(),
+        height: podcastProgressSize,
+        width: podcastProgressSize,
         child: Progress(
           color: selected
-              ? theme.colorScheme.primary
-              : theme.colorScheme.onSurface,
+              ? theme.colorScheme.primary.withOpacity(0.9)
+              : theme.colorScheme.primary.withOpacity(0.4),
           value: sliderActive
               ? (pos.inSeconds.toDouble() / duration!.inSeconds.toDouble())
               : 0,
+          backgroundColor: Colors.transparent,
           strokeWidth: 3,
         ),
       ),

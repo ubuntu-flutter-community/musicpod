@@ -294,9 +294,6 @@ class Iconz {
       );
     }
   }
-
-  Color? getAvatarIconColor(ThemeData theme) =>
-      yaruStyled ? theme.colorScheme.onSurface.withOpacity(0.08) : null;
 }
 
 double iconSize() => yaruStyled
