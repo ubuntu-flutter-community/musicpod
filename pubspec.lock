@@ -817,12 +817,11 @@ packages:
   radio_browser_api:
     dependency: "direct main"
     description:
-      path: "."
-      ref: utf8
-      resolved-ref: c411338eade04ba3c2e614b325970d2df22bbe66
-      url: "https://github.com/Feichtmeier/radio-browser-api.dart"
-    source: git
-    version: "1.0.0"
+      name: radio_browser_api
+      sha256: "0a362b9937f9881ea17d9d44aebc4c1381b6f159006aa4471a1cabfc2f2cebc8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   rss_dart:
     dependency: transitive
     description:
