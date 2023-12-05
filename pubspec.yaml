@@ -46,10 +46,7 @@ dependencies:
   podcast_search: ^0.6.0
   popover: ^0.2.8+2
   provider: ^6.0.5
-  radio_browser_api:
-    git:
-      url: https://github.com/Feichtmeier/radio-browser-api.dart
-      ref: utf8
+  radio_browser_api: ^1.0.1
   safe_change_notifier: ^0.3.0
   shimmer: ^3.0.0
   smtc_windows: ^0.1.1
