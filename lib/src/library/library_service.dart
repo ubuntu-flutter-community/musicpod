@@ -243,10 +243,15 @@ class LibraryService {
   void updatePodcast(String feedUrl, Set<Audio> audios) {
     if (feedUrl.isEmpty || audios.isEmpty) return;
     _addPodcastUpdate(feedUrl);
-    if (_podcasts[feedUrl]?.length == audios.length) return;
     _podcasts.update(feedUrl, (value) => audios);
     writeAudioMap(_podcasts, kPodcastsFileName)
-        .then((_) => _podcastsController.add(true))
+        .then((_) => _podcastsController.add(true));
+  }
+
+  void _addPodcastUpdate(String feedUrl) {
+    if (_podcastUpdates?.contains(feedUrl) == true) return;
+    _podcastUpdates?.add(feedUrl);
+    writeStringSet(set: _podcastUpdates!, filename: kPodcastsUpdates)
         .then((_) => _updateController.add(true));
   }
 
@@ -255,14 +260,6 @@ class LibraryService {
 
   bool podcastUpdateAvailable(String feedUrl) =>
       _podcastUpdates?.contains(feedUrl) == true;
-
-  void _addPodcastUpdate(String feedUrl) {
-    if (_podcastUpdates?.isNotEmpty == false ||
-        _podcastUpdates?.contains(feedUrl) == true) return;
-    _podcastUpdates?.add(feedUrl);
-    writeStringSet(set: _podcastUpdates!, filename: kPodcastsUpdates)
-        .then((_) => _updateController.add(true));
-  }
 
   void removePodcastUpdate(String feedUrl) {
     if (_podcastUpdates?.isNotEmpty == false) return;
