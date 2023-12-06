@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../theme.dart';
 import '../common/icons.dart';
 import 'player_model.dart';
 
@@ -31,8 +32,11 @@ class PlayButton extends StatelessWidget {
                 playOrPause();
               }
             },
-      icon: Icon(
-        isPlaying ? Iconz().pause : Iconz().play,
+      icon: Padding(
+        padding: EdgeInsets.only(left: appleStyled ? 3 : 0),
+        child: Icon(
+          isPlaying ? Iconz().pause : Iconz().play,
+        ),
       ),
     );
   }

@@ -6,11 +6,18 @@ import '../../common.dart';
 import '../../data.dart';
 
 class ShareButton extends StatelessWidget {
-  const ShareButton({super.key, required this.active, this.audio, this.color});
+  const ShareButton({
+    super.key,
+    required this.active,
+    this.audio,
+    this.color,
+    this.iconSize,
+  });
 
   final bool active;
   final Audio? audio;
   final Color? color;
+  final double? iconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +51,7 @@ class ShareButton extends StatelessWidget {
       icon: Icon(
         Iconz().share,
         color: color,
+        size: iconSize,
       ),
     );
   }
