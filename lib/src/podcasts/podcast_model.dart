@@ -95,6 +95,7 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  var _firstUpdateChecked = false;
   Future<void> init({
     String? countryCode,
     required String updateMessage,
@@ -116,7 +117,10 @@ class PodcastModel extends SafeChangeNotifier {
       search();
     }
 
-    update(updateMessage);
+    if (_firstUpdateChecked == false) {
+      update(updateMessage);
+    }
+    _firstUpdateChecked = true;
   }
 
   void update(String updateMessage) {

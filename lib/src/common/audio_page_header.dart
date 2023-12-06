@@ -5,6 +5,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
+import '../../theme.dart';
 import '../l10n/l10n.dart';
 
 class AudioPageHeader extends StatelessWidget {
@@ -81,7 +82,7 @@ class AudioPageHeader extends StatelessWidget {
                     child: description == null
                         ? const SizedBox.expand()
                         : SizedBox(
-                            width: 800,
+                            width: 600,
                             child: InkWell(
                               borderRadius:
                                   BorderRadius.circular(kYaruButtonRadius),
@@ -142,12 +143,14 @@ class _DescriptionDialog extends StatelessWidget {
       height: 400,
       width: 400,
       child: AlertDialog(
-        title: YaruDialogTitleBar(
-          title: Text(title),
-          backgroundColor: Colors.transparent,
-          border: BorderSide.none,
-        ),
-        titlePadding: EdgeInsets.zero,
+        title: yaruStyled
+            ? YaruDialogTitleBar(
+                title: Text(title),
+                backgroundColor: Colors.transparent,
+                border: BorderSide.none,
+              )
+            : Text(title),
+        titlePadding: yaruStyled ? EdgeInsets.zero : null,
         contentPadding: const EdgeInsets.only(
           top: 10,
           left: kYaruPagePadding,

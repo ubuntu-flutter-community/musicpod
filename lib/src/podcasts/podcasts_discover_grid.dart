@@ -4,8 +4,8 @@ import 'package:podcast_search/podcast_search.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
-import '../../podcasts.dart';
 import '../../l10n.dart';
+import '../../podcasts.dart';
 
 class PodcastsDiscoverGrid extends StatelessWidget {
   const PodcastsDiscoverGrid({
