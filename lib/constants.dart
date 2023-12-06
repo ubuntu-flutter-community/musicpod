@@ -75,7 +75,7 @@ const kDiskGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
   crossAxisSpacing: 10,
 );
 
-const kShimmerBaseLight = Color.fromARGB(120, 230, 230, 230);
+const kShimmerBaseLight = Color.fromARGB(120, 192, 192, 192);
 const kShimmerBaseDark = Color.fromARGB(255, 51, 51, 51);
 const kShimmerHighLightLight = Color.fromARGB(197, 218, 218, 218);
 const kShimmerHighLightDark = Color.fromARGB(255, 57, 57, 57);
