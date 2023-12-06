@@ -3,16 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
-import '../../player.dart';
-import '../../theme.dart';
 import '../../utils.dart';
+import 'avatar_with_progress.dart';
 
 class PodcastAudioTile extends StatelessWidget {
   const PodcastAudioTile({
@@ -45,13 +44,6 @@ class PodcastAudioTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textStyle = TextStyle(
-      color: theme.colorScheme.onSurface,
-      fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
-      fontSize: 16,
-    );
-
     final date = audio.year == null
         ? ''
         : '${DateFormat.yMMMEd(Platform.localeName).format(DateTime.fromMillisecondsSinceEpoch(audio.year!))}, ';
@@ -75,68 +67,28 @@ class PodcastAudioTile extends StatelessWidget {
             right: 20,
           ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  _AudioProgress(
-                    selected: selected,
-                    lastPosition: lastPosition,
-                    duration: audio.durationMs == null
-                        ? null
-                        : Duration(milliseconds: audio.durationMs!.toInt()),
-                  ),
-                  CircleAvatar(
-                    radius: avatarIconSize,
-                    backgroundColor: selected
-                        ? theme.colorScheme.primary.withOpacity(0.08)
-                        : theme.colorScheme.onSurface.withOpacity(0.09),
-                    child: IconButton(
-                      icon: (isPlayerPlaying && selected)
-                          ? Icon(
-                              Iconz().pause,
-                            )
-                          : Padding(
-                              padding: appleStyled
-                                  ? const EdgeInsets.only(left: 3)
-                                  : EdgeInsets.zero,
-                              child: Icon(Iconz().playFilled),
-                            ),
-                      onPressed: () {
-                        if (selected) {
-                          if (isPlayerPlaying) {
-                            pause();
-                          } else {
-                            resume();
-                          }
-                        } else {
-                          safeLastPosition();
-                          play(newAudio: audio, newPosition: lastPosition);
-                          removeUpdate?.call();
-                        }
-                      },
-                    ),
-                  ),
-                ],
+              AvatarWithProgress(
+                selected: selected,
+                lastPosition: lastPosition,
+                audio: audio,
+                isPlayerPlaying: isPlayerPlaying,
+                pause: pause,
+                resume: resume,
+                safeLastPosition: safeLastPosition,
+                play: play,
+                removeUpdate: removeUpdate,
               ),
               const SizedBox(
                 width: 20,
               ),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      audio.title ?? '',
-                      style: textStyle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      '$date$duration',
-                      style: theme.textTheme.labelMedium,
-                    ),
-                  ],
+                child: _Right(
+                  selected: selected,
+                  audio: audio,
+                  date: date,
+                  duration: duration,
                 ),
               ),
             ],
@@ -146,9 +98,82 @@ class PodcastAudioTile extends StatelessWidget {
       child: _Bottom(
         selected: selected,
         audio: audio,
-        theme: theme,
         lastPosition: lastPosition,
       ),
+    );
+  }
+}
+
+class _Right extends StatelessWidget {
+  const _Right({
+    required this.audio,
+    required this.selected,
+    required this.date,
+    required this.duration,
+  });
+
+  final Audio audio;
+  final String date;
+  final String duration;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textStyle = TextStyle(
+      color: theme.colorScheme.onSurface,
+      fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
+      fontSize: 16,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          audio.title ?? '',
+          style: textStyle,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                '$date$duration',
+                style: theme.textTheme.labelMedium,
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: kTinyButtonSize,
+                  width: kTinyButtonSize,
+                  child: ShareButton(
+                    active: true,
+                    audio: audio,
+                    iconSize: kTinyButtonIconSize,
+                  ),
+                ),
+                // TODO: implement download
+                SizedBox(
+                  height: kTinyButtonSize,
+                  width: kTinyButtonSize,
+                  child: IconButton(
+                    icon: Icon(Iconz().download),
+                    onPressed: null,
+                    iconSize: kTinyButtonIconSize,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -157,48 +182,24 @@ class _Bottom extends StatelessWidget {
   const _Bottom({
     required this.selected,
     required this.audio,
-    required this.theme,
     required this.lastPosition,
   });
 
   final bool selected;
   final Audio audio;
-  final ThemeData theme;
   final Duration? lastPosition;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              ShareButton(
-                active: true,
-                audio: audio,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              // TODO: implement download
-              IconButton(
-                icon: Icon(Iconz().download),
-                onPressed: null,
-              ),
-            ],
-          ),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1000),
-            child: _Description(
-              description: audio.description,
-              title: audio.title,
-              selected: selected,
-            ),
-          ),
-        ],
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1000),
+        child: _Description(
+          description: audio.description,
+          title: audio.title,
+          selected: selected,
+        ),
       ),
     );
   }
@@ -254,7 +255,7 @@ class _Description extends StatelessWidget {
       child: _createHtml(
         color: theme.colorScheme.onSurface.scale(lightness: -0.2),
         maxLines: 5,
-        paddings: HtmlPaddings.only(top: 10, left: 5, right: 5, bottom: 10),
+        paddings: HtmlPaddings.all(5),
       ),
     );
   }
@@ -282,47 +283,6 @@ class _Description extends StatelessWidget {
           textAlign: textAlign ?? TextAlign.start,
         ),
       },
-    );
-  }
-}
-
-class _AudioProgress extends StatelessWidget {
-  const _AudioProgress({
-    this.lastPosition,
-    this.duration,
-    required this.selected,
-  });
-
-  final Duration? lastPosition;
-  final Duration? duration;
-  final bool selected;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    final pos = (selected
-            ? context.select((PlayerModel m) => m.position)
-            : lastPosition) ??
-        Duration.zero;
-
-    bool sliderActive = duration != null && duration!.inSeconds > pos.inSeconds;
-
-    return RepaintBoundary(
-      child: SizedBox(
-        height: podcastProgressSize,
-        width: podcastProgressSize,
-        child: Progress(
-          color: selected
-              ? theme.colorScheme.primary.withOpacity(0.9)
-              : theme.colorScheme.primary.withOpacity(0.4),
-          value: sliderActive
-              ? (pos.inSeconds.toDouble() / duration!.inSeconds.toDouble())
-              : 0,
-          backgroundColor: Colors.transparent,
-          strokeWidth: 3,
-        ),
-      ),
     );
   }
 }
