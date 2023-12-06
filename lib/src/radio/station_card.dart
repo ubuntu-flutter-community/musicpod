@@ -26,7 +26,10 @@ class StationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final light = theme.brightness == Brightness.light;
     return AudioCard(
+      color: light ? theme.dividerColor : kShimmerBaseDark,
       bottom: AudioCardBottom(text: station?.title?.replaceAll('_', '') ?? ''),
       onPlay: () => play(newAudio: station),
       onTap: station == null ? null : () => onTap(context, station!),

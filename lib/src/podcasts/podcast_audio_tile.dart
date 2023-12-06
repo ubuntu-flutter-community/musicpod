@@ -14,6 +14,8 @@ import '../../theme.dart';
 import '../../utils.dart';
 import 'avatar_with_progress.dart';
 
+const _kGap = 20.0;
+
 class PodcastAudioTile extends StatelessWidget {
   const PodcastAudioTile({
     super.key,
@@ -82,7 +84,7 @@ class PodcastAudioTile extends StatelessWidget {
                 removeUpdate: removeUpdate,
               ),
               const SizedBox(
-                width: 20,
+                width: _kGap,
               ),
               Expanded(
                 child: _Right(
@@ -138,44 +140,47 @@ class _Right extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(
-              child: Text(
-                '$date$duration',
-                style: theme.textTheme.labelMedium,
+        SizedBox(
+          width: 220,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Text(
+                  '$date$duration',
+                  style: theme.textTheme.labelMedium,
+                ),
               ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: kTinyButtonSize,
-                  width: kTinyButtonSize,
-                  child: ShareButton(
-                    active: true,
-                    audio: audio,
-                    iconSize: kTinyButtonIconSize,
+              const SizedBox(
+                width: 10,
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: kTinyButtonSize,
+                    width: kTinyButtonSize,
+                    child: ShareButton(
+                      active: true,
+                      audio: audio,
+                      iconSize: kTinyButtonIconSize,
+                    ),
                   ),
-                ),
-                // TODO: implement download
-                SizedBox(
-                  height: kTinyButtonSize,
-                  width: kTinyButtonSize,
-                  child: IconButton(
-                    icon: Icon(Iconz().download),
-                    onPressed: null,
-                    iconSize: kTinyButtonIconSize,
+                  // TODO: implement download
+                  SizedBox(
+                    height: kTinyButtonSize,
+                    width: kTinyButtonSize,
+                    child: IconButton(
+                      icon: Icon(Iconz().download),
+                      onPressed: null,
+                      iconSize: kTinyButtonIconSize,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -196,7 +201,8 @@ class _Bottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 80, right: 20),
+      padding:
+          EdgeInsets.only(left: _kGap + podcastProgressSize + 15, right: 20),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 600),
         child: _Description(

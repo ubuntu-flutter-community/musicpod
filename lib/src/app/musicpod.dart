@@ -23,7 +23,8 @@ class MusicPod extends StatelessWidget {
           return GtkApplication(
             child: MusicPodApp(
               lightTheme: yaruThemeData.theme,
-              darkTheme: yaruThemeData.darkTheme,
+              darkTheme: yaruThemeData.darkTheme
+                  ?.copyWith(scaffoldBackgroundColor: Color(0xFF1e1e1e)),
             ),
           );
         },

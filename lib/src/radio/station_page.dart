@@ -68,6 +68,7 @@ class StationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final light = theme.brightness == Brightness.light;
     final tags = station.album?.isNotEmpty == false
         ? null
         : <String>[
@@ -129,6 +130,7 @@ class StationPage extends StatelessWidget {
                     ),
                   ),
                   AudioCard(
+                    color: light ? theme.dividerColor : kShimmerBaseDark,
                     height: size,
                     width: size,
                     onTap: () => play(newAudio: station),
