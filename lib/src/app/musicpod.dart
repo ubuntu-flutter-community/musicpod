@@ -24,7 +24,7 @@ class MusicPod extends StatelessWidget {
             child: MusicPodApp(
               lightTheme: yaruThemeData.theme,
               darkTheme: yaruThemeData.darkTheme
-                  ?.copyWith(scaffoldBackgroundColor: Color(0xFF1e1e1e)),
+                  ?.copyWith(scaffoldBackgroundColor: const Color(0xFF1e1e1e)),
             ),
           );
         },
