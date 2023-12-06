@@ -4,9 +4,9 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../common.dart';
-import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
+import '../common/loading_grid.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import 'podcasts_collection_body.dart';
@@ -82,6 +82,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
         context.select((PodcastModel m) => m.sortedCountries);
     context.select((PodcastModel m) => m.country);
 
+    final checkingForUpdates =
+        context.select((PodcastModel m) => m.checkingForUpdates);
+
     final setCountry = model.setCountry;
     final podcastGenre = context.select((PodcastModel m) => m.podcastGenre);
     final sortedGenres = context.select((PodcastModel m) => m.sortedGenres);
@@ -97,18 +100,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
     }
 
     Widget grid;
-    if (searchResult == null) {
-      grid = GridView(
-        gridDelegate: imageGridDelegate,
-        padding: gridPadding,
-        children: List.generate(limit, (index) => Audio())
-            .map(
-              (e) => const AudioCard(
-                bottom: AudioCardBottom(),
-              ),
-            )
-            .toList(),
-      );
+    if (searchResult == null || checkingForUpdates) {
+      grid = LoadingGrid(limit: limit);
     } else if (searchResult.items.isEmpty == true) {
       grid = NoSearchResultPage(message: Text(context.l10n.noPodcastFound));
     } else {
@@ -151,6 +144,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     );
 
     final subsBody = PodcastsCollectionBody(
+      loading: checkingForUpdates,
       isOnline: widget.isOnline,
       startPlaylist: startPlaylist,
       onTapText: onTapText,

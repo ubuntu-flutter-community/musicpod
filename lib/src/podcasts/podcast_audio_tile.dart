@@ -10,6 +10,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../theme.dart';
 import '../../utils.dart';
 import 'avatar_with_progress.dart';
 
@@ -95,10 +96,13 @@ class PodcastAudioTile extends StatelessWidget {
           ),
         ),
       ),
-      child: _Bottom(
-        selected: selected,
-        audio: audio,
-        lastPosition: lastPosition,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: _Bottom(
+          selected: selected,
+          audio: audio,
+          lastPosition: lastPosition,
+        ),
       ),
     );
   }
@@ -192,9 +196,9 @@ class _Bottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.only(left: 80, right: 20),
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1000),
+        constraints: const BoxConstraints(maxWidth: 600),
         child: _Description(
           description: audio.description,
           title: audio.title,
@@ -226,13 +230,18 @@ class _Description extends StatelessWidget {
           context: context,
           builder: (c) {
             return SimpleDialog(
-              titlePadding: EdgeInsets.zero,
-              title: YaruDialogTitleBar(
-                backgroundColor: theme.dialogBackgroundColor,
-                border: BorderSide.none,
-                title: Text(title ?? ''),
-              ),
-              contentPadding: const EdgeInsets.only(
+              titlePadding: yaruStyled
+                  ? EdgeInsets.zero
+                  : const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
+              title: yaruStyled
+                  ? YaruDialogTitleBar(
+                      backgroundColor: theme.dialogBackgroundColor,
+                      border: BorderSide.none,
+                      title: Text(title ?? ''),
+                    )
+                  : Text(title ?? ''),
+              contentPadding: EdgeInsets.only(
+                top: yaruStyled ? 0 : 20,
                 left: 20,
                 right: 20,
                 bottom: 20,
