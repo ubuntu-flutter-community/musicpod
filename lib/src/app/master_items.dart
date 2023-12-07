@@ -19,23 +19,17 @@ List<MasterItem> createMasterItems({
       onTextTap,
   required Set<Audio> likedLocalAudios,
   required Set<Audio> likedPodcasts,
-  required AudioPageType? audioPageType,
-  required void Function(AudioPageType? value) setAudioPageType,
   required Map<String, Set<Audio>> subbedPodcasts,
-  required bool showSubbedPodcasts,
   required void Function(String name, Set<Audio> audios) addPodcast,
   required void Function(String name) removePodcast,
   required Map<String, Set<Audio>> playlists,
-  required bool showPlaylists,
   required void Function(String name) removePlaylist,
   required void Function(String oldName, String newName)? updatePlaylistName,
   required Map<String, Set<Audio>> pinnedAlbums,
-  required bool showPinnedAlbums,
   required void Function(String name, Set<Audio> audios) addPinnedAlbum,
   required bool Function(String name) isPinnedAlbum,
   required void Function(String name) removePinnedAlbum,
   required Map<String, Set<Audio>> starredStations,
-  required bool showStarredStations,
   required void Function(String name) unStarStation,
   required Future<void> Function({Duration? newPosition, Audio? newAudio}) play,
   required String? countryCode,
@@ -110,97 +104,90 @@ List<MasterItem> createMasterItems({
       ),
       pageBuilder: (context) => const SizedBox.shrink(),
     ),
-    if (showSubbedPodcasts)
-      for (final podcast in subbedPodcasts.entries)
-        MasterItem(
-          titleBuilder: (context) => PodcastPageTitle(
-            feedUrl: podcast.key,
-            title: podcast.value.firstOrNull?.album ??
-                podcast.value.firstOrNull?.title ??
-                podcast.value.firstOrNull.toString(),
-          ),
-          pageBuilder: (context) => isOnline
-              ? PodcastPage(
-                  pageId: podcast.key,
-                  title: podcast.value.firstOrNull?.album ??
-                      podcast.value.firstOrNull?.title ??
-                      podcast.value.firstOrNull.toString(),
-                  audios: podcast.value,
-                  onTextTap: onTextTap,
-                  addPodcast: addPodcast,
-                  removePodcast: removePodcast,
-                  imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
-                      podcast.value.firstOrNull?.imageUrl,
-                )
-              : const OfflinePage(),
-          iconBuilder: (context, selected) => PodcastPage.createIcon(
-            context: context,
-            imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
-                podcast.value.firstOrNull?.imageUrl,
-            isOnline: isOnline,
-          ),
+    for (final podcast in subbedPodcasts.entries)
+      MasterItem(
+        titleBuilder: (context) => PodcastPageTitle(
+          feedUrl: podcast.key,
+          title: podcast.value.firstOrNull?.album ??
+              podcast.value.firstOrNull?.title ??
+              podcast.value.firstOrNull.toString(),
         ),
-    if (showPlaylists)
-      for (final playlist in playlists.entries)
-        MasterItem(
-          titleBuilder: (context) => Opacity(
-            opacity: showPlaylists ? 1 : 0.5,
-            child: Text(playlist.key),
-          ),
-          pageBuilder: (context) => PlaylistPage(
-            onTextTap: onTextTap,
-            playlist: playlist,
-            unPinPlaylist: removePlaylist,
-            updatePlaylistName: updatePlaylistName,
-          ),
-          iconBuilder: (context, selected) => Icon(
-            Iconz().playlist,
-          ),
+        pageBuilder: (context) => isOnline
+            ? PodcastPage(
+                pageId: podcast.key,
+                title: podcast.value.firstOrNull?.album ??
+                    podcast.value.firstOrNull?.title ??
+                    podcast.value.firstOrNull.toString(),
+                audios: podcast.value,
+                onTextTap: onTextTap,
+                addPodcast: addPodcast,
+                removePodcast: removePodcast,
+                imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
+                    podcast.value.firstOrNull?.imageUrl,
+              )
+            : const OfflinePage(),
+        iconBuilder: (context, selected) => PodcastPage.createIcon(
+          context: context,
+          imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
+              podcast.value.firstOrNull?.imageUrl,
+          isOnline: isOnline,
         ),
-    if (showPinnedAlbums)
-      for (final album in pinnedAlbums.entries)
-        MasterItem(
-          titleBuilder: (context) => Text(
-            album.value.firstOrNull?.album ?? album.key,
-          ),
-          pageBuilder: (context) => AlbumPage(
-            onTextTap: onTextTap,
-            album: album.value,
-            id: album.key,
-            addPinnedAlbum: addPinnedAlbum,
-            isPinnedAlbum: isPinnedAlbum,
-            removePinnedAlbum: removePinnedAlbum,
-          ),
-          iconBuilder: (context, selected) => AlbumPage.createIcon(
-            context,
-            album.value.firstOrNull?.pictureData,
-          ),
+      ),
+    for (final playlist in playlists.entries)
+      MasterItem(
+        titleBuilder: (context) => Text(playlist.key),
+        pageBuilder: (context) => PlaylistPage(
+          onTextTap: onTextTap,
+          playlist: playlist,
+          unPinPlaylist: removePlaylist,
+          updatePlaylistName: updatePlaylistName,
         ),
-    if (showStarredStations)
-      for (final station in starredStations.entries)
-        MasterItem(
-          titleBuilder: (context) => RadioSideBarTile(
-            station: station,
-            play: play,
-          ),
-          pageBuilder: (context) => isOnline
-              ? StationPage(
-                  isStarred: true,
-                  starStation: (station) {},
-                  onTextTap: (text) =>
-                      onTextTap(text: text, audioType: AudioType.radio),
-                  unStarStation: unStarStation,
-                  name: station.key,
-                  station: station.value.first,
-                  play: play,
-                )
-              : const OfflinePage(),
-          iconBuilder: (context, selected) => StationPage.createIcon(
-            context: context,
-            imageUrl: station.value.first.imageUrl,
-            selected: selected,
-            isOnline: isOnline,
-          ),
+        iconBuilder: (context, selected) => Icon(
+          Iconz().playlist,
         ),
+      ),
+    for (final album in pinnedAlbums.entries)
+      MasterItem(
+        titleBuilder: (context) => Text(
+          album.value.firstOrNull?.album ?? album.key,
+        ),
+        pageBuilder: (context) => AlbumPage(
+          onTextTap: onTextTap,
+          album: album.value,
+          id: album.key,
+          addPinnedAlbum: addPinnedAlbum,
+          isPinnedAlbum: isPinnedAlbum,
+          removePinnedAlbum: removePinnedAlbum,
+        ),
+        iconBuilder: (context, selected) => AlbumPage.createIcon(
+          context,
+          album.value.firstOrNull?.pictureData,
+        ),
+      ),
+    for (final station in starredStations.entries)
+      MasterItem(
+        titleBuilder: (context) => RadioSideBarTile(
+          station: station,
+          play: play,
+        ),
+        pageBuilder: (context) => isOnline
+            ? StationPage(
+                isStarred: true,
+                starStation: (station) {},
+                onTextTap: (text) =>
+                    onTextTap(text: text, audioType: AudioType.radio),
+                unStarStation: unStarStation,
+                name: station.key,
+                station: station.value.first,
+                play: play,
+              )
+            : const OfflinePage(),
+        iconBuilder: (context, selected) => StationPage.createIcon(
+          context: context,
+          imageUrl: station.value.first.imageUrl,
+          selected: selected,
+          isOnline: isOnline,
+        ),
+      ),
   ];
 }

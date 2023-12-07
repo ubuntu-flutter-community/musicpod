@@ -15,11 +15,17 @@ class RadioService {
     if (isOnline) {
       if (radioBrowserApi == null) {
         final hosts = await _findHost();
+        if (hosts.isEmpty) {
+          return false;
+        }
 
         for (var host in hosts) {
           try {
-            radioBrowserApi = RadioBrowserApi.fromHost(host);
-            return true;
+            if (radioBrowserApi != null) {
+              return true;
+            } else {
+              radioBrowserApi = RadioBrowserApi.fromHost(host);
+            }
             // ignore: unused_catch_clause
           } on Exception catch (e) {
             return false;
@@ -39,6 +45,9 @@ class RadioService {
         kRadioBrowserBaseUrl,
         RRecordType.A,
       );
+      if (records?.isNotEmpty == false) {
+        return [];
+      }
 
       for (RRecord record in records ?? <RRecord>[]) {
         final reverse = await DnsUtils.reverseDns(record.data);
