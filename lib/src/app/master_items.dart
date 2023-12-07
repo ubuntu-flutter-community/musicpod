@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
@@ -179,7 +180,10 @@ List<MasterItem> createMasterItems({
     if (showStarredStations)
       for (final station in starredStations.entries)
         MasterItem(
-          titleBuilder: (context) => Text(station.key),
+          titleBuilder: (context) => RadioSideBarTile(
+            station: station,
+            play: play,
+          ),
           pageBuilder: (context) => isOnline
               ? StationPage(
                   isStarred: true,
@@ -200,4 +204,35 @@ List<MasterItem> createMasterItems({
           ),
         ),
   ];
+}
+
+class RadioSideBarTile extends StatelessWidget {
+  const RadioSideBarTile({
+    super.key,
+    required this.station,
+    required this.play,
+  });
+
+  final MapEntry<String, Set<Audio>> station;
+  final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.centerLeft,
+      children: [
+        Text(station.key),
+        Positioned(
+          right: 5,
+          child: IconButton(
+            onPressed: () => play(newAudio: station.value.first),
+            icon: Icon(
+              Iconz().play,
+              size: kTinyButtonIconSize,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
