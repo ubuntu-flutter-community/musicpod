@@ -93,3 +93,9 @@ void onArtistTap({
     navigatorKey.currentState?.maybePop();
   }
 }
+
+String createQueueElement(Audio? audio) {
+  final title = audio?.title?.isNotEmpty == true ? audio?.title! : '';
+  final artist = audio?.artist?.isNotEmpty == true ? ' • ${audio?.artist}' : '';
+  return '$title$artist'.trim();
+}
