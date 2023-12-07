@@ -141,7 +141,7 @@ class _Right extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         SizedBox(
-          width: 220,
+          width: 240,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
