@@ -39,7 +39,7 @@ class QueuePopup extends StatelessWidget {
               children: [
                 for (final e in queue)
                   Text(
-                    '${e.title ?? ''} • ${e.artist ?? ''}',
+                    createQueueElement(e),
                     style: theme.textTheme.labelMedium?.copyWith(
                       color: e == audio
                           ? theme.colorScheme.onSurface

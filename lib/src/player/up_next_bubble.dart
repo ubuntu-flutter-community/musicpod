@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../data.dart';
-import '../l10n/l10n.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-import 'player_model.dart';
+import '../../data.dart';
+import '../../player.dart';
+import '../l10n/l10n.dart';
 
 class UpNextBubble extends StatelessWidget {
   const UpNextBubble({
@@ -42,7 +42,7 @@ class UpNextBubble extends StatelessWidget {
                 right: 10,
               ),
               child: Text(
-                context.l10n.upNext,
+                isUpNextExpanded ? context.l10n.queue : context.l10n.upNext,
                 style: theme.textTheme.labelSmall,
               ),
             ),
@@ -58,7 +58,7 @@ class UpNextBubble extends StatelessWidget {
                           right: 10,
                         ),
                         child: Text(
-                          '${e.title ?? ''} • ${e.artist ?? ''}',
+                          createQueueElement(e),
                           style: theme.textTheme.labelMedium?.copyWith(
                             color: theme.colorScheme.onSurface,
                             fontWeight: e == audio
@@ -79,7 +79,7 @@ class UpNextBubble extends StatelessWidget {
                   bottom: 10,
                 ),
                 child: Text(
-                  '${nextAudio!.title!} • ${nextAudio?.artist!}',
+                  createQueueElement(nextAudio),
                   style: theme.textTheme.labelMedium
                       ?.copyWith(color: theme.colorScheme.onSurface),
                   overflow: TextOverflow.ellipsis,
