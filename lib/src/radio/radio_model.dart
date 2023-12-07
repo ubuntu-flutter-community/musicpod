@@ -22,7 +22,7 @@ class RadioModel extends SafeChangeNotifier {
   Country? _country;
   Country? get country => _country;
   void setCountry(Country? value) {
-    if (value == _country) return;
+    if (value == _country || value == null) return;
     _country = value;
     notifyListeners();
   }
@@ -48,27 +48,31 @@ class RadioModel extends SafeChangeNotifier {
   }
 
   Set<Audio>? get stations {
-    if (_radioService.stations != null) {
-      if (_radioService.stations!.isEmpty) {
-        return <Audio>{};
-      }
+    if (_radioService.stations == null) return null;
 
-      return Set.from(
-        _radioService.stations!.map(
-          (e) => Audio(
+    if (_radioService.stations!.isEmpty) {
+      return <Audio>{};
+    }
+
+    return Set.from(
+      _radioService.stations!.map(
+        (e) {
+          var artist = e.bitrate == 0 ? '' : '${e.bitrate} kb/s';
+          if (e.language?.isNotEmpty == true) {
+            artist += ', ${e.language}';
+          }
+          return Audio(
             url: e.urlResolved,
             title: e.name,
-            artist: e.bitrate == 0 ? ' ' : '${e.bitrate.toString()} kb/s',
+            artist: artist,
             album: e.tags ?? '',
             audioType: AudioType.radio,
             imageUrl: e.favicon,
             website: e.homepage,
-          ),
-        ),
-      );
-    } else {
-      return null;
-    }
+          );
+        },
+      ),
+    );
   }
 
   String? get statusCode => _radioService.statusCode;
@@ -84,8 +88,12 @@ class RadioModel extends SafeChangeNotifier {
   bool? _connected;
   bool? get connected => _connected;
 
-  Future<void> init(String? countryCode, String? lastFav) async {
-    _connected = await _radioService.init();
+  Future<void> init({
+    required String? countryCode,
+    required String? lastFav,
+    required bool isOnline,
+  }) async {
+    _connected = await _radioService.init(isOnline);
 
     _stationsSub =
         _radioService.stationsChanged.listen((_) => notifyListeners());
@@ -98,28 +106,28 @@ class RadioModel extends SafeChangeNotifier {
 
     _tagsSub = _radioService.tagsChanged.listen((_) => notifyListeners());
 
+    _country ??= Country.values.firstWhereOrNull((c) => c.code == countryCode);
+
     if (connected == true) {
       await _radioService.loadTags();
-
-      if (_tag == null) {
-        _tag = lastFav == null || tags == null || tags!.isEmpty
-            ? null
-            : tags!.firstWhere((t) => t.name.contains(lastFav));
-        await loadStationsByTag();
-      }
+      _tag ??= lastFav == null || tags == null || tags!.isEmpty
+          ? null
+          : tags!.firstWhere((t) => t.name.contains(lastFav));
 
       if (stations == null) {
-        final c = Country.values.firstWhereOrNull((c) => c.code == countryCode);
-        _country = c;
-        await loadStationsByCountry();
+        if (_tag != null) {
+          await loadStationsByTag();
+        } else {
+          await loadStationsByCountry();
+        }
       }
     }
 
     notifyListeners();
   }
 
-  Future<void> loadStationsByCountry() {
-    return _radioService.loadStations(
+  Future<void> loadStationsByCountry() async {
+    return await _radioService.loadStations(
       country: country?.name.camelToSentence(),
       limit: limit,
     );
@@ -130,16 +138,12 @@ class RadioModel extends SafeChangeNotifier {
   }
 
   Future<void> search({String? name, String? tag}) async {
-    if (name != null) {
-      if (name.trim().isEmpty) {
-        setTag(null);
-        await loadStationsByCountry();
-      } else {
-        await _radioService.loadStations(name: name, limit: limit);
-      }
-    } else if (tag != null) {
+    if (name?.isNotEmpty == true) {
+      setTag(null);
+      await _radioService.loadStations(name: name, limit: limit);
+    } else if (tag?.isNotEmpty == true) {
       await _radioService.loadStations(
-        tag: Tag(name: tag, stationCount: 1),
+        tag: Tag(name: tag!, stationCount: 1),
         limit: limit,
       );
     } else {

@@ -16,13 +16,13 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _podcastsSub;
   StreamSubscription<bool>? _stationsSub;
   StreamSubscription<int?>? _localAudioIndexSub;
+  StreamSubscription<int?>? _podcastIndexSub;
+  StreamSubscription<int?>? _radioIndexSub;
   StreamSubscription<bool>? _lastPositionsSub;
   StreamSubscription<bool>? _updatesChangedSub;
   StreamSubscription<bool>? _neverShowFailedImportsSub;
   StreamSubscription<bool>? _favTagsSub;
   StreamSubscription<bool>? _lastFavSub;
-
-  bool ready = false;
 
   bool get neverShowFailedImports => _service.neverShowFailedImports;
   Future<void> setNeverShowLocalImports() async =>
@@ -36,6 +36,10 @@ class LibraryModel extends SafeChangeNotifier {
 
     _localAudioIndexSub = _service.localAudioIndexStream
         .listen((index) => setLocalAudioindex(index));
+    _radioIndexSub =
+        _service.radioIndexStream.listen((index) => setRadioIndex(index));
+    _radioIndexSub =
+        _service.podcastIndexStream.listen((index) => setPodcastIndex(index));
     _likedAudiosSub =
         _service.likedAudiosChanged.listen((event) => notifyListeners());
     _playlistsSub =
@@ -54,13 +58,18 @@ class LibraryModel extends SafeChangeNotifier {
     _favTagsSub = _service.favTagsChanged.listen((_) => notifyListeners());
     _lastFavSub = _service.lastFavChanged.listen((_) => notifyListeners());
 
-    ready = true;
     notifyListeners();
+  }
+
+  Future<void> safeStates() async {
+    await _service.safeStates();
   }
 
   @override
   Future<void> dispose() async {
     _localAudioIndexSub?.cancel();
+    _radioIndexSub?.cancel();
+    _podcastIndexSub?.cancel();
     _likedAudiosSub?.cancel();
     _playlistsSub?.cancel();
     _albumsSub?.cancel();
@@ -131,7 +140,7 @@ class LibraryModel extends SafeChangeNotifier {
 
   void addLikedAudios(Set<Audio> audios) => _service.addLikedAudios(audios);
 
-  bool liked(Audio audio) => _service.liked(audio);
+  bool liked(Audio? audio) => audio == null ? false : _service.liked(audio);
 
   void removeLikedAudio(Audio audio, [bool notify = true]) =>
       _service.removeLikedAudio(audio, notify);
@@ -150,7 +159,8 @@ class LibraryModel extends SafeChangeNotifier {
 
   void unStarStation(String name) => _service.unStarStation(name);
 
-  bool isStarredStation(String name) => _service.isStarredStation(name);
+  bool isStarredStation(String? name) =>
+      name?.isNotEmpty == false ? false : _service.isStarredStation(name);
 
   bool get showStarredStations =>
       audioPageType == null || audioPageType == AudioPageType.radio;
@@ -215,7 +225,7 @@ class LibraryModel extends SafeChangeNotifier {
   bool podcastUpdateAvailable(String feedUrl) =>
       _service.podcastUpdateAvailable(feedUrl);
 
-  Set<String> get podcastUpdates => _service.podcastUpdates;
+  int? get podcastUpdatesLength => _service.podcastUpdatesLength;
 
   void removePodcastUpdate(String feedUrl) =>
       _service.removePodcastUpdate(feedUrl);
@@ -251,6 +261,18 @@ class LibraryModel extends SafeChangeNotifier {
   void setLocalAudioindex(int? value) {
     if (value == null || value == _service.localAudioIndex) return;
     _service.setLocalAudioIndex(value);
+  }
+
+  int? get radioindex => _service.radioIndex;
+  void setRadioIndex(int? value) {
+    if (value == null || value == _service.radioIndex) return;
+    _service.setRadioIndex(value);
+  }
+
+  int? get podcastIndex => _service.podcastIndex;
+  void setPodcastIndex(int? value) {
+    if (value == null || value == _service.podcastIndex) return;
+    _service.setPodcastIndex(value);
   }
 
   Map<String, Duration>? get lastPositions => _service.lastPositions;

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'stream_provider_share_button.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../data.dart';
-import 'icons.dart';
 import '../l10n/l10n.dart';
 import '../library/playlist_dialog.dart';
+import 'icons.dart';
+import 'stream_provider_share_button.dart';
 
 class LikeButton extends StatelessWidget {
   const LikeButton({
@@ -43,13 +42,11 @@ class LikeButton extends StatelessWidget {
     final heartButton = InkWell(
       borderRadius: BorderRadius.circular(10),
       onTap: () => liked ? removeLikedAudio(audio) : addLikedAudio(audio),
-      child: YaruAnimatedIcon(
-        liked
-            ? const YaruAnimatedHeartIcon(filled: true)
-            : const YaruAnimatedHeartIcon(filled: false),
-        initialProgress: 1.0,
-        color: audioSelected ? theme.colorScheme.onSurface : theme.hintColor,
-        size: iconSize(),
+      child: Iconz().getAnimatedHeartIcon(
+        liked: liked,
+        color: audioSelected
+            ? theme.colorScheme.primary
+            : theme.colorScheme.onSurface,
       ),
     );
 

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -13,18 +12,14 @@ class PodcastModel extends SafeChangeNotifier {
   PodcastModel(
     this._podcastService,
     this._libraryService,
-    this._connectivity,
   );
 
   final PodcastService _podcastService;
   final LibraryService _libraryService;
-  final Connectivity _connectivity;
 
   StreamSubscription<bool>? _searchChangedSub;
 
   SearchResult? get searchResult => _podcastService.searchResult;
-
-  StreamSubscription<ConnectivityResult>? _conSub;
 
   bool _searchActive = false;
   bool get searchActive => _searchActive;
@@ -100,9 +95,11 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  var _firstUpdateChecked = false;
   Future<void> init({
     String? countryCode,
     required String updateMessage,
+    required bool isOnline,
   }) async {
     final c = Country.values.firstWhereOrNull((c) => c.code == countryCode);
     if (c != null) {
@@ -113,27 +110,20 @@ class PodcastModel extends SafeChangeNotifier {
       notifyListeners();
     });
 
-    _conSub = _connectivity.onConnectivityChanged.listen((result) {
-      if (_conResult == ConnectivityResult.none &&
-          result != ConnectivityResult.none) {
-        // update(updateMessage);
-      }
-      _conResult = result;
-    });
-
-    final res = await _connectivity.checkConnectivity();
-    if (res == ConnectivityResult.none) return;
+    if (!isOnline) return;
 
     if (_podcastService.searchResult == null ||
         _podcastService.searchResult?.items.isEmpty == true) {
       search();
     }
 
-    update(updateMessage);
+    if (_firstUpdateChecked == false) {
+      update(updateMessage);
+    }
+    _firstUpdateChecked = true;
   }
 
   void update(String updateMessage) {
-    if (_conResult == ConnectivityResult.none) return;
     _setCheckingForUpdates(true);
     _podcastService
         .updatePodcasts(
@@ -144,7 +134,6 @@ class PodcastModel extends SafeChangeNotifier {
         .then((_) => _setCheckingForUpdates(false));
   }
 
-  ConnectivityResult? _conResult;
   bool _checkingForUpdates = false;
   bool get checkingForUpdates => _checkingForUpdates;
   void _setCheckingForUpdates(bool value) {
@@ -153,10 +142,17 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  bool _updatesOnly = false;
+  bool get updatesOnly => _updatesOnly;
+  void setUpdatesOnly(bool value) {
+    if (_updatesOnly == value) return;
+    _updatesOnly = value;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _searchChangedSub?.cancel();
-    _conSub?.cancel();
     super.dispose();
   }
 

@@ -15,6 +15,10 @@ const kFlatPakDesktopEntry = '';
 
 const kDesktopEntry = kSnapDesktopEntry;
 
+const kTinyButtonSize = 30.0;
+
+const kTinyButtonIconSize = 13.0;
+
 const kSearchBarWidth = 350.0;
 
 const kSnackBarWidth = 500.0;
@@ -71,7 +75,7 @@ const kDiskGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
   crossAxisSpacing: 10,
 );
 
-const kShimmerBaseLight = Color.fromARGB(120, 230, 230, 230);
+const kShimmerBaseLight = Color.fromARGB(120, 192, 192, 192);
 const kShimmerBaseDark = Color.fromARGB(255, 51, 51, 51);
 const kShimmerHighLightLight = Color.fromARGB(197, 218, 218, 218);
 const kShimmerHighLightDark = Color.fromARGB(255, 57, 57, 57);
@@ -84,9 +88,14 @@ const kLastFav = 'lastFav';
 const kPlaylistsFileName = 'playlists.json';
 const kPinnedAlbumsFileName = 'pinnedAlbums.json';
 const kPodcastsFileName = 'podcasts.json';
+const kPodcastsUpdates = 'podcastsupdates.json';
 const kStarredStationsFileName = 'starredStations.json';
 const kSettingsFileName = 'settings.json';
 const kLastPositionsFileName = 'lastPositions.json';
+const kLocalAudioCacheFileName = 'localaudiocache.json';
+const kLocalAudioCache = 'localAudioCache';
+const kUseLocalAudioCache = 'cacheSuggestionDisposed';
+const kCreateCacheLimit = 1000;
 const kDirectoryProperty = 'directory';
 const kRadioUrl = 'de1.api.radio-browser.info';
 const kRadioBrowserBaseUrl = 'all.api.radio-browser.info';
@@ -95,6 +104,8 @@ const kLastPositionAsString = 'lastPositionAsString';
 const kLastDurationAsString = 'lastDurationAsString';
 const kLocalAudioIndex = 'localAudioIndex';
 const kAppIndex = 'appIndex';
+const kRadioIndex = 'radioIndex';
+const kPodcastIndex = 'podcastIndex';
 const kNeverShowImportFails = 'neverShowImportFails';
 
 const shops = <String, String>{

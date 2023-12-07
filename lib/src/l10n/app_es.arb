@@ -36,8 +36,8 @@
     "discover": "Explorar",
     "forYou": "Para ti",
     "search": "Buscar",
-    "noPodcastFound": "🐣🔎🎙❓\n\nLo siento, no se ha encontrado ningún podcast que concida con esa búsqueda.",
-    "noPodcastChartsFound": "🐣🔎🎙❓\n\nLo siento, no hay listas disponibles para este país o categoría.",
+    "noPodcastFound": "Lo siento, no se ha encontrado ningún podcast que concida con esa búsqueda.",
+    "noPodcastChartsFound": "Lo siento, no hay listas disponibles para este país o categoría.",
     "upNext": "A continuación",
     "all": "Todo",
     "arts": "Arte",
@@ -61,8 +61,8 @@
     "offline": "Sin conexión",
     "offlineDescription": "Parece que tu ordenador no está conectado a internet",
     "newEpisodeAvailable": "Nuevo episodio disponible:",
-    "noStationFound": "🐣🔎📻❓\n\nLo siento, no se ha encontrado ningúna estación que concida con esa búsqueda",
-    "nothingFound": "🐣🔎❓\n\nSin resultados",
+    "noStationFound": "Lo siento, no se ha encontrado ningúna estación que concida con esa búsqueda",
+    "nothingFound": "Sin resultados",
     "tags": "Tags",
     "quality": "Calidad",
     "station": "Estación",
@@ -77,8 +77,8 @@
     "podcastFeedIsEmpty": "Lo siento, el feed de este podcast se encuentra vacío",
     "video": "Vídeo",
     "ok": "De acuerdo",
-    "noLocalTitlesFound": "🐣🔎🎵❓\n\nParece que tu colección de música local está vacía. Revisa la ubicación de tu biblioteca en los ajustes",
-    "noLocalSearchFound": "🐣🔎🎵❓\n\nLo siento, no se ha encontrado música local que concida con esa búsqueda",
+    "noLocalTitlesFound": "Parece que tu colección de música local está vacía. Revisa la ubicación de tu biblioteca en los ajustes",
+    "noLocalSearchFound": "Lo siento, no se ha encontrado música local que concida con esa búsqueda",
     "buyMusicOnline": "Aquí encontrarás música que puedes comprar:",
     "settings": "Ajustes",
     "findUsOnGitHub": "Visítanos en GitHub",
@@ -94,6 +94,6 @@
             }
         }
     },
-    "emptyPlaylist": "🐣🔎🎵❓\n\nEsta lista de reproducción se encuentra vacía",
+    "emptyPlaylist": "Esta lista de reproducción se encuentra vacía",
     "copiedToClipBoard": "Copiado al portapapeles:"
 }

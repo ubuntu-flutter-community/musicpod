@@ -53,18 +53,34 @@ class SafeNetworkImage extends StatelessWidget {
 
     if (url == null) return fallBack;
 
-    return CachedNetworkImage(
-      cacheManager: Platform.isLinux ? XdgCacheManager() : null,
-      imageUrl: url!,
-      imageBuilder: (context, imageProvider) => Image(
-        image: imageProvider,
-        filterQuality: filterQuality,
+    if (url?.endsWith('.svg') == true || url?.endsWith('.ico') == true) {
+      return Image.network(
+        url!,
         fit: fit,
         height: height,
         width: width,
-      ),
-      errorWidget: (context, url, error) => errorWidget,
-    );
+        filterQuality: filterQuality,
+        errorBuilder: (a, b, c) => errorWidget,
+        frameBuilder: (a, child, frame, d) => frame == null ? fallBack : child,
+      );
+    }
+
+    try {
+      return CachedNetworkImage(
+        cacheManager: Platform.isLinux ? XdgCacheManager() : null,
+        imageUrl: url!,
+        imageBuilder: (context, imageProvider) => Image(
+          image: imageProvider,
+          filterQuality: filterQuality,
+          fit: fit,
+          height: height,
+          width: width,
+        ),
+        errorWidget: (context, url, error) => errorWidget,
+      );
+    } on Exception catch (_) {
+      return fallBack;
+    }
   }
 }
 

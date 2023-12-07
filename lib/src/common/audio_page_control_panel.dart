@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../theme.dart';
 import '../l10n/l10n.dart';
 
 class AudioPageControlPanel extends StatelessWidget {
@@ -76,12 +77,20 @@ class AudioPageControlPanel extends StatelessWidget {
                     }
                   }
                 },
-                icon: Icon(
-                  isPlaying && queueName == listName
-                      ? Iconz().pause
-                      : Iconz().play,
-                  color: theme.colorScheme.onInverseSurface,
-                ),
+                icon: isPlaying && queueName == listName
+                    ? Icon(
+                        Iconz().pause,
+                        color: theme.colorScheme.onInverseSurface,
+                      )
+                    : Padding(
+                        padding: appleStyled
+                            ? const EdgeInsets.only(left: 3)
+                            : EdgeInsets.zero,
+                        child: Icon(
+                          Iconz().playFilled,
+                          color: theme.colorScheme.onInverseSurface,
+                        ),
+                      ),
               ),
             ),
           ),

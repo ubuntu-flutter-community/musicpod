@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -37,6 +38,7 @@ class ArtistsView extends StatelessWidget {
 
     if (artists!.isEmpty) {
       return NoSearchResultPage(
+        icons: const AnimatedEmoji(AnimatedEmojis.eyes),
         message: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -58,7 +60,8 @@ class ArtistsView extends StatelessWidget {
         );
         final images = findImages(artistAudios ?? {});
 
-        final artistname = artists!.elementAt(index).artist ?? 'unknown';
+        final artistname =
+            artists!.elementAt(index).artist ?? context.l10n.unknown;
 
         return YaruSelectableContainer(
           selected: false,
@@ -78,8 +81,10 @@ class ArtistsView extends StatelessWidget {
             ),
           ),
           borderRadius: BorderRadius.circular(300),
-          child:
-              RoundImageContainer(image: images?.firstOrNull, text: artistname),
+          child: RoundImageContainer(
+            image: images?.firstOrNull,
+            text: artistname.isNotEmpty ? artistname : context.l10n.unknown,
+          ),
         );
       },
     );

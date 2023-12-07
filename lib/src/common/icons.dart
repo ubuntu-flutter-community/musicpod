@@ -1,8 +1,10 @@
-import 'dart:io';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/constants.dart';
+
+import '../../globals.dart';
+import '../../theme.dart';
 
 class Iconz {
   static final Iconz _instance = Iconz._internal();
@@ -10,61 +12,250 @@ class Iconz {
 
   Iconz._internal();
 
-  IconData get menu => _l ? YaruIcons.menu : Icons.menu;
-  IconData get musicNote => _l ? YaruIcons.music_note : Icons.music_note;
-  IconData get external => _l ? YaruIcons.external_link : Icons.link;
-  IconData get starFilled => _l ? YaruIcons.star_filled : Icons.star;
-  IconData get star => _l ? YaruIcons.star : Icons.star_outline;
-  IconData get offline => _l ? YaruIcons.network_offline : Icons.offline_bolt;
-  IconData get pause => _l ? YaruIcons.media_pause : Icons.pause;
-  IconData get play => _l ? YaruIcons.media_play : Icons.play_arrow;
-  IconData get download => _l ? YaruIcons.download : Icons.download;
-  IconData get podcast => _l ? YaruIcons.podcast : Icons.podcasts_outlined;
-  IconData get podcastFilled => _l ? YaruIcons.podcast_filled : Icons.podcasts;
-  IconData get radio =>
-      _l ? YaruIcons.radio : Icons.settings_input_antenna_outlined;
-  IconData get radioFilled =>
-      _l ? YaruIcons.radio_filled : Icons.settings_input_antenna;
-  IconData get localAudio =>
-      _l ? YaruIcons.drive_harddisk : Icons.sd_storage_outlined;
-  IconData get localAudioFilled =>
-      _l ? YaruIcons.drive_harddisk_filled : Icons.sd_storage;
-  IconData get rss => _l ? YaruIcons.rss : Icons.rss_feed_outlined;
-  IconData get refresh => _l ? YaruIcons.refresh : Icons.refresh;
-  IconData get speakerLowFilled =>
-      _l ? YaruIcons.speaker_low_filled : Icons.volume_down;
-  IconData get speakerMediumFilled =>
-      _l ? YaruIcons.speaker_medium_filled : Icons.volume_up;
-  IconData get speakerHighFilled =>
-      _l ? YaruIcons.speaker_high_filled : Icons.volume_up;
-  IconData get speakerMutedFilled =>
-      _l ? YaruIcons.speaker_muted_filled : Icons.volume_off;
-  IconData get fullScreenExit =>
-      _l ? YaruIcons.fullscreen_exit : Icons.arrow_drop_down;
-  IconData get fullScreen =>
-      _l ? YaruIcons.fullscreen : Icons.arrow_drop_up_outlined;
-  IconData get repeatSingle => _l ? YaruIcons.repeat_single : Icons.repeat_one;
-  IconData get shuffle => _l ? YaruIcons.shuffle : Icons.shuffle;
-  IconData get skipBackward =>
-      _l ? YaruIcons.skip_backward : Icons.skip_previous;
-  IconData get skipForward => _l ? YaruIcons.skip_forward : Icons.skip_next;
-  IconData get share => _l ? YaruIcons.share : Icons.share;
-  IconData get startPlayList =>
-      _l ? YaruIcons.playlist_play : Icons.playlist_play;
-  IconData get playlist => _l ? YaruIcons.playlist : Icons.list;
-  IconData get pen => _l ? YaruIcons.pen : Icons.edit;
-  IconData get pin => _l ? YaruIcons.pin : Icons.sticky_note_2;
-  IconData get heart => _l ? YaruIcons.heart : Icons.favorite_outline;
-  IconData get heartFilled => _l ? YaruIcons.heart_filled : Icons.favorite;
-  IconData get globe => _l ? YaruIcons.globe : Icons.link;
-  IconData get imageMissing =>
-      _l ? YaruIcons.image_missing : Icons.image_not_supported;
-  IconData get plus => _l ? YaruIcons.plus : Icons.add;
+  IconData get menu {
+    return yaruStyled
+        ? YaruIcons.menu
+        : appleStyled
+            ? CupertinoIcons.bars
+            : Icons.menu;
+  }
 
-  bool get _l => Platform.isLinux;
+  IconData get musicNote => yaruStyled
+      ? YaruIcons.music_note
+      : appleStyled
+          ? CupertinoIcons.double_music_note
+          : Icons.music_note;
+  IconData get external => yaruStyled
+      ? YaruIcons.external_link
+      : appleStyled
+          ? CupertinoIcons.link
+          : Icons.link;
+  IconData get starFilled => yaruStyled
+      ? YaruIcons.star_filled
+      : appleStyled
+          ? CupertinoIcons.star_fill
+          : Icons.star;
+  IconData get star => yaruStyled
+      ? YaruIcons.star
+      : appleStyled
+          ? CupertinoIcons.star
+          : Icons.star_outline;
+  IconData get offline => yaruStyled
+      ? YaruIcons.network_offline
+      : appleStyled
+          ? CupertinoIcons.wifi_slash
+          : Icons.offline_bolt;
+  IconData get pause => yaruStyled
+      ? YaruIcons.media_pause
+      : appleStyled
+          ? CupertinoIcons.pause
+          : Icons.pause;
+  IconData get play => yaruStyled
+      ? YaruIcons.media_play
+      : appleStyled
+          ? CupertinoIcons.play
+          : Icons.play_arrow_outlined;
+  IconData get playFilled => yaruStyled
+      ? YaruIcons.media_play
+      : appleStyled
+          ? CupertinoIcons.play_fill
+          : Icons.play_arrow;
+  IconData get download => yaruStyled
+      ? YaruIcons.download
+      : appleStyled
+          ? CupertinoIcons.down_arrow
+          : Icons.download;
+  IconData get podcast => yaruStyled
+      ? YaruIcons.podcast
+      : appleStyled
+          ? CupertinoIcons.mic
+          : Icons.podcasts_outlined;
+  IconData get podcastFilled => yaruStyled
+      ? YaruIcons.podcast_filled
+      : appleStyled
+          ? CupertinoIcons.mic_fill
+          : Icons.podcasts;
+  IconData get radio => yaruStyled
+      ? YaruIcons.radio
+      : appleStyled
+          ? CupertinoIcons.antenna_radiowaves_left_right
+          : Icons.radio_outlined;
+  IconData get radioFilled => yaruStyled
+      ? YaruIcons.radio_filled
+      : appleStyled
+          ? CupertinoIcons.antenna_radiowaves_left_right
+          : Icons.radio;
+  IconData get localAudio {
+    if (appleStyled) {
+      if (isMobile) {
+        return CupertinoIcons.device_phone_portrait;
+      }
+      return CupertinoIcons.device_laptop;
+    }
+    return yaruStyled
+        ? YaruIcons.drive_harddisk
+        : isMobile
+            ? Icons.sd_storage_outlined
+            : Icons.computer;
+  }
 
-  Widget getAnimatedStar(bool isStarred, Color color) {
-    if (_l) {
+  IconData get localAudioFilled {
+    if (appleStyled) {
+      if (isMobile) {
+        return CupertinoIcons.device_phone_portrait;
+      }
+      return CupertinoIcons.device_laptop;
+    }
+    return yaruStyled
+        ? YaruIcons.drive_harddisk_filled
+        : isMobile
+            ? Icons.sd_storage
+            : Icons.computer;
+  }
+
+  IconData get addToLibrary => yaruStyled
+      ? YaruIcons.plus
+      : appleStyled
+          ? CupertinoIcons.plus
+          : Icons.add;
+  IconData get removeFromLibrary => yaruStyled
+      ? YaruIcons.checkmark
+      : appleStyled
+          ? CupertinoIcons.check_mark
+          : Icons.check;
+  IconData get refresh => yaruStyled
+      ? YaruIcons.refresh
+      : appleStyled
+          ? CupertinoIcons.refresh
+          : Icons.refresh;
+  IconData get speakerLowFilled => yaruStyled
+      ? YaruIcons.speaker_low_filled
+      : appleStyled
+          ? CupertinoIcons.volume_off
+          : Icons.volume_down;
+  IconData get speakerMediumFilled => yaruStyled
+      ? YaruIcons.speaker_medium_filled
+      : appleStyled
+          ? CupertinoIcons.volume_down
+          : Icons.volume_down;
+  IconData get speakerHighFilled => yaruStyled
+      ? YaruIcons.speaker_high_filled
+      : appleStyled
+          ? CupertinoIcons.volume_up
+          : Icons.volume_up;
+  IconData get speakerMutedFilled => yaruStyled
+      ? YaruIcons.speaker_muted_filled
+      : appleStyled
+          ? CupertinoIcons.volume_off
+          : Icons.volume_off;
+  IconData get fullScreenExit => yaruStyled
+      ? YaruIcons.fullscreen_exit
+      : appleStyled
+          ? CupertinoIcons.fullscreen_exit
+          : Icons.fullscreen_exit;
+  IconData get fullScreen => yaruStyled
+      ? YaruIcons.fullscreen
+      : appleStyled
+          ? CupertinoIcons.fullscreen
+          : Icons.fullscreen;
+  IconData get repeatSingle => yaruStyled
+      ? YaruIcons.repeat_single
+      : appleStyled
+          ? CupertinoIcons.repeat_1
+          : Icons.repeat_one;
+  IconData get shuffle => yaruStyled
+      ? YaruIcons.shuffle
+      : appleStyled
+          ? CupertinoIcons.shuffle
+          : Icons.shuffle;
+  IconData get skipBackward => yaruStyled
+      ? YaruIcons.skip_backward
+      : appleStyled
+          ? CupertinoIcons.backward_end
+          : Icons.skip_previous;
+  IconData get skipForward => yaruStyled
+      ? YaruIcons.skip_forward
+      : appleStyled
+          ? CupertinoIcons.forward_end
+          : Icons.skip_next;
+  IconData get goBack => yaruStyled
+      ? YaruIcons.go_previous
+      : appleStyled
+          ? CupertinoIcons.back
+          : Icons.arrow_back;
+  IconData get goNext => yaruStyled
+      ? YaruIcons.go_next
+      : appleStyled
+          ? CupertinoIcons.forward
+          : Icons.arrow_forward;
+  IconData get share => yaruStyled
+      ? YaruIcons.share
+      : appleStyled
+          ? CupertinoIcons.share
+          : Icons.share;
+  IconData get startPlayList => yaruStyled
+      ? YaruIcons.playlist_play
+      : appleStyled
+          ? CupertinoIcons.play_circle
+          : Icons.playlist_play;
+  IconData get playlist => yaruStyled
+      ? YaruIcons.playlist
+      : appleStyled
+          ? CupertinoIcons.music_note_list
+          : Icons.list;
+  IconData get pen => yaruStyled
+      ? YaruIcons.pen
+      : appleStyled
+          ? CupertinoIcons.pen
+          : Icons.edit;
+  IconData get pin => yaruStyled
+      ? YaruIcons.pin
+      : appleStyled
+          ? CupertinoIcons.pin
+          : Icons.push_pin_outlined;
+  IconData get pinFilled => yaruStyled
+      ? YaruIcons.pin
+      : appleStyled
+          ? CupertinoIcons.pin_fill
+          : Icons.push_pin;
+  IconData get heart => yaruStyled
+      ? YaruIcons.heart
+      : appleStyled
+          ? CupertinoIcons.heart
+          : Icons.favorite_outline;
+  IconData get heartFilled => yaruStyled
+      ? YaruIcons.heart_filled
+      : appleStyled
+          ? CupertinoIcons.heart_fill
+          : Icons.favorite;
+  IconData get globe => yaruStyled
+      ? YaruIcons.globe
+      : appleStyled
+          ? CupertinoIcons.globe
+          : Icons.link;
+  IconData get imageMissing => yaruStyled
+      ? YaruIcons.image_missing
+      : appleStyled
+          ? CupertinoIcons.question_diamond
+          : Icons.image_not_supported;
+  IconData get plus => yaruStyled
+      ? YaruIcons.plus
+      : appleStyled
+          ? CupertinoIcons.plus
+          : Icons.add;
+  IconData get search => yaruStyled
+      ? YaruIcons.search
+      : appleStyled
+          ? CupertinoIcons.search
+          : Icons.search;
+  IconData? get clear => yaruStyled
+      ? YaruIcons.edit_clear
+      : appleStyled
+          ? CupertinoIcons.clear
+          : Icons.clear;
+
+  Widget getAnimatedStar(bool isStarred, [Color? color]) {
+    if (yaruStyled) {
       return YaruAnimatedIcon(
         isStarred
             ? const YaruAnimatedStarIcon(filled: true)
@@ -75,22 +266,38 @@ class Iconz {
       );
     } else {
       return isStarred
-          ? const Icon(Icons.star)
-          : const Icon(Icons.star_outline);
+          ? Icon(
+              Iconz().starFilled,
+              size: iconSize(),
+            )
+          : Icon(
+              Iconz().star,
+              size: iconSize(),
+            );
     }
   }
 
-  Color? getAvatarIconColor(ThemeData theme) =>
-      _l ? theme.colorScheme.onSurface.withOpacity(0.08) : null;
-
-  Widget? get searchIcon => _l ? null : const Icon(Icons.search);
-
-  Widget? get clearIcon => _l
-      ? null
-      : const Icon(
-          Icons.clear,
-          size: 15,
-        );
+  Widget getAnimatedHeartIcon({required bool liked, Color? color}) {
+    if (yaruStyled) {
+      return YaruAnimatedIcon(
+        liked
+            ? const YaruAnimatedHeartIcon(filled: true)
+            : const YaruAnimatedHeartIcon(filled: false),
+        initialProgress: 1.0,
+        color: color,
+        size: iconSize(),
+      );
+    } else {
+      return Icon(
+        liked ? Icons.favorite : Icons.favorite_outline,
+        color: color,
+      );
+    }
+  }
 }
 
-double iconSize() => Platform.isLinux ? kYaruIconSize : 24.0;
+double iconSize() => yaruStyled
+    ? kYaruIconSize
+    : appleStyled
+        ? 24.0
+        : 24.0;

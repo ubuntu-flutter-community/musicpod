@@ -6,6 +6,7 @@ import '../../app.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../theme.dart';
 import 'radio_page.dart';
 
 class StationPage extends StatelessWidget {
@@ -42,9 +43,11 @@ class StationPage extends StatelessWidget {
     final icon = selected
         ? Icon(
             Iconz().starFilled,
+            size: iconSize(),
           )
         : Icon(
-            Iconz().starFilled,
+            Iconz().star,
+            size: iconSize(),
           );
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
@@ -65,12 +68,13 @@ class StationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final light = theme.brightness == Brightness.light;
     final tags = station.album?.isNotEmpty == false
         ? null
         : <String>[
             for (final tag in station.album?.split(',') ?? <String>[]) tag,
           ];
-    const size = fullHeightPlayerImageSize;
+    const size = fullHeightPlayerImageSize - 20;
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
@@ -89,18 +93,44 @@ class StationPage extends StatelessWidget {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 50),
           child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  height: size,
-                  width: size,
-                  child: AudioCard(
+            child: SizedBox(
+              width: size,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 5,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Tooltip(
+                            message:
+                                station.title?.replaceAll('_', '').trim() ?? '',
+                            child: Text(
+                              station.title?.replaceAll('_', '').trim() ?? '',
+                              style: theme.textTheme.bodyLarge,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: isStarred
+                              ? () => unStarStation(name)
+                              : () => starStation(name),
+                          icon: Iconz().getAnimatedStar(
+                            isStarred,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  AudioCard(
+                    color: light ? theme.dividerColor : kShimmerBaseDark,
                     height: size,
                     width: size,
                     onTap: () => play(newAudio: station),
@@ -120,65 +150,42 @@ class StationPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  width: size * 0.95,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            radius: avatarIconSize,
-                            backgroundColor:
-                                theme.colorScheme.primary.withOpacity(0.4),
-                            child: IconButton(
-                              onPressed: isStarred
-                                  ? () => unStarStation(name)
-                                  : () => starStation(name),
-                              icon: Iconz().getAnimatedStar(
-                                isStarred,
-                                theme.colorScheme.onPrimary,
-                              ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 15,
+                      left: 5,
+                      right: 5,
+                    ),
+                    child: (tags?.isNotEmpty == true)
+                        ? YaruChoiceChipBar(
+                            goNextIcon: Padding(
+                              padding: appleStyled
+                                  ? const EdgeInsets.only(left: 3)
+                                  : EdgeInsets.zero,
+                              child: Icon(Iconz().goNext),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: Text(
-                              station.title?.replaceAll('_', '') ?? '',
-                              style: theme.textTheme.headlineSmall,
+                            goPreviousIcon: Padding(
+                              padding: appleStyled
+                                  ? const EdgeInsets.only(right: 3)
+                                  : EdgeInsets.zero,
+                              child: Icon(Iconz().goBack),
                             ),
+                            chipHeight: chipHeight,
+                            yaruChoiceChipBarStyle:
+                                YaruChoiceChipBarStyle.stack,
+                            labels: tags!.map((e) => Text(e)).toList(),
+                            isSelected: tags.map((e) => false).toList(),
+                            onSelected: (index) {
+                              onTextTap?.call(tags[index]);
+                              Navigator.of(context).maybePop();
+                            },
+                          )
+                        : SizedBox(
+                            height: chipHeight,
                           ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      if (tags?.isNotEmpty == true)
-                        YaruChoiceChipBar(
-                          chipHeight: chipHeight,
-                          yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.stack,
-                          labels: tags!.map((e) => Text(e)).toList(),
-                          isSelected: tags.map((e) => false).toList(),
-                          onSelected: (index) {
-                            onTextTap?.call(tags[index]);
-                            if (Navigator.canPop(context)) {
-                              Navigator.of(context).pop();
-                            }
-                          },
-                        ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

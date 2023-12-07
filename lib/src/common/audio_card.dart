@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../constants.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../constants.dart';
+import '../../theme.dart';
 import 'common_widgets.dart';
 import 'icons.dart';
 
@@ -15,6 +17,7 @@ class AudioCard extends StatefulWidget {
     this.bottom,
     this.height,
     this.width,
+    this.color,
   });
   final Widget? image;
   final void Function()? onTap;
@@ -22,6 +25,7 @@ class AudioCard extends StatefulWidget {
   final Widget? bottom;
   final double? height;
   final double? width;
+  final Color? color;
 
   @override
   State<AudioCard> createState() => _AudioCardState();
@@ -39,7 +43,9 @@ class _AudioCardState extends State<AudioCard> {
         SizedBox(
           height: widget.height ?? kSmallCardHeight,
           width: widget.width ?? kSmallCardHeight,
-          child: YaruBanner(
+          child: Banner(
+            color:
+                widget.color ?? (light ? theme.dividerColor : kShimmerBaseDark),
             padding: EdgeInsets.zero,
             onTap: widget.onTap,
             onHover: (value) => setState(() {
@@ -69,9 +75,14 @@ class _AudioCardState extends State<AudioCard> {
                         backgroundColor: theme.colorScheme.primary,
                         child: IconButton(
                           onPressed: widget.onPlay,
-                          icon: Icon(
-                            Iconz().play,
-                            color: Colors.white,
+                          icon: Padding(
+                            padding: appleStyled
+                                ? const EdgeInsets.only(left: 3)
+                                : EdgeInsets.zero,
+                            child: Icon(
+                              Iconz().playFilled,
+                              color: contrastColor(theme.colorScheme.primary),
+                            ),
                           ),
                         ),
                       ),
@@ -83,6 +94,81 @@ class _AudioCardState extends State<AudioCard> {
         ),
         if (widget.bottom != null) widget.bottom!,
       ],
+    );
+  }
+}
+
+class Banner extends StatelessWidget {
+  const Banner({
+    super.key,
+    this.onTap,
+    this.color,
+    this.elevation,
+    this.surfaceTintColor,
+    required this.child,
+    this.padding = const EdgeInsets.all(kYaruPagePadding),
+    this.onHover,
+    this.selected,
+    this.mouseCursor,
+  });
+
+  final Widget child;
+
+  final VoidCallback? onTap;
+
+  final ValueChanged<bool>? onHover;
+
+  final Color? color;
+
+  final double? elevation;
+
+  final Color? surfaceTintColor;
+
+  final EdgeInsetsGeometry padding;
+
+  final bool? selected;
+
+  final MouseCursor? mouseCursor;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final light = theme.brightness == Brightness.light;
+    final borderRadius = BorderRadius.circular(kYaruBannerRadius);
+
+    return Material(
+      color: selected == true
+          ? theme.primaryColor.withOpacity(0.8)
+          : Colors.transparent,
+      borderRadius: borderRadius,
+      child: InkWell(
+        onTap: onTap,
+        onHover: onHover,
+        borderRadius: borderRadius,
+        hoverColor: theme.colorScheme.onSurface.withOpacity(0.1),
+        mouseCursor: mouseCursor,
+        child: Card(
+          color: color ?? theme.cardColor,
+          shadowColor: Colors.black.withOpacity(0.5),
+          surfaceTintColor: null,
+          elevation: 1,
+          shape: RoundedRectangleBorder(
+            borderRadius: borderRadius,
+            side: light
+                ? const BorderSide(
+                    color: Color.fromARGB(255, 226, 226, 226),
+                    width: 0,
+                  )
+                : BorderSide.none,
+          ),
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            padding: padding,
+            child: child,
+          ),
+        ),
+      ),
     );
   }
 }

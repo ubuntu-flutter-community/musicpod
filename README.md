@@ -1,6 +1,6 @@
 # Musicpod
 
-Music, Radio and Podcast player for ***Ubuntu*** made with Flutter.
+Music, Radio, Television and Podcast player for ***Ubuntu*** made with Flutter.
 
 Windows, MacOs, Android and other Linux Distributions support are WIP.
 
@@ -50,21 +50,24 @@ Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https
 ## MusicPod Level 2
 
 - [X] Video Podcasts ([#71](https://github.com/ubuntu-flutter-community/musicpod/issues/71))
+- [X] Play TV Stations found on radiobrowser
 - [ ] Chromecast Support ([#91](https://github.com/ubuntu-flutter-community/musicpod/issues/91))
 - [X] streaming provider agnostic sharing links
 - [ ] option to download podcasts (#[240](https://github.com/ubuntu-flutter-community/musicpod/issues/240))
 - [X] reduced memory allocation
+- [ ] WebDav support (#[248](https://github.com/ubuntu-flutter-community/musicpod/issues/248))
+- [ ] upnp/dlna support (#[248](https://github.com/ubuntu-flutter-community/musicpod/issues/247))
 
 ## Supported operating systems and package formats
 
 - [X] Ubuntu Desktop
   - [X] [snap package](https://snapcraft.io/musicpod) (this is the primary supported package!)
   - [ ] Flatpak ([WIP](https://github.com/ubuntu-flutter-community/musicpod/issues/10))
-- [X] Windows Support (Media Controls are WIP)
+- [X] Windows Support
   - [ ] Windows Store
 - [X] Android Support (Media Controls are WIP)
   - [ ] PlayStore
-- [ ] MacOs Support
+- [X] MacOs Support
   - [ ] Apple?Store?
 - [ ] iOS Support
   - [ ] AppStore

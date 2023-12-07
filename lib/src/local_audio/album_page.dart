@@ -55,27 +55,29 @@ class AlbumPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final image = album?.firstOrNull?.pictureData != null
+        ? Image.memory(
+            album!.firstOrNull!.pictureData!,
+            width: 200.0,
+            height: 200.0,
+            fit: BoxFit.cover,
+            filterQuality: FilterQuality.medium,
+          )
+        : null;
     return AudioPage(
+      showAudioPageHeader: image != null,
       showAlbum: false,
       onTextTap: onTextTap,
       audioPageType: AudioPageType.album,
       headerLabel: context.l10n.album,
       headerSubtile: album?.firstOrNull?.artist,
-      image: album?.firstOrNull?.pictureData != null
-          ? Image.memory(
-              album!.firstOrNull!.pictureData!,
-              width: 200.0,
-              height: 200.0,
-              fit: BoxFit.cover,
-              filterQuality: FilterQuality.medium,
-            )
-          : null,
+      image: image,
       controlPanelButton: Row(
         children: [
           if (isPinnedAlbum(id))
             IconButton(
               icon: Icon(
-                Iconz().pin,
+                Iconz().pinFilled,
                 color: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () => removePinnedAlbum(

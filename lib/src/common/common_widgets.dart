@@ -1,22 +1,64 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:popover/popover.dart';
+import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../constants.dart';
+import '../../theme.dart';
 import 'icons.dart';
 
 class NavBackButton extends StatelessWidget {
-  const NavBackButton({super.key});
+  const NavBackButton({super.key, this.onPressed});
+
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return Platform.isLinux
-        ? const YaruBackButton(
-            style: YaruBackButtonStyle.rounded,
-          )
-        : const Center(child: BackButton());
+    void onTap() {
+      if (onPressed == null) {
+        Navigator.maybePop(context);
+      } else {
+        onPressed?.call();
+        Future.delayed(const Duration(milliseconds: 400))
+            .then((value) => Navigator.maybePop(context));
+      }
+    }
+
+    if (yaruStyled) {
+      return const YaruBackButton(
+        style: YaruBackButtonStyle.rounded,
+      );
+    } else {
+      if (Platform.isMacOS) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 16, left: 13),
+          child: Center(
+            child: SizedBox(
+              height: 15,
+              width: 15,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(20),
+                onTap: onTap,
+                child: Icon(
+                  Iconz().goBack,
+                  size: 10,
+                ),
+              ),
+            ),
+          ),
+        );
+      } else {
+        return Center(
+          child: BackButton(
+            onPressed: onTap,
+          ),
+        );
+      }
+    }
   }
 }
 
@@ -25,7 +67,7 @@ class SideBarProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled
+    return yaruStyled
         ? const SizedBox(
             height: 18,
             width: 18,
@@ -65,16 +107,23 @@ class Progress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled
+    return yaruStyled
         ? YaruCircularProgressIndicator(
             strokeWidth: strokeWidth,
             value: value,
+            color: color,
+            trackColor: backgroundColor,
           )
         : Padding(
             padding: padding ?? const EdgeInsets.all(4),
             child: CircularProgressIndicator(
               strokeWidth: strokeWidth,
               value: value,
+              color: color,
+              backgroundColor: value == null
+                  ? null
+                  : (backgroundColor ??
+                      Theme.of(context).colorScheme.primary.withOpacity(0.3)),
             ),
           );
   }
@@ -137,7 +186,7 @@ class TabsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled
+    return yaruStyled || appleStyled
         ? YaruTabBar(
             onTap: onTap,
             tabs: tabs,
@@ -157,7 +206,7 @@ class SearchButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled
+    return yaruStyled
         ? YaruSearchButton(
             searchActive: active,
             onPressed: onPressed,
@@ -166,10 +215,10 @@ class SearchButton extends StatelessWidget {
             isSelected: active,
             onPressed: onPressed,
             selectedIcon: Icon(
-              Icons.search,
+              Iconz().search,
               color: Theme.of(context).colorScheme.primary,
             ),
-            icon: const Icon(Icons.search),
+            icon: Icon(Iconz().search),
           );
   }
 }
@@ -183,10 +232,10 @@ class SearchingBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled
+    return yaruStyled
         ? YaruSearchField(
             radius: const Radius.circular(kYaruButtonRadius),
-            clearIcon: Iconz().clearIcon,
+            clearIcon: yaruStyled ? null : Icon(Iconz().clear),
             key: key,
             text: text,
             onClear: onClear,
@@ -233,16 +282,25 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      textAlign: TextAlign.center,
-      controller: _controller,
-      key: widget.key,
-      autofocus: true,
-      onSubmitted: widget.onSubmitted,
-      decoration: InputDecoration(
-        suffixIcon: IconButton(
-          onPressed: widget.onClear,
-          icon: const Icon(Icons.clear),
+    return SizedBox(
+      height: 38,
+      child: TextField(
+        controller: _controller,
+        key: widget.key,
+        autofocus: true,
+        onSubmitted: widget.onSubmitted,
+        decoration: InputDecoration(
+          border: const OutlineInputBorder(),
+          contentPadding:
+              const EdgeInsets.only(top: 10, bottom: 8, left: 10, right: 10),
+          filled: true,
+          suffixIcon: IconButton(
+            onPressed: () {
+              widget.onClear?.call();
+              _controller.clear();
+            },
+            icon: const Icon(Icons.clear),
+          ),
         ),
       ),
     );
@@ -254,36 +312,37 @@ class DropDownArrow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _yaruStyled
+    return yaruStyled
         ? const Icon(YaruIcons.pan_down)
         : const Icon(Icons.arrow_drop_down);
   }
 }
 
-double? get avatarIconSize => _yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
+double get podcastProgressSize => yaruStyled ? 34 : 45;
 
-double? get snackBarWidth => _yaruStyled ? kSnackBarWidth : null;
+double? get avatarIconSize => yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
+
+double? get snackBarWidth => yaruStyled ? kSnackBarWidth : null;
 
 double get searchBarWidth => isMobile ? kSearchBarWidth : 600;
 
-bool get showSideBarFilter => _yaruStyled ? true : false;
+bool get showSideBarFilter => yaruStyled ? true : false;
 
 FontWeight get smallTextFontWeight =>
-    _yaruStyled ? FontWeight.w100 : FontWeight.w400;
+    yaruStyled ? FontWeight.w100 : FontWeight.w400;
 
 FontWeight get mediumTextWeight =>
-    _yaruStyled ? FontWeight.w200 : FontWeight.w500;
+    yaruStyled ? FontWeight.w400 : FontWeight.w400;
 
 FontWeight get largeTextWeight =>
-    _yaruStyled ? FontWeight.w200 : FontWeight.w300;
+    yaruStyled ? FontWeight.w200 : FontWeight.w300;
 
-bool get _yaruStyled => Platform.isLinux;
+bool get shrinkTitleBarItems => yaruStyled;
 
-bool get isMobile => Platform.isAndroid || Platform.isIOS || Platform.isFuchsia;
+double get chipHeight => yaruStyled ? kYaruTitleBarItemHeight : 35;
 
-bool get shrinkTitleBarItems => _yaruStyled;
-
-double get chipHeight => _yaruStyled ? kYaruTitleBarItemHeight : 40;
+EdgeInsetsGeometry get tabViewPadding =>
+    isMobile ? const EdgeInsets.only(top: 15) : const EdgeInsets.only(top: 5);
 
 EdgeInsetsGeometry get gridPadding =>
     isMobile ? kMobileGridPadding : kGridPadding;
@@ -292,7 +351,7 @@ SliverGridDelegate get imageGridDelegate =>
     isMobile ? kMobileImageGridDelegate : kImageGridDelegate;
 
 Gradient? getAudioPageHeaderGradient(ThemeData theme) {
-  if (_yaruStyled) {
+  if (yaruStyled) {
     return theme.brightness == Brightness.light
         ? null
         : LinearGradient(
@@ -306,12 +365,97 @@ Gradient? getAudioPageHeaderGradient(ThemeData theme) {
   }
 
   return LinearGradient(
-    begin: Alignment.bottomCenter,
-    end: Alignment.topCenter,
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
     colors: [
       Colors.transparent,
-      theme.colorScheme.primary.withOpacity(0.15),
+      theme.colorScheme.primary.withOpacity(0.01),
+      theme.colorScheme.primary.withOpacity(0.02),
+      theme.colorScheme.primary.withOpacity(0.03),
+      theme.colorScheme.primary.withOpacity(0.04),
+      theme.colorScheme.primary.withOpacity(0.05),
+      theme.colorScheme.primary.withOpacity(0.03),
+      theme.colorScheme.primary.withOpacity(0.01),
       Colors.transparent,
     ],
+  );
+}
+
+EdgeInsetsGeometry get appBarActionSpacing => Platform.isMacOS
+    ? const EdgeInsets.only(right: 5, left: 40)
+    : const EdgeInsets.only(right: 20, left: 40);
+
+class CommonSwitch extends StatelessWidget {
+  const CommonSwitch({super.key, required this.value, this.onChanged});
+
+  final bool value;
+  final void Function(bool)? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return yaruStyled
+        ? YaruSwitch(
+            value: value,
+            onChanged: onChanged,
+          )
+        : appleStyled
+            ? CupertinoSwitch(value: value, onChanged: onChanged)
+            : Switch(value: value, onChanged: onChanged);
+  }
+}
+
+class ImportantButton extends StatelessWidget {
+  const ImportantButton({
+    super.key,
+    required this.onPressed,
+    required this.child,
+  });
+
+  final void Function()? onPressed;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return yaruStyled
+        ? ElevatedButton(
+            onPressed: onPressed,
+            child: child,
+          )
+        : FilledButton(onPressed: onPressed, child: child);
+  }
+}
+
+Future<Object?> showStyledPopover({
+  required BuildContext context,
+  required Widget content,
+  PopoverDirection direction = PopoverDirection.bottom,
+  double? height,
+  double? width,
+}) {
+  final theme = Theme.of(context);
+  final light = theme.brightness == Brightness.light;
+  return showPopover(
+    context: context,
+    // onPop: () => print('Popover was popped!'),
+    direction: direction,
+    shadow: [
+      BoxShadow(
+        color: Colors.black.withOpacity(0.2),
+        offset: const Offset(0, 0),
+        spreadRadius: 2,
+        blurRadius: 4,
+      ),
+    ],
+    backgroundColor:
+        light ? Colors.white : theme.colorScheme.surface.scale(lightness: 0.05),
+    barrierColor: Colors.transparent,
+    width: width ?? 250,
+    height: height,
+    arrowHeight: 15,
+    arrowWidth: 30,
+    bodyBuilder: (context) {
+      return content;
+    },
+    transitionDuration: Duration.zero,
   );
 }

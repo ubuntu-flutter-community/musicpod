@@ -39,26 +39,13 @@ class PodcastPage extends StatelessWidget {
           fit: BoxFit.fitHeight,
           filterQuality: FilterQuality.medium,
           fallBackIcon: Icon(
-            Iconz().rss,
+            Iconz().podcast,
           ),
           errorIcon: Icon(
-            Iconz().rss,
+            Iconz().podcast,
           ),
         ),
       ),
-    );
-  }
-
-  static Widget createTitle({
-    required BuildContext context,
-    required String title,
-    required update,
-  }) {
-    return Badge(
-      alignment: Alignment.bottomRight,
-      isLabelVisible: update,
-      label: Text(context.l10n.newEpisode),
-      child: Text(title),
     );
   }
 
@@ -111,12 +98,18 @@ class PodcastPage extends StatelessWidget {
       title: Text(title),
       controlPanelTitle: Text(title),
       controlPanelButton: IconButton(
-        icon: Icon(
-          Iconz().rss,
-          color: subscribed
-              ? theme.colorScheme.primary
-              : theme.colorScheme.onSurface,
-        ),
+        tooltip: subscribed
+            ? context.l10n.removeFromCollection
+            : context.l10n.addToCollection,
+        icon: subscribed
+            ? Icon(
+                Iconz().removeFromLibrary,
+                color: theme.colorScheme.primary,
+              )
+            : Icon(
+                Iconz().addToLibrary,
+                color: theme.colorScheme.onSurface,
+              ),
         onPressed: () {
           if (subscribed) {
             removePodcast(pageId);
@@ -124,6 +117,33 @@ class PodcastPage extends StatelessWidget {
             addPodcast(pageId, audios!);
           }
         },
+      ),
+    );
+  }
+}
+
+class PodcastPageTitle extends StatelessWidget {
+  const PodcastPageTitle({
+    super.key,
+    required this.feedUrl,
+    required this.title,
+  });
+
+  final String feedUrl;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    context.select((LibraryModel m) => m.podcastUpdatesLength);
+    final visible =
+        context.read<LibraryModel>().podcastUpdateAvailable(feedUrl);
+    return Badge(
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      isLabelVisible: visible,
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: EdgeInsets.only(right: visible ? 10 : 0),
+        child: Text(title),
       ),
     );
   }

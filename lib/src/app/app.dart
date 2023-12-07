@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
+import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -15,9 +15,8 @@ import '../../patch_notes.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
 import '../../radio.dart';
-import '../common/colors.dart';
+import '../../theme.dart';
 import '../external_path/external_path_service.dart';
-import '../media_control/media_control_service.dart';
 import 'connectivity_notifier.dart';
 import 'master_detail_page.dart';
 import 'master_items.dart';
@@ -36,13 +35,14 @@ class App extends StatefulWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => PlayerModel(
-            videoController: getService<VideoController>(),
-            mediaControlService: getService<MediaControlService>(),
-            libraryService: getService<LibraryService>(),
+            service: getService<PlayerService>(),
           ),
         ),
         ChangeNotifierProvider(
-          create: (_) => LocalAudioModel(getService<LocalAudioService>()),
+          create: (_) => LocalAudioModel(
+            localAudioService: getService<LocalAudioService>(),
+            libraryService: getService<LibraryService>(),
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => LibraryModel(getService<LibraryService>()),
@@ -51,7 +51,6 @@ class App extends StatefulWidget {
           create: (_) => PodcastModel(
             getService<PodcastService>(),
             getService<LibraryService>(),
-            getService<Connectivity>(),
           ),
         ),
         ChangeNotifierProvider(
@@ -68,12 +67,14 @@ class App extends StatefulWidget {
   State<App> createState() => _AppState();
 }
 
-class _AppState extends State<App> {
+class _AppState extends State<App> with WidgetsBindingObserver {
   String? _countryCode;
 
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
 
     _countryCode = WidgetsBinding.instance.platformDispatcher.locale.countryCode
         ?.toLowerCase();
@@ -83,23 +84,11 @@ class _AppState extends State<App> {
     final connectivityNotifier = context.read<ConnectivityNotifier>();
 
     final extPathService = getService<ExternalPathService>();
-    //  final gtkNotifier = getService<GtkApplicationNotifier>();
-    // gtkNotifier.addCommandLineListener(
-    //   (args) => _playPath(
-    //     play: playerModel.play,
-    //     path: gtkNotifier.commandLine?.firstOrNull,
-    //   ),
-    // );
 
     if (!Platform.isAndroid && !Platform.isIOS) {
       YaruWindow.of(context).onClose(
         () async {
-          await playerModel.dispose().then((_) async {
-            await libraryModel.dispose().then((_) async {
-              await resetAllServices();
-            });
-          });
-
+          await resetAllServices();
           return true;
         },
       );
@@ -125,9 +114,21 @@ class _AppState extends State<App> {
   }
 
   @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.paused) {
+      await context.read<LibraryModel>().safeStates();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final width = MediaQuery.of(context).size.width;
     final playerToTheRight = MediaQuery.of(context).size.width > 1700;
 
     // Connectivity
@@ -138,8 +139,6 @@ class _AppState extends State<App> {
 
     // Podcasts
     final podcastModel = context.read<PodcastModel>();
-    final checkingForPodcastUpdates =
-        context.select((PodcastModel m) => m.checkingForUpdates);
 
     // Radio
     final radioModel = context.read<RadioModel>();
@@ -182,19 +181,12 @@ class _AppState extends State<App> {
     final showPinnedAlbums =
         context.select((LibraryModel m) => m.showPinnedAlbums);
     final audioPageType = context.select((LibraryModel m) => m.audioPageType);
-    final ready = context.select((LibraryModel m) => m.ready);
+
     context.select((LibraryModel m) => m.podcasts.length);
     context.select((LibraryModel m) => m.pinnedAlbums.length);
     context.select((LibraryModel m) => m.starredStations.length);
     context.select((LibraryModel m) => m.playlists.length);
     context.select((LibraryModel m) => m.playlists.keys);
-    context.select((LibraryModel m) => m.podcastUpdates.length);
-
-    if (!ready) {
-      return SplashScreen(
-        color: playerBg,
-      );
-    }
 
     void onTextTap({
       required String text,
@@ -209,12 +201,15 @@ class _AppState extends State<App> {
           break;
         case AudioType.radio:
           libraryModel.setIndex(1);
-          radioModel.setSearchActive(true);
-          radioModel.setSearchQuery(text);
-          radioModel.search(name: text);
+          libraryModel.setRadioIndex(1);
+          // radioModel.setSearchActive(true);
+          // radioModel.setSearchQuery(text);
+          radioModel.search(tag: text);
+          radioModel.setTag(Tag(name: text, stationCount: 1));
           break;
         case AudioType.podcast:
           libraryModel.setIndex(2);
+          libraryModel.setPodcastIndex(1);
           podcastModel.setSearchActive(true);
           podcastModel.setSearchQuery(text);
           podcastModel.search(searchQuery: text);
@@ -223,9 +218,6 @@ class _AppState extends State<App> {
     }
 
     final masterItems = createMasterItems(
-      showFilter: (libraryModel.totalListAmount > 7 ||
-              libraryModel.audioPageType != null) &&
-          width > 600.0,
       localAudioIndex: localAudioIndex,
       setLocalAudioindex: libraryModel.setLocalAudioindex,
       audioType: audioType,
@@ -253,32 +245,10 @@ class _AppState extends State<App> {
       unStarStation: libraryModel.unStarStation,
       play: play,
       countryCode: _countryCode,
-      podcastUpdateAvailable: libraryModel.podcastUpdateAvailable,
-      checkingForPodcastUpdates: checkingForPodcastUpdates,
     );
 
     final yaruMasterDetailPage = MasterDetailPage(
       setIndex: libraryModel.setIndex,
-      onDirectorySelected: (directoryPath) async {
-        localAudioModel.setDirectory(directoryPath).then(
-              (value) async => await localAudioModel.init(
-                forceInit: true,
-                onFail: (failedImports) {
-                  if (libraryModel.neverShowFailedImports) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      duration: const Duration(seconds: 10),
-                      content: FailedImportsContent(
-                        failedImports: failedImports,
-                        onNeverShowFailedImports:
-                            libraryModel.setNeverShowLocalImports,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            );
-      },
       totalListAmount: libraryModel.totalListAmount,
       index: index,
       masterItems: masterItems,

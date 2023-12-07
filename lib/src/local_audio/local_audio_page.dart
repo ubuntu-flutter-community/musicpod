@@ -10,6 +10,7 @@ import '../../player.dart';
 import '../../common.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
+import 'cache_dialog.dart';
 
 class LocalAudioPage extends StatefulWidget {
   const LocalAudioPage({
@@ -30,9 +31,10 @@ class _LocalAudioPageState extends State<LocalAudioPage>
   @override
   void initState() {
     super.initState();
+    final model = context.read<LocalAudioModel>();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
-      context.read<LocalAudioModel>().init(
+      model.init(
         onFail: (failedImports) {
           if (context.read<LibraryModel>().neverShowFailedImports) return;
           ScaffoldMessenger.of(context).showSnackBar(
@@ -46,7 +48,20 @@ class _LocalAudioPageState extends State<LocalAudioPage>
             ),
           );
         },
-      );
+      ).then((_) {
+        if (!mounted) return;
+        if ((model.localAudioCache == null &&
+                model.useLocalAudioCache == null) &&
+            model.audios != null &&
+            model.audios!.length > kCreateCacheLimit) {
+          showCacheSuggestion(
+            context: context,
+            onUseLocalAudioCache: model.setUseLocalAudioCache,
+            createCache: model.createLocalAudioCache,
+            localAudioLength: model.audios!.length,
+          );
+        }
+      });
     });
   }
 
@@ -73,6 +88,8 @@ class _LocalAudioPageState extends State<LocalAudioPage>
         context.select((LocalAudioModel m) => m.similarAlbumsSearchResult);
 
     final libraryModel = context.read<LibraryModel>();
+
+    context.select((LocalAudioModel m) => m.useLocalAudioCache);
 
     final isPinnedAlbum = libraryModel.isPinnedAlbum;
     final removePinnedAlbum = libraryModel.removePinnedAlbum;
@@ -185,12 +202,16 @@ class _LocalAudioPageState extends State<LocalAudioPage>
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
           leading: (Navigator.of(context).canPop())
-              ? const NavBackButton()
+              ? NavBackButton(
+                  onPressed: () {
+                    setSearchActive(false);
+                  },
+                )
               : const SizedBox.shrink(),
           titleSpacing: 0,
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 20, left: 20),
+              padding: appBarActionSpacing,
               child: SearchButton(
                 active: searchActive,
                 onPressed: () {
@@ -201,18 +222,21 @@ class _LocalAudioPageState extends State<LocalAudioPage>
             ),
           ],
           title: searchActive
-              ? SearchingBar(
-                  key: ValueKey(searchQuery),
-                  text: searchQuery,
-                  onSubmitted: (value) {
-                    setSearchActive(true);
-                    setSearchQuery(value);
-                    search();
-                  },
-                  onClear: () {
-                    setSearchActive(false);
-                    setSearchQuery('');
-                  },
+              ? SizedBox(
+                  width: kSearchBarWidth,
+                  child: SearchingBar(
+                    key: ValueKey(searchQuery),
+                    text: searchQuery,
+                    onSubmitted: (value) {
+                      setSearchActive(true);
+                      setSearchQuery(value);
+                      search();
+                    },
+                    onClear: () {
+                      setSearchActive(false);
+                      setSearchQuery('');
+                    },
+                  ),
                 )
               : tabBar,
         ),

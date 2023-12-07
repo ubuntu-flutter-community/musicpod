@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:radio_browser_api/radio_browser_api.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 
 import '../../common.dart';
 import '../l10n/l10n.dart';
+import '../theme.dart';
 
 class TagPopup extends StatelessWidget {
   const TagPopup({
@@ -28,57 +29,192 @@ class TagPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final buttonStyle = TextButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6),
-      ),
+    final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(
+      fontWeight: FontWeight.w500,
     );
-    final fallBackTextStyle =
-        theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
-    return YaruPopupMenuButton<Tag?>(
-      icon: const DropDownArrow(),
-      style: buttonStyle,
-      onSelected: onSelected,
-      initialValue: value,
-      child: Text(
-        value?.name ?? context.l10n.all,
-        style: textStyle ?? fallBackTextStyle,
-      ),
-      itemBuilder: (context) {
-        return [
-          for (final t in [
-            ...[null, ...?tags].where((e) => favs?.contains(e?.name) == true),
-            ...[null, ...?tags].where((e) => favs?.contains(e?.name) == false),
-          ])
-            PopupMenuItem(
-              value: t,
-              onTap: t != null ? null : () => onSelected?.call(t),
-              child: StatefulBuilder(
-                builder: (context, stateSetter) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(t?.name ?? context.l10n.all),
-                      IconButton(
-                        onPressed: () {
-                          favs?.contains(t?.name) == false
-                              ? addFav(t)
-                              : removeFav(t);
-                          stateSetter(() {});
-                        },
-                        icon: Icon(
-                          favs?.contains(t?.name) == true
-                              ? Iconz().starFilled
-                              : Iconz().star,
+
+    return SizedBox(
+      width: 120,
+      height: 20,
+      child: LayoutBuilder(
+        builder: (_, constraints) {
+          return Autocomplete<Tag>(
+            key: ValueKey(value?.name),
+            initialValue: TextEditingValue(
+              text: value?.name ?? context.l10n.all,
+            ),
+            displayStringForOption: (option) => option.name,
+            fieldViewBuilder: (
+              context,
+              textEditingController,
+              focusNode,
+              onFieldSubmitted,
+            ) {
+              const outlineInputBorder = OutlineInputBorder(
+                borderSide: BorderSide.none,
+              );
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: yaruStyled ? 3 : 0,
+                ),
+                child: Center(
+                  heightFactor: 20,
+                  child: TextFormField(
+                    maxLines: 1,
+                    cursorHeight: 20,
+                    onTap: () {
+                      textEditingController.selection = TextSelection(
+                        baseOffset: 0,
+                        extentOffset: textEditingController.value.text.length,
+                      );
+                    },
+                    style: fallBackTextStyle,
+                    decoration: const InputDecoration(
+                      constraints: BoxConstraints(maxHeight: 20),
+                      contentPadding: EdgeInsets.zero,
+                      filled: false,
+                      border: outlineInputBorder,
+                      errorBorder: outlineInputBorder,
+                      enabledBorder: outlineInputBorder,
+                      focusedBorder: outlineInputBorder,
+                      disabledBorder: outlineInputBorder,
+                      focusedErrorBorder: outlineInputBorder,
+                    ),
+                    controller: textEditingController,
+                    focusNode: focusNode,
+                    onFieldSubmitted: (String value) {
+                      onFieldSubmitted();
+                    },
+                  ),
+                ),
+              );
+            },
+            optionsViewBuilder: (context, onSelected, options) {
+              return Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: SizedBox(
+                    width: constraints.maxWidth + 30,
+                    height:
+                        (options.length * 50) > 400 ? 400 : options.length * 50,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: Material(
+                        color: theme.brightness == Brightness.light
+                            ? theme.colorScheme.surface
+                            : theme.colorScheme.surfaceVariant,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                          side: BorderSide(
+                            color: theme.dividerColor,
+                            width: 1,
+                          ),
+                        ),
+                        elevation: 1,
+                        child: ListView.builder(
+                          itemCount: options.length,
+                          itemBuilder: (context, index) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                final bool highlight =
+                                    AutocompleteHighlightedOption.of(
+                                          context,
+                                        ) ==
+                                        index;
+                                if (highlight) {
+                                  SchedulerBinding.instance
+                                      .addPostFrameCallback(
+                                          (Duration timeStamp) {
+                                    Scrollable.ensureVisible(
+                                      context,
+                                      alignment: 0.5,
+                                    );
+                                  });
+                                }
+                                final t = options.elementAt(index);
+                                return _TagTile(
+                                  onSelected: (v) => onSelected(v),
+                                  fallBackTextStyle: fallBackTextStyle,
+                                  highlight: highlight,
+                                  theme: theme,
+                                  t: t,
+                                  favs: favs,
+                                  addFav: addFav,
+                                  removeFav: removeFav,
+                                );
+                              },
+                            );
+                          },
                         ),
                       ),
-                    ],
-                  );
-                },
-              ),
-            ),
-        ];
-      },
+                    ),
+                  ),
+                ),
+              );
+            },
+            optionsBuilder: (textEditingValue) {
+              if (textEditingValue.text.isEmpty) {
+                return tags ?? [];
+              }
+              return tags?.where(
+                    (e) => e.name
+                        .toLowerCase()
+                        .contains(textEditingValue.text.toLowerCase()),
+                  ) ??
+                  [];
+            },
+            onSelected: (option) => onSelected?.call(option),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _TagTile extends StatelessWidget {
+  const _TagTile({
+    required this.fallBackTextStyle,
+    required this.highlight,
+    required this.theme,
+    required this.t,
+    required this.favs,
+    required this.addFav,
+    required this.removeFav,
+    required this.onSelected,
+  });
+
+  final TextStyle? fallBackTextStyle;
+  final bool highlight;
+  final ThemeData theme;
+  final Tag t;
+  final Set<String>? favs;
+  final void Function(Tag? tag) addFav;
+  final void Function(Tag? tag) removeFav;
+  final void Function(Tag tag) onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: const EdgeInsets.only(
+        left: 10,
+        right: 5,
+      ),
+      titleTextStyle: fallBackTextStyle?.copyWith(
+        fontWeight: FontWeight.normal,
+      ),
+      hoverColor: highlight ? theme.focusColor : null,
+      tileColor: highlight ? theme.focusColor : null,
+      onTap: () => onSelected(t),
+      title: Text(t.name),
+      trailing: IconButton(
+        onPressed: () {
+          favs?.contains(t.name) == false ? addFav(t) : removeFav(t);
+        },
+        icon: Icon(
+          favs?.contains(t.name) == true ? Iconz().starFilled : Iconz().star,
+        ),
+      ),
     );
   }
 }

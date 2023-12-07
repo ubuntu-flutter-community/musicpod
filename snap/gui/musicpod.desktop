@@ -6,4 +6,5 @@ Keywords=Music;Podcast;Radio;
 Exec=musicpod %U
 Icon=music-app
 Terminal=false
-Categories=Music and Audio; 
+Categories=AudioVideo;Audio;
+StartupWMClass=musicpod

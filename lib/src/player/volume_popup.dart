@@ -1,65 +1,80 @@
 import 'package:flutter/material.dart';
-import '../common/icons.dart';
+import 'package:popover/popover.dart';
+import 'package:provider/provider.dart';
 
+import '../../common.dart';
 import '../l10n/l10n.dart';
+import 'player_model.dart';
 
-class VolumeSliderPopup extends StatefulWidget {
+class VolumeSliderPopup extends StatelessWidget {
   const VolumeSliderPopup({
     super.key,
-    required this.volume,
-    required this.setVolume,
+    this.color,
+    required this.direction,
   });
 
-  final double volume;
-  final Future<void> Function(double value) setVolume;
+  final Color? color;
+  final PopoverDirection direction;
 
-  @override
-  State<VolumeSliderPopup> createState() => _VolumeSliderPopupState();
-}
-
-class _VolumeSliderPopupState extends State<VolumeSliderPopup> {
   @override
   Widget build(BuildContext context) {
+    final playerModel = context.read<PlayerModel>();
+    final volume = context.select((PlayerModel m) => m.volume);
+    final setVolume = playerModel.setVolume;
     IconData iconData;
-    if (widget.volume <= 20) {
-      iconData = Iconz().speakerLowFilled;
-    } else if (widget.volume <= 50 && widget.volume > 20) {
-      iconData = Iconz().speakerMediumFilled;
-    } else if (widget.volume <= 0) {
+    if (volume <= 0) {
       iconData = Iconz().speakerMutedFilled;
+    } else if (volume <= 20) {
+      iconData = Iconz().speakerLowFilled;
+    } else if (volume <= 50 && volume > 20) {
+      iconData = Iconz().speakerMediumFilled;
     } else {
       iconData = Iconz().speakerHighFilled;
     }
 
-    return StatefulBuilder(
-      builder: (context, stateSetter) {
-        return PopupMenuButton<double>(
-          padding: EdgeInsets.zero,
-          tooltip: context.l10n.volume,
-          icon: Icon(iconData),
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem(
-                child: StatefulBuilder(
-                  builder: (context, stateSetter) {
-                    return Slider(
-                      value: widget.volume,
-                      onChanged: (value) async {
-                        await widget.setVolume(value);
-                        stateSetter(
-                          () {},
-                        );
-                      },
-                      max: 100,
-                      min: 0,
-                    );
-                  },
-                ),
-              ),
-            ];
+    return IconButton(
+      padding: EdgeInsets.zero,
+      tooltip: context.l10n.volume,
+      icon: Icon(
+        iconData,
+        color: color,
+      ),
+      onPressed: () => showStyledPopover(
+        context: context,
+        content: ChangeNotifierProvider.value(
+          value: playerModel,
+          builder: (context, _) {
+            return _Slider(
+              setVolume: setVolume,
+            );
           },
-        );
-      },
+        ),
+        height: 50,
+        direction: direction,
+      ),
+    );
+  }
+}
+
+class _Slider extends StatelessWidget {
+  const _Slider({
+    required this.setVolume,
+  });
+
+  final Future<void> Function(double value) setVolume;
+
+  @override
+  Widget build(BuildContext context) {
+    final volume = context.select((PlayerModel m) => m.volume);
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: Slider(
+        value: volume,
+        onChanged: setVolume,
+        max: 100,
+        min: 0,
+      ),
     );
   }
 }

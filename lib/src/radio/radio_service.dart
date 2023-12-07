@@ -1,20 +1,18 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:basic_utils/basic_utils.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
 import '../../constants.dart';
 
 class RadioService {
   RadioBrowserApi? radioBrowserApi;
-  final Connectivity connectivity;
 
-  RadioService(this.connectivity);
+  RadioService();
 
-  Future<bool> init() async {
-    final result = await connectivity.checkConnectivity();
-    if (result != ConnectivityResult.none) {
+  Future<bool> init(bool isOnline) async {
+    if (isOnline) {
       if (radioBrowserApi == null) {
         final hosts = await _findHost();
 
@@ -36,18 +34,22 @@ class RadioService {
 
   Future<List<String>> _findHost() async {
     final hosts = <String>[];
-    final records = await DnsUtils.lookupRecord(
-      kRadioBrowserBaseUrl,
-      RRecordType.A,
-    );
+    try {
+      final records = await DnsUtils.lookupRecord(
+        kRadioBrowserBaseUrl,
+        RRecordType.A,
+      );
 
-    for (RRecord record in records ?? <RRecord>[]) {
-      final reverse = await DnsUtils.reverseDns(record.data);
-      for (RRecord r in reverse ?? <RRecord>[]) {
-        hosts.add(r.data.replaceAll('info.', 'info'));
+      for (RRecord record in records ?? <RRecord>[]) {
+        final reverse = await DnsUtils.reverseDns(record.data);
+        for (RRecord r in reverse ?? <RRecord>[]) {
+          hosts.add(r.data.replaceAll('info.', 'info'));
+        }
       }
+      return hosts;
+    } on SocketException {
+      return [];
     }
-    return hosts;
   }
 
   Future<void> dispose() async {
@@ -134,7 +136,11 @@ class RadioService {
         setStations(response.items);
         setStatusCode(response.statusCode.toString());
       }
-    } on FormatException catch (_) {}
+    } on Exception catch (e) {
+      if (e is SocketException) {
+        setStations([]);
+      }
+    }
   }
 
   List<Tag>? _tags;
@@ -153,13 +159,17 @@ class RadioService {
       final response = await radioBrowserApi!.getTags(
         parameters: const InputParameters(
           hidebroken: true,
-          limit: 100,
+          limit: 300,
           order: 'stationcount',
           reverse: true,
         ),
       );
       _tags = response.items;
-    } on FormatException catch (_) {}
+    } on Exception catch (e) {
+      if (e is SocketException) {
+        _tags = [];
+      }
+    }
   }
 
   String? _searchQuery;

@@ -96,25 +96,40 @@ Audio createLocalAudio(String path, Metadata metadata, [String? fileName]) {
   );
 }
 
+String? _workingDir;
 Future<String> getWorkingDir() async {
+  if (_workingDir != null) return Future.value(_workingDir!);
   if (Platform.isLinux) {
     final workingDir = p.join(configHome.path, kAppName);
     if (!Directory(workingDir).existsSync()) {
       await Directory(workingDir).create();
     }
+    _workingDir = workingDir;
     return workingDir;
+  } else if (Platform.isMacOS || Platform.isIOS) {
+    final libDirPath = (await getLibraryDirectory()).path;
+    final workingDirPath = p.join(libDirPath, kAppName);
+    if (!Directory(workingDirPath).existsSync()) {
+      await Directory(workingDirPath).create();
+    }
+    _workingDir = workingDirPath;
+    return workingDirPath;
   } else {
-    Directory tempDir = await getTemporaryDirectory();
-    return tempDir.path;
+    final docDirPath = (await getApplicationSupportDirectory()).path;
+    final workingDirPath = p.join(docDirPath, kAppName);
+    if (!Directory(workingDirPath).existsSync()) {
+      Directory(workingDirPath).createSync();
+    }
+    _workingDir = workingDirPath;
+    return workingDirPath;
   }
 }
 
 Future<String?> getMusicDir() async {
   if (Platform.isLinux) {
     return getUserDirectory('MUSIC')?.path;
-  } else {
-    return (await getApplicationDocumentsDirectory()).path;
   }
+  return null;
 }
 
 Future<void> writeSetting(
@@ -133,7 +148,7 @@ Future<void> writeSetting(
 
   final workingDir = await getWorkingDir();
 
-  final file = File('$workingDir/$filename');
+  final file = File(p.join(workingDir, filename));
 
   if (!file.existsSync()) {
     file.create();
@@ -156,7 +171,7 @@ Future<Map<String, String>> getSettings([
 ]) async {
   final workingDir = await getWorkingDir();
 
-  final file = File('$workingDir/$filename');
+  final file = File(p.join(workingDir, filename));
 
   if (file.existsSync()) {
     final jsonStr = await file.readAsString();
@@ -192,13 +207,63 @@ Future<Set<String>> readStringSet({
   required String filename,
 }) async {
   final workingDir = await getWorkingDir();
-  final file = File('$workingDir/$filename');
+  final file = File(p.join(workingDir, filename));
 
   if (!file.existsSync()) return Future.value(<String>{});
 
   final content = await file.readAsLines();
 
   return Set.from(content);
+}
+
+Future<void> writeAudioMap(Map<String, Set<Audio>> map, String fileName) async {
+  final dynamicMap = map.map(
+    (key, value) => MapEntry<String, List<dynamic>>(
+      key,
+      value.map((audio) => audio.toMap()).toList(),
+    ),
+  );
+
+  final jsonStr = jsonEncode(dynamicMap);
+
+  final workingDir = await getWorkingDir();
+
+  final file = File(p.join(workingDir, fileName));
+
+  if (!file.existsSync()) {
+    file.createSync();
+  }
+
+  await file.writeAsString(jsonStr);
+}
+
+Future<Map<String, Set<Audio>>> readAudioMap(String fileName) async {
+  final workingDir = await getWorkingDir();
+
+  try {
+    final file = File(p.join(workingDir, fileName));
+
+    if (file.existsSync()) {
+      final jsonStr = await file.readAsString();
+
+      final map = jsonDecode(jsonStr) as Map<String, dynamic>;
+
+      final m = map.map(
+        (key, value) => MapEntry<String, Set<Audio>>(
+          key,
+          Set.from(
+            (value as List<dynamic>).map((e) => Audio.fromMap(e)),
+          ),
+        ),
+      );
+
+      return m;
+    } else {
+      return <String, Set<Audio>>{};
+    }
+  } on Exception catch (_) {
+    return <String, Set<Audio>>{};
+  }
 }
 
 Duration? parseDuration(String? durationAsString) {
@@ -220,7 +285,7 @@ Duration? parseDuration(String? durationAsString) {
 Future<Uri?> createUriFromAudio(Audio audio) async {
   if (audio.imageUrl != null || audio.albumArtUrl != null) {
     return Uri.parse(
-      audio.albumArtUrl ?? audio.imageUrl!,
+      audio.imageUrl ?? audio.albumArtUrl!,
     );
   } else if (audio.pictureData != null) {
     Uint8List imageInUnit8List = audio.pictureData!;

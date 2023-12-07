@@ -5,6 +5,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../globals.dart';
 import '../l10n/l10n.dart';
 
 class AudioPage extends StatelessWidget {
@@ -61,8 +62,6 @@ class AudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
 
@@ -96,11 +95,10 @@ class AudioPage extends StatelessWidget {
     return YaruDetailPage(
       key: ValueKey(pageId),
       appBar: HeaderBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
-        title: title ?? Text(headerTitle ?? pageId),
+        title: isMobile ? null : (title ?? Text(headerTitle ?? pageId)),
         leading: Navigator.canPop(context)
             ? const NavBackButton()
             : const SizedBox.shrink(),

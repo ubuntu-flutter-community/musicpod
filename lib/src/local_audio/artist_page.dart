@@ -34,6 +34,7 @@ class ArtistPage extends StatelessWidget {
       audioPageType: AudioPageType.artist,
       headerLabel: context.l10n.artist,
       headerTitle: artistAudios?.firstOrNull?.artist,
+      showAudioPageHeader: images?.isNotEmpty == true,
       image: ArtistImage(images: images),
       headerSubtile: artistAudios?.firstOrNull?.genre,
       audios: artistAudios,

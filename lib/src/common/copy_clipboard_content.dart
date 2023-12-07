@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'colors.dart';
-import 'stream_provider_share_button.dart';
 
+import '../../theme.dart';
 import '../l10n/l10n.dart';
+import 'stream_provider_share_button.dart';
 
 class CopyClipboardContent extends StatelessWidget {
   const CopyClipboardContent({

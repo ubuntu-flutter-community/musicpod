@@ -5,34 +5,54 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../../globals.dart';
 
 void onTitleTap({
   required Audio? audio,
-  required String? title,
+  required String? text,
   required BuildContext context,
-  required void Function(AudioType audioType, String text)? onTextTap,
+  required void Function({required String text, required AudioType audioType})
+      onTextTap,
 }) {
-  if (audio?.audioType == null ||
-      audio?.title == null ||
-      audio?.audioType == AudioType.podcast) {
+  if (audio?.audioType == null || audio?.title == null) {
     return;
   }
 
-  if (title?.isNotEmpty == true) {
-    Clipboard.setData(ClipboardData(text: title!));
+  if (text?.isNotEmpty == true) {
+    Clipboard.setData(ClipboardData(text: text!));
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         width: snackBarWidth,
         duration: kSnackBarDuration,
-        content: CopyClipboardContent(text: title),
+        content: CopyClipboardContent(text: text),
+      ),
+    );
+  } else if ((audio?.audioType == AudioType.radio ||
+          audio?.audioType == AudioType.podcast) &&
+      audio?.url?.isNotEmpty == true) {
+    Clipboard.setData(ClipboardData(text: audio!.url!));
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        width: snackBarWidth,
+        duration: kSnackBarDuration,
+        content: CopyClipboardContent(
+          text: audio.url!,
+          onSearch: () {
+            if (audio.url != null) {
+              launchUrl(Uri.parse(audio.url ?? ''));
+            }
+          },
+        ),
       ),
     );
   } else {
-    onTextTap?.call(
-      audio!.audioType!,
-      audio.title!,
+    onTextTap.call(
+      audioType: audio!.audioType!,
+      text: audio.title!,
     );
+    navigatorKey.currentState?.maybePop();
   }
 }
 
@@ -40,7 +60,8 @@ void onArtistTap({
   required Audio? audio,
   required String? artist,
   required BuildContext context,
-  required void Function(AudioType audioType, String text)? onTextTap,
+  required void Function({required String text, required AudioType audioType})
+      onTextTap,
 }) {
   if (audio?.audioType == null || audio?.artist == null) {
     return;
@@ -63,11 +84,12 @@ void onArtistTap({
       ),
     );
   } else {
-    onTextTap?.call(
-      audio.audioType!,
-      audio.audioType == AudioType.radio && audio.title != null
+    onTextTap.call(
+      audioType: audio.audioType!,
+      text: audio.audioType == AudioType.radio && audio.title != null
           ? audio.title!
           : audio.artist!,
     );
+    navigatorKey.currentState?.maybePop();
   }
 }

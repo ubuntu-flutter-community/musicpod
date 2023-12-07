@@ -11,9 +11,11 @@ import '../../player.dart';
 import '../../utils.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
+import 'radio_control_panel.dart';
+import 'radio_lib_page.dart';
 import 'radio_model.dart';
-import 'station_page.dart';
-import 'tag_popup.dart';
+import 'radio_page_title.dart';
+import 'station_card.dart';
 
 class RadioPage extends StatefulWidget {
   const RadioPage({
@@ -35,11 +37,16 @@ class _RadioPageState extends State<RadioPage> {
   @override
   void initState() {
     super.initState();
-    readSetting(kLastFav).then(
-      (value) => context
-          .read<RadioModel>()
-          .init(widget.countryCode, value == null ? null : value as String),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      readSetting(kLastFav).then(
+        (value) => context.read<RadioModel>().init(
+              isOnline: widget.isOnline,
+              countryCode: widget.countryCode,
+              lastFav: value == null ? null : value as String,
+            ),
+      );
+    });
   }
 
   @override
@@ -74,123 +81,93 @@ class _RadioPageState extends State<RadioPage> {
     context.select((LibraryModel m) => m.favTagsLength);
     final setLastFav = context.read<LibraryModel>().setLastFav;
 
+    final radioIndex = context.select((LibraryModel m) => m.radioindex);
+    final setRadioIndex = context.read<LibraryModel>().setRadioIndex;
+
     final searchActive = context.select((RadioModel m) => m.searchActive);
     final setSearchActive = model.setSearchActive;
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
 
-    final controlPanel = SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          LimitPopup(
-            value: limit,
-            onSelected: (value) {
-              setLimit(value);
-              if (searchQuery?.isEmpty == true) {
-                if (tag == null) {
-                  loadStationsByCountry();
-                } else {
-                  loadStationsByTag();
-                }
-              } else {
-                search(name: searchQuery);
-              }
-            },
-          ),
-          CountryPopup(
-            value: country,
-            onSelected: (country) {
-              setCountry(country);
-              loadStationsByCountry();
-              setTag(null);
-            },
-            countries: sortedCountries,
-          ),
-          TagPopup(
-            value: tag,
-            addFav: (tag) {
-              if (tag?.name == null) return;
-              addFavTag(tag!.name);
-            },
-            removeFav: (tag) {
-              if (tag?.name == null) return;
-              removeFavTag(tag!.name);
-            },
-            favs: favTags,
-            onSelected: (tag) {
-              setTag(tag);
-              if (tag != null) {
-                loadStationsByTag();
-              } else {
-                setSearchQuery(null);
-                search();
-              }
-              if (tag?.name.isNotEmpty == true) {
-                setLastFav(tag!.name);
-              }
-            },
-            tags: tags,
-          ),
-        ],
-      ),
+    final controlPanel = RadioControlPanel(
+      limit: limit,
+      setLimit: setLimit,
+      searchQuery: searchQuery,
+      tag: tag,
+      loadStationsByCountry: loadStationsByCountry,
+      loadStationsByTag: loadStationsByTag,
+      search: search,
+      country: country,
+      setCountry: setCountry,
+      setTag: setTag,
+      sortedCountries: sortedCountries,
+      addFavTag: addFavTag,
+      removeFavTag: removeFavTag,
+      favTags: favTags,
+      setSearchQuery: setSearchQuery,
+      setLastFav: setLastFav,
+      tags: tags,
     );
 
     if (!widget.isOnline) {
       return const OfflinePage();
     } else {
-      Widget body;
+      Widget discoverGrid;
       if (connected == false) {
-        body = _ReconnectPage(
+        discoverGrid = _ReconnectPage(
           text: 'Not connected to any radiobrowser server.',
           init: () => readSetting(kLastFav).then(
             (value) => context.read<RadioModel>().init(
-                  widget.countryCode,
-                  value == null ? null : value as String,
+                  isOnline: widget.isOnline,
+                  countryCode: widget.countryCode,
+                  lastFav: value == null ? null : value as String,
                 ),
           ),
         );
       } else {
         if (stations == null) {
-          body = GridView(
+          discoverGrid = GridView(
             gridDelegate: imageGridDelegate,
             padding: gridPadding,
             children: List.generate(limit, (index) => Audio())
-                .map((e) => const AudioCard())
+                .map(
+                  (e) => const AudioCard(
+                    bottom: AudioCardBottom(),
+                  ),
+                )
                 .toList(),
           );
         } else {
           if (stationsCount == 0) {
-            if (statusCode != '200') {
-              body = _ReconnectPage(
+            if (statusCode != null && statusCode != '200') {
+              discoverGrid = _ReconnectPage(
                 text: statusCode,
                 init: () => readSetting(kLastFav).then(
                   (value) => context.read<RadioModel>().init(
-                        widget.countryCode,
-                        value == null ? null : value as String,
+                        isOnline: widget.isOnline,
+                        countryCode: widget.countryCode,
+                        lastFav: value == null ? null : value as String,
                       ),
                 ),
               );
             } else {
-              body = NoSearchResultPage(
+              discoverGrid = NoSearchResultPage(
                 message: Text(context.l10n.noStationFound),
               );
             }
           } else {
-            body = GridView.builder(
+            discoverGrid = GridView.builder(
               padding: gridPadding,
               gridDelegate: imageGridDelegate,
               itemCount: stationsCount,
               itemBuilder: (context, index) {
                 final station = stations.elementAt(index);
                 final onTextTap = widget.onTextTap;
-                return _StationCard(
+                return StationCard(
                   station: station,
                   play: play,
                   isStarredStation: isStarredStation,
-                  showWindowControls: showWindowControls,
                   onTextTap: onTextTap,
                   unstarStation: unstarStation,
                   starStation: starStation,
@@ -201,50 +178,66 @@ class _RadioPageState extends State<RadioPage> {
         }
       }
 
-      return YaruDetailPage(
-        appBar: HeaderBar(
-          style: showWindowControls
-              ? YaruTitleBarStyle.normal
-              : YaruTitleBarStyle.undecorated,
-          titleSpacing: 0,
-          leading: Navigator.of(context).canPop()
-              ? const NavBackButton()
-              : const SizedBox.shrink(),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20, left: 20),
-              child: SearchButton(
-                active: searchActive,
-                onPressed: () => setSearchActive(!searchActive),
+      final discoverBody = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          controlPanel,
+          const SizedBox(
+            height: 15,
+          ),
+          Expanded(child: discoverGrid),
+        ],
+      );
+
+      final radioLibPage = RadioLibPage(
+        isOnline: widget.isOnline,
+        play: play,
+        isStarredStation: isStarredStation,
+        unstarStation: unstarStation,
+        starStation: starStation,
+      );
+
+      return DefaultTabController(
+        initialIndex: radioIndex ?? 1,
+        length: 2,
+        child: Scaffold(
+          appBar: HeaderBar(
+            style: showWindowControls
+                ? YaruTitleBarStyle.normal
+                : YaruTitleBarStyle.undecorated,
+            titleSpacing: 0,
+            leading: Navigator.of(context).canPop()
+                ? NavBackButton(
+                    onPressed: () {
+                      setSearchActive(false);
+                    },
+                  )
+                : const SizedBox.shrink(),
+            actions: [
+              Padding(
+                padding: appBarActionSpacing,
+                child: SearchButton(
+                  active: searchActive,
+                  onPressed: () => setSearchActive(!searchActive),
+                ),
               ),
+            ],
+            title: RadioPageTitle(
+              onIndexSelected: setRadioIndex,
+              searchActive: searchActive,
+              setSearchActive: setSearchActive,
+              search: search,
+              setSearchQuery: setSearchQuery,
+              setTag: setTag,
+              searchQuery: searchQuery,
             ),
-          ],
-          title: searchActive
-              ? SearchingBar(
-                  key: ValueKey(searchQuery),
-                  text: searchQuery,
-                  onClear: () {
-                    setTag(null);
-                    setSearchActive(false);
-                    setSearchQuery(null);
-                    search();
-                  },
-                  onSubmitted: (value) {
-                    setSearchQuery(value);
-                    search(name: value);
-                  },
-                )
-              : Text(context.l10n.radio),
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            controlPanel,
-            const SizedBox(
-              height: 15,
-            ),
-            Expanded(child: body),
-          ],
+          ),
+          body: TabBarView(
+            children: [
+              radioLibPage,
+              discoverBody,
+            ],
+          ),
         ),
       );
     }
@@ -276,76 +269,6 @@ class _ReconnectPage extends StatelessWidget {
             icon: Icon(Iconz().refresh),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _StationCard extends StatelessWidget {
-  const _StationCard({
-    required this.station,
-    required this.play,
-    required this.isStarredStation,
-    required this.showWindowControls,
-    required this.onTextTap,
-    required this.unstarStation,
-    required this.starStation,
-  });
-
-  final Audio? station;
-  final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
-  final bool Function(String name) isStarredStation;
-  final bool showWindowControls;
-  final void Function(String text)? onTextTap;
-  final void Function(String name) unstarStation;
-  final void Function(String name, Set<Audio> audios) starStation;
-
-  @override
-  Widget build(BuildContext context) {
-    return AudioCard(
-      bottom: AudioCardBottom(text: station?.title?.replaceAll('_', '') ?? ''),
-      onPlay: () => play(newAudio: station),
-      onTap: station == null ? null : () => onTap(context, station!),
-      image: SizedBox.expand(
-        child: SafeNetworkImage(
-          fallBackIcon: RadioFallBackIcon(
-            station: station,
-          ),
-          errorIcon: RadioFallBackIcon(station: station),
-          url: station?.imageUrl,
-          fit: BoxFit.scaleDown,
-          height: kSmallCardHeight,
-          width: kSmallCardHeight,
-        ),
-      ),
-    );
-  }
-
-  void onTap(BuildContext context, Audio station) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) {
-          final starred = isStarredStation(
-            station.title ?? station.toString(),
-          );
-          return StationPage(
-            onTextTap: (v) {
-              onTextTap?.call(v);
-              Navigator.of(context).maybePop();
-            },
-            station: station,
-            name: station.title ?? station.toString(),
-            unStarStation: (s) => unstarStation(
-              station.title ?? station.toString(),
-            ),
-            starStation: (s) => starStation(
-              station.title ?? station.toString(),
-              {station},
-            ),
-            play: play,
-            isStarred: starred,
-          );
-        },
       ),
     );
   }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../../l10n.dart';
 
 class AudioTile extends StatelessWidget {
   const AudioTile({
@@ -48,15 +48,12 @@ class AudioTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textStyle = TextStyle(
-      color: selected ? theme.colorScheme.onSurface : theme.hintColor,
-      fontWeight: selected ? FontWeight.w500 : FontWeight.normal,
+      color: selected ? theme.colorScheme.primary : theme.colorScheme.onSurface,
+      fontWeight: selected ? FontWeight.bold : FontWeight.normal,
     );
 
     final listTile = ListTile(
-      contentPadding: const EdgeInsets.only(left: 8, right: 4),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(kYaruButtonRadius),
-      ),
+      contentPadding: const EdgeInsets.only(left: 25, right: 25),
       onTap: () {
         if (selected) {
           if (isPlayerPlaying) {
@@ -76,8 +73,8 @@ class AudioTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (showTrack)
-            Expanded(
-              flex: 1,
+            Padding(
+              padding: const EdgeInsets.only(right: 25),
               child: Text(
                 audio.trackNumber != null ? '${audio.trackNumber}' : ' ',
                 style: textStyle,
@@ -88,13 +85,13 @@ class AudioTile extends StatelessWidget {
           Expanded(
             flex: titleFlex,
             child: Text(
-              audio.title ?? 'unknown',
+              audio.title ?? context.l10n.unknown,
               style: textStyle,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          if (audio.artist != null && showArtist)
+          if (showArtist)
             Expanded(
               flex: artistFlex,
               child: TapAbleText(
@@ -104,11 +101,13 @@ class AudioTile extends StatelessWidget {
                           text: audio.artist!,
                           audioType: audio.audioType!,
                         ),
-                text: audio.artist!,
+                text: audio.artist?.isNotEmpty == false
+                    ? context.l10n.unknown
+                    : audio.artist!,
                 selected: selected,
               ),
             ),
-          if (audio.album != null && showAlbum)
+          if (showAlbum)
             Expanded(
               flex: albumFlex,
               child: TapAbleText(
@@ -120,7 +119,9 @@ class AudioTile extends StatelessWidget {
                           text: audio.album!,
                           audioType: audio.audioType!,
                         ),
-                text: audio.album!,
+                text: audio.album?.isNotEmpty == false
+                    ? context.l10n.unknown
+                    : audio.album!,
                 selected: selected,
               ),
             ),

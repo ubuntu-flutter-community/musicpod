@@ -57,3 +57,31 @@ class ConfirmationDialog extends StatelessWidget {
     );
   }
 }
+
+void runOrConfirm({
+  required BuildContext context,
+  required bool noConfirm,
+  required String message,
+  required Function run,
+}) {
+  if (noConfirm) {
+    run();
+  } else {
+    showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return ConfirmationDialog(
+          message: Text(
+            context.l10n.queueConfirmMessage(
+              message,
+            ),
+          ),
+        );
+      },
+    ).then((value) {
+      if (value == true) {
+        run();
+      }
+    });
+  }
+}

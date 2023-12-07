@@ -6,68 +6,43 @@ import 'package:flutter/material.dart';
 import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:mpris_service/mpris_service.dart';
-import 'package:smtc_windows/smtc_windows.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import 'app.dart';
-import 'constants.dart';
 import 'external_path.dart';
+import 'globals.dart';
 import 'library.dart';
 import 'local_audio.dart';
-import 'media_control.dart';
 import 'notifications.dart';
+import 'player.dart';
 import 'podcasts.dart';
 import 'radio.dart';
 
 Future<void> main(List<String> args) async {
-  if (!(Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)) {
+  if (!isMobile) {
     await YaruWindowTitleBar.ensureInitialized();
   }
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
 
-  final libraryService = LibraryService();
-  await libraryService.init();
-
   final player = Player(
     configuration: const PlayerConfiguration(title: 'MusicPod'),
   );
-  registerService<Player>(
-    () => player,
-    dispose: (p) => p.dispose(),
+
+  final controller = VideoController(player);
+
+  final libraryService = LibraryService();
+
+  final playerService = PlayerService(
+    player: player,
+    controller: controller,
+    libraryService: libraryService,
   );
+  await playerService.init();
 
-  registerService<VideoController>(() => VideoController(player));
-
-  NotificationsClient? notificationsClient;
-  SMTCWindows? smtc;
-  MPRIS? mpris;
-  if (Platform.isLinux) {
-    notificationsClient = NotificationsClient();
-
-    mpris = await MPRIS.create(
-      busName: kBusName,
-      identity: kAppName,
-      desktopEntry: kDesktopEntry,
-    );
-  } else if (Platform.isWindows) {
-    smtc = SMTCWindows(
-      config: const SMTCConfig(
-        fastForwardEnabled: false,
-        nextEnabled: true,
-        pauseEnabled: true,
-        playEnabled: true,
-        rewindEnabled: false,
-        prevEnabled: true,
-        stopEnabled: false,
-      ),
-    );
-  }
-  registerService<MediaControlService>(
-    () => MediaControlService(mpris, smtc),
-    dispose: (s) => s.dispose(),
+  registerService<PlayerService>(
+    () => playerService,
   );
 
   registerService<LibraryService>(
@@ -79,7 +54,9 @@ Future<void> main(List<String> args) async {
     dispose: (s) async => await s.dispose(),
   );
 
-  final notificationsService = NotificationsService(notificationsClient);
+  final notificationsService =
+      NotificationsService(Platform.isLinux ? NotificationsClient() : null);
+
   registerService<NotificationsService>(
     () => notificationsService,
     dispose: (s) async => await s.dispose(),
@@ -100,11 +77,9 @@ Future<void> main(List<String> args) async {
     dispose: (s) => s.dispose(),
   );
 
-  registerService<RadioService>(() => RadioService(connectivity));
+  registerService<RadioService>(() => RadioService());
 
   runApp(
-    MusicPod(
-      yaruApp: Platform.isLinux,
-    ),
+    const MusicPod(),
   );
 }

@@ -1,3 +1,4 @@
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 
 import '../../common.dart';
@@ -46,6 +47,7 @@ class AlbumsView extends StatelessWidget {
 
     if (albums!.isEmpty) {
       return NoSearchResultPage(
+        icons: const AnimatedEmoji(AnimatedEmojis.eyes),
         message: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -70,7 +72,7 @@ class AlbumsView extends StatelessWidget {
             ? Center(
                 child: Icon(
                   Iconz().musicNote,
-                  size: 140,
+                  size: 70,
                   color: theme.hintColor,
                 ),
               )
@@ -84,8 +86,11 @@ class AlbumsView extends StatelessWidget {
         return AudioCard(
           bottom: Align(
             alignment: Alignment.bottomCenter,
-            child:
-                AudioCardBottom(text: audio.album == null ? '' : audio.album!),
+            child: AudioCardBottom(
+              text: audio.album?.isNotEmpty == false
+                  ? context.l10n.unknown
+                  : audio.album!,
+            ),
           ),
           image: image,
           onTap: id == null
