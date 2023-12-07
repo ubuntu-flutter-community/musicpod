@@ -11,3 +11,4 @@
 - [Davide Bianco](https://github.com/HrX03)
 - [Phil Clifford](https://github.com/philclifford)
 - [Peter Vančo](petervanco347@gmail.com)
+- [Tiago Lucas Flach](https://github.com/tiagoFlach)
