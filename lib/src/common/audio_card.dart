@@ -18,6 +18,7 @@ class AudioCard extends StatefulWidget {
     this.height,
     this.width,
     this.color,
+    this.elevation = 1,
   });
   final Widget? image;
   final void Function()? onTap;
@@ -26,6 +27,7 @@ class AudioCard extends StatefulWidget {
   final double? height;
   final double? width;
   final Color? color;
+  final double elevation;
 
   @override
   State<AudioCard> createState() => _AudioCardState();
@@ -44,6 +46,7 @@ class _AudioCardState extends State<AudioCard> {
           height: widget.height ?? kSmallCardHeight,
           width: widget.width ?? kSmallCardHeight,
           child: Banner(
+            elevation: widget.elevation,
             color:
                 widget.color ?? (light ? theme.dividerColor : kShimmerBaseDark),
             padding: EdgeInsets.zero,
@@ -103,7 +106,7 @@ class Banner extends StatelessWidget {
     super.key,
     this.onTap,
     this.color,
-    this.elevation,
+    this.elevation = 1,
     this.surfaceTintColor,
     required this.child,
     this.padding = const EdgeInsets.all(kYaruPagePadding),
@@ -120,7 +123,7 @@ class Banner extends StatelessWidget {
 
   final Color? color;
 
-  final double? elevation;
+  final double elevation;
 
   final Color? surfaceTintColor;
 
@@ -133,7 +136,7 @@ class Banner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final light = theme.brightness == Brightness.light;
+    final dark = theme.brightness == Brightness.dark;
     final borderRadius = BorderRadius.circular(kYaruBannerRadius);
 
     return Material(
@@ -151,15 +154,15 @@ class Banner extends StatelessWidget {
           color: color ?? theme.cardColor,
           shadowColor: Colors.black.withOpacity(0.5),
           surfaceTintColor: null,
-          elevation: 1,
+          elevation: elevation,
           shape: RoundedRectangleBorder(
             borderRadius: borderRadius,
-            side: light
-                ? const BorderSide(
+            side: dark
+                ? BorderSide.none
+                : const BorderSide(
                     color: Color.fromARGB(255, 226, 226, 226),
                     width: 0,
-                  )
-                : BorderSide.none,
+                  ),
           ),
           child: Container(
             width: double.infinity,

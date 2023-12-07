@@ -9,6 +9,7 @@ import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../../utils.dart';
+import '../common/loading_grid.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import 'radio_control_panel.dart';
@@ -127,17 +128,7 @@ class _RadioPageState extends State<RadioPage> {
         );
       } else {
         if (stations == null) {
-          discoverGrid = GridView(
-            gridDelegate: imageGridDelegate,
-            padding: gridPadding,
-            children: List.generate(limit, (index) => Audio())
-                .map(
-                  (e) => const AudioCard(
-                    bottom: AudioCardBottom(),
-                  ),
-                )
-                .toList(),
-          );
+          discoverGrid = LoadingGrid(limit: limit);
         } else {
           if (stationsCount == 0) {
             if (statusCode != null && statusCode != '200') {

@@ -32,12 +32,14 @@ class PlayButton extends StatelessWidget {
                 playOrPause();
               }
             },
-      icon: Padding(
-        padding: EdgeInsets.only(left: appleStyled ? 3 : 0),
-        child: Icon(
-          isPlaying ? Iconz().pause : Iconz().play,
-        ),
-      ),
+      icon: isPlaying
+          ? Icon(Iconz().pause)
+          : Padding(
+              padding: EdgeInsets.only(left: appleStyled ? 3 : 0),
+              child: Icon(
+                Iconz().play,
+              ),
+            ),
     );
   }
 }

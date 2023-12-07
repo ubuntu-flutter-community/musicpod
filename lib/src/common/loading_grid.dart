@@ -18,6 +18,8 @@ class LoadingGrid extends StatelessWidget {
       children: List.generate(limit, (index) => Audio())
           .map(
             (e) => const AudioCard(
+              color: Colors.transparent,
+              elevation: 0,
               bottom: AudioCardBottom(),
             ),
           )
