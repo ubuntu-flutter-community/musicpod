@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../../common.dart';
 import '../../data.dart';
 import 'library_service.dart';
 
@@ -87,47 +86,11 @@ class LibraryModel extends SafeChangeNotifier {
   int get totalListAmount {
     const fix = 7;
 
-    switch (_audioPageType) {
-      case AudioPageType.album:
-        return pinnedAlbumsLength + fix;
-      case AudioPageType.playlist:
-        return playlistsLength + fix;
-      case AudioPageType.podcast:
-        return podcastsLength + fix;
-      case AudioPageType.radio:
-        return starredStationsLength + fix;
-      default:
-        return starredStationsLength +
-            podcastsLength +
-            playlistsLength +
-            pinnedAlbumsLength +
-            fix;
-    }
-  }
-
-  AudioPageType? _audioPageType;
-  AudioPageType? get audioPageType => _audioPageType;
-  int? _oldIndex;
-  void setAudioPageType(AudioPageType? value) {
-    if (value == _audioPageType) {
-      _audioPageType = null;
-      _index = _oldIndex ?? 0;
-    } else {
-      _audioPageType = value;
-      _oldIndex = _index;
-      switch (value) {
-        case AudioPageType.radio:
-          _index = 1;
-          break;
-        case AudioPageType.podcast:
-          _index = 2;
-          break;
-        default:
-          _index = 0;
-          break;
-      }
-    }
-    notifyListeners();
+    return starredStationsLength +
+        podcastsLength +
+        playlistsLength +
+        pinnedAlbumsLength +
+        fix;
   }
 
   //
@@ -161,9 +124,6 @@ class LibraryModel extends SafeChangeNotifier {
 
   bool isStarredStation(String? name) =>
       name?.isNotEmpty == false ? false : _service.isStarredStation(name);
-
-  bool get showStarredStations =>
-      audioPageType == null || audioPageType == AudioPageType.radio;
 
   Set<String> get favTags => _service.favTags;
   int get favTagsLength => _service.favTags.length;
@@ -202,9 +162,6 @@ class LibraryModel extends SafeChangeNotifier {
   List<String> getTopFivePlaylistNames() =>
       playlists.entries.take(5).map((e) => e.key).toList();
 
-  bool get showPlaylists =>
-      audioPageType == null || audioPageType == AudioPageType.playlist;
-
   // Podcasts
 
   Map<String, Set<Audio>> get podcasts => _service.podcasts;
@@ -218,9 +175,6 @@ class LibraryModel extends SafeChangeNotifier {
 
   bool podcastSubscribed(String? feedUrl) =>
       feedUrl == null ? false : podcasts.containsKey(feedUrl);
-
-  bool get showSubbedPodcasts =>
-      audioPageType == null || audioPageType == AudioPageType.podcast;
 
   bool podcastUpdateAvailable(String feedUrl) =>
       _service.podcastUpdateAvailable(feedUrl);
@@ -253,9 +207,6 @@ class LibraryModel extends SafeChangeNotifier {
     _service.setAppIndex(value);
     notifyListeners();
   }
-
-  bool get showPinnedAlbums =>
-      audioPageType == null || audioPageType == AudioPageType.album;
 
   int? get localAudioindex => _service.localAudioIndex;
   void setLocalAudioindex(int? value) {

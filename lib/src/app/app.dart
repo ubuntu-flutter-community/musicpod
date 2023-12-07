@@ -170,17 +170,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
     final subbedPodcasts = context.select((LibraryModel m) => m.podcasts);
     final playlists = context.select((LibraryModel m) => m.playlists);
-    final showPlaylists = context.select((LibraryModel m) => m.showPlaylists);
     final starredStations =
         context.select((LibraryModel m) => m.starredStations);
     final pinnedAlbums = context.select((LibraryModel m) => m.pinnedAlbums);
-    final showSubbedPodcasts =
-        context.select((LibraryModel m) => m.showSubbedPodcasts);
-    final showStarredStations =
-        context.select((LibraryModel m) => m.showStarredStations);
-    final showPinnedAlbums =
-        context.select((LibraryModel m) => m.showPinnedAlbums);
-    final audioPageType = context.select((LibraryModel m) => m.audioPageType);
 
     context.select((LibraryModel m) => m.podcasts.length);
     context.select((LibraryModel m) => m.pinnedAlbums.length);
@@ -225,23 +217,17 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       onTextTap: onTextTap,
       likedLocalAudios: likedLocalAudios,
       likedPodcasts: likedPodcasts,
-      audioPageType: audioPageType,
-      setAudioPageType: libraryModel.setAudioPageType,
       subbedPodcasts: subbedPodcasts,
-      showSubbedPodcasts: showSubbedPodcasts,
       addPodcast: libraryModel.addPodcast,
       removePodcast: libraryModel.removePodcast,
       playlists: playlists,
-      showPlaylists: showPlaylists,
       removePlaylist: libraryModel.removePlaylist,
       updatePlaylistName: libraryModel.updatePlaylistName,
       pinnedAlbums: pinnedAlbums,
-      showPinnedAlbums: showPinnedAlbums,
       addPinnedAlbum: libraryModel.addPinnedAlbum,
       isPinnedAlbum: libraryModel.isPinnedAlbum,
       removePinnedAlbum: libraryModel.removePinnedAlbum,
       starredStations: starredStations,
-      showStarredStations: showStarredStations,
       unStarStation: libraryModel.unStarStation,
       play: play,
       countryCode: _countryCode,
