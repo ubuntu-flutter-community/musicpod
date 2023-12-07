@@ -179,7 +179,10 @@ List<MasterItem> createMasterItems({
     if (showStarredStations)
       for (final station in starredStations.entries)
         MasterItem(
-          titleBuilder: (context) => Text(station.key),
+          titleBuilder: (context) => RadioSideBarTile(
+            station: station,
+            play: play,
+          ),
           pageBuilder: (context) => isOnline
               ? StationPage(
                   isStarred: true,

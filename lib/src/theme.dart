@@ -31,8 +31,7 @@ ThemeData m3Theme({
   );
 }
 
-Color? getSideBarColor(ThemeData theme) =>
-    yaruStyled ? null : theme.scaffoldBackgroundColor;
+Color? getSideBarColor(ThemeData theme) => theme.scaffoldBackgroundColor;
 
 Color getSnackBarTextColor(ThemeData theme) => yaruStyled
     ? Colors.white.withOpacity(0.7)
