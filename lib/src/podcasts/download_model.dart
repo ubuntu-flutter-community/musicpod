@@ -66,11 +66,13 @@ class DownloadModel extends SafeChangeNotifier {
     ).then((response) {
       if (response?.statusCode == 200 && audio.website != null) {
         _service.addDownload(url: url, path: path, feedUrl: audio.website!);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.downloadFinished(audio.title ?? '')),
-          ),
-        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(context.l10n.downloadFinished(audio.title ?? '')),
+            ),
+          );
+        }
         _cancelToken = null;
       }
     });
@@ -99,8 +101,10 @@ class DownloadModel extends SafeChangeNotifier {
         message = context.l10n.downloadCancelled(name);
       }
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(message ?? e.toString())));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(message ?? e.toString())));
+      }
       return null;
     }
   }

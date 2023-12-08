@@ -135,7 +135,7 @@ Future<String?> getMusicDir() async {
 Future<String?> getDownloadsDir() async {
   String? path;
   if (Platform.isLinux) {
-    path = getUserDirectory('DOWNLOADS')?.path;
+    path = getUserDirectory('DOWNLOAD')?.path;
   } else if (Platform.isMacOS || Platform.isIOS || Platform.isWindows) {
     path = (await getDownloadsDirectory())?.path;
   }

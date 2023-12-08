@@ -283,6 +283,14 @@ class LibraryService {
     }
   }
 
+  void _removeFeedWithDownload(String feedUrl) {
+    _feedsWithDownloads.remove(feedUrl);
+    writeStringSet(
+      set: _feedsWithDownloads,
+      filename: kFeedsWithDownloads,
+    ).then((_) => _downloadsController.add(true));
+  }
+
   String? _downloadsDir;
   String? get downloadsDir => _downloadsDir;
   Map<String, Set<Audio>> _podcasts = {};
@@ -331,7 +339,9 @@ class LibraryService {
   void removePodcast(String name) {
     _podcasts.remove(name);
     writeAudioMap(_podcasts, kPodcastsFileName)
-        .then((_) => _podcastsController.add(true));
+        .then((_) => _podcastsController.add(true))
+        .then((_) => removePodcastUpdate(name))
+        .then((_) => _removeFeedWithDownload(name));
   }
 
   //
