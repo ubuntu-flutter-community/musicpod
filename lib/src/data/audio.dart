@@ -252,8 +252,9 @@ class Audio {
     if (identical(this, other)) return true;
 
     return other is Audio &&
-        other.path == path &&
-        other.url == url &&
+        (other.path == path ||
+            (other.url == url && other.path != null) ||
+            other.url == url) &&
         other.audioType == audioType &&
         other.imageUrl == imageUrl &&
         other.description == description &&

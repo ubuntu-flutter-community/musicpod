@@ -16,6 +16,7 @@ dependencies:
   connectivity_plus: ^5.0.1
   cupertino_icons: ^1.0.6
   desktop_notifications: ^0.6.3
+  dio: ^5.4.0
   file: ^7.0.0
   file_selector: ^1.0.0
   file_selector_linux: ^0.9.2

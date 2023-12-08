@@ -69,6 +69,7 @@ class PodcastsCollectionBody extends StatelessWidget {
                           },
                     label: Text(context.l10n.newEpisodes),
                   ),
+                  // TODO: add show only downloads chip
                 ],
               ),
               const SizedBox(

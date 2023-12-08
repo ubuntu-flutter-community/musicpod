@@ -7,6 +7,7 @@ import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
+import '../app/connectivity_notifier.dart';
 import '../library/library_model.dart';
 
 class AudioPageBody extends StatefulWidget {
@@ -90,6 +91,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
 
   @override
   Widget build(BuildContext context) {
+    final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
     final isPlaying = context.select((PlayerModel m) => m.isPlaying);
 
     final playerModel = context.read<PlayerModel>();
@@ -209,13 +211,16 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   List.generate(sortedAudios.take(_amount).length, (index) {
                 final audio = sortedAudios.elementAt(index);
                 final audioSelected = currentAudio == audio;
+                final download = libraryModel.getDownload(audio.url);
 
                 if (audio.audioType == AudioType.podcast) {
                   return PodcastAudioTile(
                     removeUpdate: () =>
                         libraryModel.removePodcastUpdate(widget.pageId),
                     isExpanded: audioSelected,
-                    audio: audio,
+                    audio: download != null
+                        ? audio.copyWith(path: download)
+                        : audio,
                     isPlayerPlaying: isPlaying,
                     selected: audioSelected,
                     pause: pause,
@@ -226,6 +231,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                     play: play,
                     lastPosition: libraryModel.getLastPosition.call(audio.url),
                     safeLastPosition: playerModel.safeLastPosition,
+                    isOnline: isOnline,
                   );
                 }
 

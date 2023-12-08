@@ -67,6 +67,7 @@ class PodcastPage extends StatelessWidget {
     final genre = audios?.firstWhereOrNull((e) => e.genre != null)?.genre;
 
     context.select((LibraryModel m) => m.lastPositions?.length);
+    context.select((LibraryModel m) => m.downloadsLength);
 
     return AudioPage(
       showAudioTileHeader: false,

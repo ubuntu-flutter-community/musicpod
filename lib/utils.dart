@@ -132,6 +132,15 @@ Future<String?> getMusicDir() async {
   return null;
 }
 
+Future<String?> getDownloadsDir() async {
+  if (Platform.isLinux) {
+    return getUserDirectory('DOWNLOADS')?.path;
+  } else if (Platform.isMacOS) {
+    return (await getDownloadsDirectory())?.path;
+  }
+  return null;
+}
+
 Future<void> writeSetting(
   String? key,
   dynamic value, [
@@ -264,6 +273,54 @@ Future<Map<String, Set<Audio>>> readAudioMap(String fileName) async {
   } on Exception catch (_) {
     return <String, Set<Audio>>{};
   }
+}
+
+Future<Map<String, String>> readStringMap(String fileName) async {
+  final workingDir = await getWorkingDir();
+
+  try {
+    final file = File(p.join(workingDir, fileName));
+
+    if (file.existsSync()) {
+      final jsonStr = await file.readAsString();
+
+      final map = jsonDecode(jsonStr) as Map<String, dynamic>;
+
+      final m = map.map(
+        (key, value) => MapEntry<String, String>(
+          key,
+          value as String,
+        ),
+      );
+
+      return m;
+    } else {
+      return <String, String>{};
+    }
+  } on Exception catch (_) {
+    return <String, String>{};
+  }
+}
+
+Future<void> writeStringMap(Map<String, String> map, String fileName) async {
+  final dynamicMap = map.map(
+    (key, value) => MapEntry<String, String>(
+      key,
+      value as dynamic,
+    ),
+  );
+
+  final jsonStr = jsonEncode(dynamicMap);
+
+  final workingDir = await getWorkingDir();
+
+  final file = File(p.join(workingDir, fileName));
+
+  if (!file.existsSync()) {
+    file.createSync();
+  }
+
+  await file.writeAsString(jsonStr);
 }
 
 Duration? parseDuration(String? durationAsString) {

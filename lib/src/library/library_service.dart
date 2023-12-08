@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../constants.dart';
@@ -227,7 +228,21 @@ class LibraryService {
   }
 
   // Podcasts
+  final dio = Dio();
+  Map<String, String> _downloads = {};
+  Map<String, String> get downloads => _downloads;
+  String? getDownload(String? url) => downloads[url];
 
+  final _downloadsController = StreamController<bool>.broadcast();
+  Stream<bool> get downloadsChanged => _downloadsController.stream;
+  void addDownload(String url, String path) {
+    _downloads.putIfAbsent(url, () => path);
+    writeStringMap(_downloads, kDownloads)
+        .then((_) => _downloadsController.add(true));
+  }
+
+  String? _downloadsDir;
+  String? get downloadsDir => _downloadsDir;
   Map<String, Set<Audio>> _podcasts = {};
   Map<String, Set<Audio>> get podcasts => _podcasts;
   int get podcastsLength => _podcasts.length;
@@ -342,6 +357,8 @@ class LibraryService {
         (await readAudioMap(kLikedAudios)).entries.firstOrNull?.value ??
             <Audio>{};
     _favTags = (await readStringSet(filename: kTagFavsFileName));
+    _downloadsDir = await getDownloadsDir();
+    _downloads = await readStringMap(kDownloads);
     _libraryInitialized = true;
   }
 
@@ -399,6 +416,7 @@ class LibraryService {
   }
 
   Future<void> dispose() async {
+    dio.close();
     await safeStates();
     await _useLocalAudioCacheController.close();
     await _albumsController.close();
