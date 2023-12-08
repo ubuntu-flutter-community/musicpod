@@ -150,6 +150,14 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  bool _downloadsOnly = false;
+  bool get downloadsOnly => _downloadsOnly;
+  void setDownloadsOnly(bool value) {
+    if (_downloadsOnly == value) return;
+    _downloadsOnly = value;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _searchChangedSub?.cancel();

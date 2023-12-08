@@ -141,5 +141,6 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "downloadsOnly": "Nur Downloads"
 }

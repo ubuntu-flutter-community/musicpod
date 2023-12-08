@@ -94,6 +94,7 @@ const kSettingsFileName = 'settings.json';
 const kLastPositionsFileName = 'lastPositions.json';
 const kLocalAudioCacheFileName = 'localaudiocache.json';
 const kDownloads = 'downloads.json';
+const kFeedsWithDownloads = 'feedswithdownloads.json';
 const kLocalAudioCache = 'localAudioCache';
 const kUseLocalAudioCache = 'cacheSuggestionDisposed';
 const kCreateCacheLimit = 1000;

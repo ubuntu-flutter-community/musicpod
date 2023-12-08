@@ -26,8 +26,10 @@ class DownloadModel extends SafeChangeNotifier {
     required BuildContext context,
     required Audio? audio,
   }) async {
-    if (audio?.url != null || _service.downloadsDir != null) {
-      _service.removeDownload(audio!.url!);
+    if (audio?.url != null &&
+        _service.downloadsDir != null &&
+        audio?.website != null) {
+      _service.removeDownload(url: audio!.url!, feedUrl: audio.website!);
       _value = null;
       notifyListeners();
     }
@@ -62,8 +64,8 @@ class DownloadModel extends SafeChangeNotifier {
       path: path,
       name: audio.title ?? '',
     ).then((response) {
-      if (response?.statusCode == 200) {
-        _service.addDownload(url, path);
+      if (response?.statusCode == 200 && audio.website != null) {
+        _service.addDownload(url: url, path: path, feedUrl: audio.website!);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(context.l10n.downloadFinished(audio.title ?? '')),

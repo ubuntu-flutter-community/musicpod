@@ -192,6 +192,11 @@ class LibraryModel extends SafeChangeNotifier {
   String? getDownload(String? url) =>
       url == null ? null : _service.downloads[url];
 
+  bool feedHasDownload(String? feedUrl) =>
+      feedUrl == null ? false : _service.feedHasDownloads(feedUrl);
+
+  int get feedsWithDownloadsLength => _service.feedsWithDownloadsLength;
+
   //
   // Albums
   //

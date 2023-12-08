@@ -234,15 +234,31 @@ class LibraryService {
   Map<String, String> get downloads => _downloads;
   String? getDownload(String? url) => downloads[url];
 
+  Set<String> _feedsWithDownloads = {};
+  bool feedHasDownloads(String feedUrl) =>
+      _feedsWithDownloads.contains(feedUrl);
+  int get feedsWithDownloadsLength => _feedsWithDownloads.length;
+
   final _downloadsController = StreamController<bool>.broadcast();
   Stream<bool> get downloadsChanged => _downloadsController.stream;
-  void addDownload(String url, String path) {
+  void addDownload({
+    required String url,
+    required String path,
+    required String feedUrl,
+  }) {
     _downloads.putIfAbsent(url, () => path);
+    _feedsWithDownloads.add(feedUrl);
     writeStringMap(_downloads, kDownloads)
+        .then(
+          (_) => writeStringSet(
+            set: _feedsWithDownloads,
+            filename: kFeedsWithDownloads,
+          ),
+        )
         .then((_) => _downloadsController.add(true));
   }
 
-  void removeDownload(String url) {
+  void removeDownload({required String url, required String feedUrl}) {
     final path = _downloads[url];
 
     if (path != null) {
@@ -254,7 +270,15 @@ class LibraryService {
 
     if (_downloads.containsKey(url)) {
       _downloads.remove(url);
+      _feedsWithDownloads.remove(feedUrl);
+
       writeStringMap(_downloads, kDownloads)
+          .then(
+            (_) => writeStringSet(
+              set: _feedsWithDownloads,
+              filename: kFeedsWithDownloads,
+            ),
+          )
           .then((_) => _downloadsController.add(true));
     }
   }
@@ -377,6 +401,7 @@ class LibraryService {
     _favTags = (await readStringSet(filename: kTagFavsFileName));
     _downloadsDir = await getDownloadsDir();
     _downloads = await readStringMap(kDownloads);
+    _feedsWithDownloads = await readStringSet(filename: kFeedsWithDownloads);
     _libraryInitialized = true;
   }
 
@@ -450,6 +475,7 @@ class LibraryService {
     await _neverShowFailedImportsController.close();
     await _lastFavController.close();
     await _updateController.close();
+    await _downloadsController.close();
   }
 
   Future<void> safeStates() async {
