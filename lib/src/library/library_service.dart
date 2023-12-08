@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../constants.dart';
@@ -227,7 +229,70 @@ class LibraryService {
   }
 
   // Podcasts
+  final dio = Dio();
+  Map<String, String> _downloads = {};
+  Map<String, String> get downloads => _downloads;
+  String? getDownload(String? url) => downloads[url];
 
+  Set<String> _feedsWithDownloads = {};
+  bool feedHasDownloads(String feedUrl) =>
+      _feedsWithDownloads.contains(feedUrl);
+  int get feedsWithDownloadsLength => _feedsWithDownloads.length;
+
+  final _downloadsController = StreamController<bool>.broadcast();
+  Stream<bool> get downloadsChanged => _downloadsController.stream;
+  void addDownload({
+    required String url,
+    required String path,
+    required String feedUrl,
+  }) {
+    _downloads.putIfAbsent(url, () => path);
+    _feedsWithDownloads.add(feedUrl);
+    writeStringMap(_downloads, kDownloads)
+        .then(
+          (_) => writeStringSet(
+            set: _feedsWithDownloads,
+            filename: kFeedsWithDownloads,
+          ),
+        )
+        .then((_) => _downloadsController.add(true));
+  }
+
+  void removeDownload({required String url, required String feedUrl}) {
+    final path = _downloads[url];
+
+    if (path != null) {
+      final file = File(path);
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
+    }
+
+    if (_downloads.containsKey(url)) {
+      _downloads.remove(url);
+      _feedsWithDownloads.remove(feedUrl);
+
+      writeStringMap(_downloads, kDownloads)
+          .then(
+            (_) => writeStringSet(
+              set: _feedsWithDownloads,
+              filename: kFeedsWithDownloads,
+            ),
+          )
+          .then((_) => _downloadsController.add(true));
+    }
+  }
+
+  void _removeFeedWithDownload(String feedUrl) {
+    _feedsWithDownloads.remove(feedUrl);
+    writeStringSet(
+      set: _feedsWithDownloads,
+      filename: kFeedsWithDownloads,
+    ).then((_) => _downloadsController.add(true));
+  }
+
+  String? _downloadsDir;
+  String? get downloadsDir => _downloadsDir;
   Map<String, Set<Audio>> _podcasts = {};
   Map<String, Set<Audio>> get podcasts => _podcasts;
   int get podcastsLength => _podcasts.length;
@@ -274,7 +339,9 @@ class LibraryService {
   void removePodcast(String name) {
     _podcasts.remove(name);
     writeAudioMap(_podcasts, kPodcastsFileName)
-        .then((_) => _podcastsController.add(true));
+        .then((_) => _podcastsController.add(true))
+        .then((_) => removePodcastUpdate(name))
+        .then((_) => _removeFeedWithDownload(name));
   }
 
   //
@@ -342,6 +409,9 @@ class LibraryService {
         (await readAudioMap(kLikedAudios)).entries.firstOrNull?.value ??
             <Audio>{};
     _favTags = (await readStringSet(filename: kTagFavsFileName));
+    _downloadsDir = await getDownloadsDir();
+    _downloads = await readStringMap(kDownloads);
+    _feedsWithDownloads = await readStringSet(filename: kFeedsWithDownloads);
     _libraryInitialized = true;
   }
 
@@ -399,6 +469,7 @@ class LibraryService {
   }
 
   Future<void> dispose() async {
+    dio.close();
     await safeStates();
     await _useLocalAudioCacheController.close();
     await _albumsController.close();
@@ -414,6 +485,7 @@ class LibraryService {
     await _neverShowFailedImportsController.close();
     await _lastFavController.close();
     await _updateController.close();
+    await _downloadsController.close();
   }
 
   Future<void> safeStates() async {

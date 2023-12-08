@@ -33,17 +33,25 @@ class PodcastsCollectionBody extends StatelessWidget {
     final theme = Theme.of(context);
     final subs = context.select((LibraryModel m) => m.podcasts);
     context.select((LibraryModel m) => m.podcastUpdatesLength);
-    final podcastUpdateAvailable =
-        context.read<LibraryModel>().podcastUpdateAvailable;
+    final libraryModel = context.read<LibraryModel>();
+    final podcastUpdateAvailable = libraryModel.podcastUpdateAvailable;
+    final feedHasDownload = libraryModel.feedHasDownload;
     final updatesLength =
         context.select((LibraryModel m) => m.podcastUpdatesLength);
     final model = context.read<PodcastModel>();
     final updatesOnly = context.select((PodcastModel m) => m.updatesOnly);
+    final downloadsOnly = context.select((PodcastModel m) => m.downloadsOnly);
     final subsLength = context.select((LibraryModel m) => m.podcastsLength);
+    final feedsWithUpdatesLength =
+        context.select((LibraryModel m) => m.feedsWithDownloadsLength);
     final setUpdatesOnly = model.setUpdatesOnly;
-    var libraryModel = context.read<LibraryModel>();
+    final setDownloadsOnly = model.setDownloadsOnly;
     final subscribed = libraryModel.podcastSubscribed;
     final removeUpdate = libraryModel.removePodcastUpdate;
+
+    final itemCount = updatesOnly
+        ? updatesLength
+        : (downloadsOnly ? feedsWithUpdatesLength : subsLength);
 
     return subsLength == 0
         ? NoSearchResultPage(
@@ -69,6 +77,14 @@ class PodcastsCollectionBody extends StatelessWidget {
                           },
                     label: Text(context.l10n.newEpisodes),
                   ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  ChoiceChip(
+                    selected: downloadsOnly,
+                    onSelected: setDownloadsOnly,
+                    label: Text(context.l10n.downloadsOnly),
+                  ),
                 ],
               ),
               const SizedBox(
@@ -79,14 +95,21 @@ class PodcastsCollectionBody extends StatelessWidget {
                     ? LoadingGrid(limit: subsLength)
                     : GridView.builder(
                         padding: gridPadding,
-                        itemCount: updatesOnly ? updatesLength : subsLength,
+                        itemCount: itemCount,
                         gridDelegate: imageGridDelegate,
                         itemBuilder: (context, index) {
-                          final podcast = updatesOnly
-                              ? subs.entries
-                                  .where((e) => podcastUpdateAvailable(e.key))
-                                  .elementAt(index)
-                              : subs.entries.elementAt(index);
+                          final MapEntry<String, Set<Audio>> podcast;
+                          if (updatesOnly) {
+                            podcast = subs.entries
+                                .where((e) => podcastUpdateAvailable(e.key))
+                                .elementAt(index);
+                          } else if (downloadsOnly) {
+                            podcast = subs.entries
+                                .where((e) => feedHasDownload(e.key))
+                                .elementAt(index);
+                          } else {
+                            podcast = subs.entries.elementAt(index);
+                          }
 
                           final artworkUrl600 =
                               podcast.value.firstOrNull?.albumArtUrl ??

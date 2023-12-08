@@ -112,20 +112,18 @@ List<MasterItem> createMasterItems({
               podcast.value.firstOrNull?.title ??
               podcast.value.firstOrNull.toString(),
         ),
-        pageBuilder: (context) => isOnline
-            ? PodcastPage(
-                pageId: podcast.key,
-                title: podcast.value.firstOrNull?.album ??
-                    podcast.value.firstOrNull?.title ??
-                    podcast.value.firstOrNull.toString(),
-                audios: podcast.value,
-                onTextTap: onTextTap,
-                addPodcast: addPodcast,
-                removePodcast: removePodcast,
-                imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
-                    podcast.value.firstOrNull?.imageUrl,
-              )
-            : const OfflinePage(),
+        pageBuilder: (context) => PodcastPage(
+          pageId: podcast.key,
+          title: podcast.value.firstOrNull?.album ??
+              podcast.value.firstOrNull?.title ??
+              podcast.value.firstOrNull.toString(),
+          audios: podcast.value,
+          onTextTap: onTextTap,
+          addPodcast: addPodcast,
+          removePodcast: removePodcast,
+          imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
+              podcast.value.firstOrNull?.imageUrl,
+        ),
         iconBuilder: (context, selected) => PodcastPage.createIcon(
           context: context,
           imageUrl: podcast.value.firstOrNull?.albumArtUrl ??

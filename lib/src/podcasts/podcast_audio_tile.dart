@@ -13,6 +13,7 @@ import '../../data.dart';
 import '../../theme.dart';
 import '../../utils.dart';
 import 'avatar_with_progress.dart';
+import 'download_button.dart';
 
 const _kGap = 20.0;
 
@@ -30,6 +31,7 @@ class PodcastAudioTile extends StatelessWidget {
     this.isExpanded = false,
     this.removeUpdate,
     required this.safeLastPosition,
+    this.isOnline = true,
   });
 
   final Audio audio;
@@ -44,6 +46,7 @@ class PodcastAudioTile extends StatelessWidget {
 
   final Duration? lastPosition;
   final bool isExpanded;
+  final bool isOnline;
 
   @override
   Widget build(BuildContext context) {
@@ -55,58 +58,61 @@ class PodcastAudioTile extends StatelessWidget {
           ? Duration(milliseconds: audio.durationMs!.toInt())
           : Duration.zero,
     );
+    final enabled = isOnline || audio.path != null;
 
-    return YaruExpandable(
-      expandIcon: const SizedBox.shrink(),
-      isExpanded: isExpanded,
-      gapHeight: 0,
-      header: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 15,
-            bottom: 10,
-            left: 19,
-            right: 20,
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AvatarWithProgress(
-                selected: selected,
-                lastPosition: lastPosition,
-                audio: audio,
-                isPlayerPlaying: isPlayerPlaying,
-                pause: pause,
-                resume: resume,
-                safeLastPosition: safeLastPosition,
-                play: play,
-                removeUpdate: removeUpdate,
-              ),
-              const SizedBox(
-                width: _kGap,
-              ),
-              Expanded(
-                child: _Right(
-                  selected: selected,
-                  audio: audio,
-                  date: date,
-                  duration: duration,
+    return !enabled
+        ? const SizedBox.shrink()
+        : YaruExpandable(
+            expandIcon: const SizedBox.shrink(),
+            isExpanded: isExpanded,
+            gapHeight: 0,
+            header: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 15,
+                  bottom: 10,
+                  left: 19,
+                  right: 20,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AvatarWithProgress(
+                      selected: selected,
+                      lastPosition: lastPosition,
+                      audio: audio,
+                      isPlayerPlaying: isPlayerPlaying,
+                      pause: pause,
+                      resume: resume,
+                      safeLastPosition: safeLastPosition,
+                      play: play,
+                      removeUpdate: removeUpdate,
+                    ),
+                    const SizedBox(
+                      width: _kGap,
+                    ),
+                    Expanded(
+                      child: _Right(
+                        selected: selected,
+                        audio: audio,
+                        date: date,
+                        duration: duration,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: _Bottom(
-          selected: selected,
-          audio: audio,
-          lastPosition: lastPosition,
-        ),
-      ),
-    );
+            ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: _Bottom(
+                selected: selected,
+                audio: audio,
+                lastPosition: lastPosition,
+              ),
+            ),
+          );
   }
 }
 
@@ -164,14 +170,13 @@ class _Right extends StatelessWidget {
                       iconSize: kTinyButtonIconSize,
                     ),
                   ),
-                  // TODO: implement download
                   SizedBox(
                     height: kTinyButtonSize,
                     width: kTinyButtonSize,
-                    child: IconButton(
-                      icon: Icon(Iconz().download),
-                      onPressed: null,
+                    child: DownloadButton.create(
+                      context: context,
                       iconSize: kTinyButtonIconSize,
+                      audio: audio,
                     ),
                   ),
                 ],

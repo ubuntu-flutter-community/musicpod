@@ -22,6 +22,7 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _neverShowFailedImportsSub;
   StreamSubscription<bool>? _favTagsSub;
   StreamSubscription<bool>? _lastFavSub;
+  StreamSubscription<bool>? _downloadsSub;
 
   bool get neverShowFailedImports => _service.neverShowFailedImports;
   Future<void> setNeverShowLocalImports() async =>
@@ -56,6 +57,7 @@ class LibraryModel extends SafeChangeNotifier {
         _service.neverShowFailedImportsChanged.listen((_) => notifyListeners());
     _favTagsSub = _service.favTagsChanged.listen((_) => notifyListeners());
     _lastFavSub = _service.lastFavChanged.listen((_) => notifyListeners());
+    _downloadsSub = _service.downloadsChanged.listen((_) => notifyListeners());
 
     notifyListeners();
   }
@@ -79,6 +81,7 @@ class LibraryModel extends SafeChangeNotifier {
     _neverShowFailedImportsSub?.cancel();
     _favTagsSub?.cancel();
     _lastFavSub?.cancel();
+    _downloadsSub?.cancel();
 
     super.dispose();
   }
@@ -183,6 +186,16 @@ class LibraryModel extends SafeChangeNotifier {
 
   void removePodcastUpdate(String feedUrl) =>
       _service.removePodcastUpdate(feedUrl);
+
+  int get downloadsLength => _service.downloads.length;
+
+  String? getDownload(String? url) =>
+      url == null ? null : _service.downloads[url];
+
+  bool feedHasDownload(String? feedUrl) =>
+      feedUrl == null ? false : _service.feedHasDownloads(feedUrl);
+
+  int get feedsWithDownloadsLength => _service.feedsWithDownloadsLength;
 
   //
   // Albums
