@@ -117,5 +117,29 @@
     "collection": "Collection",
     "addToCollection": "Add to collection",
     "removeFromCollection": "Remove from collection",
-    "loadingPodcastFeed": "Loading podcast feed..."
+    "loadingPodcastFeed": "Loading podcast feed...",
+    "downloadStarted": "Download started: {name}",
+    "@downloadStarted": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "downloadCancelled": "Download cancelled: {name}",
+    "@downloadCancelled": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "downloadFinished": "Download finished: {name}",
+    "@downloadFinished": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    }
 }

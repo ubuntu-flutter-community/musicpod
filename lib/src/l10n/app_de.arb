@@ -117,5 +117,29 @@
     "collection": "Sammlung",
     "addToCollection": "Zur Sammlung hinzufügen",
     "removeFromCollection": "Aus Sammlung entfernen",
-    "loadingPodcastFeed": "Lade Podcast-Feed..."
+    "loadingPodcastFeed": "Lade Podcast-Feed...",
+    "downloadStarted": "Herunterladen gestartet: {name}",
+    "@downloadStarted": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "downloadCancelled": "Herunterladen abgebrochen: {name}",
+    "@downloadCancelled": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "downloadFinished": "Herunterladen abgeschlossen: {name}",
+    "@downloadFinished": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    }
 }

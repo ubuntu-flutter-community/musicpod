@@ -6,6 +6,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:path/path.dart' as p;
 
 import '../../data.dart';
+import '../../l10n.dart';
 import '../../library.dart';
 
 class DownloadModel extends SafeChangeNotifier {
@@ -27,6 +28,8 @@ class DownloadModel extends SafeChangeNotifier {
   }) async {
     if (audio?.url != null || _service.downloadsDir != null) {
       _service.removeDownload(audio!.url!);
+      _value = null;
+      notifyListeners();
     }
   }
 
@@ -39,8 +42,7 @@ class DownloadModel extends SafeChangeNotifier {
     if (_cancelToken != null) {
       _cancelToken?.cancel();
       _value = null;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Download canceled')));
+      _cancelToken = null;
       notifyListeners();
       return;
     }
@@ -58,11 +60,15 @@ class DownloadModel extends SafeChangeNotifier {
       context: context,
       url: url,
       path: path,
+      name: audio.title ?? '',
     ).then((response) {
       if (response?.statusCode == 200) {
         _service.addDownload(url, path);
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Download Finished')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(context.l10n.downloadFinished(audio.title ?? '')),
+          ),
+        );
         _cancelToken = null;
       }
     });
@@ -73,6 +79,7 @@ class DownloadModel extends SafeChangeNotifier {
     required BuildContext context,
     required String url,
     required String path,
+    required String name,
   }) async {
     _cancelToken = CancelToken();
     try {
@@ -84,8 +91,14 @@ class DownloadModel extends SafeChangeNotifier {
       );
     } catch (e) {
       _cancelToken?.cancel();
+
+      String? message;
+      if (e.toString().contains('[request cancelled]')) {
+        message = context.l10n.downloadCancelled(name);
+      }
+
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+          .showSnackBar(SnackBar(content: Text(message ?? e.toString())));
       return null;
     }
   }
