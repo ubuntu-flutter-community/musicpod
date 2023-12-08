@@ -133,10 +133,14 @@ Future<String?> getMusicDir() async {
 }
 
 Future<String?> getDownloadsDir() async {
+  String? path;
   if (Platform.isLinux) {
-    return getUserDirectory('DOWNLOADS')?.path;
-  } else if (Platform.isMacOS) {
-    return (await getDownloadsDirectory())?.path;
+    path = getUserDirectory('DOWNLOADS')?.path;
+  } else if (Platform.isMacOS || Platform.isIOS || Platform.isWindows) {
+    path = (await getDownloadsDirectory())?.path;
+  }
+  if (path != null) {
+    return p.join(path, 'musicpod');
   }
   return null;
 }

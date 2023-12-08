@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
@@ -239,6 +240,23 @@ class LibraryService {
     _downloads.putIfAbsent(url, () => path);
     writeStringMap(_downloads, kDownloads)
         .then((_) => _downloadsController.add(true));
+  }
+
+  void removeDownload(String url) {
+    final path = _downloads[url];
+
+    if (path != null) {
+      final file = File(path);
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
+    }
+
+    if (_downloads.containsKey(url)) {
+      _downloads.remove(url);
+      writeStringMap(_downloads, kDownloads)
+          .then((_) => _downloadsController.add(true));
+    }
   }
 
   String? _downloadsDir;

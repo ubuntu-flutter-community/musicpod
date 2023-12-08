@@ -170,7 +170,6 @@ class _Right extends StatelessWidget {
                       iconSize: kTinyButtonIconSize,
                     ),
                   ),
-                  // TODO: implement download
                   SizedBox(
                     height: kTinyButtonSize,
                     width: kTinyButtonSize,

@@ -40,13 +40,18 @@ class DownloadButton extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         Progress(
-          value: value ?? 0,
+          value: value == null || value == 1.0 ? 0 : value,
           backgroundColor: Colors.transparent,
         ),
         IconButton(
           icon: Icon(Iconz().download),
-          // TODO: add remove download
-          onPressed: () => model.startDownload(audio),
+          onPressed: () {
+            if (audio?.path != null) {
+              model.deleteDownload(context: context, audio: audio);
+            } else {
+              model.startDownload(context: context, audio: audio);
+            }
+          },
           iconSize: iconSize,
           color: audio?.path != null ? theme.colorScheme.primary : null,
         ),

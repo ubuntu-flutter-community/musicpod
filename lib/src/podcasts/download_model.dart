@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:path/path.dart' as p;
 
@@ -20,47 +21,72 @@ class DownloadModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> startDownload(
-    Audio? audio,
-  ) async {
-    _service.dio.interceptors.add(LogInterceptor());
-    // Assure the value of total argument of onReceiveProgress is not -1.
-    _service.dio.options.headers = {HttpHeaders.acceptEncodingHeader: '*'};
-    final downloadsDir = _service.downloadsDir;
-
-    if (audio?.url == null || downloadsDir == null) return;
-
-    final downloadDir = p.join(downloadsDir, 'musicpod');
-
-    if (!Directory(downloadDir).existsSync()) {
-      Directory(downloadDir).createSync();
+  Future<void> deleteDownload({
+    required BuildContext context,
+    required Audio? audio,
+  }) async {
+    if (audio?.url != null || _service.downloadsDir != null) {
+      _service.removeDownload(audio!.url!);
     }
-    final fileName =
-        '${audio?.artist}${audio?.title}${audio?.year}'.replaceAll(' ', '_');
-    final file = File(
-      p.join(
-        downloadDir,
-        fileName,
-      ),
-    );
-    file.createSync();
-
-    download1(_service.dio, audio!.url!, file.path);
   }
 
-  Future download1(Dio dio, String url, String path) async {
-    final cancelToken = CancelToken();
+  Future<void> startDownload({
+    required BuildContext context,
+    required Audio? audio,
+  }) async {
+    final downloadsDir = _service.downloadsDir;
+    if (audio?.url == null || downloadsDir == null) return;
+    if (_cancelToken != null) {
+      _cancelToken?.cancel();
+      _value = null;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Download canceled')));
+      notifyListeners();
+      return;
+    }
+
+    _service.dio.interceptors.add(LogInterceptor());
+    _service.dio.options.headers = {HttpHeaders.acceptEncodingHeader: '*'};
+
+    if (!Directory(downloadsDir).existsSync()) {
+      Directory(downloadsDir).createSync();
+    }
+
+    final url = audio!.url!;
+    final path = p.join(downloadsDir, audio.toShortPath());
+    await _download(
+      context: context,
+      url: url,
+      path: path,
+    ).then((response) {
+      if (response?.statusCode == 200) {
+        _service.addDownload(url, path);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Download Finished')));
+        _cancelToken = null;
+      }
+    });
+  }
+
+  CancelToken? _cancelToken;
+  Future<Response<dynamic>?> _download({
+    required BuildContext context,
+    required String url,
+    required String path,
+  }) async {
+    _cancelToken = CancelToken();
     try {
-      await dio
-          .download(
-            url,
-            path,
-            onReceiveProgress: setValue,
-            cancelToken: cancelToken,
-          )
-          .then((_) => _service.addDownload(url, path));
+      return await _service.dio.download(
+        url,
+        path,
+        onReceiveProgress: setValue,
+        cancelToken: _cancelToken,
+      );
     } catch (e) {
-      //TODO: manage download exception
+      _cancelToken?.cancel();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+      return null;
     }
   }
 }
