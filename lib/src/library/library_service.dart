@@ -246,6 +246,7 @@ class LibraryService {
     required String path,
     required String feedUrl,
   }) {
+    if (_downloads.containsKey(url)) return;
     _downloads.putIfAbsent(url, () => path);
     _feedsWithDownloads.add(feedUrl);
     writeStringMap(_downloads, kDownloads)
@@ -284,6 +285,7 @@ class LibraryService {
   }
 
   void _removeFeedWithDownload(String feedUrl) {
+    if (!_feedsWithDownloads.contains(feedUrl)) return;
     _feedsWithDownloads.remove(feedUrl);
     writeStringSet(
       set: _feedsWithDownloads,
@@ -300,6 +302,7 @@ class LibraryService {
   Stream<bool> get podcastsChanged => _podcastsController.stream;
 
   void addPodcast(String feedUrl, Set<Audio> audios) {
+    if (_podcasts.containsKey(feedUrl)) return;
     _podcasts.putIfAbsent(feedUrl, () => audios);
     writeAudioMap(_podcasts, kPodcastsFileName)
         .then((_) => _podcastsController.add(true));
@@ -337,6 +340,7 @@ class LibraryService {
   Stream<bool> get updatesChanged => _updateController.stream;
 
   void removePodcast(String name) {
+    if (!_podcasts.containsKey(name)) return;
     _podcasts.remove(name);
     writeAudioMap(_podcasts, kPodcastsFileName)
         .then((_) => _podcastsController.add(true))

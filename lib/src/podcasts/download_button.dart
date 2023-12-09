@@ -12,24 +12,28 @@ class DownloadButton extends StatelessWidget {
     super.key,
     this.iconSize,
     required this.audio,
+    required this.addPodcast,
   });
 
   static Widget create({
     required BuildContext context,
     double? iconSize,
     required Audio? audio,
+    required void Function()? addPodcast,
   }) {
     return ChangeNotifierProvider(
       create: (_) => DownloadModel(getService<LibraryService>()),
       child: DownloadButton(
         iconSize: iconSize,
         audio: audio,
+        addPodcast: addPodcast,
       ),
     );
   }
 
   final double? iconSize;
   final Audio? audio;
+  final void Function()? addPodcast;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +53,7 @@ class DownloadButton extends StatelessWidget {
             if (audio?.path != null) {
               model.deleteDownload(context: context, audio: audio);
             } else {
+              addPodcast?.call();
               model.startDownload(context: context, audio: audio);
             }
           },
