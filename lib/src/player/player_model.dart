@@ -27,11 +27,9 @@ class PlayerModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _durationChangedSub;
   StreamSubscription<bool>? _positionChangedSub;
 
-  String? get queueName => service.queueName;
-  void setQueueName(String? value) => service.setQueueName(value);
+  String? get queueName => service.queue.$1;
 
-  List<Audio> get queue => service.queue;
-  set queue(List<Audio>? value) => service.queue = value;
+  List<Audio> get queue => service.queue.$2;
   MpvMetaData? get mpvMetaData => service.mpvMetaData;
 
   bool? _fullScreen;
@@ -77,7 +75,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> init() async {
     _queueNameChangedSub =
-        service.queueNameChanged.listen((_) => notifyListeners());
+        service.queueChanged.listen((_) => notifyListeners());
     _queueChangedSub = service.queueChanged.listen((_) => notifyListeners());
     _mpvMetaDataChangedSub =
         service.mpvMetaDataChanged.listen((_) => notifyListeners());
