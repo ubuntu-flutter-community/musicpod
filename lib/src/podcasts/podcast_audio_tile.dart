@@ -32,6 +32,7 @@ class PodcastAudioTile extends StatelessWidget {
     this.removeUpdate,
     required this.safeLastPosition,
     this.isOnline = true,
+    required this.addPodcast,
   });
 
   final Audio audio;
@@ -43,6 +44,7 @@ class PodcastAudioTile extends StatelessWidget {
   final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
   final void Function()? removeUpdate;
   final void Function() safeLastPosition;
+  final void Function()? addPodcast;
 
   final Duration? lastPosition;
   final bool isExpanded;
@@ -98,6 +100,7 @@ class PodcastAudioTile extends StatelessWidget {
                         audio: audio,
                         date: date,
                         duration: duration,
+                        addPodcast: addPodcast,
                       ),
                     ),
                   ],
@@ -122,12 +125,14 @@ class _Right extends StatelessWidget {
     required this.selected,
     required this.date,
     required this.duration,
+    required this.addPodcast,
   });
 
   final Audio audio;
   final String date;
   final String duration;
   final bool selected;
+  final void Function()? addPodcast;
 
   @override
   Widget build(BuildContext context) {
@@ -177,6 +182,7 @@ class _Right extends StatelessWidget {
                       context: context,
                       iconSize: kTinyButtonIconSize,
                       audio: audio,
+                      addPodcast: addPodcast,
                     ),
                   ),
                 ],

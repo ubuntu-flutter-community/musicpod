@@ -215,6 +215,12 @@ class _AudioPageBodyState extends State<AudioPageBody> {
 
                 if (audio.audioType == AudioType.podcast) {
                   return PodcastAudioTile(
+                    addPodcast: audio.website == null || widget.audios == null
+                        ? null
+                        : () => libraryModel.addPodcast(
+                              audio.website!,
+                              widget.audios!,
+                            ),
                     removeUpdate: () =>
                         libraryModel.removePodcastUpdate(widget.pageId),
                     isExpanded: audioSelected,

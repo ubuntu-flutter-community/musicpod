@@ -42,7 +42,7 @@ class PodcastsCollectionBody extends StatelessWidget {
     final updatesOnly = context.select((PodcastModel m) => m.updatesOnly);
     final downloadsOnly = context.select((PodcastModel m) => m.downloadsOnly);
     final subsLength = context.select((LibraryModel m) => m.podcastsLength);
-    final feedsWithUpdatesLength =
+    final feedsWithDownloadLength =
         context.select((LibraryModel m) => m.feedsWithDownloadsLength);
     final setUpdatesOnly = model.setUpdatesOnly;
     final setDownloadsOnly = model.setDownloadsOnly;
@@ -51,7 +51,7 @@ class PodcastsCollectionBody extends StatelessWidget {
 
     final itemCount = updatesOnly
         ? updatesLength
-        : (downloadsOnly ? feedsWithUpdatesLength : subsLength);
+        : (downloadsOnly ? feedsWithDownloadLength : subsLength);
 
     return subsLength == 0
         ? NoSearchResultPage(
