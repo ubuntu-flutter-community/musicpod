@@ -39,22 +39,12 @@ class PlayerService {
   StreamSubscription<bool>? _isCompletedSub;
   StreamSubscription<double>? _volumeSub;
 
-  final _queueNameController = StreamController<bool>.broadcast();
-  Stream<bool> get queueNameChanged => _queueNameController.stream;
-  String? _queueName;
-  String? get queueName => _queueName;
-  void setQueueName(String? value) {
-    if (value == null || value == _queueName) return;
-    _queueName = value;
-    _queueNameController.add(true);
-  }
-
   final _queueController = StreamController<bool>.broadcast();
   Stream<bool> get queueChanged => _queueController.stream;
-  List<Audio> _queue = [];
-  List<Audio> get queue => _queue;
-  set queue(List<Audio>? value) {
-    if (value == null) return;
+  (String, List<Audio>) _queue = ('', []);
+  (String, List<Audio>) get queue => _queue;
+  void setQueue((String, List<Audio>) value) {
+    if (value == _queue || value.$2.isEmpty) return;
     _queue = value;
     _queueController.add(true);
   }
@@ -165,7 +155,7 @@ class PlayerService {
   void setShuffle(bool value) {
     if (value == _shuffle) return;
     _shuffle = value;
-    if (value && queue.length > 1) {
+    if (value && queue.$2.length > 1) {
       _randomNext();
     }
     _shuffleController.add(true);
@@ -183,18 +173,18 @@ class PlayerService {
   bool _firstPlay = true;
   Future<void> play({Duration? newPosition, Audio? newAudio}) async {
     final currentIndex =
-        (audio == null || queue.isEmpty || !queue.contains(audio!))
+        (audio == null || queue.$2.isEmpty || !queue.$2.contains(audio!))
             ? 0
-            : queue.indexOf(audio!);
+            : queue.$2.indexOf(audio!);
     if (newAudio != null) {
       _setAudio(newAudio);
     }
     if (audio == null) return;
 
-    if (!queue.contains(audio)) {
-      queue.insert(currentIndex, audio!);
-      if (queue.length > 1) {
-        nextAudio = queue[1];
+    if (!queue.$2.contains(audio)) {
+      queue.$2.insert(currentIndex, audio!);
+      if (queue.$2.length > 1) {
+        nextAudio = queue.$2[1];
       }
     }
     final playList = Playlist([
@@ -280,25 +270,25 @@ class PlayerService {
   }
 
   Future<void> insertIntoQueue(Audio audio) async {
-    if (_queue.isNotEmpty && !_queue.contains(audio)) {
-      _queue.insert(1, audio);
-      nextAudio = queue[1];
+    if (_queue.$2.isNotEmpty && !_queue.$2.contains(audio)) {
+      _queue.$2.insert(1, audio);
+      nextAudio = queue.$2[1];
     }
   }
 
   void _estimateNext() {
     if (audio == null) return;
 
-    if (queue.isNotEmpty == true && queue.contains(audio)) {
-      final currentIndex = queue.indexOf(audio!);
+    if (queue.$2.isNotEmpty == true && queue.$2.contains(audio)) {
+      final currentIndex = queue.$2.indexOf(audio!);
 
-      if (shuffle && queue.length > 1) {
+      if (shuffle && queue.$2.length > 1) {
         _randomNext();
       } else {
-        if (currentIndex == queue.length - 1) {
-          nextAudio = queue.elementAt(0);
+        if (currentIndex == queue.$2.length - 1) {
+          nextAudio = queue.$2.elementAt(0);
         } else {
-          nextAudio = queue.elementAt(queue.indexOf(audio!) + 1);
+          nextAudio = queue.$2.elementAt(queue.$2.indexOf(audio!) + 1);
         }
       }
     }
@@ -306,25 +296,27 @@ class PlayerService {
 
   void _randomNext() {
     if (audio == null) return;
-    final currentIndex = queue.indexOf(audio!);
-    final max = queue.length;
+    final currentIndex = queue.$2.indexOf(audio!);
+    final max = queue.$2.length;
     final random = Random();
     var randomIndex = random.nextInt(max);
     while (randomIndex == currentIndex) {
       randomIndex = random.nextInt(max);
     }
-    nextAudio = queue.elementAt(randomIndex);
+    nextAudio = queue.$2.elementAt(randomIndex);
   }
 
   Future<void> playPrevious() async {
-    if (queue.isNotEmpty == true && audio != null && queue.contains(audio)) {
-      final currentIndex = queue.indexOf(audio!);
+    if (queue.$2.isNotEmpty == true &&
+        audio != null &&
+        queue.$2.contains(audio)) {
+      final currentIndex = queue.$2.indexOf(audio!);
 
       if (currentIndex == 0) {
         return;
       }
 
-      nextAudio = queue.elementAt(currentIndex - 1);
+      nextAudio = queue.$2.elementAt(currentIndex - 1);
 
       if (nextAudio == null) return;
       _setAudio(nextAudio);
@@ -334,8 +326,7 @@ class PlayerService {
   }
 
   Future<void> startPlaylist(Set<Audio> audios, String listName) async {
-    queue = audios.toList();
-    setQueueName(listName);
+    setQueue((listName, audios.toList()));
     _setAudio(audios.first);
     _position = libraryService.getLastPosition.call(_audio?.url);
     _estimateNext();
@@ -598,7 +589,6 @@ class PlayerService {
     await _smtc?.disableSmtc();
     await _smtc?.dispose();
     await _queueController.close();
-    await _queueNameController.close();
     await _mpvMetaDataController.close();
     await _audioController.close();
     await _nextAudioController.close();
