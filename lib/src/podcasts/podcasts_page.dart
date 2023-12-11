@@ -169,11 +169,13 @@ class _PodcastsPageState extends State<PodcastsPage> {
               ? YaruTitleBarStyle.normal
               : YaruTitleBarStyle.undecorated,
           actions: [
-            Padding(
-              padding: appBarActionSpacing,
-              child: SearchButton(
-                active: searchActive,
-                onPressed: () => setSearchActive(!searchActive),
+            Flexible(
+              child: Padding(
+                padding: appBarActionSpacing,
+                child: SearchButton(
+                  active: searchActive,
+                  onPressed: () => setSearchActive(!searchActive),
+                ),
               ),
             ),
           ],

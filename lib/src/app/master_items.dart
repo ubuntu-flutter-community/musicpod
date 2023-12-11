@@ -11,8 +11,6 @@ import '../l10n/l10n.dart';
 import 'master_item.dart';
 
 List<MasterItem> createMasterItems({
-  required int? localAudioIndex,
-  required void Function(int? value) setLocalAudioindex,
   required AudioType? audioType,
   required bool isOnline,
   required void Function({required AudioType audioType, required String text})
@@ -37,10 +35,7 @@ List<MasterItem> createMasterItems({
   return [
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.localAudio),
-      pageBuilder: (context) => LocalAudioPage(
-        selectedIndex: localAudioIndex ?? 0,
-        onIndexSelected: (i) => setLocalAudioindex(i),
-      ),
+      pageBuilder: (context) => const LocalAudioPage(),
       iconBuilder: (context, selected) => LocalAudioPageIcon(
         selected: selected,
         isPlaying: audioType == AudioType.local,
