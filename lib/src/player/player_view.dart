@@ -95,23 +95,29 @@ class _PlayerViewState extends State<PlayerView> {
         size: size,
       );
     } else {
-      player = BottomPlayer(
-        isVideo: isVideo,
-        videoController: playerModel.controller,
-        onTextTap: widget.onTextTap,
-        setFullScreen: setFullScreen,
-        audio: audio,
-        width: width,
-        color: color,
-        playPrevious: playPrevious,
-        playNext: playNext,
-        liked: liked,
-        isStarredStation: isStarredStation,
-        addStarredStation: addStarredStation,
-        removeStarredStation: removeStarredStation,
-        addLikedAudio: addLikedAudio,
-        removeLikedAudio: removeLikedAudio,
-        isOnline: widget.isOnline,
+      player = Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Divider(),
+          BottomPlayer(
+            isVideo: isVideo,
+            videoController: playerModel.controller,
+            onTextTap: widget.onTextTap,
+            setFullScreen: setFullScreen,
+            audio: audio,
+            width: width,
+            color: color,
+            playPrevious: playPrevious,
+            playNext: playNext,
+            liked: liked,
+            isStarredStation: isStarredStation,
+            addStarredStation: addStarredStation,
+            removeStarredStation: removeStarredStation,
+            addLikedAudio: addLikedAudio,
+            removeLikedAudio: removeLikedAudio,
+            isOnline: widget.isOnline,
+          ),
+        ],
       );
     }
 

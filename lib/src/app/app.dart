@@ -250,7 +250,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                     Expanded(
                       child: yaruMasterDetailPage,
                     ),
-                    if (!playerToTheRight) const Divider(),
                     if (!playerToTheRight)
                       Material(
                         color: playerBg,
