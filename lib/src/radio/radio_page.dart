@@ -205,11 +205,13 @@ class _RadioPageState extends State<RadioPage> {
                   )
                 : const SizedBox.shrink(),
             actions: [
-              Padding(
-                padding: appBarActionSpacing,
-                child: SearchButton(
-                  active: searchActive,
-                  onPressed: () => setSearchActive(!searchActive),
+              Flexible(
+                child: Padding(
+                  padding: appBarActionSpacing,
+                  child: SearchButton(
+                    active: searchActive,
+                    onPressed: () => setSearchActive(!searchActive),
+                  ),
                 ),
               ),
             ],
@@ -223,11 +225,14 @@ class _RadioPageState extends State<RadioPage> {
               searchQuery: searchQuery,
             ),
           ),
-          body: TabBarView(
-            children: [
-              radioLibPage,
-              discoverBody,
-            ],
+          body: Padding(
+            padding: tabViewPadding,
+            child: TabBarView(
+              children: [
+                radioLibPage,
+                discoverBody,
+              ],
+            ),
           ),
         ),
       );

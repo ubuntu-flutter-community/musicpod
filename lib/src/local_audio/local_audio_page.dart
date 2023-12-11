@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
+import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
 import '../../player.dart';
-import '../../common.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import 'cache_dialog.dart';
@@ -15,12 +15,7 @@ import 'cache_dialog.dart';
 class LocalAudioPage extends StatefulWidget {
   const LocalAudioPage({
     super.key,
-    required this.selectedIndex,
-    required this.onIndexSelected,
   });
-
-  final int selectedIndex;
-  final void Function(int index) onIndexSelected;
 
   @override
   State<LocalAudioPage> createState() => _LocalAudioPageState();
@@ -88,6 +83,8 @@ class _LocalAudioPageState extends State<LocalAudioPage>
         context.select((LocalAudioModel m) => m.similarAlbumsSearchResult);
 
     final libraryModel = context.read<LibraryModel>();
+    final selectedIndex = context.select((LibraryModel m) => m.localAudioindex);
+    final onIndexSelected = libraryModel.setLocalAudioindex;
 
     context.select((LocalAudioModel m) => m.useLocalAudioCache);
 
@@ -120,7 +117,7 @@ class _LocalAudioPageState extends State<LocalAudioPage>
       width: kSearchBarWidth,
       child: TabsBar(
         onTap: (value) {
-          widget.onIndexSelected.call(value);
+          onIndexSelected.call(value);
           setSearchActive(false);
           setSearchQuery(null);
         },
@@ -194,7 +191,7 @@ class _LocalAudioPageState extends State<LocalAudioPage>
     }
 
     return DefaultTabController(
-      initialIndex: widget.selectedIndex,
+      initialIndex: selectedIndex ?? 0,
       length: 3,
       child: Scaffold(
         appBar: HeaderBar(
@@ -210,14 +207,16 @@ class _LocalAudioPageState extends State<LocalAudioPage>
               : const SizedBox.shrink(),
           titleSpacing: 0,
           actions: [
-            Padding(
-              padding: appBarActionSpacing,
-              child: SearchButton(
-                active: searchActive,
-                onPressed: () {
-                  setSearchActive(!searchActive);
-                  setSearchQuery('');
-                },
+            Flexible(
+              child: Padding(
+                padding: appBarActionSpacing,
+                child: SearchButton(
+                  active: searchActive,
+                  onPressed: () {
+                    setSearchActive(!searchActive);
+                    setSearchQuery('');
+                  },
+                ),
               ),
             ),
           ],

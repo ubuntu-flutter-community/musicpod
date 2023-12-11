@@ -154,8 +154,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     // Library
     // Watching values
     final libraryModel = context.read<LibraryModel>();
-    final localAudioIndex =
-        context.select((LibraryModel m) => m.localAudioindex);
     final index = context.select((LibraryModel m) => m.index);
     final likedLocalAudios = context.select(
       (LibraryModel m) => Set<Audio>.from(
@@ -210,8 +208,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     }
 
     final masterItems = createMasterItems(
-      localAudioIndex: localAudioIndex,
-      setLocalAudioindex: libraryModel.setLocalAudioindex,
       audioType: audioType,
       isOnline: isOnline,
       onTextTap: onTextTap,
