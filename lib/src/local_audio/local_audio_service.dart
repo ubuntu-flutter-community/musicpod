@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:metadata_god/metadata_god.dart';
-import 'package:mime_type/mime_type.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
@@ -79,7 +78,7 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
 
     for (var fileSystemEntity in allFileSystemEntities) {
       if (!await FileSystemEntity.isDirectory(fileSystemEntity.path) &&
-          _validType(fileSystemEntity.path)) {
+          isValidFile(fileSystemEntity.path)) {
         onlyFiles.add(fileSystemEntity);
       }
     }
@@ -101,8 +100,6 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
 
   return (failedImports, newAudios);
 }
-
-bool _validType(String path) => mime(path)?.contains('audio') ?? false;
 
 Future<List<FileSystemEntity>> _getFlattenedFileSystemEntities({
   required String path,

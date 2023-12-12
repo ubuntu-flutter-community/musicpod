@@ -30,7 +30,7 @@ class ExternalPathService {
     Future<void> Function({Audio? newAudio, Duration? newPosition}) play, [
     String? path,
   ]) {
-    if (path == null || !isValidAudio(path)) {
+    if (path == null || !isValidFile(path)) {
       return;
     }
     MetadataGod.initialize();
