@@ -174,7 +174,7 @@ class _RadioPageState extends State<RadioPage> {
         children: [
           controlPanel,
           const SizedBox(
-            height: 15,
+            height: 10,
           ),
           Expanded(child: discoverGrid),
         ],

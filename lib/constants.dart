@@ -38,26 +38,19 @@ const kAudioTileSpacing = EdgeInsets.only(right: 10.0);
 const kAudioTrackWidth = 40.0;
 
 const kGridPadding = EdgeInsets.only(
-  top: 0,
+  top: 5,
   bottom: kYaruPagePadding,
-  left: kYaruPagePadding - 5,
-  right: kYaruPagePadding - 5,
-);
-const kMobileGridPadding = EdgeInsets.only(
-  top: 0,
-  bottom: kYaruPagePadding,
-  left: kYaruPagePadding - 5,
-  right: kYaruPagePadding - 5,
-);
-
-const kHeaderPadding = EdgeInsets.only(
-  top: kYaruPagePadding,
   left: kYaruPagePadding,
   right: kYaruPagePadding,
-  bottom: kYaruPagePadding - 5,
+);
+const kMobileGridPadding = EdgeInsets.only(
+  top: 5,
+  bottom: kYaruPagePadding,
+  left: kYaruPagePadding,
+  right: kYaruPagePadding,
 );
 
-const kCardHeight = 200.0;
+const kCardHeight = 190.0;
 
 const kSmallCardHeight = kCardHeight - 70;
 
