@@ -106,7 +106,7 @@ class Banner extends StatelessWidget {
     super.key,
     this.onTap,
     this.color,
-    this.elevation = 1,
+    required this.elevation,
     this.surfaceTintColor,
     required this.child,
     this.padding = const EdgeInsets.all(kYaruPagePadding),
@@ -136,7 +136,6 @@ class Banner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dark = theme.brightness == Brightness.dark;
     final borderRadius = BorderRadius.circular(kYaruBannerRadius);
 
     return Material(
@@ -152,17 +151,10 @@ class Banner extends StatelessWidget {
         mouseCursor: mouseCursor,
         child: Card(
           color: color ?? theme.cardColor,
-          shadowColor: Colors.black.withOpacity(0.5),
           surfaceTintColor: null,
           elevation: elevation,
           shape: RoundedRectangleBorder(
             borderRadius: borderRadius,
-            side: dark
-                ? BorderSide.none
-                : const BorderSide(
-                    color: Color.fromARGB(255, 226, 226, 226),
-                    width: 0,
-                  ),
           ),
           child: Container(
             width: double.infinity,
