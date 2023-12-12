@@ -28,7 +28,6 @@ class AudioCardBottom extends StatelessWidget {
           margin: const EdgeInsets.all(1),
           padding: const EdgeInsets.symmetric(
             vertical: 5,
-            horizontal: 5,
           ),
           child: text == null
               ? ClipRRect(
