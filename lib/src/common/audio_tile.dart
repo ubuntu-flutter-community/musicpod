@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../l10n.dart';
 
@@ -19,9 +20,9 @@ class AudioTile extends StatelessWidget {
     this.showTrack = true,
     this.showAlbum = true,
     this.showArtist = true,
-    this.titleFlex = 5,
-    this.artistFlex = 5,
-    this.albumFlex = 4,
+    this.titleFlex = 1,
+    this.artistFlex = 1,
+    this.albumFlex = 1,
     this.startPlaylist,
   });
 
@@ -53,7 +54,7 @@ class AudioTile extends StatelessWidget {
     );
 
     final listTile = ListTile(
-      contentPadding: const EdgeInsets.only(left: 25, right: 25),
+      contentPadding: kAudioTilePadding,
       onTap: () {
         if (selected) {
           if (isPlayerPlaying) {
@@ -74,9 +75,11 @@ class AudioTile extends StatelessWidget {
         children: [
           if (showTrack)
             Padding(
-              padding: const EdgeInsets.only(right: 25),
+              padding: kAudioTileTrackPadding,
               child: Text(
-                audio.trackNumber != null ? '${audio.trackNumber}' : ' ',
+                audio.trackNumber != null
+                    ? audio.trackNumber!.toString().padLeft(2, '0')
+                    : '00',
                 style: textStyle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -84,27 +87,33 @@ class AudioTile extends StatelessWidget {
             ),
           Expanded(
             flex: titleFlex,
-            child: Text(
-              audio.title ?? context.l10n.unknown,
-              style: textStyle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            child: Padding(
+              padding: kAudioTileSpacing,
+              child: Text(
+                audio.title ?? context.l10n.unknown,
+                style: textStyle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ),
           if (showArtist)
             Expanded(
               flex: artistFlex,
-              child: TapAbleText(
-                onTap: onTextTap == null || audio.audioType == null
-                    ? null
-                    : () => onTextTap!(
-                          text: audio.artist!,
-                          audioType: audio.audioType!,
-                        ),
-                text: audio.artist?.isNotEmpty == false
-                    ? context.l10n.unknown
-                    : audio.artist!,
-                selected: selected,
+              child: Padding(
+                padding: kAudioTileSpacing,
+                child: TapAbleText(
+                  onTap: onTextTap == null || audio.audioType == null
+                      ? null
+                      : () => onTextTap!(
+                            text: audio.artist!,
+                            audioType: audio.audioType!,
+                          ),
+                  text: audio.artist?.isNotEmpty == false
+                      ? context.l10n.unknown
+                      : audio.artist!,
+                  selected: selected,
+                ),
               ),
             ),
           if (showAlbum)

@@ -4,7 +4,6 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../data.dart';
 import '../l10n/l10n.dart';
 import '../library/playlist_dialog.dart';
-import '../theme.dart';
 import 'icons.dart';
 import 'stream_provider_share_button.dart';
 
@@ -102,50 +101,47 @@ class _Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: yaruStyled ? 8 : 2),
-      child: YaruPopupMenuButton(
-        style: TextButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            side: BorderSide.none,
-            borderRadius: BorderRadius.circular(kYaruButtonRadius),
-          ),
+    return YaruPopupMenuButton(
+      style: TextButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          side: BorderSide.none,
+          borderRadius: BorderRadius.circular(kYaruButtonRadius),
         ),
-        itemBuilder: (context) {
-          return [
-            PopupMenuItem(
-              onTap: onCreateNewPlaylist,
-              child: Text(context.l10n.createNewPlaylist),
-            ),
-            PopupMenuItem(
-              onTap: insertIntoQueue,
-              child: Text(context.l10n.insertIntoQueue),
-            ),
-            if (onRemoveFromPlaylist != null)
-              PopupMenuItem(
-                onTap: onRemoveFromPlaylist == null || playlistId == null
-                    ? null
-                    : () => onRemoveFromPlaylist!(playlistId!),
-                child: Text('Remove from $playlistId'),
-              ),
-            if (topFivePlaylistIds != null)
-              for (final playlist in topFivePlaylistIds!)
-                PopupMenuItem(
-                  onTap: onAddToPlaylist == null
-                      ? null
-                      : () => onAddToPlaylist!(playlist),
-                  child: Text(
-                    '${context.l10n.addTo} $playlist',
-                  ),
-                ),
-            PopupMenuItem(
-              padding: EdgeInsets.zero,
-              child: StreamProviderRow(text: '$artist - $title'),
-            ),
-          ];
-        },
-        child: icon,
       ),
+      itemBuilder: (context) {
+        return [
+          PopupMenuItem(
+            onTap: onCreateNewPlaylist,
+            child: Text(context.l10n.createNewPlaylist),
+          ),
+          PopupMenuItem(
+            onTap: insertIntoQueue,
+            child: Text(context.l10n.insertIntoQueue),
+          ),
+          if (onRemoveFromPlaylist != null)
+            PopupMenuItem(
+              onTap: onRemoveFromPlaylist == null || playlistId == null
+                  ? null
+                  : () => onRemoveFromPlaylist!(playlistId!),
+              child: Text('Remove from $playlistId'),
+            ),
+          if (topFivePlaylistIds != null)
+            for (final playlist in topFivePlaylistIds!)
+              PopupMenuItem(
+                onTap: onAddToPlaylist == null
+                    ? null
+                    : () => onAddToPlaylist!(playlist),
+                child: Text(
+                  '${context.l10n.addTo} $playlist',
+                ),
+              ),
+          PopupMenuItem(
+            padding: EdgeInsets.zero,
+            child: StreamProviderRow(text: '$artist - $title'),
+          ),
+        ];
+      },
+      child: icon,
     );
   }
 }

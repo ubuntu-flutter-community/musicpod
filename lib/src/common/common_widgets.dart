@@ -320,6 +320,8 @@ class DropDownArrow extends StatelessWidget {
 
 double get podcastProgressSize => yaruStyled ? 34 : 45;
 
+double get likeButtonWidth => yaruStyled ? 62 : 70;
+
 double? get avatarIconSize => yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
 
 double? get snackBarWidth => yaruStyled ? kSnackBarWidth : null;
