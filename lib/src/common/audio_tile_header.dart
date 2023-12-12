@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
+import '../../constants.dart';
 import '../l10n/l10n.dart';
 
 class AudioTileHeader extends StatelessWidget {
@@ -15,9 +15,9 @@ class AudioTileHeader extends StatelessWidget {
     this.titleLabel,
     this.artistLabel,
     this.albumLabel,
-    this.titleFlex = 5,
-    this.albumFlex = 4,
-    this.artistFlex = 5,
+    this.titleFlex = 1,
+    this.albumFlex = 1,
+    this.artistFlex = 1,
     this.textStyle,
   });
 
@@ -33,40 +33,43 @@ class AudioTileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: const EdgeInsets.only(left: 5, right: 10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(kYaruButtonRadius),
-      ),
+      contentPadding: kAudioTilePadding,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (showTrack)
-            Padding(
-              padding: const EdgeInsets.only(right: kYaruPagePadding),
+            SizedBox(
+              width: kAudioTrackWidth,
               child: _HeaderElement(
                 onAudioFilterSelected: onAudioFilterSelected,
-                label: '#',
+                label: '  #',
                 audioFilter: AudioFilter.trackNumber,
                 style: textStyle,
               ),
             ),
           Expanded(
             flex: titleFlex,
-            child: _HeaderElement(
-              onAudioFilterSelected: onAudioFilterSelected,
-              label: titleLabel ?? context.l10n.title,
-              audioFilter: AudioFilter.title,
-              style: textStyle,
+            child: Padding(
+              padding: kAudioTileSpacing,
+              child: _HeaderElement(
+                onAudioFilterSelected: onAudioFilterSelected,
+                label: titleLabel ?? context.l10n.title,
+                audioFilter: AudioFilter.title,
+                style: textStyle,
+              ),
             ),
           ),
           if (showArtist)
             Expanded(
               flex: artistFlex,
-              child: _HeaderElement(
-                onAudioFilterSelected: onAudioFilterSelected,
-                label: artistLabel ?? context.l10n.artist,
-                audioFilter: AudioFilter.artist,
-                style: textStyle,
+              child: Padding(
+                padding: kAudioTileSpacing,
+                child: _HeaderElement(
+                  onAudioFilterSelected: onAudioFilterSelected,
+                  label: artistLabel ?? context.l10n.artist,
+                  audioFilter: AudioFilter.artist,
+                  style: textStyle,
+                ),
               ),
             ),
           if (showAlbum)
@@ -81,7 +84,7 @@ class AudioTileHeader extends StatelessWidget {
             ),
         ],
       ),
-      trailing: const SizedBox(width: 61),
+      trailing: SizedBox(width: likeButtonWidth),
     );
   }
 }

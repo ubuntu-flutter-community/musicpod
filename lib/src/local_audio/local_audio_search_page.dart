@@ -146,15 +146,12 @@ class _Titles extends StatelessWidget {
 
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 18, right: 20),
-          child: AudioTileHeader(
-            textStyle: theme.textTheme.headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w100),
-            showTrack: false,
-            audioFilter: AudioFilter.trackNumber,
-            titleLabel: '${context.l10n.titles}  •  ${titlesResult.length}',
-          ),
+        AudioTileHeader(
+          textStyle: theme.textTheme.headlineSmall
+              ?.copyWith(fontWeight: FontWeight.w100),
+          showTrack: false,
+          audioFilter: AudioFilter.trackNumber,
+          titleLabel: '${context.l10n.titles}  •  ${titlesResult.length}',
         ),
         const SpacedDivider(
           top: 0,
