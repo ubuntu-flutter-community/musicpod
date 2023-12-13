@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
+import 'translate_on_hover.dart';
+
 class RoundImageContainer extends StatelessWidget {
   const RoundImageContainer({
     super.key,
@@ -77,7 +79,7 @@ class RoundImageContainer extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ).translateOnHover;
   }
 
   Color? getColorFromName(String name) {
@@ -111,5 +113,11 @@ class RoundImageContainer extends StatelessWidget {
       'y': Colors.purpleAccent,
       'z': Colors.deepPurple,
     }[firstChar];
+  }
+}
+
+extension _HoverExtension on Widget {
+  Widget get translateOnHover {
+    return TranslateOnHover(child: this);
   }
 }

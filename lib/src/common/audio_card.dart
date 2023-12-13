@@ -7,6 +7,7 @@ import '../../constants.dart';
 import '../../theme.dart';
 import 'common_widgets.dart';
 import 'icons.dart';
+import 'translate_on_hover.dart';
 
 class AudioCard extends StatefulWidget {
   const AudioCard({
@@ -68,7 +69,7 @@ class _AudioCardState extends State<AudioCard> {
                           color: light ? kShimmerBaseLight : kShimmerBaseDark,
                         ),
                       ),
-                  if (widget.image != null) widget.image!,
+                  if (widget.image != null) widget.image!.translateOnHover,
                   if (_hovered && widget.onPlay != null)
                     Positioned(
                       bottom: 10,
@@ -165,5 +166,11 @@ class Banner extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension _HoverExtension on Widget {
+  Widget get translateOnHover {
+    return TranslateOnHover(child: this);
   }
 }
