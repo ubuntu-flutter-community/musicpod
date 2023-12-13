@@ -284,7 +284,7 @@ class RadioFallBackIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
-    final fallBackColor = light ? kShimmerBaseLight : kShimmerBaseDark;
+    final fallBackColor = light ? kCardColorLight : kCardColorDark;
     return Container(
       height: double.infinity,
       width: double.infinity,
@@ -296,11 +296,11 @@ class RadioFallBackIcon extends StatelessWidget {
             getColor(
               station?.title ?? station?.album ?? '',
               fallBackColor,
-            ).withOpacity(0.5),
+            ).scale(lightness: light ? -0.3 : 0.2),
             getColor(
               station?.title ?? station?.album ?? '',
               fallBackColor,
-            ).withOpacity(0.9),
+            ),
           ],
         ),
       ),

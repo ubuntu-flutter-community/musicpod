@@ -83,10 +83,8 @@ const kDiskGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
   crossAxisSpacing: 10,
 );
 
-const kShimmerBaseLight = Color.fromARGB(255, 233, 233, 233);
-const kShimmerBaseDark = Color.fromARGB(255, 51, 51, 51);
-const kShimmerHighLightLight = Color.fromARGB(197, 218, 218, 218);
-const kShimmerHighLightDark = Color.fromARGB(255, 57, 57, 57);
+const kCardColorLight = Color.fromARGB(255, 233, 233, 233);
+const kCardColorDark = Color.fromARGB(255, 51, 51, 51);
 
 const kAudioQueueThreshHold = 100;
 

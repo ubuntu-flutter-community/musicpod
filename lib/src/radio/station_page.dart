@@ -130,7 +130,7 @@ class StationPage extends StatelessWidget {
                     ),
                   ),
                   AudioCard(
-                    color: light ? theme.dividerColor : kShimmerBaseDark,
+                    color: light ? theme.dividerColor : kCardColorDark,
                     height: size,
                     width: size,
                     onTap: () => play(newAudio: station),
