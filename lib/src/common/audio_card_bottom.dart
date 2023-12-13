@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:yaru/yaru.dart';
+
 import '../../constants.dart';
 
 class AudioCardBottom extends StatelessWidget {
@@ -37,12 +39,12 @@ class AudioCardBottom extends StatelessWidget {
                     height: 15,
                     width: kSmallCardHeight - 20,
                     child: Shimmer.fromColors(
-                      baseColor: light ? kShimmerBaseLight : kShimmerBaseDark,
+                      baseColor: light ? kCardColorLight : kCardColorDark,
                       highlightColor: light
-                          ? kShimmerHighLightLight
-                          : kShimmerHighLightDark,
+                          ? kCardColorLight.scale(lightness: 0.1)
+                          : kCardColorDark.scale(lightness: 0.1),
                       child: Container(
-                        color: light ? kShimmerBaseLight : kShimmerBaseDark,
+                        color: light ? kCardColorLight : kCardColorDark,
                       ),
                     ),
                   ),
