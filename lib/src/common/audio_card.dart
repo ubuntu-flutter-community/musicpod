@@ -143,8 +143,10 @@ class Banner extends StatelessWidget {
           border: elevation == 0
               ? null
               : Border.all(
-                  width: light ? 0.8 : 0.5,
-                  color: theme.colorScheme.onSurface.withOpacity(0.01),
+                  width: 1,
+                  color: light
+                      ? theme.colorScheme.onSurface.withOpacity(0.05)
+                      : Colors.white.withOpacity(0.005),
                 ),
         ),
         width: double.infinity,

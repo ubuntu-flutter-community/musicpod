@@ -23,8 +23,9 @@ class MusicPod extends StatelessWidget {
           return GtkApplication(
             child: MusicPodApp(
               lightTheme: yaruThemeData.theme,
-              darkTheme: yaruThemeData.darkTheme
-                  ?.copyWith(scaffoldBackgroundColor: const Color(0xFF1e1e1e)),
+              darkTheme: yaruThemeData.darkTheme?.copyWith(
+                scaffoldBackgroundColor: const Color(0xFF1e1e1e),
+              ),
             ),
           );
         },
@@ -49,7 +50,7 @@ class MusicPodApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const dividerColor = Color.fromARGB(28, 255, 255, 255);
+    const dividerColor = Color.fromARGB(19, 255, 255, 255);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
