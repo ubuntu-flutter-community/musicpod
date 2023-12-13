@@ -59,7 +59,7 @@ class _AudioCardState extends State<AudioCard> {
                       Shimmer.fromColors(
                         baseColor: light ? kCardColorLight : kCardColorDark,
                         highlightColor: light
-                            ? kCardColorLight.scale(lightness: -0.03)
+                            ? kCardColorLight.scale(lightness: -0.01)
                             : kCardColorDark.scale(lightness: 0.01),
                         child: Container(
                           color: light ? kCardColorLight : kCardColorDark,
