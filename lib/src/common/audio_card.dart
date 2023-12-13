@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yaru/yaru.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../constants.dart';
 import '../../theme.dart';
 import 'common_widgets.dart';
 import 'icons.dart';
-import 'translate_on_hover.dart';
 
 class AudioCard extends StatefulWidget {
   const AudioCard({
@@ -49,8 +47,7 @@ class _AudioCardState extends State<AudioCard> {
           child: Banner(
             elevation: widget.elevation,
             color:
-                widget.color ?? (light ? theme.dividerColor : kShimmerBaseDark),
-            padding: EdgeInsets.zero,
+                widget.color ?? (light ? kShimmerBaseLight : kShimmerBaseDark),
             onTap: widget.onTap,
             onHover: (value) => setState(() {
               _hovered = value;
@@ -69,7 +66,7 @@ class _AudioCardState extends State<AudioCard> {
                           color: light ? kShimmerBaseLight : kShimmerBaseDark,
                         ),
                       ),
-                  if (widget.image != null) widget.image!.translateOnHover,
+                  if (widget.image != null) widget.image!,
                   if (_hovered && widget.onPlay != null)
                     Positioned(
                       bottom: 10,
@@ -110,9 +107,7 @@ class Banner extends StatelessWidget {
     required this.elevation,
     this.surfaceTintColor,
     required this.child,
-    this.padding = const EdgeInsets.all(kYaruPagePadding),
     this.onHover,
-    this.selected,
     this.mouseCursor,
   });
 
@@ -128,49 +123,35 @@ class Banner extends StatelessWidget {
 
   final Color? surfaceTintColor;
 
-  final EdgeInsetsGeometry padding;
-
-  final bool? selected;
-
   final MouseCursor? mouseCursor;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final borderRadius = BorderRadius.circular(kYaruBannerRadius);
+    final light = theme.brightness == Brightness.light;
 
-    return Material(
-      color: selected == true
-          ? theme.primaryColor.withOpacity(0.8)
-          : Colors.transparent,
-      borderRadius: borderRadius,
-      child: InkWell(
-        onTap: onTap,
-        onHover: onHover,
-        borderRadius: borderRadius,
-        hoverColor: theme.colorScheme.onSurface.withOpacity(0.1),
-        mouseCursor: mouseCursor,
-        child: Card(
-          color: color ?? theme.cardColor,
-          surfaceTintColor: null,
-          elevation: elevation,
-          shape: RoundedRectangleBorder(
-            borderRadius: borderRadius,
-          ),
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            padding: padding,
-            child: child,
-          ),
+    return InkWell(
+      onTap: onTap,
+      onHover: onHover,
+      borderRadius: BorderRadius.circular(12),
+      hoverColor: theme.colorScheme.onSurface.withOpacity(0.1),
+      mouseCursor: mouseCursor,
+      child: Container(
+        margin: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(11),
+          border: elevation == 0
+              ? null
+              : Border.all(
+                  width: light ? 0.8 : 0.5,
+                  color: theme.colorScheme.onSurface.withOpacity(0.01),
+                ),
         ),
+        width: double.infinity,
+        height: double.infinity,
+        child: child,
       ),
     );
-  }
-}
-
-extension _HoverExtension on Widget {
-  Widget get translateOnHover {
-    return TranslateOnHover(child: this);
   }
 }
