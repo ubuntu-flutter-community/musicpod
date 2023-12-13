@@ -284,7 +284,7 @@ class RadioFallBackIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final light = theme.brightness == Brightness.light;
-    final fallBackColor = light ? theme.dividerColor : Colors.black38;
+    final fallBackColor = light ? kShimmerBaseLight : kShimmerBaseDark;
     return Container(
       height: double.infinity,
       width: double.infinity,
@@ -333,7 +333,7 @@ Color getColor(String name, Color fallBackColor) {
       name.toLowerCase().contains('soul') ||
       name.toLowerCase().contains('rnb') ||
       name.toLowerCase().contains('deutschrap')) {
-    return Colors.black87;
+    return const Color.fromARGB(255, 53, 14, 91);
   } else if (name.toLowerCase().contains('xmas') ||
       name.toLowerCase().contains('christmas') ||
       name.toLowerCase().contains('weihnacht')) {
