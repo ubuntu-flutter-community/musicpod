@@ -137,7 +137,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
       children: [
         controlPanel,
         const SizedBox(
-          height: 10,
+          height: 15,
         ),
         Expanded(child: grid),
       ],

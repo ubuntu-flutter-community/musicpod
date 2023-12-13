@@ -49,6 +49,7 @@ class _AudioCardState extends State<AudioCard> {
             elevation: widget.elevation,
             color:
                 widget.color ?? (light ? theme.dividerColor : kShimmerBaseDark),
+            padding: EdgeInsets.zero,
             onTap: widget.onTap,
             onHover: (value) => setState(() {
               _hovered = value;
@@ -72,43 +73,30 @@ class _AudioCardState extends State<AudioCard> {
                     Positioned(
                       bottom: 10,
                       right: 10,
-                      child: _PlayButton(onPlay: widget.onPlay),
+                      child: CircleAvatar(
+                        radius: avatarIconSize,
+                        backgroundColor: theme.colorScheme.primary,
+                        child: IconButton(
+                          onPressed: widget.onPlay,
+                          icon: Padding(
+                            padding: appleStyled
+                                ? const EdgeInsets.only(left: 3)
+                                : EdgeInsets.zero,
+                            child: Icon(
+                              Iconz().playFilled,
+                              color: contrastColor(theme.colorScheme.primary),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                 ],
               ),
             ),
-          ).translateOnHover,
+          ),
         ),
         if (widget.bottom != null) widget.bottom!,
       ],
-    );
-  }
-}
-
-class _PlayButton extends StatelessWidget {
-  const _PlayButton({
-    this.onPlay,
-  });
-
-  final void Function()? onPlay;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return CircleAvatar(
-      radius: avatarIconSize,
-      backgroundColor: theme.colorScheme.primary,
-      child: IconButton(
-        onPressed: onPlay,
-        icon: Padding(
-          padding:
-              appleStyled ? const EdgeInsets.only(left: 3) : EdgeInsets.zero,
-          child: Icon(
-            Iconz().playFilled,
-            color: contrastColor(theme.colorScheme.primary),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -121,16 +109,28 @@ class Banner extends StatelessWidget {
     required this.elevation,
     this.surfaceTintColor,
     required this.child,
+    this.padding = const EdgeInsets.all(kYaruPagePadding),
     this.onHover,
+    this.selected,
     this.mouseCursor,
   });
 
   final Widget child;
+
   final VoidCallback? onTap;
+
   final ValueChanged<bool>? onHover;
+
   final Color? color;
+
   final double elevation;
+
   final Color? surfaceTintColor;
+
+  final EdgeInsetsGeometry padding;
+
+  final bool? selected;
+
   final MouseCursor? mouseCursor;
 
   @override
@@ -138,63 +138,32 @@ class Banner extends StatelessWidget {
     final theme = Theme.of(context);
     final borderRadius = BorderRadius.circular(kYaruBannerRadius);
 
-    return InkWell(
-      onTap: onTap,
-      onHover: onHover,
+    return Material(
+      color: selected == true
+          ? theme.primaryColor.withOpacity(0.8)
+          : Colors.transparent,
       borderRadius: borderRadius,
-      mouseCursor: mouseCursor,
-      child: Card(
-        margin: EdgeInsets.zero,
-        color: color ?? theme.cardColor,
-        surfaceTintColor: null,
-        elevation: elevation,
-        shape: RoundedRectangleBorder(
-          borderRadius: borderRadius,
+      child: InkWell(
+        onTap: onTap,
+        onHover: onHover,
+        borderRadius: borderRadius,
+        hoverColor: theme.colorScheme.onSurface.withOpacity(0.1),
+        mouseCursor: mouseCursor,
+        child: Card(
+          color: color ?? theme.cardColor,
+          surfaceTintColor: null,
+          elevation: elevation,
+          shape: RoundedRectangleBorder(
+            borderRadius: borderRadius,
+          ),
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            padding: padding,
+            child: child,
+          ),
         ),
-        child: child,
       ),
     );
-  }
-}
-
-extension HoverExtension on Widget {
-  Widget get translateOnHover {
-    return TranslateOnHover(child: this);
-  }
-}
-
-class TranslateOnHover extends StatefulWidget {
-  final Widget child;
-  const TranslateOnHover({super.key, required this.child});
-
-  @override
-  State<TranslateOnHover> createState() => _TranslateOnHoverState();
-}
-
-class _TranslateOnHoverState extends State<TranslateOnHover> {
-  double scale = 1.0;
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (e) => _mouseEnter(true),
-      onExit: (e) => _mouseEnter(false),
-      child: TweenAnimationBuilder(
-        duration: const Duration(milliseconds: 200),
-        tween: Tween<double>(begin: 1.0, end: scale),
-        builder: (BuildContext context, double value, _) {
-          return Transform.scale(scale: value, child: widget.child);
-        },
-      ),
-    );
-  }
-
-  void _mouseEnter(bool hover) {
-    setState(() {
-      if (hover) {
-        scale = 1.03;
-      } else {
-        scale = 1.0;
-      }
-    });
   }
 }
