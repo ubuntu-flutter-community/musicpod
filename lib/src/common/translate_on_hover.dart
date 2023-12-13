@@ -16,7 +16,7 @@ class _TranslateOnHoverState extends State<TranslateOnHover> {
       onEnter: (e) => _mouseEnter(true),
       onExit: (e) => _mouseEnter(false),
       child: TweenAnimationBuilder(
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 100),
         tween: Tween<double>(begin: 1.0, end: scale),
         builder: (BuildContext context, double value, _) {
           return Transform.scale(scale: value, child: widget.child);
