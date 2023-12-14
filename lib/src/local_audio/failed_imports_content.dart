@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../build_context_x.dart';
 import '../l10n/l10n.dart';
 
 class FailedImportsContent extends StatelessWidget {
@@ -14,7 +15,7 @@ class FailedImportsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     return SizedBox(
       height: 400,
       width: 400,

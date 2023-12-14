@@ -3,10 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../theme.dart';
+import '../../theme_data_x.dart';
 import 'radio_page.dart';
 
 class StationPage extends StatelessWidget {
@@ -67,8 +69,7 @@ class StationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final light = theme.brightness == Brightness.light;
+    final theme = context.t;
     final tags = station.album?.isNotEmpty == false
         ? null
         : <String>[
@@ -130,7 +131,7 @@ class StationPage extends StatelessWidget {
                     ),
                   ),
                   AudioCard(
-                    color: light ? theme.dividerColor : kCardColorDark,
+                    color: theme.isLight ? theme.dividerColor : kCardColorDark,
                     height: size,
                     width: size,
                     onTap: () => play(newAudio: station),

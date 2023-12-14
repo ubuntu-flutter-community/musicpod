@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../build_context_x.dart';
 import '../common/icons.dart';
 import 'player_model.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,7 @@ class ShuffleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final shuffle = context.select((PlayerModel m) => m.shuffle);
     final setShuffle = context.read<PlayerModel>().setShuffle;
 

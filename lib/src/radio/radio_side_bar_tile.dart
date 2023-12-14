@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 
@@ -38,7 +39,7 @@ class _RadioSideBarTileState extends State<RadioSideBarTile> {
                 onTap: () => widget.play(newAudio: widget.station.value.first),
                 child: Icon(
                   Iconz().playFilled,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.t.colorScheme.primary,
                 ),
               ),
             ),

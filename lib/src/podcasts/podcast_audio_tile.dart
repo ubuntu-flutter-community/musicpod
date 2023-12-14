@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
@@ -136,7 +137,7 @@ class _Right extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final textStyle = TextStyle(
       color: theme.colorScheme.onSurface,
       fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
@@ -236,7 +237,7 @@ class _Description extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     return InkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: () {

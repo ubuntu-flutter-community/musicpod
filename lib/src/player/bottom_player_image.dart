@@ -1,3 +1,4 @@
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class BottomPlayerImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
       iconData = Iconz().radio;

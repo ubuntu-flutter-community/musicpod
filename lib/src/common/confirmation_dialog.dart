@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yaru_widgets/constants.dart';
 
+import '../../build_context_x.dart';
 import '../l10n/l10n.dart';
 
 class ConfirmationDialog extends StatelessWidget {
@@ -15,7 +16,7 @@ class ConfirmationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       content: DefaultTextStyle(
-        style: Theme.of(context).textTheme.bodyLarge ?? const TextStyle(),
+        style: context.t.textTheme.bodyLarge ?? const TextStyle(),
         child: SizedBox(
           width: 300,
           child: message,

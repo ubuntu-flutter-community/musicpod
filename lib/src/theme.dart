@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import 'color_scheme_x.dart';
+
 ThemeData m3Theme({
   Brightness brightness = Brightness.light,
   Color color = Colors.greenAccent,
@@ -55,9 +57,8 @@ bool get yaruStyled => Platform.isLinux;
 bool get appleStyled => Platform.isMacOS || Platform.isIOS;
 
 PopupMenuThemeData _createPopupMenuTheme(ColorScheme colorScheme) {
-  final bgColor = colorScheme.brightness == Brightness.light
-      ? colorScheme.surface
-      : colorScheme.surfaceVariant;
+  final bgColor =
+      colorScheme.isLight ? colorScheme.surface : colorScheme.surfaceVariant;
   return PopupMenuThemeData(
     color: bgColor,
     surfaceTintColor: bgColor,
@@ -65,7 +66,7 @@ PopupMenuThemeData _createPopupMenuTheme(ColorScheme colorScheme) {
       borderRadius: BorderRadius.circular(10),
       borderSide: BorderSide(
         color: colorScheme.onSurface.withOpacity(
-          colorScheme.brightness == Brightness.light ? 0.3 : 0.2,
+          colorScheme.isLight ? 0.3 : 0.2,
         ),
         width: 1,
       ),
@@ -74,9 +75,8 @@ PopupMenuThemeData _createPopupMenuTheme(ColorScheme colorScheme) {
 }
 
 MenuStyle _createMenuStyle(ColorScheme colorScheme) {
-  final bgColor = colorScheme.brightness == Brightness.light
-      ? colorScheme.surface
-      : colorScheme.surfaceVariant;
+  final bgColor =
+      colorScheme.isLight ? colorScheme.surface : colorScheme.surfaceVariant;
 
   return MenuStyle(
     surfaceTintColor: MaterialStateColor.resolveWith((states) => bgColor),
@@ -84,7 +84,7 @@ MenuStyle _createMenuStyle(ColorScheme colorScheme) {
       (states) => RoundedRectangleBorder(
         side: BorderSide(
           color: colorScheme.onSurface.withOpacity(
-            colorScheme.brightness == Brightness.light ? 0.3 : 0.2,
+            colorScheme.isLight ? 0.3 : 0.2,
           ),
           width: 1,
         ),
@@ -94,7 +94,7 @@ MenuStyle _createMenuStyle(ColorScheme colorScheme) {
     side: MaterialStateBorderSide.resolveWith(
       (states) => BorderSide(
         color: colorScheme.onSurface.withOpacity(
-          colorScheme.brightness == Brightness.light ? 0.3 : 0.2,
+          colorScheme.isLight ? 0.3 : 0.2,
         ),
         width: 1,
       ),

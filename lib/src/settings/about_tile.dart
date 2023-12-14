@@ -4,6 +4,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
 import '../../constants.dart';
 import '../common/icons.dart';
 import '../l10n/l10n.dart';
@@ -13,7 +14,7 @@ class AboutTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final linkColor = theme.colorScheme.primary;
     final content = [
       Padding(
@@ -68,9 +69,9 @@ class AboutTile extends StatelessWidget {
           children: [
             Text(
               context.l10n.findUsOnGitHub,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: linkColor,
-                  ),
+              style: context.t.textTheme.bodyMedium?.copyWith(
+                color: linkColor,
+              ),
             ),
             const SizedBox(
               width: 5,

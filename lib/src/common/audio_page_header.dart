@@ -3,6 +3,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../theme.dart';
@@ -26,8 +27,8 @@ class AudioPageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
+    final theme = context.t;
+    final size = context.m.size;
     final smallWindow = size.width < 600.0;
 
     return Container(
@@ -138,7 +139,7 @@ class _DescriptionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     return SizedBox(
       height: 400,
       width: 400,

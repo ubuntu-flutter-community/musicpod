@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../string_x.dart';
 import 'package:podcast_search/podcast_search.dart';
@@ -22,7 +23,7 @@ class CountryPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final buttonStyle = TextButton.styleFrom(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(6),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../build_context_x.dart';
 import '../l10n/l10n.dart';
 import 'patch_notes.dart';
 
@@ -17,7 +18,7 @@ class PatchNotesDialog extends StatelessWidget {
       title: const Text(kRecentPatchNotesTitle),
       content: Text(
         kRecentPatchNotes,
-        style: Theme.of(context).textTheme.bodyLarge,
+        style: context.t.textTheme.bodyLarge,
       ),
       actions: [
         ElevatedButton(

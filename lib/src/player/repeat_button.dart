@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import 'player_model.dart';
 
@@ -14,7 +15,7 @@ class RepeatButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final setRepeatSingle = context.read<PlayerModel>().setRepeatSingle;
     final repeatSingle = context.select((PlayerModel m) => m.repeatSingle);
 

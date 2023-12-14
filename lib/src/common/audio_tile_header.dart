@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../l10n/l10n.dart';
@@ -104,7 +105,7 @@ class _HeaderElement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final textStyle = style ??
         TextStyle(
           fontWeight: mediumTextWeight,

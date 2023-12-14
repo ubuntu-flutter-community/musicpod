@@ -3,6 +3,7 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:popover/popover.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../globals.dart';
@@ -64,7 +65,7 @@ class FullHeightPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final active = audio?.path != null || isOnline;
     final activeControls = audio?.path != null || isOnline;
 

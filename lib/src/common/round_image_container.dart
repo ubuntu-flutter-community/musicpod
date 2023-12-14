@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../build_context_x.dart';
+
 class RoundImageContainer extends StatelessWidget {
   const RoundImageContainer({
     super.key,
@@ -15,7 +17,7 @@ class RoundImageContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
 
     Color? bg;
     if (image == null) {

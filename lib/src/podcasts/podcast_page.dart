@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../l10n/l10n.dart';
@@ -63,7 +64,7 @@ class PodcastPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final genre = audios?.firstWhereOrNull((e) => e.genre != null)?.genre;
 
     context.select((LibraryModel m) => m.lastPositions?.length);
@@ -79,12 +80,12 @@ class PodcastPage extends StatelessWidget {
               fallBackIcon: Icon(
                 Iconz().podcast,
                 size: 80,
-                color: Theme.of(context).hintColor,
+                color: theme.hintColor,
               ),
               errorIcon: Icon(
                 Iconz().podcast,
                 size: 80,
-                color: Theme.of(context).hintColor,
+                color: theme.hintColor,
               ),
               url: imageUrl,
               fit: BoxFit.fitWidth,
@@ -139,7 +140,7 @@ class PodcastPageTitle extends StatelessWidget {
     final visible =
         context.read<LibraryModel>().podcastUpdateAvailable(feedUrl);
     return Badge(
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: context.t.colorScheme.primary,
       isLabelVisible: visible,
       alignment: Alignment.centerRight,
       child: Padding(

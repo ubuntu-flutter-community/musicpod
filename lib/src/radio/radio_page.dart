@@ -4,10 +4,12 @@ import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
+import '../../theme_data_x.dart';
 import '../../utils.dart';
 import '../common/loading_grid.dart';
 import '../l10n/l10n.dart';
@@ -282,8 +284,8 @@ class RadioFallBackIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final light = theme.brightness == Brightness.light;
+    final theme = context.t;
+    final light = theme.isLight;
     final fallBackColor = light ? kCardColorLight : kCardColorDark;
     return Container(
       height: double.infinity,
@@ -376,7 +378,7 @@ class RadioPageIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     if (isPlaying) {
       return Icon(
         Iconz().play,

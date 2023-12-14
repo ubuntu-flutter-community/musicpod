@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../l10n/l10n.dart';
@@ -18,7 +19,7 @@ class UpNextBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final setUpNextExpanded = context.read<PlayerModel>().setUpNextExpanded;
     final isUpNextExpanded =
         context.select((PlayerModel m) => m.isUpNextExpanded);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
 import '../../data.dart';
 import '../../library.dart';
 import '../../settings.dart';
@@ -30,7 +31,7 @@ class MasterDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return YaruMasterDetailTheme(
       data: YaruMasterDetailTheme.of(context).copyWith(
-        sideBarColor: getSideBarColor(Theme.of(context)),
+        sideBarColor: getSideBarColor(context.t),
       ),
       child: YaruMasterDetailPage(
         navigatorKey: navigatorKey,

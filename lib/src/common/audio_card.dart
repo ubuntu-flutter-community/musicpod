@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../build_context_x.dart';
 import '../../constants.dart';
 import '../../theme.dart';
+import '../../theme_data_x.dart';
 import 'common_widgets.dart';
 import 'icons.dart';
 
@@ -36,8 +38,8 @@ class _AudioCardState extends State<AudioCard> {
   bool _hovered = false;
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final light = theme.brightness == Brightness.light;
+    final theme = context.t;
+    final light = theme.isLight;
 
     return Column(
       children: [
@@ -126,8 +128,8 @@ class Banner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final light = theme.brightness == Brightness.light;
+    final theme = context.t;
+    final light = theme.isLight;
 
     return InkWell(
       onTap: onTap,

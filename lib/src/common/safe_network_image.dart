@@ -10,6 +10,7 @@ import 'package:flutter_cache_manager/src/storage/file_system/file_system.dart';
 import 'package:path/path.dart' as p;
 import 'package:xdg_directories/xdg_directories.dart';
 
+import '../../build_context_x.dart';
 import 'icons.dart';
 
 class SafeNetworkImage extends StatelessWidget {
@@ -47,7 +48,7 @@ class SafeNetworkImage extends StatelessWidget {
           Icon(
             Iconz().imageMissing,
             size: 70,
-            color: Theme.of(context).hintColor,
+            color: context.t.hintColor,
           ),
     );
 
