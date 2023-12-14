@@ -296,11 +296,11 @@ class RadioFallBackIcon extends StatelessWidget {
             getColor(
               station?.title ?? station?.album ?? '',
               fallBackColor,
-            ).scale(lightness: light ? -0.3 : 0.2),
+            ).scale(lightness: light ? 0 : -0.4),
             getColor(
               station?.title ?? station?.album ?? '',
               fallBackColor,
-            ),
+            ).scale(lightness: light ? -0.1 : -0.2),
           ],
         ),
       ),
