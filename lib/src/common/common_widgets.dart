@@ -7,8 +7,10 @@ import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
 import '../../constants.dart';
 import '../../theme.dart';
+import '../../theme_data_x.dart';
 import 'icons.dart';
 
 class NavBackButton extends StatelessWidget {
@@ -123,7 +125,7 @@ class Progress extends StatelessWidget {
               backgroundColor: value == null
                   ? null
                   : (backgroundColor ??
-                      Theme.of(context).colorScheme.primary.withOpacity(0.3)),
+                      context.t.colorScheme.primary.withOpacity(0.3)),
             ),
           );
   }
@@ -216,7 +218,7 @@ class SearchButton extends StatelessWidget {
             onPressed: onPressed,
             selectedIcon: Icon(
               Iconz().search,
-              color: Theme.of(context).colorScheme.primary,
+              color: context.t.colorScheme.primary,
             ),
             icon: Icon(Iconz().search),
           );
@@ -354,7 +356,7 @@ SliverGridDelegate get imageGridDelegate =>
 
 Gradient? getAudioPageHeaderGradient(ThemeData theme) {
   if (yaruStyled) {
-    return theme.brightness == Brightness.light
+    return theme.isLight
         ? null
         : LinearGradient(
             begin: Alignment.bottomCenter,
@@ -434,8 +436,8 @@ Future<Object?> showStyledPopover({
   double? height,
   double? width,
 }) {
-  final theme = Theme.of(context);
-  final light = theme.brightness == Brightness.light;
+  final theme = context.t;
+  final light = theme.isLight;
   return showPopover(
     context: context,
     // onPop: () => print('Popover was popped!'),

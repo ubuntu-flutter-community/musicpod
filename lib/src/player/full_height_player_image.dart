@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
@@ -18,7 +19,7 @@ class FullHeightPlayerImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
 
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {

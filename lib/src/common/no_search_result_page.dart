@@ -1,6 +1,7 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../l10n/l10n.dart';
 
@@ -16,7 +17,7 @@ class NoSearchResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final style = theme.textTheme.headlineSmall != null
         ? theme.textTheme.headlineSmall?.copyWith(
             fontWeight: largeTextWeight,

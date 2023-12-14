@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 
+import '../../build_context_x.dart';
 import '../../common.dart';
+import '../../theme_data_x.dart';
 import '../l10n/l10n.dart';
 import '../theme.dart';
 
@@ -28,7 +30,7 @@ class TagPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(
       fontWeight: FontWeight.w500,
     );
@@ -101,7 +103,7 @@ class TagPopup extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(6),
                       child: Material(
-                        color: theme.brightness == Brightness.light
+                        color: theme.isLight
                             ? theme.colorScheme.surface
                             : theme.colorScheme.surfaceVariant,
                         shape: RoundedRectangleBorder(

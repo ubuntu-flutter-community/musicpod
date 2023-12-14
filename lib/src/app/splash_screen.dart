@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../build_context_x.dart';
 import '../common/icons.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -40,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     return Material(
       color: widget.color ?? theme.scaffoldBackgroundColor,
       child: Center(

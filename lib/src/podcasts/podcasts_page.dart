@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
@@ -51,7 +52,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final searchActive = context.select((PodcastModel m) => m.searchActive);
     final setSearchActive = model.setSearchActive;
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
-    final theme = Theme.of(context);
+    final theme = context.t;
     final libraryModel = context.read<LibraryModel>();
     final podcastSubscribed = libraryModel.podcastSubscribed;
     final removePodcast = libraryModel.removePodcast;
@@ -213,7 +214,7 @@ class PodcastsPageIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final checkingForUpdates =
         context.select((PodcastModel m) => m.checkingForUpdates);
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
 import '../../constants.dart';
 import '../common/common_widgets.dart';
 import '../l10n/l10n.dart';
@@ -11,7 +12,7 @@ class ShopRecommendations extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final style = theme.textTheme.bodySmall?.copyWith(
       fontWeight: smallTextFontWeight,
       color: theme.colorScheme.onSurface,

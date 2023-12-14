@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../build_context_x.dart';
+
 class TapAbleText extends StatelessWidget {
   const TapAbleText({
     super.key,
@@ -14,7 +16,7 @@ class TapAbleText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final style = TextStyle(
       color: selected ? theme.colorScheme.primary : theme.colorScheme.onSurface,
       fontWeight: selected ? FontWeight.bold : FontWeight.normal,

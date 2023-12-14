@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../library.dart';
@@ -37,7 +38,7 @@ class DownloadButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final model = context.read<DownloadModel>();
     final value = context.select((DownloadModel m) => m.value);
     return Stack(

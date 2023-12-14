@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
 import '../../data.dart';
 import '../l10n/l10n.dart';
 import '../library/playlist_dialog.dart';
@@ -37,7 +38,7 @@ class LikeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
 
     final heartButton = InkWell(
       borderRadius: BorderRadius.circular(10),

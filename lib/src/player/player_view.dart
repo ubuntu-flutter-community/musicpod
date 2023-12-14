@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../app.dart';
+import '../../build_context_x.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../library/library_model.dart';
@@ -50,7 +51,7 @@ class _PlayerViewState extends State<PlayerView> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = context.m.size;
     final width = size.width;
 
     final playerModel = context.read<PlayerModel>();

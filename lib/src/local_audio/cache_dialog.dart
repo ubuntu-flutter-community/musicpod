@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../build_context_x.dart';
 import '../../l10n.dart';
 
 class CacheDialog extends StatelessWidget {
@@ -19,7 +20,7 @@ class CacheDialog extends StatelessWidget {
     return AlertDialog(
       content: Text(
         context.l10n.localAudioCacheSuggestion(localAudioLength.toString()),
-        style: Theme.of(context).textTheme.bodyLarge,
+        style: context.t.textTheme.bodyLarge,
       ),
       actions: [
         OutlinedButton(

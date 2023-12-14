@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../build_context_x.dart';
 import 'common_widgets.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -10,6 +11,7 @@ class OfflinePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.t;
     return YaruDetailPage(
       appBar: HeaderBar(
         title: Text(context.l10n.offline),
@@ -22,7 +24,7 @@ class OfflinePage extends StatelessWidget {
             YaruAnimatedIcon(
               const YaruAnimatedNoNetworkIcon(),
               size: 200,
-              color: Theme.of(context).disabledColor,
+              color: theme.disabledColor,
             ),
             Padding(
               padding: const EdgeInsets.only(
@@ -33,9 +35,9 @@ class OfflinePage extends StatelessWidget {
               child: Text(
                 context.l10n.offlineDescription,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: Theme.of(context).disabledColor,
-                    ),
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  color: theme.disabledColor,
+                ),
               ),
             ),
           ],

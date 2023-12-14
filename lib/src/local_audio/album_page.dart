@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../l10n/l10n.dart';
@@ -78,7 +79,7 @@ class AlbumPage extends StatelessWidget {
             IconButton(
               icon: Icon(
                 Iconz().pinFilled,
-                color: Theme.of(context).colorScheme.primary,
+                color: context.t.colorScheme.primary,
               ),
               onPressed: () => removePinnedAlbum(
                 id,

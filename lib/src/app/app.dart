@@ -8,6 +8,7 @@ import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
+import '../../build_context_x.dart';
 import '../../data.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
@@ -128,8 +129,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final playerToTheRight = MediaQuery.of(context).size.width > 1700;
+    final playerToTheRight = context.m.size.width > 1700;
 
     // Connectivity
     final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
@@ -149,7 +149,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
     final color = context.select((PlayerModel m) => m.color);
     final isFullScreen = context.select((PlayerModel m) => m.fullScreen);
-    final Color playerBg = getPlayerBg(color, theme.scaffoldBackgroundColor);
+    final Color playerBg =
+        getPlayerBg(color, context.t.scaffoldBackgroundColor);
 
     // Library
     // Watching values

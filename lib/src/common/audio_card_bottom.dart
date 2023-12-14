@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../build_context_x.dart';
 import '../../constants.dart';
+import '../../theme_data_x.dart';
 
 class AudioCardBottom extends StatelessWidget {
   const AudioCardBottom({
@@ -18,8 +20,8 @@ class AudioCardBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final light = theme.brightness == Brightness.light;
+    final theme = context.t;
+    final light = theme.isLight;
 
     return Align(
       alignment: Alignment.bottomCenter,

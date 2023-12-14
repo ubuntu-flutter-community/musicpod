@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
@@ -257,7 +258,7 @@ class LocalAudioPageIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     if (isPlaying) {
       return Icon(
         Iconz().play,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../build_context_x.dart';
 import '../../utils.dart';
 import 'player_model.dart';
 
@@ -14,7 +15,7 @@ class PlayerTrack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
 
     final playerModel = context.read<PlayerModel>();
 

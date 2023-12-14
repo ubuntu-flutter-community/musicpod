@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../theme.dart';
@@ -31,7 +32,7 @@ class AvatarWithProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     return Stack(
       alignment: Alignment.center,
       children: [

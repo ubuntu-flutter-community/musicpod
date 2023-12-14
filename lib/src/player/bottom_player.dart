@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:popover/popover.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
@@ -58,7 +59,7 @@ class BottomPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = context.t;
     final veryNarrow = width < 700;
     final active = audio?.path != null || isOnline;
 
