@@ -16,8 +16,6 @@ G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
 static void my_application_activate(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
 
-  hdy_init();
-
   GtkWindow* window = GTK_WINDOW(hdy_application_window_new());
   GList* windows = gtk_application_get_windows(GTK_APPLICATION(application));
   if (windows) {
