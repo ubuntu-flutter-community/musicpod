@@ -16,7 +16,6 @@ import '../../patch_notes.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
 import '../../radio.dart';
-import '../../theme.dart';
 import '../external_path/external_path_service.dart';
 import 'connectivity_notifier.dart';
 import 'master_detail_page.dart';
@@ -145,12 +144,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
     // Player
     final play = context.read<PlayerModel>().play;
-    final audioType = context.select((PlayerModel m) => m.audio?.audioType);
 
-    final color = context.select((PlayerModel m) => m.color);
     final isFullScreen = context.select((PlayerModel m) => m.fullScreen);
-    final Color playerBg =
-        getPlayerBg(color, context.t.scaffoldBackgroundColor);
 
     // Library
     // Watching values
@@ -209,7 +204,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     }
 
     final masterItems = createMasterItems(
-      audioType: audioType,
       isOnline: isOnline,
       onTextTap: onTextTap,
       likedLocalAudios: likedLocalAudios,
@@ -238,56 +232,47 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       addPlaylist: libraryModel.addPlaylist,
     );
 
-    return Material(
-      color: playerBg,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: yaruMasterDetailPage,
-                    ),
-                    if (!playerToTheRight)
-                      Material(
-                        color: playerBg,
-                        child: PlayerView(
-                          onTextTap: onTextTap,
-                          playerViewMode: PlayerViewMode.bottom,
-                          isOnline: isOnline,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              if (playerToTheRight) const VerticalDivider(),
-              if (playerToTheRight)
-                SizedBox(
-                  width: 500,
-                  child: PlayerView(
-                    playerViewMode: PlayerViewMode.sideBar,
-                    onTextTap: onTextTap,
-                    isOnline: isOnline,
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: yaruMasterDetailPage,
                   ),
-                ),
-            ],
-          ),
-          if (isFullScreen == true)
-            Scaffold(
-              body: Material(
-                color: playerBg,
+                  if (!playerToTheRight)
+                    PlayerView(
+                      onTextTap: onTextTap,
+                      playerViewMode: PlayerViewMode.bottom,
+                      isOnline: isOnline,
+                    ),
+                ],
+              ),
+            ),
+            if (playerToTheRight) const VerticalDivider(),
+            if (playerToTheRight)
+              SizedBox(
+                width: 500,
                 child: PlayerView(
+                  playerViewMode: PlayerViewMode.sideBar,
                   onTextTap: onTextTap,
-                  playerViewMode: PlayerViewMode.fullWindow,
                   isOnline: isOnline,
                 ),
               ),
+          ],
+        ),
+        if (isFullScreen == true)
+          Scaffold(
+            body: PlayerView(
+              onTextTap: onTextTap,
+              playerViewMode: PlayerViewMode.fullWindow,
+              isOnline: isOnline,
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 }

@@ -6,6 +6,7 @@ import '../../build_context_x.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../library/library_model.dart';
+import '../theme.dart';
 
 class PlayerView extends StatefulWidget {
   const PlayerView({
@@ -56,7 +57,8 @@ class _PlayerViewState extends State<PlayerView> {
 
     final playerModel = context.read<PlayerModel>();
     final nextAudio = context.select((PlayerModel m) => m.nextAudio);
-    final color = context.select((PlayerModel m) => m.color);
+    final c = context.select((PlayerModel m) => m.color);
+    final color = getPlayerBg(c, context.t.scaffoldBackgroundColor);
     final setFullScreen = playerModel.setFullScreen;
     final playPrevious = playerModel.playPrevious;
     final playNext = playerModel.playNext;
@@ -123,7 +125,12 @@ class _PlayerViewState extends State<PlayerView> {
     }
 
     // VERY important to reduce CPU usage
-    return RepaintBoundary(child: player);
+    return RepaintBoundary(
+      child: Material(
+        color: color,
+        child: player,
+      ),
+    );
   }
 }
 
