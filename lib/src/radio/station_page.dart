@@ -45,17 +45,17 @@ class StationPage extends StatelessWidget {
     final icon = selected
         ? Icon(
             Iconz().starFilled,
-            size: iconSize(),
+            size: masterTrailingSize,
           )
         : Icon(
             Iconz().star,
-            size: iconSize(),
+            size: masterTrailingSize,
           );
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(
-        height: iconSize(),
-        width: iconSize(),
+        height: masterTrailingSize,
+        width: masterTrailingSize,
         child: SafeNetworkImage(
           fallBackIcon: icon,
           errorIcon: icon,

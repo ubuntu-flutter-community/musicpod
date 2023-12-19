@@ -33,8 +33,8 @@ class PodcastPage extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(
-        width: iconSize(),
-        height: iconSize(),
+        width: masterTrailingSize,
+        height: masterTrailingSize,
         child: SafeNetworkImage(
           url: imageUrl,
           fit: BoxFit.fitHeight,

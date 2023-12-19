@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
 import '../../data.dart';
 import '../../library.dart';
+import '../../player.dart';
+import '../../radio.dart';
 import '../../settings.dart';
 import '../../theme.dart';
 import '../common/common_widgets.dart';
@@ -29,6 +32,8 @@ class MasterDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final startPlaylist = context.read<PlayerModel>().startPlaylist;
+
     return YaruMasterDetailTheme(
       data: YaruMasterDetailTheme.of(context).copyWith(
         sideBarColor: getSideBarColor(context.t),
@@ -55,35 +60,43 @@ class MasterDetailPage extends StatelessWidget {
           initialIndex: index ?? 0,
         ),
         tileBuilder: (context, index, selected, availableWidth) {
+          final item = masterItems[index];
           if (index == 3 || index == 6) {
-            return masterItems[index].titleBuilder(context);
-          } else if (index == 4) {
-            return YaruMasterTile(
-              selected: false,
-              title: masterItems[index].titleBuilder(context),
-              leading: masterItems[index].iconBuilder?.call(context, false),
-              onTap: () => showDialog(
-                context: context,
-                builder: (context) {
-                  return PlaylistDialog(
-                    playlistName: context.l10n.createNewPlaylist,
-                    onCreateNewPlaylist: addPlaylist,
-                  );
-                },
-              ),
-            );
+            return item.titleBuilder(context);
           }
           return Padding(
             padding:
                 index == 0 ? const EdgeInsets.only(top: 5) : EdgeInsets.zero,
-            child: YaruMasterTile(
-              title: masterItems[index].titleBuilder(context),
-              leading: masterItems[index].iconBuilder == null
+            child: MasterTile(
+              selected: index == 4 ? false : selected,
+              title: item.titleBuilder(context),
+              subtitle: item.subtitleBuilder?.call(context),
+              onPlay: item.content?.$1 == null || item.content?.$2 == null
                   ? null
-                  : masterItems[index].iconBuilder!(
-                      context,
-                      selected,
+                  : () => startPlaylist(
+                        item.content!.$2,
+                        item.content!.$1,
+                      ),
+              leading: item.iconBuilder == null
+                  ? null
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 1),
+                      child: item.iconBuilder!(
+                        context,
+                        selected,
+                      ),
                     ),
+              onTap: index != 4
+                  ? null
+                  : () => showDialog(
+                        context: context,
+                        builder: (context) {
+                          return PlaylistDialog(
+                            playlistName: context.l10n.createNewPlaylist,
+                            onCreateNewPlaylist: addPlaylist,
+                          );
+                        },
+                      ),
             ),
           );
         },
