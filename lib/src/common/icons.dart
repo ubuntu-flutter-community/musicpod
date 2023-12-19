@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru_icons/yaru_icons.dart';
-import 'package:yaru_widgets/constants.dart';
+import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../globals.dart';
 import '../../theme.dart';
@@ -262,17 +262,17 @@ class Iconz {
             : const YaruAnimatedStarIcon(filled: false),
         initialProgress: 1.0,
         color: color,
-        size: iconSize(),
+        size: 24,
       );
     } else {
       return isStarred
           ? Icon(
               Iconz().starFilled,
-              size: iconSize(),
+              size: size,
             )
           : Icon(
               Iconz().star,
-              size: iconSize(),
+              size: size,
             );
     }
   }
@@ -285,7 +285,7 @@ class Iconz {
             : const YaruAnimatedHeartIcon(filled: false),
         initialProgress: 1.0,
         color: color,
-        size: iconSize(),
+        size: size,
       );
     } else {
       return Icon(
@@ -296,8 +296,6 @@ class Iconz {
   }
 }
 
-double iconSize() => yaruStyled
-    ? kYaruIconSize
-    : appleStyled
-        ? 24.0
-        : 24.0;
+double get masterTrailingSize => 35;
+
+double get size => yaruStyled ? kYaruIconSize : 24;

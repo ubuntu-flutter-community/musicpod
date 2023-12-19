@@ -103,6 +103,10 @@ List<MasterItem> createMasterItems({
               podcast.value.firstOrNull?.title ??
               podcast.value.firstOrNull.toString(),
         ),
+        subtitleBuilder: (context) => Text(
+          podcast.value.firstOrNull?.artist ?? context.l10n.podcast,
+        ),
+        content: (podcast.key, podcast.value),
         pageBuilder: (context) => PodcastPage(
           pageId: podcast.key,
           title: podcast.value.firstOrNull?.album ??
@@ -125,6 +129,8 @@ List<MasterItem> createMasterItems({
     for (final playlist in playlists.entries)
       MasterItem(
         titleBuilder: (context) => Text(playlist.key),
+        subtitleBuilder: (context) => Text(context.l10n.playlist),
+        content: (playlist.key, playlist.value),
         pageBuilder: (context) => PlaylistPage(
           onTextTap: onTextTap,
           playlist: playlist,
@@ -140,6 +146,9 @@ List<MasterItem> createMasterItems({
         titleBuilder: (context) => Text(
           album.value.firstOrNull?.album ?? album.key,
         ),
+        subtitleBuilder: (context) =>
+            Text(album.value.firstOrNull?.artist ?? context.l10n.album),
+        content: (album.key, album.value),
         pageBuilder: (context) => AlbumPage(
           onTextTap: onTextTap,
           album: album.value,
@@ -155,10 +164,10 @@ List<MasterItem> createMasterItems({
       ),
     for (final station in starredStations.entries)
       MasterItem(
-        titleBuilder: (context) => RadioSideBarTile(
-          station: station,
-          play: play,
-        ),
+        titleBuilder: (context) => Text(station.key),
+        subtitleBuilder: (context) =>
+            Text(station.value.firstOrNull?.artist ?? context.l10n.station),
+        content: (station.key, station.value),
         pageBuilder: (context) => isOnline
             ? StationPage(
                 isStarred: true,

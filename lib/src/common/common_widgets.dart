@@ -75,10 +75,10 @@ class SideBarProgress extends StatelessWidget {
             width: 18,
             child: Progress(),
           )
-        : SizedBox(
-            height: iconSize(),
-            width: iconSize(),
-            child: const Progress(),
+        : const SizedBox(
+            height: 24,
+            width: 24,
+            child: Progress(),
           );
   }
 }
