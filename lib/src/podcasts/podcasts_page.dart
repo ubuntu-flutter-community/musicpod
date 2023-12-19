@@ -5,6 +5,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
+import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
 import '../common/loading_grid.dart';
@@ -206,15 +207,16 @@ class _PodcastsPageState extends State<PodcastsPage> {
 class PodcastsPageIcon extends StatelessWidget {
   const PodcastsPageIcon({
     super.key,
-    required this.isPlaying,
     required this.selected,
   });
 
-  final bool isPlaying, selected;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    final audioType = context.select((PlayerModel m) => m.audio?.audioType);
+
     final checkingForUpdates =
         context.select((PodcastModel m) => m.checkingForUpdates);
 
@@ -222,7 +224,7 @@ class PodcastsPageIcon extends StatelessWidget {
       return const SideBarProgress();
     }
 
-    if (isPlaying) {
+    if (audioType == AudioType.podcast) {
       return Icon(
         Iconz().play,
         color: theme.colorScheme.primary,

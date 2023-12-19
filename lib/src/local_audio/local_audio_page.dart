@@ -250,16 +250,16 @@ class LocalAudioPageIcon extends StatelessWidget {
   const LocalAudioPageIcon({
     super.key,
     required this.selected,
-    required this.isPlaying,
   });
 
   final bool selected;
-  final bool isPlaying;
 
   @override
   Widget build(BuildContext context) {
+    final audioType = context.select((PlayerModel m) => m.audio?.audioType);
+
     final theme = context.t;
-    if (isPlaying) {
+    if (audioType == AudioType.local) {
       return Icon(
         Iconz().play,
         color: theme.colorScheme.primary,

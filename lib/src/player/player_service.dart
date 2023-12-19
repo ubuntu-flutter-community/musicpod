@@ -118,7 +118,7 @@ class PlayerService {
   Duration? _duration;
   Duration? get duration => _duration;
   void setDuration(Duration? value) {
-    if (value == _duration) return;
+    if (value?.inSeconds == _duration?.inSeconds) return;
     _duration = value;
     libraryService.setDuration(value);
     _durationController.add(true);
@@ -130,7 +130,7 @@ class PlayerService {
   Duration? _position = Duration.zero;
   Duration? get position => _position;
   void setPosition(Duration? value) {
-    if (value == position) return;
+    if (position?.inSeconds == value?.inSeconds) return;
     _position = value;
     libraryService.setPosition(value);
     _positionController.add(true);

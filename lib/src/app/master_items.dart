@@ -11,7 +11,6 @@ import '../l10n/l10n.dart';
 import 'master_item.dart';
 
 List<MasterItem> createMasterItems({
-  required AudioType? audioType,
   required bool isOnline,
   required void Function({required AudioType audioType, required String text})
       onTextTap,
@@ -38,7 +37,6 @@ List<MasterItem> createMasterItems({
       pageBuilder: (context) => const LocalAudioPage(),
       iconBuilder: (context, selected) => LocalAudioPageIcon(
         selected: selected,
-        isPlaying: audioType == AudioType.local,
       ),
     ),
     MasterItem(
@@ -50,7 +48,6 @@ List<MasterItem> createMasterItems({
       ),
       iconBuilder: (context, selected) => RadioPageIcon(
         selected: selected,
-        isPlaying: audioType == AudioType.radio,
       ),
     ),
     MasterItem(
@@ -63,7 +60,6 @@ List<MasterItem> createMasterItems({
       },
       iconBuilder: (context, selected) => PodcastsPageIcon(
         selected: selected,
-        isPlaying: audioType == AudioType.podcast,
       ),
     ),
     MasterItem(

@@ -370,16 +370,17 @@ Color getColor(String name, Color fallBackColor) {
 class RadioPageIcon extends StatelessWidget {
   const RadioPageIcon({
     super.key,
-    required this.isPlaying,
     required this.selected,
   });
 
-  final bool isPlaying, selected;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
+    final audioType = context.select((PlayerModel m) => m.audio?.audioType);
+
     final theme = context.t;
-    if (isPlaying) {
+    if (audioType == AudioType.radio) {
       return Icon(
         Iconz().play,
         color: theme.colorScheme.primary,
