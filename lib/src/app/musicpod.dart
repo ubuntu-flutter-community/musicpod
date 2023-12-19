@@ -5,7 +5,6 @@ import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
-import '../../common.dart';
 import '../../library.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
@@ -75,9 +74,7 @@ class _MusicPodAppState extends State<MusicPodApp> {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => 'MusicPod',
-      home: initialized
-          ? App.create()
-          : const Scaffold(appBar: HeaderBar(), body: SplashScreen()),
+      home: initialized ? App.create() : const SplashScreen(),
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,
