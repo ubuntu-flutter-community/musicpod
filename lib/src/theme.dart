@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 
 import 'color_scheme_x.dart';
 
+const darkDividerColor = Color.fromARGB(19, 255, 255, 255);
+
 ThemeData m3Theme({
   Brightness brightness = Brightness.light,
   Color color = Colors.greenAccent,
 }) {
   final dividerColor = brightness == Brightness.light
       ? const Color.fromARGB(48, 0, 0, 0)
-      : const Color.fromARGB(18, 255, 255, 255);
+      : darkDividerColor;
   final colorScheme = ColorScheme.fromSeed(
     surfaceTint: Colors.transparent,
     seedColor: color,
