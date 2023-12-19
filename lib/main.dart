@@ -79,7 +79,11 @@ Future<void> main(List<String> args) async {
 
   registerService<RadioService>(() => RadioService());
 
-  runApp(
-    const MusicPod(),
-  );
+  if (Platform.isLinux) {
+    runApp(const GtkApplication(child: YaruMusicPodApp()));
+  } else {
+    runApp(
+      const MusicPodApp(),
+    );
+  }
 }

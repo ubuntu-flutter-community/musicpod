@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../build_context_x.dart';
+import '../common/common_widgets.dart';
 import '../common/icons.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({
     super.key,
-    this.color,
   });
-
-  final Color? color;
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -42,9 +40,10 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    return Material(
-      color: widget.color ?? theme.scaffoldBackgroundColor,
-      child: Center(
+    return Scaffold(
+      appBar: const HeaderBar(),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: Center(
         child: AnimatedOpacity(
           duration: const Duration(milliseconds: 100),
           curve: Curves.bounceIn,

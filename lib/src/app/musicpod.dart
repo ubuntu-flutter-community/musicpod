@@ -1,45 +1,43 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:gtk/gtk.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
-import '../../common.dart';
 import '../../library.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
 import 'app.dart';
 
-class MusicPod extends StatelessWidget {
-  const MusicPod({super.key});
+class YaruMusicPodApp extends StatelessWidget {
+  const YaruMusicPodApp({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    if (yaruStyled) {
-      return YaruTheme(
-        builder: (context, yaruThemeData, child) {
-          return GtkApplication(
-            child: MusicPodApp(
-              lightTheme: yaruThemeData.theme,
-              darkTheme: yaruThemeData.darkTheme?.copyWith(
-                scaffoldBackgroundColor: const Color(0xFF1e1e1e),
-              ),
+    return YaruTheme(
+      builder: (context, yaru, child) {
+        return MusicPodApp(
+          lightTheme: yaru.theme,
+          darkTheme: yaru.darkTheme?.copyWith(
+            scaffoldBackgroundColor: const Color(0xFF1e1e1e),
+            dividerColor: darkDividerColor,
+            dividerTheme: const DividerThemeData(
+              color: darkDividerColor,
+              space: 1.0,
+              thickness: 0.0,
             ),
-          );
-        },
-      );
-    } else {
-      return MusicPodApp(
-        lightTheme: m3Theme(),
-        darkTheme: m3Theme(brightness: Brightness.dark),
-      );
-    }
+          ),
+        );
+      },
+      child: const MusicPodApp(),
+    );
   }
 }
 
-class MusicPodApp extends StatelessWidget {
+class MusicPodApp extends StatefulWidget {
   const MusicPodApp({
     super.key,
     this.lightTheme,
@@ -49,31 +47,34 @@ class MusicPodApp extends StatelessWidget {
   final ThemeData? lightTheme, darkTheme;
 
   @override
+  State<MusicPodApp> createState() => _MusicPodAppState();
+}
+
+class _MusicPodAppState extends State<MusicPodApp> {
+  bool initialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getService<LibraryService>().init().then(
+      (value) {
+        if (!initialized) {
+          setState(() => initialized = value);
+        }
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    const dividerColor = Color.fromARGB(19, 255, 255, 255);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: lightTheme,
-      darkTheme: darkTheme?.copyWith(
-        dividerColor: dividerColor,
-        dividerTheme: const DividerThemeData(
-          color: dividerColor,
-          space: 1.0,
-          thickness: 0.0,
-        ),
-      ),
+      theme: widget.lightTheme ?? m3Theme(),
+      darkTheme: widget.darkTheme ?? m3Theme(brightness: Brightness.dark),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => 'MusicPod',
-      home: FutureBuilder(
-        future: getService<LibraryService>().init(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return App.create();
-          }
-          return const Scaffold(appBar: HeaderBar(), body: SplashScreen());
-        },
-      ),
+      home: initialized ? App.create() : const SplashScreen(),
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,

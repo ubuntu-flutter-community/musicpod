@@ -389,12 +389,13 @@ class LibraryService {
     _neverShowFailedImportsController.add(true);
   }
 
-  Future<void> init() async {
+  bool _libraryInitialized = false;
+  Future<bool> init() async {
     await _initSettings();
     await _initLibrary();
+    return _libraryInitialized;
   }
 
-  bool _libraryInitialized = false;
   Future<void> _initLibrary() async {
     if (_libraryInitialized) return;
     if (_useLocalAudioCache == true) {
