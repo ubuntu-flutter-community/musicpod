@@ -4,6 +4,7 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../theme_data_x.dart';
 
 class FullHeightPlayerImage extends StatelessWidget {
   const FullHeightPlayerImage({
@@ -45,17 +46,22 @@ class FullHeightPlayerImage extends StatelessWidget {
           color: theme.hintColor,
         );
       } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
-        image = SafeNetworkImage(
-          url: audio?.imageUrl ?? audio?.albumArtUrl,
-          filterQuality: FilterQuality.medium,
-          fit: BoxFit.cover,
-          fallBackIcon: Icon(
-            iconData,
-            size: fullHeightPlayerImageSize * 0.7,
-            color: theme.hintColor,
-          ),
+        image = Container(
           height: size.width,
           width: size.width,
+          color: theme.isLight ? kCardColorLight : kCardColorDark,
+          child: SafeNetworkImage(
+            url: audio?.imageUrl ?? audio?.albumArtUrl,
+            filterQuality: FilterQuality.medium,
+            fit: BoxFit.scaleDown,
+            fallBackIcon: Icon(
+              iconData,
+              size: fullHeightPlayerImageSize * 0.7,
+              color: theme.hintColor,
+            ),
+            height: size.width,
+            width: size.width,
+          ),
         );
       } else {
         image = Icon(

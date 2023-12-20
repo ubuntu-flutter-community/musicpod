@@ -1,8 +1,11 @@
-import '../../build_context_x.dart';
-import '../../common.dart';
-import '../../data.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+
+import '../../build_context_x.dart';
+import '../../common.dart';
+import '../../constants.dart';
+import '../../data.dart';
+import '../../theme_data_x.dart';
 
 class BottomPlayerImage extends StatelessWidget {
   const BottomPlayerImage({
@@ -66,7 +69,8 @@ class BottomPlayerImage extends StatelessWidget {
           ),
         );
       } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
-        return SizedBox(
+        return Container(
+          color: theme.isLight ? kCardColorLight : kCardColorDark,
           height: size,
           width: size,
           child: SafeNetworkImage(
@@ -77,7 +81,7 @@ class BottomPlayerImage extends StatelessWidget {
             ),
             url: audio?.imageUrl ?? audio?.albumArtUrl,
             filterQuality: FilterQuality.medium,
-            fit: BoxFit.cover,
+            fit: BoxFit.scaleDown,
           ),
         );
       } else {
