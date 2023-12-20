@@ -115,8 +115,8 @@ Future<void> searchAndPushPodcastPage({
         children: [
           Text(context.l10n.loadingPodcastFeed),
           SizedBox(
-            height: masterTrailingSize,
-            width: masterTrailingSize,
+            height: iconSize,
+            width: iconSize,
             child: const Progress(),
           ),
         ],

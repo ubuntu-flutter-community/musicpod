@@ -106,7 +106,6 @@ class StreamProviderRow extends StatelessWidget {
           if (onSearch == null)
             StreamProviderShareButton(
               color: iconColor,
-              padding: spacing,
               text: text,
               streamProvider: StreamProvider.appleMusic,
             ),

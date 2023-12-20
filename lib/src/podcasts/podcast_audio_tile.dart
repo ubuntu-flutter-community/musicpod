@@ -53,6 +53,10 @@ class PodcastAudioTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!isOnline && audio.path == null) {
+      return const SizedBox.shrink();
+    }
+
     final date = audio.year == null
         ? ''
         : '${DateFormat.yMMMEd(Platform.localeName).format(DateTime.fromMillisecondsSinceEpoch(audio.year!))} | ';
@@ -61,62 +65,66 @@ class PodcastAudioTile extends StatelessWidget {
           ? Duration(milliseconds: audio.durationMs!.toInt())
           : Duration.zero,
     );
-    final enabled = isOnline || audio.path != null;
 
-    return !enabled
-        ? const SizedBox.shrink()
-        : YaruExpandable(
-            expandIcon: const SizedBox.shrink(),
-            isExpanded: isExpanded,
-            gapHeight: 0,
-            header: MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 15,
-                  bottom: 10,
-                  left: 19,
-                  right: 20,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AvatarWithProgress(
-                      selected: selected,
-                      lastPosition: lastPosition,
-                      audio: audio,
-                      isPlayerPlaying: isPlayerPlaying,
-                      pause: pause,
-                      resume: resume,
-                      safeLastPosition: safeLastPosition,
-                      play: play,
-                      removeUpdate: removeUpdate,
-                    ),
-                    const SizedBox(
-                      width: _kGap,
-                    ),
-                    Expanded(
-                      child: _Right(
-                        selected: selected,
-                        audio: audio,
-                        date: date,
-                        duration: duration,
-                        addPodcast: addPodcast,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+    final narrow = context.m.size.width < 600;
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: narrow ? 500 : double.infinity),
+      child: YaruExpandable(
+        expandIcon: narrow ? null : const SizedBox.shrink(),
+        expandIconPadding: const EdgeInsets.only(right: 20, bottom: 25),
+        isExpanded: isExpanded,
+        gapHeight: 0,
+        header: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 15,
+              bottom: 10,
+              left: 19,
+              right: 20,
             ),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: _Bottom(
-                selected: selected,
-                audio: audio,
-                lastPosition: lastPosition,
-              ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                AvatarWithProgress(
+                  selected: selected,
+                  lastPosition: lastPosition,
+                  audio: audio,
+                  isPlayerPlaying: isPlayerPlaying,
+                  pause: pause,
+                  resume: resume,
+                  safeLastPosition: safeLastPosition,
+                  play: play,
+                  removeUpdate: removeUpdate,
+                ),
+                const SizedBox(
+                  width: _kGap,
+                ),
+                Expanded(
+                  child: _Right(
+                    selected: selected,
+                    audio: audio,
+                    date: date,
+                    duration: duration,
+                    addPodcast: addPodcast,
+                  ),
+                ),
+              ],
             ),
-          );
+          ),
+        ),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: _Bottom(
+            selected: selected,
+            audio: audio,
+            lastPosition: lastPosition,
+          ),
+        ),
+      ),
+    );
   }
 }
 

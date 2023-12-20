@@ -55,7 +55,7 @@ class _MasterTileState extends State<MasterTile> {
           yaruMasterTile,
           if (_hovered || widget.selected == true)
             Positioned(
-              right: 20,
+              right: 25,
               top: 12,
               child: CircleAvatar(
                 radius: kTinyButtonSize / 2,

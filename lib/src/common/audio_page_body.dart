@@ -135,10 +135,9 @@ class _AudioPageBodyState extends State<AudioPageBody> {
         title: widget.controlPanelTitle,
         pause: pause,
         resume: resume,
-        startPlaylist: startPlaylist,
-        isPlaying: isPlaying,
-        queueName: queueName,
-        listName: widget.headerTitle ?? widget.pageId,
+        onTap: widget.audios == null
+            ? null
+            : () => startPlaylist(widget.audios!, widget.pageId),
         controlButton: widget.controlPanelButton,
         audios: sortedAudios.toSet(),
       ),

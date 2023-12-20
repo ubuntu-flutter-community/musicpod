@@ -39,6 +39,14 @@ class ArtistPage extends StatelessWidget {
       headerSubtile: artistAudios?.firstOrNull?.genre,
       audios: artistAudios,
       pageId: artistAudios?.firstOrNull?.artist ?? artistAudios.toString(),
+      controlPanelButton: Row(
+        children: [
+          StreamProviderRow(
+            spacing: const EdgeInsets.only(right: 10),
+            text: artistAudios?.firstOrNull?.artist,
+          ),
+        ],
+      ),
     );
   }
 }

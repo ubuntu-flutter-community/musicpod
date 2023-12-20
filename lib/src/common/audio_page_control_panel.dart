@@ -11,24 +11,18 @@ class AudioPageControlPanel extends StatelessWidget {
   const AudioPageControlPanel({
     super.key,
     required this.audios,
-    required this.listName,
     this.controlButton,
-    required this.isPlaying,
-    this.queueName,
-    required this.startPlaylist,
+    required this.onTap,
     required this.pause,
     required this.resume,
     this.title,
   });
 
   final Set<Audio> audios;
-  final String listName;
   final Widget? title;
 
   final Widget? controlButton;
-  final bool isPlaying;
-  final String? queueName;
-  final void Function(Set<Audio> audios, String listName)? startPlaylist;
+  final void Function()? onTap;
   final void Function() pause;
   final void Function() resume;
 
@@ -36,12 +30,12 @@ class AudioPageControlPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.t;
 
-    final textStyle =
-        theme.textTheme.headlineSmall?.copyWith(fontWeight: largeTextWeight) ??
-            const TextStyle(fontSize: 25);
     return Row(
+      mainAxisAlignment: context.m.size.width < 600
+          ? MainAxisAlignment.center
+          : MainAxisAlignment.start,
       children: [
-        if (startPlaylist != null)
+        if (onTap != null)
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: CircleAvatar(
@@ -49,73 +43,40 @@ class AudioPageControlPanel extends StatelessWidget {
               backgroundColor: theme.colorScheme.inverseSurface,
               child: IconButton(
                 onPressed: () {
-                  if (queueName != listName) {
-                    if (audios.length > kAudioQueueThreshHold) {
-                      showDialog<bool>(
-                        context: context,
-                        builder: (context) {
-                          return ConfirmationDialog(
-                            message: Text(
-                              context.l10n.queueConfirmMessage(
-                                audios.length.toString(),
-                              ),
+                  if (audios.length > kAudioQueueThreshHold) {
+                    showDialog<bool>(
+                      context: context,
+                      builder: (context) {
+                        return ConfirmationDialog(
+                          message: Text(
+                            context.l10n.queueConfirmMessage(
+                              audios.length.toString(),
                             ),
-                          );
-                        },
-                      ).then((value) {
-                        if (value == true) {
-                          startPlaylist!(audios, listName);
-                        }
-                      });
-                    } else {
-                      startPlaylist!(audios, listName);
-                    }
+                          ),
+                        );
+                      },
+                    ).then((value) {
+                      if (value == true) {
+                        onTap!();
+                      }
+                    });
                   } else {
-                    if (isPlaying) {
-                      pause();
-                    } else {
-                      resume();
-                    }
+                    onTap!();
                   }
                 },
-                icon: isPlaying && queueName == listName
-                    ? Icon(
-                        Iconz().pause,
-                        color: theme.colorScheme.onInverseSurface,
-                      )
-                    : Padding(
-                        padding: appleStyled
-                            ? const EdgeInsets.only(left: 3)
-                            : EdgeInsets.zero,
-                        child: Icon(
-                          Iconz().playFilled,
-                          color: theme.colorScheme.onInverseSurface,
-                        ),
-                      ),
+                icon: Padding(
+                  padding: appleStyled
+                      ? const EdgeInsets.only(left: 3)
+                      : EdgeInsets.zero,
+                  child: Icon(
+                    Iconz().playFilled,
+                    color: theme.colorScheme.onInverseSurface,
+                  ),
+                ),
               ),
             ),
           ),
-        if (controlButton != null)
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: controlButton!,
-          )
-        else
-          const SizedBox(
-            width: 10,
-          ),
-        Expanded(
-          child: DefaultTextStyle(
-            style: textStyle,
-            child: title ??
-                Text(
-                  '$listName  •  ${audios.length} ${context.l10n.titles}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: textStyle,
-                ),
-          ),
-        ),
+        if (controlButton != null) controlButton!,
       ],
     );
   }

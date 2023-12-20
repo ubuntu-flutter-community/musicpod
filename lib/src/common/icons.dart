@@ -64,6 +64,11 @@ class Iconz {
       ? YaruIcons.download
       : appleStyled
           ? CupertinoIcons.down_arrow
+          : Icons.download_outlined;
+  IconData get downloadFilled => yaruStyled
+      ? YaruIcons.download_filled
+      : appleStyled
+          ? CupertinoIcons.down_arrow
           : Icons.download;
   IconData get podcast => yaruStyled
       ? YaruIcons.podcast
@@ -296,6 +301,6 @@ class Iconz {
   }
 }
 
-double get masterTrailingSize => 40;
+double get sideBarImageSize => 38;
 
 double get iconSize => yaruStyled ? kYaruIconSize : 24;

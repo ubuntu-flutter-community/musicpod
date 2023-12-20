@@ -49,7 +49,9 @@ class DownloadButton extends StatelessWidget {
           backgroundColor: Colors.transparent,
         ),
         IconButton(
-          icon: Icon(Iconz().download),
+          icon: Icon(
+            audio?.path != null ? Iconz().downloadFilled : Iconz().download,
+          ),
           onPressed: () {
             if (audio?.path != null) {
               model.deleteDownload(context: context, audio: audio);
