@@ -51,6 +51,7 @@ class LikedAudioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AudioPage(
+      showTrack: false,
       noResultMessage: Text(context.l10n.likedSongsSubtitle),
       noResultIcon: const AnimatedEmoji(AnimatedEmojis.twoHearts),
       audios: likedLocalAudios ?? {},

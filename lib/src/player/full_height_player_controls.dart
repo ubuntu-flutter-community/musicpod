@@ -37,6 +37,7 @@ class FullHeightPlayerControls extends StatelessWidget {
           icon: Icon(Iconz().skipBackward),
         ),
         CircleAvatar(
+          radius: avatarIconSize,
           backgroundColor: theme.colorScheme.inverseSurface,
           child: PlayButton(
             iconColor: theme.colorScheme.onInverseSurface,
