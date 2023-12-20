@@ -29,7 +29,11 @@ class NoSearchResultPage extends StatelessWidget {
           );
     return Center(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(50),
+        padding: const EdgeInsets.only(
+          left: 50,
+          right: 50,
+          bottom: 50,
+        ),
         child: DefaultTextStyle(
           style: style!,
           textAlign: TextAlign.center,

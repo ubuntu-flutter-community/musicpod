@@ -19,6 +19,7 @@ import 'radio_lib_page.dart';
 import 'radio_model.dart';
 import 'radio_page_title.dart';
 import 'station_card.dart';
+import '../../theme.dart';
 
 class RadioPage extends StatefulWidget {
   const RadioPage({
@@ -295,11 +296,11 @@ class RadioFallBackIcon extends StatelessWidget {
           begin: Alignment.bottomLeft,
           end: Alignment.topRight,
           colors: [
-            getColor(
+            getAlphabetColor(
               station?.title ?? station?.album ?? '',
               fallBackColor,
             ).scale(lightness: light ? 0 : -0.4),
-            getColor(
+            getAlphabetColor(
               station?.title ?? station?.album ?? '',
               fallBackColor,
             ).scale(lightness: light ? -0.1 : -0.2),
@@ -312,7 +313,7 @@ class RadioFallBackIcon extends StatelessWidget {
           Iconz().radio,
           size: iconSize ?? 70,
           color: contrastColor(
-            getColor(
+            getAlphabetColor(
               station?.title ?? station?.album ?? '',
               fallBackColor,
             ),
@@ -320,50 +321,6 @@ class RadioFallBackIcon extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-Color getColor(String name, Color fallBackColor) {
-  if (name.toLowerCase().contains('lofi') ||
-      name.toLowerCase().contains('lounge') ||
-      name.toLowerCase().contains('chill')) {
-    return Colors.purple;
-  } else if (name.toLowerCase().contains('rap') ||
-      name.toLowerCase().contains('hip-hop') ||
-      name.toLowerCase().contains('hop') ||
-      name.toLowerCase().contains('jam') ||
-      name.toLowerCase().contains('soul') ||
-      name.toLowerCase().contains('rnb') ||
-      name.toLowerCase().contains('deutschrap')) {
-    return const Color.fromARGB(255, 53, 14, 91);
-  } else if (name.toLowerCase().contains('xmas') ||
-      name.toLowerCase().contains('christmas') ||
-      name.toLowerCase().contains('weihnacht')) {
-    return Colors.limeAccent;
-  } else if (name.toLowerCase().contains('pop') ||
-      name.toLowerCase().contains('charts')) {
-    return Colors.greenAccent;
-  } else if (name.toLowerCase().contains('house')) {
-    return Colors.white38;
-  } else if (name.toLowerCase().contains('techno')) {
-    return Colors.pink;
-  } else if (name.toLowerCase().contains('metal') ||
-      name.toLowerCase().contains('punk')) {
-    return Colors.yellow;
-  } else if (name.toLowerCase().contains('rock')) {
-    return Colors.blue;
-  } else if (name.toLowerCase().contains('classic') ||
-      name.toLowerCase().contains('klassik')) {
-    return Colors.amber;
-  } else if (name.toLowerCase().contains('arab') ||
-      name.toLowerCase().contains('orient') ||
-      name.toLowerCase().contains('schlager') ||
-      name.toLowerCase().contains('volk') ||
-      name.toLowerCase().contains('deutsch') ||
-      name.toLowerCase().contains('islam')) {
-    return Colors.brown;
-  } else {
-    return fallBackColor;
   }
 }
 

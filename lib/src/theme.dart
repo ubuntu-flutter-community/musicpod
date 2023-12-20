@@ -117,3 +117,36 @@ DropdownMenuThemeData _createDropdownMenuTheme(ColorScheme colorScheme) {
     menuStyle: _createMenuStyle(colorScheme),
   );
 }
+
+const alphabetColors = {
+  'A': Colors.red,
+  'B': Colors.orange,
+  'C': Colors.yellow,
+  'D': Colors.green,
+  'E': Colors.teal,
+  'F': Colors.blue,
+  'G': Colors.indigo,
+  'H': Colors.purple,
+  'I': Colors.pink,
+  'J': Colors.deepOrange,
+  'K': Colors.deepPurple,
+  'L': Colors.cyan,
+  'M': Colors.lightGreen,
+  'N': Colors.lime,
+  'O': Colors.amber,
+  'P': Colors.brown,
+  'Q': Colors.blueAccent,
+  'R': Colors.blueGrey,
+  'S': Colors.lightGreenAccent,
+  'T': Colors.greenAccent,
+  'U': Colors.pinkAccent,
+  'V': Colors.purpleAccent,
+  'W': Colors.amberAccent,
+  'X': Colors.indigoAccent,
+  'Y': Colors.cyanAccent,
+  'Z': Colors.deepOrangeAccent,
+};
+
+Color getAlphabetColor(String text, [Color fallBackColor = Colors.black]) {
+  return alphabetColors[text[0].toUpperCase()] ?? fallBackColor;
+}
