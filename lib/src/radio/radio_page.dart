@@ -9,8 +9,8 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
+import '../../theme.dart';
 import '../../theme_data_x.dart';
-import '../../utils.dart';
 import '../common/loading_grid.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
@@ -19,7 +19,6 @@ import 'radio_lib_page.dart';
 import 'radio_model.dart';
 import 'radio_page_title.dart';
 import 'station_card.dart';
-import '../../theme.dart';
 
 class RadioPage extends StatefulWidget {
   const RadioPage({
@@ -43,13 +42,10 @@ class _RadioPageState extends State<RadioPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      readSetting(kLastFav).then(
-        (value) => context.read<RadioModel>().init(
-              isOnline: widget.isOnline,
-              countryCode: widget.countryCode,
-              lastFav: value == null ? null : value as String,
-            ),
-      );
+      context.read<RadioModel>().init(
+            isOnline: widget.isOnline,
+            countryCode: widget.countryCode,
+          );
     });
   }
 
@@ -121,13 +117,10 @@ class _RadioPageState extends State<RadioPage> {
       if (connected == false) {
         discoverGrid = _ReconnectPage(
           text: 'Not connected to any radiobrowser server.',
-          init: () => readSetting(kLastFav).then(
-            (value) => context.read<RadioModel>().init(
-                  isOnline: widget.isOnline,
-                  countryCode: widget.countryCode,
-                  lastFav: value == null ? null : value as String,
-                ),
-          ),
+          init: () => context.read<RadioModel>().init(
+                isOnline: widget.isOnline,
+                countryCode: widget.countryCode,
+              ),
         );
       } else {
         if (stations == null) {
@@ -137,13 +130,10 @@ class _RadioPageState extends State<RadioPage> {
             if (statusCode != null && statusCode != '200') {
               discoverGrid = _ReconnectPage(
                 text: statusCode,
-                init: () => readSetting(kLastFav).then(
-                  (value) => context.read<RadioModel>().init(
-                        isOnline: widget.isOnline,
-                        countryCode: widget.countryCode,
-                        lastFav: value == null ? null : value as String,
-                      ),
-                ),
+                init: () => context.read<RadioModel>().init(
+                      isOnline: widget.isOnline,
+                      countryCode: widget.countryCode,
+                    ),
               );
             } else {
               discoverGrid = NoSearchResultPage(
