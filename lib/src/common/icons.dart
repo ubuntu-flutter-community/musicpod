@@ -262,17 +262,17 @@ class Iconz {
             : const YaruAnimatedStarIcon(filled: false),
         initialProgress: 1.0,
         color: color,
-        size: 24,
+        size: iconSize,
       );
     } else {
       return isStarred
           ? Icon(
               Iconz().starFilled,
-              size: size,
+              size: iconSize,
             )
           : Icon(
               Iconz().star,
-              size: size,
+              size: iconSize,
             );
     }
   }
@@ -285,7 +285,7 @@ class Iconz {
             : const YaruAnimatedHeartIcon(filled: false),
         initialProgress: 1.0,
         color: color,
-        size: size,
+        size: iconSize,
       );
     } else {
       return Icon(
@@ -296,6 +296,6 @@ class Iconz {
   }
 }
 
-double get masterTrailingSize => 35;
+double get masterTrailingSize => 40;
 
-double get size => yaruStyled ? kYaruIconSize : 24;
+double get iconSize => yaruStyled ? kYaruIconSize : 24;
