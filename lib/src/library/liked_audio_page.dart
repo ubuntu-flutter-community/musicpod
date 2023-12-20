@@ -1,8 +1,8 @@
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:yaru/yaru.dart';
 
-import '../../app.dart';
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
@@ -13,14 +13,32 @@ class LikedAudioPage extends StatelessWidget {
     super.key,
     this.onTextTap,
     this.likedLocalAudios,
-    this.likedPodcasts,
   });
 
   static Widget createIcon({
     required BuildContext context,
     required bool selected,
   }) {
-    return selected ? Icon(Iconz().heartFilled) : Icon(Iconz().heart);
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(6),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            context.t.colorScheme.primary
+                .scale(lightness: 0.1)
+                .withOpacity(0.4),
+            context.t.colorScheme.primary
+                .scale(lightness: 0.6)
+                .withOpacity(0.4),
+          ],
+        ),
+      ),
+      width: sideBarImageSize,
+      height: sideBarImageSize,
+      child: selected ? Icon(Iconz().heartFilled) : Icon(Iconz().heart),
+    );
   }
 
   final void Function({
@@ -28,61 +46,41 @@ class LikedAudioPage extends StatelessWidget {
     required AudioType audioType,
   })? onTextTap;
   final Set<Audio>? likedLocalAudios;
-  final Set<Audio>? likedPodcasts;
+  // final Set<Audio>? likedPodcasts;
 
   @override
   Widget build(BuildContext context) {
-    final showWindowControls =
-        context.select((AppModel a) => a.showWindowControls);
-    final localFavs = AudioPageBody(
-      padding: const EdgeInsets.only(top: 10),
-      key: ValueKey(likedLocalAudios),
-      pageId: 'likedAudio',
-      headerTitle: context.l10n.likedSongs,
-      audios: likedLocalAudios,
-      onTextTap: onTextTap,
+    return AudioPage(
+      noResultMessage: Text(context.l10n.likedSongsSubtitle),
+      noResultIcon: const AnimatedEmoji(AnimatedEmojis.twoHearts),
+      audios: likedLocalAudios ?? {},
       audioPageType: AudioPageType.likedAudio,
-    );
-
-    final podcastFavs = AudioPageBody(
-      padding: const EdgeInsets.only(top: 10),
-      showAudioTileHeader: false,
-      key: ValueKey(likedPodcasts),
-      pageId: 'likedAudio',
+      pageId: kLikedAudios,
+      title: Text(context.l10n.likedSongs),
       headerTitle: context.l10n.likedSongs,
-      audios: likedPodcasts,
-      onTextTap: onTextTap,
-      audioPageType: AudioPageType.likedAudio,
-    );
-
-    final leading = (Navigator.of(context).canPop())
-        ? const NavBackButton()
-        : const SizedBox.shrink();
-    final title = SizedBox(
-      width: kSearchBarWidth,
-      child: TabsBar(
-        tabs: [
-          Tab(text: context.l10n.localAudio),
-          Tab(text: context.l10n.podcasts),
-        ],
-      ),
-    );
-
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: HeaderBar(
-          leading: leading,
-          title: title,
-          style: showWindowControls
-              ? YaruTitleBarStyle.normal
-              : YaruTitleBarStyle.undecorated,
+      headerSubtile: context.l10n.likedSongsSubtitle,
+      headerLabel: context.l10n.playlist,
+      image: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              context.t.colorScheme.primary
+                  .scale(lightness: 0.1)
+                  .withOpacity(0.4),
+              context.t.colorScheme.primary
+                  .scale(lightness: 0.6)
+                  .withOpacity(0.4),
+            ],
+          ),
         ),
-        body: TabBarView(
-          children: [
-            localFavs,
-            podcastFavs,
-          ],
+        width: 200,
+        height: 200,
+        child: Icon(
+          Iconz().heart,
+          size: 65,
         ),
       ),
     );

@@ -30,6 +30,10 @@ class LikeIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (audio?.audioType == AudioType.podcast) {
+      return const SizedBox.shrink();
+    }
+
     Widget likeIcon;
     if (audio?.audioType == AudioType.radio) {
       likeIcon = Iconz().getAnimatedStar(

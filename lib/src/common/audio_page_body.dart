@@ -25,6 +25,7 @@ class AudioPageBody extends StatefulWidget {
     this.showAudioPageHeader,
     this.onTextTap,
     this.noResultMessage,
+    this.noResultIcon = const AnimatedEmoji(AnimatedEmojis.eyes),
     this.titleLabel,
     this.artistLabel,
     this.albumLabel,
@@ -52,6 +53,7 @@ class AudioPageBody extends StatefulWidget {
   final bool? showAudioPageHeader;
   final bool showAudioTileHeader;
   final Widget? noResultMessage;
+  final Widget? noResultIcon;
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
   final bool showTrack, showAlbum, showArtist;
@@ -143,9 +145,19 @@ class _AudioPageBodyState extends State<AudioPageBody> {
       ),
     );
 
+    final audioPageHeader = AudioPageHeader(
+      title: widget.headerTitle ?? sortedAudios.firstOrNull?.album ?? '',
+      description:
+          widget.headerDescription ?? sortedAudios.firstOrNull?.description,
+      image: widget.image,
+      subTitle: widget.headerSubTitle,
+      label: widget.headerLabel,
+    );
+
     if (widget.audios == null) {
       return Column(
         children: [
+          if (widget.showAudioPageHeader == true) audioPageHeader,
           audioControlPanel,
           const Expanded(
             child: Center(
@@ -158,10 +170,10 @@ class _AudioPageBodyState extends State<AudioPageBody> {
       if (widget.audios!.isEmpty) {
         return Column(
           children: [
-            audioControlPanel,
+            if (widget.showAudioPageHeader == true) audioPageHeader,
             Expanded(
               child: NoSearchResultPage(
-                icons: const AnimatedEmoji(AnimatedEmojis.eyes),
+                icons: widget.noResultIcon,
                 message: widget.noResultMessage,
               ),
             ),
@@ -175,16 +187,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
       controller: _controller,
       child: Column(
         children: [
-          if (widget.showAudioPageHeader == true)
-            AudioPageHeader(
-              title:
-                  widget.headerTitle ?? sortedAudios.firstOrNull?.album ?? '',
-              description: widget.headerDescription ??
-                  sortedAudios.firstOrNull?.description,
-              image: widget.image,
-              subTitle: widget.headerSubTitle,
-              label: widget.headerLabel,
-            ),
+          if (widget.showAudioPageHeader == true) audioPageHeader,
           audioControlPanel,
           if (widget.showAudioTileHeader)
             AudioTileHeader(

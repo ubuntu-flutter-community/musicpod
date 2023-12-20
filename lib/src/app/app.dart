@@ -156,11 +156,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         m.likedAudios.where((e) => e.audioType == AudioType.local),
       ),
     );
-    final likedPodcasts = context.select(
-      (LibraryModel m) => Set<Audio>.from(
-        m.likedAudios.where((e) => e.audioType == AudioType.podcast),
-      ),
-    );
 
     final subbedPodcasts = context.select((LibraryModel m) => m.podcasts);
     final playlists = context.select((LibraryModel m) => m.playlists);
@@ -207,7 +202,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       isOnline: isOnline,
       onTextTap: onTextTap,
       likedLocalAudios: likedLocalAudios,
-      likedPodcasts: likedPodcasts,
       subbedPodcasts: subbedPodcasts,
       addPodcast: libraryModel.addPodcast,
       removePodcast: libraryModel.removePodcast,
