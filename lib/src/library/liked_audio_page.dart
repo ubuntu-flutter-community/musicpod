@@ -1,11 +1,11 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:yaru/yaru.dart';
 
-import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../common/fall_back_header_image.dart';
+import '../common/side_bar_fall_back_image.dart';
 import '../l10n/l10n.dart';
 
 class LikedAudioPage extends StatelessWidget {
@@ -19,24 +19,7 @@ class LikedAudioPage extends StatelessWidget {
     required BuildContext context,
     required bool selected,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(6),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            context.t.colorScheme.primary
-                .scale(lightness: 0.1)
-                .withOpacity(0.4),
-            context.t.colorScheme.primary
-                .scale(lightness: 0.6)
-                .withOpacity(0.4),
-          ],
-        ),
-      ),
-      width: sideBarImageSize,
-      height: sideBarImageSize,
+    return SideBarFallBackImage(
       child: selected ? Icon(Iconz().heartFilled) : Icon(Iconz().heart),
     );
   }
@@ -51,6 +34,7 @@ class LikedAudioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AudioPage(
+      showTrack: false,
       noResultMessage: Text(context.l10n.likedSongsSubtitle),
       noResultIcon: const AnimatedEmoji(AnimatedEmojis.twoHearts),
       audios: likedLocalAudios ?? {},
@@ -60,24 +44,7 @@ class LikedAudioPage extends StatelessWidget {
       headerTitle: context.l10n.likedSongs,
       headerSubtile: context.l10n.likedSongsSubtitle,
       headerLabel: context.l10n.playlist,
-      image: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              context.t.colorScheme.primary
-                  .scale(lightness: 0.1)
-                  .withOpacity(0.4),
-              context.t.colorScheme.primary
-                  .scale(lightness: 0.6)
-                  .withOpacity(0.4),
-            ],
-          ),
-        ),
-        width: 200,
-        height: 200,
+      image: FallBackHeaderImage(
         child: Icon(
           Iconz().heart,
           size: 65,

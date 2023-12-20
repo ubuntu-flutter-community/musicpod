@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../common/fall_back_header_image.dart';
 import '../l10n/l10n.dart';
+import '../theme.dart';
 import 'playlist_dialog.dart';
 
 class PlaylistPage extends StatelessWidget {
@@ -25,43 +26,16 @@ class PlaylistPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
-
-    final noPicture = playlist.value.firstOrNull == null ||
-        playlist.value.firstOrNull!.pictureData == null;
-
-    final noImage = playlist.value.firstOrNull == null ||
-        playlist.value.firstOrNull!.imageUrl == null;
-
-    final image = !noPicture
-        ? Image.memory(
-            playlist.value.firstOrNull!.pictureData!,
-            width: 200.0,
-            fit: BoxFit.fitWidth,
-            filterQuality: FilterQuality.medium,
-          )
-        : !noImage
-            ? SafeNetworkImage(
-                fallBackIcon: SizedBox(
-                  width: 200,
-                  child: Center(
-                    child: Icon(
-                      Iconz().musicNote,
-                      size: 80,
-                      color: theme.hintColor,
-                    ),
-                  ),
-                ),
-                url: playlist.value.firstOrNull!.imageUrl,
-                fit: BoxFit.fitWidth,
-                filterQuality: FilterQuality.medium,
-              )
-            : null;
-
     return AudioPage(
       onTextTap: onTextTap,
       audioPageType: AudioPageType.playlist,
-      image: image,
+      image: FallBackHeaderImage(
+        color: getAlphabetColor(playlist.key),
+        child: Icon(
+          Iconz().playlist,
+          size: 65,
+        ),
+      ),
       headerLabel: context.l10n.playlist,
       headerTitle: playlist.key,
       audios: playlist.value,

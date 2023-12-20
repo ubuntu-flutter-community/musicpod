@@ -128,7 +128,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final playerToTheRight = context.m.size.width > 1700;
+    final playerToTheRight = context.m.size.width > 1500;
 
     // Connectivity
     final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);

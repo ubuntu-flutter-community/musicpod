@@ -137,7 +137,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
         title: widget.controlPanelTitle,
         pause: pause,
         resume: resume,
-        onTap: widget.audios == null
+        onTap: widget.audios?.isNotEmpty == false
             ? null
             : () => startPlaylist(widget.audios!, widget.pageId),
         controlButton: widget.controlPanelButton,
@@ -171,6 +171,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
         return Column(
           children: [
             if (widget.showAudioPageHeader == true) audioPageHeader,
+            audioControlPanel,
             Expanded(
               child: NoSearchResultPage(
                 icons: widget.noResultIcon,
