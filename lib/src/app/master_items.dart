@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
@@ -88,6 +89,7 @@ List<MasterItem> createMasterItems({
     ),
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.likedSongs),
+      content: (kLikedAudios, likedLocalAudios),
       pageBuilder: (context) => LikedAudioPage(
         onTextTap: onTextTap,
         likedLocalAudios: likedLocalAudios,
@@ -168,8 +170,12 @@ List<MasterItem> createMasterItems({
     for (final station in starredStations.entries)
       MasterItem(
         titleBuilder: (context) => Text(station.key),
-        subtitleBuilder: (context) =>
-            Text(station.value.firstOrNull?.artist ?? context.l10n.station),
+        subtitleBuilder: (context) {
+          final text = station.value.firstOrNull?.artist?.isNotEmpty == true
+              ? station.value.firstOrNull!.artist!
+              : context.l10n.station;
+          return Text(text);
+        },
         content: (station.key, station.value),
         pageBuilder: (context) => isOnline
             ? StationPage(
