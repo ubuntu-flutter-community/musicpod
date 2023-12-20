@@ -22,7 +22,6 @@ class PlayerTrack extends StatelessWidget {
     final position = context.select((PlayerModel m) => m.position);
     final setPosition = playerModel.setPosition;
     final duration = context.select((PlayerModel m) => m.duration);
-    final color = context.select((PlayerModel m) => m.color);
     final seek = playerModel.seek;
 
     bool sliderActive = duration != null &&
@@ -42,15 +41,9 @@ class PlayerTrack extends StatelessWidget {
         minThumbSeparation: 0,
         trackShape: superNarrow ? const RectangularSliderTrackShape() : null,
         trackHeight: superNarrow ? 4 : 2,
-        inactiveTrackColor: color != null
-            ? theme.colorScheme.onSurface.withOpacity(0.35)
-            : theme.colorScheme.primary.withOpacity(0.5),
-        activeTrackColor: color != null
-            ? theme.colorScheme.onSurface.withOpacity(0.8)
-            : theme.colorScheme.primary,
-        overlayColor: color != null
-            ? theme.colorScheme.onSurface
-            : theme.colorScheme.primary,
+        inactiveTrackColor: theme.colorScheme.onSurface.withOpacity(0.35),
+        activeTrackColor: theme.colorScheme.onSurface.withOpacity(0.8),
+        overlayColor: theme.colorScheme.onSurface,
         overlayShape: RoundSliderThumbShape(
           elevation: 3,
           enabledThumbRadius: superNarrow ? 0 : 5.0,

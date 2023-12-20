@@ -47,7 +47,7 @@ class AboutTile extends StatelessWidget {
             return SizedBox(
               height: 400,
               width: 300,
-              child: MarkdownBody(
+              child: Markdown(
                 data: 'Contributors:\n ${snapshot.data!}',
                 onTapLink: (text, href, title) =>
                     href != null ? launchUrl(Uri.parse(href)) : null,

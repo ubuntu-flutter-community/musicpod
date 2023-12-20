@@ -148,5 +148,6 @@ const alphabetColors = {
 };
 
 Color getAlphabetColor(String text, [Color fallBackColor = Colors.black]) {
-  return alphabetColors[text[0].toUpperCase()] ?? fallBackColor;
+  final letter = text.isEmpty ? null : text[0];
+  return alphabetColors[letter] ?? fallBackColor;
 }
