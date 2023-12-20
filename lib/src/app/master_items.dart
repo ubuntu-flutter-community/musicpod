@@ -96,6 +96,24 @@ List<MasterItem> createMasterItems({
       iconBuilder: (context, selected) =>
           LikedAudioPage.createIcon(context: context, selected: selected),
     ),
+    for (final playlist in playlists.entries)
+      MasterItem(
+        titleBuilder: (context) => Text(playlist.key),
+        subtitleBuilder: (context) => Text(context.l10n.playlist),
+        content: (playlist.key, playlist.value),
+        pageBuilder: (context) => PlaylistPage(
+          onTextTap: onTextTap,
+          playlist: playlist,
+          unPinPlaylist: removePlaylist,
+          updatePlaylistName: updatePlaylistName,
+        ),
+        iconBuilder: (context, selected) => SideBarFallBackImage(
+          color: getAlphabetColor(playlist.key),
+          child: Icon(
+            Iconz().playlist,
+          ),
+        ),
+      ),
     for (final podcast in subbedPodcasts.entries)
       MasterItem(
         titleBuilder: (context) => PodcastPageTitle(
@@ -124,24 +142,6 @@ List<MasterItem> createMasterItems({
           context: context,
           imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
               podcast.value.firstOrNull?.imageUrl,
-        ),
-      ),
-    for (final playlist in playlists.entries)
-      MasterItem(
-        titleBuilder: (context) => Text(playlist.key),
-        subtitleBuilder: (context) => Text(context.l10n.playlist),
-        content: (playlist.key, playlist.value),
-        pageBuilder: (context) => PlaylistPage(
-          onTextTap: onTextTap,
-          playlist: playlist,
-          unPinPlaylist: removePlaylist,
-          updatePlaylistName: updatePlaylistName,
-        ),
-        iconBuilder: (context, selected) => SideBarFallBackImage(
-          color: getAlphabetColor(playlist.key),
-          child: Icon(
-            Iconz().playlist,
-          ),
         ),
       ),
     for (final album in pinnedAlbums.entries)

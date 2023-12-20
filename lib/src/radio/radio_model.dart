@@ -5,8 +5,10 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide Country;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../../constants.dart';
 import '../../data.dart';
 import '../../string_x.dart';
+import '../../utils.dart';
 import 'radio_service.dart';
 
 class RadioModel extends SafeChangeNotifier {
@@ -88,11 +90,15 @@ class RadioModel extends SafeChangeNotifier {
   bool? _connected;
   bool? get connected => _connected;
 
+  bool _initialized = false;
   Future<void> init({
     required String? countryCode,
-    required String? lastFav,
     required bool isOnline,
   }) async {
+    if (_initialized && _connected == true) return Future.value();
+
+    final lastFav = (await readSetting(kLastFav)) as String?;
+
     _connected = await _radioService.init(isOnline);
 
     _stationsSub =
@@ -122,6 +128,8 @@ class RadioModel extends SafeChangeNotifier {
         }
       }
     }
+
+    _initialized = true;
 
     notifyListeners();
   }
