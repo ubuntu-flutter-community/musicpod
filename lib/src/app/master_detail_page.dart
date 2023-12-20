@@ -3,13 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
+import '../../common.dart';
 import '../../data.dart';
 import '../../library.dart';
 import '../../player.dart';
 import '../../radio.dart';
 import '../../settings.dart';
 import '../../theme.dart';
-import '../common/common_widgets.dart';
 import '../globals.dart';
 import '../l10n/l10n.dart';
 import 'master_item.dart';
@@ -32,7 +32,9 @@ class MasterDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final startPlaylist = context.read<PlayerModel>().startPlaylist;
+    final playerModel = context.read<PlayerModel>();
+    final startPlaylist = playerModel.startPlaylist;
+    final pause = playerModel.pause;
 
     return YaruMasterDetailTheme(
       data: YaruMasterDetailTheme.of(context).copyWith(
@@ -64,19 +66,38 @@ class MasterDetailPage extends StatelessWidget {
           if (index == 3 || index == 5) {
             return item.titleBuilder(context);
           }
+
+          final isEnQueued = context.select(
+            (PlayerModel m) =>
+                m.queueName != null && m.queueName == item.content?.$1,
+          );
+          final isPlaying = context.select(
+            (PlayerModel m) => m.isPlaying,
+          );
+
+          final onPlay = item.content?.$1 == null || item.content?.$2 == null
+              ? null
+              : () {
+                  if (isEnQueued) {
+                    isPlaying ? pause() : playerModel.resume();
+                  } else {
+                    startPlaylist(
+                      item.content!.$2,
+                      item.content!.$1,
+                    );
+                  }
+                };
+
           return Padding(
             padding:
                 index == 0 ? const EdgeInsets.only(top: 5) : EdgeInsets.zero,
             child: MasterTile(
+              iconData:
+                  isPlaying && isEnQueued ? Iconz().pause : Iconz().playFilled,
               selected: index == 4 ? false : selected,
               title: item.titleBuilder(context),
               subtitle: item.subtitleBuilder?.call(context),
-              onPlay: item.content?.$1 == null || item.content?.$2 == null
-                  ? null
-                  : () => startPlaylist(
-                        item.content!.$2,
-                        item.content!.$1,
-                      ),
+              onPlay: onPlay,
               leading: item.iconBuilder == null
                   ? null
                   : Padding(

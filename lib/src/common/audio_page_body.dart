@@ -99,7 +99,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     final playerModel = context.read<PlayerModel>();
     final startPlaylist = playerModel.startPlaylist;
 
-    final queueName = context.select((PlayerModel m) => m.queueName);
     final currentAudio = context.select((PlayerModel m) => m.audio);
     final play = playerModel.play;
     final pause = playerModel.pause;
@@ -231,9 +230,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                     selected: audioSelected,
                     pause: pause,
                     resume: resume,
-                    startPlaylist: widget.audios == null
-                        ? null
-                        : () => play(newAudio: audio),
                     play: play,
                     lastPosition: libraryModel.getLastPosition.call(audio.url),
                     safeLastPosition: playerModel.safeLastPosition,
@@ -274,10 +270,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                       ? null
                       : () => startPlaylist(
                             widget.audios!.skip(index).toSet(),
-                            queueName ??
-                                audio.artist ??
-                                audio.album ??
-                                widget.audios.toString(),
+                            widget.pageId,
                           ),
                   resume: resume,
                   key: ValueKey(audio),

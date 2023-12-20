@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
-import '../../common.dart';
 import '../../constants.dart';
 
 class MasterTile extends StatefulWidget {
@@ -15,6 +14,7 @@ class MasterTile extends StatefulWidget {
     this.subtitle,
     this.trailing,
     this.onPlay,
+    required this.iconData,
   });
 
   final bool? selected;
@@ -24,6 +24,7 @@ class MasterTile extends StatefulWidget {
   final Widget? trailing;
   final void Function()? onTap;
   final void Function()? onPlay;
+  final IconData iconData;
 
   @override
   State<MasterTile> createState() => _MasterTileState();
@@ -62,7 +63,7 @@ class _MasterTileState extends State<MasterTile> {
                 child: IconButton(
                   onPressed: widget.onPlay,
                   icon: Icon(
-                    Iconz().playFilled,
+                    widget.iconData,
                     size: kTinyButtonIconSize,
                     color: context.t.colorScheme.primary,
                   ),

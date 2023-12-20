@@ -270,9 +270,10 @@ class PlayerService {
   }
 
   Future<void> insertIntoQueue(Audio audio) async {
-    if (_queue.$2.isNotEmpty && !_queue.$2.contains(audio)) {
-      _queue.$2.insert(1, audio);
-      nextAudio = queue.$2[1];
+    if (_queue.$2.isNotEmpty && !_queue.$2.contains(audio) && _audio != null) {
+      final currentIndex = queue.$2.indexOf(_audio!);
+      _queue.$2.insert(currentIndex + 1, audio);
+      nextAudio = queue.$2[currentIndex + 1];
     }
   }
 
