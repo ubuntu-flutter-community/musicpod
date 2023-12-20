@@ -82,7 +82,7 @@ class LibraryService {
   void addLikedAudio(Audio audio, [bool notify = true]) {
     _likedAudios.add(audio);
     if (notify) {
-      writeAudioMap({'likedAudios': _likedAudios}, kLikedAudios)
+      writeAudioMap({kLikedAudios: _likedAudios}, kLikedAudiosFileName)
           .then((value) => _likedAudiosController.add(true));
     }
   }
@@ -91,7 +91,7 @@ class LibraryService {
     for (var audio in audios) {
       addLikedAudio(audio, false);
     }
-    writeAudioMap({'likedAudios': _likedAudios}, kLikedAudios)
+    writeAudioMap({kLikedAudios: _likedAudios}, kLikedAudiosFileName)
         .then((value) => _likedAudiosController.add(true));
   }
 
@@ -102,7 +102,7 @@ class LibraryService {
   void removeLikedAudio(Audio audio, [bool notify = true]) {
     _likedAudios.remove(audio);
     if (notify) {
-      writeAudioMap({'likedAudios': _likedAudios}, kLikedAudios)
+      writeAudioMap({kLikedAudios: _likedAudios}, kLikedAudiosFileName)
           .then((value) => _likedAudiosController.add(true));
     }
   }
@@ -111,7 +111,7 @@ class LibraryService {
     for (var audio in audios) {
       removeLikedAudio(audio, false);
     }
-    writeAudioMap({'likedAudios': _likedAudios}, kLikedAudios)
+    writeAudioMap({kLikedAudios: _likedAudios}, kLikedAudiosFileName)
         .then((value) => _likedAudiosController.add(true));
   }
 
@@ -411,7 +411,7 @@ class LibraryService {
       (key, value) => MapEntry(key, parseDuration(value) ?? Duration.zero),
     );
     _likedAudios =
-        (await readAudioMap(kLikedAudios)).entries.firstOrNull?.value ??
+        (await readAudioMap(kLikedAudiosFileName)).entries.firstOrNull?.value ??
             <Audio>{};
     _favTags = (await readStringSet(filename: kTagFavsFileName));
     _downloadsDir = await getDownloadsDir();

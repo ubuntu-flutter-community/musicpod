@@ -24,6 +24,7 @@ class AudioPage extends StatelessWidget {
     this.showAudioPageHeader = true,
     this.onTextTap,
     this.noResultMessage,
+    this.noResultIcon,
     this.titleLabel,
     this.artistLabel,
     this.albumLabel,
@@ -49,6 +50,7 @@ class AudioPage extends StatelessWidget {
   final Widget? title;
   final Widget? image;
   final Widget? noResultMessage;
+  final Widget? noResultIcon;
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
   final bool showAudioPageHeader;
@@ -70,6 +72,7 @@ class AudioPage extends StatelessWidget {
       pageId: pageId,
       audios: audios,
       noResultMessage: noResultMessage,
+      noResultIcon: noResultIcon,
       onTextTap: onTextTap,
       audioPageType: audioPageType,
       image: image,

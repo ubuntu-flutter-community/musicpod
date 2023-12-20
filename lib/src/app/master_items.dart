@@ -15,7 +15,6 @@ List<MasterItem> createMasterItems({
   required void Function({required AudioType audioType, required String text})
       onTextTap,
   required Set<Audio> likedLocalAudios,
-  required Set<Audio> likedPodcasts,
   required Map<String, Set<Audio>> subbedPodcasts,
   required void Function(String name, Set<Audio> audios) addPodcast,
   required void Function(String name) removePodcast,
@@ -77,16 +76,6 @@ List<MasterItem> createMasterItems({
       pageBuilder: (context) => const SizedBox.shrink(),
     ),
     MasterItem(
-      titleBuilder: (context) => Text(context.l10n.likedSongs),
-      pageBuilder: (context) => LikedAudioPage(
-        onTextTap: onTextTap,
-        likedLocalAudios: likedLocalAudios,
-        likedPodcasts: likedPodcasts,
-      ),
-      iconBuilder: (context, selected) =>
-          LikedAudioPage.createIcon(context: context, selected: selected),
-    ),
-    MasterItem(
       titleBuilder: (context) => const SpacedDivider(
         top: 10,
         bottom: 10,
@@ -94,6 +83,16 @@ List<MasterItem> createMasterItems({
         left: 0,
       ),
       pageBuilder: (context) => const SizedBox.shrink(),
+    ),
+    MasterItem(
+      titleBuilder: (context) => Text(context.l10n.likedSongs),
+      pageBuilder: (context) => LikedAudioPage(
+        onTextTap: onTextTap,
+        likedLocalAudios: likedLocalAudios,
+      ),
+      subtitleBuilder: (context) => Text(context.l10n.playlist),
+      iconBuilder: (context, selected) =>
+          LikedAudioPage.createIcon(context: context, selected: selected),
     ),
     for (final podcast in subbedPodcasts.entries)
       MasterItem(

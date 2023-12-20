@@ -88,7 +88,8 @@ const kCardColorDark = Color.fromARGB(255, 51, 51, 51);
 
 const kAudioQueueThreshHold = 100;
 
-const kLikedAudios = 'likedAudios.json';
+const kLikedAudiosFileName = 'likedAudios.json';
+const kLikedAudios = 'likedAudios';
 const kTagFavsFileName = 'tagFavs.json';
 const kLastFav = 'lastFav';
 const kPlaylistsFileName = 'playlists.json';

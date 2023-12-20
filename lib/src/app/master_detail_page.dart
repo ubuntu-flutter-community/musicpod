@@ -61,7 +61,7 @@ class MasterDetailPage extends StatelessWidget {
         ),
         tileBuilder: (context, index, selected, availableWidth) {
           final item = masterItems[index];
-          if (index == 3 || index == 6) {
+          if (index == 3 || index == 5) {
             return item.titleBuilder(context);
           }
           return Padding(
