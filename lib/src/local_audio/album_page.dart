@@ -25,13 +25,13 @@ class AlbumPage extends StatelessWidget {
     Widget? albumArt;
     if (picture != null) {
       albumArt = SizedBox(
-        width: masterTrailingSize,
-        height: masterTrailingSize,
+        width: sideBarImageSize,
+        height: sideBarImageSize,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(5),
           child: Image.memory(
             picture,
-            height: masterTrailingSize,
+            height: sideBarImageSize,
             fit: BoxFit.fitHeight,
             filterQuality: FilterQuality.medium,
           ),

@@ -24,26 +24,23 @@ class PodcastPage extends StatelessWidget {
   static Widget createIcon({
     required BuildContext context,
     String? imageUrl,
-    required bool isOnline,
   }) {
-    if (!isOnline) {
-      return Icon(Iconz().offline);
-    }
-
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(
-        width: masterTrailingSize,
-        height: masterTrailingSize,
+        width: sideBarImageSize,
+        height: sideBarImageSize,
         child: SafeNetworkImage(
           url: imageUrl,
           fit: BoxFit.fitHeight,
           filterQuality: FilterQuality.medium,
           fallBackIcon: Icon(
             Iconz().podcast,
+            size: sideBarImageSize,
           ),
           errorIcon: Icon(
             Iconz().podcast,
+            size: sideBarImageSize,
           ),
         ),
       ),
@@ -99,26 +96,34 @@ class PodcastPage extends StatelessWidget {
       pageId: pageId,
       title: Text(title),
       controlPanelTitle: Text(title),
-      controlPanelButton: IconButton(
-        tooltip: subscribed
-            ? context.l10n.removeFromCollection
-            : context.l10n.addToCollection,
-        icon: subscribed
-            ? Icon(
-                Iconz().removeFromLibrary,
-                color: theme.colorScheme.primary,
-              )
-            : Icon(
-                Iconz().addToLibrary,
-                color: theme.colorScheme.onSurface,
-              ),
-        onPressed: () {
-          if (subscribed) {
-            removePodcast(pageId);
-          } else if (audios?.isNotEmpty == true) {
-            addPodcast(pageId, audios!);
-          }
-        },
+      controlPanelButton: Row(
+        children: [
+          IconButton(
+            tooltip: subscribed
+                ? context.l10n.removeFromCollection
+                : context.l10n.addToCollection,
+            icon: subscribed
+                ? Icon(
+                    Iconz().removeFromLibrary,
+                    color: theme.colorScheme.primary,
+                  )
+                : Icon(
+                    Iconz().addToLibrary,
+                    color: theme.colorScheme.onSurface,
+                  ),
+            onPressed: () {
+              if (subscribed) {
+                removePodcast(pageId);
+              } else if (audios?.isNotEmpty == true) {
+                addPodcast(pageId, audios!);
+              }
+            },
+          ),
+          StreamProviderRow(
+            spacing: const EdgeInsets.only(right: 10),
+            text: title,
+          ),
+        ],
       ),
     );
   }

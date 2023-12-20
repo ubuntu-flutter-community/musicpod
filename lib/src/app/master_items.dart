@@ -123,7 +123,6 @@ List<MasterItem> createMasterItems({
           context: context,
           imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
               podcast.value.firstOrNull?.imageUrl,
-          isOnline: isOnline,
         ),
       ),
     for (final playlist in playlists.entries)
@@ -184,7 +183,6 @@ List<MasterItem> createMasterItems({
           context: context,
           imageUrl: station.value.first.imageUrl,
           selected: selected,
-          isOnline: isOnline,
         ),
       ),
   ];

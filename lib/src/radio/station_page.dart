@@ -36,26 +36,21 @@ class StationPage extends StatelessWidget {
     required BuildContext context,
     required String? imageUrl,
     required bool selected,
-    required bool isOnline,
   }) {
-    if (!isOnline) {
-      return Icon(Iconz().offline);
-    }
-
     final icon = selected
         ? Icon(
             Iconz().starFilled,
-            size: masterTrailingSize,
+            size: sideBarImageSize,
           )
         : Icon(
             Iconz().star,
-            size: masterTrailingSize,
+            size: sideBarImageSize,
           );
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(
-        height: masterTrailingSize,
-        width: masterTrailingSize,
+        height: sideBarImageSize,
+        width: sideBarImageSize,
         child: SafeNetworkImage(
           fallBackIcon: icon,
           errorIcon: icon,
