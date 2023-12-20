@@ -32,7 +32,9 @@ class _LocalAudioPageState extends State<LocalAudioPage>
       if (!mounted) return;
       model.init(
         onFail: (failedImports) {
-          if (context.read<LibraryModel>().neverShowFailedImports) return;
+          if (!mounted || context.read<LibraryModel>().neverShowFailedImports) {
+            return;
+          }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               duration: const Duration(seconds: 10),

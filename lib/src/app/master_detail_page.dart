@@ -80,7 +80,9 @@ class MasterDetailPage extends StatelessWidget {
               leading: item.iconBuilder == null
                   ? null
                   : Padding(
-                      padding: const EdgeInsets.only(top: 1),
+                      padding: index <= 3
+                          ? EdgeInsets.zero
+                          : const EdgeInsets.only(right: 4, top: 2),
                       child: item.iconBuilder!(
                         context,
                         selected,
