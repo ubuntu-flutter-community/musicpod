@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
@@ -58,6 +59,15 @@ class _TitlesViewState extends State<TitlesView> {
     }
 
     return AudioPageBody(
+      controlPanelButton: Padding(
+        padding: const EdgeInsets.only(left: 20),
+        child: Text(
+          '${context.l10n.localAudio}  •  ${widget.audios?.length} ${context.l10n.titles}',
+          style: context.t.textTheme.headlineSmall
+                  ?.copyWith(fontWeight: largeTextWeight) ??
+              const TextStyle(fontSize: 25),
+        ),
+      ),
       noResultMessage: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

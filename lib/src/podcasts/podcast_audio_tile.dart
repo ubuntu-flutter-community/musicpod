@@ -70,7 +70,8 @@ class PodcastAudioTile extends StatelessWidget {
       constraints: BoxConstraints(maxWidth: narrow ? 500 : double.infinity),
       child: YaruExpandable(
         expandIcon: narrow ? null : const SizedBox.shrink(),
-        expandIconPadding: const EdgeInsets.only(right: 20, bottom: 25),
+        expandIconPadding:
+            EdgeInsets.only(right: 20, bottom: yaruStyled ? 25 : 10),
         isExpanded: isExpanded,
         gapHeight: 0,
         header: MouseRegion(
