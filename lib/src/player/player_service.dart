@@ -535,6 +535,13 @@ class PlayerService {
       _audioService!.playbackState.add(
         _audioService!.playbackState.value.copyWith(
           playing: playing,
+          controls: [
+            MediaControl.skipToPrevious,
+            MediaControl.rewind,
+            playing ? MediaControl.pause : MediaControl.play,
+            MediaControl.fastForward,
+            MediaControl.skipToNext,
+          ],
         ),
       );
     }
