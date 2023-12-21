@@ -49,7 +49,7 @@ class SettingsTile extends StatelessWidget {
     }
 
     final content = Padding(
-      padding: const EdgeInsets.all(25),
+      padding: const EdgeInsets.all(20),
       child: ListView(
         children: [
           ImportantButton(
