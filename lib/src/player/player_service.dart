@@ -8,6 +8,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:path/path.dart';
 import 'package:smtc_windows/smtc_windows.dart';
 
 import '../../constants.dart';
@@ -322,7 +323,7 @@ class PlayerService {
     nextAudio = queue.$2.elementAt(randomIndex);
   }
 
-  Future<void> playPrevious() async {
+  Future<void> playPrevious({bool doubleTap = false}) async {
     if (queue.$2.isNotEmpty == true &&
         audio != null &&
         queue.$2.contains(audio)) {
