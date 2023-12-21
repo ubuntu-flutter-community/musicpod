@@ -37,7 +37,7 @@ class BottomPlayer extends StatelessWidget {
   final double width;
   final Color? color;
 
-  final Future<void> Function() playPrevious;
+  final Future<void> Function({bool doubleTap}) playPrevious;
   final Future<void> Function() playNext;
   final bool liked;
 

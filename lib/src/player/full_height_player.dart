@@ -37,7 +37,7 @@ class FullHeightPlayer extends StatelessWidget {
 
   final Audio? audio;
   final Audio? nextAudio;
-  final Future<void> Function() playPrevious;
+  final Future<void> Function({bool doubleTap}) playPrevious;
   final Future<void> Function() playNext;
   final bool liked;
 

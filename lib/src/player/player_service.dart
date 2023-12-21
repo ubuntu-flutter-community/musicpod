@@ -323,18 +323,23 @@ class PlayerService {
   }
 
   Future<void> playPrevious({bool doubleTap = false}) async {
+    safeLastPosition();
+    doubleTap ? _setPrevAudio() : _setAudio(audio);
+    await play();
+  }
+
+  void _setPrevAudio() {
     if (queue.$2.isNotEmpty == true &&
         audio != null &&
         queue.$2.contains(audio)) {
       final currentIndex = queue.$2.indexOf(audio!);
 
       if (currentIndex == 0) {
-        return;
+        _setAudio(queue.$2.last);
+      } else {
+        _setAudio(queue.$2.elementAt(currentIndex - 1));
       }
-      _setAudio(queue.$2.elementAt(currentIndex - 1));
-      nextAudio = queue.$2.elementAt(queue.$2.indexOf(audio!) + 1);
-
-      await play();
+      _estimateNext();
     }
   }
 

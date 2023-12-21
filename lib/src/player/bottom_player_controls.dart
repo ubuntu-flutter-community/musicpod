@@ -14,7 +14,7 @@ class BottomPlayerControls extends StatelessWidget {
     required this.onFullScreenTap,
   });
 
-  final Future<void> Function() playPrevious;
+  final Future<void> Function({bool doubleTap}) playPrevious;
   final Future<void> Function() playNext;
 
   final void Function() onFullScreenTap;
@@ -29,9 +29,12 @@ class BottomPlayerControls extends StatelessWidget {
           ShuffleButton(active: active),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: IconButton(
-              onPressed: !active ? null : () => playPrevious(),
-              icon: Icon(Iconz().skipBackward),
+            child: GestureDetector(
+              onDoubleTap: !active ? null : () => playPrevious(doubleTap: true),
+              child: IconButton(
+                onPressed: !active ? null : () => playPrevious(),
+                icon: Icon(Iconz().skipBackward),
+              ),
             ),
           ),
           PlayButton(active: active),

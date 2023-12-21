@@ -105,10 +105,8 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> insertIntoQueue(Audio audio) async =>
       await service.insertIntoQueue(audio);
 
-  Future<void> moveAudioInQueue(int oldIndex, int newIndex) async =>
-      await service.moveAudioInQueue(oldIndex, newIndex);
-
-  Future<void> playPrevious() async => await service.playPrevious();
+  Future<void> playPrevious({bool doubleTap = false}) async =>
+      await service.playPrevious(doubleTap: doubleTap);
 
   Future<void> startPlaylist(Set<Audio> audios, String listName) async =>
       await service.startPlaylist(audios, listName);

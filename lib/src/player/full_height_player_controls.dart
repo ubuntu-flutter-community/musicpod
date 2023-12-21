@@ -17,7 +17,7 @@ class FullHeightPlayerControls extends StatelessWidget {
   });
 
   final Audio? audio;
-  final Future<void> Function() playPrevious;
+  final Future<void> Function({bool doubleTap}) playPrevious;
   final Future<void> Function() playNext;
   final bool active;
 
@@ -32,9 +32,12 @@ class FullHeightPlayerControls extends StatelessWidget {
       runSpacing: spacing,
       children: [
         ShuffleButton(active: active),
-        IconButton(
-          onPressed: !active ? null : () => playPrevious(),
-          icon: Icon(Iconz().skipBackward),
+        GestureDetector(
+          onDoubleTap: !active ? null : () => playPrevious(doubleTap: true),
+          child: IconButton(
+            onPressed: !active ? null : () => playPrevious(),
+            icon: Icon(Iconz().skipBackward),
+          ),
         ),
         CircleAvatar(
           radius: avatarIconSize,
