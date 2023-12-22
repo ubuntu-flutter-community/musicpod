@@ -324,7 +324,9 @@ class PlayerService {
 
   Future<void> playPrevious({bool doubleTap = false}) async {
     safeLastPosition();
-    doubleTap ? _setPrevAudio() : _setAudio(audio);
+    doubleTap || (position != null && position!.inSeconds < 10)
+        ? _setPrevAudio()
+        : _setAudio(audio);
     await play();
   }
 
