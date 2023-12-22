@@ -41,16 +41,16 @@ Color getSnackBarTextColor(ThemeData theme) => yaruStyled
     ? Colors.white.withOpacity(0.7)
     : theme.colorScheme.onInverseSurface;
 
-Color getPlayerBg(Color? surfaceTintColor, Color scaffoldBg) {
+Color getPlayerBg(Color? surfaceTintColor, Color fallbackColor) {
   if (surfaceTintColor != null) {
     return (Platform.isLinux
         ? surfaceTintColor.withOpacity(0.05)
         : Color.alphaBlend(
             surfaceTintColor.withOpacity(0.2),
-            scaffoldBg,
+            fallbackColor,
           ));
   } else {
-    return scaffoldBg;
+    return fallbackColor;
   }
 }
 

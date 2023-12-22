@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 
 import '../../app.dart';
 import '../../build_context_x.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
+import '../../theme_data_x.dart';
 import '../library/library_model.dart';
 import '../theme.dart';
 
@@ -52,13 +54,17 @@ class _PlayerViewState extends State<PlayerView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.t;
     final size = context.m.size;
     final width = size.width;
 
     final playerModel = context.read<PlayerModel>();
     final nextAudio = context.select((PlayerModel m) => m.nextAudio);
     final c = context.select((PlayerModel m) => m.color);
-    final color = getPlayerBg(c, context.t.scaffoldBackgroundColor);
+    final color = getPlayerBg(
+      c,
+      theme.isLight ? kCardColorLight : theme.scaffoldBackgroundColor,
+    );
     final setFullScreen = playerModel.setFullScreen;
     final playPrevious = playerModel.playPrevious;
     final playNext = playerModel.playNext;

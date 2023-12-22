@@ -49,7 +49,7 @@ class StationPage extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: Container(
-        color: context.t.isLight ? kCardColorLight : kCardColorDark,
+        color: kCardColorNeutral,
         height: sideBarImageSize,
         width: sideBarImageSize,
         child: SafeNetworkImage(

@@ -249,7 +249,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                 ],
               ),
             ),
-            if (playerToTheRight) const VerticalDivider(),
             if (playerToTheRight)
               SizedBox(
                 width: 500,
