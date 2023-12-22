@@ -59,6 +59,7 @@ class _TitlesViewState extends State<TitlesView> {
     }
 
     return AudioPageBody(
+      showTrack: false,
       controlPanelButton: Padding(
         padding: const EdgeInsets.only(left: 20),
         child: Text(
