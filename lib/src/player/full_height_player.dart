@@ -196,11 +196,21 @@ class FullHeightPlayer extends StatelessWidget {
             backgroundColor:
                 isVideo == true ? Colors.black : Colors.transparent,
           ),
-        Expanded(
-          child: Padding(
-            padding:
-                isMobile ? const EdgeInsets.only(top: 40) : EdgeInsets.zero,
-            child: stack,
+        GestureDetector(
+          onVerticalDragEnd: (details) {
+            if (isMobile) {
+              if (details.primaryVelocity != null &&
+                  details.primaryVelocity! > 150) {
+                setFullScreen(false);
+              }
+            }
+          },
+          child: Expanded(
+            child: Padding(
+              padding:
+                  isMobile ? const EdgeInsets.only(top: 40) : EdgeInsets.zero,
+              child: stack,
+            ),
           ),
         ),
       ],

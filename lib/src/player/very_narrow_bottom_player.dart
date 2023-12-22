@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../../player.dart';
@@ -25,35 +27,45 @@ class VeryNarrowBottomPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => setFullScreen(true),
-      child: SizedBox(
-        height: kBottomPlayerHeight,
-        child: Column(
-          children: [
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: bottomPlayerImage,
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: titleAndArtist,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: PlayButton(active: active),
-                  ),
-                ],
+    return GestureDetector(
+      onVerticalDragEnd: (details) {
+        if (Platform.isAndroid) {
+          if (details.primaryVelocity != null &&
+              details.primaryVelocity! < 150) {
+            setFullScreen(true);
+          }
+        }
+      },
+      child: InkWell(
+        onTap: () => setFullScreen(true),
+        child: SizedBox(
+          height: kBottomPlayerHeight,
+          child: Column(
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: bottomPlayerImage,
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Expanded(
+                      child: titleAndArtist,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: PlayButton(active: active),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            track,
-          ],
+              track,
+            ],
+          ),
         ),
       ),
     );
