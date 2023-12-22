@@ -316,11 +316,8 @@ class PlayerService {
       if (currentIndex == 0) {
         return;
       }
-
-      nextAudio = queue.$2.elementAt(currentIndex - 1);
-
-      if (nextAudio == null) return;
-      _setAudio(nextAudio);
+      _setAudio(queue.$2.elementAt(currentIndex - 1));
+      nextAudio = queue.$2.elementAt(queue.$2.indexOf(audio!) + 1);
 
       await play();
     }
