@@ -64,6 +64,7 @@ class BottomPlayer extends StatelessWidget {
     final active = audio?.path != null || isOnline;
 
     final bottomPlayerImage = BottomPlayerImage(
+      setFullScreen: () => setFullScreen(true),
       audio: audio,
       size: kBottomPlayerHeight - (veryNarrow ? 20 : 0),
       videoController: videoController,

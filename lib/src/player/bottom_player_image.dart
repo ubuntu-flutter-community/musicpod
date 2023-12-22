@@ -14,16 +14,19 @@ class BottomPlayerImage extends StatelessWidget {
     this.isVideo,
     required this.videoController,
     required this.isOnline,
+    required this.setFullScreen,
   });
   final Audio? audio;
   final double size;
   final bool? isVideo;
   final VideoController videoController;
   final bool isOnline;
+  final void Function() setFullScreen;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    final Widget image;
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
       iconData = Iconz().radio;
@@ -33,7 +36,7 @@ class BottomPlayerImage extends StatelessWidget {
       iconData = Iconz().musicNote;
     }
     if (isVideo == true) {
-      return RepaintBoundary(
+      image = RepaintBoundary(
         child: Video(
           height: size,
           width: size,
@@ -45,7 +48,7 @@ class BottomPlayerImage extends StatelessWidget {
         ),
       );
     } else if (audio?.pictureData != null) {
-      return AnimatedContainer(
+      image = AnimatedContainer(
         height: size,
         width: size,
         duration: const Duration(milliseconds: 300),
@@ -58,7 +61,7 @@ class BottomPlayerImage extends StatelessWidget {
       );
     } else {
       if (!isOnline) {
-        return SizedBox(
+        image = SizedBox(
           width: size,
           height: size,
           child: Icon(
@@ -68,7 +71,7 @@ class BottomPlayerImage extends StatelessWidget {
           ),
         );
       } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
-        return Container(
+        image = Container(
           color: kCardColorNeutral,
           height: size,
           width: size,
@@ -84,7 +87,7 @@ class BottomPlayerImage extends StatelessWidget {
           ),
         );
       } else {
-        return Center(
+        image = Center(
           child: SizedBox(
             width: size,
             height: size,
@@ -97,5 +100,12 @@ class BottomPlayerImage extends StatelessWidget {
         );
       }
     }
+    return MouseRegion(
+      cursor: MaterialStateMouseCursor.clickable,
+      child: GestureDetector(
+        onTap: () => setFullScreen(),
+        child: image,
+      ),
+    );
   }
 }
