@@ -4,7 +4,6 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
-import '../../theme_data_x.dart';
 
 class FullHeightPlayerImage extends StatelessWidget {
   const FullHeightPlayerImage({
@@ -49,7 +48,7 @@ class FullHeightPlayerImage extends StatelessWidget {
         image = Container(
           height: size.width,
           width: size.width,
-          color: theme.isLight ? kCardColorLight : kCardColorDark,
+          color: kCardColorNeutral,
           child: SafeNetworkImage(
             url: audio?.imageUrl ?? audio?.albumArtUrl,
             filterQuality: FilterQuality.medium,

@@ -5,7 +5,6 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
-import '../../theme_data_x.dart';
 
 class BottomPlayerImage extends StatelessWidget {
   const BottomPlayerImage({
@@ -70,7 +69,7 @@ class BottomPlayerImage extends StatelessWidget {
         );
       } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
         return Container(
-          color: theme.isLight ? kCardColorLight : kCardColorDark,
+          color: kCardColorNeutral,
           height: size,
           width: size,
           child: SafeNetworkImage(

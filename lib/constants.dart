@@ -85,6 +85,7 @@ const kDiskGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
 
 const kCardColorLight = Color.fromARGB(255, 233, 233, 233);
 const kCardColorDark = Color.fromARGB(255, 51, 51, 51);
+const kCardColorNeutral = Color.fromARGB(255, 133, 133, 133);
 
 const kAudioQueueThreshHold = 100;
 
