@@ -10,12 +10,10 @@ class FullHeightPlayerImage extends StatelessWidget {
     super.key,
     this.audio,
     required this.isOnline,
-    required this.size,
   });
 
   final Audio? audio;
   final bool isOnline;
-  final Size size;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +32,7 @@ class FullHeightPlayerImage extends StatelessWidget {
     if (audio?.pictureData != null) {
       image = Image.memory(
         audio!.pictureData!,
-        height: size.height,
+        height: fullHeightPlayerImageSize,
         fit: BoxFit.fitWidth,
       );
     } else {
@@ -46,8 +44,8 @@ class FullHeightPlayerImage extends StatelessWidget {
         );
       } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
         image = Container(
-          height: size.width,
-          width: size.width,
+          height: fullHeightPlayerImageSize,
+          width: fullHeightPlayerImageSize,
           color: kCardColorNeutral,
           child: SafeNetworkImage(
             url: audio?.imageUrl ?? audio?.albumArtUrl,
@@ -58,8 +56,8 @@ class FullHeightPlayerImage extends StatelessWidget {
               size: fullHeightPlayerImageSize * 0.7,
               color: theme.hintColor,
             ),
-            height: size.width,
-            width: size.width,
+            height: fullHeightPlayerImageSize,
+            width: fullHeightPlayerImageSize,
           ),
         );
       } else {

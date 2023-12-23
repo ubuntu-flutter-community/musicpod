@@ -105,7 +105,6 @@ class FullHeightPlayer extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   FullHeightPlayerImage(
-                    size: size,
                     audio: audio,
                     isOnline: isOnline,
                   ),

@@ -371,6 +371,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.82.1"
+  flutter_staggered_grid_view:
+    dependency: transitive
+    description:
+      name: flutter_staggered_grid_view
+      sha256: f0b6d8c0fa7b4b444985cdde68492c0138a4fb6fc57a641b24cb234b7ee0f5c4
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.1"
   flutter_tabler_icons:
     dependency: "direct main"
     description:
@@ -822,6 +830,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  reorderableitemsview:
+    dependency: "direct main"
+    description:
+      name: reorderableitemsview
+      sha256: "13f1a0394e158fea6f440557b2025bba7c61364885eaa9d71e1c4ba818c8d79c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   rss_dart:
     dependency: transitive
     description:
@@ -910,6 +926,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.9"
+  scroll_to_index:
+    dependency: "direct main"
+    description:
+      name: scroll_to_index
+      sha256: b707546e7500d9f070d63e5acf74fd437ec7eeeb68d3412ef7b0afada0b4f176
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   shelf:
     dependency: transitive
     description:

@@ -277,6 +277,21 @@ class PlayerService {
     }
   }
 
+  Future<void> moveAudioInQueue(int oldIndex, int newIndex) async {
+    if (_queue.$2.isNotEmpty && newIndex < _queue.$2.length) {
+      if (oldIndex < newIndex) {
+        newIndex -= 1;
+      }
+
+      final audio = _queue.$2.removeAt(oldIndex);
+      _queue.$2.insert(newIndex, audio);
+
+      _estimateNext();
+
+      _queueController.add(true);
+    }
+  }
+
   void _estimateNext() {
     if (audio == null) return;
 
