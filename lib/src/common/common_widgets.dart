@@ -463,3 +463,7 @@ Future<Object?> showStyledPopover({
     transitionDuration: Duration.zero,
   );
 }
+
+TextStyle getControlPanelStyle(TextTheme textTheme) =>
+    textTheme.headlineSmall?.copyWith(fontWeight: largeTextWeight) ??
+    const TextStyle(fontSize: 25);

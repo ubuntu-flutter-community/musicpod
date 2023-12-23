@@ -61,12 +61,10 @@ class _TitlesViewState extends State<TitlesView> {
     return AudioPageBody(
       showTrack: false,
       controlPanelButton: Padding(
-        padding: const EdgeInsets.only(left: 20),
+        padding: const EdgeInsets.only(left: 10),
         child: Text(
           '${context.l10n.localAudio}  •  ${widget.audios?.length} ${context.l10n.titles}',
-          style: context.t.textTheme.headlineSmall
-                  ?.copyWith(fontWeight: largeTextWeight) ??
-              const TextStyle(fontSize: 25),
+          style: getControlPanelStyle(context.t.textTheme),
         ),
       ),
       noResultMessage: Column(
