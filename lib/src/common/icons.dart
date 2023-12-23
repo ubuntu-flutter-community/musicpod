@@ -258,6 +258,11 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.clear
           : Icons.clear;
+  IconData get viewMore => yaruStyled
+      ? YaruIcons.view_more_horizontal
+      : appleStyled
+          ? CupertinoIcons.ellipsis
+          : Icons.more_horiz;
 
   Widget getAnimatedStar(bool isStarred, [Color? color]) {
     if (yaruStyled) {

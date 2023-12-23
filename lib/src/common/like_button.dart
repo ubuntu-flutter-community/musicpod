@@ -103,6 +103,7 @@ class _Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return YaruPopupMenuButton(
+      tooltip: context.l10n.moreOptions,
       style: TextButton.styleFrom(
         shape: RoundedRectangleBorder(
           side: BorderSide.none,

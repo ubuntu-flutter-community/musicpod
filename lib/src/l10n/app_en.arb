@@ -142,5 +142,6 @@
             }
         }
     },
-    "downloadsOnly": "Downloads only"
+    "downloadsOnly": "Downloads only",
+    "moreOptions": "More options"
 }

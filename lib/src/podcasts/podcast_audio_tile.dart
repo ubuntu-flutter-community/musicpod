@@ -11,6 +11,7 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../l10n.dart';
 import '../../theme.dart';
 import '../../utils.dart';
 import 'avatar_with_progress.dart';
@@ -33,6 +34,7 @@ class PodcastAudioTile extends StatelessWidget {
     required this.safeLastPosition,
     this.isOnline = true,
     required this.addPodcast,
+    this.insertIntoQueue,
   });
 
   final Audio audio;
@@ -44,6 +46,7 @@ class PodcastAudioTile extends StatelessWidget {
   final void Function()? removeUpdate;
   final void Function() safeLastPosition;
   final void Function()? addPodcast;
+  final void Function()? insertIntoQueue;
 
   final Duration? lastPosition;
   final bool isExpanded;
@@ -67,11 +70,9 @@ class PodcastAudioTile extends StatelessWidget {
     final narrow = context.m.size.width < 600;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: narrow ? 500 : double.infinity),
+      constraints: BoxConstraints(maxWidth: narrow ? 550 : double.infinity),
       child: YaruExpandable(
-        expandIcon: narrow ? null : const SizedBox.shrink(),
-        expandIconPadding:
-            EdgeInsets.only(right: 20, bottom: yaruStyled ? 25 : 10),
+        expandIcon: const SizedBox.shrink(),
         isExpanded: isExpanded,
         gapHeight: 0,
         header: MouseRegion(
@@ -103,11 +104,13 @@ class PodcastAudioTile extends StatelessWidget {
                 ),
                 Expanded(
                   child: _Right(
+                    narrow: narrow,
                     selected: selected,
                     audio: audio,
                     date: date,
                     duration: duration,
                     addPodcast: addPodcast,
+                    insertIntoQueue: insertIntoQueue,
                   ),
                 ),
               ],
@@ -117,6 +120,7 @@ class PodcastAudioTile extends StatelessWidget {
         child: Align(
           alignment: Alignment.centerLeft,
           child: _Bottom(
+            narrow: narrow,
             selected: selected,
             audio: audio,
             lastPosition: lastPosition,
@@ -134,6 +138,8 @@ class _Right extends StatelessWidget {
     required this.date,
     required this.duration,
     required this.addPodcast,
+    this.insertIntoQueue,
+    this.narrow = false,
   });
 
   final Audio audio;
@@ -141,6 +147,8 @@ class _Right extends StatelessWidget {
   final String duration;
   final bool selected;
   final void Function()? addPodcast;
+  final void Function()? insertIntoQueue;
+  final bool narrow;
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +168,7 @@ class _Right extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         SizedBox(
-          width: 250,
+          width: narrow ? double.infinity : 280,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
@@ -193,6 +201,9 @@ class _Right extends StatelessWidget {
                       addPodcast: addPodcast,
                     ),
                   ),
+                  _ViewMoreButton(
+                    insertIntoQueue: insertIntoQueue,
+                  ),
                 ],
               ),
             ],
@@ -203,24 +214,65 @@ class _Right extends StatelessWidget {
   }
 }
 
+class _ViewMoreButton extends StatelessWidget {
+  const _ViewMoreButton({
+    required this.insertIntoQueue,
+  });
+
+  final void Function()? insertIntoQueue;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: kTinyButtonSize,
+      width: kTinyButtonSize,
+      child: Material(
+        color: Colors.transparent,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(kTinyButtonSize),
+        ),
+        child: PopupMenuButton(
+          splashRadius: 100,
+          tooltip: context.l10n.moreOptions,
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                onTap: insertIntoQueue,
+                child: Text(context.l10n.insertIntoQueue),
+              ),
+            ];
+          },
+          child: Icon(
+            Iconz().viewMore,
+            size: kTinyButtonIconSize,
+            color: context.t.colorScheme.onSurface,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _Bottom extends StatelessWidget {
   const _Bottom({
     required this.selected,
     required this.audio,
     required this.lastPosition,
+    this.narrow = false,
   });
 
   final bool selected;
   final Audio audio;
   final Duration? lastPosition;
+  final bool narrow;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding:
-          EdgeInsets.only(left: _kGap + podcastProgressSize + 15, right: 20),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 600),
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: narrow ? 480 : 600),
+      child: Padding(
+        padding: EdgeInsets.only(left: _kGap + podcastProgressSize + 15),
         child: _Description(
           description: audio.description,
           title: audio.title,
