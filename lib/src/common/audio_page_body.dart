@@ -234,6 +234,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                     lastPosition: libraryModel.getLastPosition.call(audio.url),
                     safeLastPosition: playerModel.safeLastPosition,
                     isOnline: isOnline,
+                    insertIntoQueue: () => playerModel.insertIntoQueue(audio),
                   );
                 }
 
