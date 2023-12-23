@@ -49,7 +49,9 @@ dependencies:
   popover: ^0.2.8+2
   provider: ^6.0.5
   radio_browser_api: ^1.0.1
+  reorderableitemsview: ^2.0.1
   safe_change_notifier: ^0.3.0
+  scroll_to_index: ^3.0.1
   shimmer: ^3.0.0
   smtc_windows: ^0.1.1
   stream_transform: ^2.1.0

@@ -60,11 +60,15 @@ class _TitlesViewState extends State<TitlesView> {
 
     return AudioPageBody(
       showTrack: false,
-      controlPanelButton: Padding(
-        padding: const EdgeInsets.only(left: 10),
-        child: Text(
-          '${context.l10n.localAudio}  •  ${widget.audios?.length} ${context.l10n.titles}',
-          style: getControlPanelStyle(context.t.textTheme),
+      controlPanelButton: Expanded(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Text(
+            '${context.l10n.localAudio}  •  ${widget.audios?.length} ${context.l10n.titles}',
+            style: getControlPanelStyle(context.t.textTheme),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ),
       noResultMessage: Column(
