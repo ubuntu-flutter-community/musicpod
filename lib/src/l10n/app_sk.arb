@@ -35,7 +35,7 @@
     "playlist": "Playlist",
     "discover": "Objavte",
     "forYou": "Pre vás",
-    "search": "Nájsť",
+    "search": "Hľadať",
     "noPodcastFound": "Ľutujeme, s týmto vyhľadávacím dopytom sa nenašiel žiadny podcast.",
     "noPodcastChartsFound": "Ľutujeme, pre túto krajinu alebo kategóriu nie sú k dispozícii žiadne rebríčky.",
     "noPodcastSubsFound": "Zatiaľ ste sa neprihlásili na odber žiadneho podcastu.",
@@ -67,11 +67,11 @@
     "noStationFound": "Ľutujeme, na tento vyhľadávací dopyt sa nenašli žiadne stanice.",
     "nothingFound": "Nič sa nenašlo.",
     "noStarredStations": "Zatiaľ ste nezaradili medzi obľúbené žiadne rozhlasové stanice s tlačidlom s hviezdičkou.",
-    "tags": "Tagy",
+    "tags": "Označenia",
     "quality": "Kvalita",
     "station": "Stanica",
     "country": "Krajina",
-    "tag": "Tag",
+    "tag": "Označenie",
     "failedToImport": "Nepodarilo sa importovať nasledujúce súbory:",
     "unknown": "Neznáme",
     "volume": "Hlasitosť",
@@ -117,5 +117,31 @@
     "collection": "Zbierka",
     "addToCollection": "Pridať do zbierky",
     "removeFromCollection": "Odstrániť zo zbierky",
-    "loadingPodcastFeed": "Načítava sa kanál podcastov..."
+    "loadingPodcastFeed": "Načítava sa kanál podcastov...",
+    "downloadStarted": "Sťahovanie začaté: {name}",
+    "@downloadStarted": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "downloadCancelled": "Sťahovanie zrušené: {name}",
+    "@downloadCancelled": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "downloadFinished": "Sťahovanie dokončené: {name}",
+    "@downloadFinished": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "downloadsOnly": "Iba stiahnuté",
+    "moreOptions": "Viac možností"
 }

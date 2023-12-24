@@ -277,6 +277,21 @@ class PlayerService {
     }
   }
 
+  Future<void> moveAudioInQueue(int oldIndex, int newIndex) async {
+    if (_queue.$2.isNotEmpty && newIndex < _queue.$2.length) {
+      if (oldIndex < newIndex) {
+        newIndex -= 1;
+      }
+
+      final audio = _queue.$2.removeAt(oldIndex);
+      _queue.$2.insert(newIndex, audio);
+
+      _estimateNext();
+
+      _queueController.add(true);
+    }
+  }
+
   void _estimateNext() {
     if (audio == null) return;
 
@@ -311,15 +326,18 @@ class PlayerService {
     if (queue.$2.isNotEmpty == true &&
         audio != null &&
         queue.$2.contains(audio)) {
-      final currentIndex = queue.$2.indexOf(audio!);
-
-      if (currentIndex == 0) {
-        return;
+      if (position != null && position!.inSeconds > 10) {
+        setPosition(Duration.zero);
+        await seek();
+      } else {
+        final currentIndex = queue.$2.indexOf(audio!);
+        if (currentIndex == 0) {
+          return;
+        }
+        _setAudio(queue.$2.elementAt(currentIndex - 1));
+        _estimateNext();
+        await play();
       }
-      _setAudio(queue.$2.elementAt(currentIndex - 1));
-      nextAudio = queue.$2.elementAt(queue.$2.indexOf(audio!) + 1);
-
-      await play();
     }
   }
 

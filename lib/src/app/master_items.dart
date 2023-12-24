@@ -171,10 +171,7 @@ List<MasterItem> createMasterItems({
       MasterItem(
         titleBuilder: (context) => Text(station.key),
         subtitleBuilder: (context) {
-          final text = station.value.firstOrNull?.artist?.isNotEmpty == true
-              ? station.value.firstOrNull!.artist!
-              : context.l10n.station;
-          return Text(text);
+          return Text(context.l10n.station);
         },
         content: (station.key, station.value),
         pageBuilder: (context) => isOnline

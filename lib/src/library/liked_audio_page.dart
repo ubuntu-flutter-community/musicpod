@@ -1,6 +1,7 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
@@ -35,6 +36,13 @@ class LikedAudioPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AudioPage(
       showTrack: false,
+      controlPanelButton: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: Text(
+          '${likedLocalAudios?.length} ${context.l10n.titles}',
+          style: getControlPanelStyle(context.t.textTheme),
+        ),
+      ),
       noResultMessage: Text(context.l10n.likedSongsSubtitle),
       noResultIcon: const AnimatedEmoji(AnimatedEmojis.twoHearts),
       audios: likedLocalAudios ?? {},
