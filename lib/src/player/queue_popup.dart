@@ -64,6 +64,7 @@ class _QueueDialogState extends State<QueueDialog> {
       _controller.scrollToIndex(
         model.queue.indexOf(currentAudio),
         preferPosition: AutoScrollPosition.begin,
+        duration: const Duration(milliseconds: 1),
       );
     }
   }
