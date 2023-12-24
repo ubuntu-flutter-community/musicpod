@@ -1,0 +1,69 @@
+# appimage-builder recipe see https://appimage-builder.readthedocs.io for details
+version: 1
+script:
+  # Ensure that the mksquashfs tool is installed (workaround for the AppImageCrafters/build-appimage GHA)
+  - which mksquashfs || apt install squashfs-tools
+  # Remove any previous build
+  - rm -rf AppDir || true
+  # Copy build app to AppDir
+  - cp -r build/linux/x64/release/bundle AppDir
+  # Make usr and icons dirs
+  - cp snap/gui/musicpod.desktop AppDir/org.feichtmeier.musicpod.desktop
+  - mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps/
+  - cp snap/gui/musicpod.png AppDir/usr/share/icons/hicolor/256x256/apps/
+AppDir:
+  path: ./AppDir
+  app_info:
+    id: org.feichtmeier.musicpod
+    name: Musicpod
+    icon: musicpod
+    version: latest
+    exec: musicpod
+    exec_args: $@
+  apt:
+    arch: amd64
+    allow_unauthenticated: true
+    sources:
+      - sourceline: deb http://archive.ubuntu.com/ubuntu/ bionic main restricted universe multiverse
+      - sourceline: deb http://archive.ubuntu.com/ubuntu/ bionic-updates main restricted universe multiverse
+      - sourceline: deb http://archive.ubuntu.com/ubuntu/ bionic-backports main restricted universe multiverse
+      - sourceline: deb http://security.ubuntu.com/ubuntu bionic-security main restricted universe multiverse
+    include:
+      - libgtk-3-0
+    exclude:
+      - humanity-icon-theme
+      - hicolor-icon-theme
+      - adwaita-icon-theme
+      - ubuntu-mono
+  files:
+    exclude:
+      - usr/share/man
+      - usr/share/doc/*/README.*
+      - usr/share/doc/*/changelog.*
+      - usr/share/doc/*/NEWS.*
+      - usr/share/doc/*/TODO.*
+  test:
+    fedora:
+      image: appimagecrafters/tests-env:fedora-30
+      command: ./AppRun
+      use_host_x: true
+    debian:
+      image: appimagecrafters/tests-env:debian-stable
+      command: ./AppRun
+      use_host_x: true
+    arch:
+      image: appimagecrafters/tests-env:archlinux-latest
+      command: ./AppRun
+      use_host_x: true
+    centos:
+      image: appimagecrafters/tests-env:centos-7
+      command: ./AppRun
+      use_host_x: true
+    ubuntu:
+      image: appimagecrafters/tests-env:ubuntu-xenial
+      command: ./AppRun
+      use_host_x: true
+AppImage:
+  arch: x86_64
+  update-information: guess
+  sign-key: None
