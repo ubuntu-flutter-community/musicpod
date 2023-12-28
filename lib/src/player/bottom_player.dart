@@ -89,6 +89,14 @@ class BottomPlayer extends StatelessWidget {
     );
 
     if (veryNarrow) {
+      final veryNarrowBottomPlayer = VeryNarrowBottomPlayer(
+        setFullScreen: setFullScreen,
+        bottomPlayerImage: bottomPlayerImage,
+        titleAndArtist: titleAndArtist,
+        active: active,
+        isOnline: isOnline,
+        track: track,
+      );
       return isMobile
           ? GestureDetector(
               onVerticalDragEnd: (details) {
@@ -97,23 +105,9 @@ class BottomPlayer extends StatelessWidget {
                   setFullScreen(true);
                 }
               },
-              child: VeryNarrowBottomPlayer(
-                setFullScreen: setFullScreen,
-                bottomPlayerImage: bottomPlayerImage,
-                titleAndArtist: titleAndArtist,
-                active: active,
-                isOnline: isOnline,
-                track: track,
-              ),
+              child: veryNarrowBottomPlayer,
             )
-          : VeryNarrowBottomPlayer(
-              setFullScreen: setFullScreen,
-              bottomPlayerImage: bottomPlayerImage,
-              titleAndArtist: titleAndArtist,
-              active: active,
-              isOnline: isOnline,
-              track: track,
-            );
+          : veryNarrowBottomPlayer;
     }
 
     return SizedBox(
