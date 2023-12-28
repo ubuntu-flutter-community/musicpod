@@ -42,16 +42,46 @@ class _RadioPageState extends State<RadioPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      context.read<RadioModel>().init(
-            countryCode: widget.countryCode,
+      final model = context.read<RadioModel>();
+      model
+          .init(
+        countryCode: widget.countryCode,
+      )
+          .then(
+        (connectedHost) {
+          if (!widget.isOnline) {
+            return;
+          }
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Text(
+                    connectedHost?.isNotEmpty == true
+                        ? '${context.l10n.connectedTo}: $connectedHost'
+                        : context.l10n.noRadioServerFound,
+                  ),
+                  if (connectedHost == null)
+                    ImportantButton(
+                      onPressed: () =>
+                          model.init(countryCode: widget.countryCode),
+                      child: Text(
+                        context.l10n.tryReconnect,
+                      ),
+                    ),
+                ],
+              ),
+            ),
           );
+        },
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final model = context.read<RadioModel>();
-    final connected = context.select((RadioModel m) => m.connected);
     final stations = context.select((RadioModel m) => m.stations);
     final statusCode = context.select((RadioModel m) => m.statusCode);
     final stationsCount = context.select((RadioModel m) => m.stations?.length);
@@ -113,49 +143,32 @@ class _RadioPageState extends State<RadioPage> {
       return const OfflinePage();
     } else {
       Widget discoverGrid;
-      if (connected == false) {
-        discoverGrid = _ReconnectPage(
-          text: 'Not connected to any radiobrowser server.',
-          init: () => context.read<RadioModel>().init(
-                countryCode: widget.countryCode,
-              ),
-        );
+
+      if (stations == null) {
+        discoverGrid = LoadingGrid(limit: limit);
       } else {
-        if (stations == null) {
-          discoverGrid = LoadingGrid(limit: limit);
+        if (stationsCount != null && stationsCount > 0 && statusCode == '200') {
+          discoverGrid = GridView.builder(
+            padding: gridPadding,
+            gridDelegate: imageGridDelegate,
+            itemCount: stationsCount,
+            itemBuilder: (context, index) {
+              final station = stations.elementAt(index);
+              final onTextTap = widget.onTextTap;
+              return StationCard(
+                station: station,
+                play: play,
+                isStarredStation: isStarredStation,
+                onTextTap: onTextTap,
+                unstarStation: unstarStation,
+                starStation: starStation,
+              );
+            },
+          );
         } else {
-          if (stationsCount == 0) {
-            if (statusCode != null && statusCode != '200') {
-              discoverGrid = _ReconnectPage(
-                text: statusCode,
-                init: () => context.read<RadioModel>().init(
-                      countryCode: widget.countryCode,
-                    ),
-              );
-            } else {
-              discoverGrid = NoSearchResultPage(
-                message: Text(context.l10n.noStationFound),
-              );
-            }
-          } else {
-            discoverGrid = GridView.builder(
-              padding: gridPadding,
-              gridDelegate: imageGridDelegate,
-              itemCount: stationsCount,
-              itemBuilder: (context, index) {
-                final station = stations.elementAt(index);
-                final onTextTap = widget.onTextTap;
-                return StationCard(
-                  station: station,
-                  play: play,
-                  isStarredStation: isStarredStation,
-                  onTextTap: onTextTap,
-                  unstarStation: unstarStation,
-                  starStation: starStation,
-                );
-              },
-            );
-          }
+          discoverGrid = NoSearchResultPage(
+            message: Text(context.l10n.noStationFound),
+          );
         }
       }
 

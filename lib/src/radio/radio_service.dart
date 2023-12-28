@@ -7,29 +7,27 @@ import 'package:radio_browser_api/radio_browser_api.dart';
 import '../../constants.dart';
 
 class RadioService {
-  RadioBrowserApi? radioBrowserApi;
+  RadioBrowserApi? _radioBrowserApi;
 
   RadioService();
 
-  Future<bool> init() async {
-    if (radioBrowserApi != null) return true;
-
-    final hosts = await _findHost();
-
-    if (hosts.isEmpty) {
-      return false;
+  Future<String?> init() async {
+    if (_radioBrowserApi?.host != null) {
+      return _radioBrowserApi?.host;
     }
 
-    for (var host in hosts) {
+    for (var host in (await _findHost())) {
       try {
-        radioBrowserApi ??= RadioBrowserApi.fromHost(host);
-        if (radioBrowserApi != null) {
-          return true;
+        _radioBrowserApi ??= RadioBrowserApi.fromHost(host);
+        if (_radioBrowserApi != null) {
+          return _radioBrowserApi?.host;
         }
-      } on Exception catch (_) {}
+      } on Exception catch (e) {
+        setStatusCode(e.toString());
+      }
     }
 
-    return false;
+    return null;
   }
 
   Future<List<String>> _findHost() async {
@@ -89,17 +87,18 @@ class RadioService {
     Tag? tag,
     int limit = 100,
   }) async {
-    if (radioBrowserApi == null) {
+    if (_radioBrowserApi == null) {
       setStatusCode('503');
       setStations([]);
       return;
     }
+    setStations(null);
     setStatusCode(null);
 
     RadioBrowserListResponse<Station>? response;
     try {
       if (name?.isEmpty == false) {
-        response = await radioBrowserApi!.getStationsByName(
+        response = await _radioBrowserApi!.getStationsByName(
           name: name!,
           parameters: InputParameters(
             hidebroken: true,
@@ -108,7 +107,7 @@ class RadioService {
           ),
         );
       } else if (country?.isEmpty == false) {
-        response = await radioBrowserApi!.getStationsByCountry(
+        response = await _radioBrowserApi!.getStationsByCountry(
           country: country!,
           parameters: InputParameters(
             hidebroken: true,
@@ -117,7 +116,7 @@ class RadioService {
           ),
         );
       } else if (tag != null) {
-        response = await radioBrowserApi!.getStationsByTag(
+        response = await _radioBrowserApi!.getStationsByTag(
           tag: tag.name,
           parameters: InputParameters(
             hidebroken: true,
@@ -126,7 +125,7 @@ class RadioService {
           ),
         );
       } else if (state?.isEmpty == false) {
-        response = await radioBrowserApi!.getStationsByState(
+        response = await _radioBrowserApi!.getStationsByState(
           state: state!,
           parameters: InputParameters(
             hidebroken: true,
@@ -157,9 +156,9 @@ class RadioService {
   Stream<bool> get tagsChanged => _tagsChangedController.stream;
 
   Future<void> loadTags() async {
-    if (radioBrowserApi == null) return;
+    if (_radioBrowserApi == null) return;
     try {
-      final response = await radioBrowserApi!.getTags(
+      final response = await _radioBrowserApi!.getTags(
         parameters: const InputParameters(
           hidebroken: true,
           limit: 300,

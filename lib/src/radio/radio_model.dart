@@ -87,50 +87,48 @@ class RadioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  bool? _connected;
-  bool? get connected => _connected;
-
+  String? _connectedHost;
   bool _initialized = false;
-  Future<void> init({
+  Future<String?> init({
     required String? countryCode,
   }) async {
-    if (_initialized && _connected == true) return Future.value();
+    if (_connectedHost?.isNotEmpty == true) {
+      return _connectedHost;
+    }
+    _connectedHost ??= await _radioService.init();
 
-    final lastFav = (await readSetting(kLastFav)) as String?;
+    if (_initialized == false) {
+      final lastFav = (await readSetting(kLastFav)) as String?;
+      _stationsSub =
+          _radioService.stationsChanged.listen((_) => notifyListeners());
+      _statusCodeSub =
+          _radioService.statusCodeChanged.listen((_) => notifyListeners());
+      _searchSub =
+          _radioService.searchQueryChanged.listen((_) => notifyListeners());
+      _tagsSub = _radioService.tagsChanged.listen((_) => notifyListeners());
+      _country ??=
+          Country.values.firstWhereOrNull((c) => c.code == countryCode);
 
-    _connected = await _radioService.init();
+      if (_connectedHost?.isNotEmpty == true) {
+        await _radioService.loadTags();
+        _tag ??= lastFav == null || tags == null || tags!.isEmpty
+            ? null
+            : tags!.firstWhere((t) => t.name.contains(lastFav));
 
-    _stationsSub =
-        _radioService.stationsChanged.listen((_) => notifyListeners());
-
-    _statusCodeSub =
-        _radioService.statusCodeChanged.listen((_) => notifyListeners());
-
-    _searchSub =
-        _radioService.searchQueryChanged.listen((_) => notifyListeners());
-
-    _tagsSub = _radioService.tagsChanged.listen((_) => notifyListeners());
-
-    _country ??= Country.values.firstWhereOrNull((c) => c.code == countryCode);
-
-    if (connected == true) {
-      await _radioService.loadTags();
-      _tag ??= lastFav == null || tags == null || tags!.isEmpty
-          ? null
-          : tags!.firstWhere((t) => t.name.contains(lastFav));
-
-      if (stations == null) {
-        if (_tag != null) {
-          await loadStationsByTag();
-        } else {
-          await loadStationsByCountry();
+        if (stations == null) {
+          if (_tag != null) {
+            await loadStationsByTag();
+          } else {
+            await loadStationsByCountry();
+          }
         }
+        _initialized = true;
       }
     }
 
-    _initialized = true;
-
     notifyListeners();
+
+    return _connectedHost;
   }
 
   Future<void> loadStationsByCountry() async {
