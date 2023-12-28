@@ -5,6 +5,7 @@ import 'package:popover/popover.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../globals.dart';
 import '../../player.dart';
 import 'bottom_player_image.dart';
 import 'bottom_player_title_artist.dart';
@@ -88,14 +89,31 @@ class BottomPlayer extends StatelessWidget {
     );
 
     if (veryNarrow) {
-      return VeryNarrowBottomPlayer(
-        setFullScreen: setFullScreen,
-        bottomPlayerImage: bottomPlayerImage,
-        titleAndArtist: titleAndArtist,
-        active: active,
-        isOnline: isOnline,
-        track: track,
-      );
+      return isMobile
+          ? GestureDetector(
+              onVerticalDragEnd: (details) {
+                if (details.primaryVelocity != null &&
+                    details.primaryVelocity! < 150) {
+                  setFullScreen(true);
+                }
+              },
+              child: VeryNarrowBottomPlayer(
+                setFullScreen: setFullScreen,
+                bottomPlayerImage: bottomPlayerImage,
+                titleAndArtist: titleAndArtist,
+                active: active,
+                isOnline: isOnline,
+                track: track,
+              ),
+            )
+          : VeryNarrowBottomPlayer(
+              setFullScreen: setFullScreen,
+              bottomPlayerImage: bottomPlayerImage,
+              titleAndArtist: titleAndArtist,
+              active: active,
+              isOnline: isOnline,
+              track: track,
+            );
     }
 
     return SizedBox(
