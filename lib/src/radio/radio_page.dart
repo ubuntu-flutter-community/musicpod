@@ -55,7 +55,11 @@ class _RadioPageState extends State<RadioPage> {
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              duration: connectedHost?.isNotEmpty == true
+                  ? const Duration(seconds: 4)
+                  : const Duration(seconds: 30),
               content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     connectedHost?.isNotEmpty == true
