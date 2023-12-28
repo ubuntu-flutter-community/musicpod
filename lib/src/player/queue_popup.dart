@@ -4,6 +4,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../../library.dart';
 import '../../player.dart';
 import '../l10n/l10n.dart';
 import 'full_height_player_image.dart';
@@ -16,6 +17,7 @@ class QueuePopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final playerModel = context.read<PlayerModel>();
+    final libraryModel = context.read<LibraryModel>();
 
     return IconButton(
       padding: EdgeInsets.zero,
@@ -29,7 +31,9 @@ class QueuePopup extends StatelessWidget {
           builder: (context) {
             return ChangeNotifierProvider.value(
               value: playerModel,
-              child: const QueueDialog(),
+              child: QueueDialog(
+                addPlaylist: libraryModel.addPlaylist,
+              ),
             );
           },
         );
@@ -41,7 +45,10 @@ class QueuePopup extends StatelessWidget {
 class QueueDialog extends StatefulWidget {
   const QueueDialog({
     super.key,
+    required this.addPlaylist,
   });
+
+  final void Function(String name, Set<Audio> audios) addPlaylist;
 
   @override
   State<QueueDialog> createState() => _QueueDialogState();
@@ -83,7 +90,7 @@ class _QueueDialogState extends State<QueueDialog> {
 
     return AlertDialog(
       titlePadding: const EdgeInsets.only(left: 25, right: 25, top: 50),
-      contentPadding: const EdgeInsets.only(bottom: 50, top: 35),
+      contentPadding: const EdgeInsets.only(bottom: 25, top: 5),
       title: Column(
         children: [
           FullHeightPlayerImage(
@@ -107,34 +114,58 @@ class _QueueDialogState extends State<QueueDialog> {
       content: SizedBox(
         width: 400,
         height: 500,
-        child: ReorderableListView.builder(
-          scrollController: _controller,
-          padding: const EdgeInsets.only(
-            left: 25,
-            right: 25,
-          ),
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            final audio = queue.elementAt(index);
-            final selected = audio == currentAudio;
-
-            return AutoScrollTag(
-              key: ValueKey(index),
-              controller: _controller,
-              index: index,
-              child: ListTile(
-                contentPadding: const EdgeInsets.only(right: 20, left: 20),
-                selected: selected,
-                key: ValueKey(index),
-                title: Padding(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: Text(audio.title ?? ''),
+        child: Column(
+          children: [
+            Expanded(
+              child: ReorderableListView.builder(
+                scrollController: _controller,
+                padding: const EdgeInsets.only(
+                  left: 25,
+                  right: 25,
                 ),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  final audio = queue.elementAt(index);
+                  final selected = audio == currentAudio;
+
+                  return AutoScrollTag(
+                    key: ValueKey(index),
+                    controller: _controller,
+                    index: index,
+                    child: ListTile(
+                      contentPadding:
+                          const EdgeInsets.only(right: 20, left: 20),
+                      selected: selected,
+                      key: ValueKey(index),
+                      title: Padding(
+                        padding: const EdgeInsets.only(right: 20),
+                        child: Text(audio.title ?? ''),
+                      ),
+                    ),
+                  );
+                },
+                itemCount: queue.length,
+                onReorder: playerModel.moveAudioInQueue,
               ),
-            );
-          },
-          itemCount: queue.length,
-          onReorder: playerModel.moveAudioInQueue,
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 45,
+                    top: 15,
+                  ),
+                  child: OutlinedButton(
+                    onPressed: () => widget.addPlaylist(
+                      '${context.l10n.queue} ${DateTime.now()}',
+                      Set.from(queue),
+                    ),
+                    child: Text(context.l10n.createNewPlaylist),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

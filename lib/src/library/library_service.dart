@@ -181,16 +181,20 @@ class LibraryService {
   final _playlistsController = StreamController<bool>.broadcast();
   Stream<bool> get playlistsChanged => _playlistsController.stream;
 
-  void addPlaylist(String name, Set<Audio> audios) {
-    _playlists.putIfAbsent(name, () => audios);
-    writeAudioMap(_playlists, kPlaylistsFileName)
-        .then((_) => _playlistsController.add(true));
+  void addPlaylist(String id, Set<Audio> audios) {
+    if (!_playlists.containsKey(id)) {
+      _playlists.putIfAbsent(id, () => audios);
+      writeAudioMap(_playlists, kPlaylistsFileName)
+          .then((_) => _playlistsController.add(true));
+    }
   }
 
-  void removePlaylist(String name) {
-    _playlists.remove(name);
-    writeAudioMap(_playlists, kPlaylistsFileName)
-        .then((_) => _playlistsController.add(true));
+  void removePlaylist(String id) {
+    if (_playlists.containsKey(id)) {
+      _playlists.remove(id);
+      writeAudioMap(_playlists, kPlaylistsFileName)
+          .then((_) => _playlistsController.add(true));
+    }
   }
 
   void updatePlaylistName(String oldName, String newName) {
@@ -199,33 +203,32 @@ class LibraryService {
     if (oldList != null) {
       _playlists.remove(oldName);
       _playlists.putIfAbsent(newName, () => oldList);
+      writeAudioMap(_playlists, kPlaylistsFileName)
+          .then((_) => _playlistsController.add(true));
     }
-
-    writeAudioMap(_playlists, kPlaylistsFileName)
-        .then((_) => _playlistsController.add(true));
   }
 
-  void addAudioToPlaylist(String playlist, Audio audio) {
-    final p = _playlists[playlist];
-    if (p != null) {
-      for (var e in p) {
+  void addAudioToPlaylist(String id, Audio audio) {
+    final playlist = _playlists[id];
+    if (playlist != null) {
+      for (var e in playlist) {
         if (e.path == audio.path) {
           return;
         }
       }
-      p.add(audio);
+      playlist.add(audio);
+      writeAudioMap(_playlists, kPlaylistsFileName)
+          .then((_) => _playlistsController.add(true));
     }
-    writeAudioMap(_playlists, kPlaylistsFileName)
-        .then((_) => _playlistsController.add(true));
   }
 
-  void removeAudioFromPlaylist(String playlist, Audio audio) {
-    final p = _playlists[playlist];
-    if (p != null && p.contains(audio)) {
-      p.remove(audio);
+  void removeAudioFromPlaylist(String id, Audio audio) {
+    final playlist = _playlists[id];
+    if (playlist != null && playlist.contains(audio)) {
+      playlist.remove(audio);
+      writeAudioMap(_playlists, kPlaylistsFileName)
+          .then((_) => _playlistsController.add(true));
     }
-    writeAudioMap(_playlists, kPlaylistsFileName)
-        .then((_) => _playlistsController.add(true));
   }
 
   // Podcasts
