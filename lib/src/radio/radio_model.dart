@@ -87,34 +87,23 @@ class RadioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  bool? _connected;
-  bool? get connected => _connected;
-
-  bool _initialized = false;
-  Future<void> init({
+  String? _connectedHost;
+  Future<String?> init({
     required String? countryCode,
-    required bool isOnline,
   }) async {
-    if (_initialized && _connected == true) return Future.value();
+    _connectedHost ??= await _radioService.init();
 
     final lastFav = (await readSetting(kLastFav)) as String?;
-
-    _connected = await _radioService.init(isOnline);
-
-    _stationsSub =
+    _stationsSub ??=
         _radioService.stationsChanged.listen((_) => notifyListeners());
-
-    _statusCodeSub =
+    _statusCodeSub ??=
         _radioService.statusCodeChanged.listen((_) => notifyListeners());
-
-    _searchSub =
+    _searchSub ??=
         _radioService.searchQueryChanged.listen((_) => notifyListeners());
-
-    _tagsSub = _radioService.tagsChanged.listen((_) => notifyListeners());
-
+    _tagsSub ??= _radioService.tagsChanged.listen((_) => notifyListeners());
     _country ??= Country.values.firstWhereOrNull((c) => c.code == countryCode);
 
-    if (connected == true) {
+    if (_connectedHost?.isNotEmpty == true) {
       await _radioService.loadTags();
       _tag ??= lastFav == null || tags == null || tags!.isEmpty
           ? null
@@ -129,9 +118,7 @@ class RadioModel extends SafeChangeNotifier {
       }
     }
 
-    _initialized = true;
-
-    notifyListeners();
+    return _connectedHost;
   }
 
   Future<void> loadStationsByCountry() async {

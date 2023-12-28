@@ -143,5 +143,8 @@
         }
     },
     "downloadsOnly": "Downloads only",
-    "moreOptions": "More options"
+    "moreOptions": "More options",
+    "noRadioServerFound": "No radio server found",
+    "connectedTo": "Connected to",
+    "tryReconnect": "Try reconnect"
 }
