@@ -243,36 +243,6 @@ class _RadioPageState extends State<RadioPage> {
   }
 }
 
-class _ReconnectPage extends StatelessWidget {
-  const _ReconnectPage({
-    required this.text,
-    required this.init,
-  });
-
-  final String? text;
-  final Function() init;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(text ?? ''),
-          ),
-          OutlinedButton.icon(
-            onPressed: init,
-            label: const Text('Reconnect to server'),
-            icon: Icon(Iconz().refresh),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class RadioFallBackIcon extends StatelessWidget {
   const RadioFallBackIcon({
     super.key,
