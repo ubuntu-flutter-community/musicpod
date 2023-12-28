@@ -11,30 +11,24 @@ class RadioService {
 
   RadioService();
 
-  Future<bool> init(bool isOnline) async {
-    if (isOnline) {
-      if (radioBrowserApi == null) {
-        final hosts = await _findHost();
-        if (hosts.isEmpty) {
-          return false;
-        }
+  Future<bool> init() async {
+    if (radioBrowserApi != null) return true;
 
-        for (var host in hosts) {
-          try {
-            if (radioBrowserApi != null) {
-              return true;
-            } else {
-              radioBrowserApi = RadioBrowserApi.fromHost(host);
-            }
-            // ignore: unused_catch_clause
-          } on Exception catch (e) {
-            return false;
-          }
-        }
-      } else {
-        return true;
-      }
+    final hosts = await _findHost();
+
+    if (hosts.isEmpty) {
+      return false;
     }
+
+    for (var host in hosts) {
+      try {
+        radioBrowserApi ??= RadioBrowserApi.fromHost(host);
+        if (radioBrowserApi != null) {
+          return true;
+        }
+      } on Exception catch (_) {}
+    }
+
     return false;
   }
 

@@ -43,7 +43,6 @@ class _RadioPageState extends State<RadioPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       context.read<RadioModel>().init(
-            isOnline: widget.isOnline,
             countryCode: widget.countryCode,
           );
     });
@@ -118,7 +117,6 @@ class _RadioPageState extends State<RadioPage> {
         discoverGrid = _ReconnectPage(
           text: 'Not connected to any radiobrowser server.',
           init: () => context.read<RadioModel>().init(
-                isOnline: widget.isOnline,
                 countryCode: widget.countryCode,
               ),
         );
@@ -131,7 +129,6 @@ class _RadioPageState extends State<RadioPage> {
               discoverGrid = _ReconnectPage(
                 text: statusCode,
                 init: () => context.read<RadioModel>().init(
-                      isOnline: widget.isOnline,
                       countryCode: widget.countryCode,
                     ),
               );
