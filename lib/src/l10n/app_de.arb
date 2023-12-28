@@ -143,5 +143,8 @@
         }
     },
     "downloadsOnly": "Nur Downloads",
-    "moreOptions": "Mehr Optionen"
+    "moreOptions": "Mehr Optionen",
+    "noRadioServerFound": "Es wurde kein Radio-Server gefunden",
+    "connectedTo": "Verbunden mit",
+    "tryReconnect": "Versuche Neuverbindung"
 }

@@ -183,9 +183,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         case AudioType.radio:
           libraryModel.setIndex(1);
           libraryModel.setRadioIndex(1);
-          radioModel
-              .init(countryCode: _countryCode, isOnline: isOnline)
-              .then((_) {
+          radioModel.init(countryCode: _countryCode).then((_) {
             radioModel.search(tag: text);
             radioModel.setTag(Tag(name: text, stationCount: 1));
           });
