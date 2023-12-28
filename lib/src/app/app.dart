@@ -144,30 +144,11 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
     // Player
     final play = context.read<PlayerModel>().play;
-
     final isFullScreen = context.select((PlayerModel m) => m.fullScreen);
 
     // Library
-    // Watching values
     final libraryModel = context.read<LibraryModel>();
-    final index = context.select((LibraryModel m) => m.index);
-    final likedLocalAudios = context.select(
-      (LibraryModel m) => Set<Audio>.from(
-        m.likedAudios.where((e) => e.audioType == AudioType.local),
-      ),
-    );
-
-    final subbedPodcasts = context.select((LibraryModel m) => m.podcasts);
-    final playlists = context.select((LibraryModel m) => m.playlists);
-    final starredStations =
-        context.select((LibraryModel m) => m.starredStations);
-    final pinnedAlbums = context.select((LibraryModel m) => m.pinnedAlbums);
-
-    context.select((LibraryModel m) => m.podcasts.length);
-    context.select((LibraryModel m) => m.pinnedAlbums.length);
-    context.select((LibraryModel m) => m.starredStations.length);
-    context.select((LibraryModel m) => m.playlists.length);
-    context.select((LibraryModel m) => m.playlists.keys);
+    context.watch<LibraryModel>();
 
     void onTextTap({
       required String text,
@@ -202,18 +183,18 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     final masterItems = createMasterItems(
       isOnline: isOnline,
       onTextTap: onTextTap,
-      likedLocalAudios: likedLocalAudios,
-      subbedPodcasts: subbedPodcasts,
+      likedLocalAudios: libraryModel.likedAudios,
+      subbedPodcasts: libraryModel.podcasts,
       addPodcast: libraryModel.addPodcast,
       removePodcast: libraryModel.removePodcast,
-      playlists: playlists,
+      playlists: libraryModel.playlists,
       removePlaylist: libraryModel.removePlaylist,
       updatePlaylistName: libraryModel.updatePlaylistName,
-      pinnedAlbums: pinnedAlbums,
+      pinnedAlbums: libraryModel.pinnedAlbums,
       addPinnedAlbum: libraryModel.addPinnedAlbum,
       isPinnedAlbum: libraryModel.isPinnedAlbum,
       removePinnedAlbum: libraryModel.removePinnedAlbum,
-      starredStations: starredStations,
+      starredStations: libraryModel.starredStations,
       unStarStation: libraryModel.unStarStation,
       play: play,
       countryCode: _countryCode,
@@ -222,7 +203,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     final yaruMasterDetailPage = MasterDetailPage(
       setIndex: libraryModel.setIndex,
       totalListAmount: libraryModel.totalListAmount,
-      index: index,
+      index: libraryModel.index,
       masterItems: masterItems,
       addPlaylist: libraryModel.addPlaylist,
     );

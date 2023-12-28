@@ -27,6 +27,8 @@ class PlaylistPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AudioPage(
+      showAudioTileHeader:
+          playlist.value.any((e) => e.audioType != AudioType.podcast),
       onTextTap: onTextTap,
       audioPageType: AudioPageType.playlist,
       image: FallBackHeaderImage(

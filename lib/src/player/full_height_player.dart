@@ -191,6 +191,11 @@ class FullHeightPlayer extends StatelessWidget {
       children: [
         if (!isMobile)
           HeaderBar(
+            title: Text(
+              audio?.title ?? '',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
             foregroundColor: isVideo == true ? Colors.white : null,
             backgroundColor:
                 isVideo == true ? Colors.black : Colors.transparent,
