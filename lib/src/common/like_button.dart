@@ -3,7 +3,9 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
 import '../../data.dart';
+import '../../library.dart';
 import '../l10n/l10n.dart';
+import '../library/add_to_playlist_dialog.dart';
 import '../library/playlist_dialog.dart';
 import 'icons.dart';
 import 'stream_provider_share_button.dart';
@@ -18,10 +20,13 @@ class LikeButton extends StatelessWidget {
     required this.removeLikedAudio,
     required this.addLikedAudio,
     this.onRemoveFromPlaylist,
-    required this.topFivePlaylistNames,
+    required this.playlistIds,
     required this.addAudioToPlaylist,
     required this.addPlaylist,
     this.insertIntoQueue,
+    required this.getPlaylistById,
+    required this.removePlaylist,
+    this.onTextTap,
   });
 
   final String playlistId;
@@ -31,10 +36,14 @@ class LikeButton extends StatelessWidget {
   final void Function(Audio, [bool]) removeLikedAudio;
   final void Function(Audio, [bool]) addLikedAudio;
   final void Function(String, Audio)? onRemoveFromPlaylist;
-  final List<String>? topFivePlaylistNames;
+  final List<String>? playlistIds;
   final void Function(String, Audio) addAudioToPlaylist;
   final void Function(String, Set<Audio>) addPlaylist;
   final void Function()? insertIntoQueue;
+  final Set<Audio>? Function(String id) getPlaylistById;
+  final void Function(String) removePlaylist;
+  final void Function({required AudioType audioType, required String text})?
+      onTextTap;
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +62,7 @@ class LikeButton extends StatelessWidget {
 
     return _Button(
       insertIntoQueue: insertIntoQueue,
-      artist: audio.artist ?? '',
-      title: audio.title ?? '',
+      audio: audio,
       playlistId: playlistId,
       onRemoveFromPlaylist: onRemoveFromPlaylist == null
           ? null
@@ -70,9 +78,12 @@ class LikeButton extends StatelessWidget {
           },
         );
       },
-      onAddToPlaylist: (playlistId) => addAudioToPlaylist(playlistId, audio),
-      topFivePlaylistIds: topFivePlaylistNames,
+      addAudioToPlaylist: addAudioToPlaylist,
+      playlistIds: playlistIds ?? [],
       icon: heartButton,
+      removePlaylist: removePlaylist,
+      getPlaylistById: getPlaylistById,
+      onTextTap: onTextTap,
     );
   }
 }
@@ -81,24 +92,29 @@ class _Button extends StatelessWidget {
   const _Button({
     this.onCreateNewPlaylist,
     this.onRemoveFromPlaylist,
-    this.onAddToPlaylist,
+    required this.addAudioToPlaylist,
     this.playlistId,
-    this.topFivePlaylistIds,
+    required this.playlistIds,
     required this.icon,
-    required this.artist,
-    required this.title,
+    required this.audio,
     this.insertIntoQueue,
+    required this.removePlaylist,
+    required this.getPlaylistById,
+    this.onTextTap,
   });
 
   final void Function()? insertIntoQueue;
   final void Function()? onCreateNewPlaylist;
   final void Function(String playlistId)? onRemoveFromPlaylist;
-  final void Function(String playlistId)? onAddToPlaylist;
+  final void Function(String, Audio) addAudioToPlaylist;
+  final void Function(String) removePlaylist;
   final String? playlistId;
-  final List<String>? topFivePlaylistIds;
+  final List<String> playlistIds;
   final Widget icon;
-  final String artist;
-  final String title;
+  final Audio audio;
+  final Set<Audio>? Function(String id) getPlaylistById;
+  final void Function({required AudioType audioType, required String text})?
+      onTextTap;
 
   @override
   Widget build(BuildContext context) {
@@ -113,12 +129,12 @@ class _Button extends StatelessWidget {
       itemBuilder: (context) {
         return [
           PopupMenuItem(
-            onTap: onCreateNewPlaylist,
-            child: Text(context.l10n.createNewPlaylist),
-          ),
-          PopupMenuItem(
             onTap: insertIntoQueue,
             child: Text(context.l10n.insertIntoQueue),
+          ),
+          PopupMenuItem(
+            onTap: onCreateNewPlaylist,
+            child: Text(context.l10n.createNewPlaylist),
           ),
           if (onRemoveFromPlaylist != null)
             PopupMenuItem(
@@ -127,19 +143,29 @@ class _Button extends StatelessWidget {
                   : () => onRemoveFromPlaylist!(playlistId!),
               child: Text('Remove from $playlistId'),
             ),
-          if (topFivePlaylistIds != null)
-            for (final playlist in topFivePlaylistIds!)
-              PopupMenuItem(
-                onTap: onAddToPlaylist == null
-                    ? null
-                    : () => onAddToPlaylist!(playlist),
-                child: Text(
-                  '${context.l10n.addTo} $playlist',
-                ),
-              ),
+          PopupMenuItem(
+            onTap: () => showDialog(
+              context: context,
+              builder: (context) {
+                return AddToPlaylistDialog(
+                  audio: audio,
+                  playlistIds: playlistIds,
+                  addAudioToPlaylist: addAudioToPlaylist,
+                  removePlaylist: removePlaylist,
+                  getPlaylistById: getPlaylistById,
+                  onTextTap: onTextTap,
+                );
+              },
+            ),
+            child: Text(
+              '${context.l10n.addToPlaylist} ...',
+            ),
+          ),
           PopupMenuItem(
             padding: EdgeInsets.zero,
-            child: StreamProviderRow(text: '$artist - $title'),
+            child: StreamProviderRow(
+              text: '${audio.artist ?? ''} - ${audio.title ?? ''}',
+            ),
           ),
         ];
       },
