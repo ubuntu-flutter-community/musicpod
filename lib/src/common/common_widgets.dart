@@ -162,12 +162,14 @@ class HeaderBar extends StatelessWidget implements PreferredSizeWidget {
             border: BorderSide.none,
             backgroundColor: backgroundColor,
             style: style,
+            foregroundColor: foregroundColor,
           )
         : AppBar(
             centerTitle: true,
             leading: leading,
             title: title,
             actions: actions,
+            foregroundColor: foregroundColor,
           );
   }
 

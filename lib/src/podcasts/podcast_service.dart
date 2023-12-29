@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:podcast_search/podcast_search.dart';
 
+import '../../common.dart';
 import '../../data.dart';
+import '../../utils.dart';
 import '../notifications/notifications_service.dart';
 
 class PodcastService {
@@ -64,22 +66,31 @@ class PodcastService {
     required String updateMessage,
   }) async {
     for (final old in oldPodcasts.entries) {
-      final firstOld = old.value.firstOrNull;
-      final podcast = firstOld?.album;
-      if (podcast == null || podcast.isEmpty) break;
+      if (old.value.isNotEmpty) {
+        final list = old.value.toList();
+        sortListByAudioFilter(
+          audioFilter: AudioFilter.year,
+          audios: list,
+          descending: true,
+        );
+        final firstOld = list.firstOrNull;
 
-      if (firstOld?.website != null) {
-        await findEpisodes(
-          feedUrl: firstOld!.website!,
-        ).then((audios) {
-          if (firstOld.year != null &&
-                  audios.firstOrNull?.year == firstOld.year ||
-              audios.isEmpty) return;
+        if (firstOld?.website != null) {
+          final uri = await createUriFromAudio(firstOld!);
+          await findEpisodes(
+            feedUrl: firstOld.website!,
+          ).then((audios) {
+            if (firstOld.year != null &&
+                    audios.firstOrNull?.year == firstOld.year ||
+                audios.isEmpty) return;
 
-          updatePodcast(old.key, audios);
-          _notificationsService
-              .notifiy('$updateMessage ${firstOld.album ?? old.value}');
-        });
+            updatePodcast(old.key, audios);
+            _notificationsService.notify(
+              message: '$updateMessage ${firstOld.album ?? old.value}',
+              uri: uri?.toString(),
+            );
+          });
+        }
       }
     }
   }
@@ -129,7 +140,13 @@ Future<Set<Audio>> findEpisodes({
       }
     }
   }
-  return episodes;
+  final sortedEpisodes = episodes.toList();
+  sortListByAudioFilter(
+    audioFilter: AudioFilter.year,
+    audios: sortedEpisodes,
+    descending: true,
+  );
+  return Set<Audio>.from(sortedEpisodes);
 }
 
 Future<Podcast?> loadPodcast(String url) async {

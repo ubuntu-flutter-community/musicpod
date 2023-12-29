@@ -149,6 +149,9 @@ class FullHeightPlayer extends StatelessWidget {
                   addLikedAudio: addLikedAudio,
                   color: iconColor,
                 ),
+                QueueButton(
+                  color: iconColor,
+                ),
                 ShareButton(
                   audio: audio,
                   active: activeControls,
@@ -173,16 +176,17 @@ class FullHeightPlayer extends StatelessWidget {
             ),
           ),
         ),
-        if (nextAudio?.title != null && nextAudio?.artist != null && !isVideo)
+        if (nextAudio?.title != null &&
+            nextAudio?.artist != null &&
+            !isVideo &&
+            size.width > 600)
           Positioned(
             left: 10,
             bottom: 10,
-            child: size.width > 600
-                ? UpNextBubble(
-                    audio: audio,
-                    nextAudio: nextAudio,
-                  )
-                : QueuePopup(audio: audio),
+            child: UpNextBubble(
+              audio: audio,
+              nextAudio: nextAudio,
+            ),
           ),
       ],
     );
