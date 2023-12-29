@@ -346,7 +346,7 @@ class PlayerService {
     int? index,
   }) async {
     if (listName == _queue.$1 && index != null) {
-      _setAudio(_queue.$2.elementAt(index));
+      _setAudio(audios.elementAt(index));
     } else {
       setQueue((listName, audios.toList()));
       _setAudio(index != null ? audios.elementAt(index) : audios.first);
