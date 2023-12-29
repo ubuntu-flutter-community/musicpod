@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../theme.dart';
+import '../../theme_data_x.dart';
 
 class FullHeightPlayerImage extends StatelessWidget {
   const FullHeightPlayerImage({
@@ -61,10 +64,38 @@ class FullHeightPlayerImage extends StatelessWidget {
           ),
         );
       } else {
-        image = Icon(
-          iconData,
-          size: fullHeightPlayerImageSize * 0.7,
-          color: theme.hintColor.withOpacity(0.4),
+        image = Container(
+          height: fullHeightPlayerImageSize,
+          width: fullHeightPlayerImageSize,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
+              colors: [
+                getAlphabetColor(
+                  audio?.title ?? audio?.album ?? 'a',
+                ).scale(
+                  lightness: theme.isLight ? 0 : -0.4,
+                  saturation: -0.5,
+                ),
+                getAlphabetColor(
+                  audio?.title ?? audio?.album ?? 'a',
+                ).scale(
+                  lightness: theme.isLight ? -0.1 : -0.2,
+                  saturation: -0.5,
+                ),
+              ],
+            ),
+          ),
+          child: Icon(
+            iconData,
+            size: fullHeightPlayerImageSize * 0.7,
+            color: contrastColor(
+              getAlphabetColor(
+                audio?.title ?? audio?.album ?? 'a',
+              ),
+            ),
+          ),
         );
       }
     }

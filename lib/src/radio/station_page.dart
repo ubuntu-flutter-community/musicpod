@@ -7,15 +7,16 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../player.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
+import '../common/side_bar_fall_back_image.dart';
 import 'radio_page.dart';
 
 class StationPage extends StatelessWidget {
   const StationPage({
     super.key,
     required this.station,
-    required this.play,
     required this.name,
     required this.unStarStation,
     required this.starStation,
@@ -25,7 +26,6 @@ class StationPage extends StatelessWidget {
 
   final Audio station;
   final String name;
-  final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
   final void Function(String station) unStarStation;
   final void Function(String station) starStation;
   final bool isStarred;
@@ -46,6 +46,13 @@ class StationPage extends StatelessWidget {
             Iconz().star,
             size: sideBarImageSize,
           );
+
+    if (imageUrl == null) {
+      return SideBarFallBackImage(
+        child: selected ? Icon(Iconz().starFilled) : Icon(Iconz().star),
+      );
+    }
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: Container(
@@ -75,6 +82,7 @@ class StationPage extends StatelessWidget {
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
+    final startPlaylist = context.read<PlayerModel>().startPlaylist;
 
     return YaruDetailPage(
       appBar: HeaderBar(
@@ -130,8 +138,14 @@ class StationPage extends StatelessWidget {
                     color: theme.isLight ? theme.dividerColor : kCardColorDark,
                     height: size,
                     width: size,
-                    onTap: () => play(newAudio: station),
-                    onPlay: () => play(newAudio: station),
+                    onTap: () => startPlaylist(
+                      listName: station.toShortPath(),
+                      audios: {station},
+                    ),
+                    onPlay: () => startPlaylist(
+                      listName: station.toShortPath(),
+                      audios: {station},
+                    ),
                     image: SizedBox(
                       height: size,
                       width: size,

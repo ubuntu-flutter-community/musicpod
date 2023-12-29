@@ -12,7 +12,7 @@ class StationCard extends StatelessWidget {
   const StationCard({
     super.key,
     required this.station,
-    required this.play,
+    required this.startPlaylist,
     required this.isStarredStation,
     required this.onTextTap,
     required this.unstarStation,
@@ -20,7 +20,11 @@ class StationCard extends StatelessWidget {
   });
 
   final Audio? station;
-  final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
+  final Future<void> Function({
+    required Set<Audio> audios,
+    required String listName,
+    int? index,
+  }) startPlaylist;
   final bool Function(String name) isStarredStation;
   final void Function(String text)? onTextTap;
   final void Function(String name) unstarStation;
@@ -32,7 +36,12 @@ class StationCard extends StatelessWidget {
     return AudioCard(
       color: theme.isLight ? theme.dividerColor : kCardColorDark,
       bottom: AudioCardBottom(text: station?.title?.replaceAll('_', '') ?? ''),
-      onPlay: () => play(newAudio: station),
+      onPlay: station == null
+          ? null
+          : () => startPlaylist(
+                audios: {station!},
+                listName: station!.toShortPath(),
+              ),
       onTap: station == null ? null : () => onTap(context, station!),
       image: SizedBox.expand(
         child: SafeNetworkImage(
@@ -67,7 +76,6 @@ class StationCard extends StatelessWidget {
               station.title ?? station.toString(),
               {station},
             ),
-            play: play,
             isStarred: starred,
           );
         },

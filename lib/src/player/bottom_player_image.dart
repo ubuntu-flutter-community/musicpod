@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../theme.dart';
+import '../../theme_data_x.dart';
 
 class BottomPlayerImage extends StatelessWidget {
   const BottomPlayerImage({
@@ -85,13 +88,37 @@ class BottomPlayerImage extends StatelessWidget {
         );
       } else {
         return Center(
-          child: SizedBox(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomLeft,
+                end: Alignment.topRight,
+                colors: [
+                  getAlphabetColor(
+                    audio?.title ?? audio?.album ?? 'a',
+                  ).scale(
+                    lightness: theme.isLight ? 0 : -0.4,
+                    saturation: -0.5,
+                  ),
+                  getAlphabetColor(
+                    audio?.title ?? audio?.album ?? 'a',
+                  ).scale(
+                    lightness: theme.isLight ? -0.1 : -0.2,
+                    saturation: -0.5,
+                  ),
+                ],
+              ),
+            ),
             width: size,
             height: size,
             child: Icon(
               iconData,
               size: 50,
-              color: theme.hintColor,
+              color: contrastColor(
+                getAlphabetColor(
+                  audio?.title ?? audio?.album ?? 'a',
+                ),
+              ),
             ),
           ),
         );

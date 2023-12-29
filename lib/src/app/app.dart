@@ -143,7 +143,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     final radioModel = context.read<RadioModel>();
 
     // Player
-    final play = context.read<PlayerModel>().play;
     final isFullScreen = context.select((PlayerModel m) => m.fullScreen);
 
     // Library
@@ -196,7 +195,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       removePinnedAlbum: libraryModel.removePinnedAlbum,
       starredStations: libraryModel.starredStations,
       unStarStation: libraryModel.unStarStation,
-      play: play,
       countryCode: _countryCode,
     );
 

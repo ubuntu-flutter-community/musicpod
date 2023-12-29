@@ -30,7 +30,6 @@ List<MasterItem> createMasterItems({
   required void Function(String name) removePinnedAlbum,
   required Map<String, Set<Audio>> starredStations,
   required void Function(String name) unStarStation,
-  required Future<void> Function({Duration? newPosition, Audio? newAudio}) play,
   required String? countryCode,
 }) {
   return [
@@ -183,7 +182,6 @@ List<MasterItem> createMasterItems({
                 unStarStation: unStarStation,
                 name: station.key,
                 station: station.value.first,
-                play: play,
               )
             : const OfflinePage(),
         iconBuilder: (context, selected) => StationPage.createIcon(
