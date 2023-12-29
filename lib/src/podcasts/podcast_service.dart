@@ -76,9 +76,8 @@ class PodcastService {
         final firstOld = list.firstOrNull;
 
         if (firstOld?.website != null) {
-          final uri = await createUriFromAudio(firstOld!);
           await findEpisodes(
-            feedUrl: firstOld.website!,
+            feedUrl: firstOld!.website!,
           ).then((audios) {
             if (firstOld.year != null &&
                     audios.firstOrNull?.year == firstOld.year ||
@@ -87,7 +86,6 @@ class PodcastService {
             updatePodcast(old.key, audios);
             _notificationsService.notify(
               message: '$updateMessage ${firstOld.album ?? old.value}',
-              uri: uri?.toString(),
             );
           });
         }
