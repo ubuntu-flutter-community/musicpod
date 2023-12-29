@@ -170,9 +170,9 @@ class BottomPlayer extends StatelessWidget {
                 const VolumeSliderPopup(
                   direction: PopoverDirection.top,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: QueuePopup(audio: audio),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  child: QueueButton(),
                 ),
                 IconButton(
                   icon: Icon(

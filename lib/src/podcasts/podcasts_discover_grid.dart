@@ -6,7 +6,6 @@ import '../../constants.dart';
 import '../../data.dart';
 import '../../l10n.dart';
 import '../../podcasts.dart';
-import '../../utils.dart';
 
 class PodcastsDiscoverGrid extends StatelessWidget {
   const PodcastsDiscoverGrid({
@@ -134,14 +133,6 @@ Future<void> searchAndPushPodcastPage({
       return;
     }
 
-    final list = podcast.toList();
-    sortListByAudioFilter(
-      audioFilter: AudioFilter.year,
-      audios: list,
-      descending: true,
-    );
-    final sortedPodcast = Set<Audio>.from(list);
-
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
@@ -156,10 +147,10 @@ Future<void> searchAndPushPodcastPage({
             addPodcast: addPodcast,
             removePodcast: removePodcast,
             onTextTap: onTapText,
-            audios: sortedPodcast,
+            audios: podcast,
             pageId: id!,
-            title: sortedPodcast.firstOrNull?.album ??
-                sortedPodcast.firstOrNull?.title ??
+            title: podcast.firstOrNull?.album ??
+                podcast.firstOrNull?.title ??
                 podcastItem.feedUrl!,
           );
         },

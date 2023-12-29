@@ -9,10 +9,10 @@ import '../../player.dart';
 import '../l10n/l10n.dart';
 import 'full_height_player_image.dart';
 
-class QueuePopup extends StatelessWidget {
-  const QueuePopup({super.key, this.audio});
+class QueueButton extends StatelessWidget {
+  const QueueButton({super.key, this.color});
 
-  final Audio? audio;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +20,7 @@ class QueuePopup extends StatelessWidget {
     final libraryModel = context.read<LibraryModel>();
 
     return IconButton(
+      color: color,
       padding: EdgeInsets.zero,
       tooltip: context.l10n.queue,
       icon: Icon(

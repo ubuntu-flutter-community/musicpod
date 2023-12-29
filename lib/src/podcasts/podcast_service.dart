@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:podcast_search/podcast_search.dart';
 
+import '../../common.dart';
 import '../../data.dart';
+import '../../utils.dart';
 import '../notifications/notifications_service.dart';
 
 class PodcastService {
@@ -129,7 +131,13 @@ Future<Set<Audio>> findEpisodes({
       }
     }
   }
-  return episodes;
+  final sortedEpisodes = episodes.toList();
+  sortListByAudioFilter(
+    audioFilter: AudioFilter.year,
+    audios: sortedEpisodes,
+    descending: true,
+  );
+  return Set<Audio>.from(sortedEpisodes);
 }
 
 Future<Podcast?> loadPodcast(String url) async {
