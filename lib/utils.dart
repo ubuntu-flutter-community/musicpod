@@ -28,12 +28,15 @@ bool listsAreEqual(List<dynamic>? list1, List<dynamic>? list2) =>
 void sortListByAudioFilter({
   required AudioFilter audioFilter,
   required List<Audio> audios,
+  bool descending = false,
 }) {
   switch (audioFilter) {
     case AudioFilter.artist:
       audios.sort((a, b) {
         if (a.artist != null && b.artist != null) {
-          return a.artist!.compareTo(b.artist!);
+          return descending
+              ? b.artist!.compareTo(a.artist!)
+              : a.artist!.compareTo(b.artist!);
         }
         return 0;
       });
@@ -41,7 +44,19 @@ void sortListByAudioFilter({
     case AudioFilter.title:
       audios.sort((a, b) {
         if (a.title != null && b.title != null) {
-          return a.title!.compareTo(b.title!);
+          return descending
+              ? b.title!.compareTo(a.title!)
+              : a.title!.compareTo(b.title!);
+        }
+        return 0;
+      });
+      break;
+    case AudioFilter.year:
+      audios.sort((a, b) {
+        if (a.year != null && b.year != null) {
+          return descending
+              ? b.year!.compareTo(a.year!)
+              : a.year!.compareTo(b.year!);
         }
         return 0;
       });
@@ -49,7 +64,9 @@ void sortListByAudioFilter({
     case AudioFilter.album:
       audios.sort((a, b) {
         if (a.album != null && b.album != null) {
-          final albumComp = a.album!.compareTo(b.album!);
+          final albumComp = descending
+              ? b.album!.compareTo(a.album!)
+              : a.album!.compareTo(b.album!);
           if (albumComp == 0 &&
               a.trackNumber != null &&
               b.trackNumber != null) {
@@ -65,7 +82,9 @@ void sortListByAudioFilter({
     default:
       audios.sort((a, b) {
         if (a.trackNumber != null && b.trackNumber != null) {
-          return a.trackNumber!.compareTo(b.trackNumber!);
+          return descending
+              ? b.trackNumber!.compareTo(a.trackNumber!)
+              : a.trackNumber!.compareTo(b.trackNumber!);
         }
         return 0;
       });
