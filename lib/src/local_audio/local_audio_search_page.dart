@@ -49,7 +49,11 @@ class LocalAudioSearchPage extends StatelessWidget {
   final Set<Audio>? Function(Audio, [AudioFilter]) findArtist;
   final Set<Uint8List>? Function(Set<Audio>) findImages;
   final Set<Audio>? Function(Audio, [AudioFilter]) findAlbum;
-  final Future<void> Function(Set<Audio>, String) startPlaylist;
+  final Future<void> Function({
+    required Set<Audio> audios,
+    required String listName,
+    int? index,
+  }) startPlaylist;
   final bool Function(String) isPinnedAlbum;
   final void Function(String) removePinnedAlbum;
   final void Function(String, Set<Audio>) addPinnedAlbum;
@@ -208,7 +212,11 @@ class _Albums extends StatelessWidget {
   final void Function(String, Set<Audio>) addPinnedAlbum;
   final void Function(String) removePinnedAlbum;
   final bool Function(String) isPinnedAlbum;
-  final Future<void> Function(Set<Audio>, String) startPlaylist;
+  final Future<void> Function({
+    required Set<Audio> audios,
+    required String listName,
+    int? index,
+  }) startPlaylist;
   final Set<Audio> similarAlbumsResult;
 
   @override
@@ -272,7 +280,7 @@ class _Albums extends StatelessWidget {
                   ),
           onPlay: albumAudio == null || albumAudio.isEmpty || id == null
               ? null
-              : () => startPlaylist(albumAudio, id),
+              : () => startPlaylist(audios: albumAudio, listName: id),
         );
       },
     );

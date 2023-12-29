@@ -187,14 +187,13 @@ class PlayerService {
         nextAudio = queue.$2[1];
       }
     }
-    final playList = Playlist([
-      if (audio!.path != null)
-        Media('file://${audio!.path!}')
-      else if (audio!.url != null)
-        Media(audio!.url!),
-    ]);
-
-    player.open(playList);
+    Media? media = audio!.path != null
+        ? Media('file://${audio!.path!}')
+        : (audio!.url != null)
+            ? Media(audio!.url!)
+            : null;
+    if (media == null) return;
+    player.open(media);
     if (newPosition != null && _audio!.audioType != AudioType.radio) {
       player.setVolume(0).then(
             (_) => Future.delayed(const Duration(seconds: 3)).then(
@@ -341,9 +340,18 @@ class PlayerService {
     }
   }
 
-  Future<void> startPlaylist(Set<Audio> audios, String listName) async {
-    setQueue((listName, audios.toList()));
-    _setAudio(audios.first);
+  Future<void> startPlaylist({
+    required Set<Audio> audios,
+    required String listName,
+    int? index,
+  }) async {
+    if (listName == _queue.$1 && index != null) {
+      _setAudio(audios.elementAt(index));
+    } else {
+      setQueue((listName, audios.toList()));
+      _setAudio(index != null ? audios.elementAt(index) : audios.first);
+    }
+
     _position = libraryService.getLastPosition.call(_audio?.url);
     _estimateNext();
     await play(newPosition: _position);

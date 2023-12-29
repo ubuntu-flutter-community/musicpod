@@ -23,7 +23,11 @@ class PodcastsCollectionBody extends StatelessWidget {
   });
 
   final bool isOnline;
-  final Future<void> Function(Set<Audio>, String) startPlaylist;
+  final Future<void> Function({
+    required Set<Audio> audios,
+    required String listName,
+    int? index,
+  }) startPlaylist;
   final void Function(String text) onTapText;
   final void Function(String, Set<Audio>) addPodcast;
   final void Function(String) removePodcast;
@@ -146,8 +150,8 @@ class PodcastsCollectionBody extends StatelessWidget {
                                     kAudioQueueThreshHold,
                                 message: podcast.value.length.toString(),
                                 run: () => startPlaylist(
-                                  podcast.value,
-                                  podcast.key,
+                                  audios: podcast.value,
+                                  listName: podcast.key,
                                 ).then((_) => removeUpdate(podcast.key)),
                               );
                             },

@@ -138,7 +138,10 @@ class _AudioPageBodyState extends State<AudioPageBody> {
         resume: resume,
         onTap: widget.audios?.isNotEmpty == false
             ? null
-            : () => startPlaylist(widget.audios!, widget.pageId),
+            : () => startPlaylist(
+                  audios: widget.audios!,
+                  listName: widget.pageId,
+                ),
         controlButton: widget.controlPanelButton,
         audios: sortedAudios.toSet(),
       ),
@@ -270,8 +273,9 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   startPlaylist: widget.audios == null
                       ? null
                       : () => startPlaylist(
-                            widget.audios!.skip(index).toSet(),
-                            widget.pageId,
+                            audios: widget.audios!,
+                            listName: widget.pageId,
+                            index: index,
                           ),
                   resume: resume,
                   key: ValueKey(audio),
