@@ -30,7 +30,11 @@ class AlbumsView extends StatelessWidget {
     required AudioType audioType,
   })? onTextTap;
 
-  final Future<void> Function(Set<Audio>, String) startPlaylist;
+  final Future<void> Function({
+    required Set<Audio> audios,
+    required String listName,
+    int? index,
+  }) startPlaylist;
   final bool Function(String) isPinnedAlbum;
   final void Function(String) removePinnedAlbum;
   final void Function(String, Set<Audio>) addPinnedAlbum;
@@ -115,7 +119,7 @@ class AlbumsView extends StatelessWidget {
                   ),
           onPlay: albumAudios == null || albumAudios.isEmpty || id == null
               ? null
-              : () => startPlaylist(albumAudios, id),
+              : () => startPlaylist(audios: albumAudios, listName: id),
         );
       },
     );

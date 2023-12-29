@@ -82,8 +82,8 @@ class MasterDetailPage extends StatelessWidget {
                     isPlaying ? pause() : playerModel.resume();
                   } else {
                     startPlaylist(
-                      item.content!.$2,
-                      item.content!.$1,
+                      audios: item.content!.$2,
+                      listName: item.content!.$1,
                     );
                   }
                 };

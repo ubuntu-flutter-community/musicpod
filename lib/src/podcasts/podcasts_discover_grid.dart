@@ -21,7 +21,11 @@ class PodcastsDiscoverGrid extends StatelessWidget {
   });
 
   final SearchResult searchResult;
-  final Future<void> Function(Set<Audio> audios, String listName) startPlaylist;
+  final Future<void> Function({
+    required Set<Audio> audios,
+    required String listName,
+    int? index,
+  }) startPlaylist;
   final bool Function(String? feedUrl) podcastSubscribed;
   final void Function(String feedUrl) removePodcast;
   final void Function(String feedUrl, Set<Audio> audios) addPodcast;
@@ -61,7 +65,10 @@ class PodcastsDiscoverGrid extends StatelessWidget {
                   context: context,
                   message: feed.length.toString(),
                   noConfirm: feed.length < kAudioQueueThreshHold,
-                  run: () => startPlaylist(feed, podcastItem.feedUrl!),
+                  run: () => startPlaylist(
+                    audios: feed,
+                    listName: podcastItem.feedUrl!,
+                  ),
                 );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(

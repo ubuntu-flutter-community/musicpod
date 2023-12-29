@@ -110,8 +110,16 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> playPrevious() async => await service.playPrevious();
 
-  Future<void> startPlaylist(Set<Audio> audios, String listName) async =>
-      await service.startPlaylist(audios, listName);
+  Future<void> startPlaylist({
+    required Set<Audio> audios,
+    required String listName,
+    int? index,
+  }) async =>
+      await service.startPlaylist(
+        audios: audios,
+        listName: listName,
+        index: index,
+      );
 
   Color? get color => service.color;
 
