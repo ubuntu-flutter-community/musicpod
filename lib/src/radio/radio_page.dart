@@ -103,7 +103,7 @@ class _RadioPageState extends State<RadioPage> {
     final limit = context.select((RadioModel m) => m.limit);
     final setLimit = model.setLimit;
 
-    final play = context.select((PlayerModel m) => m.play);
+    final startPlaylist = context.read<PlayerModel>().startPlaylist;
 
     final starStation = context.select((LibraryModel m) => m.addStarredStation);
     final unstarStation = context.select((LibraryModel m) => m.unStarStation);
@@ -161,7 +161,7 @@ class _RadioPageState extends State<RadioPage> {
               final onTextTap = widget.onTextTap;
               return StationCard(
                 station: station,
-                play: play,
+                startPlaylist: startPlaylist,
                 isStarredStation: isStarredStation,
                 onTextTap: onTextTap,
                 unstarStation: unstarStation,
@@ -189,7 +189,7 @@ class _RadioPageState extends State<RadioPage> {
 
       final radioLibPage = RadioLibPage(
         isOnline: widget.isOnline,
-        play: play,
+        startPlaylist: startPlaylist,
         isStarredStation: isStarredStation,
         unstarStation: unstarStation,
         starStation: starStation,

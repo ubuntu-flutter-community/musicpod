@@ -10,7 +10,7 @@ import 'station_card.dart';
 class RadioLibPage extends StatelessWidget {
   const RadioLibPage({
     super.key,
-    required this.play,
+    required this.startPlaylist,
     this.onTextTap,
     required this.isStarredStation,
     required this.unstarStation,
@@ -18,7 +18,11 @@ class RadioLibPage extends StatelessWidget {
     required this.isOnline,
   });
 
-  final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
+  final Future<void> Function({
+    required Set<Audio> audios,
+    required String listName,
+    int? index,
+  }) startPlaylist;
   final bool Function(String name) isStarredStation;
   final void Function(String text)? onTextTap;
   final void Function(String name) unstarStation;
@@ -49,7 +53,7 @@ class RadioLibPage extends StatelessWidget {
                     stations.entries.elementAt(index).value.firstOrNull;
                 return StationCard(
                   station: station,
-                  play: play,
+                  startPlaylist: startPlaylist,
                   isStarredStation: isStarredStation,
                   onTextTap: onTextTap,
                   unstarStation: unstarStation,
