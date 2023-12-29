@@ -5,11 +5,11 @@ class NotificationsService {
 
   final NotificationsClient? _notificationsClient;
 
-  Future<void> notifiy(String message) async {
+  Future<void> notify({required String message, String? uri}) async {
     if (_notificationsClient != null) {
       _notificationsClient?.notify(
         message,
-        appIcon: 'music-app',
+        appIcon: uri ?? 'music-app',
         appName: 'MusicPod',
       );
     }
