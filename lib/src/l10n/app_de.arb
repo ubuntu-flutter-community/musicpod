@@ -146,5 +146,8 @@
     "moreOptions": "Mehr Optionen",
     "noRadioServerFound": "Es wurde kein Radio-Server gefunden",
     "connectedTo": "Verbunden mit",
-    "tryReconnect": "Versuche Neuverbindung"
+    "tryReconnect": "Versuche Neuverbindung",
+    "addedTo": "Hinzugefügt zu",
+    "addToPlaylist": "Zu Wiedergabeliste hinzufügen",
+    "open": "Öffnen"
 }

@@ -145,6 +145,7 @@ class LibraryModel extends SafeChangeNotifier {
   int get playlistsLength => playlists.length;
   List<Audio> getPlaylistAt(int index) =>
       playlists.entries.elementAt(index).value.toList();
+  Set<Audio>? getPlaylistById(String id) => _service.playlists[id];
 
   bool isPlaylistSaved(String? name) => playlists.containsKey(name);
 
@@ -162,8 +163,8 @@ class LibraryModel extends SafeChangeNotifier {
   void removeAudioFromPlaylist(String playlist, Audio audio) =>
       _service.removeAudioFromPlaylist(playlist, audio);
 
-  List<String> getTopFivePlaylistNames() =>
-      playlists.entries.take(5).map((e) => e.key).toList();
+  List<String> getPlaylistNames() =>
+      playlists.entries.map((e) => e.key).toList();
 
   // Podcasts
 

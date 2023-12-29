@@ -157,10 +157,13 @@ class _QueueDialogState extends State<QueueDialog> {
                     top: 15,
                   ),
                   child: OutlinedButton(
-                    onPressed: () => widget.addPlaylist(
-                      '${context.l10n.queue} ${DateTime.now()}',
-                      Set.from(queue),
-                    ),
+                    onPressed: () {
+                      widget.addPlaylist(
+                        '${context.l10n.queue} ${DateTime.now()}',
+                        Set.from(queue),
+                      );
+                      Navigator.of(context).pop();
+                    },
                     child: Text(context.l10n.createNewPlaylist),
                   ),
                 ),

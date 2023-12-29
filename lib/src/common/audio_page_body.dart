@@ -114,14 +114,12 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     final liked = libraryModel.liked;
     final removeLikedAudio = libraryModel.removeLikedAudio;
     final addLikedAudio = libraryModel.addLikedAudio;
-    final void Function(String, Audio) removeAudioFromPlaylist =
-        libraryModel.removeAudioFromPlaylist;
-    final List<String> Function() getTopFivePlaylistNames =
-        libraryModel.getTopFivePlaylistNames;
-    final void Function(String, Audio) addAudioToPlaylist =
-        libraryModel.addAudioToPlaylist;
-    final void Function(String, Set<Audio>) addPlaylist =
-        libraryModel.addPlaylist;
+    final removeAudioFromPlaylist = libraryModel.removeAudioFromPlaylist;
+    final playlistNames = libraryModel.getPlaylistNames;
+    final addAudioToPlaylist = libraryModel.addAudioToPlaylist;
+    final addPlaylist = libraryModel.addPlaylist;
+    final getPlaylistById = libraryModel.getPlaylistById;
+    final removePlaylist = libraryModel.removePlaylist;
 
     final sortedAudios = widget.audios?.toList() ?? [];
 
@@ -253,10 +251,13 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                       widget.audioPageType != AudioPageType.playlist
                           ? null
                           : removeAudioFromPlaylist,
-                  topFivePlaylistNames: getTopFivePlaylistNames(),
+                  playlistIds: playlistNames(),
                   addAudioToPlaylist: addAudioToPlaylist,
                   addPlaylist: addPlaylist,
                   insertIntoQueue: () => insertIntoQueue(audio),
+                  removePlaylist: removePlaylist,
+                  getPlaylistById: getPlaylistById,
+                  onTextTap: widget.onTextTap,
                 );
 
                 return AudioTile(
