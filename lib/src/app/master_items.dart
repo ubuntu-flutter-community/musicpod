@@ -17,19 +17,7 @@ List<MasterItem> createMasterItems({
   required bool isOnline,
   required void Function({required AudioType audioType, required String text})
       onTextTap,
-  required Set<Audio> likedLocalAudios,
-  required Map<String, Set<Audio>> subbedPodcasts,
-  required void Function(String name, Set<Audio> audios) addPodcast,
-  required void Function(String name) removePodcast,
-  required Map<String, Set<Audio>> playlists,
-  required void Function(String name) removePlaylist,
-  required void Function(String oldName, String newName)? updatePlaylistName,
-  required Map<String, Set<Audio>> pinnedAlbums,
-  required void Function(String name, Set<Audio> audios) addPinnedAlbum,
-  required bool Function(String name) isPinnedAlbum,
-  required void Function(String name) removePinnedAlbum,
-  required Map<String, Set<Audio>> starredStations,
-  required void Function(String name) unStarStation,
+  required LibraryModel libraryModel,
   required String? countryCode,
 }) {
   return [
@@ -88,16 +76,16 @@ List<MasterItem> createMasterItems({
     ),
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.likedSongs),
-      content: (kLikedAudios, likedLocalAudios),
+      content: (kLikedAudios, libraryModel.likedAudios),
       pageBuilder: (context) => LikedAudioPage(
         onTextTap: onTextTap,
-        likedLocalAudios: likedLocalAudios,
+        likedLocalAudios: libraryModel.likedAudios,
       ),
       subtitleBuilder: (context) => Text(context.l10n.playlist),
       iconBuilder: (context, selected) =>
           LikedAudioPage.createIcon(context: context, selected: selected),
     ),
-    for (final playlist in playlists.entries)
+    for (final playlist in libraryModel.playlists.entries)
       MasterItem(
         titleBuilder: (context) => Text(playlist.key),
         subtitleBuilder: (context) => Text(context.l10n.playlist),
@@ -105,8 +93,8 @@ List<MasterItem> createMasterItems({
         pageBuilder: (context) => PlaylistPage(
           onTextTap: onTextTap,
           playlist: playlist,
-          unPinPlaylist: removePlaylist,
-          updatePlaylistName: updatePlaylistName,
+          unPinPlaylist: libraryModel.removePlaylist,
+          updatePlaylistName: libraryModel.updatePlaylistName,
         ),
         iconBuilder: (context, selected) => SideBarFallBackImage(
           color: getAlphabetColor(playlist.key),
@@ -115,7 +103,7 @@ List<MasterItem> createMasterItems({
           ),
         ),
       ),
-    for (final podcast in subbedPodcasts.entries)
+    for (final podcast in libraryModel.podcasts.entries)
       MasterItem(
         titleBuilder: (context) => PodcastPageTitle(
           feedUrl: podcast.key,
@@ -134,8 +122,8 @@ List<MasterItem> createMasterItems({
               podcast.value.firstOrNull.toString(),
           audios: podcast.value,
           onTextTap: onTextTap,
-          addPodcast: addPodcast,
-          removePodcast: removePodcast,
+          addPodcast: libraryModel.addPodcast,
+          removePodcast: libraryModel.removePodcast,
           imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
               podcast.value.firstOrNull?.imageUrl,
         ),
@@ -145,7 +133,7 @@ List<MasterItem> createMasterItems({
               podcast.value.firstOrNull?.imageUrl,
         ),
       ),
-    for (final album in pinnedAlbums.entries)
+    for (final album in libraryModel.pinnedAlbums.entries)
       MasterItem(
         titleBuilder: (context) => Text(
           album.value.firstOrNull?.album ?? album.key,
@@ -157,16 +145,16 @@ List<MasterItem> createMasterItems({
           onTextTap: onTextTap,
           album: album.value,
           id: album.key,
-          addPinnedAlbum: addPinnedAlbum,
-          isPinnedAlbum: isPinnedAlbum,
-          removePinnedAlbum: removePinnedAlbum,
+          addPinnedAlbum: libraryModel.addPinnedAlbum,
+          isPinnedAlbum: libraryModel.isPinnedAlbum,
+          removePinnedAlbum: libraryModel.removePinnedAlbum,
         ),
         iconBuilder: (context, selected) => AlbumPage.createIcon(
           context,
           album.value.firstOrNull?.pictureData,
         ),
       ),
-    for (final station in starredStations.entries)
+    for (final station in libraryModel.starredStations.entries)
       MasterItem(
         titleBuilder: (context) => Text(station.key),
         subtitleBuilder: (context) {
@@ -179,7 +167,7 @@ List<MasterItem> createMasterItems({
                 starStation: (station) {},
                 onTextTap: (text) =>
                     onTextTap(text: text, audioType: AudioType.radio),
-                unStarStation: unStarStation,
+                unStarStation: libraryModel.unStarStation,
                 name: station.key,
                 station: station.value.first,
               )

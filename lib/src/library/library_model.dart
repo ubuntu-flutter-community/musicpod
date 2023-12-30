@@ -5,6 +5,8 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import '../../data.dart';
 import 'library_service.dart';
 
+const fix = 7;
+
 class LibraryModel extends SafeChangeNotifier {
   LibraryModel(this._service);
 
@@ -87,8 +89,6 @@ class LibraryModel extends SafeChangeNotifier {
   }
 
   int get totalListAmount {
-    const fix = 7;
-
     return starredStationsLength +
         podcastsLength +
         playlistsLength +
@@ -220,6 +220,13 @@ class LibraryModel extends SafeChangeNotifier {
     _index = value;
     _service.setAppIndex(value);
     notifyListeners();
+  }
+
+  int? getIndexOfPlaylist(String id) {
+    final playlist = getPlaylistById(id);
+    if (playlist == null) return null;
+    final allPlaylists = playlists.entries.map((e) => e.value).toList();
+    return fix + allPlaylists.indexOf(playlist);
   }
 
   int? get localAudioindex => _service.localAudioIndex;

@@ -111,15 +111,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     }
 
     final libraryModel = context.read<LibraryModel>();
-    final liked = libraryModel.liked;
-    final removeLikedAudio = libraryModel.removeLikedAudio;
-    final addLikedAudio = libraryModel.addLikedAudio;
-    final removeAudioFromPlaylist = libraryModel.removeAudioFromPlaylist;
-    final playlistNames = libraryModel.getPlaylistNames;
-    final addAudioToPlaylist = libraryModel.addAudioToPlaylist;
-    final addPlaylist = libraryModel.addPlaylist;
-    final getPlaylistById = libraryModel.getPlaylistById;
-    final removePlaylist = libraryModel.removePlaylist;
 
     final sortedAudios = widget.audios?.toList() ?? [];
 
@@ -241,23 +232,12 @@ class _AudioPageBodyState extends State<AudioPageBody> {
 
                 final likeButton = LikeButton(
                   key: ObjectKey(audio),
+                  libraryModel: libraryModel,
                   playlistId: widget.pageId,
                   audio: audio,
-                  audioSelected: audioSelected,
-                  liked: liked(audio),
-                  removeLikedAudio: removeLikedAudio,
-                  addLikedAudio: addLikedAudio,
-                  onRemoveFromPlaylist:
-                      widget.audioPageType != AudioPageType.playlist
-                          ? null
-                          : removeAudioFromPlaylist,
-                  playlistIds: playlistNames(),
-                  addAudioToPlaylist: addAudioToPlaylist,
-                  addPlaylist: addPlaylist,
+                  selected: audioSelected,
+                  allowRemove: widget.audioPageType == AudioPageType.playlist,
                   insertIntoQueue: () => insertIntoQueue(audio),
-                  removePlaylist: removePlaylist,
-                  getPlaylistById: getPlaylistById,
-                  onTextTap: widget.onTextTap,
                 );
 
                 return AudioTile(

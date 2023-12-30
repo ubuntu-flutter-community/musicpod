@@ -146,8 +146,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     final isFullScreen = context.select((PlayerModel m) => m.fullScreen);
 
     // Library
-    final libraryModel = context.read<LibraryModel>();
-    context.watch<LibraryModel>();
+    final libraryModel = context.watch<LibraryModel>();
 
     void onTextTap({
       required String text,
@@ -179,30 +178,16 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       }
     }
 
-    final masterItems = createMasterItems(
-      isOnline: isOnline,
-      onTextTap: onTextTap,
-      likedLocalAudios: libraryModel.likedAudios,
-      subbedPodcasts: libraryModel.podcasts,
-      addPodcast: libraryModel.addPodcast,
-      removePodcast: libraryModel.removePodcast,
-      playlists: libraryModel.playlists,
-      removePlaylist: libraryModel.removePlaylist,
-      updatePlaylistName: libraryModel.updatePlaylistName,
-      pinnedAlbums: libraryModel.pinnedAlbums,
-      addPinnedAlbum: libraryModel.addPinnedAlbum,
-      isPinnedAlbum: libraryModel.isPinnedAlbum,
-      removePinnedAlbum: libraryModel.removePinnedAlbum,
-      starredStations: libraryModel.starredStations,
-      unStarStation: libraryModel.unStarStation,
-      countryCode: _countryCode,
-    );
-
     final yaruMasterDetailPage = MasterDetailPage(
       setIndex: libraryModel.setIndex,
       totalListAmount: libraryModel.totalListAmount,
       index: libraryModel.index,
-      masterItems: masterItems,
+      masterItems: createMasterItems(
+        libraryModel: libraryModel,
+        isOnline: isOnline,
+        onTextTap: onTextTap,
+        countryCode: _countryCode,
+      ),
       addPlaylist: libraryModel.addPlaylist,
     );
 

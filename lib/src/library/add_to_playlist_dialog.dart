@@ -8,29 +8,63 @@ import '../../l10n.dart';
 import '../../library.dart';
 import '../../theme.dart';
 import '../common/side_bar_fall_back_image.dart';
+import 'add_to_playlist_snack_bar.dart';
 
 class AddToPlaylistDialog extends StatelessWidget {
   const AddToPlaylistDialog({
     super.key,
     required this.audio,
-    required this.playlistIds,
-    required this.addAudioToPlaylist,
-    required this.getPlaylistById,
-    required this.removePlaylist,
-    this.onTextTap,
+    required this.libraryModel,
   });
 
   final Audio audio;
-  final List<String> playlistIds;
-  final void Function(String, Audio) addAudioToPlaylist;
-  final Set<Audio>? Function(String id) getPlaylistById;
-  final void Function(String) removePlaylist;
-  final void Function({required AudioType audioType, required String text})?
-      onTextTap;
+  final LibraryModel libraryModel;
 
   @override
   Widget build(BuildContext context) {
-    return SimpleDialog(
+    final nav = Navigator(
+      onPopPage: (route, result) => route.didPop(result),
+      key: playlistNavigatorKey,
+      initialRoute: '/',
+      onGenerateRoute: (settings) {
+        final listView = ListView(
+          shrinkWrap: true,
+          children: [
+            ListTile(
+              onTap: () => playlistNavigatorKey.currentState?.pushNamed('/new'),
+              leading: SideBarFallBackImage(
+                color: Colors.transparent,
+                child: Icon(Iconz().plus),
+              ),
+              title: Text(context.l10n.createNewPlaylist),
+            ),
+            ...libraryModel.getPlaylistNames().map(
+                  (playlistId) => Builder(
+                    builder: (context) {
+                      return _PlaylistTile(
+                        playlistId: playlistId,
+                        libraryModel: libraryModel,
+                        audio: audio,
+                      );
+                    },
+                  ),
+                ),
+          ],
+        );
+
+        return PageRouteBuilder(
+          pageBuilder: (_, __, ___) => settings.name == '/new'
+              ? _NewView(
+                  libraryModel: libraryModel,
+                  audio: audio,
+                )
+              : listView,
+          transitionDuration: const Duration(milliseconds: 500),
+        );
+      },
+    );
+
+    return AlertDialog(
       title: yaruStyled
           ? YaruDialogTitleBar(
               title: Text(context.l10n.addToPlaylist),
@@ -39,77 +73,138 @@ class AddToPlaylistDialog extends StatelessWidget {
       titlePadding: yaruStyled
           ? EdgeInsets.zero
           : const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
-      children: playlistIds
-          .map(
-            (e) => ListTile(
-              onTap: () {
-                addAudioToPlaylist(e, audio);
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: _AddToPlaylistSnackBar(
-                      id: e,
-                      getPlaylistById: getPlaylistById,
-                      unPinPlaylist: removePlaylist,
-                      onTextTap: onTextTap,
-                    ),
-                  ),
-                );
-              },
-              leading: SideBarFallBackImage(
-                color: getAlphabetColor(e),
-                child: Icon(Iconz().starFilled),
-              ),
-              title: Text(e),
-            ),
-          )
-          .toList(),
+      content: SizedBox(height: 200, width: 400, child: nav),
+      contentPadding: const EdgeInsets.symmetric(vertical: 20),
     );
   }
 }
 
-class _AddToPlaylistSnackBar extends StatelessWidget {
-  const _AddToPlaylistSnackBar({
-    required this.getPlaylistById,
-    required this.unPinPlaylist,
-    required this.id,
-    this.onTextTap,
+class _PlaylistTile extends StatelessWidget {
+  const _PlaylistTile({
+    required this.libraryModel,
+    required this.audio,
+    required this.playlistId,
   });
 
-  final Set<Audio>? Function(String id) getPlaylistById;
-  final void Function(String p1) unPinPlaylist;
-  final String id;
-  final void Function({required AudioType audioType, required String text})?
-      onTextTap;
+  final LibraryModel libraryModel;
+  final Audio audio;
+  final String playlistId;
 
   @override
   Widget build(BuildContext context) {
-    final playlist = getPlaylistById(id);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          '${context.l10n.addedTo} $id',
+    return ListTile(
+      onTap: () {
+        libraryModel.addAudioToPlaylist(playlistId, audio);
+        _snack(context, playlistId, libraryModel);
+      },
+      leading: SideBarFallBackImage(
+        color: getAlphabetColor(playlistId),
+        child: Icon(Iconz().starFilled),
+      ),
+      title: Text(playlistId),
+    );
+  }
+}
+
+ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _snack(
+  BuildContext context,
+  String playlistID,
+  LibraryModel libraryModel,
+) {
+  final messenger = ScaffoldMessenger.of(context);
+  messenger.clearSnackBars();
+  return messenger.showSnackBar(
+    SnackBar(
+      content: AddToPlaylistSnackBar(
+        id: playlistID,
+        libraryModel: libraryModel,
+      ),
+      duration: const Duration(seconds: 5),
+    ),
+  );
+}
+
+class _NewView extends StatefulWidget {
+  const _NewView({
+    required this.libraryModel,
+    required this.audio,
+  });
+
+  final LibraryModel libraryModel;
+  final Audio audio;
+
+  @override
+  State<_NewView> createState() => _NewViewState();
+}
+
+class _NewViewState extends State<_NewView> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).dialogBackgroundColor,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _controller,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Wrap(
+                spacing: 20,
+                runSpacing: 10,
+                children: [
+                  OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(
+                      context.l10n.cancel,
+                    ),
+                  ),
+                  ImportantButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      widget.libraryModel.addPlaylist(
+                        _controller.text,
+                        {widget.audio},
+                      );
+                      _snack(
+                        context,
+                        _controller.text,
+                        widget.libraryModel,
+                      );
+                    },
+                    child: Text(
+                      context.l10n.add,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        if (playlist != null)
-          ImportantButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).clearSnackBars();
-              navigatorKey.currentState?.push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return PlaylistPage(
-                      playlist: MapEntry(id, playlist),
-                      unPinPlaylist: unPinPlaylist,
-                      onTextTap: onTextTap,
-                    );
-                  },
-                ),
-              );
-            },
-            child: Text(context.l10n.open),
-          ),
-      ],
+      ),
     );
   }
 }

@@ -40,7 +40,6 @@
     "noPodcastChartsFound": "Sorry, no charts available for this country or category.",
     "noPodcastSubsFound": "You haven't subscribed to any podcast yet.",
     "charts": "Charts",
-    "discover": "Discover",
     "upNext": "Up next",
     "all": "All",
     "arts": "Arts",
@@ -149,5 +148,6 @@
     "tryReconnect": "Try reconnect",
     "addedTo": "Added to",
     "addToPlaylist": "Add to playlist",
-    "open": "Open"
+    "open": "Open",
+    "removeFrom": "Remove from"
 }
