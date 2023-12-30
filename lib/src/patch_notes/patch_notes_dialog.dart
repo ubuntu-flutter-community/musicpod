@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../build_context_x.dart';
 import '../l10n/l10n.dart';
 import 'patch_notes.dart';
+import 'sponsor_link.dart';
 
 class PatchNotesDialog extends StatelessWidget {
   const PatchNotesDialog({
@@ -16,9 +17,20 @@ class PatchNotesDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text(kRecentPatchNotesTitle),
-      content: Text(
-        kRecentPatchNotes,
-        style: context.t.textTheme.bodyLarge,
+      scrollable: true,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            kRecentPatchNotes,
+            style: context.t.textTheme.bodyLarge,
+          ),
+          const Row(
+            children: [
+              SponsorLink(),
+            ],
+          ),
+        ],
       ),
       actions: [
         ElevatedButton(

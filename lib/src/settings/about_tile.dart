@@ -23,7 +23,7 @@ class AboutTile extends StatelessWidget {
           bottom: 10,
         ),
         child: InkWell(
-          onTap: () => launchUrl(Uri.parse('https://github.com/Feichtmeier')),
+          onTap: () => launchUrl(Uri.parse(kSponsorLink)),
           child: Text(
             'Copyright by Frederik Feichtmeier 2023 and onwards - all rights reserved',
             style: TextStyle(color: linkColor),
