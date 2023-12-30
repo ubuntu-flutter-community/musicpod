@@ -52,6 +52,7 @@ class RadioControlPanel extends StatelessWidget {
       child: Row(
         children: [
           LimitPopup(
+            limits: const [100, 200, 400, 500],
             value: limit,
             onSelected: (value) {
               setLimit(value);
