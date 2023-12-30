@@ -63,7 +63,7 @@ class _PlayerViewState extends State<PlayerView> {
     final c = context.select((PlayerModel m) => m.color);
     final color = getPlayerBg(
       c,
-      theme.isLight ? kCardColorLight : theme.scaffoldBackgroundColor,
+      theme.isLight ? kCardColorLight : kCardColorDark,
     );
     final setFullScreen = playerModel.setFullScreen;
     final playPrevious = playerModel.playPrevious;
@@ -91,7 +91,6 @@ class _PlayerViewState extends State<PlayerView> {
         setFullScreen: setFullScreen,
         nextAudio: nextAudio,
         audio: audio,
-        color: color,
         playPrevious: playPrevious,
         playNext: playNext,
         liked: liked,
@@ -115,7 +114,6 @@ class _PlayerViewState extends State<PlayerView> {
             setFullScreen: setFullScreen,
             audio: audio,
             width: width,
-            color: color,
             playPrevious: playPrevious,
             playNext: playNext,
             liked: liked,
