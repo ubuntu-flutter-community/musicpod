@@ -125,3 +125,5 @@ const shops = <String, String>{
   'https://www.amazon.com/music/player': 'Amazon Music',
   'https://bandcamp.com/tag/buy': 'Bandcamp',
 };
+
+const kSponsorLink = 'https://github.com/sponsors/Feichtmeier';
