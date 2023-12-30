@@ -4,7 +4,6 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
-import '../../data.dart';
 import '../../library.dart';
 import '../../player.dart';
 import '../../radio.dart';
@@ -21,14 +20,14 @@ class MasterDetailPage extends StatelessWidget {
     required this.totalListAmount,
     required this.index,
     required this.masterItems,
-    required this.addPlaylist,
+    required this.libraryModel,
   });
 
   final void Function(int? value) setIndex;
   final int totalListAmount;
   final int? index;
   final List<MasterItem> masterItems;
-  final void Function(String name, Set<Audio> audios) addPlaylist;
+  final LibraryModel libraryModel;
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +115,8 @@ class MasterDetailPage extends StatelessWidget {
                         builder: (context) {
                           return PlaylistDialog(
                             playlistName: context.l10n.createNewPlaylist,
-                            onCreateNewPlaylist: addPlaylist,
+                            allowCreate: true,
+                            libraryModel: libraryModel,
                           );
                         },
                       ),

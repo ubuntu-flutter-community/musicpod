@@ -3,26 +3,28 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../../library.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
+import 'add_to_playlist_snack_bar.dart';
 
 class PlaylistDialog extends StatefulWidget {
   const PlaylistDialog({
     super.key,
-    this.onCreateNewPlaylist,
-    this.onDeletePlaylist,
-    this.onUpdatePlaylistName,
     this.playlistName,
     this.initialValue,
     this.audios,
+    this.allowDelete = false,
+    this.allowRename = false,
+    this.allowCreate = false,
+    required this.libraryModel,
   });
 
+  final LibraryModel libraryModel;
   final Set<Audio>? audios;
-  final void Function(String name, Set<Audio> audios)? onCreateNewPlaylist;
-  final void Function(String name)? onUpdatePlaylistName;
-  final void Function()? onDeletePlaylist;
   final String? playlistName;
   final String? initialValue;
+  final bool allowRename, allowDelete, allowCreate;
 
   @override
   State<PlaylistDialog> createState() => _PlaylistDialogState();
@@ -68,40 +70,53 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
             context.l10n.cancel,
           ),
         ),
-        if (widget.onDeletePlaylist != null)
+        if (widget.allowDelete && widget.playlistName != null)
           OutlinedButton(
             onPressed: () {
-              widget.onDeletePlaylist!();
-              Navigator.pop(context);
+              widget.libraryModel.removePlaylist(widget.playlistName!);
+              Navigator.of(context).pop();
             },
             child: Text(
               context.l10n.deletePlaylist,
             ),
           ),
-        if (widget.onUpdatePlaylistName != null)
+        if (widget.allowRename && widget.playlistName != null)
           ImportantButton(
             onPressed: () {
-              widget.onUpdatePlaylistName!(_controller.text);
+              widget.libraryModel
+                  .updatePlaylistName(widget.playlistName!, _controller.text);
               Navigator.of(context).pop();
             },
             child: Text(
               context.l10n.save,
             ),
           ),
-        if (widget.onCreateNewPlaylist != null)
+        if (widget.allowCreate)
           ImportantButton(
             onPressed: () {
-              widget.onCreateNewPlaylist!(
+              widget.libraryModel.addPlaylist(
                 _controller.text,
                 widget.audios ?? {},
               );
-              Navigator.of(context).pop();
+              _snack(context, _controller.text);
             },
             child: Text(
               context.l10n.add,
             ),
           ),
       ],
+    );
+  }
+
+  void _snack(BuildContext context, String id) {
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: AddToPlaylistSnackBar(
+          libraryModel: widget.libraryModel,
+          id: id,
+        ),
+      ),
     );
   }
 }
