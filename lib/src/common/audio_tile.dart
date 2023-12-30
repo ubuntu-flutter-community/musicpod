@@ -25,8 +25,10 @@ class AudioTile extends StatelessWidget {
     this.artistFlex = 1,
     this.albumFlex = 1,
     this.startPlaylist,
+    this.trackLabel,
   });
 
+  final String? trackLabel;
   final Audio audio;
   final bool selected;
   final void Function()? onLike;
@@ -78,9 +80,10 @@ class AudioTile extends StatelessWidget {
             Padding(
               padding: kAudioTileTrackPadding,
               child: Text(
-                audio.trackNumber != null
-                    ? audio.trackNumber!.toString().padLeft(2, '0')
-                    : '00',
+                trackLabel ??
+                    (audio.trackNumber != null
+                        ? audio.trackNumber!.toString().padLeft(2, '0')
+                        : '00'),
                 style: textStyle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

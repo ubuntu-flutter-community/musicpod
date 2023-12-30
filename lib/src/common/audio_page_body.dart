@@ -204,7 +204,8 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                 final audioSelected = currentAudio == audio;
                 final download = libraryModel.getDownload(audio.url);
 
-                if (audio.audioType == AudioType.podcast) {
+                if (audio.audioType == AudioType.podcast &&
+                    widget.audioPageType != AudioPageType.playlist) {
                   return PodcastAudioTile(
                     addPodcast: audio.website == null || widget.audios == null
                         ? null
@@ -241,6 +242,9 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                 );
 
                 return AudioTile(
+                  trackLabel: widget.audioPageType == AudioPageType.playlist
+                      ? (index + 1).toString().padLeft(2, '0')
+                      : null,
                   showAlbum: widget.showAlbum,
                   showArtist: widget.showArtist,
                   showTrack: widget.showTrack,
