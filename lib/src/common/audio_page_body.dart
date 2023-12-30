@@ -111,15 +111,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     }
 
     final libraryModel = context.read<LibraryModel>();
-    final liked = libraryModel.liked;
-    final removeLikedAudio = libraryModel.removeLikedAudio;
-    final addLikedAudio = libraryModel.addLikedAudio;
-    final removeAudioFromPlaylist = libraryModel.removeAudioFromPlaylist;
-    final playlistNames = libraryModel.getPlaylistNames;
-    final addAudioToPlaylist = libraryModel.addAudioToPlaylist;
-    final addPlaylist = libraryModel.addPlaylist;
-    final getPlaylistById = libraryModel.getPlaylistById;
-    final removePlaylist = libraryModel.removePlaylist;
 
     final sortedAudios = widget.audios?.toList() ?? [];
 
@@ -213,7 +204,8 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                 final audioSelected = currentAudio == audio;
                 final download = libraryModel.getDownload(audio.url);
 
-                if (audio.audioType == AudioType.podcast) {
+                if (audio.audioType == AudioType.podcast &&
+                    widget.audioPageType != AudioPageType.playlist) {
                   return PodcastAudioTile(
                     addPodcast: audio.website == null || widget.audios == null
                         ? null
@@ -241,26 +233,18 @@ class _AudioPageBodyState extends State<AudioPageBody> {
 
                 final likeButton = LikeButton(
                   key: ObjectKey(audio),
+                  libraryModel: libraryModel,
                   playlistId: widget.pageId,
                   audio: audio,
-                  audioSelected: audioSelected,
-                  liked: liked(audio),
-                  removeLikedAudio: removeLikedAudio,
-                  addLikedAudio: addLikedAudio,
-                  onRemoveFromPlaylist:
-                      widget.audioPageType != AudioPageType.playlist
-                          ? null
-                          : removeAudioFromPlaylist,
-                  playlistIds: playlistNames(),
-                  addAudioToPlaylist: addAudioToPlaylist,
-                  addPlaylist: addPlaylist,
+                  selected: audioSelected,
+                  allowRemove: widget.audioPageType == AudioPageType.playlist,
                   insertIntoQueue: () => insertIntoQueue(audio),
-                  removePlaylist: removePlaylist,
-                  getPlaylistById: getPlaylistById,
-                  onTextTap: widget.onTextTap,
                 );
 
                 return AudioTile(
+                  trackLabel: widget.audioPageType == AudioPageType.playlist
+                      ? (index + 1).toString().padLeft(2, '0')
+                      : null,
                   showAlbum: widget.showAlbum,
                   showArtist: widget.showArtist,
                   showTrack: widget.showTrack,

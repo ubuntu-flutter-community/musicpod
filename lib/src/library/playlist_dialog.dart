@@ -60,6 +60,7 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
         decoration: InputDecoration(label: Text(context.l10n.playlist)),
         controller: _controller,
       ),
+      actionsOverflowButtonSpacing: 10,
       actions: [
         OutlinedButton(
           onPressed: () => Navigator.pop(context),

@@ -40,7 +40,6 @@
     "noPodcastChartsFound": "Entschuldigung, für dieses Land sind keine Charts verfügbar.",
     "noPodcastSubsFound": "Du hast noch keinen Podcast abonniert.",
     "charts": "Charts",
-    "discover": "Entdecken",
     "upNext": "Als nächstes",
     "all": "Alles",
     "arts": "Kunst",
@@ -149,5 +148,6 @@
     "tryReconnect": "Versuche Neuverbindung",
     "addedTo": "Hinzugefügt zu",
     "addToPlaylist": "Zu Wiedergabeliste hinzufügen",
-    "open": "Öffnen"
+    "open": "Öffnen",
+    "removeFrom": "Entferne aus"
 }
