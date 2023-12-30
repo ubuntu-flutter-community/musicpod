@@ -19,7 +19,6 @@ class BottomPlayer extends StatelessWidget {
     required this.setFullScreen,
     required this.audio,
     required this.width,
-    this.color,
     required this.playPrevious,
     required this.playNext,
     required this.liked,
@@ -36,7 +35,6 @@ class BottomPlayer extends StatelessWidget {
 
   final Audio? audio;
   final double width;
-  final Color? color;
 
   final Future<void> Function() playPrevious;
   final Future<void> Function() playNext;

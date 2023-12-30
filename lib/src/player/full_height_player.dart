@@ -25,7 +25,6 @@ class FullHeightPlayer extends StatelessWidget {
     required this.addStarredStation,
     required this.removeLikedAudio,
     required this.addLikedAudio,
-    this.color,
     required this.setFullScreen,
     required this.playerViewMode,
     required this.onTextTap,
@@ -47,8 +46,6 @@ class FullHeightPlayer extends StatelessWidget {
 
   final void Function(Audio audio, bool notify) removeLikedAudio;
   final void Function(Audio audio, bool notify) addLikedAudio;
-
-  final Color? color;
 
   final void Function(bool?) setFullScreen;
 
@@ -195,8 +192,8 @@ class FullHeightPlayer extends StatelessWidget {
       children: [
         if (!isMobile)
           HeaderBar(
-            title: Text(
-              audio?.title ?? '',
+            title: const Text(
+              '',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
