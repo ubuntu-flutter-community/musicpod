@@ -188,7 +188,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         onTextTap: onTextTap,
         countryCode: _countryCode,
       ),
-      addPlaylist: libraryModel.addPlaylist,
+      libraryModel: libraryModel,
     );
 
     return Stack(

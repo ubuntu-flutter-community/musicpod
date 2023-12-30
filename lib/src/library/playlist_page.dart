@@ -2,23 +2,21 @@ import 'package:flutter/material.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../../library.dart';
 import '../common/fall_back_header_image.dart';
 import '../l10n/l10n.dart';
 import '../theme.dart';
-import 'playlist_dialog.dart';
 
 class PlaylistPage extends StatelessWidget {
   const PlaylistPage({
     super.key,
     required this.playlist,
-    required this.unPinPlaylist,
     this.onTextTap,
-    this.updatePlaylistName,
+    required this.libraryModel,
   });
 
   final MapEntry<String, Set<Audio>> playlist;
-  final void Function(String playlist) unPinPlaylist;
-  final void Function(String oldName, String newName)? updatePlaylistName;
+  final LibraryModel libraryModel;
   final void Function({
     required String text,
     required AudioType audioType,
@@ -50,9 +48,9 @@ class PlaylistPage extends StatelessWidget {
           builder: (context) => PlaylistDialog(
             playlistName: playlist.key,
             initialValue: playlist.key,
-            onDeletePlaylist: () => unPinPlaylist(playlist.key),
-            onUpdatePlaylistName: (name) =>
-                updatePlaylistName!(playlist.key, name),
+            allowDelete: true,
+            allowRename: true,
+            libraryModel: libraryModel,
           ),
         ),
       ),

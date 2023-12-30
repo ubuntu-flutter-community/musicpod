@@ -93,8 +93,7 @@ List<MasterItem> createMasterItems({
         pageBuilder: (context) => PlaylistPage(
           onTextTap: onTextTap,
           playlist: playlist,
-          unPinPlaylist: libraryModel.removePlaylist,
-          updatePlaylistName: libraryModel.updatePlaylistName,
+          libraryModel: libraryModel,
         ),
         iconBuilder: (context, selected) => SideBarFallBackImage(
           color: getAlphabetColor(playlist.key),
