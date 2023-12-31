@@ -117,6 +117,7 @@ const kAppIndex = 'appIndex';
 const kRadioIndex = 'radioIndex';
 const kPodcastIndex = 'podcastIndex';
 const kNeverShowImportFails = 'neverShowImportFails';
+const kLastCountryCode = 'lastCountryCode';
 
 const shops = <String, String>{
   'https://us.7digital.com/': '7digital',

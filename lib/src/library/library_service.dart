@@ -172,6 +172,18 @@ class LibraryService {
   final _lastFavController = StreamController<bool>.broadcast();
   Stream<bool> get lastFavChanged => _lastFavController.stream;
 
+  String? _lastCountryCode;
+  String? get lastCountryCode => _lastCountryCode;
+  void setLastCountryCode(String? value) {
+    if (value == _lastCountryCode) return;
+    _lastCountryCode = value;
+    writeSetting(kLastCountryCode, value)
+        .then((_) => _lastCountryCodeController.add(true));
+  }
+
+  final _lastCountryCodeController = StreamController<bool>.broadcast();
+  Stream<bool> get lastCountryCodeChanged => _lastCountryCodeController.stream;
+
   //
   // Playlists
   //

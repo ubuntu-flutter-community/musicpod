@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -87,7 +88,11 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final checkingForUpdates =
         context.select((PodcastModel m) => m.checkingForUpdates);
 
-    final setCountry = model.setCountry;
+    void setCountry(Country? country) {
+      model.setCountry(country);
+      libraryModel.setLastCountryCode(country?.code);
+    }
+
     final podcastGenre = context.select((PodcastModel m) => m.podcastGenre);
     final sortedGenres = context.select((PodcastModel m) => m.sortedGenres);
     final setPodcastGenre = model.setPodcastGenre;
