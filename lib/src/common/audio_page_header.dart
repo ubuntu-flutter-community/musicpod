@@ -4,7 +4,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
-import '../../common.dart';
 import '../../constants.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
@@ -33,9 +32,6 @@ class AudioPageHeader extends StatelessWidget {
 
     return Container(
       height: kAudioPageHeaderHeight,
-      decoration: BoxDecoration(
-        gradient: getAudioPageHeaderGradient(theme),
-      ),
       padding: const EdgeInsets.all(20),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

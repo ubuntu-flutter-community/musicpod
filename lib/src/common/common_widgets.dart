@@ -356,37 +356,6 @@ EdgeInsetsGeometry get gridPadding =>
 SliverGridDelegate get imageGridDelegate =>
     isMobile ? kMobileImageGridDelegate : kImageGridDelegate;
 
-Gradient? getAudioPageHeaderGradient(ThemeData theme) {
-  if (yaruStyled) {
-    return theme.isLight
-        ? null
-        : LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-            colors: [
-              Colors.transparent,
-              theme.scaffoldBackgroundColor,
-            ],
-          );
-  }
-
-  return LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [
-      Colors.transparent,
-      theme.colorScheme.primary.withOpacity(0.01),
-      theme.colorScheme.primary.withOpacity(0.02),
-      theme.colorScheme.primary.withOpacity(0.03),
-      theme.colorScheme.primary.withOpacity(0.04),
-      theme.colorScheme.primary.withOpacity(0.05),
-      theme.colorScheme.primary.withOpacity(0.03),
-      theme.colorScheme.primary.withOpacity(0.01),
-      Colors.transparent,
-    ],
-  );
-}
-
 EdgeInsetsGeometry get appBarActionSpacing => Platform.isMacOS
     ? const EdgeInsets.only(right: 5, left: 40)
     : const EdgeInsets.only(right: 20, left: 40);

@@ -12,6 +12,7 @@ dependencies:
   animated_emoji: ^2.1.0
   audio_service: ^0.18.12
   basic_utils: ^5.6.1
+  blur: ^3.1.0
   cached_network_image: ^3.3.0
   collection: ^1.17.0
   connectivity_plus: ^5.0.1
