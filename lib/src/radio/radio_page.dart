@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -86,6 +87,7 @@ class _RadioPageState extends State<RadioPage> {
   @override
   Widget build(BuildContext context) {
     final model = context.read<RadioModel>();
+    final libraryModel = context.read<LibraryModel>();
     final stations = context.select((RadioModel m) => m.stations);
     final statusCode = context.select((RadioModel m) => m.statusCode);
     final stationsCount = context.select((RadioModel m) => m.stations?.length);
@@ -94,7 +96,11 @@ class _RadioPageState extends State<RadioPage> {
     final setSearchQuery = model.setSearchQuery;
     final country = context.select((RadioModel m) => m.country);
     final sortedCountries = context.select((RadioModel m) => m.sortedCountries);
-    final setCountry = model.setCountry;
+    void setCountry(Country? value) {
+      model.setCountry(value);
+      libraryModel.setLastCountryCode(country?.code);
+    }
+
     final loadStationsByCountry = model.loadStationsByCountry;
     final tag = context.select((RadioModel m) => m.tag);
     final setTag = model.setTag;

@@ -93,6 +93,7 @@ class RadioModel extends SafeChangeNotifier {
   }) async {
     _connectedHost ??= await _radioService.init();
 
+    final lastCountryCode = (await readSetting(kLastCountryCode)) as String?;
     final lastFav = (await readSetting(kLastFav)) as String?;
     _stationsSub ??=
         _radioService.stationsChanged.listen((_) => notifyListeners());
@@ -101,7 +102,8 @@ class RadioModel extends SafeChangeNotifier {
     _searchSub ??=
         _radioService.searchQueryChanged.listen((_) => notifyListeners());
     _tagsSub ??= _radioService.tagsChanged.listen((_) => notifyListeners());
-    _country ??= Country.values.firstWhereOrNull((c) => c.code == countryCode);
+    _country ??= Country.values
+        .firstWhereOrNull((c) => c.code == (lastCountryCode ?? countryCode));
 
     if (_connectedHost?.isNotEmpty == true) {
       await _radioService.loadTags();
