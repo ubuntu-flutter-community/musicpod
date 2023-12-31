@@ -1,3 +1,4 @@
+import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:popover/popover.dart';
@@ -188,7 +189,7 @@ class FullHeightPlayer extends StatelessWidget {
       ],
     );
 
-    return Column(
+    final column = Column(
       children: [
         if (!isMobile)
           HeaderBar(
@@ -226,5 +227,36 @@ class FullHeightPlayer extends StatelessWidget {
               ),
       ],
     );
+
+    if ((audio?.imageUrl != null ||
+            audio?.albumArtUrl != null ||
+            audio?.pictureData != null) &&
+        audio?.audioType != AudioType.radio) {
+      return Stack(
+        children: [
+          Opacity(
+            opacity: 0.2,
+            child: SizedBox(
+              width: size.width,
+              height: size.height,
+              child: Blur(
+                blur: 20,
+                colorOpacity: 0.1,
+                child: FullHeightPlayerImage(
+                  audio: audio,
+                  fit: BoxFit.cover,
+                  height: size.height,
+                  width: size.width,
+                  isOnline: isOnline,
+                ),
+              ),
+            ),
+          ),
+          column,
+        ],
+      );
+    } else {
+      return column;
+    }
   }
 }

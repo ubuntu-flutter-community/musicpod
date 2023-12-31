@@ -13,10 +13,15 @@ class FullHeightPlayerImage extends StatelessWidget {
     super.key,
     this.audio,
     required this.isOnline,
+    this.fit,
+    this.height,
+    this.width,
   });
 
   final Audio? audio;
   final bool isOnline;
+  final BoxFit? fit;
+  final double? height, width;
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +40,9 @@ class FullHeightPlayerImage extends StatelessWidget {
     if (audio?.pictureData != null) {
       image = Image.memory(
         audio!.pictureData!,
-        height: fullHeightPlayerImageSize,
-        fit: BoxFit.fitWidth,
+        height: height ?? fullHeightPlayerImageSize,
+        width: width ?? fullHeightPlayerImageSize,
+        fit: fit ?? BoxFit.fitWidth,
       );
     } else {
       if (!isOnline) {
@@ -47,26 +53,26 @@ class FullHeightPlayerImage extends StatelessWidget {
         );
       } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
         image = Container(
-          height: fullHeightPlayerImageSize,
-          width: fullHeightPlayerImageSize,
+          height: height ?? fullHeightPlayerImageSize,
+          width: width ?? fullHeightPlayerImageSize,
           color: kCardColorNeutral,
           child: SafeNetworkImage(
             url: audio?.imageUrl ?? audio?.albumArtUrl,
             filterQuality: FilterQuality.medium,
-            fit: BoxFit.scaleDown,
+            fit: fit ?? BoxFit.scaleDown,
             fallBackIcon: Icon(
               iconData,
               size: fullHeightPlayerImageSize * 0.7,
               color: theme.hintColor,
             ),
-            height: fullHeightPlayerImageSize,
-            width: fullHeightPlayerImageSize,
+            height: height ?? fullHeightPlayerImageSize,
+            width: width ?? fullHeightPlayerImageSize,
           ),
         );
       } else {
         image = Container(
-          height: fullHeightPlayerImageSize,
-          width: fullHeightPlayerImageSize,
+          height: height ?? fullHeightPlayerImageSize,
+          width: width ?? fullHeightPlayerImageSize,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.bottomLeft,
@@ -101,8 +107,8 @@ class FullHeightPlayerImage extends StatelessWidget {
     }
 
     return SizedBox(
-      height: fullHeightPlayerImageSize,
-      width: fullHeightPlayerImageSize,
+      height: height ?? fullHeightPlayerImageSize,
+      width: width ?? fullHeightPlayerImageSize,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: image,
