@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -93,14 +95,11 @@ class FullHeightPlayer extends StatelessWidget {
             ),
           )
         else
-          SingleChildScrollView(
-            padding: EdgeInsets.only(
-              left: 35,
-              right: 35,
-              top: size.height / 5.2,
-            ),
-            child: Center(
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 35),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   FullHeightPlayerImage(
@@ -128,7 +127,10 @@ class FullHeightPlayer extends StatelessWidget {
             ),
           ),
         Padding(
-          padding: const EdgeInsets.all(kYaruPagePadding),
+          padding: EdgeInsets.only(
+            right: kYaruPagePadding,
+            top: Platform.isMacOS ? 0 : kYaruPagePadding,
+          ),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(100),
@@ -204,16 +206,14 @@ class FullHeightPlayer extends StatelessWidget {
                 isVideo == true ? Colors.black : Colors.transparent,
           ),
         isMobile
-            ? GestureDetector(
-                onVerticalDragEnd: (details) {
-                  if (isMobile) {
+            ? Expanded(
+                child: GestureDetector(
+                  onVerticalDragEnd: (details) {
                     if (details.primaryVelocity != null &&
                         details.primaryVelocity! > 150) {
                       setFullScreen(false);
                     }
-                  }
-                },
-                child: Expanded(
+                  },
                   child: Padding(
                     padding: const EdgeInsets.only(top: 40),
                     child: stack,
@@ -221,10 +221,7 @@ class FullHeightPlayer extends StatelessWidget {
                 ),
               )
             : Expanded(
-                child: Padding(
-                  padding: EdgeInsets.zero,
-                  child: stack,
-                ),
+                child: stack,
               ),
       ],
     );
