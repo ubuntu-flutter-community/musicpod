@@ -7,6 +7,7 @@ import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
+import 'package:window_manager/window_manager.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import 'app.dart';
@@ -22,6 +23,10 @@ import 'radio.dart';
 Future<void> main(List<String> args) async {
   if (!isMobile) {
     await YaruWindowTitleBar.ensureInitialized();
+    if (!Platform.isLinux) {
+      await windowManager.ensureInitialized();
+      WindowManager.instance.setMinimumSize(const Size(500, 700));
+    }
   }
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();

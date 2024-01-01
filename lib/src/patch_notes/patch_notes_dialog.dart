@@ -27,7 +27,7 @@ class PatchNotesDialog extends StatelessWidget {
           ),
           const Row(
             children: [
-              SponsorLink(),
+              Expanded(child: SponsorLink()),
             ],
           ),
         ],

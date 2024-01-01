@@ -1244,7 +1244,7 @@ packages:
     source: hosted
     version: "5.1.0"
   window_manager:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: window_manager
       sha256: dcc865277f26a7dad263a47d0e405d77e21f12cb71f30333a52710a408690bd7
