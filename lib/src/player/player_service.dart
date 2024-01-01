@@ -361,7 +361,11 @@ class PlayerService {
   Color? get color => _color;
 
   Future<void> _loadColor() async {
-    if (audio == null) return;
+    if (audio == null) {
+      _color = kCardColorDark;
+      return;
+    }
+
     if (audio?.path != null && audio?.pictureData != null) {
       final image = MemoryImage(
         audio!.pictureData!,

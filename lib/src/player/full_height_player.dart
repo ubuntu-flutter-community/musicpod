@@ -9,6 +9,7 @@ import '../../common.dart';
 import '../../data.dart';
 import '../../globals.dart';
 import '../../player.dart';
+import '../../theme_data_x.dart';
 import 'full_height_player_image.dart';
 import 'full_height_title_and_artist.dart';
 import 'up_next_bubble.dart';
@@ -235,13 +236,14 @@ class FullHeightPlayer extends StatelessWidget {
       return Stack(
         children: [
           Opacity(
-            opacity: 0.2,
+            opacity: theme.isLight ? 0.8 : 0.9,
             child: SizedBox(
               width: size.width,
               height: size.height,
               child: Blur(
                 blur: 20,
-                colorOpacity: 0.1,
+                colorOpacity: theme.isLight ? 0.6 : 0.7,
+                blurColor: theme.isLight ? Colors.white : Colors.black,
                 child: FullHeightPlayerImage(
                   audio: audio,
                   fit: BoxFit.cover,
