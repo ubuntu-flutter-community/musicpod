@@ -16,12 +16,14 @@ class FullHeightPlayerImage extends StatelessWidget {
     this.fit,
     this.height,
     this.width,
+    this.borderRadius,
   });
 
   final Audio? audio;
   final bool isOnline;
   final BoxFit? fit;
   final double? height, width;
+  final BorderRadiusGeometry? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +112,7 @@ class FullHeightPlayerImage extends StatelessWidget {
       height: height ?? fullHeightPlayerImageSize,
       width: width ?? fullHeightPlayerImageSize,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: borderRadius ?? BorderRadius.circular(10),
         child: image,
       ),
     );

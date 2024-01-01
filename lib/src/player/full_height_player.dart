@@ -243,8 +243,11 @@ class FullHeightPlayer extends StatelessWidget {
               child: Blur(
                 blur: 20,
                 colorOpacity: theme.isLight ? 0.6 : 0.7,
-                blurColor: theme.isLight ? Colors.white : Colors.black,
+                blurColor: theme.isLight
+                    ? Colors.white
+                    : theme.scaffoldBackgroundColor,
                 child: FullHeightPlayerImage(
+                  borderRadius: BorderRadius.zero,
                   audio: audio,
                   fit: BoxFit.cover,
                   height: size.height,
