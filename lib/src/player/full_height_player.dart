@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:popover/popover.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
@@ -11,8 +9,9 @@ import '../../common.dart';
 import '../../data.dart';
 import '../../globals.dart';
 import '../../player.dart';
-import '../../theme_data_x.dart';
+import 'blurred_full_height_player_image.dart';
 import 'full_height_player_image.dart';
+import 'full_height_player_top_controls.dart';
 import 'full_height_title_and_artist.dart';
 import 'up_next_bubble.dart';
 
@@ -35,7 +34,6 @@ class FullHeightPlayer extends StatelessWidget {
     required this.videoController,
     required this.isVideo,
     required this.isOnline,
-    required this.size,
   });
 
   final Audio? audio;
@@ -62,11 +60,10 @@ class FullHeightPlayer extends StatelessWidget {
   final bool isVideo;
   final bool isOnline;
 
-  final Size size;
-
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    final size = context.m.size;
     final active = audio?.path != null || isOnline;
     final activeControls = audio?.path != null || isOnline;
 
@@ -85,7 +82,7 @@ class FullHeightPlayer extends StatelessWidget {
     const sliderAndTime = PlayerTrack();
 
     final iconColor = isVideo ? Colors.white : theme.colorScheme.onSurface;
-    final stack = Stack(
+    final body = Stack(
       alignment: Alignment.topRight,
       children: [
         if (isVideo)
@@ -136,44 +133,18 @@ class FullHeightPlayer extends StatelessWidget {
               borderRadius: BorderRadius.circular(100),
               color: isVideo ? Colors.black.withOpacity(0.6) : null,
             ),
-            child: Wrap(
-              alignment: WrapAlignment.end,
-              spacing: 7.0,
-              children: [
-                LikeIconButton(
-                  audio: audio,
-                  liked: liked,
-                  isStarredStation: isStarredStation,
-                  removeStarredStation: removeStarredStation,
-                  addStarredStation: addStarredStation,
-                  removeLikedAudio: removeLikedAudio,
-                  addLikedAudio: addLikedAudio,
-                  color: iconColor,
-                ),
-                QueueButton(
-                  color: iconColor,
-                ),
-                ShareButton(
-                  audio: audio,
-                  active: activeControls,
-                  color: iconColor,
-                ),
-                VolumeSliderPopup(
-                  direction: PopoverDirection.bottom,
-                  color: iconColor,
-                ),
-                IconButton(
-                  icon: Icon(
-                    playerViewMode == PlayerViewMode.fullWindow
-                        ? Iconz().fullScreenExit
-                        : Iconz().fullScreen,
-                    color: iconColor,
-                  ),
-                  onPressed: () => setFullScreen(
-                    playerViewMode == PlayerViewMode.fullWindow ? false : true,
-                  ),
-                ),
-              ],
+            child: FullHeightPlayerTopControls(
+              audio: audio,
+              liked: liked,
+              isStarredStation: isStarredStation,
+              removeStarredStation: removeStarredStation,
+              addStarredStation: addStarredStation,
+              removeLikedAudio: removeLikedAudio,
+              addLikedAudio: addLikedAudio,
+              iconColor: iconColor,
+              activeControls: activeControls,
+              playerViewMode: playerViewMode,
+              setFullScreen: setFullScreen,
             ),
           ),
         ),
@@ -192,7 +163,7 @@ class FullHeightPlayer extends StatelessWidget {
       ],
     );
 
-    final column = Column(
+    final fullHeightPlayer = Column(
       children: [
         if (!isMobile)
           HeaderBar(
@@ -216,49 +187,31 @@ class FullHeightPlayer extends StatelessWidget {
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(top: 40),
-                    child: stack,
+                    child: body,
                   ),
                 ),
               )
             : Expanded(
-                child: stack,
+                child: body,
               ),
       ],
     );
 
     if ((audio?.imageUrl != null ||
-            audio?.albumArtUrl != null ||
-            audio?.pictureData != null) &&
-        audio?.audioType != AudioType.radio) {
+        audio?.albumArtUrl != null ||
+        audio?.pictureData != null)) {
       return Stack(
         children: [
-          Opacity(
-            opacity: theme.isLight ? 0.8 : 0.9,
-            child: SizedBox(
-              width: size.width,
-              height: size.height,
-              child: Blur(
-                blur: 20,
-                colorOpacity: theme.isLight ? 0.6 : 0.7,
-                blurColor: theme.isLight
-                    ? Colors.white
-                    : theme.scaffoldBackgroundColor,
-                child: FullHeightPlayerImage(
-                  borderRadius: BorderRadius.zero,
-                  audio: audio,
-                  fit: BoxFit.cover,
-                  height: size.height,
-                  width: size.width,
-                  isOnline: isOnline,
-                ),
-              ),
-            ),
+          BlurredFullHeightPlayerImage(
+            size: size,
+            audio: audio,
+            isOnline: isOnline,
           ),
-          column,
+          fullHeightPlayer,
         ],
       );
     } else {
-      return column;
+      return fullHeightPlayer;
     }
   }
 }

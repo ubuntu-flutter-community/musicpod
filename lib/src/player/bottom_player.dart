@@ -18,7 +18,6 @@ class BottomPlayer extends StatelessWidget {
     super.key,
     required this.setFullScreen,
     required this.audio,
-    required this.width,
     required this.playPrevious,
     required this.playNext,
     required this.liked,
@@ -34,7 +33,6 @@ class BottomPlayer extends StatelessWidget {
   });
 
   final Audio? audio;
-  final double width;
 
   final Future<void> Function() playPrevious;
   final Future<void> Function() playNext;
@@ -59,7 +57,7 @@ class BottomPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final veryNarrow = width < 700;
+    final veryNarrow = context.m.size.width < 700;
     final active = audio?.path != null || isOnline;
 
     final bottomPlayerImage = BottomPlayerImage(
