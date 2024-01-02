@@ -32,7 +32,12 @@ ThemeData m3Theme({
     colorScheme: colorScheme,
     splashFactory:
         Platform.isMacOS || Platform.isIOS ? NoSplash.splashFactory : null,
+    snackBarTheme: _createSnackBarThemeData(colorScheme),
   );
+}
+
+SnackBarThemeData _createSnackBarThemeData(ColorScheme scheme) {
+  return const SnackBarThemeData(behavior: SnackBarBehavior.floating);
 }
 
 Color? getSideBarColor(ThemeData theme) => theme.scaffoldBackgroundColor;
