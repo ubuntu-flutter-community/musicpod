@@ -55,8 +55,6 @@ class _PlayerViewState extends State<PlayerView> {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final size = context.m.size;
-    final width = size.width;
 
     final playerModel = context.read<PlayerModel>();
     final nextAudio = context.select((PlayerModel m) => m.nextAudio);
@@ -100,7 +98,6 @@ class _PlayerViewState extends State<PlayerView> {
         addLikedAudio: addLikedAudio,
         removeLikedAudio: removeLikedAudio,
         isOnline: widget.isOnline,
-        size: size,
       );
     } else {
       player = Column(
@@ -113,7 +110,6 @@ class _PlayerViewState extends State<PlayerView> {
             onTextTap: widget.onTextTap,
             setFullScreen: setFullScreen,
             audio: audio,
-            width: width,
             playPrevious: playPrevious,
             playNext: playNext,
             liked: liked,
