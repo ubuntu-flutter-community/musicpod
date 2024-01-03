@@ -3,11 +3,9 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:audio_service/audio_service.dart';
-import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:smtc_windows/smtc_windows.dart';
 
 import '../../constants.dart';
@@ -194,7 +192,6 @@ class PlayerService {
           );
     }
     _setMediaControlsMetaData(audio!);
-    _loadColor();
     _firstPlay = false;
   }
 
@@ -356,32 +353,6 @@ class PlayerService {
     _position = libraryService.getLastPosition.call(_audio?.url);
     _estimateNext();
     await play(newPosition: _position);
-  }
-
-  Color? _color;
-  Color? get color => _color;
-
-  Future<void> _loadColor() async {
-    if (audio == null) {
-      _color = kCardColorDark;
-      return;
-    }
-
-    if (audio?.path != null && audio?.pictureData != null) {
-      final image = MemoryImage(
-        audio!.pictureData!,
-      );
-      final generator = await PaletteGenerator.fromImageProvider(image);
-      _color = generator.dominantColor?.color;
-    } else {
-      if (audio?.imageUrl == null && audio?.albumArtUrl == null) return;
-
-      final image = NetworkImage(
-        audio!.imageUrl ?? audio!.albumArtUrl!,
-      );
-      final generator = await PaletteGenerator.fromImageProvider(image);
-      _color = generator.dominantColor?.color;
-    }
   }
 
   Future<void> _readPlayerState() async {
