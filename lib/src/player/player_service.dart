@@ -38,6 +38,7 @@ class PlayerService {
   StreamSubscription<Duration>? _positionSub;
   StreamSubscription<bool>? _isCompletedSub;
   StreamSubscription<double>? _volumeSub;
+  StreamSubscription<Tracks>? _tracksSub;
 
   final _queueController = StreamController<bool>.broadcast();
   Stream<bool> get queueChanged => _queueController.stream;
@@ -67,27 +68,15 @@ class PlayerService {
     if (value == null || value == _audio) return;
     _audio = value;
     libraryService.setLastAudio(value);
-    _setIsVideo();
-
     _audioController.add(true);
   }
 
   final _isVideoController = StreamController<bool>.broadcast();
   Stream<bool> get isVideoChanged => _isVideoController.stream;
-  void _setIsVideo() {
-    _isVideo = false;
-    for (var t in _videoTypes) {
-      if (audio?.url?.contains(t) == true) {
-        _isVideo = true;
-        break;
-      }
-    }
-  }
 
   bool? _isVideo;
   bool? get isVideo => _isVideo;
-  void setIsVideo(bool? value) {
-    if (value == _isVideo) return;
+  void _setIsVideo(bool? value) {
     _isVideo = value;
     _isVideoController.add(true);
   }
@@ -193,7 +182,9 @@ class PlayerService {
             ? Media(audio!.url!)
             : null;
     if (media == null) return;
-    player.open(media);
+    player.open(media).then((_) {
+      player.state.tracks;
+    });
     if (newPosition != null && _audio!.audioType != AudioType.radio) {
       player.setVolume(0).then(
             (_) => Future.delayed(const Duration(seconds: 3)).then(
@@ -256,6 +247,16 @@ class PlayerService {
     _volumeSub = player.stream.volume.listen((value) {
       _volume = value;
       _volumeController.add(true);
+    });
+
+    _tracksSub = player.stream.tracks.listen((tracks) {
+      _setIsVideo(false);
+      for (var track in tracks.video) {
+        if (track.fps != null && track.fps! > 1) {
+          _setIsVideo(true);
+          break;
+        }
+      }
     });
   }
 
@@ -393,12 +394,11 @@ class PlayerService {
       setDuration(playerState.$2);
     }
     if (playerState.$3 != null) {
-      _audio = playerState.$3;
+      _setAudio(playerState.$3);
 
       if (_audio != null) {
         await _setMediaControlsMetaData(audio!);
       }
-      _setIsVideo();
     }
   }
 
@@ -639,43 +639,7 @@ class PlayerService {
     await _durationSub?.cancel();
     await _isCompletedSub?.cancel();
     await _volumeSub?.cancel();
+    await _tracksSub?.cancel();
     await player.dispose();
   }
 }
-
-Set<String> _videoTypes = {
-  '.3g2',
-  '.3gp',
-  '.aaf',
-  '.asf',
-  '.avchd',
-  '.avi',
-  '.drc',
-  '.flv',
-  '.m2v',
-  '.m3u8',
-  '.m4p',
-  '.m4v',
-  '.mkv',
-  '.mng',
-  '.mov',
-  '.mp2',
-  '.mp4',
-  '.mpe',
-  '.mpeg',
-  '.mpg',
-  '.mpv',
-  '.mxf',
-  '.nsv',
-  '.ogg',
-  '.ogv',
-  '.qt',
-  '.rm',
-  '.rmvb',
-  '.roq',
-  '.svi',
-  '.vob',
-  '.webm',
-  '.wmv',
-  '.yuv',
-};
