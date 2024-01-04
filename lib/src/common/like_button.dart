@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../library.dart';
@@ -11,6 +12,7 @@ class LikeButton extends StatelessWidget {
   const LikeButton({
     super.key,
     required this.audio,
+    required this.selected,
     required this.playlistId,
     required this.insertIntoQueue,
     required this.libraryModel,
@@ -19,6 +21,7 @@ class LikeButton extends StatelessWidget {
 
   final String playlistId;
   final Audio audio;
+  final bool selected;
   final void Function()? insertIntoQueue;
 
   final LibraryModel libraryModel;
@@ -26,6 +29,7 @@ class LikeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.t;
     final lik = libraryModel.liked(audio);
 
     final heartButton = InkWell(
@@ -35,6 +39,8 @@ class LikeButton extends StatelessWidget {
           : libraryModel.addLikedAudio(audio),
       child: Iconz().getAnimatedHeartIcon(
         liked: lik,
+        color:
+            selected ? theme.colorScheme.primary : theme.colorScheme.onSurface,
       ),
     );
 

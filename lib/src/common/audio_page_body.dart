@@ -94,6 +94,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
   @override
   Widget build(BuildContext context) {
     final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
+    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
 
     final playerModel = context.read<PlayerModel>();
     final startPlaylist = playerModel.startPlaylist;
@@ -218,6 +219,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                     audio: download != null
                         ? audio.copyWith(path: download)
                         : audio,
+                    isPlayerPlaying: isPlaying,
                     selected: audioSelected,
                     pause: pause,
                     resume: resume,
@@ -234,6 +236,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   libraryModel: libraryModel,
                   playlistId: widget.pageId,
                   audio: audio,
+                  selected: audioSelected,
                   allowRemove: widget.audioPageType == AudioPageType.playlist,
                   insertIntoQueue: () => insertIntoQueue(audio),
                 );
@@ -249,6 +252,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   artistFlex: widget.artistFlex,
                   albumFlex: widget.albumFlex,
                   onTextTap: widget.onTextTap,
+                  isPlayerPlaying: isPlaying,
                   pause: pause,
                   startPlaylist: widget.audios == null
                       ? null

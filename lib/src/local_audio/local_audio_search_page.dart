@@ -175,6 +175,7 @@ class _Titles extends StatelessWidget {
               return AudioTile(
                 onTextTap: onTextTap,
                 showTrack: false,
+                isPlayerPlaying: isPlaying,
                 pause: pause,
                 startPlaylist: () => startPlaylist(
                   audios: titlesResult,

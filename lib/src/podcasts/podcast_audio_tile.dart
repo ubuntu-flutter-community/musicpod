@@ -23,6 +23,7 @@ class PodcastAudioTile extends StatelessWidget {
   const PodcastAudioTile({
     super.key,
     required this.audio,
+    required this.isPlayerPlaying,
     required this.selected,
     required this.pause,
     required this.resume,
@@ -37,6 +38,7 @@ class PodcastAudioTile extends StatelessWidget {
   });
 
   final Audio audio;
+  final bool isPlayerPlaying;
   final bool selected;
   final void Function() pause;
   final Future<void> Function() resume;
@@ -90,6 +92,7 @@ class PodcastAudioTile extends StatelessWidget {
                   selected: selected,
                   lastPosition: lastPosition,
                   audio: audio,
+                  isPlayerPlaying: isPlayerPlaying,
                   pause: pause,
                   resume: resume,
                   safeLastPosition: safeLastPosition,
