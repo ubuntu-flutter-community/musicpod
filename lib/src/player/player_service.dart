@@ -47,6 +47,8 @@ class PlayerService {
   void setQueue((String, List<Audio>) value) {
     if (value == _queue || value.$2.isEmpty) return;
     _queue = value;
+    libraryService.setQueue(_queue.$2);
+    libraryService.setQueueName(_queue.$1);
     _queueController.add(true);
   }
 
@@ -64,7 +66,7 @@ class PlayerService {
   Stream<bool> get audioChanged => _audioController.stream;
   Audio? _audio;
   Audio? get audio => _audio;
-  Future<void> _setAudio(Audio? value) async {
+  void _setAudio(Audio? value) async {
     if (value == null || value == _audio) return;
     _audio = value;
     libraryService.setLastAudio(value);
@@ -216,6 +218,7 @@ class PlayerService {
     await player.playOrPause();
   }
 
+  bool _initialized = false;
   Future<void> init() async {
     await _initMediaControl();
 
@@ -235,7 +238,9 @@ class PlayerService {
 
     _isCompletedSub = player.stream.completed.listen((value) async {
       if (value) {
-        await playNext();
+        if (_initialized) {
+          await playNext();
+        }
       }
     });
 
@@ -258,6 +263,8 @@ class PlayerService {
         }
       }
     });
+
+    _initialized = true;
   }
 
   Future<void> playNext() async {
@@ -387,16 +394,23 @@ class PlayerService {
   Future<void> _readPlayerState() async {
     final playerState = await libraryService.readPlayerState();
 
-    if (playerState.$1 != null) {
-      setPosition(playerState.$1!);
+    if (playerState?.position != null) {
+      setPosition(parseDuration(playerState!.position!));
     }
-    if (playerState.$2 != null) {
-      setDuration(playerState.$2);
+    if (playerState?.duration != null) {
+      setDuration(parseDuration(playerState!.duration!));
     }
-    if (playerState.$3 != null) {
-      _setAudio(playerState.$3);
+    if (playerState?.audio != null) {
+      _setAudio(playerState!.audio!);
 
       if (_audio != null) {
+        if (playerState.queue?.isNotEmpty == true &&
+            playerState.queueName?.isNotEmpty == true) {
+          setQueue((playerState.queueName!, playerState.queue!));
+        }
+
+        _estimateNext();
+
         await _setMediaControlsMetaData(audio!);
       }
     }

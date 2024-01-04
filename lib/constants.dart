@@ -100,6 +100,7 @@ const kPodcastsUpdates = 'podcastsupdates.json';
 const kStarredStationsFileName = 'starredStations.json';
 const kSettingsFileName = 'settings.json';
 const kLastPositionsFileName = 'lastPositions.json';
+const kPlayerStateFileName = 'playerstate.json';
 const kLocalAudioCacheFileName = 'localaudiocache.json';
 const kDownloads = 'downloads.json';
 const kFeedsWithDownloads = 'feedswithdownloads.json';

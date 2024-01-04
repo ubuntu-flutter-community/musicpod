@@ -223,8 +223,8 @@ Future<Map<String, String>> getSettings([
   }
 }
 
-Future<void> writeStringSet({
-  required Set<String> set,
+Future<void> writeStringIterable({
+  required Iterable<String> iterable,
   required String filename,
 }) async {
   final workingDir = await getWorkingDir();
@@ -232,20 +232,20 @@ Future<void> writeStringSet({
   if (!file.existsSync()) {
     file.create();
   }
-  await file.writeAsString(set.join('\n'));
+  await file.writeAsString(iterable.join('\n'));
 }
 
-Future<Set<String>> readStringSet({
+Future<Iterable<String>?> readStringIterable({
   required String filename,
 }) async {
   final workingDir = await getWorkingDir();
   final file = File(p.join(workingDir, filename));
 
-  if (!file.existsSync()) return Future.value(<String>{});
+  if (!file.existsSync()) return Future.value(null);
 
   final content = await file.readAsLines();
 
-  return Set.from(content);
+  return content;
 }
 
 Future<void> writeAudioMap(Map<String, Set<Audio>> map, String fileName) async {
@@ -256,7 +256,11 @@ Future<void> writeAudioMap(Map<String, Set<Audio>> map, String fileName) async {
     ),
   );
 
-  final jsonStr = jsonEncode(dynamicMap);
+  await writeJsonToFile(dynamicMap, fileName);
+}
+
+Future<void> writeJsonToFile(Map<String, dynamic> json, String fileName) async {
+  final jsonStr = jsonEncode(json);
 
   final workingDir = await getWorkingDir();
 

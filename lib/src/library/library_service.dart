@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:path/path.dart' as p;
 
 import '../../constants.dart';
 import '../../data.dart';
@@ -150,14 +151,14 @@ class LibraryService {
   void addFavTag(String name) {
     if (favTags.contains(name)) return;
     _favTags.add(name);
-    writeStringSet(set: _favTags, filename: kTagFavsFileName)
+    writeStringIterable(iterable: _favTags, filename: kTagFavsFileName)
         .then((_) => _favTagsController.add(true));
   }
 
   void removeFavTag(String name) {
     if (!favTags.contains(name)) return;
     _favTags.remove(name);
-    writeStringSet(set: _favTags, filename: kTagFavsFileName)
+    writeStringIterable(iterable: _favTags, filename: kTagFavsFileName)
         .then((_) => _favTagsController.add(true));
   }
 
@@ -266,8 +267,8 @@ class LibraryService {
     _feedsWithDownloads.add(feedUrl);
     writeStringMap(_downloads, kDownloads)
         .then(
-          (_) => writeStringSet(
-            set: _feedsWithDownloads,
+          (_) => writeStringIterable(
+            iterable: _feedsWithDownloads,
             filename: kFeedsWithDownloads,
           ),
         )
@@ -290,8 +291,8 @@ class LibraryService {
 
       writeStringMap(_downloads, kDownloads)
           .then(
-            (_) => writeStringSet(
-              set: _feedsWithDownloads,
+            (_) => writeStringIterable(
+              iterable: _feedsWithDownloads,
               filename: kFeedsWithDownloads,
             ),
           )
@@ -302,8 +303,8 @@ class LibraryService {
   void _removeFeedWithDownload(String feedUrl) {
     if (!_feedsWithDownloads.contains(feedUrl)) return;
     _feedsWithDownloads.remove(feedUrl);
-    writeStringSet(
-      set: _feedsWithDownloads,
+    writeStringIterable(
+      iterable: _feedsWithDownloads,
       filename: kFeedsWithDownloads,
     ).then((_) => _downloadsController.add(true));
   }
@@ -334,7 +335,7 @@ class LibraryService {
   void _addPodcastUpdate(String feedUrl) {
     if (_podcastUpdates?.contains(feedUrl) == true) return;
     _podcastUpdates?.add(feedUrl);
-    writeStringSet(set: _podcastUpdates!, filename: kPodcastsUpdates)
+    writeStringIterable(iterable: _podcastUpdates!, filename: kPodcastsUpdates)
         .then((_) => _updateController.add(true));
   }
 
@@ -347,7 +348,7 @@ class LibraryService {
   void removePodcastUpdate(String feedUrl) {
     if (_podcastUpdates?.isNotEmpty == false) return;
     _podcastUpdates?.remove(feedUrl);
-    writeStringSet(set: _podcastUpdates!, filename: kPodcastsUpdates)
+    writeStringIterable(iterable: _podcastUpdates!, filename: kPodcastsUpdates)
         .then((_) => _updateController.add(true));
   }
 
@@ -419,7 +420,9 @@ class LibraryService {
     _playlists = await readAudioMap(kPlaylistsFileName);
     _pinnedAlbums = await readAudioMap(kPinnedAlbumsFileName);
     _podcasts = await readAudioMap(kPodcastsFileName);
-    _podcastUpdates = await readStringSet(filename: kPodcastsUpdates);
+    _podcastUpdates = Set.from(
+      await readStringIterable(filename: kPodcastsUpdates) ?? <String>{},
+    );
     _podcastUpdates ??= {};
     _starredStations = await readAudioMap(kStarredStationsFileName);
     _lastPositions = (await getSettings(kLastPositionsFileName)).map(
@@ -428,10 +431,14 @@ class LibraryService {
     _likedAudios =
         (await readAudioMap(kLikedAudiosFileName)).entries.firstOrNull?.value ??
             <Audio>{};
-    _favTags = (await readStringSet(filename: kTagFavsFileName));
+    _favTags = Set.from(
+      (await readStringIterable(filename: kTagFavsFileName) ?? <String>{}),
+    );
     _downloadsDir = await getDownloadsDir();
     _downloads = await readStringMap(kDownloads);
-    _feedsWithDownloads = await readStringSet(filename: kFeedsWithDownloads);
+    _feedsWithDownloads = Set.from(
+      await readStringIterable(filename: kFeedsWithDownloads) ?? <String>{},
+    );
     _libraryInitialized = true;
   }
 
@@ -534,9 +541,15 @@ class LibraryService {
   }
 
   Future<void> writePlayerState() async {
-    await writeSetting(kLastPositionAsString, _position.toString());
-    await writeSetting(kLastDurationAsString, _duration.toString());
-    await writeSetting(kLastAudio, _lastAudio?.toJson());
+    final playerState = PlayerState(
+      audio: _lastAudio,
+      duration: _duration?.inMilliseconds.toString(),
+      position: _position?.inMilliseconds.toString(),
+      queue: _queue,
+      queueName: _queueName,
+    );
+
+    await writeJsonToFile(playerState.toMap(), kPlayerStateFileName);
   }
 
   Duration? _duration;
@@ -545,23 +558,25 @@ class LibraryService {
   void setPosition(Duration? position) => _position = position;
   Audio? _lastAudio;
   void setLastAudio(Audio? audio) => _lastAudio = audio;
+  String? _queueName;
+  List<Audio>? _queue;
+  void setQueueName(String? value) => _queueName = value;
+  void setQueue(List<Audio>? value) => _queue = value;
 
-  Future<(Duration?, Duration?, Audio?)> readPlayerState() async {
-    Duration? position, duration;
-    Audio? audio;
-    final positionAsString = await readSetting(kLastPositionAsString);
-    final durationAsString = await readSetting(kLastDurationAsString);
-    if (positionAsString != null) {
-      position = parseDuration(positionAsString);
-    }
-    if (durationAsString != null) {
-      duration = parseDuration(durationAsString);
-    }
-    final maybeAudio = await readSetting(kLastAudio);
-    if (maybeAudio != null) {
-      audio = Audio.fromJson(maybeAudio);
-    }
+  Future<PlayerState?> readPlayerState() async {
+    try {
+      final workingDir = await getWorkingDir();
+      final file = File(p.join(workingDir, kPlayerStateFileName));
 
-    return (position, duration, audio);
+      if (file.existsSync()) {
+        final jsonStr = await file.readAsString();
+
+        return PlayerState.fromJson(jsonStr);
+      } else {
+        return null;
+      }
+    } on Exception catch (_) {
+      return null;
+    }
   }
 }
