@@ -27,7 +27,6 @@ class LocalAudioSearchPage extends StatelessWidget {
     required this.removePinnedAlbum,
     required this.addPinnedAlbum,
     required this.isPlaying,
-    required this.play,
     required this.pause,
     required this.resume,
     this.currentAudio,
@@ -60,7 +59,6 @@ class LocalAudioSearchPage extends StatelessWidget {
 
   final bool isPlaying;
   final Audio? currentAudio;
-  final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
   final Future<void> Function() pause;
   final Future<void> Function() resume;
 
@@ -91,7 +89,7 @@ class LocalAudioSearchPage extends StatelessWidget {
             onTextTap: ({required audioType, required text}) => onTap(text),
             isPlaying: isPlaying,
             pause: pause,
-            play: play,
+            startPlaylist: startPlaylist,
             resume: resume,
             currentAudio: currentAudio,
             titlesResult: titlesResult!,
@@ -127,7 +125,7 @@ class _Titles extends StatelessWidget {
     this.onTextTap,
     required this.isPlaying,
     this.currentAudio,
-    required this.play,
+    required this.startPlaylist,
     required this.pause,
     required this.resume,
     required this.titlesResult,
@@ -140,7 +138,11 @@ class _Titles extends StatelessWidget {
 
   final bool isPlaying;
   final Audio? currentAudio;
-  final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
+  final Future<void> Function({
+    required Set<Audio> audios,
+    required String listName,
+    int? index,
+  }) startPlaylist;
   final Future<void> Function() pause;
   final Future<void> Function() resume;
   final Set<Audio> titlesResult;
@@ -166,8 +168,8 @@ class _Titles extends StatelessWidget {
           const SizedBox.shrink()
         else
           Column(
-            children: List.generate(titlesResult.take(5).length, (index) {
-              final audio = titlesResult.take(5).elementAt(index);
+            children: List.generate(titlesResult.length, (index) {
+              final audio = titlesResult.elementAt(index);
               final audioSelected = currentAudio == audio;
 
               return AudioTile(
@@ -175,7 +177,11 @@ class _Titles extends StatelessWidget {
                 showTrack: false,
                 isPlayerPlaying: isPlaying,
                 pause: pause,
-                play: play,
+                startPlaylist: () => startPlaylist(
+                  audios: titlesResult,
+                  listName: '$kSearchResult${DateTime.now().toString()}',
+                  index: index,
+                ),
                 resume: resume,
                 key: ValueKey(audio),
                 selected: audioSelected,

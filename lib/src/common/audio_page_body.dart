@@ -254,7 +254,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   onTextTap: widget.onTextTap,
                   isPlayerPlaying: isPlaying,
                   pause: pause,
-                  play: play,
                   startPlaylist: widget.audios == null
                       ? null
                       : () => startPlaylist(

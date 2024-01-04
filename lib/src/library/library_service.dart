@@ -543,10 +543,10 @@ class LibraryService {
   Future<void> writePlayerState() async {
     final playerState = PlayerState(
       audio: _lastAudio,
-      duration: _duration?.inMilliseconds.toString(),
-      position: _position?.inMilliseconds.toString(),
-      queue: _queue,
-      queueName: _queueName,
+      duration: _duration?.toString(),
+      position: _position?.toString(),
+      queue: _queue != null && _queue!.length < 200 ? _queue : null,
+      queueName: _queue != null && _queue!.length < 200 ? _queueName : null,
     );
 
     await writeJsonToFile(playerState.toMap(), kPlayerStateFileName);

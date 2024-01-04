@@ -66,8 +66,8 @@ class PlayerService {
   Stream<bool> get audioChanged => _audioController.stream;
   Audio? _audio;
   Audio? get audio => _audio;
-  void _setAudio(Audio? value) async {
-    if (value == null || value == _audio) return;
+  void _setAudio(Audio value) async {
+    if (value == _audio) return;
     _audio = value;
     libraryService.setLastAudio(value);
     _audioController.add(true);
@@ -163,21 +163,11 @@ class PlayerService {
 
   bool _firstPlay = true;
   Future<void> play({Duration? newPosition, Audio? newAudio}) async {
-    final currentIndex =
-        (audio == null || queue.$2.isEmpty || !queue.$2.contains(audio!))
-            ? 0
-            : queue.$2.indexOf(audio!);
     if (newAudio != null) {
       _setAudio(newAudio);
     }
     if (audio == null) return;
 
-    if (!queue.$2.contains(audio)) {
-      queue.$2.insert(currentIndex, audio!);
-      if (queue.$2.length > 1) {
-        nextAudio = queue.$2[1];
-      }
-    }
     Media? media = audio!.path != null
         ? Media('file://${audio!.path!}')
         : (audio!.url != null)
@@ -215,7 +205,7 @@ class PlayerService {
 
   Future<void> resume() async {
     if (audio == null) return;
-    await player.playOrPause();
+    await playOrPause();
   }
 
   bool _initialized = false;
@@ -270,7 +260,7 @@ class PlayerService {
   Future<void> playNext() async {
     safeLastPosition();
     if (!repeatSingle && nextAudio != null) {
-      _setAudio(nextAudio);
+      _setAudio(nextAudio!);
       _estimateNext();
     }
     await play();
@@ -341,7 +331,9 @@ class PlayerService {
         if (currentIndex == 0) {
           return;
         }
-        _setAudio(queue.$2.elementAt(currentIndex - 1));
+        final mightBePrevious = queue.$2.elementAtOrNull(currentIndex - 1);
+        if (mightBePrevious == null) return;
+        _setAudio(mightBePrevious);
         _estimateNext();
         await play();
       }
@@ -353,11 +345,17 @@ class PlayerService {
     required String listName,
     int? index,
   }) async {
-    if (listName == _queue.$1 && index != null) {
-      _setAudio(audios.elementAt(index));
+    if (listName == _queue.$1 &&
+        index != null &&
+        audios.elementAtOrNull(index) != null) {
+      _setAudio(audios.elementAtOrNull(index)!);
     } else {
       setQueue((listName, audios.toList()));
-      _setAudio(index != null ? audios.elementAt(index) : audios.first);
+      _setAudio(
+        (index != null && audios.elementAtOrNull(index) != null)
+            ? audios.elementAtOrNull(index)!
+            : audios.first,
+      );
     }
 
     _position = libraryService.getLastPosition.call(_audio?.url);

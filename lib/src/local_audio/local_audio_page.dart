@@ -100,7 +100,6 @@ class _LocalAudioPageState extends State<LocalAudioPage>
 
     final isPlaying = context.select((PlayerModel m) => m.isPlaying);
     final currentAudio = context.select((PlayerModel m) => m.audio);
-    final play = playerModel.play;
     final pause = playerModel.pause;
     final resume = playerModel.resume;
 
@@ -184,7 +183,6 @@ class _LocalAudioPageState extends State<LocalAudioPage>
         isPinnedAlbum: isPinnedAlbum,
         isPlaying: isPlaying,
         pause: pause,
-        play: play,
         resume: resume,
         removePinnedAlbum: removePinnedAlbum,
         startPlaylist: startPlaylist,
