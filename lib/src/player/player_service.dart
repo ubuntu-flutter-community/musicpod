@@ -394,25 +394,24 @@ class PlayerService {
   Future<void> _readPlayerState() async {
     final playerState = await libraryService.readPlayerState();
 
-    if (playerState?.position != null) {
-      setPosition(parseDuration(playerState!.position!));
-    }
-    if (playerState?.duration != null) {
-      setDuration(parseDuration(playerState!.duration!));
-    }
     if (playerState?.audio != null) {
       _setAudio(playerState!.audio!);
 
-      if (_audio != null) {
-        if (playerState.queue?.isNotEmpty == true &&
-            playerState.queueName?.isNotEmpty == true) {
-          setQueue((playerState.queueName!, playerState.queue!));
-        }
-
-        _estimateNext();
-
-        await _setMediaControlsMetaData(audio!);
+      if (playerState.duration != null) {
+        setDuration(parseDuration(playerState.duration!));
       }
+      if (playerState.position != null) {
+        setPosition(parseDuration(playerState.position!));
+      }
+
+      if (playerState.queue?.isNotEmpty == true &&
+          playerState.queueName?.isNotEmpty == true) {
+        setQueue((playerState.queueName!, playerState.queue!));
+      }
+
+      _estimateNext();
+
+      await _setMediaControlsMetaData(playerState.audio!);
     }
   }
 
