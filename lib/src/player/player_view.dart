@@ -8,6 +8,7 @@ import '../../data.dart';
 import '../../player.dart';
 import '../../theme_data_x.dart';
 import '../library/library_model.dart';
+import '../theme.dart';
 
 class PlayerView extends StatefulWidget {
   const PlayerView({
@@ -57,7 +58,11 @@ class _PlayerViewState extends State<PlayerView> {
 
     final playerModel = context.read<PlayerModel>();
     final nextAudio = context.select((PlayerModel m) => m.nextAudio);
-    final color = theme.isLight ? kCardColorLight : kCardColorDark;
+    final c = context.select((PlayerModel m) => m.color);
+    final color = getPlayerBg(
+      c,
+      theme.isLight ? kCardColorLight : kCardColorDark,
+    );
     final setFullScreen = playerModel.setFullScreen;
     final playPrevious = playerModel.playPrevious;
     final playNext = playerModel.playNext;

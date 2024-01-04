@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -119,6 +120,8 @@ class PlayerModel extends SafeChangeNotifier {
         listName: listName,
         index: index,
       );
+
+  Color? get color => service.color;
 
   bool _isUpNextExpanded = false;
   bool get isUpNextExpanded => _isUpNextExpanded;

@@ -43,6 +43,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/mpris_service
       ref: 3a4a721
+  palette_generator: ^0.3.3+2
   path: ^1.8.3
   path_provider: ^2.1.1
   podcast_search: ^0.6.0
