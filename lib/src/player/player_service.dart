@@ -208,7 +208,6 @@ class PlayerService {
     await playOrPause();
   }
 
-  bool _initialized = false;
   Future<void> init() async {
     await _initMediaControl();
 
@@ -228,9 +227,7 @@ class PlayerService {
 
     _isCompletedSub = player.stream.completed.listen((value) async {
       if (value) {
-        if (_initialized) {
-          await playNext();
-        }
+        await playNext();
       }
     });
 
@@ -253,8 +250,6 @@ class PlayerService {
         }
       }
     });
-
-    _initialized = true;
   }
 
   Future<void> playNext() async {
