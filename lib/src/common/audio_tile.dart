@@ -14,7 +14,6 @@ class AudioTile extends StatelessWidget {
     this.onLike,
     this.likeIcon,
     required this.isPlayerPlaying,
-    required this.play,
     required this.pause,
     required this.resume,
     this.onTextTap,
@@ -34,7 +33,6 @@ class AudioTile extends StatelessWidget {
   final void Function()? onLike;
   final Widget? likeIcon;
   final bool isPlayerPlaying;
-  final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
   final Future<void> Function() resume;
   final void Function()? startPlaylist;
   final void Function() pause;
@@ -66,11 +64,7 @@ class AudioTile extends StatelessWidget {
             resume();
           }
         } else {
-          if (startPlaylist != null) {
-            startPlaylist!();
-          } else {
-            play(newAudio: audio);
-          }
+          startPlaylist!();
         }
       },
       title: Row(

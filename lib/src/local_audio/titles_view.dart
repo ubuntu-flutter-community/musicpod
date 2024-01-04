@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
 import '../../utils.dart';
@@ -80,7 +81,7 @@ class _TitlesViewState extends State<TitlesView> {
       ),
       audios: _titles == null ? null : Set.from(_titles!),
       audioPageType: AudioPageType.immutable,
-      pageId: context.l10n.localAudio,
+      pageId: kLocalAudio,
       showAudioPageHeader: false,
       onTextTap: widget.onTextTap,
     );

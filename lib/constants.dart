@@ -100,10 +100,12 @@ const kPodcastsUpdates = 'podcastsupdates.json';
 const kStarredStationsFileName = 'starredStations.json';
 const kSettingsFileName = 'settings.json';
 const kLastPositionsFileName = 'lastPositions.json';
+const kPlayerStateFileName = 'playerstate.json';
 const kLocalAudioCacheFileName = 'localaudiocache.json';
 const kDownloads = 'downloads.json';
 const kFeedsWithDownloads = 'feedswithdownloads.json';
 const kLocalAudioCache = 'localAudioCache';
+const kLocalAudio = 'localAudio';
 const kUseLocalAudioCache = 'cacheSuggestionDisposed';
 const kCreateCacheLimit = 1000;
 const kDirectoryProperty = 'directory';
@@ -118,6 +120,7 @@ const kRadioIndex = 'radioIndex';
 const kPodcastIndex = 'podcastIndex';
 const kNeverShowImportFails = 'neverShowImportFails';
 const kLastCountryCode = 'lastCountryCode';
+const kSearchResult = 'searchResult';
 
 const shops = <String, String>{
   'https://us.7digital.com/': '7digital',
