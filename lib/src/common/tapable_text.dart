@@ -17,10 +17,7 @@ class TapAbleText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final style = TextStyle(
-      color: selected ? theme.colorScheme.primary : theme.colorScheme.onSurface,
-      fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-    );
+
     return Row(
       children: [
         Flexible(
@@ -31,7 +28,6 @@ class TapAbleText extends StatelessWidget {
             onTap: onTap == null ? null : () => onTap!(),
             child: Text(
               text,
-              style: style,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

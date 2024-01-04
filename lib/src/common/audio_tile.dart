@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../l10n.dart';
+import '../../player.dart';
 
 class AudioTile extends StatelessWidget {
   const AudioTile({
@@ -13,7 +14,6 @@ class AudioTile extends StatelessWidget {
     required this.audio,
     this.onLike,
     this.likeIcon,
-    required this.isPlayerPlaying,
     required this.pause,
     required this.resume,
     this.onTextTap,
@@ -32,7 +32,6 @@ class AudioTile extends StatelessWidget {
   final bool selected;
   final void Function()? onLike;
   final Widget? likeIcon;
-  final bool isPlayerPlaying;
   final Future<void> Function() resume;
   final void Function()? startPlaylist;
   final void Function() pause;
@@ -48,17 +47,17 @@ class AudioTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
-    final textStyle = TextStyle(
-      color: selected ? theme.colorScheme.primary : theme.colorScheme.onSurface,
-      fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-    );
+    bool? playing;
+    if (selected && showTrack) {
+      playing = context.select((PlayerModel m) => m.isPlaying);
+    }
 
     final listTile = ListTile(
+      selected: selected,
       contentPadding: kAudioTilePadding,
       onTap: () {
         if (selected) {
-          if (isPlayerPlaying) {
+          if (playing == true) {
             pause();
           } else {
             resume();
@@ -71,25 +70,34 @@ class AudioTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (showTrack)
-            Padding(
-              padding: kAudioTileTrackPadding,
-              child: Text(
-                trackLabel ??
-                    (audio.trackNumber != null
-                        ? audio.trackNumber!.toString().padLeft(2, '0')
-                        : '00'),
-                style: textStyle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+            playing == true
+                ? const Padding(
+                    padding: EdgeInsets.only(right: 15, left: 0),
+                    child: SizedBox(
+                      height: 26,
+                      width: 26,
+                      child: MusicIndicator(
+                        thickness: 2,
+                      ),
+                    ),
+                  )
+                : Padding(
+                    padding: kAudioTileTrackPadding,
+                    child: Text(
+                      trackLabel ??
+                          (audio.trackNumber != null
+                              ? audio.trackNumber!.toString().padLeft(2, '0')
+                              : '00'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
           Expanded(
             flex: titleFlex,
             child: Padding(
               padding: kAudioTileSpacing,
               child: Text(
                 audio.title ?? context.l10n.unknown,
-                style: textStyle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
