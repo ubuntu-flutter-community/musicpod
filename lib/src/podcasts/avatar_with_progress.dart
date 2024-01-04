@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../player.dart';
 import '../../theme.dart';
 import 'audio_progress.dart';
 
@@ -12,7 +14,6 @@ class AvatarWithProgress extends StatelessWidget {
     required this.selected,
     required this.lastPosition,
     required this.audio,
-    required this.isPlayerPlaying,
     required this.pause,
     required this.resume,
     required this.safeLastPosition,
@@ -23,7 +24,6 @@ class AvatarWithProgress extends StatelessWidget {
   final bool selected;
   final Duration? lastPosition;
   final Audio audio;
-  final bool isPlayerPlaying;
   final void Function() pause;
   final Future<void> Function() resume;
   final void Function() safeLastPosition;
@@ -33,6 +33,10 @@ class AvatarWithProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    bool? playing;
+    if (selected) {
+      playing = context.select((PlayerModel m) => m.isPlaying);
+    }
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -49,7 +53,7 @@ class AvatarWithProgress extends StatelessWidget {
               ? theme.colorScheme.primary.withOpacity(0.08)
               : theme.colorScheme.onSurface.withOpacity(0.09),
           child: IconButton(
-            icon: (isPlayerPlaying && selected)
+            icon: (playing == true && selected)
                 ? Icon(
                     Iconz().pause,
                   )
@@ -61,7 +65,7 @@ class AvatarWithProgress extends StatelessWidget {
                   ),
             onPressed: () {
               if (selected) {
-                if (isPlayerPlaying) {
+                if (playing == true) {
                   pause();
                 } else {
                   resume();
