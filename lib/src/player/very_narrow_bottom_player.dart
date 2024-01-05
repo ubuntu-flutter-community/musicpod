@@ -31,6 +31,7 @@ class VeryNarrowBottomPlayer extends StatelessWidget {
         height: kBottomPlayerHeight,
         child: Column(
           children: [
+            track,
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -52,7 +53,6 @@ class VeryNarrowBottomPlayer extends StatelessWidget {
                 ],
               ),
             ),
-            track,
           ],
         ),
       ),

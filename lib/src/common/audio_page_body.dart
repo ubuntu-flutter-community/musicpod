@@ -112,8 +112,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
 
     final libraryModel = context.read<LibraryModel>();
 
-    final sortedAudios = widget.audios?.toList() ?? [];
-
     final audioControlPanel = Padding(
       padding: const EdgeInsets.only(
         top: 10,
@@ -132,14 +130,16 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   listName: widget.pageId,
                 ),
         controlButton: widget.controlPanelButton,
-        audios: sortedAudios.toSet(),
+        audios: widget.audios ?? {},
       ),
     );
 
     final audioPageHeader = AudioPageHeader(
-      title: widget.headerTitle ?? sortedAudios.firstOrNull?.album ?? '',
+      title: widget.headerTitle ??
+          widget.audios?.firstOrNull?.album ??
+          widget.pageId,
       description:
-          widget.headerDescription ?? sortedAudios.firstOrNull?.description,
+          widget.headerDescription ?? widget.audios?.firstOrNull?.description,
       image: widget.image,
       subTitle: widget.headerSubTitle,
       label: widget.headerLabel,
@@ -199,8 +199,8 @@ class _AudioPageBodyState extends State<AudioPageBody> {
             padding: const EdgeInsets.only(bottom: 20),
             child: Column(
               children:
-                  List.generate(sortedAudios.take(_amount).length, (index) {
-                final audio = sortedAudios.elementAt(index);
+                  List.generate(widget.audios!.take(_amount).length, (index) {
+                final audio = widget.audios!.elementAt(index);
                 final audioSelected = currentAudio == audio;
                 final download = libraryModel.getDownload(audio.url);
 
