@@ -55,8 +55,7 @@ class MasterDetailPage extends StatelessWidget {
           final item = masterItems[index];
 
           return MasterTile(
-            audios: item.content.$2,
-            pageId: item.content.$1,
+            pageId: item.pageId,
             libraryModel: libraryModel,
             selected: selected,
             title: item.titleBuilder(context),

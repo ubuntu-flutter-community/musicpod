@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../../constants.dart';
 import '../../data.dart';
 import 'library_service.dart';
 
@@ -98,6 +99,17 @@ class LibraryModel extends SafeChangeNotifier {
         playlistsLength +
         pinnedAlbumsLength +
         kFixedListAmount;
+  }
+
+  Set<Audio>? getAudiosById(String pageId) {
+    if (pageId == kLikedAudiosPageId) {
+      return likedAudios;
+    } else {
+      return playlists[pageId] ??
+          pinnedAlbums[pageId] ??
+          podcasts[pageId] ??
+          starredStations[pageId];
+    }
   }
 
   //

@@ -92,7 +92,6 @@ const kAudioQueueThreshHold = 100;
 const kMainPageIconPadding = EdgeInsets.only(right: 4.0);
 
 const kLikedAudiosFileName = 'likedAudios.json';
-const kLikedAudios = 'likedAudios';
 const kTagFavsFileName = 'tagFavs.json';
 const kLastFav = 'lastFav';
 const kPlaylistsFileName = 'playlists.json';
@@ -107,7 +106,6 @@ const kLocalAudioCacheFileName = 'localaudiocache.json';
 const kDownloads = 'downloads.json';
 const kFeedsWithDownloads = 'feedswithdownloads.json';
 const kLocalAudioCache = 'localAudioCache';
-const kLocalAudio = 'localAudio';
 const kUseLocalAudioCache = 'cacheSuggestionDisposed';
 const kCreateCacheLimit = 1000;
 const kDirectoryProperty = 'directory';
@@ -123,9 +121,11 @@ const kPodcastIndex = 'podcastIndex';
 const kNeverShowImportFails = 'neverShowImportFails';
 const kLastCountryCode = 'lastCountryCode';
 const kSearchResult = 'searchResult';
-const kPodcasts = 'podcasts';
-const kRadio = 'radio';
-const kNewPlaylist = 'newPlaylist';
+const kLocalAudioPageId = 'localAudio';
+const kPodcastsPageId = 'podcasts';
+const kRadioPageId = 'radio';
+const kNewPlaylistPageId = 'newPlaylist';
+const kLikedAudiosPageId = 'likedAudios';
 
 const shops = <String, String>{
   'https://us.7digital.com/': '7digital',
