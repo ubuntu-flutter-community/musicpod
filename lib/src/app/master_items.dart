@@ -27,7 +27,7 @@ List<MasterItem> createMasterItems({
       iconBuilder: (context, selected) => LocalAudioPageIcon(
         selected: selected,
       ),
-      content: (kLocalAudio, {}),
+      pageId: kLocalAudioPageId,
     ),
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.radio),
@@ -39,7 +39,7 @@ List<MasterItem> createMasterItems({
       iconBuilder: (context, selected) => RadioPageIcon(
         selected: selected,
       ),
-      content: (kRadio, {}),
+      pageId: kRadioPageId,
     ),
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.podcasts),
@@ -52,17 +52,17 @@ List<MasterItem> createMasterItems({
       iconBuilder: (context, selected) => PodcastsPageIcon(
         selected: selected,
       ),
-      content: (kPodcasts, {}),
+      pageId: kPodcastsPageId,
     ),
     MasterItem(
       iconBuilder: (context, selected) => Icon(Iconz().plus),
       titleBuilder: (context) => Text(context.l10n.playlistDialogTitleNew),
       pageBuilder: (context) => const SizedBox.shrink(),
-      content: (kNewPlaylist, {}),
+      pageId: kNewPlaylistPageId,
     ),
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.likedSongs),
-      content: (kLikedAudios, libraryModel.likedAudios),
+      pageId: kLikedAudiosPageId,
       pageBuilder: (context) => LikedAudioPage(
         onTextTap: onTextTap,
         likedLocalAudios: libraryModel.likedAudios,
@@ -75,7 +75,7 @@ List<MasterItem> createMasterItems({
       MasterItem(
         titleBuilder: (context) => Text(playlist.key),
         subtitleBuilder: (context) => Text(context.l10n.playlist),
-        content: (playlist.key, playlist.value),
+        pageId: playlist.key,
         pageBuilder: (context) => PlaylistPage(
           onTextTap: onTextTap,
           playlist: playlist,
@@ -99,7 +99,7 @@ List<MasterItem> createMasterItems({
         subtitleBuilder: (context) => Text(
           podcast.value.firstOrNull?.artist ?? context.l10n.podcast,
         ),
-        content: (podcast.key, podcast.value),
+        pageId: podcast.key,
         pageBuilder: (context) => PodcastPage(
           pageId: podcast.key,
           title: podcast.value.firstOrNull?.album ??
@@ -125,7 +125,7 @@ List<MasterItem> createMasterItems({
         ),
         subtitleBuilder: (context) =>
             Text(album.value.firstOrNull?.artist ?? context.l10n.album),
-        content: (album.key, album.value),
+        pageId: album.key,
         pageBuilder: (context) => AlbumPage(
           onTextTap: onTextTap,
           album: album.value,
@@ -145,7 +145,7 @@ List<MasterItem> createMasterItems({
         subtitleBuilder: (context) {
           return Text(context.l10n.station);
         },
-        content: (station.key, station.value),
+        pageId: station.key,
         pageBuilder: (context) => isOnline
             ? StationPage(
                 isStarred: true,

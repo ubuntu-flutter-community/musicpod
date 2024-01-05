@@ -83,7 +83,7 @@ class LibraryService {
   void addLikedAudio(Audio audio, [bool notify = true]) {
     _likedAudios.add(audio);
     if (notify) {
-      writeAudioMap({kLikedAudios: _likedAudios}, kLikedAudiosFileName)
+      writeAudioMap({kLikedAudiosPageId: _likedAudios}, kLikedAudiosFileName)
           .then((value) => _likedAudiosController.add(true));
     }
   }
@@ -92,7 +92,7 @@ class LibraryService {
     for (var audio in audios) {
       addLikedAudio(audio, false);
     }
-    writeAudioMap({kLikedAudios: _likedAudios}, kLikedAudiosFileName)
+    writeAudioMap({kLikedAudiosPageId: _likedAudios}, kLikedAudiosFileName)
         .then((value) => _likedAudiosController.add(true));
   }
 
@@ -103,7 +103,7 @@ class LibraryService {
   void removeLikedAudio(Audio audio, [bool notify = true]) {
     _likedAudios.remove(audio);
     if (notify) {
-      writeAudioMap({kLikedAudios: _likedAudios}, kLikedAudiosFileName)
+      writeAudioMap({kLikedAudiosPageId: _likedAudios}, kLikedAudiosFileName)
           .then((value) => _likedAudiosController.add(true));
     }
   }
@@ -112,7 +112,7 @@ class LibraryService {
     for (var audio in audios) {
       removeLikedAudio(audio, false);
     }
-    writeAudioMap({kLikedAudios: _likedAudios}, kLikedAudiosFileName)
+    writeAudioMap({kLikedAudiosPageId: _likedAudios}, kLikedAudiosFileName)
         .then((value) => _likedAudiosController.add(true));
   }
 

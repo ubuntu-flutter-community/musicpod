@@ -81,7 +81,7 @@ class _TitlesViewState extends State<TitlesView> {
       ),
       audios: _titles == null ? null : Set.from(_titles!),
       audioPageType: AudioPageType.immutable,
-      pageId: kLocalAudio,
+      pageId: kLocalAudioPageId,
       showAudioPageHeader: false,
       onTextTap: widget.onTextTap,
     );

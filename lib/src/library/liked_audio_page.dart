@@ -47,7 +47,7 @@ class LikedAudioPage extends StatelessWidget {
       noResultIcon: const AnimatedEmoji(AnimatedEmojis.twoHearts),
       audios: likedLocalAudios ?? {},
       audioPageType: AudioPageType.likedAudio,
-      pageId: kLikedAudios,
+      pageId: kLikedAudiosPageId,
       title: Text(context.l10n.likedSongs),
       headerTitle: context.l10n.likedSongs,
       headerSubtile: context.l10n.likedSongsSubtitle,
