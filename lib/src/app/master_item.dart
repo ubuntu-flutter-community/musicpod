@@ -8,12 +8,13 @@ class MasterItem {
     this.subtitleBuilder,
     required this.pageBuilder,
     this.iconBuilder,
-    this.content,
+    required this.content,
   });
 
   final WidgetBuilder titleBuilder;
   final WidgetBuilder? subtitleBuilder;
   final WidgetBuilder pageBuilder;
   final Widget Function(BuildContext context, bool selected)? iconBuilder;
-  final (String, Set<Audio>)? content;
+  // TODO: lookup Set for pageID instead of copying it
+  final (String, Set<Audio>) content;
 }

@@ -32,14 +32,6 @@ class PlayerModel extends SafeChangeNotifier {
   List<Audio> get queue => service.queue.$2;
   MpvMetaData? get mpvMetaData => service.mpvMetaData;
 
-  bool? _fullScreen;
-  bool? get fullScreen => _fullScreen;
-  void setFullScreen(bool? value) {
-    if (value == null || value == _fullScreen) return;
-    _fullScreen = value;
-    notifyListeners();
-  }
-
   Audio? get audio => service.audio;
 
   bool? get isVideo => service.isVideo;

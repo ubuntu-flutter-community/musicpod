@@ -6,6 +6,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
@@ -236,6 +237,9 @@ class PodcastsPageIcon extends StatelessWidget {
       );
     }
 
-    return selected ? Icon(Iconz().podcastFilled) : Icon(Iconz().podcast);
+    return Padding(
+      padding: kMainPageIconPadding,
+      child: selected ? Icon(Iconz().podcastFilled) : Icon(Iconz().podcast),
+    );
   }
 }

@@ -324,6 +324,9 @@ class RadioPageIcon extends StatelessWidget {
       );
     }
 
-    return selected ? Icon(Iconz().radioFilled) : Icon(Iconz().radio);
+    return Padding(
+      padding: kMainPageIconPadding,
+      child: selected ? Icon(Iconz().radioFilled) : Icon(Iconz().radio),
+    );
   }
 }

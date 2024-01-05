@@ -27,6 +27,7 @@ List<MasterItem> createMasterItems({
       iconBuilder: (context, selected) => LocalAudioPageIcon(
         selected: selected,
       ),
+      content: (kLocalAudio, {}),
     ),
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.radio),
@@ -38,6 +39,7 @@ List<MasterItem> createMasterItems({
       iconBuilder: (context, selected) => RadioPageIcon(
         selected: selected,
       ),
+      content: (kRadio, {}),
     ),
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.podcasts),
@@ -50,29 +52,13 @@ List<MasterItem> createMasterItems({
       iconBuilder: (context, selected) => PodcastsPageIcon(
         selected: selected,
       ),
-    ),
-    MasterItem(
-      titleBuilder: (context) => const SpacedDivider(
-        top: 10,
-        bottom: 10,
-        right: 0,
-        left: 0,
-      ),
-      pageBuilder: (context) => const SizedBox.shrink(),
+      content: (kPodcasts, {}),
     ),
     MasterItem(
       iconBuilder: (context, selected) => Icon(Iconz().plus),
       titleBuilder: (context) => Text(context.l10n.playlistDialogTitleNew),
       pageBuilder: (context) => const SizedBox.shrink(),
-    ),
-    MasterItem(
-      titleBuilder: (context) => const SpacedDivider(
-        top: 10,
-        bottom: 10,
-        right: 0,
-        left: 0,
-      ),
-      pageBuilder: (context) => const SizedBox.shrink(),
+      content: (kNewPlaylist, {}),
     ),
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.likedSongs),
