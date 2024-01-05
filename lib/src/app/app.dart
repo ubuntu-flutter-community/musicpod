@@ -131,7 +131,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     final playerToTheRight = context.m.size.width > 1500;
 
     // Connectivity
-    final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
+    final isOnline = context.watch<ConnectivityNotifier>().isOnline;
 
     // Local Audio
     final localAudioModel = context.read<LocalAudioModel>();

@@ -81,7 +81,8 @@ class BottomPlayer extends StatelessWidget {
     );
 
     final track = PlayerTrack(
-      superNarrow: veryNarrow,
+      veryNarrow: veryNarrow,
+      active: active,
     );
 
     if (veryNarrow) {
