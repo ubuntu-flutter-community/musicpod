@@ -57,13 +57,14 @@ class _PlayerViewState extends State<PlayerView> {
     final theme = context.t;
 
     final playerModel = context.read<PlayerModel>();
+    final appModel = context.read<AppModel>();
     final nextAudio = context.select((PlayerModel m) => m.nextAudio);
     final c = context.select((PlayerModel m) => m.color);
     final color = getPlayerBg(
       c,
       theme.isLight ? kCardColorLight : kCardColorDark,
     );
-    final setFullScreen = playerModel.setFullScreen;
+    final setFullScreen = appModel.setFullScreen;
     final playPrevious = playerModel.playPrevious;
     final playNext = playerModel.playNext;
     final audio = context.select((PlayerModel m) => m.audio);

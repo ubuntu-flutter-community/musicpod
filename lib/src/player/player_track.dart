@@ -75,9 +75,13 @@ class PlayerTrack extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             RepaintBoundary(
-              child: Text(
-                formatTime(position ?? Duration.zero),
-                style: textStyle,
+              child: SizedBox(
+                width: 40,
+                height: 15,
+                child: Text(
+                  formatTime(position ?? Duration.zero),
+                  style: textStyle,
+                ),
               ),
             ),
           ],
@@ -92,9 +96,13 @@ class PlayerTrack extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             RepaintBoundary(
-              child: Text(
-                formatTime(duration ?? Duration.zero),
-                style: textStyle,
+              child: SizedBox(
+                width: 40,
+                height: 15,
+                child: Text(
+                  formatTime(duration ?? Duration.zero),
+                  style: textStyle,
+                ),
               ),
             ),
           ],

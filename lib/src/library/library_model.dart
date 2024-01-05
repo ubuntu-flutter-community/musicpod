@@ -5,7 +5,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import '../../data.dart';
 import 'library_service.dart';
 
-const fix = 7;
+const kFixedListAmount = 5; // local, radio, podcasts, newplaylist, favs
 
 class LibraryModel extends SafeChangeNotifier {
   LibraryModel(this._service);
@@ -33,7 +33,7 @@ class LibraryModel extends SafeChangeNotifier {
 
   Future<void> init() async {
     if (_service.appIndex != null &&
-        totalListAmount - 1 >= _service.appIndex!) {
+        _totalListAmount - 1 >= _service.appIndex!) {
       _index = _service.appIndex;
     }
 
@@ -92,12 +92,12 @@ class LibraryModel extends SafeChangeNotifier {
     super.dispose();
   }
 
-  int get totalListAmount {
+  int get _totalListAmount {
     return starredStationsLength +
         podcastsLength +
         playlistsLength +
         pinnedAlbumsLength +
-        fix;
+        kFixedListAmount;
   }
 
   //
@@ -233,7 +233,7 @@ class LibraryModel extends SafeChangeNotifier {
     final playlist = getPlaylistById(id);
     if (playlist == null) return null;
     final allPlaylists = playlists.entries.map((e) => e.value).toList();
-    return fix + allPlaylists.indexOf(playlist);
+    return kFixedListAmount + allPlaylists.indexOf(playlist);
   }
 
   int? get localAudioindex => _service.localAudioIndex;

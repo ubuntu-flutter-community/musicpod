@@ -89,6 +89,8 @@ const kCardColorNeutral = Color.fromARGB(255, 133, 133, 133);
 
 const kAudioQueueThreshHold = 100;
 
+const kMainPageIconPadding = EdgeInsets.only(right: 4.0);
+
 const kLikedAudiosFileName = 'likedAudios.json';
 const kLikedAudios = 'likedAudios';
 const kTagFavsFileName = 'tagFavs.json';
@@ -121,6 +123,9 @@ const kPodcastIndex = 'podcastIndex';
 const kNeverShowImportFails = 'neverShowImportFails';
 const kLastCountryCode = 'lastCountryCode';
 const kSearchResult = 'searchResult';
+const kPodcasts = 'podcasts';
+const kRadio = 'radio';
+const kNewPlaylist = 'newPlaylist';
 
 const shops = <String, String>{
   'https://us.7digital.com/': '7digital',

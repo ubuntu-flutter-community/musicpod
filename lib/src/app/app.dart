@@ -142,8 +142,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     // Radio
     final radioModel = context.read<RadioModel>();
 
-    // Player
-    final isFullScreen = context.select((PlayerModel m) => m.fullScreen);
+    // AppModel
+    final isFullScreen = context.select((AppModel m) => m.fullScreen);
 
     // Library
     final libraryModel = context.watch<LibraryModel>();
@@ -180,7 +180,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
     final yaruMasterDetailPage = MasterDetailPage(
       setIndex: libraryModel.setIndex,
-      totalListAmount: libraryModel.totalListAmount,
       index: libraryModel.index,
       masterItems: createMasterItems(
         libraryModel: libraryModel,
