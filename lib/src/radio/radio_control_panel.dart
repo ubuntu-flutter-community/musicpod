@@ -68,7 +68,7 @@ class RadioControlPanel extends StatelessWidget {
             },
           ),
           CountryPopup(
-            value: tag != null ? null : country,
+            value: tag != null ? Country.none : country,
             onSelected: (country) {
               setCountry(country);
               loadStationsByCountry();
