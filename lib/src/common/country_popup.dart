@@ -1,11 +1,10 @@
+import 'package:collection/collection.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:podcast_search/podcast_search.dart';
+
 import '../../build_context_x.dart';
 import '../../common.dart';
-import '../../string_x.dart';
-import 'package:podcast_search/podcast_search.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
-
-import '../l10n/l10n.dart';
 
 class CountryPopup extends StatelessWidget {
   const CountryPopup({
@@ -24,32 +23,25 @@ class CountryPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final buttonStyle = TextButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6),
+
+    return CountryCodePicker(
+      backgroundColor: theme.dialogBackgroundColor,
+      dialogBackgroundColor: theme.dialogBackgroundColor,
+      barrierColor: Colors.transparent,
+      onChanged: (value) => onSelected?.call(
+        Country.values.firstWhereOrNull(
+              (e) => e.code.toLowerCase() == value.code?.toLowerCase(),
+            ) ??
+            Country.none,
       ),
-    );
-    final fallBackTextStyle =
-        theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
-    return YaruPopupMenuButton<Country>(
-      icon: const DropDownArrow(),
-      style: buttonStyle,
-      onSelected: onSelected,
-      initialValue: value,
-      child: Text(
-        '${context.l10n.country}: ${value?.name.capitalize().camelToSentence() ?? context.l10n.all}',
-        style: textStyle ?? fallBackTextStyle,
-      ),
-      itemBuilder: (context) {
-        return [
-          for (final c
-              in countries ?? Country.values.where((c) => c != Country.none))
-            PopupMenuItem(
-              value: c,
-              child: Text(c.name.capitalize().camelToSentence()),
-            ),
-        ];
-      },
+      initialSelection: value?.code,
+      showCountryOnly: true,
+      dialogSize: const Size(500, 500),
+      closeIcon: Icon(Iconz().close),
+      showOnlyCountryWhenClosed: true,
+      alignLeft: false,
+      padding: EdgeInsets.zero,
+      flagWidth: 20,
     );
   }
 }

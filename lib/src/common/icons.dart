@@ -263,6 +263,11 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.ellipsis
           : Icons.more_horiz;
+  IconData? get close => yaruStyled
+      ? YaruIcons.window_close
+      : appleStyled
+          ? CupertinoIcons.clear
+          : Icons.clear;
 
   Widget getAnimatedStar(bool isStarred, [Color? color]) {
     if (yaruStyled) {
