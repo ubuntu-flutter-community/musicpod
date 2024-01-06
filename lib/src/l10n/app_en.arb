@@ -149,5 +149,6 @@
     "addedTo": "Added to",
     "addToPlaylist": "Add to playlist",
     "open": "Open",
-    "removeFrom": "Remove from"
+    "removeFrom": "Remove from",
+    "noCountryFound": "No country can be found with this name. You can also use phone prefixes such as +49"
 }
