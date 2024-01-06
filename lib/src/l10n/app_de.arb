@@ -149,5 +149,6 @@
     "addedTo": "Hinzugefügt zu",
     "addToPlaylist": "Zu Wiedergabeliste hinzufügen",
     "open": "Öffnen",
-    "removeFrom": "Entferne aus"
+    "removeFrom": "Entferne aus",
+    "noCountryFound": "Es konnte kein Land mit diesem Namen gefunden werden. Du kannst auch mit Ländervorwahlen suchen wie +49"
 }
