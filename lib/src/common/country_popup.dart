@@ -1,12 +1,11 @@
-import 'package:animated_emoji/animated_emoji.dart';
-import 'package:collection/collection.dart';
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:podcast_search/podcast_search.dart';
-
 import '../../build_context_x.dart';
 import '../../common.dart';
-import '../../l10n.dart';
+import '../../string_x.dart';
+import 'package:podcast_search/podcast_search.dart';
+import 'package:yaru_widgets/yaru_widgets.dart';
+
+import '../l10n/l10n.dart';
 
 class CountryPopup extends StatelessWidget {
   const CountryPopup({
@@ -25,47 +24,32 @@ class CountryPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-
-    return CountryCodePicker(
-      backgroundColor: theme.dialogBackgroundColor,
-      dialogBackgroundColor: theme.dialogBackgroundColor,
-      barrierColor: Colors.black.withOpacity(0.5),
-      onChanged: (value) => onSelected?.call(
-        Country.values.firstWhereOrNull(
-              (e) => e.code.toLowerCase() == value.code?.toLowerCase(),
-            ) ??
-            Country.none,
+    final buttonStyle = TextButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(6),
       ),
-      initialSelection: value?.code,
-      searchDecoration: InputDecoration(
-        prefixIcon: Icon(Iconz().search),
+    );
+    final fallBackTextStyle =
+        theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
+    return YaruPopupMenuButton<Country>(
+      icon: const DropDownArrow(),
+      style: buttonStyle,
+      onSelected: onSelected,
+      initialValue: value,
+      child: Text(
+        '${context.l10n.country}: ${value?.name.capitalize().camelToSentence() ?? context.l10n.all}',
+        style: textStyle ?? fallBackTextStyle,
       ),
-      emptySearchBuilder: (context) => Padding(
-        padding: const EdgeInsets.only(top: 100),
-        child: NoSearchResultPage(
-          message: Text(
-            context.l10n.noCountryFound,
-            style: theme.textTheme.bodyMedium,
-          ),
-          icons: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AnimatedEmoji(AnimatedEmojis.xEyes),
-              SizedBox(
-                width: 5,
-              ),
-              AnimatedEmoji(AnimatedEmojis.globeShowingEuropeAfrica),
-            ],
-          ),
-        ),
-      ),
-      showCountryOnly: true,
-      dialogSize: const Size(500, 500),
-      closeIcon: Icon(Iconz().close),
-      showOnlyCountryWhenClosed: true,
-      alignLeft: false,
-      padding: EdgeInsets.zero,
-      flagWidth: 20,
+      itemBuilder: (context) {
+        return [
+          for (final c
+              in countries ?? Country.values.where((c) => c != Country.none))
+            PopupMenuItem(
+              value: c,
+              child: Text(c.name.capitalize().camelToSentence()),
+            ),
+        ];
+      },
     );
   }
 }

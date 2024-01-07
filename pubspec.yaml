@@ -16,7 +16,6 @@ dependencies:
   cached_network_image: ^3.3.0
   collection: ^1.17.0
   connectivity_plus: ^5.0.1
-  country_code_picker: ^3.0.0
   cupertino_icons: ^1.0.6
   desktop_notifications: ^0.6.3
   dio: ^5.4.0

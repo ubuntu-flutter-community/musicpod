@@ -24,7 +24,7 @@ class RadioModel extends SafeChangeNotifier {
   Country? _country;
   Country? get country => _country;
   void setCountry(Country? value) {
-    if (value == _country || value == null) return;
+    if (value == _country) return;
     _country = value;
     notifyListeners();
   }
