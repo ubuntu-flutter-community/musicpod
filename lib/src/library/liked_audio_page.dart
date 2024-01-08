@@ -6,7 +6,6 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../common/fall_back_header_image.dart';
-import '../common/side_bar_fall_back_image.dart';
 import '../l10n/l10n.dart';
 
 class LikedAudioPage extends StatelessWidget {
