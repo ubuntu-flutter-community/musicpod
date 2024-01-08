@@ -6,7 +6,6 @@ import '../../data.dart';
 import '../../library.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
-import 'add_to_playlist_snack_bar.dart';
 
 class PlaylistDialog extends StatefulWidget {
   const PlaylistDialog({

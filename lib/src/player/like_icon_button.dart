@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../constants.dart';
 import '../../data.dart';
+import '../../library.dart';
 import '../common/icons.dart';
 
 class LikeIconButton extends StatelessWidget {
@@ -30,6 +33,7 @@ class LikeIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final libraryModel = context.read<LibraryModel>();
     if (audio?.audioType == AudioType.podcast) {
       return const SizedBox.shrink();
     }
@@ -58,7 +62,19 @@ class LikeIconButton extends StatelessWidget {
         };
       } else {
         onLike = () {
-          liked ? removeLikedAudio(audio!, true) : addLikedAudio(audio!, true);
+          if (liked) {
+            removeLikedAudio(audio!, true);
+          } else {
+            addLikedAudio(audio!, true);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: AddToPlaylistSnackBar(
+                  libraryModel: libraryModel,
+                  id: kLikedAudiosPageId,
+                ),
+              ),
+            );
+          }
         };
       }
     }

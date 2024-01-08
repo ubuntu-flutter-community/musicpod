@@ -8,7 +8,6 @@ import '../../library.dart';
 import '../../local_audio.dart';
 import '../../podcasts.dart';
 import '../../radio.dart';
-import '../common/side_bar_fall_back_image.dart';
 import '../l10n/l10n.dart';
 import '../theme.dart';
 import 'master_item.dart';

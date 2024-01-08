@@ -20,6 +20,7 @@ export 'src/common/offline_page.dart';
 export 'src/common/round_image_container.dart';
 export 'src/common/safe_network_image.dart';
 export 'src/common/share_button.dart';
+export 'src/common/side_bar_fall_back_image.dart';
 export 'src/common/spaced_divider.dart';
 export 'src/common/stream_provider_share_button.dart';
 export 'src/common/tapable_text.dart';

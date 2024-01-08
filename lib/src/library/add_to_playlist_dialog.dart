@@ -7,8 +7,6 @@ import '../../globals.dart';
 import '../../l10n.dart';
 import '../../library.dart';
 import '../../theme.dart';
-import '../common/side_bar_fall_back_image.dart';
-import 'add_to_playlist_snack_bar.dart';
 
 class AddToPlaylistDialog extends StatelessWidget {
   const AddToPlaylistDialog({
