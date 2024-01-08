@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
 import '../l10n/l10n.dart';
 import '../library/add_to_playlist_dialog.dart';
+import '../library/add_to_playlist_snack_bar.dart';
 
 class LikeButton extends StatelessWidget {
   const LikeButton({
@@ -26,15 +28,27 @@ class LikeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lik = libraryModel.liked(audio);
+    final liked = libraryModel.liked(audio);
 
     final heartButton = InkWell(
       borderRadius: BorderRadius.circular(10),
-      onTap: () => lik
-          ? libraryModel.removeLikedAudio(audio)
-          : libraryModel.addLikedAudio(audio),
+      onTap: () {
+        if (liked) {
+          libraryModel.removeLikedAudio(audio);
+        } else {
+          libraryModel.addLikedAudio(audio);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: AddToPlaylistSnackBar(
+                id: kLikedAudiosPageId,
+                libraryModel: libraryModel,
+              ),
+            ),
+          );
+        }
+      },
       child: Iconz().getAnimatedHeartIcon(
-        liked: lik,
+        liked: liked,
       ),
     );
 
