@@ -49,12 +49,10 @@ class AudioTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final textStyle = TextStyle(
-      color: selected ? theme.colorScheme.primary : theme.colorScheme.onSurface,
-      fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-    );
-
     final listTile = ListTile(
+      selected: selected && isPlayerPlaying,
+      selectedColor: theme.colorScheme.onSurface,
+      selectedTileColor: theme.colorScheme.onSurface.withOpacity(0.05),
       contentPadding: kAudioTilePadding,
       onTap: () {
         if (selected) {
@@ -78,7 +76,6 @@ class AudioTile extends StatelessWidget {
                     (audio.trackNumber != null
                         ? audio.trackNumber!.toString().padLeft(2, '0')
                         : '00'),
-                style: textStyle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -89,7 +86,6 @@ class AudioTile extends StatelessWidget {
               padding: kAudioTileSpacing,
               child: Text(
                 audio.title ?? context.l10n.unknown,
-                style: textStyle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -110,7 +106,6 @@ class AudioTile extends StatelessWidget {
                   text: audio.artist?.isNotEmpty == false
                       ? context.l10n.unknown
                       : audio.artist!,
-                  selected: selected,
                 ),
               ),
             ),
@@ -129,7 +124,6 @@ class AudioTile extends StatelessWidget {
                 text: audio.album?.isNotEmpty == false
                     ? context.l10n.unknown
                     : audio.album!,
-                selected: selected,
               ),
             ),
         ],

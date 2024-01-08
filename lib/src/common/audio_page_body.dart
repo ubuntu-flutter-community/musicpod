@@ -236,13 +236,13 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   libraryModel: libraryModel,
                   playlistId: widget.pageId,
                   audio: audio,
-                  selected: audioSelected,
                   allowRemove: widget.audioPageType == AudioPageType.playlist,
                   insertIntoQueue: () => insertIntoQueue(audio),
                 );
 
                 return AudioTile(
-                  trackLabel: widget.audioPageType == AudioPageType.playlist
+                  trackLabel: (widget.audioPageType == AudioPageType.playlist ||
+                          widget.audioPageType == AudioPageType.likedAudio)
                       ? (index + 1).toString().padLeft(2, '0')
                       : null,
                   showAlbum: widget.showAlbum,

@@ -7,20 +7,17 @@ class TapAbleText extends StatelessWidget {
     super.key,
     this.onTap,
     required this.text,
-    required this.selected,
+    this.style,
   });
 
   final void Function()? onTap;
   final String text;
-  final bool selected;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final style = TextStyle(
-      color: selected ? theme.colorScheme.primary : theme.colorScheme.onSurface,
-      fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-    );
+
     return Row(
       children: [
         Flexible(
