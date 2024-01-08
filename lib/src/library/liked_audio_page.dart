@@ -35,6 +35,7 @@ class LikedAudioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AudioPage(
+      onTextTap: onTextTap,
       controlPanelButton: Padding(
         padding: const EdgeInsets.only(left: 10),
         child: Text(

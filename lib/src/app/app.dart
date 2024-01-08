@@ -81,6 +81,41 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
     final libraryModel = context.read<LibraryModel>();
     final playerModel = context.read<PlayerModel>();
+    // TODO: replace Function forwarding with AppModel.onTextTap!!!
+    // final radioModel = context.read<RadioModel>();
+    // final podcastModel = context.read<PodcastModel>();
+    // final localAudioModel = context.read<LocalAudioModel>();
+    // final appModel = context.read<AppModel>();
+    // appModel.onTextTap = ({
+    //   required String text,
+    //   required AudioType audioType,
+    // }) {
+    //   switch (audioType) {
+    //     case AudioType.local:
+    //       libraryModel.setIndex(0);
+    //       localAudioModel.setSearchActive(true);
+    //       localAudioModel.setSearchQuery(text);
+    //       localAudioModel.search();
+    //       break;
+    //     case AudioType.radio:
+    //       libraryModel.setIndex(1);
+    //       libraryModel.setRadioIndex(1);
+    //       radioModel.init(countryCode: _countryCode).then((_) {
+    //         radioModel.search(tag: text);
+    //         radioModel.setTag(Tag(name: text, stationCount: 1));
+    //       });
+
+    //       break;
+    //     case AudioType.podcast:
+    //       libraryModel.setIndex(2);
+    //       libraryModel.setPodcastIndex(1);
+    //       podcastModel.setSearchActive(true);
+    //       podcastModel.setSearchQuery(text);
+    //       podcastModel.search(searchQuery: text);
+    //       break;
+    //   }
+    // };
+
     final connectivityNotifier = context.read<ConnectivityNotifier>();
 
     final extPathService = getService<ExternalPathService>();
@@ -148,6 +183,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     // Library
     final libraryModel = context.watch<LibraryModel>();
 
+    // TODO: replace Function forwarding with AppModel.onTextTap!!!
     void onTextTap({
       required String text,
       required AudioType audioType,

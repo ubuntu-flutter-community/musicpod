@@ -242,6 +242,7 @@ class LibraryModel extends SafeChangeNotifier {
   }
 
   int? getIndexOfPlaylist(String id) {
+    if (id == kLikedAudiosPageId) return 4;
     final playlist = getPlaylistById(id);
     if (playlist == null) return null;
     final allPlaylists = playlists.entries.map((e) => e.value).toList();
