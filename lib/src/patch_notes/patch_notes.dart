@@ -54,8 +54,20 @@ const kPatchNotes20231231 = 'Hello MusicPod Users 💙🐧🧡\n\n'
     '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
     '\n';
 
-const kRecentPatchNotesDisposed = kPatchNotes20231231disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20231231;
-const kRecentPatchNotes = kPatchNotes20231231;
+// 2024 01 10
+const kPatchNotes20240110disposed = 'patchNotes20240110disposed';
+const kPatchNotesTitle20240110 = 'Patch notes: 2024-01-10';
+const kPatchNotes20240110 = 'Hello MusicPod Users 💙🐧🧡\n\n'
+    'New updates in both channels:'
+    '\n* playlist creation has been further improved'
+    '\n* jump to lists directly from the snackbar'
+    '\n* the player background is now created by a blurred version of the image'
+    '\n* if the queue is not too big, it is preserved after quitting MusicPod'
+    '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
+    '\n';
+
+const kRecentPatchNotesDisposed = kPatchNotes20240110disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20240110;
+const kRecentPatchNotes = kPatchNotes20240110;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';
