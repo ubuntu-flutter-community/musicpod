@@ -18,7 +18,6 @@ void onLocalAudioTitleTap({
   final libraryModel = context.read<LibraryModel>();
   final localAudioModel = context.read<LocalAudioModel>();
 
-  libraryModel.setIndex(0);
   final albumAudios = localAudioModel.findAlbum(audio);
   if (albumAudios?.firstOrNull == null) return;
   final id = generateAlbumId(albumAudios!.first);
