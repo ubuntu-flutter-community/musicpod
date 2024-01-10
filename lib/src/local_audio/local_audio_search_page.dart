@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,7 @@ class LocalAudioSearchPage extends StatelessWidget {
     final currentAudio = context.select((PlayerModel m) => m.audio);
     final pause = playerModel.pause;
     final resume = playerModel.resume;
+    final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
 
     final Set<Audio>? titlesResult =
         context.select((LocalAudioModel m) => m.titlesSearchResult);
@@ -60,7 +62,15 @@ class LocalAudioSearchPage extends StatelessWidget {
     if ((titlesResult?.isEmpty ?? true) &&
         (similarAlbumsSearchResult?.isEmpty ?? true) &&
         (similarArtistsSearchResult?.isEmpty ?? true)) {
-      body = NoSearchResultPage(message: Text(context.l10n.noLocalSearchFound));
+      body = NoSearchResultPage(
+        message: searchQuery == ''
+            ? Text(context.l10n.search)
+            : Text(
+                context.l10n.noLocalSearchFound,
+              ),
+        icons:
+            searchQuery == '' ? const AnimatedEmoji(AnimatedEmojis.drum) : null,
+      );
     } else {
       body = ListView(
         shrinkWrap: true,
