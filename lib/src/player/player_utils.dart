@@ -42,10 +42,8 @@ void onLocalAudioArtistTap({
   required Audio audio,
   required BuildContext context,
 }) {
-  final libraryModel = context.read<LibraryModel>();
   final localAudioModel = context.read<LocalAudioModel>();
 
-  libraryModel.setIndex(0);
   final artistAudios = localAudioModel.findArtist(audio);
   if (artistAudios?.firstOrNull == null) return;
   final images = localAudioModel.findImages(artistAudios ?? {});
