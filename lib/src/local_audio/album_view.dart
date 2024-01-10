@@ -14,8 +14,6 @@ class AlbumsView extends StatelessWidget {
   const AlbumsView({
     super.key,
     required this.albums,
-    required this.showWindowControls,
-    this.onTextTap,
     required this.startPlaylist,
     required this.isPinnedAlbum,
     required this.removePinnedAlbum,
@@ -24,11 +22,6 @@ class AlbumsView extends StatelessWidget {
   });
 
   final Set<Audio>? albums;
-  final bool showWindowControls;
-  final void Function({
-    required String text,
-    required AudioType audioType,
-  })? onTextTap;
 
   final Future<void> Function({
     required Set<Audio> audios,
@@ -104,10 +97,6 @@ class AlbumsView extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) {
                         return AlbumPage(
-                          onTextTap: ({required audioType, required text}) {
-                            onTextTap?.call(text: text, audioType: audioType);
-                            Navigator.of(context).maybePop();
-                          },
                           id: id,
                           isPinnedAlbum: isPinnedAlbum,
                           removePinnedAlbum: removePinnedAlbum,

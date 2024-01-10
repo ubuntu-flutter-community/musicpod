@@ -19,23 +19,6 @@ class LocalAudioModel extends SafeChangeNotifier {
   final LocalAudioService localAudioService;
   final LibraryService libraryService;
 
-  bool _searchActive = false;
-  bool get searchActive => _searchActive;
-  void setSearchActive(bool value) {
-    if (value == _searchActive) return;
-    _searchActive = value;
-    notifyListeners();
-  }
-
-  String? _searchQuery;
-
-  String? get searchQuery => _searchQuery;
-  void setSearchQuery(String? value) {
-    if (value == null || value == _searchQuery) return;
-    _searchQuery = value;
-    notifyListeners();
-  }
-
   Set<Audio>? _similarAlbumsSearchResult;
   Set<Audio>? get similarAlbumsSearchResult => _similarAlbumsSearchResult;
   void setSimilarAlbumsSearchResult(Set<Audio>? value) {
@@ -57,8 +40,19 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  void search() {
-    if (searchQuery == null) return;
+  String? _searchQuery;
+  String? get searchQuery => _searchQuery;
+  void search(String? query) {
+    _searchQuery = query;
+    if (query == null) return;
+    if (query.isEmpty) {
+      setTitlesSearchResult(
+        {},
+      );
+      setSimilarAlbumsSearchResult({});
+      setSimilarArtistsSearchResult({});
+      return;
+    }
 
     final allAlbumsFindings = audios?.where(
       (audio) =>

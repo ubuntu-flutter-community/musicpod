@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../common.dart';
 import '../../data.dart';
 import '../../library.dart';
+import '../../local_audio.dart';
+import '../../utils.dart';
 import '../common/fall_back_header_image.dart';
 import '../l10n/l10n.dart';
 import '../theme.dart';
@@ -11,23 +14,54 @@ class PlaylistPage extends StatelessWidget {
   const PlaylistPage({
     super.key,
     required this.playlist,
-    this.onTextTap,
     required this.libraryModel,
   });
 
   final MapEntry<String, Set<Audio>> playlist;
   final LibraryModel libraryModel;
-  final void Function({
-    required String text,
-    required AudioType audioType,
-  })? onTextTap;
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<LocalAudioModel>();
+    final libraryModel = context.read<LibraryModel>();
     return AudioPage(
+      onAlbumTap: ({required audioType, required text}) {
+        final albumAudios = model.findAlbum(Audio(album: text));
+        if (albumAudios?.firstOrNull == null) return;
+        final id = generateAlbumId(albumAudios!.first);
+        if (id == null) return;
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) {
+              return AlbumPage(
+                isPinnedAlbum: libraryModel.isPinnedAlbum,
+                removePinnedAlbum: libraryModel.removePinnedAlbum,
+                addPinnedAlbum: libraryModel.addPinnedAlbum,
+                id: id,
+                album: albumAudios,
+              );
+            },
+          ),
+        );
+      },
+      onArtistTap: ({required audioType, required text}) {
+        final artistAudios = model.findArtist(Audio(artist: text));
+        final images = model.findImages(artistAudios ?? {});
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) {
+              return ArtistPage(
+                images: images,
+                artistAudios: artistAudios,
+              );
+            },
+          ),
+        );
+      },
       showAudioTileHeader:
           playlist.value.any((e) => e.audioType != AudioType.podcast),
-      onTextTap: onTextTap,
       audioPageType: AudioPageType.playlist,
       image: FallBackHeaderImage(
         color: getAlphabetColor(playlist.key),

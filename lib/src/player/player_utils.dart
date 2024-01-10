@@ -1,18 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../constants.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../globals.dart';
+import '../../library.dart';
+import '../../local_audio.dart';
+import '../../utils.dart';
+
+void onLocalAudioTitleTap({
+  required Audio audio,
+  required BuildContext context,
+}) {
+  final libraryModel = context.read<LibraryModel>();
+  final localAudioModel = context.read<LocalAudioModel>();
+
+  libraryModel.setIndex(0);
+  final albumAudios = localAudioModel.findAlbum(audio);
+  if (albumAudios?.firstOrNull == null) return;
+  final id = generateAlbumId(albumAudios!.first);
+  if (id == null) return;
+
+  navigatorKey.currentState?.push(
+    MaterialPageRoute(
+      builder: (context) {
+        return AlbumPage(
+          isPinnedAlbum: libraryModel.isPinnedAlbum,
+          removePinnedAlbum: libraryModel.removePinnedAlbum,
+          addPinnedAlbum: libraryModel.addPinnedAlbum,
+          id: id,
+          album: albumAudios,
+        );
+      },
+    ),
+  );
+}
+
+void onLocalAudioArtistTap({
+  required Audio audio,
+  required BuildContext context,
+}) {
+  final libraryModel = context.read<LibraryModel>();
+  final localAudioModel = context.read<LocalAudioModel>();
+
+  libraryModel.setIndex(0);
+  final artistAudios = localAudioModel.findArtist(audio);
+  if (artistAudios?.firstOrNull == null) return;
+  final images = localAudioModel.findImages(artistAudios ?? {});
+
+  navigatorKey.currentState?.push(
+    MaterialPageRoute(
+      builder: (context) {
+        return ArtistPage(
+          artistAudios: artistAudios,
+          images: images,
+        );
+      },
+    ),
+  );
+}
 
 void onTitleTap({
   required Audio? audio,
   required String? text,
   required BuildContext context,
-  required void Function({required String text, required AudioType audioType})
-      onTextTap,
 }) {
   if (audio?.audioType == null || audio?.title == null) {
     return;
@@ -48,11 +102,10 @@ void onTitleTap({
       ),
     );
   } else {
-    onTextTap.call(
-      audioType: audio!.audioType!,
-      text: audio.title!,
+    onLocalAudioTitleTap(
+      audio: audio!,
+      context: context,
     );
-    navigatorKey.currentState?.maybePop();
   }
 }
 
@@ -60,8 +113,6 @@ void onArtistTap({
   required Audio? audio,
   required String? artist,
   required BuildContext context,
-  required void Function({required String text, required AudioType audioType})
-      onTextTap,
 }) {
   if (audio?.audioType == null || audio?.artist == null) {
     return;
@@ -84,13 +135,7 @@ void onArtistTap({
       ),
     );
   } else {
-    onTextTap.call(
-      audioType: audio.audioType!,
-      text: audio.audioType == AudioType.radio && audio.title != null
-          ? audio.title!
-          : audio.artist!,
-    );
-    navigatorKey.currentState?.maybePop();
+    onLocalAudioArtistTap(audio: audio, context: context);
   }
 }
 

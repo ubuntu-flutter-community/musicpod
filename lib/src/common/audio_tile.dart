@@ -16,7 +16,8 @@ class AudioTile extends StatelessWidget {
     required this.isPlayerPlaying,
     required this.pause,
     required this.resume,
-    this.onTextTap,
+    this.onAlbumTap,
+    this.onArtistTap,
     this.showTrack = true,
     this.showAlbum = true,
     this.showArtist = true,
@@ -42,7 +43,11 @@ class AudioTile extends StatelessWidget {
   final void Function({
     required String text,
     required AudioType audioType,
-  })? onTextTap;
+  })? onAlbumTap;
+  final void Function({
+    required String text,
+    required AudioType audioType,
+  })? onArtistTap;
 
   final int titleFlex, artistFlex, albumFlex;
 
@@ -97,9 +102,9 @@ class AudioTile extends StatelessWidget {
               child: Padding(
                 padding: kAudioTileSpacing,
                 child: TapAbleText(
-                  onTap: onTextTap == null || audio.audioType == null
+                  onTap: onArtistTap == null || audio.audioType == null
                       ? null
-                      : () => onTextTap!(
+                      : () => onArtistTap!(
                             text: audio.artist!,
                             audioType: audio.audioType!,
                           ),
@@ -113,11 +118,11 @@ class AudioTile extends StatelessWidget {
             Expanded(
               flex: albumFlex,
               child: TapAbleText(
-                onTap: onTextTap == null ||
+                onTap: onAlbumTap == null ||
                         audio.audioType == null ||
                         audio.audioType == AudioType.radio
                     ? null
-                    : () => onTextTap!(
+                    : () => onAlbumTap!(
                           text: audio.album!,
                           audioType: audio.audioType!,
                         ),

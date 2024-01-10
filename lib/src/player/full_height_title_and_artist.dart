@@ -10,12 +10,9 @@ class FullHeightTitleAndArtist extends StatelessWidget {
   const FullHeightTitleAndArtist({
     super.key,
     required this.audio,
-    required this.onTextTap,
   });
 
   final Audio? audio;
-  final void Function({required AudioType audioType, required String text})
-      onTextTap;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +31,6 @@ class FullHeightTitleAndArtist extends StatelessWidget {
             audio: audio,
             text: mpvMetaData?.icyTitle,
             context: context,
-            onTextTap: onTextTap,
           ),
           child: Tooltip(
             message: label,
@@ -57,7 +53,6 @@ class FullHeightTitleAndArtist extends StatelessWidget {
             audio: audio,
             artist: mpvMetaData?.icyName,
             context: context,
-            onTextTap: onTextTap,
           ),
           child: Text(
             mpvMetaData?.icyName.isNotEmpty == true

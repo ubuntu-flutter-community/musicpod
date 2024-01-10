@@ -23,7 +23,8 @@ class AudioPageBody extends StatefulWidget {
     this.controlPanelButton,
     this.image,
     this.showAudioPageHeader,
-    this.onTextTap,
+    this.onAlbumTap,
+    this.onArtistTap,
     this.noResultMessage,
     this.noResultIcon = const AnimatedEmoji(AnimatedEmojis.eyes),
     this.titleLabel,
@@ -62,7 +63,7 @@ class AudioPageBody extends StatefulWidget {
   final void Function({
     required String text,
     required AudioType audioType,
-  })? onTextTap;
+  })? onAlbumTap, onArtistTap;
 
   @override
   State<AudioPageBody> createState() => _AudioPageBodyState();
@@ -251,7 +252,8 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   titleFlex: widget.titleFlex,
                   artistFlex: widget.artistFlex,
                   albumFlex: widget.albumFlex,
-                  onTextTap: widget.onTextTap,
+                  onAlbumTap: widget.onAlbumTap,
+                  onArtistTap: widget.onArtistTap,
                   isPlayerPlaying: isPlaying,
                   pause: pause,
                   startPlaylist: widget.audios == null

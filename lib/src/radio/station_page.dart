@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -7,10 +8,11 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../library.dart';
 import '../../player.dart';
+import '../../radio.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
-import 'radio_page.dart';
 
 class StationPage extends StatelessWidget {
   const StationPage({
@@ -19,7 +21,6 @@ class StationPage extends StatelessWidget {
     required this.name,
     required this.unStarStation,
     required this.starStation,
-    this.onTextTap,
     required this.isStarred,
   });
 
@@ -28,8 +29,6 @@ class StationPage extends StatelessWidget {
   final void Function(String station) unStarStation;
   final void Function(String station) starStation;
   final bool isStarred;
-
-  final void Function(String text)? onTextTap;
 
   static Widget createIcon({
     required BuildContext context,
@@ -82,6 +81,7 @@ class StationPage extends StatelessWidget {
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
+    final model = context.read<RadioModel>();
 
     return YaruDetailPage(
       appBar: HeaderBar(
@@ -186,8 +186,15 @@ class StationPage extends StatelessWidget {
                             labels: tags!.map((e) => Text(e)).toList(),
                             isSelected: tags.map((e) => false).toList(),
                             onSelected: (index) {
-                              onTextTap?.call(tags[index]);
+                              context.read<LibraryModel>().setIndex(1);
                               Navigator.of(context).maybePop();
+                              model.setTag(
+                                Tag(
+                                  name: tags[index],
+                                  stationCount: 1,
+                                ),
+                              );
+                              model.search(tag: tags[index]);
                             },
                           )
                         : SizedBox(

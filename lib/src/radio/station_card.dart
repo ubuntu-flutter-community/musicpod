@@ -14,7 +14,6 @@ class StationCard extends StatelessWidget {
     required this.station,
     required this.startPlaylist,
     required this.isStarredStation,
-    required this.onTextTap,
     required this.unstarStation,
     required this.starStation,
   });
@@ -26,7 +25,6 @@ class StationCard extends StatelessWidget {
     int? index,
   }) startPlaylist;
   final bool Function(String name) isStarredStation;
-  final void Function(String text)? onTextTap;
   final void Function(String name) unstarStation;
   final void Function(String name, Set<Audio> audios) starStation;
 
@@ -66,7 +64,6 @@ class StationCard extends StatelessWidget {
             station.title ?? station.toString(),
           );
           return StationPage(
-            onTextTap: (v) => onTextTap?.call(v),
             station: station,
             name: station.title ?? station.toString(),
             unStarStation: (s) => unstarStation(

@@ -153,7 +153,6 @@ Future<void> searchAndPushPodcastPage({
             imageUrl: podcastItem.artworkUrl600,
             addPodcast: addPodcast,
             removePodcast: removePodcast,
-            onTextTap: onTapText,
             audios: podcast,
             pageId: id!,
             title: podcast.firstOrNull?.album ??

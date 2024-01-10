@@ -167,11 +167,6 @@ class PodcastsCollectionBody extends StatelessWidget {
                                         podcast.value.firstOrNull?.title ??
                                         podcast.value.firstOrNull.toString(),
                                     audios: podcast.value,
-                                    onTextTap: ({
-                                      required audioType,
-                                      required text,
-                                    }) =>
-                                        onTapText(text),
                                     addPodcast: addPodcast,
                                     removePodcast: removePodcast,
                                     imageUrl: podcast

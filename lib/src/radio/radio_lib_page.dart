@@ -11,7 +11,6 @@ class RadioLibPage extends StatelessWidget {
   const RadioLibPage({
     super.key,
     required this.startPlaylist,
-    this.onTextTap,
     required this.isStarredStation,
     required this.unstarStation,
     required this.starStation,
@@ -24,7 +23,6 @@ class RadioLibPage extends StatelessWidget {
     int? index,
   }) startPlaylist;
   final bool Function(String name) isStarredStation;
-  final void Function(String text)? onTextTap;
   final void Function(String name) unstarStation;
   final void Function(String name, Set<Audio> audios) starStation;
   final bool isOnline;
@@ -55,7 +53,6 @@ class RadioLibPage extends StatelessWidget {
                   station: station,
                   startPlaylist: startPlaylist,
                   isStarredStation: isStarredStation,
-                  onTextTap: onTextTap,
                   unstarStation: unstarStation,
                   starStation: starStation,
                 );

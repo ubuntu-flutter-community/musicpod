@@ -24,12 +24,10 @@ import 'station_card.dart';
 class RadioPage extends StatefulWidget {
   const RadioPage({
     super.key,
-    this.onTextTap,
     required this.isOnline,
     this.countryCode,
   });
 
-  final void Function(String text)? onTextTap;
   final bool isOnline;
   final String? countryCode;
 
@@ -164,12 +162,10 @@ class _RadioPageState extends State<RadioPage> {
             itemCount: stationsCount,
             itemBuilder: (context, index) {
               final station = stations.elementAt(index);
-              final onTextTap = widget.onTextTap;
               return StationCard(
                 station: station,
                 startPlaylist: startPlaylist,
                 isStarredStation: isStarredStation,
-                onTextTap: onTextTap,
                 unstarStation: unstarStation,
                 starStation: starStation,
               );

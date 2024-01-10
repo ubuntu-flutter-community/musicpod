@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
-import '../../data.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
 import '../../podcasts.dart';
@@ -14,8 +13,6 @@ import 'master_item.dart';
 
 List<MasterItem> createMasterItems({
   required bool isOnline,
-  required void Function({required AudioType audioType, required String text})
-      onTextTap,
   required LibraryModel libraryModel,
   required String? countryCode,
 }) {
@@ -33,7 +30,6 @@ List<MasterItem> createMasterItems({
       pageBuilder: (context) => RadioPage(
         countryCode: countryCode,
         isOnline: isOnline,
-        onTextTap: (text) => onTextTap(text: text, audioType: AudioType.radio),
       ),
       iconBuilder: (context, selected) => RadioPageIcon(
         selected: selected,
@@ -63,7 +59,6 @@ List<MasterItem> createMasterItems({
       titleBuilder: (context) => Text(context.l10n.likedSongs),
       pageId: kLikedAudiosPageId,
       pageBuilder: (context) => LikedAudioPage(
-        onTextTap: onTextTap,
         likedLocalAudios: libraryModel.likedAudios,
       ),
       subtitleBuilder: (context) => Text(context.l10n.playlist),
@@ -76,7 +71,6 @@ List<MasterItem> createMasterItems({
         subtitleBuilder: (context) => Text(context.l10n.playlist),
         pageId: playlist.key,
         pageBuilder: (context) => PlaylistPage(
-          onTextTap: onTextTap,
           playlist: playlist,
           libraryModel: libraryModel,
         ),
@@ -105,7 +99,6 @@ List<MasterItem> createMasterItems({
               podcast.value.firstOrNull?.title ??
               podcast.value.firstOrNull.toString(),
           audios: podcast.value,
-          onTextTap: onTextTap,
           addPodcast: libraryModel.addPodcast,
           removePodcast: libraryModel.removePodcast,
           imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
@@ -126,7 +119,6 @@ List<MasterItem> createMasterItems({
             Text(album.value.firstOrNull?.artist ?? context.l10n.album),
         pageId: album.key,
         pageBuilder: (context) => AlbumPage(
-          onTextTap: onTextTap,
           album: album.value,
           id: album.key,
           addPinnedAlbum: libraryModel.addPinnedAlbum,
@@ -149,8 +141,6 @@ List<MasterItem> createMasterItems({
             ? StationPage(
                 isStarred: true,
                 starStation: (station) {},
-                onTextTap: (text) =>
-                    onTextTap(text: text, audioType: AudioType.radio),
                 unStarStation: libraryModel.unStarStation,
                 name: station.key,
                 station: station.value.first,

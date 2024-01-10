@@ -7,6 +7,7 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../globals.dart';
 import '../../local_audio.dart';
 import '../../player.dart';
 import '../l10n/l10n.dart';
@@ -65,25 +66,34 @@ class _LocalAudioPageState extends State<LocalAudioPage>
 
   @override
   Widget build(BuildContext context) {
-    final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
-    final searchActive = context.select((LocalAudioModel m) => m.searchActive);
+    final showWindowControls =
+        context.select((AppModel a) => a.showWindowControls);
 
     final model = context.read<LocalAudioModel>();
     final audios = context.select((LocalAudioModel m) => m.audios);
     final artists = model.allArtists;
     final albums = model.allAlbums;
-    final setSearchQuery = model.setSearchQuery;
-    final search = model.search;
-    final setSearchActive = model.setSearchActive;
+    void search({
+      required String? text,
+      bool replace = false,
+    }) {
+      if (text != null) {
+        model.search(text);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return const LocalAudioSearchPage();
+            },
+          ),
+        );
+      } else {
+        Navigator.of(context).pop();
+      }
+    }
+
     final findArtist = model.findArtist;
     final findImages = model.findImages;
     final findAlbum = model.findAlbum;
-
-    final similarArtistsSearchResult =
-        context.select((LocalAudioModel m) => m.similarArtistsSearchResult);
-
-    final similarAlbumsSearchResult =
-        context.select((LocalAudioModel m) => m.similarAlbumsSearchResult);
 
     final libraryModel = context.read<LibraryModel>();
     final selectedIndex = context.select((LibraryModel m) => m.localAudioindex);
@@ -98,30 +108,11 @@ class _LocalAudioPageState extends State<LocalAudioPage>
     final playerModel = context.read<PlayerModel>();
     final startPlaylist = playerModel.startPlaylist;
 
-    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
-    final currentAudio = context.select((PlayerModel m) => m.audio);
-    final pause = playerModel.pause;
-    final resume = playerModel.resume;
-
-    final Set<Audio>? titlesResult =
-        context.select((LocalAudioModel m) => m.titlesSearchResult);
-
-    final showWindowControls =
-        context.select((AppModel a) => a.showWindowControls);
-
-    void onTap(text) {
-      setSearchQuery(text);
-      search();
-      setSearchActive(true);
-    }
-
     final tabBar = SizedBox(
       width: kSearchBarWidth,
       child: TabsBar(
         onTap: (value) {
           onIndexSelected.call(value);
-          setSearchActive(false);
-          setSearchQuery(null);
         },
         tabs: [
           Tab(
@@ -137,24 +128,42 @@ class _LocalAudioPageState extends State<LocalAudioPage>
       ),
     );
 
+    final headerBar = HeaderBar(
+      style: showWindowControls
+          ? YaruTitleBarStyle.normal
+          : YaruTitleBarStyle.undecorated,
+      leading: (navigatorKey.currentState?.canPop() == true)
+          ? NavBackButton(
+              onPressed: () => search(text: null),
+            )
+          : const SizedBox.shrink(),
+      titleSpacing: 0,
+      actions: [
+        Flexible(
+          child: Padding(
+            padding: appBarActionSpacing,
+            child: SearchButton(
+              active: false,
+              onPressed: () => search(text: ''),
+            ),
+          ),
+        ),
+      ],
+      title: tabBar,
+    );
+
     final tabBarView = TabBarView(
       children: [
         TitlesView(
-          onTextTap: ({required audioType, required text}) => onTap(text),
           audios: audios,
-          showWindowControls: showWindowControls,
         ),
         ArtistsView(
-          showWindowControls: showWindowControls,
           artists: artists,
-          onTextTap: ({required audioType, required text}) => onTap(text),
           findArtist: findArtist,
           findImages: findImages,
         ),
         AlbumsView(
-          showWindowControls: showWindowControls,
           albums: albums,
-          onTextTap: ({required audioType, required text}) => onTap(text),
           addPinnedAlbum: addPinnedAlbum,
           findAlbum: findAlbum,
           isPinnedAlbum: isPinnedAlbum,
@@ -164,83 +173,12 @@ class _LocalAudioPageState extends State<LocalAudioPage>
       ],
     );
 
-    Widget body;
-    if (searchQuery?.isNotEmpty == true && searchActive) {
-      body = LocalAudioSearchPage(
-        similarAlbumsSearchResult: similarAlbumsSearchResult,
-        showWindowControls: showWindowControls,
-        searchQuery: searchQuery,
-        setSearchActive: setSearchActive,
-        search: search,
-        setSearchQuery: setSearchQuery,
-        currentAudio: currentAudio,
-        titlesResult: titlesResult,
-        similarArtistsSearchResult: similarArtistsSearchResult,
-        addPinnedAlbum: addPinnedAlbum,
-        findAlbum: findAlbum,
-        findArtist: findArtist,
-        findImages: findImages,
-        isPinnedAlbum: isPinnedAlbum,
-        isPlaying: isPlaying,
-        pause: pause,
-        resume: resume,
-        removePinnedAlbum: removePinnedAlbum,
-        startPlaylist: startPlaylist,
-      );
-    } else {
-      body = tabBarView;
-    }
-
     return DefaultTabController(
       initialIndex: selectedIndex ?? 0,
       length: 3,
       child: Scaffold(
-        appBar: HeaderBar(
-          style: showWindowControls
-              ? YaruTitleBarStyle.normal
-              : YaruTitleBarStyle.undecorated,
-          leading: (Navigator.of(context).canPop())
-              ? NavBackButton(
-                  onPressed: () {
-                    setSearchActive(false);
-                  },
-                )
-              : const SizedBox.shrink(),
-          titleSpacing: 0,
-          actions: [
-            Flexible(
-              child: Padding(
-                padding: appBarActionSpacing,
-                child: SearchButton(
-                  active: searchActive,
-                  onPressed: () {
-                    setSearchActive(!searchActive);
-                    setSearchQuery('');
-                  },
-                ),
-              ),
-            ),
-          ],
-          title: searchActive
-              ? SizedBox(
-                  width: kSearchBarWidth,
-                  child: SearchingBar(
-                    key: ValueKey(searchQuery),
-                    text: searchQuery,
-                    onSubmitted: (value) {
-                      setSearchActive(true);
-                      setSearchQuery(value);
-                      search();
-                    },
-                    onClear: () {
-                      setSearchActive(false);
-                      setSearchQuery('');
-                    },
-                  ),
-                )
-              : tabBar,
-        ),
-        body: body,
+        appBar: headerBar,
+        body: tabBarView,
       ),
     );
   }

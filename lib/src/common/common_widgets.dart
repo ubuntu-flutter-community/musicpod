@@ -9,6 +9,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
 import '../../constants.dart';
+import '../../globals.dart' hide isMobile;
 import '../../theme.dart';
 import '../../theme_data_x.dart';
 import 'icons.dart';
@@ -22,11 +23,10 @@ class NavBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     void onTap() {
       if (onPressed == null) {
-        Navigator.maybePop(context);
+        navigatorKey.currentState?.maybePop(context);
       } else {
         onPressed?.call();
-        Future.delayed(const Duration(milliseconds: 400))
-            .then((value) => Navigator.maybePop(context));
+        navigatorKey.currentState?.maybePop(context);
       }
     }
 

@@ -14,17 +14,12 @@ class ArtistsView extends StatelessWidget {
   const ArtistsView({
     super.key,
     this.artists,
-    required this.showWindowControls,
-    this.onTextTap,
     required this.findArtist,
     required this.findImages,
   });
 
   final Set<Audio>? artists;
-  final bool showWindowControls;
 
-  final void Function({required String text, required AudioType audioType})?
-      onTextTap;
   final Set<Audio>? Function(Audio, [AudioFilter]) findArtist;
   final Set<Uint8List>? Function(Set<Audio>) findImages;
 
@@ -69,13 +64,8 @@ class ArtistsView extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) {
                 return ArtistPage(
-                  onTextTap: ({required audioType, required text}) {
-                    onTextTap?.call(text: text, audioType: audioType);
-                    Navigator.of(context).maybePop();
-                  },
                   images: images,
                   artistAudios: artistAudios,
-                  showWindowControls: showWindowControls,
                 );
               },
             ),

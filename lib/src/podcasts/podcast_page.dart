@@ -11,7 +11,6 @@ import '../library/library_model.dart';
 class PodcastPage extends StatelessWidget {
   const PodcastPage({
     super.key,
-    this.onTextTap,
     this.imageUrl,
     required this.pageId,
     this.audios,
@@ -49,10 +48,7 @@ class PodcastPage extends StatelessWidget {
 
   final void Function(String feedUrl) removePodcast;
   final void Function(String feedUrl, Set<Audio> audios) addPodcast;
-  final void Function({
-    required String text,
-    required AudioType audioType,
-  })? onTextTap;
+
   final String? imageUrl;
   final String pageId;
   final String title;
@@ -69,7 +65,6 @@ class PodcastPage extends StatelessWidget {
 
     return AudioPage(
       showAudioTileHeader: false,
-      onTextTap: onTextTap,
       audioPageType: AudioPageType.podcast,
       image: imageUrl == null
           ? null

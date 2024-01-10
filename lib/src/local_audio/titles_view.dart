@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../library.dart';
 import '../../local_audio.dart';
 import '../../utils.dart';
 import '../l10n/l10n.dart';
@@ -12,16 +14,9 @@ class TitlesView extends StatefulWidget {
   const TitlesView({
     super.key,
     required this.audios,
-    required this.showWindowControls,
-    this.onTextTap,
   });
 
   final Set<Audio>? audios;
-  final bool showWindowControls;
-  final void Function({
-    required String text,
-    required AudioType audioType,
-  })? onTextTap;
 
   @override
   State<TitlesView> createState() => _TitlesViewState();
@@ -59,6 +54,9 @@ class _TitlesViewState extends State<TitlesView> {
       );
     }
 
+    final model = context.read<LocalAudioModel>();
+    final libraryModel = context.read<LibraryModel>();
+
     return AudioPageBody(
       showTrack: false,
       controlPanelButton: Expanded(
@@ -83,7 +81,41 @@ class _TitlesViewState extends State<TitlesView> {
       audioPageType: AudioPageType.immutable,
       pageId: kLocalAudioPageId,
       showAudioPageHeader: false,
-      onTextTap: widget.onTextTap,
+      onAlbumTap: ({required audioType, required text}) {
+        final albumAudios = model.findAlbum(Audio(album: text));
+        if (albumAudios?.firstOrNull == null) return;
+        final id = generateAlbumId(albumAudios!.first);
+        if (id == null) return;
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) {
+              return AlbumPage(
+                isPinnedAlbum: libraryModel.isPinnedAlbum,
+                removePinnedAlbum: libraryModel.removePinnedAlbum,
+                addPinnedAlbum: libraryModel.addPinnedAlbum,
+                id: id,
+                album: albumAudios,
+              );
+            },
+          ),
+        );
+      },
+      onArtistTap: ({required audioType, required text}) {
+        final artistAudios = model.findArtist(Audio(artist: text));
+        final images = model.findImages(artistAudios ?? {});
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) {
+              return ArtistPage(
+                images: images,
+                artistAudios: artistAudios,
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
