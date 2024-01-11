@@ -9,6 +9,7 @@ import '../../constants.dart';
 import '../../data.dart';
 import '../../string_x.dart';
 import '../../utils.dart';
+import 'radio_search.dart';
 import 'radio_service.dart';
 
 class RadioModel extends SafeChangeNotifier {
@@ -58,6 +59,47 @@ class RadioModel extends SafeChangeNotifier {
 
     return Set.from(
       _radioService.stations!.map(
+        (e) {
+          var artist = e.bitrate == 0 ? '' : '${e.bitrate} kb/s';
+          if (e.language?.isNotEmpty == true) {
+            artist += ', ${e.language}';
+          }
+          return Audio(
+            url: e.urlResolved,
+            title: e.name,
+            artist: artist,
+            album: e.tags ?? '',
+            audioType: AudioType.radio,
+            imageUrl: e.favicon,
+            website: e.homepage,
+          );
+        },
+      ),
+    );
+  }
+
+  Future<Set<Audio>?> getStations({
+    String? country,
+    String? name,
+    String? state,
+    Tag? tag,
+    int limit = 100,
+  }) async {
+    final s = await _radioService.getStations(
+      tag: tag,
+      name: name,
+      country: country,
+      state: state,
+      limit: limit,
+    );
+    if (s == null) return null;
+
+    if (s.isEmpty) {
+      return <Audio>{};
+    }
+
+    return Set.from(
+      s.map(
         (e) {
           var artist = e.bitrate == 0 ? '' : '${e.bitrate} kb/s';
           if (e.language?.isNotEmpty == true) {
@@ -157,6 +199,22 @@ class RadioModel extends SafeChangeNotifier {
   void setSearchActive(bool value) {
     if (value == _searchActive) return;
     _searchActive = value;
+    notifyListeners();
+  }
+
+  bool _showTags = false;
+  bool get showTags => _showTags;
+  void setShowTags(bool value) {
+    if (value == _showTags) return;
+    _showTags = value;
+    notifyListeners();
+  }
+
+  RadioSearch _radioSearch = RadioSearch.country;
+  RadioSearch get radioSearch => _radioSearch;
+  void setRadioSearch(RadioSearch value) {
+    if (value == _radioSearch) return;
+    _radioSearch = value;
     notifyListeners();
   }
 

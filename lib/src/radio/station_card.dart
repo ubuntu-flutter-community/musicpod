@@ -5,7 +5,7 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../theme_data_x.dart';
-import 'radio_page.dart';
+import 'radio_fall_back_icon.dart';
 import 'station_page.dart';
 
 class StationCard extends StatelessWidget {

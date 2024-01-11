@@ -150,5 +150,8 @@
     "addToPlaylist": "Add to playlist",
     "open": "Open",
     "removeFrom": "Remove from",
-    "noCountryFound": "No country can be found with this name. You can also use phone prefixes such as +49"
+    "noCountryFound": "No country can be found with this name. You can also use phone prefixes such as +49",
+    "noStarredTags": "You didn't star any tags yet",
+    "name": "Name",
+    "state": "State"
 }

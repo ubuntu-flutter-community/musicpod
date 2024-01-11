@@ -150,5 +150,8 @@
     "addToPlaylist": "Zu Wiedergabeliste hinzufügen",
     "open": "Öffnen",
     "removeFrom": "Entferne aus",
-    "noCountryFound": "Es konnte kein Land mit diesem Namen gefunden werden. Du kannst auch mit Ländervorwahlen suchen wie +49"
+    "noCountryFound": "Es konnte kein Land mit diesem Namen gefunden werden. Du kannst auch mit Ländervorwahlen suchen wie +49",
+    "noStarredTags": "Du hast noch keinen Tag mit dem Stern-Button favorisiert.",
+    "name": "Name",
+    "state": "Bundesland"
 }
