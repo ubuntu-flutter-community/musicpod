@@ -151,6 +151,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     );
 
     final audioPageHeader = AudioPageHeader(
+      height: _headerHeight,
       title: widget.headerTitle ??
           widget.audios?.firstOrNull?.album ??
           widget.pageId,
@@ -194,12 +195,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
       padding: widget.padding ?? EdgeInsets.zero,
       child: Column(
         children: [
-          if (widget.showAudioPageHeader == true)
-            AnimatedContainer(
-              height: _headerHeight,
-              duration: const Duration(milliseconds: 200),
-              child: audioPageHeader,
-            ),
+          if (widget.showAudioPageHeader == true) audioPageHeader,
           if (widget.showControlPanel) audioControlPanel,
           if (widget.showAudioTileHeader)
             AudioTileHeader(
