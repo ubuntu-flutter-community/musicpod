@@ -87,10 +87,34 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
       return futureBuilder;
     }
 
+    final isFavTag = libraryModel.favTags.contains(widget.searchQuery);
+
     return Scaffold(
       appBar: HeaderBar(
-        title: Text(
-          widget.searchQuery ?? '',
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              widget.searchQuery ?? '',
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            IconButton(
+              onPressed: widget.searchQuery == null
+                  ? null
+                  : () {
+                      if (isFavTag) {
+                        libraryModel.removeFavTag(widget.searchQuery!);
+                      } else {
+                        libraryModel.addFavTag(widget.searchQuery!);
+                      }
+                    },
+              icon: Icon(
+                isFavTag ? Iconz().starFilled : Iconz().star,
+              ),
+            ),
+          ],
         ),
         leading: navigatorKey.currentState?.canPop() == true
             ? const NavBackButton()
