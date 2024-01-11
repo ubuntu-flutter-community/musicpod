@@ -49,72 +49,73 @@ class AudioPageHeader extends StatelessWidget {
           if (!smallWindow)
             Expanded(
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    label ?? context.l10n.album,
-                    style: theme.textTheme.labelSmall,
-                  ),
-                  Text(
-                    title,
-                    style: theme.textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 35,
-                      color: theme.colorScheme.onSurface.withOpacity(0.9),
+                  Flexible(
+                    child: Text(
+                      label ?? context.l10n.album,
+                      style: theme.textTheme.labelSmall,
                     ),
-                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(
-                    height: 5,
+                  Flexible(
+                    child: Text(
+                      title,
+                      style: theme.textTheme.headlineLarge?.copyWith(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 35,
+                        color: theme.colorScheme.onSurface.withOpacity(0.9),
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   if (subTitle?.isNotEmpty == true)
-                    Text(
-                      subTitle!,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontStyle: FontStyle.italic,
+                    Flexible(
+                      child: Text(
+                        subTitle!,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
                     ),
-                  Expanded(
-                    child: description == null
-                        ? const SizedBox.expand()
-                        : SizedBox(
-                            width: 600,
-                            child: InkWell(
-                              borderRadius:
-                                  BorderRadius.circular(kYaruButtonRadius),
-                              onTap: () => showDialog(
-                                context: context,
-                                builder: (context) => _DescriptionDialog(
-                                  title: title,
-                                  description: description!,
-                                ),
-                              ),
-                              child: Html(
-                                data: description,
-                                onAnchorTap: (url, attributes, element) {
-                                  if (url == null) return;
-                                  launchUrl(Uri.parse(url));
-                                },
-                                style: {
-                                  'img': Style(display: Display.none),
-                                  'html': Style(
-                                    margin: Margins.zero,
-                                    padding: HtmlPaddings.zero,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  'body': Style(
-                                    margin: Margins.zero,
-                                    padding: HtmlPaddings.only(top: 5),
-                                    textOverflow: TextOverflow.ellipsis,
-                                    maxLines: 4,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                },
+                  description == null
+                      ? const SizedBox.expand()
+                      : Expanded(
+                          child: InkWell(
+                            borderRadius:
+                                BorderRadius.circular(kYaruButtonRadius),
+                            onTap: () => showDialog(
+                              context: context,
+                              builder: (context) => _DescriptionDialog(
+                                title: title,
+                                description: description!,
                               ),
                             ),
+                            child: Html(
+                              data: description,
+                              onAnchorTap: (url, attributes, element) {
+                                if (url == null) return;
+                                launchUrl(Uri.parse(url));
+                              },
+                              style: {
+                                'img': Style(display: Display.none),
+                                'html': Style(
+                                  margin: Margins.zero,
+                                  padding: HtmlPaddings.zero,
+                                  textAlign: TextAlign.start,
+                                ),
+                                'body': Style(
+                                  margin: Margins.zero,
+                                  padding: HtmlPaddings.only(top: 5),
+                                  textOverflow: TextOverflow.ellipsis,
+                                  maxLines: 20,
+                                  textAlign: TextAlign.start,
+                                ),
+                              },
+                            ),
                           ),
-                  ),
+                        ),
                 ],
               ),
             ),

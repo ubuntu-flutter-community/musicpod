@@ -19,8 +19,7 @@ class ImageGrid extends StatelessWidget {
       width: gridSize,
       child: Column(
         children: [
-          SizedBox(
-            height: gridSize / 2,
+          Expanded(
             child: Row(
               children: [
                 Image.memory(
@@ -38,8 +37,7 @@ class ImageGrid extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            height: gridSize / 2,
+          Expanded(
             child: Row(
               children: [
                 Image.memory(

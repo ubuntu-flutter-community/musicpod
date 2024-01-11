@@ -44,39 +44,42 @@ class ArtistsView extends StatelessWidget {
       );
     }
 
-    return GridView.builder(
-      itemCount: artists!.length,
-      padding: gridPadding,
-      shrinkWrap: true,
-      gridDelegate: kDiskGridDelegate,
-      itemBuilder: (context, index) {
-        final artistAudios = findArtist(
-          artists!.elementAt(index),
-        );
-        final images = findImages(artistAudios ?? {});
+    return Padding(
+      padding: const EdgeInsets.only(top: 15),
+      child: GridView.builder(
+        itemCount: artists!.length,
+        padding: gridPadding,
+        shrinkWrap: true,
+        gridDelegate: kDiskGridDelegate,
+        itemBuilder: (context, index) {
+          final artistAudios = findArtist(
+            artists!.elementAt(index),
+          );
+          final images = findImages(artistAudios ?? {});
 
-        final artistname =
-            artists!.elementAt(index).artist ?? context.l10n.unknown;
+          final artistname =
+              artists!.elementAt(index).artist ?? context.l10n.unknown;
 
-        return YaruSelectableContainer(
-          selected: false,
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return ArtistPage(
-                  images: images,
-                  artistAudios: artistAudios,
-                );
-              },
+          return YaruSelectableContainer(
+            selected: false,
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return ArtistPage(
+                    images: images,
+                    artistAudios: artistAudios,
+                  );
+                },
+              ),
             ),
-          ),
-          borderRadius: BorderRadius.circular(300),
-          child: RoundImageContainer(
-            image: images?.firstOrNull,
-            text: artistname.isNotEmpty ? artistname : context.l10n.unknown,
-          ),
-        );
-      },
+            borderRadius: BorderRadius.circular(300),
+            child: RoundImageContainer(
+              image: images?.firstOrNull,
+              text: artistname.isNotEmpty ? artistname : context.l10n.unknown,
+            ),
+          );
+        },
+      ),
     );
   }
 }

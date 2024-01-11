@@ -176,9 +176,6 @@ class _LocalAudioPageState extends State<LocalAudioPage>
               ),
             ],
           ),
-          const SizedBox(
-            height: 15,
-          ),
           Expanded(child: body),
         ],
       ),

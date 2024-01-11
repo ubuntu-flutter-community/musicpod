@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
@@ -58,18 +57,9 @@ class _TitlesViewState extends State<TitlesView> {
     final libraryModel = context.read<LibraryModel>();
 
     return AudioPageBody(
+      padding: const EdgeInsets.only(top: 10),
       showTrack: false,
-      controlPanelButton: Expanded(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Text(
-            '${context.l10n.localAudio}  •  ${widget.audios?.length} ${context.l10n.titles}',
-            style: getControlPanelStyle(context.t.textTheme),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ),
+      showControlPanel: false,
       noResultMessage: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

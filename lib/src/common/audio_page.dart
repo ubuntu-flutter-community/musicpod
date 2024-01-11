@@ -37,6 +37,7 @@ class AudioPage extends StatelessWidget {
     this.showAlbum = true,
     this.showArtist = true,
     this.showAudioTileHeader = true,
+    this.showControlPanel = true,
   });
 
   final Set<Audio>? audios;
@@ -56,6 +57,7 @@ class AudioPage extends StatelessWidget {
   final int titleFlex, artistFlex, albumFlex;
   final bool showAudioPageHeader;
   final bool showAudioTileHeader;
+  final bool showControlPanel;
   final bool showTrack, showAlbum, showArtist;
 
   final void Function({
@@ -95,6 +97,7 @@ class AudioPage extends StatelessWidget {
       showTrack: showTrack,
       showAlbum: showAlbum,
       showArtist: showArtist,
+      showControlPanel: showControlPanel,
     );
 
     return YaruDetailPage(
