@@ -5,6 +5,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../common.dart';
+import '../../constants.dart';
 import '../../globals.dart';
 import '../../radio.dart';
 import '../library/library_model.dart';
@@ -36,38 +37,43 @@ class RadioDiscoverPage extends StatelessWidget {
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
         leading: const NavBackButton(),
-        title: radioSearch == RadioSearch.tag && model.searchQuery != null
-            ? TagPopup(
-                value: Tag(name: model.searchQuery!, stationCount: 1),
-                addFav: (tag) {
-                  if (tag?.name == null) return;
-                  libraryModel.addFavTag(tag!.name);
-                },
-                removeFav: (tag) {
-                  if (tag?.name == null) return;
-                  libraryModel.removeFavTag(tag!.name);
-                },
-                favs: libraryModel.favTags,
-                onSelected: (tag) {
-                  setSearchQuery(tag?.name);
-                },
-                tags: [
-                  ...[
-                    ...?model.tags,
-                  ].where((e) => libraryModel.favTags.contains(e.name) == true),
-                  ...[...?model.tags].where(
-                    (e) => libraryModel.favTags.contains(e.name) == false,
-                  ),
-                ],
-              )
-            : SearchingBar(
-                key: ValueKey(searchQuery),
-                text: searchQuery,
-                onClear: () {
-                  setSearchQuery(null);
-                },
-                onSubmitted: setSearchQuery,
-              ),
+        title: SizedBox(
+          width: kSearchBarWidth,
+          child: radioSearch == RadioSearch.tag && model.searchQuery != null
+              ? TagPopup(
+                  value: Tag(name: model.searchQuery!, stationCount: 1),
+                  addFav: (tag) {
+                    if (tag?.name == null) return;
+                    libraryModel.addFavTag(tag!.name);
+                  },
+                  removeFav: (tag) {
+                    if (tag?.name == null) return;
+                    libraryModel.removeFavTag(tag!.name);
+                  },
+                  favs: libraryModel.favTags,
+                  onSelected: (tag) {
+                    setSearchQuery(tag?.name);
+                  },
+                  tags: [
+                    ...[
+                      ...?model.tags,
+                    ].where(
+                      (e) => libraryModel.favTags.contains(e.name) == true,
+                    ),
+                    ...[...?model.tags].where(
+                      (e) => libraryModel.favTags.contains(e.name) == false,
+                    ),
+                  ],
+                )
+              : SearchingBar(
+                  key: ValueKey(searchQuery),
+                  text: searchQuery,
+                  onClear: () {
+                    setSearchQuery(null);
+                  },
+                  onSubmitted: setSearchQuery,
+                ),
+        ),
         actions: [
           Padding(
             padding: appBarActionSpacing,

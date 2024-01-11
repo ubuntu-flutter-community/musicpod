@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 import 'package:yaru/yaru.dart';
+import 'package:yaru_widgets/constants.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -38,8 +39,7 @@ class TagPopup extends StatelessWidget {
     );
 
     return SizedBox(
-      width: kSearchBarWidth,
-      height: 38,
+      height: yaruStyled ? kYaruTitleBarItemHeight : 38,
       child: LayoutBuilder(
         builder: (_, constraints) {
           return Autocomplete<Tag>(
@@ -54,17 +54,7 @@ class TagPopup extends StatelessWidget {
               focusNode,
               onFieldSubmitted,
             ) {
-              final outlineInputBorder = OutlineInputBorder(
-                borderSide:
-                    BorderSide(width: 2, color: theme.colorScheme.primary),
-              );
               return TextField(
-                style: yaruStyled
-                    ? const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
-                      )
-                    : null,
                 maxLines: 1,
                 onTap: () {
                   textEditingController.selection = TextSelection(
@@ -72,19 +62,17 @@ class TagPopup extends StatelessWidget {
                     extentOffset: textEditingController.value.text.length,
                   );
                 },
-                // style: fallBackTextStyle,
+                style: yaruStyled ? theme.textTheme.bodyMedium : null,
+                strutStyle: yaruStyled
+                    ? const StrutStyle(
+                        leading: 0.2,
+                      )
+                    : null,
+                textAlignVertical: yaruStyled ? TextAlignVertical.center : null,
+                cursorWidth: yaruStyled ? 1 : 2.0,
                 decoration: yaruStyled
-                    ? _createYaruDecoration(theme.colorScheme)
-                    : InputDecoration(
-                        filled: true,
-                        contentPadding: const EdgeInsets.all(10),
-                        border: outlineInputBorder,
-                        errorBorder: outlineInputBorder,
-                        enabledBorder: outlineInputBorder,
-                        focusedBorder: outlineInputBorder,
-                        disabledBorder: outlineInputBorder,
-                        focusedErrorBorder: outlineInputBorder,
-                      ),
+                    ? _createYaruDecoration(theme.isLight)
+                    : _createDecoration(theme.colorScheme),
                 controller: textEditingController,
                 focusNode: focusNode,
                 onSubmitted: (String value) {
@@ -96,7 +84,7 @@ class TagPopup extends StatelessWidget {
               return Align(
                 alignment: Alignment.topLeft,
                 child: SizedBox(
-                  width: kSearchBarWidth - 22,
+                  width: kSearchBarWidth,
                   height:
                       (options.length * 50) > 400 ? 400 : options.length * 50,
                   child: ClipRRect(
@@ -170,19 +158,26 @@ class TagPopup extends StatelessWidget {
     );
   }
 
-  InputDecoration _createYaruDecoration(ColorScheme colorScheme) {
-    final radius = BorderRadius.circular(6);
-    const width = 1.0;
-    const strokeAlign = 0.0;
-    final fill = colorScheme.isLight
-        ? const Color(0xFFededed)
-        : const Color.fromARGB(255, 40, 40, 40);
-    final border = colorScheme.isHighContrast
-        ? colorScheme.outlineVariant
-        : colorScheme.outline;
-    final disabledBorder = colorScheme.isLight
-        ? const Color.fromARGB(255, 237, 237, 237)
-        : const Color.fromARGB(255, 67, 67, 67);
+  InputDecoration _createDecoration(ColorScheme colorScheme) {
+    final outlineInputBorder = OutlineInputBorder(
+      borderSide: BorderSide(width: 2, color: colorScheme.primary),
+    );
+    return InputDecoration(
+      filled: true,
+      contentPadding: const EdgeInsets.all(10),
+      border: outlineInputBorder,
+      errorBorder: outlineInputBorder,
+      enabledBorder: outlineInputBorder,
+      focusedBorder: outlineInputBorder,
+      disabledBorder: outlineInputBorder,
+      focusedErrorBorder: outlineInputBorder,
+    );
+  }
+
+  InputDecoration _createYaruDecoration(bool isLight) {
+    final radius = BorderRadius.circular(kYaruButtonRadius);
+
+    final fill = isLight ? const Color(0xffdcdcdc) : const Color(0xff2f2f2f);
 
     const textStyle = TextStyle(
       fontSize: 14,
@@ -192,62 +187,31 @@ class TagPopup extends StatelessWidget {
     return InputDecoration(
       filled: true,
       fillColor: fill,
+      hoverColor: (fill).scale(lightness: 0.1),
+      suffixIconConstraints:
+          const BoxConstraints(maxWidth: kYaruTitleBarItemHeight),
       border: OutlineInputBorder(
-        borderSide: BorderSide(
-          width: width,
-          color: border,
-        ),
+        borderSide: BorderSide.none,
         borderRadius: radius,
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(width: width, color: colorScheme.primary),
+        borderSide: BorderSide(width: 1, color: fill),
         borderRadius: radius,
       ),
       enabledBorder: OutlineInputBorder(
-        borderSide:
-            BorderSide(width: width, color: border, strokeAlign: strokeAlign),
-        borderRadius: radius,
-      ),
-      // activeIndicatorBorder:
-      //     const BorderSide(width: width, strokeAlign: strokeAlign),
-      // outlineBorder: const BorderSide(width: width, strokeAlign: strokeAlign),
-      focusedErrorBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          width: width,
-          color: colorScheme.error,
-          strokeAlign: strokeAlign,
-        ),
-        borderRadius: radius,
-      ),
-      errorBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          width: width,
-          color: colorScheme.error,
-          strokeAlign: strokeAlign,
-        ),
-        borderRadius: radius,
-      ),
-      disabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          width: width,
-          color: disabledBorder,
-          strokeAlign: strokeAlign,
-        ),
+        borderSide: BorderSide(width: 1, color: fill, strokeAlign: 1),
         borderRadius: radius,
       ),
       isDense: true,
-      iconColor: colorScheme.onSurface,
-      contentPadding:
-          const EdgeInsets.only(left: 12, right: 12, bottom: 9, top: 10),
+      contentPadding: const EdgeInsets.only(
+        bottom: 10,
+        top: 10,
+        right: 15,
+        left: 15,
+      ),
       helperStyle: textStyle,
       hintStyle: textStyle,
       labelStyle: textStyle,
-      suffixStyle: textStyle.copyWith(
-        color: colorScheme.onSurface.scale(lightness: -0.2),
-      ),
-      prefixStyle: textStyle.copyWith(
-        color: colorScheme.onSurface.scale(lightness: -0.2),
-      ),
     );
   }
 }
