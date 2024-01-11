@@ -9,6 +9,7 @@ import '../../data.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
 import '../../utils.dart';
+import '../l10n/l10n.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
   LocalAudioModel({
@@ -198,11 +199,11 @@ class LocalAudioModel extends SafeChangeNotifier {
     return images;
   }
 
-  int _selectedTab = 0;
-  int get selectedTab => _selectedTab;
-  set selectedTab(int value) {
-    if (value == _selectedTab) return;
-    _selectedTab = value;
+  LocalAudioView _localAudioView = LocalAudioView.titles;
+  LocalAudioView get localAudioView => _localAudioView;
+  void setLocalAudioView(LocalAudioView value) {
+    if (value == _localAudioView) return;
+    _localAudioView = value;
     notifyListeners();
   }
 
@@ -259,4 +260,18 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   Future<void> createLocalAudioCache() async => await libraryService
       .writeLocalAudioCache(audios: localAudioService.audios);
+}
+
+enum LocalAudioView {
+  titles,
+  artists,
+  albums;
+
+  String localize(AppLocalizations l10n) {
+    return switch (this) {
+      titles => l10n.titles,
+      artists => l10n.artists,
+      albums => l10n.albums
+    };
+  }
 }

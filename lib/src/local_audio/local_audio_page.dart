@@ -96,8 +96,9 @@ class _LocalAudioPageState extends State<LocalAudioPage>
     final findAlbum = model.findAlbum;
 
     final libraryModel = context.read<LibraryModel>();
-    final selectedIndex = context.select((LibraryModel m) => m.localAudioindex);
-    final onIndexSelected = libraryModel.setLocalAudioindex;
+    final localAudioView =
+        context.select((LocalAudioModel m) => m.localAudioView);
+    final setLocalAudioView = model.setLocalAudioView;
 
     context.select((LocalAudioModel m) => m.useLocalAudioCache);
 
@@ -107,26 +108,6 @@ class _LocalAudioPageState extends State<LocalAudioPage>
 
     final playerModel = context.read<PlayerModel>();
     final startPlaylist = playerModel.startPlaylist;
-
-    final tabBar = SizedBox(
-      width: kSearchBarWidth,
-      child: TabsBar(
-        onTap: (value) {
-          onIndexSelected.call(value);
-        },
-        tabs: [
-          Tab(
-            text: context.l10n.titles,
-          ),
-          Tab(
-            text: context.l10n.artists,
-          ),
-          Tab(
-            text: context.l10n.albums,
-          ),
-        ],
-      ),
-    );
 
     final headerBar = HeaderBar(
       style: showWindowControls
@@ -149,20 +130,19 @@ class _LocalAudioPageState extends State<LocalAudioPage>
           ),
         ),
       ],
-      title: tabBar,
+      title: Text(context.l10n.localAudio),
     );
 
-    final tabBarView = TabBarView(
-      children: [
-        TitlesView(
+    final body = switch (localAudioView) {
+      LocalAudioView.titles => TitlesView(
           audios: audios,
         ),
-        ArtistsView(
+      LocalAudioView.artists => ArtistsView(
           artists: artists,
           findArtist: findArtist,
           findImages: findImages,
         ),
-        AlbumsView(
+      LocalAudioView.albums => AlbumsView(
           albums: albums,
           addPinnedAlbum: addPinnedAlbum,
           findAlbum: findAlbum,
@@ -170,15 +150,37 @@ class _LocalAudioPageState extends State<LocalAudioPage>
           removePinnedAlbum: removePinnedAlbum,
           startPlaylist: startPlaylist,
         ),
-      ],
-    );
+    };
 
-    return DefaultTabController(
-      initialIndex: selectedIndex ?? 0,
-      length: 3,
-      child: Scaffold(
-        appBar: headerBar,
-        body: tabBarView,
+    return Scaffold(
+      appBar: headerBar,
+      body: Column(
+        children: [
+          Row(
+            children: [
+              const SizedBox(
+                width: 20,
+              ),
+              YaruChoiceChipBar(
+                yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+                selectedFirst: false,
+                clearOnSelect: false,
+                labels: LocalAudioView.values
+                    .map((e) => Text(e.localize(context.l10n)))
+                    .toList(),
+                isSelected: LocalAudioView.values
+                    .map((e) => e == localAudioView)
+                    .toList(),
+                onSelected: (index) =>
+                    setLocalAudioView(LocalAudioView.values[index]),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Expanded(child: body),
+        ],
       ),
     );
   }
