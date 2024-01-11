@@ -4,7 +4,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
-import '../../constants.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
 
@@ -16,6 +15,7 @@ class AudioPageHeader extends StatelessWidget {
     this.image,
     this.label,
     this.subTitle,
+    this.height,
   });
 
   final String title;
@@ -23,6 +23,7 @@ class AudioPageHeader extends StatelessWidget {
   final Widget? image;
   final String? label;
   final String? subTitle;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +31,9 @@ class AudioPageHeader extends StatelessWidget {
     final size = context.m.size;
     final smallWindow = size.width < 600.0;
 
-    return Container(
-      height: kAudioPageHeaderHeight,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      height: height,
       padding: const EdgeInsets.all(20),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,34 +54,33 @@ class AudioPageHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Flexible(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            label ?? context.l10n.album,
-                            style: theme.textTheme.labelSmall,
-                            maxLines: 1,
+                  if (height != 0)
+                    Flexible(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              label ?? context.l10n.album,
+                              style: theme.textTheme.labelSmall,
+                              maxLines: 1,
+                            ),
                           ),
-                        ),
-                        if (subTitle?.isNotEmpty == true)
                           const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 5),
                             child: Text('·'),
                           ),
-                        if (subTitle?.isNotEmpty == true)
                           Flexible(
                             child: Text(
-                              subTitle!,
+                              subTitle ?? '',
                               style: theme.textTheme.labelSmall,
                               maxLines: 1,
                               overflow: TextOverflow.visible,
                             ),
                           ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
                   Flexible(
                     fit: FlexFit.tight,
                     child: Text(
