@@ -56,7 +56,7 @@ class LikeButton extends StatelessWidget {
       style: TextButton.styleFrom(
         shape: RoundedRectangleBorder(
           side: BorderSide.none,
-          borderRadius: BorderRadius.circular(kYaruButtonRadius),
+          borderRadius: BorderRadius.circular(100),
         ),
       ),
       itemBuilder: (context) {

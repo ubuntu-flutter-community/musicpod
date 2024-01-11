@@ -26,7 +26,7 @@ class CountryPopup extends StatelessWidget {
     final theme = context.t;
     final buttonStyle = TextButton.styleFrom(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(100),
       ),
     );
     final fallBackTextStyle =
