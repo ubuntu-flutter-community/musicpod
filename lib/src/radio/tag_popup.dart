@@ -195,11 +195,11 @@ class TagPopup extends StatelessWidget {
         borderRadius: radius,
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(width: 1, color: fill),
+        borderSide: BorderSide.none,
         borderRadius: radius,
       ),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(width: 1, color: fill, strokeAlign: 1),
+        borderSide: BorderSide.none,
         borderRadius: radius,
       ),
       isDense: true,
