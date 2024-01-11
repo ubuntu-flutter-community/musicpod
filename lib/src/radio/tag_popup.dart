@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide State;
+import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -54,11 +55,16 @@ class TagPopup extends StatelessWidget {
               onFieldSubmitted,
             ) {
               final outlineInputBorder = OutlineInputBorder(
-                borderSide: focusNode.hasFocus
-                    ? BorderSide(width: 2, color: theme.colorScheme.primary)
-                    : const BorderSide(width: 2),
+                borderSide:
+                    BorderSide(width: 2, color: theme.colorScheme.primary),
               );
               return TextField(
+                style: yaruStyled
+                    ? const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      )
+                    : null,
                 maxLines: 1,
                 onTap: () {
                   textEditingController.selection = TextSelection(
@@ -68,7 +74,7 @@ class TagPopup extends StatelessWidget {
                 },
                 // style: fallBackTextStyle,
                 decoration: yaruStyled
-                    ? null
+                    ? _createYaruDecoration(theme.colorScheme)
                     : InputDecoration(
                         filled: true,
                         contentPadding: const EdgeInsets.all(10),
@@ -160,6 +166,87 @@ class TagPopup extends StatelessWidget {
             onSelected: (option) => onSelected?.call(option),
           );
         },
+      ),
+    );
+  }
+
+  InputDecoration _createYaruDecoration(ColorScheme colorScheme) {
+    final radius = BorderRadius.circular(6);
+    const width = 1.0;
+    const strokeAlign = 0.0;
+    final fill = colorScheme.isLight
+        ? const Color(0xFFededed)
+        : const Color.fromARGB(255, 40, 40, 40);
+    final border = colorScheme.isHighContrast
+        ? colorScheme.outlineVariant
+        : colorScheme.outline;
+    final disabledBorder = colorScheme.isLight
+        ? const Color.fromARGB(255, 237, 237, 237)
+        : const Color.fromARGB(255, 67, 67, 67);
+
+    const textStyle = TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+    );
+
+    return InputDecoration(
+      filled: true,
+      fillColor: fill,
+      border: OutlineInputBorder(
+        borderSide: BorderSide(
+          width: width,
+          color: border,
+        ),
+        borderRadius: radius,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(width: width, color: colorScheme.primary),
+        borderRadius: radius,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide:
+            BorderSide(width: width, color: border, strokeAlign: strokeAlign),
+        borderRadius: radius,
+      ),
+      // activeIndicatorBorder:
+      //     const BorderSide(width: width, strokeAlign: strokeAlign),
+      // outlineBorder: const BorderSide(width: width, strokeAlign: strokeAlign),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          width: width,
+          color: colorScheme.error,
+          strokeAlign: strokeAlign,
+        ),
+        borderRadius: radius,
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          width: width,
+          color: colorScheme.error,
+          strokeAlign: strokeAlign,
+        ),
+        borderRadius: radius,
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          width: width,
+          color: disabledBorder,
+          strokeAlign: strokeAlign,
+        ),
+        borderRadius: radius,
+      ),
+      isDense: true,
+      iconColor: colorScheme.onSurface,
+      contentPadding:
+          const EdgeInsets.only(left: 12, right: 12, bottom: 9, top: 10),
+      helperStyle: textStyle,
+      hintStyle: textStyle,
+      labelStyle: textStyle,
+      suffixStyle: textStyle.copyWith(
+        color: colorScheme.onSurface.scale(lightness: -0.2),
+      ),
+      prefixStyle: textStyle.copyWith(
+        color: colorScheme.onSurface.scale(lightness: -0.2),
       ),
     );
   }
