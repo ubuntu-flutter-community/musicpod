@@ -49,73 +49,89 @@ class AudioPageHeader extends StatelessWidget {
           if (!smallWindow)
             Expanded(
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Flexible(
-                    child: Text(
-                      label ?? context.l10n.album,
-                      style: theme.textTheme.labelSmall,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            label ?? context.l10n.album,
+                            style: theme.textTheme.labelSmall,
+                            maxLines: 1,
+                          ),
+                        ),
+                        if (subTitle?.isNotEmpty == true)
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            child: Text('·'),
+                          ),
+                        if (subTitle?.isNotEmpty == true)
+                          Flexible(
+                            child: Text(
+                              subTitle!,
+                              style: theme.textTheme.labelSmall,
+                              maxLines: 1,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   Flexible(
+                    fit: FlexFit.tight,
                     child: Text(
                       title,
                       style: theme.textTheme.headlineLarge?.copyWith(
                         fontWeight: FontWeight.w300,
-                        fontSize: 35,
+                        fontSize: 30,
                         color: theme.colorScheme.onSurface.withOpacity(0.9),
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  if (subTitle?.isNotEmpty == true)
-                    Flexible(
-                      child: Text(
-                        subTitle!,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontStyle: FontStyle.italic,
+                  if (description != null)
+                    Expanded(
+                      flex: 3,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(kYaruButtonRadius),
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => _DescriptionDialog(
+                            title: title,
+                            description: description!,
+                          ),
+                        ),
+                        child: SizedBox(
+                          height: 100,
+                          child: Html(
+                            data: description,
+                            onAnchorTap: (url, attributes, element) {
+                              if (url == null) return;
+                              launchUrl(Uri.parse(url));
+                            },
+                            style: {
+                              'img': Style(display: Display.none),
+                              'html': Style(
+                                margin: Margins.zero,
+                                padding: HtmlPaddings.zero,
+                                textAlign: TextAlign.start,
+                                maxLines: 20,
+                                textOverflow: TextOverflow.fade,
+                              ),
+                              'body': Style(
+                                margin: Margins.zero,
+                                textOverflow: TextOverflow.fade,
+                                maxLines: 20,
+                                textAlign: TextAlign.start,
+                              ),
+                            },
+                          ),
                         ),
                       ),
                     ),
-                  description == null
-                      ? const SizedBox.expand()
-                      : Expanded(
-                          child: InkWell(
-                            borderRadius:
-                                BorderRadius.circular(kYaruButtonRadius),
-                            onTap: () => showDialog(
-                              context: context,
-                              builder: (context) => _DescriptionDialog(
-                                title: title,
-                                description: description!,
-                              ),
-                            ),
-                            child: Html(
-                              data: description,
-                              onAnchorTap: (url, attributes, element) {
-                                if (url == null) return;
-                                launchUrl(Uri.parse(url));
-                              },
-                              style: {
-                                'img': Style(display: Display.none),
-                                'html': Style(
-                                  margin: Margins.zero,
-                                  padding: HtmlPaddings.zero,
-                                  textAlign: TextAlign.start,
-                                ),
-                                'body': Style(
-                                  margin: Margins.zero,
-                                  padding: HtmlPaddings.only(top: 5),
-                                  textOverflow: TextOverflow.ellipsis,
-                                  maxLines: 20,
-                                  textAlign: TextAlign.start,
-                                ),
-                              },
-                            ),
-                          ),
-                        ),
                 ],
               ),
             ),
@@ -136,49 +152,43 @@ class _DescriptionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
-    return SizedBox(
-      height: 400,
-      width: 400,
-      child: AlertDialog(
-        title: yaruStyled
-            ? YaruDialogTitleBar(
-                title: Text(title),
-                backgroundColor: Colors.transparent,
-                border: BorderSide.none,
-              )
-            : Text(title),
-        titlePadding: yaruStyled ? EdgeInsets.zero : null,
-        contentPadding: const EdgeInsets.only(
-          top: 10,
-          left: kYaruPagePadding,
-          right: kYaruPagePadding,
-          bottom: kYaruPagePadding,
-        ),
-        content: SizedBox(
-          width: 400,
-          height: 200,
-          child: Html(
-            onAnchorTap: (url, attributes, element) {
-              if (url == null) return;
-              launchUrl(Uri.parse(url));
-            },
-            data: description,
-            style: {
-              'html': Style(
-                margin: Margins.zero,
-                padding: HtmlPaddings.zero,
-              ),
-              'body': Style(
-                margin: Margins.zero,
-                padding: HtmlPaddings.zero,
-                color: theme.hintColor,
-              ),
-            },
-          ),
-        ),
-        scrollable: true,
+    return AlertDialog(
+      title: yaruStyled
+          ? YaruDialogTitleBar(
+              title: Text(title),
+              backgroundColor: Colors.transparent,
+              border: BorderSide.none,
+            )
+          : Text(title),
+      titlePadding: yaruStyled ? EdgeInsets.zero : null,
+      contentPadding: const EdgeInsets.only(
+        top: 10,
+        left: kYaruPagePadding,
+        right: kYaruPagePadding,
+        bottom: kYaruPagePadding,
       ),
+      content: SizedBox(
+        width: 400,
+        height: 500,
+        child: Html(
+          onAnchorTap: (url, attributes, element) {
+            if (url == null) return;
+            launchUrl(Uri.parse(url));
+          },
+          data: description,
+          style: {
+            'html': Style(
+              margin: Margins.zero,
+              padding: HtmlPaddings.zero,
+            ),
+            'body': Style(
+              margin: Margins.zero,
+              padding: HtmlPaddings.zero,
+            ),
+          },
+        ),
+      ),
+      scrollable: true,
     );
   }
 }
