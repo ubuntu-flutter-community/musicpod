@@ -88,12 +88,21 @@ class PodcastsCollectionBody extends StatelessWidget {
                         ? null
                         : (index) {
                             if (index == 0) {
-                              if (!updatesOnly) {
+                              if (updatesOnly) {
+                                setUpdatesOnly(false);
+                              } else {
                                 model.update(context.l10n.newEpisodeAvailable);
+
+                                setUpdatesOnly(true);
+                                setDownloadsOnly(false);
                               }
-                              setUpdatesOnly(!updatesOnly);
                             } else {
-                              setDownloadsOnly(!downloadsOnly);
+                              if (downloadsOnly) {
+                                setDownloadsOnly(false);
+                              } else {
+                                setDownloadsOnly(true);
+                                setUpdatesOnly(false);
+                              }
                             }
                           },
                   ),
