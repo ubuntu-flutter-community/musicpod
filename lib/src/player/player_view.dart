@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../constants.dart';
-import '../../data.dart';
 import '../../player.dart';
 import '../../theme_data_x.dart';
 import '../library/library_model.dart';
@@ -14,13 +13,12 @@ class PlayerView extends StatefulWidget {
   const PlayerView({
     super.key,
     required this.playerViewMode,
-    required this.onTextTap,
     required this.isOnline,
+    this.countryCode,
   });
 
   final PlayerViewMode playerViewMode;
-  final void Function({required String text, required AudioType audioType})
-      onTextTap;
+  final String? countryCode;
   final bool isOnline;
 
   @override
@@ -86,7 +84,6 @@ class _PlayerViewState extends State<PlayerView> {
         isVideo: isVideo == true,
         videoController: playerModel.controller,
         playerViewMode: widget.playerViewMode,
-        onTextTap: widget.onTextTap,
         setFullScreen: setFullScreen,
         nextAudio: nextAudio,
         audio: audio,
@@ -108,7 +105,6 @@ class _PlayerViewState extends State<PlayerView> {
           BottomPlayer(
             isVideo: isVideo,
             videoController: playerModel.controller,
-            onTextTap: widget.onTextTap,
             setFullScreen: setFullScreen,
             audio: audio,
             playPrevious: playPrevious,

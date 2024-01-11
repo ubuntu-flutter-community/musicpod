@@ -145,6 +145,64 @@ class RadioService {
     }
   }
 
+  Future<List<Station>?> getStations({
+    String? country,
+    String? name,
+    String? state,
+    Tag? tag,
+    int limit = 100,
+  }) async {
+    if (_radioBrowserApi == null) {
+      return [];
+    }
+
+    RadioBrowserListResponse<Station>? response;
+    try {
+      if (name?.isEmpty == false) {
+        response = await _radioBrowserApi!.getStationsByName(
+          name: name!,
+          parameters: InputParameters(
+            hidebroken: true,
+            order: 'stationcount',
+            limit: limit,
+          ),
+        );
+      } else if (country?.isEmpty == false) {
+        response = await _radioBrowserApi!.getStationsByCountry(
+          country: country!,
+          parameters: InputParameters(
+            hidebroken: true,
+            order: 'stationcount',
+            limit: limit,
+          ),
+        );
+      } else if (tag != null) {
+        response = await _radioBrowserApi!.getStationsByTag(
+          tag: tag.name,
+          parameters: InputParameters(
+            hidebroken: true,
+            order: 'stationcount',
+            limit: limit,
+          ),
+        );
+      } else if (state?.isEmpty == false) {
+        response = await _radioBrowserApi!.getStationsByState(
+          state: state!,
+          parameters: InputParameters(
+            hidebroken: true,
+            order: 'stationcount',
+            limit: limit,
+          ),
+        );
+      }
+    } on Exception catch (e) {
+      if (e is SocketException) {
+        return [];
+      }
+    }
+    return response?.items;
+  }
+
   List<Tag>? _tags;
   List<Tag>? get tags => _tags;
   void setTags(List<Tag>? value) {
@@ -179,7 +237,6 @@ class RadioService {
   final _searchController = StreamController<bool>.broadcast();
   Stream<bool> get searchQueryChanged => _searchController.stream;
   void setSearchQuery(String? value) {
-    if (value == _searchQuery) return;
     _searchQuery = value;
     _searchController.add(true);
   }

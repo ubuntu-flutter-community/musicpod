@@ -7,10 +7,13 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../globals.dart';
 import '../../player.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
-import 'radio_page.dart';
+import 'radio_fall_back_icon.dart';
+import 'radio_search.dart';
+import 'radio_search_page.dart';
 
 class StationPage extends StatelessWidget {
   const StationPage({
@@ -19,7 +22,6 @@ class StationPage extends StatelessWidget {
     required this.name,
     required this.unStarStation,
     required this.starStation,
-    this.onTextTap,
     required this.isStarred,
   });
 
@@ -28,8 +30,6 @@ class StationPage extends StatelessWidget {
   final void Function(String station) unStarStation;
   final void Function(String station) starStation;
   final bool isStarred;
-
-  final void Function(String text)? onTextTap;
 
   static Widget createIcon({
     required BuildContext context,
@@ -186,8 +186,16 @@ class StationPage extends StatelessWidget {
                             labels: tags!.map((e) => Text(e)).toList(),
                             isSelected: tags.map((e) => false).toList(),
                             onSelected: (index) {
-                              onTextTap?.call(tags[index]);
-                              Navigator.of(context).maybePop();
+                              navigatorKey.currentState?.push(
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return RadioSearchPage(
+                                      radioSearch: RadioSearch.tag,
+                                      searchQuery: tags[index],
+                                    );
+                                  },
+                                ),
+                              );
                             },
                           )
                         : SizedBox(

@@ -2,10 +2,14 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../../library.dart';
+import '../../local_audio.dart';
+import '../../utils.dart';
 import '../l10n/l10n.dart';
 
 class ArtistPage extends StatelessWidget {
@@ -13,24 +17,38 @@ class ArtistPage extends StatelessWidget {
     super.key,
     required this.images,
     required this.artistAudios,
-    required this.showWindowControls,
-    this.onTextTap,
   });
 
   final Set<Uint8List>? images;
   final Set<Audio>? artistAudios;
-  final bool showWindowControls;
-
-  final void Function({
-    required String text,
-    required AudioType audioType,
-  })? onTextTap;
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<LocalAudioModel>();
+    final libraryModel = context.read<LibraryModel>();
+
     return AudioPage(
       showArtist: false,
-      onTextTap: onTextTap,
+      onAlbumTap: ({required audioType, required text}) {
+        final audios = model.findAlbum(Audio(album: text));
+        if (audios?.firstOrNull == null) return;
+        final id = generateAlbumId(audios!.first);
+        if (id == null) return;
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) {
+              return AlbumPage(
+                isPinnedAlbum: libraryModel.isPinnedAlbum,
+                removePinnedAlbum: libraryModel.removePinnedAlbum,
+                addPinnedAlbum: libraryModel.addPinnedAlbum,
+                id: id,
+                album: audios,
+              );
+            },
+          ),
+        );
+      },
       audioPageType: AudioPageType.artist,
       headerLabel: context.l10n.artist,
       headerTitle: artistAudios?.firstOrNull?.artist,

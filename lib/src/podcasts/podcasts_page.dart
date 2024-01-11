@@ -10,7 +10,6 @@ import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
-import '../common/loading_grid.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import 'podcasts_collection_body.dart';
@@ -61,7 +60,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final removePodcast = libraryModel.removePodcast;
     final addPodcast = libraryModel.addPodcast;
     final setPodcastIndex = libraryModel.setPodcastIndex;
-    final podcastIndex = context.select((LibraryModel m) => m.podcastIndex);
 
     final setLimit = model.setLimit;
     final setSelectedFeedUrl = model.setSelectedFeedUrl;
@@ -75,7 +73,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
         theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
     final buttonStyle = TextButton.styleFrom(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(100),
       ),
     );
 
@@ -160,51 +158,44 @@ class _PodcastsPageState extends State<PodcastsPage> {
       removePodcast: removePodcast,
     );
 
-    return DefaultTabController(
-      initialIndex: podcastIndex ?? 1,
-      length: 2,
-      child: Scaffold(
-        appBar: HeaderBar(
-          leading: (Navigator.canPop(context))
-              ? NavBackButton(
-                  onPressed: () {
-                    setSearchActive(false);
-                  },
-                )
-              : const SizedBox.shrink(),
-          titleSpacing: 0,
-          style: showWindowControls
-              ? YaruTitleBarStyle.normal
-              : YaruTitleBarStyle.undecorated,
-          actions: [
-            Flexible(
-              child: Padding(
-                padding: appBarActionSpacing,
-                child: SearchButton(
-                  active: searchActive,
-                  onPressed: () => setSearchActive(!searchActive),
-                ),
+    return Scaffold(
+      appBar: HeaderBar(
+        leading: (Navigator.canPop(context))
+            ? NavBackButton(
+                onPressed: () {
+                  setSearchActive(false);
+                },
+              )
+            : const SizedBox.shrink(),
+        titleSpacing: 0,
+        style: showWindowControls
+            ? YaruTitleBarStyle.normal
+            : YaruTitleBarStyle.undecorated,
+        actions: [
+          Flexible(
+            child: Padding(
+              padding: appBarActionSpacing,
+              child: SearchButton(
+                active: searchActive,
+                onPressed: () => setSearchActive(!searchActive),
               ),
             ),
-          ],
-          title: PodcastsPageTitle(
-            onIndexSelected: setPodcastIndex,
-            searchActive: searchActive,
-            searchQuery: searchQuery,
-            setSearchActive: setSearchActive,
-            setSearchQuery: setSearchQuery,
-            search: search,
           ),
-        ),
-        body: Padding(
-          padding: tabViewPadding,
-          child: TabBarView(
-            children: [
-              subsBody,
-              searchBody,
-            ],
-          ),
-        ),
+        ],
+        title: searchActive
+            ? PodcastsPageTitle(
+                onIndexSelected: setPodcastIndex,
+                searchActive: true,
+                searchQuery: searchQuery,
+                setSearchActive: setSearchActive,
+                setSearchQuery: setSearchQuery,
+                search: search,
+              )
+            : Text('${context.l10n.podcasts} ${context.l10n.collection}'),
+      ),
+      body: Padding(
+        padding: tabViewPadding,
+        child: searchActive ? searchBody : subsBody,
       ),
     );
   }

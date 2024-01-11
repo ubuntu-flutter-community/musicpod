@@ -22,7 +22,8 @@ class AudioPage extends StatelessWidget {
     this.headerDescription,
     this.image,
     this.showAudioPageHeader = true,
-    this.onTextTap,
+    this.onAlbumTap,
+    this.onArtistTap,
     this.noResultMessage,
     this.noResultIcon,
     this.titleLabel,
@@ -36,6 +37,7 @@ class AudioPage extends StatelessWidget {
     this.showAlbum = true,
     this.showArtist = true,
     this.showAudioTileHeader = true,
+    this.showControlPanel = true,
   });
 
   final Set<Audio>? audios;
@@ -55,12 +57,13 @@ class AudioPage extends StatelessWidget {
   final int titleFlex, artistFlex, albumFlex;
   final bool showAudioPageHeader;
   final bool showAudioTileHeader;
+  final bool showControlPanel;
   final bool showTrack, showAlbum, showArtist;
 
   final void Function({
     required String text,
     required AudioType audioType,
-  })? onTextTap;
+  })? onAlbumTap, onArtistTap;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +76,8 @@ class AudioPage extends StatelessWidget {
       audios: audios,
       noResultMessage: noResultMessage,
       noResultIcon: noResultIcon,
-      onTextTap: onTextTap,
+      onAlbumTap: onAlbumTap,
+      onArtistTap: onArtistTap,
       audioPageType: audioPageType,
       image: image,
       headerDescription: headerDescription,
@@ -93,6 +97,7 @@ class AudioPage extends StatelessWidget {
       showTrack: showTrack,
       showAlbum: showAlbum,
       showArtist: showArtist,
+      showControlPanel: showControlPanel,
     );
 
     return YaruDetailPage(

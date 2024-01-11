@@ -9,6 +9,7 @@ import '../../data.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
 import '../../utils.dart';
+import '../l10n/l10n.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
   LocalAudioModel({
@@ -18,23 +19,6 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   final LocalAudioService localAudioService;
   final LibraryService libraryService;
-
-  bool _searchActive = false;
-  bool get searchActive => _searchActive;
-  void setSearchActive(bool value) {
-    if (value == _searchActive) return;
-    _searchActive = value;
-    notifyListeners();
-  }
-
-  String? _searchQuery;
-
-  String? get searchQuery => _searchQuery;
-  void setSearchQuery(String? value) {
-    if (value == null || value == _searchQuery) return;
-    _searchQuery = value;
-    notifyListeners();
-  }
 
   Set<Audio>? _similarAlbumsSearchResult;
   Set<Audio>? get similarAlbumsSearchResult => _similarAlbumsSearchResult;
@@ -57,8 +41,19 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  void search() {
-    if (searchQuery == null) return;
+  String? _searchQuery;
+  String? get searchQuery => _searchQuery;
+  void search(String? query) {
+    _searchQuery = query;
+    if (query == null) return;
+    if (query.isEmpty) {
+      setTitlesSearchResult(
+        {},
+      );
+      setSimilarAlbumsSearchResult({});
+      setSimilarArtistsSearchResult({});
+      return;
+    }
 
     final allAlbumsFindings = audios?.where(
       (audio) =>
@@ -204,11 +199,11 @@ class LocalAudioModel extends SafeChangeNotifier {
     return images;
   }
 
-  int _selectedTab = 0;
-  int get selectedTab => _selectedTab;
-  set selectedTab(int value) {
-    if (value == _selectedTab) return;
-    _selectedTab = value;
+  LocalAudioView _localAudioView = LocalAudioView.titles;
+  LocalAudioView get localAudioView => _localAudioView;
+  void setLocalAudioView(LocalAudioView value) {
+    if (value == _localAudioView) return;
+    _localAudioView = value;
     notifyListeners();
   }
 
@@ -265,4 +260,18 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   Future<void> createLocalAudioCache() async => await libraryService
       .writeLocalAudioCache(audios: localAudioService.audios);
+}
+
+enum LocalAudioView {
+  titles,
+  artists,
+  albums;
+
+  String localize(AppLocalizations l10n) {
+    return switch (this) {
+      titles => l10n.titles,
+      artists => l10n.artists,
+      albums => l10n.albums
+    };
+  }
 }

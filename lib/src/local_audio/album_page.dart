@@ -1,10 +1,12 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../local_audio.dart';
 import '../l10n/l10n.dart';
 
 class AlbumPage extends StatelessWidget {
@@ -15,7 +17,6 @@ class AlbumPage extends StatelessWidget {
     required this.removePinnedAlbum,
     required this.album,
     required this.addPinnedAlbum,
-    this.onTextTap,
   });
 
   static Widget createIcon(
@@ -49,10 +50,6 @@ class AlbumPage extends StatelessWidget {
   final void Function(String name) removePinnedAlbum;
   final Set<Audio>? album;
   final void Function(String name, Set<Audio> audios) addPinnedAlbum;
-  final void Function({
-    required String text,
-    required AudioType audioType,
-  })? onTextTap;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +65,25 @@ class AlbumPage extends StatelessWidget {
     return AudioPage(
       showAudioPageHeader: image != null,
       showAlbum: false,
-      onTextTap: onTextTap,
+      onArtistTap: ({required audioType, required text}) {
+        final artistName = album?.firstOrNull?.artist;
+        if (artistName == null) return;
+        final model = context.read<LocalAudioModel>();
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) {
+              final artistAudios = model.findArtist(album!.first);
+              final images = model.findImages(artistAudios ?? {});
+
+              return ArtistPage(
+                images: images,
+                artistAudios: artistAudios,
+              );
+            },
+          ),
+        );
+      },
       audioPageType: AudioPageType.album,
       headerLabel: context.l10n.album,
       headerSubtile: album?.firstOrNull?.artist,

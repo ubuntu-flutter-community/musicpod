@@ -105,6 +105,8 @@ class PodcastModel extends SafeChangeNotifier {
   }) async {
     final lastCountryCode = (await readSetting(kLastCountryCode)) as String?;
 
+    _searchActive = _libraryService.podcasts.isEmpty;
+
     final c = Country.values
         .firstWhereOrNull((c) => c.code == (lastCountryCode ?? countryCode));
     if (c != null) {
@@ -126,6 +128,8 @@ class PodcastModel extends SafeChangeNotifier {
       update(updateMessage);
     }
     _firstUpdateChecked = true;
+
+    notifyListeners();
   }
 
   void update(String updateMessage) {

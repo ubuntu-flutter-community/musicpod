@@ -14,8 +14,6 @@ class AlbumsView extends StatelessWidget {
   const AlbumsView({
     super.key,
     required this.albums,
-    required this.showWindowControls,
-    this.onTextTap,
     required this.startPlaylist,
     required this.isPinnedAlbum,
     required this.removePinnedAlbum,
@@ -24,11 +22,6 @@ class AlbumsView extends StatelessWidget {
   });
 
   final Set<Audio>? albums;
-  final bool showWindowControls;
-  final void Function({
-    required String text,
-    required AudioType audioType,
-  })? onTextTap;
 
   final Future<void> Function({
     required Set<Audio> audios,
@@ -63,65 +56,64 @@ class AlbumsView extends StatelessWidget {
       );
     }
 
-    return GridView.builder(
-      shrinkWrap: true,
-      padding: gridPadding,
-      itemCount: albums!.length,
-      gridDelegate: imageGridDelegate,
-      itemBuilder: (context, index) {
-        final audio = albums!.elementAt(index);
-        String? id = generateAlbumId(audio);
-        final albumAudios = findAlbum(audio);
+    return Padding(
+      padding: const EdgeInsets.only(top: 15),
+      child: GridView.builder(
+        shrinkWrap: true,
+        padding: gridPadding,
+        itemCount: albums!.length,
+        gridDelegate: imageGridDelegate,
+        itemBuilder: (context, index) {
+          final audio = albums!.elementAt(index);
+          String? id = generateAlbumId(audio);
+          final albumAudios = findAlbum(audio);
 
-        final image = audio.pictureData == null
-            ? Center(
-                child: Icon(
-                  Iconz().musicNote,
-                  size: 70,
-                  color: theme.hintColor,
-                ),
-              )
-            : Image.memory(
-                audio.pictureData!,
-                fit: BoxFit.cover,
-                height: kSmallCardHeight,
-                filterQuality: FilterQuality.medium,
-              );
-
-        return AudioCard(
-          bottom: Align(
-            alignment: Alignment.bottomCenter,
-            child: AudioCardBottom(
-              text: audio.album?.isNotEmpty == false
-                  ? context.l10n.unknown
-                  : audio.album!,
-            ),
-          ),
-          image: image,
-          onTap: id == null
-              ? null
-              : () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return AlbumPage(
-                          onTextTap: ({required audioType, required text}) {
-                            onTextTap?.call(text: text, audioType: audioType);
-                            Navigator.of(context).maybePop();
-                          },
-                          id: id,
-                          isPinnedAlbum: isPinnedAlbum,
-                          removePinnedAlbum: removePinnedAlbum,
-                          album: albumAudios,
-                          addPinnedAlbum: addPinnedAlbum,
-                        );
-                      },
-                    ),
+          final image = audio.pictureData == null
+              ? Center(
+                  child: Icon(
+                    Iconz().musicNote,
+                    size: 70,
+                    color: theme.hintColor,
                   ),
-          onPlay: albumAudios == null || albumAudios.isEmpty || id == null
-              ? null
-              : () => startPlaylist(audios: albumAudios, listName: id),
-        );
-      },
+                )
+              : Image.memory(
+                  audio.pictureData!,
+                  fit: BoxFit.cover,
+                  height: kSmallCardHeight,
+                  filterQuality: FilterQuality.medium,
+                );
+
+          return AudioCard(
+            bottom: Align(
+              alignment: Alignment.bottomCenter,
+              child: AudioCardBottom(
+                text: audio.album?.isNotEmpty == false
+                    ? context.l10n.unknown
+                    : audio.album!,
+              ),
+            ),
+            image: image,
+            onTap: id == null
+                ? null
+                : () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return AlbumPage(
+                            id: id,
+                            isPinnedAlbum: isPinnedAlbum,
+                            removePinnedAlbum: removePinnedAlbum,
+                            album: albumAudios,
+                            addPinnedAlbum: addPinnedAlbum,
+                          );
+                        },
+                      ),
+                    ),
+            onPlay: albumAudios == null || albumAudios.isEmpty || id == null
+                ? null
+                : () => startPlaylist(audios: albumAudios, listName: id),
+          );
+        },
+      ),
     );
   }
 }

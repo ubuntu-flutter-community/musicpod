@@ -26,7 +26,6 @@ class BottomPlayer extends StatelessWidget {
     required this.addStarredStation,
     required this.removeLikedAudio,
     required this.addLikedAudio,
-    required this.onTextTap,
     this.isVideo,
     required this.videoController,
     required this.isOnline,
@@ -46,9 +45,6 @@ class BottomPlayer extends StatelessWidget {
   final void Function(Audio audio, bool notify) addLikedAudio;
 
   final void Function(bool?) setFullScreen;
-
-  final void Function({required String text, required AudioType audioType})
-      onTextTap;
 
   final bool? isVideo;
   final VideoController videoController;
@@ -70,7 +66,6 @@ class BottomPlayer extends StatelessWidget {
 
     final titleAndArtist = BottomPlayerTitleArtist(
       audio: audio,
-      onTextTap: onTextTap,
     );
 
     final bottomPlayerControls = BottomPlayerControls(

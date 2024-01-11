@@ -8,10 +8,13 @@ class SideBarFallBackImage extends StatelessWidget {
     super.key,
     required this.child,
     this.color,
+    this.width,
+    this.height,
   });
 
   final Widget child;
   final Color? color;
+  final double? width, height;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +31,8 @@ class SideBarFallBackImage extends StatelessWidget {
           ],
         ),
       ),
-      width: sideBarImageSize,
-      height: sideBarImageSize,
+      width: width ?? sideBarImageSize,
+      height: height ?? sideBarImageSize,
       child: child,
     );
   }

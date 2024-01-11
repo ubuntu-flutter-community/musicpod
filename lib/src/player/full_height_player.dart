@@ -30,7 +30,6 @@ class FullHeightPlayer extends StatelessWidget {
     required this.addLikedAudio,
     required this.setFullScreen,
     required this.playerViewMode,
-    required this.onTextTap,
     required this.videoController,
     required this.isVideo,
     required this.isOnline,
@@ -53,9 +52,6 @@ class FullHeightPlayer extends StatelessWidget {
 
   final PlayerViewMode playerViewMode;
 
-  final void Function({required String text, required AudioType audioType})
-      onTextTap;
-
   final VideoController videoController;
   final bool isVideo;
   final bool isOnline;
@@ -69,7 +65,6 @@ class FullHeightPlayer extends StatelessWidget {
 
     final titleAndArtist = FullHeightTitleAndArtist(
       audio: audio,
-      onTextTap: onTextTap,
     );
 
     final controls = FullHeightPlayerControls(

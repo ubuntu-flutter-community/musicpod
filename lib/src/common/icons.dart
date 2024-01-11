@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -314,3 +315,17 @@ class Iconz {
 double get sideBarImageSize => 38;
 
 double get iconSize => yaruStyled ? kYaruIconSize : 24;
+
+IconData getIconForTag(String tag) {
+  final tagsToIcons = <String, IconData>{
+    'metal': TablerIcons.guitar_pick,
+    'pop': TablerIcons.diamond,
+  };
+
+  return tagsToIcons[tag] ??
+      (yaruStyled
+          ? YaruIcons.music_note
+          : appleStyled
+              ? CupertinoIcons.double_music_note
+              : Icons.music_note);
+}

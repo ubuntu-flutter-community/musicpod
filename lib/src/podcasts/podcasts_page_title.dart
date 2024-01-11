@@ -36,7 +36,6 @@ class PodcastsPageTitle extends StatelessWidget {
                     search();
                   },
                   onSubmitted: (value) {
-                    DefaultTabController.of(context).index = 1;
                     setSearchQuery(value);
 
                     if (value?.isEmpty == true) {

@@ -1,9 +1,11 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
@@ -23,7 +25,8 @@ class AudioPageBody extends StatefulWidget {
     this.controlPanelButton,
     this.image,
     this.showAudioPageHeader,
-    this.onTextTap,
+    this.onAlbumTap,
+    this.onArtistTap,
     this.noResultMessage,
     this.noResultIcon = const AnimatedEmoji(AnimatedEmojis.eyes),
     this.titleLabel,
@@ -38,6 +41,7 @@ class AudioPageBody extends StatefulWidget {
     this.albumFlex = 1,
     this.showAudioTileHeader = true,
     this.padding,
+    this.showControlPanel = true,
   });
 
   final String pageId;
@@ -51,6 +55,7 @@ class AudioPageBody extends StatefulWidget {
   final Widget? controlPanelButton;
   final Widget? image;
   final bool? showAudioPageHeader;
+  final bool showControlPanel;
   final bool showAudioTileHeader;
   final Widget? noResultMessage;
   final Widget? noResultIcon;
@@ -62,7 +67,7 @@ class AudioPageBody extends StatefulWidget {
   final void Function({
     required String text,
     required AudioType audioType,
-  })? onTextTap;
+  })? onAlbumTap, onArtistTap;
 
   @override
   State<AudioPageBody> createState() => _AudioPageBodyState();
@@ -70,19 +75,30 @@ class AudioPageBody extends StatefulWidget {
 
 class _AudioPageBodyState extends State<AudioPageBody> {
   late ScrollController _controller;
-  int _amount = 40;
+  double _headerHeight = kAudioPageHeaderHeight;
 
   @override
   void initState() {
     super.initState();
-    _controller = ScrollController();
-    _controller.addListener(() {
-      if (_controller.position.maxScrollExtent == _controller.offset) {
-        setState(() {
-          _amount++;
-        });
-      }
-    });
+    _controller = ScrollController()
+      ..addListener(() {
+        if (_controller.position.userScrollDirection ==
+            ScrollDirection.reverse) {
+          if (_headerHeight != 0) {
+            setState(() {
+              _headerHeight = 0;
+            });
+          }
+        }
+        if (_controller.position.userScrollDirection ==
+            ScrollDirection.forward) {
+          if (_headerHeight == 0) {
+            setState(() {
+              _headerHeight = kAudioPageHeaderHeight;
+            });
+          }
+        }
+      });
   }
 
   @override
@@ -174,13 +190,17 @@ class _AudioPageBodyState extends State<AudioPageBody> {
       }
     }
 
-    return SingleChildScrollView(
-      padding: widget.padding,
-      controller: _controller,
+    return Padding(
+      padding: widget.padding ?? EdgeInsets.zero,
       child: Column(
         children: [
-          if (widget.showAudioPageHeader == true) audioPageHeader,
-          audioControlPanel,
+          if (widget.showAudioPageHeader == true)
+            AnimatedContainer(
+              height: _headerHeight,
+              duration: const Duration(milliseconds: 200),
+              child: audioPageHeader,
+            ),
+          if (widget.showControlPanel) audioControlPanel,
           if (widget.showAudioTileHeader)
             AudioTileHeader(
               titleFlex: widget.titleFlex,
@@ -195,79 +215,85 @@ class _AudioPageBodyState extends State<AudioPageBody> {
               audioFilter: AudioFilter.title,
             ),
           if (widget.showAudioTileHeader) const Divider(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Column(
-              children:
-                  List.generate(widget.audios!.take(_amount).length, (index) {
-                final audio = widget.audios!.elementAt(index);
-                final audioSelected = currentAudio == audio;
-                final download = libraryModel.getDownload(audio.url);
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: ListView.builder(
+                controller: _controller,
+                itemCount: widget.audios?.length,
+                itemBuilder: (context, index) {
+                  final audio = widget.audios!.elementAt(index);
+                  final audioSelected = currentAudio == audio;
+                  final download = libraryModel.getDownload(audio.url);
 
-                if (audio.audioType == AudioType.podcast &&
-                    widget.audioPageType != AudioPageType.playlist) {
-                  return PodcastAudioTile(
-                    addPodcast: audio.website == null || widget.audios == null
-                        ? null
-                        : () => libraryModel.addPodcast(
-                              audio.website!,
-                              widget.audios!,
-                            ),
-                    removeUpdate: () =>
-                        libraryModel.removePodcastUpdate(widget.pageId),
-                    isExpanded: audioSelected,
-                    audio: download != null
-                        ? audio.copyWith(path: download)
-                        : audio,
-                    isPlayerPlaying: isPlaying,
-                    selected: audioSelected,
-                    pause: pause,
-                    resume: resume,
-                    play: play,
-                    lastPosition: libraryModel.getLastPosition.call(audio.url),
-                    safeLastPosition: playerModel.safeLastPosition,
-                    isOnline: isOnline,
-                    insertIntoQueue: () => playerModel.insertIntoQueue(audio),
+                  if (audio.audioType == AudioType.podcast &&
+                      widget.audioPageType != AudioPageType.playlist) {
+                    return PodcastAudioTile(
+                      addPodcast: audio.website == null || widget.audios == null
+                          ? null
+                          : () => libraryModel.addPodcast(
+                                audio.website!,
+                                widget.audios!,
+                              ),
+                      removeUpdate: () =>
+                          libraryModel.removePodcastUpdate(widget.pageId),
+                      isExpanded: audioSelected,
+                      audio: download != null
+                          ? audio.copyWith(path: download)
+                          : audio,
+                      isPlayerPlaying: isPlaying,
+                      selected: audioSelected,
+                      pause: pause,
+                      resume: resume,
+                      play: play,
+                      lastPosition:
+                          libraryModel.getLastPosition.call(audio.url),
+                      safeLastPosition: playerModel.safeLastPosition,
+                      isOnline: isOnline,
+                      insertIntoQueue: () => playerModel.insertIntoQueue(audio),
+                    );
+                  }
+
+                  final likeButton = LikeButton(
+                    key: ObjectKey(audio),
+                    libraryModel: libraryModel,
+                    playlistId: widget.pageId,
+                    audio: audio,
+                    allowRemove: widget.audioPageType == AudioPageType.playlist,
+                    insertIntoQueue: () => insertIntoQueue(audio),
                   );
-                }
 
-                final likeButton = LikeButton(
-                  key: ObjectKey(audio),
-                  libraryModel: libraryModel,
-                  playlistId: widget.pageId,
-                  audio: audio,
-                  allowRemove: widget.audioPageType == AudioPageType.playlist,
-                  insertIntoQueue: () => insertIntoQueue(audio),
-                );
-
-                return AudioTile(
-                  trackLabel: (widget.audioPageType == AudioPageType.playlist ||
-                          widget.audioPageType == AudioPageType.likedAudio)
-                      ? (index + 1).toString().padLeft(2, '0')
-                      : null,
-                  showAlbum: widget.showAlbum,
-                  showArtist: widget.showArtist,
-                  showTrack: widget.showTrack,
-                  titleFlex: widget.titleFlex,
-                  artistFlex: widget.artistFlex,
-                  albumFlex: widget.albumFlex,
-                  onTextTap: widget.onTextTap,
-                  isPlayerPlaying: isPlaying,
-                  pause: pause,
-                  startPlaylist: widget.audios == null
-                      ? null
-                      : () => startPlaylist(
-                            audios: widget.audios!,
-                            listName: widget.pageId,
-                            index: index,
-                          ),
-                  resume: resume,
-                  key: ValueKey(audio),
-                  selected: audioSelected,
-                  audio: audio,
-                  likeIcon: likeButton,
-                );
-              }),
+                  return AudioTile(
+                    trackLabel: (widget.audioPageType ==
+                                AudioPageType.playlist ||
+                            widget.audioPageType == AudioPageType.likedAudio)
+                        ? (index + 1).toString().padLeft(2, '0')
+                        : null,
+                    showAlbum: widget.showAlbum,
+                    showArtist: widget.showArtist,
+                    showTrack: widget.showTrack,
+                    titleFlex: widget.titleFlex,
+                    artistFlex: widget.artistFlex,
+                    albumFlex: widget.albumFlex,
+                    onAlbumTap: widget.onAlbumTap,
+                    onArtistTap: widget.onArtistTap,
+                    isPlayerPlaying: isPlaying,
+                    pause: pause,
+                    startPlaylist: widget.audios == null
+                        ? null
+                        : () => startPlaylist(
+                              audios: widget.audios!,
+                              listName: widget.pageId,
+                              index: index,
+                            ),
+                    resume: resume,
+                    key: ValueKey(audio),
+                    selected: audioSelected,
+                    audio: audio,
+                    likeIcon: likeButton,
+                  );
+                },
+              ),
             ),
           ),
         ],

@@ -9,11 +9,8 @@ class BottomPlayerTitleArtist extends StatelessWidget {
   const BottomPlayerTitleArtist({
     super.key,
     required this.audio,
-    required this.onTextTap,
   });
   final Audio? audio;
-  final void Function({required String text, required AudioType audioType})
-      onTextTap;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +28,6 @@ class BottomPlayerTitleArtist extends StatelessWidget {
             audio: audio,
             text: icyTitle,
             context: context,
-            onTextTap: onTextTap,
           ),
           child: Tooltip(
             message: icyTitle?.isNotEmpty == true
@@ -58,7 +54,6 @@ class BottomPlayerTitleArtist extends StatelessWidget {
               audio: audio,
               artist: icyTitle,
               context: context,
-              onTextTap: onTextTap,
             ),
             child: Tooltip(
               message: icyName?.isNotEmpty == true
