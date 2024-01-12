@@ -9,10 +9,9 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
-import '../l10n/l10n.dart';
 
-class TagPopup extends StatelessWidget {
-  const TagPopup({
+class TagAutoComplete extends StatelessWidget {
+  const TagAutoComplete({
     super.key,
     this.onSelected,
     this.tags,
@@ -45,7 +44,7 @@ class TagPopup extends StatelessWidget {
           return Autocomplete<Tag>(
             key: ValueKey(value?.name),
             initialValue: TextEditingValue(
-              text: value?.name ?? context.l10n.all,
+              text: value?.name ?? '',
             ),
             displayStringForOption: (option) => option.name,
             fieldViewBuilder: (

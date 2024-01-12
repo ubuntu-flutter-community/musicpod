@@ -50,34 +50,6 @@ class RadioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Set<Audio>? get stations {
-    if (_radioService.stations == null) return null;
-
-    if (_radioService.stations!.isEmpty) {
-      return <Audio>{};
-    }
-
-    return Set.from(
-      _radioService.stations!.map(
-        (e) {
-          var artist = e.bitrate == 0 ? '' : '${e.bitrate} kb/s';
-          if (e.language?.isNotEmpty == true) {
-            artist += ', ${e.language}';
-          }
-          return Audio(
-            url: e.urlResolved,
-            title: e.name,
-            artist: artist,
-            album: e.tags ?? '',
-            audioType: AudioType.radio,
-            imageUrl: e.favicon,
-            website: e.homepage,
-          );
-        },
-      ),
-    );
-  }
-
   Future<Set<Audio>?> getStations({
     String? country,
     String? name,
@@ -88,7 +60,7 @@ class RadioModel extends SafeChangeNotifier {
     final s = await _radioService.getStations(
       tag: tag,
       name: name,
-      country: country,
+      country: country?.camelToSentence(),
       state: state,
       limit: limit,
     );
@@ -137,8 +109,7 @@ class RadioModel extends SafeChangeNotifier {
 
     final lastCountryCode = (await readSetting(kLastCountryCode)) as String?;
     final lastFav = (await readSetting(kLastFav)) as String?;
-    _stationsSub ??=
-        _radioService.stationsChanged.listen((_) => notifyListeners());
+
     _statusCodeSub ??=
         _radioService.statusCodeChanged.listen((_) => notifyListeners());
     _searchSub ??=
@@ -152,43 +123,9 @@ class RadioModel extends SafeChangeNotifier {
       _tag ??= lastFav == null || tags == null || tags!.isEmpty
           ? null
           : tags!.firstWhere((t) => t.name.contains(lastFav));
-
-      if (stations == null) {
-        if (_tag != null) {
-          await loadStationsByTag();
-        } else {
-          await loadStationsByCountry();
-        }
-      }
     }
 
     return _connectedHost;
-  }
-
-  Future<void> loadStationsByCountry() async {
-    return await _radioService.loadStations(
-      country: country?.name.camelToSentence(),
-      limit: limit,
-    );
-  }
-
-  Future<void> loadStationsByTag() async {
-    await _radioService.loadStations(tag: tag, limit: limit);
-  }
-
-  Future<void> search({String? name, String? tag}) async {
-    if (name?.isNotEmpty == true) {
-      setTag(null);
-      await _radioService.loadStations(name: name, limit: limit);
-    } else if (tag?.isNotEmpty == true) {
-      await _radioService.loadStations(
-        tag: Tag(name: tag!, stationCount: 1),
-        limit: limit,
-      );
-    } else {
-      setTag(null);
-      await loadStationsByCountry();
-    }
   }
 
   String? get searchQuery => _radioService.searchQuery;
