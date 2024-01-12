@@ -9,4 +9,8 @@ extension StringExtension on String {
       (Match m) => m[1] == null ? ' ${m[0]}' : m[1]!.toUpperCase(),
     );
   }
+
+  String capitalizeEveryWord() {
+    return split(' ').map((word) => word.capitalize()).join(' ');
+  }
 }

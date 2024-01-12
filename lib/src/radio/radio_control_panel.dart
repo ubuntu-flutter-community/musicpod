@@ -30,54 +30,5 @@ class RadioControlPanel extends StatelessWidget {
         onSelected: (index) => setRadioSearch(RadioSearch.values[index]),
       ),
     );
-
-    // return SingleChildScrollView(
-    //   padding: const EdgeInsets.symmetric(horizontal: 20),
-    //   scrollDirection: Axis.horizontal,
-    //   child: Row(
-    //     children: [
-    //       CountryPopup(
-    //         value: tag != null ? null : country,
-    //         onSelected: (country) {
-    //           setCountry(country);
-    //           loadStationsByCountry();
-    //           setTag(null);
-    //         },
-    //         countries: sortedCountries,
-    //       ),
-    //       const SizedBox(
-    //         width: 10,
-    //       ),
-    //       TagPopup(
-    //         value: tag,
-    //         addFav: (tag) {
-    //           if (tag?.name == null) return;
-    //           addFavTag(tag!.name);
-    //         },
-    //         removeFav: (tag) {
-    //           if (tag?.name == null) return;
-    //           removeFavTag(tag!.name);
-    //         },
-    //         favs: favTags,
-    //         onSelected: (tag) {
-    //           setTag(tag);
-    //           if (tag != null) {
-    //             loadStationsByTag();
-    //           } else {
-    //             setSearchQuery(null);
-    //             search();
-    //           }
-    //           if (tag?.name.isNotEmpty == true) {
-    //             setLastFav(tag!.name);
-    //           }
-    //         },
-    //         tags: [
-    //           ...[...?tags].where((e) => favTags.contains(e.name) == true),
-    //           ...[...?tags].where((e) => favTags.contains(e.name) == false),
-    //         ],
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }

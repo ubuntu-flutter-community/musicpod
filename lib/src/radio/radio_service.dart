@@ -56,7 +56,6 @@ class RadioService {
   Future<void> dispose() async {
     _searchController.close();
     _tagsChangedController.close();
-    _stationsChangedController.close();
     _statusCodeController.close();
   }
 
@@ -69,81 +68,6 @@ class RadioService {
 
   final _statusCodeController = StreamController<bool>.broadcast();
   Stream<bool> get statusCodeChanged => _statusCodeController.stream;
-
-  List<Station>? _stations;
-  List<Station>? get stations => _stations;
-  void setStations(List<Station>? value) {
-    _stations = value;
-    _stationsChangedController.add(true);
-  }
-
-  final _stationsChangedController = StreamController<bool>.broadcast();
-  Stream<bool> get stationsChanged => _stationsChangedController.stream;
-
-  Future<void> loadStations({
-    String? country,
-    String? name,
-    String? state,
-    Tag? tag,
-    int limit = 100,
-  }) async {
-    if (_radioBrowserApi == null) {
-      setStatusCode('503');
-      setStations([]);
-      return;
-    }
-    setStations(null);
-    setStatusCode(null);
-
-    RadioBrowserListResponse<Station>? response;
-    try {
-      if (name?.isEmpty == false) {
-        response = await _radioBrowserApi!.getStationsByName(
-          name: name!,
-          parameters: InputParameters(
-            hidebroken: true,
-            order: 'stationcount',
-            limit: limit,
-          ),
-        );
-      } else if (country?.isEmpty == false) {
-        response = await _radioBrowserApi!.getStationsByCountry(
-          country: country!,
-          parameters: InputParameters(
-            hidebroken: true,
-            order: 'stationcount',
-            limit: limit,
-          ),
-        );
-      } else if (tag != null) {
-        response = await _radioBrowserApi!.getStationsByTag(
-          tag: tag.name,
-          parameters: InputParameters(
-            hidebroken: true,
-            order: 'stationcount',
-            limit: limit,
-          ),
-        );
-      } else if (state?.isEmpty == false) {
-        response = await _radioBrowserApi!.getStationsByState(
-          state: state!,
-          parameters: InputParameters(
-            hidebroken: true,
-            order: 'stationcount',
-            limit: limit,
-          ),
-        );
-      }
-      if (response != null) {
-        setStations(response.items);
-        setStatusCode(response.statusCode.toString());
-      }
-    } on Exception catch (e) {
-      if (e is SocketException) {
-        setStations([]);
-      }
-    }
-  }
 
   Future<List<Station>?> getStations({
     String? country,
@@ -219,7 +143,7 @@ class RadioService {
       final response = await _radioBrowserApi!.getTags(
         parameters: const InputParameters(
           hidebroken: true,
-          limit: 300,
+          limit: 500,
           order: 'stationcount',
           reverse: true,
         ),

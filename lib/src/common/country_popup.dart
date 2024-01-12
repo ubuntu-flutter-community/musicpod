@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../build_context_x.dart';
-import '../../common.dart';
-import '../../string_x.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
+import '../../common.dart';
 import '../l10n/l10n.dart';
 
 class CountryPopup extends StatelessWidget {
@@ -37,7 +36,7 @@ class CountryPopup extends StatelessWidget {
       onSelected: onSelected,
       initialValue: value,
       child: Text(
-        '${context.l10n.country}: ${value?.name.capitalize().camelToSentence() ?? context.l10n.all}',
+        '${context.l10n.country}: ${value?.name ?? context.l10n.all}',
         style: textStyle ?? fallBackTextStyle,
       ),
       itemBuilder: (context) {
@@ -46,7 +45,7 @@ class CountryPopup extends StatelessWidget {
               in countries ?? Country.values.where((c) => c != Country.none))
             PopupMenuItem(
               value: c,
-              child: Text(c.name.capitalize().camelToSentence()),
+              child: Text(c.name),
             ),
         ];
       },

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
-import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -9,14 +9,37 @@ import '../../constants.dart';
 import '../../globals.dart';
 import '../../radio.dart';
 import '../library/library_model.dart';
+import 'country_auto_complete.dart';
 import 'radio_control_panel.dart';
 import 'radio_search.dart';
 import 'radio_search_page.dart';
 
-class RadioDiscoverPage extends StatelessWidget {
+class RadioDiscoverPage extends StatefulWidget {
   const RadioDiscoverPage({
     super.key,
   });
+
+  @override
+  State<RadioDiscoverPage> createState() => _RadioDiscoverPageState();
+}
+
+class _RadioDiscoverPageState extends State<RadioDiscoverPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    final model = context.read<RadioModel>();
+
+    switch (model.radioSearch) {
+      case RadioSearch.country:
+        model.setSearchQuery(model.country?.name);
+        break;
+      case RadioSearch.tag:
+        model.setSearchQuery(model.tag?.name);
+
+      default:
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +54,57 @@ class RadioDiscoverPage extends StatelessWidget {
 
     final radioSearch = context.select((RadioModel m) => m.radioSearch);
 
+    final country = context.select((RadioModel m) => m.country);
+    final setCountry = model.setCountry;
+    final tag = context.select((RadioModel m) => m.tag);
+
+    final Widget input = switch (radioSearch) {
+      RadioSearch.country => CountryAutoComplete(
+          countries: Country.values,
+          onSelected: (country) {
+            setCountry(country);
+            setSearchQuery(country?.name);
+          },
+          value: country,
+          addFav: (v) {},
+          removeFav: (v) {},
+        ),
+      RadioSearch.tag => TagAutoComplete(
+          value: tag,
+          addFav: (tag) {
+            if (tag?.name == null) return;
+            libraryModel.addFavTag(tag!.name);
+          },
+          removeFav: (tag) {
+            if (tag?.name == null) return;
+            libraryModel.removeFavTag(tag!.name);
+          },
+          favs: libraryModel.favTags,
+          onSelected: (tag) {
+            setSearchQuery(tag?.name);
+            model.setTag(tag);
+          },
+          tags: [
+            ...[
+              ...?model.tags,
+            ].where(
+              (e) => libraryModel.favTags.contains(e.name) == true,
+            ),
+            ...[...?model.tags].where(
+              (e) => libraryModel.favTags.contains(e.name) == false,
+            ),
+          ],
+        ),
+      _ => SearchingBar(
+          key: ValueKey(searchQuery),
+          text: searchQuery,
+          onClear: () {
+            setSearchQuery(null);
+          },
+          onSubmitted: setSearchQuery,
+        ),
+    };
+
     return Scaffold(
       appBar: HeaderBar(
         style: showWindowControls
@@ -39,40 +113,7 @@ class RadioDiscoverPage extends StatelessWidget {
         leading: const NavBackButton(),
         title: SizedBox(
           width: kSearchBarWidth,
-          child: radioSearch == RadioSearch.tag && model.searchQuery != null
-              ? TagPopup(
-                  value: Tag(name: model.searchQuery!, stationCount: 1),
-                  addFav: (tag) {
-                    if (tag?.name == null) return;
-                    libraryModel.addFavTag(tag!.name);
-                  },
-                  removeFav: (tag) {
-                    if (tag?.name == null) return;
-                    libraryModel.removeFavTag(tag!.name);
-                  },
-                  favs: libraryModel.favTags,
-                  onSelected: (tag) {
-                    setSearchQuery(tag?.name);
-                  },
-                  tags: [
-                    ...[
-                      ...?model.tags,
-                    ].where(
-                      (e) => libraryModel.favTags.contains(e.name) == true,
-                    ),
-                    ...[...?model.tags].where(
-                      (e) => libraryModel.favTags.contains(e.name) == false,
-                    ),
-                  ],
-                )
-              : SearchingBar(
-                  key: ValueKey(searchQuery),
-                  text: searchQuery,
-                  onClear: () {
-                    setSearchQuery(null);
-                  },
-                  onSubmitted: setSearchQuery,
-                ),
+          child: input,
         ),
         actions: [
           Padding(
@@ -98,7 +139,9 @@ class RadioDiscoverPage extends StatelessWidget {
             child: searchQuery?.isNotEmpty == true
                 ? RadioSearchPage(
                     key: ValueKey(
-                      searchQuery.toString() + radioSearch.toString(),
+                      searchQuery.toString() +
+                          tag.toString() +
+                          radioSearch.toString(),
                     ),
                     includeHeader: false,
                     radioSearch: radioSearch,
