@@ -185,6 +185,26 @@ class LibraryService {
   final _lastCountryCodeController = StreamController<bool>.broadcast();
   Stream<bool> get lastCountryCodeChanged => _lastCountryCodeController.stream;
 
+  Set<String> _favCountries = {};
+  Set<String> get favCountries => _favCountries;
+  bool isFavCountry(String value) => _favCountries.contains(value);
+  final _favCountriesController = StreamController<bool>.broadcast();
+  Stream<bool> get favCountriesChanged => _favCountriesController.stream;
+
+  void addFavCountry(String name) {
+    if (favCountries.contains(name)) return;
+    _favCountries.add(name);
+    writeStringIterable(iterable: _favCountries, filename: kCountryFavsFileName)
+        .then((_) => _favCountriesController.add(true));
+  }
+
+  void removeFavCountry(String name) {
+    if (!favCountries.contains(name)) return;
+    _favCountries.remove(name);
+    writeStringIterable(iterable: _favCountries, filename: kCountryFavsFileName)
+        .then((_) => _favCountriesController.add(true));
+  }
+
   //
   // Playlists
   //
@@ -434,6 +454,9 @@ class LibraryService {
     _favTags = Set.from(
       (await readStringIterable(filename: kTagFavsFileName) ?? <String>{}),
     );
+    _favCountries = Set.from(
+      (await readStringIterable(filename: kCountryFavsFileName) ?? <String>{}),
+    );
     _downloadsDir = await getDownloadsDir();
     _downloads = await readStringMap(kDownloads);
     _feedsWithDownloads = Set.from(
@@ -505,6 +528,7 @@ class LibraryService {
     await _playlistsController.close();
     await _starredStationsController.close();
     await _favTagsController.close();
+    await _favCountriesController.close();
     await _lastPositionsController.close();
     await _localAudioIndexController.close();
     await _radioIndexController.close();

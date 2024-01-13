@@ -28,6 +28,7 @@ class RadioDiscoverPage extends StatelessWidget {
     final searchQuery = context.select((RadioModel m) => m.searchQuery);
 
     context.select((LibraryModel m) => m.favTagsLength);
+    context.select((LibraryModel m) => m.favCountriesLength);
 
     final radioSearch = context.select((RadioModel m) => m.radioSearch);
 
@@ -36,11 +37,27 @@ class RadioDiscoverPage extends StatelessWidget {
 
     final Widget input = switch (radioSearch) {
       RadioSearch.country => CountryAutoComplete(
-          countries: Country.values,
+          countries: [
+            ...[
+              ...Country.values,
+            ].where(
+              (e) => libraryModel.favCountryCodes.contains(e.code) == true,
+            ),
+            ...[...Country.values].where(
+              (e) => libraryModel.favCountryCodes.contains(e.code) == false,
+            ),
+          ]..remove(Country.none),
           onSelected: model.setCountry,
           value: country,
-          addFav: (v) {},
-          removeFav: (v) {},
+          addFav: (v) {
+            if (country?.code == null) return;
+            libraryModel.addFavCountry(v!.code);
+          },
+          removeFav: (v) {
+            if (country?.code == null) return;
+            libraryModel.removeFavCountry(v!.code);
+          },
+          favs: libraryModel.favCountryCodes,
         ),
       RadioSearch.tag => TagAutoComplete(
           value: tag,

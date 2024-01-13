@@ -24,6 +24,8 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _updatesChangedSub;
   StreamSubscription<bool>? _neverShowFailedImportsSub;
   StreamSubscription<bool>? _favTagsSub;
+  StreamSubscription<bool>? _favCountriesSub;
+
   StreamSubscription<bool>? _lastFavSub;
   StreamSubscription<bool>? _lastCountryCodeSub;
   StreamSubscription<bool>? _downloadsSub;
@@ -60,6 +62,9 @@ class LibraryModel extends SafeChangeNotifier {
     _neverShowFailedImportsSub =
         _service.neverShowFailedImportsChanged.listen((_) => notifyListeners());
     _favTagsSub = _service.favTagsChanged.listen((_) => notifyListeners());
+    _favCountriesSub =
+        _service.favCountriesChanged.listen((_) => notifyListeners());
+
     _lastFavSub = _service.lastFavChanged.listen((_) => notifyListeners());
     _downloadsSub = _service.downloadsChanged.listen((_) => notifyListeners());
     _lastCountryCodeSub =
@@ -86,6 +91,7 @@ class LibraryModel extends SafeChangeNotifier {
     _updatesChangedSub?.cancel();
     _neverShowFailedImportsSub?.cancel();
     _favTagsSub?.cancel();
+    _favCountriesSub?.cancel();
     _lastFavSub?.cancel();
     _downloadsSub?.cancel();
     _lastCountryCodeSub?.cancel();
@@ -155,6 +161,12 @@ class LibraryModel extends SafeChangeNotifier {
 
   String? get lastCountryCode => _service.lastCountryCode;
   void setLastCountryCode(String? value) => _service.setLastCountryCode(value);
+
+  void addFavCountry(String value) => _service.addFavCountry(value);
+  void removeFavCountry(String value) => _service.removeFavCountry(value);
+
+  Set<String> get favCountryCodes => _service.favCountries;
+  int get favCountriesLength => _service.favCountries.length;
 
   //
   // Playlists

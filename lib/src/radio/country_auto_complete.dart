@@ -200,10 +200,10 @@ class _CountryTile extends StatelessWidget {
       title: Text(t.name.camelToSentence().capitalizeEveryWord()),
       trailing: IconButton(
         onPressed: () {
-          favs?.contains(t.name) == false ? addFav(t) : removeFav(t);
+          favs?.contains(t.code) == false ? addFav(t) : removeFav(t);
         },
         icon: Icon(
-          favs?.contains(t.name) == true ? Iconz().starFilled : Iconz().star,
+          favs?.contains(t.code) == true ? Iconz().starFilled : Iconz().star,
         ),
       ),
     );

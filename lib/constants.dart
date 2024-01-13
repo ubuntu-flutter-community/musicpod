@@ -93,6 +93,7 @@ const kMainPageIconPadding = EdgeInsets.only(right: 4.0);
 
 const kLikedAudiosFileName = 'likedAudios.json';
 const kTagFavsFileName = 'tagFavs.json';
+const kCountryFavsFileName = 'countryfavs.json';
 const kLastFav = 'lastFav';
 const kPlaylistsFileName = 'playlists.json';
 const kPinnedAlbumsFileName = 'pinnedAlbums.json';
