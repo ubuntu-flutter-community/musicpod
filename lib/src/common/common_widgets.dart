@@ -289,14 +289,20 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
     return SizedBox(
       height: 38,
       child: TextField(
+        onTap: () {
+          _controller.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: _controller.value.text.length,
+          );
+        },
         controller: _controller,
         key: widget.key,
         autofocus: true,
         onSubmitted: widget.onSubmitted,
         decoration: InputDecoration(
-          border: const OutlineInputBorder(),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
           contentPadding:
-              const EdgeInsets.only(top: 10, bottom: 8, left: 10, right: 10),
+              const EdgeInsets.only(top: 10, bottom: 8, left: 15, right: 15),
           filled: true,
           suffixIcon: IconButton(
             onPressed: () {

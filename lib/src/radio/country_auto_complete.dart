@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:podcast_search/podcast_search.dart';
-import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/constants.dart';
 
 import '../../build_context_x.dart';
@@ -76,8 +75,8 @@ class CountryAutoComplete extends StatelessWidget {
                 textAlignVertical: yaruStyled ? TextAlignVertical.center : null,
                 cursorWidth: yaruStyled ? 1 : 2.0,
                 decoration: yaruStyled
-                    ? _createYaruDecoration(theme.isLight)
-                    : _createDecoration(theme.colorScheme),
+                    ? createYaruDecoration(theme.isLight)
+                    : createMaterialDecoration(theme.colorScheme),
                 controller: textEditingController,
                 focusNode: focusNode,
                 onSubmitted: (String value) {
@@ -160,63 +159,6 @@ class CountryAutoComplete extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-
-  InputDecoration _createDecoration(ColorScheme colorScheme) {
-    final outlineInputBorder = OutlineInputBorder(
-      borderSide: BorderSide(width: 2, color: colorScheme.primary),
-    );
-    return InputDecoration(
-      filled: true,
-      contentPadding: const EdgeInsets.all(10),
-      border: outlineInputBorder,
-      errorBorder: outlineInputBorder,
-      enabledBorder: outlineInputBorder,
-      focusedBorder: outlineInputBorder,
-      disabledBorder: outlineInputBorder,
-      focusedErrorBorder: outlineInputBorder,
-    );
-  }
-
-  InputDecoration _createYaruDecoration(bool isLight) {
-    final radius = BorderRadius.circular(kYaruButtonRadius);
-
-    final fill = isLight ? const Color(0xffdcdcdc) : const Color(0xff2f2f2f);
-
-    const textStyle = TextStyle(
-      fontSize: 14,
-      fontWeight: FontWeight.normal,
-    );
-
-    return InputDecoration(
-      filled: true,
-      fillColor: fill,
-      hoverColor: (fill).scale(lightness: 0.1),
-      suffixIconConstraints:
-          const BoxConstraints(maxWidth: kYaruTitleBarItemHeight),
-      border: OutlineInputBorder(
-        borderSide: BorderSide.none,
-        borderRadius: radius,
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide.none,
-        borderRadius: radius,
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide.none,
-        borderRadius: radius,
-      ),
-      isDense: true,
-      contentPadding: const EdgeInsets.only(
-        bottom: 10,
-        top: 10,
-        right: 15,
-        left: 15,
-      ),
-      helperStyle: textStyle,
-      hintStyle: textStyle,
-      labelStyle: textStyle,
     );
   }
 }

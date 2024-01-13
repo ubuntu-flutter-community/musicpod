@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
-import 'color_scheme_x.dart';
+import 'package:yaru/yaru.dart';
+import 'package:yaru_widgets/yaru_widgets.dart';
 
 const darkDividerColor = Color.fromARGB(19, 255, 255, 255);
 
@@ -155,4 +155,63 @@ const alphabetColors = {
 Color getAlphabetColor(String text, [Color fallBackColor = Colors.black]) {
   final letter = text.isEmpty ? null : text[0];
   return alphabetColors[letter?.toUpperCase()] ?? fallBackColor;
+}
+
+InputDecoration createMaterialDecoration(ColorScheme colorScheme) {
+  final outlineInputBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(100),
+    borderSide: BorderSide(width: 2, color: colorScheme.primary),
+  );
+  return InputDecoration(
+    filled: true,
+    contentPadding:
+        const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+    border: outlineInputBorder,
+    errorBorder: outlineInputBorder,
+    enabledBorder: outlineInputBorder,
+    focusedBorder: outlineInputBorder,
+    disabledBorder: outlineInputBorder,
+    focusedErrorBorder: outlineInputBorder,
+  );
+}
+
+InputDecoration createYaruDecoration(bool isLight) {
+  final radius = BorderRadius.circular(kYaruButtonRadius);
+
+  final fill = isLight ? const Color(0xffdcdcdc) : const Color(0xff2f2f2f);
+
+  const textStyle = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.normal,
+  );
+
+  return InputDecoration(
+    filled: true,
+    fillColor: fill,
+    hoverColor: (fill).scale(lightness: 0.1),
+    suffixIconConstraints:
+        const BoxConstraints(maxWidth: kYaruTitleBarItemHeight),
+    border: OutlineInputBorder(
+      borderSide: BorderSide.none,
+      borderRadius: radius,
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide.none,
+      borderRadius: radius,
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide.none,
+      borderRadius: radius,
+    ),
+    isDense: true,
+    contentPadding: const EdgeInsets.only(
+      bottom: 10,
+      top: 10,
+      right: 15,
+      left: 15,
+    ),
+    helperStyle: textStyle,
+    hintStyle: textStyle,
+    labelStyle: textStyle,
+  );
 }
