@@ -16,7 +16,6 @@ class RadioControlPanel extends StatelessWidget {
     final model = context.read<RadioModel>();
 
     final radioSearch = context.select((RadioModel m) => m.radioSearch);
-    final setRadioSearch = model.setRadioSearch;
     return Padding(
       padding: const EdgeInsets.only(left: 30),
       child: YaruChoiceChipBar(
@@ -27,7 +26,9 @@ class RadioControlPanel extends StatelessWidget {
             .map((e) => Text(e.localize(context.l10n)))
             .toList(),
         isSelected: RadioSearch.values.map((e) => e == radioSearch).toList(),
-        onSelected: (index) => setRadioSearch(RadioSearch.values[index]),
+        onSelected: (index) {
+          model.setRadioSearch(RadioSearch.values[index]);
+        },
       ),
     );
   }
