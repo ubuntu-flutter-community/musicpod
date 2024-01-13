@@ -14,32 +14,10 @@ import 'radio_control_panel.dart';
 import 'radio_search.dart';
 import 'radio_search_page.dart';
 
-class RadioDiscoverPage extends StatefulWidget {
+class RadioDiscoverPage extends StatelessWidget {
   const RadioDiscoverPage({
     super.key,
   });
-
-  @override
-  State<RadioDiscoverPage> createState() => _RadioDiscoverPageState();
-}
-
-class _RadioDiscoverPageState extends State<RadioDiscoverPage> {
-  @override
-  void initState() {
-    super.initState();
-
-    final model = context.read<RadioModel>();
-
-    switch (model.radioSearch) {
-      case RadioSearch.country:
-        model.setSearchQuery(model.country?.name);
-        break;
-      case RadioSearch.tag:
-        model.setSearchQuery(model.tag?.name);
-
-      default:
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,23 +26,18 @@ class _RadioDiscoverPageState extends State<RadioDiscoverPage> {
     final model = context.read<RadioModel>();
     final libraryModel = context.read<LibraryModel>();
     final searchQuery = context.select((RadioModel m) => m.searchQuery);
-    final setSearchQuery = model.setSearchQuery;
 
     context.select((LibraryModel m) => m.favTagsLength);
 
     final radioSearch = context.select((RadioModel m) => m.radioSearch);
 
     final country = context.select((RadioModel m) => m.country);
-    final setCountry = model.setCountry;
     final tag = context.select((RadioModel m) => m.tag);
 
     final Widget input = switch (radioSearch) {
       RadioSearch.country => CountryAutoComplete(
           countries: Country.values,
-          onSelected: (country) {
-            setCountry(country);
-            setSearchQuery(country?.name);
-          },
+          onSelected: model.setCountry,
           value: country,
           addFav: (v) {},
           removeFav: (v) {},
@@ -80,10 +53,7 @@ class _RadioDiscoverPageState extends State<RadioDiscoverPage> {
             libraryModel.removeFavTag(tag!.name);
           },
           favs: libraryModel.favTags,
-          onSelected: (tag) {
-            setSearchQuery(tag?.name);
-            model.setTag(tag);
-          },
+          onSelected: model.setTag,
           tags: [
             ...[
               ...?model.tags,
@@ -99,9 +69,9 @@ class _RadioDiscoverPageState extends State<RadioDiscoverPage> {
           key: ValueKey(searchQuery),
           text: searchQuery,
           onClear: () {
-            setSearchQuery(null);
+            model.setSearchQuery(null);
           },
-          onSubmitted: setSearchQuery,
+          onSubmitted: model.setSearchQuery,
         ),
     };
 
@@ -141,6 +111,7 @@ class _RadioDiscoverPageState extends State<RadioDiscoverPage> {
                     key: ValueKey(
                       searchQuery.toString() +
                           tag.toString() +
+                          country.toString() +
                           radioSearch.toString(),
                     ),
                     includeHeader: false,
