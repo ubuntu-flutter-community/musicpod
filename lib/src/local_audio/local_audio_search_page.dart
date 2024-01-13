@@ -131,6 +131,7 @@ class LocalAudioSearchPage extends StatelessWidget {
         title: SizedBox(
           width: kSearchBarWidth,
           child: SearchingBar(
+            key: ValueKey(searchQuery.toString() + localAudioView.toString()),
             text: searchQuery,
             onSubmitted: (value) => search(text: value),
             onClear: () => search(text: ''),
