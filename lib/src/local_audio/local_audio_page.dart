@@ -13,6 +13,7 @@ import '../../player.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import 'cache_dialog.dart';
+import 'local_audio_control_panel.dart';
 
 class LocalAudioPage extends StatefulWidget {
   const LocalAudioPage({
@@ -98,7 +99,6 @@ class _LocalAudioPageState extends State<LocalAudioPage>
     final libraryModel = context.read<LibraryModel>();
     final localAudioView =
         context.select((LocalAudioModel m) => m.localAudioView);
-    final setLocalAudioView = model.setLocalAudioView;
 
     context.select((LocalAudioModel m) => m.useLocalAudioCache);
 
@@ -156,26 +156,7 @@ class _LocalAudioPageState extends State<LocalAudioPage>
       appBar: headerBar,
       body: Column(
         children: [
-          Row(
-            children: [
-              const SizedBox(
-                width: 20,
-              ),
-              YaruChoiceChipBar(
-                yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-                selectedFirst: false,
-                clearOnSelect: false,
-                labels: LocalAudioView.values
-                    .map((e) => Text(e.localize(context.l10n)))
-                    .toList(),
-                isSelected: LocalAudioView.values
-                    .map((e) => e == localAudioView)
-                    .toList(),
-                onSelected: (index) =>
-                    setLocalAudioView(LocalAudioView.values[index]),
-              ),
-            ],
-          ),
+          const LocalAudioControlPanel(),
           Expanded(child: body),
         ],
       ),
