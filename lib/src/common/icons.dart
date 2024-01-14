@@ -194,6 +194,11 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.forward
           : Icons.arrow_forward;
+  IconData get goUp => yaruStyled
+      ? YaruIcons.go_up
+      : appleStyled
+          ? CupertinoIcons.up_arrow
+          : Icons.arrow_upward;
   IconData get share => yaruStyled
       ? YaruIcons.share
       : appleStyled
