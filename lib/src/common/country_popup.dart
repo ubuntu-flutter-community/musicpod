@@ -4,6 +4,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
+import '../../string_x.dart';
 import '../l10n/l10n.dart';
 
 class CountryPopup extends StatelessWidget {
@@ -13,21 +14,19 @@ class CountryPopup extends StatelessWidget {
     this.countries,
     required this.value,
     this.textStyle,
+    this.buttonStyle,
   });
 
   final void Function(Country country)? onSelected;
   final List<Country>? countries;
   final Country? value;
   final TextStyle? textStyle;
+  final ButtonStyle? buttonStyle;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final buttonStyle = TextButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(100),
-      ),
-    );
+
     final fallBackTextStyle =
         theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
     return YaruPopupMenuButton<Country>(
@@ -36,7 +35,7 @@ class CountryPopup extends StatelessWidget {
       onSelected: onSelected,
       initialValue: value,
       child: Text(
-        '${context.l10n.country}: ${value?.name ?? context.l10n.all}',
+        '${context.l10n.country}: ${value?.name.camelToSentence().capitalizeEveryWord() ?? context.l10n.all}',
         style: textStyle ?? fallBackTextStyle,
       ),
       itemBuilder: (context) {
@@ -45,7 +44,7 @@ class CountryPopup extends StatelessWidget {
               in countries ?? Country.values.where((c) => c != Country.none))
             PopupMenuItem(
               value: c,
-              child: Text(c.name),
+              child: Text(c.name.camelToSentence().capitalizeEveryWord()),
             ),
         ];
       },

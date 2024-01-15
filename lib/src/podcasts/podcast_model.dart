@@ -173,10 +173,10 @@ class PodcastModel extends SafeChangeNotifier {
     super.dispose();
   }
 
-  void search({
+  Future<SearchResult?> search({
     String? searchQuery,
-  }) {
-    _podcastService.search(
+  }) async {
+    return await _podcastService.search(
       searchQuery: searchQuery,
       country: _country,
       podcastGenre: podcastGenre,
