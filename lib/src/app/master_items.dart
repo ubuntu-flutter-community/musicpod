@@ -132,14 +132,14 @@ List<MasterItem> createMasterItems({
       ),
     for (final station in libraryModel.starredStations.entries)
       MasterItem(
-        titleBuilder: (context) => Text(station.key),
+        titleBuilder: (context) =>
+            Text(station.value.first.title ?? station.key),
         subtitleBuilder: (context) {
           return Text(context.l10n.station);
         },
         pageId: station.key,
         pageBuilder: (context) => isOnline
             ? StationPage(
-                isStarred: true,
                 starStation: (station) {},
                 unStarStation: libraryModel.unStarStation,
                 name: station.key,

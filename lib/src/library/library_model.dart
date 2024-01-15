@@ -144,9 +144,12 @@ class LibraryModel extends SafeChangeNotifier {
   void addStarredStation(String name, Set<Audio> audios) =>
       _service.addStarredStation(name, audios);
 
-  void unStarStation(String name) {
-    setIndex(_service.appIndex - 1);
-    _service.unStarStation(name);
+  void unStarStation(String url) {
+    final stationIndex = indexOfStation(url);
+    if (stationIndex == index) {
+      setIndex(_service.appIndex - 1);
+    }
+    _service.unStarStation(url);
   }
 
   int? indexOfStation(String id) {
@@ -160,8 +163,8 @@ class LibraryModel extends SafeChangeNotifier {
         allStations.indexOf(station);
   }
 
-  bool isStarredStation(String? name) =>
-      name?.isNotEmpty == false ? false : _service.isStarredStation(name);
+  bool isStarredStation(String? url) =>
+      url?.isNotEmpty == false ? false : _service.isStarredStation(url);
 
   Set<String> get favTags => _service.favTags;
   int get favTagsLength => _service.favTags.length;

@@ -20,12 +20,6 @@ class BottomPlayer extends StatelessWidget {
     required this.audio,
     required this.playPrevious,
     required this.playNext,
-    required this.liked,
-    required this.isStarredStation,
-    required this.removeStarredStation,
-    required this.addStarredStation,
-    required this.removeLikedAudio,
-    required this.addLikedAudio,
     this.isVideo,
     required this.videoController,
     required this.isOnline,
@@ -35,14 +29,6 @@ class BottomPlayer extends StatelessWidget {
 
   final Future<void> Function() playPrevious;
   final Future<void> Function() playNext;
-  final bool liked;
-
-  final bool isStarredStation;
-  final void Function(String station) removeStarredStation;
-  final void Function(String name, Set<Audio> stations) addStarredStation;
-
-  final void Function(Audio audio, bool notify) removeLikedAudio;
-  final void Function(Audio audio, bool notify) addLikedAudio;
 
   final void Function(bool?) setFullScreen;
 
@@ -125,12 +111,6 @@ class BottomPlayer extends StatelessWidget {
                 Flexible(
                   child: LikeIconButton(
                     audio: audio,
-                    liked: liked,
-                    isStarredStation: isStarredStation,
-                    removeStarredStation: removeStarredStation,
-                    addStarredStation: addStarredStation,
-                    removeLikedAudio: removeLikedAudio,
-                    addLikedAudio: addLikedAudio,
                   ),
                 ),
               ],

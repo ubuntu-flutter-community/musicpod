@@ -138,8 +138,8 @@ class LibraryService {
         .then((_) => _starredStationsController.add(true));
   }
 
-  bool isStarredStation(String? name) {
-    return name == null ? false : _starredStations.containsKey(name);
+  bool isStarredStation(String? url) {
+    return url == null ? false : _starredStations.containsKey(url);
   }
 
   Set<String> _favTags = {};

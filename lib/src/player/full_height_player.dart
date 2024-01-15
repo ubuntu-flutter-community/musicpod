@@ -22,12 +22,6 @@ class FullHeightPlayer extends StatelessWidget {
     required this.nextAudio,
     required this.playPrevious,
     required this.playNext,
-    required this.liked,
-    required this.isStarredStation,
-    required this.removeStarredStation,
-    required this.addStarredStation,
-    required this.removeLikedAudio,
-    required this.addLikedAudio,
     required this.setFullScreen,
     required this.playerViewMode,
     required this.videoController,
@@ -39,14 +33,6 @@ class FullHeightPlayer extends StatelessWidget {
   final Audio? nextAudio;
   final Future<void> Function() playPrevious;
   final Future<void> Function() playNext;
-  final bool liked;
-
-  final bool isStarredStation;
-  final void Function(String station) removeStarredStation;
-  final void Function(String name, Set<Audio> stations) addStarredStation;
-
-  final void Function(Audio audio, bool notify) removeLikedAudio;
-  final void Function(Audio audio, bool notify) addLikedAudio;
 
   final void Function(bool?) setFullScreen;
 
@@ -130,12 +116,6 @@ class FullHeightPlayer extends StatelessWidget {
             ),
             child: FullHeightPlayerTopControls(
               audio: audio,
-              liked: liked,
-              isStarredStation: isStarredStation,
-              removeStarredStation: removeStarredStation,
-              addStarredStation: addStarredStation,
-              removeLikedAudio: removeLikedAudio,
-              addLikedAudio: addLikedAudio,
               iconColor: iconColor,
               activeControls: activeControls,
               playerViewMode: playerViewMode,
