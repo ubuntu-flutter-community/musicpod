@@ -142,7 +142,7 @@ List<MasterItem> createMasterItems({
             ? StationPage(
                 starStation: (station) {},
                 unStarStation: libraryModel.unStarStation,
-                name: station.key,
+                name: station.value.first.title ?? station.key,
                 station: station.value.first,
               )
             : const OfflinePage(),
