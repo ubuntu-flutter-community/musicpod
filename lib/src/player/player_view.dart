@@ -6,6 +6,7 @@ import '../../build_context_x.dart';
 import '../../constants.dart';
 import '../../player.dart';
 import '../../theme_data_x.dart';
+import '../app/connectivity_notifier.dart';
 import '../library/library_model.dart';
 import '../theme.dart';
 
@@ -13,13 +14,9 @@ class PlayerView extends StatefulWidget {
   const PlayerView({
     super.key,
     required this.playerViewMode,
-    required this.isOnline,
-    this.countryCode,
   });
 
   final PlayerViewMode playerViewMode;
-  final String? countryCode;
-  final bool isOnline;
 
   @override
   State<PlayerView> createState() => _PlayerViewState();
@@ -53,6 +50,9 @@ class _PlayerViewState extends State<PlayerView> {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+
+    // Connectivity
+    final isOnline = context.watch<ConnectivityNotifier>().isOnline;
 
     final playerModel = context.read<PlayerModel>();
     final appModel = context.read<AppModel>();
@@ -95,7 +95,7 @@ class _PlayerViewState extends State<PlayerView> {
         removeStarredStation: removeStarredStation,
         addLikedAudio: addLikedAudio,
         removeLikedAudio: removeLikedAudio,
-        isOnline: widget.isOnline,
+        isOnline: isOnline,
       );
     } else {
       player = Column(
@@ -115,7 +115,7 @@ class _PlayerViewState extends State<PlayerView> {
             removeStarredStation: removeStarredStation,
             addLikedAudio: addLikedAudio,
             removeLikedAudio: removeLikedAudio,
-            isOnline: widget.isOnline,
+            isOnline: isOnline,
           ),
         ],
       );

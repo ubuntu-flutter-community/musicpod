@@ -121,9 +121,7 @@ class PodcastAudioTile extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: _Bottom(
             narrow: narrow,
-            selected: selected,
             audio: audio,
-            lastPosition: lastPosition,
           ),
         ),
       ),
@@ -256,15 +254,11 @@ class _ViewMoreButton extends StatelessWidget {
 
 class _Bottom extends StatelessWidget {
   const _Bottom({
-    required this.selected,
     required this.audio,
-    required this.lastPosition,
     this.narrow = false,
   });
 
-  final bool selected;
   final Audio audio;
-  final Duration? lastPosition;
   final bool narrow;
 
   @override
@@ -276,7 +270,6 @@ class _Bottom extends StatelessWidget {
         child: _Description(
           description: audio.description,
           title: audio.title,
-          selected: selected,
         ),
       ),
     );
@@ -287,12 +280,10 @@ class _Description extends StatelessWidget {
   const _Description({
     required this.description,
     required this.title,
-    required this.selected,
   });
 
   final String? description;
   final String? title;
-  final bool selected;
 
   @override
   Widget build(BuildContext context) {

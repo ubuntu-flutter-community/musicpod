@@ -55,22 +55,22 @@ class LibraryService {
   //
   // last positions
   //
-  Map<String, Duration>? _lastPositions = {};
-  Map<String, Duration>? get lastPositions => _lastPositions;
+  Map<String, Duration> _lastPositions = {};
+  Map<String, Duration> get lastPositions => _lastPositions;
   final _lastPositionsController = StreamController<bool>.broadcast();
   Stream<bool> get lastPositionsChanged => _lastPositionsController.stream;
   void addLastPosition(String url, Duration lastPosition) {
-    if (_lastPositions?.containsKey(url) == true) {
-      _lastPositions?.update(url, (value) => lastPosition);
+    if (_lastPositions.containsKey(url) == true) {
+      _lastPositions.update(url, (value) => lastPosition);
     } else {
-      _lastPositions?.putIfAbsent(url, () => lastPosition);
+      _lastPositions.putIfAbsent(url, () => lastPosition);
     }
 
     writeSetting(url, lastPosition.toString(), kLastPositionsFileName)
         .then((_) => _lastPositionsController.add(true));
   }
 
-  Duration? getLastPosition(String? url) => _lastPositions?[url];
+  Duration? getLastPosition(String? url) => _lastPositions[url];
 
   //
   // Liked Audios
@@ -525,9 +525,9 @@ class LibraryService {
     _podcastIndexController.add(true);
   }
 
-  int? _appIndex;
-  int? get appIndex => _appIndex;
-  void setAppIndex(int? value) {
+  int _appIndex = 0;
+  int get appIndex => _appIndex;
+  void setAppIndex(int value) {
     _appIndex = value;
   }
 

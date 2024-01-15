@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
@@ -7,31 +8,38 @@ import '../../library.dart';
 import '../../settings.dart';
 import '../../theme.dart';
 import '../globals.dart';
-import 'master_item.dart';
+import 'connectivity_notifier.dart';
+import 'master_items.dart';
 
 class MasterDetailPage extends StatelessWidget {
   const MasterDetailPage({
     super.key,
-    required this.setIndex,
-    required this.index,
-    required this.masterItems,
-    required this.libraryModel,
+    required this.countryCode,
   });
 
-  final void Function(int? value) setIndex;
-  final int? index;
-  final List<MasterItem> masterItems;
-  final LibraryModel libraryModel;
+  final String? countryCode;
 
   @override
   Widget build(BuildContext context) {
+    // Connectivity
+    final isOnline = context.watch<ConnectivityNotifier>().isOnline;
+
+    // Library
+    final libraryModel = context.watch<LibraryModel>();
+
+    final masterItems = createMasterItems(
+      libraryModel: libraryModel,
+      isOnline: isOnline,
+      countryCode: countryCode,
+    );
+
     return YaruMasterDetailTheme(
       data: YaruMasterDetailTheme.of(context).copyWith(
         sideBarColor: getSideBarColor(context.t),
       ),
       child: YaruMasterDetailPage(
         navigatorKey: navigatorKey,
-        onSelected: (value) => setIndex(value ?? 0),
+        onSelected: (value) => libraryModel.setIndex(value ?? 0),
         appBar: const HeaderBar(
           style: YaruTitleBarStyle.undecorated,
           title: Text('MusicPod'),
@@ -47,8 +55,8 @@ class MasterDetailPage extends StatelessWidget {
         ),
         breakpoint: 720,
         controller: YaruPageController(
-          length: masterItems.length,
-          initialIndex: index ?? 0,
+          length: libraryModel.totalListAmount,
+          initialIndex: libraryModel.index ?? 0,
         ),
         tileBuilder: (context, index, selected, availableWidth) {
           final item = masterItems[index];
