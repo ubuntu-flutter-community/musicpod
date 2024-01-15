@@ -37,7 +37,7 @@ class LikeIconButton extends StatelessWidget {
     }
 
     final void Function()? onLike;
-    if (audio == null || audio?.url == null) {
+    if (audio == null && audio?.url == null) {
       onLike = null;
     } else {
       if (audio?.audioType == AudioType.radio) {
