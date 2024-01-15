@@ -7,7 +7,6 @@ import '../../constants.dart';
 import '../../player.dart';
 import '../../theme_data_x.dart';
 import '../app/connectivity_notifier.dart';
-import '../library/library_model.dart';
 import '../theme.dart';
 
 class PlayerView extends StatefulWidget {
@@ -67,15 +66,6 @@ class _PlayerViewState extends State<PlayerView> {
     final playNext = playerModel.playNext;
     final audio = context.select((PlayerModel m) => m.audio);
 
-    final library = context.read<LibraryModel>();
-    final liked = library.liked(audio);
-
-    final removeLikedAudio = library.removeLikedAudio;
-    final addLikedAudio = library.addLikedAudio;
-    final addStarredStation = library.addStarredStation;
-    final removeStarredStation = library.unStarStation;
-    final isStarredStation = library.isStarredStation(audio?.title);
-
     final isVideo = context.select((PlayerModel m) => m.isVideo);
 
     Widget player;
@@ -89,12 +79,6 @@ class _PlayerViewState extends State<PlayerView> {
         audio: audio,
         playPrevious: playPrevious,
         playNext: playNext,
-        liked: liked,
-        isStarredStation: isStarredStation,
-        addStarredStation: addStarredStation,
-        removeStarredStation: removeStarredStation,
-        addLikedAudio: addLikedAudio,
-        removeLikedAudio: removeLikedAudio,
         isOnline: isOnline,
       );
     } else {
@@ -109,12 +93,6 @@ class _PlayerViewState extends State<PlayerView> {
             audio: audio,
             playPrevious: playPrevious,
             playNext: playNext,
-            liked: liked,
-            isStarredStation: isStarredStation,
-            addStarredStation: addStarredStation,
-            removeStarredStation: removeStarredStation,
-            addLikedAudio: addLikedAudio,
-            removeLikedAudio: removeLikedAudio,
             isOnline: isOnline,
           ),
         ],

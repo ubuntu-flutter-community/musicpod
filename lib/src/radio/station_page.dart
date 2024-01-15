@@ -8,6 +8,7 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../globals.dart';
+import '../../library.dart';
 import '../../player.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
@@ -22,14 +23,12 @@ class StationPage extends StatelessWidget {
     required this.name,
     required this.unStarStation,
     required this.starStation,
-    required this.isStarred,
   });
 
   final Audio station;
   final String name;
   final void Function(String station) unStarStation;
   final void Function(String station) starStation;
-  final bool isStarred;
 
   static Widget createIcon({
     required BuildContext context,
@@ -82,6 +81,11 @@ class StationPage extends StatelessWidget {
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
+    final libraryModel = context.read<LibraryModel>();
+    final isStarred = station.url == null
+        ? false
+        : libraryModel.isStarredStation(station.url!);
+    context.select((LibraryModel m) => m.starredStations.length);
 
     return YaruDetailPage(
       appBar: HeaderBar(
@@ -123,9 +127,11 @@ class StationPage extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          onPressed: isStarred
-                              ? () => unStarStation(name)
-                              : () => starStation(name),
+                          onPressed: station.url == null
+                              ? null
+                              : isStarred
+                                  ? () => unStarStation(station.url!)
+                                  : () => starStation(station.url!),
                           icon: Iconz().getAnimatedStar(
                             isStarred,
                           ),
