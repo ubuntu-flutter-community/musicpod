@@ -73,7 +73,15 @@ class _RadioPageState extends State<RadioPage> {
             ),
           );
         },
-      );
+      ).then((_) {
+        if (libraryModel.starredStations.isEmpty) {
+          navigatorKey.currentState?.push(
+            MaterialPageRoute(
+              builder: (context) => const RadioDiscoverPage(),
+            ),
+          );
+        }
+      });
     });
   }
 

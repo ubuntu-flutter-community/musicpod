@@ -73,7 +73,7 @@ const kPatchNotes20240115 = 'Hello MusicPod Users 💙🐧🧡\n\n'
     'Important bug fixes:'
     '\n* removing radio stations, albums and podcasts in small windows now works'
     '\n* stations are now properly identified. Sadly this means you need to add'
-    '\n* your favorite radio stations again :('
+    '\n  your favorite radio stations again :('
     '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
     '\n';
 
