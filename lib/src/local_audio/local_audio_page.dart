@@ -97,8 +97,9 @@ class _LocalAudioPageState extends State<LocalAudioPage>
     final findAlbum = model.findAlbum;
 
     final libraryModel = context.read<LibraryModel>();
-    final localAudioView =
-        context.select((LocalAudioModel m) => m.localAudioView);
+
+    final index = context.select((LibraryModel m) => m.localAudioindex) ?? 0;
+    final localAudioView = LocalAudioView.values[index];
 
     context.select((LocalAudioModel m) => m.useLocalAudioCache);
 

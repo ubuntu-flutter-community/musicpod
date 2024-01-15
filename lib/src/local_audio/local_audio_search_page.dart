@@ -43,8 +43,9 @@ class LocalAudioSearchPage extends StatelessWidget {
     final pause = playerModel.pause;
     final resume = playerModel.resume;
     final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
-    final localAudioView =
-        context.select((LocalAudioModel m) => m.localAudioView);
+    final index = context.select((LibraryModel m) => m.localAudioindex) ?? 0;
+
+    final localAudioView = LocalAudioView.values[index];
 
     final Set<Audio>? titlesResult =
         context.select((LocalAudioModel m) => m.titlesSearchResult);

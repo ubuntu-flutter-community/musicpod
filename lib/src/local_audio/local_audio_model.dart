@@ -199,14 +199,6 @@ class LocalAudioModel extends SafeChangeNotifier {
     return images;
   }
 
-  LocalAudioView _localAudioView = LocalAudioView.titles;
-  LocalAudioView get localAudioView => _localAudioView;
-  void setLocalAudioView(LocalAudioView value) {
-    if (value == _localAudioView) return;
-    _localAudioView = value;
-    notifyListeners();
-  }
-
   StreamSubscription<bool>? _directoryChangedSub;
   StreamSubscription<bool>? _audiosChangedSub;
   StreamSubscription<bool>? _localAudioCacheChangedSub;

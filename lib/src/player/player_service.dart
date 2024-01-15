@@ -261,15 +261,17 @@ class PlayerService {
     await play();
   }
 
-  Future<void> insertIntoQueue(Audio audio) async {
-    if (_queue.$2.isNotEmpty && !_queue.$2.contains(audio) && _audio != null) {
+  void insertIntoQueue(Audio newAudio) {
+    if (_queue.$2.isNotEmpty &&
+        !_queue.$2.contains(newAudio) &&
+        _audio != null) {
       final currentIndex = queue.$2.indexOf(_audio!);
-      _queue.$2.insert(currentIndex + 1, audio);
-      nextAudio = queue.$2[currentIndex + 1];
+      _queue.$2.insert(currentIndex + 1, newAudio);
+      nextAudio = newAudio;
     }
   }
 
-  Future<void> moveAudioInQueue(int oldIndex, int newIndex) async {
+  void moveAudioInQueue(int oldIndex, int newIndex) {
     if (_queue.$2.isNotEmpty && newIndex < _queue.$2.length) {
       if (oldIndex < newIndex) {
         newIndex -= 1;
@@ -282,6 +284,12 @@ class PlayerService {
 
       _queueController.add(true);
     }
+  }
+
+  void remove(Audio deleteMe) {
+    _queue.$2.remove(deleteMe);
+    _estimateNext();
+    _queueController.add(true);
   }
 
   void _estimateNext() {

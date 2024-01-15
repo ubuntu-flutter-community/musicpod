@@ -32,9 +32,12 @@ class _RadioPageState extends State<RadioPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final model = context.read<RadioModel>();
+      final libraryModel = context.read<LibraryModel>();
+      final index = libraryModel.radioindex;
       model
           .init(
         countryCode: widget.countryCode,
+        index: index,
       )
           .then(
         (connectedHost) {
@@ -57,8 +60,10 @@ class _RadioPageState extends State<RadioPage> {
                   ),
                   if (connectedHost == null)
                     ImportantButton(
-                      onPressed: () =>
-                          model.init(countryCode: widget.countryCode),
+                      onPressed: () => model.init(
+                        countryCode: widget.countryCode,
+                        index: index,
+                      ),
                       child: Text(
                         context.l10n.tryReconnect,
                       ),

@@ -30,7 +30,8 @@ class RadioDiscoverPage extends StatelessWidget {
     context.select((LibraryModel m) => m.favTagsLength);
     context.select((LibraryModel m) => m.favCountriesLength);
 
-    final radioSearch = context.select((RadioModel m) => m.radioSearch);
+    final radioSearch =
+        context.select((LibraryModel m) => RadioSearch.values[m.radioindex]);
 
     final country = context.select((RadioModel m) => m.country);
     final tag = context.select((RadioModel m) => m.tag);

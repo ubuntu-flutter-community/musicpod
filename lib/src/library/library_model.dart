@@ -17,9 +17,9 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _albumsSub;
   StreamSubscription<bool>? _podcastsSub;
   StreamSubscription<bool>? _stationsSub;
-  StreamSubscription<int?>? _localAudioIndexSub;
-  StreamSubscription<int?>? _podcastIndexSub;
-  StreamSubscription<int?>? _radioIndexSub;
+  StreamSubscription<bool>? _localAudioIndexSub;
+  StreamSubscription<bool>? _podcastIndexSub;
+  StreamSubscription<bool>? _radioIndexSub;
   StreamSubscription<bool>? _lastPositionsSub;
   StreamSubscription<bool>? _updatesChangedSub;
   StreamSubscription<bool>? _neverShowFailedImportsSub;
@@ -40,12 +40,12 @@ class LibraryModel extends SafeChangeNotifier {
       _index = _service.appIndex;
     }
 
-    _localAudioIndexSub = _service.localAudioIndexStream
-        .listen((index) => setLocalAudioindex(index));
+    _localAudioIndexSub =
+        _service.localAudioIndexChanged.listen((_) => notifyListeners());
     _radioIndexSub =
-        _service.radioIndexStream.listen((index) => setRadioIndex(index));
-    _radioIndexSub =
-        _service.podcastIndexStream.listen((index) => setPodcastIndex(index));
+        _service.radioIndexChanged.listen((_) => notifyListeners());
+    _podcastIndexSub =
+        _service.podcastIndexChanged.listen((_) => notifyListeners());
     _likedAudiosSub =
         _service.likedAudiosChanged.listen((event) => notifyListeners());
     _playlistsSub =
@@ -267,17 +267,11 @@ class LibraryModel extends SafeChangeNotifier {
     _service.setLocalAudioIndex(value);
   }
 
-  int? get radioindex => _service.radioIndex;
-  void setRadioIndex(int? value) {
-    if (value == null || value == _service.radioIndex) return;
-    _service.setRadioIndex(value);
-  }
+  int get radioindex => _service.radioIndex;
+  void setRadioIndex(int value) => _service.setRadioIndex(value);
 
-  int? get podcastIndex => _service.podcastIndex;
-  void setPodcastIndex(int? value) {
-    if (value == null || value == _service.podcastIndex) return;
-    _service.setPodcastIndex(value);
-  }
+  int get podcastIndex => _service.podcastIndex;
+  void setPodcastIndex(int value) => _service.setPodcastIndex(value);
 
   Map<String, Duration>? get lastPositions => _service.lastPositions;
   Duration? getLastPosition(String? url) => _service.getLastPosition(url);

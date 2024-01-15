@@ -239,7 +239,7 @@ class _ViewMoreButton extends StatelessWidget {
             return [
               PopupMenuItem(
                 onTap: insertIntoQueue,
-                child: Text(context.l10n.insertIntoQueue),
+                child: Text(context.l10n.playNext),
               ),
             ];
           },
