@@ -116,7 +116,9 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     final resume = playerModel.resume;
     final insertIntoQueue = playerModel.insertIntoQueue;
 
-    context.select((LibraryModel m) => m.likedAudios.length);
+    if (widget.audioPageType != AudioPageType.podcast) {
+      context.select((LibraryModel m) => m.likedAudios.length);
+    }
     if (widget.audioPageType == AudioPageType.playlist) {
       context.select((LibraryModel m) => m.playlists[widget.pageId]?.length);
     }
@@ -238,8 +240,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                         pause: pause,
                         resume: resume,
                         play: play,
-                        lastPosition:
-                            libraryModel.getLastPosition.call(audio.url),
+                        lastPosition: libraryModel.getLastPosition(audio.url),
                         safeLastPosition: playerModel.safeLastPosition,
                         isOnline: isOnline,
                         insertIntoQueue: () =>

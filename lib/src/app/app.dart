@@ -17,7 +17,6 @@ import '../../radio.dart';
 import '../external_path/external_path_service.dart';
 import 'connectivity_notifier.dart';
 import 'master_detail_page.dart';
-import 'master_items.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -129,25 +128,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final playerToTheRight = context.m.size.width > 1500;
 
-    // Connectivity
-    final isOnline = context.watch<ConnectivityNotifier>().isOnline;
-
     // AppModel
     final isFullScreen = context.select((AppModel m) => m.fullScreen);
-
-    // Library
-    final libraryModel = context.watch<LibraryModel>();
-
-    final yaruMasterDetailPage = MasterDetailPage(
-      setIndex: libraryModel.setIndex,
-      index: libraryModel.index,
-      masterItems: createMasterItems(
-        libraryModel: libraryModel,
-        isOnline: isOnline,
-        countryCode: _countryCode,
-      ),
-      libraryModel: libraryModel,
-    );
 
     return Stack(
       alignment: Alignment.center,
@@ -158,34 +140,30 @@ class _AppState extends State<App> with WidgetsBindingObserver {
               child: Column(
                 children: [
                   Expanded(
-                    child: yaruMasterDetailPage,
+                    child: MasterDetailPage(
+                      countryCode: _countryCode,
+                    ),
                   ),
                   if (!playerToTheRight)
-                    PlayerView(
+                    const PlayerView(
                       playerViewMode: PlayerViewMode.bottom,
-                      isOnline: isOnline,
-                      countryCode: _countryCode,
                     ),
                 ],
               ),
             ),
             if (playerToTheRight)
-              SizedBox(
+              const SizedBox(
                 width: 500,
                 child: PlayerView(
                   playerViewMode: PlayerViewMode.sideBar,
-                  isOnline: isOnline,
-                  countryCode: _countryCode,
                 ),
               ),
           ],
         ),
         if (isFullScreen == true)
-          Scaffold(
+          const Scaffold(
             body: PlayerView(
               playerViewMode: PlayerViewMode.fullWindow,
-              isOnline: isOnline,
-              countryCode: _countryCode,
             ),
           ),
       ],

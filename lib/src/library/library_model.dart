@@ -35,8 +35,7 @@ class LibraryModel extends SafeChangeNotifier {
       await _service.setNeverShowFailedImports();
 
   Future<void> init() async {
-    if (_service.appIndex != null &&
-        _totalListAmount - 1 >= _service.appIndex!) {
+    if (totalListAmount - 1 >= _service.appIndex) {
       _index = _service.appIndex;
     }
 
@@ -99,7 +98,7 @@ class LibraryModel extends SafeChangeNotifier {
     super.dispose();
   }
 
-  int get _totalListAmount {
+  int get totalListAmount {
     return starredStationsLength +
         podcastsLength +
         playlistsLength +
@@ -145,7 +144,21 @@ class LibraryModel extends SafeChangeNotifier {
   void addStarredStation(String name, Set<Audio> audios) =>
       _service.addStarredStation(name, audios);
 
-  void unStarStation(String name) => _service.unStarStation(name);
+  void unStarStation(String name) {
+    setIndex(_service.appIndex - 1);
+    _service.unStarStation(name);
+  }
+
+  int? indexOfStation(String id) {
+    final station = starredStations[id];
+    if (station == null) return null;
+    final allStations = starredStations.entries.map((e) => e.value).toList();
+    return kFixedListAmount +
+        playlistsLength +
+        podcastsLength +
+        pinnedAlbumsLength +
+        allStations.indexOf(station);
+  }
 
   bool isStarredStation(String? name) =>
       name?.isNotEmpty == false ? false : _service.isStarredStation(name);
@@ -183,7 +196,21 @@ class LibraryModel extends SafeChangeNotifier {
   void addPlaylist(String name, Set<Audio> audios) =>
       _service.addPlaylist(name, audios);
 
-  void removePlaylist(String name) => _service.removePlaylist(name);
+  void removePlaylist(String id) {
+    final playlistIndex = getIndexOfPlaylist(id);
+    if (index == playlistIndex) {
+      setIndex(_service.appIndex - 1);
+    }
+    _service.removePlaylist(id);
+  }
+
+  int? getIndexOfPlaylist(String id) {
+    if (id == kLikedAudiosPageId) return 4;
+    final playlist = getPlaylistById(id);
+    if (playlist == null) return null;
+    final allPlaylists = playlists.entries.map((e) => e.value).toList();
+    return kFixedListAmount + allPlaylists.indexOf(playlist);
+  }
 
   void updatePlaylistName(String oldName, String newName) =>
       _service.updatePlaylistName(oldName, newName);
@@ -206,7 +233,20 @@ class LibraryModel extends SafeChangeNotifier {
   void updatePodcast(String feedUrl, Set<Audio> audios) =>
       _service.updatePodcast(feedUrl, audios);
 
-  void removePodcast(String feedUrl) => _service.removePodcast(feedUrl);
+  void removePodcast(String feedUrl) {
+    final podcastIndex = indexOfPodcast(feedUrl);
+    if (podcastIndex == index) {
+      setIndex(_service.appIndex - 1);
+    }
+    _service.removePodcast(feedUrl);
+  }
+
+  int? indexOfPodcast(String id) {
+    final podcast = podcasts[id];
+    if (podcast == null) return null;
+    final allPodcasts = podcasts.entries.map((e) => e.value).toList();
+    return kFixedListAmount + playlistsLength + allPodcasts.indexOf(podcast);
+  }
 
   bool podcastSubscribed(String? feedUrl) =>
       feedUrl == null ? false : podcasts.containsKey(feedUrl);
@@ -242,7 +282,23 @@ class LibraryModel extends SafeChangeNotifier {
   void addPinnedAlbum(String name, Set<Audio> audios) =>
       _service.addPinnedAlbum(name, audios);
 
-  void removePinnedAlbum(String name) => _service.removePinnedAlbum(name);
+  void removePinnedAlbum(String name) {
+    final albumIndex = indexOfAlbum(name);
+    if (albumIndex == index) {
+      setIndex(_service.appIndex - 1);
+    }
+    _service.removePinnedAlbum(name);
+  }
+
+  int? indexOfAlbum(String id) {
+    final album = pinnedAlbums[id];
+    if (album == null) return null;
+    final allAlbums = pinnedAlbums.entries.map((e) => e.value).toList();
+    return kFixedListAmount +
+        playlistsLength +
+        podcastsLength +
+        allAlbums.indexOf(album);
+  }
 
   int? _index;
   int? get index => _index;
@@ -251,14 +307,6 @@ class LibraryModel extends SafeChangeNotifier {
     _index = value;
     _service.setAppIndex(value);
     notifyListeners();
-  }
-
-  int? getIndexOfPlaylist(String id) {
-    if (id == kLikedAudiosPageId) return 4;
-    final playlist = getPlaylistById(id);
-    if (playlist == null) return null;
-    final allPlaylists = playlists.entries.map((e) => e.value).toList();
-    return kFixedListAmount + allPlaylists.indexOf(playlist);
   }
 
   int? get localAudioindex => _service.localAudioIndex;
