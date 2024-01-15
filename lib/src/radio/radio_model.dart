@@ -26,7 +26,7 @@ class RadioModel extends SafeChangeNotifier {
   void setCountry(Country? value) {
     if (value == _country) return;
     _country = value;
-    _loadQueryBySearch();
+    loadQueryBySearch(RadioSearch.country);
   }
 
   List<Country> get sortedCountries {
@@ -46,7 +46,7 @@ class RadioModel extends SafeChangeNotifier {
   void setTag(Tag? value) {
     if (value == _tag) return;
     _tag = value;
-    _loadQueryBySearch();
+    loadQueryBySearch(RadioSearch.tag);
   }
 
   Future<Set<Audio>?> getStations({
@@ -103,6 +103,7 @@ class RadioModel extends SafeChangeNotifier {
   String? _connectedHost;
   Future<String?> init({
     required String? countryCode,
+    required int index,
   }) async {
     _connectedHost ??= await _radioService.init();
 
@@ -122,13 +123,13 @@ class RadioModel extends SafeChangeNotifier {
           : tags!.firstWhere((t) => t.name.contains(lastFav));
     }
 
-    _loadQueryBySearch();
+    loadQueryBySearch(RadioSearch.values[index]);
 
     return _connectedHost;
   }
 
-  void _loadQueryBySearch() {
-    switch (_radioSearch) {
+  void loadQueryBySearch(RadioSearch search) {
+    switch (search) {
       case RadioSearch.country:
         _searchQuery = country?.name;
         break;
@@ -165,14 +166,6 @@ class RadioModel extends SafeChangeNotifier {
     if (value == _showTags) return;
     _showTags = value;
     notifyListeners();
-  }
-
-  RadioSearch _radioSearch = RadioSearch.country;
-  RadioSearch get radioSearch => _radioSearch;
-  void setRadioSearch(RadioSearch value) {
-    if (value == _radioSearch) return;
-    _radioSearch = value;
-    _loadQueryBySearch();
   }
 
   @override

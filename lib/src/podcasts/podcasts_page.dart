@@ -59,7 +59,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final podcastSubscribed = libraryModel.podcastSubscribed;
     final removePodcast = libraryModel.removePodcast;
     final addPodcast = libraryModel.addPodcast;
-    final setPodcastIndex = libraryModel.setPodcastIndex;
 
     final setLimit = model.setLimit;
     final setSelectedFeedUrl = model.setSelectedFeedUrl;
@@ -184,10 +183,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
         ],
         title: searchActive
             ? PodcastsPageTitle(
-                onIndexSelected: setPodcastIndex,
-                searchActive: true,
                 searchQuery: searchQuery,
-                setSearchActive: setSearchActive,
                 setSearchQuery: setSearchQuery,
                 search: search,
               )

@@ -86,10 +86,12 @@ class _QueueDialogState extends State<QueueDialog> {
   @override
   Widget build(BuildContext context) {
     final queue = context.select((PlayerModel m) => m.queue);
+    final queueLength = context.select((PlayerModel m) => m.queue.length);
     final currentAudio = context.select((PlayerModel m) => m.audio);
     final playerModel = context.read<PlayerModel>();
 
     return AlertDialog(
+      key: ValueKey(queueLength),
       titlePadding: const EdgeInsets.only(left: 25, right: 25, top: 50),
       contentPadding: const EdgeInsets.only(bottom: 25, top: 5),
       title: Column(
@@ -130,10 +132,15 @@ class _QueueDialogState extends State<QueueDialog> {
                   final selected = audio == currentAudio;
 
                   return AutoScrollTag(
-                    key: ValueKey(index),
+                    key: ObjectKey(audio),
                     controller: _controller,
                     index: index,
                     child: ListTile(
+                      leading: IconButton(
+                        onPressed:
+                            selected ? null : () => playerModel.remove(audio),
+                        icon: Icon(Iconz().close),
+                      ),
                       contentPadding:
                           const EdgeInsets.only(right: 20, left: 20),
                       selected: selected,

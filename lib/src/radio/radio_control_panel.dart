@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../l10n.dart';
-import 'radio_model.dart';
+import '../../library.dart';
+import '../../radio.dart';
 import 'radio_search.dart';
 
 class RadioControlPanel extends StatelessWidget {
@@ -13,9 +14,10 @@ class RadioControlPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final libraryModel = context.read<LibraryModel>();
     final model = context.read<RadioModel>();
+    final index = context.select((LibraryModel m) => m.radioindex);
 
-    final radioSearch = context.select((RadioModel m) => m.radioSearch);
     return Padding(
       padding: const EdgeInsets.only(left: 30),
       child: YaruChoiceChipBar(
@@ -25,9 +27,12 @@ class RadioControlPanel extends StatelessWidget {
         labels: RadioSearch.values
             .map((e) => Text(e.localize(context.l10n)))
             .toList(),
-        isSelected: RadioSearch.values.map((e) => e == radioSearch).toList(),
+        isSelected: RadioSearch.values
+            .map((e) => e == RadioSearch.values[index])
+            .toList(),
         onSelected: (index) {
-          model.setRadioSearch(RadioSearch.values[index]);
+          libraryModel.setRadioIndex(index);
+          model.loadQueryBySearch(RadioSearch.values[index]);
         },
       ),
     );

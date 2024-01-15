@@ -1,3 +1,4 @@
+import '../../library.dart';
 import '../../local_audio.dart';
 import '../l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +12,8 @@ class LocalAudioControlPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<LocalAudioModel>();
-
-    final localAudioView =
-        context.select((LocalAudioModel m) => m.localAudioView);
-    final setLocalAudioView = model.setLocalAudioView;
+    final libraryModel = context.read<LibraryModel>();
+    final index = context.select((LibraryModel m) => m.localAudioindex) ?? 0;
 
     return Row(
       children: [
@@ -29,10 +27,10 @@ class LocalAudioControlPanel extends StatelessWidget {
           labels: LocalAudioView.values
               .map((e) => Text(e.localize(context.l10n)))
               .toList(),
-          isSelected:
-              LocalAudioView.values.map((e) => e == localAudioView).toList(),
-          onSelected: (index) =>
-              setLocalAudioView(LocalAudioView.values[index]),
+          isSelected: LocalAudioView.values
+              .map((e) => e == LocalAudioView.values[index])
+              .toList(),
+          onSelected: libraryModel.setLocalAudioindex,
         ),
       ],
     );

@@ -481,35 +481,48 @@ class LibraryService {
     final appIndexOrNull = await readSetting(kAppIndex);
     _appIndex = appIndexOrNull == null ? 0 : int.parse(appIndexOrNull);
 
-    final localAudioIndexOrNull = await readSetting(kLocalAudioIndex);
-    _localAudioIndex =
-        localAudioIndexOrNull == null ? 0 : int.parse(localAudioIndexOrNull);
+    final localAudioParseOrNull =
+        int.tryParse((await readSetting(kLocalAudioIndex)));
+    if (localAudioParseOrNull != null) {
+      _localAudioIndex = localAudioParseOrNull;
+    }
+
+    final radioParseOrNull = int.tryParse((await readSetting(kRadioIndex)));
+    if (radioParseOrNull != null) {
+      _radioIndex = radioParseOrNull;
+    }
 
     _settingsInitialized = true;
   }
 
-  int? _localAudioIndex;
-  int? get localAudioIndex => _localAudioIndex;
-  final _localAudioIndexController = StreamController<int?>.broadcast();
-  Stream<int?> get localAudioIndexStream => _localAudioIndexController.stream;
-  void setLocalAudioIndex(int? value) {
+  int _localAudioIndex = 0;
+  int get localAudioIndex => _localAudioIndex;
+  final _localAudioIndexController = StreamController<bool>.broadcast();
+  Stream<bool> get localAudioIndexChanged => _localAudioIndexController.stream;
+  void setLocalAudioIndex(int value) {
+    if (value == _localAudioIndex) return;
     _localAudioIndex = value;
+    _localAudioIndexController.add(true);
   }
 
-  int? _radioIndex;
-  int? get radioIndex => _radioIndex;
-  final _radioIndexController = StreamController<int?>.broadcast();
-  Stream<int?> get radioIndexStream => _radioIndexController.stream;
-  void setRadioIndex(int? value) {
+  int _radioIndex = 2; // Default to RadioSearch.country
+  int get radioIndex => _radioIndex;
+  final _radioIndexController = StreamController<bool>.broadcast();
+  Stream<bool> get radioIndexChanged => _radioIndexController.stream;
+  void setRadioIndex(int value) {
+    if (value == _radioIndex) return;
     _radioIndex = value;
+    _radioIndexController.add(true);
   }
 
-  int? _podcastIndex;
-  int? get podcastIndex => _podcastIndex;
-  final _podcastIndexController = StreamController<int?>.broadcast();
-  Stream<int?> get podcastIndexStream => _podcastIndexController.stream;
-  void setPodcastIndex(int? value) {
+  int _podcastIndex = 0;
+  int get podcastIndex => _podcastIndex;
+  final _podcastIndexController = StreamController<bool>.broadcast();
+  Stream<bool> get podcastIndexChanged => _podcastIndexController.stream;
+  void setPodcastIndex(int value) {
+    if (value == _podcastIndex) return;
     _podcastIndex = value;
+    _podcastIndexController.add(true);
   }
 
   int? _appIndex;
