@@ -210,7 +210,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
               if (widget.showAudioTileHeader) const Divider(),
               Expanded(
                 child: ListView.builder(
-                  shrinkWrap: true,
                   controller: _controller,
                   itemCount: widget.audios?.length,
                   itemBuilder: (context, index) {

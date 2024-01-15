@@ -12,21 +12,19 @@ class LimitPopup extends StatelessWidget {
     this.limits,
     required this.value,
     this.textStyle,
+    this.buttonStyle,
   });
 
   final void Function(int value)? onSelected;
   final List<int>? limits;
   final int? value;
   final TextStyle? textStyle;
+  final ButtonStyle? buttonStyle;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final buttonStyle = TextButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(100),
-      ),
-    );
+
     final fallBackTextStyle =
         theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
     return YaruPopupMenuButton<int>(
@@ -35,7 +33,7 @@ class LimitPopup extends StatelessWidget {
       onSelected: onSelected,
       initialValue: value,
       child: Text(
-        '${context.l10n.limit}: ${value?.toString() ?? ''} ',
+        '${context.l10n.limit}: ${value?.toString() ?? ''}',
         style: textStyle ?? fallBackTextStyle,
       ),
       itemBuilder: (context) {

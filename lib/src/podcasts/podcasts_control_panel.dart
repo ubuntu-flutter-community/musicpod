@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../theme.dart';
 import '../l10n/l10n.dart';
 
 class PodcastsControlPanel extends StatelessWidget {
@@ -38,12 +40,15 @@ class PodcastsControlPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    final theme = context.t;
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      scrollDirection: Axis.horizontal,
-      child: Row(
+      child: Wrap(
+        spacing: 10,
+        runSpacing: 20,
         children: [
           LimitPopup(
+            buttonStyle: createPopupStyle(theme),
             value: limit,
             onSelected: (value) {
               setLimit(value);
@@ -51,6 +56,7 @@ class PodcastsControlPanel extends StatelessWidget {
             },
           ),
           CountryPopup(
+            buttonStyle: createPopupStyle(theme),
             onSelected: (value) {
               setCountry(value);
               search(searchQuery: searchQuery);
@@ -59,7 +65,7 @@ class PodcastsControlPanel extends StatelessWidget {
             countries: sortedCountries,
           ),
           YaruPopupMenuButton<PodcastGenre>(
-            style: buttonStyle,
+            style: createPopupStyle(theme),
             icon: const DropDownArrow(),
             onSelected: (value) {
               setPodcastGenre(value);

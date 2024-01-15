@@ -22,7 +22,7 @@ class PodcastService {
     _searchChangedController.close();
   }
 
-  Future<void> search({
+  Future<SearchResult?> search({
     String? searchQuery,
     PodcastGenre podcastGenre = PodcastGenre.science,
     Country? country,
@@ -58,6 +58,7 @@ class PodcastService {
           SearchResult.fromError(lastError: error ?? 'Something went wrong');
     }
     _searchChangedController.add(true);
+    return _searchResult;
   }
 
   Future<void> updatePodcasts({
