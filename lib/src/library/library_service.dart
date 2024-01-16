@@ -481,15 +481,20 @@ class LibraryService {
     final appIndexOrNull = await readSetting(kAppIndex);
     _appIndex = appIndexOrNull == null ? 0 : int.parse(appIndexOrNull);
 
-    final localAudioParseOrNull =
-        int.tryParse((await readSetting(kLocalAudioIndex)));
-    if (localAudioParseOrNull != null) {
-      _localAudioIndex = localAudioParseOrNull;
+    final localAudioIndexStringOrNull = await readSetting(kLocalAudioIndex);
+    if (localAudioIndexStringOrNull != null) {
+      final localParse = int.tryParse((await readSetting(kLocalAudioIndex)));
+      if (localParse != null) {
+        _localAudioIndex = localParse;
+      }
     }
 
-    final radioParseOrNull = int.tryParse((await readSetting(kRadioIndex)));
-    if (radioParseOrNull != null) {
-      _radioIndex = radioParseOrNull;
+    final radioIndexStringOrNull = await readSetting(kRadioIndex);
+    if (radioIndexStringOrNull != null) {
+      final radioParse = int.tryParse(radioIndexStringOrNull);
+      if (radioParse != null) {
+        _radioIndex = radioParse;
+      }
     }
 
     _settingsInitialized = true;
