@@ -71,6 +71,7 @@ class PodcastsCollectionBody extends StatelessWidget {
                     width: 25,
                   ),
                   YaruChoiceChipBar(
+                    borderColor: Colors.transparent,
                     yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
                     clearOnSelect: false,
                     selectedFirst: false,

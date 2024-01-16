@@ -219,7 +219,6 @@ InputDecoration createYaruDecoration(bool isLight) {
 ButtonStyle createPopupStyle(ThemeData themeData) {
   return TextButton.styleFrom(
     shape: RoundedRectangleBorder(
-      side: BorderSide(color: themeData.colorScheme.outline),
       borderRadius: BorderRadius.circular(100),
     ),
   );

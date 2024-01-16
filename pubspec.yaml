@@ -64,7 +64,7 @@ dependencies:
   yaru_widgets:
     git:
       url: https://github.com/ubuntu/yaru_widgets.dart
-      ref: 83b16b7d783b5d8dd9de6e2ffa30c9148cba5565
+      ref: fix(YaruChoiceChipBar)--allow-border-color
   yaru_window: ^0.2.0
   yaru_window_linux: ^0.1.3
 
@@ -84,4 +84,4 @@ dependency_overrides:
   yaru_widgets:
     git:
       url: https://github.com/ubuntu/yaru_widgets.dart
-      ref: 83b16b7d783b5d8dd9de6e2ffa30c9148cba5565
+      ref: fix(YaruChoiceChipBar)--allow-border-color

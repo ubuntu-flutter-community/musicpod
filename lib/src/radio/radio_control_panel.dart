@@ -21,6 +21,7 @@ class RadioControlPanel extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 30),
       child: YaruChoiceChipBar(
+        borderColor: Colors.transparent,
         yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
         clearOnSelect: false,
         selectedFirst: false,

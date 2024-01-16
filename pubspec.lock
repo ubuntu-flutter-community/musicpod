@@ -1287,8 +1287,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "83b16b7d783b5d8dd9de6e2ffa30c9148cba5565"
-      resolved-ref: "83b16b7d783b5d8dd9de6e2ffa30c9148cba5565"
+      ref: "fix(YaruChoiceChipBar)--allow-border-color"
+      resolved-ref: "98453c36459bf8783837b5a0b9836055fdacda3a"
       url: "https://github.com/ubuntu/yaru_widgets.dart"
     source: git
     version: "3.4.0"
