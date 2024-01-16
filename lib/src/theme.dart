@@ -178,7 +178,7 @@ InputDecoration createMaterialDecoration(ColorScheme colorScheme) {
 }
 
 InputDecoration createYaruDecoration(bool isLight) {
-  final radius = BorderRadius.circular(kYaruButtonRadius);
+  final radius = BorderRadius.circular(100);
 
   final fill = isLight ? const Color(0xffdcdcdc) : const Color(0xff2f2f2f);
 
