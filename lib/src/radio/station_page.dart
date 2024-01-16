@@ -166,47 +166,51 @@ class StationPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 15,
-                      left: 5,
-                      right: 5,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 15,
+                        left: 5,
+                        right: 5,
+                      ),
+                      child: (tags?.isNotEmpty == true)
+                          ? YaruChoiceChipBar(
+                              goNextIcon: Padding(
+                                padding: appleStyled
+                                    ? const EdgeInsets.only(left: 3)
+                                    : EdgeInsets.zero,
+                                child: Icon(Iconz().goNext),
+                              ),
+                              goPreviousIcon: Padding(
+                                padding: appleStyled
+                                    ? const EdgeInsets.only(right: 3)
+                                    : EdgeInsets.zero,
+                                child: Icon(Iconz().goBack),
+                              ),
+                              chipHeight: chipHeight,
+                              yaruChoiceChipBarStyle: tags!.length < 3
+                                  ? YaruChoiceChipBarStyle.wrap
+                                  : YaruChoiceChipBarStyle.stack,
+                              labels: tags.map((e) => Text(e)).toList(),
+                              isSelected: tags.map((e) => false).toList(),
+                              onSelected: (index) {
+                                navigatorKey.currentState?.push(
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return RadioSearchPage(
+                                        radioSearch: RadioSearch.tag,
+                                        searchQuery: tags[index],
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                            )
+                          : SizedBox(
+                              height: chipHeight,
+                            ),
                     ),
-                    child: (tags?.isNotEmpty == true)
-                        ? YaruChoiceChipBar(
-                            goNextIcon: Padding(
-                              padding: appleStyled
-                                  ? const EdgeInsets.only(left: 3)
-                                  : EdgeInsets.zero,
-                              child: Icon(Iconz().goNext),
-                            ),
-                            goPreviousIcon: Padding(
-                              padding: appleStyled
-                                  ? const EdgeInsets.only(right: 3)
-                                  : EdgeInsets.zero,
-                              child: Icon(Iconz().goBack),
-                            ),
-                            chipHeight: chipHeight,
-                            yaruChoiceChipBarStyle:
-                                YaruChoiceChipBarStyle.stack,
-                            labels: tags!.map((e) => Text(e)).toList(),
-                            isSelected: tags.map((e) => false).toList(),
-                            onSelected: (index) {
-                              navigatorKey.currentState?.push(
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return RadioSearchPage(
-                                      radioSearch: RadioSearch.tag,
-                                      searchQuery: tags[index],
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          )
-                        : SizedBox(
-                            height: chipHeight,
-                          ),
                   ),
                 ],
               ),

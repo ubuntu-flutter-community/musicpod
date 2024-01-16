@@ -42,7 +42,8 @@ class RadioLibPage extends StatelessWidget {
             ),
             YaruChoiceChipBar(
               chipBackgroundColor: chipColor(theme),
-              borderColor: Colors.transparent,
+              selectedChipBackgroundColor: chipSelectionColor(theme, false),
+              borderColor: chipBorder(theme, false),
               selectedFirst: false,
               clearOnSelect: false,
               onSelected: (index) =>

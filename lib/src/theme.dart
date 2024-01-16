@@ -227,6 +227,15 @@ ButtonStyle createPopupStyle(ThemeData themeData) {
 }
 
 Color? chipColor(ThemeData theme) {
-  return theme.colorScheme.outline
-      .withOpacity(yaruStyled ? (theme.isLight ? 1 : 0.4) : 0.15);
+  return yaruStyled
+      ? theme.colorScheme.outline.withOpacity(theme.isLight ? 1 : 0.4)
+      : null;
+}
+
+Color? chipBorder(ThemeData theme, bool loading) {
+  return yaruStyled ? (loading ? null : Colors.transparent) : null;
+}
+
+Color? chipSelectionColor(ThemeData theme, bool loading) {
+  return yaruStyled ? (loading ? theme.colorScheme.outline : null) : null;
 }
