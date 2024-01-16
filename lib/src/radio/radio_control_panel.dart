@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
 import '../../l10n.dart';
 import '../../library.dart';
 import '../../radio.dart';
+import '../../theme.dart';
 import 'radio_search.dart';
 
 class RadioControlPanel extends StatelessWidget {
@@ -14,6 +16,7 @@ class RadioControlPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.t;
     final libraryModel = context.read<LibraryModel>();
     final model = context.read<RadioModel>();
     final index = context.select((LibraryModel m) => m.radioindex);
@@ -21,6 +24,8 @@ class RadioControlPanel extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 30),
       child: YaruChoiceChipBar(
+        chipBackgroundColor: chipColor(theme),
+        borderColor: Colors.transparent,
         yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
         clearOnSelect: false,
         selectedFirst: false,

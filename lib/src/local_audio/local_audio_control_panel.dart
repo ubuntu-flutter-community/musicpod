@@ -1,9 +1,12 @@
-import '../../library.dart';
-import '../../local_audio.dart';
-import '../l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
+
+import '../../build_context_x.dart';
+import '../../library.dart';
+import '../../local_audio.dart';
+import '../../theme.dart';
+import '../l10n/l10n.dart';
 
 class LocalAudioControlPanel extends StatelessWidget {
   const LocalAudioControlPanel({
@@ -12,6 +15,7 @@ class LocalAudioControlPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.t;
     final libraryModel = context.read<LibraryModel>();
     final index = context.select((LibraryModel m) => m.localAudioindex) ?? 0;
 
@@ -21,6 +25,8 @@ class LocalAudioControlPanel extends StatelessWidget {
           width: 20,
         ),
         YaruChoiceChipBar(
+          chipBackgroundColor: chipColor(theme),
+          borderColor: Colors.transparent,
           yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
           selectedFirst: false,
           clearOnSelect: false,

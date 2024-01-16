@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../globals.dart';
 import '../../l10n.dart';
@@ -24,12 +25,13 @@ class RadioLibPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showTags = context.select((RadioModel m) => m.showTags);
-    final radioModel = context.read<RadioModel>();
-
     if (!isOnline) {
       return const OfflinePage();
     }
+
+    final theme = context.t;
+    final showTags = context.select((RadioModel m) => m.showTags);
+    final radioModel = context.read<RadioModel>();
 
     return Column(
       children: [
@@ -39,6 +41,8 @@ class RadioLibPage extends StatelessWidget {
               width: 25,
             ),
             YaruChoiceChipBar(
+              chipBackgroundColor: chipColor(theme),
+              borderColor: Colors.transparent,
               selectedFirst: false,
               clearOnSelect: false,
               onSelected: (index) =>

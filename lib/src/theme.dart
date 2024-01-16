@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../theme_data_x.dart';
+
 const darkDividerColor = Color.fromARGB(19, 255, 255, 255);
 
 ThemeData m3Theme({
@@ -219,8 +221,12 @@ InputDecoration createYaruDecoration(bool isLight) {
 ButtonStyle createPopupStyle(ThemeData themeData) {
   return TextButton.styleFrom(
     shape: RoundedRectangleBorder(
-      side: BorderSide(color: themeData.colorScheme.outline),
       borderRadius: BorderRadius.circular(100),
     ),
   );
+}
+
+Color? chipColor(ThemeData theme) {
+  return theme.colorScheme.outline
+      .withOpacity(yaruStyled ? (theme.isLight ? 1 : 0.4) : 0.15);
 }

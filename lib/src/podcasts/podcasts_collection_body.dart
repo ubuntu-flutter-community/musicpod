@@ -8,6 +8,7 @@ import '../../constants.dart';
 import '../../data.dart';
 import '../../l10n.dart';
 import '../../podcasts.dart';
+import '../../theme.dart';
 import '../globals.dart';
 import '../library/library_model.dart';
 
@@ -71,6 +72,10 @@ class PodcastsCollectionBody extends StatelessWidget {
                     width: 25,
                   ),
                   YaruChoiceChipBar(
+                    chipBackgroundColor: chipColor(theme),
+                    selectedChipBackgroundColor:
+                        loading ? theme.colorScheme.outline : null,
+                    borderColor: loading ? null : Colors.transparent,
                     yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
                     clearOnSelect: false,
                     selectedFirst: false,
