@@ -174,8 +174,6 @@ class StationPage extends StatelessWidget {
                     ),
                     child: (tags?.isNotEmpty == true)
                         ? YaruChoiceChipBar(
-                            chipBackgroundColor: chipThemeColor(theme),
-                            borderColor: Colors.transparent,
                             goNextIcon: Padding(
                               padding: appleStyled
                                   ? const EdgeInsets.only(left: 3)

@@ -226,6 +226,7 @@ ButtonStyle createPopupStyle(ThemeData themeData) {
   );
 }
 
-Color? chipThemeColor(ThemeData theme) {
-  return theme.colorScheme.onSurface.withOpacity(theme.isLight ? 0.1 : 0.03);
+Color? chipColor(ThemeData theme) {
+  return theme.colorScheme.outline
+      .withOpacity(yaruStyled ? (theme.isLight ? 1 : 0.4) : 0.15);
 }

@@ -25,7 +25,7 @@ class LocalAudioControlPanel extends StatelessWidget {
           width: 20,
         ),
         YaruChoiceChipBar(
-          chipBackgroundColor: chipThemeColor(theme),
+          chipBackgroundColor: chipColor(theme),
           borderColor: Colors.transparent,
           yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
           selectedFirst: false,
