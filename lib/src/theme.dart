@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../theme_data_x.dart';
+
 const darkDividerColor = Color.fromARGB(19, 255, 255, 255);
 
 ThemeData m3Theme({
@@ -222,4 +224,8 @@ ButtonStyle createPopupStyle(ThemeData themeData) {
       borderRadius: BorderRadius.circular(100),
     ),
   );
+}
+
+Color? chipThemeColor(ThemeData theme) {
+  return theme.colorScheme.onSurface.withOpacity(theme.isLight ? 0.1 : 0.03);
 }

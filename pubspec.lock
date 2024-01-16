@@ -794,10 +794,10 @@ packages:
     dependency: transitive
     description:
       name: pointycastle
-      sha256: "7c1e5f0d23c9016c5bbd8b1473d0d3fb3fc851b876046039509e18e0c7485f2c"
+      sha256: "43ac87de6e10afabc85c445745a7b799e04de84cebaa4fd7bf55a5e1e9604d29"
       url: "https://pub.dev"
     source: hosted
-    version: "3.7.3"
+    version: "3.7.4"
   pool:
     dependency: transitive
     description:
@@ -1288,7 +1288,7 @@ packages:
     description:
       path: "."
       ref: "fix(YaruChoiceChipBar)--allow-border-color"
-      resolved-ref: "98453c36459bf8783837b5a0b9836055fdacda3a"
+      resolved-ref: ef92b055efdb2e702bbdbbca7bb871e17c0b6576
       url: "https://github.com/ubuntu/yaru_widgets.dart"
     source: git
     version: "3.4.0"
