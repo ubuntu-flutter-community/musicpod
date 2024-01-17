@@ -72,7 +72,7 @@
     "country": "Krajina",
     "tag": "Označenie",
     "failedToImport": "Nepodarilo sa importovať nasledujúce súbory:",
-    "unknown": "Neznáme",
+    "unknown": "Neznámy",
     "volume": "Hlasitosť",
     "queue": "Poradie",
     "limit": "Limit",
@@ -142,5 +142,17 @@
         }
     },
     "downloadsOnly": "Iba stiahnuté",
-    "moreOptions": "Viac možností"
+    "moreOptions": "Viac možností",
+    "noRadioServerFound": "Nenašiel sa žiadny rádiový server",
+    "connectedTo": "Pripojené k",
+    "tryReconnect": "Skúsiť znovu pripojiť",
+    "addedTo": "Pridané do",
+    "addToPlaylist": "Pridať do playlistu",
+    "open": "Otvoriť",
+    "removeFrom": "Odstrániť z",
+    "noCountryFound": "Žiadna krajina s týmto názvom sa nedá nájsť. Môžete použiť aj telefónne predvoľby ako napríklad +49",
+    "noStarredTags": "Zatiaľ ste neoznačili hviezdičkou žiadne označenia.",
+    "name": "Názov",
+    "state": "Štát",
+    "playNext": "Prehrať ďalšie"
 }
