@@ -77,7 +77,9 @@ class _RadioPageState extends State<RadioPage> {
         if (libraryModel.starredStations.isEmpty) {
           navigatorKey.currentState?.push(
             MaterialPageRoute(
-              builder: (context) => const RadioDiscoverPage(),
+              builder: (context) => widget.isOnline
+                  ? const RadioDiscoverPage()
+                  : const OfflinePage(),
             ),
           );
         }

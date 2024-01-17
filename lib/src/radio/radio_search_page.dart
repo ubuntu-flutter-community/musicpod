@@ -1,3 +1,4 @@
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide State;
@@ -5,6 +6,7 @@ import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 import '../../common.dart';
 import '../../data.dart';
 import '../../globals.dart';
+import '../../l10n.dart';
 import '../../library.dart';
 import '../../player.dart';
 import 'radio_model.dart';
@@ -62,7 +64,10 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
           return LoadingGrid(limit: widget.limit);
         }
         if (snapshot.data?.isEmpty == true) {
-          return const NoSearchResultPage();
+          return NoSearchResultPage(
+            icons: const AnimatedEmoji(AnimatedEmojis.dog),
+            message: Text(context.l10n.noStationFound),
+          );
         } else {
           return GridView.builder(
             padding: gridPadding,
