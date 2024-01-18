@@ -228,11 +228,18 @@ class SearchButton extends StatelessWidget {
 }
 
 class SearchingBar extends StatelessWidget {
-  const SearchingBar({super.key, this.text, this.onClear, this.onSubmitted});
+  const SearchingBar({
+    super.key,
+    this.text,
+    this.onClear,
+    this.onSubmitted,
+    this.onChanged,
+  });
 
   final String? text;
   final void Function()? onClear;
   final void Function(String?)? onSubmitted;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -243,12 +250,14 @@ class SearchingBar extends StatelessWidget {
             text: text,
             onClear: onClear,
             onSubmitted: onSubmitted,
+            onChanged: onChanged,
           )
         : MaterialSearchBar(
             text: text,
             key: key,
             onSubmitted: onSubmitted,
             onClear: onClear,
+            onChanged: onChanged,
           );
   }
 }
@@ -259,10 +268,12 @@ class MaterialSearchBar extends StatefulWidget {
     this.text,
     this.onClear,
     this.onSubmitted,
+    this.onChanged,
   });
   final String? text;
   final void Function()? onClear;
   final void Function(String?)? onSubmitted;
+  final void Function(String)? onChanged;
 
   @override
   State<MaterialSearchBar> createState() => _NormalSearchBarState();
@@ -298,6 +309,7 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
         key: widget.key,
         autofocus: true,
         onSubmitted: widget.onSubmitted,
+        onChanged: widget.onChanged,
         decoration: InputDecoration(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
           contentPadding:

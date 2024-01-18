@@ -1,30 +1,24 @@
-import 'dart:typed_data';
-
-import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
-import '../../local_audio.dart';
 import '../l10n/l10n.dart';
+import 'artist_page.dart';
+import 'local_audio_model.dart';
 
 class ArtistsView extends StatelessWidget {
   const ArtistsView({
     super.key,
     this.artists,
-    required this.findArtist,
-    required this.findImages,
     this.noResultMessage,
+    this.noResultIcon,
   });
 
   final Set<Audio>? artists;
-
-  final Set<Audio>? Function(Audio, [AudioFilter]) findArtist;
-  final Set<Uint8List>? Function(Set<Audio>) findImages;
-
-  final Widget? noResultMessage;
+  final Widget? noResultMessage, noResultIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -36,17 +30,12 @@ class ArtistsView extends StatelessWidget {
 
     if (artists!.isEmpty) {
       return NoSearchResultPage(
-        icons: const AnimatedEmoji(AnimatedEmojis.eyes),
-        message: noResultMessage ??
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(context.l10n.noLocalTitlesFound),
-                const ShopRecommendations(),
-              ],
-            ),
+        icons: noResultIcon,
+        message: noResultMessage,
       );
     }
+
+    final model = context.read<LocalAudioModel>();
 
     return Padding(
       padding: const EdgeInsets.only(top: 15),
@@ -56,10 +45,10 @@ class ArtistsView extends StatelessWidget {
         shrinkWrap: true,
         gridDelegate: kDiskGridDelegate,
         itemBuilder: (context, index) {
-          final artistAudios = findArtist(
+          final artistAudios = model.findArtist(
             artists!.elementAt(index),
           );
-          final images = findImages(artistAudios ?? {});
+          final images = model.findImages(artistAudios ?? {});
 
           final artistname =
               artists!.elementAt(index).artist ?? context.l10n.unknown;

@@ -6,7 +6,6 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../app.dart';
 import '../../common.dart';
 import '../../constants.dart';
-import '../../data.dart';
 import '../../globals.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
@@ -26,20 +25,15 @@ class LocalAudioSearchPage extends StatelessWidget {
         context.select((AppModel m) => m.showWindowControls);
 
     final model = context.read<LocalAudioModel>();
-
-    final similarArtistsSearchResult =
+    final titlesResult =
+        context.select((LocalAudioModel m) => m.titlesSearchResult);
+    final artistsResult =
         context.select((LocalAudioModel m) => m.similarArtistsSearchResult);
-
-    final similarAlbumsSearchResult =
+    final albumsResult =
         context.select((LocalAudioModel m) => m.albumSearchResult);
-
     final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
     final index = context.select((LibraryModel m) => m.localAudioindex) ?? 0;
-
     final localAudioView = LocalAudioView.values[index];
-
-    final Set<Audio>? titlesResult =
-        context.select((LocalAudioModel m) => m.titlesSearchResult);
 
     void search({required String? text}) {
       if (text != null) {
@@ -49,34 +43,34 @@ class LocalAudioSearchPage extends StatelessWidget {
       }
     }
 
+    final nothing = (titlesResult?.isEmpty ?? true) &&
+        (albumsResult?.isEmpty ?? true) &&
+        (artistsResult?.isEmpty ?? true) &&
+        searchQuery?.isNotEmpty == true;
     Widget body = Column(
       children: [
-        const LocalAudioControlPanel(),
-        if ((titlesResult?.isEmpty ?? true) &&
-            (similarAlbumsSearchResult?.isEmpty ?? true) &&
-            (similarArtistsSearchResult?.isEmpty ?? true))
-          Expanded(
-            child: NoSearchResultPage(
-              message: searchQuery == ''
-                  ? Text(context.l10n.search)
-                  : Text(
-                      context.l10n.noLocalSearchFound,
-                    ),
-              icons: searchQuery == ''
-                  ? const AnimatedEmoji(AnimatedEmojis.drum)
-                  : null,
+        LocalAudioControlPanel(
+          titlesCount:
+              searchQuery?.isNotEmpty == true ? titlesResult?.length : null,
+          artistCount:
+              searchQuery?.isNotEmpty == true ? artistsResult?.length : null,
+          albumCount:
+              searchQuery?.isNotEmpty == true ? albumsResult?.length : null,
+        ),
+        Expanded(
+          child: LocalAudioBody(
+            noResultIcon: nothing
+                ? const AnimatedEmoji(AnimatedEmojis.eyes)
+                : const AnimatedEmoji(AnimatedEmojis.drum),
+            noResultMessage: Text(
+              nothing ? context.l10n.noLocalSearchFound : context.l10n.search,
             ),
-          )
-        else
-          Expanded(
-            child: LocalAudioBody(
-              noResultMessage: Text(context.l10n.nothingFound),
-              localAudioView: localAudioView,
-              titles: titlesResult,
-              artists: similarArtistsSearchResult,
-              albums: similarAlbumsSearchResult,
-            ),
+            localAudioView: localAudioView,
+            titles: titlesResult,
+            artists: artistsResult,
+            albums: albumsResult,
           ),
+        ),
       ],
     );
 
@@ -103,9 +97,8 @@ class LocalAudioSearchPage extends StatelessWidget {
         title: SizedBox(
           width: kSearchBarWidth,
           child: SearchingBar(
-            key: ValueKey(searchQuery.toString() + localAudioView.toString()),
             text: searchQuery,
-            onSubmitted: (value) => search(text: value),
+            onChanged: (value) => search(text: value),
             onClear: () => search(text: ''),
           ),
         ),

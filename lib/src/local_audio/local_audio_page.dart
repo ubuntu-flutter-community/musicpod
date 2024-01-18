@@ -26,8 +26,7 @@ class LocalAudioPage extends StatefulWidget {
   State<LocalAudioPage> createState() => _LocalAudioPageState();
 }
 
-class _LocalAudioPageState extends State<LocalAudioPage>
-    with SingleTickerProviderStateMixin {
+class _LocalAudioPageState extends State<LocalAudioPage> {
   @override
   void initState() {
     super.initState();
@@ -74,11 +73,9 @@ class _LocalAudioPageState extends State<LocalAudioPage>
 
     final model = context.read<LocalAudioModel>();
     final audios = context.select((LocalAudioModel m) => m.audios);
-    final artists = model.allArtists;
-    final albums = model.allAlbums;
+
     void search({
       required String? text,
-      bool replace = false,
     }) {
       if (text != null) {
         model.search(text);
@@ -90,7 +87,7 @@ class _LocalAudioPageState extends State<LocalAudioPage>
           ),
         );
       } else {
-        navigatorKey.currentState?.pop();
+        navigatorKey.currentState?.maybePop();
       }
     }
 
@@ -132,8 +129,8 @@ class _LocalAudioPageState extends State<LocalAudioPage>
             child: LocalAudioBody(
               localAudioView: localAudioView,
               titles: audios,
-              albums: albums,
-              artists: artists,
+              albums: model.allAlbums,
+              artists: model.allArtists,
             ),
           ),
         ],
