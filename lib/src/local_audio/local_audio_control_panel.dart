@@ -4,9 +4,9 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
 import '../../library.dart';
-import '../../local_audio.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
+import 'local_audio_view.dart';
 
 class LocalAudioControlPanel extends StatelessWidget {
   const LocalAudioControlPanel({

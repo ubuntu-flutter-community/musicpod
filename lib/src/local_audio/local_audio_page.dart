@@ -13,7 +13,9 @@ import '../../player.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import 'cache_dialog.dart';
+import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
+import 'local_audio_view.dart';
 
 class LocalAudioPage extends StatefulWidget {
   const LocalAudioPage({
@@ -80,7 +82,7 @@ class _LocalAudioPageState extends State<LocalAudioPage>
     }) {
       if (text != null) {
         model.search(text);
-        Navigator.of(context).push(
+        navigatorKey.currentState?.push(
           MaterialPageRoute(
             builder: (context) {
               return const LocalAudioSearchPage();
@@ -88,27 +90,14 @@ class _LocalAudioPageState extends State<LocalAudioPage>
           ),
         );
       } else {
-        Navigator.of(context).pop();
+        navigatorKey.currentState?.pop();
       }
     }
-
-    final findArtist = model.findArtist;
-    final findImages = model.findImages;
-    final findAlbum = model.findAlbum;
-
-    final libraryModel = context.read<LibraryModel>();
 
     final index = context.select((LibraryModel m) => m.localAudioindex) ?? 0;
     final localAudioView = LocalAudioView.values[index];
 
     context.select((LocalAudioModel m) => m.useLocalAudioCache);
-
-    final isPinnedAlbum = libraryModel.isPinnedAlbum;
-    final removePinnedAlbum = libraryModel.removePinnedAlbum;
-    final addPinnedAlbum = libraryModel.addPinnedAlbum;
-
-    final playerModel = context.read<PlayerModel>();
-    final startPlaylist = playerModel.startPlaylist;
 
     final headerBar = HeaderBar(
       style: showWindowControls
@@ -134,31 +123,19 @@ class _LocalAudioPageState extends State<LocalAudioPage>
       title: Text(context.l10n.localAudio),
     );
 
-    final body = switch (localAudioView) {
-      LocalAudioView.titles => TitlesView(
-          audios: audios,
-        ),
-      LocalAudioView.artists => ArtistsView(
-          artists: artists,
-          findArtist: findArtist,
-          findImages: findImages,
-        ),
-      LocalAudioView.albums => AlbumsView(
-          albums: albums,
-          addPinnedAlbum: addPinnedAlbum,
-          findAlbum: findAlbum,
-          isPinnedAlbum: isPinnedAlbum,
-          removePinnedAlbum: removePinnedAlbum,
-          startPlaylist: startPlaylist,
-        ),
-    };
-
     return Scaffold(
       appBar: headerBar,
       body: Column(
         children: [
           const LocalAudioControlPanel(),
-          Expanded(child: body),
+          Expanded(
+            child: LocalAudioBody(
+              localAudioView: localAudioView,
+              titles: audios,
+              albums: albums,
+              artists: artists,
+            ),
+          ),
         ],
       ),
     );

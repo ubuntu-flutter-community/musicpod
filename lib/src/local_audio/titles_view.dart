@@ -13,9 +13,11 @@ class TitlesView extends StatefulWidget {
   const TitlesView({
     super.key,
     required this.audios,
+    this.noResultMessage,
   });
 
   final Set<Audio>? audios;
+  final Widget? noResultMessage;
 
   @override
   State<TitlesView> createState() => _TitlesViewState();
@@ -60,13 +62,14 @@ class _TitlesViewState extends State<TitlesView> {
       padding: const EdgeInsets.only(top: 10),
       showTrack: false,
       showControlPanel: false,
-      noResultMessage: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(context.l10n.noLocalTitlesFound),
-          const ShopRecommendations(),
-        ],
-      ),
+      noResultMessage: widget.noResultMessage ??
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(context.l10n.noLocalTitlesFound),
+              const ShopRecommendations(),
+            ],
+          ),
       audios: _titles == null ? null : Set.from(_titles!),
       audioPageType: AudioPageType.immutable,
       pageId: kLocalAudioPageId,
