@@ -5,19 +5,21 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
-import '../../local_audio.dart';
 import '../../utils.dart';
-import '../l10n/l10n.dart';
+import 'album_page.dart';
+import 'artist_page.dart';
+import 'local_audio_model.dart';
 
 class TitlesView extends StatefulWidget {
   const TitlesView({
     super.key,
     required this.audios,
     this.noResultMessage,
+    this.noResultIcon,
   });
 
   final Set<Audio>? audios;
-  final Widget? noResultMessage;
+  final Widget? noResultMessage, noResultIcon;
 
   @override
   State<TitlesView> createState() => _TitlesViewState();
@@ -62,14 +64,8 @@ class _TitlesViewState extends State<TitlesView> {
       padding: const EdgeInsets.only(top: 10),
       showTrack: false,
       showControlPanel: false,
-      noResultMessage: widget.noResultMessage ??
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(context.l10n.noLocalTitlesFound),
-              const ShopRecommendations(),
-            ],
-          ),
+      noResultIcon: widget.noResultIcon,
+      noResultMessage: widget.noResultMessage,
       audios: _titles == null ? null : Set.from(_titles!),
       audioPageType: AudioPageType.immutable,
       pageId: kLocalAudioPageId,

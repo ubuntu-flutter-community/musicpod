@@ -1,39 +1,27 @@
-import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
+import '../../library.dart';
+import '../../player.dart';
 import '../../utils.dart';
 import '../data/audio.dart';
 import '../l10n/l10n.dart';
 import 'album_page.dart';
-import 'shop_recommendations.dart';
+import 'local_audio_model.dart';
 
 class AlbumsView extends StatelessWidget {
   const AlbumsView({
     super.key,
     required this.albums,
-    required this.startPlaylist,
-    required this.isPinnedAlbum,
-    required this.removePinnedAlbum,
-    required this.addPinnedAlbum,
-    required this.findAlbum,
     this.noResultMessage,
+    this.noResultIcon,
   });
 
   final Set<Audio>? albums;
-
-  final Future<void> Function({
-    required Set<Audio> audios,
-    required String listName,
-    int? index,
-  }) startPlaylist;
-  final bool Function(String) isPinnedAlbum;
-  final void Function(String) removePinnedAlbum;
-  final void Function(String, Set<Audio>) addPinnedAlbum;
-  final Set<Audio>? Function(Audio, [AudioFilter]) findAlbum;
-  final Widget? noResultMessage;
+  final Widget? noResultMessage, noResultIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -47,17 +35,14 @@ class AlbumsView extends StatelessWidget {
 
     if (albums!.isEmpty) {
       return NoSearchResultPage(
-        icons: const AnimatedEmoji(AnimatedEmojis.eyes),
-        message: noResultMessage ??
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(context.l10n.noLocalTitlesFound),
-                const ShopRecommendations(),
-              ],
-            ),
+        icons: noResultIcon,
+        message: noResultMessage,
       );
     }
+
+    final libraryModel = context.read<LibraryModel>();
+    final playerModel = context.read<PlayerModel>();
+    final model = context.read<LocalAudioModel>();
 
     return Padding(
       padding: const EdgeInsets.only(top: 15),
@@ -69,7 +54,7 @@ class AlbumsView extends StatelessWidget {
         itemBuilder: (context, index) {
           final audio = albums!.elementAt(index);
           String? id = generateAlbumId(audio);
-          final albumAudios = findAlbum(audio);
+          final albumAudios = model.findAlbum(audio);
 
           final image = audio.pictureData == null
               ? Center(
@@ -103,17 +88,18 @@ class AlbumsView extends StatelessWidget {
                         builder: (context) {
                           return AlbumPage(
                             id: id,
-                            isPinnedAlbum: isPinnedAlbum,
-                            removePinnedAlbum: removePinnedAlbum,
+                            isPinnedAlbum: libraryModel.isPinnedAlbum,
+                            removePinnedAlbum: libraryModel.removePinnedAlbum,
                             album: albumAudios,
-                            addPinnedAlbum: addPinnedAlbum,
+                            addPinnedAlbum: libraryModel.addPinnedAlbum,
                           );
                         },
                       ),
                     ),
             onPlay: albumAudios == null || albumAudios.isEmpty || id == null
                 ? null
-                : () => startPlaylist(audios: albumAudios, listName: id),
+                : () => playerModel.startPlaylist(
+                    audios: albumAudios, listName: id),
           );
         },
       ),
