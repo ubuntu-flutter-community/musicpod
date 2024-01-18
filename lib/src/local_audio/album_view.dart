@@ -19,6 +19,7 @@ class AlbumsView extends StatelessWidget {
     required this.removePinnedAlbum,
     required this.addPinnedAlbum,
     required this.findAlbum,
+    this.noResultMessage,
   });
 
   final Set<Audio>? albums;
@@ -32,6 +33,7 @@ class AlbumsView extends StatelessWidget {
   final void Function(String) removePinnedAlbum;
   final void Function(String, Set<Audio>) addPinnedAlbum;
   final Set<Audio>? Function(Audio, [AudioFilter]) findAlbum;
+  final Widget? noResultMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +48,14 @@ class AlbumsView extends StatelessWidget {
     if (albums!.isEmpty) {
       return NoSearchResultPage(
         icons: const AnimatedEmoji(AnimatedEmojis.eyes),
-        message: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(context.l10n.noLocalTitlesFound),
-            const ShopRecommendations(),
-          ],
-        ),
+        message: noResultMessage ??
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(context.l10n.noLocalTitlesFound),
+                const ShopRecommendations(),
+              ],
+            ),
       );
     }
 

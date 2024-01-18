@@ -16,12 +16,15 @@ class ArtistsView extends StatelessWidget {
     this.artists,
     required this.findArtist,
     required this.findImages,
+    this.noResultMessage,
   });
 
   final Set<Audio>? artists;
 
   final Set<Audio>? Function(Audio, [AudioFilter]) findArtist;
   final Set<Uint8List>? Function(Set<Audio>) findImages;
+
+  final Widget? noResultMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -34,13 +37,14 @@ class ArtistsView extends StatelessWidget {
     if (artists!.isEmpty) {
       return NoSearchResultPage(
         icons: const AnimatedEmoji(AnimatedEmojis.eyes),
-        message: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(context.l10n.noLocalTitlesFound),
-            const ShopRecommendations(),
-          ],
-        ),
+        message: noResultMessage ??
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(context.l10n.noLocalTitlesFound),
+                const ShopRecommendations(),
+              ],
+            ),
       );
     }
 
