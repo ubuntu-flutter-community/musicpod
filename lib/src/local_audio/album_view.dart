@@ -99,7 +99,9 @@ class AlbumsView extends StatelessWidget {
             onPlay: albumAudios == null || albumAudios.isEmpty || id == null
                 ? null
                 : () => playerModel.startPlaylist(
-                    audios: albumAudios, listName: id),
+                      audios: albumAudios,
+                      listName: id,
+                    ),
           );
         },
       ),
