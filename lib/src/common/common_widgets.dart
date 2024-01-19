@@ -165,6 +165,7 @@ class HeaderBar extends StatelessWidget implements PreferredSizeWidget {
             foregroundColor: foregroundColor,
           )
         : AppBar(
+            titleSpacing: titleSpacing,
             centerTitle: true,
             leading: leading,
             title: title,
@@ -374,8 +375,8 @@ SliverGridDelegate get imageGridDelegate =>
     isMobile ? kMobileImageGridDelegate : kImageGridDelegate;
 
 EdgeInsetsGeometry get appBarActionSpacing => Platform.isMacOS
-    ? const EdgeInsets.only(right: 5, left: 40)
-    : const EdgeInsets.only(right: 20, left: 40);
+    ? const EdgeInsets.only(right: 5, left: 20)
+    : const EdgeInsets.only(right: 10, left: 20);
 
 class CommonSwitch extends StatelessWidget {
   const CommonSwitch({super.key, required this.value, this.onChanged});

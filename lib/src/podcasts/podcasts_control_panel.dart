@@ -75,7 +75,7 @@ class PodcastsControlPanel extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
             isDense: true,
-            width: 160,
+            width: 150,
             height: chipHeight,
             countries: [
               ...[
@@ -120,7 +120,7 @@ class PodcastsControlPanel extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
             isDense: true,
-            width: 160,
+            width: 150,
             height: chipHeight,
             genres: sortedGenres,
             onSelected: (podcastGenre) {

@@ -121,7 +121,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
             checkingForUpdates: checkingForUpdates,
             limit: limit,
             incrementLimit: () async {
-              setLimit(limit + 10);
+              setLimit(limit + 20);
               await search();
             },
           ),

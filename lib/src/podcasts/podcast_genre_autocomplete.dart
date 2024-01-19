@@ -3,7 +3,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:yaru_widgets/constants.dart';
 
 import '../../build_context_x.dart';
-import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../theme.dart';
@@ -156,8 +155,8 @@ class PodcastGenreAutoComplete extends StatelessWidget {
                                 theme: theme,
                                 t: t,
                                 favs: favs,
-                                addFav: addFav,
-                                removeFav: removeFav,
+                                // addFav: addFav,
+                                // removeFav: removeFav,
                               );
                             },
                           );
@@ -195,8 +194,8 @@ class _PodcastGenreTile extends StatelessWidget {
     required this.theme,
     required this.t,
     required this.favs,
-    required this.addFav,
-    required this.removeFav,
+    // required this.addFav,
+    // required this.removeFav,
     required this.onSelected,
   });
 
@@ -205,8 +204,8 @@ class _PodcastGenreTile extends StatelessWidget {
   final ThemeData theme;
   final PodcastGenre t;
   final Set<String>? favs;
-  final void Function(PodcastGenre? tag) addFav;
-  final void Function(PodcastGenre? tag) removeFav;
+  // final void Function(PodcastGenre? tag) addFav;
+  // final void Function(PodcastGenre? tag) removeFav;
   final void Function(PodcastGenre tag) onSelected;
 
   @override
@@ -223,14 +222,14 @@ class _PodcastGenreTile extends StatelessWidget {
       tileColor: highlight ? theme.focusColor : null,
       onTap: () => onSelected(t),
       title: Text(t.localize(context.l10n)),
-      trailing: IconButton(
-        onPressed: () {
-          favs?.contains(t.id) == false ? addFav(t) : removeFav(t);
-        },
-        icon: Icon(
-          favs?.contains(t.id) == true ? Iconz().starFilled : Iconz().star,
-        ),
-      ),
+      // trailing: IconButton(
+      //   onPressed: () {
+      //     favs?.contains(t.id) == false ? addFav(t) : removeFav(t);
+      //   },
+      //   icon: Icon(
+      //     favs?.contains(t.id) == true ? Iconz().starFilled : Iconz().star,
+      //   ),
+      // ),
     );
   }
 }

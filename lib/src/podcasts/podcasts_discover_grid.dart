@@ -102,6 +102,7 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
                 OutlinedButton(
                   onPressed: () async {
                     await widget.incrementLimit();
+                    await Future.delayed(const Duration(milliseconds: 300));
                     _controller.jumpTo(_controller.position.maxScrollExtent);
                   },
                   child: const Text('Load more'),
