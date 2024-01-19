@@ -159,14 +159,24 @@ Color getAlphabetColor(String text, [Color fallBackColor = Colors.black]) {
   return alphabetColors[letter?.toUpperCase()] ?? fallBackColor;
 }
 
-InputDecoration createMaterialDecoration(ColorScheme colorScheme) {
-  final outlineInputBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(100),
-    borderSide: BorderSide(width: 2, color: colorScheme.primary),
-  );
+InputDecoration createMaterialDecoration({
+  required ColorScheme colorScheme,
+  TextStyle? style,
+  bool isDense = false,
+  bool filled = true,
+  OutlineInputBorder? border,
+  Color? fillColor,
+  EdgeInsets? contentPadding,
+}) {
+  final outlineInputBorder = border ??
+      OutlineInputBorder(
+        borderRadius: BorderRadius.circular(100),
+        borderSide: BorderSide(width: 2, color: colorScheme.primary),
+      );
   return InputDecoration(
-    filled: true,
-    contentPadding:
+    fillColor: fillColor,
+    filled: filled,
+    contentPadding: contentPadding ??
         const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
     border: outlineInputBorder,
     errorBorder: outlineInputBorder,
@@ -174,23 +184,33 @@ InputDecoration createMaterialDecoration(ColorScheme colorScheme) {
     focusedBorder: outlineInputBorder,
     disabledBorder: outlineInputBorder,
     focusedErrorBorder: outlineInputBorder,
+    helperStyle: style,
+    hintStyle: style,
+    labelStyle: style,
+    isDense: isDense,
   );
 }
 
-InputDecoration createYaruDecoration(bool isLight) {
+InputDecoration createYaruDecoration({
+  required bool isLight,
+  TextStyle? style,
+  Color? fillColor,
+  EdgeInsets? contentPadding,
+}) {
   final radius = BorderRadius.circular(100);
 
   final fill = isLight ? const Color(0xffdcdcdc) : const Color(0xff2f2f2f);
 
-  const textStyle = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.normal,
-  );
+  final textStyle = style ??
+      const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.normal,
+      );
 
   return InputDecoration(
     filled: true,
-    fillColor: fill,
-    hoverColor: (fill).scale(lightness: 0.1),
+    fillColor: fillColor ?? fill,
+    hoverColor: (fillColor ?? fill).scale(lightness: 0.1),
     suffixIconConstraints:
         const BoxConstraints(maxWidth: kYaruTitleBarItemHeight),
     border: OutlineInputBorder(
@@ -206,12 +226,13 @@ InputDecoration createYaruDecoration(bool isLight) {
       borderRadius: radius,
     ),
     isDense: true,
-    contentPadding: const EdgeInsets.only(
-      bottom: 10,
-      top: 10,
-      right: 15,
-      left: 15,
-    ),
+    contentPadding: contentPadding ??
+        const EdgeInsets.only(
+          bottom: 10,
+          top: 10,
+          right: 15,
+          left: 15,
+        ),
     helperStyle: textStyle,
     hintStyle: textStyle,
     labelStyle: textStyle,

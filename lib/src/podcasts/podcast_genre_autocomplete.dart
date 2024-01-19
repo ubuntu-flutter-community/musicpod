@@ -1,51 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 import 'package:yaru_widgets/constants.dart';
 
 import '../../build_context_x.dart';
-import '../../common.dart';
 import '../../constants.dart';
+import '../../data.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
+import '../l10n/l10n.dart';
 
-class TagAutoComplete extends StatelessWidget {
-  const TagAutoComplete({
+// TODO: create general purpose generic auto complete
+// or extract more
+class PodcastGenreAutoComplete extends StatelessWidget {
+  const PodcastGenreAutoComplete({
     super.key,
     this.onSelected,
-    this.tags,
+    this.genres,
     required this.value,
     this.textStyle,
     required this.addFav,
     required this.removeFav,
     this.favs,
+    this.width,
+    this.height,
+    this.style,
+    this.isDense = false,
+    this.filled = true,
+    this.border,
+    this.fillColor,
+    this.contentPadding,
   });
 
-  final void Function(Tag? tag)? onSelected;
-  final List<Tag>? tags;
+  final void Function(PodcastGenre? podcastGenre)? onSelected;
+  final List<PodcastGenre>? genres;
   final Set<String>? favs;
-  final Tag? value;
+  final PodcastGenre? value;
   final TextStyle? textStyle;
-  final void Function(Tag? tag) addFav;
-  final void Function(Tag? tag) removeFav;
+  final void Function(PodcastGenre? podcastGenre) addFav;
+  final void Function(PodcastGenre? podcastGenre) removeFav;
+  final double? width;
+  final double? height;
+  final TextStyle? style;
+  final bool isDense, filled;
+  final Color? fillColor;
+  final OutlineInputBorder? border;
+  final EdgeInsets? contentPadding;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(
-      fontWeight: FontWeight.w500,
-    );
 
     return SizedBox(
-      height: yaruStyled ? kYaruTitleBarItemHeight : 38,
+      height: height ?? (yaruStyled ? kYaruTitleBarItemHeight : 38),
+      width: width,
       child: LayoutBuilder(
         builder: (_, constraints) {
-          return Autocomplete<Tag>(
+          return Autocomplete<PodcastGenre>(
             key: ValueKey(value?.name),
             initialValue: TextEditingValue(
-              text: value?.name ?? '',
+              text: value?.localize(context.l10n) ?? context.l10n.all,
             ),
-            displayStringForOption: (option) => option.name,
+            displayStringForOption: (option) => option.localize(context.l10n),
             fieldViewBuilder: (
               context,
               textEditingController,
@@ -60,7 +75,8 @@ class TagAutoComplete extends StatelessWidget {
                     extentOffset: textEditingController.value.text.length,
                   );
                 },
-                style: yaruStyled ? theme.textTheme.bodyMedium : null,
+                style:
+                    style ?? (yaruStyled ? theme.textTheme.bodyMedium : null),
                 strutStyle: yaruStyled
                     ? const StrutStyle(
                         leading: 0.2,
@@ -69,8 +85,21 @@ class TagAutoComplete extends StatelessWidget {
                 textAlignVertical: yaruStyled ? TextAlignVertical.center : null,
                 cursorWidth: yaruStyled ? 1 : 2.0,
                 decoration: yaruStyled
-                    ? createYaruDecoration(isLight: theme.isLight)
-                    : createMaterialDecoration(colorScheme: theme.colorScheme),
+                    ? createYaruDecoration(
+                        isLight: theme.isLight,
+                        style: style,
+                        fillColor: fillColor,
+                        contentPadding: contentPadding,
+                      )
+                    : createMaterialDecoration(
+                        colorScheme: theme.colorScheme,
+                        style: style,
+                        isDense: isDense,
+                        border: border,
+                        filled: filled,
+                        fillColor: fillColor,
+                        contentPadding: contentPadding,
+                      ),
                 controller: textEditingController,
                 focusNode: focusNode,
                 onSubmitted: (String value) {
@@ -82,7 +111,7 @@ class TagAutoComplete extends StatelessWidget {
               return Align(
                 alignment: Alignment.topLeft,
                 child: SizedBox(
-                  width: kSearchBarWidth,
+                  width: width ?? kSearchBarWidth,
                   height:
                       (options.length * 50) > 400 ? 400 : options.length * 50,
                   child: ClipRRect(
@@ -119,15 +148,15 @@ class TagAutoComplete extends StatelessWidget {
                                 });
                               }
                               final t = options.elementAt(index);
-                              return _TagTile(
+                              return _PodcastGenreTile(
                                 onSelected: (v) => onSelected(v),
-                                fallBackTextStyle: fallBackTextStyle,
+                                fallBackTextStyle: style,
                                 highlight: highlight,
                                 theme: theme,
                                 t: t,
                                 favs: favs,
-                                addFav: addFav,
-                                removeFav: removeFav,
+                                // addFav: addFav,
+                                // removeFav: removeFav,
                               );
                             },
                           );
@@ -140,10 +169,11 @@ class TagAutoComplete extends StatelessWidget {
             },
             optionsBuilder: (textEditingValue) {
               if (textEditingValue.text.isEmpty) {
-                return tags ?? [];
+                return genres ?? [];
               }
-              return tags?.where(
-                    (e) => e.name
+              return genres?.where(
+                    (e) => e
+                        .localize(context.l10n)
                         .toLowerCase()
                         .contains(textEditingValue.text.toLowerCase()),
                   ) ??
@@ -157,26 +187,26 @@ class TagAutoComplete extends StatelessWidget {
   }
 }
 
-class _TagTile extends StatelessWidget {
-  const _TagTile({
+class _PodcastGenreTile extends StatelessWidget {
+  const _PodcastGenreTile({
     required this.fallBackTextStyle,
     required this.highlight,
     required this.theme,
     required this.t,
     required this.favs,
-    required this.addFav,
-    required this.removeFav,
+    // required this.addFav,
+    // required this.removeFav,
     required this.onSelected,
   });
 
   final TextStyle? fallBackTextStyle;
   final bool highlight;
   final ThemeData theme;
-  final Tag t;
+  final PodcastGenre t;
   final Set<String>? favs;
-  final void Function(Tag? tag) addFav;
-  final void Function(Tag? tag) removeFav;
-  final void Function(Tag tag) onSelected;
+  // final void Function(PodcastGenre? tag) addFav;
+  // final void Function(PodcastGenre? tag) removeFav;
+  final void Function(PodcastGenre tag) onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -191,15 +221,15 @@ class _TagTile extends StatelessWidget {
       hoverColor: highlight ? theme.focusColor : null,
       tileColor: highlight ? theme.focusColor : null,
       onTap: () => onSelected(t),
-      title: Text(t.name),
-      trailing: IconButton(
-        onPressed: () {
-          favs?.contains(t.name) == false ? addFav(t) : removeFav(t);
-        },
-        icon: Icon(
-          favs?.contains(t.name) == true ? Iconz().starFilled : Iconz().star,
-        ),
-      ),
+      title: Text(t.localize(context.l10n)),
+      // trailing: IconButton(
+      //   onPressed: () {
+      //     favs?.contains(t.id) == false ? addFav(t) : removeFav(t);
+      //   },
+      //   icon: Icon(
+      //     favs?.contains(t.id) == true ? Iconz().starFilled : Iconz().star,
+      //   ),
+      // ),
     );
   }
 }
