@@ -7,6 +7,7 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../l10n.dart';
+import '../../player.dart';
 import '../../podcasts.dart';
 import '../../theme.dart';
 import '../globals.dart';
@@ -16,22 +17,10 @@ class PodcastsCollectionBody extends StatelessWidget {
   const PodcastsCollectionBody({
     super.key,
     required this.isOnline,
-    required this.startPlaylist,
-    required this.onTapText,
-    required this.addPodcast,
-    required this.removePodcast,
     required this.loading,
   });
 
   final bool isOnline;
-  final Future<void> Function({
-    required Set<Audio> audios,
-    required String listName,
-    int? index,
-  }) startPlaylist;
-  final void Function(String text) onTapText;
-  final void Function(String, Set<Audio>) addPodcast;
-  final void Function(String) removePodcast;
   final bool loading;
 
   @override
@@ -39,6 +28,7 @@ class PodcastsCollectionBody extends StatelessWidget {
     final theme = context.t;
     final subs = context.select((LibraryModel m) => m.podcasts);
     context.select((LibraryModel m) => m.podcastUpdatesLength);
+    final playerModel = context.read<PlayerModel>();
     final libraryModel = context.read<LibraryModel>();
     final podcastUpdateAvailable = libraryModel.podcastUpdateAvailable;
     final feedHasDownload = libraryModel.feedHasDownload;
@@ -170,10 +160,12 @@ class PodcastsCollectionBody extends StatelessWidget {
                                 noConfirm: podcast.value.length <
                                     kAudioQueueThreshHold,
                                 message: podcast.value.length.toString(),
-                                run: () => startPlaylist(
-                                  audios: podcast.value,
-                                  listName: podcast.key,
-                                ).then((_) => removeUpdate(podcast.key)),
+                                run: () => playerModel
+                                    .startPlaylist(
+                                      audios: podcast.value,
+                                      listName: podcast.key,
+                                    )
+                                    .then((_) => removeUpdate(podcast.key)),
                               );
                             },
                             onTap: () => navigatorKey.currentState?.push(
@@ -188,8 +180,8 @@ class PodcastsCollectionBody extends StatelessWidget {
                                         podcast.value.firstOrNull?.title ??
                                         podcast.value.firstOrNull.toString(),
                                     audios: podcast.value,
-                                    addPodcast: addPodcast,
-                                    removePodcast: removePodcast,
+                                    addPodcast: libraryModel.addPodcast,
+                                    removePodcast: libraryModel.removePodcast,
                                     imageUrl: podcast
                                             .value.firstOrNull?.albumArtUrl ??
                                         podcast.value.firstOrNull?.imageUrl,

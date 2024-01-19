@@ -23,6 +23,14 @@ class CountryAutoComplete extends StatelessWidget {
     required this.addFav,
     required this.removeFav,
     this.favs,
+    this.width,
+    this.height,
+    this.style,
+    this.isDense = false,
+    this.filled = true,
+    this.border,
+    this.fillColor,
+    this.contentPadding,
   });
 
   final void Function(Country? country)? onSelected;
@@ -32,16 +40,21 @@ class CountryAutoComplete extends StatelessWidget {
   final TextStyle? textStyle;
   final void Function(Country? country) addFav;
   final void Function(Country? country) removeFav;
+  final double? width;
+  final double? height;
+  final TextStyle? style;
+  final bool isDense, filled;
+  final OutlineInputBorder? border;
+  final Color? fillColor;
+  final EdgeInsets? contentPadding;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(
-      fontWeight: FontWeight.w500,
-    );
 
     return SizedBox(
-      height: yaruStyled ? kYaruTitleBarItemHeight : 38,
+      height: height ?? (yaruStyled ? kYaruTitleBarItemHeight : 38),
+      width: width,
       child: LayoutBuilder(
         builder: (_, constraints) {
           return Autocomplete<Country>(
@@ -66,7 +79,8 @@ class CountryAutoComplete extends StatelessWidget {
                     extentOffset: textEditingController.value.text.length,
                   );
                 },
-                style: yaruStyled ? theme.textTheme.bodyMedium : null,
+                style:
+                    style ?? (yaruStyled ? theme.textTheme.bodyMedium : null),
                 strutStyle: yaruStyled
                     ? const StrutStyle(
                         leading: 0.2,
@@ -75,8 +89,21 @@ class CountryAutoComplete extends StatelessWidget {
                 textAlignVertical: yaruStyled ? TextAlignVertical.center : null,
                 cursorWidth: yaruStyled ? 1 : 2.0,
                 decoration: yaruStyled
-                    ? createYaruDecoration(theme.isLight)
-                    : createMaterialDecoration(theme.colorScheme),
+                    ? createYaruDecoration(
+                        isLight: theme.isLight,
+                        style: style,
+                        fillColor: fillColor,
+                        contentPadding: contentPadding,
+                      )
+                    : createMaterialDecoration(
+                        colorScheme: theme.colorScheme,
+                        style: style,
+                        isDense: isDense,
+                        border: border,
+                        filled: filled,
+                        fillColor: fillColor,
+                        contentPadding: contentPadding,
+                      ),
                 controller: textEditingController,
                 focusNode: focusNode,
                 onSubmitted: (String value) {
@@ -88,7 +115,7 @@ class CountryAutoComplete extends StatelessWidget {
               return Align(
                 alignment: Alignment.topLeft,
                 child: SizedBox(
-                  width: kSearchBarWidth,
+                  width: width ?? kSearchBarWidth,
                   height:
                       (options.length * 50) > 400 ? 400 : options.length * 50,
                   child: ClipRRect(
@@ -127,7 +154,7 @@ class CountryAutoComplete extends StatelessWidget {
                               final t = options.elementAt(index);
                               return _CountryTile(
                                 onSelected: (v) => onSelected(v),
-                                fallBackTextStyle: fallBackTextStyle,
+                                fallBackTextStyle: style,
                                 highlight: highlight,
                                 theme: theme,
                                 t: t,

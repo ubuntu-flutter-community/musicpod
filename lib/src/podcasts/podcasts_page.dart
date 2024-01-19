@@ -51,20 +51,15 @@ class _PodcastsPageState extends State<PodcastsPage> {
     }
 
     final model = context.read<PodcastModel>();
+    final searchResult = context.select((PodcastModel m) => m.searchResult);
+
     final searchActive = context.select((PodcastModel m) => m.searchActive);
     final setSearchActive = model.setSearchActive;
-    final startPlaylist = context.read<PlayerModel>().startPlaylist;
     final theme = context.t;
     final libraryModel = context.read<LibraryModel>();
-    final podcastSubscribed = libraryModel.podcastSubscribed;
-    final removePodcast = libraryModel.removePodcast;
-    final addPodcast = libraryModel.addPodcast;
 
-    final setLimit = model.setLimit;
-    final setSelectedFeedUrl = model.setSelectedFeedUrl;
-    final selectedFeedUrl =
-        context.select((PodcastModel m) => m.selectedFeedUrl);
     final limit = context.select((PodcastModel m) => m.limit);
+    final setLimit = model.setLimit;
 
     final search = model.search;
     final setSearchQuery = model.setSearchQuery;
@@ -94,33 +89,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final podcastGenre = context.select((PodcastModel m) => m.podcastGenre);
     final sortedGenres = context.select((PodcastModel m) => m.sortedGenres);
     final setPodcastGenre = model.setPodcastGenre;
-    final searchResult = context.select((PodcastModel m) => m.searchResult);
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
-
-    void onTapText(String text) {
-      setSearchQuery(text);
-      search(searchQuery: text);
-    }
-
-    Widget grid;
-    if (searchResult == null || checkingForUpdates) {
-      grid = LoadingGrid(limit: limit);
-    } else if (searchResult.items.isEmpty == true) {
-      grid = NoSearchResultPage(message: Text(context.l10n.noPodcastFound));
-    } else {
-      grid = PodcastsDiscoverGrid(
-        searchResult: searchResult,
-        startPlaylist: startPlaylist,
-        podcastSubscribed: podcastSubscribed,
-        removePodcast: removePodcast,
-        addPodcast: addPodcast,
-        setSelectedFeedUrl: setSelectedFeedUrl,
-        selectedFeedUrl: selectedFeedUrl,
-        onTapText: onTapText,
-      );
-    }
 
     final controlPanel = PodcastsControlPanel(
       limit: limit,
@@ -144,17 +115,23 @@ class _PodcastsPageState extends State<PodcastsPage> {
         const SizedBox(
           height: 15,
         ),
-        Expanded(child: grid),
+        Expanded(
+          child: PodcastsDiscoverGrid(
+            searchResult: searchResult,
+            checkingForUpdates: checkingForUpdates,
+            limit: limit,
+            incrementLimit: () async {
+              setLimit(limit + 10);
+              await search();
+            },
+          ),
+        ),
       ],
     );
 
     final subsBody = PodcastsCollectionBody(
       loading: checkingForUpdates,
       isOnline: widget.isOnline,
-      startPlaylist: startPlaylist,
-      onTapText: onTapText,
-      addPodcast: addPodcast,
-      removePodcast: removePodcast,
     );
 
     return Scaffold(
