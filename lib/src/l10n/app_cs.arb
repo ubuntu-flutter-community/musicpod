@@ -1,0 +1,158 @@
+{
+    "@@locale": "cs",
+    "play": "Přehrát",
+    "pause": "Pozastavit",
+    "stop": "Zastavit",
+    "localAudio": "Místní hudba",
+    "localAudioDescription": "Your music collection, stored on your computer.",
+    "localAudioSubtitle": "Vaše hudební sbírka uložená v počítači.",
+    "music": "Hudba",
+    "radio": "Rádio",
+    "podcasts": "Podcasty",
+    "podcast": "Podcast",
+    "likedSongs": "Oblíbené skladby",
+    "likedSongsDescription": "Všekerá hudba, která se vám líbily. Místní nebo z internetu.",
+    "likedSongsSubtitle": "Chcete-li přidat další tituly, stiskněte tlačítko srdce.",
+    "cancel": "Zpět",
+    "add": "Přídat",
+    "addTo": "Přidat do:",
+    "deletePlaylist": "Smazat seznam skladeb",
+    "createNewPlaylist" : "Vytvořit nový seznam skladeb",
+    "playlistDialogTitleNew": "Přidat seznam skladeb",
+    "playlistDialogTitleEdit": "Upravit seznam skladeb",
+    "save": "Uložit",
+    "title": "Název",
+    "titles": "Názvy",
+    "artist": "Umělěc",
+    "artists": "Umělci",
+    "album": "Album",
+    "albums": "Alba",
+    "genres": "Žánry",
+    "years": "Roky",
+    "searchLocalAudioHint": "Vyhledat místní hudbu",
+    "library": "Knihovna",
+    "playlists": "Seznamy skladem",
+    "playlist": "Seznam skladeb",
+    "discover": "Objevit",
+    "forYou": "Pro Vás",
+    "search": "Hledat",
+    "noPodcastFound": "Je nám líto, ale pro tento vyhledávací dotaz nebyl nalezen žádný podcast.",
+    "noPodcastChartsFound": "Je nám líto, ale pro tuto zemi nebo kategorii nejsou k dispozici žádné grafy.",
+    "noPodcastSubsFound": "Zatím jste se nepřihlásili k odběru žádného podcastu.",
+    "charts": "Grafy",
+    "upNext": "Další",
+    "all": "Vše",
+    "arts": "Umění",
+    "business": "Podnikání",
+    "comedy": "Komedie",
+    "education": "Vzdělání",
+    "fiction": "Fikce",
+    "government": "Vláda",
+    "healthAndFitness": "Zdraví",
+    "history": "Historie",
+    "kidsAndFamily": "Děti a rodina",
+    "leisure": "Volný čas",
+    "news": "Novinky",
+    "religionAndSpirituality": "Náboženství a spiritualita",
+    "science": "Science",
+    "societyAndCulture": "SSpolečnost a kultura",
+    "sports": "Sporty",
+    "tvAndFilm": "TV a Film",
+    "technology": "Technologie",
+    "trueCrime": "Skutečný zločin",
+    "offline": "offline",
+    "offlineDescription": "Vypadá to, že váš počítač není připojen k internetu.",
+    "newEpisodeAvailable": "Jsou dostupné nové epizody:",
+    "noStationFound": "Omlouváme se, s tímto vyhledávacím dotazem nebyly nalezeny žádné stanice",
+    "nothingFound": "Nic nenalezeno",
+    "noStarredStations": "Zatím jste neoznačili žádnou stanici hvězdičkou.",
+    "tags": "Příznaky",
+    "quality": "Kvalita",
+    "station": "Stanice",
+    "country": "Země",
+    "tag": "Příznak",
+    "failedToImport": "Nepodařilo se importovat následující soubory:",
+    "unknown": "Neznámé",
+    "volume": "Hlasitost",
+    "queue": "Seznam k přehrání",
+    "limit": "Limit",
+    "decreaseSearchLimit": "Snižte prosím limit vyhledávání pro",
+    "podcastFeedIsEmpty": "Omlouváme se, ale kanál tohoto podcastu je prázdný.",
+    "video": "Video",
+    "ok": "Dobře",
+    "noLocalTitlesFound": "Zdá se, že vaše místní hudební sbírka je prázdná. Zkontrolujte umístění knihovny v nastavení.",
+    "noLocalSearchFound": "Je nám líto, pro tento vyhledávací dotaz nebyla nalezena žádná místní hudba.",
+    "buyMusicOnline": "Možná zde najdete hudbu, kterou byste si rádi koupili:",
+    "settings": "Nastavení",
+    "findUsOnGitHub": "Najdete nás na GitHubu",
+    "musicPodSubTitle": "Váš přehrávač hudby, rádia a podcastů",
+    "pickMusicCollection": "Vyberte si svou hudební sbírku",
+    "newEpisode": "Nové",
+    "dontShowAgain": "Znovu již nezobrazovat",
+    "queueConfirmMessage": "Opravdu chcete zapsat {length} médií?",
+    "@queueConfirmMessage": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "emptyPlaylist": "Tento seznam skladeb je prázdný.",
+    "copiedToClipBoard": "Zkopírováno do schránky:",
+    "insertIntoQueue": "Vložit do fronty",
+    "about": "O aplikaci",
+    "localAudioCacheSuggestion": "Máte {length} místních zvukových souborů. Chcete vytvořit mezipaměť, abyste zlepšili dobu spuštění?",
+    "@localAudioCacheSuggestion": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "noThankYou": "Ne, děkuji",
+    "recreateLocalAudioCache": "Obnovení místní zvukové mezipaměti",
+    "useALocalAudioCache": "Použití místní zvukové mezipaměti",
+    "newEpisodes": "Nové epizody",
+    "collection": "Sbírka",
+    "addToCollection": "Přidat do sbírky",
+    "removeFromCollection": "Odebrat ze sbírky",
+    "loadingPodcastFeed": "Načítání podcastového kanálu...",
+    "downloadStarted": "Stahování začalo: {name}",
+    "@downloadStarted": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "downloadCancelled": "Stažení zrušeno: {name}",
+    "@downloadCancelled": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "downloadFinished": "Stahovaní dokončeno: {name}",
+    "@downloadFinished": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "downloadsOnly": "Pouze ke stažení",
+    "moreOptions": "Další možnosti",
+    "noRadioServerFound": "Nebyl nalezen žádný rádiový server",
+    "connectedTo": "Připojeno k",
+    "tryReconnect": "Zkuste se znovu připojit",
+    "addedTo": "Přidáno do",
+    "addToPlaylist": "Přidat do seznamu skladeb",
+    "open": "Otevřít",
+    "removeFrom": "Odebrat z",
+    "noCountryFound": "Žádnou zemi s tímto názvem nelze nalézt. Můžete také použít telefonní předvolby, jako je +420",
+    "noStarredTags": "Ještě jste neoznačili hvězdičkou žádné příznaky",
+    "name": "Jméno",
+    "state": "Stát",
+    "playNext": "Přehrát další"
+}
