@@ -37,6 +37,9 @@ const kAudioTileSpacing = EdgeInsets.only(right: 10.0);
 
 const kAudioTrackWidth = 40.0;
 
+const kFallbackThumbnail =
+    'https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/main/snap/gui/musicpod.png';
+
 const kGridPadding = EdgeInsets.only(
   top: 0,
   bottom: kYaruPagePadding,
