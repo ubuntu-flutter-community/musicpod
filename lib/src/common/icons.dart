@@ -174,6 +174,21 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.shuffle
           : Icons.shuffle;
+  IconData get levelMiddle => yaruStyled
+      ? YaruIcons.meter_middle
+      : appleStyled
+          ? CupertinoIcons.speedometer
+          : Icons.speed;
+  IconData get levelHigh => yaruStyled
+      ? YaruIcons.meter_three_quarter
+      : appleStyled
+          ? CupertinoIcons.speedometer
+          : Icons.speed;
+  IconData get levelLow => yaruStyled
+      ? YaruIcons.meter_quarter
+      : appleStyled
+          ? CupertinoIcons.speedometer
+          : Icons.speed;
   IconData get skipBackward => yaruStyled
       ? YaruIcons.skip_backward
       : appleStyled

@@ -39,6 +39,7 @@ class PlayerService {
   StreamSubscription<bool>? _isCompletedSub;
   StreamSubscription<double>? _volumeSub;
   StreamSubscription<Tracks>? _tracksSub;
+  StreamSubscription<double>? _rateSub;
 
   final _queueController = StreamController<bool>.broadcast();
   Stream<bool> get queueChanged => _queueController.stream;
@@ -161,6 +162,15 @@ class PlayerService {
     await player.setVolume(value);
   }
 
+  final _rateController = StreamController<bool>.broadcast();
+  Stream<bool> get rateChanged => _rateController.stream;
+  double _rate = 1.0;
+  double get rate => _rate;
+  Future<void> setRate(double value) async {
+    if (value == _rate) return;
+    await player.setRate(value);
+  }
+
   bool _firstPlay = true;
   Future<void> play({Duration? newPosition, Audio? newAudio}) async {
     if (newAudio != null) {
@@ -239,6 +249,11 @@ class PlayerService {
     _volumeSub = player.stream.volume.listen((value) {
       _volume = value;
       _volumeController.add(true);
+    });
+
+    _rateSub = player.stream.rate.listen((value) {
+      _rate = value;
+      _rateController.add(true);
     });
 
     _tracksSub = player.stream.tracks.listen((tracks) {
@@ -656,6 +671,9 @@ class PlayerService {
     await _isCompletedSub?.cancel();
     await _volumeSub?.cancel();
     await _tracksSub?.cancel();
+    await _rateSub?.cancel();
+    await _rateController.close();
+
     await player.dispose();
   }
 }

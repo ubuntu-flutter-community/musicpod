@@ -104,6 +104,7 @@ class _QueueDialogState extends State<QueueDialog> {
             height: 20,
           ),
           FullHeightPlayerControls(
+            showPlaybackRate: false,
             playPrevious: () async => await playerModel.playPrevious().then(
                   (_) => _jump(),
                 ),
