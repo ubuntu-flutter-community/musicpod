@@ -89,7 +89,7 @@
     "pickMusicCollection": "Vyberte si svou hudební sbírku",
     "newEpisode": "Nové",
     "dontShowAgain": "Znovu již nezobrazovat",
-    "queueConfirmMessage": "Opravdu chcete zapsat {lenght} médií?",
+    "queueConfirmMessage": "Opravdu chcete zapsat {length} médií?",
     "@queueConfirmMessage": {
         "placeholders": {
             "length": {
@@ -101,7 +101,7 @@
     "copiedToClipBoard": "Zkopírováno do schránky:",
     "insertIntoQueue": "Vložit do fronty",
     "about": "O aplikaci",
-    "localAudioCacheSuggestion": "Máte {lenght} místních zvukových souborů. Chcete vytvořit mezipaměť, abyste zlepšili dobu spuštění?",
+    "localAudioCacheSuggestion": "Máte {length} místních zvukových souborů. Chcete vytvořit mezipaměť, abyste zlepšili dobu spuštění?",
     "@localAudioCacheSuggestion": {
         "placeholders": {
             "length": {
