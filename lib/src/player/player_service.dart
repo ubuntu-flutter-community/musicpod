@@ -597,8 +597,10 @@ class PlayerService {
         albumArtist: audio.artist,
         artist: audio.artist,
         thumbnail: audio.audioType == AudioType.local
-            ? artUri?.toFilePath(windows: true)
-            : '$artUri',
+            ? kFallbackThumbnail
+            : artUri == null
+                ? null
+                : '$artUri',
       ),
     );
   }
