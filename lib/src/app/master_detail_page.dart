@@ -4,6 +4,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
+import '../../constants.dart';
 import '../../library.dart';
 import '../../settings.dart';
 import '../../theme.dart';
@@ -53,7 +54,7 @@ class MasterDetailPage extends StatelessWidget {
         layoutDelegate: const YaruMasterFixedPaneDelegate(
           paneWidth: 250,
         ),
-        breakpoint: 720,
+        breakpoint: kMasterDetailBreakPoint,
         controller: YaruPageController(
           length: libraryModel.totalListAmount,
           initialIndex: libraryModel.index ?? 0,
