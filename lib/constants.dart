@@ -66,6 +66,8 @@ const kSmallCardHeight = kCardHeight - 70;
 
 const kCardBottomHeight = 30.0;
 
+const kMasterDetailBreakPoint = 720.0;
+
 const kImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
   maxCrossAxisExtent: kSmallCardHeight + 40,
   mainAxisExtent: kSmallCardHeight + kCardBottomHeight + 10,

@@ -4,6 +4,7 @@ import 'package:popover/popover.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../globals.dart';
 import '../../player.dart';
@@ -39,7 +40,7 @@ class BottomPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final veryNarrow = context.m.size.width < 700;
+    final veryNarrow = context.m.size.width < kMasterDetailBreakPoint;
     final active = audio?.path != null || isOnline;
 
     final bottomPlayerImage = BottomPlayerImage(
@@ -103,7 +104,7 @@ class BottomPlayer extends StatelessWidget {
             child: Row(
               children: [
                 Flexible(
-                  flex: 3,
+                  flex: 5,
                   child: titleAndArtist,
                 ),
                 const SizedBox(
@@ -123,7 +124,7 @@ class BottomPlayer extends StatelessWidget {
           Expanded(
             flex: 6,
             child: Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 10, right: 8),
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
               child: Column(
                 children: [
                   bottomPlayerControls,

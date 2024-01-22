@@ -5,6 +5,7 @@ import '../../common.dart';
 import 'play_button.dart';
 import 'playback_rate_button.dart';
 import 'repeat_button.dart';
+import 'seek_button.dart';
 import 'shuffle_button.dart';
 
 class FullHeightPlayerControls extends StatelessWidget {
@@ -35,6 +36,10 @@ class FullHeightPlayerControls extends StatelessWidget {
           PlaybackRateButton(active: active)
         else
           ShuffleButton(active: active),
+        SeekButton(
+          active: active,
+          forward: false,
+        ),
         IconButton(
           onPressed: !active ? null : () => playPrevious(),
           icon: Icon(Iconz().skipBackward),
@@ -51,6 +56,7 @@ class FullHeightPlayerControls extends StatelessWidget {
           onPressed: !active ? null : () => playNext(),
           icon: Icon(Iconz().skipForward),
         ),
+        SeekButton(active: active),
         RepeatButton(active: active),
       ],
     );
