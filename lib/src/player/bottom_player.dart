@@ -123,7 +123,7 @@ class BottomPlayer extends StatelessWidget {
           Expanded(
             flex: 6,
             child: Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 10, right: 8),
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
               child: Column(
                 children: [
                   bottomPlayerControls,

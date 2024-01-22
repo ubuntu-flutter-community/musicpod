@@ -209,6 +209,16 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.forward
           : Icons.arrow_forward;
+  IconData get forward30 => yaruStyled
+      ? YaruIcons.redo
+      : appleStyled
+          ? CupertinoIcons.goforward_30
+          : Icons.forward_30;
+  IconData get backward10 => yaruStyled
+      ? YaruIcons.undo
+      : appleStyled
+          ? CupertinoIcons.gobackward_10
+          : Icons.replay_10;
   IconData get goUp => yaruStyled
       ? YaruIcons.go_up
       : appleStyled

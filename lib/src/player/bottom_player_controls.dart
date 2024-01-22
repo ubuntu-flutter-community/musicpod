@@ -4,6 +4,7 @@ import '../common/icons.dart';
 import 'playback_rate_button.dart';
 import 'play_button.dart';
 import 'repeat_button.dart';
+import 'seek_button.dart';
 import 'shuffle_button.dart';
 
 class BottomPlayerControls extends StatelessWidget {
@@ -27,28 +28,31 @@ class BottomPlayerControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final children = [
-      Row(
+      Wrap(
+        spacing: 5,
         children: [
           if (showPlaybackRate)
             PlaybackRateButton(active: active)
           else
             ShuffleButton(active: active),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: IconButton(
-              onPressed: !active ? null : () => playPrevious(),
-              icon: Icon(Iconz().skipBackward),
-            ),
+          SeekButton(
+            active: active,
+            forward: false,
+          ),
+          IconButton(
+            onPressed: !active ? null : () => playPrevious(),
+            icon: Icon(Iconz().skipBackward),
           ),
           PlayButton(active: active),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: IconButton(
-              onPressed: !active ? null : () => playNext(),
-              icon: Icon(Iconz().skipForward),
-            ),
+          IconButton(
+            onPressed: !active ? null : () => playNext(),
+            icon: Icon(Iconz().skipForward),
           ),
+          SeekButton(active: active),
           RepeatButton(active: active),
+          const SizedBox(
+            width: 0,
+          ),
         ],
       ),
     ];
