@@ -1,8 +1,8 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../l10n.dart';
 import '../../library.dart';
@@ -48,11 +48,11 @@ class SettingsTile extends StatelessWidget {
           );
     }
 
-    final content = Padding(
-      padding: const EdgeInsets.all(20),
-      child: ListView(
-        children: [
-          ImportantButton(
+    final content = [
+      Center(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: ImportantButton(
             onPressed: () async {
               final directoryPath = await getDirectoryPath();
 
@@ -67,55 +67,54 @@ class SettingsTile extends StatelessWidget {
               ),
             ),
           ),
-          const SpacedDivider(
-            top: 0,
-            bottom: 0,
-          ),
-          const ShopRecommendations(),
+        ),
+      ),
+      const Divider(),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
           const SizedBox(
-            height: kYaruPagePadding,
+            width: 5,
           ),
-          const SpacedDivider(
-            bottom: 10,
-            top: 0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(context.l10n.useALocalAudioCache),
-              CommonSwitch(
-                value: useLocalAudioCache == true,
-                onChanged: (value) {
-                  setUseLocalAudioCache(value)
-                      .then((_) => Navigator.of(context).pop());
-                },
-              ),
-            ],
-          ),
-          TextButton.icon(
-            onPressed: () {
-              createLocalAudioCache();
+          Text(context.l10n.useALocalAudioCache),
+          CommonSwitch(
+            value: useLocalAudioCache == true,
+            onChanged: (value) {
+              setUseLocalAudioCache(value)
+                  .then((_) => Navigator.of(context).pop());
             },
-            icon: Icon(Iconz().refresh),
-            label: Text(context.l10n.recreateLocalAudioCache),
           ),
-          const AboutTile(),
         ],
       ),
-    );
+      TextButton.icon(
+        onPressed: () {
+          createLocalAudioCache();
+        },
+        icon: Icon(Iconz().refresh),
+        label: Text(context.l10n.recreateLocalAudioCache),
+      ),
+      const AboutTile(),
+    ];
 
     return Center(
-      child: IconButton(
+      child: PopupMenuButton(
         padding: EdgeInsets.zero,
         icon: Icon(
           Iconz().menu,
         ),
-        onPressed: () => showStyledPopover(
-          context: context,
-          content: content,
-          height: 480,
-          width: 260,
-        ),
+        itemBuilder: (context) {
+          return content
+              .map(
+                (e) => PopupMenuItem(
+                  labelTextStyle:
+                      MaterialStatePropertyAll(context.t.textTheme.bodyMedium),
+                  enabled: false,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: e,
+                ),
+              )
+              .toList();
+        },
       ),
     );
   }

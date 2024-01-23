@@ -30,6 +30,7 @@ dependencies:
     sdk: flutter
   flutter_markdown: ^0.6.15
   flutter_tabler_icons: ^1.7.0
+  github: ^9.22.0
   gtk: ^2.1.0
   handy_window: ^0.3.1
   intl: ^0.18.0
@@ -47,7 +48,6 @@ dependencies:
   path: ^1.8.3
   path_provider: ^2.1.1
   podcast_search: ^0.6.0
-  popover: ^0.2.8+2
   provider: ^6.0.5
   radio_browser_api: ^1.0.1
   reorderableitemsview: ^2.0.1
@@ -78,7 +78,6 @@ flutter:
   uses-material-design: true
   assets:
     - snap/gui/musicpod.png
-    - assets/contributors.md
 
 dependency_overrides:
   yaru_widgets:

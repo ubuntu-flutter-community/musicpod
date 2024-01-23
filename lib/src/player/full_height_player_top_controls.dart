@@ -2,7 +2,6 @@ import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
 import 'package:flutter/material.dart';
-import 'package:popover/popover.dart';
 
 class FullHeightPlayerTopControls extends StatelessWidget {
   const FullHeightPlayerTopControls({
@@ -39,7 +38,6 @@ class FullHeightPlayerTopControls extends StatelessWidget {
           color: iconColor,
         ),
         VolumeSliderPopup(
-          direction: PopoverDirection.bottom,
           color: iconColor,
         ),
         IconButton(

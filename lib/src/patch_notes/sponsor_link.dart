@@ -14,7 +14,7 @@ class SponsorLink extends StatelessWidget {
       borderRadius: BorderRadius.circular(4),
       child: const Text(
         kSponsorLink,
-        style: TextStyle(color: Colors.blue, fontSize: 20),
+        style: TextStyle(color: Colors.blue),
       ),
     );
   }

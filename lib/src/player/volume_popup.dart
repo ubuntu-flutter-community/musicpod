@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:popover/popover.dart';
 import 'package:provider/provider.dart';
 
 import '../../common.dart';
@@ -10,11 +9,9 @@ class VolumeSliderPopup extends StatelessWidget {
   const VolumeSliderPopup({
     super.key,
     this.color,
-    required this.direction,
   });
 
   final Color? color;
-  final PopoverDirection direction;
 
   @override
   Widget build(BuildContext context) {
@@ -32,26 +29,28 @@ class VolumeSliderPopup extends StatelessWidget {
       iconData = Iconz().speakerHighFilled;
     }
 
-    return IconButton(
+    return PopupMenuButton(
       padding: EdgeInsets.zero,
       tooltip: context.l10n.volume,
       icon: Icon(
         iconData,
         color: color,
       ),
-      onPressed: () => showStyledPopover(
-        context: context,
-        content: ChangeNotifierProvider.value(
-          value: playerModel,
-          builder: (context, _) {
-            return _Slider(
-              setVolume: setVolume,
-            );
-          },
-        ),
-        height: 50,
-        direction: direction,
-      ),
+      itemBuilder: (context) {
+        return [
+          PopupMenuItem(
+            enabled: false,
+            child: ChangeNotifierProvider.value(
+              value: playerModel,
+              builder: (context, _) {
+                return _Slider(
+                  setVolume: setVolume,
+                );
+              },
+            ),
+          ),
+        ];
+      },
     );
   }
 }
