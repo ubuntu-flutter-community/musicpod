@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:popover/popover.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -11,7 +10,6 @@ import '../../build_context_x.dart';
 import '../../constants.dart';
 import '../../globals.dart' hide isMobile;
 import '../../theme.dart';
-import '../../theme_data_x.dart';
 import 'icons.dart';
 
 class NavBackButton extends StatelessWidget {
@@ -411,41 +409,6 @@ class ImportantButton extends StatelessWidget {
           )
         : FilledButton(onPressed: onPressed, child: child);
   }
-}
-
-Future<Object?> showStyledPopover({
-  required BuildContext context,
-  required Widget content,
-  PopoverDirection direction = PopoverDirection.bottom,
-  double? height,
-  double? width,
-}) {
-  final theme = context.t;
-  final light = theme.isLight;
-  return showPopover(
-    context: context,
-    // onPop: () => print('Popover was popped!'),
-    direction: direction,
-    shadow: [
-      BoxShadow(
-        color: Colors.black.withOpacity(0.2),
-        offset: const Offset(0, 0),
-        spreadRadius: 2,
-        blurRadius: 4,
-      ),
-    ],
-    backgroundColor:
-        light ? Colors.white : theme.colorScheme.surface.scale(lightness: 0.05),
-    barrierColor: Colors.transparent,
-    width: width ?? 250,
-    height: height,
-    arrowHeight: 15,
-    arrowWidth: 30,
-    bodyBuilder: (context) {
-      return content;
-    },
-    transitionDuration: Duration.zero,
-  );
 }
 
 TextStyle getControlPanelStyle(TextTheme textTheme) =>

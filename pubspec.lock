@@ -413,6 +413,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.6.6"
+  github:
+    dependency: "direct main"
+    description:
+      name: github
+      sha256: "6fe4cb40c0553f06e954f9bd44f0ba620eab9de27f1ce50249b88c15d2359adf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.22.0"
   gtk:
     dependency: "direct main"
     description:
@@ -806,14 +814,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
-  popover:
-    dependency: "direct main"
-    description:
-      name: popover
-      sha256: "6a0928ccdcf12d46b407372b644a0d94400b316d0ee072a19dcef03c2bb88c3f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.9"
   provider:
     dependency: "direct main"
     description:

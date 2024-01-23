@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:github/github.dart';
 import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -83,6 +84,8 @@ Future<void> main(List<String> args) async {
   );
 
   registerService<RadioService>(() => RadioService());
+
+  registerService(GitHub.new);
 
   if (Platform.isLinux) {
     runApp(const GtkApplication(child: YaruMusicPodApp()));

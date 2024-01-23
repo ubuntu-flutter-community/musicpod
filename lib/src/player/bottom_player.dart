@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:popover/popover.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -141,9 +140,7 @@ class BottomPlayer extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const VolumeSliderPopup(
-                  direction: PopoverDirection.top,
-                ),
+                const VolumeSliderPopup(),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5),
                   child: QueueButton(),
