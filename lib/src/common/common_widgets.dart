@@ -69,17 +69,12 @@ class SideBarProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return yaruStyled
-        ? const SizedBox(
-            height: 18,
-            width: 18,
-            child: Progress(),
-          )
-        : SizedBox(
-            height: iconSize,
-            width: iconSize,
-            child: const Progress(),
-          );
+    return SizedBox.square(
+      dimension: yaruStyled ? 18 : iconSize,
+      child: const Progress(
+        strokeWidth: 2,
+      ),
+    );
   }
 }
 

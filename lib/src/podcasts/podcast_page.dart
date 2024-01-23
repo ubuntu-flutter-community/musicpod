@@ -7,6 +7,7 @@ import '../../common.dart';
 import '../../data.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
+import 'podcast_model.dart';
 
 class PodcastPage extends StatelessWidget {
   const PodcastPage({
@@ -63,6 +64,9 @@ class PodcastPage extends StatelessWidget {
     context.select((LibraryModel m) => m.lastPositions?.length);
     context.select((LibraryModel m) => m.downloadsLength);
 
+    final checkingForUpdates =
+        context.select((PodcastModel m) => m.checkingForUpdates);
+
     return AudioPage(
       showAudioTileHeader: false,
       audioPageType: AudioPageType.podcast,
@@ -97,22 +101,25 @@ class PodcastPage extends StatelessWidget {
             tooltip: subscribed
                 ? context.l10n.removeFromCollection
                 : context.l10n.addToCollection,
-            icon: subscribed
-                ? Icon(
-                    Iconz().removeFromLibrary,
-                    color: theme.colorScheme.primary,
-                  )
+            icon: checkingForUpdates
+                ? const SideBarProgress()
                 : Icon(
-                    Iconz().addToLibrary,
-                    color: theme.colorScheme.onSurface,
+                    subscribed
+                        ? Iconz().removeFromLibrary
+                        : Iconz().addToLibrary,
+                    color: subscribed
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.onSurface,
                   ),
-            onPressed: () {
-              if (subscribed) {
-                removePodcast(pageId);
-              } else if (audios?.isNotEmpty == true) {
-                addPodcast(pageId, audios!);
-              }
-            },
+            onPressed: checkingForUpdates
+                ? null
+                : () {
+                    if (subscribed) {
+                      removePodcast(pageId);
+                    } else if (audios?.isNotEmpty == true) {
+                      addPodcast(pageId, audios!);
+                    }
+                  },
           ),
           StreamProviderRow(
             spacing: const EdgeInsets.only(right: 10),
