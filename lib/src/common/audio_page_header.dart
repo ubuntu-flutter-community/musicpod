@@ -53,7 +53,7 @@ class AudioPageHeader extends StatelessWidget {
                       offset: const Offset(0, 0),
                       spreadRadius: 0.8,
                       blurRadius: 0,
-                      color: theme.colorScheme.outline,
+                      color: theme.shadowColor.withOpacity(0.1),
                     ),
                   ],
                 ),
