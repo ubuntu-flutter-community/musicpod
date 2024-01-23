@@ -57,9 +57,12 @@ class StreamProviderShareButton extends StatelessWidget {
                     address,
                   ),
                 ),
-        icon: Icon(
-          onSearch != null ? Iconz().globe : iconData,
-          color: color,
+        icon: Padding(
+          padding: const EdgeInsets.only(bottom: 2),
+          child: Icon(
+            onSearch != null ? Iconz().globe : iconData,
+            color: color,
+          ),
         ),
       ),
     );

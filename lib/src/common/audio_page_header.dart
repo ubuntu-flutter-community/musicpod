@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
+import '../../constants.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
 
@@ -29,7 +30,8 @@ class AudioPageHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.t;
     final size = context.m.size;
-    final smallWindow = size.width < 600.0;
+    final smallWindow = size.width < kMasterDetailBreakPoint;
+    final imageRadius = BorderRadius.circular(10);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -43,9 +45,22 @@ class AudioPageHeader extends StatelessWidget {
           if (image != null)
             Padding(
               padding: EdgeInsets.only(right: smallWindow ? 0 : 20),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: image!,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: imageRadius,
+                  boxShadow: [
+                    BoxShadow(
+                      offset: const Offset(0, 0),
+                      spreadRadius: 0.8,
+                      blurRadius: 0,
+                      color: theme.colorScheme.outline,
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: imageRadius,
+                  child: image!,
+                ),
               ),
             ),
           if (!smallWindow)
