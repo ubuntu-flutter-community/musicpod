@@ -82,20 +82,14 @@ class _PlayerViewState extends State<PlayerView> {
         isOnline: isOnline,
       );
     } else {
-      player = Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Divider(),
-          BottomPlayer(
-            isVideo: isVideo,
-            videoController: playerModel.controller,
-            setFullScreen: setFullScreen,
-            audio: audio,
-            playPrevious: playPrevious,
-            playNext: playNext,
-            isOnline: isOnline,
-          ),
-        ],
+      player = BottomPlayer(
+        isVideo: isVideo,
+        videoController: playerModel.controller,
+        setFullScreen: setFullScreen,
+        audio: audio,
+        playPrevious: playPrevious,
+        playNext: playNext,
+        isOnline: isOnline,
       );
     }
 
