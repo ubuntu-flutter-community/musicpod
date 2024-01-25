@@ -20,9 +20,7 @@ class LikeIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final libraryModel = context.read<LibraryModel>();
-    if (audio?.audioType == AudioType.podcast) {
-      return const SizedBox.shrink();
-    }
+
     context.select((LibraryModel m) => m.likedAudios.length);
     context.select((LibraryModel m) => m.starredStations.length);
 
