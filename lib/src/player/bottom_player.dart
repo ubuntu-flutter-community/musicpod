@@ -105,7 +105,7 @@ class BottomPlayer extends StatelessWidget {
                       if (audio?.audioType != AudioType.podcast && !veryNarrow)
                         Flexible(
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 5),
+                            padding: const EdgeInsets.only(left: 10),
                             child: LikeIconButton(
                               audio: audio,
                             ),
