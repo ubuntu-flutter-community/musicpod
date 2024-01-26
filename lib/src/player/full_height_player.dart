@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
@@ -22,11 +23,11 @@ class FullHeightPlayer extends StatelessWidget {
     required this.nextAudio,
     required this.playPrevious,
     required this.playNext,
-    required this.setFullScreen,
     required this.playerViewMode,
     required this.videoController,
     required this.isVideo,
     required this.isOnline,
+    required this.appModel,
   });
 
   final Audio? audio;
@@ -34,9 +35,8 @@ class FullHeightPlayer extends StatelessWidget {
   final Future<void> Function() playPrevious;
   final Future<void> Function() playNext;
 
-  final void Function(bool?) setFullScreen;
-
   final PlayerViewMode playerViewMode;
+  final AppModel appModel;
 
   final VideoController videoController;
   final bool isVideo;
@@ -119,7 +119,7 @@ class FullHeightPlayer extends StatelessWidget {
               iconColor: iconColor,
               activeControls: activeControls,
               playerViewMode: playerViewMode,
-              setFullScreen: setFullScreen,
+              appModel: appModel,
             ),
           ),
         ),
@@ -157,7 +157,7 @@ class FullHeightPlayer extends StatelessWidget {
                   onVerticalDragEnd: (details) {
                     if (details.primaryVelocity != null &&
                         details.primaryVelocity! > 150) {
-                      setFullScreen(false);
+                      appModel.setFullScreen(false);
                     }
                   },
                   child: Padding(

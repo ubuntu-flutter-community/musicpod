@@ -61,7 +61,6 @@ class _PlayerViewState extends State<PlayerView> {
       c,
       theme.isLight ? kCardColorLight : kCardColorDark,
     );
-    final setFullScreen = appModel.setFullScreen;
     final playPrevious = playerModel.playPrevious;
     final playNext = playerModel.playNext;
     final audio = context.select((PlayerModel m) => m.audio);
@@ -74,7 +73,7 @@ class _PlayerViewState extends State<PlayerView> {
         isVideo: isVideo == true,
         videoController: playerModel.controller,
         playerViewMode: widget.playerViewMode,
-        setFullScreen: setFullScreen,
+        appModel: appModel,
         nextAudio: nextAudio,
         audio: audio,
         playPrevious: playPrevious,
@@ -85,7 +84,7 @@ class _PlayerViewState extends State<PlayerView> {
       player = BottomPlayer(
         isVideo: isVideo,
         videoController: playerModel.controller,
-        setFullScreen: setFullScreen,
+        appModel: appModel,
         audio: audio,
         playPrevious: playPrevious,
         playNext: playNext,

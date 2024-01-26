@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
+
+import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
-import 'package:flutter/material.dart';
-
 import 'playback_rate_button.dart';
 
 class FullHeightPlayerTopControls extends StatelessWidget {
@@ -12,14 +13,14 @@ class FullHeightPlayerTopControls extends StatelessWidget {
     required this.iconColor,
     required this.activeControls,
     required this.playerViewMode,
-    required this.setFullScreen,
+    required this.appModel,
   });
 
   final Audio? audio;
   final Color iconColor;
   final bool activeControls;
   final PlayerViewMode playerViewMode;
-  final void Function(bool? p1) setFullScreen;
+  final AppModel appModel;
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +52,14 @@ class FullHeightPlayerTopControls extends StatelessWidget {
                 : Iconz().fullScreen,
             color: iconColor,
           ),
-          onPressed: () => setFullScreen(
-            playerViewMode == PlayerViewMode.fullWindow ? false : true,
-          ),
+          onPressed: () {
+            appModel.setFullScreen(
+              playerViewMode == PlayerViewMode.fullWindow ? false : true,
+            );
+            appModel.setShowWindowControls(
+              false,
+            );
+          },
         ),
       ],
     );
