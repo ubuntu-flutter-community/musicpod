@@ -58,10 +58,9 @@ class BottomPlayer extends StatelessWidget {
       audio: audio,
     );
 
-    final bottomPlayerControls = BottomPlayerControls(
+    final bottomPlayerControls = PlayerMainControls(
       playPrevious: playPrevious,
       playNext: playNext,
-      onFullScreenTap: () => setFullScreen(true),
       active: active,
       podcast: audio?.audioType == AudioType.podcast,
     );

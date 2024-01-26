@@ -1,7 +1,6 @@
 export 'src/player/bottom_player.dart';
-export 'src/player/bottom_player_controls.dart';
+export 'src/player/player_main_controls.dart';
 export 'src/player/full_height_player.dart';
-export 'src/player/full_height_player_controls.dart';
 export 'src/player/like_icon_button.dart';
 export 'src/player/mpv_meta_data.dart';
 export 'src/player/player_model.dart';

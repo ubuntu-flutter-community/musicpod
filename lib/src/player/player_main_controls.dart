@@ -7,20 +7,17 @@ import 'repeat_button.dart';
 import 'seek_button.dart';
 import 'shuffle_button.dart';
 
-class BottomPlayerControls extends StatelessWidget {
-  const BottomPlayerControls({
+class PlayerMainControls extends StatelessWidget {
+  const PlayerMainControls({
     super.key,
     required this.active,
     required this.playPrevious,
     required this.playNext,
-    required this.onFullScreenTap,
     required this.podcast,
   });
 
   final Future<void> Function() playPrevious;
   final Future<void> Function() playNext;
-
-  final void Function() onFullScreenTap;
 
   final bool active;
   final bool podcast;

@@ -53,8 +53,8 @@ class FullHeightPlayer extends StatelessWidget {
       audio: audio,
     );
 
-    final controls = FullHeightPlayerControls(
-      showPlaybackRate: audio?.audioType == AudioType.podcast,
+    final controls = PlayerMainControls(
+      podcast: audio?.audioType == AudioType.podcast,
       playPrevious: playPrevious,
       playNext: playNext,
       active: active,
