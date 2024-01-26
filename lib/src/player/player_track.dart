@@ -18,6 +18,8 @@ class PlayerTrack extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.t;
 
+    final mainColor = theme.colorScheme.onSurface;
+
     final playerModel = context.read<PlayerModel>();
 
     final position = context.select((PlayerModel m) => m.position);
@@ -32,6 +34,13 @@ class PlayerTrack extends StatelessWidget {
 
     final textStyle =
         TextStyle(fontSize: 12, color: !active ? theme.disabledColor : null);
+
+    final thumbShape = RoundSliderThumbShape(
+      elevation: 5,
+      enabledThumbRadius: bottomPlayer ? 0 : 5.0,
+      disabledThumbRadius: bottomPlayer ? 0 : 5.0,
+    );
+
     final slider = Tooltip(
       preferBelow: false,
       message:
@@ -39,23 +48,14 @@ class PlayerTrack extends StatelessWidget {
       child: SliderTheme(
         data: theme.sliderTheme.copyWith(
           thumbColor: Colors.white,
-          thumbShape: const RoundSliderThumbShape(
-            elevation: 0,
-            enabledThumbRadius: 0,
-            disabledThumbRadius: 0,
-            pressedElevation: 0,
-          ),
+          thumbShape: thumbShape,
+          overlayShape: thumbShape,
           minThumbSeparation: 0,
           trackShape: bottomPlayer ? const RectangularSliderTrackShape() : null,
           trackHeight: bottomPlayer ? 4 : 2,
-          inactiveTrackColor: theme.colorScheme.onSurface.withOpacity(0.35),
-          activeTrackColor: theme.colorScheme.onSurface.withOpacity(0.8),
-          overlayColor: theme.colorScheme.onSurface,
-          overlayShape: RoundSliderThumbShape(
-            elevation: 3,
-            enabledThumbRadius: bottomPlayer ? 0 : 5.0,
-            disabledThumbRadius: bottomPlayer ? 0 : 5.0,
-          ),
+          inactiveTrackColor: mainColor.withOpacity(0.35),
+          activeTrackColor: mainColor.withOpacity(0.8),
+          overlayColor: mainColor,
         ),
         child: RepaintBoundary(
           child: Slider(
