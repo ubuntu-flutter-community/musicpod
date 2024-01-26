@@ -3,6 +3,8 @@ import '../../data.dart';
 import '../../player.dart';
 import 'package:flutter/material.dart';
 
+import 'playback_rate_button.dart';
+
 class FullHeightPlayerTopControls extends StatelessWidget {
   const FullHeightPlayerTopControls({
     super.key,
@@ -23,7 +25,7 @@ class FullHeightPlayerTopControls extends StatelessWidget {
   Widget build(BuildContext context) {
     return Wrap(
       alignment: WrapAlignment.end,
-      spacing: 7.0,
+      spacing: 5.0,
       children: [
         LikeIconButton(
           audio: audio,
@@ -37,6 +39,8 @@ class FullHeightPlayerTopControls extends StatelessWidget {
           active: activeControls,
           color: iconColor,
         ),
+        if (audio?.audioType == AudioType.podcast)
+          PlaybackRateButton(active: activeControls),
         VolumeSliderPopup(
           color: iconColor,
         ),

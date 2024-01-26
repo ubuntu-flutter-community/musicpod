@@ -7,7 +7,6 @@ import '../../data.dart';
 import '../../library.dart';
 import '../../player.dart';
 import '../l10n/l10n.dart';
-import 'full_height_player_image.dart';
 
 class QueueButton extends StatelessWidget {
   const QueueButton({super.key, this.color});
@@ -92,19 +91,13 @@ class _QueueDialogState extends State<QueueDialog> {
 
     return AlertDialog(
       key: ValueKey(queueLength),
-      titlePadding: const EdgeInsets.only(left: 25, right: 25, top: 50),
-      contentPadding: const EdgeInsets.only(bottom: 25, top: 5),
+      titlePadding:
+          const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 10),
+      contentPadding: const EdgeInsets.only(bottom: 20, top: 10),
       title: Column(
         children: [
-          FullHeightPlayerImage(
-            audio: currentAudio,
-            isOnline: true,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          FullHeightPlayerControls(
-            showPlaybackRate: false,
+          PlayerMainControls(
+            podcast: false,
             playPrevious: () async => await playerModel.playPrevious().then(
                   (_) => _jump(),
                 ),
@@ -115,6 +108,19 @@ class _QueueDialogState extends State<QueueDialog> {
           ),
         ],
       ),
+      actionsAlignment: MainAxisAlignment.center,
+      actions: [
+        OutlinedButton(
+          onPressed: () {
+            widget.addPlaylist(
+              '${context.l10n.queue} ${DateTime.now()}',
+              Set.from(queue),
+            );
+            Navigator.of(context).pop();
+          },
+          child: Text(context.l10n.createNewPlaylist),
+        ),
+      ],
       content: SizedBox(
         width: 400,
         height: 500,
@@ -142,8 +148,7 @@ class _QueueDialogState extends State<QueueDialog> {
                             selected ? null : () => playerModel.remove(audio),
                         icon: Icon(Iconz().close),
                       ),
-                      contentPadding:
-                          const EdgeInsets.only(right: 20, left: 20),
+                      contentPadding: const EdgeInsets.only(right: 10, left: 0),
                       selected: selected,
                       key: ValueKey(index),
                       title: Padding(
@@ -156,26 +161,6 @@ class _QueueDialogState extends State<QueueDialog> {
                 itemCount: queue.length,
                 onReorder: playerModel.moveAudioInQueue,
               ),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 45,
-                    top: 15,
-                  ),
-                  child: OutlinedButton(
-                    onPressed: () {
-                      widget.addPlaylist(
-                        '${context.l10n.queue} ${DateTime.now()}',
-                        Set.from(queue),
-                      );
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(context.l10n.createNewPlaylist),
-                  ),
-                ),
-              ],
             ),
           ],
         ),
