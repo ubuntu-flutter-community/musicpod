@@ -64,21 +64,23 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
             itemBuilder: (context, index) {
               final podcastItem = widget.searchResult!.items.elementAt(index);
 
-              final artworkUrl600 = podcastItem.artworkUrl600;
+              final art = podcastItem.artworkUrl600 ?? podcastItem.artworkUrl;
               final image = SafeNetworkImage(
-                url: artworkUrl600,
+                url: art,
                 fit: BoxFit.cover,
                 height: kSmallCardHeight,
                 width: kSmallCardHeight,
               );
 
               return AudioCard(
-                bottom: AudioCardBottom(text: podcastItem.collectionName),
+                bottom: AudioCardBottom(
+                  text: podcastItem.collectionName ?? podcastItem.trackName,
+                ),
                 image: image,
                 onPlay: () async => await searchAndPushPodcastPage(
                   context: context,
                   podcastItem: podcastItem,
-                  itemImageUrl: artworkUrl600,
+                  itemImageUrl: art,
                   genre: podcastItem.primaryGenreName,
                   selectedFeedUrl: selectedFeedUrl,
                   play: true,
@@ -86,7 +88,7 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
                 onTap: () async => await searchAndPushPodcastPage(
                   context: context,
                   podcastItem: podcastItem,
-                  itemImageUrl: artworkUrl600,
+                  itemImageUrl: art,
                   genre: podcastItem.primaryGenreName,
                   selectedFeedUrl: selectedFeedUrl,
                 ),
@@ -196,7 +198,7 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
 
               return PodcastPage(
                 subscribed: subscribed,
-                imageUrl: podcastItem.artworkUrl600,
+                imageUrl: itemImageUrl,
                 addPodcast: libraryModel.addPodcast,
                 removePodcast: libraryModel.removePodcast,
                 audios: podcast,
