@@ -8,6 +8,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../build_context_x.dart';
+import '../../constants.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
 import '../../patch_notes.dart';
@@ -126,7 +127,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final playerToTheRight = context.m.size.width > 1500;
+    final playerToTheRight = context.m.size.width > kSideBarThreshHold;
 
     // AppModel
     final isFullScreen = context.select((AppModel m) => m.fullScreen);

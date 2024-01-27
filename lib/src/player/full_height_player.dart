@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../globals.dart';
 import '../../player.dart';
@@ -46,6 +48,9 @@ class FullHeightPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.t;
     final size = context.m.size;
+    final playerToTheRight = size.width > kSideBarThreshHold;
+    final fullScreen = context.select((AppModel m) => m.fullScreen);
+
     final active = audio?.path != null || isOnline;
     final activeControls = audio?.path != null || isOnline;
 
@@ -53,16 +58,20 @@ class FullHeightPlayer extends StatelessWidget {
       audio: audio,
     );
 
-    final controls = PlayerMainControls(
-      podcast: audio?.audioType == AudioType.podcast,
-      playPrevious: playPrevious,
-      playNext: playNext,
-      active: active,
-    );
-
     const sliderAndTime = PlayerTrack();
 
     final iconColor = isVideo ? Colors.white : theme.colorScheme.onSurface;
+
+    void onFullScreenPressed() {
+      appModel.setFullScreen(
+        playerViewMode == PlayerViewMode.fullWindow ? false : true,
+      );
+
+      appModel.setShowWindowControls(
+        (fullScreen == true && playerToTheRight) ? false : true,
+      );
+    }
+
     final body = Stack(
       alignment: Alignment.topRight,
       children: [
@@ -99,7 +108,12 @@ class FullHeightPlayer extends StatelessWidget {
                   const SizedBox(
                     height: kYaruPagePadding,
                   ),
-                  controls,
+                  PlayerMainControls(
+                    podcast: audio?.audioType == AudioType.podcast,
+                    playPrevious: playPrevious,
+                    playNext: playNext,
+                    active: active,
+                  ),
                 ],
               ),
             ),
@@ -119,7 +133,7 @@ class FullHeightPlayer extends StatelessWidget {
               iconColor: iconColor,
               activeControls: activeControls,
               playerViewMode: playerViewMode,
-              appModel: appModel,
+              onFullScreenPressed: onFullScreenPressed,
             ),
           ),
         ),

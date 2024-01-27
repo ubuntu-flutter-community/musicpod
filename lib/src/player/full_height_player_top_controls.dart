@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
@@ -13,14 +12,14 @@ class FullHeightPlayerTopControls extends StatelessWidget {
     required this.iconColor,
     required this.activeControls,
     required this.playerViewMode,
-    required this.appModel,
+    required this.onFullScreenPressed,
   });
 
   final Audio? audio;
   final Color iconColor;
   final bool activeControls;
   final PlayerViewMode playerViewMode;
-  final AppModel appModel;
+  final void Function() onFullScreenPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -52,14 +51,7 @@ class FullHeightPlayerTopControls extends StatelessWidget {
                 : Iconz().fullScreen,
             color: iconColor,
           ),
-          onPressed: () {
-            appModel.setFullScreen(
-              playerViewMode == PlayerViewMode.fullWindow ? false : true,
-            );
-            appModel.setShowWindowControls(
-              false,
-            );
-          },
+          onPressed: onFullScreenPressed,
         ),
       ],
     );
