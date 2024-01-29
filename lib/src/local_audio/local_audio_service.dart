@@ -10,7 +10,9 @@ import '../../utils.dart';
 
 class LocalAudioService {
   String? _directory;
+
   String? get directory => _directory;
+
   Future<void> setDirectory(String? value) async {
     if (value == null || value == _directory) return;
     await writeSetting(kDirectoryProperty, value).then((_) {
@@ -19,20 +21,26 @@ class LocalAudioService {
   }
 
   final _directoryController = StreamController<bool>.broadcast();
+
   Stream<bool> get directoryChanged => _directoryController.stream;
+
   void _updateDirectory(String? value) {
     _directory = value;
     _directoryController.add(true);
   }
 
   Set<Audio>? _audios;
+
   Set<Audio>? get audios => _audios;
+
   set audios(Set<Audio>? value) {
     _updateAudios(value);
   }
 
   final _audiosController = StreamController<bool>.broadcast();
+
   Stream<bool> get audiosChanged => _audiosController.stream;
+
   void _updateAudios(Set<Audio>? value) {
     _audios = value;
     _audiosController.add(true);
@@ -87,7 +95,20 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
         final metadata = await MetadataGod.readMetadata(file: e.path);
         final audio = createLocalAudio(
           e.path,
-          metadata,
+          Metadata(
+              title: metadata.title,
+              durationMs: metadata.durationMs,
+              artist: metadata.artist,
+              album: metadata.album,
+              albumArtist: metadata.albumArtist,
+              trackNumber: metadata.trackNumber,
+              trackTotal: metadata.trackTotal,
+              discNumber: metadata.discNumber,
+              discTotal: metadata.discTotal,
+              year: metadata.year,
+              genre: metadata.genre,
+              fileSize: metadata.fileSize,
+          ),
           File(e.path).uri.pathSegments.last,
         );
 
