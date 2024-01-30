@@ -41,6 +41,8 @@ const kAudioTrackWidth = 40.0;
 
 const kSideBarThreshHold = 1500.0;
 
+const kSideBarPlayerWidth = 500.0;
+
 const kFallbackThumbnail =
     'https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/main/snap/gui/musicpod.png';
 

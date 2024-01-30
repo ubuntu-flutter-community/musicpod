@@ -9,9 +9,11 @@ class PlaybackRateButton extends StatelessWidget {
   const PlaybackRateButton({
     super.key,
     required this.active,
+    this.color,
   });
 
   final bool active;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class PlaybackRateButton extends StatelessWidget {
             ? theme.disabledColor
             : (rate != 1.0
                 ? theme.colorScheme.primary
-                : theme.colorScheme.onSurface),
+                : (color ?? theme.colorScheme.onSurface)),
       ),
       initialValue: rate,
       itemBuilder: (context) {

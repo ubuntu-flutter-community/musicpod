@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:system_theme/system_theme.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
 
@@ -42,9 +43,11 @@ class MusicPodApp extends StatefulWidget {
     super.key,
     this.lightTheme,
     this.darkTheme,
+    this.accent,
   });
 
   final ThemeData? lightTheme, darkTheme;
+  final Color? accent;
 
   @override
   State<MusicPodApp> createState() => _MusicPodAppState();
@@ -67,23 +70,32 @@ class _MusicPodAppState extends State<MusicPodApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: widget.lightTheme ?? m3Theme(),
-      darkTheme: widget.darkTheme ?? m3Theme(brightness: Brightness.dark),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: supportedLocales,
-      onGenerateTitle: (context) => 'MusicPod',
-      home: initialized ? App.create() : const SplashScreen(),
-      scrollBehavior: const MaterialScrollBehavior().copyWith(
-        dragDevices: {
-          PointerDeviceKind.mouse,
-          PointerDeviceKind.touch,
-          PointerDeviceKind.stylus,
-          PointerDeviceKind.unknown,
-          PointerDeviceKind.trackpad,
-        },
-      ),
+    return SystemThemeBuilder(
+      builder: (context, accent) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: widget.lightTheme ??
+              m3Theme(color: widget.accent ?? Colors.greenAccent),
+          darkTheme: widget.darkTheme ??
+              m3Theme(
+                brightness: Brightness.dark,
+                color: widget.accent ?? Colors.greenAccent,
+              ),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: supportedLocales,
+          onGenerateTitle: (context) => 'MusicPod',
+          home: initialized ? App.create() : const SplashScreen(),
+          scrollBehavior: const MaterialScrollBehavior().copyWith(
+            dragDevices: {
+              PointerDeviceKind.mouse,
+              PointerDeviceKind.touch,
+              PointerDeviceKind.stylus,
+              PointerDeviceKind.unknown,
+              PointerDeviceKind.trackpad,
+            },
+          ),
+        );
+      },
     );
   }
 }

@@ -34,7 +34,7 @@ class PlayButton extends StatelessWidget {
       icon: isPlaying
           ? Icon(Iconz().pause)
           : Icon(
-              Iconz().play,
+              Iconz().playFilled,
             ),
     );
   }

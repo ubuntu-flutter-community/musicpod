@@ -27,10 +27,11 @@ class FullHeightPlayerTopControls extends StatelessWidget {
       alignment: WrapAlignment.end,
       spacing: 5.0,
       children: [
-        LikeIconButton(
-          audio: audio,
-          color: iconColor,
-        ),
+        if (audio?.audioType != AudioType.podcast)
+          LikeIconButton(
+            audio: audio,
+            color: iconColor,
+          ),
         QueueButton(
           color: iconColor,
         ),
@@ -40,7 +41,10 @@ class FullHeightPlayerTopControls extends StatelessWidget {
           color: iconColor,
         ),
         if (audio?.audioType == AudioType.podcast)
-          PlaybackRateButton(active: activeControls),
+          PlaybackRateButton(
+            active: activeControls,
+            color: iconColor,
+          ),
         VolumeSliderPopup(
           color: iconColor,
         ),

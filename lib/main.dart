@@ -7,6 +7,7 @@ import 'package:github/github.dart';
 import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:system_theme/system_theme.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -31,6 +32,10 @@ Future<void> main(List<String> args) async {
   }
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
+  if (!Platform.isLinux) {
+    SystemTheme.fallbackColor = Colors.greenAccent;
+    await SystemTheme.accentColor.load();
+  }
 
   final player = Player(
     configuration: const PlayerConfiguration(title: 'MusicPod'),
@@ -91,7 +96,11 @@ Future<void> main(List<String> args) async {
     runApp(const GtkApplication(child: YaruMusicPodApp()));
   } else {
     runApp(
-      const MusicPodApp(),
+      SystemThemeBuilder(
+        builder: (context, accent) {
+          return MusicPodApp(accent: accent.accent);
+        },
+      ),
     );
   }
 }
