@@ -154,7 +154,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
             ),
             if (playerToTheRight)
               const SizedBox(
-                width: 500,
+                width: kSideBarPlayerWidth,
                 child: PlayerView(
                   playerViewMode: PlayerViewMode.sideBar,
                 ),
