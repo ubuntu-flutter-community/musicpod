@@ -66,7 +66,7 @@ class Audio {
   /// Optional art that belongs to parent element
   final String? albumArtUrl;
 
-  Audio({
+  const Audio({
     this.path,
     this.url,
     this.audioType,
