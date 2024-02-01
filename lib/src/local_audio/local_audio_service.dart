@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:metadata_god/metadata_god.dart';
+import 'package:id3tag/id3tag.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
@@ -42,12 +42,13 @@ class LocalAudioService {
     Set<Audio>? cache,
     @visibleForTesting String? testDir,
   }) async {
-    if (testDir != null) {
-      MetadataGod.initialize();
-    }
     if (cache == null || cache.isEmpty || testDir != null) {
-      _directory = await readSetting(kDirectoryProperty);
-      _directory ??= testDir ?? await getMusicDir();
+      if (testDir != null) {
+        _directory = testDir;
+      } else {
+        _directory = await readSetting(kDirectoryProperty);
+        _directory ??= await getMusicDir();
+      }
 
       final result = await compute(_init, directory);
 
@@ -88,11 +89,12 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
     }
     for (var e in onlyFiles) {
       try {
-        final metadata = await MetadataGod.readMetadata(file: e.path);
+        final parser = ID3TagReader.path(e.path);
+        final metadata = parser.readTagSync();
         final audio = createLocalAudio(
-          e.path,
-          metadata,
-          File(e.path).uri.pathSegments.last,
+          path: e.path,
+          tag: metadata,
+          fileName: File(e.path).uri.pathSegments.last,
         );
 
         newAudios.add(audio);

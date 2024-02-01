@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:gtk/gtk.dart';
-import 'package:metadata_god/metadata_god.dart';
+import 'package:id3tag/id3tag.dart';
 
 import '../../data.dart';
 import '../../utils.dart';
@@ -33,15 +33,13 @@ class ExternalPathService {
     if (path == null || !isValidFile(path)) {
       return;
     }
-    MetadataGod.initialize();
     try {
-      MetadataGod.readMetadata(file: path).then(
-        (metadata) => play.call(
-          newAudio: createLocalAudio(
-            path,
-            metadata,
-            File(path).uri.pathSegments.last,
-          ),
+      final metadata = ID3TagReader.path(path).readTagSync();
+      play.call(
+        newAudio: createLocalAudio(
+          path: path,
+          tag: metadata,
+          fileName: File(path).uri.pathSegments.last,
         ),
       );
     } catch (_) {}

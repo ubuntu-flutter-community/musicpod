@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
-import 'package:metadata_god/metadata_god.dart';
+import 'package:id3tag/id3tag.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -12,6 +12,7 @@ import 'package:xdg_directories/xdg_directories.dart';
 import 'common.dart';
 import 'constants.dart';
 import 'data.dart';
+import 'id3_x.dart';
 
 String formatTime(Duration duration) {
   String twoDigits(int n) => n.toString().padLeft(2, '0');
@@ -92,26 +93,32 @@ void sortListByAudioFilter({
   }
 }
 
-Audio createLocalAudio(String path, Metadata metadata, [String? fileName]) {
+Audio createLocalAudio({
+  required String path,
+  required ID3Tag tag,
+  required String? fileName,
+}) {
   return Audio(
     path: path,
     audioType: AudioType.local,
-    artist: metadata.artist ?? '',
-    title: (metadata.title?.isNotEmpty == true ? metadata.title : fileName) ??
-        path,
-    album: metadata.album == null
+    artist: tag.artist ?? '',
+    title: (tag.title?.isNotEmpty == true ? tag.title : fileName) ?? path,
+    album: tag.album == null
         ? ''
-        : '${metadata.album} ${metadata.discTotal != null && metadata.discTotal! > 1 ? metadata.discNumber : ''}',
-    albumArtist: metadata.albumArtist,
-    discNumber: metadata.discNumber,
-    discTotal: metadata.discTotal,
-    durationMs: metadata.durationMs,
-    fileSize: metadata.fileSize,
-    genre: metadata.genre,
-    pictureData: metadata.picture?.data,
-    pictureMimeType: metadata.picture?.mimeType,
-    trackNumber: metadata.trackNumber,
-    year: metadata.year,
+        : '${tag.album}${tag.discTotal != null && tag.discNumber != null && tag.discTotal! > 1 ? ' ${tag.discNumber}' : ''}',
+    albumArtist: tag.albumArtist,
+    discNumber: tag.discNumber,
+    discTotal: tag.discTotal,
+    durationMs: tag.duration?.inMilliseconds.toDouble(),
+    // fileSize: metadata.,
+    genre: tag.genre,
+    pictureData: tag.pictures.firstOrNull?.imageData != null
+        ? Uint8List.fromList(tag.pictures.firstOrNull!.imageData)
+        : null,
+    pictureMimeType: tag.pictures.firstOrNull?.mime,
+    trackNumber:
+        tag.trackNumber != null ? int.tryParse(tag.trackNumber!) : null,
+    year: tag.year,
   );
 }
 

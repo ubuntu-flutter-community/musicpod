@@ -461,6 +461,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  id3tag:
+    dependency: "direct main"
+    description:
+      name: id3tag
+      sha256: "3b556ecee2627eee68ef04201667e5d06028e6d25984f7ea5cadda437429a55f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   image:
     dependency: transitive
     description:
@@ -629,14 +637,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
-  metadata_god:
-    dependency: "direct main"
-    description:
-      name: metadata_god
-      sha256: cf13931c39eba0b9443d16e8940afdabee125bf08945f18d4c0d02bcae2a3317
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.2+1"
   mime:
     dependency: "direct main"
     description:
