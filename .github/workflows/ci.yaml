@@ -31,7 +31,7 @@ jobs:
       - run: dart format --set-exit-if-changed .
 
   test:
-    runs-on: ubuntu-22-04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
