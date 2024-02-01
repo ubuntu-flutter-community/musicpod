@@ -38,10 +38,16 @@ class LocalAudioService {
     _audiosController.add(true);
   }
 
-  Future<List<String>> init({Set<Audio>? cache}) async {
-    if (cache == null || cache.isEmpty) {
+  Future<List<String>> init({
+    Set<Audio>? cache,
+    @visibleForTesting String? testDir,
+  }) async {
+    if (testDir != null) {
+      MetadataGod.initialize();
+    }
+    if (cache == null || cache.isEmpty || testDir != null) {
       _directory = await readSetting(kDirectoryProperty);
-      _directory ??= await getMusicDir();
+      _directory ??= testDir ?? await getMusicDir();
 
       final result = await compute(_init, directory);
 
@@ -64,8 +70,6 @@ class LocalAudioService {
 }
 
 FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
-  MetadataGod.initialize();
-
   Set<Audio>? newAudios = {};
   List<String> failedImports = [];
 
