@@ -15,7 +15,7 @@ class LoadingGrid extends StatelessWidget {
     return GridView(
       gridDelegate: imageGridDelegate,
       padding: gridPadding,
-      children: List.generate(limit, (index) => Audio())
+      children: List.generate(limit, (index) => const Audio())
           .map(
             (e) => const AudioCard(
               color: Colors.transparent,

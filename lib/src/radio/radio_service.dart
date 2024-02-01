@@ -54,7 +54,6 @@ class RadioService {
   }
 
   Future<void> dispose() async {
-    // _searchController.close();
     _tagsChangedController.close();
     _statusCodeController.close();
   }
@@ -155,13 +154,4 @@ class RadioService {
       }
     }
   }
-
-  // String? _searchQuery;
-  // String? get searchQuery => _searchQuery;
-  // final _searchController = StreamController<bool>.broadcast();
-  // Stream<bool> get searchQueryChanged => _searchController.stream;
-  // void setSearchQuery(String? value) {
-  //   _searchQuery = value;
-  //   _searchController.add(true);
-  // }
 }

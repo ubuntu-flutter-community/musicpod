@@ -30,6 +30,16 @@ jobs:
       - run: flutter pub get
       - run: dart format --set-exit-if-changed .
 
+  test:
+    runs-on: ubuntu-22-04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: ${{env.FLUTTER_VERSION}}
+      - run: flutter test
+
   build:
     runs-on: ubuntu-22.04
     steps:
