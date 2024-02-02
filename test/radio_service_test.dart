@@ -1,7 +1,6 @@
+import 'package:flutter_test/flutter_test.dart';
 import 'package:musicpod/data.dart';
 import 'package:musicpod/radio.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:radio_browser_api/radio_browser_api.dart';
 
 const Audio sixFortyStation = Audio(
   url: 'http://radio.6forty.com:8000/6forty',
@@ -9,14 +8,13 @@ const Audio sixFortyStation = Audio(
 
 Future<void> main() async {
   final service = RadioService();
-  await service.init();
+  final host = await service.init();
 
   test('initRadioService', () async {
-    expect(service.statusCode, null);
+    expect(host != null, true);
   });
 
   test('loadTags', () async {
-    await service.loadTags();
     expect(service.tags?.any((e) => e.name == 'metal'), true);
   });
 
@@ -39,9 +37,7 @@ Future<void> main() async {
   });
 
   test('findByTag', () async {
-    final result = await service.getStations(
-      tag: const Tag(name: 'metal', stationCount: 1),
-    );
+    final result = await service.getStations(tag: 'metal');
     expect(result?.isNotEmpty, true);
   });
 

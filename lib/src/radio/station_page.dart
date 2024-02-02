@@ -189,10 +189,10 @@ class StationPage extends StatelessWidget {
                                 child: Icon(Iconz().goBack),
                               ),
                               chipHeight: chipHeight,
-                              yaruChoiceChipBarStyle: tags!.length < 3
-                                  ? YaruChoiceChipBarStyle.wrap
-                                  : YaruChoiceChipBarStyle.stack,
-                              labels: tags.map((e) => Text(e)).toList(),
+                              yaruChoiceChipBarStyle:
+                                  YaruChoiceChipBarStyle.stack,
+                              shrinkWrap: false,
+                              labels: tags!.map((e) => Text(e)).toList(),
                               isSelected: tags.map((e) => false).toList(),
                               onSelected: (index) {
                                 navigatorKey.currentState?.push(

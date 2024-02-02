@@ -19,12 +19,10 @@ import 'my_audio_handler.dart';
 
 class PlayerService {
   PlayerService({
-    required this.player,
     required this.controller,
     required this.libraryService,
   });
 
-  final Player player;
   final VideoController controller;
   final LibraryService libraryService;
 
@@ -40,6 +38,8 @@ class PlayerService {
   StreamSubscription<double>? _volumeSub;
   StreamSubscription<Tracks>? _tracksSub;
   StreamSubscription<double>? _rateSub;
+
+  Player get _player => controller.player;
 
   final _queueController = StreamController<bool>.broadcast();
   Stream<bool> get queueChanged => _queueController.stream;
@@ -159,7 +159,7 @@ class PlayerService {
   double get volume => _volume;
   Future<void> setVolume(double value) async {
     if (value == _volume) return;
-    await player.setVolume(value);
+    await _player.setVolume(value);
   }
 
   final _rateController = StreamController<bool>.broadcast();
@@ -168,7 +168,7 @@ class PlayerService {
   double get rate => _rate;
   Future<void> setRate(double value) async {
     if (value == _rate) return;
-    await player.setRate(value);
+    await _player.setRate(value);
   }
 
   bool _firstPlay = true;
@@ -184,14 +184,15 @@ class PlayerService {
             ? Media(audio!.url!)
             : null;
     if (media == null) return;
-    player.open(media).then((_) {
-      player.state.tracks;
+    _player.open(media).then((_) {
+      _player.state.tracks;
     });
     if (newPosition != null && _audio!.audioType != AudioType.radio) {
-      player.setVolume(0).then(
+      _player.setVolume(0).then(
             (_) => Future.delayed(const Duration(seconds: 3)).then(
-              (_) =>
-                  player.seek(newPosition).then((_) => player.setVolume(100.0)),
+              (_) => _player
+                  .seek(newPosition)
+                  .then((_) => _player.setVolume(100.0)),
             ),
           );
     }
@@ -201,16 +202,16 @@ class PlayerService {
   }
 
   Future<void> playOrPause() async {
-    return _firstPlay ? play(newPosition: _position) : player.playOrPause();
+    return _firstPlay ? play(newPosition: _position) : _player.playOrPause();
   }
 
   Future<void> pause() async {
-    await player.pause();
+    await _player.pause();
   }
 
   Future<void> seek() async {
     if (position == null) return;
-    await player.seek(position!);
+    await _player.seek(position!);
   }
 
   Future<void> resume() async {
@@ -223,40 +224,40 @@ class PlayerService {
 
     await _readPlayerState();
 
-    _isPlayingSub = player.stream.playing.listen((value) {
+    _isPlayingSub = _player.stream.playing.listen((value) {
       setIsPlaying(value);
     });
 
-    _durationSub = player.stream.duration.listen((newDuration) {
+    _durationSub = _player.stream.duration.listen((newDuration) {
       setDuration(newDuration);
     });
 
-    _positionSub = player.stream.position.listen((newPosition) {
+    _positionSub = _player.stream.position.listen((newPosition) {
       setPosition(newPosition);
     });
 
-    _isCompletedSub = player.stream.completed.listen((value) async {
+    _isCompletedSub = _player.stream.completed.listen((value) async {
       if (value) {
         await playNext();
       }
     });
 
-    await (player.platform as NativePlayer).observeProperty(
+    await (_player.platform as NativePlayer).observeProperty(
       'metadata',
       (data) async => setMpvMetaData(MpvMetaData.fromJson(data)),
     );
 
-    _volumeSub = player.stream.volume.listen((value) {
+    _volumeSub = _player.stream.volume.listen((value) {
       _volume = value;
       _volumeController.add(true);
     });
 
-    _rateSub = player.stream.rate.listen((value) {
+    _rateSub = _player.stream.rate.listen((value) {
       _rate = value;
       _rateController.add(true);
     });
 
-    _tracksSub = player.stream.tracks.listen((tracks) {
+    _tracksSub = _player.stream.tracks.listen((tracks) {
       _setIsVideo(false);
       for (var track in tracks.video) {
         if (track.fps != null && track.fps! > 1) {
@@ -674,6 +675,6 @@ class PlayerService {
     await _rateSub?.cancel();
     await _rateController.close();
 
-    await player.dispose();
+    await _player.dispose();
   }
 }

@@ -1,7 +1,6 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 
 import '../../common.dart';
 import '../../data.dart';
@@ -38,17 +37,9 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
   void initState() {
     super.initState();
     final radioModel = context.read<RadioModel>();
-
     _future = radioModel.getStations(
-      tag: widget.radioSearch == RadioSearch.tag
-          ? Tag(name: widget.searchQuery ?? 'radio', stationCount: 1)
-          : null,
-      limit: widget.limit,
-      country:
-          widget.radioSearch == RadioSearch.country ? widget.searchQuery : null,
-      name: widget.radioSearch == RadioSearch.name ? widget.searchQuery : null,
-      state:
-          widget.radioSearch == RadioSearch.state ? widget.searchQuery : null,
+      radioSearch: widget.radioSearch,
+      query: widget.searchQuery,
     );
   }
 

@@ -38,7 +38,7 @@ class RadioControlPanel extends StatelessWidget {
             .toList(),
         onSelected: (index) {
           libraryModel.setRadioIndex(index);
-          model.loadQueryBySearch(RadioSearch.values[index]);
+          model.setSearchQuery(search: RadioSearch.values[index]);
         },
       ),
     );

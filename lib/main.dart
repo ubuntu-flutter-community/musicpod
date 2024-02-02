@@ -37,17 +37,14 @@ Future<void> main(List<String> args) async {
     await SystemTheme.accentColor.load();
   }
 
-  final player = Player(
-    configuration: const PlayerConfiguration(title: 'MusicPod'),
-  );
-
-  final controller = VideoController(player);
-
   final libraryService = LibraryService();
 
   final playerService = PlayerService(
-    player: player,
-    controller: controller,
+    controller: VideoController(
+      Player(
+        configuration: const PlayerConfiguration(title: 'MusicPod'),
+      ),
+    ),
     libraryService: libraryService,
   );
   await playerService.init();
