@@ -16,7 +16,24 @@ class PodcastService {
   Stream<bool> get searchChanged => _searchChangedController.stream;
   SearchResult? _searchResult;
   SearchResult? get searchResult => _searchResult;
-  final Search _search;
+  Search? _search;
+
+  Future<void> init({
+    bool? usePodcastIndex,
+    String? podcastIndexApiKey,
+    String? podcastIndexApiSecret,
+  }) async {
+    _search = Search(
+      searchProvider: usePodcastIndex == true &&
+              podcastIndexApiKey != null &&
+              podcastIndexApiSecret != null
+          ? PodcastIndexProvider(
+              key: podcastIndexApiKey,
+              secret: podcastIndexApiSecret,
+            )
+          : const ITunesProvider(),
+    );
+  }
 
   Future<void> dispose() async {
     _searchChangedController.close();
@@ -24,7 +41,7 @@ class PodcastService {
 
   Future<SearchResult?> search({
     String? searchQuery,
-    PodcastGenre podcastGenre = PodcastGenre.science,
+    PodcastGenre podcastGenre = PodcastGenre.all,
     Country? country,
     int limit = 10,
   }) async {
@@ -34,16 +51,17 @@ class PodcastService {
     String? error;
     try {
       if (searchQuery == null || searchQuery.isEmpty == true) {
-        result = await _search.charts(
+        result = await _search?.charts(
           genre: podcastGenre == PodcastGenre.all ? '' : podcastGenre.id,
           limit: limit,
           country: country ?? Country.none,
+          language: country?.code ?? '',
         );
       } else {
-        result = await _search.search(
+        result = await _search?.search(
           searchQuery,
           country: country ?? Country.none,
-          language: Language.none,
+          language: country?.code ?? '',
           limit: limit,
         );
       }

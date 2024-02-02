@@ -430,6 +430,10 @@ class LibraryService {
 
     await _readUsePodcastIndex();
 
+    await _readPodcastIndexApiKey();
+
+    await _readPodcastIndexApiSecret();
+
     await _readRecentPatchNotesDisposed();
 
     var neverShowImportsOrNull = await readSetting(kNeverShowImportFails);
@@ -531,6 +535,8 @@ class LibraryService {
     await _updateController.close();
     await _downloadsController.close();
     await _usePodcastIndexController.close();
+    await _podcastIndexApiKeyController.close();
+    await _podcastIndexApiSecretController.close();
   }
 
   Future<void> safeStates() async {
@@ -614,6 +620,44 @@ class LibraryService {
     String? value = await readSetting(kUsePodcastIndex);
     if (value != null) {
       _usePodcastIndex = bool.tryParse(value) ?? false;
+    }
+  }
+
+  final _podcastIndexApiKeyController = StreamController<bool>.broadcast();
+  Stream<bool> get podcastIndexApiKeyChanged =>
+      _podcastIndexApiKeyController.stream;
+  String? _podcastIndexApiKey;
+  String? get podcastIndexApiKey => _podcastIndexApiKey;
+  Future<void> setPodcastIndexApiKey(String podcastIndexApiKey) async {
+    await writeSetting(kPodcastIndexApiKey, podcastIndexApiKey).then((_) {
+      _podcastIndexApiKey = podcastIndexApiKey;
+      _podcastIndexApiKeyController.add(true);
+    });
+  }
+
+  Future<void> _readPodcastIndexApiKey() async {
+    String? value = await readSetting(kPodcastIndexApiKey);
+    if (value != null) {
+      _podcastIndexApiKey = value;
+    }
+  }
+
+  final _podcastIndexApiSecretController = StreamController<bool>.broadcast();
+  Stream<bool> get podcastIndexApiSecretChanged =>
+      _podcastIndexApiSecretController.stream;
+  String? _podcastIndexApiSecret;
+  String? get podcastIndexApiSecret => _podcastIndexApiSecret;
+  Future<void> setPodcastIndexApiSecret(String podcastIndexApiSecret) async {
+    await writeSetting(kPodcastIndexApiSecret, podcastIndexApiSecret).then((_) {
+      _podcastIndexApiSecret = podcastIndexApiSecret;
+      _podcastIndexApiSecretController.add(true);
+    });
+  }
+
+  Future<void> _readPodcastIndexApiSecret() async {
+    String? value = await readSetting(kPodcastIndexApiSecret);
+    if (value != null) {
+      _podcastIndexApiSecret = value;
     }
   }
 }

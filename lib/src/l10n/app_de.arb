@@ -167,5 +167,6 @@
     "iTunes": "iTunes",
     "podcastIndex": "Podcast Index",
     "usePodcastIndex": "Benutze Podcast Index anstatt iTunes",
-    "select": "Auswählen"
+    "select": "Auswählen",
+    "requiresAppRestart": "Benötigt App-Neustart"
 }

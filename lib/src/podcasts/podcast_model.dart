@@ -47,14 +47,6 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Language _language = Language.none;
-  Language get language => _language;
-  set language(Language value) {
-    if (value == _language) return;
-    _language = value;
-    notifyListeners();
-  }
-
   PodcastGenre _podcastGenre = PodcastGenre.all;
   PodcastGenre get podcastGenre => _podcastGenre;
   void setPodcastGenre(PodcastGenre value) {
@@ -102,7 +94,15 @@ class PodcastModel extends SafeChangeNotifier {
     String? countryCode,
     required String updateMessage,
     required bool isOnline,
+    bool? usePodcastIndex,
+    String? podcastIndexApiKey,
+    String? podcastIndexApiSecret,
   }) async {
+    await _podcastService.init(
+      usePodcastIndex: usePodcastIndex,
+      podcastIndexApiKey: podcastIndexApiKey,
+      podcastIndexApiSecret: podcastIndexApiSecret,
+    );
     final lastCountryCode = (await readSetting(kLastCountryCode)) as String?;
 
     _searchActive = _libraryService.podcasts.isEmpty;

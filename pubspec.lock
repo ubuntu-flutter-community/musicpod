@@ -794,10 +794,10 @@ packages:
     dependency: "direct main"
     description:
       name: podcast_search
-      sha256: daf632458002cf5dffaca0b1457a17d13cfcf46bee501f2bb747e23a5be8faf3
+      sha256: "0fd33fc397dd18c3228678a3dbacfdc6a85b431dfd4ff6cb3e8c86841fd614d1"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.6"
+    version: "0.6.8"
   pointycastle:
     dependency: transitive
     description:

@@ -136,6 +136,8 @@ const kNewPlaylistPageId = 'newPlaylist';
 const kLikedAudiosPageId = 'likedAudios';
 const kUsePodcastIndex = 'usePodcastIndex';
 const kThemeIndex = 'themeIndex';
+const kPodcastIndexApiKey = 'podcastIndexApiKey';
+const kPodcastIndexApiSecret = 'podcastIndexApiSecret';
 
 const shops = <String, String>{
   'https://us.7digital.com/': '7digital',

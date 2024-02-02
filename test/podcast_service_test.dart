@@ -15,9 +15,9 @@ const Audio episodeOneAudio = Audio(
   title: 'Episode 1: Too Much Choice | LU1',
 );
 
-void main() {
-  final notificationService = MockNotificationService();
-  final service = PodcastService(notificationService);
+Future<void> main() async {
+  final service = PodcastService(MockNotificationService());
+  await service.init();
 
   test('searchByQuery', () async {
     final result = await service.search(searchQuery: 'LINUX Unplugged');
