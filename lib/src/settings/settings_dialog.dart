@@ -4,6 +4,7 @@ import 'package:github/github.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -14,6 +15,7 @@ import '../../globals.dart';
 import '../../l10n.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
+import '../../string_x.dart';
 import '../../theme_mode_x.dart';
 import 'settings_model.dart';
 import 'theme_tile.dart';
@@ -301,7 +303,6 @@ class _AboutDialog extends StatelessWidget {
                         if (snapshot.hasData) {
                           return SizedBox(
                             height: 300,
-                            width: 400,
                             child: GridView.builder(
                               padding:
                                   const EdgeInsets.only(bottom: 20, top: 10),
@@ -427,27 +428,109 @@ class _LicensePage extends StatelessWidget {
   }
 }
 
-class PodcastSection extends StatelessWidget {
+class PodcastSection extends StatefulWidget {
   const PodcastSection({super.key});
 
   @override
+  State<PodcastSection> createState() => _PodcastSectionState();
+}
+
+class _PodcastSectionState extends State<PodcastSection> {
+  String? _initialKey;
+  String? _initialSecret;
+  late TextEditingController _keyController, _secretController;
+
+  @override
+  void initState() {
+    super.initState();
+    final model = context.read<SettingsModel>();
+    _initialKey = model.podcastIndexApiKey;
+    _keyController = TextEditingController(text: _initialKey);
+    _initialSecret = model.podcastIndexApiSecret;
+    _secretController = TextEditingController(text: _initialSecret);
+  }
+
+  @override
+  void dispose() {
+    _keyController.dispose();
+    _secretController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // final model = context.read<SettingsModel>();
+    final theme = context.t;
+    final model = context.read<SettingsModel>();
     final usePodcastIndex =
         context.select((SettingsModel m) => m.usePodcastIndex);
+    final podcastIndexApiKey =
+        context.select((SettingsModel m) => m.podcastIndexApiKey);
+    final podcastIndexApiSecret =
+        context.select((SettingsModel m) => m.podcastIndexApiSecret);
+
     return YaruSection(
       margin: const EdgeInsets.all(kYaruPagePadding),
       headline: Text(context.l10n.podcasts),
       child: Column(
         children: [
           YaruTile(
-            leading: Text(context.l10n.usePodcastIndex),
+            title: Text(context.l10n.usePodcastIndex),
+            subtitle: Text(context.l10n.requiresAppRestart),
             trailing: CommonSwitch(
               value: usePodcastIndex,
-              // TODO: implement podcastindex
-              // onChanged: model.setUsePodcastIndex,
+              onChanged: model.setUsePodcastIndex,
             ),
           ),
+          if (usePodcastIndex)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: _keyController,
+                onChanged: (v) => setState(() => _initialKey = v),
+                obscureText: true,
+                decoration: InputDecoration(
+                  label: Text(kPodcastIndexApiKey.camelToSentence()),
+                  suffixIcon: IconButton(
+                    tooltip: context.l10n.save,
+                    onPressed: () =>
+                        model.setPodcastIndexApiKey(_keyController.text),
+                    icon: Icon(
+                      Iconz().check,
+                      color: podcastIndexApiKey == _initialKey
+                          ? theme.colorScheme.success
+                          : theme.colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          if (usePodcastIndex)
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 8,
+                right: 8,
+                bottom: kYaruPagePadding,
+              ),
+              child: TextField(
+                controller: _secretController,
+                onChanged: (v) => setState(() => _initialSecret = v),
+                obscureText: true,
+                decoration: InputDecoration(
+                  label: Text(kPodcastIndexApiSecret.camelToSentence()),
+                  suffixIcon: IconButton(
+                    tooltip: context.l10n.save,
+                    onPressed: () =>
+                        model.setPodcastIndexApiSecret(_secretController.text),
+                    icon: Icon(
+                      Iconz().check,
+                      color: podcastIndexApiSecret == _initialSecret
+                          ? theme.colorScheme.success
+                          : theme.colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

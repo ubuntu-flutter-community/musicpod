@@ -12,6 +12,7 @@ import '../../player.dart';
 import '../../podcasts.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
+import '../settings/settings_model.dart';
 import 'podcasts_collection_body.dart';
 import 'podcasts_control_panel.dart';
 import 'podcasts_discover_grid.dart';
@@ -36,10 +37,14 @@ class _PodcastsPageState extends State<PodcastsPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final settingsModel = context.read<SettingsModel>();
       context.read<PodcastModel>().init(
             countryCode: widget.countryCode,
             updateMessage: context.l10n.newEpisodeAvailable,
             isOnline: widget.isOnline,
+            usePodcastIndex: settingsModel.usePodcastIndex,
+            podcastIndexApiKey: settingsModel.podcastIndexApiKey,
+            podcastIndexApiSecret: settingsModel.podcastIndexApiSecret,
           );
     });
   }
@@ -89,6 +94,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final podcastGenre = context.select((PodcastModel m) => m.podcastGenre);
     final sortedGenres = context.select((PodcastModel m) => m.sortedGenres);
     final setPodcastGenre = model.setPodcastGenre;
+    final usePodcastIndex =
+        context.select((SettingsModel m) => m.usePodcastIndex);
 
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
@@ -105,7 +112,13 @@ class _PodcastsPageState extends State<PodcastsPage> {
       setPodcastGenre: setPodcastGenre,
       podcastGenre: podcastGenre,
       textStyle: textStyle,
-      sortedGenres: sortedGenres,
+      sortedGenres: usePodcastIndex
+          ? sortedGenres
+              .where((e) => !e.name.contains('XXXITunesOnly'))
+              .toList()
+          : sortedGenres
+              .where((e) => !e.name.contains('XXXPodcastIndexOnly'))
+              .toList(),
     );
 
     final searchBody = Column(

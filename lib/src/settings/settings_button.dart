@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../common.dart';
 import '../../library.dart';
@@ -18,10 +17,8 @@ class SettingsButton extends StatelessWidget {
       onPressed: () {
         showDialog(
           context: context,
-          builder: (_) => ChangeNotifierProvider(
-            create: (_) => SettingsModel(
-              libraryService: getService<LibraryService>(),
-            )..init(),
+          builder: (_) => ChangeNotifierProvider.value(
+            value: context.read<SettingsModel>(),
             child: ChangeNotifierProvider.value(
               value: context.read<LocalAudioModel>(),
               child: ChangeNotifierProvider.value(

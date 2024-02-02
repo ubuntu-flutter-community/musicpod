@@ -10,36 +10,138 @@ enum PodcastGenre {
   education,
   fiction,
   government,
-  healthAndFitness,
+  healthAndFitnessXXXITunesOnly,
   history,
-  kidsAndFamily,
+  kidsAndFamilyXXXITunesOnly,
   leisure,
   music,
   news,
-  religionAndSpirituality,
+  religionAndSpiritualityXXXITunesOnly,
   science,
-  societyAndCulture,
+  societyAndCultureXXXITunesOnly,
   sports,
-  tvAndFilm,
+  tvAndFilmXXXITunesOnly,
   technology,
-  trueCrime;
+  trueCrime,
+  afterShows,
+  alternative,
+  animals,
+  animation,
+
+  astronomyXXXPodcastIndexOnly,
+  automotiveXXXPodcastIndexOnly,
+  aviationXXXPodcastIndexOnly,
+  baseballXXXPodcastIndexOnly,
+  basketballXXXPodcastIndexOnly,
+  beautyXXXPodcastIndexOnly,
+  booksXXXPodcastIndexOnly,
+  buddhismXXXPodcastIndexOnly,
+  careersXXXPodcastIndexOnly,
+  chemistryXXXPodcastIndexOnly,
+  christianityXXXPodcastIndexOnly,
+  climateXXXPodcastIndexOnly,
+  commentaryXXXPodcastIndexOnly,
+  coursesXXXPodcastIndexOnly,
+  craftsXXXPodcastIndexOnly,
+  cricketXXXPodcastIndexOnly,
+  cryptocurrencyXXXPodcastIndexOnly,
+  cultureXXXPodcastIndexOnly,
+  dailyXXXPodcastIndexOnly,
+  designXXXPodcastIndexOnly,
+  documentaryXXXPodcastIndexOnly,
+  dramaXXXPodcastIndexOnly,
+  earthXXXPodcastIndexOnly,
+  entertainmentXXXPodcastIndexOnly,
+  entrepreneurshipXXXPodcastIndexOnly,
+  familyXXXPodcastIndexOnly,
+  fantasyXXXPodcastIndexOnly,
+  fashionXXXPodcastIndexOnly,
+  filmXXXPodcastIndexOnly,
+  fitnessXXXPodcastIndexOnly,
+  foodXXXPodcastIndexOnly,
+  footballXXXPodcastIndexOnly,
+  gamesXXXPodcastIndexOnly,
+  gardenXXXPodcastIndexOnly,
+  golfXXXPodcastIndexOnly,
+  healthXXXPodcastIndexOnly,
+  hinduismXXXPodcastIndexOnly,
+  hobbiesXXXPodcastIndexOnly,
+  hockeyXXXPodcastIndexOnly,
+  homeXXXPodcastIndexOnly,
+  howToXXXPodcastIndexOnly,
+  improvXXXPodcastIndexOnly,
+  interviewsXXXPodcastIndexOnly,
+  investingXXXPodcastIndexOnly,
+  islamXXXPodcastIndexOnly,
+  journalsXXXPodcastIndexOnly,
+  judaismXXXPodcastIndexOnly,
+  kidsXXXPodcastIndexOnly,
+  languageXXXPodcastIndexOnly,
+  learningXXXPodcastIndexOnly,
+  lifeXXXPodcastIndexOnly,
+  managementXXXPodcastIndexOnly,
+  mangaXXXPodcastIndexOnly,
+  marketingXXXPodcastIndexOnly,
+  mathematicsXXXPodcastIndexOnly,
+  medicineXXXPodcastIndexOnly,
+  mentalXXXPodcastIndexOnly,
+  naturalXXXPodcastIndexOnly,
+  natureXXXPodcastIndexOnly,
+  nonProfitXXXPodcastIndexOnly,
+  nutritionXXXPodcastIndexOnly,
+  parentingXXXPodcastIndexOnly,
+  performingXXXPodcastIndexOnly,
+  personalXXXPodcastIndexOnly,
+  petsXXXPodcastIndexOnly,
+  philosophyXXXPodcastIndexOnly,
+  physicsXXXPodcastIndexOnly,
+  placesXXXPodcastIndexOnly,
+  politicsXXXPodcastIndexOnly,
+  relationshipsXXXPodcastIndexOnly,
+  religionXXXPodcastIndexOnly,
+  reviewsXXXPodcastIndexOnly,
+  rolePlayingXXXPodcastIndexOnly,
+  rugbyXXXPodcastIndexOnly,
+  runningXXXPodcastIndexOnly,
+  selfImprovementXXXPodcastIndexOnly,
+  sexualityXXXPodcastIndexOnly,
+  soccerXXXPodcastIndexOnly,
+  socialXXXPodcastIndexOnly,
+  societyXXXPodcastIndexOnly,
+  spiritualityXXXPodcastIndexOnly,
+  standUpXXXPodcastIndexOnly,
+  storiesXXXPodcastIndexOnly,
+  swimmingXXXPodcastIndexOnly,
+  tVXXXPodcastIndexOnly,
+  tabletopXXXPodcastIndexOnly,
+  tennisXXXPodcastIndexOnly,
+  travelXXXPodcastIndexOnly,
+  videoGamesXXXPodcastIndexOnly,
+  visualXXXPodcastIndexOnly,
+  volleyballXXXPodcastIndexOnly,
+  weatherXXXPodcastIndexOnly,
+  wildernessXXXPodcastIndexOnly,
+  wrestlingXXXPodcastIndexOnly;
 
   String get id {
     switch (this) {
-      case healthAndFitness:
+      case healthAndFitnessXXXITunesOnly:
         return 'Health & Fitness';
-      case kidsAndFamily:
+      case kidsAndFamilyXXXITunesOnly:
         return 'Kids & Family';
-      case religionAndSpirituality:
+      case religionAndSpiritualityXXXITunesOnly:
         return 'Religion & Spirituality';
-      case societyAndCulture:
+      case societyAndCultureXXXITunesOnly:
         return 'Society & Culture';
-      case tvAndFilm:
+      case tvAndFilmXXXITunesOnly:
         return 'TV & Film';
       case trueCrime:
         return 'True Crime';
       default:
-        return name.capitalize();
+        return name
+            .replaceAll('XXXITunesOnly', '')
+            .replaceAll('XXXPodcastIndexOnly', '')
+            .capitalize();
     }
   }
 
@@ -59,11 +161,11 @@ enum PodcastGenre {
         return l10n.fiction;
       case government:
         return l10n.government;
-      case healthAndFitness:
+      case healthAndFitnessXXXITunesOnly:
         return l10n.healthAndFitness;
       case history:
         return l10n.history;
-      case kidsAndFamily:
+      case kidsAndFamilyXXXITunesOnly:
         return l10n.kidsAndFamily;
       case leisure:
         return l10n.leisure;
@@ -71,20 +173,26 @@ enum PodcastGenre {
         return l10n.music;
       case news:
         return l10n.news;
-      case religionAndSpirituality:
+      case religionAndSpiritualityXXXITunesOnly:
         return l10n.religionAndSpirituality;
       case science:
         return l10n.science;
-      case societyAndCulture:
+      case societyAndCultureXXXITunesOnly:
         return l10n.societyAndCulture;
       case sports:
         return l10n.sports;
-      case tvAndFilm:
+      case tvAndFilmXXXITunesOnly:
         return l10n.tvAndFilm;
       case technology:
         return l10n.technology;
       case trueCrime:
         return l10n.trueCrime;
+      // TODO: localize podcast index genre names
+      default:
+        return name
+            .replaceAll('XXXITunesOnly', '')
+            .replaceAll('XXXPodcastIndexOnly', '')
+            .capitalize();
     }
   }
 }

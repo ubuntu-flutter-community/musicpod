@@ -21,6 +21,11 @@ class Iconz {
             : Icons.menu;
   }
 
+  IconData get check => yaruStyled
+      ? YaruIcons.checkmark
+      : appleStyled
+          ? CupertinoIcons.check_mark
+          : Icons.check;
   IconData get musicNote => yaruStyled
       ? YaruIcons.music_note
       : appleStyled

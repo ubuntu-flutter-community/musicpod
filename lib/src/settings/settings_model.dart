@@ -10,6 +10,8 @@ class SettingsModel extends SafeChangeNotifier {
 
   String? _appName;
   StreamSubscription<bool>? _usePodcastIndexChangedSub;
+  StreamSubscription<bool>? _podcastIndexApiKeyChangedSub;
+  StreamSubscription<bool>? _podcastIndexApiSecretChangedSub;
 
   SettingsModel({
     required LibraryService libraryService,
@@ -55,6 +57,11 @@ class SettingsModel extends SafeChangeNotifier {
 
     _usePodcastIndexChangedSub =
         _libraryService.usePodcastIndexChanged.listen((_) => notifyListeners());
+    _podcastIndexApiKeyChangedSub = _libraryService.podcastIndexApiKeyChanged
+        .listen((_) => notifyListeners());
+    _podcastIndexApiSecretChangedSub = _libraryService
+        .podcastIndexApiSecretChanged
+        .listen((_) => notifyListeners());
 
     notifyListeners();
   }
@@ -62,6 +69,8 @@ class SettingsModel extends SafeChangeNotifier {
   @override
   Future<void> dispose() async {
     _usePodcastIndexChangedSub?.cancel();
+    _podcastIndexApiKeyChangedSub?.cancel();
+    _podcastIndexApiSecretChangedSub?.cancel();
     super.dispose();
   }
 
@@ -70,4 +79,12 @@ class SettingsModel extends SafeChangeNotifier {
       _libraryService.setUsePodcastIndex(value);
 
   void setThemeIndex(int value) => _libraryService.setThemeIndex(value);
+
+  String? get podcastIndexApiKey => _libraryService.podcastIndexApiKey;
+  Future<void> setPodcastIndexApiKey(String podcastIndexApiKey) async =>
+      await _libraryService.setPodcastIndexApiKey(podcastIndexApiKey);
+
+  String? get podcastIndexApiSecret => _libraryService.podcastIndexApiSecret;
+  Future<void> setPodcastIndexApiSecret(String podcastIndexApiSecret) async =>
+      await _libraryService.setPodcastIndexApiSecret(podcastIndexApiSecret);
 }

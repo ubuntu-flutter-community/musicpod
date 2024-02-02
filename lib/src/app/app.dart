@@ -16,6 +16,7 @@ import '../../player.dart';
 import '../../podcasts.dart';
 import '../../radio.dart';
 import '../external_path/external_path_service.dart';
+import '../settings/settings_model.dart';
 import 'connectivity_notifier.dart';
 import 'master_detail_page.dart';
 
@@ -44,6 +45,11 @@ class App extends StatefulWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => LibraryModel(getService<LibraryService>()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => SettingsModel(
+            libraryService: getService<LibraryService>(),
+          )..init(),
         ),
         ChangeNotifierProvider(
           create: (_) => PodcastModel(
