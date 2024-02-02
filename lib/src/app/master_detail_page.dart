@@ -47,7 +47,7 @@ class MasterDetailPage extends StatelessWidget {
           actions: [
             Padding(
               padding: EdgeInsets.only(right: 10),
-              child: SettingsTile(),
+              child: SettingsButton(),
             ),
           ],
         ),

@@ -3,55 +3,16 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 
 import '../../constants.dart';
 import '../../data.dart';
+import '../../globals.dart';
 import '../../patch_notes.dart';
 import '../../utils.dart';
 
-Future<void> _writeCache(Set<Audio> audios) async {
-  await writeAudioMap({kLocalAudioCache: audios}, kLocalAudioCacheFileName);
-}
-
-Future<void> _readCache(Set<Audio>? localAudioCache) async {
-  localAudioCache =
-      (await readAudioMap(kLocalAudioCacheFileName))[kLocalAudioCache];
-}
-
 class LibraryService {
-  Future<void> writeLocalAudioCache({required Set<Audio>? audios}) async {
-    if (audios == null || audios.isEmpty == true) return;
-    await _writeCache(audios);
-  }
-
-  Set<Audio>? _localAudioCache;
-  Set<Audio>? get localAudioCache => _localAudioCache;
-  Future<Set<Audio>?> _readLocalAudioCache() async {
-    await compute(_readCache, _localAudioCache);
-    return _localAudioCache;
-  }
-
-  Future<void> setUseLocalCache(bool value) async {
-    await writeSetting(kUseLocalAudioCache, value ? 'true' : 'false');
-    _useLocalAudioCache = value;
-    _useLocalAudioCacheController.add(true);
-  }
-
-  bool? _useLocalAudioCache;
-  bool? get useLocalAudioCache => _useLocalAudioCache;
-  final _useLocalAudioCacheController = StreamController<bool>.broadcast();
-  Stream<bool> get useLocalAudioCacheChanged =>
-      _useLocalAudioCacheController.stream;
-
-  Future<void> _readUseLocalAudioCache() async {
-    String? value = await readSetting(kUseLocalAudioCache);
-    if (value != null) {
-      _useLocalAudioCache = bool.parse(value);
-    }
-  }
-
   //
   // last positions
   //
@@ -434,9 +395,7 @@ class LibraryService {
 
   Future<void> _initLibrary() async {
     if (_libraryInitialized) return;
-    if (_useLocalAudioCache == true) {
-      await _readLocalAudioCache();
-    }
+
     _playlists = await readAudioMap(kPlaylistsFileName);
     _pinnedAlbums = await readAudioMap(kPinnedAlbumsFileName);
     _podcasts = await readAudioMap(kPodcastsFileName);
@@ -469,7 +428,7 @@ class LibraryService {
   Future<void> _initSettings() async {
     if (_settingsInitialized) return;
 
-    await _readUseLocalAudioCache();
+    await _readUsePodcastIndex();
 
     await _readRecentPatchNotesDisposed();
 
@@ -483,9 +442,18 @@ class LibraryService {
 
     final localAudioIndexStringOrNull = await readSetting(kLocalAudioIndex);
     if (localAudioIndexStringOrNull != null) {
-      final localParse = int.tryParse((await readSetting(kLocalAudioIndex)));
+      final localParse = int.tryParse(localAudioIndexStringOrNull);
       if (localParse != null) {
         _localAudioIndex = localParse;
+      }
+    }
+
+    final themeIndexStringOrNull = await readSetting(kThemeIndex);
+    if (themeIndexStringOrNull != null) {
+      final themeParse = int.tryParse(themeIndexStringOrNull);
+      if (themeParse != null) {
+        _themeIndex = themeParse;
+        themeNotifier.value = ThemeMode.values[_themeIndex];
       }
     }
 
@@ -536,10 +504,17 @@ class LibraryService {
     _appIndex = value;
   }
 
+  int _themeIndex = 0;
+  int get themeIndex => _themeIndex;
+
+  void setThemeIndex(int value) {
+    if (value == _themeIndex) return;
+    _themeIndex = value;
+  }
+
   Future<void> dispose() async {
     dio.close();
     await safeStates();
-    await _useLocalAudioCacheController.close();
     await _albumsController.close();
     await _podcastsController.close();
     await _likedAudiosController.close();
@@ -555,6 +530,7 @@ class LibraryService {
     await _lastFavController.close();
     await _updateController.close();
     await _downloadsController.close();
+    await _usePodcastIndexController.close();
   }
 
   Future<void> safeStates() async {
@@ -562,6 +538,7 @@ class LibraryService {
     await writeSetting(kRadioIndex, _radioIndex.toString());
     await writeSetting(kPodcastIndex, _podcastIndex.toString());
     await writeSetting(kAppIndex, _appIndex.toString());
+    await writeSetting(kThemeIndex, _themeIndex.toString());
     await writePlayerState();
   }
 
@@ -619,6 +596,24 @@ class LibraryService {
       }
     } on Exception catch (_) {
       return null;
+    }
+  }
+
+  bool _usePodcastIndex = false;
+  bool get usePodcastIndex => _usePodcastIndex;
+  final _usePodcastIndexController = StreamController<bool>();
+  Stream<bool> get usePodcastIndexChanged => _usePodcastIndexController.stream;
+  void setUsePodcastIndex(bool value) {
+    writeSetting(kUsePodcastIndex, value ? 'true' : 'false').then((_) {
+      _usePodcastIndex = value;
+      _usePodcastIndexController.sink.add(true);
+    });
+  }
+
+  Future<void> _readUsePodcastIndex() async {
+    String? value = await readSetting(kUsePodcastIndex);
+    if (value != null) {
+      _usePodcastIndex = bool.tryParse(value) ?? false;
     }
   }
 }

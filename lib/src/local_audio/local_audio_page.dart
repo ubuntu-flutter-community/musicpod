@@ -12,7 +12,6 @@ import '../../local_audio.dart';
 import '../../player.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
-import 'cache_dialog.dart';
 import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 import 'local_audio_view.dart';
@@ -49,20 +48,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             ),
           );
         },
-      ).then((_) {
-        if (!mounted) return;
-        if ((model.localAudioCache == null &&
-                model.useLocalAudioCache == null) &&
-            model.audios != null &&
-            model.audios!.length > kCreateCacheLimit) {
-          showCacheSuggestion(
-            context: context,
-            onUseLocalAudioCache: model.setUseLocalAudioCache,
-            createCache: model.createLocalAudioCache,
-            localAudioLength: model.audios!.length,
-          );
-        }
-      });
+      );
     });
   }
 
@@ -93,8 +79,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
 
     final index = context.select((LibraryModel m) => m.localAudioindex) ?? 0;
     final localAudioView = LocalAudioView.values[index];
-
-    context.select((LocalAudioModel m) => m.useLocalAudioCache);
 
     final headerBar = HeaderBar(
       style: showWindowControls

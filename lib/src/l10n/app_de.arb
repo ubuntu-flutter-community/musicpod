@@ -154,6 +154,18 @@
     "noStarredTags": "Du hast noch keinen Tag mit dem Stern-Button favorisiert.",
     "name": "Name",
     "state": "Bundesland",
-    "playNext": "Als Nächstes spielen"
-
+    "playNext": "Als Nächstes spielen",
+    "contributors": "Mitwirkende",
+    "version": "Version",
+    "theme": "Thema",
+    "license": "Lizenz",
+    "dependencies": "Abhängigkeiten",
+    "light": "Hell",
+    "system": "System",
+    "dark": "Dunkel",
+    "podcastProvider": "Podcast Provider",
+    "iTunes": "iTunes",
+    "podcastIndex": "Podcast Index",
+    "usePodcastIndex": "Benutze Podcast Index anstatt iTunes",
+    "select": "Auswählen"
 }

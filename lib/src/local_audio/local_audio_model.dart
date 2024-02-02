@@ -21,8 +21,6 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   StreamSubscription<bool>? _directoryChangedSub;
   StreamSubscription<bool>? _audiosChangedSub;
-  StreamSubscription<bool>? _localAudioCacheChangedSub;
-  StreamSubscription<bool>? _useLocalAudioCacheChangedSub;
 
   Set<Audio>? _albumSearchResult;
   Set<Audio>? get albumSearchResult => _albumSearchResult;
@@ -195,8 +193,7 @@ class LocalAudioModel extends SafeChangeNotifier {
     if (forceInit ||
         (localAudioService.audios == null ||
             localAudioService.audios?.isEmpty == true)) {
-      final failedImports =
-          await localAudioService.init(cache: libraryService.localAudioCache);
+      final failedImports = await localAudioService.init();
 
       if (failedImports.isNotEmpty) {
         onFail(failedImports);
@@ -212,8 +209,6 @@ class LocalAudioModel extends SafeChangeNotifier {
     _audiosChangedSub = localAudioService.audiosChanged.listen((_) {
       notifyListeners();
     });
-    _useLocalAudioCacheChangedSub = libraryService.useLocalAudioCacheChanged
-        .listen((_) => notifyListeners());
 
     notifyListeners();
   }
@@ -222,18 +217,6 @@ class LocalAudioModel extends SafeChangeNotifier {
   Future<void> dispose() async {
     _directoryChangedSub?.cancel();
     _audiosChangedSub?.cancel();
-    _localAudioCacheChangedSub?.cancel();
-    _useLocalAudioCacheChangedSub?.cancel();
     super.dispose();
   }
-
-  Future<void> setUseLocalAudioCache(bool value) async =>
-      await libraryService.setUseLocalCache(value);
-
-  bool? get useLocalAudioCache => libraryService.useLocalAudioCache;
-
-  Set<Audio>? get localAudioCache => libraryService.localAudioCache;
-
-  Future<void> createLocalAudioCache() async => await libraryService
-      .writeLocalAudioCache(audios: localAudioService.audios);
 }
