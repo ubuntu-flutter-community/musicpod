@@ -47,7 +47,10 @@ class RadioDiscoverPage extends StatelessWidget {
               (e) => libraryModel.favCountryCodes.contains(e.code) == false,
             ),
           ]..remove(Country.none),
-          onSelected: model.setCountry,
+          onSelected: (c) {
+            model.setCountry(c);
+            libraryModel.setLastCountryCode(c?.code);
+          },
           value: country,
           addFav: (v) {
             if (country?.code == null) return;
@@ -83,12 +86,9 @@ class RadioDiscoverPage extends StatelessWidget {
           ],
         ),
       _ => SearchingBar(
-          key: ValueKey(searchQuery),
           text: searchQuery,
-          onClear: () {
-            model.setSearchQuery(null);
-          },
-          onSubmitted: model.setSearchQuery,
+          onClear: () => model.setSearchQuery(query: null),
+          onSubmitted: (v) => model.setSearchQuery(query: v),
         ),
     };
 

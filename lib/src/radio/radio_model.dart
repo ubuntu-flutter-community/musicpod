@@ -17,16 +17,12 @@ class RadioModel extends SafeChangeNotifier {
 
   RadioModel(this._radioService);
 
-  StreamSubscription<bool>? _stationsSub;
-  StreamSubscription<bool>? _statusCodeSub;
-  StreamSubscription<bool>? _tagsSub;
-
   Country? _country;
   Country? get country => _country;
   void setCountry(Country? value) {
     if (value == _country) return;
     _country = value;
-    loadQueryBySearch(RadioSearch.country);
+    setSearchQuery(search: RadioSearch.country);
   }
 
   List<Country> get sortedCountries {
@@ -46,31 +42,29 @@ class RadioModel extends SafeChangeNotifier {
   void setTag(Tag? value) {
     if (value == _tag) return;
     _tag = value;
-    loadQueryBySearch(RadioSearch.tag);
+    setSearchQuery(search: RadioSearch.tag);
   }
 
   Future<Set<Audio>?> getStations({
-    String? country,
-    String? name,
-    String? state,
-    Tag? tag,
-    int limit = 100,
+    required RadioSearch radioSearch,
+    required String? query,
   }) async {
-    final s = await _radioService.getStations(
-      tag: tag,
-      name: name,
-      country: country?.camelToSentence(),
-      state: state,
-      limit: limit,
-    );
-    if (s == null) return null;
+    final stations = switch (radioSearch) {
+      RadioSearch.tag => await _radioService.getStations(tag: query),
+      RadioSearch.country =>
+        await _radioService.getStations(country: query?.camelToSentence()),
+      RadioSearch.name => await _radioService.getStations(name: query),
+      RadioSearch.state => await _radioService.getStations(state: query),
+    };
 
-    if (s.isEmpty) {
+    if (stations == null) return null;
+
+    if (stations.isEmpty) {
       return <Audio>{};
     }
 
     return Set.from(
-      s.map(
+      stations.map(
         (e) {
           var artist = e.bitrate == 0 ? '' : '${e.bitrate} kb/s';
           if (e.language?.isNotEmpty == true) {
@@ -90,16 +84,6 @@ class RadioModel extends SafeChangeNotifier {
     );
   }
 
-  String? get statusCode => _radioService.statusCode;
-
-  int _limit = 100;
-  int get limit => _limit;
-  void setLimit(int? value) {
-    if (value == null || value == _limit) return;
-    _limit = value;
-    notifyListeners();
-  }
-
   String? _connectedHost;
   Future<String?> init({
     required String? countryCode,
@@ -110,53 +94,32 @@ class RadioModel extends SafeChangeNotifier {
     final lastCountryCode = (await readSetting(kLastCountryCode)) as String?;
     final lastFav = (await readSetting(kLastFav)) as String?;
 
-    _statusCodeSub ??=
-        _radioService.statusCodeChanged.listen((_) => notifyListeners());
-    _tagsSub ??= _radioService.tagsChanged.listen((_) => notifyListeners());
     _country ??= Country.values
         .firstWhereOrNull((c) => c.code == (lastCountryCode ?? countryCode));
 
     if (_connectedHost?.isNotEmpty == true) {
-      await _radioService.loadTags();
       _tag ??= lastFav == null || tags == null || tags!.isEmpty
           ? null
           : tags!.firstWhere((t) => t.name.contains(lastFav));
     }
 
-    loadQueryBySearch(RadioSearch.values[index]);
+    setSearchQuery(search: RadioSearch.values[index]);
 
     return _connectedHost;
   }
 
-  void loadQueryBySearch(RadioSearch search) {
+  String? _searchQuery;
+  String? get searchQuery => _searchQuery;
+  void setSearchQuery({RadioSearch? search, String? query}) {
     switch (search) {
       case RadioSearch.country:
         _searchQuery = country?.name;
         break;
       case RadioSearch.tag:
         _searchQuery = _tag?.name;
-      case RadioSearch.name:
-        _searchQuery = _searchQuery;
-      case RadioSearch.state:
-        _searchQuery = state;
       default:
+        _searchQuery = query ?? _searchQuery;
     }
-    notifyListeners();
-  }
-
-  String? _searchQuery;
-  String? get searchQuery => _searchQuery;
-  void setSearchQuery(String? value) {
-    if (value == _searchQuery) return;
-    _searchQuery = value;
-    notifyListeners();
-  }
-
-  String? _state;
-  String? get state => _state;
-  void setState(String? value) {
-    if (value == _state) return;
-    _state = value;
     notifyListeners();
   }
 
@@ -166,13 +129,5 @@ class RadioModel extends SafeChangeNotifier {
     if (value == _showTags) return;
     _showTags = value;
     notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    _stationsSub?.cancel();
-    _tagsSub?.cancel();
-    _statusCodeSub?.cancel();
-    super.dispose();
   }
 }

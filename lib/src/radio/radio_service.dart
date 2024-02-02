@@ -9,10 +9,9 @@ import '../../constants.dart';
 class RadioService {
   RadioBrowserApi? _radioBrowserApi;
 
-  RadioService();
-
   Future<String?> init() async {
     if (_radioBrowserApi?.host != null) {
+      await _loadTags();
       return _radioBrowserApi?.host;
     }
 
@@ -20,10 +19,11 @@ class RadioService {
       try {
         _radioBrowserApi ??= RadioBrowserApi.fromHost(host);
         if (_radioBrowserApi != null) {
+          await _loadTags();
           return _radioBrowserApi?.host;
         }
-      } on Exception catch (e) {
-        setStatusCode(e.toString());
+      } on Exception catch (_) {
+        return null;
       }
     }
 
@@ -53,26 +53,11 @@ class RadioService {
     }
   }
 
-  Future<void> dispose() async {
-    _tagsChangedController.close();
-    _statusCodeController.close();
-  }
-
-  String? _statusCode;
-  String? get statusCode => _statusCode;
-  void setStatusCode(String? value) {
-    _statusCodeController.add(value != _statusCode);
-    _statusCode = value;
-  }
-
-  final _statusCodeController = StreamController<bool>.broadcast();
-  Stream<bool> get statusCodeChanged => _statusCodeController.stream;
-
   Future<List<Station>?> getStations({
     String? country,
     String? name,
     String? state,
-    Tag? tag,
+    String? tag,
     int limit = 100,
   }) async {
     if (_radioBrowserApi == null) {
@@ -101,7 +86,7 @@ class RadioService {
         );
       } else if (tag != null) {
         response = await _radioBrowserApi!.getStationsByTag(
-          tag: tag.name,
+          tag: tag,
           parameters: InputParameters(
             hidebroken: true,
             order: 'stationcount',
@@ -128,15 +113,7 @@ class RadioService {
 
   List<Tag>? _tags;
   List<Tag>? get tags => _tags;
-  void setTags(List<Tag>? value) {
-    _tags = value;
-    _tagsChangedController.add(true);
-  }
-
-  final _tagsChangedController = StreamController<bool>.broadcast();
-  Stream<bool> get tagsChanged => _tagsChangedController.stream;
-
-  Future<void> loadTags() async {
+  Future<void> _loadTags() async {
     if (_radioBrowserApi == null) return;
     try {
       final response = await _radioBrowserApi!.getTags(
