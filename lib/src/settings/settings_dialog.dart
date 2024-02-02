@@ -86,10 +86,10 @@ class AboutSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<SettingsModel>();
+    final appName = context.select((SettingsModel m) => m.appName);
 
     return YaruSection(
-      headline: Text('${context.l10n.about} ${model.appName}'),
+      headline: Text('${context.l10n.about} ${appName ?? ''}'),
       margin: const EdgeInsets.all(kYaruPagePadding),
       child: const Column(
         children: [_AboutTile(), _LicenseTile()],
@@ -247,6 +247,7 @@ class _AboutDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           YaruDialogTitleBar(
+            title: Text(context.l10n.about),
             leading: YaruBackButton(
               style: YaruBackButtonStyle.rounded,
               onPressed: () => Navigator.of(context).pop(),
