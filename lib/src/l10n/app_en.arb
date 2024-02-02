@@ -154,5 +154,18 @@
     "noStarredTags": "You didn't star any tags yet",
     "name": "Name",
     "state": "State",
-    "playNext": "Play next"
+    "playNext": "Play next",
+    "contributors": "Contributors",
+    "version": "Version",
+    "theme": "Theme",
+    "license": "License",
+    "dependencies": "Dependencies",
+    "light": "Light",
+    "system": "System",
+    "dark": "Dark",
+    "podcastProvider": "Podcast Provider",
+    "iTunes": "iTunes",
+    "podcastIndex": "Podcast Index",
+    "usePodcastIndex": "Use Podcast Index instead of iTunes",
+    "select": "Select"
 }

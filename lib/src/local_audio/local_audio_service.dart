@@ -39,29 +39,23 @@ class LocalAudioService {
   }
 
   Future<List<String>> init({
-    Set<Audio>? cache,
     @visibleForTesting String? testDir,
   }) async {
-    if (cache == null || cache.isEmpty || testDir != null) {
-      if (testDir != null) {
-        _directory = testDir;
-      } else {
-        _directory = await readSetting(kDirectoryProperty);
-        _directory ??= await getMusicDir();
-      }
-
-      final result = await compute(_init, directory);
-
-      _audios = result.$2;
-
-      _audiosController.add(true);
-      _directoryController.add(true);
-
-      return result.$1;
+    if (testDir != null) {
+      _directory = testDir;
     } else {
-      _audios = cache;
-      return [];
+      _directory = await readSetting(kDirectoryProperty);
+      _directory ??= await getMusicDir();
     }
+
+    final result = await compute(_init, directory);
+
+    _audios = result.$2;
+
+    _audiosController.add(true);
+    _directoryController.add(true);
+
+    return result.$1;
   }
 
   Future<void> dispose() async {

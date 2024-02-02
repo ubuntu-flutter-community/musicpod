@@ -8,6 +8,7 @@ import 'package:yaru/yaru.dart';
 import '../../app.dart';
 import '../../library.dart';
 import '../../theme.dart';
+import '../globals.dart';
 import '../l10n/l10n.dart';
 import 'app.dart';
 
@@ -18,22 +19,50 @@ class YaruMusicPodApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return YaruTheme(
-      builder: (context, yaru, child) {
-        return MusicPodApp(
-          lightTheme: yaru.theme,
-          darkTheme: yaru.darkTheme?.copyWith(
-            scaffoldBackgroundColor: const Color(0xFF1e1e1e),
-            dividerColor: darkDividerColor,
-            dividerTheme: const DividerThemeData(
-              color: darkDividerColor,
-              space: 1.0,
-              thickness: 0.0,
-            ),
-          ),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeNotifier,
+      builder: (_, ThemeMode currentMode, __) {
+        return YaruTheme(
+          builder: (context, yaru, child) {
+            return MusicPodApp(
+              themeMode: currentMode,
+              lightTheme: yaru.theme,
+              darkTheme: yaru.darkTheme?.copyWith(
+                scaffoldBackgroundColor: const Color(0xFF1e1e1e),
+                dividerColor: darkDividerColor,
+                dividerTheme: const DividerThemeData(
+                  color: darkDividerColor,
+                  space: 1.0,
+                  thickness: 0.0,
+                ),
+              ),
+            );
+          },
         );
       },
-      child: const MusicPodApp(),
+    );
+  }
+}
+
+class MaterialMusicPodApp extends StatelessWidget {
+  const MaterialMusicPodApp({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeNotifier,
+      builder: (_, ThemeMode currentMode, __) {
+        return SystemThemeBuilder(
+          builder: (context, accent) {
+            return MusicPodApp(
+              themeMode: currentMode,
+              accent: accent.accent,
+            );
+          },
+        );
+      },
     );
   }
 }
@@ -44,9 +73,11 @@ class MusicPodApp extends StatefulWidget {
     this.lightTheme,
     this.darkTheme,
     this.accent,
+    required this.themeMode,
   });
 
   final ThemeData? lightTheme, darkTheme;
+  final ThemeMode? themeMode;
   final Color? accent;
 
   @override
@@ -74,6 +105,7 @@ class _MusicPodAppState extends State<MusicPodApp> {
       builder: (context, accent) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
+          themeMode: widget.themeMode,
           theme: widget.lightTheme ??
               m3Theme(color: widget.accent ?? Colors.greenAccent),
           darkTheme: widget.darkTheme ??

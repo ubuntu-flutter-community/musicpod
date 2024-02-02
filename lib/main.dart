@@ -92,12 +92,6 @@ Future<void> main(List<String> args) async {
   if (Platform.isLinux) {
     runApp(const GtkApplication(child: YaruMusicPodApp()));
   } else {
-    runApp(
-      SystemThemeBuilder(
-        builder: (context, accent) {
-          return MusicPodApp(accent: accent.accent);
-        },
-      ),
-    );
+    runApp(const MaterialMusicPodApp());
   }
 }

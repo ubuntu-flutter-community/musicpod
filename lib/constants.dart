@@ -114,12 +114,8 @@ const kStarredStationsFileName = 'betterStarredStations.json';
 const kSettingsFileName = 'settings.json';
 const kLastPositionsFileName = 'lastPositions.json';
 const kPlayerStateFileName = 'playerstate.json';
-const kLocalAudioCacheFileName = 'localaudiocache.json';
 const kDownloads = 'downloads.json';
 const kFeedsWithDownloads = 'feedswithdownloads.json';
-const kLocalAudioCache = 'localAudioCache';
-const kUseLocalAudioCache = 'cacheSuggestionDisposed';
-const kCreateCacheLimit = 1000;
 const kDirectoryProperty = 'directory';
 const kRadioUrl = 'de1.api.radio-browser.info';
 const kRadioBrowserBaseUrl = 'all.api.radio-browser.info';
@@ -138,6 +134,8 @@ const kPodcastsPageId = 'podcasts';
 const kRadioPageId = 'radio';
 const kNewPlaylistPageId = 'newPlaylist';
 const kLikedAudiosPageId = 'likedAudios';
+const kUsePodcastIndex = 'usePodcastIndex';
+const kThemeIndex = 'themeIndex';
 
 const shops = <String, String>{
   'https://us.7digital.com/': '7digital',
