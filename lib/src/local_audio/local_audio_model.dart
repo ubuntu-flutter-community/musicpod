@@ -21,8 +21,6 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   StreamSubscription<bool>? _directoryChangedSub;
   StreamSubscription<bool>? _audiosChangedSub;
-  StreamSubscription<bool>? _localAudioCacheChangedSub;
-  StreamSubscription<bool>? _useLocalAudioCacheChangedSub;
 
   Set<Audio>? _albumSearchResult;
   Set<Audio>? get albumSearchResult => _albumSearchResult;
@@ -219,8 +217,6 @@ class LocalAudioModel extends SafeChangeNotifier {
   Future<void> dispose() async {
     _directoryChangedSub?.cancel();
     _audiosChangedSub?.cancel();
-    _localAudioCacheChangedSub?.cancel();
-    _useLocalAudioCacheChangedSub?.cancel();
     super.dispose();
   }
 }
