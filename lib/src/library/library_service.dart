@@ -601,12 +601,12 @@ class LibraryService {
 
   bool _usePodcastIndex = false;
   bool get usePodcastIndex => _usePodcastIndex;
-  final _usePodcastIndexController = StreamController<bool>();
+  final _usePodcastIndexController = StreamController<bool>.broadcast();
   Stream<bool> get usePodcastIndexChanged => _usePodcastIndexController.stream;
   void setUsePodcastIndex(bool value) {
     writeSetting(kUsePodcastIndex, value ? 'true' : 'false').then((_) {
       _usePodcastIndex = value;
-      _usePodcastIndexController.sink.add(true);
+      _usePodcastIndexController.add(true);
     });
   }
 
