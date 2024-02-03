@@ -168,5 +168,6 @@
     "podcastIndex": "Podcast Index",
     "usePodcastIndex": "Use Podcast Index instead of iTunes",
     "select": "Select",
-    "requiresAppRestart": "Requires app restart"
+    "requiresAppRestart": "Requires app restart",
+    "musicCollectionLocation": "Music collection location"
 }

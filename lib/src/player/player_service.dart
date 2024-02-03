@@ -173,32 +173,37 @@ class PlayerService {
 
   bool _firstPlay = true;
   Future<void> play({Duration? newPosition, Audio? newAudio}) async {
-    if (newAudio != null) {
-      _setAudio(newAudio);
-    }
-    if (audio == null) return;
+    try {
+      if (newAudio != null) {
+        _setAudio(newAudio);
+      }
+      if (audio == null) return;
 
-    Media? media = audio!.path != null
-        ? Media('file://${audio!.path!}')
-        : (audio!.url != null)
-            ? Media(audio!.url!)
-            : null;
-    if (media == null) return;
-    _player.open(media).then((_) {
-      _player.state.tracks;
-    });
-    if (newPosition != null && _audio!.audioType != AudioType.radio) {
-      _player.setVolume(0).then(
-            (_) => Future.delayed(const Duration(seconds: 3)).then(
-              (_) => _player
-                  .seek(newPosition)
-                  .then((_) => _player.setVolume(100.0)),
-            ),
-          );
+      Media? media = audio!.path != null
+          ? Media('file://${audio!.path!}')
+          : (audio!.url != null)
+              ? Media(audio!.url!)
+              : null;
+      if (media == null) return;
+      _player.open(media).then((_) {
+        _player.state.tracks;
+      });
+      if (newPosition != null && _audio!.audioType != AudioType.radio) {
+        _player.setVolume(0).then(
+              (_) => Future.delayed(const Duration(seconds: 3)).then(
+                (_) => _player
+                    .seek(newPosition)
+                    .then((_) => _player.setVolume(100.0)),
+              ),
+            );
+      }
+      _setMediaControlsMetaData(audio!);
+      _loadColor();
+      _firstPlay = false;
+    } on Exception catch (_) {
+      // TODO: instead of disallowing certain file types
+      // process via error stream if something went wrong
     }
-    _setMediaControlsMetaData(audio!);
-    _loadColor();
-    _firstPlay = false;
   }
 
   Future<void> playOrPause() async {
