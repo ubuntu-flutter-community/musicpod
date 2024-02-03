@@ -90,11 +90,12 @@ class AboutSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final appName = context.select((SettingsModel m) => m.appName);
 
+    final text = '${context.l10n.about} ${appName ?? ''}';
     return YaruSection(
-      headline: Text('${context.l10n.about} ${appName ?? ''}'),
+      headline: Text(text),
       margin: const EdgeInsets.all(kYaruPagePadding),
-      child: const Column(
-        children: [_AboutTile(), _LicenseTile()],
+      child: Column(
+        children: [_AboutTile(text: text), const _LicenseTile()],
       ),
     );
   }
@@ -137,7 +138,8 @@ class LocalAudioSection extends StatelessWidget {
       child: Column(
         children: [
           YaruTile(
-            leading: Text(directory),
+            title: Text(context.l10n.musicCollectionLocation),
+            subtitle: Text(directory),
             trailing: ImportantButton(
               onPressed: () async {
                 final directoryPath = await getDirectoryPath();
@@ -212,18 +214,16 @@ class _ThemeSectionState extends State<ThemeSection> {
 }
 
 class _AboutTile extends StatelessWidget {
-  const _AboutTile();
+  const _AboutTile({required this.text});
+
+  final String text;
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<SettingsModel>();
-
     return YaruTile(
-      title: Text(
-        '${context.l10n.version}: ${model.version}',
-      ),
+      title: Text(text),
       trailing: OutlinedButton(
-        onPressed: () => settingsNavigatorKey.currentState!.pushNamed('/about'),
+        onPressed: () => settingsNavigatorKey.currentState?.pushNamed('/about'),
         child: Text(context.l10n.contributors),
       ),
     );
@@ -236,6 +236,7 @@ class _AboutDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    final appName = context.select((SettingsModel m) => m.appName);
     final linkStyle = theme.textTheme.bodyLarge
         ?.copyWith(color: Colors.lightBlue, overflow: TextOverflow.visible);
     const maxLines = 3;
@@ -249,7 +250,7 @@ class _AboutDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           YaruDialogTitleBar(
-            title: Text(context.l10n.about),
+            title: Text('${context.l10n.about} ${appName ?? ''}'),
             leading: YaruBackButton(
               style: YaruBackButtonStyle.rounded,
               onPressed: () => Navigator.of(context).pop(),
@@ -383,7 +384,7 @@ class _LicenseTile extends StatelessWidget {
       ),
       trailing: OutlinedButton(
         onPressed: () =>
-            settingsNavigatorKey.currentState!.pushNamed('/licenses'),
+            settingsNavigatorKey.currentState?.pushNamed('/licenses'),
         child: Text(context.l10n.dependencies),
       ),
       enabled: true,

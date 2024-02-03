@@ -30,7 +30,7 @@ class ExternalPathService {
     Future<void> Function({Audio? newAudio, Duration? newPosition}) play, [
     String? path,
   ]) {
-    if (path == null || !isValidFile(path)) {
+    if (path == null) {
       return;
     }
     try {
@@ -42,7 +42,10 @@ class ExternalPathService {
           fileName: File(path).uri.pathSegments.last,
         ),
       );
-    } catch (_) {}
+    } catch (_) {
+      // TODO: instead of disallowing certain file types
+      // process via error stream if something went wrong
+    }
   }
 
   Future<void> dispose() async {
