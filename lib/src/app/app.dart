@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -138,42 +139,53 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     // AppModel
     final isFullScreen = context.select((AppModel m) => m.fullScreen);
 
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: MasterDetailPage(
-                      countryCode: _countryCode,
+    final playerModel = context.read<PlayerModel>();
+
+    return KeyboardListener(
+      focusNode: FocusNode(),
+      onKeyEvent: (value) {
+        if (value.runtimeType == KeyDownEvent &&
+            value.logicalKey == LogicalKeyboardKey.space) {
+          playerModel.playOrPause();
+        }
+      },
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: MasterDetailPage(
+                        countryCode: _countryCode,
+                      ),
                     ),
-                  ),
-                  if (!playerToTheRight)
-                    const PlayerView(
-                      playerViewMode: PlayerViewMode.bottom,
-                    ),
-                ],
-              ),
-            ),
-            if (playerToTheRight)
-              const SizedBox(
-                width: kSideBarPlayerWidth,
-                child: PlayerView(
-                  playerViewMode: PlayerViewMode.sideBar,
+                    if (!playerToTheRight)
+                      const PlayerView(
+                        playerViewMode: PlayerViewMode.bottom,
+                      ),
+                  ],
                 ),
               ),
-          ],
-        ),
-        if (isFullScreen == true)
-          const Scaffold(
-            body: PlayerView(
-              playerViewMode: PlayerViewMode.fullWindow,
-            ),
+              if (playerToTheRight)
+                const SizedBox(
+                  width: kSideBarPlayerWidth,
+                  child: PlayerView(
+                    playerViewMode: PlayerViewMode.sideBar,
+                  ),
+                ),
+            ],
           ),
-      ],
+          if (isFullScreen == true)
+            const Scaffold(
+              body: PlayerView(
+                playerViewMode: PlayerViewMode.fullWindow,
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

@@ -77,8 +77,24 @@ const kPatchNotes20240115 = 'Hello MusicPod Users 💙🐧🧡\n\n'
     '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
     '\n';
 
-const kRecentPatchNotesDisposed = kPatchNotes20240115disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20240115;
-const kRecentPatchNotes = kPatchNotes20240115;
+// 2024 02 04
+const kPatchNotes20240204disposed = 'patchNotes20240204disposed';
+const kPatchNotesTitle20240204 = 'Patch notes: 2024-02-04';
+const kPatchNotes20240204 = 'Hello MusicPod Users 💙🐧🧡\n'
+    '\n* albums now do not include a trailing space'
+    '\n* sadly this means you need to re-pin'
+    '\n  your favorite albums again :('
+    '\n* new settings dialog, in which you can'
+    '\n* change the theme'
+    '\n* switch to podcast index with your own api key/secret'
+    '\n* MusicPod can now be used to open any audio/video on your computer'
+    '\n* loading your local music at start now happens faster'
+    '\n* the space key now toggles between play and pause'
+    '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
+    '\n';
+
+const kRecentPatchNotesDisposed = kPatchNotes20240204disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20240204;
+const kRecentPatchNotes = kPatchNotes20240204;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';
