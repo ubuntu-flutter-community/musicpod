@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../build_context_x.dart';
@@ -8,7 +8,10 @@ import '../../data.dart';
 import '../../library.dart';
 import 'download_model.dart';
 
-class DownloadButton extends StatelessWidget {
+final downloadModelProviderToAudioMap =
+    <Audio, ChangeNotifierProvider<DownloadModel>>{};
+
+class DownloadButton extends ConsumerWidget {
   const DownloadButton({
     super.key,
     this.iconSize,
@@ -19,16 +22,20 @@ class DownloadButton extends StatelessWidget {
   static Widget create({
     required BuildContext context,
     double? iconSize,
-    required Audio? audio,
+    required Audio audio,
     required void Function()? addPodcast,
   }) {
-    return ChangeNotifierProvider(
-      create: (_) => DownloadModel(getService<LibraryService>()),
-      child: DownloadButton(
-        iconSize: iconSize,
-        audio: audio,
-        addPodcast: addPodcast,
+    downloadModelProviderToAudioMap.putIfAbsent(
+      audio,
+      () => ChangeNotifierProvider(
+        (ref) => DownloadModel(getService<LibraryService>()),
       ),
+    );
+
+    return DownloadButton(
+      iconSize: iconSize,
+      audio: audio,
+      addPodcast: addPodcast,
     );
   }
 
@@ -37,10 +44,15 @@ class DownloadButton extends StatelessWidget {
   final void Function()? addPodcast;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.t;
-    final model = context.read<DownloadModel>();
-    final value = context.select((DownloadModel m) => m.value);
+    final modelProvider = downloadModelProviderToAudioMap[audio];
+
+    DownloadModel? model;
+    if (modelProvider != null) {
+      model = ref.read(modelProvider);
+    }
+    final value = ref.watch(modelProvider!.select((v) => v.value));
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -54,10 +66,10 @@ class DownloadButton extends StatelessWidget {
           ),
           onPressed: () {
             if (audio?.path != null) {
-              model.deleteDownload(context: context, audio: audio);
+              model?.deleteDownload(context: context, audio: audio);
             } else {
               addPodcast?.call();
-              model.startDownload(context: context, audio: audio);
+              model?.startDownload(context: context, audio: audio);
             }
           },
           iconSize: iconSize,

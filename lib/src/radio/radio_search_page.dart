@@ -1,6 +1,6 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common.dart';
 import '../../data.dart';
@@ -12,7 +12,7 @@ import 'radio_model.dart';
 import 'radio_search.dart';
 import 'station_card.dart';
 
-class RadioSearchPage extends StatefulWidget {
+class RadioSearchPage extends ConsumerStatefulWidget {
   const RadioSearchPage({
     super.key,
     this.limit = 100,
@@ -28,15 +28,15 @@ class RadioSearchPage extends StatefulWidget {
   final RadioSearch radioSearch;
 
   @override
-  State<RadioSearchPage> createState() => _RadioSearchPageState();
+  ConsumerState<RadioSearchPage> createState() => _RadioSearchPageState();
 }
 
-class _RadioSearchPageState extends State<RadioSearchPage> {
+class _RadioSearchPageState extends ConsumerState<RadioSearchPage> {
   late Future<Set<Audio>?> _future;
   @override
   void initState() {
     super.initState();
-    final radioModel = context.read<RadioModel>();
+    final radioModel = ref.read(radioModelProvider);
     _future = radioModel.getStations(
       radioSearch: widget.radioSearch,
       query: widget.searchQuery,
@@ -45,8 +45,8 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = context.read<LibraryModel>();
-    final playerModel = context.read<PlayerModel>();
+    final libraryModel = ref.read(libraryModelProvider);
+    final playerModel = ref.read(playerModelProvider);
 
     final futureBuilder = FutureBuilder(
       future: _future,

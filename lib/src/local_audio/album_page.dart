@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -62,66 +62,70 @@ class AlbumPage extends StatelessWidget {
             filterQuality: FilterQuality.medium,
           )
         : null;
-    return AudioPage(
-      showAudioPageHeader: image != null,
-      showAlbum: false,
-      onArtistTap: ({required audioType, required text}) {
-        final artistName = album?.firstOrNull?.artist;
-        if (artistName == null) return;
-        final model = context.read<LocalAudioModel>();
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) {
-              final artistAudios = model.findArtist(album!.first);
-              final images = model.findImages(artistAudios ?? {});
+    return Consumer(
+      builder: (context, ref, _) {
+        return AudioPage(
+          showAudioPageHeader: image != null,
+          showAlbum: false,
+          onArtistTap: ({required audioType, required text}) {
+            final artistName = album?.firstOrNull?.artist;
+            if (artistName == null) return;
+            final model = ref.read(localAudioModelProvider);
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) {
+                  final artistAudios = model.findArtist(album!.first);
+                  final images = model.findImages(artistAudios ?? {});
 
-              return ArtistPage(
-                images: images,
-                artistAudios: artistAudios,
-              );
-            },
+                  return ArtistPage(
+                    images: images,
+                    artistAudios: artistAudios,
+                  );
+                },
+              ),
+            );
+          },
+          audioPageType: AudioPageType.album,
+          headerLabel: context.l10n.album,
+          headerSubtile: album?.firstOrNull?.artist,
+          image: image,
+          controlPanelButton: Row(
+            children: [
+              if (isPinnedAlbum(id))
+                IconButton(
+                  icon: Icon(
+                    Iconz().pinFilled,
+                    color: context.t.colorScheme.primary,
+                  ),
+                  onPressed: () => removePinnedAlbum(
+                    id,
+                  ),
+                )
+              else
+                IconButton(
+                  icon: Icon(
+                    Iconz().pin,
+                  ),
+                  onPressed: album == null
+                      ? null
+                      : () => addPinnedAlbum(
+                            id,
+                            album!,
+                          ),
+                ),
+              StreamProviderRow(
+                spacing: const EdgeInsets.only(right: 10),
+                text:
+                    '${album?.firstOrNull?.artist} - ${album?.firstOrNull?.album}',
+              ),
+            ],
           ),
+          audios: album,
+          pageId: id,
+          headerTitle: album?.firstOrNull?.album,
         );
       },
-      audioPageType: AudioPageType.album,
-      headerLabel: context.l10n.album,
-      headerSubtile: album?.firstOrNull?.artist,
-      image: image,
-      controlPanelButton: Row(
-        children: [
-          if (isPinnedAlbum(id))
-            IconButton(
-              icon: Icon(
-                Iconz().pinFilled,
-                color: context.t.colorScheme.primary,
-              ),
-              onPressed: () => removePinnedAlbum(
-                id,
-              ),
-            )
-          else
-            IconButton(
-              icon: Icon(
-                Iconz().pin,
-              ),
-              onPressed: album == null
-                  ? null
-                  : () => addPinnedAlbum(
-                        id,
-                        album!,
-                      ),
-            ),
-          StreamProviderRow(
-            spacing: const EdgeInsets.only(right: 10),
-            text:
-                '${album?.firstOrNull?.artist} - ${album?.firstOrNull?.album}',
-          ),
-        ],
-      ),
-      audios: album,
-      pageId: id,
-      headerTitle: album?.firstOrNull?.album,
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -53,76 +53,80 @@ class PodcastPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.t;
     final genre = audios?.firstWhereOrNull((e) => e.genre != null)?.genre;
-    final libraryModel = context.read<LibraryModel>();
 
-    final subscribed = libraryModel.podcastSubscribed(pageId);
+    return Consumer(
+      builder: (context, ref, _) {
+        final libraryModel = ref.read(libraryModelProvider);
 
-    context.select((LibraryModel m) => m.lastPositions?.length);
-    context.select((LibraryModel m) => m.downloadsLength);
+        final subscribed = libraryModel.podcastSubscribed(pageId);
 
-    final checkingForUpdates =
-        context.select((PodcastModel m) => m.checkingForUpdates);
+        ref.watch(libraryModelProvider.select((p) => p.lastPositions?.length));
+        ref.watch(libraryModelProvider.select((p) => p.downloadsLength));
 
-    return AudioPage(
-      showAudioTileHeader: false,
-      audioPageType: AudioPageType.podcast,
-      image: imageUrl == null
-          ? null
-          : SafeNetworkImage(
-              fallBackIcon: Icon(
-                Iconz().podcast,
-                size: 80,
-                color: theme.hintColor,
-              ),
-              errorIcon: Icon(
-                Iconz().podcast,
-                size: 80,
-                color: theme.hintColor,
-              ),
-              url: imageUrl,
-              fit: BoxFit.fitWidth,
-              filterQuality: FilterQuality.medium,
-            ),
-      headerLabel: genre ?? context.l10n.podcast,
-      headerTitle: title,
-      headerSubtile: audios?.firstOrNull?.artist,
-      headerDescription: audios?.firstOrNull?.albumArtist,
-      audios: audios,
-      pageId: pageId,
-      title: Text(title),
-      controlPanelTitle: Text(title),
-      controlPanelButton: Row(
-        children: [
-          IconButton(
-            tooltip: subscribed
-                ? context.l10n.removeFromCollection
-                : context.l10n.addToCollection,
-            icon: checkingForUpdates
-                ? const SideBarProgress()
-                : Icon(
-                    subscribed
-                        ? Iconz().removeFromLibrary
-                        : Iconz().addToLibrary,
-                    color: subscribed
-                        ? theme.colorScheme.primary
-                        : theme.colorScheme.onSurface,
+        final checkingForUpdates =
+            ref.watch(podcastModelProvider.select((p) => p.checkingForUpdates));
+        return AudioPage(
+          showAudioTileHeader: false,
+          audioPageType: AudioPageType.podcast,
+          image: imageUrl == null
+              ? null
+              : SafeNetworkImage(
+                  fallBackIcon: Icon(
+                    Iconz().podcast,
+                    size: 80,
+                    color: theme.hintColor,
                   ),
-            onPressed: checkingForUpdates
-                ? null
-                : () {
-                    if (subscribed) {
-                      libraryModel.removePodcast(pageId);
-                    } else if (audios?.isNotEmpty == true) {
-                      libraryModel.addPodcast(pageId, audios!);
-                    }
-                  },
+                  errorIcon: Icon(
+                    Iconz().podcast,
+                    size: 80,
+                    color: theme.hintColor,
+                  ),
+                  url: imageUrl,
+                  fit: BoxFit.fitWidth,
+                  filterQuality: FilterQuality.medium,
+                ),
+          headerLabel: genre ?? context.l10n.podcast,
+          headerTitle: title,
+          headerSubtile: audios?.firstOrNull?.artist,
+          headerDescription: audios?.firstOrNull?.albumArtist,
+          audios: audios,
+          pageId: pageId,
+          title: Text(title),
+          controlPanelTitle: Text(title),
+          controlPanelButton: Row(
+            children: [
+              IconButton(
+                tooltip: subscribed
+                    ? context.l10n.removeFromCollection
+                    : context.l10n.addToCollection,
+                icon: checkingForUpdates
+                    ? const SideBarProgress()
+                    : Icon(
+                        subscribed
+                            ? Iconz().removeFromLibrary
+                            : Iconz().addToLibrary,
+                        color: subscribed
+                            ? theme.colorScheme.primary
+                            : theme.colorScheme.onSurface,
+                      ),
+                onPressed: checkingForUpdates
+                    ? null
+                    : () {
+                        if (subscribed) {
+                          libraryModel.removePodcast(pageId);
+                        } else if (audios?.isNotEmpty == true) {
+                          libraryModel.addPodcast(pageId, audios!);
+                        }
+                      },
+              ),
+              StreamProviderRow(
+                spacing: const EdgeInsets.only(right: 10),
+                text: title,
+              ),
+            ],
           ),
-          StreamProviderRow(
-            spacing: const EdgeInsets.only(right: 10),
-            text: title,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -139,17 +143,21 @@ class PodcastPageTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.select((LibraryModel m) => m.podcastUpdatesLength);
-    final visible =
-        context.read<LibraryModel>().podcastUpdateAvailable(feedUrl);
-    return Badge(
-      backgroundColor: context.t.colorScheme.primary,
-      isLabelVisible: visible,
-      alignment: Alignment.centerRight,
-      child: Padding(
-        padding: EdgeInsets.only(right: visible ? 10 : 0),
-        child: Text(title),
-      ),
+    return Consumer(
+      builder: (context, ref, _) {
+        ref.watch(libraryModelProvider.select((p) => p.podcastUpdatesLength));
+        final visible =
+            ref.read(libraryModelProvider).podcastUpdateAvailable(feedUrl);
+        return Badge(
+          backgroundColor: context.t.colorScheme.primary,
+          isLabelVisible: visible,
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: EdgeInsets.only(right: visible ? 10 : 0),
+            child: Text(title),
+          ),
+        );
+      },
     );
   }
 }

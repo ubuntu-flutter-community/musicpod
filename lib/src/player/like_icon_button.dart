@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
 import '../common/icons.dart';
 
-class LikeIconButton extends StatelessWidget {
+class LikeIconButton extends ConsumerWidget {
   const LikeIconButton({
     super.key,
     required this.audio,
@@ -18,11 +18,11 @@ class LikeIconButton extends StatelessWidget {
   final Color? color;
 
   @override
-  Widget build(BuildContext context) {
-    final libraryModel = context.read<LibraryModel>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final libraryModel = ref.read(libraryModelProvider);
 
-    context.select((LibraryModel m) => m.likedAudios.length);
-    context.select((LibraryModel m) => m.starredStations.length);
+    ref.watch(libraryModelProvider.select((m) => m.likedAudios.length));
+    ref.watch(libraryModelProvider.select((m) => m.starredStations.length));
 
     final isStarredStation = libraryModel.isStarredStation(audio?.url);
     final liked = libraryModel.liked(audio);

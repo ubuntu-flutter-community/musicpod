@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
@@ -35,44 +35,48 @@ class ArtistsView extends StatelessWidget {
       );
     }
 
-    final model = context.read<LocalAudioModel>();
+    return Consumer(
+      builder: (context, ref, _) {
+        final model = ref.read(localAudioModelProvider);
+        return Padding(
+          padding: const EdgeInsets.only(top: 15),
+          child: GridView.builder(
+            itemCount: artists!.length,
+            padding: gridPadding,
+            shrinkWrap: true,
+            gridDelegate: kDiskGridDelegate,
+            itemBuilder: (context, index) {
+              final artistAudios = model.findArtist(
+                artists!.elementAt(index),
+              );
+              final images = model.findImages(artistAudios ?? {});
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 15),
-      child: GridView.builder(
-        itemCount: artists!.length,
-        padding: gridPadding,
-        shrinkWrap: true,
-        gridDelegate: kDiskGridDelegate,
-        itemBuilder: (context, index) {
-          final artistAudios = model.findArtist(
-            artists!.elementAt(index),
-          );
-          final images = model.findImages(artistAudios ?? {});
+              final artistname =
+                  artists!.elementAt(index).artist ?? context.l10n.unknown;
 
-          final artistname =
-              artists!.elementAt(index).artist ?? context.l10n.unknown;
-
-          return YaruSelectableContainer(
-            selected: false,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return ArtistPage(
-                    images: images,
-                    artistAudios: artistAudios,
-                  );
-                },
-              ),
-            ),
-            borderRadius: BorderRadius.circular(300),
-            child: RoundImageContainer(
-              image: images?.firstOrNull,
-              text: artistname.isNotEmpty ? artistname : context.l10n.unknown,
-            ),
-          );
-        },
-      ),
+              return YaruSelectableContainer(
+                selected: false,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ArtistPage(
+                        images: images,
+                        artistAudios: artistAudios,
+                      );
+                    },
+                  ),
+                ),
+                borderRadius: BorderRadius.circular(300),
+                child: RoundImageContainer(
+                  image: images?.firstOrNull,
+                  text:
+                      artistname.isNotEmpty ? artistname : context.l10n.unknown,
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

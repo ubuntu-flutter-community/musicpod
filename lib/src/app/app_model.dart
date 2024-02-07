@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class AppModel extends SafeChangeNotifier {
@@ -16,3 +17,5 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 }
+
+final appModelProvider = ChangeNotifierProvider((ref) => AppModel());
