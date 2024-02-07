@@ -43,26 +43,15 @@ class AudioPageControlPanel extends StatelessWidget {
               backgroundColor: theme.colorScheme.inverseSurface,
               child: IconButton(
                 onPressed: () {
-                  if (audios.length > kAudioQueueThreshHold) {
-                    showDialog<bool>(
-                      context: context,
-                      builder: (context) {
-                        return ConfirmationDialog(
-                          message: Text(
-                            context.l10n.queueConfirmMessage(
-                              audios.length.toString(),
-                            ),
-                          ),
-                        );
-                      },
-                    ).then((value) {
-                      if (value == true) {
-                        onTap!();
-                      }
-                    });
-                  } else {
-                    onTap!();
-                  }
+                  runOrConfirm(
+                    context: context,
+                    noConfirm: audios.length < kAudioQueueThreshHold,
+                    message: context.l10n.queueConfirmMessage(
+                      audios.length.toString(),
+                    ),
+                    run: () => onTap!(),
+                    onCancel: () {},
+                  );
                 },
                 icon: Padding(
                   padding: appleStyled

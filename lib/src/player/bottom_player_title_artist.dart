@@ -18,6 +18,17 @@ class BottomPlayerTitleArtist extends StatelessWidget {
     final icyName = mpvMetaData?.icyName;
     final icyTitle = mpvMetaData?.icyTitle;
 
+    final subTitle = icyName?.isNotEmpty == true
+        ? icyName!
+        : (audio?.audioType == AudioType.podcast
+                ? audio?.album
+                : audio?.artist ?? ' ') ??
+            '';
+
+    final title = icyTitle?.isNotEmpty == true
+        ? icyTitle!
+        : (audio?.title?.isNotEmpty == true ? audio!.title! : ' ');
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,13 +41,9 @@ class BottomPlayerTitleArtist extends StatelessWidget {
             context: context,
           ),
           child: Tooltip(
-            message: icyTitle?.isNotEmpty == true
-                ? icyTitle!
-                : (audio?.title?.isNotEmpty == true ? audio!.title! : ' '),
+            message: title,
             child: Text(
-              icyTitle?.isNotEmpty == true
-                  ? icyTitle!
-                  : (audio?.title?.isNotEmpty == true ? audio!.title! : ' '),
+              title,
               style: const TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 14,
@@ -56,11 +63,9 @@ class BottomPlayerTitleArtist extends StatelessWidget {
               context: context,
             ),
             child: Tooltip(
-              message: icyName?.isNotEmpty == true
-                  ? icyName!
-                  : (audio?.artist ?? ' '),
+              message: subTitle,
               child: Text(
-                icyName?.isNotEmpty == true ? icyName! : (audio?.artist ?? ' '),
+                subTitle,
                 style: TextStyle(
                   fontWeight: smallTextFontWeight,
                   fontSize: 12,

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
-import 'package:provider/provider.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
 import '../../l10n.dart';
-import '../../library.dart';
-import '../../player.dart';
-import '../../podcasts.dart';
+import 'podcast_utils.dart';
 
 class PodcastsDiscoverGrid extends StatefulWidget {
   const PodcastsDiscoverGrid({
@@ -50,9 +47,6 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
       return NoSearchResultPage(message: Text(context.l10n.noPodcastFound));
     }
 
-    final selectedFeedUrl =
-        context.select((PodcastModel m) => m.selectedFeedUrl);
-
     return Column(
       children: [
         Expanded(
@@ -79,18 +73,17 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
                 image: image,
                 onPlay: () async => await searchAndPushPodcastPage(
                   context: context,
-                  podcastItem: podcastItem,
+                  feedUrl: podcastItem.feedUrl,
                   itemImageUrl: art,
                   genre: podcastItem.primaryGenreName,
-                  selectedFeedUrl: selectedFeedUrl,
                   play: true,
                 ),
                 onTap: () async => await searchAndPushPodcastPage(
                   context: context,
-                  podcastItem: podcastItem,
+                  feedUrl: podcastItem.feedUrl,
                   itemImageUrl: art,
                   genre: podcastItem.primaryGenreName,
-                  selectedFeedUrl: selectedFeedUrl,
+                  play: false,
                 ),
               );
             },
@@ -114,103 +107,5 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
           ),
       ],
     );
-  }
-
-  Future<void> searchAndPushPodcastPage({
-    required BuildContext context,
-    required Item podcastItem,
-    String? itemImageUrl,
-    String? genre,
-    String? selectedFeedUrl,
-    bool play = false,
-  }) async {
-    if (podcastItem.feedUrl == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.podcastFeedIsEmpty),
-        ),
-      );
-      return;
-    }
-    final model = context.read<PodcastModel>();
-    final libraryModel = context.read<LibraryModel>();
-    final startPlaylist = context.read<PlayerModel>().startPlaylist;
-
-    final setSelectedFeedUrl = model.setSelectedFeedUrl;
-
-    setSelectedFeedUrl(podcastItem.feedUrl);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 20),
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(context.l10n.loadingPodcastFeed),
-            SizedBox(
-              height: iconSize,
-              width: iconSize,
-              child: const Progress(),
-            ),
-          ],
-        ),
-      ),
-    );
-
-    await findEpisodes(
-      feedUrl: podcastItem.feedUrl!,
-      itemImageUrl: itemImageUrl,
-      genre: genre,
-    ).then((podcast) async {
-      if (selectedFeedUrl == podcastItem.feedUrl) {
-        return;
-      }
-      if (podcast.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.podcastFeedIsEmpty),
-          ),
-        );
-        return;
-      }
-
-      if (play) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-
-        runOrConfirm(
-          context: context,
-          noConfirm: podcast.length < kAudioQueueThreshHold,
-          message: context.l10n.queueConfirmMessage(podcast.length.toString()),
-          run: () => startPlaylist
-              .call(listName: podcastItem.feedUrl!, audios: podcast)
-              .then(
-                (_) => setSelectedFeedUrl(null),
-              ),
-        );
-      } else {
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              final subscribed =
-                  libraryModel.podcastSubscribed(podcastItem.feedUrl);
-              final id = podcastItem.feedUrl;
-
-              ScaffoldMessenger.of(context).clearSnackBars();
-
-              return PodcastPage(
-                subscribed: subscribed,
-                imageUrl: itemImageUrl,
-                addPodcast: libraryModel.addPodcast,
-                removePodcast: libraryModel.removePodcast,
-                audios: podcast,
-                pageId: id!,
-                title: podcast.firstOrNull?.album ??
-                    podcast.firstOrNull?.title ??
-                    podcastItem.feedUrl!,
-              );
-            },
-          ),
-        ).then((_) => setSelectedFeedUrl(null));
-      }
-    });
   }
 }

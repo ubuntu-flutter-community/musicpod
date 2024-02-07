@@ -15,9 +15,6 @@ class PodcastPage extends StatelessWidget {
     this.imageUrl,
     required this.pageId,
     this.audios,
-    this.subscribed = true,
-    required this.removePodcast,
-    required this.addPodcast,
     required this.title,
   });
 
@@ -47,19 +44,18 @@ class PodcastPage extends StatelessWidget {
     );
   }
 
-  final void Function(String feedUrl) removePodcast;
-  final void Function(String feedUrl, Set<Audio> audios) addPodcast;
-
   final String? imageUrl;
   final String pageId;
   final String title;
   final Set<Audio>? audios;
-  final bool subscribed;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
     final genre = audios?.firstWhereOrNull((e) => e.genre != null)?.genre;
+    final libraryModel = context.read<LibraryModel>();
+
+    final subscribed = libraryModel.podcastSubscribed(pageId);
 
     context.select((LibraryModel m) => m.lastPositions?.length);
     context.select((LibraryModel m) => m.downloadsLength);
@@ -115,9 +111,9 @@ class PodcastPage extends StatelessWidget {
                 ? null
                 : () {
                     if (subscribed) {
-                      removePodcast(pageId);
+                      libraryModel.removePodcast(pageId);
                     } else if (audios?.isNotEmpty == true) {
-                      addPodcast(pageId, audios!);
+                      libraryModel.addPodcast(pageId, audios!);
                     }
                   },
           ),

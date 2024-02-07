@@ -99,8 +99,6 @@ List<MasterItem> createMasterItems({
               podcast.value.firstOrNull?.title ??
               podcast.value.firstOrNull.toString(),
           audios: podcast.value,
-          addPodcast: libraryModel.addPodcast,
-          removePodcast: libraryModel.removePodcast,
           imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
               podcast.value.firstOrNull?.imageUrl,
         ),

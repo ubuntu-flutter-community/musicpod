@@ -9,7 +9,9 @@ import '../../data.dart';
 import '../../globals.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
+import '../../podcasts.dart';
 import '../../utils.dart';
+import '../app/app_model.dart';
 
 void onLocalAudioTitleTap({
   required Audio audio,
@@ -68,6 +70,9 @@ void onTitleTap({
   if (audio?.audioType == null || audio?.title == null) {
     return;
   }
+  if (audio?.audioType == AudioType.local) {
+    context.read<AppModel>().setFullScreen(false);
+  }
 
   if (text?.isNotEmpty == true) {
     Clipboard.setData(ClipboardData(text: text!));
@@ -106,13 +111,16 @@ void onTitleTap({
   }
 }
 
-void onArtistTap({
+Future<void> onArtistTap({
   required Audio? audio,
   required String? artist,
   required BuildContext context,
-}) {
+}) async {
   if (audio?.audioType == null || audio?.artist == null) {
     return;
+  }
+  if (audio?.audioType != AudioType.radio) {
+    context.read<AppModel>().setFullScreen(false);
   }
   if (audio!.audioType == AudioType.radio && audio.url?.isNotEmpty == true) {
     Clipboard.setData(ClipboardData(text: audio.url!));
@@ -130,6 +138,15 @@ void onArtistTap({
           },
         ),
       ),
+    );
+  } else if (audio.audioType == AudioType.podcast &&
+      audio.website?.isNotEmpty == true) {
+    await searchAndPushPodcastPage(
+      context: context,
+      feedUrl: audio.website,
+      itemImageUrl: audio.albumArtUrl,
+      genre: audio.genre,
+      play: false,
     );
   } else {
     onLocalAudioArtistTap(audio: audio, context: context);
