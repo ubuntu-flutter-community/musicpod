@@ -42,7 +42,6 @@ class PodcastsCollectionBody extends StatelessWidget {
         context.select((LibraryModel m) => m.feedsWithDownloadsLength);
     final setUpdatesOnly = model.setUpdatesOnly;
     final setDownloadsOnly = model.setDownloadsOnly;
-    final subscribed = libraryModel.podcastSubscribed;
     final removeUpdate = libraryModel.removePodcastUpdate;
 
     final itemCount = updatesOnly
@@ -166,6 +165,11 @@ class PodcastsCollectionBody extends StatelessWidget {
                                       listName: podcast.key,
                                     )
                                     .then((_) => removeUpdate(podcast.key)),
+                                onCancel: () {
+                                  model.setSelectedFeedUrl(null);
+                                  ScaffoldMessenger.of(context)
+                                      .clearSnackBars();
+                                },
                               );
                             },
                             onTap: () => navigatorKey.currentState?.push(
@@ -174,14 +178,11 @@ class PodcastsCollectionBody extends StatelessWidget {
                                   if (!isOnline) return const OfflinePage();
 
                                   return PodcastPage(
-                                    subscribed: subscribed(podcast.key),
                                     pageId: podcast.key,
                                     title: podcast.value.firstOrNull?.album ??
                                         podcast.value.firstOrNull?.title ??
                                         podcast.value.firstOrNull.toString(),
                                     audios: podcast.value,
-                                    addPodcast: libraryModel.addPodcast,
-                                    removePodcast: libraryModel.removePodcast,
                                     imageUrl: podcast
                                             .value.firstOrNull?.albumArtUrl ??
                                         podcast.value.firstOrNull?.imageUrl,

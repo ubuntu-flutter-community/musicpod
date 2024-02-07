@@ -4,9 +4,8 @@ import 'package:yaru_widgets/constants.dart';
 import '../../build_context_x.dart';
 import '../l10n/l10n.dart';
 
-class ConfirmationDialog extends StatelessWidget {
-  const ConfirmationDialog({
-    super.key,
+class _ConfirmationDialog extends StatelessWidget {
+  const _ConfirmationDialog({
     required this.message,
   });
 
@@ -64,6 +63,7 @@ void runOrConfirm({
   required bool noConfirm,
   required String message,
   required Function run,
+  required Function onCancel,
 }) {
   if (noConfirm) {
     run();
@@ -71,7 +71,7 @@ void runOrConfirm({
     showDialog<bool>(
       context: context,
       builder: (context) {
-        return ConfirmationDialog(
+        return _ConfirmationDialog(
           message: Text(
             context.l10n.queueConfirmMessage(
               message,
@@ -82,6 +82,8 @@ void runOrConfirm({
     ).then((value) {
       if (value == true) {
         run();
+      } else {
+        onCancel();
       }
     });
   }

@@ -18,10 +18,20 @@ class FullHeightTitleAndArtist extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.t;
     final mpvMetaData = context.select((PlayerModel m) => m.mpvMetaData);
+    final icyName = mpvMetaData?.icyName;
+    final icyTitle = mpvMetaData?.icyTitle;
 
-    final label = mpvMetaData?.icyTitle.isNotEmpty == true
-        ? mpvMetaData!.icyTitle
-        : (audio?.title?.isNotEmpty == true ? audio!.title! : '');
+    final subTitle = icyName?.isNotEmpty == true
+        ? icyName!
+        : (audio?.audioType == AudioType.podcast
+                ? audio?.album
+                : audio?.artist ?? ' ') ??
+            '';
+
+    final title = icyTitle?.isNotEmpty == true
+        ? icyTitle!
+        : (audio?.title?.isNotEmpty == true ? audio!.title! : ' ');
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -33,9 +43,9 @@ class FullHeightTitleAndArtist extends StatelessWidget {
             context: context,
           ),
           child: Tooltip(
-            message: label,
+            message: title,
             child: Text(
-              label,
+              title,
               style: TextStyle(
                 fontWeight: largeTextWeight,
                 fontSize: 30,
@@ -54,18 +64,19 @@ class FullHeightTitleAndArtist extends StatelessWidget {
             artist: mpvMetaData?.icyName,
             context: context,
           ),
-          child: Text(
-            mpvMetaData?.icyName.isNotEmpty == true
-                ? mpvMetaData!.icyName
-                : (audio?.artist ?? ''),
-            style: TextStyle(
-              fontWeight: smallTextFontWeight,
-              fontSize: 20,
-              color: theme.colorScheme.onSurface,
+          child: Tooltip(
+            message: subTitle,
+            child: Text(
+              subTitle,
+              style: TextStyle(
+                fontWeight: smallTextFontWeight,
+                fontSize: 20,
+                color: theme.colorScheme.onSurface,
+              ),
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
           ),
         ),
       ],

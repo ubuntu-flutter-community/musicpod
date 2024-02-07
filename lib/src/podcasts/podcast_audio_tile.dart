@@ -313,7 +313,6 @@ class _Description extends StatelessWidget {
               ),
               children: [
                 SizedBox(
-                  height: 400,
                   width: 400,
                   child: _createHtml(
                     color: theme.colorScheme.onSurface,
