@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app.dart';
 import '../../build_context_x.dart';
@@ -9,7 +9,7 @@ import '../../theme_data_x.dart';
 import '../app/connectivity_notifier.dart';
 import '../theme.dart';
 
-class PlayerView extends StatefulWidget {
+class PlayerView extends ConsumerStatefulWidget {
   const PlayerView({
     super.key,
     required this.playerViewMode,
@@ -18,17 +18,17 @@ class PlayerView extends StatefulWidget {
   final PlayerViewMode playerViewMode;
 
   @override
-  State<PlayerView> createState() => _PlayerViewState();
+  ConsumerState<PlayerView> createState() => _PlayerViewState();
 }
 
-class _PlayerViewState extends State<PlayerView> {
+class _PlayerViewState extends ConsumerState<PlayerView> {
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
-      context.read<AppModel>().setShowWindowControls(
+      ref.read(appModelProvider).setShowWindowControls(
             widget.playerViewMode != PlayerViewMode.sideBar,
           );
     });
@@ -40,7 +40,7 @@ class _PlayerViewState extends State<PlayerView> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
-      context.read<AppModel>().setShowWindowControls(
+      ref.read(appModelProvider).setShowWindowControls(
             widget.playerViewMode != PlayerViewMode.sideBar,
           );
     });
@@ -51,21 +51,22 @@ class _PlayerViewState extends State<PlayerView> {
     final theme = context.t;
 
     // Connectivity
-    final isOnline = context.watch<ConnectivityNotifier>().isOnline;
+    final isOnline =
+        ref.watch(connectivityNotifierProvider.select((c) => c.isOnline));
 
-    final playerModel = context.read<PlayerModel>();
-    final appModel = context.read<AppModel>();
-    final nextAudio = context.select((PlayerModel m) => m.nextAudio);
-    final c = context.select((PlayerModel m) => m.color);
+    final playerModel = ref.read(playerModelProvider);
+    final appModel = ref.read(appModelProvider);
+    final nextAudio = ref.watch(playerModelProvider.select((p) => p.nextAudio));
+    final c = ref.watch(playerModelProvider.select((p) => p.color));
     final color = getPlayerBg(
       c,
       theme.isLight ? kCardColorLight : kCardColorDark,
     );
     final playPrevious = playerModel.playPrevious;
     final playNext = playerModel.playNext;
-    final audio = context.select((PlayerModel m) => m.audio);
+    final audio = ref.watch(playerModelProvider.select((p) => p.audio));
 
-    final isVideo = context.select((PlayerModel m) => m.isVideo);
+    final isVideo = ref.watch(playerModelProvider.select((p) => p.isVideo));
 
     Widget player;
     if (widget.playerViewMode != PlayerViewMode.bottom) {

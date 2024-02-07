@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
@@ -333,3 +335,7 @@ class LibraryModel extends SafeChangeNotifier {
 
   bool get recentPatchNotesDisposed => _service.recentPatchNotesDisposed;
 }
+
+final libraryModelProvider = ChangeNotifierProvider<LibraryModel>((ref) {
+  return LibraryModel(getService<LibraryService>());
+});

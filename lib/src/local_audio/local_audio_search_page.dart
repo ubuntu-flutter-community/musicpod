@@ -1,6 +1,6 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -14,25 +14,28 @@ import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 import 'local_audio_view.dart';
 
-class LocalAudioSearchPage extends StatelessWidget {
+class LocalAudioSearchPage extends ConsumerWidget {
   const LocalAudioSearchPage({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final showWindowControls =
-        context.select((AppModel m) => m.showWindowControls);
+        ref.watch(appModelProvider.select((v) => v.showWindowControls));
 
-    final model = context.read<LocalAudioModel>();
+    final model = ref.read(localAudioModelProvider);
     final titlesResult =
-        context.select((LocalAudioModel m) => m.titlesSearchResult);
-    final artistsResult =
-        context.select((LocalAudioModel m) => m.similarArtistsSearchResult);
+        ref.watch(localAudioModelProvider.select((m) => m.titlesSearchResult));
+    final artistsResult = ref.watch(
+      localAudioModelProvider.select((m) => m.similarArtistsSearchResult),
+    );
     final albumsResult =
-        context.select((LocalAudioModel m) => m.albumSearchResult);
-    final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
-    final index = context.select((LibraryModel m) => m.localAudioindex) ?? 0;
+        ref.watch(localAudioModelProvider.select((m) => m.albumSearchResult));
+    final searchQuery =
+        ref.watch(localAudioModelProvider.select((m) => m.searchQuery));
+    final index =
+        ref.watch(libraryModelProvider.select((m) => m.localAudioindex ?? 0));
     final localAudioView = LocalAudioView.values[index];
 
     void search({required String? text}) {

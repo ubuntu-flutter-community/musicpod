@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
@@ -13,7 +13,7 @@ import '../../theme.dart';
 import '../globals.dart';
 import '../library/library_model.dart';
 
-class PodcastsCollectionBody extends StatelessWidget {
+class PodcastsCollectionBody extends ConsumerWidget {
   const PodcastsCollectionBody({
     super.key,
     required this.isOnline,
@@ -24,22 +24,25 @@ class PodcastsCollectionBody extends StatelessWidget {
   final bool loading;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.t;
-    final subs = context.select((LibraryModel m) => m.podcasts);
-    context.select((LibraryModel m) => m.podcastUpdatesLength);
-    final playerModel = context.read<PlayerModel>();
-    final libraryModel = context.read<LibraryModel>();
+    final subs = ref.watch(libraryModelProvider.select((p) => p.podcasts));
+    ref.watch(libraryModelProvider.select((p) => p.podcastUpdatesLength));
+    final playerModel = ref.read(playerModelProvider);
+    final libraryModel = ref.read(libraryModelProvider);
     final podcastUpdateAvailable = libraryModel.podcastUpdateAvailable;
     final feedHasDownload = libraryModel.feedHasDownload;
     final updatesLength =
-        context.select((LibraryModel m) => m.podcastUpdatesLength);
-    final model = context.read<PodcastModel>();
-    final updatesOnly = context.select((PodcastModel m) => m.updatesOnly);
-    final downloadsOnly = context.select((PodcastModel m) => m.downloadsOnly);
-    final subsLength = context.select((LibraryModel m) => m.podcastsLength);
-    final feedsWithDownloadLength =
-        context.select((LibraryModel m) => m.feedsWithDownloadsLength);
+        ref.watch(libraryModelProvider.select((p) => p.podcastUpdatesLength));
+    final model = ref.read(podcastModelProvider);
+    final updatesOnly =
+        ref.watch(podcastModelProvider.select((p) => p.updatesOnly));
+    final downloadsOnly =
+        ref.watch(podcastModelProvider.select((p) => p.downloadsOnly));
+    final subsLength =
+        ref.watch(libraryModelProvider.select((p) => p.podcastsLength));
+    final feedsWithDownloadLength = ref
+        .watch(libraryModelProvider.select((p) => p.feedsWithDownloadsLength));
     final setUpdatesOnly = model.setUpdatesOnly;
     final setDownloadsOnly = model.setDownloadsOnly;
     final removeUpdate = libraryModel.removePodcastUpdate;

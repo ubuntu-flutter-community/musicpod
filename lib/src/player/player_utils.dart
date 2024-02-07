@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common.dart';
@@ -15,10 +15,10 @@ import '../app/app_model.dart';
 
 void onLocalAudioTitleTap({
   required Audio audio,
-  required BuildContext context,
+  required WidgetRef ref,
 }) {
-  final libraryModel = context.read<LibraryModel>();
-  final localAudioModel = context.read<LocalAudioModel>();
+  final libraryModel = ref.read(libraryModelProvider);
+  final localAudioModel = ref.read(localAudioModelProvider);
 
   final albumAudios = localAudioModel.findAlbum(audio);
   if (albumAudios?.firstOrNull == null) return;
@@ -42,9 +42,9 @@ void onLocalAudioTitleTap({
 
 void onLocalAudioArtistTap({
   required Audio audio,
-  required BuildContext context,
+  required WidgetRef ref,
 }) {
-  final localAudioModel = context.read<LocalAudioModel>();
+  final localAudioModel = ref.read(localAudioModelProvider);
 
   final artistAudios = localAudioModel.findArtist(audio);
   if (artistAudios?.firstOrNull == null) return;
@@ -66,12 +66,13 @@ void onTitleTap({
   required Audio? audio,
   required String? text,
   required BuildContext context,
+  required WidgetRef ref,
 }) {
   if (audio?.audioType == null || audio?.title == null) {
     return;
   }
   if (audio?.audioType == AudioType.local) {
-    context.read<AppModel>().setFullScreen(false);
+    ref.read(appModelProvider).setFullScreen(false);
   }
 
   if (text?.isNotEmpty == true) {
@@ -106,7 +107,7 @@ void onTitleTap({
   } else {
     onLocalAudioTitleTap(
       audio: audio!,
-      context: context,
+      ref: ref,
     );
   }
 }
@@ -115,12 +116,13 @@ Future<void> onArtistTap({
   required Audio? audio,
   required String? artist,
   required BuildContext context,
+  required WidgetRef ref,
 }) async {
   if (audio?.audioType == null || audio?.artist == null) {
     return;
   }
   if (audio?.audioType != AudioType.radio) {
-    context.read<AppModel>().setFullScreen(false);
+    ref.read(appModelProvider).setFullScreen(false);
   }
   if (audio!.audioType == AudioType.radio && audio.url?.isNotEmpty == true) {
     Clipboard.setData(ClipboardData(text: audio.url!));
@@ -147,9 +149,10 @@ Future<void> onArtistTap({
       itemImageUrl: audio.albumArtUrl,
       genre: audio.genre,
       play: false,
+      ref: ref,
     );
   } else {
-    onLocalAudioArtistTap(audio: audio, context: context);
+    onLocalAudioArtistTap(audio: audio, ref: ref);
   }
 }
 

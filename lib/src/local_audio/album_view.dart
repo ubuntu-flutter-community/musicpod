@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -40,71 +40,75 @@ class AlbumsView extends StatelessWidget {
       );
     }
 
-    final libraryModel = context.read<LibraryModel>();
-    final playerModel = context.read<PlayerModel>();
-    final model = context.read<LocalAudioModel>();
+    return Consumer(
+      builder: (context, ref, _) {
+        final model = ref.read(localAudioModelProvider);
+        final libraryModel = ref.read(libraryModelProvider);
+        final playerModel = ref.read(playerModelProvider);
+        return Padding(
+          padding: const EdgeInsets.only(top: 15),
+          child: GridView.builder(
+            shrinkWrap: true,
+            padding: gridPadding,
+            itemCount: albums!.length,
+            gridDelegate: imageGridDelegate,
+            itemBuilder: (context, index) {
+              final audio = albums!.elementAt(index);
+              String? id = generateAlbumId(audio);
+              final albumAudios = model.findAlbum(audio);
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 15),
-      child: GridView.builder(
-        shrinkWrap: true,
-        padding: gridPadding,
-        itemCount: albums!.length,
-        gridDelegate: imageGridDelegate,
-        itemBuilder: (context, index) {
-          final audio = albums!.elementAt(index);
-          String? id = generateAlbumId(audio);
-          final albumAudios = model.findAlbum(audio);
-
-          final image = audio.pictureData == null
-              ? Center(
-                  child: Icon(
-                    Iconz().musicNote,
-                    size: 70,
-                    color: theme.hintColor,
-                  ),
-                )
-              : Image.memory(
-                  audio.pictureData!,
-                  fit: BoxFit.cover,
-                  height: kSmallCardHeight,
-                  filterQuality: FilterQuality.medium,
-                );
-
-          return AudioCard(
-            bottom: Align(
-              alignment: Alignment.bottomCenter,
-              child: AudioCardBottom(
-                text: audio.album?.isNotEmpty == false
-                    ? context.l10n.unknown
-                    : audio.album!,
-              ),
-            ),
-            image: image,
-            onTap: id == null
-                ? null
-                : () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return AlbumPage(
-                            id: id,
-                            isPinnedAlbum: libraryModel.isPinnedAlbum,
-                            removePinnedAlbum: libraryModel.removePinnedAlbum,
-                            album: albumAudios,
-                            addPinnedAlbum: libraryModel.addPinnedAlbum,
-                          );
-                        },
+              final image = audio.pictureData == null
+                  ? Center(
+                      child: Icon(
+                        Iconz().musicNote,
+                        size: 70,
+                        color: theme.hintColor,
                       ),
-                    ),
-            onPlay: albumAudios == null || albumAudios.isEmpty || id == null
-                ? null
-                : () => playerModel.startPlaylist(
-                      audios: albumAudios,
-                      listName: id,
-                    ),
-          );
-        },
-      ),
+                    )
+                  : Image.memory(
+                      audio.pictureData!,
+                      fit: BoxFit.cover,
+                      height: kSmallCardHeight,
+                      filterQuality: FilterQuality.medium,
+                    );
+
+              return AudioCard(
+                bottom: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: AudioCardBottom(
+                    text: audio.album?.isNotEmpty == false
+                        ? context.l10n.unknown
+                        : audio.album!,
+                  ),
+                ),
+                image: image,
+                onTap: id == null
+                    ? null
+                    : () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return AlbumPage(
+                                id: id,
+                                isPinnedAlbum: libraryModel.isPinnedAlbum,
+                                removePinnedAlbum:
+                                    libraryModel.removePinnedAlbum,
+                                album: albumAudios,
+                                addPinnedAlbum: libraryModel.addPinnedAlbum,
+                              );
+                            },
+                          ),
+                        ),
+                onPlay: albumAudios == null || albumAudios.isEmpty || id == null
+                    ? null
+                    : () => playerModel.startPlaylist(
+                          audios: albumAudios,
+                          listName: id,
+                        ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
