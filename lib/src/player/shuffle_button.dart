@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../build_context_x.dart';
 import '../common/icons.dart';
 import 'player_model.dart';
+import 'package:provider/provider.dart';
 
 class ShuffleButton extends StatelessWidget {
   const ShuffleButton({
@@ -15,24 +15,19 @@ class ShuffleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    final shuffle = context.select((PlayerModel m) => m.shuffle);
+    final setShuffle = context.read<PlayerModel>().setShuffle;
 
-    return Consumer(
-      builder: (context, ref, _) {
-        final shuffle = ref.watch(playerModelProvider.select((p) => p.shuffle));
-        final setShuffle = ref.read(playerModelProvider).setShuffle;
-
-        return IconButton(
-          icon: Icon(
-            Iconz().shuffle,
-            color: !active
-                ? theme.disabledColor
-                : (shuffle
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.onSurface),
-          ),
-          onPressed: !active ? null : () => setShuffle(!(shuffle)),
-        );
-      },
+    return IconButton(
+      icon: Icon(
+        Iconz().shuffle,
+        color: !active
+            ? theme.disabledColor
+            : (shuffle
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurface),
+      ),
+      onPressed: !active ? null : () => setShuffle(!(shuffle)),
     );
   }
 }

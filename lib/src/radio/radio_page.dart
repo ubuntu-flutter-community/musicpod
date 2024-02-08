@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -11,7 +11,7 @@ import 'radio_discover_page.dart';
 import 'radio_lib_page.dart';
 import 'radio_model.dart';
 
-class RadioPage extends ConsumerStatefulWidget {
+class RadioPage extends StatefulWidget {
   const RadioPage({
     super.key,
     required this.isOnline,
@@ -22,17 +22,17 @@ class RadioPage extends ConsumerStatefulWidget {
   final String? countryCode;
 
   @override
-  ConsumerState<RadioPage> createState() => _RadioPageState();
+  State<RadioPage> createState() => _RadioPageState();
 }
 
-class _RadioPageState extends ConsumerState<RadioPage> {
+class _RadioPageState extends State<RadioPage> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      final model = ref.read(radioModelProvider);
-      final libraryModel = ref.read(libraryModelProvider);
+      final model = context.read<RadioModel>();
+      final libraryModel = context.read<LibraryModel>();
       final index = libraryModel.radioindex;
       model
           .init(
@@ -90,9 +90,9 @@ class _RadioPageState extends ConsumerState<RadioPage> {
   @override
   Widget build(BuildContext context) {
     final showWindowControls =
-        ref.watch(appModelProvider.select((p) => p.showWindowControls));
+        context.select((AppModel a) => a.showWindowControls);
 
-    ref.watch(libraryModelProvider.select((p) => p.favTagsLength));
+    context.select((LibraryModel m) => m.favTagsLength);
 
     if (!widget.isOnline) {
       return const OfflinePage();

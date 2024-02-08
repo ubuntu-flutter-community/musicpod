@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
 
-class FullHeightTitleAndArtist extends ConsumerWidget {
+class FullHeightTitleAndArtist extends StatelessWidget {
   const FullHeightTitleAndArtist({
     super.key,
     required this.audio,
@@ -15,10 +15,9 @@ class FullHeightTitleAndArtist extends ConsumerWidget {
   final Audio? audio;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
-    final mpvMetaData =
-        ref.watch(playerModelProvider.select((p) => p.mpvMetaData));
+    final mpvMetaData = context.select((PlayerModel m) => m.mpvMetaData);
     final icyName = mpvMetaData?.icyName;
     final icyTitle = mpvMetaData?.icyTitle;
 
@@ -42,7 +41,6 @@ class FullHeightTitleAndArtist extends ConsumerWidget {
             audio: audio,
             text: mpvMetaData?.icyTitle,
             context: context,
-            ref: ref,
           ),
           child: Tooltip(
             message: title,
@@ -65,7 +63,6 @@ class FullHeightTitleAndArtist extends ConsumerWidget {
             audio: audio,
             artist: mpvMetaData?.icyName,
             context: context,
-            ref: ref,
           ),
           child: Tooltip(
             message: subTitle,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../build_context_x.dart';
@@ -8,10 +8,7 @@ import '../../data.dart';
 import '../../library.dart';
 import 'download_model.dart';
 
-final downloadModelProviderToAudioMap =
-    <Audio, ChangeNotifierProvider<DownloadModel>>{};
-
-class DownloadButton extends ConsumerWidget {
+class DownloadButton extends StatelessWidget {
   const DownloadButton({
     super.key,
     this.iconSize,
@@ -22,20 +19,16 @@ class DownloadButton extends ConsumerWidget {
   static Widget create({
     required BuildContext context,
     double? iconSize,
-    required Audio audio,
+    required Audio? audio,
     required void Function()? addPodcast,
   }) {
-    downloadModelProviderToAudioMap.putIfAbsent(
-      audio,
-      () => ChangeNotifierProvider(
-        (ref) => DownloadModel(getService<LibraryService>()),
+    return ChangeNotifierProvider(
+      create: (_) => DownloadModel(getService<LibraryService>()),
+      child: DownloadButton(
+        iconSize: iconSize,
+        audio: audio,
+        addPodcast: addPodcast,
       ),
-    );
-
-    return DownloadButton(
-      iconSize: iconSize,
-      audio: audio,
-      addPodcast: addPodcast,
     );
   }
 
@@ -44,15 +37,10 @@ class DownloadButton extends ConsumerWidget {
   final void Function()? addPodcast;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
-    final modelProvider = downloadModelProviderToAudioMap[audio];
-
-    DownloadModel? model;
-    if (modelProvider != null) {
-      model = ref.read(modelProvider);
-    }
-    final value = ref.watch(modelProvider!.select((v) => v.value));
+    final model = context.read<DownloadModel>();
+    final value = context.select((DownloadModel m) => m.value);
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -66,10 +54,10 @@ class DownloadButton extends ConsumerWidget {
           ),
           onPressed: () {
             if (audio?.path != null) {
-              model?.deleteDownload(context: context, audio: audio);
+              model.deleteDownload(context: context, audio: audio);
             } else {
               addPodcast?.call();
-              model?.startDownload(context: context, audio: audio);
+              model.startDownload(context: context, audio: audio);
             }
           },
           iconSize: iconSize,

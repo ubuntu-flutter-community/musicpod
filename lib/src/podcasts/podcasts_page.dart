@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -18,7 +18,7 @@ import 'podcasts_control_panel.dart';
 import 'podcasts_discover_grid.dart';
 import 'podcasts_page_title.dart';
 
-class PodcastsPage extends ConsumerStatefulWidget {
+class PodcastsPage extends StatefulWidget {
   const PodcastsPage({
     super.key,
     required this.isOnline,
@@ -29,16 +29,16 @@ class PodcastsPage extends ConsumerStatefulWidget {
   final String? countryCode;
 
   @override
-  ConsumerState<PodcastsPage> createState() => _PodcastsPageState();
+  State<PodcastsPage> createState() => _PodcastsPageState();
 }
 
-class _PodcastsPageState extends ConsumerState<PodcastsPage> {
+class _PodcastsPageState extends State<PodcastsPage> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final settingsModel = ref.read(settingsModelProvider);
-      ref.read(podcastModelProvider).init(
+      final settingsModel = context.read<SettingsModel>();
+      context.read<PodcastModel>().init(
             countryCode: widget.countryCode,
             updateMessage: context.l10n.newEpisodeAvailable,
             isOnline: widget.isOnline,
@@ -55,17 +55,15 @@ class _PodcastsPageState extends ConsumerState<PodcastsPage> {
       return const OfflinePage();
     }
 
-    final model = ref.read(podcastModelProvider);
-    final searchResult =
-        ref.watch(podcastModelProvider.select((p) => p.searchResult));
+    final model = context.read<PodcastModel>();
+    final searchResult = context.select((PodcastModel m) => m.searchResult);
 
-    final searchActive =
-        ref.watch(podcastModelProvider.select((p) => p.searchActive));
+    final searchActive = context.select((PodcastModel m) => m.searchActive);
     final setSearchActive = model.setSearchActive;
     final theme = context.t;
-    final libraryModel = ref.read(libraryModelProvider);
+    final libraryModel = context.read<LibraryModel>();
 
-    final limit = ref.watch(podcastModelProvider.select((p) => p.limit));
+    final limit = context.select((PodcastModel m) => m.limit);
     final setLimit = model.setLimit;
 
     final search = model.search;
@@ -78,32 +76,29 @@ class _PodcastsPageState extends ConsumerState<PodcastsPage> {
       ),
     );
 
-    final searchQuery =
-        ref.watch(podcastModelProvider.select((p) => p.searchQuery));
+    final searchQuery = context.select((PodcastModel m) => m.searchQuery);
 
-    final country = ref.watch(podcastModelProvider.select((p) => p.country));
+    final country = context.select((PodcastModel m) => m.country);
     final sortedCountries =
-        ref.watch(podcastModelProvider.select((p) => p.sortedCountries));
-    ref.watch(podcastModelProvider.select((p) => p.country));
+        context.select((PodcastModel m) => m.sortedCountries);
+    context.select((PodcastModel m) => m.country);
 
     final checkingForUpdates =
-        ref.watch(podcastModelProvider.select((p) => p.checkingForUpdates));
+        context.select((PodcastModel m) => m.checkingForUpdates);
 
     void setCountry(Country? country) {
       model.setCountry(country);
       libraryModel.setLastCountryCode(country?.code);
     }
 
-    final podcastGenre =
-        ref.watch(podcastModelProvider.select((p) => p.podcastGenre));
-    final sortedGenres =
-        ref.watch(podcastModelProvider.select((p) => p.sortedGenres));
+    final podcastGenre = context.select((PodcastModel m) => m.podcastGenre);
+    final sortedGenres = context.select((PodcastModel m) => m.sortedGenres);
     final setPodcastGenre = model.setPodcastGenre;
     final usePodcastIndex =
-        ref.watch(settingsModelProvider.select((p) => p.usePodcastIndex));
+        context.select((SettingsModel m) => m.usePodcastIndex);
 
     final showWindowControls =
-        ref.watch(appModelProvider.select((p) => p.showWindowControls));
+        context.select((AppModel a) => a.showWindowControls);
 
     final controlPanel = PodcastsControlPanel(
       limit: limit,
@@ -192,7 +187,7 @@ class _PodcastsPageState extends ConsumerState<PodcastsPage> {
   }
 }
 
-class PodcastsPageIcon extends ConsumerWidget {
+class PodcastsPageIcon extends StatelessWidget {
   const PodcastsPageIcon({
     super.key,
     required this.selected,
@@ -201,13 +196,12 @@ class PodcastsPageIcon extends ConsumerWidget {
   final bool selected;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
-    final audioType =
-        ref.watch(playerModelProvider.select((p) => p.audio?.audioType));
+    final audioType = context.select((PlayerModel m) => m.audio?.audioType);
 
     final checkingForUpdates =
-        ref.watch(podcastModelProvider.select((p) => p.checkingForUpdates));
+        context.select((PodcastModel m) => m.checkingForUpdates);
 
     if (checkingForUpdates) {
       return const SideBarProgress();

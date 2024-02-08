@@ -29,7 +29,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.6.15
-  flutter_riverpod: ^2.4.10
   flutter_tabler_icons: ^1.7.0
   github: ^9.22.0
   gtk: ^2.1.0
@@ -50,9 +49,9 @@ dependencies:
   path: ^1.8.3
   path_provider: ^2.1.1
   podcast_search: ^0.6.8
+  provider: ^6.0.5
   radio_browser_api: ^1.0.1
   reorderableitemsview: ^2.0.1
-  riverpod_annotation: ^2.3.4
   safe_change_notifier: ^0.3.0
   scroll_to_index: ^3.0.1
   shimmer: ^3.0.0
@@ -75,8 +74,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
-  build_runner: ^2.4.8
-  custom_lint: ^0.6.0
 
 flutter:
   generate: true

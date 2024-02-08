@@ -1,6 +1,6 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -31,70 +31,66 @@ class LikedAudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final model = ref.read(localAudioModelProvider);
-        final libraryModel = ref.read(libraryModelProvider);
-        return AudioPage(
-          onAlbumTap: ({required audioType, required text}) {
-            final albumAudios = model.findAlbum(Audio(album: text));
-            if (albumAudios?.firstOrNull == null) return;
-            final id = generateAlbumId(albumAudios!.first);
-            if (id == null) return;
+    final model = context.read<LocalAudioModel>();
+    final libraryModel = context.read<LibraryModel>();
+    return AudioPage(
+      onAlbumTap: ({required audioType, required text}) {
+        final albumAudios = model.findAlbum(Audio(album: text));
+        if (albumAudios?.firstOrNull == null) return;
+        final id = generateAlbumId(albumAudios!.first);
+        if (id == null) return;
 
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) {
-                  return AlbumPage(
-                    isPinnedAlbum: libraryModel.isPinnedAlbum,
-                    removePinnedAlbum: libraryModel.removePinnedAlbum,
-                    addPinnedAlbum: libraryModel.addPinnedAlbum,
-                    id: id,
-                    album: albumAudios,
-                  );
-                },
-              ),
-            );
-          },
-          onArtistTap: ({required audioType, required text}) {
-            final artistAudios = model.findArtist(Audio(artist: text));
-            final images = model.findImages(artistAudios ?? {});
-
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) {
-                  return ArtistPage(
-                    images: images,
-                    artistAudios: artistAudios,
-                  );
-                },
-              ),
-            );
-          },
-          controlPanelButton: Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Text(
-              '${likedLocalAudios?.length} ${context.l10n.titles}',
-              style: getControlPanelStyle(context.t.textTheme),
-            ),
-          ),
-          noResultMessage: Text(context.l10n.likedSongsSubtitle),
-          noResultIcon: const AnimatedEmoji(AnimatedEmojis.twoHearts),
-          audios: likedLocalAudios ?? {},
-          audioPageType: AudioPageType.likedAudio,
-          pageId: kLikedAudiosPageId,
-          title: Text(context.l10n.likedSongs),
-          headerTitle: context.l10n.likedSongs,
-          headerSubtile: context.l10n.likedSongsSubtitle,
-          headerLabel: context.l10n.playlist,
-          image: FallBackHeaderImage(
-            child: Icon(
-              Iconz().heart,
-              size: 65,
-            ),
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) {
+              return AlbumPage(
+                isPinnedAlbum: libraryModel.isPinnedAlbum,
+                removePinnedAlbum: libraryModel.removePinnedAlbum,
+                addPinnedAlbum: libraryModel.addPinnedAlbum,
+                id: id,
+                album: albumAudios,
+              );
+            },
           ),
         );
       },
+      onArtistTap: ({required audioType, required text}) {
+        final artistAudios = model.findArtist(Audio(artist: text));
+        final images = model.findImages(artistAudios ?? {});
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) {
+              return ArtistPage(
+                images: images,
+                artistAudios: artistAudios,
+              );
+            },
+          ),
+        );
+      },
+      controlPanelButton: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: Text(
+          '${likedLocalAudios?.length} ${context.l10n.titles}',
+          style: getControlPanelStyle(context.t.textTheme),
+        ),
+      ),
+      noResultMessage: Text(context.l10n.likedSongsSubtitle),
+      noResultIcon: const AnimatedEmoji(AnimatedEmojis.twoHearts),
+      audios: likedLocalAudios ?? {},
+      audioPageType: AudioPageType.likedAudio,
+      pageId: kLikedAudiosPageId,
+      title: Text(context.l10n.likedSongs),
+      headerTitle: context.l10n.likedSongs,
+      headerSubtile: context.l10n.likedSongsSubtitle,
+      headerLabel: context.l10n.playlist,
+      image: FallBackHeaderImage(
+        child: Icon(
+          Iconz().heart,
+          size: 65,
+        ),
+      ),
     );
   }
 }

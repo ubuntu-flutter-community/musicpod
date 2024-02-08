@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
@@ -10,7 +10,6 @@ import '../../podcasts.dart';
 
 Future<void> searchAndPushPodcastPage({
   required BuildContext context,
-  required WidgetRef ref,
   required String? feedUrl,
   required String? itemImageUrl,
   required String? genre,
@@ -26,8 +25,8 @@ Future<void> searchAndPushPodcastPage({
     );
     return;
   }
-  final model = ref.read(podcastModelProvider);
-  final startPlaylist = ref.read(playerModelProvider).startPlaylist;
+  final model = context.read<PodcastModel>();
+  final startPlaylist = context.read<PlayerModel>().startPlaylist;
   final selectedFeedUrl = model.selectedFeedUrl;
   final setSelectedFeedUrl = model.setSelectedFeedUrl;
 

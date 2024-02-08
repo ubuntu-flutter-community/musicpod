@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -13,29 +13,27 @@ import 'radio_control_panel.dart';
 import 'radio_search.dart';
 import 'radio_search_page.dart';
 
-class RadioDiscoverPage extends ConsumerWidget {
+class RadioDiscoverPage extends StatelessWidget {
   const RadioDiscoverPage({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final showWindowControls =
-        ref.watch(appModelProvider.select((p) => p.showWindowControls));
-    final model = ref.read(radioModelProvider);
-    final libraryModel = ref.read(libraryModelProvider);
-    final searchQuery =
-        ref.watch(radioModelProvider.select((p) => p.searchQuery));
+        context.select((AppModel a) => a.showWindowControls);
+    final model = context.read<RadioModel>();
+    final libraryModel = context.read<LibraryModel>();
+    final searchQuery = context.select((RadioModel m) => m.searchQuery);
 
-    ref.watch(libraryModelProvider.select((p) => p.favTagsLength));
-    ref.watch(libraryModelProvider.select((p) => p.favCountriesLength));
+    context.select((LibraryModel m) => m.favTagsLength);
+    context.select((LibraryModel m) => m.favCountriesLength);
 
-    final radioSearch = ref.watch(
-      libraryModelProvider.select((p) => RadioSearch.values[p.radioindex]),
-    );
+    final radioSearch =
+        context.select((LibraryModel m) => RadioSearch.values[m.radioindex]);
 
-    final country = ref.watch(radioModelProvider.select((p) => p.country));
-    final tag = ref.watch(radioModelProvider.select((p) => p.tag));
+    final country = context.select((RadioModel m) => m.country);
+    final tag = context.select((RadioModel m) => m.tag);
 
     final Widget input = switch (radioSearch) {
       RadioSearch.country => CountryAutoComplete(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
+import 'package:provider/provider.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -41,6 +41,7 @@ class PodcastsControlPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final libraryModel = context.read<LibraryModel>();
     final theme = context.t;
     final fillColor = theme.chipTheme.selectedColor;
     final contentPadding = yaruStyled
@@ -58,57 +59,50 @@ class PodcastsControlPanel extends StatelessWidget {
         spacing: 10,
         runSpacing: 20,
         children: [
-          Consumer(
-            builder: (context, ref, _) {
-              final libraryModel = ref.read(libraryModelProvider);
-              return CountryAutoComplete(
-                contentPadding: contentPadding,
-                fillColor: fillColor,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(100),
-                  borderSide: BorderSide(
-                    color: theme.colorScheme.outline,
-                    width: 1.3,
-                    strokeAlign: 1,
-                  ),
-                ),
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-                isDense: true,
-                width: 150,
-                height: chipHeight,
-                countries: [
-                  ...[
-                    ...Country.values,
-                  ].where(
-                    (e) =>
-                        libraryModel.favCountryCodes.contains(e.code) == true,
-                  ),
-                  ...[...Country.values].where(
-                    (e) =>
-                        libraryModel.favCountryCodes.contains(e.code) == false,
-                  ),
-                ]..remove(Country.none),
-                onSelected: (country) {
-                  setCountry(country);
-                  setLimit(20);
+          CountryAutoComplete(
+            contentPadding: contentPadding,
+            fillColor: fillColor,
+            filled: true,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(100),
+              borderSide: BorderSide(
+                color: theme.colorScheme.outline,
+                width: 1.3,
+                strokeAlign: 1,
+              ),
+            ),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+            isDense: true,
+            width: 150,
+            height: chipHeight,
+            countries: [
+              ...[
+                ...Country.values,
+              ].where(
+                (e) => libraryModel.favCountryCodes.contains(e.code) == true,
+              ),
+              ...[...Country.values].where(
+                (e) => libraryModel.favCountryCodes.contains(e.code) == false,
+              ),
+            ]..remove(Country.none),
+            onSelected: (country) {
+              setCountry(country);
+              setLimit(20);
 
-                  search(searchQuery: searchQuery);
-                },
-                value: country,
-                addFav: (v) {
-                  if (country?.code == null) return;
-                  libraryModel.addFavCountry(v!.code);
-                },
-                removeFav: (v) {
-                  if (country?.code == null) return;
-                  libraryModel.removeFavCountry(v!.code);
-                },
-                favs: libraryModel.favCountryCodes,
-              );
+              search(searchQuery: searchQuery);
             },
+            value: country,
+            addFav: (v) {
+              if (country?.code == null) return;
+              libraryModel.addFavCountry(v!.code);
+            },
+            removeFav: (v) {
+              if (country?.code == null) return;
+              libraryModel.removeFavCountry(v!.code);
+            },
+            favs: libraryModel.favCountryCodes,
           ),
           PodcastGenreAutoComplete(
             contentPadding: contentPadding,
