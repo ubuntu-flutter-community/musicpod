@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -17,7 +18,7 @@ import '../../player.dart';
 import '../../podcasts.dart';
 import '../../radio.dart';
 import '../external_path/external_path_service.dart';
-import '../settings/settings_model.dart';
+import '../settings/settings_service.dart';
 import 'connectivity_notifier.dart';
 import 'master_detail_page.dart';
 
@@ -27,9 +28,6 @@ class App extends StatefulWidget {
   static Widget create() {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => AppModel(),
-        ),
         ChangeNotifierProvider(
           create: (_) => RadioModel(getService<RadioService>()),
         ),
@@ -45,12 +43,10 @@ class App extends StatefulWidget {
           ),
         ),
         ChangeNotifierProvider(
-          create: (_) => LibraryModel(getService<LibraryService>()),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => SettingsModel(
-            libraryService: getService<LibraryService>(),
-          )..init(),
+          create: (_) => LibraryModel(
+            getService<LibraryService>(),
+            getService<AppStateService>(),
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => PodcastModel(
@@ -84,6 +80,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     _countryCode = WidgetsBinding.instance.platformDispatcher.locale.countryCode
         ?.toLowerCase();
 
+    final settingService = getService<SettingsService>();
+
     final libraryModel = context.read<LibraryModel>();
     final playerModel = context.read<PlayerModel>();
 
@@ -94,6 +92,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     if (!Platform.isAndroid && !Platform.isIOS) {
       YaruWindow.of(context).onClose(
         () async {
+          final service = getService<AppStateService>();
+          await service.safeStates();
           await resetAllServices();
           return true;
         },
@@ -107,8 +107,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
           libraryModel.init().then(
             (_) {
               playerModel.init().then((_) {
-                if (libraryModel.recentPatchNotesDisposed == false) {
-                  showPatchNotes(context, libraryModel.disposePatchNotes);
+                if (settingService.recentPatchNotesDisposed.value == false) {
+                  showPatchNotes(context, settingService.disposePatchNotes);
                 }
                 extPathService.init(playerModel.play);
               });
@@ -128,7 +128,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.paused) {
-      await context.read<LibraryModel>().safeStates();
+      final service = getService<AppStateService>();
+      await service.safeStates();
+      await resetAllServices();
     }
   }
 
@@ -136,8 +138,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final playerToTheRight = context.m.size.width > kSideBarThreshHold;
 
-    // AppModel
-    final isFullScreen = context.select((AppModel m) => m.fullScreen);
+    final appStateService = getService<AppStateService>();
+    final isFullScreen = appStateService.fullScreen;
 
     final playerModel = context.read<PlayerModel>();
 
@@ -149,42 +151,46 @@ class _AppState extends State<App> with WidgetsBindingObserver {
           playerModel.playOrPause();
         }
       },
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Row(
+      child: Watch.builder(
+        builder: (context) {
+          return Stack(
+            alignment: Alignment.center,
             children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: MasterDetailPage(
-                        countryCode: _countryCode,
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: MasterDetailPage(
+                            countryCode: _countryCode,
+                          ),
+                        ),
+                        if (!playerToTheRight)
+                          const PlayerView(
+                            playerViewMode: PlayerViewMode.bottom,
+                          ),
+                      ],
+                    ),
+                  ),
+                  if (playerToTheRight)
+                    const SizedBox(
+                      width: kSideBarPlayerWidth,
+                      child: PlayerView(
+                        playerViewMode: PlayerViewMode.sideBar,
                       ),
                     ),
-                    if (!playerToTheRight)
-                      const PlayerView(
-                        playerViewMode: PlayerViewMode.bottom,
-                      ),
-                  ],
-                ),
+                ],
               ),
-              if (playerToTheRight)
-                const SizedBox(
-                  width: kSideBarPlayerWidth,
-                  child: PlayerView(
-                    playerViewMode: PlayerViewMode.sideBar,
+              if (isFullScreen.value == true)
+                const Scaffold(
+                  body: PlayerView(
+                    playerViewMode: PlayerViewMode.fullWindow,
                   ),
                 ),
             ],
-          ),
-          if (isFullScreen == true)
-            const Scaffold(
-              body: PlayerView(
-                playerViewMode: PlayerViewMode.fullWindow,
-              ),
-            ),
-        ],
+          );
+        },
       ),
     );
   }

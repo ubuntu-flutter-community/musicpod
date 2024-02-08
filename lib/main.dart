@@ -21,6 +21,7 @@ import 'notifications.dart';
 import 'player.dart';
 import 'podcasts.dart';
 import 'radio.dart';
+import 'src/settings/settings_service.dart';
 
 Future<void> main(List<String> args) async {
   if (!isMobile) {
@@ -57,6 +58,15 @@ Future<void> main(List<String> args) async {
     () => libraryService,
     dispose: (s) async => await s.dispose(),
   );
+
+  final appStateService = AppStateService();
+  await appStateService.init();
+  registerService<AppStateService>(() => appStateService);
+
+  final settingsService = SettingsService();
+  await settingsService.init();
+  registerService<SettingsService>(() => settingsService);
+
   registerService<LocalAudioService>(
     LocalAudioService.new,
     dispose: (s) async => await s.dispose(),

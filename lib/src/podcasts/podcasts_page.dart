@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -11,8 +13,7 @@ import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
 import '../l10n/l10n.dart';
-import '../library/library_model.dart';
-import '../settings/settings_model.dart';
+import '../settings/settings_service.dart';
 import 'podcasts_collection_body.dart';
 import 'podcasts_control_panel.dart';
 import 'podcasts_discover_grid.dart';
@@ -37,14 +38,14 @@ class _PodcastsPageState extends State<PodcastsPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final settingsModel = context.read<SettingsModel>();
+      final settingsModel = getService<SettingsService>();
       context.read<PodcastModel>().init(
             countryCode: widget.countryCode,
             updateMessage: context.l10n.newEpisodeAvailable,
             isOnline: widget.isOnline,
-            usePodcastIndex: settingsModel.usePodcastIndex,
-            podcastIndexApiKey: settingsModel.podcastIndexApiKey,
-            podcastIndexApiSecret: settingsModel.podcastIndexApiSecret,
+            usePodcastIndex: settingsModel.usePodcastIndex.value,
+            podcastIndexApiKey: settingsModel.podcastIndexApiKey.value,
+            podcastIndexApiSecret: settingsModel.podcastIndexApiSecret.value,
           );
     });
   }
@@ -61,7 +62,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final searchActive = context.select((PodcastModel m) => m.searchActive);
     final setSearchActive = model.setSearchActive;
     final theme = context.t;
-    final libraryModel = context.read<LibraryModel>();
 
     final limit = context.select((PodcastModel m) => m.limit);
     final setLimit = model.setLimit;
@@ -85,20 +85,18 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
     final checkingForUpdates =
         context.select((PodcastModel m) => m.checkingForUpdates);
-
+    final appStateService = getService<AppStateService>();
+    final settingsService = getService<SettingsService>();
+    final showWindowControls = appStateService.showWindowControls;
     void setCountry(Country? country) {
       model.setCountry(country);
-      libraryModel.setLastCountryCode(country?.code);
+      appStateService.setLastCountryCode(country?.code);
     }
 
     final podcastGenre = context.select((PodcastModel m) => m.podcastGenre);
     final sortedGenres = context.select((PodcastModel m) => m.sortedGenres);
     final setPodcastGenre = model.setPodcastGenre;
-    final usePodcastIndex =
-        context.select((SettingsModel m) => m.usePodcastIndex);
-
-    final showWindowControls =
-        context.select((AppModel a) => a.showWindowControls);
+    final usePodcastIndex = settingsService.usePodcastIndex;
 
     final controlPanel = PodcastsControlPanel(
       limit: limit,
@@ -112,7 +110,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
       setPodcastGenre: setPodcastGenre,
       podcastGenre: podcastGenre,
       textStyle: textStyle,
-      sortedGenres: usePodcastIndex
+      sortedGenres: usePodcastIndex.watch(context)
           ? sortedGenres
               .where((e) => !e.name.contains('XXXITunesOnly'))
               .toList()
@@ -157,7 +155,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               )
             : const SizedBox.shrink(),
         titleSpacing: 0,
-        style: showWindowControls
+        style: showWindowControls.watch(context)
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
         actions: [

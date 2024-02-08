@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -54,8 +56,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final showWindowControls =
-        context.select((AppModel a) => a.showWindowControls);
+    final service = getService<AppStateService>();
+    final showWindowControls = service.showWindowControls;
 
     final model = context.read<LocalAudioModel>();
     final audios = context.select((LocalAudioModel m) => m.audios);
@@ -77,11 +79,10 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
       }
     }
 
-    final index = context.select((LibraryModel m) => m.localAudioindex) ?? 0;
-    final localAudioView = LocalAudioView.values[index];
+    final index = service.localAudioIndex;
 
     final headerBar = HeaderBar(
-      style: showWindowControls
+      style: showWindowControls.watch(context)
           ? YaruTitleBarStyle.normal
           : YaruTitleBarStyle.undecorated,
       leading: (navigatorKey.currentState?.canPop() == true)
@@ -111,7 +112,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
           const LocalAudioControlPanel(),
           Expanded(
             child: LocalAudioBody(
-              localAudioView: localAudioView,
+              localAudioView: LocalAudioView.values[index.watch(context)],
               titles: audios,
               albums: model.allAlbums,
               artists: model.allArtists,

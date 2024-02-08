@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../app.dart';
 import '../../build_context_x.dart';
@@ -24,14 +25,12 @@ class BottomPlayer extends StatelessWidget {
     this.isVideo,
     required this.videoController,
     required this.isOnline,
-    required this.appModel,
   });
 
   final Audio? audio;
 
   final Future<void> Function() playPrevious;
   final Future<void> Function() playNext;
-  final AppModel appModel;
   final bool? isVideo;
   final VideoController videoController;
   final bool isOnline;
@@ -41,6 +40,7 @@ class BottomPlayer extends StatelessWidget {
     final theme = context.t;
     final veryNarrow = context.m.size.width < kMasterDetailBreakPoint;
     final active = audio?.path != null || isOnline;
+    final appStateService = getService<AppStateService>();
 
     final bottomPlayerImage = ClipRRect(
       borderRadius: BorderRadius.circular(4),
@@ -118,7 +118,7 @@ class BottomPlayer extends StatelessWidget {
                       Iconz().fullScreen,
                       color: theme.colorScheme.onSurface,
                     ),
-                    onPressed: () => appModel.setFullScreen(true),
+                    onPressed: () => appStateService.setFullScreen(true),
                   ),
                 ],
               ),
@@ -139,7 +139,7 @@ class BottomPlayer extends StatelessWidget {
           track,
           if (veryNarrow)
             InkWell(
-              onTap: () => appModel.setFullScreen(true),
+              onTap: () => appStateService.setFullScreen(true),
               child: bottom,
             )
           else
@@ -153,7 +153,7 @@ class BottomPlayer extends StatelessWidget {
         onVerticalDragEnd: (details) {
           if (details.primaryVelocity != null &&
               details.primaryVelocity! < 150) {
-            appModel.setFullScreen(true);
+            appStateService.setFullScreen(true);
           }
         },
         child: player,

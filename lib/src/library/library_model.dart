@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../../app.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import 'library_service.dart';
@@ -9,9 +10,10 @@ import 'library_service.dart';
 const kFixedListAmount = 5; // local, radio, podcasts, newplaylist, favs
 
 class LibraryModel extends SafeChangeNotifier {
-  LibraryModel(this._service);
+  LibraryModel(this._service, this._appStateService);
 
   final LibraryService _service;
+  final AppStateService _appStateService;
   StreamSubscription<bool>? _likedAudiosSub;
   StreamSubscription<bool>? _playlistsSub;
   StreamSubscription<bool>? _albumsSub;
@@ -35,16 +37,6 @@ class LibraryModel extends SafeChangeNotifier {
       await _service.setNeverShowFailedImports();
 
   Future<void> init() async {
-    if (totalListAmount - 1 >= _service.appIndex) {
-      _index = _service.appIndex;
-    }
-
-    _localAudioIndexSub =
-        _service.localAudioIndexChanged.listen((_) => notifyListeners());
-    _radioIndexSub =
-        _service.radioIndexChanged.listen((_) => notifyListeners());
-    _podcastIndexSub =
-        _service.podcastIndexChanged.listen((_) => notifyListeners());
     _likedAudiosSub =
         _service.likedAudiosChanged.listen((event) => notifyListeners());
     _playlistsSub =
@@ -64,16 +56,9 @@ class LibraryModel extends SafeChangeNotifier {
     _favCountriesSub =
         _service.favCountriesChanged.listen((_) => notifyListeners());
 
-    _lastFavSub = _service.lastFavChanged.listen((_) => notifyListeners());
     _downloadsSub = _service.downloadsChanged.listen((_) => notifyListeners());
-    _lastCountryCodeSub =
-        _service.lastCountryCodeChanged.listen((_) => notifyListeners());
 
     notifyListeners();
-  }
-
-  Future<void> safeStates() async {
-    await _service.safeStates();
   }
 
   @override
@@ -147,7 +132,7 @@ class LibraryModel extends SafeChangeNotifier {
   void unStarStation(String url) {
     final stationIndex = indexOfStation(url);
     if (stationIndex == index) {
-      setIndex(_service.appIndex - 1);
+      setIndex(_appStateService.appIndex.value - 1);
     }
     _service.unStarStation(url);
   }
@@ -171,12 +156,6 @@ class LibraryModel extends SafeChangeNotifier {
 
   void addFavTag(String value) => _service.addFavTag(value);
   void removeFavTag(String value) => _service.removeFavTag(value);
-
-  String? get lastFav => _service.lastFav;
-  void setLastFav(String? value) => _service.setLastFav(value);
-
-  String? get lastCountryCode => _service.lastCountryCode;
-  void setLastCountryCode(String? value) => _service.setLastCountryCode(value);
 
   void addFavCountry(String value) => _service.addFavCountry(value);
   void removeFavCountry(String value) => _service.removeFavCountry(value);
@@ -202,7 +181,7 @@ class LibraryModel extends SafeChangeNotifier {
   void removePlaylist(String id) {
     final playlistIndex = getIndexOfPlaylist(id);
     if (index == playlistIndex) {
-      setIndex(_service.appIndex - 1);
+      setIndex(_appStateService.appIndex.value - 1);
     }
     _service.removePlaylist(id);
   }
@@ -239,7 +218,7 @@ class LibraryModel extends SafeChangeNotifier {
   void removePodcast(String feedUrl) {
     final podcastIndex = indexOfPodcast(feedUrl);
     if (podcastIndex == index) {
-      setIndex(_service.appIndex - 1);
+      setIndex(_appStateService.appIndex.value - 1);
     }
     _service.removePodcast(feedUrl);
   }
@@ -288,7 +267,7 @@ class LibraryModel extends SafeChangeNotifier {
   void removePinnedAlbum(String name) {
     final albumIndex = indexOfAlbum(name);
     if (albumIndex == index) {
-      setIndex(_service.appIndex - 1);
+      setIndex(_appStateService.appIndex.value - 1);
     }
     _service.removePinnedAlbum(name);
   }
@@ -303,33 +282,21 @@ class LibraryModel extends SafeChangeNotifier {
         allAlbums.indexOf(album);
   }
 
-  int? _index;
-  int? get index => _index;
-  void setIndex(int? value) {
-    if (value == null || value == _index) return;
-    _index = value;
-    _service.setAppIndex(value);
+  int? get index {
+    if (totalListAmount - 1 >= _appStateService.appIndex.value) {
+      return _appStateService.appIndex.value;
+    } else {
+      return 0;
+    }
+  }
+
+  void setIndex(int value) {
+    _appStateService.setAppIndex(value);
     notifyListeners();
   }
-
-  int? get localAudioindex => _service.localAudioIndex;
-  void setLocalAudioindex(int? value) {
-    if (value == null || value == _service.localAudioIndex) return;
-    _service.setLocalAudioIndex(value);
-  }
-
-  int get radioindex => _service.radioIndex;
-  void setRadioIndex(int value) => _service.setRadioIndex(value);
-
-  int get podcastIndex => _service.podcastIndex;
-  void setPodcastIndex(int value) => _service.setPodcastIndex(value);
 
   Map<String, Duration>? get lastPositions => _service.lastPositions;
   Duration? getLastPosition(String? url) => _service.getLastPosition(url);
   void addLastPosition(String url, Duration lastPosition) =>
       _service.addLastPosition(url, lastPosition);
-
-  Future<void> disposePatchNotes() async => await _service.disposePatchNotes();
-
-  bool get recentPatchNotesDisposed => _service.recentPatchNotesDisposed;
 }

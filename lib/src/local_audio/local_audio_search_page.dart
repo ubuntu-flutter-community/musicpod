@@ -1,13 +1,14 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../globals.dart';
-import '../../library.dart';
 import '../../local_audio.dart';
 import '../l10n/l10n.dart';
 import 'local_audio_body.dart';
@@ -21,8 +22,8 @@ class LocalAudioSearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showWindowControls =
-        context.select((AppModel m) => m.showWindowControls);
+    final service = getService<AppStateService>();
+    final showWindowControls = service.showWindowControls;
 
     final model = context.read<LocalAudioModel>();
     final titlesResult =
@@ -32,8 +33,7 @@ class LocalAudioSearchPage extends StatelessWidget {
     final albumsResult =
         context.select((LocalAudioModel m) => m.albumSearchResult);
     final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
-    final index = context.select((LibraryModel m) => m.localAudioindex) ?? 0;
-    final localAudioView = LocalAudioView.values[index];
+    final index = service.localAudioIndex;
 
     void search({required String? text}) {
       if (text != null) {
@@ -65,7 +65,7 @@ class LocalAudioSearchPage extends StatelessWidget {
             noResultMessage: Text(
               nothing ? context.l10n.noLocalSearchFound : context.l10n.search,
             ),
-            localAudioView: localAudioView,
+            localAudioView: LocalAudioView.values[index.watch(context)],
             titles: titlesResult,
             artists: artistsResult,
             albums: albumsResult,
@@ -76,7 +76,7 @@ class LocalAudioSearchPage extends StatelessWidget {
 
     return Scaffold(
       appBar: HeaderBar(
-        style: showWindowControls
+        style: showWindowControls.watch(context)
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
         leading: (Navigator.of(context).canPop())

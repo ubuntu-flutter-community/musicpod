@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -29,7 +30,6 @@ class FullHeightPlayer extends StatelessWidget {
     required this.videoController,
     required this.isVideo,
     required this.isOnline,
-    required this.appModel,
   });
 
   final Audio? audio;
@@ -38,7 +38,6 @@ class FullHeightPlayer extends StatelessWidget {
   final Future<void> Function() playNext;
 
   final PlayerViewMode playerViewMode;
-  final AppModel appModel;
 
   final VideoController videoController;
   final bool isVideo;
@@ -49,7 +48,8 @@ class FullHeightPlayer extends StatelessWidget {
     final theme = context.t;
     final size = context.m.size;
     final playerToTheRight = size.width > kSideBarThreshHold;
-    final fullScreen = context.select((AppModel m) => m.fullScreen);
+    final appStateService = getService<AppStateService>();
+    final fullScreen = appStateService.fullScreen;
 
     final active = audio?.path != null || isOnline;
     final activeControls = audio?.path != null || isOnline;
@@ -63,12 +63,14 @@ class FullHeightPlayer extends StatelessWidget {
     final iconColor = isVideo ? Colors.white : theme.colorScheme.onSurface;
 
     void onFullScreenPressed() {
-      appModel.setFullScreen(
+      appStateService.setFullScreen(
         playerViewMode == PlayerViewMode.fullWindow ? false : true,
       );
 
-      appModel.setShowWindowControls(
-        (fullScreen == true && playerToTheRight) ? false : true,
+      effect(
+        () => appStateService.setShowWindowControls(
+          (fullScreen.value == true && playerToTheRight) ? false : true,
+        ),
       );
     }
 
@@ -171,7 +173,7 @@ class FullHeightPlayer extends StatelessWidget {
                   onVerticalDragEnd: (details) {
                     if (details.primaryVelocity != null &&
                         details.primaryVelocity! > 150) {
-                      appModel.setFullScreen(false);
+                      appStateService.setFullScreen(false);
                     }
                   },
                   child: Padding(

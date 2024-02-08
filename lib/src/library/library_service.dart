@@ -3,13 +3,10 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 
 import '../../constants.dart';
 import '../../data.dart';
-import '../../globals.dart';
-import '../../patch_notes.dart';
 import '../../utils.dart';
 
 class LibraryService {
@@ -122,29 +119,6 @@ class LibraryService {
     writeStringIterable(iterable: _favTags, filename: kTagFavsFileName)
         .then((_) => _favTagsController.add(true));
   }
-
-  String? _lastFav;
-  String? get lastFav => _lastFav;
-  void setLastFav(String? value) {
-    if (value == _lastFav) return;
-    _lastFav = value;
-    writeSetting(kLastFav, value).then((_) => _lastFavController.add(true));
-  }
-
-  final _lastFavController = StreamController<bool>.broadcast();
-  Stream<bool> get lastFavChanged => _lastFavController.stream;
-
-  String? _lastCountryCode;
-  String? get lastCountryCode => _lastCountryCode;
-  void setLastCountryCode(String? value) {
-    if (value == _lastCountryCode) return;
-    _lastCountryCode = value;
-    writeSetting(kLastCountryCode, value)
-        .then((_) => _lastCountryCodeController.add(true));
-  }
-
-  final _lastCountryCodeController = StreamController<bool>.broadcast();
-  Stream<bool> get lastCountryCodeChanged => _lastCountryCodeController.stream;
 
   Set<String> _favCountries = {};
   Set<String> get favCountries => _favCountries;
@@ -388,7 +362,6 @@ class LibraryService {
 
   bool _libraryInitialized = false;
   Future<bool> init() async {
-    await _initSettings();
     await _initLibrary();
     return _libraryInitialized;
   }
@@ -424,101 +397,9 @@ class LibraryService {
     _libraryInitialized = true;
   }
 
-  bool _settingsInitialized = false;
-  Future<void> _initSettings() async {
-    if (_settingsInitialized) return;
-
-    await _readUsePodcastIndex();
-
-    await _readPodcastIndexApiKey();
-
-    await _readPodcastIndexApiSecret();
-
-    await _readRecentPatchNotesDisposed();
-
-    var neverShowImportsOrNull = await readSetting(kNeverShowImportFails);
-    _neverShowFailedImports = neverShowImportsOrNull == null
-        ? false
-        : bool.parse(neverShowImportsOrNull);
-
-    final appIndexOrNull = await readSetting(kAppIndex);
-    _appIndex = appIndexOrNull == null ? 0 : int.parse(appIndexOrNull);
-
-    final localAudioIndexStringOrNull = await readSetting(kLocalAudioIndex);
-    if (localAudioIndexStringOrNull != null) {
-      final localParse = int.tryParse(localAudioIndexStringOrNull);
-      if (localParse != null) {
-        _localAudioIndex = localParse;
-      }
-    }
-
-    final themeIndexStringOrNull = await readSetting(kThemeIndex);
-    if (themeIndexStringOrNull != null) {
-      final themeParse = int.tryParse(themeIndexStringOrNull);
-      if (themeParse != null) {
-        _themeIndex = themeParse;
-        themeNotifier.value = ThemeMode.values[_themeIndex];
-      }
-    }
-
-    final radioIndexStringOrNull = await readSetting(kRadioIndex);
-    if (radioIndexStringOrNull != null) {
-      final radioParse = int.tryParse(radioIndexStringOrNull);
-      if (radioParse != null) {
-        _radioIndex = radioParse;
-      }
-    }
-
-    _settingsInitialized = true;
-  }
-
-  int _localAudioIndex = 0;
-  int get localAudioIndex => _localAudioIndex;
-  final _localAudioIndexController = StreamController<bool>.broadcast();
-  Stream<bool> get localAudioIndexChanged => _localAudioIndexController.stream;
-  void setLocalAudioIndex(int value) {
-    if (value == _localAudioIndex) return;
-    _localAudioIndex = value;
-    _localAudioIndexController.add(true);
-  }
-
-  int _radioIndex = 2; // Default to RadioSearch.country
-  int get radioIndex => _radioIndex;
-  final _radioIndexController = StreamController<bool>.broadcast();
-  Stream<bool> get radioIndexChanged => _radioIndexController.stream;
-  void setRadioIndex(int value) {
-    if (value == _radioIndex) return;
-    _radioIndex = value;
-    _radioIndexController.add(true);
-  }
-
-  int _podcastIndex = 0;
-  int get podcastIndex => _podcastIndex;
-  final _podcastIndexController = StreamController<bool>.broadcast();
-  Stream<bool> get podcastIndexChanged => _podcastIndexController.stream;
-  void setPodcastIndex(int value) {
-    if (value == _podcastIndex) return;
-    _podcastIndex = value;
-    _podcastIndexController.add(true);
-  }
-
-  int _appIndex = 0;
-  int get appIndex => _appIndex;
-  void setAppIndex(int value) {
-    _appIndex = value;
-  }
-
-  int _themeIndex = 0;
-  int get themeIndex => _themeIndex;
-
-  void setThemeIndex(int value) {
-    if (value == _themeIndex) return;
-    _themeIndex = value;
-  }
-
   Future<void> dispose() async {
     dio.close();
-    await safeStates();
+    await writePlayerState();
     await _albumsController.close();
     await _podcastsController.close();
     await _likedAudiosController.close();
@@ -527,43 +408,13 @@ class LibraryService {
     await _favTagsController.close();
     await _favCountriesController.close();
     await _lastPositionsController.close();
-    await _localAudioIndexController.close();
-    await _radioIndexController.close();
-    await _podcastIndexController.close();
+
     await _neverShowFailedImportsController.close();
-    await _lastFavController.close();
     await _updateController.close();
     await _downloadsController.close();
-    await _usePodcastIndexController.close();
-    await _podcastIndexApiKeyController.close();
-    await _podcastIndexApiSecretController.close();
   }
 
-  Future<void> safeStates() async {
-    await writeSetting(kLocalAudioIndex, _localAudioIndex.toString());
-    await writeSetting(kRadioIndex, _radioIndex.toString());
-    await writeSetting(kPodcastIndex, _podcastIndex.toString());
-    await writeSetting(kAppIndex, _appIndex.toString());
-    await writeSetting(kThemeIndex, _themeIndex.toString());
-    await writePlayerState();
-  }
-
-  Future<void> disposePatchNotes() async {
-    await writeSetting(
-      kPatchNotesDisposed,
-      kRecentPatchNotesDisposed,
-    );
-  }
-
-  bool _recentPatchNotesDisposed = false;
-  bool get recentPatchNotesDisposed => _recentPatchNotesDisposed;
-
-  Future<void> _readRecentPatchNotesDisposed() async {
-    String? value = await readSetting(kPatchNotesDisposed);
-    if (value == kRecentPatchNotesDisposed) {
-      _recentPatchNotesDisposed = true;
-    }
-  }
+  // Player State
 
   Future<void> writePlayerState() async {
     final playerState = PlayerState(
@@ -602,62 +453,6 @@ class LibraryService {
       }
     } on Exception catch (_) {
       return null;
-    }
-  }
-
-  bool _usePodcastIndex = false;
-  bool get usePodcastIndex => _usePodcastIndex;
-  final _usePodcastIndexController = StreamController<bool>.broadcast();
-  Stream<bool> get usePodcastIndexChanged => _usePodcastIndexController.stream;
-  void setUsePodcastIndex(bool value) {
-    writeSetting(kUsePodcastIndex, value ? 'true' : 'false').then((_) {
-      _usePodcastIndex = value;
-      _usePodcastIndexController.add(true);
-    });
-  }
-
-  Future<void> _readUsePodcastIndex() async {
-    String? value = await readSetting(kUsePodcastIndex);
-    if (value != null) {
-      _usePodcastIndex = bool.tryParse(value) ?? false;
-    }
-  }
-
-  final _podcastIndexApiKeyController = StreamController<bool>.broadcast();
-  Stream<bool> get podcastIndexApiKeyChanged =>
-      _podcastIndexApiKeyController.stream;
-  String? _podcastIndexApiKey;
-  String? get podcastIndexApiKey => _podcastIndexApiKey;
-  Future<void> setPodcastIndexApiKey(String podcastIndexApiKey) async {
-    await writeSetting(kPodcastIndexApiKey, podcastIndexApiKey).then((_) {
-      _podcastIndexApiKey = podcastIndexApiKey;
-      _podcastIndexApiKeyController.add(true);
-    });
-  }
-
-  Future<void> _readPodcastIndexApiKey() async {
-    String? value = await readSetting(kPodcastIndexApiKey);
-    if (value != null) {
-      _podcastIndexApiKey = value;
-    }
-  }
-
-  final _podcastIndexApiSecretController = StreamController<bool>.broadcast();
-  Stream<bool> get podcastIndexApiSecretChanged =>
-      _podcastIndexApiSecretController.stream;
-  String? _podcastIndexApiSecret;
-  String? get podcastIndexApiSecret => _podcastIndexApiSecret;
-  Future<void> setPodcastIndexApiSecret(String podcastIndexApiSecret) async {
-    await writeSetting(kPodcastIndexApiSecret, podcastIndexApiSecret).then((_) {
-      _podcastIndexApiSecret = podcastIndexApiSecret;
-      _podcastIndexApiSecretController.add(true);
-    });
-  }
-
-  Future<void> _readPodcastIndexApiSecret() async {
-    String? value = await readSetting(kPodcastIndexApiSecret);
-    if (value != null) {
-      _podcastIndexApiSecret = value;
     }
   }
 }

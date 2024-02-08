@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../app.dart';
 import '../../build_context_x.dart';
@@ -28,9 +29,9 @@ class _PlayerViewState extends State<PlayerView> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
-      context.read<AppModel>().setShowWindowControls(
-            widget.playerViewMode != PlayerViewMode.sideBar,
-          );
+      getService<AppStateService>().setShowWindowControls(
+        widget.playerViewMode != PlayerViewMode.sideBar,
+      );
     });
   }
 
@@ -40,9 +41,9 @@ class _PlayerViewState extends State<PlayerView> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
-      context.read<AppModel>().setShowWindowControls(
-            widget.playerViewMode != PlayerViewMode.sideBar,
-          );
+      getService<AppStateService>().setShowWindowControls(
+        widget.playerViewMode != PlayerViewMode.sideBar,
+      );
     });
   }
 
@@ -54,7 +55,6 @@ class _PlayerViewState extends State<PlayerView> {
     final isOnline = context.watch<ConnectivityNotifier>().isOnline;
 
     final playerModel = context.read<PlayerModel>();
-    final appModel = context.read<AppModel>();
     final nextAudio = context.select((PlayerModel m) => m.nextAudio);
     final c = context.select((PlayerModel m) => m.color);
     final color = getPlayerBg(
@@ -73,7 +73,6 @@ class _PlayerViewState extends State<PlayerView> {
         isVideo: isVideo == true,
         videoController: playerModel.controller,
         playerViewMode: widget.playerViewMode,
-        appModel: appModel,
         nextAudio: nextAudio,
         audio: audio,
         playPrevious: playPrevious,
@@ -84,7 +83,6 @@ class _PlayerViewState extends State<PlayerView> {
       player = BottomPlayer(
         isVideo: isVideo,
         videoController: playerModel.controller,
-        appModel: appModel,
         audio: audio,
         playPrevious: playPrevious,
         playNext: playNext,

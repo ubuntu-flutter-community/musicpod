@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../l10n.dart';
-import '../../library.dart';
 import '../../radio.dart';
 import '../../theme.dart';
 import 'radio_search.dart';
@@ -17,9 +19,9 @@ class RadioControlPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final libraryModel = context.read<LibraryModel>();
     final model = context.read<RadioModel>();
-    final index = context.select((LibraryModel m) => m.radioindex);
+    final service = getService<AppStateService>();
+    final index = service.radioIndex;
 
     return Padding(
       padding: const EdgeInsets.only(left: 30),
@@ -34,10 +36,10 @@ class RadioControlPanel extends StatelessWidget {
             .map((e) => Text(e.localize(context.l10n)))
             .toList(),
         isSelected: RadioSearch.values
-            .map((e) => e == RadioSearch.values[index])
+            .map((e) => e == RadioSearch.values[index.watch(context)])
             .toList(),
         onSelected: (index) {
-          libraryModel.setRadioIndex(index);
+          service.setRadioIndex(index);
           model.setSearchQuery(search: RadioSearch.values[index]);
         },
       ),

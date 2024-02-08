@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
-import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -10,7 +10,7 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../l10n.dart';
-import 'settings_model.dart';
+import 'settings_service.dart';
 
 const _kTileSize = 50.0;
 
@@ -20,7 +20,8 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final appName = context.select((SettingsModel m) => m.appName);
+    final service = getService<SettingsService>();
+    final appName = service.appName;
     final linkStyle = theme.textTheme.bodyLarge
         ?.copyWith(color: Colors.lightBlue, overflow: TextOverflow.visible);
     const maxLines = 3;
@@ -35,7 +36,11 @@ class AboutPage extends StatelessWidget {
         children: [
           YaruDialogTitleBar(
             backgroundColor: context.t.dialogBackgroundColor,
-            title: Text('${context.l10n.about} ${appName ?? ''}'),
+            title: Watch.builder(
+              builder: (context) {
+                return Text('${context.l10n.about} ${appName.value ?? ''}');
+              },
+            ),
             leading: YaruBackButton(
               style: YaruBackButtonStyle.rounded,
               onPressed: () => Navigator.of(context).pop(),

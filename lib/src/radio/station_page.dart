@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -78,8 +80,8 @@ class StationPage extends StatelessWidget {
           ];
     const size = fullHeightPlayerImageSize - 20;
 
-    final showWindowControls =
-        context.select((AppModel a) => a.showWindowControls);
+    final service = getService<AppStateService>();
+    final showWindowControls = service.showWindowControls;
     final startPlaylist = context.read<PlayerModel>().startPlaylist;
     final libraryModel = context.read<LibraryModel>();
     final isStarred = station.url == null
@@ -89,7 +91,7 @@ class StationPage extends StatelessWidget {
 
     return YaruDetailPage(
       appBar: HeaderBar(
-        style: showWindowControls
+        style: showWindowControls.watch(context)
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
         title: Text(name.replaceAll('_', '')),

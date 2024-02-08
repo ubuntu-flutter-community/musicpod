@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -67,8 +68,8 @@ class AudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showWindowControls =
-        context.select((AppModel a) => a.showWindowControls);
+    final service = getService<AppStateService>();
+    final showWindowControls = service.showWindowControls;
 
     final body = AudioPageBody(
       key: ValueKey(audios?.length),
@@ -103,7 +104,7 @@ class AudioPage extends StatelessWidget {
     return YaruDetailPage(
       key: ValueKey(pageId),
       appBar: HeaderBar(
-        style: showWindowControls
+        style: showWindowControls.watch(context)
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
         title: isMobile ? null : (title ?? Text(headerTitle ?? pageId)),

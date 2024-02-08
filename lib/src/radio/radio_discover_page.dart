@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -20,8 +22,8 @@ class RadioDiscoverPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showWindowControls =
-        context.select((AppModel a) => a.showWindowControls);
+    final service = getService<AppStateService>();
+    final showWindowControls = service.showWindowControls;
     final model = context.read<RadioModel>();
     final libraryModel = context.read<LibraryModel>();
     final searchQuery = context.select((RadioModel m) => m.searchQuery);
@@ -29,13 +31,13 @@ class RadioDiscoverPage extends StatelessWidget {
     context.select((LibraryModel m) => m.favTagsLength);
     context.select((LibraryModel m) => m.favCountriesLength);
 
-    final radioSearch =
-        context.select((LibraryModel m) => RadioSearch.values[m.radioindex]);
+    final radioIndex = service.radioIndex;
 
     final country = context.select((RadioModel m) => m.country);
     final tag = context.select((RadioModel m) => m.tag);
 
-    final Widget input = switch (radioSearch) {
+    final Widget input =
+        switch (RadioSearch.values[radioIndex.watch(context)]) {
       RadioSearch.country => CountryAutoComplete(
           countries: [
             ...[
@@ -49,7 +51,7 @@ class RadioDiscoverPage extends StatelessWidget {
           ]..remove(Country.none),
           onSelected: (c) {
             model.setCountry(c);
-            libraryModel.setLastCountryCode(c?.code);
+            service.setLastCountryCode(c?.code);
           },
           value: country,
           addFav: (v) {
@@ -73,7 +75,10 @@ class RadioDiscoverPage extends StatelessWidget {
             libraryModel.removeFavTag(tag!.name);
           },
           favs: libraryModel.favTags,
-          onSelected: model.setTag,
+          onSelected: (v) {
+            model.setTag(v);
+            service.setLastFav(v?.name);
+          },
           tags: [
             ...[
               ...?model.tags,
@@ -94,7 +99,7 @@ class RadioDiscoverPage extends StatelessWidget {
 
     return Scaffold(
       appBar: HeaderBar(
-        style: showWindowControls
+        style: showWindowControls.watch(context)
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
         leading: const NavBackButton(),
@@ -129,10 +134,11 @@ class RadioDiscoverPage extends StatelessWidget {
                       searchQuery.toString() +
                           tag.toString() +
                           country.toString() +
-                          radioSearch.toString(),
+                          RadioSearch.values[radioIndex.watch(context)]
+                              .toString(),
                     ),
                     includeHeader: false,
-                    radioSearch: radioSearch,
+                    radioSearch: RadioSearch.values[radioIndex.watch(context)],
                     searchQuery: searchQuery,
                   )
                 : const SizedBox.shrink(),

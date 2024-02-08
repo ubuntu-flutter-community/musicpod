@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../app.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
@@ -11,7 +13,6 @@ import '../../library.dart';
 import '../../local_audio.dart';
 import '../../podcasts.dart';
 import '../../utils.dart';
-import '../app/app_model.dart';
 
 void onLocalAudioTitleTap({
   required Audio audio,
@@ -71,7 +72,7 @@ void onTitleTap({
     return;
   }
   if (audio?.audioType == AudioType.local) {
-    context.read<AppModel>().setFullScreen(false);
+    getService<AppStateService>().setFullScreen(false);
   }
 
   if (text?.isNotEmpty == true) {
@@ -120,7 +121,7 @@ Future<void> onArtistTap({
     return;
   }
   if (audio?.audioType != AudioType.radio) {
-    context.read<AppModel>().setFullScreen(false);
+    getService<AppStateService>().setFullScreen(false);
   }
   if (audio!.audioType == AudioType.radio && audio.url?.isNotEmpty == true) {
     Clipboard.setData(ClipboardData(text: audio.url!));

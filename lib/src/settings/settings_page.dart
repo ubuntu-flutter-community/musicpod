@@ -1,6 +1,8 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -13,7 +15,7 @@ import '../../local_audio.dart';
 import '../../string_x.dart';
 import '../../theme_mode_x.dart';
 import '../globals.dart';
-import 'settings_model.dart';
+import 'settings_service.dart';
 import 'theme_tile.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -53,10 +55,10 @@ class _ThemeSection extends StatefulWidget {
 class _ThemeSectionState extends State<_ThemeSection> {
   @override
   Widget build(BuildContext context) {
-    final model = context.read<SettingsModel>();
+    final service = getService<SettingsService>();
 
     void onChanged(int index) {
-      model.setThemeIndex(index);
+      service.setThemeIndex(index);
       setState(() => themeNotifier.value = ThemeMode.values[index]);
     }
 
@@ -113,10 +115,10 @@ class _PodcastSectionState extends State<_PodcastSection> {
   @override
   void initState() {
     super.initState();
-    final model = context.read<SettingsModel>();
-    _initialKey = model.podcastIndexApiKey;
+    final service = getService<SettingsService>();
+    _initialKey = service.podcastIndexApiKey.value;
     _keyController = TextEditingController(text: _initialKey);
-    _initialSecret = model.podcastIndexApiSecret;
+    _initialSecret = service.podcastIndexApiSecret.value;
     _secretController = TextEditingController(text: _initialSecret);
   }
 
@@ -130,13 +132,11 @@ class _PodcastSectionState extends State<_PodcastSection> {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final model = context.read<SettingsModel>();
-    final usePodcastIndex =
-        context.select((SettingsModel m) => m.usePodcastIndex);
-    final podcastIndexApiKey =
-        context.select((SettingsModel m) => m.podcastIndexApiKey);
-    final podcastIndexApiSecret =
-        context.select((SettingsModel m) => m.podcastIndexApiSecret);
+    final service = getService<SettingsService>();
+    final usePodcastIndex = service.usePodcastIndex;
+
+    final podcastIndexApiKey = service.podcastIndexApiKey;
+    final podcastIndexApiSecret = service.podcastIndexApiSecret;
 
     return YaruSection(
       margin: const EdgeInsets.all(kYaruPagePadding),
@@ -146,12 +146,16 @@ class _PodcastSectionState extends State<_PodcastSection> {
           YaruTile(
             title: Text(context.l10n.usePodcastIndex),
             subtitle: Text(context.l10n.requiresAppRestart),
-            trailing: CommonSwitch(
-              value: usePodcastIndex,
-              onChanged: model.setUsePodcastIndex,
+            trailing: Watch.builder(
+              builder: (context) {
+                return CommonSwitch(
+                  value: usePodcastIndex.value,
+                  onChanged: service.setUsePodcastIndex,
+                );
+              },
             ),
           ),
-          if (usePodcastIndex)
+          if (usePodcastIndex.value)
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -163,18 +167,22 @@ class _PodcastSectionState extends State<_PodcastSection> {
                   suffixIcon: IconButton(
                     tooltip: context.l10n.save,
                     onPressed: () =>
-                        model.setPodcastIndexApiKey(_keyController.text),
-                    icon: Icon(
-                      Iconz().check,
-                      color: podcastIndexApiKey == _initialKey
-                          ? theme.colorScheme.success
-                          : theme.colorScheme.onSurface,
+                        service.setPodcastIndexApiKey(_keyController.text),
+                    icon: Watch.builder(
+                      builder: (context) {
+                        return Icon(
+                          Iconz().check,
+                          color: podcastIndexApiKey.value == _initialKey
+                              ? theme.colorScheme.success
+                              : theme.colorScheme.onSurface,
+                        );
+                      },
                     ),
                   ),
                 ),
               ),
             ),
-          if (usePodcastIndex)
+          if (usePodcastIndex.value)
             Padding(
               padding: const EdgeInsets.only(
                 left: 8,
@@ -189,13 +197,17 @@ class _PodcastSectionState extends State<_PodcastSection> {
                   label: Text(kPodcastIndexApiSecret.camelToSentence()),
                   suffixIcon: IconButton(
                     tooltip: context.l10n.save,
-                    onPressed: () =>
-                        model.setPodcastIndexApiSecret(_secretController.text),
-                    icon: Icon(
-                      Iconz().check,
-                      color: podcastIndexApiSecret == _initialSecret
-                          ? theme.colorScheme.success
-                          : theme.colorScheme.onSurface,
+                    onPressed: () => service
+                        .setPodcastIndexApiSecret(_secretController.text),
+                    icon: Watch.builder(
+                      builder: (context) {
+                        return Icon(
+                          Iconz().check,
+                          color: podcastIndexApiSecret.value == _initialSecret
+                              ? theme.colorScheme.success
+                              : theme.colorScheme.onSurface,
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -269,15 +281,20 @@ class _AboutSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appName = context.select((SettingsModel m) => m.appName);
+    final service = getService<SettingsService>();
+    final appName = service.appName;
 
-    final text = '${context.l10n.about} ${appName ?? ''}';
-    return YaruSection(
-      headline: Text(text),
-      margin: const EdgeInsets.all(kYaruPagePadding),
-      child: Column(
-        children: [_AboutTile(text: text), const _LicenseTile()],
-      ),
+    final text = '${context.l10n.about} ${appName.value ?? ''}';
+    return Watch.builder(
+      builder: (context) {
+        return YaruSection(
+          headline: Text(text),
+          margin: const EdgeInsets.all(kYaruPagePadding),
+          child: Column(
+            children: [_AboutTile(text: text), const _LicenseTile()],
+          ),
+        );
+      },
     );
   }
 }
