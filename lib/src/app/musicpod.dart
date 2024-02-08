@@ -6,6 +6,7 @@ import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
+import '../../common.dart';
 import '../../library.dart';
 import '../../theme.dart';
 import '../globals.dart';
@@ -26,8 +27,15 @@ class YaruMusicPodApp extends StatelessWidget {
           builder: (context, yaru, child) {
             return MusicPodApp(
               themeMode: currentMode,
-              lightTheme: yaru.theme,
+              lightTheme: yaru.theme?.copyWith(
+                actionIconTheme: ActionIconThemeData(
+                  backButtonIconBuilder: (context) => Icon(Iconz().goBack),
+                ),
+              ),
               darkTheme: yaru.darkTheme?.copyWith(
+                actionIconTheme: ActionIconThemeData(
+                  backButtonIconBuilder: (context) => Icon(Iconz().goBack),
+                ),
                 scaffoldBackgroundColor: const Color(0xFF1e1e1e),
                 dividerColor: darkDividerColor,
                 dividerTheme: const DividerThemeData(

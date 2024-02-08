@@ -38,6 +38,7 @@ class AboutPage extends StatelessWidget {
                   ref.watch(settingsModelProvider.select((p) => p.appName));
 
               return YaruDialogTitleBar(
+                backgroundColor: context.t.dialogBackgroundColor,
                 title: Text('${context.l10n.about} ${appName ?? ''}'),
                 leading: YaruBackButton(
                   style: YaruBackButtonStyle.rounded,
