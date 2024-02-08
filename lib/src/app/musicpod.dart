@@ -116,7 +116,7 @@ class _MusicPodAppState extends State<MusicPodApp> {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: supportedLocales,
           onGenerateTitle: (context) => 'MusicPod',
-          home: initialized ? const App() : const SplashScreen(),
+          home: initialized ? App.create() : const SplashScreen(),
           scrollBehavior: const MaterialScrollBehavior().copyWith(
             dragDevices: {
               PointerDeviceKind.mouse,

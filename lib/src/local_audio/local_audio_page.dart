@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -16,26 +16,25 @@ import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 import 'local_audio_view.dart';
 
-class LocalAudioPage extends ConsumerStatefulWidget {
+class LocalAudioPage extends StatefulWidget {
   const LocalAudioPage({
     super.key,
   });
 
   @override
-  ConsumerState<LocalAudioPage> createState() => _LocalAudioPageState();
+  State<LocalAudioPage> createState() => _LocalAudioPageState();
 }
 
-class _LocalAudioPageState extends ConsumerState<LocalAudioPage> {
+class _LocalAudioPageState extends State<LocalAudioPage> {
   @override
   void initState() {
     super.initState();
-    final model = ref.read(localAudioModelProvider);
+    final model = context.read<LocalAudioModel>();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
       model.init(
         onFail: (failedImports) {
-          if (!mounted ||
-              ref.read(libraryModelProvider).neverShowFailedImports) {
+          if (!mounted || context.read<LibraryModel>().neverShowFailedImports) {
             return;
           }
           ScaffoldMessenger.of(context).showSnackBar(
@@ -43,7 +42,7 @@ class _LocalAudioPageState extends ConsumerState<LocalAudioPage> {
               duration: const Duration(seconds: 10),
               content: FailedImportsContent(
                 onNeverShowFailedImports:
-                    ref.read(libraryModelProvider).setNeverShowLocalImports,
+                    context.read<LibraryModel>().setNeverShowLocalImports,
                 failedImports: failedImports,
               ),
             ),
@@ -56,10 +55,10 @@ class _LocalAudioPageState extends ConsumerState<LocalAudioPage> {
   @override
   Widget build(BuildContext context) {
     final showWindowControls =
-        ref.watch(appModelProvider.select((v) => v.showWindowControls));
+        context.select((AppModel a) => a.showWindowControls);
 
-    final model = ref.read(localAudioModelProvider);
-    final audios = ref.watch(localAudioModelProvider.select((v) => v.audios));
+    final model = context.read<LocalAudioModel>();
+    final audios = context.select((LocalAudioModel m) => m.audios);
 
     void search({
       required String? text,
@@ -78,9 +77,7 @@ class _LocalAudioPageState extends ConsumerState<LocalAudioPage> {
       }
     }
 
-    final index = ref.watch(
-      libraryModelProvider.select((value) => value.localAudioindex ?? 0),
-    );
+    final index = context.select((LibraryModel m) => m.localAudioindex) ?? 0;
     final localAudioView = LocalAudioView.values[index];
 
     final headerBar = HeaderBar(
@@ -126,7 +123,7 @@ class _LocalAudioPageState extends ConsumerState<LocalAudioPage> {
   }
 }
 
-class LocalAudioPageIcon extends ConsumerWidget {
+class LocalAudioPageIcon extends StatelessWidget {
   const LocalAudioPageIcon({
     super.key,
     required this.selected,
@@ -135,9 +132,8 @@ class LocalAudioPageIcon extends ConsumerWidget {
   final bool selected;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final audioType =
-        ref.watch(playerModelProvider.select((m) => m.audio?.audioType));
+  Widget build(BuildContext context) {
+    final audioType = context.select((PlayerModel m) => m.audio?.audioType);
 
     final theme = context.t;
     if (audioType == AudioType.local) {

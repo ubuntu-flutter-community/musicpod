@@ -1,6 +1,6 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
@@ -30,65 +30,58 @@ class RadioLibPage extends StatelessWidget {
     }
 
     final theme = context.t;
+    final showTags = context.select((RadioModel m) => m.showTags);
+    final radioModel = context.read<RadioModel>();
 
-    return Consumer(
-      builder: (context, ref, _) {
-        final showTags =
-            ref.watch(radioModelProvider.select((p) => p.showTags));
-        final radioModel = ref.read(radioModelProvider);
-        return Column(
+    return Column(
+      children: [
+        Row(
           children: [
-            Row(
-              children: [
-                const SizedBox(
-                  width: 25,
-                ),
-                YaruChoiceChipBar(
-                  chipBackgroundColor: chipColor(theme),
-                  selectedChipBackgroundColor: chipSelectionColor(theme, false),
-                  borderColor: chipBorder(theme, false),
-                  selectedFirst: false,
-                  clearOnSelect: false,
-                  onSelected: (index) =>
-                      radioModel.setShowTags(index == 0 ? false : true),
-                  yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-                  labels: [
-                    Text(context.l10n.station),
-                    Text(context.l10n.tags),
-                  ],
-                  isSelected: [!showTags, showTags],
-                ),
-              ],
-            ),
             const SizedBox(
-              height: 15,
+              width: 25,
             ),
-            if (showTags)
-              const Expanded(child: TagGrid())
-            else
-              const Expanded(
-                child: StationGrid(),
-              ),
+            YaruChoiceChipBar(
+              chipBackgroundColor: chipColor(theme),
+              selectedChipBackgroundColor: chipSelectionColor(theme, false),
+              borderColor: chipBorder(theme, false),
+              selectedFirst: false,
+              clearOnSelect: false,
+              onSelected: (index) =>
+                  radioModel.setShowTags(index == 0 ? false : true),
+              yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+              labels: [
+                Text(context.l10n.station),
+                Text(context.l10n.tags),
+              ],
+              isSelected: [!showTags, showTags],
+            ),
           ],
-        );
-      },
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        if (showTags)
+          const Expanded(child: TagGrid())
+        else
+          const Expanded(
+            child: StationGrid(),
+          ),
+      ],
     );
   }
 }
 
-class StationGrid extends ConsumerWidget {
+class StationGrid extends StatelessWidget {
   const StationGrid({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final stations =
-        ref.watch(libraryModelProvider.select((p) => p.starredStations));
-    final length =
-        ref.watch(libraryModelProvider.select((p) => p.starredStationsLength));
-    final libraryModel = ref.read(libraryModelProvider);
-    final playerModel = ref.read(playerModelProvider);
+  Widget build(BuildContext context) {
+    final stations = context.select((LibraryModel m) => m.starredStations);
+    final length = context.select((LibraryModel m) => m.starredStationsLength);
+    final libraryModel = context.read<LibraryModel>();
+    final playerModel = context.read<PlayerModel>();
 
     if (length == 0) {
       return NoSearchResultPage(
@@ -115,16 +108,15 @@ class StationGrid extends ConsumerWidget {
   }
 }
 
-class TagGrid extends ConsumerWidget {
+class TagGrid extends StatelessWidget {
   const TagGrid({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final favTagsLength =
-        ref.watch(libraryModelProvider.select((p) => p.favTags.length));
-    final favTags = ref.watch(libraryModelProvider.select((p) => p.favTags));
+  Widget build(BuildContext context) {
+    final favTagsLength = context.select((LibraryModel m) => m.favTags.length);
+    final favTags = context.select((LibraryModel m) => m.favTags);
 
     if (favTagsLength == 0) {
       return NoSearchResultPage(

@@ -1,6 +1,6 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -42,17 +42,17 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-class _ThemeSection extends ConsumerStatefulWidget {
+class _ThemeSection extends StatefulWidget {
   const _ThemeSection();
 
   @override
-  ConsumerState<_ThemeSection> createState() => _ThemeSectionState();
+  State<_ThemeSection> createState() => _ThemeSectionState();
 }
 
-class _ThemeSectionState extends ConsumerState<_ThemeSection> {
+class _ThemeSectionState extends State<_ThemeSection> {
   @override
   Widget build(BuildContext context) {
-    final model = ref.read(settingsModelProvider);
+    final model = context.read<SettingsModel>();
 
     void onChanged(int index) {
       model.setThemeIndex(index);
@@ -97,14 +97,14 @@ class _ThemeSectionState extends ConsumerState<_ThemeSection> {
   }
 }
 
-class _PodcastSection extends ConsumerStatefulWidget {
+class _PodcastSection extends StatefulWidget {
   const _PodcastSection();
 
   @override
-  ConsumerState<_PodcastSection> createState() => _PodcastSectionState();
+  State<_PodcastSection> createState() => _PodcastSectionState();
 }
 
-class _PodcastSectionState extends ConsumerState<_PodcastSection> {
+class _PodcastSectionState extends State<_PodcastSection> {
   String? _initialKey;
   String? _initialSecret;
   late TextEditingController _keyController, _secretController;
@@ -112,7 +112,7 @@ class _PodcastSectionState extends ConsumerState<_PodcastSection> {
   @override
   void initState() {
     super.initState();
-    final model = ref.read(settingsModelProvider);
+    final model = context.read<SettingsModel>();
     _initialKey = model.podcastIndexApiKey;
     _keyController = TextEditingController(text: _initialKey);
     _initialSecret = model.podcastIndexApiSecret;
@@ -129,13 +129,13 @@ class _PodcastSectionState extends ConsumerState<_PodcastSection> {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final model = ref.read(settingsModelProvider);
+    final model = context.read<SettingsModel>();
     final usePodcastIndex =
-        ref.watch(settingsModelProvider.select((p) => p.usePodcastIndex));
+        context.select((SettingsModel m) => m.usePodcastIndex);
     final podcastIndexApiKey =
-        ref.watch(settingsModelProvider.select((p) => p.podcastIndexApiKey));
+        context.select((SettingsModel m) => m.podcastIndexApiKey);
     final podcastIndexApiSecret =
-        ref.watch(settingsModelProvider.select((p) => p.podcastIndexApiSecret));
+        context.select((SettingsModel m) => m.podcastIndexApiSecret);
 
     return YaruSection(
       margin: const EdgeInsets.all(kYaruPagePadding),
@@ -206,15 +206,15 @@ class _PodcastSectionState extends ConsumerState<_PodcastSection> {
   }
 }
 
-class _LocalAudioSection extends ConsumerWidget {
+class _LocalAudioSection extends StatelessWidget {
   const _LocalAudioSection();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final libraryModel = ref.read(libraryModelProvider);
-    final localAudioModel = ref.read(localAudioModelProvider);
+  Widget build(BuildContext context) {
+    final libraryModel = context.read<LibraryModel>();
+    final localAudioModel = context.read<LocalAudioModel>();
     final directory =
-        ref.watch(localAudioModelProvider.select((p) => p.directory ?? ''));
+        context.select((LocalAudioModel m) => localAudioModel.directory ?? '');
 
     Future<void> onDirectorySelected(String? directoryPath) async {
       localAudioModel.setDirectory(directoryPath).then(
@@ -268,20 +268,15 @@ class _AboutSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final appName =
-            ref.watch(settingsModelProvider.select((p) => p.appName));
+    final appName = context.select((SettingsModel m) => m.appName);
 
-        final text = '${context.l10n.about} ${appName ?? ''}';
-        return YaruSection(
-          headline: Text(text),
-          margin: const EdgeInsets.all(kYaruPagePadding),
-          child: Column(
-            children: [_AboutTile(text: text), const _LicenseTile()],
-          ),
-        );
-      },
+    final text = '${context.l10n.about} ${appName ?? ''}';
+    return YaruSection(
+      headline: Text(text),
+      margin: const EdgeInsets.all(kYaruPagePadding),
+      child: Column(
+        children: [_AboutTile(text: text), const _LicenseTile()],
+      ),
     );
   }
 }

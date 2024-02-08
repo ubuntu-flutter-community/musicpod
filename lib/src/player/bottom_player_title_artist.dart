@@ -1,11 +1,11 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
 import 'package:flutter/material.dart';
 
-class BottomPlayerTitleArtist extends ConsumerWidget {
+class BottomPlayerTitleArtist extends StatelessWidget {
   const BottomPlayerTitleArtist({
     super.key,
     required this.audio,
@@ -13,9 +13,8 @@ class BottomPlayerTitleArtist extends ConsumerWidget {
   final Audio? audio;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final mpvMetaData =
-        ref.watch(playerModelProvider.select((p) => p.mpvMetaData));
+  Widget build(BuildContext context) {
+    final mpvMetaData = context.select((PlayerModel m) => m.mpvMetaData);
     final icyName = mpvMetaData?.icyName;
     final icyTitle = mpvMetaData?.icyTitle;
 
@@ -40,7 +39,6 @@ class BottomPlayerTitleArtist extends ConsumerWidget {
             audio: audio,
             text: icyTitle,
             context: context,
-            ref: ref,
           ),
           child: Tooltip(
             message: title,
@@ -63,7 +61,6 @@ class BottomPlayerTitleArtist extends ConsumerWidget {
               audio: audio,
               artist: icyTitle,
               context: context,
-              ref: ref,
             ),
             child: Tooltip(
               message: subTitle,

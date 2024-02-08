@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../library.dart';
 
@@ -90,7 +88,3 @@ class SettingsModel extends SafeChangeNotifier {
   Future<void> setPodcastIndexApiSecret(String podcastIndexApiSecret) async =>
       await _libraryService.setPodcastIndexApiSecret(podcastIndexApiSecret);
 }
-
-final settingsModelProvider = ChangeNotifierProvider(
-  (ref) => SettingsModel(libraryService: getService<LibraryService>()),
-);

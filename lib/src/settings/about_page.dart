@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github/github.dart';
+import 'package:provider/provider.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
@@ -20,6 +20,7 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    final appName = context.select((SettingsModel m) => m.appName);
     final linkStyle = theme.textTheme.bodyLarge
         ?.copyWith(color: Colors.lightBlue, overflow: TextOverflow.visible);
     const maxLines = 3;
@@ -32,19 +33,12 @@ class AboutPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Consumer(
-            builder: (context, ref, _) {
-              final appName =
-                  ref.watch(settingsModelProvider.select((p) => p.appName));
-
-              return YaruDialogTitleBar(
-                title: Text('${context.l10n.about} ${appName ?? ''}'),
-                leading: YaruBackButton(
-                  style: YaruBackButtonStyle.rounded,
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              );
-            },
+          YaruDialogTitleBar(
+            title: Text('${context.l10n.about} ${appName ?? ''}'),
+            leading: YaruBackButton(
+              style: YaruBackButtonStyle.rounded,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
           ),
           Expanded(
             child: Padding(

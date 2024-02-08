@@ -2,7 +2,7 @@ import 'package:animated_emoji/animated_emoji.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
@@ -12,7 +12,7 @@ import '../../podcasts.dart';
 import '../app/connectivity_notifier.dart';
 import '../library/library_model.dart';
 
-class AudioPageBody extends ConsumerStatefulWidget {
+class AudioPageBody extends StatefulWidget {
   const AudioPageBody({
     super.key,
     this.audios,
@@ -70,10 +70,10 @@ class AudioPageBody extends ConsumerStatefulWidget {
   })? onAlbumTap, onArtistTap;
 
   @override
-  ConsumerState<AudioPageBody> createState() => _AudioPageBodyState();
+  State<AudioPageBody> createState() => _AudioPageBodyState();
 }
 
-class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
+class _AudioPageBodyState extends State<AudioPageBody> {
   late ScrollController _controller;
   double _headerHeight = kAudioPageHeaderHeight;
 
@@ -104,31 +104,26 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline =
-        ref.watch(connectivityNotifierProvider.select((v) => v.isOnline));
-    final isPlaying = ref.watch(playerModelProvider.select((v) => v.isPlaying));
+    final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
+    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
 
-    final playerModel = ref.read(playerModelProvider);
+    final playerModel = context.read<PlayerModel>();
     final startPlaylist = playerModel.startPlaylist;
 
-    final currentAudio = ref.watch(playerModelProvider.select((v) => v.audio));
+    final currentAudio = context.select((PlayerModel m) => m.audio);
     final play = playerModel.play;
     final pause = playerModel.pause;
     final resume = playerModel.resume;
     final insertIntoQueue = playerModel.insertIntoQueue;
 
     if (widget.audioPageType != AudioPageType.podcast) {
-      ref.watch(libraryModelProvider.select((m) => m.likedAudios.length));
+      context.select((LibraryModel m) => m.likedAudios.length);
     }
     if (widget.audioPageType == AudioPageType.playlist) {
-      ref.watch(
-        libraryModelProvider.select(
-          (m) => m.playlists[widget.pageId]?.length,
-        ),
-      );
+      context.select((LibraryModel m) => m.playlists[widget.pageId]?.length);
     }
 
-    final libraryModel = ref.read(libraryModelProvider);
+    final libraryModel = context.read<LibraryModel>();
 
     final audioControlPanel = Padding(
       padding: const EdgeInsets.only(

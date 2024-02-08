@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -21,34 +21,30 @@ class AudioProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.t;
 
+    final pos = (selected
+            ? context.select((PlayerModel m) => m.position)
+            : lastPosition) ??
+        Duration.zero;
+
+    final dur =
+        (selected ? context.select((PlayerModel m) => m.duration) : duration) ??
+            Duration.zero;
+
+    bool sliderActive = dur.inSeconds > pos.inSeconds;
+
     return RepaintBoundary(
       child: SizedBox(
         height: podcastProgressSize,
         width: podcastProgressSize,
-        child: Consumer(
-          builder: (context, ref, _) {
-            final pos = (selected
-                    ? ref.watch(playerModelProvider.select((p) => p.position))
-                    : lastPosition) ??
-                Duration.zero;
-
-            final dur = (selected
-                    ? ref.watch(playerModelProvider.select((p) => p.duration))
-                    : duration) ??
-                Duration.zero;
-            bool sliderActive = dur.inSeconds > pos.inSeconds;
-
-            return Progress(
-              color: selected
-                  ? theme.colorScheme.primary.withOpacity(0.9)
-                  : theme.colorScheme.primary.withOpacity(0.4),
-              value: sliderActive
-                  ? (pos.inSeconds.toDouble() / dur.inSeconds.toDouble())
-                  : 0,
-              backgroundColor: Colors.transparent,
-              strokeWidth: 3,
-            );
-          },
+        child: Progress(
+          color: selected
+              ? theme.colorScheme.primary.withOpacity(0.9)
+              : theme.colorScheme.primary.withOpacity(0.4),
+          value: sliderActive
+              ? (pos.inSeconds.toDouble() / dur.inSeconds.toDouble())
+              : 0,
+          backgroundColor: Colors.transparent,
+          strokeWidth: 3,
         ),
       ),
     );

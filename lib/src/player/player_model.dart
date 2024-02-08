@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../data.dart';
 import 'mpv_meta_data.dart';
@@ -154,7 +152,3 @@ class PlayerModel extends SafeChangeNotifier {
     super.dispose();
   }
 }
-
-final playerModelProvider = ChangeNotifierProvider<PlayerModel>((ref) {
-  return PlayerModel(service: getService<PlayerService>());
-});

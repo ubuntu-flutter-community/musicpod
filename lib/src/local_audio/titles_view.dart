@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
@@ -57,55 +57,52 @@ class _TitlesViewState extends State<TitlesView> {
       );
     }
 
-    return Consumer(
-      builder: (context, ref, _) {
-        final model = ref.read(localAudioModelProvider);
-        final libraryModel = ref.read(libraryModelProvider);
-        return AudioPageBody(
-          padding: const EdgeInsets.only(top: 10),
-          showTrack: false,
-          showControlPanel: false,
-          noResultIcon: widget.noResultIcon,
-          noResultMessage: widget.noResultMessage,
-          audios: _titles == null ? null : Set.from(_titles!),
-          audioPageType: AudioPageType.immutable,
-          pageId: kLocalAudioPageId,
-          showAudioPageHeader: false,
-          onAlbumTap: ({required audioType, required text}) {
-            final albumAudios = model.findAlbum(Audio(album: text));
-            if (albumAudios?.firstOrNull == null) return;
-            final id = generateAlbumId(albumAudios!.first);
-            if (id == null) return;
+    final model = context.read<LocalAudioModel>();
+    final libraryModel = context.read<LibraryModel>();
 
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) {
-                  return AlbumPage(
-                    isPinnedAlbum: libraryModel.isPinnedAlbum,
-                    removePinnedAlbum: libraryModel.removePinnedAlbum,
-                    addPinnedAlbum: libraryModel.addPinnedAlbum,
-                    id: id,
-                    album: albumAudios,
-                  );
-                },
-              ),
-            );
-          },
-          onArtistTap: ({required audioType, required text}) {
-            final artistAudios = model.findArtist(Audio(artist: text));
-            final images = model.findImages(artistAudios ?? {});
+    return AudioPageBody(
+      padding: const EdgeInsets.only(top: 10),
+      showTrack: false,
+      showControlPanel: false,
+      noResultIcon: widget.noResultIcon,
+      noResultMessage: widget.noResultMessage,
+      audios: _titles == null ? null : Set.from(_titles!),
+      audioPageType: AudioPageType.immutable,
+      pageId: kLocalAudioPageId,
+      showAudioPageHeader: false,
+      onAlbumTap: ({required audioType, required text}) {
+        final albumAudios = model.findAlbum(Audio(album: text));
+        if (albumAudios?.firstOrNull == null) return;
+        final id = generateAlbumId(albumAudios!.first);
+        if (id == null) return;
 
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) {
-                  return ArtistPage(
-                    images: images,
-                    artistAudios: artistAudios,
-                  );
-                },
-              ),
-            );
-          },
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) {
+              return AlbumPage(
+                isPinnedAlbum: libraryModel.isPinnedAlbum,
+                removePinnedAlbum: libraryModel.removePinnedAlbum,
+                addPinnedAlbum: libraryModel.addPinnedAlbum,
+                id: id,
+                album: albumAudios,
+              );
+            },
+          ),
+        );
+      },
+      onArtistTap: ({required audioType, required text}) {
+        final artistAudios = model.findArtist(Audio(artist: text));
+        final images = model.findImages(artistAudios ?? {});
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) {
+              return ArtistPage(
+                images: images,
+                artistAudios: artistAudios,
+              );
+            },
+          ),
         );
       },
     );
