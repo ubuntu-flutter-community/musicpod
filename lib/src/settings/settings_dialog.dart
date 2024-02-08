@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart' hide LicensePage;
+import 'package:flutter/material.dart';
 
 import '../../globals.dart';
 import 'about_page.dart';
-import 'license_page.dart';
+import 'licenses_page.dart';
 import 'settings_page.dart';
 
 class SettingsDialog extends StatelessWidget {
@@ -16,9 +16,8 @@ class SettingsDialog extends StatelessWidget {
       initialRoute: '/settings',
       onGenerateRoute: (settings) {
         Widget page = switch (settings.name) {
-          '/settings' => const SettingsPage(),
           '/about' => const AboutPage(),
-          '/licenses' => const LicensePage(),
+          '/licenses' => const LicensesPage(),
           _ => const SettingsPage()
         };
 
