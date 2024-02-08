@@ -34,6 +34,7 @@ class AboutPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           YaruDialogTitleBar(
+            backgroundColor: context.t.dialogBackgroundColor,
             title: Text('${context.l10n.about} ${appName ?? ''}'),
             leading: YaruBackButton(
               style: YaruBackButtonStyle.rounded,
