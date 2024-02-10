@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../common/icons.dart';
-import 'player_model.dart';
+import 'player_service.dart';
 
 class PlayButton extends StatelessWidget {
   const PlayButton({
@@ -16,10 +17,10 @@ class PlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playerModel = context.read<PlayerModel>();
-    final pause = playerModel.pause;
-    final playOrPause = playerModel.playOrPause;
-    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
+    final service = getService<PlayerService>();
+    final pause = service.pause;
+    final playOrPause = service.playOrPause;
+    final isPlaying = service.isPlaying.watch(context);
     return IconButton(
       color: iconColor,
       onPressed: !active

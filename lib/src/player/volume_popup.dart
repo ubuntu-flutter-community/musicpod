@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../common.dart';
 import '../l10n/l10n.dart';
-import 'player_model.dart';
+import 'player_service.dart';
 
 class VolumeSliderPopup extends StatelessWidget {
   const VolumeSliderPopup({
@@ -15,9 +16,9 @@ class VolumeSliderPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playerModel = context.read<PlayerModel>();
-    final volume = context.select((PlayerModel m) => m.volume);
-    final setVolume = playerModel.setVolume;
+    final service = getService<PlayerService>();
+    final volume = service.volume.watch(context);
+    final setVolume = service.setVolume;
     IconData iconData;
     if (volume <= 0) {
       iconData = Iconz().speakerMutedFilled;
@@ -40,9 +41,8 @@ class VolumeSliderPopup extends StatelessWidget {
         return [
           PopupMenuItem(
             enabled: false,
-            child: ChangeNotifierProvider.value(
-              value: playerModel,
-              builder: (context, _) {
+            child: Watch.builder(
+              builder: (context) {
                 return _Slider(
                   setVolume: setVolume,
                 );
@@ -64,7 +64,8 @@ class _Slider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final volume = context.select((PlayerModel m) => m.volume);
+    final service = getService<PlayerService>();
+    final volume = service.volume.watch(context);
 
     return Padding(
       padding: const EdgeInsets.only(right: 8),

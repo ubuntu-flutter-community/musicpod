@@ -1,6 +1,7 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../common.dart';
 import '../../data.dart';
@@ -46,8 +47,7 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
   @override
   Widget build(BuildContext context) {
     final libraryModel = context.read<LibraryModel>();
-    final playerModel = context.read<PlayerModel>();
-
+    final service = getService<PlayerService>();
     final futureBuilder = FutureBuilder(
       future: _future,
       builder: (context, snapshot) {
@@ -68,7 +68,7 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
               final station = snapshot.data?.elementAt(index);
               return StationCard(
                 station: station,
-                startPlaylist: playerModel.startPlaylist,
+                startPlaylist: service.startPlaylist,
                 isStarredStation: libraryModel.isStarredStation,
                 unstarStation: libraryModel.unStarStation,
                 starStation: libraryModel.addStarredStation,

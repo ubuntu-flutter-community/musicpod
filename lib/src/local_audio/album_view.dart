@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -41,7 +42,7 @@ class AlbumsView extends StatelessWidget {
     }
 
     final libraryModel = context.read<LibraryModel>();
-    final playerModel = context.read<PlayerModel>();
+    final playerService = getService<PlayerService>();
     final model = context.read<LocalAudioModel>();
 
     return Padding(
@@ -98,7 +99,7 @@ class AlbumsView extends StatelessWidget {
                     ),
             onPlay: albumAudios == null || albumAudios.isEmpty || id == null
                 ? null
-                : () => playerModel.startPlaylist(
+                : () => playerService.startPlaylist(
                       audios: albumAudios,
                       listName: id,
                     ),

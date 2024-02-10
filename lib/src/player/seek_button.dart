@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../build_context_x.dart';
 import '../../theme.dart';
 import '../common/icons.dart';
-import 'player_model.dart';
+import 'player_service.dart';
 
 class SeekButton extends StatelessWidget {
   const SeekButton({
@@ -17,11 +18,11 @@ class SeekButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playerModel = context.read<PlayerModel>();
-    final position = context.select((PlayerModel m) => m.position);
-    final setPosition = playerModel.setPosition;
-    final duration = context.select((PlayerModel m) => m.duration);
-    final seek = playerModel.seek;
+    final service = getService<PlayerService>();
+    final position = service.position.watch(context);
+    final setPosition = service.setPosition;
+    final duration = service.duration.watch(context);
+    final seek = service.seek;
     final icon = Icon(
       forward ? Iconz().forward30 : Iconz().backward10,
     );

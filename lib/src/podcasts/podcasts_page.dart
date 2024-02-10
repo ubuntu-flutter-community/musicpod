@@ -196,7 +196,8 @@ class PodcastsPageIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final audioType = context.select((PlayerModel m) => m.audio?.audioType);
+
+    final audio = getService<PlayerService>().audio.watch(context);
 
     final checkingForUpdates =
         context.select((PodcastModel m) => m.checkingForUpdates);
@@ -205,7 +206,7 @@ class PodcastsPageIcon extends StatelessWidget {
       return const SideBarProgress();
     }
 
-    if (audioType == AudioType.podcast) {
+    if (audio?.audioType == AudioType.podcast) {
       return Icon(
         Iconz().play,
         color: theme.colorScheme.primary,

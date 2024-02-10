@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
@@ -26,7 +27,7 @@ Future<void> searchAndPushPodcastPage({
     return;
   }
   final model = context.read<PodcastModel>();
-  final startPlaylist = context.read<PlayerModel>().startPlaylist;
+  final startPlaylist = getService<PlayerService>().startPlaylist;
   final selectedFeedUrl = model.selectedFeedUrl;
   final setSelectedFeedUrl = model.setSelectedFeedUrl;
 
@@ -71,9 +72,9 @@ Future<void> searchAndPushPodcastPage({
         noConfirm: podcast.length < kAudioQueueThreshHold,
         message: context.l10n.queueConfirmMessage(podcast.length.toString()),
         run: () {
-          startPlaylist.call(listName: feedUrl, audios: podcast).then(
-                (_) => setSelectedFeedUrl(null),
-              );
+          startPlaylist(listName: feedUrl, audios: podcast).then(
+            (_) => setSelectedFeedUrl(null),
+          );
         },
         onCancel: () {
           model.setSelectedFeedUrl(null);

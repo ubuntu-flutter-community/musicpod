@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
+
 import '../../build_context_x.dart';
 import '../common/icons.dart';
-import 'player_model.dart';
-import 'package:provider/provider.dart';
+import 'player_service.dart';
 
 class ShuffleButton extends StatelessWidget {
   const ShuffleButton({
@@ -15,8 +17,9 @@ class ShuffleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final shuffle = context.select((PlayerModel m) => m.shuffle);
-    final setShuffle = context.read<PlayerModel>().setShuffle;
+    final service = getService<PlayerService>();
+    final shuffle = service.shuffle.watch(context);
+    final setShuffle = service.setShuffle;
 
     return IconButton(
       icon: Icon(

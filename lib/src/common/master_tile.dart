@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
@@ -132,20 +133,16 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
       return widget.tile;
     }
 
-    final isEnQueued = context.select(
-      (PlayerModel m) => m.queueName != null && m.queueName == widget.pageId,
-    );
-    final isPlaying = context.select(
-      (PlayerModel m) => m.isPlaying,
-    );
-
-    final playerModel = context.read<PlayerModel>();
+    final playerService = getService<PlayerService>();
+    final isPlaying = playerService.isPlaying.watch(context);
+    final queue = playerService.queue.watch(context);
+    final isEnQueued = queue.$1 == widget.pageId;
 
     void onPlay() {
       if (isEnQueued) {
-        isPlaying ? playerModel.pause() : playerModel.resume();
+        isPlaying ? playerService.pause() : playerService.resume();
       } else {
-        playerModel
+        playerService
             .startPlaylist(
               audios: audios,
               listName: widget.pageId,

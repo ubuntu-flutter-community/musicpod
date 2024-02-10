@@ -82,7 +82,7 @@ class StationPage extends StatelessWidget {
 
     final service = getService<AppStateService>();
     final showWindowControls = service.showWindowControls;
-    final startPlaylist = context.read<PlayerModel>().startPlaylist;
+    final startPlaylist = getService<PlayerService>().startPlaylist;
     final libraryModel = context.read<LibraryModel>();
     final isStarred = station.url == null
         ? false

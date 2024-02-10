@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
@@ -28,7 +29,8 @@ class PodcastsCollectionBody extends StatelessWidget {
     final theme = context.t;
     final subs = context.select((LibraryModel m) => m.podcasts);
     context.select((LibraryModel m) => m.podcastUpdatesLength);
-    final playerModel = context.read<PlayerModel>();
+    final service = getService<PlayerService>();
+
     final libraryModel = context.read<LibraryModel>();
     final podcastUpdateAvailable = libraryModel.podcastUpdateAvailable;
     final feedHasDownload = libraryModel.feedHasDownload;
@@ -159,7 +161,7 @@ class PodcastsCollectionBody extends StatelessWidget {
                                 noConfirm: podcast.value.length <
                                     kAudioQueueThreshHold,
                                 message: podcast.value.length.toString(),
-                                run: () => playerModel
+                                run: () => service
                                     .startPlaylist(
                                       audios: podcast.value,
                                       listName: podcast.key,

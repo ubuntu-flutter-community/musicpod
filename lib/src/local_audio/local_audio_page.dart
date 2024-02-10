@@ -134,7 +134,8 @@ class LocalAudioPageIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audioType = context.select((PlayerModel m) => m.audio?.audioType);
+    final audioType =
+        getService<PlayerService>().audio.watch(context)?.audioType;
 
     final theme = context.t;
     if (audioType == AudioType.local) {

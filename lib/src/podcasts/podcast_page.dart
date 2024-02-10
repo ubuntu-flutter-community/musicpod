@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -58,7 +60,8 @@ class PodcastPage extends StatelessWidget {
 
     final subscribed = libraryModel.podcastSubscribed(pageId);
 
-    context.select((PlayerModel m) => m.lastPositions?.length);
+    final service = getService<PlayerService>();
+    service.lastPositions.watch(context).length;
     context.select((LibraryModel m) => m.downloadsLength);
 
     final checkingForUpdates =

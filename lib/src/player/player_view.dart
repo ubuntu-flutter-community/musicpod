@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../app.dart';
@@ -54,24 +55,24 @@ class _PlayerViewState extends State<PlayerView> {
     // Connectivity
     final isOnline = context.watch<ConnectivityNotifier>().isOnline;
 
-    final playerModel = context.read<PlayerModel>();
-    final nextAudio = context.select((PlayerModel m) => m.nextAudio);
-    final c = context.select((PlayerModel m) => m.color);
+    final service = getService<PlayerService>();
+    final nextAudio = service.nextAudio.watch(context);
+    final c = service.color.watch(context);
     final color = getPlayerBg(
       c,
       theme.isLight ? kCardColorLight : kCardColorDark,
     );
-    final playPrevious = playerModel.playPrevious;
-    final playNext = playerModel.playNext;
-    final audio = context.select((PlayerModel m) => m.audio);
+    final playPrevious = service.playPrevious;
+    final playNext = service.playNext;
+    final audio = service.audio.watch(context);
 
-    final isVideo = context.select((PlayerModel m) => m.isVideo);
+    final isVideo = service.isVideo.watch(context);
 
     Widget player;
     if (widget.playerViewMode != PlayerViewMode.bottom) {
       player = FullHeightPlayer(
         isVideo: isVideo == true,
-        videoController: playerModel.controller,
+        videoController: service.controller,
         playerViewMode: widget.playerViewMode,
         nextAudio: nextAudio,
         audio: audio,
@@ -82,7 +83,7 @@ class _PlayerViewState extends State<PlayerView> {
     } else {
       player = BottomPlayer(
         isVideo: isVideo,
-        videoController: playerModel.controller,
+        videoController: service.controller,
         audio: audio,
         playPrevious: playPrevious,
         playNext: playNext,

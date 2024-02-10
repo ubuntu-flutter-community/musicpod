@@ -3,6 +3,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
@@ -105,16 +107,15 @@ class _AudioPageBodyState extends State<AudioPageBody> {
   @override
   Widget build(BuildContext context) {
     final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
-    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
+    final playerService = getService<PlayerService>();
 
-    final playerModel = context.read<PlayerModel>();
-    final startPlaylist = playerModel.startPlaylist;
+    final startPlaylist = playerService.startPlaylist;
 
-    final currentAudio = context.select((PlayerModel m) => m.audio);
-    final play = playerModel.play;
-    final pause = playerModel.pause;
-    final resume = playerModel.resume;
-    final insertIntoQueue = playerModel.insertIntoQueue;
+    final currentAudio = playerService.audio.watch(context);
+    final play = playerService.play;
+    final pause = playerService.pause;
+    final resume = playerService.resume;
+    final insertIntoQueue = playerService.insertIntoQueue;
 
     if (widget.audioPageType != AudioPageType.podcast) {
       context.select((LibraryModel m) => m.likedAudios.length);
@@ -215,6 +216,8 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                   controller: _controller,
                   itemCount: widget.audios?.length,
                   itemBuilder: (context, index) {
+                    final isPlaying = playerService.isPlaying.watch(context);
+
                     final audio = widget.audios!.elementAt(index);
                     final audioSelected = currentAudio == audio;
                     final download = libraryModel.getDownload(audio.url);
@@ -240,11 +243,11 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                         pause: pause,
                         resume: resume,
                         play: play,
-                        lastPosition: playerModel.getLastPosition(audio.url),
-                        safeLastPosition: playerModel.safeLastPosition,
+                        lastPosition: playerService.getLastPosition(audio.url),
+                        safeLastPosition: playerService.safeLastPosition,
                         isOnline: isOnline,
                         insertIntoQueue: () =>
-                            playerModel.insertIntoQueue(audio),
+                            playerService.insertIntoQueue(audio),
                       );
                     }
 

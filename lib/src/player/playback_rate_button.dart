@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../build_context_x.dart';
 import '../common/icons.dart';
-import 'player_model.dart';
+import 'player_service.dart';
+
+const rateValues = [1.0, 1.5, 2.0];
 
 class PlaybackRateButton extends StatelessWidget {
   const PlaybackRateButton({
@@ -18,8 +21,9 @@ class PlaybackRateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final rate = context.select((PlayerModel m) => m.rate);
-    final setRate = context.read<PlayerModel>().setRate;
+    final service = getService<PlayerService>();
+    final rate = service.rate.watch(context);
+    final setRate = service.setRate;
 
     return PopupMenuButton(
       icon: Icon(

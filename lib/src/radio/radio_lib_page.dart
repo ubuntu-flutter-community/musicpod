@@ -1,6 +1,7 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
@@ -81,7 +82,7 @@ class StationGrid extends StatelessWidget {
     final stations = context.select((LibraryModel m) => m.starredStations);
     final length = context.select((LibraryModel m) => m.starredStationsLength);
     final libraryModel = context.read<LibraryModel>();
-    final playerModel = context.read<PlayerModel>();
+    final service = getService<PlayerService>();
 
     if (length == 0) {
       return NoSearchResultPage(
@@ -98,7 +99,7 @@ class StationGrid extends StatelessWidget {
         final station = stations.entries.elementAt(index).value.firstOrNull;
         return StationCard(
           station: station,
-          startPlaylist: playerModel.startPlaylist,
+          startPlaylist: service.startPlaylist,
           isStarredStation: libraryModel.isStarredStation,
           unstarStation: libraryModel.unStarStation,
           starStation: libraryModel.addStarredStation,

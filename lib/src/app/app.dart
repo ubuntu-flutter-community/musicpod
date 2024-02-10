@@ -32,11 +32,6 @@ class App extends StatefulWidget {
           create: (_) => RadioModel(getService<RadioService>()),
         ),
         ChangeNotifierProvider(
-          create: (_) => PlayerModel(
-            service: getService<PlayerService>(),
-          ),
-        ),
-        ChangeNotifierProvider(
           create: (_) => LocalAudioModel(
             localAudioService: getService<LocalAudioService>(),
             libraryService: getService<LibraryService>(),
@@ -83,7 +78,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     final settingService = getService<SettingsService>();
 
     final libraryModel = context.read<LibraryModel>();
-    final playerModel = context.read<PlayerModel>();
+    final playerService = getService<PlayerService>();
 
     final connectivityNotifier = context.read<ConnectivityNotifier>();
 
@@ -104,12 +99,10 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         (_) {
           libraryModel.init().then(
             (_) {
-              playerModel.init().then((_) {
-                if (settingService.recentPatchNotesDisposed.value == false) {
-                  showPatchNotes(context, settingService.disposePatchNotes);
-                }
-                extPathService.init(playerModel.play);
-              });
+              if (settingService.recentPatchNotesDisposed.value == false) {
+                showPatchNotes(context, settingService.disposePatchNotes);
+              }
+              extPathService.init(playerService.play);
             },
           );
         },
@@ -137,14 +130,14 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     final appStateService = getService<AppStateService>();
     final isFullScreen = appStateService.fullScreen;
 
-    final playerModel = context.read<PlayerModel>();
+    final playerService = getService<PlayerService>();
 
     return KeyboardListener(
       focusNode: FocusNode(),
       onKeyEvent: (value) {
         if (value.runtimeType == KeyDownEvent &&
             value.logicalKey == LogicalKeyboardKey.space) {
-          playerModel.playOrPause();
+          playerService.playOrPause();
         }
       },
       child: Watch.builder(

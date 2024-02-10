@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -17,7 +18,7 @@ class FullHeightTitleAndArtist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final mpvMetaData = context.select((PlayerModel m) => m.mpvMetaData);
+    final mpvMetaData = getService<PlayerService>().mpvMetaData.watch(context);
     final icyName = mpvMetaData?.icyName;
     final icyTitle = mpvMetaData?.icyTitle;
 

@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
+
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class RadioPageIcon extends StatelessWidget {
   const RadioPageIcon({
@@ -16,10 +18,10 @@ class RadioPageIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audioType = context.select((PlayerModel m) => m.audio?.audioType);
+    final audio = getService<PlayerService>().audio.watch(context);
 
     final theme = context.t;
-    if (audioType == AudioType.radio) {
+    if (audio?.audioType == AudioType.radio) {
       return Icon(
         Iconz().play,
         color: theme.colorScheme.primary,

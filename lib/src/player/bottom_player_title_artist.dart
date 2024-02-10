@@ -1,9 +1,10 @@
-import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../common.dart';
 import '../../data.dart';
 import '../../player.dart';
-import 'package:flutter/material.dart';
 
 class BottomPlayerTitleArtist extends StatelessWidget {
   const BottomPlayerTitleArtist({
@@ -14,7 +15,7 @@ class BottomPlayerTitleArtist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mpvMetaData = context.select((PlayerModel m) => m.mpvMetaData);
+    final mpvMetaData = getService<PlayerService>().mpvMetaData.watch(context);
     final icyName = mpvMetaData?.icyName;
     final icyTitle = mpvMetaData?.icyTitle;
 

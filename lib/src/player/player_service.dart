@@ -8,8 +8,9 @@ import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:smtc_windows/smtc_windows.dart';
 import 'package:path/path.dart' as p;
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:smtc_windows/smtc_windows.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
@@ -39,128 +40,81 @@ class PlayerService {
 
   Player get _player => controller.player;
 
-  final _queueController = StreamController<bool>.broadcast();
-  Stream<bool> get queueChanged => _queueController.stream;
-  (String, List<Audio>) _queue = ('', []);
-  (String, List<Audio>) get queue => _queue;
+  final Signal<(String, List<Audio>)> queue = signal(('', []));
   void setQueue((String, List<Audio>) value) {
-    if (value == _queue || value.$2.isEmpty) return;
-    _queue = value;
-    _queueController.add(true);
+    if (value == queue.value || value.$2.isEmpty) return;
+    queue.value = value;
   }
 
-  final _mpvMetaDataController = StreamController<bool>.broadcast();
-  Stream<bool> get mpvMetaDataChanged => _mpvMetaDataController.stream;
-  MpvMetaData? _mpvMetaData;
-  MpvMetaData? get mpvMetaData => _mpvMetaData;
+  final Signal<MpvMetaData?> mpvMetaData = signal(null);
   void setMpvMetaData(MpvMetaData value) {
-    if (value == _mpvMetaData) return;
-    _mpvMetaData = value;
-    _mpvMetaDataController.add(true);
+    if (value == mpvMetaData.value) return;
+    mpvMetaData.value = value;
   }
 
-  final _audioController = StreamController<bool>.broadcast();
-  Stream<bool> get audioChanged => _audioController.stream;
-  Audio? _audio;
-  Audio? get audio => _audio;
+  final Signal<Audio?> audio = signal(null);
   void _setAudio(Audio value) async {
-    if (value == _audio) return;
-    _audio = value;
-    _audioController.add(true);
+    if (value == audio.value) return;
+    audio.value = value;
   }
 
-  final _isVideoController = StreamController<bool>.broadcast();
-  Stream<bool> get isVideoChanged => _isVideoController.stream;
-
-  bool? _isVideo;
-  bool? get isVideo => _isVideo;
+  final Signal<bool?> isVideo = signal(null);
   void _setIsVideo(bool? value) {
-    _isVideo = value;
-    _isVideoController.add(true);
+    isVideo.value = value;
   }
 
-  final _nextAudioController = StreamController<bool>.broadcast();
-  Stream<bool> get nextAudioChanged => _nextAudioController.stream;
-  Audio? _nextAudio;
-  Audio? get nextAudio => _nextAudio;
-  set nextAudio(Audio? value) {
-    if (value == null || value == _nextAudio) return;
-    _nextAudio = value;
-    _nextAudioController.add(true);
+  final Signal<Audio?> nextAudio = signal(null);
+  void setNextAudio(Audio? value) {
+    if (value == null || value == nextAudio.value) return;
+    nextAudio.value = value;
   }
 
-  final _isPlayingController = StreamController<bool>.broadcast();
-  Stream<bool> get isPlayingChanged => _isPlayingController.stream;
-  bool _isPlaying = false;
-  bool get isPlaying => _isPlaying;
+  final Signal<bool> isPlaying = signal(false);
   void setIsPlaying(bool value) {
-    if (value == _isPlaying) return;
-    _isPlaying = value;
-    _isPlayingController.add(true);
+    if (value == isPlaying.value) return;
+    isPlaying.value = value;
     _setMediaControlsIsPlaying(value);
   }
 
-  final _durationController = StreamController<bool>.broadcast();
-  Stream<bool> get durationChanged => _durationController.stream;
-  Duration? _duration;
-  Duration? get duration => _duration;
+  final Signal<Duration?> duration = signal(null);
   void setDuration(Duration? value) {
-    if (value?.inSeconds == _duration?.inSeconds) return;
-    _duration = value;
-    _durationController.add(true);
+    if (value == null || value.inSeconds == duration.value?.inSeconds) return;
+    duration.value = value;
     _setMediaControlDuration(value);
   }
 
-  final _positionController = StreamController<bool>.broadcast();
-  Stream<bool> get positionChanged => _positionController.stream;
-  Duration? _position = Duration.zero;
-  Duration? get position => _position;
+  final Signal<Duration?> position = signal(null);
   void setPosition(Duration? value) {
-    if (position?.inSeconds == value?.inSeconds) return;
-    _position = value;
-    _positionController.add(true);
+    if (position.value?.inSeconds == value?.inSeconds) return;
+    position.value = value;
     _setMediaControlPosition(value);
   }
 
-  final _repeatSingleController = StreamController<bool>.broadcast();
-  Stream<bool> get repeatSingleChanged => _repeatSingleController.stream;
-  bool _repeatSingle = false;
-  bool get repeatSingle => _repeatSingle;
+  final Signal<bool> repeatSingle = signal(false);
   void setRepeatSingle(bool value) {
-    if (value == _repeatSingle) return;
-    _repeatSingle = value;
+    if (value == repeatSingle.value) return;
+    repeatSingle.value = value;
     _estimateNext();
-    _repeatSingleController.add(true);
   }
 
-  final _shuffleController = StreamController<bool>.broadcast();
-  Stream<bool> get shuffleChanged => _shuffleController.stream;
-  bool _shuffle = false;
-  bool get shuffle => _shuffle;
+  final Signal<bool> shuffle = signal(false);
   void setShuffle(bool value) {
-    if (value == _shuffle) return;
-    _shuffle = value;
-    if (value && queue.$2.length > 1) {
+    if (value == shuffle.value) return;
+    shuffle.value = value;
+    if (value && queue.value.$2.length > 1) {
       _randomNext();
     }
-    _shuffleController.add(true);
   }
 
-  final _volumeController = StreamController<bool>.broadcast();
-  Stream<bool> get volumeChanged => _volumeController.stream;
-  double _volume = 100.0;
-  double get volume => _volume;
+  final Signal<double> volume = signal(100.0);
   Future<void> setVolume(double value) async {
-    if (value == _volume) return;
+    if (value == volume.value) return;
     await _player.setVolume(value);
   }
 
-  final _rateController = StreamController<bool>.broadcast();
-  Stream<bool> get rateChanged => _rateController.stream;
-  double _rate = 1.0;
-  double get rate => _rate;
+  final Signal<double> rate = signal(1.0);
   Future<void> setRate(double value) async {
-    if (value == _rate) return;
+    if (value == rate.value) return;
     await _player.setRate(value);
   }
 
@@ -170,18 +124,18 @@ class PlayerService {
       if (newAudio != null) {
         _setAudio(newAudio);
       }
-      if (audio == null) return;
+      if (audio.value == null) return;
 
-      Media? media = audio!.path != null
-          ? Media('file://${audio!.path!}')
-          : (audio!.url != null)
-              ? Media(audio!.url!)
+      Media? media = audio.value!.path != null
+          ? Media('file://${audio.value!.path!}')
+          : (audio.value!.url != null)
+              ? Media(audio.value!.url!)
               : null;
       if (media == null) return;
       _player.open(media).then((_) {
         _player.state.tracks;
       });
-      if (newPosition != null && _audio!.audioType != AudioType.radio) {
+      if (newPosition != null && audio.value!.audioType != AudioType.radio) {
         _player.setVolume(0).then(
               (_) => Future.delayed(const Duration(seconds: 3)).then(
                 (_) => _player
@@ -190,7 +144,7 @@ class PlayerService {
               ),
             );
       }
-      _setMediaControlsMetaData(audio!);
+      _setMediaControlsMetaData(audio.value!);
       _loadColor();
       _firstPlay = false;
     } on Exception catch (_) {
@@ -200,7 +154,9 @@ class PlayerService {
   }
 
   Future<void> playOrPause() async {
-    return _firstPlay ? play(newPosition: _position) : _player.playOrPause();
+    return _firstPlay
+        ? play(newPosition: position.value)
+        : _player.playOrPause();
   }
 
   Future<void> pause() async {
@@ -208,12 +164,12 @@ class PlayerService {
   }
 
   Future<void> seek() async {
-    if (position == null) return;
-    await _player.seek(position!);
+    if (position.value == null) return;
+    await _player.seek(position.value!);
   }
 
   Future<void> resume() async {
-    if (audio == null) return;
+    if (audio.value == null) return;
     await playOrPause();
   }
 
@@ -221,7 +177,7 @@ class PlayerService {
     await _initMediaControl();
 
     await _readPlayerState();
-    _lastPositions = (await getSettings(kLastPositionsFileName)).map(
+    lastPositions.value = (await getSettings(kLastPositionsFileName)).map(
       (key, value) => MapEntry(key, parseDuration(value) ?? Duration.zero),
     );
 
@@ -248,15 +204,9 @@ class PlayerService {
       (data) async => setMpvMetaData(MpvMetaData.fromJson(data)),
     );
 
-    _volumeSub = _player.stream.volume.listen((value) {
-      _volume = value;
-      _volumeController.add(true);
-    });
+    _volumeSub = _player.stream.volume.listen((value) => setVolume(value));
 
-    _rateSub = _player.stream.rate.listen((value) {
-      _rate = value;
-      _rateController.add(true);
-    });
+    _rateSub = _player.stream.rate.listen((value) => setRate(value));
 
     _tracksSub = _player.stream.tracks.listen((tracks) {
       _setIsVideo(false);
@@ -271,87 +221,88 @@ class PlayerService {
 
   Future<void> playNext() async {
     safeLastPosition();
-    if (!repeatSingle && nextAudio != null) {
-      _setAudio(nextAudio!);
+    if (!repeatSingle.value && nextAudio.value != null) {
+      _setAudio(nextAudio.value!);
       _estimateNext();
     }
     await play();
   }
 
   void insertIntoQueue(Audio newAudio) {
-    if (_queue.$2.isNotEmpty &&
-        !_queue.$2.contains(newAudio) &&
-        _audio != null) {
-      final currentIndex = queue.$2.indexOf(_audio!);
-      _queue.$2.insert(currentIndex + 1, newAudio);
-      nextAudio = newAudio;
+    if (queue.value.$2.isNotEmpty &&
+        !queue.value.$2.contains(newAudio) &&
+        audio.value != null) {
+      final currentIndex = queue.value.$2.indexOf(audio.value!);
+      queue.value.$2.insert(currentIndex + 1, newAudio);
+      setNextAudio(newAudio);
     }
   }
 
   void moveAudioInQueue(int oldIndex, int newIndex) {
-    if (_queue.$2.isNotEmpty && newIndex < _queue.$2.length) {
+    if (queue.value.$2.isNotEmpty && newIndex < queue.value.$2.length) {
       if (oldIndex < newIndex) {
         newIndex -= 1;
       }
 
-      final audio = _queue.$2.removeAt(oldIndex);
-      _queue.$2.insert(newIndex, audio);
+      final audio = queue.value.$2.removeAt(oldIndex);
+      queue.value.$2.insert(newIndex, audio);
 
       _estimateNext();
-
-      _queueController.add(true);
     }
   }
 
   void remove(Audio deleteMe) {
-    _queue.$2.remove(deleteMe);
+    queue.value.$2.remove(deleteMe);
     _estimateNext();
-    _queueController.add(true);
   }
 
   void _estimateNext() {
-    if (audio == null) return;
+    if (audio.value == null) return;
 
-    if (queue.$2.isNotEmpty == true && queue.$2.contains(audio)) {
-      final currentIndex = queue.$2.indexOf(audio!);
+    if (queue.value.$2.isNotEmpty == true &&
+        queue.value.$2.contains(audio.value)) {
+      final currentIndex = queue.value.$2.indexOf(audio.value!);
 
-      if (shuffle && queue.$2.length > 1) {
+      if (shuffle.value && queue.value.$2.length > 1) {
         _randomNext();
       } else {
-        if (currentIndex == queue.$2.length - 1) {
-          nextAudio = queue.$2.elementAt(0);
+        if (currentIndex == queue.value.$2.length - 1) {
+          setNextAudio(queue.value.$2.elementAt(0));
         } else {
-          nextAudio = queue.$2.elementAt(queue.$2.indexOf(audio!) + 1);
+          setNextAudio(
+            queue.value.$2.elementAt(queue.value.$2.indexOf(audio.value!) + 1),
+          );
         }
       }
     }
   }
 
   void _randomNext() {
-    if (audio == null) return;
-    final currentIndex = queue.$2.indexOf(audio!);
-    final max = queue.$2.length;
+    if (audio.value == null) return;
+    final currentIndex = queue.value.$2.indexOf(audio.value!);
+    final max = queue.value.$2.length;
     final random = Random();
     var randomIndex = random.nextInt(max);
     while (randomIndex == currentIndex) {
       randomIndex = random.nextInt(max);
     }
-    nextAudio = queue.$2.elementAt(randomIndex);
+    setNextAudio(queue.value.$2.elementAt(randomIndex));
   }
 
   Future<void> playPrevious() async {
-    if (queue.$2.isNotEmpty == true &&
-        audio != null &&
-        queue.$2.contains(audio)) {
-      if (position != null && position!.inSeconds > 10) {
+    if (queue.value.$2.isNotEmpty == true &&
+        audio.value != null &&
+        queue.value.$2.contains(audio.value)) {
+      if (position.value != null && position.value!.inSeconds > 10) {
         setPosition(Duration.zero);
         await seek();
       } else {
-        final currentIndex = queue.$2.indexOf(audio!);
+        final currentIndex = queue.value.$2.indexOf(audio.value!);
         if (currentIndex == 0) {
           return;
         }
-        final mightBePrevious = queue.$2.elementAtOrNull(currentIndex - 1);
+        final mightBePrevious =
+            queue.value.$2.elementAtOrNull(currentIndex - 1);
         if (mightBePrevious == null) return;
         _setAudio(mightBePrevious);
         _estimateNext();
@@ -365,7 +316,7 @@ class PlayerService {
     required String listName,
     int? index,
   }) async {
-    if (listName == _queue.$1 &&
+    if (listName == queue.value.$1 &&
         index != null &&
         audios.elementAtOrNull(index) != null) {
       _setAudio(audios.elementAtOrNull(index)!);
@@ -378,34 +329,35 @@ class PlayerService {
       );
     }
 
-    _position = getLastPosition.call(_audio?.url);
+    position.value = getLastPosition.call(audio.value?.url);
     _estimateNext();
-    await play(newPosition: _position);
+    await play(newPosition: position.value);
   }
 
-  Color? _color;
-  Color? get color => _color;
+  final Signal<Color?> color = signal(null);
 
   Future<void> _loadColor() async {
-    if (audio == null) {
-      _color = kCardColorDark;
+    if (audio.value == null) {
+      color.value = kCardColorDark;
       return;
     }
 
-    if (audio?.path != null && audio?.pictureData != null) {
+    if (audio.value?.path != null && audio.value?.pictureData != null) {
       final image = MemoryImage(
-        audio!.pictureData!,
+        audio.value!.pictureData!,
       );
       final generator = await PaletteGenerator.fromImageProvider(image);
-      _color = generator.dominantColor?.color;
+      color.value = generator.dominantColor?.color;
     } else {
-      if (audio?.imageUrl == null && audio?.albumArtUrl == null) return;
+      if (audio.value?.imageUrl == null && audio.value?.albumArtUrl == null) {
+        return;
+      }
 
       final image = NetworkImage(
-        audio!.imageUrl ?? audio!.albumArtUrl!,
+        audio.value!.imageUrl ?? audio.value!.albumArtUrl!,
       );
       final generator = await PaletteGenerator.fromImageProvider(image);
-      _color = generator.dominantColor?.color;
+      color.value = generator.dominantColor?.color;
     }
   }
 
@@ -434,10 +386,10 @@ class PlayerService {
   }
 
   void safeLastPosition() {
-    if (_audio?.audioType == AudioType.radio ||
-        _audio?.url == null ||
-        _position == null) return;
-    addLastPosition(_audio!.url!, _position!);
+    if (audio.value?.audioType == AudioType.radio ||
+        audio.value?.url == null ||
+        position.value == null) return;
+    addLastPosition(audio.value!.url!, position.value!);
   }
 
   Future<void> _initMediaControl() async {
@@ -469,14 +421,14 @@ class PlayerService {
         case PressedButton.play:
           playOrPause().then(
             (_) => _smtc?.setPlaybackStatus(
-              _isPlaying ? PlaybackStatus.Playing : PlaybackStatus.Paused,
+              isPlaying.value ? PlaybackStatus.Playing : PlaybackStatus.Paused,
             ),
           );
           break;
         case PressedButton.pause:
           playOrPause().then(
             (_) => _smtc?.setPlaybackStatus(
-              _isPlaying ? PlaybackStatus.Playing : PlaybackStatus.Paused,
+              isPlaying.value ? PlaybackStatus.Playing : PlaybackStatus.Paused,
             ),
           );
           break;
@@ -657,17 +609,6 @@ class PlayerService {
     await _mpris?.dispose();
     await _smtc?.disableSmtc();
     await _smtc?.dispose();
-    await _queueController.close();
-    await _mpvMetaDataController.close();
-    await _audioController.close();
-    await _nextAudioController.close();
-    await _volumeController.close();
-    await _shuffleController.close();
-    await _durationController.close();
-    await _isVideoController.close();
-    await _positionController.close();
-    await _isPlayingController.close();
-    await _repeatSingleController.close();
     await _isPlayingSub?.cancel();
     await _positionSub?.cancel();
     await _durationSub?.cancel();
@@ -675,40 +616,35 @@ class PlayerService {
     await _volumeSub?.cancel();
     await _tracksSub?.cancel();
     await _rateSub?.cancel();
-    await _rateController.close();
-    await _lastPositionsController.close();
     await _player.dispose();
   }
 
   //
   // last positions
   //
-  Map<String, Duration> _lastPositions = {};
-  Map<String, Duration> get lastPositions => _lastPositions;
-  final _lastPositionsController = StreamController<bool>.broadcast();
-  Stream<bool> get lastPositionsChanged => _lastPositionsController.stream;
+  final Signal<Map<String, Duration>> lastPositions = signal({});
   void addLastPosition(String url, Duration lastPosition) {
-    if (_lastPositions.containsKey(url) == true) {
-      _lastPositions.update(url, (value) => lastPosition);
-    } else {
-      _lastPositions.putIfAbsent(url, () => lastPosition);
-    }
-
     writeSetting(url, lastPosition.toString(), kLastPositionsFileName)
-        .then((_) => _lastPositionsController.add(true));
+        .then((_) {
+      if (lastPositions.value.containsKey(url) == true) {
+        lastPositions.value.update(url, (value) => lastPosition);
+      } else {
+        lastPositions.value.putIfAbsent(url, () => lastPosition);
+      }
+    });
   }
 
-  Duration? getLastPosition(String? url) => _lastPositions[url];
+  Duration? getLastPosition(String? url) => lastPositions.value[url];
 
   // Player State
 
   Future<void> writePlayerState() async {
     final playerState = PlayerState(
-      audio: _audio,
-      duration: _duration?.toString(),
-      position: _position?.toString(),
-      queue: _queue.$2.take(100).toList(),
-      queueName: _queue.$1,
+      audio: audio.value,
+      duration: duration.value?.toString(),
+      position: position.value?.toString(),
+      queue: queue.value.$2.take(100).toList(),
+      queueName: queue.value.$1,
     );
 
     await writeJsonToFile(playerState.toMap(), kPlayerStateFileName);

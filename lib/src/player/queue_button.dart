@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../common.dart';
 import '../../data.dart';
@@ -15,7 +17,6 @@ class QueueButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playerModel = context.read<PlayerModel>();
     final libraryModel = context.read<LibraryModel>();
 
     return IconButton(
@@ -29,11 +30,8 @@ class QueueButton extends StatelessWidget {
         showDialog(
           context: context,
           builder: (context) {
-            return ChangeNotifierProvider.value(
-              value: playerModel,
-              child: QueueDialog(
-                addPlaylist: libraryModel.addPlaylist,
-              ),
+            return QueueDialog(
+              addPlaylist: libraryModel.addPlaylist,
             );
           },
         );
@@ -65,11 +63,12 @@ class _QueueDialogState extends State<QueueDialog> {
   }
 
   void _jump() {
-    final model = context.read<PlayerModel>();
-    final currentAudio = model.audio;
-    if (currentAudio != null && model.queue.isNotEmpty == true) {
+    final service = getService<PlayerService>();
+    final currentAudio = service.audio.watch(context);
+    final queue = service.queue.value.$2;
+    if (currentAudio != null && queue.isNotEmpty == true) {
       _controller.scrollToIndex(
-        model.queue.indexOf(currentAudio),
+        queue.indexOf(currentAudio),
         preferPosition: AutoScrollPosition.begin,
         duration: const Duration(milliseconds: 1),
       );
@@ -84,10 +83,11 @@ class _QueueDialogState extends State<QueueDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final queue = context.select((PlayerModel m) => m.queue);
-    final queueLength = context.select((PlayerModel m) => m.queue.length);
-    final currentAudio = context.select((PlayerModel m) => m.audio);
-    final playerModel = context.read<PlayerModel>();
+    final service = getService<PlayerService>();
+
+    final queue = service.queue.watch(context).$2;
+    final queueLength = queue.length;
+    final currentAudio = service.audio.watch(context);
 
     return AlertDialog(
       key: ValueKey(queueLength),
@@ -98,10 +98,10 @@ class _QueueDialogState extends State<QueueDialog> {
         children: [
           PlayerMainControls(
             podcast: false,
-            playPrevious: () async => await playerModel.playPrevious().then(
+            playPrevious: () async => await service.playPrevious().then(
                   (_) => _jump(),
                 ),
-            playNext: () async => await playerModel.playNext().then(
+            playNext: () async => await service.playNext().then(
                   (_) => _jump(),
                 ),
             active: true,
@@ -145,7 +145,7 @@ class _QueueDialogState extends State<QueueDialog> {
                     child: ListTile(
                       leading: IconButton(
                         onPressed:
-                            selected ? null : () => playerModel.remove(audio),
+                            selected ? null : () => service.remove(audio),
                         icon: Icon(Iconz().close),
                       ),
                       contentPadding: const EdgeInsets.only(right: 10, left: 0),
@@ -159,7 +159,7 @@ class _QueueDialogState extends State<QueueDialog> {
                   );
                 },
                 itemCount: queue.length,
-                onReorder: playerModel.moveAudioInQueue,
+                onReorder: service.moveAudioInQueue,
               ),
             ),
           ],

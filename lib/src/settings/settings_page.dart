@@ -124,7 +124,7 @@ class _PodcastSectionState extends State<_PodcastSection> {
   Widget build(BuildContext context) {
     final theme = context.t;
     final service = getService<SettingsService>();
-    final usePodcastIndex = service.usePodcastIndex;
+    final usePodcastIndex = service.usePodcastIndex.watch(context);
 
     final podcastIndexApiKey = service.podcastIndexApiKey;
     final podcastIndexApiSecret = service.podcastIndexApiSecret;
@@ -140,13 +140,13 @@ class _PodcastSectionState extends State<_PodcastSection> {
             trailing: Watch.builder(
               builder: (context) {
                 return CommonSwitch(
-                  value: usePodcastIndex.value,
+                  value: usePodcastIndex,
                   onChanged: service.setUsePodcastIndex,
                 );
               },
             ),
           ),
-          if (usePodcastIndex.value)
+          if (usePodcastIndex)
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -173,7 +173,7 @@ class _PodcastSectionState extends State<_PodcastSection> {
                 ),
               ),
             ),
-          if (usePodcastIndex.value)
+          if (usePodcastIndex)
             Padding(
               padding: const EdgeInsets.only(
                 left: 8,
