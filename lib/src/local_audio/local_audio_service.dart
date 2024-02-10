@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:id3tag/id3tag.dart';
+import 'package:metadata_god/metadata_god.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
@@ -65,6 +65,7 @@ class LocalAudioService {
 }
 
 FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
+  MetadataGod.initialize();
   Set<Audio>? newAudios = {};
   List<String> failedImports = [];
 
@@ -83,12 +84,12 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
     }
     for (var e in onlyFiles) {
       try {
-        final parser = ID3TagReader.path(e.path);
-        final metadata = parser.readTagSync();
+        final metadata = await MetadataGod.readMetadata(file: e.path);
+
         final audio = createLocalAudio(
           path: e.path,
           tag: metadata,
-          fileName: File(e.path).uri.pathSegments.last,
+          fileName: File(e.path).uri.pathSegments.lastOrNull,
         );
 
         newAudios.add(audio);

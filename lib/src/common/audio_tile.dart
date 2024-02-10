@@ -102,7 +102,9 @@ class AudioTile extends StatelessWidget {
               child: Padding(
                 padding: kAudioTileSpacing,
                 child: TapAbleText(
-                  onTap: onArtistTap == null || audio.audioType == null
+                  onTap: onArtistTap == null ||
+                          audio.audioType == null ||
+                          audio.artist == null
                       ? null
                       : () => onArtistTap!(
                             text: audio.artist!,
@@ -110,7 +112,7 @@ class AudioTile extends StatelessWidget {
                           ),
                   text: audio.artist?.isNotEmpty == false
                       ? context.l10n.unknown
-                      : audio.artist!,
+                      : audio.artist ?? context.l10n.unknown,
                 ),
               ),
             ),
@@ -120,7 +122,8 @@ class AudioTile extends StatelessWidget {
               child: TapAbleText(
                 onTap: onAlbumTap == null ||
                         audio.audioType == null ||
-                        audio.audioType == AudioType.radio
+                        audio.audioType == AudioType.radio ||
+                        audio.album == null
                     ? null
                     : () => onAlbumTap!(
                           text: audio.album!,
@@ -128,7 +131,7 @@ class AudioTile extends StatelessWidget {
                         ),
                 text: audio.album?.isNotEmpty == false
                     ? context.l10n.unknown
-                    : audio.album!,
+                    : audio.album ?? context.l10n.unknown,
               ),
             ),
         ],

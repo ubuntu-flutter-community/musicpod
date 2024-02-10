@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
-import 'package:id3tag/id3tag.dart';
+import 'package:metadata_god/metadata_god.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -12,7 +12,6 @@ import 'package:xdg_directories/xdg_directories.dart';
 import 'common.dart';
 import 'constants.dart';
 import 'data.dart';
-import 'id3_x.dart';
 
 String formatTime(Duration duration) {
   String twoDigits(int n) => n.toString().padLeft(2, '0');
@@ -95,32 +94,30 @@ void sortListByAudioFilter({
 
 Audio createLocalAudio({
   required String path,
-  required ID3Tag tag,
+  required Metadata tag,
   required String? fileName,
 }) {
   return Audio(
     path: path,
     audioType: AudioType.local,
-    artist: tag.artist ?? '',
+    artist: tag.artist,
     title: (tag.title?.isNotEmpty == true ? tag.title : fileName) ?? path,
-    album: tag.album == null
-        ? ''
-        : '${tag.album}${tag.discTotal != null && tag.discNumber != null && tag.discTotal! > 1 ? ' ${tag.discNumber}' : ''}',
-    albumArtist: tag.albumArtist,
+    album: tag.album == null ? null : createAlbumName(tag),
+    albumArtist: tag.artist,
     discNumber: tag.discNumber,
     discTotal: tag.discTotal,
     durationMs: tag.duration?.inMilliseconds.toDouble(),
-    // fileSize: metadata.,
+    // fileSize: tag.,
     genre: tag.genre,
-    pictureData: tag.pictures.firstOrNull?.imageData != null
-        ? Uint8List.fromList(tag.pictures.firstOrNull!.imageData)
-        : null,
-    pictureMimeType: tag.pictures.firstOrNull?.mime,
-    trackNumber:
-        tag.trackNumber != null ? int.tryParse(tag.trackNumber!) : null,
+    pictureData: tag.picture?.data,
+    pictureMimeType: tag.picture?.mimeType,
+    trackNumber: tag.trackNumber,
     year: tag.year,
   );
 }
+
+String createAlbumName(Metadata tag) =>
+    '${tag.album}${tag.discTotal != null && tag.discNumber != null && tag.discTotal! > 1 ? ' ${tag.discNumber}' : ''}';
 
 String? _workingDir;
 Future<String> getWorkingDir() async {
@@ -419,6 +416,9 @@ String? generateAlbumId(Audio audio) {
 /// TODO: either guarantee that downloads are saved with the correct extension or manage to detect files without file extensions via magic bytes
 bool isValidFile(String path) {
   final mime = lookupMimeType(path);
-  return (mime?.startsWith('audio') == true ||
+  return (path.endsWith('.mp3') ||
+      path.endsWith('.flac') ||
+      path.endsWith('.mp4') ||
+      mime?.startsWith('audio') == true ||
       mime?.startsWith('video') == true);
 }
