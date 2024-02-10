@@ -59,7 +59,7 @@ class AppStateService {
   Future<void> _initPodcastIndex() async {
     final podcastIndexOrNull =
         await readSetting(kPodcastIndex, kAppStateFileName);
-    appIndex.value =
+    podcastIndex.value =
         podcastIndexOrNull == null ? 0 : int.parse(podcastIndexOrNull);
   }
 
