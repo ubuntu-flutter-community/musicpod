@@ -3,33 +3,12 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
-import 'package:path/path.dart' as p;
 
 import '../../constants.dart';
 import '../../data.dart';
 import '../../utils.dart';
 
 class LibraryService {
-  //
-  // last positions
-  //
-  Map<String, Duration> _lastPositions = {};
-  Map<String, Duration> get lastPositions => _lastPositions;
-  final _lastPositionsController = StreamController<bool>.broadcast();
-  Stream<bool> get lastPositionsChanged => _lastPositionsController.stream;
-  void addLastPosition(String url, Duration lastPosition) {
-    if (_lastPositions.containsKey(url) == true) {
-      _lastPositions.update(url, (value) => lastPosition);
-    } else {
-      _lastPositions.putIfAbsent(url, () => lastPosition);
-    }
-
-    writeSetting(url, lastPosition.toString(), kLastPositionsFileName)
-        .then((_) => _lastPositionsController.add(true));
-  }
-
-  Duration? getLastPosition(String? url) => _lastPositions[url];
-
   //
   // Liked Audios
   //
@@ -377,9 +356,7 @@ class LibraryService {
     );
     _podcastUpdates ??= {};
     _starredStations = await readAudioMap(kStarredStationsFileName);
-    _lastPositions = (await getSettings(kLastPositionsFileName)).map(
-      (key, value) => MapEntry(key, parseDuration(value) ?? Duration.zero),
-    );
+
     _likedAudios =
         (await readAudioMap(kLikedAudiosFileName)).entries.firstOrNull?.value ??
             <Audio>{};
@@ -399,7 +376,6 @@ class LibraryService {
 
   Future<void> dispose() async {
     dio.close();
-    await writePlayerState();
     await _albumsController.close();
     await _podcastsController.close();
     await _likedAudiosController.close();
@@ -407,52 +383,9 @@ class LibraryService {
     await _starredStationsController.close();
     await _favTagsController.close();
     await _favCountriesController.close();
-    await _lastPositionsController.close();
 
     await _neverShowFailedImportsController.close();
     await _updateController.close();
     await _downloadsController.close();
-  }
-
-  // Player State
-
-  Future<void> writePlayerState() async {
-    final playerState = PlayerState(
-      audio: _lastAudio,
-      duration: _duration?.toString(),
-      position: _position?.toString(),
-      queue: _queue != null && _queue!.length < 200 ? _queue : null,
-      queueName: _queue != null && _queue!.length < 200 ? _queueName : null,
-    );
-
-    await writeJsonToFile(playerState.toMap(), kPlayerStateFileName);
-  }
-
-  Duration? _duration;
-  void setDuration(Duration? duration) => _duration = duration;
-  Duration? _position;
-  void setPosition(Duration? position) => _position = position;
-  Audio? _lastAudio;
-  void setLastAudio(Audio? audio) => _lastAudio = audio;
-  String? _queueName;
-  List<Audio>? _queue;
-  void setQueueName(String? value) => _queueName = value;
-  void setQueue(List<Audio>? value) => _queue = value;
-
-  Future<PlayerState?> readPlayerState() async {
-    try {
-      final workingDir = await getWorkingDir();
-      final file = File(p.join(workingDir, kPlayerStateFileName));
-
-      if (file.existsSync()) {
-        final jsonStr = await file.readAsString();
-
-        return PlayerState.fromJson(jsonStr);
-      } else {
-        return null;
-      }
-    } on Exception catch (_) {
-      return null;
-    }
   }
 }

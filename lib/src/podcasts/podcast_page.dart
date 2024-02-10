@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../player.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import 'podcast_model.dart';
@@ -57,7 +58,7 @@ class PodcastPage extends StatelessWidget {
 
     final subscribed = libraryModel.podcastSubscribed(pageId);
 
-    context.select((LibraryModel m) => m.lastPositions?.length);
+    context.select((PlayerModel m) => m.lastPositions?.length);
     context.select((LibraryModel m) => m.downloadsLength);
 
     final checkingForUpdates =

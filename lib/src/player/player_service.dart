@@ -4,15 +4,15 @@ import 'dart:math';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
-import 'package:media_kit/media_kit.dart';
+import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:smtc_windows/smtc_windows.dart';
+import 'package:path/path.dart' as p;
 
 import '../../constants.dart';
 import '../../data.dart';
-import '../../library.dart';
 import '../../player.dart';
 import '../../utils.dart';
 import 'my_audio_handler.dart';
@@ -20,11 +20,9 @@ import 'my_audio_handler.dart';
 class PlayerService {
   PlayerService({
     required this.controller,
-    required this.libraryService,
   });
 
   final VideoController controller;
-  final LibraryService libraryService;
 
   MPRIS? _mpris;
   SMTCWindows? _smtc;
@@ -48,8 +46,6 @@ class PlayerService {
   void setQueue((String, List<Audio>) value) {
     if (value == _queue || value.$2.isEmpty) return;
     _queue = value;
-    libraryService.setQueue(_queue.$2);
-    libraryService.setQueueName(_queue.$1);
     _queueController.add(true);
   }
 
@@ -70,7 +66,6 @@ class PlayerService {
   void _setAudio(Audio value) async {
     if (value == _audio) return;
     _audio = value;
-    libraryService.setLastAudio(value);
     _audioController.add(true);
   }
 
@@ -112,7 +107,6 @@ class PlayerService {
   void setDuration(Duration? value) {
     if (value?.inSeconds == _duration?.inSeconds) return;
     _duration = value;
-    libraryService.setDuration(value);
     _durationController.add(true);
     _setMediaControlDuration(value);
   }
@@ -124,7 +118,6 @@ class PlayerService {
   void setPosition(Duration? value) {
     if (position?.inSeconds == value?.inSeconds) return;
     _position = value;
-    libraryService.setPosition(value);
     _positionController.add(true);
     _setMediaControlPosition(value);
   }
@@ -228,6 +221,9 @@ class PlayerService {
     await _initMediaControl();
 
     await _readPlayerState();
+    _lastPositions = (await getSettings(kLastPositionsFileName)).map(
+      (key, value) => MapEntry(key, parseDuration(value) ?? Duration.zero),
+    );
 
     _isPlayingSub = _player.stream.playing.listen((value) {
       setIsPlaying(value);
@@ -382,7 +378,7 @@ class PlayerService {
       );
     }
 
-    _position = libraryService.getLastPosition.call(_audio?.url);
+    _position = getLastPosition.call(_audio?.url);
     _estimateNext();
     await play(newPosition: _position);
   }
@@ -414,7 +410,7 @@ class PlayerService {
   }
 
   Future<void> _readPlayerState() async {
-    final playerState = await libraryService.readPlayerState();
+    final playerState = await readPlayerState();
 
     if (playerState?.audio != null) {
       _setAudio(playerState!.audio!);
@@ -441,7 +437,7 @@ class PlayerService {
     if (_audio?.audioType == AudioType.radio ||
         _audio?.url == null ||
         _position == null) return;
-    libraryService.addLastPosition(_audio!.url!, _position!);
+    addLastPosition(_audio!.url!, _position!);
   }
 
   Future<void> _initMediaControl() async {
@@ -656,6 +652,7 @@ class PlayerService {
   }
 
   Future<void> dispose() async {
+    await writePlayerState();
     await _smtcSub?.cancel();
     await _mpris?.dispose();
     await _smtc?.disableSmtc();
@@ -679,7 +676,58 @@ class PlayerService {
     await _tracksSub?.cancel();
     await _rateSub?.cancel();
     await _rateController.close();
-
+    await _lastPositionsController.close();
     await _player.dispose();
+  }
+
+  //
+  // last positions
+  //
+  Map<String, Duration> _lastPositions = {};
+  Map<String, Duration> get lastPositions => _lastPositions;
+  final _lastPositionsController = StreamController<bool>.broadcast();
+  Stream<bool> get lastPositionsChanged => _lastPositionsController.stream;
+  void addLastPosition(String url, Duration lastPosition) {
+    if (_lastPositions.containsKey(url) == true) {
+      _lastPositions.update(url, (value) => lastPosition);
+    } else {
+      _lastPositions.putIfAbsent(url, () => lastPosition);
+    }
+
+    writeSetting(url, lastPosition.toString(), kLastPositionsFileName)
+        .then((_) => _lastPositionsController.add(true));
+  }
+
+  Duration? getLastPosition(String? url) => _lastPositions[url];
+
+  // Player State
+
+  Future<void> writePlayerState() async {
+    final playerState = PlayerState(
+      audio: _audio,
+      duration: _duration?.toString(),
+      position: _position?.toString(),
+      queue: _queue.$2.take(100).toList(),
+      queueName: _queue.$1,
+    );
+
+    await writeJsonToFile(playerState.toMap(), kPlayerStateFileName);
+  }
+
+  Future<PlayerState?> readPlayerState() async {
+    try {
+      final workingDir = await getWorkingDir();
+      final file = File(p.join(workingDir, kPlayerStateFileName));
+
+      if (file.existsSync()) {
+        final jsonStr = await file.readAsString();
+
+        return PlayerState.fromJson(jsonStr);
+      } else {
+        return null;
+      }
+    } on Exception catch (_) {
+      return null;
+    }
   }
 }

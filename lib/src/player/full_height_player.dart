@@ -17,7 +17,6 @@ import 'blurred_full_height_player_image.dart';
 import 'full_height_player_image.dart';
 import 'full_height_player_top_controls.dart';
 import 'full_height_title_and_artist.dart';
-import 'up_next_bubble.dart';
 
 class FullHeightPlayer extends StatelessWidget {
   const FullHeightPlayer({
@@ -139,18 +138,6 @@ class FullHeightPlayer extends StatelessWidget {
             ),
           ),
         ),
-        if (nextAudio?.title != null &&
-            nextAudio?.artist != null &&
-            !isVideo &&
-            size.width > 600)
-          Positioned(
-            left: 10,
-            bottom: 10,
-            child: UpNextBubble(
-              audio: audio,
-              nextAudio: nextAudio,
-            ),
-          ),
       ],
     );
 

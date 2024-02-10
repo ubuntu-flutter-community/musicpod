@@ -22,7 +22,6 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _localAudioIndexSub;
   StreamSubscription<bool>? _podcastIndexSub;
   StreamSubscription<bool>? _radioIndexSub;
-  StreamSubscription<bool>? _lastPositionsSub;
   StreamSubscription<bool>? _updatesChangedSub;
   StreamSubscription<bool>? _neverShowFailedImportsSub;
   StreamSubscription<bool>? _favTagsSub;
@@ -46,8 +45,6 @@ class LibraryModel extends SafeChangeNotifier {
         _service.podcastsChanged.listen((event) => notifyListeners());
     _stationsSub =
         _service.starredStationsChanged.listen((event) => notifyListeners());
-    _lastPositionsSub =
-        _service.lastPositionsChanged.listen((_) => notifyListeners());
     _updatesChangedSub =
         _service.updatesChanged.listen((_) => notifyListeners());
     _neverShowFailedImportsSub =
@@ -63,22 +60,21 @@ class LibraryModel extends SafeChangeNotifier {
 
   @override
   Future<void> dispose() async {
-    _localAudioIndexSub?.cancel();
-    _radioIndexSub?.cancel();
-    _podcastIndexSub?.cancel();
-    _likedAudiosSub?.cancel();
-    _playlistsSub?.cancel();
-    _albumsSub?.cancel();
-    _podcastsSub?.cancel();
-    _stationsSub?.cancel();
-    _lastPositionsSub?.cancel();
-    _updatesChangedSub?.cancel();
-    _neverShowFailedImportsSub?.cancel();
-    _favTagsSub?.cancel();
-    _favCountriesSub?.cancel();
-    _lastFavSub?.cancel();
-    _downloadsSub?.cancel();
-    _lastCountryCodeSub?.cancel();
+    await _localAudioIndexSub?.cancel();
+    await _radioIndexSub?.cancel();
+    await _podcastIndexSub?.cancel();
+    await _likedAudiosSub?.cancel();
+    await _playlistsSub?.cancel();
+    await _albumsSub?.cancel();
+    await _podcastsSub?.cancel();
+    await _stationsSub?.cancel();
+    await _updatesChangedSub?.cancel();
+    await _neverShowFailedImportsSub?.cancel();
+    await _favTagsSub?.cancel();
+    await _favCountriesSub?.cancel();
+    await _lastFavSub?.cancel();
+    await _downloadsSub?.cancel();
+    await _lastCountryCodeSub?.cancel();
 
     super.dispose();
   }
@@ -283,9 +279,4 @@ class LibraryModel extends SafeChangeNotifier {
         podcastsLength +
         allAlbums.indexOf(album);
   }
-
-  Map<String, Duration>? get lastPositions => _service.lastPositions;
-  Duration? getLastPosition(String? url) => _service.getLastPosition(url);
-  void addLastPosition(String url, Duration lastPosition) =>
-      _service.addLastPosition(url, lastPosition);
 }

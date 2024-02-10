@@ -29,6 +29,7 @@ class PlayerModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _durationChangedSub;
   StreamSubscription<bool>? _positionChangedSub;
   StreamSubscription<bool>? _rateChanged;
+  StreamSubscription<bool>? _lastPositionsSub;
 
   String? get queueName => service.queue.$1;
 
@@ -89,7 +90,8 @@ class PlayerModel extends SafeChangeNotifier {
         service.repeatSingleChanged.listen((_) => notifyListeners());
     _volumeChangedSub = service.volumeChanged.listen((_) => notifyListeners());
     _rateChanged = service.rateChanged.listen((_) => notifyListeners());
-
+    _lastPositionsSub =
+        service.lastPositionsChanged.listen((_) => notifyListeners());
     _isPlayingChangedSub =
         service.isPlayingChanged.listen((_) => notifyListeners());
     _durationChangedSub =
@@ -124,15 +126,11 @@ class PlayerModel extends SafeChangeNotifier {
 
   Color? get color => service.color;
 
-  bool _isUpNextExpanded = false;
-  bool get isUpNextExpanded => _isUpNextExpanded;
-  void setUpNextExpanded(bool value) {
-    if (value == _isUpNextExpanded) return;
-    _isUpNextExpanded = value;
-    notifyListeners();
-  }
-
   void safeLastPosition() => service.safeLastPosition();
+  Map<String, Duration>? get lastPositions => service.lastPositions;
+  Duration? getLastPosition(String? url) => service.getLastPosition(url);
+  void addLastPosition(String url, Duration lastPosition) =>
+      service.addLastPosition(url, lastPosition);
 
   @override
   Future<void> dispose() async {
@@ -149,6 +147,8 @@ class PlayerModel extends SafeChangeNotifier {
     await _durationChangedSub?.cancel();
     await _positionChangedSub?.cancel();
     await _rateChanged?.cancel();
+    await _lastPositionsSub?.cancel();
+
     super.dispose();
   }
 }

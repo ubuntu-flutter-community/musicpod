@@ -46,19 +46,19 @@ Future<void> main(List<String> args) async {
         configuration: const PlayerConfiguration(title: 'MusicPod'),
       ),
     ),
-    libraryService: libraryService,
   );
   await playerService.init();
 
   registerService<PlayerService>(
     () => playerService,
+    dispose: (s) async => await s.dispose(),
   );
 
   final appStateService = AppStateService();
   await appStateService.init();
   registerService<AppStateService>(
     () => appStateService,
-    dispose: (s) => appStateService.dispose(),
+    dispose: (s) async => await appStateService.dispose(),
   );
 
   registerService<LibraryService>(
