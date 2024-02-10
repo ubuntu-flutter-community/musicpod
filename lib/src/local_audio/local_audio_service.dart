@@ -4,28 +4,18 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:metadata_god/metadata_god.dart';
 
-import '../../constants.dart';
 import '../../data.dart';
 import '../../utils.dart';
+import '../settings/settings_service.dart';
 
 class LocalAudioService {
-  String? _directory;
-  String? get directory => _directory;
-  Future<void> setDirectory(String? value) async {
-    if (value == null || value == _directory) return;
-    await writeSetting(kDirectoryProperty, value).then((_) {
-      _updateDirectory(value);
-    });
-  }
-
-  final _directoryController = StreamController<bool>.broadcast();
-  Stream<bool> get directoryChanged => _directoryController.stream;
-  void _updateDirectory(String? value) {
-    _directory = value;
-    _directoryController.add(true);
-  }
+  final SettingsService settingsService;
 
   Set<Audio>? _audios;
+  LocalAudioService({
+    required this.settingsService,
+  });
+
   Set<Audio>? get audios => _audios;
   set audios(Set<Audio>? value) {
     _updateAudios(value);
@@ -41,26 +31,25 @@ class LocalAudioService {
   Future<List<String>> init({
     @visibleForTesting String? testDir,
   }) async {
+    String? dir;
     if (testDir != null) {
-      _directory = testDir;
+      dir = testDir;
     } else {
-      _directory = await readSetting(kDirectoryProperty);
-      _directory ??= await getMusicDir();
+      dir = settingsService.directory.value;
+      dir ??= await getMusicDir();
     }
 
-    final result = await compute(_init, directory);
+    final result = await compute(_init, dir);
 
     _audios = result.$2;
 
     _audiosController.add(true);
-    _directoryController.add(true);
 
     return result.$1;
   }
 
   Future<void> dispose() async {
     await _audiosController.close();
-    await _directoryController.close();
   }
 }
 

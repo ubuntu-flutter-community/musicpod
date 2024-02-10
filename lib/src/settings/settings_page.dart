@@ -217,11 +217,12 @@ class _LocalAudioSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final libraryModel = context.read<LibraryModel>();
     final localAudioModel = context.read<LocalAudioModel>();
-    final directory =
-        context.select((LocalAudioModel m) => localAudioModel.directory ?? '');
+
+    final settingsService = getService<SettingsService>();
+    final directory = settingsService.directory.watch(context);
 
     Future<void> onDirectorySelected(String? directoryPath) async {
-      localAudioModel.setDirectory(directoryPath).then(
+      settingsService.setDirectory(directoryPath).then(
             (value) async => await localAudioModel.init(
               forceInit: true,
               onFail: (failedImports) {
@@ -248,7 +249,7 @@ class _LocalAudioSection extends StatelessWidget {
         children: [
           YaruTile(
             title: Text(context.l10n.musicCollectionLocation),
-            subtitle: Text(directory),
+            subtitle: Text(directory ?? ''),
             trailing: ImportantButton(
               onPressed: () async {
                 final directoryPath = await getDirectoryPath();

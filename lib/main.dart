@@ -71,7 +71,7 @@ Future<void> main(List<String> args) async {
   registerService<SettingsService>(() => settingsService);
 
   registerService<LocalAudioService>(
-    LocalAudioService.new,
+    () => LocalAudioService(settingsService: settingsService),
     dispose: (s) async => await s.dispose(),
   );
 

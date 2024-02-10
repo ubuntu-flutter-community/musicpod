@@ -103,10 +103,25 @@ class SettingsService {
     });
   }
 
-  Future<void> _readPodcastIndexApiSecret() async {
+  Future<void> _initPodcastIndexApiSecret() async {
     String? value = await readSetting(kPodcastIndexApiSecret);
     if (value != null) {
       podcastIndexApiSecret.value = value;
+    }
+  }
+
+  final Signal<String?> directory = signal(null);
+  Future<void> setDirectory(String? value) async {
+    if (value == null || value == directory.value) return;
+    await writeSetting(kDirectoryProperty, value).then((_) {
+      directory.value = value;
+    });
+  }
+
+  Future<void> _initDirectory() async {
+    String? value = await readSetting(kDirectoryProperty);
+    if (value != null) {
+      directory.value = value;
     }
   }
 
@@ -116,9 +131,10 @@ class SettingsService {
   }
 
   Future<void> _initSettings() async {
+    await _initDirectory();
     await _initUsePodcastIndex();
     await _initPodcastIndexApiKey();
-    await _readPodcastIndexApiSecret();
+    await _initPodcastIndexApiSecret();
     await _initRecentPatchNotesDisposed();
     await _initNeverShowImports();
     await _initThemeIndex();
