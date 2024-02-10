@@ -131,8 +131,8 @@ class LibraryModel extends SafeChangeNotifier {
 
   void unStarStation(String url) {
     final stationIndex = indexOfStation(url);
-    if (stationIndex == index) {
-      setIndex(_appStateService.appIndex.value - 1);
+    if (stationIndex == _appIndex) {
+      _appStateService.setAppIndex(_appIndex - 1);
     }
     _service.unStarStation(url);
   }
@@ -180,11 +180,13 @@ class LibraryModel extends SafeChangeNotifier {
 
   void removePlaylist(String id) {
     final playlistIndex = getIndexOfPlaylist(id);
-    if (index == playlistIndex) {
-      setIndex(_appStateService.appIndex.value - 1);
+    if (_appIndex == playlistIndex) {
+      _appStateService.setAppIndex(_appIndex - 1);
     }
     _service.removePlaylist(id);
   }
+
+  int get _appIndex => (_appStateService.appIndex.value);
 
   int? getIndexOfPlaylist(String id) {
     if (id == kLikedAudiosPageId) return 4;
@@ -217,8 +219,8 @@ class LibraryModel extends SafeChangeNotifier {
 
   void removePodcast(String feedUrl) {
     final podcastIndex = indexOfPodcast(feedUrl);
-    if (podcastIndex == index) {
-      setIndex(_appStateService.appIndex.value - 1);
+    if (podcastIndex == _appIndex) {
+      _appStateService.setAppIndex(_appIndex - 1);
     }
     _service.removePodcast(feedUrl);
   }
@@ -266,8 +268,8 @@ class LibraryModel extends SafeChangeNotifier {
 
   void removePinnedAlbum(String name) {
     final albumIndex = indexOfAlbum(name);
-    if (albumIndex == index) {
-      setIndex(_appStateService.appIndex.value - 1);
+    if (albumIndex == _appIndex) {
+      _appStateService.setAppIndex(_appIndex - 1);
     }
     _service.removePinnedAlbum(name);
   }
@@ -280,19 +282,6 @@ class LibraryModel extends SafeChangeNotifier {
         playlistsLength +
         podcastsLength +
         allAlbums.indexOf(album);
-  }
-
-  int? get index {
-    if (totalListAmount - 1 >= _appStateService.appIndex.value) {
-      return _appStateService.appIndex.value;
-    } else {
-      return 0;
-    }
-  }
-
-  void setIndex(int value) {
-    _appStateService.setAppIndex(value);
-    notifyListeners();
   }
 
   Map<String, Duration>? get lastPositions => _service.lastPositions;

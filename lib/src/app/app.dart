@@ -92,8 +92,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     if (!Platform.isAndroid && !Platform.isIOS) {
       YaruWindow.of(context).onClose(
         () async {
-          final service = getService<AppStateService>();
-          await service.safeStates();
           await resetAllServices();
           return true;
         },
@@ -128,8 +126,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.paused) {
-      final service = getService<AppStateService>();
-      await service.safeStates();
       await resetAllServices();
     }
   }

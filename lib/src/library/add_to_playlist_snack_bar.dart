@@ -1,3 +1,6 @@
+import 'package:ubuntu_service/ubuntu_service.dart';
+
+import '../../app.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../l10n.dart';
@@ -33,7 +36,7 @@ class AddToPlaylistSnackBar extends StatelessWidget {
             child: ImportantButton(
               onPressed: () {
                 ScaffoldMessenger.of(context).clearSnackBars();
-                libraryModel.setIndex(index);
+                getService<AppStateService>().setAppIndex(index);
               },
               child: Text(context.l10n.open),
             ),

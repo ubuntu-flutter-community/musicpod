@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
@@ -9,8 +10,8 @@ import '../../app.dart';
 import '../../common.dart';
 import '../../library.dart';
 import '../../theme.dart';
-import '../globals.dart';
 import '../l10n/l10n.dart';
+import '../settings/settings_service.dart';
 import 'app.dart';
 
 class YaruMusicPodApp extends StatelessWidget {
@@ -20,32 +21,30 @@ class YaruMusicPodApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<ThemeMode>(
-      valueListenable: themeNotifier,
-      builder: (_, ThemeMode currentMode, __) {
-        return YaruTheme(
-          builder: (context, yaru, child) {
-            return MusicPodApp(
-              themeMode: currentMode,
-              lightTheme: yaru.theme?.copyWith(
-                actionIconTheme: ActionIconThemeData(
-                  backButtonIconBuilder: (context) => Icon(Iconz().goBack),
-                ),
-              ),
-              darkTheme: yaru.darkTheme?.copyWith(
-                actionIconTheme: ActionIconThemeData(
-                  backButtonIconBuilder: (context) => Icon(Iconz().goBack),
-                ),
-                scaffoldBackgroundColor: const Color(0xFF1e1e1e),
-                dividerColor: darkDividerColor,
-                dividerTheme: const DividerThemeData(
-                  color: darkDividerColor,
-                  space: 1.0,
-                  thickness: 0.0,
-                ),
-              ),
-            );
-          },
+    final settingsService = getService<SettingsService>();
+    final themeIndex = settingsService.themeIndex;
+
+    return YaruTheme(
+      builder: (context, yaru, child) {
+        return MusicPodApp(
+          themeMode: ThemeMode.values[themeIndex.watch(context)],
+          lightTheme: yaru.theme?.copyWith(
+            actionIconTheme: ActionIconThemeData(
+              backButtonIconBuilder: (context) => Icon(Iconz().goBack),
+            ),
+          ),
+          darkTheme: yaru.darkTheme?.copyWith(
+            actionIconTheme: ActionIconThemeData(
+              backButtonIconBuilder: (context) => Icon(Iconz().goBack),
+            ),
+            scaffoldBackgroundColor: const Color(0xFF1e1e1e),
+            dividerColor: darkDividerColor,
+            dividerTheme: const DividerThemeData(
+              color: darkDividerColor,
+              space: 1.0,
+              thickness: 0.0,
+            ),
+          ),
         );
       },
     );
@@ -59,16 +58,13 @@ class MaterialMusicPodApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<ThemeMode>(
-      valueListenable: themeNotifier,
-      builder: (_, ThemeMode currentMode, __) {
-        return SystemThemeBuilder(
-          builder: (context, accent) {
-            return MusicPodApp(
-              themeMode: currentMode,
-              accent: accent.accent,
-            );
-          },
+    final settingsService = getService<SettingsService>();
+    final themeIndex = settingsService.themeIndex;
+    return SystemThemeBuilder(
+      builder: (context, accent) {
+        return MusicPodApp(
+          themeMode: ThemeMode.values[themeIndex.watch(context)],
+          accent: accent.accent,
         );
       },
     );

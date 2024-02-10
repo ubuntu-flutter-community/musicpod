@@ -105,7 +105,7 @@ class AppStateService {
     await _initPodcastIndex();
   }
 
-  Future<void> safeStates() async {
+  Future<void> dispose() async {
     await writeSetting(
       kLocalAudioIndex,
       localAudioIndex.value.toString(),

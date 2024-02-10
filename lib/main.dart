@@ -54,14 +54,17 @@ Future<void> main(List<String> args) async {
     () => playerService,
   );
 
+  final appStateService = AppStateService();
+  await appStateService.init();
+  registerService<AppStateService>(
+    () => appStateService,
+    dispose: (s) => appStateService.dispose(),
+  );
+
   registerService<LibraryService>(
     () => libraryService,
     dispose: (s) async => await s.dispose(),
   );
-
-  final appStateService = AppStateService();
-  await appStateService.init();
-  registerService<AppStateService>(() => appStateService);
 
   final settingsService = SettingsService();
   await settingsService.init();

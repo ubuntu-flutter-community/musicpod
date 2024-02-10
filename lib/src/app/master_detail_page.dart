@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
@@ -22,6 +25,9 @@ class MasterDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appStateService = getService<AppStateService>();
+    final appIndex = appStateService.appIndex;
+
     // Connectivity
     final isOnline = context.watch<ConnectivityNotifier>().isOnline;
 
@@ -40,7 +46,7 @@ class MasterDetailPage extends StatelessWidget {
       ),
       child: YaruMasterDetailPage(
         navigatorKey: navigatorKey,
-        onSelected: (value) => libraryModel.setIndex(value ?? 0),
+        onSelected: (value) => appStateService.setAppIndex(value ?? 0),
         appBar: const HeaderBar(
           style: YaruTitleBarStyle.undecorated,
           title: Text('MusicPod'),
@@ -57,7 +63,7 @@ class MasterDetailPage extends StatelessWidget {
         breakpoint: kMasterDetailBreakPoint,
         controller: YaruPageController(
           length: libraryModel.totalListAmount,
-          initialIndex: libraryModel.index ?? 0,
+          initialIndex: appIndex.watch(context),
         ),
         tileBuilder: (context, index, selected, availableWidth) {
           final item = masterItems[index];

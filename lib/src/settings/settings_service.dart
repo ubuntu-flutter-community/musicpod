@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 import '../../constants.dart';
-import '../../globals.dart';
 import '../../patch_notes.dart';
 import '../../utils.dart';
 
@@ -21,11 +19,11 @@ class SettingsService {
     buildNumber.value = packageInfo.buildNumber;
   }
 
-  final Signal<int> _themeIndex = signal(0);
+  final Signal<int> themeIndex = signal(0);
   void setThemeIndex(int value) {
-    if (value == _themeIndex.value) return;
-    writeSetting(kThemeIndex, _themeIndex.value.toString())
-        .then((_) => _themeIndex.value = value);
+    if (value == themeIndex.value) return;
+    writeSetting(kThemeIndex, themeIndex.value.toString())
+        .then((_) => themeIndex.value = value);
   }
 
   Future<void> _initThemeIndex() async {
@@ -33,8 +31,7 @@ class SettingsService {
     if (themeIndexStringOrNull != null) {
       final themeParse = int.tryParse(themeIndexStringOrNull);
       if (themeParse != null) {
-        _themeIndex.value = themeParse;
-        themeNotifier.value = ThemeMode.values[_themeIndex.value];
+        themeIndex.value = themeParse;
       }
     }
   }
