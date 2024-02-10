@@ -33,11 +33,11 @@ dependencies:
   github: ^9.22.0
   gtk: ^2.1.0
   handy_window: ^0.3.1
-  id3tag: ^0.2.0
   intl: ^0.18.0
   media_kit: ^1.1.10
   media_kit_libs_video: ^1.0.4
   media_kit_video: ^1.2.4
+  metadata_god: ^0.5.2+1
   mime: ^1.0.4
   mime_type: ^1.0.0
   mpris_service:
