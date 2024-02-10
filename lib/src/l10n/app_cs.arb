@@ -21,8 +21,8 @@
     "playlistDialogTitleNew": "Přidat seznam skladeb",
     "playlistDialogTitleEdit": "Upravit seznam skladeb",
     "save": "Uložit",
-    "title": "Název",
-    "titles": "Názvy",
+    "title": "Skladba",
+    "titles": "Skladby",
     "artist": "Umělěc",
     "artists": "Umělci",
     "album": "Album",
@@ -155,4 +155,20 @@
     "name": "Jméno",
     "state": "Stát",
     "playNext": "Přehrát další"
+    "contributors": "Přispěvatelé",
+    "version": "Verze",
+    "theme": "Motiv",
+    "license": "Licence",
+    "dependencies": "Závislosti",
+    "light": "Světlý",
+    "system": "Systémový",
+    "dark": "Tmavý",
+    "podcastProvider": "Poskytovatel podcastů",
+    "iTunes": "iTunes",
+    "podcastIndex": "Rejstřík podcastů",
+    "usePodcastIndex": "Použít restřík podcastů místo iTunes",
+    "select": "Vybrat",
+    "requiresAppRestart": "Vyžaduje restart aplikace",
+    "musicCollectionLocation": "Umístění hudební knihovny"
 }
+
