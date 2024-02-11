@@ -161,7 +161,7 @@ class LibraryModel extends SafeChangeNotifier {
   void removeFavTag(String value) => _service.removeFavTag(value);
 
   String? get lastFav => _service.lastFav;
-  void setLastFav(String? value) => _service.setLastFav(value);
+  void setLastRadioTag(String? value) => _service.setLastRadioTag(value);
 
   String? get lastCountryCode => _service.lastCountryCode;
   void setLastCountryCode(String? value) => _service.setLastCountryCode(value);

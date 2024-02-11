@@ -121,10 +121,12 @@ class LibraryService {
 
   String? _lastFav;
   String? get lastFav => _lastFav;
-  void setLastFav(String? value) {
+  void setLastRadioTag(String? value) {
     if (value == _lastFav) return;
-    _lastFav = value;
-    writeSetting(kLastFav, value).then((_) => _lastFavController.add(true));
+    writeSetting(kLastFav, value, kAppStateFileName).then((_) {
+      _lastFav = value;
+      _lastFavController.add(true);
+    });
   }
 
   final _lastFavController = StreamController<bool>.broadcast();
@@ -134,9 +136,10 @@ class LibraryService {
   String? get lastCountryCode => _lastCountryCode;
   void setLastCountryCode(String? value) {
     if (value == _lastCountryCode) return;
-    _lastCountryCode = value;
-    writeSetting(kLastCountryCode, value)
-        .then((_) => _lastCountryCodeController.add(true));
+    writeSetting(kLastCountryCode, value, kAppStateFileName).then((_) {
+      _lastCountryCodeController.add(true);
+      _lastCountryCode = value;
+    });
   }
 
   final _lastCountryCodeController = StreamController<bool>.broadcast();
@@ -461,9 +464,17 @@ class LibraryService {
   }
 
   Future<void> _safeStates() async {
-    await writeSetting(kLocalAudioIndex, _localAudioIndex.toString());
-    await writeSetting(kRadioIndex, _radioIndex.toString());
-    await writeSetting(kPodcastIndex, _podcastIndex.toString());
-    await writeSetting(kAppIndex, _appIndex.toString());
+    await writeSetting(
+      kLocalAudioIndex,
+      _localAudioIndex.toString(),
+      kAppStateFileName,
+    );
+    await writeSetting(kRadioIndex, _radioIndex.toString(), kAppStateFileName);
+    await writeSetting(
+      kPodcastIndex,
+      _podcastIndex.toString(),
+      kAppStateFileName,
+    );
+    await writeSetting(kAppIndex, _appIndex.toString(), kAppStateFileName);
   }
 }

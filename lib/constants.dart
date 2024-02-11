@@ -114,6 +114,7 @@ const kStarredStationsFileName = 'betterStarredStations.json';
 const kSettingsFileName = 'settings.json';
 const kLastPositionsFileName = 'lastPositions.json';
 const kPlayerStateFileName = 'playerstate.json';
+const kAppStateFileName = 'appstate.json';
 const kDownloads = 'downloads.json';
 const kFeedsWithDownloads = 'feedswithdownloads.json';
 const kDirectoryProperty = 'directory';

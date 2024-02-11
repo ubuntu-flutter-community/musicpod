@@ -73,7 +73,10 @@ class RadioDiscoverPage extends StatelessWidget {
             libraryModel.removeFavTag(tag!.name);
           },
           favs: libraryModel.favTags,
-          onSelected: model.setTag,
+          onSelected: (v) {
+            model.setTag(v);
+            libraryModel.setLastRadioTag(v?.name);
+          },
           tags: [
             ...[
               ...?model.tags,
