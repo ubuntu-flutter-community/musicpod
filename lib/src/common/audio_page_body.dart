@@ -108,6 +108,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
   Widget build(BuildContext context) {
     final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
     final service = getService<PlayerService>();
+    final isPlaying = service.isPlaying.watch(context);
 
     if (widget.audioPageType != AudioPageType.podcast) {
       context.select((LibraryModel m) => m.likedAudios.length);
@@ -204,90 +205,75 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                 ),
               if (widget.showAudioTileHeader) const Divider(),
               Expanded(
-                child: Watch.builder(
-                  builder: (context) {
-                    return ListView.builder(
-                      controller: _controller,
-                      itemCount: widget.audios?.length,
-                      itemBuilder: (context, index) {
-                        final audio = widget.audios!.elementAt(index);
+                child: ListView.builder(
+                  controller: _controller,
+                  itemCount: widget.audios?.length,
+                  itemBuilder: (context, index) {
+                    final audio = widget.audios!.elementAt(index);
+                    final download = libraryModel.getDownload(audio.url);
 
-                        final download = libraryModel.getDownload(audio.url);
-
-                        if (audio.audioType == AudioType.podcast &&
-                            widget.audioPageType != AudioPageType.playlist) {
-                          final isPlaying = service.isPlaying;
-
-                          return Watch(
-                            (context) => PodcastAudioTile(
-                              addPodcast:
-                                  audio.website == null || widget.audios == null
-                                      ? null
-                                      : () => libraryModel.addPodcast(
-                                            audio.website!,
-                                            widget.audios!,
-                                          ),
-                              removeUpdate: () => libraryModel
-                                  .removePodcastUpdate(widget.pageId),
-                              isExpanded: service.audio.value == audio,
-                              audio: download != null
-                                  ? audio.copyWith(path: download)
-                                  : audio,
-                              isPlayerPlaying: isPlaying.value,
-                              selected: service.audio.value == audio,
-                              pause: service.pause,
-                              resume: service.resume,
-                              play: service.play,
-                              lastPosition: service.getLastPosition(audio.url),
-                              safeLastPosition: service.safeLastPosition,
-                              isOnline: isOnline,
-                              insertIntoQueue: () =>
-                                  service.insertIntoQueue(audio),
-                            ),
-                          );
-                        }
-
-                        final likeButton = LikeButton(
-                          libraryModel: libraryModel,
-                          playlistId: widget.pageId,
-                          audio: audio,
-                          allowRemove:
-                              widget.audioPageType == AudioPageType.playlist,
-                          insertIntoQueue: () => service.insertIntoQueue(audio),
-                        );
-
-                        return Watch(
-                          (context) => AudioTile(
-                            trackLabel: (widget.audioPageType ==
-                                        AudioPageType.playlist ||
-                                    widget.audioPageType ==
-                                        AudioPageType.likedAudio)
-                                ? (index + 1).toString().padLeft(2, '0')
-                                : null,
-                            showAlbum: widget.showAlbum,
-                            showArtist: widget.showArtist,
-                            showTrack: widget.showTrack,
-                            titleFlex: widget.titleFlex,
-                            artistFlex: widget.artistFlex,
-                            albumFlex: widget.albumFlex,
-                            onAlbumTap: widget.onAlbumTap,
-                            onArtistTap: widget.onArtistTap,
-                            isPlayerPlaying: service.isPlaying.value,
-                            pause: service.pause,
-                            startPlaylist: widget.audios == null
+                    if (audio.audioType == AudioType.podcast &&
+                        widget.audioPageType != AudioPageType.playlist) {
+                      return PodcastAudioTile(
+                        addPodcast:
+                            audio.website == null || widget.audios == null
                                 ? null
-                                : () => service.startPlaylist(
-                                      audios: widget.audios!,
-                                      listName: widget.pageId,
-                                      index: index,
+                                : () => libraryModel.addPodcast(
+                                      audio.website!,
+                                      widget.audios!,
                                     ),
-                            resume: service.resume,
-                            selected: service.audio.value == audio,
-                            audio: audio,
-                            likeIcon: likeButton,
-                          ),
-                        );
-                      },
+                        removeUpdate: () =>
+                            libraryModel.removePodcastUpdate(widget.pageId),
+                        isExpanded: service.audio.value == audio,
+                        audio: download != null
+                            ? audio.copyWith(path: download)
+                            : audio,
+                        isPlayerPlaying: isPlaying,
+                        pause: service.pause,
+                        resume: service.resume,
+                        play: service.play,
+                        lastPosition: service.getLastPosition(audio.url),
+                        safeLastPosition: service.safeLastPosition,
+                        isOnline: isOnline,
+                        insertIntoQueue: () => service.insertIntoQueue(audio),
+                      );
+                    }
+
+                    final likeButton = LikeButton(
+                      libraryModel: libraryModel,
+                      playlistId: widget.pageId,
+                      audio: audio,
+                      allowRemove:
+                          widget.audioPageType == AudioPageType.playlist,
+                      insertIntoQueue: () => service.insertIntoQueue(audio),
+                    );
+
+                    return AudioTile(
+                      trackLabel: (widget.audioPageType ==
+                                  AudioPageType.playlist ||
+                              widget.audioPageType == AudioPageType.likedAudio)
+                          ? (index + 1).toString().padLeft(2, '0')
+                          : null,
+                      showAlbum: widget.showAlbum,
+                      showArtist: widget.showArtist,
+                      showTrack: widget.showTrack,
+                      titleFlex: widget.titleFlex,
+                      artistFlex: widget.artistFlex,
+                      albumFlex: widget.albumFlex,
+                      onAlbumTap: widget.onAlbumTap,
+                      onArtistTap: widget.onArtistTap,
+                      isPlayerPlaying: service.isPlaying.value,
+                      pause: service.pause,
+                      startPlaylist: widget.audios == null
+                          ? null
+                          : () => service.startPlaylist(
+                                audios: widget.audios!,
+                                listName: widget.pageId,
+                                index: index,
+                              ),
+                      resume: service.resume,
+                      audio: audio,
+                      likeIcon: likeButton,
                     );
                   },
                 ),

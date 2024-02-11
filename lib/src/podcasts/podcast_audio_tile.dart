@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -14,6 +16,7 @@ import '../../data.dart';
 import '../../l10n.dart';
 import '../../theme.dart';
 import '../../utils.dart';
+import '../player/player_service.dart';
 import 'avatar_with_progress.dart';
 import 'download_button.dart';
 
@@ -24,7 +27,6 @@ class PodcastAudioTile extends StatelessWidget {
     super.key,
     required this.audio,
     required this.isPlayerPlaying,
-    required this.selected,
     required this.pause,
     required this.resume,
     required this.play,
@@ -39,7 +41,6 @@ class PodcastAudioTile extends StatelessWidget {
 
   final Audio audio;
   final bool isPlayerPlaying;
-  final bool selected;
   final void Function() pause;
   final Future<void> Function() resume;
   final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
@@ -84,36 +85,43 @@ class PodcastAudioTile extends StatelessWidget {
               left: 19,
               right: 20,
             ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                AvatarWithProgress(
-                  selected: selected,
-                  lastPosition: lastPosition,
-                  audio: audio,
-                  isPlayerPlaying: isPlayerPlaying,
-                  pause: pause,
-                  resume: resume,
-                  safeLastPosition: safeLastPosition,
-                  play: play,
-                  removeUpdate: removeUpdate,
-                ),
-                const SizedBox(
-                  width: _kGap,
-                ),
-                Expanded(
-                  child: _Right(
-                    narrow: narrow,
-                    selected: selected,
-                    audio: audio,
-                    date: date,
-                    duration: duration,
-                    addPodcast: addPodcast,
-                    insertIntoQueue: insertIntoQueue,
-                  ),
-                ),
-              ],
+            child: Watch.builder(
+              builder: (context) {
+                final service = getService<PlayerService>();
+                final selected = service.audio.value == audio;
+
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    AvatarWithProgress(
+                      selected: selected,
+                      lastPosition: lastPosition,
+                      audio: audio,
+                      isPlayerPlaying: isPlayerPlaying,
+                      pause: pause,
+                      resume: resume,
+                      safeLastPosition: safeLastPosition,
+                      play: play,
+                      removeUpdate: removeUpdate,
+                    ),
+                    const SizedBox(
+                      width: _kGap,
+                    ),
+                    Expanded(
+                      child: _Right(
+                        narrow: narrow,
+                        selected: selected,
+                        audio: audio,
+                        date: date,
+                        duration: duration,
+                        addPodcast: addPodcast,
+                        insertIntoQueue: insertIntoQueue,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),

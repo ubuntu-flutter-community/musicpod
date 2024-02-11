@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../l10n.dart';
+import '../../player.dart';
 
 class AudioTile extends StatelessWidget {
   const AudioTile({
     super.key,
-    required this.selected,
     required this.audio,
     this.onLike,
     this.likeIcon,
@@ -30,7 +32,6 @@ class AudioTile extends StatelessWidget {
 
   final String? trackLabel;
   final Audio audio;
-  final bool selected;
   final void Function()? onLike;
   final Widget? likeIcon;
   final bool isPlayerPlaying;
@@ -54,89 +55,97 @@ class AudioTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final listTile = ListTile(
-      selected: selected && isPlayerPlaying,
-      selectedColor: theme.colorScheme.onSurface,
-      selectedTileColor: theme.colorScheme.onSurface.withOpacity(0.05),
-      contentPadding: kAudioTilePadding,
-      onTap: () {
-        if (selected) {
-          if (isPlayerPlaying) {
-            pause();
-          } else {
-            resume();
-          }
-        } else {
-          startPlaylist!();
-        }
-      },
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          if (showTrack)
-            Padding(
-              padding: kAudioTileTrackPadding,
-              child: Text(
-                trackLabel ??
-                    (audio.trackNumber != null
-                        ? audio.trackNumber!.toString().padLeft(2, '0')
-                        : '00'),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          Expanded(
-            flex: titleFlex,
-            child: Padding(
-              padding: kAudioTileSpacing,
-              child: Text(
-                audio.title ?? context.l10n.unknown,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ),
-          if (showArtist)
-            Expanded(
-              flex: artistFlex,
-              child: Padding(
-                padding: kAudioTileSpacing,
-                child: TapAbleText(
-                  onTap: onArtistTap == null ||
-                          audio.audioType == null ||
-                          audio.artist == null
-                      ? null
-                      : () => onArtistTap!(
-                            text: audio.artist!,
-                            audioType: audio.audioType!,
-                          ),
-                  text: audio.artist?.isNotEmpty == false
-                      ? context.l10n.unknown
-                      : audio.artist ?? context.l10n.unknown,
+    final service = getService<PlayerService>();
+
+    final listTile = Watch.builder(
+      builder: (context) {
+        final selected = service.audio.value == audio;
+
+        return ListTile(
+          selected: selected && isPlayerPlaying,
+          selectedColor: theme.colorScheme.onSurface,
+          selectedTileColor: theme.colorScheme.onSurface.withOpacity(0.05),
+          contentPadding: kAudioTilePadding,
+          onTap: () {
+            if (selected) {
+              if (isPlayerPlaying) {
+                pause();
+              } else {
+                resume();
+              }
+            } else {
+              startPlaylist!();
+            }
+          },
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (showTrack)
+                Padding(
+                  padding: kAudioTileTrackPadding,
+                  child: Text(
+                    trackLabel ??
+                        (audio.trackNumber != null
+                            ? audio.trackNumber!.toString().padLeft(2, '0')
+                            : '00'),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              Expanded(
+                flex: titleFlex,
+                child: Padding(
+                  padding: kAudioTileSpacing,
+                  child: Text(
+                    audio.title ?? context.l10n.unknown,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
-            ),
-          if (showAlbum)
-            Expanded(
-              flex: albumFlex,
-              child: TapAbleText(
-                onTap: onAlbumTap == null ||
-                        audio.audioType == null ||
-                        audio.audioType == AudioType.radio ||
-                        audio.album == null
-                    ? null
-                    : () => onAlbumTap!(
-                          text: audio.album!,
-                          audioType: audio.audioType!,
-                        ),
-                text: audio.album?.isNotEmpty == false
-                    ? context.l10n.unknown
-                    : audio.album ?? context.l10n.unknown,
-              ),
-            ),
-        ],
-      ),
-      trailing: likeIcon,
+              if (showArtist)
+                Expanded(
+                  flex: artistFlex,
+                  child: Padding(
+                    padding: kAudioTileSpacing,
+                    child: TapAbleText(
+                      onTap: onArtistTap == null ||
+                              audio.audioType == null ||
+                              audio.artist == null
+                          ? null
+                          : () => onArtistTap!(
+                                text: audio.artist!,
+                                audioType: audio.audioType!,
+                              ),
+                      text: audio.artist?.isNotEmpty == false
+                          ? context.l10n.unknown
+                          : audio.artist ?? context.l10n.unknown,
+                    ),
+                  ),
+                ),
+              if (showAlbum)
+                Expanded(
+                  flex: albumFlex,
+                  child: TapAbleText(
+                    onTap: onAlbumTap == null ||
+                            audio.audioType == null ||
+                            audio.audioType == AudioType.radio ||
+                            audio.album == null
+                        ? null
+                        : () => onAlbumTap!(
+                              text: audio.album!,
+                              audioType: audio.audioType!,
+                            ),
+                    text: audio.album?.isNotEmpty == false
+                        ? context.l10n.unknown
+                        : audio.album ?? context.l10n.unknown,
+                  ),
+                ),
+            ],
+          ),
+          trailing: likeIcon,
+        );
+      },
     );
 
     return listTile;
