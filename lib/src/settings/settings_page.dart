@@ -47,23 +47,14 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-class _ThemeSection extends StatefulWidget {
+class _ThemeSection extends StatelessWidget {
   const _ThemeSection();
 
-  @override
-  State<_ThemeSection> createState() => _ThemeSectionState();
-}
-
-class _ThemeSectionState extends State<_ThemeSection> {
   @override
   Widget build(BuildContext context) {
     final model = context.read<SettingsModel>();
 
-    void onChanged(int index) {
-      model.setThemeIndex(index);
-      setState(() => themeNotifier.value = ThemeMode.values[index]);
-    }
-
+    final themeIndex = context.select((SettingsModel m) => m.themeIndex);
     return YaruSection(
       margin: const EdgeInsets.only(
         left: kYaruPagePadding,
@@ -84,8 +75,8 @@ class _ThemeSectionState extends State<_ThemeSection> {
                     YaruSelectableContainer(
                       padding: const EdgeInsets.all(1),
                       borderRadius: BorderRadius.circular(15),
-                      selected: themeNotifier.value == ThemeMode.values[i],
-                      onTap: () => onChanged(i),
+                      selected: themeIndex == i,
+                      onTap: () => model.setThemeIndex(i),
                       child: ThemeTile(ThemeMode.values[i]),
                     ),
                     Padding(

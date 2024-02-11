@@ -441,14 +441,6 @@ class LibraryService {
     _appIndex = value;
   }
 
-  int _themeIndex = 0;
-  int get themeIndex => _themeIndex;
-
-  void setThemeIndex(int value) {
-    if (value == _themeIndex) return;
-    _themeIndex = value;
-  }
-
   Future<void> dispose() async {
     dio.close();
     await _safeStates();
@@ -473,6 +465,5 @@ class LibraryService {
     await writeSetting(kRadioIndex, _radioIndex.toString());
     await writeSetting(kPodcastIndex, _podcastIndex.toString());
     await writeSetting(kAppIndex, _appIndex.toString());
-    await writeSetting(kThemeIndex, _themeIndex.toString());
   }
 }

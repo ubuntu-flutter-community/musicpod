@@ -15,8 +15,6 @@ class SettingsService {
   String? get version => _version;
   String? _buildNumber;
   String? get buildNumber => _buildNumber;
-  final _packageInfoController = StreamController<bool>.broadcast();
-  Stream<bool> get packageInfoChanged => _packageInfoController.stream;
 
   Future<void> _initPackageInfo() async {
     final packageInfo = await PackageInfo.fromPlatform();
@@ -96,7 +94,7 @@ class SettingsService {
   bool _usePodcastIndex = false;
   bool get usePodcastIndex => _usePodcastIndex;
   void setUsePodcastIndex(bool value) {
-    writeSetting(kPatchNotesDisposed, value.toString()).then((_) {
+    writeSetting(kUsePodcastIndex, value.toString()).then((_) {
       _usePodcastIndex = value;
       _usePodcastIndexController.add(true);
     });
@@ -133,9 +131,9 @@ class SettingsService {
       _podcastIndexApiSecretController.stream;
   String? _podcastIndexApiSecret;
   String? get podcastIndexApiSecret => _podcastIndexApiSecret;
-  void setPodcastIndexApiSecret(String podcastIndexApiSecret) {
-    writeSetting(kPodcastIndexApiSecret, podcastIndexApiSecret).then((_) {
-      _podcastIndexApiSecret = podcastIndexApiSecret;
+  void setPodcastIndexApiSecret(String value) {
+    writeSetting(kPodcastIndexApiSecret, value).then((_) {
+      _podcastIndexApiSecret = value;
       _podcastIndexApiSecretController.add(true);
     });
   }
@@ -171,18 +169,22 @@ class SettingsService {
   }
 
   Future<void> _initSettings() async {
+    await _initThemeIndex();
     await _initDirectory();
     await _initUsePodcastIndex();
     await _initPodcastIndexApiKey();
     await _initPodcastIndexApiSecret();
     await _initRecentPatchNotesDisposed();
     await _initNeverShowImports();
-    await _initThemeIndex();
   }
 
   Future<void> dispose() async {
-    await _packageInfoController.close();
     await _themeIndexController.close();
     await _recentPatchNotesDisposedController.close();
+    await _neverShowFailedImportsController.close();
+    await _directoryController.close();
+    await _podcastIndexApiSecretController.close();
+    await _usePodcastIndexController.close();
+    await _podcastIndexApiKeyController.close();
   }
 }

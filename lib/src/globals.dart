@@ -8,5 +8,3 @@ final GlobalKey<NavigatorState> playlistNavigatorKey =
 final GlobalKey<NavigatorState> settingsNavigatorKey = GlobalKey();
 
 bool get isMobile => Platform.isAndroid || Platform.isIOS || Platform.isFuchsia;
-
-final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);

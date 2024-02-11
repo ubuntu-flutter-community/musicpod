@@ -16,6 +16,6 @@ class NotificationsService {
   }
 
   Future<void> dispose() async {
-    _notificationsClient?.close();
+    await _notificationsClient?.close();
   }
 }
