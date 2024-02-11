@@ -36,7 +36,7 @@ class PodcastService {
   }
 
   Future<void> dispose() async {
-    _searchChangedController.close();
+    await _searchChangedController.close();
   }
 
   Future<SearchResult?> search({

@@ -7,6 +7,7 @@ import 'package:github/github.dart';
 import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:window_manager/window_manager.dart';
@@ -21,6 +22,7 @@ import 'notifications.dart';
 import 'player.dart';
 import 'podcasts.dart';
 import 'radio.dart';
+import 'settings.dart';
 
 Future<void> main(List<String> args) async {
   if (!isMobile) {
@@ -37,6 +39,13 @@ Future<void> main(List<String> args) async {
     await SystemTheme.accentColor.load();
   }
 
+  final settingsService = SettingsService();
+  settingsService.init();
+  registerService<SettingsService>(
+    () => settingsService,
+    dispose: (s) async => await s.dispose(),
+  );
+
   final libraryService = LibraryService();
 
   final playerService = PlayerService(
@@ -51,6 +60,7 @@ Future<void> main(List<String> args) async {
 
   registerService<PlayerService>(
     () => playerService,
+    dispose: (s) async => await s.dispose(),
   );
 
   registerService<LibraryService>(
@@ -58,7 +68,7 @@ Future<void> main(List<String> args) async {
     dispose: (s) async => await s.dispose(),
   );
   registerService<LocalAudioService>(
-    LocalAudioService.new,
+    () => LocalAudioService(settingsService: settingsService),
     dispose: (s) async => await s.dispose(),
   );
 
@@ -89,9 +99,13 @@ Future<void> main(List<String> args) async {
 
   registerService(GitHub.new);
 
-  if (Platform.isLinux) {
-    runApp(const GtkApplication(child: YaruMusicPodApp()));
-  } else {
-    runApp(const MaterialMusicPodApp());
-  }
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) =>
+          SettingsModel(service: getService<SettingsService>())..init(),
+      child: Platform.isLinux
+          ? const GtkApplication(child: YaruMusicPodApp())
+          : const MaterialMusicPodApp(),
+    ),
+  );
 }

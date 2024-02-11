@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../common.dart';
-import '../../library.dart';
-import '../../local_audio.dart';
-import 'settings_model.dart';
 import 'settings_dialog.dart';
+import 'settings_model.dart';
 
 class SettingsButton extends StatelessWidget {
-  const SettingsButton({super.key});
+  const SettingsButton({super.key, required this.initLocalAudio});
 
+  final Future<void> Function({
+    required void Function(List<String>) onFail,
+    bool forceInit,
+  }) initLocalAudio;
   @override
   Widget build(BuildContext context) {
     return IconButton(
@@ -19,12 +21,8 @@ class SettingsButton extends StatelessWidget {
           context: context,
           builder: (_) => ChangeNotifierProvider.value(
             value: context.read<SettingsModel>(),
-            child: ChangeNotifierProvider.value(
-              value: context.read<LocalAudioModel>(),
-              child: ChangeNotifierProvider.value(
-                value: context.read<LibraryModel>(),
-                child: const SettingsDialog(),
-              ),
+            child: SettingsDialog(
+              initLocalAudio: initLocalAudio,
             ),
           ),
         );

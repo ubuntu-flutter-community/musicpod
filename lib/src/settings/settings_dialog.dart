@@ -6,8 +6,12 @@ import 'licenses_page.dart';
 import 'settings_page.dart';
 
 class SettingsDialog extends StatelessWidget {
-  const SettingsDialog({super.key});
+  const SettingsDialog({super.key, required this.initLocalAudio});
 
+  final Future<void> Function({
+    required void Function(List<String>) onFail,
+    bool forceInit,
+  }) initLocalAudio;
   @override
   Widget build(BuildContext context) {
     final nav = Navigator(
@@ -18,7 +22,9 @@ class SettingsDialog extends StatelessWidget {
         Widget page = switch (settings.name) {
           '/about' => const AboutPage(),
           '/licenses' => const LicensesPage(),
-          _ => const SettingsPage()
+          _ => SettingsPage(
+              initLocalAudio: initLocalAudio,
+            )
         };
 
         return PageRouteBuilder(

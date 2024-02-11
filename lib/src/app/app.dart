@@ -48,11 +48,6 @@ class App extends StatefulWidget {
           create: (_) => LibraryModel(getService<LibraryService>()),
         ),
         ChangeNotifierProvider(
-          create: (_) => SettingsModel(
-            libraryService: getService<LibraryService>(),
-          )..init(),
-        ),
-        ChangeNotifierProvider(
           create: (_) => PodcastModel(
             getService<PodcastService>(),
             getService<LibraryService>(),
@@ -85,6 +80,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         ?.toLowerCase();
 
     final libraryModel = context.read<LibraryModel>();
+    final settingsModel = context.read<SettingsModel>();
     final playerModel = context.read<PlayerModel>();
 
     final connectivityNotifier = context.read<ConnectivityNotifier>();
@@ -107,8 +103,11 @@ class _AppState extends State<App> with WidgetsBindingObserver {
           libraryModel.init().then(
             (_) {
               playerModel.init().then((_) {
-                if (libraryModel.recentPatchNotesDisposed == false) {
-                  showPatchNotes(context, libraryModel.disposePatchNotes);
+                if (settingsModel.recentPatchNotesDisposed == false) {
+                  showPatchNotes(
+                    context,
+                    settingsModel.disposePatchNotes,
+                  );
                 }
                 extPathService.init(playerModel.play);
               });
@@ -128,7 +127,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.paused) {
-      await context.read<LibraryModel>().safeStates();
+      await resetAllServices();
     }
   }
 
