@@ -8,7 +8,6 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../l10n.dart';
-import '../../library.dart';
 import '../../local_audio.dart';
 import '../../string_x.dart';
 import '../../theme_mode_x.dart';
@@ -17,7 +16,12 @@ import 'settings_model.dart';
 import 'theme_tile.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  const SettingsPage({super.key, required this.initLocalAudio});
+
+  final Future<void> Function({
+    required void Function(List<String>) onFail,
+    bool forceInit,
+  }) initLocalAudio;
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +34,11 @@ class SettingsPage extends StatelessWidget {
         ),
         Expanded(
           child: ListView(
-            children: const [
-              _ThemeSection(),
-              _PodcastSection(),
-              _LocalAudioSection(),
-              _AboutSection(),
+            children: [
+              const _ThemeSection(),
+              const _PodcastSection(),
+              _LocalAudioSection(initLocalAudio: initLocalAudio),
+              const _AboutSection(),
             ],
           ),
         ),
@@ -208,28 +212,32 @@ class _PodcastSectionState extends State<_PodcastSection> {
 }
 
 class _LocalAudioSection extends StatelessWidget {
-  const _LocalAudioSection();
+  const _LocalAudioSection({required this.initLocalAudio});
+
+  final Future<void> Function({
+    required void Function(List<String>) onFail,
+    bool forceInit,
+  }) initLocalAudio;
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = context.read<LibraryModel>();
-    final localAudioModel = context.read<LocalAudioModel>();
+    final settingsModel = context.read<SettingsModel>();
     final directory =
-        context.select((LocalAudioModel m) => localAudioModel.directory ?? '');
+        context.select((SettingsModel m) => settingsModel.directory ?? '');
 
     Future<void> onDirectorySelected(String? directoryPath) async {
-      localAudioModel.setDirectory(directoryPath).then(
-            (value) async => await localAudioModel.init(
+      settingsModel.setDirectory(directoryPath).then(
+            (value) async => await initLocalAudio(
               forceInit: true,
               onFail: (failedImports) {
-                if (libraryModel.neverShowFailedImports) return;
+                if (settingsModel.neverShowFailedImports) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     duration: const Duration(seconds: 10),
                     content: FailedImportsContent(
                       failedImports: failedImports,
-                      onNeverShowFailedImports:
-                          libraryModel.setNeverShowLocalImports,
+                      onNeverShowFailedImports: () =>
+                          settingsModel.setNeverShowFailedImports(true),
                     ),
                   ),
                 );

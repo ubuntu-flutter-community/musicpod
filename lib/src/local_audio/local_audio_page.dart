@@ -12,6 +12,7 @@ import '../../local_audio.dart';
 import '../../player.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
+import '../settings/settings_model.dart';
 import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 import 'local_audio_view.dart';
@@ -34,15 +35,17 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
       if (!mounted) return;
       model.init(
         onFail: (failedImports) {
-          if (!mounted || context.read<LibraryModel>().neverShowFailedImports) {
+          if (!mounted ||
+              context.read<SettingsModel>().neverShowFailedImports) {
             return;
           }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               duration: const Duration(seconds: 10),
               content: FailedImportsContent(
-                onNeverShowFailedImports:
-                    context.read<LibraryModel>().setNeverShowLocalImports,
+                onNeverShowFailedImports: () => context
+                    .read<SettingsModel>()
+                    .setNeverShowFailedImports(true),
                 failedImports: failedImports,
               ),
             ),

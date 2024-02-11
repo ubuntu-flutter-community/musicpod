@@ -19,7 +19,6 @@ class LocalAudioModel extends SafeChangeNotifier {
   final LocalAudioService localAudioService;
   final LibraryService libraryService;
 
-  StreamSubscription<bool>? _directoryChangedSub;
   StreamSubscription<bool>? _audiosChangedSub;
 
   Set<Audio>? _albumSearchResult;
@@ -124,10 +123,6 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  String? get directory => localAudioService.directory;
-  Future<void> setDirectory(String? value) async =>
-      localAudioService.setDirectory(value);
-
   Set<Audio>? get audios {
     return localAudioService.audios;
   }
@@ -203,9 +198,6 @@ class LocalAudioModel extends SafeChangeNotifier {
     _allAlbums = _findAllAlbums();
     _allArtists = _findAllArtists();
 
-    _directoryChangedSub = localAudioService.directoryChanged.listen((_) {
-      notifyListeners();
-    });
     _audiosChangedSub = localAudioService.audiosChanged.listen((_) {
       notifyListeners();
     });
@@ -215,8 +207,7 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   @override
   Future<void> dispose() async {
-    _directoryChangedSub?.cancel();
-    _audiosChangedSub?.cancel();
+    await _audiosChangedSub?.cancel();
     super.dispose();
   }
 }

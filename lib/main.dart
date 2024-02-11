@@ -21,6 +21,7 @@ import 'notifications.dart';
 import 'player.dart';
 import 'podcasts.dart';
 import 'radio.dart';
+import 'settings.dart';
 
 Future<void> main(List<String> args) async {
   if (!isMobile) {
@@ -37,6 +38,13 @@ Future<void> main(List<String> args) async {
     await SystemTheme.accentColor.load();
   }
 
+  final settingsService = SettingsService();
+  settingsService.init();
+  registerService<SettingsService>(
+    () => settingsService,
+    dispose: (s) async => await s.dispose(),
+  );
+
   final libraryService = LibraryService();
 
   final playerService = PlayerService(
@@ -51,6 +59,7 @@ Future<void> main(List<String> args) async {
 
   registerService<PlayerService>(
     () => playerService,
+    dispose: (s) async => await s.dispose(),
   );
 
   registerService<LibraryService>(
@@ -58,7 +67,7 @@ Future<void> main(List<String> args) async {
     dispose: (s) async => await s.dispose(),
   );
   registerService<LocalAudioService>(
-    LocalAudioService.new,
+    () => LocalAudioService(settingsService: settingsService),
     dispose: (s) async => await s.dispose(),
   );
 

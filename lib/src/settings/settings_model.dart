@@ -1,90 +1,74 @@
 import 'dart:async';
 
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../../library.dart';
+import 'settings_service.dart';
 
 class SettingsModel extends SafeChangeNotifier {
-  final LibraryService _libraryService;
+  SettingsModel({
+    required SettingsService service,
+  }) : _service = service;
 
-  String? _appName;
+  final SettingsService _service;
+
   StreamSubscription<bool>? _usePodcastIndexChangedSub;
   StreamSubscription<bool>? _podcastIndexApiKeyChangedSub;
   StreamSubscription<bool>? _podcastIndexApiSecretChangedSub;
+  StreamSubscription<bool>? _neverShowFailedImportsSub;
+  StreamSubscription<bool>? _directoryChangedSub;
 
-  SettingsModel({
-    required LibraryService libraryService,
-  }) : _libraryService = libraryService;
-
-  String? get appName => _appName;
-  set appName(String? value) {
-    if (value == null || value == _appName) return;
-    _appName = value;
-    notifyListeners();
+  String? get appName => _service.appName;
+  String? get packageName => _service.packageName;
+  String? get version => _service.version;
+  String? get buildNumber => _service.buildNumber;
+  String? get directory => _service.directory;
+  Future<void> setDirectory(String? value) async {
+    if (value != null) {
+      await _service.setDirectory(value);
+    }
   }
 
-  String? _packageName;
-  String? get packageName => _packageName;
-  set packageName(String? value) {
-    if (value == null || value == _packageName) return;
-    _packageName = value;
-    notifyListeners();
-  }
+  bool get recentPatchNotesDisposed => _service.recentPatchNotesDisposed;
+  Future<void> disposePatchNotes() async => await _service.disposePatchNotes();
 
-  String? _version;
-  String? get version => _version;
-  set version(String? value) {
-    if (value == null || value == _version) return;
-    _version = value;
-    notifyListeners();
-  }
+  bool get neverShowFailedImports => _service.neverShowFailedImports;
+  void setNeverShowFailedImports(bool value) =>
+      _service.setNeverShowFailedImports(value);
 
-  String? _buildNumber;
-  String? get buildNumber => _buildNumber;
-  set buildNumber(String? value) {
-    if (value == null || value == _buildNumber) return;
-    _buildNumber = value;
-    notifyListeners();
-  }
+  bool get usePodcastIndex => _service.usePodcastIndex;
+  void setUsePodcastIndex(bool value) => _service.setUsePodcastIndex(value);
 
-  Future<void> init() async {
-    final packageInfo = await PackageInfo.fromPlatform();
-    appName = packageInfo.appName;
-    packageName = packageInfo.packageName;
-    version = packageInfo.version;
-    buildNumber = packageInfo.buildNumber;
+  void setThemeIndex(int value) => _service.setThemeIndex(value);
 
+  String? get podcastIndexApiKey => _service.podcastIndexApiKey;
+  void setPodcastIndexApiKey(String podcastIndexApiKey) =>
+      _service.setPodcastIndexApiKey(podcastIndexApiKey);
+
+  String? get podcastIndexApiSecret => _service.podcastIndexApiSecret;
+  void setPodcastIndexApiSecret(String podcastIndexApiSecret) async =>
+      _service.setPodcastIndexApiSecret(podcastIndexApiSecret);
+
+  void init() async {
     _usePodcastIndexChangedSub =
-        _libraryService.usePodcastIndexChanged.listen((_) => notifyListeners());
-    _podcastIndexApiKeyChangedSub = _libraryService.podcastIndexApiKeyChanged
-        .listen((_) => notifyListeners());
-    _podcastIndexApiSecretChangedSub = _libraryService
-        .podcastIndexApiSecretChanged
-        .listen((_) => notifyListeners());
-
+        _service.usePodcastIndexChanged.listen((_) => notifyListeners());
+    _podcastIndexApiKeyChangedSub =
+        _service.podcastIndexApiKeyChanged.listen((_) => notifyListeners());
+    _podcastIndexApiSecretChangedSub =
+        _service.podcastIndexApiSecretChanged.listen((_) => notifyListeners());
+    _neverShowFailedImportsSub =
+        _service.neverShowFailedImportsChanged.listen((_) => notifyListeners());
+    _directoryChangedSub =
+        _service.directoryChanged.listen((_) => notifyListeners());
     notifyListeners();
   }
 
   @override
   Future<void> dispose() async {
-    _usePodcastIndexChangedSub?.cancel();
-    _podcastIndexApiKeyChangedSub?.cancel();
-    _podcastIndexApiSecretChangedSub?.cancel();
+    await _usePodcastIndexChangedSub?.cancel();
+    await _podcastIndexApiKeyChangedSub?.cancel();
+    await _podcastIndexApiSecretChangedSub?.cancel();
+    await _neverShowFailedImportsSub?.cancel();
+    await _directoryChangedSub?.cancel();
     super.dispose();
   }
-
-  bool get usePodcastIndex => _libraryService.usePodcastIndex;
-  void setUsePodcastIndex(bool value) =>
-      _libraryService.setUsePodcastIndex(value);
-
-  void setThemeIndex(int value) => _libraryService.setThemeIndex(value);
-
-  String? get podcastIndexApiKey => _libraryService.podcastIndexApiKey;
-  Future<void> setPodcastIndexApiKey(String podcastIndexApiKey) async =>
-      await _libraryService.setPodcastIndexApiKey(podcastIndexApiKey);
-
-  String? get podcastIndexApiSecret => _libraryService.podcastIndexApiSecret;
-  Future<void> setPodcastIndexApiSecret(String podcastIndexApiSecret) async =>
-      await _libraryService.setPodcastIndexApiSecret(podcastIndexApiSecret);
 }

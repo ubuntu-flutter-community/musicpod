@@ -6,6 +6,7 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../library.dart';
+import '../../local_audio.dart';
 import '../../settings.dart';
 import '../../theme.dart';
 import '../globals.dart';
@@ -28,6 +29,8 @@ class MasterDetailPage extends StatelessWidget {
     // Library
     final libraryModel = context.watch<LibraryModel>();
 
+    final localAudioModel = context.read<LocalAudioModel>();
+
     final masterItems = createMasterItems(
       libraryModel: libraryModel,
       isOnline: isOnline,
@@ -41,13 +44,15 @@ class MasterDetailPage extends StatelessWidget {
       child: YaruMasterDetailPage(
         navigatorKey: navigatorKey,
         onSelected: (value) => libraryModel.setIndex(value ?? 0),
-        appBar: const HeaderBar(
+        appBar: HeaderBar(
           style: YaruTitleBarStyle.undecorated,
-          title: Text('MusicPod'),
+          title: const Text('MusicPod'),
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: 10),
-              child: SettingsButton(),
+              padding: const EdgeInsets.only(right: 10),
+              child: SettingsButton(
+                initLocalAudio: localAudioModel.init,
+              ),
             ),
           ],
         ),
