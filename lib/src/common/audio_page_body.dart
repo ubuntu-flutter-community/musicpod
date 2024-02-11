@@ -107,14 +107,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
   @override
   Widget build(BuildContext context) {
     final isOnline = context.select((ConnectivityNotifier c) => c.isOnline);
-    final playerService = getService<PlayerService>();
-
-    final startPlaylist = playerService.startPlaylist;
-
-    final play = playerService.play;
-    final pause = playerService.pause;
-    final resume = playerService.resume;
-    final insertIntoQueue = playerService.insertIntoQueue;
+    final service = getService<PlayerService>();
 
     if (widget.audioPageType != AudioPageType.podcast) {
       context.select((LibraryModel m) => m.likedAudios.length);
@@ -134,11 +127,11 @@ class _AudioPageBodyState extends State<AudioPageBody> {
       ),
       child: AudioPageControlPanel(
         title: widget.controlPanelTitle,
-        pause: pause,
-        resume: resume,
+        pause: service.pause,
+        resume: service.resume,
         onTap: widget.audios?.isNotEmpty == false
             ? null
-            : () => startPlaylist(
+            : () => service.startPlaylist(
                   audios: widget.audios!,
                   listName: widget.pageId,
                 ),
@@ -217,51 +210,50 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                       controller: _controller,
                       itemCount: widget.audios?.length,
                       itemBuilder: (context, index) {
-                        final audio = widget.audios?.elementAtOrNull(index);
-                        final audioSelected =
-                            playerService.audio.value == audio;
-                        final download = libraryModel.getDownload(audio?.url);
+                        final audio = widget.audios!.elementAt(index);
 
-                        if (audio?.audioType == AudioType.podcast &&
+                        final download = libraryModel.getDownload(audio.url);
+
+                        if (audio.audioType == AudioType.podcast &&
                             widget.audioPageType != AudioPageType.playlist) {
+                          final isPlaying = service.isPlaying;
+
                           return Watch(
                             (context) => PodcastAudioTile(
-                              addPodcast: audio?.website == null ||
-                                      widget.audios == null
-                                  ? null
-                                  : () => libraryModel.addPodcast(
-                                        audio!.website!,
-                                        widget.audios!,
-                                      ),
+                              addPodcast:
+                                  audio.website == null || widget.audios == null
+                                      ? null
+                                      : () => libraryModel.addPodcast(
+                                            audio.website!,
+                                            widget.audios!,
+                                          ),
                               removeUpdate: () => libraryModel
                                   .removePodcastUpdate(widget.pageId),
-                              isExpanded: audioSelected,
+                              isExpanded: service.audio.value == audio,
                               audio: download != null
-                                  ? audio!.copyWith(path: download)
-                                  : audio!,
-                              isPlayerPlaying: playerService.isPlaying.value,
-                              selected: audioSelected,
-                              pause: pause,
-                              resume: resume,
-                              play: play,
-                              lastPosition:
-                                  playerService.getLastPosition(audio.url),
-                              safeLastPosition: playerService.safeLastPosition,
+                                  ? audio.copyWith(path: download)
+                                  : audio,
+                              isPlayerPlaying: isPlaying.value,
+                              selected: service.audio.value == audio,
+                              pause: service.pause,
+                              resume: service.resume,
+                              play: service.play,
+                              lastPosition: service.getLastPosition(audio.url),
+                              safeLastPosition: service.safeLastPosition,
                               isOnline: isOnline,
                               insertIntoQueue: () =>
-                                  playerService.insertIntoQueue(audio),
+                                  service.insertIntoQueue(audio),
                             ),
                           );
                         }
 
                         final likeButton = LikeButton(
-                          key: ObjectKey(audio),
                           libraryModel: libraryModel,
                           playlistId: widget.pageId,
-                          audio: audio!,
+                          audio: audio,
                           allowRemove:
                               widget.audioPageType == AudioPageType.playlist,
-                          insertIntoQueue: () => insertIntoQueue(audio),
+                          insertIntoQueue: () => service.insertIntoQueue(audio),
                         );
 
                         return Watch(
@@ -280,18 +272,17 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                             albumFlex: widget.albumFlex,
                             onAlbumTap: widget.onAlbumTap,
                             onArtistTap: widget.onArtistTap,
-                            isPlayerPlaying: playerService.isPlaying.value,
-                            pause: pause,
+                            isPlayerPlaying: service.isPlaying.value,
+                            pause: service.pause,
                             startPlaylist: widget.audios == null
                                 ? null
-                                : () => startPlaylist(
+                                : () => service.startPlaylist(
                                       audios: widget.audios!,
                                       listName: widget.pageId,
                                       index: index,
                                     ),
-                            resume: resume,
-                            key: ValueKey(audio),
-                            selected: audioSelected,
+                            resume: service.resume,
+                            selected: service.audio.value == audio,
                             audio: audio,
                             likeIcon: likeButton,
                           ),
