@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -68,13 +68,13 @@ class AlbumPage extends StatelessWidget {
       onArtistTap: ({required audioType, required text}) {
         final artistName = album?.firstOrNull?.artist;
         if (artistName == null) return;
-        final model = context.read<LocalAudioModel>();
+        final service = getService<LocalAudioService>();
 
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) {
-              final artistAudios = model.findArtist(album!.first);
-              final images = model.findImages(artistAudios ?? {});
+              final artistAudios = service.findArtist(album!.first);
+              final images = service.findImages(artistAudios ?? {});
 
               return ArtistPage(
                 images: images,

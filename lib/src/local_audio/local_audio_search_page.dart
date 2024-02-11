@@ -1,6 +1,5 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -25,19 +24,18 @@ class LocalAudioSearchPage extends StatelessWidget {
     final service = getService<AppStateService>();
     final showWindowControls = service.showWindowControls;
 
-    final model = context.read<LocalAudioModel>();
-    final titlesResult =
-        context.select((LocalAudioModel m) => m.titlesSearchResult);
-    final artistsResult =
-        context.select((LocalAudioModel m) => m.similarArtistsSearchResult);
-    final albumsResult =
-        context.select((LocalAudioModel m) => m.albumSearchResult);
-    final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
+    final localAudioService = getService<LocalAudioService>();
+    final searchResult = localAudioService.searchResult;
+    localAudioService.searchResultChanged.watch(context);
+    final titlesResult = searchResult?.$1;
+    final artistsResult = searchResult?.$3;
+    final albumsResult = searchResult?.$2;
+    final searchQuery = localAudioService.searchQuery.watch(context);
     final index = service.localAudioIndex;
 
     void search({required String? text}) {
       if (text != null) {
-        model.search(text);
+        localAudioService.search(text);
       } else {
         navigatorKey.currentState?.maybePop();
       }

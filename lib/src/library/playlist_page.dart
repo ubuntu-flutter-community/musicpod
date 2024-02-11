@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../common.dart';
 import '../../data.dart';
@@ -22,11 +23,11 @@ class PlaylistPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<LocalAudioModel>();
+    final localAudioService = getService<LocalAudioService>();
     final libraryModel = context.read<LibraryModel>();
     return AudioPage(
       onAlbumTap: ({required audioType, required text}) {
-        final albumAudios = model.findAlbum(Audio(album: text));
+        final albumAudios = localAudioService.findAlbum(Audio(album: text));
         if (albumAudios?.firstOrNull == null) return;
         final id = generateAlbumId(albumAudios!.first);
         if (id == null) return;
@@ -46,8 +47,8 @@ class PlaylistPage extends StatelessWidget {
         );
       },
       onArtistTap: ({required audioType, required text}) {
-        final artistAudios = model.findArtist(Audio(artist: text));
-        final images = model.findImages(artistAudios ?? {});
+        final artistAudios = localAudioService.findArtist(Audio(artist: text));
+        final images = localAudioService.findImages(artistAudios ?? {});
 
         Navigator.of(context).push(
           MaterialPageRoute(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
@@ -7,7 +7,7 @@ import '../../constants.dart';
 import '../../data.dart';
 import '../l10n/l10n.dart';
 import 'artist_page.dart';
-import 'local_audio_model.dart';
+import 'local_audio_service.dart';
 
 class ArtistsView extends StatelessWidget {
   const ArtistsView({
@@ -35,7 +35,7 @@ class ArtistsView extends StatelessWidget {
       );
     }
 
-    final model = context.read<LocalAudioModel>();
+    final service = getService<LocalAudioService>();
 
     return Padding(
       padding: const EdgeInsets.only(top: 15),
@@ -45,10 +45,10 @@ class ArtistsView extends StatelessWidget {
         shrinkWrap: true,
         gridDelegate: kDiskGridDelegate,
         itemBuilder: (context, index) {
-          final artistAudios = model.findArtist(
+          final artistAudios = service.findArtist(
             artists!.elementAt(index),
           );
-          final images = model.findImages(artistAudios ?? {});
+          final images = service.findImages(artistAudios ?? {});
 
           final artistname =
               artists!.elementAt(index).artist ?? context.l10n.unknown;

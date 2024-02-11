@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -13,7 +12,7 @@ import '../../globals.dart';
 import '../../local_audio.dart';
 import '../../player.dart';
 import '../l10n/l10n.dart';
-import '../library/library_model.dart';
+import '../settings/settings_service.dart';
 import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 import 'local_audio_view.dart';
@@ -31,20 +30,21 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   @override
   void initState() {
     super.initState();
-    final model = context.read<LocalAudioModel>();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    final service = getService<LocalAudioService>();
+    final settingsService = getService<SettingsService>();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       if (!mounted) return;
-      model.init(
+      await service.init(
         onFail: (failedImports) {
-          if (!mounted || context.read<LibraryModel>().neverShowFailedImports) {
+          if (!mounted || settingsService.neverShowFailedImports.value) {
             return;
           }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               duration: const Duration(seconds: 10),
               content: FailedImportsContent(
-                onNeverShowFailedImports:
-                    context.read<LibraryModel>().setNeverShowLocalImports,
+                onNeverShowFailedImports: () =>
+                    settingsService.setNeverShowFailedImports(true),
                 failedImports: failedImports,
               ),
             ),
@@ -56,17 +56,19 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final service = getService<AppStateService>();
-    final showWindowControls = service.showWindowControls;
+    final appStateService = getService<AppStateService>();
+    final showWindowControls = appStateService.showWindowControls;
 
-    final model = context.read<LocalAudioModel>();
-    final audios = context.select((LocalAudioModel m) => m.audios);
+    final localAudioService = getService<LocalAudioService>();
+    final audios = localAudioService.audios;
+
+    localAudioService.audiosChanged.watch(context);
 
     void search({
       required String? text,
     }) {
       if (text != null) {
-        model.search(text);
+        localAudioService.search(text);
         navigatorKey.currentState?.push(
           MaterialPageRoute(
             builder: (context) {
@@ -79,7 +81,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
       }
     }
 
-    final index = service.localAudioIndex;
+    final index = appStateService.localAudioIndex;
 
     final headerBar = HeaderBar(
       style: showWindowControls.watch(context)
@@ -114,8 +116,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             child: LocalAudioBody(
               localAudioView: LocalAudioView.values[index.watch(context)],
               titles: audios,
-              albums: model.allAlbums,
-              artists: model.allArtists,
+              albums: localAudioService.allAlbums,
+              artists: localAudioService.allArtists,
             ),
           ),
         ],

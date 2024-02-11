@@ -12,7 +12,6 @@ import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../constants.dart';
 import '../../library.dart';
-import '../../local_audio.dart';
 import '../../patch_notes.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
@@ -30,11 +29,6 @@ class App extends StatefulWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => RadioModel(getService<RadioService>()),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => LocalAudioModel(
-            localAudioService: getService<LocalAudioService>(),
-          ),
         ),
         ChangeNotifierProvider(
           create: (_) => LibraryModel(

@@ -121,32 +121,34 @@ class PlayerService {
   bool _firstPlay = true;
   Future<void> play({Duration? newPosition, Audio? newAudio}) async {
     try {
-      if (newAudio != null) {
-        _setAudio(newAudio);
-      }
-      if (audio.value == null) return;
+      batch(() {
+        if (newAudio != null) {
+          audio.value = newAudio;
+        }
+        if (audio.value == null) return;
 
-      Media? media = audio.value!.path != null
-          ? Media('file://${audio.value!.path!}')
-          : (audio.value!.url != null)
-              ? Media(audio.value!.url!)
-              : null;
-      if (media == null) return;
-      _player.open(media).then((_) {
-        _player.state.tracks;
+        Media? media = audio.value!.path != null
+            ? Media('file://${audio.value!.path!}')
+            : (audio.value!.url != null)
+                ? Media(audio.value!.url!)
+                : null;
+        if (media == null) return;
+        _player.open(media).then((_) {
+          _player.state.tracks;
+        });
+        if (newPosition != null && audio.value!.audioType != AudioType.radio) {
+          _player.setVolume(0).then(
+                (_) => Future.delayed(const Duration(seconds: 3)).then(
+                  (_) => _player
+                      .seek(newPosition)
+                      .then((_) => _player.setVolume(100.0)),
+                ),
+              );
+        }
+        _setMediaControlsMetaData(audio.value!);
+        _loadColor();
+        _firstPlay = false;
       });
-      if (newPosition != null && audio.value!.audioType != AudioType.radio) {
-        _player.setVolume(0).then(
-              (_) => Future.delayed(const Duration(seconds: 3)).then(
-                (_) => _player
-                    .seek(newPosition)
-                    .then((_) => _player.setVolume(100.0)),
-              ),
-            );
-      }
-      _setMediaControlsMetaData(audio.value!);
-      _loadColor();
-      _firstPlay = false;
     } on Exception catch (_) {
       // TODO: instead of disallowing certain file types
       // process via error stream if something went wrong
@@ -322,11 +324,10 @@ class PlayerService {
       _setAudio(audios.elementAtOrNull(index)!);
     } else {
       setQueue((listName, audios.toList()));
-      _setAudio(
-        (index != null && audios.elementAtOrNull(index) != null)
-            ? audios.elementAtOrNull(index)!
-            : audios.first,
-      );
+      final a = (index != null && audios.elementAtOrNull(index) != null)
+          ? audios.elementAtOrNull(index)!
+          : audios.firstOrNull;
+      if (a != null) _setAudio(a);
     }
 
     position.value = getLastPosition.call(audio.value?.url);
@@ -383,13 +384,6 @@ class PlayerService {
 
       await _setMediaControlsMetaData(playerState.audio!);
     }
-  }
-
-  void safeLastPosition() {
-    if (audio.value?.audioType == AudioType.radio ||
-        audio.value?.url == null ||
-        position.value == null) return;
-    addLastPosition(audio.value!.url!, position.value!);
   }
 
   Future<void> _initMediaControl() async {
@@ -622,8 +616,15 @@ class PlayerService {
   //
   // last positions
   //
-  final Signal<Map<String, Duration>> lastPositions = signal({});
-  void addLastPosition(String url, Duration lastPosition) {
+  final Signal<Map<String, Duration>> lastPositions = mapSignal({});
+  void safeLastPosition() {
+    if (audio.value?.audioType == AudioType.radio ||
+        audio.value?.url == null ||
+        position.value == null) return;
+    _addLastPosition(audio.value!.url!, position.value!);
+  }
+
+  void _addLastPosition(String url, Duration lastPosition) {
     writeSetting(url, lastPosition.toString(), kLastPositionsFileName)
         .then((_) {
       if (lastPositions.value.containsKey(url) == true) {

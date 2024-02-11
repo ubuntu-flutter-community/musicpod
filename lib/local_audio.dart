@@ -3,7 +3,6 @@ export 'src/local_audio/album_view.dart';
 export 'src/local_audio/artist_page.dart';
 export 'src/local_audio/artists_view.dart';
 export 'src/local_audio/failed_imports_content.dart';
-export 'src/local_audio/local_audio_model.dart';
 export 'src/local_audio/local_audio_page.dart';
 export 'src/local_audio/local_audio_search_page.dart';
 export 'src/local_audio/local_audio_service.dart';

@@ -1,6 +1,5 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
@@ -10,7 +9,6 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../l10n.dart';
-import '../../library.dart';
 import '../../local_audio.dart';
 import '../../string_x.dart';
 import '../../theme_mode_x.dart';
@@ -215,25 +213,24 @@ class _LocalAudioSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = context.read<LibraryModel>();
-    final localAudioModel = context.read<LocalAudioModel>();
+    final localAudioService = getService<LocalAudioService>();
 
     final settingsService = getService<SettingsService>();
     final directory = settingsService.directory.watch(context);
 
     Future<void> onDirectorySelected(String? directoryPath) async {
       settingsService.setDirectory(directoryPath).then(
-            (value) async => await localAudioModel.init(
+            (value) async => await localAudioService.init(
               forceInit: true,
               onFail: (failedImports) {
-                if (libraryModel.neverShowFailedImports) return;
+                if (settingsService.neverShowFailedImports.value) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     duration: const Duration(seconds: 10),
                     content: FailedImportsContent(
                       failedImports: failedImports,
-                      onNeverShowFailedImports:
-                          libraryModel.setNeverShowLocalImports,
+                      onNeverShowFailedImports: () =>
+                          settingsService.setNeverShowFailedImports(true),
                     ),
                   ),
                 );

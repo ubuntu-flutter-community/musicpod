@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:metadata_god/metadata_god.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
+import '../../common.dart';
 import '../../data.dart';
 import '../../utils.dart';
 import '../settings/settings_service.dart';
@@ -11,45 +14,181 @@ import '../settings/settings_service.dart';
 class LocalAudioService {
   final SettingsService settingsService;
 
-  Set<Audio>? _audios;
   LocalAudioService({
     required this.settingsService,
   });
 
-  Set<Audio>? get audios => _audios;
-  set audios(Set<Audio>? value) {
-    _updateAudios(value);
-  }
+  final Signal<bool?> audiosChanged = signal(null);
+  Set<Audio>? audios;
 
-  final _audiosController = StreamController<bool>.broadcast();
-  Stream<bool> get audiosChanged => _audiosController.stream;
-  void _updateAudios(Set<Audio>? value) {
-    _audios = value;
-    _audiosController.add(true);
-  }
-
-  Future<List<String>> init({
+  Future<void> init({
     @visibleForTesting String? testDir,
+    required void Function(List<String> failedImports) onFail,
+    bool forceInit = false,
   }) async {
-    String? dir;
-    if (testDir != null) {
-      dir = testDir;
-    } else {
-      dir = settingsService.directory.value;
-      dir ??= await getMusicDir();
+    if (forceInit || (audios == null || audios?.isEmpty == true)) {
+      String? dir;
+      if (testDir != null) {
+        dir = testDir;
+      } else {
+        dir = settingsService.directory.value;
+        dir ??= await getMusicDir();
+      }
+      final result = await compute(_init, dir);
+
+      audios = result.$2;
+
+      _allAlbums = _findAllAlbums();
+      _allArtists = _findAllArtists();
+
+      audiosChanged.value = true;
+
+      final failedImports = result.$1;
+      if (failedImports.isNotEmpty) {
+        onFail(failedImports);
+      }
+    }
+  }
+
+  (Set<Audio>?, Set<Audio>?, Set<Audio>?)? searchResult;
+  final Signal<bool?> searchResultChanged = signal(null);
+  Signal<String?> searchQuery = signal(null);
+  void search(String? query) {
+    searchQuery.value = query;
+    if (query == null) return;
+    if (query.isEmpty) {
+      searchResult = ({}, {}, {});
+      searchResultChanged.value = true;
+
+      return;
     }
 
-    final result = await compute(_init, dir);
+    final allAlbumsFindings = audios?.where(
+      (audio) =>
+          audio.album?.isNotEmpty == true &&
+          audio.album!.toLowerCase().contains(query.toLowerCase()),
+    );
 
-    _audios = result.$2;
+    final albumsResult = <Audio>{};
+    if (allAlbumsFindings != null) {
+      for (var a in allAlbumsFindings) {
+        if (albumsResult.none((element) => element.album == a.album)) {
+          albumsResult.add(a);
+        }
+      }
+    }
 
-    _audiosController.add(true);
+    final allArtistFindings = audios?.where(
+      (audio) =>
+          audio.artist?.isNotEmpty == true &&
+          audio.artist!.toLowerCase().contains(query.toLowerCase()),
+    );
+    final artistsResult = <Audio>{};
+    if (allArtistFindings != null) {
+      for (var a in allArtistFindings) {
+        if (artistsResult.none(
+          (e) => e.artist == a.artist,
+        )) {
+          artistsResult.add(a);
+        }
+      }
+    }
 
-    return result.$1;
+    searchResult = (
+      Set.from(
+        audios?.where(
+              (audio) =>
+                  audio.title?.isNotEmpty == true &&
+                  audio.title!.toLowerCase().contains(query.toLowerCase()),
+            ) ??
+            <Audio>[],
+      ),
+      albumsResult,
+      artistsResult
+    );
+    searchResultChanged.value = true;
   }
 
-  Future<void> dispose() async {
-    await _audiosController.close();
+  Set<Audio>? _allArtists;
+  Set<Audio>? get allArtists => _allArtists;
+  Set<Audio>? _findAllArtists() {
+    if (audios == null) return null;
+    final artistsResult = <Audio>{};
+    for (var a in audios!) {
+      if (artistsResult.none(
+        (e) => e.artist == a.artist,
+      )) {
+        artistsResult.add(a);
+      }
+    }
+    return artistsResult;
+  }
+
+  Set<Audio>? _allAlbums;
+  Set<Audio>? get allAlbums => _allAlbums;
+  Set<Audio>? _findAllAlbums() {
+    if (audios == null) return null;
+    final albumsResult = <Audio>{};
+    for (var a in audios!) {
+      if (albumsResult.none((element) => element.album == a.album)) {
+        albumsResult.add(a);
+      }
+    }
+    return albumsResult;
+  }
+
+  Set<Audio>? findAlbum(
+    Audio audio, [
+    AudioFilter audioFilter = AudioFilter.trackNumber,
+  ]) {
+    final album = audios?.where(
+      (a) => a.album != null && a.album == audio.album,
+    );
+
+    final albumList = album?.toList();
+    if (albumList != null) {
+      sortListByAudioFilter(
+        audioFilter: audioFilter,
+        audios: albumList,
+      );
+    }
+    return albumList != null ? Set.from(albumList) : null;
+  }
+
+  Set<Audio>? findArtist(
+    Audio audio, [
+    AudioFilter audioFilter = AudioFilter.album,
+  ]) {
+    final album = audios?.where(
+      (a) => a.artist != null && a.artist == audio.artist,
+    );
+
+    final albumList = album?.toList();
+    if (albumList != null) {
+      sortListByAudioFilter(
+        audioFilter: audioFilter,
+        audios: albumList,
+      );
+    }
+    return albumList != null ? Set.from(albumList) : null;
+  }
+
+  Set<Uint8List>? findImages(Set<Audio> audios) {
+    final images = <Uint8List>{};
+    final albumAudios = <Audio>{};
+    for (var audio in audios) {
+      if (albumAudios.none((a) => a.album == audio.album)) {
+        albumAudios.add(audio);
+      }
+    }
+
+    for (var audio in albumAudios) {
+      if (audio.pictureData != null) {
+        images.add(audio.pictureData!);
+      }
+    }
+
+    return images;
   }
 }
 

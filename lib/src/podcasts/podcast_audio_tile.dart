@@ -37,7 +37,7 @@ class PodcastAudioTile extends StatelessWidget {
     this.insertIntoQueue,
   });
 
-  final Audio audio;
+  final Audio? audio;
   final bool isPlayerPlaying;
   final bool selected;
   final void Function() pause;
@@ -54,16 +54,16 @@ class PodcastAudioTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!isOnline && audio.path == null) {
+    if (!isOnline && audio?.path == null) {
       return const SizedBox.shrink();
     }
 
-    final date = audio.year == null
+    final date = audio?.year == null
         ? ''
-        : '${DateFormat.yMMMEd(Platform.localeName).format(DateTime.fromMillisecondsSinceEpoch(audio.year!))} | ';
+        : '${DateFormat.yMMMEd(Platform.localeName).format(DateTime.fromMillisecondsSinceEpoch(audio!.year!))} | ';
     final duration = formatTime(
-      audio.durationMs != null
-          ? Duration(milliseconds: audio.durationMs!.toInt())
+      audio?.durationMs != null
+          ? Duration(milliseconds: audio!.durationMs!.toInt())
           : Duration.zero,
     );
 
@@ -88,42 +88,46 @@ class PodcastAudioTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                AvatarWithProgress(
-                  selected: selected,
-                  lastPosition: lastPosition,
-                  audio: audio,
-                  isPlayerPlaying: isPlayerPlaying,
-                  pause: pause,
-                  resume: resume,
-                  safeLastPosition: safeLastPosition,
-                  play: play,
-                  removeUpdate: removeUpdate,
-                ),
+                if (audio != null)
+                  AvatarWithProgress(
+                    selected: selected,
+                    lastPosition: lastPosition,
+                    audio: audio!,
+                    isPlayerPlaying: isPlayerPlaying,
+                    pause: pause,
+                    resume: resume,
+                    safeLastPosition: safeLastPosition,
+                    play: play,
+                    removeUpdate: removeUpdate,
+                  ),
                 const SizedBox(
                   width: _kGap,
                 ),
-                Expanded(
-                  child: _Right(
-                    narrow: narrow,
-                    selected: selected,
-                    audio: audio,
-                    date: date,
-                    duration: duration,
-                    addPodcast: addPodcast,
-                    insertIntoQueue: insertIntoQueue,
+                if (audio != null)
+                  Expanded(
+                    child: _Right(
+                      narrow: narrow,
+                      selected: selected,
+                      audio: audio!,
+                      date: date,
+                      duration: duration,
+                      addPodcast: addPodcast,
+                      insertIntoQueue: insertIntoQueue,
+                    ),
                   ),
-                ),
               ],
             ),
           ),
         ),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: _Bottom(
-            narrow: narrow,
-            audio: audio,
-          ),
-        ),
+        child: audio == null
+            ? const SizedBox.shrink()
+            : Align(
+                alignment: Alignment.centerLeft,
+                child: _Bottom(
+                  narrow: narrow,
+                  audio: audio!,
+                ),
+              ),
       ),
     );
   }

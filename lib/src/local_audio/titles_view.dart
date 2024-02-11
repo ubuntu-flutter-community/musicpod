@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
@@ -8,7 +9,7 @@ import '../../library.dart';
 import '../../utils.dart';
 import 'album_page.dart';
 import 'artist_page.dart';
-import 'local_audio_model.dart';
+import 'local_audio_service.dart';
 
 class TitlesView extends StatefulWidget {
   const TitlesView({
@@ -57,7 +58,7 @@ class _TitlesViewState extends State<TitlesView> {
       );
     }
 
-    final model = context.read<LocalAudioModel>();
+    final localAudioService = getService<LocalAudioService>();
     final libraryModel = context.read<LibraryModel>();
 
     return AudioPageBody(
@@ -71,7 +72,7 @@ class _TitlesViewState extends State<TitlesView> {
       pageId: kLocalAudioPageId,
       showAudioPageHeader: false,
       onAlbumTap: ({required audioType, required text}) {
-        final albumAudios = model.findAlbum(Audio(album: text));
+        final albumAudios = localAudioService.findAlbum(Audio(album: text));
         if (albumAudios?.firstOrNull == null) return;
         final id = generateAlbumId(albumAudios!.first);
         if (id == null) return;
@@ -91,8 +92,8 @@ class _TitlesViewState extends State<TitlesView> {
         );
       },
       onArtistTap: ({required audioType, required text}) {
-        final artistAudios = model.findArtist(Audio(artist: text));
-        final images = model.findImages(artistAudios ?? {});
+        final artistAudios = localAudioService.findArtist(Audio(artist: text));
+        final images = localAudioService.findImages(artistAudios ?? {});
 
         Navigator.of(context).push(
           MaterialPageRoute(

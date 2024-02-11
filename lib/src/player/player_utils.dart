@@ -19,9 +19,9 @@ void onLocalAudioTitleTap({
   required BuildContext context,
 }) {
   final libraryModel = context.read<LibraryModel>();
-  final localAudioModel = context.read<LocalAudioModel>();
+  final service = getService<LocalAudioService>();
 
-  final albumAudios = localAudioModel.findAlbum(audio);
+  final albumAudios = service.findAlbum(audio);
   if (albumAudios?.firstOrNull == null) return;
   final id = generateAlbumId(albumAudios!.first);
   if (id == null) return;
@@ -45,11 +45,11 @@ void onLocalAudioArtistTap({
   required Audio audio,
   required BuildContext context,
 }) {
-  final localAudioModel = context.read<LocalAudioModel>();
+  final service = getService<LocalAudioService>();
 
-  final artistAudios = localAudioModel.findArtist(audio);
+  final artistAudios = service.findArtist(audio);
   if (artistAudios?.firstOrNull == null) return;
-  final images = localAudioModel.findImages(artistAudios ?? {});
+  final images = service.findImages(artistAudios ?? {});
 
   navigatorKey.currentState?.push(
     MaterialPageRoute(

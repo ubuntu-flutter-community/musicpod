@@ -325,20 +325,6 @@ class LibraryService {
         .then((_) => _albumsController.add(true));
   }
 
-  bool _neverShowFailedImports = false;
-  bool get neverShowFailedImports => _neverShowFailedImports;
-  final _neverShowFailedImportsController = StreamController<bool>.broadcast();
-  Stream<bool> get neverShowFailedImportsChanged =>
-      _neverShowFailedImportsController.stream;
-  Future<void> setNeverShowFailedImports() async {
-    _neverShowFailedImports = !_neverShowFailedImports;
-    await writeSetting(
-      kNeverShowImportFails,
-      _neverShowFailedImports.toString(),
-    );
-    _neverShowFailedImportsController.add(true);
-  }
-
   bool _libraryInitialized = false;
   Future<bool> init() async {
     await _initLibrary();
@@ -383,8 +369,6 @@ class LibraryService {
     await _starredStationsController.close();
     await _favTagsController.close();
     await _favCountriesController.close();
-
-    await _neverShowFailedImportsController.close();
     await _updateController.close();
     await _downloadsController.close();
   }

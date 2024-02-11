@@ -38,6 +38,10 @@ Future<void> main(List<String> args) async {
     await SystemTheme.accentColor.load();
   }
 
+  final settingsService = SettingsService();
+  await settingsService.init();
+  registerService<SettingsService>(() => settingsService);
+
   final libraryService = LibraryService();
 
   final playerService = PlayerService(
@@ -66,13 +70,8 @@ Future<void> main(List<String> args) async {
     dispose: (s) async => await s.dispose(),
   );
 
-  final settingsService = SettingsService();
-  await settingsService.init();
-  registerService<SettingsService>(() => settingsService);
-
   registerService<LocalAudioService>(
     () => LocalAudioService(settingsService: settingsService),
-    dispose: (s) async => await s.dispose(),
   );
 
   final notificationsService =

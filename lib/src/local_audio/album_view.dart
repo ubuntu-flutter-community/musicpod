@@ -11,7 +11,7 @@ import '../../utils.dart';
 import '../data/audio.dart';
 import '../l10n/l10n.dart';
 import 'album_page.dart';
-import 'local_audio_model.dart';
+import 'local_audio_service.dart';
 
 class AlbumsView extends StatelessWidget {
   const AlbumsView({
@@ -43,7 +43,7 @@ class AlbumsView extends StatelessWidget {
 
     final libraryModel = context.read<LibraryModel>();
     final playerService = getService<PlayerService>();
-    final model = context.read<LocalAudioModel>();
+    final service = getService<LocalAudioService>();
 
     return Padding(
       padding: const EdgeInsets.only(top: 15),
@@ -55,7 +55,7 @@ class AlbumsView extends StatelessWidget {
         itemBuilder: (context, index) {
           final audio = albums!.elementAt(index);
           String? id = generateAlbumId(audio);
-          final albumAudios = model.findAlbum(audio);
+          final albumAudios = service.findAlbum(audio);
 
           final image = audio.pictureData == null
               ? Center(

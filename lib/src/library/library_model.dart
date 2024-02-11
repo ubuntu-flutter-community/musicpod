@@ -31,10 +31,6 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _lastCountryCodeSub;
   StreamSubscription<bool>? _downloadsSub;
 
-  bool get neverShowFailedImports => _service.neverShowFailedImports;
-  Future<void> setNeverShowLocalImports() async =>
-      await _service.setNeverShowFailedImports();
-
   Future<void> init() async {
     _likedAudiosSub =
         _service.likedAudiosChanged.listen((event) => notifyListeners());
@@ -47,8 +43,7 @@ class LibraryModel extends SafeChangeNotifier {
         _service.starredStationsChanged.listen((event) => notifyListeners());
     _updatesChangedSub =
         _service.updatesChanged.listen((_) => notifyListeners());
-    _neverShowFailedImportsSub =
-        _service.neverShowFailedImportsChanged.listen((_) => notifyListeners());
+
     _favTagsSub = _service.favTagsChanged.listen((_) => notifyListeners());
     _favCountriesSub =
         _service.favCountriesChanged.listen((_) => notifyListeners());
