@@ -55,8 +55,10 @@ class AudioTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.t;
     final listTile = ListTile(
-      selected: selected && isPlayerPlaying,
-      selectedColor: theme.colorScheme.onSurface,
+      selected: selected,
+      selectedColor: isPlayerPlaying
+          ? theme.colorScheme.primary
+          : theme.colorScheme.onSurface,
       selectedTileColor: theme.colorScheme.onSurface.withOpacity(0.05),
       contentPadding: kAudioTilePadding,
       onTap: () {
