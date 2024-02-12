@@ -81,18 +81,20 @@ class AudioPageHeader extends StatelessWidget {
                               maxLines: 1,
                             ),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: Text('·'),
-                          ),
-                          Flexible(
-                            child: Text(
-                              subTitle ?? '',
-                              style: theme.textTheme.labelSmall,
-                              maxLines: 1,
-                              overflow: TextOverflow.visible,
+                          if (subTitle?.isNotEmpty == true)
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              child: Text('·'),
                             ),
-                          ),
+                          if (subTitle?.isNotEmpty == true)
+                            Flexible(
+                              child: Text(
+                                subTitle ?? '',
+                                style: theme.textTheme.labelSmall,
+                                maxLines: 1,
+                                overflow: TextOverflow.visible,
+                              ),
+                            ),
                         ],
                       ),
                     ),
