@@ -5,7 +5,6 @@ import 'package:podcast_search/podcast_search.dart';
 
 import '../../common.dart';
 import '../../data.dart';
-import '../../utils.dart';
 import '../notifications/notifications_service.dart';
 
 class PodcastService {

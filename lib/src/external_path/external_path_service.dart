@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:collection/collection.dart';
 import 'package:gtk/gtk.dart';
 import 'package:metadata_god/metadata_god.dart';
 
 import '../../data.dart';
-import '../../utils.dart';
 
 class ExternalPathService {
   final GtkApplicationNotifier? _gtkNotifier;
@@ -37,11 +34,7 @@ class ExternalPathService {
     try {
       MetadataGod.readMetadata(file: path).then(
         (data) => play.call(
-          newAudio: createLocalAudio(
-            path: path,
-            tag: data,
-            fileName: File(path).uri.pathSegments.lastOrNull,
-          ),
+          newAudio: createLocalAudio(path: path, data: data),
         ),
       );
     } catch (_) {

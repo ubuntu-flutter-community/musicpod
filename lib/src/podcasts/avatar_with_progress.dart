@@ -16,7 +16,7 @@ class AvatarWithProgress extends StatelessWidget {
     required this.pause,
     required this.resume,
     required this.safeLastPosition,
-    required this.play,
+    required this.startPlaylist,
     required this.removeUpdate,
   });
 
@@ -27,7 +27,11 @@ class AvatarWithProgress extends StatelessWidget {
   final void Function() pause;
   final Future<void> Function() resume;
   final void Function() safeLastPosition;
-  final Future<void> Function({Audio? newAudio, Duration? newPosition}) play;
+  final Future<void> Function({
+    required Set<Audio> audios,
+    required String listName,
+    int? index,
+  }) startPlaylist;
   final void Function()? removeUpdate;
 
   @override
@@ -68,7 +72,9 @@ class AvatarWithProgress extends StatelessWidget {
                 }
               } else {
                 safeLastPosition();
-                play(newAudio: audio, newPosition: lastPosition);
+                if (audio.website != null) {
+                  startPlaylist(audios: {audio}, listName: audio.website!);
+                }
                 removeUpdate?.call();
               }
             },

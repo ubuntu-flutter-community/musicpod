@@ -84,7 +84,9 @@ class PlayerTrack extends StatelessWidget {
           children: [
             RepaintBoundary(
               child: SizedBox(
-                width: 40,
+                width: (position?.inHours != null && position!.inHours > 0)
+                    ? 60
+                    : 40,
                 height: 15,
                 child: Text(
                   formatTime(position ?? Duration.zero),
@@ -105,7 +107,9 @@ class PlayerTrack extends StatelessWidget {
           children: [
             RepaintBoundary(
               child: SizedBox(
-                width: 40,
+                width: (duration?.inHours != null && duration!.inHours > 0)
+                    ? 60
+                    : 40,
                 height: 15,
                 child: Text(
                   formatTime(duration ?? Duration.zero),

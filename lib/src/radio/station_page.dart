@@ -143,14 +143,18 @@ class StationPage extends StatelessWidget {
                     color: theme.isLight ? theme.dividerColor : kCardColorDark,
                     height: size,
                     width: size,
-                    onTap: () => startPlaylist(
-                      listName: station.toShortPath(),
-                      audios: {station},
-                    ),
-                    onPlay: () => startPlaylist(
-                      listName: station.toShortPath(),
-                      audios: {station},
-                    ),
+                    onTap: station.url == null
+                        ? null
+                        : () => startPlaylist(
+                              audios: {station},
+                              listName: station.url!,
+                            ),
+                    onPlay: station.url == null
+                        ? null
+                        : () => startPlaylist(
+                              audios: {station},
+                              listName: station.url!,
+                            ),
                     image: SizedBox(
                       height: size,
                       width: size,

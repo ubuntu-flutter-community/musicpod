@@ -27,7 +27,7 @@ class PodcastAudioTile extends StatelessWidget {
     required this.selected,
     required this.pause,
     required this.resume,
-    required this.play,
+    required this.startPlaylist,
     required this.lastPosition,
     this.isExpanded = false,
     this.removeUpdate,
@@ -42,7 +42,11 @@ class PodcastAudioTile extends StatelessWidget {
   final bool selected;
   final void Function() pause;
   final Future<void> Function() resume;
-  final Future<void> Function({Duration? newPosition, Audio? newAudio}) play;
+  final Future<void> Function({
+    required Set<Audio> audios,
+    required String listName,
+    int? index,
+  }) startPlaylist;
   final void Function()? removeUpdate;
   final void Function() safeLastPosition;
   final void Function()? addPodcast;
@@ -96,7 +100,7 @@ class PodcastAudioTile extends StatelessWidget {
                   pause: pause,
                   resume: resume,
                   safeLastPosition: safeLastPosition,
-                  play: play,
+                  startPlaylist: startPlaylist,
                   removeUpdate: removeUpdate,
                 ),
                 const SizedBox(
