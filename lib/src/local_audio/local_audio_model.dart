@@ -98,7 +98,12 @@ class LocalAudioModel extends SafeChangeNotifier {
         artistsResult.add(a);
       }
     }
-    return artistsResult;
+    final list = artistsResult.toList();
+    sortListByAudioFilter(
+      audioFilter: AudioFilter.artist,
+      audios: list,
+    );
+    return Set.from(list);
   }
 
   Set<Audio>? _allAlbums;
@@ -111,7 +116,12 @@ class LocalAudioModel extends SafeChangeNotifier {
         albumsResult.add(a);
       }
     }
-    return albumsResult;
+    final list = albumsResult.toList();
+    sortListByAudioFilter(
+      audioFilter: AudioFilter.album,
+      audios: list,
+    );
+    return Set.from(list);
   }
 
   AudioFilter _audioFilter = AudioFilter.title;
