@@ -273,7 +273,6 @@ class Audio {
         other.year == year &&
         other.genre == genre &&
         other.pictureMimeType == pictureMimeType &&
-        other.fileSize == fileSize &&
         other.albumArtUrl == albumArtUrl;
   }
 
