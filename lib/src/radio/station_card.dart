@@ -34,11 +34,11 @@ class StationCard extends StatelessWidget {
     return AudioCard(
       color: theme.isLight ? theme.dividerColor : kCardColorDark,
       bottom: AudioCardBottom(text: station?.title?.replaceAll('_', '') ?? ''),
-      onPlay: station == null
+      onPlay: station?.url == null
           ? null
           : () => startPlaylist(
                 audios: {station!},
-                listName: station!.toShortPath(),
+                listName: station!.url!,
               ),
       onTap: station == null ? null : () => onTap(context, station!),
       image: SizedBox.expand(

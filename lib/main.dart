@@ -40,7 +40,7 @@ Future<void> main(List<String> args) async {
   }
 
   final settingsService = SettingsService();
-  settingsService.init();
+  await settingsService.init();
   registerService<SettingsService>(
     () => settingsService,
     dispose: (s) async => await s.dispose(),

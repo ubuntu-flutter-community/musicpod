@@ -57,7 +57,7 @@ class DownloadModel extends SafeChangeNotifier {
     }
 
     final url = audio!.url!;
-    final path = p.join(downloadsDir, audio.toShortPath());
+    final path = p.join(downloadsDir, _createAudioDownloadId(audio));
     await _download(
       context: context,
       url: url,
@@ -76,6 +76,12 @@ class DownloadModel extends SafeChangeNotifier {
         _cancelToken = null;
       }
     });
+  }
+
+  String _createAudioDownloadId(Audio audio) {
+    final now = DateTime.now().toUtc().toString();
+    return '${audio.artist ?? ''}${audio.title ?? ''}${audio.durationMs ?? ''}${audio.year ?? ''})$now'
+        .replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
   }
 
   CancelToken? _cancelToken;

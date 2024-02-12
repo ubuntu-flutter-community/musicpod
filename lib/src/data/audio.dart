@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:metadata_god/metadata_god.dart';
 
 class Audio {
   /// The local path if available.
@@ -247,12 +249,6 @@ class Audio {
     return 'Audio(path: $path, url: $url,  audioType: $audioType, imageUrl: $imageUrl, description: $description, website: $website, title: $title, durationMs: $durationMs, artist: $artist, album: $album, albumArtist: $albumArtist, trackNumber: $trackNumber, trackTotal: $trackTotal, discNumber: $discNumber, discTotal: $discTotal, year: $year, genre: $genre, pictureMimeType: $pictureMimeType, pictureData: $pictureData, fileSize: $fileSize, albumArtUrl: $albumArtUrl)';
   }
 
-  String toShortPath() {
-    final now = DateTime.now().toUtc().toString();
-    return '${artist ?? ''}${title ?? ''}${durationMs ?? ''}${year ?? ''})$now'
-        .replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
-  }
-
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -310,4 +306,31 @@ enum AudioType {
   local,
   radio,
   podcast;
+}
+
+Audio createLocalAudio({
+  required String path,
+  required Metadata data,
+}) {
+  final fileName = File(path).uri.pathSegments.lastOrNull;
+  final albumName =
+      '${data.album}${data.discTotal != null && data.discNumber != null && data.discTotal! > 1 ? ' ${data.discNumber}' : ''}';
+
+  return Audio(
+    path: path,
+    audioType: AudioType.local,
+    artist: data.artist,
+    title: (data.title?.isNotEmpty == true ? data.title : fileName) ?? path,
+    album: data.album == null ? null : albumName,
+    albumArtist: data.artist,
+    discNumber: data.discNumber,
+    discTotal: data.discTotal,
+    durationMs: data.duration?.inMilliseconds.toDouble(),
+    fileSize: data.fileSize,
+    genre: data.genre,
+    pictureData: data.picture?.data,
+    pictureMimeType: data.picture?.mimeType,
+    trackNumber: data.trackNumber,
+    year: data.year,
+  );
 }

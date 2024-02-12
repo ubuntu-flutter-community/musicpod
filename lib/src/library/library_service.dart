@@ -17,14 +17,15 @@ class LibraryService {
   final _lastPositionsController = StreamController<bool>.broadcast();
   Stream<bool> get lastPositionsChanged => _lastPositionsController.stream;
   void addLastPosition(String url, Duration lastPosition) {
-    if (_lastPositions.containsKey(url) == true) {
-      _lastPositions.update(url, (value) => lastPosition);
-    } else {
-      _lastPositions.putIfAbsent(url, () => lastPosition);
-    }
-
     writeSetting(url, lastPosition.toString(), kLastPositionsFileName)
-        .then((_) => _lastPositionsController.add(true));
+        .then((_) {
+      if (_lastPositions.containsKey(url) == true) {
+        _lastPositions.update(url, (value) => lastPosition);
+      } else {
+        _lastPositions.putIfAbsent(url, () => lastPosition);
+      }
+      _lastPositionsController.add(true);
+    });
   }
 
   Duration? getLastPosition(String? url) => _lastPositions[url];
@@ -379,6 +380,26 @@ class LibraryService {
 
   Future<void> _initLibrary() async {
     if (_libraryInitialized) return;
+    final appIndexOrNull = await readSetting(kAppIndex, kAppStateFileName);
+    _appIndex = appIndexOrNull == null ? 0 : int.parse(appIndexOrNull);
+
+    final localAudioIndexStringOrNull =
+        await readSetting(kLocalAudioIndex, kAppStateFileName);
+    if (localAudioIndexStringOrNull != null) {
+      final localParse = int.tryParse(localAudioIndexStringOrNull);
+      if (localParse != null) {
+        _localAudioIndex = localParse;
+      }
+    }
+
+    final radioIndexStringOrNull =
+        await readSetting(kRadioIndex, kAppStateFileName);
+    if (radioIndexStringOrNull != null) {
+      final radioParse = int.tryParse(radioIndexStringOrNull);
+      if (radioParse != null) {
+        _radioIndex = radioParse;
+      }
+    }
 
     _playlists = await readAudioMap(kPlaylistsFileName);
     _pinnedAlbums = await readAudioMap(kPinnedAlbumsFileName);

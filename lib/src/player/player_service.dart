@@ -378,7 +378,7 @@ class PlayerService {
       );
     }
 
-    _position = libraryService.getLastPosition.call(_audio?.url);
+    _position = libraryService.getLastPosition(_audio?.url);
     _estimateNext();
     await play(newPosition: _position);
   }

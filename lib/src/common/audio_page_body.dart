@@ -111,7 +111,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     final startPlaylist = playerModel.startPlaylist;
 
     final currentAudio = context.select((PlayerModel m) => m.audio);
-    final play = playerModel.play;
     final pause = playerModel.pause;
     final resume = playerModel.resume;
     final insertIntoQueue = playerModel.insertIntoQueue;
@@ -239,7 +238,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                         selected: audioSelected,
                         pause: pause,
                         resume: resume,
-                        play: play,
+                        startPlaylist: startPlaylist,
                         lastPosition: libraryModel.getLastPosition(audio.url),
                         safeLastPosition: playerModel.safeLastPosition,
                         isOnline: isOnline,

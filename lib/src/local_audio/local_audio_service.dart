@@ -77,11 +77,7 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
       try {
         final metadata = await MetadataGod.readMetadata(file: e.path);
 
-        final audio = createLocalAudio(
-          path: e.path,
-          tag: metadata,
-          fileName: File(e.path).uri.pathSegments.lastOrNull,
-        );
+        final audio = createLocalAudio(path: e.path, data: metadata);
 
         newAudios.add(audio);
       } catch (error) {
