@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:metadata_god/metadata_god.dart';
+import '../../../string_x.dart';
+import 'genres.dart';
 
 class Audio {
   /// The local path if available.
@@ -277,6 +279,11 @@ Audio createLocalAudio({
   final fileName = File(path).uri.pathSegments.lastOrNull;
   final albumName =
       '${data.album}${data.discTotal != null && data.discNumber != null && data.discTotal! > 1 ? ' ${data.discNumber}' : ''}';
+  final genre =
+      data.genre?.startsWith('(') == true && data.genre?.endsWith(')') == true
+          ? tagGenres[data.genre?.replaceAll('(', '').replaceAll(')', '')]
+              ?.capitalizeEveryWord()
+          : data.genre;
 
   return Audio(
     path: path,
@@ -289,7 +296,7 @@ Audio createLocalAudio({
     discTotal: data.discTotal,
     durationMs: data.duration?.inMilliseconds.toDouble(),
     fileSize: data.fileSize,
-    genre: data.genre,
+    genre: genre,
     pictureData: data.picture?.data,
     pictureMimeType: data.picture?.mimeType,
     trackNumber: data.trackNumber,
