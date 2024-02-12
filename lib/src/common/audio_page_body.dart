@@ -248,7 +248,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                     }
 
                     final likeButton = LikeButton(
-                      key: ObjectKey(audio),
                       libraryModel: libraryModel,
                       playlistId: widget.pageId,
                       audio: audio,
@@ -281,7 +280,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                                 index: index,
                               ),
                       resume: resume,
-                      key: ValueKey(audio),
                       selected: audioSelected,
                       audio: audio,
                       likeIcon: likeButton,
