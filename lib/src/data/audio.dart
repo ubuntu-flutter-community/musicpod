@@ -14,58 +14,58 @@ class Audio {
   /// The [AudioType]
   final AudioType? audioType;
 
-  /// The url of the image if available.
+  /// The url of the image if remote.
   final String? imageUrl;
 
-  /// Optional description of the audio.
+  /// The description of the audio file or stream.
   final String? description;
 
-  /// Website link or feed url.
+  /// Website link or feed url in case of podcasts.
   final String? website;
 
-  /// The ID3-Tag title of the audio file.
+  /// The title of the audio file or stream.
   final String? title;
 
-  /// The ID3-Tag duration of the audio file. It can be null if was not set
+  /// The duration of the audio file or stream. It can be null if was not set
   final double? durationMs;
 
-  /// The ID3-Tag artist(s) of the audio file.
+  /// The artist(s) of the audio file or stream.
   final String? artist;
 
-  /// The ID3-Tag album of the audio file.
+  /// The album of the audio file or stream.
   final String? album;
 
-  /// The ID3-Tag album artist(s) of the audio file.
+  /// The album artist(s) of the audio file or stream.
   final String? albumArtist;
 
-  /// The ID3-Tag track number of the audio file.
+  /// The track number of the audio file or stream.
   final int? trackNumber;
 
-  /// The ID3-Tag track total of the audio file.
+  /// The track total of the audio file or stream.
   final int? trackTotal;
 
-  /// The ID3-Tag discNumber of the audio file.
+  /// The discNumber of the audio file or stream.
   final int? discNumber;
 
-  /// The ID3-Tag discTotal of the audio file.
+  /// The discTotal of the audio file or stream.
   final int? discTotal;
 
-  /// The ID3-Tag year the track was released
+  /// The date the audio was released.
   final int? year;
 
-  /// The ID3-Tag genre of the track
+  /// The genre of the audio file or stream.
   final String? genre;
 
-  /// The ID3-Tag picture's MIME type.
+  /// The picture's MIME type. Only for local audio.
   final String? pictureMimeType;
 
-  /// The ID3-Tag image data.
+  /// The image data. Only for local audio.
   final Uint8List? pictureData;
 
-  /// The ID3-Tag file size of the audio file
+  /// The file size of the audio file.
   final int? fileSize;
 
-  /// Optional art that belongs to parent element
+  /// Optional art that can belong to a parent element.
   final String? albumArtUrl;
 
   const Audio({
@@ -254,50 +254,13 @@ class Audio {
     if (identical(this, other)) return true;
 
     return other is Audio &&
-        (other.path == path ||
-            (other.url == url && other.path != null) ||
-            other.url == url) &&
-        other.audioType == audioType &&
-        other.imageUrl == imageUrl &&
-        other.description == description &&
-        other.website == website &&
-        other.title == title &&
-        other.durationMs == durationMs &&
-        other.artist == artist &&
-        other.album == album &&
-        other.albumArtist == albumArtist &&
-        other.trackNumber == trackNumber &&
-        other.trackTotal == trackTotal &&
-        other.discNumber == discNumber &&
-        other.discTotal == discTotal &&
-        other.year == year &&
-        other.genre == genre &&
-        other.pictureMimeType == pictureMimeType &&
-        other.albumArtUrl == albumArtUrl;
+        ((other.url != null && other.url == url) ||
+            (other.path != null && other.path == path));
   }
 
   @override
   int get hashCode {
-    return path.hashCode ^
-        url.hashCode ^
-        audioType.hashCode ^
-        imageUrl.hashCode ^
-        description.hashCode ^
-        website.hashCode ^
-        title.hashCode ^
-        durationMs.hashCode ^
-        artist.hashCode ^
-        album.hashCode ^
-        albumArtist.hashCode ^
-        trackNumber.hashCode ^
-        trackTotal.hashCode ^
-        discNumber.hashCode ^
-        discTotal.hashCode ^
-        year.hashCode ^
-        genre.hashCode ^
-        pictureMimeType.hashCode ^
-        fileSize.hashCode ^
-        albumArtUrl.hashCode;
+    return path.hashCode ^ url.hashCode;
   }
 }
 
