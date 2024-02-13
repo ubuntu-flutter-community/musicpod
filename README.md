@@ -1,13 +1,16 @@
 # Musicpod
 
-Music, Radio, Television and Podcast player for ***Ubuntu*** made with Flutter.
+Music, Radio, Television and Podcast player for Linux Desktop, MacOS, Windows and Android made with Flutter.
 
-Windows, MacOs, Android and other Linux Distributions support are WIP.
-
-INSTALL FOR UBUNTU:
+Install for Linux Desktop:
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/musicpod)
 
+Install For MacOS & Windows:
+
+[Release Page](https://github.com/ubuntu-flutter-community/musicpod/releases)
+
+Android release is WIP!
 
 
 |Dark | Light|
@@ -65,9 +68,11 @@ Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https
   - [ ] Flatpak ([WIP](https://github.com/ubuntu-flutter-community/musicpod/issues/10))
 - [X] Windows Support
   - [ ] Windows Store
+  - [ ] [Exe](https://github.com/ubuntu-flutter-community/musicpod/releases)
 - [X] Android Support (Media Controls are WIP)
   - [ ] PlayStore
 - [X] MacOs Support
   - [ ] Apple?Store?
+  - [ ] [DMG](https://github.com/ubuntu-flutter-community/musicpod/releases)
 - [ ] iOS Support
   - [ ] AppStore
