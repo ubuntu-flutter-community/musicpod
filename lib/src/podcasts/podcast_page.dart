@@ -80,7 +80,7 @@ class PodcastPage extends StatelessWidget {
                 color: theme.hintColor,
               ),
               url: imageUrl,
-              fit: BoxFit.fitWidth,
+              fit: BoxFit.fitHeight,
               filterQuality: FilterQuality.medium,
             ),
       headerLabel: genre ?? context.l10n.podcast,

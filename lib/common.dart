@@ -13,7 +13,7 @@ export 'src/common/copy_clipboard_content.dart';
 export 'src/common/country_auto_complete.dart';
 export 'src/common/country_popup.dart';
 export 'src/common/icons.dart';
-export 'src/common/image_grid.dart';
+export 'src/common/four_images_grid.dart';
 export 'src/common/like_button.dart';
 export 'src/common/limit_popup.dart';
 export 'src/common/loading_grid.dart';

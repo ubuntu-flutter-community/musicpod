@@ -25,9 +25,8 @@ class AlbumPage extends StatelessWidget {
   ) {
     Widget? albumArt;
     if (picture != null) {
-      albumArt = SizedBox(
-        width: sideBarImageSize,
-        height: sideBarImageSize,
+      albumArt = SizedBox.square(
+        dimension: sideBarImageSize,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(5),
           child: Image.memory(
@@ -56,9 +55,7 @@ class AlbumPage extends StatelessWidget {
     final image = album?.firstOrNull?.pictureData != null
         ? Image.memory(
             album!.firstOrNull!.pictureData!,
-            width: 200.0,
-            height: 200.0,
-            fit: BoxFit.cover,
+            fit: BoxFit.fitHeight,
             filterQuality: FilterQuality.medium,
           )
         : null;

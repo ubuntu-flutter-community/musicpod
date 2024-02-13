@@ -27,7 +27,9 @@ const kSnackBarWidth = 500.0;
 
 const fullHeightPlayerImageSize = 300.0;
 
-const kAudioPageHeaderHeight = 240.0;
+const kMaxAudioPageHeaderHeight = 200.0;
+
+const kMinAudioPageHeaderHeight = 0.0;
 
 const kSnackBarDuration = Duration(seconds: 10);
 

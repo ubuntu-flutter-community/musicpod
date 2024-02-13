@@ -70,19 +70,33 @@ class ArtistPage extends StatelessWidget {
 }
 
 class ArtistImage extends StatelessWidget {
-  const ArtistImage({super.key, this.images});
+  const ArtistImage({
+    super.key,
+    this.images,
+  });
 
   final Set<Uint8List>? images;
 
   @override
   Widget build(BuildContext context) {
+    if (images?.length == 1) {
+      return Image.memory(
+        images!.first,
+        fit: BoxFit.fitHeight,
+        filterQuality: FilterQuality.medium,
+      );
+    }
+
     if (images?.isNotEmpty == true) {
       if (images!.length >= 4) {
-        return ImageGrid(images: images);
+        return FourImagesGrid(
+          images: images!,
+        );
       } else if (images!.length >= 2) {
         return Container(
           decoration: BoxDecoration(
             image: DecorationImage(
+              fit: BoxFit.fitHeight,
               image: MemoryImage(images!.first),
             ),
           ),
@@ -90,21 +104,14 @@ class ArtistImage extends StatelessWidget {
             position: YaruDiagonalClip.bottomLeft,
             child: Image.memory(
               images!.elementAt(1),
-              fit: BoxFit.fitWidth,
+              fit: BoxFit.fitHeight,
               filterQuality: FilterQuality.medium,
             ),
           ),
         );
-      } else {
-        return Image.memory(
-          images!.first,
-          width: 200.0,
-          fit: BoxFit.fitWidth,
-          filterQuality: FilterQuality.medium,
-        );
       }
-    } else {
-      return const SizedBox.shrink();
     }
+
+    return const SizedBox.shrink();
   }
 }
