@@ -10,6 +10,7 @@ import '../../data.dart';
 import '../../globals.dart';
 import '../../library.dart';
 import '../../player.dart';
+import '../../radio.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
 import 'radio_fall_back_icon.dart';
@@ -23,12 +24,14 @@ class StationPage extends StatelessWidget {
     required this.name,
     required this.unStarStation,
     required this.starStation,
+    this.countryCode,
   });
 
   final Audio station;
   final String name;
   final void Function(String station) unStarStation;
   final void Function(String station) starStation;
+  final String? countryCode;
 
   static Widget createIcon({
     required BuildContext context,
@@ -71,6 +74,7 @@ class StationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    final radioModel = context.read<RadioModel>();
     final tags = station.album?.isNotEmpty == false
         ? null
         : <String>[
@@ -199,16 +203,23 @@ class StationPage extends StatelessWidget {
                               labels: tags!.map((e) => Text(e)).toList(),
                               isSelected: tags.map((e) => false).toList(),
                               onSelected: (index) {
-                                navigatorKey.currentState?.push(
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return RadioSearchPage(
-                                        radioSearch: RadioSearch.tag,
-                                        searchQuery: tags[index],
-                                      );
-                                    },
-                                  ),
-                                );
+                                radioModel
+                                    .init(
+                                      countryCode: countryCode,
+                                      index: libraryModel.radioindex,
+                                    )
+                                    .then(
+                                      (_) => navigatorKey.currentState?.push(
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return RadioSearchPage(
+                                              radioSearch: RadioSearch.tag,
+                                              searchQuery: tags[index],
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    );
                               },
                             )
                           : SizedBox(
