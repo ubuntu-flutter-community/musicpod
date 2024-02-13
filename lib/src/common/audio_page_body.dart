@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
@@ -75,7 +76,7 @@ class AudioPageBody extends StatefulWidget {
 
 class _AudioPageBodyState extends State<AudioPageBody> {
   late ScrollController _controller;
-  double _headerHeight = kAudioPageHeaderHeight;
+  double _headerHeight = kMaxAudioPageHeaderHeight;
 
   @override
   void initState() {
@@ -85,13 +86,13 @@ class _AudioPageBodyState extends State<AudioPageBody> {
 
   void _listener() {
     if (_controller.position.userScrollDirection == ScrollDirection.reverse) {
-      if (_headerHeight != 0) {
-        setState(() => _headerHeight = 0);
+      if (_headerHeight != kMinAudioPageHeaderHeight) {
+        setState(() => _headerHeight = kMinAudioPageHeaderHeight);
       }
     }
     if (_controller.position.userScrollDirection == ScrollDirection.forward) {
-      if (_headerHeight == 0) {
-        setState(() => _headerHeight = kAudioPageHeaderHeight);
+      if (_headerHeight == kMinAudioPageHeaderHeight) {
+        setState(() => _headerHeight = kMaxAudioPageHeaderHeight);
       }
     }
   }
@@ -126,10 +127,10 @@ class _AudioPageBodyState extends State<AudioPageBody> {
 
     final audioControlPanel = Padding(
       padding: const EdgeInsets.only(
-        top: 10,
-        left: 20,
-        right: 20,
-        bottom: 15,
+        top: kYaruPagePadding / 2,
+        left: kYaruPagePadding,
+        right: kYaruPagePadding,
+        bottom: kYaruPagePadding / 2,
       ),
       child: AudioPageControlPanel(
         title: widget.controlPanelTitle,
@@ -289,7 +290,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
               ),
             ],
           ),
-          if (_headerHeight == 0)
+          if (_headerHeight == kMinAudioPageHeaderHeight)
             Positioned(
               bottom: 20,
               right: 20,
@@ -301,7 +302,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
                     duration: const Duration(milliseconds: 100),
                     curve: Curves.easeInOut,
                   );
-                  setState(() => _headerHeight = kAudioPageHeaderHeight);
+                  setState(() => _headerHeight = kMaxAudioPageHeaderHeight);
                 },
               ),
             ),

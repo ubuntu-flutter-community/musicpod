@@ -44,7 +44,7 @@ class FullHeightPlayerImage extends StatelessWidget {
         audio!.pictureData!,
         height: height ?? fullHeightPlayerImageSize,
         width: width ?? fullHeightPlayerImageSize,
-        fit: fit ?? BoxFit.fitWidth,
+        fit: fit ?? BoxFit.fitHeight,
       );
     } else {
       if (!isOnline) {
