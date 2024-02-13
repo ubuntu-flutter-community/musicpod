@@ -138,6 +138,7 @@ List<MasterItem> createMasterItems({
         pageId: station.key,
         pageBuilder: (context) => isOnline
             ? StationPage(
+                countryCode: countryCode,
                 starStation: (station) {},
                 unStarStation: libraryModel.unStarStation,
                 name: station.value.first.title ?? station.key,
