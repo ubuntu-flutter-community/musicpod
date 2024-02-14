@@ -230,12 +230,14 @@ class SearchingBar extends StatelessWidget {
     this.onClear,
     this.onSubmitted,
     this.onChanged,
+    this.hintText,
   });
 
   final String? text;
   final void Function()? onClear;
   final void Function(String?)? onSubmitted;
   final void Function(String)? onChanged;
+  final String? hintText;
 
   @override
   Widget build(BuildContext context) {
@@ -252,6 +254,7 @@ class SearchingBar extends StatelessWidget {
 
     return yaruStyled
         ? YaruSearchField(
+            hintText: hintText,
             clearIcon: yaruStyled ? null : Icon(Iconz().clear),
             key: key,
             text: text,
@@ -260,6 +263,7 @@ class SearchingBar extends StatelessWidget {
             onChanged: onChanged2,
           )
         : MaterialSearchBar(
+            hintText: hintText,
             text: text,
             key: key,
             onSubmitted: onSubmitted2,
@@ -276,11 +280,13 @@ class MaterialSearchBar extends StatefulWidget {
     this.onClear,
     this.onSubmitted,
     this.onChanged,
+    this.hintText,
   });
   final String? text;
   final void Function()? onClear;
   final void Function(String?)? onSubmitted;
   final void Function(String)? onChanged;
+  final String? hintText;
 
   @override
   State<MaterialSearchBar> createState() => _NormalSearchBarState();
@@ -318,6 +324,7 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
         onSubmitted: widget.onSubmitted,
         onChanged: widget.onChanged,
         decoration: InputDecoration(
+          hintText: widget.hintText,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
           contentPadding:
               const EdgeInsets.only(top: 10, bottom: 8, left: 15, right: 15),

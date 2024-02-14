@@ -115,6 +115,7 @@ class LocalAudioSearchPage extends StatelessWidget {
         title: SizedBox(
           width: kSearchBarWidth,
           child: SearchingBar(
+            hintText: '${context.l10n.search}: ${context.l10n.localAudio}',
             text: searchQuery,
             onChanged: (value) {
               search(text: value);
