@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../constants.dart';
 import '../../globals.dart' hide isMobile;
@@ -228,30 +230,45 @@ class SearchingBar extends StatelessWidget {
     this.onClear,
     this.onSubmitted,
     this.onChanged,
+    this.hintText,
   });
 
   final String? text;
   final void Function()? onClear;
   final void Function(String?)? onSubmitted;
   final void Function(String)? onChanged;
+  final String? hintText;
 
   @override
   Widget build(BuildContext context) {
+    final appModel = context.read<AppModel>();
+    void onChanged2(v) {
+      appModel.setLockSpace(true);
+      onChanged?.call(v);
+    }
+
+    void onSubmitted2(v) {
+      appModel.setLockSpace(false);
+      onSubmitted?.call(v);
+    }
+
     return yaruStyled
         ? YaruSearchField(
+            hintText: hintText,
             clearIcon: yaruStyled ? null : Icon(Iconz().clear),
             key: key,
             text: text,
             onClear: onClear,
-            onSubmitted: onSubmitted,
-            onChanged: onChanged,
+            onSubmitted: onSubmitted2,
+            onChanged: onChanged2,
           )
         : MaterialSearchBar(
+            hintText: hintText,
             text: text,
             key: key,
-            onSubmitted: onSubmitted,
+            onSubmitted: onSubmitted2,
             onClear: onClear,
-            onChanged: onChanged,
+            onChanged: onChanged2,
           );
   }
 }
@@ -263,11 +280,13 @@ class MaterialSearchBar extends StatefulWidget {
     this.onClear,
     this.onSubmitted,
     this.onChanged,
+    this.hintText,
   });
   final String? text;
   final void Function()? onClear;
   final void Function(String?)? onSubmitted;
   final void Function(String)? onChanged;
+  final String? hintText;
 
   @override
   State<MaterialSearchBar> createState() => _NormalSearchBarState();
@@ -305,6 +324,7 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
         onSubmitted: widget.onSubmitted,
         onChanged: widget.onChanged,
         decoration: InputDecoration(
+          hintText: widget.hintText,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
           contentPadding:
               const EdgeInsets.only(top: 10, bottom: 8, left: 15, right: 15),

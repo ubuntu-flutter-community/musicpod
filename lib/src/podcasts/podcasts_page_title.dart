@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
+import '../../l10n.dart';
 
 class PodcastsPageTitle extends StatelessWidget {
   const PodcastsPageTitle({
@@ -22,6 +23,7 @@ class PodcastsPageTitle extends StatelessWidget {
         return SizedBox(
           width: kSearchBarWidth,
           child: SearchingBar(
+            hintText: '${context.l10n.search}: ${context.l10n.podcasts}',
             key: ValueKey(searchQuery),
             text: searchQuery,
             onClear: () {

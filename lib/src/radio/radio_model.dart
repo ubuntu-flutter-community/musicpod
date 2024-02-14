@@ -90,6 +90,7 @@ class RadioModel extends SafeChangeNotifier {
     required int index,
   }) async {
     _connectedHost ??= await _radioService.init();
+    await _radioService.loadTags();
 
     final lastCountryCode = (await readSetting(kLastCountryCode)) as String?;
     final lastFav = (await readSetting(kLastFav)) as String?;

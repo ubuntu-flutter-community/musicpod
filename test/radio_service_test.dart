@@ -15,7 +15,9 @@ Future<void> main() async {
   });
 
   test('loadTags', () async {
-    expect(service.tags?.any((e) => e.name == 'metal'), true);
+    final response = await service.loadTags();
+    expect(response?.statusCode, 200);
+    expect(response?.items.any((e) => e.name == 'metal'), true);
   });
 
   test('find6forty', () async {

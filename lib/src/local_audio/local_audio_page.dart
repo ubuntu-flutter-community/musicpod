@@ -59,6 +59,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   Widget build(BuildContext context) {
     final showWindowControls =
         context.select((AppModel a) => a.showWindowControls);
+    final appModel = context.read<AppModel>();
 
     final model = context.read<LocalAudioModel>();
     final audios = context.select((LocalAudioModel m) => m.audios);
@@ -99,7 +100,10 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             padding: appBarActionSpacing,
             child: SearchButton(
               active: false,
-              onPressed: () => search(text: ''),
+              onPressed: () {
+                appModel.setLockSpace(true);
+                search(text: '');
+              },
             ),
           ),
         ),

@@ -219,4 +219,12 @@ class LocalAudioModel extends SafeChangeNotifier {
     await _audiosChangedSub?.cancel();
     super.dispose();
   }
+
+  bool _manualFilter = false;
+  bool get manualFilter => _manualFilter;
+  void setManualFilter(bool value) {
+    if (value == _manualFilter) return;
+    _manualFilter = value;
+    notifyListeners();
+  }
 }

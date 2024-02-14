@@ -7,6 +7,7 @@ import '../../app.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../globals.dart';
+import '../../l10n.dart';
 import '../../radio.dart';
 import '../library/library_model.dart';
 import 'radio_control_panel.dart';
@@ -89,6 +90,7 @@ class RadioDiscoverPage extends StatelessWidget {
           ],
         ),
       _ => SearchingBar(
+          hintText: '${context.l10n.search}: ${context.l10n.radio}',
           text: searchQuery,
           onClear: () => model.setSearchQuery(query: null),
           onSubmitted: (v) => model.setSearchQuery(query: v),
