@@ -48,6 +48,17 @@ class PlayerModel extends SafeChangeNotifier {
   Duration? get position => service.position;
   void setPosition(Duration? value) => service.setPosition(value);
 
+  Future<void> seekInSeconds(int seconds) async {
+    if (position != null && position!.inSeconds + seconds >= 0) {
+      setPosition(
+        Duration(
+          seconds: position!.inSeconds + seconds,
+        ),
+      );
+      await seek();
+    }
+  }
+
   bool get repeatSingle => service.repeatSingle;
   void setRepeatSingle(bool value) => service.setRepeatSingle(value);
 

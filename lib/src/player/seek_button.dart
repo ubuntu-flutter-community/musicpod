@@ -18,27 +18,13 @@ class SeekButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final playerModel = context.read<PlayerModel>();
-    final position = context.select((PlayerModel m) => m.position);
-    final setPosition = playerModel.setPosition;
-    final duration = context.select((PlayerModel m) => m.duration);
-    final seek = playerModel.seek;
+
     final icon = Icon(
       forward ? Iconz().forward30 : Iconz().backward10,
     );
     return IconButton(
       onPressed: () async {
-        if (position == null ||
-            duration == null ||
-            (forward
-                ? (position.inSeconds + 30 > duration.inSeconds)
-                : (position.inSeconds - 10 < 0))) return;
-        setPosition(
-          Duration(
-            seconds:
-                forward ? position.inSeconds + 30 : position.inSeconds - 10,
-          ),
-        );
-        await seek();
+        playerModel.seekInSeconds(forward ? 30 : -10);
       },
       icon: yaruStyled
           ? Stack(

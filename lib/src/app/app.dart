@@ -136,18 +136,14 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     final playerToTheRight = context.m.size.width > kSideBarThreshHold;
 
     // AppModel
+    final appModel = context.read<AppModel>();
     final isFullScreen = context.select((AppModel m) => m.fullScreen);
 
     final playerModel = context.read<PlayerModel>();
 
     return KeyboardListener(
       focusNode: FocusNode(),
-      onKeyEvent: (value) {
-        if (value.runtimeType == KeyDownEvent &&
-            value.logicalKey == LogicalKeyboardKey.space) {
-          playerModel.playOrPause();
-        }
-      },
+      onKeyEvent: (value) async => _onKeyEvent(value, appModel, playerModel),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -186,5 +182,20 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         ],
       ),
     );
+  }
+
+  Future<void> _onKeyEvent(
+    KeyEvent value,
+    AppModel appModel,
+    PlayerModel playerModel,
+  ) async {
+    {
+      if (value.runtimeType == KeyDownEvent &&
+          value.logicalKey == LogicalKeyboardKey.space) {
+        if (!appModel.lockSpace) {
+          playerModel.playOrPause();
+        }
+      }
+    }
   }
 }

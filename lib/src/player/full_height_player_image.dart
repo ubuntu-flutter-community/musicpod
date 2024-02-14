@@ -5,6 +5,7 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../player.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
 
@@ -23,7 +24,7 @@ class FullHeightPlayerImage extends StatelessWidget {
   final bool isOnline;
   final BoxFit? fit;
   final double? height, width;
-  final BorderRadiusGeometry? borderRadius;
+  final BorderRadius? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -108,12 +109,27 @@ class FullHeightPlayerImage extends StatelessWidget {
       }
     }
 
-    return SizedBox(
-      height: height ?? fullHeightPlayerImageSize,
-      width: width ?? fullHeightPlayerImageSize,
-      child: ClipRRect(
-        borderRadius: borderRadius ?? BorderRadius.circular(10),
-        child: image,
+    final radius = borderRadius ?? BorderRadius.circular(10);
+    return Tooltip(
+      message:
+          '${audio?.audioType == AudioType.radio ? audio?.title : audio?.album ?? ''}',
+      child: InkWell(
+        borderRadius: radius,
+        onTap: () {
+          if (audio?.audioType == AudioType.local) {
+            onTitleTap(audio: audio, text: '', context: context);
+          } else {
+            onArtistTap(audio: audio, artist: null, context: context);
+          }
+        },
+        child: SizedBox(
+          height: height ?? fullHeightPlayerImageSize,
+          width: width ?? fullHeightPlayerImageSize,
+          child: ClipRRect(
+            borderRadius: radius,
+            child: image,
+          ),
+        ),
       ),
     );
   }

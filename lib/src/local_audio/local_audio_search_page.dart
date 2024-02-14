@@ -25,6 +25,7 @@ class LocalAudioSearchPage extends StatelessWidget {
         context.select((AppModel m) => m.showWindowControls);
 
     final model = context.read<LocalAudioModel>();
+    final appModel = context.read<AppModel>();
     final titlesResult =
         context.select((LocalAudioModel m) => m.titlesSearchResult);
     final artistsResult =
@@ -34,12 +35,26 @@ class LocalAudioSearchPage extends StatelessWidget {
     final searchQuery = context.select((LocalAudioModel m) => m.searchQuery);
     final index = context.select((LibraryModel m) => m.localAudioindex) ?? 0;
     final localAudioView = LocalAudioView.values[index];
+    final manualFilter = context.select((LocalAudioModel m) => m.manualFilter);
 
     void search({required String? text}) {
       if (text != null) {
         model.search(text);
       } else {
         navigatorKey.currentState?.maybePop();
+      }
+    }
+
+    var view = localAudioView;
+    if (!manualFilter) {
+      if (titlesResult?.isNotEmpty == true &&
+          (artistsResult == null || artistsResult.isEmpty) &&
+          (albumsResult == null || albumsResult.isEmpty)) {
+        view = LocalAudioView.titles;
+      } else if (artistsResult?.isNotEmpty == true) {
+        view = LocalAudioView.artists;
+      } else if (albumsResult?.isNotEmpty == true) {
+        view = LocalAudioView.albums;
       }
     }
 
@@ -65,7 +80,7 @@ class LocalAudioSearchPage extends StatelessWidget {
             noResultMessage: Text(
               nothing ? context.l10n.noLocalSearchFound : context.l10n.search,
             ),
-            localAudioView: localAudioView,
+            localAudioView: view,
             titles: titlesResult,
             artists: artistsResult,
             albums: albumsResult,
@@ -89,7 +104,10 @@ class LocalAudioSearchPage extends StatelessWidget {
               padding: appBarActionSpacing,
               child: SearchButton(
                 active: true,
-                onPressed: () => search(text: null),
+                onPressed: () {
+                  search(text: null);
+                  appModel.setLockSpace(false);
+                },
               ),
             ),
           ),
@@ -98,7 +116,10 @@ class LocalAudioSearchPage extends StatelessWidget {
           width: kSearchBarWidth,
           child: SearchingBar(
             text: searchQuery,
-            onChanged: (value) => search(text: value),
+            onChanged: (value) {
+              search(text: value);
+              model.setManualFilter(false);
+            },
             onClear: () => search(text: ''),
           ),
         ),

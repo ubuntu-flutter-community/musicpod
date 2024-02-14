@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../constants.dart';
 import '../../globals.dart' hide isMobile;
@@ -237,21 +239,32 @@ class SearchingBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appModel = context.read<AppModel>();
+    void onChanged2(v) {
+      appModel.setLockSpace(true);
+      onChanged?.call(v);
+    }
+
+    void onSubmitted2(v) {
+      appModel.setLockSpace(false);
+      onSubmitted?.call(v);
+    }
+
     return yaruStyled
         ? YaruSearchField(
             clearIcon: yaruStyled ? null : Icon(Iconz().clear),
             key: key,
             text: text,
             onClear: onClear,
-            onSubmitted: onSubmitted,
-            onChanged: onChanged,
+            onSubmitted: onSubmitted2,
+            onChanged: onChanged2,
           )
         : MaterialSearchBar(
             text: text,
             key: key,
-            onSubmitted: onSubmitted,
+            onSubmitted: onSubmitted2,
             onClear: onClear,
-            onChanged: onChanged,
+            onChanged: onChanged2,
           );
   }
 }

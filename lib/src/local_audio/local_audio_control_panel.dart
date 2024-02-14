@@ -4,6 +4,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
 import '../../library.dart';
+import '../../local_audio.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
 import 'local_audio_view.dart';
@@ -22,7 +23,23 @@ class LocalAudioControlPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.t;
     final libraryModel = context.read<LibraryModel>();
+    final localAudioModel = context.read<LocalAudioModel>();
     final index = context.select((LibraryModel m) => m.localAudioindex) ?? 0;
+    final manualFilter = context.select((LocalAudioModel m) => m.manualFilter);
+
+    var i = index;
+    if (!manualFilter) {
+      if (titlesCount != null &&
+          titlesCount! > 0 &&
+          (artistCount == null || artistCount == 0) &&
+          (albumCount == null || albumCount == 0)) {
+        i = LocalAudioView.titles.index;
+      } else if (artistCount != null && artistCount! > 0) {
+        i = LocalAudioView.artists.index;
+      } else if (albumCount != null && albumCount! > 0) {
+        i = LocalAudioView.albums.index;
+      }
+    }
 
     return Row(
       children: [
@@ -50,9 +67,12 @@ class LocalAudioControlPanel extends StatelessWidget {
             };
           }).toList(),
           isSelected: LocalAudioView.values
-              .map((e) => e == LocalAudioView.values[index])
+              .map((e) => e == LocalAudioView.values[i])
               .toList(),
-          onSelected: libraryModel.setLocalAudioindex,
+          onSelected: (index) {
+            localAudioModel.setManualFilter(true);
+            libraryModel.setLocalAudioindex(index);
+          },
         ),
       ],
     );

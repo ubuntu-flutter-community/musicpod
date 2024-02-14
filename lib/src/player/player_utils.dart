@@ -10,6 +10,7 @@ import '../../globals.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
 import '../../podcasts.dart';
+import '../../radio.dart';
 import '../../utils.dart';
 import '../app/app_model.dart';
 
@@ -123,20 +124,18 @@ Future<void> onArtistTap({
     context.read<AppModel>().setFullScreen(false);
   }
   if (audio!.audioType == AudioType.radio && audio.url?.isNotEmpty == true) {
-    Clipboard.setData(ClipboardData(text: audio.url!));
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        width: snackBarWidth,
-        duration: kSnackBarDuration,
-        content: CopyClipboardContent(
-          text: audio.url!,
-          onSearch: () {
-            if (audio.url != null) {
-              launchUrl(Uri.parse(audio.url!));
-            }
-          },
-        ),
+    final libModel = context.read<LibraryModel>();
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (context) {
+          return StationPage(
+            station: audio,
+            name: audio.title ?? '',
+            unStarStation: libModel.unStarStation,
+            starStation: (station) =>
+                libModel.addStarredStation(audio.url!, {audio}),
+          );
+        },
       ),
     );
   } else if (audio.audioType == AudioType.podcast &&
