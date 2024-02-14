@@ -316,9 +316,9 @@ String? generateAlbumId(Audio audio) {
 /// TODO: either guarantee that downloads are saved with the correct extension or manage to detect files without file extensions via magic bytes
 bool isValidFile(String path) {
   final mime = lookupMimeType(path);
-  return (path.endsWith('.mp3') ||
-      path.endsWith('.flac') ||
-      path.endsWith('.mp4') ||
-      mime?.startsWith('audio') == true ||
-      mime?.startsWith('video') == true);
+  return mime?.startsWith('audio') == true ||
+      mime?.startsWith('video') == true ||
+      _validExtensions.any((e) => path.endsWith(e));
 }
+
+const _validExtensions = ['.mp3', '.flac', '.mp4', '.opus'];
