@@ -88,10 +88,11 @@ Future<void> main(List<String> args) async {
     () => connectivity,
   );
 
+  final externalPathService = ExternalPathService(
+    Platform.isLinux ? GtkApplicationNotifier(args) : null,
+  );
   registerService<ExternalPathService>(
-    () => ExternalPathService(
-      Platform.isLinux ? GtkApplicationNotifier(args) : null,
-    ),
+    () => externalPathService,
     dispose: (s) => s.dispose(),
   );
 
@@ -101,8 +102,10 @@ Future<void> main(List<String> args) async {
 
   runApp(
     ChangeNotifierProvider(
-      create: (_) =>
-          SettingsModel(service: getService<SettingsService>())..init(),
+      create: (_) => SettingsModel(
+        service: getService<SettingsService>(),
+        externalPathService: externalPathService,
+      )..init(),
       child: Platform.isLinux
           ? const GtkApplication(child: YaruMusicPodApp())
           : const MaterialMusicPodApp(),

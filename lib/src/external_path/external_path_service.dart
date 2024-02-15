@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:collection/collection.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:gtk/gtk.dart';
 import 'package:metadata_god/metadata_god.dart';
 
@@ -9,9 +12,12 @@ class ExternalPathService {
 
   ExternalPathService([this._gtkNotifier]);
 
+  Future<void> Function({Audio? newAudio, Duration? newPosition})? _play;
+
   void init(
     Future<void> Function({Duration? newPosition, Audio? newAudio}) play,
   ) {
+    _play = play;
     if (_gtkNotifier != null) {
       _gtkNotifier!.addCommandLineListener(
         (args) => playPath(
@@ -45,5 +51,28 @@ class ExternalPathService {
 
   Future<void> dispose() async {
     _gtkNotifier?.dispose();
+  }
+
+  void playOpenedFile() {
+    if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+      try {
+        openFile().then((xfile) {
+          if (xfile?.path == null) return;
+          MetadataGod.initialize();
+          MetadataGod.readMetadata(file: xfile!.path).then(
+            (metadata) => _play?.call(
+              newAudio: createLocalAudio(path: xfile.path, data: metadata),
+            ),
+          );
+        });
+      } on Exception catch (_) {}
+    }
+  }
+
+  Future<String?> getPathOfDirectory() async {
+    if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+      return (await getDirectoryPath());
+    }
+    return null;
   }
 }
