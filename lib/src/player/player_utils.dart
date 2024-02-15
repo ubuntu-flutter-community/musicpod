@@ -112,11 +112,11 @@ void onTitleTap({
   }
 }
 
-Future<void> onArtistTap({
+void onArtistTap({
   required Audio? audio,
   required String? artist,
   required BuildContext context,
-}) async {
+}) {
   if (audio?.audioType == null || audio?.artist == null) {
     return;
   }
@@ -140,7 +140,7 @@ Future<void> onArtistTap({
     );
   } else if (audio.audioType == AudioType.podcast &&
       audio.website?.isNotEmpty == true) {
-    await searchAndPushPodcastPage(
+    searchAndPushPodcastPage(
       context: context,
       feedUrl: audio.website,
       itemImageUrl: audio.albumArtUrl,

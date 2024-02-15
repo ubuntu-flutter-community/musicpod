@@ -71,14 +71,14 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
                   text: podcastItem.collectionName ?? podcastItem.trackName,
                 ),
                 image: image,
-                onPlay: () async => await searchAndPushPodcastPage(
+                onPlay: () => searchAndPushPodcastPage(
                   context: context,
                   feedUrl: podcastItem.feedUrl,
                   itemImageUrl: art,
                   genre: podcastItem.primaryGenreName,
                   play: true,
                 ),
-                onTap: () async => await searchAndPushPodcastPage(
+                onTap: () => searchAndPushPodcastPage(
                   context: context,
                   feedUrl: podcastItem.feedUrl,
                   itemImageUrl: art,
