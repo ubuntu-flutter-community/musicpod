@@ -1,4 +1,5 @@
 import '../data/audio.dart';
+import 'package:intl/intl.dart';
 
 enum AudioFilter {
   trackNumber,
@@ -8,6 +9,20 @@ enum AudioFilter {
   genre,
   year,
   diskNumber;
+}
+
+int _compareStrings(String a, String b) {
+  final r = RegExp('\\d+');
+  final f = NumberFormat('0' * 16);
+  final aNew = a.replaceAllMapped(
+    r,
+    (match) => f.format(int.tryParse(match[0] ?? '0') ?? 0),
+  );
+  final bNew = b.replaceAllMapped(
+    r,
+    (match) => f.format(int.tryParse(match[0] ?? '0') ?? 0),
+  );
+  return aNew.compareTo(bNew);
 }
 
 void sortListByAudioFilter({
@@ -20,8 +35,8 @@ void sortListByAudioFilter({
       audios.sort((a, b) {
         if (a.artist != null && b.artist != null) {
           return descending
-              ? b.artist!.compareTo(a.artist!)
-              : a.artist!.compareTo(b.artist!);
+              ? _compareStrings(b.artist!, a.artist!)
+              : _compareStrings(a.artist!, b.artist!);
         }
         return 0;
       });
@@ -30,8 +45,8 @@ void sortListByAudioFilter({
       audios.sort((a, b) {
         if (a.title != null && b.title != null) {
           return descending
-              ? b.title!.compareTo(a.title!)
-              : a.title!.compareTo(b.title!);
+              ? _compareStrings(b.title!, a.title!)
+              : _compareStrings(a.title!, b.title!);
         }
         return 0;
       });
@@ -50,8 +65,8 @@ void sortListByAudioFilter({
       audios.sort((a, b) {
         if (a.album != null && b.album != null) {
           final albumComp = descending
-              ? b.album!.compareTo(a.album!)
-              : a.album!.compareTo(b.album!);
+              ? _compareStrings(b.album!, a.album!)
+              : _compareStrings(a.album!, b.album!);
           if (albumComp == 0 &&
               a.trackNumber != null &&
               b.trackNumber != null) {
