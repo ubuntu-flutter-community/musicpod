@@ -2,14 +2,18 @@ import 'dart:async';
 
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../../external_path.dart';
 import 'settings_service.dart';
 
 class SettingsModel extends SafeChangeNotifier {
   SettingsModel({
     required SettingsService service,
-  }) : _service = service;
+    required ExternalPathService externalPathService,
+  })  : _service = service,
+        _externalPathService = externalPathService;
 
   final SettingsService _service;
+  final ExternalPathService _externalPathService;
 
   StreamSubscription<bool>? _usePodcastIndexChangedSub;
   StreamSubscription<bool>? _podcastIndexApiKeyChangedSub;
@@ -50,6 +54,11 @@ class SettingsModel extends SafeChangeNotifier {
   String? get podcastIndexApiSecret => _service.podcastIndexApiSecret;
   void setPodcastIndexApiSecret(String value) async =>
       _service.setPodcastIndexApiSecret(value);
+
+  void playOpenedFile() => _externalPathService.playOpenedFile();
+
+  Future<String?> getPathOfDirectory() async =>
+      await _externalPathService.getPathOfDirectory();
 
   void init() {
     _themeIndexChangedSub =

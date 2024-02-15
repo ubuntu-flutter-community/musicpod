@@ -35,6 +35,12 @@ ThemeData m3Theme({
     splashFactory:
         Platform.isMacOS || Platform.isIOS ? NoSplash.splashFactory : null,
     snackBarTheme: _createSnackBarThemeData(colorScheme),
+    dialogTheme: DialogTheme(
+      backgroundColor: colorScheme.background,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(kYaruContainerRadius),
+      ),
+    ),
   );
 }
 

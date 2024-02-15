@@ -1,4 +1,3 @@
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yaru/yaru.dart';
@@ -247,7 +246,7 @@ class _LocalAudioSection extends StatelessWidget {
             subtitle: Text(directory),
             trailing: ImportantButton(
               onPressed: () async {
-                final directoryPath = await getDirectoryPath();
+                final directoryPath = await settingsModel.getPathOfDirectory();
                 await onDirectorySelected(directoryPath);
               },
               child: Text(
@@ -274,22 +273,22 @@ class _AboutSection extends StatelessWidget {
     return YaruSection(
       headline: Text(text),
       margin: const EdgeInsets.all(kYaruPagePadding),
-      child: Column(
-        children: [_AboutTile(text: text), const _LicenseTile()],
+      child: const Column(
+        children: [_AboutTile(), _LicenseTile()],
       ),
     );
   }
 }
 
 class _AboutTile extends StatelessWidget {
-  const _AboutTile({required this.text});
-
-  final String text;
+  const _AboutTile();
 
   @override
   Widget build(BuildContext context) {
+    final version = context.select((SettingsModel m) => m.version);
+
     return YaruTile(
-      title: Text(text),
+      title: Text('${context.l10n.version}: ${version ?? ''}'),
       trailing: OutlinedButton(
         onPressed: () => settingsNavigatorKey.currentState?.pushNamed('/about'),
         child: Text(context.l10n.contributors),
