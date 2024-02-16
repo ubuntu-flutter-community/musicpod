@@ -89,8 +89,9 @@ Future<void> main(List<String> args) async {
   );
 
   final externalPathService = ExternalPathService(
-    Platform.isLinux ? GtkApplicationNotifier(args) : null,
-  );
+    gtkNotifier: Platform.isLinux ? GtkApplicationNotifier(args) : null,
+    playerService: playerService,
+  )..init();
   registerService<ExternalPathService>(
     () => externalPathService,
     dispose: (s) => s.dispose(),

@@ -16,7 +16,6 @@ import '../../patch_notes.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
 import '../../radio.dart';
-import '../external_path/external_path_service.dart';
 import '../settings/settings_model.dart';
 import 'connectivity_notifier.dart';
 import 'master_detail_page.dart';
@@ -85,8 +84,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
     final connectivityNotifier = context.read<ConnectivityNotifier>();
 
-    final extPathService = getService<ExternalPathService>();
-
     if (!Platform.isAndroid && !Platform.isIOS) {
       YaruWindow.of(context).onClose(
         () async {
@@ -109,7 +106,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                     settingsModel.disposePatchNotes,
                   );
                 }
-                extPathService.init(playerModel.play);
               });
             },
           );

@@ -6,31 +6,30 @@ import 'package:gtk/gtk.dart';
 import 'package:metadata_god/metadata_god.dart';
 
 import '../../data.dart';
+import '../../player.dart';
 
 class ExternalPathService {
   final GtkApplicationNotifier? _gtkNotifier;
+  final PlayerService _playerService;
 
-  ExternalPathService([this._gtkNotifier]);
+  ExternalPathService({
+    GtkApplicationNotifier? gtkNotifier,
+    required PlayerService playerService,
+  })  : _gtkNotifier = gtkNotifier,
+        _playerService = playerService;
 
-  Future<void> Function({Audio? newAudio, Duration? newPosition})? _play;
-
-  void init(
-    Future<void> Function({Duration? newPosition, Audio? newAudio}) play,
-  ) {
-    _play = play;
+  void init() {
     if (_gtkNotifier != null) {
       _gtkNotifier!.addCommandLineListener(
-        (args) => playPath(
-          play,
+        (args) => _playPath(
           _gtkNotifier?.commandLine?.firstOrNull,
         ),
       );
-      playPath(play, _gtkNotifier?.commandLine?.firstOrNull);
+      _playPath(_gtkNotifier?.commandLine?.firstOrNull);
     }
   }
 
-  void playPath(
-    Future<void> Function({Audio? newAudio, Duration? newPosition}) play, [
+  void _playPath([
     String? path,
   ]) {
     if (path == null) {
@@ -39,7 +38,7 @@ class ExternalPathService {
     MetadataGod.initialize();
     try {
       MetadataGod.readMetadata(file: path).then(
-        (data) => play.call(
+        (data) => _playerService.play.call(
           newAudio: createLocalAudio(path: path, data: data),
         ),
       );
@@ -60,7 +59,7 @@ class ExternalPathService {
           if (xfile?.path == null) return;
           MetadataGod.initialize();
           MetadataGod.readMetadata(file: xfile!.path).then(
-            (metadata) => _play?.call(
+            (metadata) => _playerService.play(
               newAudio: createLocalAudio(path: xfile.path, data: metadata),
             ),
           );
