@@ -10,6 +10,7 @@ import 'package:yaru_widgets/yaru_widgets.dart';
 import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../constants.dart';
+import '../../external_path.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
 import '../../patch_notes.dart';
@@ -106,7 +107,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                     settingsModel.disposePatchNotes,
                   );
                 }
-              });
+              }).then((_) => getService<ExternalPathService>().init());
             },
           );
         },
