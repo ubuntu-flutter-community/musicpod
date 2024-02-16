@@ -16,12 +16,12 @@ G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
 static void my_application_activate(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
 
-  GtkWindow* window = GTK_WINDOW(hdy_application_window_new());
   GList* windows = gtk_application_get_windows(GTK_APPLICATION(application));
   if (windows) {
     gtk_window_present(GTK_WINDOW(windows->data));
     return;
   }
+  GtkWindow* window = GTK_WINDOW(hdy_application_window_new());
   gtk_window_set_application(window, GTK_APPLICATION(application));
 
   GtkBox* box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
@@ -48,7 +48,6 @@ static void my_application_activate(GApplication* application) {
   gtk_widget_grab_focus(GTK_WIDGET(view));
 }
 
-// Implements GApplication::local_command_line.
 static gint my_application_command_line(GApplication *application, GApplicationCommandLine *command_line) {
   MyApplication *self = MY_APPLICATION(application);
   gchar **arguments = g_application_command_line_get_arguments(command_line, nullptr);
