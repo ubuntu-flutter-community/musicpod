@@ -80,7 +80,10 @@ Future<void> main(List<String> args) async {
     dispose: (s) async => await s.dispose(),
   );
   registerService<PodcastService>(
-    () => PodcastService(notificationsService),
+    () => PodcastService(
+      notificationsService: notificationsService,
+      settingsService: settingsService,
+    ),
     dispose: (s) async => await s.dispose(),
   );
   final connectivity = Connectivity();

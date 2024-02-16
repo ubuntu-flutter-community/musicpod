@@ -111,8 +111,9 @@ class RadioService {
 
   List<Tag>? _tags;
   List<Tag>? get tags => _tags;
-  Future<RadioBrowserListResponse<Tag>?> loadTags() async {
-    if (_radioBrowserApi == null || _tags?.isNotEmpty == true) return null;
+  Future<List<Tag>?> loadTags() async {
+    if (_radioBrowserApi == null) return null;
+    if (_tags?.isNotEmpty == true) return _tags;
     RadioBrowserListResponse<Tag>? response;
 
     try {
@@ -130,6 +131,6 @@ class RadioService {
         _tags = [];
       }
     }
-    return response;
+    return _tags;
   }
 }

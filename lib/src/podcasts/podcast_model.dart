@@ -98,11 +98,7 @@ class PodcastModel extends SafeChangeNotifier {
     String? podcastIndexApiKey,
     String? podcastIndexApiSecret,
   }) async {
-    await _podcastService.init(
-      usePodcastIndex: usePodcastIndex,
-      podcastIndexApiKey: podcastIndexApiKey,
-      podcastIndexApiSecret: podcastIndexApiSecret,
-    );
+    await _podcastService.init();
     final lastCountryCode = (await readSetting(kLastCountryCode)) as String?;
 
     _searchActive = _libraryService.podcasts.isEmpty;

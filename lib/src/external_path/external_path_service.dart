@@ -48,7 +48,7 @@ class ExternalPathService {
     }
   }
 
-  Future<void> dispose() async {
+  void dispose() {
     _gtkNotifier?.dispose();
   }
 
