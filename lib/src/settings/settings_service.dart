@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../constants.dart';
@@ -156,21 +157,23 @@ class SettingsService {
     });
   }
 
-  Future<void> _initDirectory() async {
-    String? value = await readSetting(kDirectoryProperty);
+  Future<void> _initDirectory(String? testDir) async {
+    String? value = testDir;
+    value ??= await readSetting(kDirectoryProperty);
+    value ??= await getMusicDir();
     if (value != null) {
       _directory = value;
     }
   }
 
-  Future<void> init() async {
+  Future<void> init({@visibleForTesting String? testDir}) async {
     await _initPackageInfo();
-    await _initSettings();
+    await _initSettings(testDir);
   }
 
-  Future<void> _initSettings() async {
+  Future<void> _initSettings(String? testDir) async {
     await _initThemeIndex();
-    await _initDirectory();
+    await _initDirectory(testDir);
     await _initUsePodcastIndex();
     await _initPodcastIndexApiKey();
     await _initPodcastIndexApiSecret();

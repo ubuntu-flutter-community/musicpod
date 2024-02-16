@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:metadata_god/metadata_god.dart';
 
-import '../../constants.dart';
 import '../../data.dart';
 import '../../utils.dart';
 import '../settings/settings_service.dart';
@@ -27,23 +26,10 @@ class LocalAudioService {
     _audiosController.add(true);
   }
 
-  Future<List<String>> init({
-    @visibleForTesting String? testDir,
-  }) async {
-    String? dir;
-    if (testDir != null) {
-      dir = testDir;
-    } else {
-      dir = await readSetting(kDirectoryProperty);
-      dir ??= await getMusicDir();
-    }
-
-    final result = await compute(_init, dir);
+  Future<List<String>> init() async {
+    final result = await compute(_init, _settingsService.directory);
 
     _audios = result.$2;
-    if (dir != null) {
-      _settingsService.setDirectory(dir);
-    }
 
     _audiosController.add(true);
 

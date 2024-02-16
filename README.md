@@ -68,11 +68,33 @@ Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https
   - [ ] Flatpak ([WIP](https://github.com/ubuntu-flutter-community/musicpod/issues/10))
 - [X] Windows Support
   - [ ] Windows Store
-  - [ ] [Exe](https://github.com/ubuntu-flutter-community/musicpod/releases)
+  - [X] [Exe](https://github.com/ubuntu-flutter-community/musicpod/releases)
 - [X] Android Support (Media Controls are WIP)
   - [ ] PlayStore
 - [X] MacOs Support
   - [ ] Apple?Store?
-  - [ ] [DMG](https://github.com/ubuntu-flutter-community/musicpod/releases)
+  - [X] [DMG](https://github.com/ubuntu-flutter-community/musicpod/releases)
 - [ ] iOS Support
   - [ ] AppStore
+
+# Contributing
+
+Contributions are highly welcome. Especially translations.
+Please [fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) MusicPod to your GitHub namespace, [clone](https://docs.github.com/de/repositories/creating-and-managing-repositories/cloning-a-repository) it to your computer, create a branch named by yourself, commit your changes to your local branch, push them to your fork and then make a pull request from your fork to this repository.
+I recommend the vscode extension [GitHub Pull Requests](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github) especially for people new to [Git](https://git-scm.com/doc) and [GitHub](https://docs.github.com/en/get-started/start-your-journey).
+
+## Translations
+For translations into your language change the corresponding `app_xx.arb` file where `xx` is the language code of your language in lower case.
+If the file does not exist yet please create it and copy the `whole` content of app_en.arb into it and change only the values to your translation but leave the keys untouched.
+The vscode extension [arb editor by Google](https://marketplace.visualstudio.com/items?itemName=Google.arb-editor) is highly recommended to avoid arb syntax errors.
+
+## Code contributions
+
+If you find any error please feel free to report it as an issue and describe it as good as you can.
+If you want to contribute code, please create an issue first.
+
+## Testing
+
+Test mocks are generated with [Mockito](https://github.com/dart-lang/mockito). You need to run the `build_runner` command in order to re-generate mocks, in case you changed the signatures of service methods.
+
+`flutter pub run build_runner build`

@@ -1,10 +1,15 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:musicpod/data.dart';
 import 'package:musicpod/podcasts.dart';
 import 'package:musicpod/src/notifications/notifications_service.dart';
+import 'package:musicpod/src/settings/settings_service.dart';
 import 'package:podcast_search/podcast_search.dart';
+
+import 'podcast_service_test.mocks.dart';
 
 const Audio episodeOneAudio = Audio(
   url:
@@ -15,8 +20,18 @@ const Audio episodeOneAudio = Audio(
   title: 'Episode 1: Too Much Choice | LU1',
 );
 
+@GenerateMocks([NotificationsService, SettingsService])
 Future<void> main() async {
-  final service = PodcastService(MockNotificationService());
+  final mockNotificationsService = MockNotificationsService();
+  final mockSettingsService = MockSettingsService();
+
+  when(mockSettingsService.usePodcastIndex)
+      .thenAnswer((realInvocation) => false);
+
+  final service = PodcastService(
+    notificationsService: mockNotificationsService,
+    settingsService: mockSettingsService,
+  );
   await service.init();
 
   test('searchByQuery', () async {
@@ -43,17 +58,4 @@ Future<void> main() async {
       true,
     );
   });
-}
-
-class MockNotificationService implements NotificationsService {
-  @override
-  Future<void> dispose() {
-    return Future.delayed(const Duration(milliseconds: 300));
-  }
-
-  @override
-  Future<void> notify({required String message, String? uri}) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    print(message);
-  }
 }
