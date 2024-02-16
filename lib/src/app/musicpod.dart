@@ -14,6 +14,8 @@ import '../l10n/l10n.dart';
 import '../settings/settings_model.dart';
 import 'app.dart';
 
+final themeNotifier = ValueNotifier<ThemeMode>(ThemeMode.system);
+
 class YaruMusicPodApp extends StatelessWidget {
   const YaruMusicPodApp({
     super.key,
@@ -21,11 +23,10 @@ class YaruMusicPodApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeIndex = context.select((SettingsModel m) => m.themeIndex);
     return YaruTheme(
       builder: (context, yaru, child) {
         return MusicPodApp(
-          themeMode: ThemeMode.values[themeIndex],
+          themeMode: themeNotifier.value,
           lightTheme: yaru.theme?.copyWith(
             actionIconTheme: ActionIconThemeData(
               backButtonIconBuilder: (context) => Icon(Iconz().goBack),
