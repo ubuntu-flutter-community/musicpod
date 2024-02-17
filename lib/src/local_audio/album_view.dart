@@ -77,7 +77,7 @@ class AlbumsView extends StatelessWidget {
               child: AudioCardBottom(
                 text: audio.album?.isNotEmpty == false
                     ? context.l10n.unknown
-                    : audio.album!,
+                    : audio.album ?? '',
               ),
             ),
             image: image,
