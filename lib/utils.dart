@@ -68,6 +68,9 @@ Future<String?> getDownloadsDir() async {
   return null;
 }
 
+Future<void> writeAppState(String key, dynamic value) async =>
+    await writeSetting(key, value, kAppStateFileName);
+
 Future<void> writeSetting(
   String? key,
   dynamic value, [
@@ -92,6 +95,8 @@ Future<void> writeSetting(
 
   await file.writeAsString(jsonStr);
 }
+
+Future<dynamic> readAppState(String key) => readSetting(key, kAppStateFileName);
 
 Future<dynamic> readSetting(
   dynamic key, [

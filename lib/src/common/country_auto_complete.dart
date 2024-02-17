@@ -71,6 +71,8 @@ class CountryAutoComplete extends StatelessWidget {
               focusNode,
               onFieldSubmitted,
             ) {
+              final hintText =
+                  '${context.l10n.search}: ${context.l10n.country}';
               return TextField(
                 maxLines: 1,
                 onTap: () {
@@ -94,6 +96,7 @@ class CountryAutoComplete extends StatelessWidget {
                         style: style,
                         fillColor: fillColor,
                         contentPadding: contentPadding,
+                        hintText: hintText,
                       )
                     : createMaterialDecoration(
                         colorScheme: theme.colorScheme,
@@ -103,6 +106,7 @@ class CountryAutoComplete extends StatelessWidget {
                         filled: filled,
                         fillColor: fillColor,
                         contentPadding: contentPadding,
+                        hintText: hintText,
                       ),
                 controller: textEditingController,
                 focusNode: focusNode,

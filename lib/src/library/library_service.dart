@@ -124,7 +124,7 @@ class LibraryService {
   String? get lastFav => _lastFav;
   void setLastRadioTag(String? value) {
     if (value == _lastFav) return;
-    writeSetting(kLastFav, value, kAppStateFileName).then((_) {
+    writeAppState(kLastFav, value).then((_) {
       _lastFav = value;
       _lastFavController.add(true);
     });
@@ -137,7 +137,7 @@ class LibraryService {
   String? get lastCountryCode => _lastCountryCode;
   void setLastCountryCode(String? value) {
     if (value == _lastCountryCode) return;
-    writeSetting(kLastCountryCode, value, kAppStateFileName).then((_) {
+    writeAppState(kLastCountryCode, value).then((_) {
       _lastCountryCodeController.add(true);
       _lastCountryCode = value;
     });
@@ -380,11 +380,10 @@ class LibraryService {
 
   Future<void> _initLibrary() async {
     if (_libraryInitialized) return;
-    final appIndexOrNull = await readSetting(kAppIndex, kAppStateFileName);
+    final appIndexOrNull = await readAppState(kAppIndex);
     _appIndex = appIndexOrNull == null ? 0 : int.parse(appIndexOrNull);
 
-    final localAudioIndexStringOrNull =
-        await readSetting(kLocalAudioIndex, kAppStateFileName);
+    final localAudioIndexStringOrNull = await readAppState(kLocalAudioIndex);
     if (localAudioIndexStringOrNull != null) {
       final localParse = int.tryParse(localAudioIndexStringOrNull);
       if (localParse != null) {
@@ -392,8 +391,7 @@ class LibraryService {
       }
     }
 
-    final radioIndexStringOrNull =
-        await readSetting(kRadioIndex, kAppStateFileName);
+    final radioIndexStringOrNull = await readAppState(kRadioIndex);
     if (radioIndexStringOrNull != null) {
       final radioParse = int.tryParse(radioIndexStringOrNull);
       if (radioParse != null) {
@@ -426,6 +424,8 @@ class LibraryService {
     _feedsWithDownloads = Set.from(
       await readStringIterable(filename: kFeedsWithDownloads) ?? <String>{},
     );
+    _lastCountryCode = (await readAppState(kLastCountryCode)) as String?;
+    _lastFav = (await readAppState(kLastFav)) as String?;
     _libraryInitialized = true;
   }
 
@@ -467,7 +467,7 @@ class LibraryService {
 
   Future<void> dispose() async {
     dio.close();
-    await _safeStates();
+    await _safeAppState();
     await _albumsController.close();
     await _podcastsController.close();
     await _likedAudiosController.close();
@@ -484,18 +484,16 @@ class LibraryService {
     await _downloadsController.close();
   }
 
-  Future<void> _safeStates() async {
-    await writeSetting(
+  Future<void> _safeAppState() async {
+    await writeAppState(
       kLocalAudioIndex,
       _localAudioIndex.toString(),
-      kAppStateFileName,
     );
-    await writeSetting(kRadioIndex, _radioIndex.toString(), kAppStateFileName);
-    await writeSetting(
+    await writeAppState(kRadioIndex, _radioIndex.toString());
+    await writeAppState(
       kPodcastIndex,
       _podcastIndex.toString(),
-      kAppStateFileName,
     );
-    await writeSetting(kAppIndex, _appIndex.toString(), kAppStateFileName);
+    await writeAppState(kAppIndex, _appIndex.toString());
   }
 }
