@@ -36,7 +36,7 @@ class ExternalPathService {
       return;
     }
     try {
-      readMetadata(File(path), getImage: false).then(
+      readMetadata(File(path), getImage: true).then(
         (data) => _playerService.play.call(
           newAudio: createLocalAudio(path: path, data: data),
         ),
@@ -56,7 +56,7 @@ class ExternalPathService {
       try {
         openFile().then((xfile) {
           if (xfile?.path == null) return;
-          readMetadata(File(xfile!.path), getImage: false).then(
+          readMetadata(File(xfile!.path), getImage: true).then(
             (metadata) => _playerService.play(
               newAudio: createLocalAudio(path: xfile.path, data: metadata),
             ),
