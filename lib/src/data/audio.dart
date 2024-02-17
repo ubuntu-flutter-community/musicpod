@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:audio_metadata_reader/audio_metadata_reader.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
-import 'package:metadata_god/metadata_god.dart';
+
 import '../../../string_x.dart';
 import 'genres.dart';
 
@@ -274,16 +276,17 @@ enum AudioType {
 
 Audio createLocalAudio({
   required String path,
-  required Metadata data,
+  required AudioMetadata data,
 }) {
   final fileName = File(path).uri.pathSegments.lastOrNull;
   final albumName =
-      '${data.album}${data.discTotal != null && data.discNumber != null && data.discTotal! > 1 ? ' ${data.discNumber}' : ''}';
-  final genre =
-      data.genre?.startsWith('(') == true && data.genre?.endsWith(')') == true
-          ? tagGenres[data.genre?.replaceAll('(', '').replaceAll(')', '')]
-              ?.capitalizeEveryWord()
-          : data.genre;
+      '${data.album}${data.totalDisc != null && data.discNumber != null && data.totalDisc! > 1 ? ' ${data.discNumber}' : ''}';
+  final genre = data.genres.firstOrNull?.startsWith('(') == true &&
+          data.genres.firstOrNull?.endsWith(')') == true
+      ? tagGenres[
+              data.genres.firstOrNull?.replaceAll('(', '').replaceAll(')', '')]
+          ?.capitalizeEveryWord()
+      : data.genres.firstOrNull;
 
   return Audio(
     path: path,
@@ -293,13 +296,14 @@ Audio createLocalAudio({
     album: data.album == null ? null : albumName,
     albumArtist: data.artist,
     discNumber: data.discNumber,
-    discTotal: data.discTotal,
+    discTotal: data.totalDisc,
     durationMs: data.duration?.inMilliseconds.toDouble(),
-    fileSize: data.fileSize,
+    // fileSize: data.,
     genre: genre,
-    pictureData: data.picture?.data,
-    pictureMimeType: data.picture?.mimeType,
+    pictureData:
+        data.pictures.firstWhereOrNull((e) => e.bytes.isNotEmpty)?.bytes,
+    pictureMimeType: data.pictures.firstOrNull?.mimetype,
     trackNumber: data.trackNumber,
-    year: data.year,
+    year: data.year?.year,
   );
 }
