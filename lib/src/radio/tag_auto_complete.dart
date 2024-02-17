@@ -6,6 +6,7 @@ import 'package:yaru_widgets/constants.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
+import '../../l10n.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
 
@@ -52,6 +53,7 @@ class TagAutoComplete extends StatelessWidget {
               focusNode,
               onFieldSubmitted,
             ) {
+              final hintText = '${context.l10n.search}: ${context.l10n.tags}';
               return TextField(
                 maxLines: 1,
                 onTap: () {
@@ -69,8 +71,14 @@ class TagAutoComplete extends StatelessWidget {
                 textAlignVertical: yaruStyled ? TextAlignVertical.center : null,
                 cursorWidth: yaruStyled ? 1 : 2.0,
                 decoration: yaruStyled
-                    ? createYaruDecoration(isLight: theme.isLight)
-                    : createMaterialDecoration(colorScheme: theme.colorScheme),
+                    ? createYaruDecoration(
+                        isLight: theme.isLight,
+                        hintText: hintText,
+                      )
+                    : createMaterialDecoration(
+                        colorScheme: theme.colorScheme,
+                        hintText: hintText,
+                      ),
                 controller: textEditingController,
                 focusNode: focusNode,
                 onSubmitted: (String value) {

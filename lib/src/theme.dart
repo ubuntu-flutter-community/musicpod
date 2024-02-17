@@ -173,6 +173,7 @@ InputDecoration createMaterialDecoration({
   OutlineInputBorder? border,
   Color? fillColor,
   EdgeInsets? contentPadding,
+  String? hintText,
 }) {
   final outlineInputBorder = border ??
       OutlineInputBorder(
@@ -180,6 +181,7 @@ InputDecoration createMaterialDecoration({
         borderSide: BorderSide(width: 2, color: colorScheme.primary),
       );
   return InputDecoration(
+    hintText: hintText,
     fillColor: fillColor,
     filled: filled,
     contentPadding: contentPadding ??
@@ -202,6 +204,7 @@ InputDecoration createYaruDecoration({
   TextStyle? style,
   Color? fillColor,
   EdgeInsets? contentPadding,
+  String? hintText,
 }) {
   final radius = BorderRadius.circular(100);
 
@@ -214,6 +217,7 @@ InputDecoration createYaruDecoration({
       );
 
   return InputDecoration(
+    hintText: hintText,
     filled: true,
     fillColor: fillColor ?? fill,
     hoverColor: (fillColor ?? fill).scale(lightness: 0.1),

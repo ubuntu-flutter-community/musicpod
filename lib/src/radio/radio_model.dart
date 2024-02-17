@@ -5,17 +5,21 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide Country;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../../constants.dart';
 import '../../data.dart';
+import '../../library.dart';
 import '../../string_x.dart';
-import '../../utils.dart';
 import 'radio_search.dart';
 import 'radio_service.dart';
 
 class RadioModel extends SafeChangeNotifier {
   final RadioService _radioService;
+  final LibraryService _libraryService;
 
-  RadioModel(this._radioService);
+  RadioModel({
+    required RadioService radioService,
+    required LibraryService libraryService,
+  })  : _radioService = radioService,
+        _libraryService = libraryService;
 
   Country? _country;
   Country? get country => _country;
@@ -92,11 +96,11 @@ class RadioModel extends SafeChangeNotifier {
     _connectedHost ??= await _radioService.init();
     await _radioService.loadTags();
 
-    final lastCountryCode = (await readSetting(kLastCountryCode)) as String?;
-    final lastFav = (await readSetting(kLastFav)) as String?;
+    final lastFav = _libraryService.lastFav;
 
-    _country ??= Country.values
-        .firstWhereOrNull((c) => c.code == (lastCountryCode ?? countryCode));
+    _country ??= Country.values.firstWhereOrNull(
+      (c) => c.code == (_libraryService.lastCountryCode ?? countryCode),
+    );
 
     if (_connectedHost?.isNotEmpty == true) {
       _tag ??= lastFav == null || tags == null || tags!.isEmpty

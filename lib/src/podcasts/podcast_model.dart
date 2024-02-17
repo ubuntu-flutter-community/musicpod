@@ -4,10 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../../constants.dart';
 import '../../library.dart';
 import '../../podcasts.dart';
-import '../../utils.dart';
 import '../data/podcast_genre.dart';
 
 class PodcastModel extends SafeChangeNotifier {
@@ -99,7 +97,7 @@ class PodcastModel extends SafeChangeNotifier {
     String? podcastIndexApiSecret,
   }) async {
     await _podcastService.init();
-    final lastCountryCode = (await readSetting(kLastCountryCode)) as String?;
+    final lastCountryCode = _libraryService.lastCountryCode;
 
     _searchActive = _libraryService.podcasts.isEmpty;
 
