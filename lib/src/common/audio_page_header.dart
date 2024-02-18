@@ -27,8 +27,8 @@ class AudioPageHeader extends StatelessWidget {
   final Widget? image;
   final String? label;
   final String? subTitle;
-  final void Function(String? text)? onSubTitleTab;
-  final void Function(String? text)? onLabelTab;
+  final void Function(String text)? onSubTitleTab;
+  final void Function(String text)? onLabelTab;
 
   final double? height;
   final BorderRadius? imageRadius;
@@ -112,9 +112,9 @@ class AudioPageHeader extends StatelessWidget {
                             Flexible(
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(5),
-                                onTap: onLabelTab == null
+                                onTap: onLabelTab == null || label == null
                                     ? null
-                                    : () => onLabelTab?.call(label),
+                                    : () => onLabelTab?.call(label!),
                                 child: Text(
                                   label ?? context.l10n.album,
                                   style: theme.textTheme.labelSmall,
@@ -131,9 +131,10 @@ class AudioPageHeader extends StatelessWidget {
                               Flexible(
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(5),
-                                  onTap: onSubTitleTab == null
+                                  onTap: onSubTitleTab == null ||
+                                          subTitle == null
                                       ? null
-                                      : () => onSubTitleTab?.call(subTitle),
+                                      : () => onSubTitleTab?.call(subTitle!),
                                   child: Text(
                                     subTitle ?? '',
                                     style: theme.textTheme.labelSmall,

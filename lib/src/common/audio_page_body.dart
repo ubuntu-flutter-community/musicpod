@@ -68,12 +68,10 @@ class AudioPageBody extends StatefulWidget {
   final int titleFlex, artistFlex, albumFlex;
   final bool showTrack, showAlbum, showArtist;
   final EdgeInsetsGeometry? padding;
-  final void Function(String? text)? onSubTitleTab;
-  final void Function(String? text)? onLabelTab;
-  final void Function({
-    required String text,
-    required AudioType audioType,
-  })? onAlbumTap, onArtistTap;
+  final void Function(String text)? onSubTitleTab;
+  final void Function(String text)? onLabelTab;
+  final void Function(String text)? onAlbumTap;
+  final void Function(String text)? onArtistTap;
 
   @override
   State<AudioPageBody> createState() => _AudioPageBodyState();

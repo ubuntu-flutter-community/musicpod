@@ -25,7 +25,7 @@ class PlaylistPage extends StatelessWidget {
     final model = context.read<LocalAudioModel>();
     final libraryModel = context.read<LibraryModel>();
     return AudioPage(
-      onAlbumTap: ({required audioType, required text}) {
+      onAlbumTap: (text) {
         final albumAudios = model.findAlbum(Audio(album: text));
         if (albumAudios?.firstOrNull == null) return;
         final id = generateAlbumId(albumAudios!.first);
@@ -45,7 +45,7 @@ class PlaylistPage extends StatelessWidget {
           ),
         );
       },
-      onArtistTap: ({required audioType, required text}) {
+      onArtistTap: (text) {
         final artistAudios = model.findArtist(Audio(artist: text));
         final images = model.findImages(artistAudios ?? {});
 
