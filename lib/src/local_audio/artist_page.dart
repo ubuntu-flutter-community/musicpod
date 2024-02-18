@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
 import '../../data.dart';
@@ -54,6 +53,7 @@ class ArtistPage extends StatelessWidget {
       headerTitle: artistAudios?.firstOrNull?.artist,
       showAudioPageHeader: images?.isNotEmpty == true,
       image: ArtistImage(images: images),
+      imageRadius: BorderRadius.circular(10000),
       headerSubtile: artistAudios?.firstOrNull?.genre,
       audios: artistAudios,
       pageId: artistAudios?.firstOrNull?.artist ?? artistAudios.toString(),
@@ -66,52 +66,5 @@ class ArtistPage extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class ArtistImage extends StatelessWidget {
-  const ArtistImage({
-    super.key,
-    this.images,
-  });
-
-  final Set<Uint8List>? images;
-
-  @override
-  Widget build(BuildContext context) {
-    if (images?.length == 1) {
-      return Image.memory(
-        images!.first,
-        fit: BoxFit.fitHeight,
-        filterQuality: FilterQuality.medium,
-      );
-    }
-
-    if (images?.isNotEmpty == true) {
-      if (images!.length >= 4) {
-        return FourImagesGrid(
-          images: images!,
-        );
-      } else if (images!.length >= 2) {
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.fitHeight,
-              image: MemoryImage(images!.first),
-            ),
-          ),
-          child: YaruClip.diagonal(
-            position: YaruDiagonalClip.bottomLeft,
-            child: Image.memory(
-              images!.elementAt(1),
-              fit: BoxFit.fitHeight,
-              filterQuality: FilterQuality.medium,
-            ),
-          ),
-        );
-      }
-    }
-
-    return const SizedBox.shrink();
   }
 }
