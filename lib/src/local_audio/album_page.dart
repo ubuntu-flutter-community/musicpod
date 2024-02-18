@@ -60,21 +60,31 @@ class AlbumPage extends StatelessWidget {
             filterQuality: FilterQuality.medium,
           )
         : null;
+
+    void onArtistTap(text) {
+      final artistName = album?.firstOrNull?.artist;
+      if (artistName == null) return;
+
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) {
+            final artistAudios = model.findArtist(album!.first);
+            final images = model.findImages(artistAudios ?? {});
+
+            return ArtistPage(
+              images: images,
+              artistAudios: artistAudios,
+            );
+          },
+        ),
+      );
+    }
+
     return AudioPage(
       showAudioPageHeader: image != null,
       showAlbum: false,
-      onArtistTap: ({required audioType, required text}) {
-        final artistName = album?.firstOrNull?.artist;
-        if (artistName == null) return;
-
-        _push(context, model);
-      },
-      onSubTitleTab: (text) {
-        final artistName = album?.firstOrNull?.artist;
-        if (artistName == null) return;
-
-        _push(context, model);
-      },
+      onArtistTap: onArtistTap,
+      onSubTitleTab: onArtistTap,
       audioPageType: AudioPageType.album,
       headerLabel: context.l10n.album,
       headerSubtile: album?.firstOrNull?.artist,
@@ -113,22 +123,6 @@ class AlbumPage extends StatelessWidget {
       audios: album,
       pageId: id,
       headerTitle: album?.firstOrNull?.album,
-    );
-  }
-
-  Future<dynamic> _push(BuildContext context, LocalAudioModel model) {
-    return Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) {
-          final artistAudios = model.findArtist(album!.first);
-          final images = model.findImages(artistAudios ?? {});
-
-          return ArtistPage(
-            images: images,
-            artistAudios: artistAudios,
-          );
-        },
-      ),
     );
   }
 }

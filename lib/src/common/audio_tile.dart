@@ -40,14 +40,8 @@ class AudioTile extends StatelessWidget {
   final bool showTrack;
   final bool showArtist;
   final bool showAlbum;
-  final void Function({
-    required String text,
-    required AudioType audioType,
-  })? onAlbumTap;
-  final void Function({
-    required String text,
-    required AudioType audioType,
-  })? onArtistTap;
+  final void Function(String text)? onAlbumTap;
+  final void Function(String text)? onArtistTap;
 
   final int titleFlex, artistFlex, albumFlex;
 
@@ -108,10 +102,7 @@ class AudioTile extends StatelessWidget {
                           audio.audioType == null ||
                           audio.artist == null
                       ? null
-                      : () => onArtistTap!(
-                            text: audio.artist!,
-                            audioType: audio.audioType!,
-                          ),
+                      : () => onArtistTap!(audio.artist!),
                   text: audio.artist?.isNotEmpty == false
                       ? context.l10n.unknown
                       : audio.artist ?? context.l10n.unknown,
@@ -127,10 +118,7 @@ class AudioTile extends StatelessWidget {
                         audio.audioType == AudioType.radio ||
                         audio.album == null
                     ? null
-                    : () => onAlbumTap!(
-                          text: audio.album!,
-                          audioType: audio.audioType!,
-                        ),
+                    : () => onAlbumTap!(audio.album!),
                 text: audio.album?.isNotEmpty == false
                     ? context.l10n.unknown
                     : audio.album ?? context.l10n.unknown,

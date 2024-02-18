@@ -28,7 +28,7 @@ class ArtistPage extends StatelessWidget {
 
     return AudioPage(
       showArtist: false,
-      onAlbumTap: ({required audioType, required text}) {
+      onAlbumTap: (text) {
         final audios = model.findAlbum(Audio(album: text));
         if (audios?.firstOrNull == null) return;
         final id = generateAlbumId(audios!.first);
