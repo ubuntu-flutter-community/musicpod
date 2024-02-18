@@ -43,6 +43,9 @@ class AudioPageBody extends StatefulWidget {
     this.showAudioTileHeader = true,
     this.padding,
     this.showControlPanel = true,
+    this.imageRadius,
+    this.onLabelTab,
+    this.onSubTitleTab,
   });
 
   final String pageId;
@@ -55,6 +58,7 @@ class AudioPageBody extends StatefulWidget {
   final String? headerSubTitle;
   final Widget? controlPanelButton;
   final Widget? image;
+  final BorderRadius? imageRadius;
   final bool? showAudioPageHeader;
   final bool showControlPanel;
   final bool showAudioTileHeader;
@@ -64,11 +68,10 @@ class AudioPageBody extends StatefulWidget {
   final int titleFlex, artistFlex, albumFlex;
   final bool showTrack, showAlbum, showArtist;
   final EdgeInsetsGeometry? padding;
-
-  final void Function({
-    required String text,
-    required AudioType audioType,
-  })? onAlbumTap, onArtistTap;
+  final void Function(String text)? onSubTitleTab;
+  final void Function(String text)? onLabelTab;
+  final void Function(String text)? onAlbumTap;
+  final void Function(String text)? onArtistTap;
 
   @override
   State<AudioPageBody> createState() => _AudioPageBodyState();
@@ -148,6 +151,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     );
 
     final audioPageHeader = AudioPageHeader(
+      imageRadius: widget.imageRadius,
       height: _headerHeight,
       title: widget.headerTitle ??
           widget.audios?.firstOrNull?.album ??
@@ -156,7 +160,9 @@ class _AudioPageBodyState extends State<AudioPageBody> {
           widget.headerDescription ?? widget.audios?.firstOrNull?.description,
       image: widget.image,
       subTitle: widget.headerSubTitle,
+      onSubTitleTab: widget.onSubTitleTab,
       label: widget.headerLabel,
+      onLabelTab: widget.onLabelTab,
     );
 
     if (widget.audios == null) {

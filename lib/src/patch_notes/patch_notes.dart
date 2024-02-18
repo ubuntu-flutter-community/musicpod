@@ -93,8 +93,21 @@ const kPatchNotes20240204 = 'Hello MusicPod Users 💙🐧🧡\n'
     '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
     '\n';
 
-const kRecentPatchNotesDisposed = kPatchNotes20240204disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20240204;
-const kRecentPatchNotes = kPatchNotes20240204;
+// 2024 02 18
+const kPatchNotes20240218disposed = 'patchNotes20240218disposed';
+const kPatchNotesTitle20240218 = 'Patch notes: 2024-02-18';
+const kPatchNotes20240218 = 'Hello MusicPod Users 💙🐧🧡\n'
+    '\n* with this release come several performance improvements'
+    '\n* bug fixes for podcast loading'
+    '\n* linux users can now set MusicPod as their default video and music player'
+    '\n* single video and audio files can be opened from the hamburger menu'
+    '\n* the artist pages have been improved'
+    '\n* audios are now correctly sorted when thanks to https://github.com/fsobolev'
+    '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
+    '\n';
+
+const kRecentPatchNotesDisposed = kPatchNotes20240218disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20240218;
+const kRecentPatchNotes = kPatchNotes20240218;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';

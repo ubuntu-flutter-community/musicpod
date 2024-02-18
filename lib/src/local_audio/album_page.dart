@@ -52,6 +52,7 @@ class AlbumPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<LocalAudioModel>();
     final image = album?.firstOrNull?.pictureData != null
         ? Image.memory(
             album!.firstOrNull!.pictureData!,
@@ -59,28 +60,31 @@ class AlbumPage extends StatelessWidget {
             filterQuality: FilterQuality.medium,
           )
         : null;
+
+    void onArtistTap(text) {
+      final artistName = album?.firstOrNull?.artist;
+      if (artistName == null) return;
+
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) {
+            final artistAudios = model.findArtist(album!.first);
+            final images = model.findImages(artistAudios ?? {});
+
+            return ArtistPage(
+              images: images,
+              artistAudios: artistAudios,
+            );
+          },
+        ),
+      );
+    }
+
     return AudioPage(
       showAudioPageHeader: image != null,
       showAlbum: false,
-      onArtistTap: ({required audioType, required text}) {
-        final artistName = album?.firstOrNull?.artist;
-        if (artistName == null) return;
-        final model = context.read<LocalAudioModel>();
-
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) {
-              final artistAudios = model.findArtist(album!.first);
-              final images = model.findImages(artistAudios ?? {});
-
-              return ArtistPage(
-                images: images,
-                artistAudios: artistAudios,
-              );
-            },
-          ),
-        );
-      },
+      onArtistTap: onArtistTap,
+      onSubTitleTab: onArtistTap,
       audioPageType: AudioPageType.album,
       headerLabel: context.l10n.album,
       headerSubtile: album?.firstOrNull?.artist,

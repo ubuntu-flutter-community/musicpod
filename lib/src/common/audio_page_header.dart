@@ -17,6 +17,9 @@ class AudioPageHeader extends StatelessWidget {
     this.label,
     this.subTitle,
     this.height,
+    this.imageRadius,
+    this.onSubTitleTab,
+    this.onLabelTab,
   });
 
   final String title;
@@ -24,14 +27,18 @@ class AudioPageHeader extends StatelessWidget {
   final Widget? image;
   final String? label;
   final String? subTitle;
+  final void Function(String text)? onSubTitleTab;
+  final void Function(String text)? onLabelTab;
+
   final double? height;
+  final BorderRadius? imageRadius;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
     final size = context.m.size;
     final smallWindow = size.width < kMasterDetailBreakPoint;
-    final imageRadius = BorderRadius.circular(10);
+    final radius = imageRadius ?? BorderRadius.circular(10);
     const kBigTextMitigation = 2.0;
 
     return Padding(
@@ -56,7 +63,7 @@ class AudioPageHeader extends StatelessWidget {
                   dimension: height,
                   child: DecoratedBox(
                     decoration: BoxDecoration(
-                      borderRadius: imageRadius,
+                      borderRadius: radius,
                       boxShadow: [
                         BoxShadow(
                           offset: const Offset(0, 0),
@@ -67,7 +74,7 @@ class AudioPageHeader extends StatelessWidget {
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: imageRadius,
+                      borderRadius: radius,
                       child: image!,
                     ),
                   ),
@@ -103,10 +110,16 @@ class AudioPageHeader extends StatelessWidget {
                               width: kBigTextMitigation,
                             ),
                             Flexible(
-                              child: Text(
-                                label ?? context.l10n.album,
-                                style: theme.textTheme.labelSmall,
-                                maxLines: 1,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(5),
+                                onTap: onLabelTab == null || label == null
+                                    ? null
+                                    : () => onLabelTab?.call(label!),
+                                child: Text(
+                                  label ?? context.l10n.album,
+                                  style: theme.textTheme.labelSmall,
+                                  maxLines: 1,
+                                ),
                               ),
                             ),
                             if (subTitle?.isNotEmpty == true)
@@ -116,11 +129,18 @@ class AudioPageHeader extends StatelessWidget {
                               ),
                             if (subTitle?.isNotEmpty == true)
                               Flexible(
-                                child: Text(
-                                  subTitle ?? '',
-                                  style: theme.textTheme.labelSmall,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.visible,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(5),
+                                  onTap: onSubTitleTab == null ||
+                                          subTitle == null
+                                      ? null
+                                      : () => onSubTitleTab?.call(subTitle!),
+                                  child: Text(
+                                    subTitle ?? '',
+                                    style: theme.textTheme.labelSmall,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.visible,
+                                  ),
                                 ),
                               ),
                           ],

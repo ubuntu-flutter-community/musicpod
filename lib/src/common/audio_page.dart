@@ -38,6 +38,9 @@ class AudioPage extends StatelessWidget {
     this.showArtist = true,
     this.showAudioTileHeader = true,
     this.showControlPanel = true,
+    this.imageRadius,
+    this.onLabelTab,
+    this.onSubTitleTab,
   });
 
   final Set<Audio>? audios;
@@ -59,11 +62,11 @@ class AudioPage extends StatelessWidget {
   final bool showAudioTileHeader;
   final bool showControlPanel;
   final bool showTrack, showAlbum, showArtist;
-
-  final void Function({
-    required String text,
-    required AudioType audioType,
-  })? onAlbumTap, onArtistTap;
+  final BorderRadius? imageRadius;
+  final void Function(String text)? onSubTitleTab;
+  final void Function(String text)? onLabelTab;
+  final void Function(String text)? onAlbumTap;
+  final void Function(String text)? onArtistTap;
 
   @override
   Widget build(BuildContext context) {
@@ -80,10 +83,13 @@ class AudioPage extends StatelessWidget {
       onArtistTap: onArtistTap,
       audioPageType: audioPageType,
       image: image,
+      imageRadius: imageRadius,
       headerDescription: headerDescription,
       controlPanelButton: controlPanelButton,
       headerLabel: headerLabel,
+      onLabelTab: onLabelTab,
       headerSubTitle: headerSubtile,
+      onSubTitleTab: onSubTitleTab,
       headerTitle: headerTitle,
       controlPanelTitle: controlPanelTitle,
       showAudioPageHeader: showAudioPageHeader,

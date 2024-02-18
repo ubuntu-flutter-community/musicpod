@@ -34,7 +34,6 @@ class ArtistsView extends StatelessWidget {
         message: noResultMessage,
       );
     }
-
     final model = context.read<LocalAudioModel>();
 
     return Padding(
@@ -50,8 +49,7 @@ class ArtistsView extends StatelessWidget {
           );
           final images = model.findImages(artistAudios ?? {});
 
-          final artistname =
-              artists!.elementAt(index).artist ?? context.l10n.unknown;
+          final text = artists!.elementAt(index).artist ?? context.l10n.unknown;
 
           return YaruSelectableContainer(
             selected: false,
@@ -66,9 +64,18 @@ class ArtistsView extends StatelessWidget {
               ),
             ),
             borderRadius: BorderRadius.circular(300),
-            child: RoundImageContainer(
-              image: images?.firstOrNull,
-              text: artistname.isNotEmpty ? artistname : context.l10n.unknown,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: ArtistImage(
+                    images: images,
+                  ),
+                ),
+                ArtistVignette(text: text),
+              ],
             ),
           );
         },
