@@ -196,8 +196,7 @@ class _Right extends StatelessWidget {
                   SizedBox(
                     height: kTinyButtonSize,
                     width: kTinyButtonSize,
-                    child: DownloadButton.create(
-                      context: context,
+                    child: DownloadButton(
                       iconSize: kTinyButtonIconSize,
                       audio: audio,
                       addPodcast: addPodcast,

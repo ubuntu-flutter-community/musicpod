@@ -1,9 +1,8 @@
 import 'dart:io';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
@@ -12,65 +11,20 @@ import '../../build_context_x.dart';
 import '../../constants.dart';
 import '../../external_path.dart';
 import '../../library.dart';
-import '../../local_audio.dart';
 import '../../patch_notes.dart';
 import '../../player.dart';
-import '../../podcasts.dart';
-import '../../radio.dart';
 import '../settings/settings_model.dart';
 import 'connectivity_notifier.dart';
 import 'master_detail_page.dart';
 
-class App extends StatefulWidget {
+class App extends ConsumerStatefulWidget {
   const App({super.key});
 
-  static Widget create() {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => AppModel(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => RadioModel(
-            radioService: getService<RadioService>(),
-            libraryService: getService<LibraryService>(),
-          ),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => PlayerModel(
-            service: getService<PlayerService>(),
-          ),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => LocalAudioModel(
-            localAudioService: getService<LocalAudioService>(),
-            libraryService: getService<LibraryService>(),
-          ),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => LibraryModel(getService<LibraryService>()),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => PodcastModel(
-            getService<PodcastService>(),
-            getService<LibraryService>(),
-          ),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ConnectivityNotifier(
-            getService<Connectivity>(),
-          ),
-        ),
-      ],
-      child: const App(),
-    );
-  }
-
   @override
-  State<App> createState() => _AppState();
+  ConsumerState<App> createState() => _AppState();
 }
 
-class _AppState extends State<App> with WidgetsBindingObserver {
+class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
   String? _countryCode;
 
   @override
@@ -82,11 +36,10 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     _countryCode = WidgetsBinding.instance.platformDispatcher.locale.countryCode
         ?.toLowerCase();
 
-    final libraryModel = context.read<LibraryModel>();
-    final settingsModel = context.read<SettingsModel>();
-    final playerModel = context.read<PlayerModel>();
-
-    final connectivityNotifier = context.read<ConnectivityNotifier>();
+    final libraryModel = ref.read(libraryModelProvider);
+    final settingsModel = ref.read(settingsModelProvider);
+    final playerModel = ref.read(playerModelProvider);
+    final connectivityNotifier = ref.read(connectivityNotifierProvider);
 
     if (!Platform.isAndroid && !Platform.isIOS) {
       YaruWindow.of(context).onClose(
@@ -135,15 +88,21 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final playerToTheRight = context.m.size.width > kSideBarThreshHold;
 
-    // AppModel
-    final appModel = context.read<AppModel>();
-    final isFullScreen = context.select((AppModel m) => m.fullScreen);
-
-    final playerModel = context.read<PlayerModel>();
+    final appModel = ref.read(appModelProvider);
+    final isFullScreen =
+        ref.watch(appModelProvider.select((value) => value.fullScreen));
+    final playerModel = ref.read(playerModelProvider);
 
     return KeyboardListener(
       focusNode: FocusNode(),
-      onKeyEvent: (value) async => _onKeyEvent(value, appModel, playerModel),
+      onKeyEvent: (value) async {
+        if (value.runtimeType == KeyDownEvent &&
+            value.logicalKey == LogicalKeyboardKey.space) {
+          if (!appModel.lockSpace) {
+            playerModel.playOrPause();
+          }
+        }
+      },
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -182,20 +141,5 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         ],
       ),
     );
-  }
-
-  Future<void> _onKeyEvent(
-    KeyEvent value,
-    AppModel appModel,
-    PlayerModel playerModel,
-  ) async {
-    {
-      if (value.runtimeType == KeyDownEvent &&
-          value.logicalKey == LogicalKeyboardKey.space) {
-        if (!appModel.lockSpace) {
-          playerModel.playOrPause();
-        }
-      }
-    }
   }
 }

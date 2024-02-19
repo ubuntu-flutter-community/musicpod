@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../external_path.dart';
 import 'settings_service.dart';
@@ -92,3 +94,10 @@ class SettingsModel extends SafeChangeNotifier {
     super.dispose();
   }
 }
+
+final settingsModelProvider = ChangeNotifierProvider(
+  (ref) => SettingsModel(
+    service: getService<SettingsService>(),
+    externalPathService: getService<ExternalPathService>(),
+  )..init(),
+);

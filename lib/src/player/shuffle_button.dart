@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../build_context_x.dart';
 import '../common/icons.dart';
 import 'player_model.dart';
-import 'package:provider/provider.dart';
 
-class ShuffleButton extends StatelessWidget {
+class ShuffleButton extends ConsumerWidget {
   const ShuffleButton({
     super.key,
     required this.active,
@@ -13,10 +13,10 @@ class ShuffleButton extends StatelessWidget {
   final bool active;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.t;
-    final shuffle = context.select((PlayerModel m) => m.shuffle);
-    final setShuffle = context.read<PlayerModel>().setShuffle;
+    final shuffle = ref.watch(playerModelProvider.select((m) => m.shuffle));
+    final setShuffle = ref.read(playerModelProvider).setShuffle;
 
     return IconButton(
       icon: Icon(

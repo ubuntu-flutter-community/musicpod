@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
@@ -9,7 +10,7 @@ import '../../player.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
 
-class FullHeightPlayerImage extends StatelessWidget {
+class FullHeightPlayerImage extends ConsumerWidget {
   const FullHeightPlayerImage({
     super.key,
     this.audio,
@@ -27,7 +28,7 @@ class FullHeightPlayerImage extends StatelessWidget {
   final BorderRadius? borderRadius;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.t;
 
     IconData iconData;
@@ -117,9 +118,9 @@ class FullHeightPlayerImage extends StatelessWidget {
         borderRadius: radius,
         onTap: () {
           if (audio?.audioType == AudioType.local) {
-            onTitleTap(audio: audio, text: '', context: context);
+            onTitleTap(audio: audio, text: '', context: context, ref: ref);
           } else {
-            onArtistTap(audio: audio, artist: null, context: context);
+            onArtistTap(audio: audio, artist: null, context: context, ref: ref);
           }
         },
         child: SizedBox(

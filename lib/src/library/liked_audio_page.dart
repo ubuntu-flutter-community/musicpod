@@ -1,6 +1,6 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -12,7 +12,7 @@ import '../../utils.dart';
 import '../common/fall_back_header_image.dart';
 import '../l10n/l10n.dart';
 
-class LikedAudioPage extends StatelessWidget {
+class LikedAudioPage extends ConsumerWidget {
   const LikedAudioPage({
     super.key,
     this.likedLocalAudios,
@@ -30,9 +30,9 @@ class LikedAudioPage extends StatelessWidget {
   final Set<Audio>? likedLocalAudios;
 
   @override
-  Widget build(BuildContext context) {
-    final model = context.read<LocalAudioModel>();
-    final libraryModel = context.read<LibraryModel>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final model = ref.read(localAudioModelProvider);
+    final libraryModel = ref.read(libraryModelProvider);
     return AudioPage(
       onAlbumTap: (text) {
         final albumAudios = model.findAlbum(Audio(album: text));
