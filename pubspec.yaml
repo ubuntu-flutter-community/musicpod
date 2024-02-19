@@ -29,6 +29,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.6.15
+  flutter_riverpod: ^2.4.10
   flutter_tabler_icons: ^1.7.0
   github: ^9.22.0
   gtk: ^2.1.0

@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 class ConnectivityNotifier extends SafeChangeNotifier {
   ConnectivityNotifier(this._connectivity);
@@ -30,3 +32,8 @@ class ConnectivityNotifier extends SafeChangeNotifier {
     notifyListeners();
   }
 }
+
+final connectivityNotifierProvider =
+    ChangeNotifierProvider<ConnectivityNotifier>((ref) {
+  return ConnectivityNotifier(getService<Connectivity>());
+});
