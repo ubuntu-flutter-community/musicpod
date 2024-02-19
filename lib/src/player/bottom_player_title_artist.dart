@@ -40,6 +40,7 @@ class BottomPlayerTitleArtist extends ConsumerWidget {
             audio: audio,
             text: icyTitle,
             context: context,
+            ref: ref,
           ),
           child: Tooltip(
             message: title,
@@ -62,6 +63,7 @@ class BottomPlayerTitleArtist extends ConsumerWidget {
               audio: audio,
               artist: icyTitle,
               context: context,
+              ref: ref,
             ),
             child: Tooltip(
               message: subTitle,

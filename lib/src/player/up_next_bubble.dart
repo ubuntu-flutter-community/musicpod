@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
@@ -7,7 +7,7 @@ import '../../data.dart';
 import '../../player.dart';
 import '../l10n/l10n.dart';
 
-class UpNextBubble extends StatelessWidget {
+class UpNextBubble extends ConsumerWidget {
   const UpNextBubble({
     super.key,
     required this.audio,
@@ -18,12 +18,12 @@ class UpNextBubble extends StatelessWidget {
   final Audio? nextAudio;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.t;
-    final setUpNextExpanded = context.read<PlayerModel>().setUpNextExpanded;
+    final setUpNextExpanded = ref.read(playerModelProvider).setUpNextExpanded;
     final isUpNextExpanded =
-        context.select((PlayerModel m) => m.isUpNextExpanded);
-    final queue = context.select((PlayerModel m) => m.queue);
+        ref.watch(playerModelProvider.select((m) => m.isUpNextExpanded));
+    final queue = ref.watch(playerModelProvider.select((m) => m.queue));
 
     return SizedBox(
       height: isUpNextExpanded ? 180 : 70,

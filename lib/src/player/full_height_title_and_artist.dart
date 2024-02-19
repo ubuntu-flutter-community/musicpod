@@ -42,6 +42,7 @@ class FullHeightTitleAndArtist extends ConsumerWidget {
             audio: audio,
             text: mpvMetaData?.icyTitle,
             context: context,
+            ref: ref,
           ),
           child: Tooltip(
             message: title,
@@ -64,6 +65,7 @@ class FullHeightTitleAndArtist extends ConsumerWidget {
             audio: audio,
             artist: mpvMetaData?.icyName,
             context: context,
+            ref: ref,
           ),
           child: Tooltip(
             message: subTitle,

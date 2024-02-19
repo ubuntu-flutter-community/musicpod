@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -223,7 +223,7 @@ class SearchButton extends StatelessWidget {
   }
 }
 
-class SearchingBar extends StatelessWidget {
+class SearchingBar extends ConsumerWidget {
   const SearchingBar({
     super.key,
     this.text,
@@ -240,8 +240,8 @@ class SearchingBar extends StatelessWidget {
   final String? hintText;
 
   @override
-  Widget build(BuildContext context) {
-    final appModel = context.read<AppModel>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appModel = ref.read(appModelProvider);
     void onChanged2(v) {
       appModel.setLockSpace(true);
       onChanged?.call(v);

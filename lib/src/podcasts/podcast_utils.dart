@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
@@ -14,6 +14,7 @@ void searchAndPushPodcastPage({
   required String? itemImageUrl,
   required String? genre,
   required bool play,
+  required WidgetRef ref,
 }) {
   ScaffoldMessenger.of(context).clearSnackBars();
 
@@ -25,8 +26,8 @@ void searchAndPushPodcastPage({
     );
     return;
   }
-  final model = context.read<PodcastModel>();
-  final startPlaylist = context.read<PlayerModel>().startPlaylist;
+  final model = ref.read(podcastModelProvider);
+  final startPlaylist = ref.read(playerModelProvider).startPlaylist;
   final selectedFeedUrl = model.selectedFeedUrl;
   final setSelectedFeedUrl = model.setSelectedFeedUrl;
 

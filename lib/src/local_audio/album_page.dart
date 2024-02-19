@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -9,7 +9,7 @@ import '../../data.dart';
 import '../../local_audio.dart';
 import '../l10n/l10n.dart';
 
-class AlbumPage extends StatelessWidget {
+class AlbumPage extends ConsumerWidget {
   const AlbumPage({
     super.key,
     required this.id,
@@ -51,8 +51,8 @@ class AlbumPage extends StatelessWidget {
   final void Function(String name, Set<Audio> audios) addPinnedAlbum;
 
   @override
-  Widget build(BuildContext context) {
-    final model = context.read<LocalAudioModel>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final model = ref.read(localAudioModelProvider);
     final image = album?.firstOrNull?.pictureData != null
         ? Image.memory(
             album!.firstOrNull!.pictureData!,

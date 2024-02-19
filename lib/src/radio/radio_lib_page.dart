@@ -1,6 +1,6 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
@@ -15,7 +15,7 @@ import 'radio_search.dart';
 import 'radio_search_page.dart';
 import 'station_card.dart';
 
-class RadioLibPage extends StatelessWidget {
+class RadioLibPage extends ConsumerWidget {
   const RadioLibPage({
     super.key,
     required this.isOnline,
@@ -24,14 +24,14 @@ class RadioLibPage extends StatelessWidget {
   final bool isOnline;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (!isOnline) {
       return const OfflinePage();
     }
 
     final theme = context.t;
-    final showTags = context.select((RadioModel m) => m.showTags);
-    final radioModel = context.read<RadioModel>();
+    final showTags = ref.watch(radioModelProvider.select((m) => m.showTags));
+    final radioModel = ref.read(radioModelProvider);
 
     return Column(
       children: [
@@ -71,17 +71,19 @@ class RadioLibPage extends StatelessWidget {
   }
 }
 
-class StationGrid extends StatelessWidget {
+class StationGrid extends ConsumerWidget {
   const StationGrid({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final stations = context.select((LibraryModel m) => m.starredStations);
-    final length = context.select((LibraryModel m) => m.starredStationsLength);
-    final libraryModel = context.read<LibraryModel>();
-    final playerModel = context.read<PlayerModel>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stations =
+        ref.watch(libraryModelProvider.select((m) => m.starredStations));
+    final length =
+        ref.watch(libraryModelProvider.select((m) => m.starredStationsLength));
+    final libraryModel = ref.read(libraryModelProvider);
+    final playerModel = ref.read(playerModelProvider);
 
     if (length == 0) {
       return NoSearchResultPage(
@@ -108,15 +110,16 @@ class StationGrid extends StatelessWidget {
   }
 }
 
-class TagGrid extends StatelessWidget {
+class TagGrid extends ConsumerWidget {
   const TagGrid({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final favTagsLength = context.select((LibraryModel m) => m.favTags.length);
-    final favTags = context.select((LibraryModel m) => m.favTags);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favTagsLength =
+        ref.watch(libraryModelProvider.select((m) => m.favTags.length));
+    final favTags = ref.watch(libraryModelProvider.select((m) => m.favTags));
 
     if (favTagsLength == 0) {
       return NoSearchResultPage(

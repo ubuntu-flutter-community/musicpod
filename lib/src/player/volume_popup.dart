@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common.dart';
 import '../l10n/l10n.dart';
 import 'player_model.dart';
 
-class VolumeSliderPopup extends StatelessWidget {
+class VolumeSliderPopup extends ConsumerWidget {
   const VolumeSliderPopup({
     super.key,
     this.color,
@@ -14,9 +14,9 @@ class VolumeSliderPopup extends StatelessWidget {
   final Color? color;
 
   @override
-  Widget build(BuildContext context) {
-    final playerModel = context.read<PlayerModel>();
-    final volume = context.select((PlayerModel m) => m.volume);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playerModel = ref.read(playerModelProvider);
+    final volume = ref.watch(playerModelProvider.select((m) => m.volume));
     final setVolume = playerModel.setVolume;
     IconData iconData;
     if (volume <= 0) {
@@ -40,13 +40,8 @@ class VolumeSliderPopup extends StatelessWidget {
         return [
           PopupMenuItem(
             enabled: false,
-            child: ChangeNotifierProvider.value(
-              value: playerModel,
-              builder: (context, _) {
-                return _Slider(
-                  setVolume: setVolume,
-                );
-              },
+            child: _Slider(
+              setVolume: setVolume,
             ),
           ),
         ];
@@ -64,15 +59,19 @@ class _Slider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final volume = context.select((PlayerModel m) => m.volume);
-
     return Padding(
       padding: const EdgeInsets.only(right: 8),
-      child: Slider(
-        value: volume,
-        onChanged: setVolume,
-        max: 100,
-        min: 0,
+      child: Consumer(
+        builder: (context, ref, _) {
+          final volume = ref.watch(playerModelProvider.select((m) => m.volume));
+
+          return Slider(
+            value: volume,
+            onChanged: setVolume,
+            max: 100,
+            min: 0,
+          );
+        },
       ),
     );
   }
