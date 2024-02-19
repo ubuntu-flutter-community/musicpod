@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -70,9 +70,6 @@ class AudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showWindowControls =
-        context.select((AppModel a) => a.showWindowControls);
-
     final body = AudioPageBody(
       key: ValueKey(audios?.length),
       pageId: pageId,
@@ -106,18 +103,25 @@ class AudioPage extends StatelessWidget {
       showControlPanel: showControlPanel,
     );
 
-    return YaruDetailPage(
-      key: ValueKey(pageId),
-      appBar: HeaderBar(
-        style: showWindowControls
-            ? YaruTitleBarStyle.normal
-            : YaruTitleBarStyle.undecorated,
-        title: isMobile ? null : (title ?? Text(headerTitle ?? pageId)),
-        leading: Navigator.canPop(context)
-            ? const NavBackButton()
-            : const SizedBox.shrink(),
-      ),
-      body: body,
+    return Consumer(
+      builder: (context, ref, _) {
+        final showWindowControls =
+            ref.watch(appModelProvider.select((a) => a.showWindowControls));
+
+        return YaruDetailPage(
+          key: ValueKey(pageId),
+          appBar: HeaderBar(
+            style: showWindowControls
+                ? YaruTitleBarStyle.normal
+                : YaruTitleBarStyle.undecorated,
+            title: isMobile ? null : (title ?? Text(headerTitle ?? pageId)),
+            leading: Navigator.canPop(context)
+                ? const NavBackButton()
+                : const SizedBox.shrink(),
+          ),
+          body: body,
+        );
+      },
     );
   }
 }

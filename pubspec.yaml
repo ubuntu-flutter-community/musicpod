@@ -29,6 +29,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.6.15
+  flutter_riverpod: ^2.4.10
   flutter_tabler_icons: ^1.7.0
   github: ^9.22.0
   gtk: ^2.1.0
@@ -50,7 +51,6 @@ dependencies:
   path: ^1.8.3
   path_provider: ^2.1.1
   podcast_search: ^0.6.8
-  provider: ^6.0.5
   radio_browser_api: ^1.0.1
   reorderableitemsview: ^2.0.1
   safe_change_notifier: ^0.3.0

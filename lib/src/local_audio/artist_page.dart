@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common.dart';
 import '../../data.dart';
@@ -11,7 +11,7 @@ import '../../local_audio.dart';
 import '../../utils.dart';
 import '../l10n/l10n.dart';
 
-class ArtistPage extends StatelessWidget {
+class ArtistPage extends ConsumerWidget {
   const ArtistPage({
     super.key,
     required this.images,
@@ -22,9 +22,9 @@ class ArtistPage extends StatelessWidget {
   final Set<Audio>? artistAudios;
 
   @override
-  Widget build(BuildContext context) {
-    final model = context.read<LocalAudioModel>();
-    final libraryModel = context.read<LibraryModel>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final libraryModel = ref.read(libraryModelProvider);
+    final model = ref.read(localAudioModelProvider);
 
     return AudioPage(
       showArtist: false,

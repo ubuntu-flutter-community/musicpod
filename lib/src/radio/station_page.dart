@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
@@ -17,7 +17,7 @@ import 'radio_fall_back_icon.dart';
 import 'radio_search.dart';
 import 'radio_search_page.dart';
 
-class StationPage extends StatelessWidget {
+class StationPage extends ConsumerWidget {
   const StationPage({
     super.key,
     required this.station,
@@ -72,9 +72,9 @@ class StationPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.t;
-    final radioModel = context.read<RadioModel>();
+    final radioModel = ref.read(radioModelProvider);
     final tags = station.album?.isNotEmpty == false
         ? null
         : <String>[
@@ -83,13 +83,13 @@ class StationPage extends StatelessWidget {
     const size = fullHeightPlayerImageSize - 20;
 
     final showWindowControls =
-        context.select((AppModel a) => a.showWindowControls);
-    final startPlaylist = context.read<PlayerModel>().startPlaylist;
-    final libraryModel = context.read<LibraryModel>();
+        ref.watch(appModelProvider.select((m) => m.showWindowControls));
+    final startPlaylist = ref.read(playerModelProvider).startPlaylist;
+    final libraryModel = ref.read(libraryModelProvider);
     final isStarred = station.url == null
         ? false
         : libraryModel.isStarredStation(station.url!);
-    context.select((LibraryModel m) => m.starredStations.length);
+    ref.watch(libraryModelProvider.select((m) => m.starredStations.length));
 
     return YaruDetailPage(
       appBar: HeaderBar(

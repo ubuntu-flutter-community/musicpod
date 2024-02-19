@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
@@ -13,7 +13,7 @@ import '../globals.dart';
 import 'connectivity_notifier.dart';
 import 'master_items.dart';
 
-class MasterDetailPage extends StatelessWidget {
+class MasterDetailPage extends ConsumerWidget {
   const MasterDetailPage({
     super.key,
     required this.countryCode,
@@ -22,14 +22,15 @@ class MasterDetailPage extends StatelessWidget {
   final String? countryCode;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // Connectivity
-    final isOnline = context.watch<ConnectivityNotifier>().isOnline;
+    final isOnline = ref
+        .watch(connectivityNotifierProvider.select((value) => value.isOnline));
 
     // Library
-    final libraryModel = context.watch<LibraryModel>();
+    final libraryModel = ref.watch(libraryModelProvider);
 
-    final localAudioModel = context.read<LocalAudioModel>();
+    final localAudioModel = ref.read(localAudioModelProvider);
 
     final masterItems = createMasterItems(
       libraryModel: libraryModel,

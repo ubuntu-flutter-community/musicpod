@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../common.dart';
@@ -9,7 +9,7 @@ import '../l10n/l10n.dart';
 import 'artist_page.dart';
 import 'local_audio_model.dart';
 
-class ArtistsView extends StatelessWidget {
+class ArtistsView extends ConsumerWidget {
   const ArtistsView({
     super.key,
     this.artists,
@@ -21,7 +21,7 @@ class ArtistsView extends StatelessWidget {
   final Widget? noResultMessage, noResultIcon;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (artists == null) {
       return const Center(
         child: Progress(),
@@ -34,8 +34,7 @@ class ArtistsView extends StatelessWidget {
         message: noResultMessage,
       );
     }
-    final model = context.read<LocalAudioModel>();
-
+    final model = ref.read(localAudioModelProvider);
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: GridView.builder(

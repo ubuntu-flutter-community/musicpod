@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github/github.dart';
 import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:window_manager/window_manager.dart';
@@ -104,11 +104,7 @@ Future<void> main(List<String> args) async {
   registerService(GitHub.new);
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => SettingsModel(
-        service: settingsService,
-        externalPathService: getService<ExternalPathService>(),
-      )..init(),
+    ProviderScope(
       child: Platform.isLinux
           ? const GtkApplication(child: YaruMusicPodApp())
           : const MaterialMusicPodApp(),

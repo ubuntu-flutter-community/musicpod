@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
@@ -21,29 +21,34 @@ class YaruMusicPodApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeIndex = context.select((SettingsModel m) => m.themeIndex);
+    return Consumer(
+      builder: (context, ref, _) {
+        final themeIndex = ref
+            .watch(settingsModelProvider.select((value) => value.themeIndex));
 
-    return YaruTheme(
-      builder: (context, yaru, child) {
-        return MusicPodApp(
-          themeMode: ThemeMode.values[themeIndex],
-          lightTheme: yaru.theme?.copyWith(
-            actionIconTheme: ActionIconThemeData(
-              backButtonIconBuilder: (context) => Icon(Iconz().goBack),
-            ),
-          ),
-          darkTheme: yaru.darkTheme?.copyWith(
-            actionIconTheme: ActionIconThemeData(
-              backButtonIconBuilder: (context) => Icon(Iconz().goBack),
-            ),
-            scaffoldBackgroundColor: const Color(0xFF1e1e1e),
-            dividerColor: darkDividerColor,
-            dividerTheme: const DividerThemeData(
-              color: darkDividerColor,
-              space: 1.0,
-              thickness: 0.0,
-            ),
-          ),
+        return YaruTheme(
+          builder: (context, yaru, child) {
+            return MusicPodApp(
+              themeMode: ThemeMode.values[themeIndex],
+              lightTheme: yaru.theme?.copyWith(
+                actionIconTheme: ActionIconThemeData(
+                  backButtonIconBuilder: (context) => Icon(Iconz().goBack),
+                ),
+              ),
+              darkTheme: yaru.darkTheme?.copyWith(
+                actionIconTheme: ActionIconThemeData(
+                  backButtonIconBuilder: (context) => Icon(Iconz().goBack),
+                ),
+                scaffoldBackgroundColor: const Color(0xFF1e1e1e),
+                dividerColor: darkDividerColor,
+                dividerTheme: const DividerThemeData(
+                  color: darkDividerColor,
+                  space: 1.0,
+                  thickness: 0.0,
+                ),
+              ),
+            );
+          },
         );
       },
     );
@@ -57,13 +62,17 @@ class MaterialMusicPodApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeIndex = context.select((SettingsModel m) => m.themeIndex);
-
-    return SystemThemeBuilder(
-      builder: (context, accent) {
-        return MusicPodApp(
-          themeMode: ThemeMode.values[themeIndex],
-          accent: accent.accent,
+    return Consumer(
+      builder: (context, ref, _) {
+        final themeIndex = ref
+            .watch(settingsModelProvider.select((value) => value.themeIndex));
+        return SystemThemeBuilder(
+          builder: (context, accent) {
+            return MusicPodApp(
+              themeMode: ThemeMode.values[themeIndex],
+              accent: accent.accent,
+            );
+          },
         );
       },
     );
@@ -119,7 +128,7 @@ class _MusicPodAppState extends State<MusicPodApp> {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: supportedLocales,
           onGenerateTitle: (context) => 'MusicPod',
-          home: initialized ? App.create() : const SplashScreen(),
+          home: initialized ? const App() : const SplashScreen(),
           scrollBehavior: const MaterialScrollBehavior().copyWith(
             dragDevices: {
               PointerDeviceKind.mouse,

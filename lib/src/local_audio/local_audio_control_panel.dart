@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../build_context_x.dart';
@@ -9,7 +9,7 @@ import '../../theme.dart';
 import '../l10n/l10n.dart';
 import 'local_audio_view.dart';
 
-class LocalAudioControlPanel extends StatelessWidget {
+class LocalAudioControlPanel extends ConsumerWidget {
   const LocalAudioControlPanel({
     super.key,
     this.titlesCount,
@@ -20,12 +20,14 @@ class LocalAudioControlPanel extends StatelessWidget {
   final int? titlesCount, artistCount, albumCount;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.t;
-    final libraryModel = context.read<LibraryModel>();
-    final localAudioModel = context.read<LocalAudioModel>();
-    final index = context.select((LibraryModel m) => m.localAudioindex) ?? 0;
-    final manualFilter = context.select((LocalAudioModel m) => m.manualFilter);
+    final libraryModel = ref.read(libraryModelProvider);
+    final localAudioModel = ref.read(localAudioModelProvider);
+    final index =
+        ref.watch(libraryModelProvider.select((l) => l.localAudioindex ?? 0));
+    final manualFilter =
+        ref.watch(localAudioModelProvider.select((l) => l.manualFilter));
 
     var i = index;
     if (!manualFilter) {
