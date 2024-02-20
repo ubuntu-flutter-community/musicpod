@@ -47,10 +47,9 @@ class AlbumsView extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: GridView.builder(
-        shrinkWrap: true,
         padding: gridPadding,
         itemCount: albums!.length,
-        gridDelegate: imageGridDelegate,
+        gridDelegate: audioCardGridDelegate,
         itemBuilder: (context, index) {
           final audio = albums!.elementAt(index);
           String? id = generateAlbumId(audio);
@@ -67,7 +66,7 @@ class AlbumsView extends ConsumerWidget {
               : Image.memory(
                   audio.pictureData!,
                   fit: BoxFit.cover,
-                  height: kSmallCardHeight,
+                  height: kAudioCardDimension,
                   filterQuality: FilterQuality.medium,
                 );
 

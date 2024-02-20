@@ -114,7 +114,7 @@ class PodcastsCollectionBody extends ConsumerWidget {
                     : GridView.builder(
                         padding: gridPadding,
                         itemCount: itemCount,
-                        gridDelegate: imageGridDelegate,
+                        gridDelegate: audioCardGridDelegate,
                         itemBuilder: (context, index) {
                           final MapEntry<String, Set<Audio>> podcast;
                           if (updatesOnly) {
@@ -135,8 +135,8 @@ class PodcastsCollectionBody extends ConsumerWidget {
                           final image = SafeNetworkImage(
                             url: artworkUrl600,
                             fit: BoxFit.cover,
-                            height: kSmallCardHeight,
-                            width: kSmallCardHeight,
+                            height: kAudioCardDimension,
+                            width: kAudioCardDimension,
                           );
 
                           return AudioCard(

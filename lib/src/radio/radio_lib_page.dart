@@ -94,7 +94,7 @@ class StationGrid extends ConsumerWidget {
 
     return GridView.builder(
       padding: gridPadding,
-      gridDelegate: imageGridDelegate,
+      gridDelegate: audioCardGridDelegate,
       itemCount: length,
       itemBuilder: (context, index) {
         final station = stations.entries.elementAt(index).value.firstOrNull;
@@ -130,7 +130,7 @@ class TagGrid extends ConsumerWidget {
 
     return GridView.builder(
       padding: gridPadding,
-      gridDelegate: imageGridDelegate,
+      gridDelegate: audioCardGridDelegate,
       itemCount: favTagsLength,
       itemBuilder: (context, index) {
         final tag = favTags.elementAt(index);
