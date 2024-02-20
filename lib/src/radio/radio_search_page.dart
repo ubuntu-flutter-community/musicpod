@@ -62,7 +62,7 @@ class _RadioSearchPageState extends ConsumerState<RadioSearchPage> {
         } else {
           return GridView.builder(
             padding: gridPadding,
-            gridDelegate: imageGridDelegate,
+            gridDelegate: audioCardGridDelegate,
             itemCount: snapshot.data?.length,
             itemBuilder: (context, index) {
               final station = snapshot.data?.elementAt(index);

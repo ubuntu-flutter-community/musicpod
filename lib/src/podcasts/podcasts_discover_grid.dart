@@ -55,7 +55,7 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
             controller: _controller,
             padding: gridPadding,
             itemCount: widget.searchResult!.resultCount,
-            gridDelegate: imageGridDelegate,
+            gridDelegate: audioCardGridDelegate,
             itemBuilder: (context, index) {
               final podcastItem = widget.searchResult!.items.elementAt(index);
 
@@ -63,8 +63,8 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
               final image = SafeNetworkImage(
                 url: art,
                 fit: BoxFit.cover,
-                height: kSmallCardHeight,
-                width: kSmallCardHeight,
+                height: kAudioCardDimension,
+                width: kAudioCardDimension,
               );
 
               return Consumer(

@@ -68,30 +68,28 @@ const kHeaderPadding = EdgeInsets.only(
   bottom: kYaruPagePadding - 5,
 );
 
-const kCardHeight = 200.0;
+const kAudioCardDimension = 130.0;
 
-const kSmallCardHeight = kCardHeight - 70;
-
-const kCardBottomHeight = 30.0;
+const kAudioCardBottomHeight = 30.0;
 
 const kMasterDetailBreakPoint = 720.0;
 
-const kImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
-  maxCrossAxisExtent: kSmallCardHeight + 40,
-  mainAxisExtent: kSmallCardHeight + kCardBottomHeight + 10,
+const kAudioCardGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
+  maxCrossAxisExtent: kAudioCardDimension + 40,
+  mainAxisExtent: kAudioCardDimension + kAudioCardBottomHeight + 8,
   mainAxisSpacing: 0,
   crossAxisSpacing: 10,
 );
 
-const kMobileImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
-  maxCrossAxisExtent: kSmallCardHeight + 60,
-  mainAxisExtent: kSmallCardHeight + kCardBottomHeight + 10,
+const kMobileAudioCardGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
+  maxCrossAxisExtent: kAudioCardDimension + 60,
+  mainAxisExtent: kAudioCardDimension + kAudioCardBottomHeight + 8,
   mainAxisSpacing: 0,
   crossAxisSpacing: 10,
 );
 
 const kDiskGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
-  maxCrossAxisExtent: kSmallCardHeight + 10,
+  maxCrossAxisExtent: kAudioCardDimension + 10,
   mainAxisSpacing: 10,
   crossAxisSpacing: 10,
 );

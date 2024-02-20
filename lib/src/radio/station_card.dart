@@ -49,8 +49,8 @@ class StationCard extends StatelessWidget {
           errorIcon: RadioFallBackIcon(station: station),
           url: station?.imageUrl,
           fit: BoxFit.scaleDown,
-          height: kSmallCardHeight,
-          width: kSmallCardHeight,
+          height: kAudioCardDimension,
+          width: kAudioCardDimension,
         ),
       ),
     );

@@ -14,18 +14,40 @@ class ArtistImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.t;
+    final boxShadow = BoxShadow(
+      offset: const Offset(0, 0),
+      spreadRadius: 1,
+      blurRadius: 1,
+      color: theme.shadowColor.withOpacity(0.4),
+    );
+
     if (images?.length == 1) {
-      return Image.memory(
-        images!.first,
-        fit: BoxFit.fitHeight,
-        filterQuality: FilterQuality.medium,
+      return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: MemoryImage(images!.first),
+            fit: BoxFit.fitHeight,
+            filterQuality: FilterQuality.medium,
+          ),
+          boxShadow: [
+            boxShadow,
+          ],
+        ),
       );
     }
 
     if (images?.isNotEmpty == true) {
       if (images!.length >= 4) {
-        return FourImagesGrid(
-          images: images!,
+        return Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              boxShadow,
+            ],
+          ),
+          child: FourImagesGrid(
+            images: images!,
+          ),
         );
       } else if (images!.length >= 2) {
         return Container(
@@ -34,6 +56,9 @@ class ArtistImage extends StatelessWidget {
               fit: BoxFit.fitHeight,
               image: MemoryImage(images!.first),
             ),
+            boxShadow: [
+              boxShadow,
+            ],
           ),
           child: YaruClip.diagonal(
             position: YaruDiagonalClip.bottomLeft,
