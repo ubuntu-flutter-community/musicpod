@@ -6,7 +6,6 @@ import '../../build_context_x.dart';
 import '../../constants.dart';
 import '../../player.dart';
 import '../../theme_data_x.dart';
-import '../app/connectivity_notifier.dart';
 import '../theme.dart';
 
 class PlayerView extends ConsumerStatefulWidget {
@@ -50,10 +49,7 @@ class _PlayerViewState extends ConsumerState<PlayerView> {
   Widget build(BuildContext context) {
     final theme = context.t;
 
-    // Connectivity
-    final isOnline =
-        ref.watch(connectivityNotifierProvider.select((c) => c.isOnline));
-
+    final isOnline = ref.watch(appModelProvider.select((c) => c.isOnline));
     final playerModel = ref.read(playerModelProvider);
     final appModel = ref.read(appModelProvider);
     final nextAudio = ref.watch(playerModelProvider.select((m) => m.nextAudio));

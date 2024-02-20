@@ -14,7 +14,6 @@ import '../../library.dart';
 import '../../patch_notes.dart';
 import '../../player.dart';
 import '../settings/settings_model.dart';
-import 'connectivity_notifier.dart';
 import 'master_detail_page.dart';
 
 class App extends ConsumerStatefulWidget {
@@ -39,7 +38,7 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
     final libraryModel = ref.read(libraryModelProvider);
     final settingsModel = ref.read(settingsModelProvider);
     final playerModel = ref.read(playerModelProvider);
-    final connectivityNotifier = ref.read(connectivityNotifierProvider);
+    final appModel = ref.read(appModelProvider);
 
     if (!Platform.isAndroid && !Platform.isIOS) {
       YaruWindow.of(context).onClose(
@@ -52,7 +51,7 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      connectivityNotifier.init().then(
+      appModel.init().then(
         (_) {
           libraryModel.init().then(
             (_) {
