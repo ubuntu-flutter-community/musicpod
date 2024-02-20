@@ -5,12 +5,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../app.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
-import '../app/connectivity_notifier.dart';
 import '../library/library_model.dart';
 
 class AudioPageBody extends ConsumerStatefulWidget {
@@ -108,8 +108,7 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline =
-        ref.watch((connectivityNotifierProvider.select((c) => c.isOnline)));
+    final isOnline = ref.watch((appModelProvider.select((c) => c.isOnline)));
     final isPlaying =
         ref.watch((playerModelProvider.select((c) => c.isPlaying)));
 
