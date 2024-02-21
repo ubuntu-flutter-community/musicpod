@@ -28,6 +28,10 @@ class YaruMusicPodApp extends StatelessWidget {
             actionIconTheme: ActionIconThemeData(
               backButtonIconBuilder: (context) => Icon(Iconz().goBack),
             ),
+            snackBarTheme: SnackBarThemeData(
+              behavior: SnackBarBehavior.floating,
+              actionTextColor: yaru.theme?.colorScheme.primary,
+            ),
           ),
           darkTheme: yaru.darkTheme?.copyWith(
             actionIconTheme: ActionIconThemeData(
@@ -39,6 +43,10 @@ class YaruMusicPodApp extends StatelessWidget {
               color: darkDividerColor,
               space: 1.0,
               thickness: 0.0,
+            ),
+            snackBarTheme: SnackBarThemeData(
+              behavior: SnackBarBehavior.floating,
+              actionTextColor: yaru.theme?.colorScheme.primary,
             ),
           ),
         );

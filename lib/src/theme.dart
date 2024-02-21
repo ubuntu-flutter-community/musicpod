@@ -45,14 +45,16 @@ ThemeData m3Theme({
 }
 
 SnackBarThemeData _createSnackBarThemeData(ColorScheme scheme) {
-  return const SnackBarThemeData(behavior: SnackBarBehavior.floating);
+  return SnackBarThemeData(
+    behavior: SnackBarBehavior.floating,
+    actionTextColor: scheme.primary.scale(
+      saturation: 0.5,
+      lightness: (scheme.isLight ? 0.2 : -0.5),
+    ),
+  );
 }
 
 Color? getSideBarColor(ThemeData theme) => theme.scaffoldBackgroundColor;
-
-Color getSnackBarTextColor(ThemeData theme) => yaruStyled
-    ? Colors.white.withOpacity(0.7)
-    : theme.colorScheme.onInverseSurface;
 
 Color getPlayerBg(Color? surfaceTintColor, Color fallbackColor) {
   if (surfaceTintColor != null) {

@@ -34,7 +34,6 @@ class ShareButton extends StatelessWidget {
               );
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  width: snackBarWidth,
                   content: CopyClipboardContent(
                     text: content,
                     onSearch: audio?.url == null
