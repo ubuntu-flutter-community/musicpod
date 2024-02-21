@@ -384,8 +384,8 @@ EdgeInsetsGeometry get tabViewPadding =>
 EdgeInsetsGeometry get gridPadding =>
     isMobile ? kMobileGridPadding : kGridPadding;
 
-SliverGridDelegate get imageGridDelegate =>
-    isMobile ? kMobileImageGridDelegate : kImageGridDelegate;
+SliverGridDelegate get audioCardGridDelegate =>
+    isMobile ? kMobileAudioCardGridDelegate : kAudioCardGridDelegate;
 
 EdgeInsetsGeometry get appBarActionSpacing => Platform.isMacOS
     ? const EdgeInsets.only(right: 5, left: 20)

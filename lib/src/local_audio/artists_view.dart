@@ -40,7 +40,6 @@ class ArtistsView extends ConsumerWidget {
       child: GridView.builder(
         itemCount: artists!.length,
         padding: gridPadding,
-        shrinkWrap: true,
         gridDelegate: kDiskGridDelegate,
         itemBuilder: (context, index) {
           final artistAudios = model.findArtist(

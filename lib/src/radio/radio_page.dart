@@ -47,16 +47,21 @@ class _RadioPageState extends ConsumerState<RadioPage> {
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              duration: connectedHost?.isNotEmpty == true
+              width: connectedHost != null ? null : 500,
+              duration: connectedHost != null
                   ? const Duration(seconds: 4)
                   : const Duration(seconds: 30),
               content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: connectedHost != null
+                    ? MainAxisAlignment.center
+                    : MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    connectedHost?.isNotEmpty == true
-                        ? '${context.l10n.connectedTo}: $connectedHost'
-                        : context.l10n.noRadioServerFound,
+                  Expanded(
+                    child: Text(
+                      connectedHost != null
+                          ? '${context.l10n.connectedTo}: $connectedHost'
+                          : context.l10n.noRadioServerFound,
+                    ),
                   ),
                   if (connectedHost == null)
                     ImportantButton(

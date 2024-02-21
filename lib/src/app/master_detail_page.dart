@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
@@ -10,7 +11,6 @@ import '../../local_audio.dart';
 import '../../settings.dart';
 import '../../theme.dart';
 import '../globals.dart';
-import 'connectivity_notifier.dart';
 import 'master_items.dart';
 
 class MasterDetailPage extends ConsumerWidget {
@@ -24,8 +24,8 @@ class MasterDetailPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Connectivity
-    final isOnline = ref
-        .watch(connectivityNotifierProvider.select((value) => value.isOnline));
+    final isOnline =
+        ref.watch(appModelProvider.select((value) => value.isOnline));
 
     // Library
     final libraryModel = ref.watch(libraryModelProvider);
