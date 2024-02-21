@@ -11,6 +11,7 @@ import '../../library.dart';
 import '../../player.dart';
 import '../../radio.dart';
 import '../../theme.dart';
+import 'open_radio_discover_page_button.dart';
 import 'radio_search.dart';
 import 'radio_search_page.dart';
 import 'station_card.dart';
@@ -87,7 +88,15 @@ class StationGrid extends ConsumerWidget {
 
     if (length == 0) {
       return NoSearchResultPage(
-        message: Text(context.l10n.noStarredStations),
+        message: Column(
+          children: [
+            Text(context.l10n.noStarredStations),
+            const SizedBox(
+              height: kYaruPagePadding,
+            ),
+            const OpenRadioDiscoverPageButton(),
+          ],
+        ),
         icons: const AnimatedEmoji(AnimatedEmojis.glowingStar),
       );
     }
@@ -123,7 +132,15 @@ class TagGrid extends ConsumerWidget {
 
     if (favTagsLength == 0) {
       return NoSearchResultPage(
-        message: Text(context.l10n.noStarredTags),
+        message: Column(
+          children: [
+            Text(context.l10n.noStarredTags),
+            const SizedBox(
+              height: kYaruPagePadding,
+            ),
+            const OpenRadioDiscoverPageButton(),
+          ],
+        ),
         icons: const AnimatedEmoji(AnimatedEmojis.glowingStar),
       );
     }

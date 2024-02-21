@@ -359,8 +359,6 @@ double get likeButtonWidth => yaruStyled ? 62 : 70;
 
 double? get avatarIconSize => yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
 
-double? get snackBarWidth => yaruStyled ? kSnackBarWidth : null;
-
 double get searchBarWidth => isMobile ? kSearchBarWidth : 600;
 
 bool get showSideBarFilter => yaruStyled ? true : false;

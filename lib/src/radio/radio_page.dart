@@ -46,50 +46,37 @@ class _RadioPageState extends ConsumerState<RadioPage> {
           }
 
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              width: connectedHost != null ? null : 500,
-              duration: connectedHost != null
-                  ? const Duration(seconds: 4)
-                  : const Duration(seconds: 30),
-              content: Row(
-                mainAxisAlignment: connectedHost != null
-                    ? MainAxisAlignment.center
-                    : MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      connectedHost != null
-                          ? '${context.l10n.connectedTo}: $connectedHost'
-                          : context.l10n.noRadioServerFound,
-                    ),
-                  ),
-                  if (connectedHost == null)
-                    ImportantButton(
-                      onPressed: () => model.init(
-                        countryCode: widget.countryCode,
-                        index: index,
-                      ),
-                      child: Text(
-                        context.l10n.tryReconnect,
-                      ),
-                    ),
-                ],
-              ),
-            ),
+            _buildConnectSnackBar(connectedHost, model, index),
           );
         },
-      ).then((_) {
-        if (libraryModel.starredStations.isEmpty) {
-          navigatorKey.currentState?.push(
-            MaterialPageRoute(
-              builder: (context) => widget.isOnline
-                  ? const RadioDiscoverPage()
-                  : const OfflinePage(),
-            ),
-          );
-        }
-      });
+      );
     });
+  }
+
+  SnackBar _buildConnectSnackBar(
+    String? connectedHost,
+    RadioModel model,
+    int index,
+  ) {
+    return SnackBar(
+      duration: connectedHost != null
+          ? const Duration(seconds: 1)
+          : const Duration(seconds: 30),
+      content: Text(
+        connectedHost != null
+            ? '${context.l10n.connectedTo}: $connectedHost'
+            : context.l10n.noRadioServerFound,
+      ),
+      action: (connectedHost == null)
+          ? SnackBarAction(
+              onPressed: () => model.init(
+                countryCode: widget.countryCode,
+                index: index,
+              ),
+              label: context.l10n.tryReconnect,
+            )
+          : null,
+    );
   }
 
   @override

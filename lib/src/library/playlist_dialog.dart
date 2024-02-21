@@ -97,25 +97,18 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
                 _controller.text,
                 widget.audios ?? {},
               );
-              _snack(context, _controller.text);
+              Navigator.pop(context);
+              showAddedToPlaylistSnackBar(
+                context: context,
+                libraryModel: widget.libraryModel,
+                id: _controller.text,
+              );
             },
             child: Text(
               context.l10n.add,
             ),
           ),
       ],
-    );
-  }
-
-  void _snack(BuildContext context, String id) {
-    Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: AddToPlaylistSnackBar(
-          libraryModel: widget.libraryModel,
-          id: id,
-        ),
-      ),
     );
   }
 }

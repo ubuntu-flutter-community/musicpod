@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
@@ -16,6 +17,7 @@ class LikeButton extends StatelessWidget {
     required this.insertIntoQueue,
     required this.libraryModel,
     required this.allowRemove,
+    required this.selected,
   });
 
   final String playlistId;
@@ -24,9 +26,11 @@ class LikeButton extends StatelessWidget {
 
   final LibraryModel libraryModel;
   final bool allowRemove;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.t;
     final liked = libraryModel.liked(audio);
 
     final heartButton = InkWell(
@@ -36,18 +40,16 @@ class LikeButton extends StatelessWidget {
           libraryModel.removeLikedAudio(audio);
         } else {
           libraryModel.addLikedAudio(audio);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: AddToPlaylistSnackBar(
-                id: kLikedAudiosPageId,
-                libraryModel: libraryModel,
-              ),
-            ),
+          showAddedToPlaylistSnackBar(
+            context: context,
+            libraryModel: libraryModel,
+            id: kLikedAudiosPageId,
           );
         }
       },
       child: Iconz().getAnimatedHeartIcon(
         liked: liked,
+        color: selected ? theme.colorScheme.primary : null,
       ),
     );
 
