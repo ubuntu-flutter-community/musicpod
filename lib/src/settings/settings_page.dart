@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:path/path.dart' as p;
 
+import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
@@ -281,15 +286,50 @@ class _AboutSection extends ConsumerWidget {
   }
 }
 
-class _AboutTile extends ConsumerWidget {
+class _AboutTile extends ConsumerStatefulWidget {
   const _AboutTile();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final version = ref.watch(settingsModelProvider.select((m) => m.version));
+  ConsumerState<_AboutTile> createState() => _AboutTileState();
+}
 
+class _AboutTileState extends ConsumerState<_AboutTile> {
+  late Future<String?> _onlineVersion;
+
+  @override
+  void initState() {
+    super.initState();
+    final isOnline = ref.read(appModelProvider.select((a) => a.isOnline));
+
+    _onlineVersion = !isOnline || Platform.isLinux
+        ? Future.value(null)
+        : ref.read(settingsModelProvider).getOnlineVersion();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final model = ref.read(settingsModelProvider);
+    final currentVersion =
+        ref.watch(settingsModelProvider.select((m) => m.version));
     return YaruTile(
-      title: Text('${context.l10n.version}: ${version ?? ''}'),
+      title: FutureBuilder(
+        future: _onlineVersion,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData ||
+              snapshot.data == null ||
+              (currentVersion?.isNotEmpty == true &&
+                  model.getExtendedVersionNumber(snapshot.data!) <=
+                      model.getExtendedVersionNumber(currentVersion!))) {
+            return Text('${context.l10n.version}: ${currentVersion ?? ''}');
+          }
+
+          return TapAbleText(
+            text: '${context.l10n.updateAvailable}: ${snapshot.data}',
+            style: TextStyle(color: context.t.colorScheme.success),
+            onTap: () => launchUrl(Uri.parse(p.join(kRepoUrl, 'releases'))),
+          );
+        },
+      ),
       trailing: OutlinedButton(
         onPressed: () => settingsNavigatorKey.currentState?.pushNamed('/about'),
         child: Text(context.l10n.contributors),
