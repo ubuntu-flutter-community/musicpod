@@ -261,6 +261,7 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
                     }
 
                     final likeButton = LikeButton(
+                      selected: audioSelected && isPlaying,
                       libraryModel: libraryModel,
                       playlistId: widget.pageId,
                       audio: audio,

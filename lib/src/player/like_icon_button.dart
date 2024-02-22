@@ -53,13 +53,10 @@ class LikeIconButton extends ConsumerWidget {
             libraryModel.removeLikedAudio(audio!, true);
           } else {
             libraryModel.addLikedAudio(audio!, true);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: AddToPlaylistSnackBar(
-                  libraryModel: libraryModel,
-                  id: kLikedAudiosPageId,
-                ),
-              ),
+            showAddedToPlaylistSnackBar(
+              context: context,
+              libraryModel: libraryModel,
+              id: kLikedAudiosPageId,
             );
           }
         };

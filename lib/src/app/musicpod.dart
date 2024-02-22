@@ -21,34 +21,34 @@ class YaruMusicPodApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final themeIndex = ref
-            .watch(settingsModelProvider.select((value) => value.themeIndex));
-
-        return YaruTheme(
-          builder: (context, yaru, child) {
-            return MusicPodApp(
-              themeMode: ThemeMode.values[themeIndex],
-              lightTheme: yaru.theme?.copyWith(
-                actionIconTheme: ActionIconThemeData(
-                  backButtonIconBuilder: (context) => Icon(Iconz().goBack),
-                ),
-              ),
-              darkTheme: yaru.darkTheme?.copyWith(
-                actionIconTheme: ActionIconThemeData(
-                  backButtonIconBuilder: (context) => Icon(Iconz().goBack),
-                ),
-                scaffoldBackgroundColor: const Color(0xFF1e1e1e),
-                dividerColor: darkDividerColor,
-                dividerTheme: const DividerThemeData(
-                  color: darkDividerColor,
-                  space: 1.0,
-                  thickness: 0.0,
-                ),
-              ),
-            );
-          },
+    return YaruTheme(
+      builder: (context, yaru, child) {
+        return _MusicPodApp(
+          lightTheme: yaru.theme?.copyWith(
+            actionIconTheme: ActionIconThemeData(
+              backButtonIconBuilder: (context) => Icon(Iconz().goBack),
+            ),
+            snackBarTheme: SnackBarThemeData(
+              behavior: SnackBarBehavior.floating,
+              actionTextColor: yaru.theme?.colorScheme.primary,
+            ),
+          ),
+          darkTheme: yaru.darkTheme?.copyWith(
+            actionIconTheme: ActionIconThemeData(
+              backButtonIconBuilder: (context) => Icon(Iconz().goBack),
+            ),
+            scaffoldBackgroundColor: const Color(0xFF1e1e1e),
+            dividerColor: darkDividerColor,
+            dividerTheme: const DividerThemeData(
+              color: darkDividerColor,
+              space: 1.0,
+              thickness: 0.0,
+            ),
+            snackBarTheme: SnackBarThemeData(
+              behavior: SnackBarBehavior.floating,
+              actionTextColor: yaru.theme?.colorScheme.primary,
+            ),
+          ),
         );
       },
     );
@@ -62,41 +62,33 @@ class MaterialMusicPodApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final themeIndex = ref
-            .watch(settingsModelProvider.select((value) => value.themeIndex));
-        return SystemThemeBuilder(
-          builder: (context, accent) {
-            return MusicPodApp(
-              themeMode: ThemeMode.values[themeIndex],
-              accent: accent.accent,
-            );
-          },
+    return SystemThemeBuilder(
+      builder: (context, accent) {
+        return _MusicPodApp(
+          accent: accent.accent,
         );
       },
     );
   }
 }
 
-class MusicPodApp extends StatefulWidget {
-  const MusicPodApp({
+class _MusicPodApp extends StatefulWidget {
+  const _MusicPodApp({
+    // ignore: unused_element
     super.key,
     this.lightTheme,
     this.darkTheme,
     this.accent,
-    required this.themeMode,
   });
 
   final ThemeData? lightTheme, darkTheme;
-  final ThemeMode themeMode;
   final Color? accent;
 
   @override
-  State<MusicPodApp> createState() => _MusicPodAppState();
+  State<_MusicPodApp> createState() => _MusicPodAppState();
 }
 
-class _MusicPodAppState extends State<MusicPodApp> {
+class _MusicPodAppState extends State<_MusicPodApp> {
   bool initialized = false;
 
   @override
@@ -113,11 +105,13 @@ class _MusicPodAppState extends State<MusicPodApp> {
 
   @override
   Widget build(BuildContext context) {
-    return SystemThemeBuilder(
-      builder: (context, accent) {
+    return Consumer(
+      builder: (context, ref, _) {
+        final themeIndex = ref
+            .watch(settingsModelProvider.select((value) => value.themeIndex));
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          themeMode: widget.themeMode,
+          themeMode: ThemeMode.values[themeIndex],
           theme: widget.lightTheme ??
               m3Theme(color: widget.accent ?? Colors.greenAccent),
           darkTheme: widget.darkTheme ??

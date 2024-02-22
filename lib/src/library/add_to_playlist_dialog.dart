@@ -93,7 +93,11 @@ class _PlaylistTile extends StatelessWidget {
     return ListTile(
       onTap: () {
         libraryModel.addAudioToPlaylist(playlistId, audio);
-        _snack(context, playlistId, libraryModel);
+        showAddedToPlaylistSnackBar(
+          context: context,
+          libraryModel: libraryModel,
+          id: playlistId,
+        );
       },
       leading: SideBarFallBackImage(
         color: getAlphabetColor(playlistId),
@@ -102,24 +106,6 @@ class _PlaylistTile extends StatelessWidget {
       title: Text(playlistId),
     );
   }
-}
-
-ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _snack(
-  BuildContext context,
-  String playlistID,
-  LibraryModel libraryModel,
-) {
-  final messenger = ScaffoldMessenger.of(context);
-  messenger.clearSnackBars();
-  return messenger.showSnackBar(
-    SnackBar(
-      content: AddToPlaylistSnackBar(
-        id: playlistID,
-        libraryModel: libraryModel,
-      ),
-      duration: const Duration(seconds: 5),
-    ),
-  );
 }
 
 class _NewView extends StatefulWidget {
@@ -187,10 +173,10 @@ class _NewViewState extends State<_NewView> {
                         _controller.text,
                         {widget.audio},
                       );
-                      _snack(
-                        context,
-                        _controller.text,
-                        widget.libraryModel,
+                      showAddedToPlaylistSnackBar(
+                        context: context,
+                        libraryModel: widget.libraryModel,
+                        id: _controller.text,
                       );
                     },
                     child: Text(

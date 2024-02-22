@@ -82,7 +82,6 @@ void onTitleTap({
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        width: snackBarWidth,
         duration: kSnackBarDuration,
         content: CopyClipboardContent(text: text),
       ),
@@ -94,7 +93,6 @@ void onTitleTap({
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        width: snackBarWidth,
         duration: kSnackBarDuration,
         content: CopyClipboardContent(
           text: audio.url!,
