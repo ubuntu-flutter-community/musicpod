@@ -87,6 +87,7 @@ I recommend the vscode extension [GitHub Pull Requests](https://marketplace.visu
 For translations into your language change the corresponding `app_xx.arb` file where `xx` is the language code of your language in lower case.
 If the file does not exist yet please create it and copy the `whole` content of app_en.arb into it and change only the values to your translation but leave the keys untouched.
 The vscode extension [arb editor by Google](https://marketplace.visualstudio.com/items?itemName=Google.arb-editor) is highly recommended to avoid arb syntax errors.
+Also recommended is the [Google Translate Extension](https://marketplace.visualstudio.com/items?itemName=funkyremi.vscode-google-translate).
 
 ## Code contributions
 
