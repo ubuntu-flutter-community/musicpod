@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github/github.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru_icons/yaru_icons.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -97,7 +96,7 @@ class AboutPage extends ConsumerWidget {
                   ),
                   Expanded(
                     child: FutureBuilder<List<Contributor>>(
-                      future: _loadContributors(),
+                      future: ref.read(settingsModelProvider).getContributors(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return SizedBox(
@@ -158,15 +157,5 @@ class AboutPage extends ConsumerWidget {
         ],
       ),
     );
-  }
-
-  Future<List<Contributor>> _loadContributors() async {
-    final github = getService<GitHub>();
-    return (await github.repositories
-        .listContributors(
-          RepositorySlug.full(kGitHubShortLink),
-        )
-        .where((c) => c.type == 'User')
-        .toList());
   }
 }

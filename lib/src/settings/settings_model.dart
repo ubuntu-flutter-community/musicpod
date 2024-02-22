@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:github/github.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 
+import '../../constants.dart';
 import '../../external_path.dart';
 import 'settings_service.dart';
 
@@ -11,11 +13,14 @@ class SettingsModel extends SafeChangeNotifier {
   SettingsModel({
     required SettingsService service,
     required ExternalPathService externalPathService,
+    required GitHub gitHub,
   })  : _service = service,
-        _externalPathService = externalPathService;
+        _externalPathService = externalPathService,
+        _gitHub = gitHub;
 
   final SettingsService _service;
   final ExternalPathService _externalPathService;
+  final GitHub _gitHub;
 
   StreamSubscription<bool>? _usePodcastIndexChangedSub;
   StreamSubscription<bool>? _podcastIndexApiKeyChangedSub;
@@ -93,11 +98,34 @@ class SettingsModel extends SafeChangeNotifier {
     await _recentPatchNotesDisposedChangedSub?.cancel();
     super.dispose();
   }
+
+  Future<String?> getOnlineVersion() async {
+    final release = await (_gitHub.repositories
+            .listReleases(RepositorySlug.full(kGitHubShortLink)))
+        .toList();
+    return release.firstOrNull?.tagName;
+  }
+
+  Future<List<Contributor>> getContributors() async {
+    return (await _gitHub.repositories
+        .listContributors(
+          RepositorySlug.full(kGitHubShortLink),
+        )
+        .where((c) => c.type == 'User')
+        .toList());
+  }
+
+  int getExtendedVersionNumber(String version) {
+    List versionCells = version.split('.');
+    versionCells = versionCells.map((i) => int.parse(i)).toList();
+    return versionCells[0] * 100000 + versionCells[1] * 1000 + versionCells[2];
+  }
 }
 
 final settingsModelProvider = ChangeNotifierProvider(
   (ref) => SettingsModel(
     service: getService<SettingsService>(),
     externalPathService: getService<ExternalPathService>(),
+    gitHub: getService<GitHub>(),
   )..init(),
 );
