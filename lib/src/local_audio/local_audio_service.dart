@@ -61,7 +61,7 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
     for (var e in onlyFiles) {
       try {
         final metadata = await readMetadata(File(e.path), getImage: true);
-        final audio = createLocalAudio(path: e.path, data: metadata);
+        final audio = Audio.fromMetadata(path: e.path, data: metadata);
 
         newAudios.add(audio);
       } catch (error) {
