@@ -24,13 +24,15 @@ Android release is WIP!
 
 ## Credits
 
-Thank you @amugofjava for creating the very easy to use and reliable [podcast_search](https://github.com/amugofjava/podcast_search)!
+Thank you [@amugofjava](https://github.com/amugofjava) for creating the very easy to use and reliable [podcast_search](https://github.com/amugofjava/podcast_search)!
 
-Thanks @alexmercerind for the super performant [Mediakit library](https://github.com/alexmercerind/media_kit) and [mpris_service](https://github.com/alexmercerind/mpris_service) dart implementation!
+Thanks [@alexmercerind](https://github.com/alexmercerind) for the super performant [Mediakit library](https://github.com/alexmercerind/media_kit) and [mpris_service](https://github.com/alexmercerind/mpris_service) dart implementation!
 
-Thank you @KRTirtho for the very easy to use [Metadata God](https://github.com/KRTirtho/metadata_god) package
+Thank you [@KRTirtho](https://github.com/KRTirtho) for the very easy to use [smtc_windows](https://github.com/KRTirtho/smtc_windows) package!
 
-Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https://github.com/tomassasovsky/radio-browser-api.dart)
+Thank you [@tomassasovsky](https://github.com/tomassasovsky) for the [dart implementation of radiobrowser-api](https://github.com/tomassasovsky/radio-browser-api.dart)!
+
+Thank you [@ClementBeal](https://github.com/ClementBeal) for the super fast, pure dart [Audio Metadata Reader](https://github.com/ClementBeal/audio_metadata_reader)!
 
 ## MusicPod Level 1
 

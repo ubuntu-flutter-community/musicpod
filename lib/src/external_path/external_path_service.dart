@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:gtk/gtk.dart';
-import 'package:metadata_god/metadata_god.dart';
 
 import '../../data.dart';
 import '../../player.dart';
@@ -35,11 +35,10 @@ class ExternalPathService {
     if (path == null) {
       return;
     }
-    MetadataGod.initialize();
     try {
-      MetadataGod.readMetadata(file: path).then(
+      readMetadata(File(path), getImage: true).then(
         (data) => _playerService.play.call(
-          newAudio: createLocalAudio(path: path, data: data),
+          newAudio: Audio.fromMetadata(path: path, data: data),
         ),
       );
     } catch (_) {
@@ -57,10 +56,9 @@ class ExternalPathService {
       try {
         openFile().then((xfile) {
           if (xfile?.path == null) return;
-          MetadataGod.initialize();
-          MetadataGod.readMetadata(file: xfile!.path).then(
+          readMetadata(File(xfile!.path), getImage: true).then(
             (metadata) => _playerService.play(
-              newAudio: createLocalAudio(path: xfile.path, data: metadata),
+              newAudio: Audio.fromMetadata(path: xfile.path, data: metadata),
             ),
           );
         });

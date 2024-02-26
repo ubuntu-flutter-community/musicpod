@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:flutter/foundation.dart';
-import 'package:metadata_god/metadata_god.dart';
 
 import '../../data.dart';
 import '../../utils.dart';
@@ -26,8 +26,8 @@ class LocalAudioService {
     _audiosController.add(true);
   }
 
-  Future<List<String>> init() async {
-    final result = await compute(_init, _settingsService.directory);
+  Future<List<String>> init({@visibleForTesting String? testDir}) async {
+    final result = await compute(_init, testDir ?? _settingsService.directory);
 
     _audios = result.$2;
 
@@ -42,7 +42,6 @@ class LocalAudioService {
 }
 
 FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
-  MetadataGod.initialize();
   Set<Audio>? newAudios = {};
   List<String> failedImports = [];
 
@@ -61,9 +60,8 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
     }
     for (var e in onlyFiles) {
       try {
-        final metadata = await MetadataGod.readMetadata(file: e.path);
-
-        final audio = createLocalAudio(path: e.path, data: metadata);
+        final metadata = await readMetadata(File(e.path), getImage: true);
+        final audio = Audio.fromMetadata(path: e.path, data: metadata);
 
         newAudios.add(audio);
       } catch (error) {

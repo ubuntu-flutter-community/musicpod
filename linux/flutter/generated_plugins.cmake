@@ -17,7 +17,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
   media_kit_native_event_loop
-  metadata_god
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
