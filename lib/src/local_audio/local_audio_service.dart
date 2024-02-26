@@ -26,8 +26,8 @@ class LocalAudioService {
     _audiosController.add(true);
   }
 
-  Future<List<String>> init() async {
-    final result = await compute(_init, _settingsService.directory);
+  Future<List<String>> init({@visibleForTesting String? testDir}) async {
+    final result = await compute(_init, testDir ?? _settingsService.directory);
 
     _audios = result.$2;
 
