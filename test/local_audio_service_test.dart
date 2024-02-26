@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:musicpod/data.dart';
 import 'package:musicpod/local_audio.dart';
+import 'package:musicpod/settings.dart';
 
-import 'podcast_service_test.mocks.dart';
+import 'local_audio_service_test.mocks.dart';
 
+@GenerateMocks([SettingsService])
 const Audio testMp3 = Audio(
   title: 'test',
   artist: 'musicpod',
