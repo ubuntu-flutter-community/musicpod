@@ -94,6 +94,13 @@ const kDiskGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
   crossAxisSpacing: 10,
 );
 
+const kAudioControlPanelPadding = EdgeInsets.only(
+  top: kYaruPagePadding / 2,
+  left: kYaruPagePadding,
+  right: kYaruPagePadding,
+  bottom: kYaruPagePadding / 2,
+);
+
 const kCardColorLight = Color.fromARGB(255, 233, 233, 233);
 const kCardColorDark = Color.fromARGB(255, 51, 51, 51);
 const kCardColorNeutral = Color.fromARGB(255, 133, 133, 133);
