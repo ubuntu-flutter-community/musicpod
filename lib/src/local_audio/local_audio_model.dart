@@ -146,13 +146,24 @@ class LocalAudioModel extends SafeChangeNotifier {
       (a) => a.album != null && a.album == audio.album,
     );
 
-    final albumList = album?.toList();
+    var albumList = album?.toList();
     if (albumList != null) {
       sortListByAudioFilter(
         audioFilter: audioFilter,
         audios: albumList,
       );
+      final discNumbers = <int>{};
+      for (var a in album!) {
+        if (a.discNumber != null) {
+          discNumbers.add(a.discNumber!);
+        }
+      }
+      albumList = [
+        for (var d in discNumbers.sorted((a, b) => a.compareTo(b)))
+          ...albumList.where((e) => e.discNumber == d),
+      ];
     }
+
     return albumList != null ? Set.from(albumList) : null;
   }
 
@@ -164,14 +175,26 @@ class LocalAudioModel extends SafeChangeNotifier {
       (a) => a.artist != null && a.artist == audio.artist,
     );
 
-    final albumList = album?.toList();
-    if (albumList != null) {
+    var artistList = album?.toList();
+    if (artistList != null) {
       sortListByAudioFilter(
         audioFilter: audioFilter,
-        audios: albumList,
+        audios: artistList,
       );
+
+      final discNumbers = <int>{};
+      for (var a in album!) {
+        if (a.discNumber != null) {
+          discNumbers.add(a.discNumber!);
+        }
+      }
+
+      artistList = [
+        for (var d in discNumbers.sorted((a, b) => a.compareTo(b)))
+          ...artistList.where((e) => e.discNumber == d),
+      ];
     }
-    return albumList != null ? Set.from(albumList) : null;
+    return artistList != null ? Set.from(artistList) : null;
   }
 
   Set<Uint8List>? findImages(Set<Audio> audios) {

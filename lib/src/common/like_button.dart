@@ -6,6 +6,7 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
+import '../../theme.dart';
 import '../l10n/l10n.dart';
 import '../library/add_to_playlist_dialog.dart';
 
@@ -88,6 +89,17 @@ class LikeButton extends StatelessWidget {
             ),
           ),
           PopupMenuItem(
+            onTap: () => showDialog(
+              context: context,
+              builder: (context) {
+                return MetaDataDialog(audio: audio);
+              },
+            ),
+            child: Text(
+              '${context.l10n.showMetaData} ...',
+            ),
+          ),
+          PopupMenuItem(
             padding: EdgeInsets.zero,
             child: StreamProviderRow(
               text: '${audio.artist ?? ''} - ${audio.title ?? ''}',
@@ -96,6 +108,70 @@ class LikeButton extends StatelessWidget {
         ];
       },
       child: heartButton,
+    );
+  }
+}
+
+class MetaDataDialog extends StatelessWidget {
+  const MetaDataDialog({super.key, required this.audio});
+
+  final Audio audio;
+
+  @override
+  Widget build(BuildContext context) {
+    final items = <(String, String)>{
+      (
+        context.l10n.title,
+        '${audio.title}',
+      ),
+      (
+        context.l10n.album,
+        '${audio.album}',
+      ),
+      (
+        context.l10n.artist,
+        '${audio.artist}',
+      ),
+      (
+        context.l10n.albumArtists,
+        '${audio.albumArtist}',
+      ),
+      (
+        context.l10n.trackNumber,
+        '${audio.trackNumber}',
+      ),
+      (
+        context.l10n.diskNumber,
+        '${audio.discNumber}',
+      ),
+      (
+        context.l10n.totalDisks,
+        '${audio.discTotal}',
+      ),
+    };
+
+    return AlertDialog(
+      title: yaruStyled
+          ? YaruDialogTitleBar(
+              title: Text(context.l10n.metadata),
+            )
+          : Center(child: Text(context.l10n.metadata)),
+      titlePadding:
+          yaruStyled ? EdgeInsets.zero : const EdgeInsets.only(top: 10),
+      contentPadding: const EdgeInsets.only(bottom: 12),
+      scrollable: true,
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: items
+            .map(
+              (e) => ListTile(
+                dense: true,
+                title: Text(e.$1),
+                subtitle: Text(e.$2),
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 }
