@@ -152,16 +152,8 @@ class LocalAudioModel extends SafeChangeNotifier {
         audioFilter: audioFilter,
         audios: albumList,
       );
-      final discNumbers = <int>{};
-      for (var a in album!) {
-        if (a.discNumber != null) {
-          discNumbers.add(a.discNumber!);
-        }
-      }
-      albumList = [
-        for (var d in discNumbers.sorted((a, b) => a.compareTo(b)))
-          ...albumList.where((e) => e.discNumber == d),
-      ];
+
+      albumList = splitByDiscs(albumList).toList();
     }
 
     return albumList != null ? Set.from(albumList) : null;
@@ -181,18 +173,7 @@ class LocalAudioModel extends SafeChangeNotifier {
         audioFilter: audioFilter,
         audios: artistList,
       );
-
-      final discNumbers = <int>{};
-      for (var a in album!) {
-        if (a.discNumber != null) {
-          discNumbers.add(a.discNumber!);
-        }
-      }
-
-      artistList = [
-        for (var d in discNumbers.sorted((a, b) => a.compareTo(b)))
-          ...artistList.where((e) => e.discNumber == d),
-      ];
+      artistList = splitByDiscs(artistList).toList();
     }
     return artistList != null ? Set.from(artistList) : null;
   }
