@@ -106,8 +106,19 @@ const kPatchNotes20240218 = 'Hello MusicPod Users 💙🐧🧡\n'
     '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
     '\n';
 
-const kRecentPatchNotesDisposed = kPatchNotes20240218disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20240218;
-const kRecentPatchNotes = kPatchNotes20240218;
+// 2024 03 01
+const kPatchNotes20240301disposed = 'patchNotes20240301disposed';
+const kPatchNotesTitle20240301 = 'Patch notes: 2024-03-01';
+const kPatchNotes20240301 = 'Hello MusicPod Users 💙🐧🧡\n'
+    '\n* player volume is now persisted, thanks mlee :)'
+    '\n* artist view can now be toggled between grid and list view'
+    '\n* multiple album discs are now gathered as one album, this needs re-pining :('
+    '\n* audios are now correctly sorted when thanks to https://github.com/fsobolev'
+    '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
+    '\n';
+
+const kRecentPatchNotesDisposed = kPatchNotes20240301disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20240301;
+const kRecentPatchNotes = kPatchNotes20240301;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';
