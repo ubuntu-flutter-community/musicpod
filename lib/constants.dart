@@ -146,6 +146,7 @@ const kUsePodcastIndex = 'usePodcastIndex';
 const kThemeIndex = 'themeIndex';
 const kPodcastIndexApiKey = 'podcastIndexApiKey';
 const kPodcastIndexApiSecret = 'podcastIndexApiSecret';
+const kUseArtistGridView = 'useArtistGridView';
 
 const shops = <String, String>{
   'https://us.7digital.com/': '7digital',

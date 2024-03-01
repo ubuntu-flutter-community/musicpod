@@ -105,7 +105,7 @@ class SettingsService {
     final usePodcastIndexOrNull = await readSetting(kUsePodcastIndex);
     _usePodcastIndex = usePodcastIndexOrNull == null
         ? false
-        : bool.parse(usePodcastIndexOrNull);
+        : bool.tryParse(usePodcastIndexOrNull) ?? false;
   }
 
   final _podcastIndexApiKeyController = StreamController<bool>.broadcast();
@@ -166,6 +166,25 @@ class SettingsService {
     }
   }
 
+  final _useArtistGridViewController = StreamController<bool>.broadcast();
+  Stream<bool> get useArtistGridViewChanged =>
+      _useArtistGridViewController.stream;
+  bool _useArtistGridView = false;
+  bool get useArtistGridView => _useArtistGridView;
+  void setUseArtistGridView(bool value) {
+    writeSetting(kUseArtistGridView, value.toString()).then((_) {
+      _useArtistGridView = value;
+      _useArtistGridViewController.add(true);
+    });
+  }
+
+  Future<void> _initUseArtistGridView() async {
+    final useArtistGridViewOrNull = await readSetting(kUseArtistGridView);
+    _useArtistGridView = useArtistGridViewOrNull == null
+        ? false
+        : (bool.tryParse(useArtistGridViewOrNull) ?? false);
+  }
+
   Future<void> init({@visibleForTesting String? testDir}) async {
     await _initPackageInfo();
     await _initSettings(testDir);
@@ -179,6 +198,7 @@ class SettingsService {
     await _initPodcastIndexApiSecret();
     await _initRecentPatchNotesDisposed();
     await _initNeverShowImports();
+    await _initUseArtistGridView();
   }
 
   Future<void> dispose() async {
