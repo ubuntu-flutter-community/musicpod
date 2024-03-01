@@ -13,10 +13,11 @@ import '../../globals.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
 import '../../player.dart';
+import '../../settings.dart';
 import '../../utils.dart';
 import '../l10n/l10n.dart';
 
-class ArtistPage extends ConsumerStatefulWidget {
+class ArtistPage extends ConsumerWidget {
   const ArtistPage({
     super.key,
     required this.images,
@@ -27,33 +28,27 @@ class ArtistPage extends ConsumerStatefulWidget {
   final Set<Audio>? artistAudios;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ArtistPageState();
-}
-
-class _ArtistPageState extends ConsumerState<ArtistPage> {
-  bool _listView = true;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final libraryModel = ref.read(libraryModelProvider);
     final model = ref.read(localAudioModelProvider);
+
+    final useGridView = ref.watch(
+      settingsModelProvider.select((v) => v.useArtistGridView),
+    );
+    final setUseGridView = ref.read(settingsModelProvider).setUseArtistGridView;
 
     var listModeToggle = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         IconButton(
           icon: Icon(Iconz().list),
-          isSelected: _listView,
-          onPressed: () => setState(() {
-            _listView = true;
-          }),
+          isSelected: !useGridView,
+          onPressed: () => setUseGridView(false),
         ),
         IconButton(
           icon: Icon(Iconz().grid),
-          isSelected: !_listView,
-          onPressed: () => setState(() {
-            _listView = false;
-          }),
+          isSelected: useGridView,
+          onPressed: () => setUseGridView(true),
         ),
       ],
     );
@@ -63,7 +58,7 @@ class _ArtistPageState extends ConsumerState<ArtistPage> {
         listModeToggle,
         StreamProviderRow(
           spacing: const EdgeInsets.only(right: 10),
-          text: widget.artistAudios?.firstOrNull?.artist,
+          text: artistAudios?.firstOrNull?.artist,
         ),
       ],
     );
@@ -89,28 +84,27 @@ class _ArtistPageState extends ConsumerState<ArtistPage> {
       );
     }
 
-    if (_listView) {
+    if (!useGridView) {
       return AudioPage(
         showArtist: false,
         onAlbumTap: onAlbumTap,
         audioPageType: AudioPageType.artist,
         headerLabel: context.l10n.artist,
-        headerTitle: widget.artistAudios?.firstOrNull?.artist,
-        showAudioPageHeader: widget.images?.isNotEmpty == true,
-        image: ArtistImage(images: widget.images),
+        headerTitle: artistAudios?.firstOrNull?.artist,
+        showAudioPageHeader: images?.isNotEmpty == true,
+        image: ArtistImage(images: images),
         imageRadius: BorderRadius.circular(10000),
-        headerSubtile: widget.artistAudios?.firstOrNull?.genre,
-        audios: widget.artistAudios,
-        pageId: widget.artistAudios?.firstOrNull?.artist ??
-            widget.artistAudios.toString(),
+        headerSubtile: artistAudios?.firstOrNull?.genre,
+        audios: artistAudios,
+        pageId: artistAudios?.firstOrNull?.artist ?? artistAudios.toString(),
         controlPanelButton: controlPanelButton,
       );
     }
 
     return _ArtistAlbumsCardGrid(
       onLabelTab: onAlbumTap,
-      images: widget.images,
-      artistAudios: widget.artistAudios,
+      images: images,
+      artistAudios: artistAudios,
       controlPanelButton: controlPanelButton,
     );
   }

@@ -29,6 +29,7 @@ class SettingsModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _directoryChangedSub;
   StreamSubscription<bool>? _themeIndexChangedSub;
   StreamSubscription<bool>? _recentPatchNotesDisposedChangedSub;
+  StreamSubscription<bool>? _useArtistGridViewChangedSub;
 
   String? get appName => _service.appName;
   String? get packageName => _service.packageName;
@@ -67,6 +68,9 @@ class SettingsModel extends SafeChangeNotifier {
   Future<String?> getPathOfDirectory() async =>
       await _externalPathService.getPathOfDirectory();
 
+  bool get useArtistGridView => _service.useArtistGridView;
+  void setUseArtistGridView(bool value) => _service.setUseArtistGridView(value);
+
   void init() {
     _themeIndexChangedSub =
         _service.themeIndexChanged.listen((_) => notifyListeners());
@@ -80,6 +84,8 @@ class SettingsModel extends SafeChangeNotifier {
         _service.neverShowFailedImportsChanged.listen((_) => notifyListeners());
     _directoryChangedSub =
         _service.directoryChanged.listen((_) => notifyListeners());
+    _useArtistGridViewChangedSub =
+        _service.useArtistGridViewChanged.listen((_) => notifyListeners());
 
     _recentPatchNotesDisposedChangedSub = _service
         .recentPatchNotesDisposedChanged
@@ -96,6 +102,7 @@ class SettingsModel extends SafeChangeNotifier {
     await _neverShowFailedImportsSub?.cancel();
     await _directoryChangedSub?.cancel();
     await _recentPatchNotesDisposedChangedSub?.cancel();
+    await _useArtistGridViewChangedSub?.cancel();
     super.dispose();
   }
 
