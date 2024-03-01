@@ -3,7 +3,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../common.dart';
@@ -135,12 +134,7 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
     final libraryModel = ref.read(libraryModelProvider);
 
     final audioControlPanel = Padding(
-      padding: const EdgeInsets.only(
-        top: kYaruPagePadding / 2,
-        left: kYaruPagePadding,
-        right: kYaruPagePadding,
-        bottom: kYaruPagePadding / 2,
-      ),
+      padding: kAudioControlPanelPadding,
       child: AudioPageControlPanel(
         title: widget.controlPanelTitle,
         pause: pause,

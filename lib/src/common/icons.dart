@@ -304,6 +304,8 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.clear
           : Icons.clear;
+  IconData get list => yaruStyled ? YaruIcons.unordered_list : Icons.list;
+  IconData get grid => yaruStyled ? YaruIcons.app_grid : Icons.grid_on;
 
   Widget getAnimatedStar(bool isStarred, [Color? color]) {
     if (yaruStyled) {

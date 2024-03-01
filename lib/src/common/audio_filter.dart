@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 import '../data/audio.dart';
 import 'package:intl/intl.dart';
 
@@ -23,6 +25,25 @@ int _compareStrings(String a, String b) {
     (match) => f.format(int.tryParse(match[0] ?? '0') ?? 0),
   );
   return aNew.compareTo(bNew);
+}
+
+Iterable<Audio> splitByDiscs(
+  Iterable<Audio> audios,
+) {
+  final discNumbers = <int>{};
+  for (var a in audios) {
+    if (a.discNumber != null) {
+      discNumbers.add(a.discNumber!);
+    }
+  }
+
+  audios = discNumbers.isEmpty
+      ? audios
+      : [
+          for (var d in discNumbers.sorted((a, b) => a.compareTo(b)))
+            ...audios.where((e) => e.discNumber == d),
+        ];
+  return audios;
 }
 
 void sortListByAudioFilter({
@@ -80,16 +101,7 @@ void sortListByAudioFilter({
       });
       break;
     case AudioFilter.diskNumber:
-      audios.sort(
-        (a, b) {
-          if (a.discNumber != null && b.discNumber != null) {
-            return descending
-                ? b.discNumber!.compareTo(a.discNumber!)
-                : a.discNumber!.compareTo(b.discNumber!);
-          }
-          return 0;
-        },
-      );
+      audios = List.from(splitByDiscs(audios));
       break;
     case AudioFilter.trackNumber:
       audios.sort((a, b) {

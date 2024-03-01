@@ -110,10 +110,11 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   Set<Audio>? _allAlbums;
   Set<Audio>? get allAlbums => _allAlbums;
-  Set<Audio>? _findAllAlbums() {
-    if (audios == null) return null;
+  Set<Audio>? findAllAlbums({Iterable<Audio>? newAudios}) {
+    final theAudios = newAudios ?? audios;
+    if (theAudios == null) return null;
     final albumsResult = <Audio>{};
-    for (var a in audios!) {
+    for (var a in theAudios) {
       if (albumsResult.none((element) => element.album == a.album)) {
         albumsResult.add(a);
       }
@@ -152,16 +153,8 @@ class LocalAudioModel extends SafeChangeNotifier {
         audioFilter: audioFilter,
         audios: albumList,
       );
-      final discNumbers = <int>{};
-      for (var a in album!) {
-        if (a.discNumber != null) {
-          discNumbers.add(a.discNumber!);
-        }
-      }
-      albumList = [
-        for (var d in discNumbers.sorted((a, b) => a.compareTo(b)))
-          ...albumList.where((e) => e.discNumber == d),
-      ];
+
+      albumList = splitByDiscs(albumList).toList();
     }
 
     return albumList != null ? Set.from(albumList) : null;
@@ -181,18 +174,7 @@ class LocalAudioModel extends SafeChangeNotifier {
         audioFilter: audioFilter,
         audios: artistList,
       );
-
-      final discNumbers = <int>{};
-      for (var a in album!) {
-        if (a.discNumber != null) {
-          discNumbers.add(a.discNumber!);
-        }
-      }
-
-      artistList = [
-        for (var d in discNumbers.sorted((a, b) => a.compareTo(b)))
-          ...artistList.where((e) => e.discNumber == d),
-      ];
+      artistList = splitByDiscs(artistList).toList();
     }
     return artistList != null ? Set.from(artistList) : null;
   }
@@ -227,10 +209,10 @@ class LocalAudioModel extends SafeChangeNotifier {
       if (failedImports.isNotEmpty) {
         onFail(failedImports);
       }
-    }
 
-    _allAlbums = _findAllAlbums();
-    _allArtists = _findAllArtists();
+      _allAlbums = findAllAlbums();
+      _allArtists = _findAllArtists();
+    }
 
     _audiosChangedSub = localAudioService.audiosChanged.listen((_) {
       notifyListeners();
