@@ -272,8 +272,6 @@ class Audio {
     required AudioMetadata data,
   }) {
     final fileName = File(path).uri.pathSegments.lastOrNull;
-    final albumName =
-        '${data.album}${data.totalDisc != null && data.discNumber != null && data.totalDisc! > 1 ? ' ${data.discNumber}' : ''}';
     final genre = data.genres.firstOrNull?.startsWith('(') == true &&
             data.genres.firstOrNull?.endsWith(')') == true
         ? tagGenres[data.genres.firstOrNull
@@ -287,7 +285,7 @@ class Audio {
       audioType: AudioType.local,
       artist: data.artist,
       title: (data.title?.isNotEmpty == true ? data.title : fileName) ?? path,
-      album: data.album == null ? null : albumName,
+      album: data.album,
       albumArtist: data.artist,
       discNumber: data.discNumber,
       discTotal: data.totalDisc,

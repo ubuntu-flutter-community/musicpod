@@ -79,12 +79,34 @@ void sortListByAudioFilter({
         return 0;
       });
       break;
-    default:
+    case AudioFilter.diskNumber:
+      audios.sort(
+        (a, b) {
+          if (a.discNumber != null && b.discNumber != null) {
+            return descending
+                ? b.discNumber!.compareTo(a.discNumber!)
+                : a.discNumber!.compareTo(b.discNumber!);
+          }
+          return 0;
+        },
+      );
+      break;
+    case AudioFilter.trackNumber:
       audios.sort((a, b) {
         if (a.trackNumber != null && b.trackNumber != null) {
           return descending
               ? b.trackNumber!.compareTo(a.trackNumber!)
               : a.trackNumber!.compareTo(b.trackNumber!);
+        }
+        return 0;
+      });
+      break;
+    case AudioFilter.genre:
+      audios.sort((a, b) {
+        if (a.genre != null && b.genre != null) {
+          return descending
+              ? _compareStrings(b.genre!, a.genre!)
+              : _compareStrings(a.genre!, b.genre!);
         }
         return 0;
       });
