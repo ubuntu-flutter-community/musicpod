@@ -28,7 +28,15 @@
     "album": "Album",
     "albums": "Albums",
     "genres": "Genres",
+    "genre": "Genre",
     "years": "Years",
+    "year": "Year",
+    "albumArtist": "Album artist",
+    "albumArtists": "Album artists",
+    "track": "Track",
+    "trackNumber": "Track number",
+    "diskNumber": "CD number",
+    "totalDisks": "CDs",
     "searchLocalAudioHint": "Search local audio",
     "library": "Library",
     "playlists": "Playlists",
@@ -264,5 +272,8 @@
     "weatherXXXPodcastIndexOnly": "Weather",
     "wildernessXXXPodcastIndexOnly": "Wilderness",
     "wrestlingXXXPodcastIndexOnly": "Wrestling",
-    "updateAvailable": "Update available"
+    "updateAvailable": "Update available",
+    "showMetaData": "Show metadata",
+    "metadata": "Metadata",
+    "writeMetadata": "Write metadata"
 }

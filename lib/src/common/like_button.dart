@@ -95,9 +95,8 @@ class LikeButton extends StatelessWidget {
                 return MetaDataDialog(audio: audio);
               },
             ),
-            // TODO: localize
-            child: const Text(
-              'Show metadata ...',
+            child: Text(
+              '${context.l10n.showMetaData} ...',
             ),
           ),
           PopupMenuItem(
@@ -120,54 +119,58 @@ class MetaDataDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final items = <(String, String)>{
+      (
+        context.l10n.title,
+        '${audio.title}',
+      ),
+      (
+        context.l10n.album,
+        '${audio.album}',
+      ),
+      (
+        context.l10n.artist,
+        '${audio.artist}',
+      ),
+      (
+        context.l10n.albumArtists,
+        '${audio.albumArtist}',
+      ),
+      (
+        context.l10n.trackNumber,
+        '${audio.trackNumber}',
+      ),
+      (
+        context.l10n.diskNumber,
+        '${audio.discNumber}',
+      ),
+      (
+        context.l10n.totalDisks,
+        '${audio.discTotal}',
+      ),
+    };
+
     return AlertDialog(
       title: yaruStyled
           ? YaruDialogTitleBar(
-              title: Text(audio.title ?? ''),
+              title: Text(context.l10n.metadata),
             )
-          : null,
-      titlePadding: yaruStyled ? EdgeInsets.zero : null,
+          : Center(child: Text(context.l10n.metadata)),
+      titlePadding:
+          yaruStyled ? EdgeInsets.zero : const EdgeInsets.only(top: 10),
+      contentPadding: const EdgeInsets.only(bottom: 12),
       scrollable: true,
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            dense: true,
-            title: Text(context.l10n.title),
-            trailing: Text('${audio.title}'),
-          ),
-          ListTile(
-            dense: true,
-            trailing: Text('${audio.album}'),
-            title: Text(context.l10n.album),
-          ),
-          ListTile(
-            dense: true,
-            trailing: Text(' ${audio.artist}'),
-            title: Text(context.l10n.artist),
-          ),
-          // TODO: localize
-          ListTile(
-            dense: true,
-            trailing: Text('${audio.trackNumber}'),
-            title: const Text('track number'),
-          ),
-          ListTile(
-            dense: true,
-            title: const Text('discNumber'),
-            trailing: Text('${audio.discNumber}'),
-          ),
-          ListTile(
-            dense: true,
-            title: const Text('totalDisc'),
-            trailing: Text('${audio.discTotal}'),
-          ),
-          ListTile(
-            dense: true,
-            title: const Text('albumArtist'),
-            trailing: Text('${audio.albumArtist}'),
-          ),
-        ],
+        children: items
+            .map(
+              (e) => ListTile(
+                dense: true,
+                title: Text(e.$1),
+                subtitle: Text(e.$2),
+              ),
+            )
+            .toList(),
       ),
     );
   }

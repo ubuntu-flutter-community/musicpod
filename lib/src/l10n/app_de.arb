@@ -28,7 +28,15 @@
     "album": "Album",
     "albums": "Alben",
     "genres": "Genres",
+    "genre": "Genre",
     "years": "Jahre",
+    "year": "Jahre",
+    "albumArtist": "Albumkünstler",
+    "albumArtists": "Albumkünstler",
+    "track": "Spur",
+    "trackNumber": "Titelnummer",
+    "diskNumber": "CD-Nummer",
+    "totalDisks": "CDs",
     "searchLocalAudioHint": "Suche lokale Musik",
     "library": "Bibliothek",
     "playlists": "Wiedergabelisten",
@@ -264,5 +272,8 @@
     "weatherXXXPodcastIndexOnly": "Wetter",
     "wildernessXXXPodcastIndexOnly": "Wildnis",
     "wrestlingXXXPodcastIndexOnly": "Ringen",
-    "updateAvailable": "Update available"
+    "updateAvailable": "Update available",
+    "showMetaData": "Zeige Metadaten",
+    "metadata": "Metadaten",
+    "writeMetadata": "Write metadata"
 }
