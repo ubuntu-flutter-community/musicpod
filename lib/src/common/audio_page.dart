@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
-import '../../globals.dart';
 import '../l10n/l10n.dart';
 
 class AudioPage extends StatelessWidget {

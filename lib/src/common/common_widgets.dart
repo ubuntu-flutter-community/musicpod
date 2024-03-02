@@ -3,13 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
-import 'package:yaru_icons/yaru_icons.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../constants.dart';
-import '../../globals.dart' hide isMobile;
+import '../../globals.dart';
 import '../../theme.dart';
 import 'icons.dart';
 

@@ -3,13 +3,12 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
-import '../../globals.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
 import '../../player.dart';
