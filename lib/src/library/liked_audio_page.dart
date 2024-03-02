@@ -70,7 +70,10 @@ class LikedAudioPage extends ConsumerWidget {
         );
       },
       controlPanelButton: Padding(
-        padding: const EdgeInsets.only(left: 10),
+        padding: const EdgeInsets.only(
+          left: 10,
+          right: 10,
+        ),
         child: Text(
           '${likedLocalAudios?.length} ${context.l10n.titles}',
           style: getControlPanelStyle(context.t.textTheme),

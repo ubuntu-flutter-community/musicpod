@@ -217,6 +217,17 @@ class LibraryModel extends SafeChangeNotifier {
   List<String> getPlaylistNames() =>
       playlists.entries.map((e) => e.key).toList();
 
+  void moveAudioInPlaylist({
+    required int oldIndex,
+    required int newIndex,
+    required String id,
+  }) =>
+      _service.moveAudioInPlaylist(
+        oldIndex: oldIndex,
+        newIndex: newIndex,
+        id: id,
+      );
+
   // Podcasts
 
   Map<String, Set<Audio>> get podcasts => _service.podcasts;

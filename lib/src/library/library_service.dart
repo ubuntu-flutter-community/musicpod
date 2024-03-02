@@ -202,6 +202,43 @@ class LibraryService {
     }
   }
 
+  void moveAudioInPlaylist({
+    required int oldIndex,
+    required int newIndex,
+    required String id,
+  }) {
+    final audios = id == kLikedAudiosPageId
+        ? likedAudios.toList()
+        : playlists[id]?.toList();
+
+    if (audios == null ||
+        audios.isEmpty == true ||
+        !(newIndex < audios.length)) {
+      return;
+    }
+
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+
+    final audio = audios.removeAt(oldIndex);
+    audios.insert(newIndex, audio);
+
+    if (id == kLikedAudiosPageId) {
+      writeAudioMap({kLikedAudiosPageId: _likedAudios}, kLikedAudiosFileName)
+          .then((value) {
+        likedAudios.clear();
+        likedAudios.addAll(audios);
+        _likedAudiosController.add(true);
+      });
+    } else {
+      writeAudioMap(_playlists, kPlaylistsFileName).then((_) {
+        _playlists.update(id, (value) => Set.from(audios));
+        _playlistsController.add(true);
+      });
+    }
+  }
+
   void addAudioToPlaylist(String id, Audio audio) {
     final playlist = _playlists[id];
     if (playlist != null) {
