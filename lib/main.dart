@@ -11,11 +11,10 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:window_manager/window_manager.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:yaru/yaru.dart';
 
 import 'app.dart';
 import 'external_path.dart';
-import 'globals.dart';
 import 'library.dart';
 import 'local_audio.dart';
 import 'notifications.dart';

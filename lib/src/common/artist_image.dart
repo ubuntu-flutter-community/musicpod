@@ -2,7 +2,7 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:yaru/yaru.dart';
 
 class ArtistImage extends StatelessWidget {
   const ArtistImage({

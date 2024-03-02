@@ -25,6 +25,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  animated_vector:
+    dependency: transitive
+    description:
+      name: animated_vector
+      sha256: e15c6596549ca6e2e7491c11fbe168a1dead87475a828a4bc81cf104feca0432
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
+  animated_vector_annotations:
+    dependency: transitive
+    description:
+      name: animated_vector_annotations
+      sha256: baa6b4ed98407220f2c9634f7da3cfa5eedb46798e090466f441e666e2f7c8c0
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   archive:
     dependency: transitive
     description:
@@ -894,6 +910,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.3"
+  path_parsing:
+    dependency: transitive
+    description:
+      name: path_parsing
+      sha256: e3e67b1629e6f7e8100b367d3db6ba6af4b1f0bb80f64db18ef1fbabd2fa9ccf
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   path_provider:
     dependency: "direct main"
     description:
@@ -1510,26 +1534,11 @@ packages:
   yaru:
     dependency: "direct main"
     description:
-      name: yaru
-      sha256: e9ccb22cb283ecf3f6b21d64dee9764d4abff65a44f48ce21aa13b9eae3e3be5
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.2"
-  yaru_icons:
-    dependency: "direct main"
-    description:
-      name: yaru_icons
-      sha256: "2dff89ee31c2dd888e1ce146f0faef1c8de4ffbc90cb6466aacd55c3a9ad0674"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.4.0"
-  yaru_widgets:
-    dependency: "direct main"
-    description:
-      name: yaru_widgets
-      sha256: "0bade922090f25eedcc88cdc15b8a6adbaba4e4b56d793e999224b22c95a19d2"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: "29941538d545ff0ec512d64b3feae2d7145d3438"
+      resolved-ref: "29941538d545ff0ec512d64b3feae2d7145d3438"
+      url: "https://github.com/ubuntu/yaru.dart"
+    source: git
     version: "3.6.0"
   yaru_window:
     dependency: "direct main"

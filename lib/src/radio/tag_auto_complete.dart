@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide State;
-import 'package:yaru_widgets/constants.dart';
+import 'package:yaru/constants.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
