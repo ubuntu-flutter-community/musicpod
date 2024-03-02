@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
@@ -402,9 +401,24 @@ class CommonSwitch extends StatelessWidget {
             value: value,
             onChanged: onChanged,
           )
-        : appleStyled
-            ? CupertinoSwitch(value: value, onChanged: onChanged)
-            : Switch(value: value, onChanged: onChanged);
+        : Switch(value: value, onChanged: onChanged);
+  }
+}
+
+class CommonCheckBox extends StatelessWidget {
+  const CommonCheckBox({super.key, required this.value, this.onChanged});
+
+  final bool value;
+  final void Function(bool?)? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return yaruStyled
+        ? YaruCheckbox(
+            value: value,
+            onChanged: onChanged,
+          )
+        : Checkbox(value: value, onChanged: onChanged);
   }
 }
 

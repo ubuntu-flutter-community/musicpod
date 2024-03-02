@@ -306,6 +306,7 @@ class Iconz {
           : Icons.clear;
   IconData get list => yaruStyled ? YaruIcons.unordered_list : Icons.list;
   IconData get grid => yaruStyled ? YaruIcons.app_grid : Icons.grid_on;
+  IconData get reorder => yaruStyled ? YaruIcons.ordered_list : Icons.grid_on;
 
   Widget getAnimatedStar(bool isStarred, [Color? color]) {
     if (yaruStyled) {
