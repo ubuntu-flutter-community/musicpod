@@ -8,6 +8,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../data.dart';
+import '../../l10n.dart';
 import '../../library.dart';
 import '../../string_x.dart';
 import 'radio_search.dart';
@@ -130,12 +131,26 @@ class RadioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  bool _showTags = false;
-  bool get showTags => _showTags;
-  void setShowTags(bool value) {
-    if (value == _showTags) return;
-    _showTags = value;
+  RadioCollectionView _radioCollectionView = RadioCollectionView.stations;
+  RadioCollectionView get radioCollectionView => _radioCollectionView;
+  void setRadioCollectionView(RadioCollectionView value) {
+    if (value == _radioCollectionView) return;
+    _radioCollectionView = value;
     notifyListeners();
+  }
+}
+
+enum RadioCollectionView {
+  stations,
+  tags,
+  history;
+
+  String localize(AppLocalizations l10n) {
+    return switch (this) {
+      stations => l10n.stations,
+      tags => l10n.tags,
+      history => l10n.history,
+    };
   }
 }
 

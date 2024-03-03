@@ -8,13 +8,12 @@ import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:smtc_windows/smtc_windows.dart';
 import 'package:path/path.dart' as p;
+import 'package:smtc_windows/smtc_windows.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
-import '../../player.dart';
 import '../../utils.dart';
 import 'my_audio_handler.dart';
 
@@ -245,7 +244,17 @@ class PlayerService {
 
     await (_player.platform as NativePlayer).observeProperty(
       'metadata',
-      (data) async => setMpvMetaData(MpvMetaData.fromJson(data)),
+      (data) async {
+        final mpvMetaData = MpvMetaData.fromJson(data);
+        if (mpvMetaData.icyTitle.isNotEmpty == true) {
+          libraryService.addRadioHistoryElement(
+            mpvMetaData: mpvMetaData.copyWith(
+              icyName: audio?.title,
+            ),
+          );
+        }
+        setMpvMetaData(mpvMetaData);
+      },
     );
 
     _volumeSub = _player.stream.volume.listen((value) {
