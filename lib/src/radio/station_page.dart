@@ -8,6 +8,7 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../globals.dart';
+import '../../l10n.dart';
 import '../../library.dart';
 import '../../player.dart';
 import '../../radio.dart';
@@ -131,6 +132,9 @@ class StationPage extends ConsumerWidget {
                           ),
                         ),
                         IconButton(
+                          tooltip: isStarred
+                              ? context.l10n.removeFromCollection
+                              : context.l10n.addToCollection,
                           onPressed: station.url == null
                               ? null
                               : isStarred

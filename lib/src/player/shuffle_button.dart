@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../build_context_x.dart';
+import '../../l10n.dart';
 import '../common/icons.dart';
 import 'player_model.dart';
 
@@ -19,6 +20,7 @@ class ShuffleButton extends ConsumerWidget {
     final setShuffle = ref.read(playerModelProvider).setShuffle;
 
     return IconButton(
+      tooltip: context.l10n.shuffle,
       icon: Icon(
         Iconz().shuffle,
         color: !active

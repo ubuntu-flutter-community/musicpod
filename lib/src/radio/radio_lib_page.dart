@@ -1,6 +1,7 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
@@ -215,6 +216,7 @@ class RadioHistoryList extends ConsumerWidget {
           final e = radioHistory.entries.elementAt(index);
           return ListTile(
             leading: IconButton(
+              tooltip: context.l10n.metadata,
               onPressed: () => showDialog(
                 context: context,
                 builder: (context) {
@@ -224,6 +226,9 @@ class RadioHistoryList extends ConsumerWidget {
                         .entries
                         .map(
                           (e) => ListTile(
+                            onTap: e.key == 'icy-url'
+                                ? () => launchUrl(Uri.parse(e.value))
+                                : null,
                             dense: true,
                             title: Text(e.key),
                             subtitle: Text(e.value),
