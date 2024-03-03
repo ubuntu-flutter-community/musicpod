@@ -123,6 +123,7 @@ class _LocalAudioPageState extends ConsumerState<LocalAudioPage> {
               titles: audios,
               albums: model.allAlbums,
               artists: model.allArtists,
+              genres: model.allGenres,
             ),
           ),
         ],

@@ -148,6 +148,10 @@ class MetaDataDialog extends StatelessWidget {
         context.l10n.totalDisks,
         '${audio.discTotal}',
       ),
+      (
+        context.l10n.genre,
+        '${audio.genre}',
+      ),
     };
 
     return AlertDialog(
