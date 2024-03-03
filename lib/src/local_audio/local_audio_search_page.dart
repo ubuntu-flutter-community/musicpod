@@ -33,6 +33,8 @@ class LocalAudioSearchPage extends ConsumerWidget {
     );
     final albumsResult =
         ref.watch(localAudioModelProvider.select((m) => m.albumSearchResult));
+    final genresResult =
+        ref.watch(localAudioModelProvider.select((m) => m.genresSearchResult));
     final searchQuery =
         ref.watch(localAudioModelProvider.select((m) => m.searchQuery));
     final index =
@@ -59,6 +61,8 @@ class LocalAudioSearchPage extends ConsumerWidget {
         view = LocalAudioView.artists;
       } else if (albumsResult?.isNotEmpty == true) {
         view = LocalAudioView.albums;
+      } else if (genresResult?.isNotEmpty == true) {
+        view = LocalAudioView.genres;
       }
     }
 
@@ -75,6 +79,8 @@ class LocalAudioSearchPage extends ConsumerWidget {
               searchQuery?.isNotEmpty == true ? artistsResult?.length : null,
           albumCount:
               searchQuery?.isNotEmpty == true ? albumsResult?.length : null,
+          genresCounts:
+              searchQuery?.isNotEmpty == true ? genresResult?.length : null,
         ),
         Expanded(
           child: LocalAudioBody(
@@ -88,6 +94,7 @@ class LocalAudioSearchPage extends ConsumerWidget {
             titles: titlesResult,
             artists: artistsResult,
             albums: albumsResult,
+            genres: genresResult,
           ),
         ),
       ],

@@ -99,7 +99,10 @@ class ArtistPage extends ConsumerWidget {
         headerLabel: context.l10n.artist,
         headerTitle: artistAudios?.firstOrNull?.artist,
         showAudioPageHeader: images?.isNotEmpty == true,
-        image: ArtistImage(images: images),
+        image: RoundImageContainer(
+          images: images,
+          fallBackText: artistAudios?.firstOrNull?.artist ?? 'a',
+        ),
         imageRadius: BorderRadius.circular(10000),
         headerSubtile: artistAudios?.firstOrNull?.genre,
         audios: artistAudios,
@@ -160,7 +163,10 @@ class _ArtistAlbumsCardGrid extends StatelessWidget {
                       height: kMaxAudioPageHeaderHeight,
                       imageRadius: BorderRadius.circular(10000),
                       title: artistAudios?.firstOrNull?.artist ?? '',
-                      image: ArtistImage(images: images),
+                      image: RoundImageContainer(
+                        images: images,
+                        fallBackText: artistAudios?.firstOrNull?.artist ?? 'a',
+                      ),
                       subTitle: artistAudios?.firstOrNull?.genre,
                       label: context.l10n.artist,
                       onLabelTab: onLabelTab,

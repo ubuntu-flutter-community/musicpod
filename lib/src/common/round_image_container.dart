@@ -4,13 +4,17 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
-class ArtistImage extends StatelessWidget {
-  const ArtistImage({
+import '../../theme.dart';
+
+class RoundImageContainer extends StatelessWidget {
+  const RoundImageContainer({
     super.key,
     this.images,
+    required this.fallBackText,
   });
 
   final Set<Uint8List>? images;
+  final String fallBackText;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +76,14 @@ class ArtistImage extends StatelessWidget {
       }
     }
 
-    return const SizedBox.shrink();
+    return Container(
+      decoration: BoxDecoration(
+        color: getAlphabetColor(fallBackText).scale(saturation: -0.6),
+        boxShadow: [
+          boxShadow,
+        ],
+      ),
+    );
   }
 }
 

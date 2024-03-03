@@ -31,6 +31,9 @@ class LocalAudioModel extends SafeChangeNotifier {
   Set<Audio>? _artistsSearchResult;
   Set<Audio>? get similarArtistsSearchResult => _artistsSearchResult;
 
+  Set<Audio>? _genresSearchResult;
+  Set<Audio>? get genresSearchResult => _genresSearchResult;
+
   String? _searchQuery;
   String? get searchQuery => _searchQuery;
   void search(String? query) {
@@ -40,6 +43,7 @@ class LocalAudioModel extends SafeChangeNotifier {
       _titlesSearchResult = {};
       _albumSearchResult = {};
       _artistsSearchResult = {};
+      _genresSearchResult = {};
       notifyListeners();
       return;
     }
@@ -55,6 +59,21 @@ class LocalAudioModel extends SafeChangeNotifier {
       for (var a in allAlbumsFindings) {
         if (albumsResult.none((element) => element.album == a.album)) {
           albumsResult.add(a);
+        }
+      }
+    }
+
+    final allGenresFindings = audios?.where(
+      (audio) =>
+          audio.genre?.isNotEmpty == true &&
+          audio.genre!.toLowerCase().contains(query.toLowerCase()),
+    );
+
+    final genreFindings = <Audio>{};
+    if (allGenresFindings != null) {
+      for (var a in allGenresFindings) {
+        if (genreFindings.none((element) => element.genre == a.genre)) {
+          genreFindings.add(a);
         }
       }
     }
@@ -85,6 +104,7 @@ class LocalAudioModel extends SafeChangeNotifier {
     );
     _albumSearchResult = albumsResult;
     _artistsSearchResult = artistsResult;
+    _genresSearchResult = genreFindings;
     notifyListeners();
   }
 
@@ -103,6 +123,27 @@ class LocalAudioModel extends SafeChangeNotifier {
     final list = artistsResult.toList();
     sortListByAudioFilter(
       audioFilter: AudioFilter.artist,
+      audios: list,
+    );
+    return Set.from(list);
+  }
+
+  Set<Audio>? _allGenres;
+  Set<Audio>? get allGenres => _allGenres;
+  Set<Audio>? _findAllGenres() {
+    if (audios == null) return null;
+    final genresResult = <Audio>{};
+    for (var a in audios!) {
+      if (genresResult.none(
+            (e) => e.genre == a.genre,
+          ) &&
+          a.genre?.isNotEmpty == true) {
+        genresResult.add(a);
+      }
+    }
+    final list = genresResult.toList();
+    sortListByAudioFilter(
+      audioFilter: AudioFilter.genre,
       audios: list,
     );
     return Set.from(list);
@@ -179,6 +220,41 @@ class LocalAudioModel extends SafeChangeNotifier {
     return artistList != null ? Set.from(artistList) : null;
   }
 
+  Set<Audio>? findArtistsOfGenre(
+    Audio audio,
+  ) {
+    if (audios == null) return null;
+    final artistsOfGenre = <Audio>{};
+
+    for (var artistAudio in audios!) {
+      if (artistAudio.genre?.trim().isNotEmpty == true &&
+          artistAudio.genre == audio.genre &&
+          artistsOfGenre.none((e) => e.artist == artistAudio.artist)) {
+        artistsOfGenre.add(artistAudio);
+      }
+    }
+
+    return artistsOfGenre;
+  }
+
+  Set<Audio>? findGenre(
+    Audio audio, [
+    AudioFilter audioFilter = AudioFilter.genre,
+  ]) {
+    final genre = audios?.where(
+      (a) => a.genre != null && a.genre == audio.genre,
+    );
+
+    var genreList = genre?.toList();
+    if (genreList != null) {
+      sortListByAudioFilter(
+        audioFilter: audioFilter,
+        audios: genreList,
+      );
+    }
+    return genreList != null ? Set.from(genreList) : null;
+  }
+
   Set<Uint8List>? findImages(Set<Audio> audios) {
     final images = <Uint8List>{};
     final albumAudios = <Audio>{};
@@ -212,6 +288,7 @@ class LocalAudioModel extends SafeChangeNotifier {
 
       _allAlbums = findAllAlbums();
       _allArtists = _findAllArtists();
+      _allGenres = _findAllGenres();
     }
 
     _audiosChangedSub = localAudioService.audiosChanged.listen((_) {

@@ -15,9 +15,10 @@ class LocalAudioControlPanel extends ConsumerWidget {
     this.titlesCount,
     this.artistCount,
     this.albumCount,
+    this.genresCounts,
   });
 
-  final int? titlesCount, artistCount, albumCount;
+  final int? titlesCount, artistCount, albumCount, genresCounts;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,15 +41,16 @@ class LocalAudioControlPanel extends ConsumerWidget {
         i = LocalAudioView.artists.index;
       } else if (albumCount != null && albumCount! > 0) {
         i = LocalAudioView.albums.index;
+      } else if (genresCounts != null && genresCounts! > 0) {
+        i = LocalAudioView.genres.index;
       }
     }
 
-    return Row(
-      children: [
-        const SizedBox(
-          width: 20,
-        ),
-        YaruChoiceChipBar(
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.only(left: kYaruPagePadding),
+        child: YaruChoiceChipBar(
           chipBackgroundColor: chipColor(theme),
           selectedChipBackgroundColor: chipSelectionColor(theme, false),
           borderColor: chipBorder(theme, false),
@@ -66,6 +68,9 @@ class LocalAudioControlPanel extends ConsumerWidget {
               LocalAudioView.albums => Text(
                   '${e.localize(context.l10n)}${albumCount != null ? ' ($albumCount)' : ''}',
                 ),
+              LocalAudioView.genres => Text(
+                  '${e.localize(context.l10n)}${genresCounts != null ? ' ($genresCounts)' : ''}',
+                ),
             };
           }).toList(),
           isSelected: LocalAudioView.values
@@ -76,7 +81,7 @@ class LocalAudioControlPanel extends ConsumerWidget {
             libraryModel.setLocalAudioindex(index);
           },
         ),
-      ],
+      ),
     );
   }
 }

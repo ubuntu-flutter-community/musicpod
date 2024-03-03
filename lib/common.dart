@@ -20,7 +20,7 @@ export 'src/common/loading_grid.dart';
 export 'src/common/master_tile.dart';
 export 'src/common/no_search_result_page.dart';
 export 'src/common/offline_page.dart';
-export 'src/common/artist_image.dart';
+export 'src/common/round_image_container.dart';
 export 'src/common/safe_network_image.dart';
 export 'src/common/share_button.dart';
 export 'src/common/side_bar_fall_back_image.dart';
