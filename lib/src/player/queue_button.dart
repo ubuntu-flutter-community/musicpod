@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../library.dart';
@@ -15,10 +16,11 @@ class QueueButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = context.t;
     final libraryModel = ref.read(libraryModelProvider);
 
     return IconButton(
-      color: color,
+      color: color ?? theme.colorScheme.onSurface,
       padding: EdgeInsets.zero,
       tooltip: context.l10n.queue,
       icon: Icon(

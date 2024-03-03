@@ -3,11 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
+import '../../l10n.dart';
 import '../../library.dart';
 import '../common/icons.dart';
 
-class LikeIconButton extends ConsumerWidget {
-  const LikeIconButton({
+class PlayerLikeIcon extends ConsumerWidget {
+  const PlayerLikeIcon({
     super.key,
     required this.audio,
     this.color,
@@ -62,7 +63,17 @@ class LikeIconButton extends ConsumerWidget {
         };
       }
     }
+
+    final toolTip = audio?.audioType == AudioType.local
+        ? liked
+            ? context.l10n.removeFromFavorites
+            : context.l10n.addToFavorites
+        : isStarredStation
+            ? context.l10n.removeFromCollection
+            : context.l10n.addToCollection;
+
     return IconButton(
+      tooltip: toolTip,
       icon: likeIcon,
       onPressed: onLike,
       color: color,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../build_context_x.dart';
+import '../../l10n.dart';
 import '../common/icons.dart';
 import 'player_model.dart';
 
@@ -21,7 +23,8 @@ class PlayButton extends ConsumerWidget {
     final playOrPause = playerModel.playOrPause;
     final isPlaying = ref.watch(playerModelProvider.select((m) => m.isPlaying));
     return IconButton(
-      color: iconColor,
+      tooltip: isPlaying ? context.l10n.pause : context.l10n.play,
+      color: iconColor ?? context.t.colorScheme.onSurface,
       onPressed: !active
           ? null
           : () {

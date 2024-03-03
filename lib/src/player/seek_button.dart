@@ -17,12 +17,14 @@ class SeekButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = context.t;
     final playerModel = ref.read(playerModelProvider);
 
     final icon = Icon(
       forward ? Iconz().forward30 : Iconz().backward10,
     );
     return IconButton(
+      color: active ? theme.colorScheme.onSurface : theme.disabledColor,
       onPressed: () async {
         playerModel.seekInSeconds(forward ? 30 : -10);
       },

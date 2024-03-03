@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../l10n/l10n.dart';
 import 'player_model.dart';
@@ -15,6 +16,7 @@ class VolumeSliderPopup extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = context.t;
     final playerModel = ref.read(playerModelProvider);
     final volume = ref.watch(playerModelProvider.select((m) => m.volume));
     final setVolume = playerModel.setVolume;
@@ -30,11 +32,11 @@ class VolumeSliderPopup extends ConsumerWidget {
     }
 
     return PopupMenuButton(
+      iconColor: color ?? theme.colorScheme.onSurface,
       padding: EdgeInsets.zero,
       tooltip: context.l10n.volume,
       icon: Icon(
         iconData,
-        color: color,
       ),
       itemBuilder: (context) {
         return [
@@ -59,8 +61,8 @@ class _Slider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
+    return RotatedBox(
+      quarterTurns: 3,
       child: Consumer(
         builder: (context, ref, _) {
           final volume = ref.watch(playerModelProvider.select((m) => m.volume));
