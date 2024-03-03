@@ -492,7 +492,7 @@ class LibraryService {
     _localAudioIndexController.add(true);
   }
 
-  int _radioIndex = 2; // Default to RadioSearch.country
+  int _radioIndex = 0; // Default to RadioSearch.name
   int get radioIndex => _radioIndex;
   final _radioIndexController = StreamController<bool>.broadcast();
   Stream<bool> get radioIndexChanged => _radioIndexController.stream;
