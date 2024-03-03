@@ -80,7 +80,7 @@ class AlbumsView extends ConsumerWidget {
               ),
             ),
             image: image,
-            onTap: id == null
+            onTap: id == null || albumAudios == null
                 ? null
                 : () => Navigator.of(context).push(
                       MaterialPageRoute(

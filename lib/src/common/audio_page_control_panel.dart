@@ -42,6 +42,7 @@ class AudioPageControlPanel extends StatelessWidget {
               radius: avatarIconSize,
               backgroundColor: theme.colorScheme.inverseSurface,
               child: IconButton(
+                tooltip: context.l10n.playAll,
                 onPressed: () {
                   runOrConfirm(
                     context: context,

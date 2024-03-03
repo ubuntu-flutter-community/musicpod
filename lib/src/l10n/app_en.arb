@@ -275,5 +275,9 @@
     "updateAvailable": "Update available",
     "showMetaData": "Show metadata",
     "metadata": "Metadata",
-    "writeMetadata": "Write metadata"
+    "writeMetadata": "Write metadata",
+    "reorder": "Reorder",
+    "move": "Move",
+    "pinAlbum": "Pin album to sidebar",
+    "playAll": "Play all"
 }

@@ -302,9 +302,21 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.clear
           : Icons.clear;
-  IconData get list => yaruStyled ? YaruIcons.unordered_list : Icons.list;
-  IconData get grid => yaruStyled ? YaruIcons.app_grid : Icons.grid_on;
-  IconData get reorder => yaruStyled ? YaruIcons.ordered_list : Icons.grid_on;
+  IconData get list => yaruStyled
+      ? YaruIcons.unordered_list
+      : appleStyled
+          ? CupertinoIcons.list_bullet
+          : Icons.list;
+  IconData get grid => yaruStyled
+      ? YaruIcons.app_grid
+      : appleStyled
+          ? CupertinoIcons.square_grid_3x2_fill
+          : Icons.grid_on;
+  IconData get reorder => yaruStyled
+      ? YaruIcons.ordered_list
+      : appleStyled
+          ? CupertinoIcons.move
+          : Icons.move_down_rounded;
 
   Widget getAnimatedStar(bool isStarred, [Color? color]) {
     if (yaruStyled) {
