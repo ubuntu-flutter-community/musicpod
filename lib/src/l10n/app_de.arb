@@ -275,5 +275,9 @@
     "updateAvailable": "Update available",
     "showMetaData": "Zeige Metadaten",
     "metadata": "Metadaten",
-    "writeMetadata": "Write metadata"
+    "writeMetadata": "Write metadata",
+    "reorder": "Neuanordnen",
+    "move": "Bewegen",
+    "pinAlbum": "Album an Seitenleiste pinnen",
+    "playAll": "Alles abspielen"
 }

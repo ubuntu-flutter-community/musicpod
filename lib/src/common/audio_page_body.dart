@@ -5,9 +5,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app.dart';
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../l10n.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
 import '../library/library_model.dart';
@@ -108,6 +110,7 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.t;
     final reorderAblePageType =
         (widget.audioPageType == AudioPageType.playlist ||
             widget.audioPageType == AudioPageType.likedAudio);
@@ -157,13 +160,16 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
                   if (widget.controlPanelButton != null)
                     widget.controlPanelButton!,
                   IconButton(
+                    tooltip: context.l10n.move,
                     isSelected: reorderAble,
+                    //TODO: fix yaru iconbutton selected color
+                    color: reorderAble ? theme.colorScheme.primary : null,
                     onPressed: () {
                       setState(() {
                         reorderAble = !reorderAble;
                       });
                     },
-                    icon: const Icon(Icons.move_down),
+                    icon: Icon(Iconz().reorder),
                   ),
                 ],
               )

@@ -93,33 +93,38 @@ class PodcastPage extends ConsumerWidget {
       controlPanelTitle: Text(title),
       controlPanelButton: Row(
         children: [
-          IconButton(
-            tooltip: subscribed
-                ? context.l10n.removeFromCollection
-                : context.l10n.addToCollection,
-            icon: checkingForUpdates
-                ? const SideBarProgress()
-                : Icon(
-                    subscribed
-                        ? Iconz().removeFromLibrary
-                        : Iconz().addToLibrary,
-                    color: subscribed
-                        ? theme.colorScheme.primary
-                        : theme.colorScheme.onSurface,
-                  ),
-            onPressed: checkingForUpdates
-                ? null
-                : () {
-                    if (subscribed) {
-                      libraryModel.removePodcast(pageId);
-                    } else if (audios?.isNotEmpty == true) {
-                      libraryModel.addPodcast(pageId, audios!);
-                    }
-                  },
+          Padding(
+            padding: const EdgeInsets.only(left: 5),
+            child: IconButton(
+              tooltip: subscribed
+                  ? context.l10n.removeFromCollection
+                  : context.l10n.addToCollection,
+              icon: checkingForUpdates
+                  ? const SideBarProgress()
+                  : Icon(
+                      subscribed
+                          ? Iconz().removeFromLibrary
+                          : Iconz().addToLibrary,
+                      color: subscribed
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurface,
+                    ),
+              onPressed: checkingForUpdates
+                  ? null
+                  : () {
+                      if (subscribed) {
+                        libraryModel.removePodcast(pageId);
+                      } else if (audios?.isNotEmpty == true) {
+                        libraryModel.addPodcast(pageId, audios!);
+                      }
+                    },
+            ),
           ),
-          StreamProviderRow(
-            spacing: const EdgeInsets.only(right: 10),
-            text: title,
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: StreamProviderRow(
+              text: title,
+            ),
           ),
         ],
       ),

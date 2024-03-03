@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
+import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
@@ -28,6 +29,7 @@ class ArtistPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = context.t;
     final libraryModel = ref.read(libraryModelProvider);
     final model = ref.read(localAudioModelProvider);
 
@@ -42,11 +44,15 @@ class ArtistPage extends ConsumerWidget {
         IconButton(
           icon: Icon(Iconz().list),
           isSelected: !useGridView,
+          //TODO: fix yaru iconbutton selected color
+          color: !useGridView ? theme.colorScheme.primary : null,
           onPressed: () => setUseGridView(false),
         ),
         IconButton(
           icon: Icon(Iconz().grid),
           isSelected: useGridView,
+          //TODO: fix yaru iconbutton selected color
+          color: useGridView ? theme.colorScheme.primary : null,
           onPressed: () => setUseGridView(true),
         ),
       ],
@@ -54,11 +60,13 @@ class ArtistPage extends ConsumerWidget {
 
     final controlPanelButton = Row(
       children: [
-        listModeToggle,
-        StreamProviderRow(
-          spacing: const EdgeInsets.only(right: 10),
-          text: artistAudios?.firstOrNull?.artist,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: StreamProviderRow(
+            text: artistAudios?.firstOrNull?.artist,
+          ),
         ),
+        listModeToggle,
       ],
     );
 

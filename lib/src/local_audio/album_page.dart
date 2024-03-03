@@ -47,28 +47,28 @@ class AlbumPage extends ConsumerWidget {
   final String id;
   final bool Function(String name) isPinnedAlbum;
   final void Function(String name) removePinnedAlbum;
-  final Set<Audio>? album;
+  final Set<Audio> album;
   final void Function(String name, Set<Audio> audios) addPinnedAlbum;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final model = ref.read(localAudioModelProvider);
-    final image = album?.firstOrNull?.pictureData != null
+    final image = album.firstOrNull?.pictureData != null
         ? Image.memory(
-            album!.firstOrNull!.pictureData!,
+            album.firstOrNull!.pictureData!,
             fit: BoxFit.fitHeight,
             filterQuality: FilterQuality.medium,
           )
         : null;
 
     void onArtistTap(text) {
-      final artistName = album?.firstOrNull?.artist;
+      final artistName = album.firstOrNull?.artist;
       if (artistName == null) return;
 
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) {
-            final artistAudios = model.findArtist(album!.first);
+            final artistAudios = model.findArtist(album.first);
             final images = model.findImages(artistAudios ?? {});
 
             return ArtistPage(
@@ -87,42 +87,41 @@ class AlbumPage extends ConsumerWidget {
       onSubTitleTab: onArtistTap,
       audioPageType: AudioPageType.album,
       headerLabel: context.l10n.album,
-      headerSubtile: album?.firstOrNull?.artist,
+      headerSubtile: album.firstOrNull?.artist,
       image: image,
       controlPanelButton: Row(
         children: [
-          if (isPinnedAlbum(id))
-            IconButton(
+          Padding(
+            padding: const EdgeInsets.only(left: 5),
+            child: IconButton(
+              tooltip: context.l10n.pinAlbum,
+              isSelected: isPinnedAlbum(id),
+              // TODO: fix this in yaru...
+              color: isPinnedAlbum(id) ? context.t.colorScheme.primary : null,
               icon: Icon(
-                Iconz().pinFilled,
-                color: context.t.colorScheme.primary,
+                isPinnedAlbum(id) ? Iconz().pinFilled : Iconz().pin,
               ),
-              onPressed: () => removePinnedAlbum(
-                id,
-              ),
-            )
-          else
-            IconButton(
-              icon: Icon(
-                Iconz().pin,
-              ),
-              onPressed: album == null
-                  ? null
-                  : () => addPinnedAlbum(
-                        id,
-                        album!,
-                      ),
+              onPressed: () {
+                if (isPinnedAlbum(id)) {
+                  removePinnedAlbum(id);
+                } else {
+                  addPinnedAlbum(id, album);
+                }
+              },
             ),
-          StreamProviderRow(
-            spacing: const EdgeInsets.only(right: 10),
-            text:
-                '${album?.firstOrNull?.artist} - ${album?.firstOrNull?.album}',
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: StreamProviderRow(
+              text:
+                  '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
+            ),
           ),
         ],
       ),
       audios: album,
       pageId: id,
-      headerTitle: album?.firstOrNull?.album,
+      headerTitle: album.firstOrNull?.album,
     );
   }
 }
