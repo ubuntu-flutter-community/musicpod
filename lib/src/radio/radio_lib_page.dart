@@ -31,7 +31,8 @@ class RadioLibPage extends ConsumerWidget {
     }
 
     final theme = context.t;
-    final showTags = ref.watch(radioModelProvider.select((m) => m.showTags));
+    final radioCollectionView =
+        ref.watch(radioModelProvider.select((m) => m.radioCollectionView));
     final radioModel = ref.read(radioModelProvider);
 
     return Column(
@@ -47,26 +48,30 @@ class RadioLibPage extends ConsumerWidget {
               borderColor: chipBorder(theme, false),
               selectedFirst: false,
               clearOnSelect: false,
-              onSelected: (index) =>
-                  radioModel.setShowTags(index == 0 ? false : true),
+              onSelected: (index) => radioModel
+                  .setRadioCollectionView(RadioCollectionView.values[index]),
               yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
               labels: [
                 Text(context.l10n.station),
                 Text(context.l10n.tags),
+                Text(context.l10n.hearingHistory),
               ],
-              isSelected: [!showTags, showTags],
+              isSelected: RadioCollectionView.values
+                  .map((e) => e == radioCollectionView)
+                  .toList(),
             ),
           ],
         ),
         const SizedBox(
           height: 15,
         ),
-        if (showTags)
-          const Expanded(child: TagGrid())
-        else
-          const Expanded(
-            child: StationGrid(),
-          ),
+        Expanded(
+          child: switch (radioCollectionView) {
+            RadioCollectionView.stations => const StationGrid(),
+            RadioCollectionView.tags => const TagGrid(),
+            RadioCollectionView.history => const RadioHistoryList(),
+          },
+        ),
       ],
     );
   }
@@ -176,6 +181,91 @@ class TagGrid extends ConsumerWidget {
           },
         );
       },
+    );
+  }
+}
+
+class RadioHistoryList extends ConsumerWidget {
+  const RadioHistoryList({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final radioHistory =
+        ref.watch(libraryModelProvider.select((l) => l.radioHistory));
+    ref.watch(playerModelProvider.select((p) => p.mpvMetaData));
+
+    if (radioHistory.isEmpty) {
+      return NoSearchResultPage(
+        icons: const AnimatedEmoji(AnimatedEmojis.crystalBall),
+        message: Text(context.l10n.emptyHearingHistory),
+      );
+    }
+
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ListView.builder(
+        reverse: true,
+        shrinkWrap: true,
+        padding: const EdgeInsets.only(
+          left: 10,
+          bottom: kYaruPagePadding,
+        ),
+        itemCount: radioHistory.length,
+        itemBuilder: (context, index) {
+          final e = radioHistory.entries.elementAt(index);
+          return ListTile(
+            leading: IconButton(
+              onPressed: () => showDialog(
+                context: context,
+                builder: (context) {
+                  return SimpleDialog(
+                    children: e.value
+                        .toMap()
+                        .entries
+                        .map(
+                          (e) => ListTile(
+                            dense: true,
+                            title: Text(e.key),
+                            subtitle: Text(e.value),
+                          ),
+                        )
+                        .toList(),
+                  );
+                },
+              ),
+              icon: Icon(Iconz().info),
+            ),
+            title: Text(e.value.icyTitle),
+            subtitle: TapAbleText(
+              text: e.value.icyName,
+              onTap: () {
+                ref
+                    .read(radioModelProvider)
+                    .getStations(
+                      radioSearch: RadioSearch.name,
+                      query: e.value.icyName,
+                    )
+                    .then((stations) {
+                  if (stations != null && stations.isNotEmpty) {
+                    onArtistTap(
+                      audio: stations.first,
+                      artist: e.value.icyTitle,
+                      context: context,
+                      ref: ref,
+                    );
+                  }
+                });
+              },
+            ),
+            trailing: SizedBox(
+              width: 120,
+              child: StreamProviderRow(
+                text: e.value.icyTitle,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

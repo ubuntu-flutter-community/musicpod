@@ -29,6 +29,7 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _lastFavSub;
   StreamSubscription<bool>? _lastCountryCodeSub;
   StreamSubscription<bool>? _downloadsSub;
+  StreamSubscription<bool>? _radioHistoryChangedSub;
 
   Future<void> init() async {
     if (totalListAmount - 1 >= _service.appIndex) {
@@ -63,6 +64,8 @@ class LibraryModel extends SafeChangeNotifier {
     _downloadsSub = _service.downloadsChanged.listen((_) => notifyListeners());
     _lastCountryCodeSub =
         _service.lastCountryCodeChanged.listen((_) => notifyListeners());
+    _radioHistoryChangedSub =
+        _service.radioHistoryChanged.listen((_) => notifyListeners());
 
     notifyListeners();
   }
@@ -84,6 +87,7 @@ class LibraryModel extends SafeChangeNotifier {
     await _lastFavSub?.cancel();
     await _downloadsSub?.cancel();
     await _lastCountryCodeSub?.cancel();
+    await _radioHistoryChangedSub?.cancel();
 
     super.dispose();
   }
@@ -329,6 +333,8 @@ class LibraryModel extends SafeChangeNotifier {
   Duration? getLastPosition(String? url) => _service.getLastPosition(url);
   void addLastPosition(String url, Duration lastPosition) =>
       _service.addLastPosition(url, lastPosition);
+
+  Map<String, MpvMetaData> get radioHistory => _service.radioHistory;
 }
 
 final libraryModelProvider = ChangeNotifierProvider<LibraryModel>((ref) {

@@ -76,7 +76,8 @@
     "noStarredStations": "Du hast noch keine Radiosender mit dem Stern-Button favorisiert.",
     "tags": "Tags",
     "quality": "Qualität",
-    "station": "Station",
+    "station": "Sender",
+    "stations": "Sender",
     "country": "Land",
     "tag": "Tag",
     "failedToImport": "Folgende Dateien konnten nicht importiert werden:",
@@ -279,5 +280,7 @@
     "reorder": "Neuanordnen",
     "move": "Bewegen",
     "pinAlbum": "Album an Seitenleiste pinnen",
-    "playAll": "Alles abspielen"
+    "playAll": "Alles abspielen",
+    "hearingHistory": "Hörverlauf",
+    "emptyHearingHistory": "Du hast noch keinem Radiosender in dieser Sitzung zugehört."
 }

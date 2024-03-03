@@ -77,6 +77,7 @@
     "tags": "Tags",
     "quality": "Quality",
     "station": "Station",
+    "stations": "Stations",
     "country": "Country",
     "tag": "Tag",
     "failedToImport": "Failed to import the following files:",
@@ -279,5 +280,7 @@
     "reorder": "Reorder",
     "move": "Move",
     "pinAlbum": "Pin album to sidebar",
-    "playAll": "Play all"
+    "playAll": "Play all",
+    "hearingHistory": "Hearing history",
+    "emptyHearingHistory": "You did not listen to radio in this app session yet"
 }

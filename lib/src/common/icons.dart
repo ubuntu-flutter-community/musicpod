@@ -317,6 +317,11 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.move
           : Icons.move_down_rounded;
+  IconData get info => yaruStyled
+      ? YaruIcons.information
+      : appleStyled
+          ? CupertinoIcons.info
+          : Icons.info;
 
   Widget getAnimatedStar(bool isStarred, [Color? color]) {
     if (yaruStyled) {

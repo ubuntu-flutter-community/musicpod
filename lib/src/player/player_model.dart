@@ -7,7 +7,6 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../data.dart';
-import 'mpv_meta_data.dart';
 import 'player_service.dart';
 
 const rateValues = [1.0, 1.5, 2.0];
