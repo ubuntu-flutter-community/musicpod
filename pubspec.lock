@@ -1534,12 +1534,11 @@ packages:
   yaru:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "29941538d545ff0ec512d64b3feae2d7145d3438"
-      resolved-ref: "29941538d545ff0ec512d64b3feae2d7145d3438"
-      url: "https://github.com/ubuntu/yaru.dart"
-    source: git
-    version: "3.6.0"
+      name: yaru
+      sha256: "15779218517af2e7cb1313f91afb8e71d68988cc18c23e6b3918b13605dc6d89"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
   yaru_window:
     dependency: "direct main"
     description:
