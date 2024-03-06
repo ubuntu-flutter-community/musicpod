@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
@@ -19,8 +20,6 @@ import 'open_radio_discover_page_button.dart';
 import 'radio_search.dart';
 import 'radio_search_page.dart';
 import 'station_card.dart';
-
-import 'package:http/http.dart' as http;
 
 class RadioLibPage extends ConsumerWidget {
   const RadioLibPage({
@@ -274,7 +273,8 @@ class _HistoryLeadState extends State<HistoryLead> {
   @override
   void initState() {
     super.initState();
-    _imageUrl = fetchAlbumArtFromMusicBrainz(widget.e.value.icyTitle);
+    final icyTitle = widget.e.value.icyTitle;
+    _imageUrl = fetchAlbumArtFromMusicBrainz(icyTitle);
   }
 
   @override
@@ -308,18 +308,26 @@ class _HistoryLeadState extends State<HistoryLead> {
           ),
           child: SizedBox.square(
             dimension: 40,
-            child: FutureBuilder(
-              future: _imageUrl,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Icon(Iconz().info);
-                }
-                return Image.network(
-                  snapshot.data!,
-                  filterQuality: FilterQuality.medium,
-                );
-              },
-            ),
+            child: _ImageUrlCache()._urlCache.containsKey(widget.e.key)
+                ? SafeNetworkImage(
+                    url: _ImageUrlCache()._urlCache[widget.e.key]!,
+                  )
+                : FutureBuilder(
+                    future: _imageUrl,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Icon(Iconz().info);
+                      }
+
+                      return SafeNetworkImage(
+                        url: _ImageUrlCache().put(
+                          icyTitle: widget.e.value.icyTitle,
+                          imageUrl: snapshot.data!,
+                        ),
+                        filterQuality: FilterQuality.medium,
+                      );
+                    },
+                  ),
           ),
         ),
       ),
@@ -327,9 +335,14 @@ class _HistoryLeadState extends State<HistoryLead> {
   }
 
   Future<String?> fetchAlbumArtFromMusicBrainz(String icyTitle) async {
+    return _ImageUrlCache().get(icyTitle) ?? await _fetchAlbumArt(icyTitle);
+  }
+
+  Future<String?> _fetchAlbumArt(String icyTitle) async {
     String? songName;
     String? artist;
-    final split = widget.e.value.icyTitle.split(' - ');
+    final split =
+        icyTitle.contains('–') ? icyTitle.split('–') : icyTitle.split('-');
 
     if (split.length == 2) {
       artist = split[0];
@@ -387,11 +400,24 @@ class _HistoryLeadState extends State<HistoryLead> {
       if (images.isNotEmpty) {
         final artwork = images[0];
 
-        var artwork2 = artwork['image'] as String;
-        return artwork2;
+        return artwork['image'] as String;
       }
     }
 
     return null;
   }
+}
+
+class _ImageUrlCache {
+  static final _ImageUrlCache _instance = _ImageUrlCache._internal();
+  factory _ImageUrlCache() => _instance;
+  _ImageUrlCache._internal();
+
+  final _urlCache = <String, String>{};
+
+  String put({required String icyTitle, required String imageUrl}) {
+    return _urlCache.putIfAbsent(icyTitle, () => imageUrl);
+  }
+
+  String? get(String icyTitle) => _urlCache[icyTitle];
 }
