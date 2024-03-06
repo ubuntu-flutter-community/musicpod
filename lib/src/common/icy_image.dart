@@ -74,6 +74,12 @@ class _IcyImageState extends State<IcyImage> {
                         ),
                       ),
                     ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+                    child: StreamProviderRow(
+                      text: widget.mpvMetaData.icyTitle,
+                    ),
+                  ),
                   ...widget.mpvMetaData
                       .toMap()
                       .entries
