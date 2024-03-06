@@ -60,7 +60,7 @@ class PlayerService {
       return;
     }
     _mpvMetaData = value;
-    if (mpvMetaData?.icyTitle.isNotEmpty == true && audio?.title != null) {
+    if (_mpvMetaData?.icyTitle.isNotEmpty == true && audio?.title != null) {
       libraryService.addRadioHistoryElement(
         icyTitle: mpvMetaData!.icyTitle,
         mpvMetaData: mpvMetaData!.copyWith(
