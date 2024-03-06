@@ -56,8 +56,18 @@ class PlayerService {
   MpvMetaData? _mpvMetaData;
   MpvMetaData? get mpvMetaData => _mpvMetaData;
   void setMpvMetaData(MpvMetaData value) {
-    if (value == _mpvMetaData) return;
+    if (_mpvMetaData != null && value.icyTitle == _mpvMetaData?.icyTitle) {
+      return;
+    }
     _mpvMetaData = value;
+    if (_mpvMetaData?.icyTitle.isNotEmpty == true && audio?.title != null) {
+      libraryService.addRadioHistoryElement(
+        icyTitle: mpvMetaData!.icyTitle,
+        mpvMetaData: mpvMetaData!.copyWith(
+          icyName: audio?.title,
+        ),
+      );
+    }
     _mpvMetaDataController.add(true);
   }
 
@@ -246,13 +256,6 @@ class PlayerService {
       'metadata',
       (data) async {
         final mpvMetaData = MpvMetaData.fromJson(data);
-        if (mpvMetaData.icyTitle.isNotEmpty == true) {
-          libraryService.addRadioHistoryElement(
-            mpvMetaData: mpvMetaData.copyWith(
-              icyName: audio?.title,
-            ),
-          );
-        }
         setMpvMetaData(mpvMetaData);
       },
     );

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
-import '../../constants.dart';
 import '../../data.dart';
+import '../../player.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
+import 'super_network_image.dart';
 
-class BottomPlayerImage extends StatelessWidget {
+class BottomPlayerImage extends ConsumerWidget {
   const BottomPlayerImage({
     super.key,
     this.audio,
@@ -25,7 +27,9 @@ class BottomPlayerImage extends StatelessWidget {
   final bool isOnline;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mpvMetaData =
+        ref.watch(playerModelProvider.select((m) => m.mpvMetaData));
     final theme = context.t;
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
@@ -71,20 +75,15 @@ class BottomPlayerImage extends StatelessWidget {
           ),
         );
       } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
-        return Container(
-          color: kCardColorNeutral,
+        return SuperNetworkImage(
           height: size,
           width: size,
-          child: SafeNetworkImage(
-            errorIcon: Icon(
-              iconData,
-              size: 50,
-              color: theme.hintColor,
-            ),
-            url: audio?.imageUrl ?? audio?.albumArtUrl,
-            filterQuality: FilterQuality.medium,
-            fit: BoxFit.scaleDown,
-          ),
+          iconData: iconData,
+          theme: theme,
+          audio: audio,
+          mpvMetaData: mpvMetaData,
+          fit: BoxFit.cover,
+          iconSize: 35,
         );
       } else {
         return Center(

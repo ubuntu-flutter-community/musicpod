@@ -420,10 +420,11 @@ class LibraryService {
   final _radioHistoryController = StreamController<bool>.broadcast();
   Stream<bool> get radioHistoryChanged => _radioHistoryController.stream;
   void addRadioHistoryElement({
+    required String icyTitle,
     required MpvMetaData mpvMetaData,
   }) {
     _radioHistory.putIfAbsent(
-      DateTime.now().toUtc().toString(),
+      icyTitle,
       () => mpvMetaData,
     );
     _radioHistoryController.add(true);

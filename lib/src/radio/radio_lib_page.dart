@@ -1,7 +1,6 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
@@ -13,6 +12,7 @@ import '../../player.dart';
 import '../../radio.dart';
 import '../../theme.dart';
 import 'open_radio_discover_page_button.dart';
+import 'radio_history_list.dart';
 import 'radio_search.dart';
 import 'radio_search_page.dart';
 import 'station_card.dart';
@@ -182,95 +182,6 @@ class TagGrid extends ConsumerWidget {
           },
         );
       },
-    );
-  }
-}
-
-class RadioHistoryList extends ConsumerWidget {
-  const RadioHistoryList({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final radioHistory =
-        ref.watch(libraryModelProvider.select((l) => l.radioHistory));
-    ref.watch(playerModelProvider.select((p) => p.mpvMetaData));
-
-    if (radioHistory.isEmpty) {
-      return NoSearchResultPage(
-        icons: const AnimatedEmoji(AnimatedEmojis.crystalBall),
-        message: Text(context.l10n.emptyHearingHistory),
-      );
-    }
-
-    return Align(
-      alignment: Alignment.topCenter,
-      child: ListView.builder(
-        reverse: true,
-        shrinkWrap: true,
-        padding: const EdgeInsets.only(
-          left: 10,
-          bottom: kYaruPagePadding,
-        ),
-        itemCount: radioHistory.length,
-        itemBuilder: (context, index) {
-          final e = radioHistory.entries.elementAt(index);
-          return ListTile(
-            leading: IconButton(
-              tooltip: context.l10n.metadata,
-              onPressed: () => showDialog(
-                context: context,
-                builder: (context) {
-                  return SimpleDialog(
-                    children: e.value
-                        .toMap()
-                        .entries
-                        .map(
-                          (e) => ListTile(
-                            onTap: e.key == 'icy-url'
-                                ? () => launchUrl(Uri.parse(e.value))
-                                : null,
-                            dense: true,
-                            title: Text(e.key),
-                            subtitle: Text(e.value),
-                          ),
-                        )
-                        .toList(),
-                  );
-                },
-              ),
-              icon: Icon(Iconz().info),
-            ),
-            title: Text(e.value.icyTitle),
-            subtitle: TapAbleText(
-              text: e.value.icyName,
-              onTap: () {
-                ref
-                    .read(radioModelProvider)
-                    .getStations(
-                      radioSearch: RadioSearch.name,
-                      query: e.value.icyName,
-                    )
-                    .then((stations) {
-                  if (stations != null && stations.isNotEmpty) {
-                    onArtistTap(
-                      audio: stations.first,
-                      artist: e.value.icyTitle,
-                      context: context,
-                      ref: ref,
-                    );
-                  }
-                });
-              },
-            ),
-            trailing: SizedBox(
-              width: 120,
-              child: StreamProviderRow(
-                text: e.value.icyTitle,
-              ),
-            ),
-          );
-        },
-      ),
     );
   }
 }

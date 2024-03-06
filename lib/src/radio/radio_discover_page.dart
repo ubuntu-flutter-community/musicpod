@@ -130,19 +130,17 @@ class RadioDiscoverPage extends ConsumerWidget {
             height: 15,
           ),
           Expanded(
-            child: searchQuery?.isNotEmpty == true
-                ? RadioSearchPage(
-                    key: ValueKey(
-                      searchQuery.toString() +
-                          tag.toString() +
-                          country.toString() +
-                          radioSearch.toString(),
-                    ),
-                    includeHeader: false,
-                    radioSearch: radioSearch,
-                    searchQuery: searchQuery,
-                  )
-                : const SizedBox.shrink(),
+            child: RadioSearchPage(
+              key: ValueKey(
+                searchQuery.toString() +
+                    tag.toString() +
+                    country.toString() +
+                    radioSearch.toString(),
+              ),
+              includeHeader: false,
+              radioSearch: radioSearch,
+              searchQuery: searchQuery,
+            ),
           ),
         ],
       ),
