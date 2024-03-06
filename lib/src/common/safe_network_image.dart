@@ -135,5 +135,5 @@ class UrlStore {
     return _value.putIfAbsent(icyTitle, () => imageUrl);
   }
 
-  String? get(String icyTitle) => _value[icyTitle];
+  String? get(String? icyTitle) => icyTitle == null ? null : _value[icyTitle];
 }

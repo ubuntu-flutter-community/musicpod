@@ -9,6 +9,7 @@ import '../../data.dart';
 import '../../player.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
+import 'super_network_image.dart';
 
 class FullHeightPlayerImage extends ConsumerWidget {
   const FullHeightPlayerImage({
@@ -30,6 +31,9 @@ class FullHeightPlayerImage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.t;
+
+    final mpvMetaData =
+        ref.watch(playerModelProvider.select((m) => m.mpvMetaData));
 
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
@@ -56,22 +60,15 @@ class FullHeightPlayerImage extends ConsumerWidget {
           color: theme.hintColor,
         );
       } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
-        image = Container(
+        image = SuperNetworkImage(
           height: height ?? fullHeightPlayerImageSize,
           width: width ?? fullHeightPlayerImageSize,
-          color: kCardColorNeutral,
-          child: SafeNetworkImage(
-            url: audio?.imageUrl ?? audio?.albumArtUrl,
-            filterQuality: FilterQuality.medium,
-            fit: fit ?? BoxFit.scaleDown,
-            fallBackIcon: Icon(
-              iconData,
-              size: fullHeightPlayerImageSize * 0.7,
-              color: theme.hintColor,
-            ),
-            height: height ?? fullHeightPlayerImageSize,
-            width: width ?? fullHeightPlayerImageSize,
-          ),
+          audio: audio,
+          fit: fit,
+          iconData: iconData,
+          theme: theme,
+          mpvMetaData: mpvMetaData,
+          iconSize: fullHeightPlayerImageSize * 0.7,
         );
       } else {
         image = Container(
@@ -110,27 +107,12 @@ class FullHeightPlayerImage extends ConsumerWidget {
       }
     }
 
-    final radius = borderRadius ?? BorderRadius.circular(10);
-    return Tooltip(
-      message:
-          '${audio?.audioType == AudioType.radio ? audio?.title : audio?.album ?? ''}',
-      child: InkWell(
-        borderRadius: radius,
-        onTap: () {
-          if (audio?.audioType == AudioType.local) {
-            onTitleTap(audio: audio, text: '', context: context, ref: ref);
-          } else {
-            onArtistTap(audio: audio, artist: null, context: context, ref: ref);
-          }
-        },
-        child: SizedBox(
-          height: height ?? fullHeightPlayerImageSize,
-          width: width ?? fullHeightPlayerImageSize,
-          child: ClipRRect(
-            borderRadius: radius,
-            child: image,
-          ),
-        ),
+    return SizedBox(
+      height: height ?? fullHeightPlayerImageSize,
+      width: width ?? fullHeightPlayerImageSize,
+      child: ClipRRect(
+        borderRadius: borderRadius ?? BorderRadius.circular(10),
+        child: image,
       ),
     );
   }
