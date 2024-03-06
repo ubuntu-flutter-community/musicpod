@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,10 +14,13 @@ import '../../library.dart';
 import '../../player.dart';
 import '../../radio.dart';
 import '../../theme.dart';
+import '../data/mpv_meta_data.dart';
 import 'open_radio_discover_page_button.dart';
 import 'radio_search.dart';
 import 'radio_search_page.dart';
 import 'station_card.dart';
+
+import 'package:http/http.dart' as http;
 
 class RadioLibPage extends ConsumerWidget {
   const RadioLibPage({
@@ -215,31 +220,7 @@ class RadioHistoryList extends ConsumerWidget {
         itemBuilder: (context, index) {
           final e = radioHistory.entries.elementAt(index);
           return ListTile(
-            leading: IconButton(
-              tooltip: context.l10n.metadata,
-              onPressed: () => showDialog(
-                context: context,
-                builder: (context) {
-                  return SimpleDialog(
-                    children: e.value
-                        .toMap()
-                        .entries
-                        .map(
-                          (e) => ListTile(
-                            onTap: e.key == 'icy-url'
-                                ? () => launchUrl(Uri.parse(e.value))
-                                : null,
-                            dense: true,
-                            title: Text(e.key),
-                            subtitle: Text(e.value),
-                          ),
-                        )
-                        .toList(),
-                  );
-                },
-              ),
-              icon: Icon(Iconz().info),
-            ),
+            leading: HistoryLead(e: e),
             title: Text(e.value.icyTitle),
             subtitle: TapAbleText(
               text: e.value.icyName,
@@ -272,5 +253,145 @@ class RadioHistoryList extends ConsumerWidget {
         },
       ),
     );
+  }
+}
+
+class HistoryLead extends StatefulWidget {
+  const HistoryLead({
+    super.key,
+    required this.e,
+  });
+
+  final MapEntry<String, MpvMetaData> e;
+
+  @override
+  State<HistoryLead> createState() => _HistoryLeadState();
+}
+
+class _HistoryLeadState extends State<HistoryLead> {
+  late Future<String?> _imageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _imageUrl = fetchAlbumArtFromMusicBrainz(widget.e.value.icyTitle);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: context.l10n.metadata,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(5),
+          onTap: () => showDialog(
+            context: context,
+            builder: (context) {
+              return SimpleDialog(
+                children: widget.e.value
+                    .toMap()
+                    .entries
+                    .map(
+                      (e) => ListTile(
+                        onTap: e.key == 'icy-url'
+                            ? () => launchUrl(Uri.parse(e.value))
+                            : null,
+                        dense: true,
+                        title: Text(e.key),
+                        subtitle: Text(e.value),
+                      ),
+                    )
+                    .toList(),
+              );
+            },
+          ),
+          child: SizedBox.square(
+            dimension: 40,
+            child: FutureBuilder(
+              future: _imageUrl,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Icon(Iconz().info);
+                }
+                return Image.network(
+                  snapshot.data!,
+                  filterQuality: FilterQuality.medium,
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<String?> fetchAlbumArtFromMusicBrainz(String icyTitle) async {
+    String? songName;
+    String? artist;
+    final split = widget.e.value.icyTitle.split(' - ');
+
+    if (split.length == 2) {
+      artist = split[0];
+      songName = split[1];
+    } else if (split.length == 3) {
+      songName = split[2].trim();
+      artist = split[1].trim();
+    }
+    if (artist == null || songName == null) return null;
+
+    final searchUrl = Uri.parse(
+      'https://musicbrainz.org/ws/2/recording/?query=recording:"$songName"%20AND%20artist:"$artist"',
+    );
+    final searchResponse = await http.get(
+      searchUrl,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent':
+            'MusicPod (https://github.com/ubuntu-flutter-community/musicpod)',
+      },
+    );
+
+    if (searchResponse.statusCode == 200) {
+      final searchData = jsonDecode(searchResponse.body);
+      final recordings = searchData['recordings'] as List;
+
+      final firstRecording = recordings.first;
+
+      final releaseId = firstRecording['releases'][0]['id'];
+
+      final imageUrl = await _fetchAlbumArtUrlFromReleaseId(releaseId);
+      return imageUrl;
+    }
+
+    return null;
+  }
+
+  Future<String?> _fetchAlbumArtUrlFromReleaseId(String releaseId) async {
+    final url = Uri.parse(
+      'https://coverartarchive.org/release/$releaseId',
+    );
+    final response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent':
+            'MusicPod (https://github.com/ubuntu-flutter-community/musicpod)',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final images = data['images'] as List;
+
+      if (images.isNotEmpty) {
+        final artwork = images[0];
+
+        var artwork2 = artwork['image'] as String;
+        return artwork2;
+      }
+    }
+
+    return null;
   }
 }

@@ -12,11 +12,24 @@ import 'settings_model.dart';
 
 const _kTileSize = 50.0;
 
-class AboutPage extends ConsumerWidget {
+class AboutPage extends ConsumerStatefulWidget {
   const AboutPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _AboutPageState();
+}
+
+class _AboutPageState extends ConsumerState<AboutPage> {
+  late Future<List<Contributor>> _contributors;
+
+  @override
+  void initState() {
+    super.initState();
+    _contributors = ref.read(settingsModelProvider).getContributors();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = context.t;
     final appName = ref.watch(settingsModelProvider.select((m) => m.appName));
     final linkStyle = theme.textTheme.bodyLarge
@@ -95,7 +108,7 @@ class AboutPage extends ConsumerWidget {
                   ),
                   Expanded(
                     child: FutureBuilder<List<Contributor>>(
-                      future: ref.read(settingsModelProvider).getContributors(),
+                      future: _contributors,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return SizedBox(
