@@ -24,7 +24,6 @@ class PlayButton extends ConsumerWidget {
     final isPlaying = ref.watch(playerModelProvider.select((m) => m.isPlaying));
     return IconButton(
       tooltip: isPlaying ? context.l10n.pause : context.l10n.play,
-      color: iconColor ?? context.t.colorScheme.onSurface,
       onPressed: !active
           ? null
           : () {
@@ -34,11 +33,10 @@ class PlayButton extends ConsumerWidget {
                 playOrPause();
               }
             },
-      icon: isPlaying
-          ? Icon(Iconz().pause)
-          : Icon(
-              Iconz().playFilled,
-            ),
+      icon: Icon(
+        isPlaying ? Iconz().pause : Iconz().playFilled,
+        color: iconColor ?? context.t.colorScheme.onSurface,
+      ),
     );
   }
 }
