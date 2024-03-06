@@ -166,8 +166,9 @@ class _IcyImageState extends State<IcyImage> {
 
         final releaseId = firstRecording['releases'][0]['id'];
 
-        final imageUrl = await _fetchAlbumArtUrlFromReleaseId(releaseId);
-        return imageUrl;
+        if (releaseId == null) return null;
+
+        return await _fetchAlbumArtUrlFromReleaseId(releaseId);
       }
     } on Exception catch (_) {
       return null;
