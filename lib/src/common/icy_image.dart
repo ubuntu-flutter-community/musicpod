@@ -74,6 +74,12 @@ class _IcyImageState extends State<IcyImage> {
                         ),
                       ),
                     ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+                    child: StreamProviderRow(
+                      text: widget.mpvMetaData.icyTitle,
+                    ),
+                  ),
                   ...widget.mpvMetaData
                       .toMap()
                       .entries
@@ -160,8 +166,9 @@ class _IcyImageState extends State<IcyImage> {
 
         final releaseId = firstRecording['releases'][0]['id'];
 
-        final imageUrl = await _fetchAlbumArtUrlFromReleaseId(releaseId);
-        return imageUrl;
+        if (releaseId == null) return null;
+
+        return await _fetchAlbumArtUrlFromReleaseId(releaseId);
       }
     } on Exception catch (_) {
       return null;
