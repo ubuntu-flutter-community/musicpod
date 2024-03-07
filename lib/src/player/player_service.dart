@@ -440,7 +440,7 @@ class PlayerService {
       }
 
       if (playerState.volume != null) {
-        _volume = double.tryParse(playerState.volume!) ?? 100.0;
+        setVolume(double.tryParse(playerState.volume!) ?? 100.0);
       }
 
       _estimateNext();

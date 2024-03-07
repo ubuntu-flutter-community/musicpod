@@ -18,6 +18,7 @@ class IcyImage extends StatefulWidget {
     this.borderRadius,
     this.fallBackWidget,
     this.fit,
+    this.errorWidget,
   });
 
   final MpvMetaData mpvMetaData;
@@ -25,6 +26,7 @@ class IcyImage extends StatefulWidget {
   final double height, width;
   final BorderRadius? borderRadius;
   final Widget? fallBackWidget;
+  final Widget? errorWidget;
   final BoxFit? fit;
 
   @override
@@ -69,6 +71,8 @@ class _IcyImageState extends State<IcyImage> {
                       child: SizedBox(
                         width: 250,
                         child: SafeNetworkImage(
+                          errorIcon:
+                              widget.errorWidget ?? Icon(Iconz().imageMissing),
                           fit: widget.fit ?? BoxFit.fitHeight,
                           url: image,
                         ),
@@ -104,6 +108,7 @@ class _IcyImageState extends State<IcyImage> {
             width: widget.width,
             child: storedUrl != null
                 ? SafeNetworkImage(
+                    errorIcon: widget.errorWidget ?? Icon(Iconz().imageMissing),
                     url: storedUrl,
                     fit: widget.fit ?? BoxFit.fitHeight,
                   )
@@ -115,6 +120,8 @@ class _IcyImageState extends State<IcyImage> {
                       }
 
                       return SafeNetworkImage(
+                        errorIcon:
+                            widget.errorWidget ?? Icon(Iconz().imageMissing),
                         url: UrlStore().put(
                           icyTitle: widget.mpvMetaData.icyTitle,
                           imageUrl: snapshot.data!,
