@@ -39,8 +39,7 @@ class _IcyImageState extends State<IcyImage> {
   @override
   void initState() {
     super.initState();
-    final icyTitle = widget.mpvMetaData.icyTitle;
-    _imageUrl = fetchAlbumArt(icyTitle);
+    _imageUrl = fetchAlbumArt(widget.mpvMetaData.icyTitle);
   }
 
   @override
@@ -107,27 +106,15 @@ class _IcyImageState extends State<IcyImage> {
             height: widget.height,
             width: widget.width,
             child: storedUrl != null
-                ? SafeNetworkImage(
-                    errorIcon: widget.errorWidget ?? Icon(Iconz().imageMissing),
-                    url: storedUrl,
-                    fit: widget.fit ?? BoxFit.fitHeight,
-                  )
+                ? _buildImage(storedUrl)
                 : FutureBuilder(
                     future: _imageUrl,
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return widget.fallBackWidget ?? Icon(Iconz().info);
-                      }
-
-                      return SafeNetworkImage(
-                        errorIcon:
-                            widget.errorWidget ?? Icon(Iconz().imageMissing),
-                        url: UrlStore().put(
+                      return _buildImage(
+                        UrlStore().put(
                           icyTitle: widget.mpvMetaData.icyTitle,
-                          imageUrl: snapshot.data!,
+                          imageUrl: snapshot.data,
                         ),
-                        filterQuality: FilterQuality.medium,
-                        fit: widget.fit ?? BoxFit.fitHeight,
                       );
                     },
                   ),
@@ -136,6 +123,14 @@ class _IcyImageState extends State<IcyImage> {
       ),
     );
   }
+
+  Widget _buildImage(String? url) => SafeNetworkImage(
+        errorIcon: widget.errorWidget ?? Icon(Iconz().imageMissing),
+        url: url,
+        fallBackIcon: widget.fallBackWidget ?? Icon(Iconz().info),
+        filterQuality: FilterQuality.medium,
+        fit: widget.fit ?? BoxFit.fitHeight,
+      );
 
   Future<String?> fetchAlbumArt(String icyTitle) async {
     return UrlStore().get(icyTitle) ?? await _fetchAlbumArt(icyTitle);

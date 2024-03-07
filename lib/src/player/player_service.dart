@@ -64,7 +64,7 @@ class PlayerService {
     var validHistoryElement = _mpvMetaData?.icyTitle.isNotEmpty == true;
 
     if (validHistoryElement &&
-        _mpvMetaData?.icyDescription != null &&
+        _mpvMetaData?.icyDescription.isNotEmpty == true &&
         (_mpvMetaData!.icyTitle.contains(_mpvMetaData!.icyDescription) ||
             _mpvMetaData!.icyTitle.contains(
               _mpvMetaData!.icyDescription

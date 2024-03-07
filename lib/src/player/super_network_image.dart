@@ -1,6 +1,7 @@
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../theme_data_x.dart';
 import '../common/icy_image.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +49,7 @@ class SuperNetworkImage extends StatelessWidget {
 
     return Container(
       key: ValueKey(mpvMetaData?.icyTitle),
-      color: kCardColorNeutral,
+      color: theme.isLight ? kCardColorLight : kCardColorDark,
       height: height,
       width: width,
       child: mpvMetaData?.icyTitle != null

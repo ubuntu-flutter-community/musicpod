@@ -44,7 +44,16 @@ class RadioHistoryList extends ConsumerWidget {
             selected: current?.icyTitle != null &&
                 current?.icyTitle == e.value.icyTitle,
             leading: IcyImage(mpvMetaData: e.value),
-            title: Text(e.value.icyTitle),
+            title: TapAbleText(
+              overflow: TextOverflow.visible,
+              maxLines: 10,
+              text: e.value.icyTitle,
+              onTap: () => onTitleTap(
+                text: e.value.icyTitle,
+                context: context,
+                ref: ref,
+              ),
+            ),
             subtitle: TapAbleText(
               text: e.value.icyName,
               onTap: () {
