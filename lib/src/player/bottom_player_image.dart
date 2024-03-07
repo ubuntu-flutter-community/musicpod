@@ -28,6 +28,7 @@ class BottomPlayerImage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const iconSize = 35.0;
     final mpvMetaData =
         ref.watch(playerModelProvider.select((m) => m.mpvMetaData));
     final theme = context.t;
@@ -70,7 +71,7 @@ class BottomPlayerImage extends ConsumerWidget {
           height: size,
           child: Icon(
             iconData,
-            size: 50,
+            size: iconSize,
             color: theme.hintColor,
           ),
         );
@@ -83,7 +84,9 @@ class BottomPlayerImage extends ConsumerWidget {
           audio: audio,
           mpvMetaData: mpvMetaData,
           fit: BoxFit.cover,
-          iconSize: 35,
+          iconSize: iconSize,
+          onImageFind: (url) =>
+              ref.read(playerModelProvider).loadColor(url: url),
         );
       } else {
         return Center(
@@ -112,7 +115,7 @@ class BottomPlayerImage extends ConsumerWidget {
             height: size,
             child: Icon(
               iconData,
-              size: 50,
+              size: iconSize,
               color: contrastColor(
                 getAlphabetColor(
                   audio?.title ?? audio?.album ?? 'a',

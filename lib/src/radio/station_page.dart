@@ -58,7 +58,7 @@ class StationPage extends ConsumerWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: Container(
-        color: kCardColorNeutral,
+        color: context.t.isLight ? kCardColorLight : kCardColorDark,
         height: sideBarImageSize,
         width: sideBarImageSize,
         child: SafeNetworkImage(

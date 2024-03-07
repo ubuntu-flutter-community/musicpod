@@ -65,14 +65,11 @@ void onLocalAudioArtistTap({
 }
 
 void onTitleTap({
-  required Audio? audio,
-  required String? text,
+  Audio? audio,
+  String? text,
   required BuildContext context,
   required WidgetRef ref,
 }) {
-  if (audio?.audioType == null || audio?.title == null) {
-    return;
-  }
   if (audio?.audioType == AudioType.local) {
     ref.read(appModelProvider).setFullScreen(false);
   }
@@ -105,6 +102,9 @@ void onTitleTap({
       ),
     );
   } else {
+    if (audio?.audioType == null || audio?.title == null) {
+      return;
+    }
     onLocalAudioTitleTap(
       audio: audio!,
       context: context,

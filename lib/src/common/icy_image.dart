@@ -19,6 +19,7 @@ class IcyImage extends StatefulWidget {
     this.fallBackWidget,
     this.fit,
     this.errorWidget,
+    this.onImageFind,
   });
 
   final MpvMetaData mpvMetaData;
@@ -28,6 +29,7 @@ class IcyImage extends StatefulWidget {
   final Widget? fallBackWidget;
   final Widget? errorWidget;
   final BoxFit? fit;
+  final Function(String url)? onImageFind;
 
   @override
   State<IcyImage> createState() => _IcyImageState();
@@ -39,8 +41,7 @@ class _IcyImageState extends State<IcyImage> {
   @override
   void initState() {
     super.initState();
-    final icyTitle = widget.mpvMetaData.icyTitle;
-    _imageUrl = fetchAlbumArt(icyTitle);
+    _imageUrl = fetchAlbumArt(widget.mpvMetaData.icyTitle);
   }
 
   @override
@@ -107,27 +108,15 @@ class _IcyImageState extends State<IcyImage> {
             height: widget.height,
             width: widget.width,
             child: storedUrl != null
-                ? SafeNetworkImage(
-                    errorIcon: widget.errorWidget ?? Icon(Iconz().imageMissing),
-                    url: storedUrl,
-                    fit: widget.fit ?? BoxFit.fitHeight,
-                  )
+                ? _buildImage(storedUrl)
                 : FutureBuilder(
                     future: _imageUrl,
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return widget.fallBackWidget ?? Icon(Iconz().info);
-                      }
-
-                      return SafeNetworkImage(
-                        errorIcon:
-                            widget.errorWidget ?? Icon(Iconz().imageMissing),
-                        url: UrlStore().put(
+                      return _buildImage(
+                        UrlStore().put(
                           icyTitle: widget.mpvMetaData.icyTitle,
-                          imageUrl: snapshot.data!,
+                          imageUrl: snapshot.data,
                         ),
-                        filterQuality: FilterQuality.medium,
-                        fit: widget.fit ?? BoxFit.fitHeight,
                       );
                     },
                   ),
@@ -136,6 +125,14 @@ class _IcyImageState extends State<IcyImage> {
       ),
     );
   }
+
+  Widget _buildImage(String? url) => SafeNetworkImage(
+        errorIcon: widget.errorWidget ?? Icon(Iconz().imageMissing),
+        url: url,
+        fallBackIcon: widget.fallBackWidget ?? Icon(Iconz().info),
+        filterQuality: FilterQuality.medium,
+        fit: widget.fit ?? BoxFit.fitHeight,
+      );
 
   Future<String?> fetchAlbumArt(String icyTitle) async {
     return UrlStore().get(icyTitle) ?? await _fetchAlbumArt(icyTitle);
@@ -175,7 +172,9 @@ class _IcyImageState extends State<IcyImage> {
 
         if (releaseId == null) return null;
 
-        return await _fetchAlbumArtUrlFromReleaseId(releaseId);
+        final albumArtUrl = await _fetchAlbumArtUrlFromReleaseId(releaseId);
+        if (albumArtUrl != null) widget.onImageFind?.call(albumArtUrl);
+        return albumArtUrl;
       }
     } on Exception catch (_) {
       return null;
