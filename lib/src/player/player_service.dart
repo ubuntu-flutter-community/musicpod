@@ -60,11 +60,23 @@ class PlayerService {
       return;
     }
     _mpvMetaData = value;
-    if (_mpvMetaData?.icyTitle.isNotEmpty == true && audio?.title != null) {
+
+    var validHistoryElement = _mpvMetaData?.icyTitle.isNotEmpty == true;
+
+    if (validHistoryElement &&
+        _mpvMetaData?.icyDescription != null &&
+        (_mpvMetaData!.icyTitle.contains(_mpvMetaData!.icyDescription) ||
+            _mpvMetaData!.icyTitle.contains(
+              _mpvMetaData!.icyDescription
+                  .replaceAll(RegExp(r'[^a-zA-Z0-9]'), ''),
+            ))) {
+      validHistoryElement = false;
+    }
+    if (validHistoryElement) {
       libraryService.addRadioHistoryElement(
         icyTitle: mpvMetaData!.icyTitle,
         mpvMetaData: mpvMetaData!.copyWith(
-          icyName: audio?.title,
+          icyName: audio?.title?.trim() ?? _mpvMetaData?.icyName ?? '',
         ),
       );
     }
