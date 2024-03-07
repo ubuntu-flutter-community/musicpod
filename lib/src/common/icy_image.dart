@@ -19,6 +19,7 @@ class IcyImage extends StatefulWidget {
     this.fallBackWidget,
     this.fit,
     this.errorWidget,
+    this.onImageFind,
   });
 
   final MpvMetaData mpvMetaData;
@@ -28,6 +29,7 @@ class IcyImage extends StatefulWidget {
   final Widget? fallBackWidget;
   final Widget? errorWidget;
   final BoxFit? fit;
+  final Function(String url)? onImageFind;
 
   @override
   State<IcyImage> createState() => _IcyImageState();
@@ -170,7 +172,9 @@ class _IcyImageState extends State<IcyImage> {
 
         if (releaseId == null) return null;
 
-        return await _fetchAlbumArtUrlFromReleaseId(releaseId);
+        final albumArtUrl = await _fetchAlbumArtUrlFromReleaseId(releaseId);
+        if (albumArtUrl != null) widget.onImageFind?.call(albumArtUrl);
+        return albumArtUrl;
       }
     } on Exception catch (_) {
       return null;

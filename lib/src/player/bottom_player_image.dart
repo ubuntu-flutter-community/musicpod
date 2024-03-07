@@ -85,6 +85,8 @@ class BottomPlayerImage extends ConsumerWidget {
           mpvMetaData: mpvMetaData,
           fit: BoxFit.cover,
           iconSize: iconSize,
+          onImageFind: (url) =>
+              ref.read(playerModelProvider).loadColor(url: url),
         );
       } else {
         return Center(

@@ -146,6 +146,8 @@ class PlayerModel extends SafeChangeNotifier {
 
   void safeLastPosition() => service.safeLastPosition();
 
+  Future<void> loadColor({String? url}) async => service.loadColor(url: url);
+
   @override
   Future<void> dispose() async {
     await _queueNameChangedSub?.cancel();

@@ -215,7 +215,7 @@ class PlayerService {
             );
       }
       _setMediaControlsMetaData(audio!);
-      _loadColor();
+      loadColor();
       _firstPlay = false;
     } on Exception catch (_) {
       // TODO: instead of disallowing certain file types
@@ -410,7 +410,7 @@ class PlayerService {
   Color? _color;
   Color? get color => _color;
 
-  Future<void> _loadColor() async {
+  Future<void> loadColor({String? url}) async {
     if (audio == null) {
       _color = kCardColorDark;
       return;
@@ -423,10 +423,14 @@ class PlayerService {
       final generator = await PaletteGenerator.fromImageProvider(image);
       _color = generator.dominantColor?.color;
     } else {
-      if (audio?.imageUrl == null && audio?.albumArtUrl == null) return;
+      if (url != null &&
+          audio?.imageUrl == null &&
+          audio?.albumArtUrl == null) {
+        return;
+      }
 
       final image = NetworkImage(
-        audio!.imageUrl ?? audio!.albumArtUrl!,
+        url ?? audio!.imageUrl ?? audio!.albumArtUrl!,
       );
       final generator = await PaletteGenerator.fromImageProvider(image);
       _color = generator.dominantColor?.color;

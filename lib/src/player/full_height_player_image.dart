@@ -69,6 +69,8 @@ class FullHeightPlayerImage extends ConsumerWidget {
           theme: theme,
           mpvMetaData: mpvMetaData,
           iconSize: fullHeightPlayerImageSize * 0.7,
+          onImageFind: (url) =>
+              ref.read(playerModelProvider).loadColor(url: url),
         );
       } else {
         image = Container(
