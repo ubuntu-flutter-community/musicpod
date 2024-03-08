@@ -117,8 +117,24 @@ const kPatchNotes20240301 = 'Hello MusicPod Users 💙🐧🧡\n'
     '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
     '\n';
 
-const kRecentPatchNotesDisposed = kPatchNotes20240301disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20240301;
-const kRecentPatchNotes = kPatchNotes20240301;
+// 2024 03 08
+const kPatchNotes20240308disposed = 'patchNotes20240308disposed';
+const kPatchNotesTitle20240308 = 'Patch notes: 2024-03-08';
+const kPatchNotes20240308 = 'Hello MusicPod Users 💙🐧🧡\n'
+    '\n* New feature: radio history & title art lookup!'
+    '\n* when radio stations send infos about the title, MusicPod will now'
+    '\n* show the title in the player view'
+    '\n* lookup the artwork on musicbrainz'
+    '\n* shows the artwork if listed on musicbrainz'
+    '\n* gather title and the artwork (if found) in the new radio history tab on your radio collection page'
+    '\n* streaming search provider buttons and additional info received is shown in a dialog'
+    '\n* when you click on a history element'
+    '\n* additionally several UI inconsistencies have been resolved'
+    '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
+    '\n';
+
+const kRecentPatchNotesDisposed = kPatchNotes20240308disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20240308;
+const kRecentPatchNotes = kPatchNotes20240308;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';
