@@ -6,7 +6,9 @@ import 'package:yaru/yaru.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../globals.dart';
 import '../../player.dart';
+import '../../radio.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
 import 'super_network_image.dart';
@@ -87,6 +89,18 @@ class BottomPlayerImage extends ConsumerWidget {
           iconSize: iconSize,
           onImageFind: (url) =>
               ref.read(playerModelProvider).loadColor(url: url),
+          onGenreTap: (genre) => ref.read(radioModelProvider).init().then(
+                (_) => navigatorKey.currentState?.push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return RadioSearchPage(
+                        radioSearch: RadioSearch.tag,
+                        searchQuery: genre.toLowerCase(),
+                      );
+                    },
+                  ),
+                ),
+              ),
         );
       } else {
         return Center(

@@ -15,8 +15,6 @@ import '../../radio.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
 import 'radio_fall_back_icon.dart';
-import 'radio_search.dart';
-import 'radio_search_page.dart';
 
 class StationPage extends ConsumerWidget {
   const StationPage({

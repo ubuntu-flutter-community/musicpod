@@ -11,8 +11,6 @@ import '../../l10n.dart';
 import '../../radio.dart';
 import '../library/library_model.dart';
 import 'radio_control_panel.dart';
-import 'radio_search.dart';
-import 'radio_search_page.dart';
 
 class RadioDiscoverPage extends ConsumerWidget {
   const RadioDiscoverPage({

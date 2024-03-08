@@ -20,6 +20,7 @@ class IcyImage extends StatefulWidget {
     this.fit,
     this.errorWidget,
     this.onImageFind,
+    this.onGenreTap,
   });
 
   final MpvMetaData mpvMetaData;
@@ -30,6 +31,7 @@ class IcyImage extends StatefulWidget {
   final Widget? errorWidget;
   final BoxFit? fit;
   final Function(String url)? onImageFind;
+  final Function(String tag)? onGenreTap;
 
   @override
   State<IcyImage> createState() => _IcyImageState();
@@ -90,9 +92,14 @@ class _IcyImageState extends State<IcyImage> {
                       .entries
                       .map(
                         (e) => ListTile(
-                          onTap: e.key == 'icy-url'
-                              ? () => launchUrl(Uri.parse(e.value))
-                              : null,
+                          onTap: switch (e.key) {
+                            'icy-url' => () => launchUrl(Uri.parse(e.value)),
+                            'icy-genre' => () {
+                                widget.onGenreTap?.call(e.value);
+                                Navigator.of(context).maybePop();
+                              },
+                            _ => null,
+                          },
                           dense: true,
                           title: Text(e.key),
                           subtitle: Text(e.value),
