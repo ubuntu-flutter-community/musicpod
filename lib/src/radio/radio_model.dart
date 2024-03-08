@@ -90,8 +90,8 @@ class RadioModel extends SafeChangeNotifier {
 
   String? _connectedHost;
   Future<String?> init({
-    required String? countryCode,
-    required int index,
+    String? countryCode,
+    int index = 0,
   }) async {
     _connectedHost ??= await _radioService.init();
     await _radioService.loadTags();

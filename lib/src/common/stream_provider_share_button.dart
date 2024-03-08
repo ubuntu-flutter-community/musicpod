@@ -25,12 +25,16 @@ class StreamProviderShareButton extends StatelessWidget {
       StreamProvider.appleMusic => TablerIcons.brand_apple,
       StreamProvider.spotify => TablerIcons.brand_spotify,
       StreamProvider.youTubeMusic => TablerIcons.brand_youtube,
+      StreamProvider.amazonMusic => TablerIcons.brand_amazon,
+      StreamProvider.amazon => TablerIcons.shopping_bag
     };
 
     final tooltip = switch (streamProvider) {
       StreamProvider.appleMusic => 'Apple Music',
       StreamProvider.spotify => 'Spotify',
       StreamProvider.youTubeMusic => 'YouTube Music',
+      StreamProvider.amazonMusic => 'Amazon Music',
+      StreamProvider.amazon => 'Amazon'
     };
 
     final clearedText =
@@ -41,7 +45,11 @@ class StreamProviderShareButton extends StatelessWidget {
         'https://music.youtube.com/search?q=$clearedText',
       StreamProvider.appleMusic =>
         'https://music.apple.com/us/search?term=$clearedText',
-      StreamProvider.spotify => 'https://open.spotify.com/search/$clearedText'
+      StreamProvider.spotify => 'https://open.spotify.com/search/$clearedText',
+      StreamProvider.amazonMusic =>
+        'https://music.amazon.de/search/$clearedText?filter=IsLibrary%7Cfalse&sc=none',
+      StreamProvider.amazon =>
+        'https://www.amazon.de/s?k=$clearedText&i=digital-music'
     };
     return IconButton(
       tooltip: onSearch != null
@@ -109,6 +117,18 @@ class StreamProviderRow extends StatelessWidget {
             text: text,
             streamProvider: StreamProvider.appleMusic,
           ),
+        if (onSearch == null)
+          StreamProviderShareButton(
+            color: iconColor,
+            text: text,
+            streamProvider: StreamProvider.amazonMusic,
+          ),
+        if (onSearch == null)
+          StreamProviderShareButton(
+            color: iconColor,
+            text: text,
+            streamProvider: StreamProvider.amazon,
+          ),
       ],
     );
   }
@@ -118,4 +138,6 @@ enum StreamProvider {
   youTubeMusic,
   spotify,
   appleMusic,
+  amazonMusic,
+  amazon,
 }
