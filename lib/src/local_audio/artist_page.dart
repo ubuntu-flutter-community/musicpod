@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
-import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
@@ -16,6 +15,7 @@ import '../../player.dart';
 import '../../settings.dart';
 import '../../utils.dart';
 import '../l10n/l10n.dart';
+import 'genre_page.dart';
 
 class ArtistPage extends ConsumerWidget {
   const ArtistPage({
@@ -29,7 +29,6 @@ class ArtistPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = context.t;
     final libraryModel = ref.read(libraryModelProvider);
     final model = ref.read(localAudioModelProvider);
 
@@ -44,15 +43,11 @@ class ArtistPage extends ConsumerWidget {
         IconButton(
           icon: Icon(Iconz().list),
           isSelected: !useGridView,
-          //TODO: fix yaru iconbutton selected color
-          color: !useGridView ? theme.colorScheme.primary : null,
           onPressed: () => setUseGridView(false),
         ),
         IconButton(
           icon: Icon(Iconz().grid),
           isSelected: useGridView,
-          //TODO: fix yaru iconbutton selected color
-          color: useGridView ? theme.colorScheme.primary : null,
           onPressed: () => setUseGridView(true),
         ),
       ],
@@ -91,10 +86,21 @@ class ArtistPage extends ConsumerWidget {
       );
     }
 
+    void onSubTitleTab(text) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) {
+            return GenrePage(genre: text);
+          },
+        ),
+      );
+    }
+
     if (!useGridView) {
       return AudioPage(
         showArtist: false,
         onAlbumTap: onAlbumTap,
+        onSubTitleTab: onSubTitleTab,
         audioPageType: AudioPageType.artist,
         headerLabel: context.l10n.artist,
         headerTitle: artistAudios?.firstOrNull?.artist,
@@ -113,6 +119,7 @@ class ArtistPage extends ConsumerWidget {
 
     return _ArtistAlbumsCardGrid(
       onLabelTab: onAlbumTap,
+      onSubTitleTab: onSubTitleTab,
       images: images,
       artistAudios: artistAudios,
       controlPanelButton: controlPanelButton,
@@ -126,9 +133,12 @@ class _ArtistAlbumsCardGrid extends StatelessWidget {
     required this.controlPanelButton,
     required this.images,
     required this.artistAudios,
+    this.onSubTitleTab,
   });
 
   final void Function(String)? onLabelTab;
+  final void Function(String text)? onSubTitleTab;
+
   final Widget controlPanelButton;
 
   final Set<Uint8List>? images;
@@ -170,6 +180,7 @@ class _ArtistAlbumsCardGrid extends StatelessWidget {
                       subTitle: artistAudios?.firstOrNull?.genre,
                       label: context.l10n.artist,
                       onLabelTab: onLabelTab,
+                      onSubTitleTab: onSubTitleTab,
                     ),
                     Padding(
                       padding: kAudioControlPanelPadding,

@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
@@ -96,8 +95,6 @@ class AlbumPage extends ConsumerWidget {
             child: IconButton(
               tooltip: context.l10n.pinAlbum,
               isSelected: isPinnedAlbum(id),
-              // TODO: fix this in yaru...
-              color: isPinnedAlbum(id) ? context.t.colorScheme.primary : null,
               icon: Icon(
                 isPinnedAlbum(id) ? Iconz().pinFilled : Iconz().pin,
               ),

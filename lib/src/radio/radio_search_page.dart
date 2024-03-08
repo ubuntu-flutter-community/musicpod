@@ -1,7 +1,9 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:yaru/yaru.dart';
 
+import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../globals.dart';
@@ -47,6 +49,8 @@ class _RadioSearchPageState extends ConsumerState<RadioSearchPage> {
   Widget build(BuildContext context) {
     final libraryModel = ref.read(libraryModelProvider);
     final playerModel = ref.read(playerModelProvider);
+    final showWindowControls =
+        ref.watch(appModelProvider.select((a) => a.showWindowControls));
 
     final futureBuilder = FutureBuilder(
       future: _future,
@@ -87,16 +91,14 @@ class _RadioSearchPageState extends ConsumerState<RadioSearchPage> {
 
     return Scaffold(
       appBar: HeaderBar(
+        style: showWindowControls
+            ? YaruTitleBarStyle.normal
+            : YaruTitleBarStyle.undecorated,
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              widget.searchQuery ?? '',
-            ),
-            const SizedBox(
-              width: 5,
-            ),
             IconButton(
+              tooltip: context.l10n.addToCollection,
               onPressed: widget.searchQuery == null
                   ? null
                   : () {
@@ -109,6 +111,12 @@ class _RadioSearchPageState extends ConsumerState<RadioSearchPage> {
               icon: Icon(
                 isFavTag ? Iconz().starFilled : Iconz().star,
               ),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            Text(
+              widget.searchQuery ?? '',
             ),
           ],
         ),

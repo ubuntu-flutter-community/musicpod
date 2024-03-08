@@ -295,5 +295,6 @@
     "pinAlbum": "Album an Seitenleiste pinnen",
     "playAll": "Alles abspielen",
     "hearingHistory": "Hörverlauf",
-    "emptyHearingHistory": "Du hast noch keinem Radiosender in dieser Sitzung zugehört."
+    "emptyHearingHistory": "Du hast noch keinem Radiosender in dieser Sitzung zugehört.",
+    "searchForRadioStationsWithGenreName": "Suche nach Radiosendern mit diesem Genre"
 }

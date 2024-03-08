@@ -295,5 +295,6 @@
     "pinAlbum": "Pin album to sidebar",
     "playAll": "Play all",
     "hearingHistory": "Hearing history",
-    "emptyHearingHistory": "You did not listen to radio in this app session yet"
+    "emptyHearingHistory": "You did not listen to radio in this app session yet",
+    "searchForRadioStationsWithGenreName": "Search for radio stations with this genre"
 }
