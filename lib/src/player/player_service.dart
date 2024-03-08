@@ -423,7 +423,7 @@ class PlayerService {
       final generator = await PaletteGenerator.fromImageProvider(image);
       _color = generator.dominantColor?.color;
     } else {
-      if (url != null &&
+      if (url == null &&
           audio?.imageUrl == null &&
           audio?.albumArtUrl == null) {
         return;

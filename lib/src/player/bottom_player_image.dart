@@ -28,7 +28,7 @@ class BottomPlayerImage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const iconSize = 35.0;
+    const iconSize = 40.0;
     final mpvMetaData =
         ref.watch(playerModelProvider.select((m) => m.mpvMetaData));
     final theme = context.t;

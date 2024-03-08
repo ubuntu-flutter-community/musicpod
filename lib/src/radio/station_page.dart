@@ -39,31 +39,27 @@ class StationPage extends ConsumerWidget {
     required String? imageUrl,
     required bool selected,
   }) {
-    final icon = selected
-        ? Icon(
-            Iconz().starFilled,
-            size: sideBarImageSize,
-          )
-        : Icon(
-            Iconz().star,
-            size: sideBarImageSize,
-          );
-
-    if (imageUrl == null) {
-      return SideBarFallBackImage(
-        child: selected ? Icon(Iconz().starFilled) : Icon(Iconz().star),
-      );
-    }
-
     return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
+      borderRadius: BorderRadius.circular(6),
       child: Container(
         color: context.t.isLight ? kCardColorLight : kCardColorDark,
         height: sideBarImageSize,
         width: sideBarImageSize,
         child: SafeNetworkImage(
-          fallBackIcon: icon,
-          errorIcon: icon,
+          fallBackIcon: SideBarFallBackImage(
+            child: selected
+                ? Icon(Iconz().starFilled)
+                : Icon(
+                    Iconz().star,
+                  ),
+          ),
+          errorIcon: SideBarFallBackImage(
+            child: selected
+                ? Icon(Iconz().imageMissingFilled)
+                : Icon(
+                    Iconz().imageMissing,
+                  ),
+          ),
           fit: BoxFit.fitHeight,
           url: imageUrl,
           filterQuality: FilterQuality.medium,

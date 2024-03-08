@@ -74,14 +74,10 @@ class RadioModel extends SafeChangeNotifier {
     return Set.from(
       stations.map(
         (e) {
-          var artist = e.bitrate == 0 ? '' : '${e.bitrate} kb/s';
-          if (e.language?.isNotEmpty == true) {
-            artist += ', ${e.language}';
-          }
           return Audio(
             url: e.urlResolved,
             title: e.name,
-            artist: artist,
+            artist: e.language ?? e.name,
             album: e.tags ?? '',
             audioType: AudioType.radio,
             imageUrl: e.favicon,

@@ -276,6 +276,11 @@ class Iconz {
       ? YaruIcons.image_missing
       : appleStyled
           ? CupertinoIcons.question_diamond
+          : Icons.image_not_supported_outlined;
+  IconData get imageMissingFilled => yaruStyled
+      ? YaruIcons.image_missing_filled
+      : appleStyled
+          ? CupertinoIcons.question_diamond_fill
           : Icons.image_not_supported;
   IconData get plus => yaruStyled
       ? YaruIcons.plus
