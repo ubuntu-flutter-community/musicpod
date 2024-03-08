@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common.dart';
+import '../../globals.dart';
 import '../../l10n.dart';
 import '../../library.dart';
 import '../../player.dart';
 import '../../radio.dart';
 import '../common/icy_image.dart';
-import 'radio_search.dart';
 
 class RadioHistoryList extends ConsumerWidget {
   const RadioHistoryList({super.key});
@@ -19,6 +19,7 @@ class RadioHistoryList extends ConsumerWidget {
     final radioHistory =
         ref.watch(libraryModelProvider.select((l) => l.radioHistory));
     final current = ref.watch(playerModelProvider.select((p) => p.mpvMetaData));
+    final radioModel = ref.read(radioModelProvider);
 
     if (radioHistory.isEmpty) {
       return NoSearchResultPage(
@@ -43,7 +44,21 @@ class RadioHistoryList extends ConsumerWidget {
           return ListTile(
             selected: current?.icyTitle != null &&
                 current?.icyTitle == e.value.icyTitle,
-            leading: IcyImage(mpvMetaData: e.value),
+            leading: IcyImage(
+              mpvMetaData: e.value,
+              onGenreTap: (tag) => radioModel.init().then(
+                    (_) => navigatorKey.currentState?.push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return RadioSearchPage(
+                            radioSearch: RadioSearch.tag,
+                            searchQuery: tag.toLowerCase(),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+            ),
             title: TapAbleText(
               overflow: TextOverflow.visible,
               maxLines: 10,

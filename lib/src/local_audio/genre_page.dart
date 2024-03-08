@@ -9,8 +9,6 @@ import '../../globals.dart';
 import '../../l10n.dart';
 import '../../local_audio.dart';
 import '../../radio.dart';
-import '../radio/radio_search.dart';
-import '../radio/radio_search_page.dart';
 
 class GenrePage extends ConsumerWidget {
   const GenrePage({required this.genre, super.key});

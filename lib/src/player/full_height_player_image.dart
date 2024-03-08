@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../globals.dart';
 import '../../player.dart';
+import '../../radio.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
 import 'super_network_image.dart';
@@ -71,6 +74,21 @@ class FullHeightPlayerImage extends ConsumerWidget {
           iconSize: fullHeightPlayerImageSize * 0.7,
           onImageFind: (url) =>
               ref.read(playerModelProvider).loadColor(url: url),
+          onGenreTap: (genre) => ref.read(radioModelProvider).init().then(
+            (_) {
+              ref.read(appModelProvider).setFullScreen(false);
+              navigatorKey.currentState?.push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return RadioSearchPage(
+                      radioSearch: RadioSearch.tag,
+                      searchQuery: genre.toLowerCase(),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
         );
       } else {
         image = Container(
