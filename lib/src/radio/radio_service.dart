@@ -11,15 +11,13 @@ class RadioService {
 
   Future<String?> init() async {
     if (_radioBrowserApi?.host != null) {
-      await _loadTags();
       return _radioBrowserApi?.host;
     }
 
     for (var host in (await _findHost())) {
       try {
         _radioBrowserApi ??= RadioBrowserApi.fromHost(host);
-        if (_radioBrowserApi != null) {
-          await _loadTags();
+        if (_radioBrowserApi?.host != null) {
           return _radioBrowserApi?.host;
         }
       } on Exception catch (_) {
@@ -113,10 +111,13 @@ class RadioService {
 
   List<Tag>? _tags;
   List<Tag>? get tags => _tags;
-  Future<void> _loadTags() async {
-    if (_radioBrowserApi == null) return;
+  Future<List<Tag>?> loadTags() async {
+    if (_radioBrowserApi == null) return null;
+    if (_tags?.isNotEmpty == true) return _tags;
+    RadioBrowserListResponse<Tag>? response;
+
     try {
-      final response = await _radioBrowserApi!.getTags(
+      response = await _radioBrowserApi!.getTags(
         parameters: const InputParameters(
           hidebroken: true,
           limit: 500,
@@ -130,5 +131,6 @@ class RadioService {
         _tags = [];
       }
     }
+    return _tags;
   }
 }

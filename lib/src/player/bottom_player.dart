@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
-import '../../globals.dart';
+import '../../l10n.dart';
 import '../../player.dart';
 import 'bottom_player_image.dart';
 import 'bottom_player_title_artist.dart';
@@ -87,12 +88,11 @@ class BottomPlayer extends StatelessWidget {
                   child: titleAndArtist,
                 ),
                 if (audio?.audioType != AudioType.podcast && !veryNarrow)
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: LikeIconButton(
-                        audio: audio,
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: PlayerLikeIcon(
+                      audio: audio,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
               ],
@@ -114,6 +114,7 @@ class BottomPlayer extends StatelessWidget {
                   const VolumeSliderPopup(),
                   const QueueButton(),
                   IconButton(
+                    tooltip: context.l10n.fullWindow,
                     icon: Icon(
                       Iconz().fullScreen,
                       color: theme.colorScheme.onSurface,

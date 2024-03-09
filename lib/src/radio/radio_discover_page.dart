@@ -1,39 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
-import 'package:provider/provider.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../globals.dart';
+import '../../l10n.dart';
 import '../../radio.dart';
 import '../library/library_model.dart';
 import 'radio_control_panel.dart';
-import 'radio_search.dart';
-import 'radio_search_page.dart';
 
-class RadioDiscoverPage extends StatelessWidget {
+class RadioDiscoverPage extends ConsumerWidget {
   const RadioDiscoverPage({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final showWindowControls =
-        context.select((AppModel a) => a.showWindowControls);
-    final model = context.read<RadioModel>();
-    final libraryModel = context.read<LibraryModel>();
-    final searchQuery = context.select((RadioModel m) => m.searchQuery);
+        ref.watch(appModelProvider.select((m) => m.showWindowControls));
+    final model = ref.read(radioModelProvider);
+    final libraryModel = ref.read(libraryModelProvider);
+    final searchQuery =
+        ref.watch(radioModelProvider.select((m) => m.searchQuery));
 
-    context.select((LibraryModel m) => m.favTagsLength);
-    context.select((LibraryModel m) => m.favCountriesLength);
+    ref.watch(libraryModelProvider.select((m) => m.favTagsLength));
+    ref.watch(libraryModelProvider.select((m) => m.favCountriesLength));
 
-    final radioSearch =
-        context.select((LibraryModel m) => RadioSearch.values[m.radioindex]);
+    final radioSearch = ref.watch(
+      libraryModelProvider.select((m) => RadioSearch.values[m.radioindex]),
+    );
 
-    final country = context.select((RadioModel m) => m.country);
-    final tag = context.select((RadioModel m) => m.tag);
+    final country = ref.watch(radioModelProvider.select((m) => m.country));
+    final tag = ref.watch(radioModelProvider.select((m) => m.tag));
 
     final Widget input = switch (radioSearch) {
       RadioSearch.country => CountryAutoComplete(
@@ -73,7 +74,10 @@ class RadioDiscoverPage extends StatelessWidget {
             libraryModel.removeFavTag(tag!.name);
           },
           favs: libraryModel.favTags,
-          onSelected: model.setTag,
+          onSelected: (v) {
+            model.setTag(v);
+            libraryModel.setLastRadioTag(v?.name);
+          },
           tags: [
             ...[
               ...?model.tags,
@@ -86,6 +90,7 @@ class RadioDiscoverPage extends StatelessWidget {
           ],
         ),
       _ => SearchingBar(
+          hintText: '${context.l10n.search}: ${context.l10n.radio}',
           text: searchQuery,
           onClear: () => model.setSearchQuery(query: null),
           onSubmitted: (v) => model.setSearchQuery(query: v),
@@ -123,19 +128,17 @@ class RadioDiscoverPage extends StatelessWidget {
             height: 15,
           ),
           Expanded(
-            child: searchQuery?.isNotEmpty == true
-                ? RadioSearchPage(
-                    key: ValueKey(
-                      searchQuery.toString() +
-                          tag.toString() +
-                          country.toString() +
-                          radioSearch.toString(),
-                    ),
-                    includeHeader: false,
-                    radioSearch: radioSearch,
-                    searchQuery: searchQuery,
-                  )
-                : const SizedBox.shrink(),
+            child: RadioSearchPage(
+              key: ValueKey(
+                searchQuery.toString() +
+                    tag.toString() +
+                    country.toString() +
+                    radioSearch.toString(),
+              ),
+              includeHeader: false,
+              radioSearch: radioSearch,
+              searchQuery: searchQuery,
+            ),
           ),
         ],
       ),

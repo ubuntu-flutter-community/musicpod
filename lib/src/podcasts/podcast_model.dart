@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
-import '../../constants.dart';
 import '../../library.dart';
 import '../../podcasts.dart';
-import '../../utils.dart';
 import '../data/podcast_genre.dart';
 
 class PodcastModel extends SafeChangeNotifier {
@@ -98,12 +98,8 @@ class PodcastModel extends SafeChangeNotifier {
     String? podcastIndexApiKey,
     String? podcastIndexApiSecret,
   }) async {
-    await _podcastService.init(
-      usePodcastIndex: usePodcastIndex,
-      podcastIndexApiKey: podcastIndexApiKey,
-      podcastIndexApiSecret: podcastIndexApiSecret,
-    );
-    final lastCountryCode = (await readSetting(kLastCountryCode)) as String?;
+    await _podcastService.init();
+    final lastCountryCode = _libraryService.lastCountryCode;
 
     _searchActive = _libraryService.podcasts.isEmpty;
 
@@ -184,3 +180,10 @@ class PodcastModel extends SafeChangeNotifier {
     );
   }
 }
+
+final podcastModelProvider = ChangeNotifierProvider(
+  (ref) => PodcastModel(
+    getService<PodcastService>(),
+    getService<LibraryService>(),
+  ),
+);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
@@ -10,7 +10,7 @@ import 'album_page.dart';
 import 'artist_page.dart';
 import 'local_audio_model.dart';
 
-class TitlesView extends StatefulWidget {
+class TitlesView extends ConsumerStatefulWidget {
   const TitlesView({
     super.key,
     required this.audios,
@@ -22,10 +22,10 @@ class TitlesView extends StatefulWidget {
   final Widget? noResultMessage, noResultIcon;
 
   @override
-  State<TitlesView> createState() => _TitlesViewState();
+  ConsumerState<TitlesView> createState() => _TitlesViewState();
 }
 
-class _TitlesViewState extends State<TitlesView> {
+class _TitlesViewState extends ConsumerState<TitlesView> {
   List<Audio>? _titles;
 
   void _initTitles() {
@@ -57,8 +57,8 @@ class _TitlesViewState extends State<TitlesView> {
       );
     }
 
-    final model = context.read<LocalAudioModel>();
-    final libraryModel = context.read<LibraryModel>();
+    final libraryModel = ref.read(libraryModelProvider);
+    final model = ref.read(localAudioModelProvider);
 
     return AudioPageBody(
       padding: const EdgeInsets.only(top: 10),
@@ -70,7 +70,7 @@ class _TitlesViewState extends State<TitlesView> {
       audioPageType: AudioPageType.immutable,
       pageId: kLocalAudioPageId,
       showAudioPageHeader: false,
-      onAlbumTap: ({required audioType, required text}) {
+      onAlbumTap: (text) {
         final albumAudios = model.findAlbum(Audio(album: text));
         if (albumAudios?.firstOrNull == null) return;
         final id = generateAlbumId(albumAudios!.first);
@@ -90,7 +90,7 @@ class _TitlesViewState extends State<TitlesView> {
           ),
         );
       },
-      onArtistTap: ({required audioType, required text}) {
+      onArtistTap: (text) {
         final artistAudios = model.findArtist(Audio(artist: text));
         final images = model.findImages(artistAudios ?? {});
 

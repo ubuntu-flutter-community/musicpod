@@ -1,15 +1,14 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
 import '../l10n/l10n.dart';
 
-class AlbumPage extends StatelessWidget {
+class AlbumPage extends ConsumerWidget {
   const AlbumPage({
     super.key,
     required this.id,
@@ -25,9 +24,8 @@ class AlbumPage extends StatelessWidget {
   ) {
     Widget? albumArt;
     if (picture != null) {
-      albumArt = SizedBox(
-        width: sideBarImageSize,
-        height: sideBarImageSize,
+      albumArt = SizedBox.square(
+        dimension: sideBarImageSize,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(5),
           child: Image.memory(
@@ -48,80 +46,79 @@ class AlbumPage extends StatelessWidget {
   final String id;
   final bool Function(String name) isPinnedAlbum;
   final void Function(String name) removePinnedAlbum;
-  final Set<Audio>? album;
+  final Set<Audio> album;
   final void Function(String name, Set<Audio> audios) addPinnedAlbum;
 
   @override
-  Widget build(BuildContext context) {
-    final image = album?.firstOrNull?.pictureData != null
+  Widget build(BuildContext context, WidgetRef ref) {
+    final model = ref.read(localAudioModelProvider);
+    final image = album.firstOrNull?.pictureData != null
         ? Image.memory(
-            album!.firstOrNull!.pictureData!,
-            width: 200.0,
-            height: 200.0,
-            fit: BoxFit.cover,
+            album.firstOrNull!.pictureData!,
+            fit: BoxFit.fitHeight,
             filterQuality: FilterQuality.medium,
           )
         : null;
+
+    void onArtistTap(text) {
+      final artistName = album.firstOrNull?.artist;
+      if (artistName == null) return;
+
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) {
+            final artistAudios = model.findArtist(album.first);
+            final images = model.findImages(artistAudios ?? {});
+
+            return ArtistPage(
+              images: images,
+              artistAudios: artistAudios,
+            );
+          },
+        ),
+      );
+    }
+
     return AudioPage(
       showAudioPageHeader: image != null,
       showAlbum: false,
-      onArtistTap: ({required audioType, required text}) {
-        final artistName = album?.firstOrNull?.artist;
-        if (artistName == null) return;
-        final model = context.read<LocalAudioModel>();
-
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) {
-              final artistAudios = model.findArtist(album!.first);
-              final images = model.findImages(artistAudios ?? {});
-
-              return ArtistPage(
-                images: images,
-                artistAudios: artistAudios,
-              );
-            },
-          ),
-        );
-      },
+      onArtistTap: onArtistTap,
+      onSubTitleTab: onArtistTap,
       audioPageType: AudioPageType.album,
       headerLabel: context.l10n.album,
-      headerSubtile: album?.firstOrNull?.artist,
+      headerSubtile: album.firstOrNull?.artist,
       image: image,
       controlPanelButton: Row(
         children: [
-          if (isPinnedAlbum(id))
-            IconButton(
+          Padding(
+            padding: const EdgeInsets.only(left: 5),
+            child: IconButton(
+              tooltip: context.l10n.pinAlbum,
+              isSelected: isPinnedAlbum(id),
               icon: Icon(
-                Iconz().pinFilled,
-                color: context.t.colorScheme.primary,
+                isPinnedAlbum(id) ? Iconz().pinFilled : Iconz().pin,
               ),
-              onPressed: () => removePinnedAlbum(
-                id,
-              ),
-            )
-          else
-            IconButton(
-              icon: Icon(
-                Iconz().pin,
-              ),
-              onPressed: album == null
-                  ? null
-                  : () => addPinnedAlbum(
-                        id,
-                        album!,
-                      ),
+              onPressed: () {
+                if (isPinnedAlbum(id)) {
+                  removePinnedAlbum(id);
+                } else {
+                  addPinnedAlbum(id, album);
+                }
+              },
             ),
-          StreamProviderRow(
-            spacing: const EdgeInsets.only(right: 10),
-            text:
-                '${album?.firstOrNull?.artist} - ${album?.firstOrNull?.album}',
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: StreamProviderRow(
+              text:
+                  '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
+            ),
           ),
         ],
       ),
       audios: album,
       pageId: id,
-      headerTitle: album?.firstOrNull?.album,
+      headerTitle: album.firstOrNull?.album,
     );
   }
 }

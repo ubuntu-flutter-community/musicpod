@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../theme_data_x.dart';
 
@@ -35,18 +34,26 @@ ThemeData m3Theme({
     splashFactory:
         Platform.isMacOS || Platform.isIOS ? NoSplash.splashFactory : null,
     snackBarTheme: _createSnackBarThemeData(colorScheme),
+    dialogTheme: DialogTheme(
+      backgroundColor: colorScheme.background,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(kYaruContainerRadius),
+      ),
+    ),
   );
 }
 
 SnackBarThemeData _createSnackBarThemeData(ColorScheme scheme) {
-  return const SnackBarThemeData(behavior: SnackBarBehavior.floating);
+  return SnackBarThemeData(
+    behavior: SnackBarBehavior.floating,
+    actionTextColor: scheme.primary.scale(
+      saturation: 0.5,
+      lightness: (scheme.isLight ? 0.2 : -0.5),
+    ),
+  );
 }
 
 Color? getSideBarColor(ThemeData theme) => theme.scaffoldBackgroundColor;
-
-Color getSnackBarTextColor(ThemeData theme) => yaruStyled
-    ? Colors.white.withOpacity(0.7)
-    : theme.colorScheme.onInverseSurface;
 
 Color getPlayerBg(Color? surfaceTintColor, Color fallbackColor) {
   if (surfaceTintColor != null) {
@@ -167,6 +174,7 @@ InputDecoration createMaterialDecoration({
   OutlineInputBorder? border,
   Color? fillColor,
   EdgeInsets? contentPadding,
+  String? hintText,
 }) {
   final outlineInputBorder = border ??
       OutlineInputBorder(
@@ -174,6 +182,7 @@ InputDecoration createMaterialDecoration({
         borderSide: BorderSide(width: 2, color: colorScheme.primary),
       );
   return InputDecoration(
+    hintText: hintText,
     fillColor: fillColor,
     filled: filled,
     contentPadding: contentPadding ??
@@ -196,6 +205,7 @@ InputDecoration createYaruDecoration({
   TextStyle? style,
   Color? fillColor,
   EdgeInsets? contentPadding,
+  String? hintText,
 }) {
   final radius = BorderRadius.circular(100);
 
@@ -208,6 +218,7 @@ InputDecoration createYaruDecoration({
       );
 
   return InputDecoration(
+    hintText: hintText,
     filled: true,
     fillColor: fillColor ?? fill,
     hoverColor: (fillColor ?? fill).scale(lightness: 0.1),

@@ -4,16 +4,16 @@ import 'dart:math';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
-import 'package:media_kit/media_kit.dart';
+import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:path/path.dart' as p;
 import 'package:smtc_windows/smtc_windows.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
-import '../../player.dart';
 import '../../utils.dart';
 import 'my_audio_handler.dart';
 
@@ -48,8 +48,6 @@ class PlayerService {
   void setQueue((String, List<Audio>) value) {
     if (value == _queue || value.$2.isEmpty) return;
     _queue = value;
-    libraryService.setQueue(_queue.$2);
-    libraryService.setQueueName(_queue.$1);
     _queueController.add(true);
   }
 
@@ -58,8 +56,30 @@ class PlayerService {
   MpvMetaData? _mpvMetaData;
   MpvMetaData? get mpvMetaData => _mpvMetaData;
   void setMpvMetaData(MpvMetaData value) {
-    if (value == _mpvMetaData) return;
+    if (_mpvMetaData != null && value.icyTitle == _mpvMetaData?.icyTitle) {
+      return;
+    }
     _mpvMetaData = value;
+
+    var validHistoryElement = _mpvMetaData?.icyTitle.isNotEmpty == true;
+
+    if (validHistoryElement &&
+        _mpvMetaData?.icyDescription.isNotEmpty == true &&
+        (_mpvMetaData!.icyTitle.contains(_mpvMetaData!.icyDescription) ||
+            _mpvMetaData!.icyTitle.contains(
+              _mpvMetaData!.icyDescription
+                  .replaceAll(RegExp(r'[^a-zA-Z0-9]'), ''),
+            ))) {
+      validHistoryElement = false;
+    }
+    if (validHistoryElement) {
+      libraryService.addRadioHistoryElement(
+        icyTitle: mpvMetaData!.icyTitle,
+        mpvMetaData: mpvMetaData!.copyWith(
+          icyName: audio?.title?.trim() ?? _mpvMetaData?.icyName ?? '',
+        ),
+      );
+    }
     _mpvMetaDataController.add(true);
   }
 
@@ -70,7 +90,6 @@ class PlayerService {
   void _setAudio(Audio value) async {
     if (value == _audio) return;
     _audio = value;
-    libraryService.setLastAudio(value);
     _audioController.add(true);
   }
 
@@ -112,7 +131,6 @@ class PlayerService {
   void setDuration(Duration? value) {
     if (value?.inSeconds == _duration?.inSeconds) return;
     _duration = value;
-    libraryService.setDuration(value);
     _durationController.add(true);
     _setMediaControlDuration(value);
   }
@@ -124,7 +142,6 @@ class PlayerService {
   void setPosition(Duration? value) {
     if (position?.inSeconds == value?.inSeconds) return;
     _position = value;
-    libraryService.setPosition(value);
     _positionController.add(true);
     _setMediaControlPosition(value);
   }
@@ -198,7 +215,7 @@ class PlayerService {
             );
       }
       _setMediaControlsMetaData(audio!);
-      _loadColor();
+      loadColor();
       _firstPlay = false;
     } on Exception catch (_) {
       // TODO: instead of disallowing certain file types
@@ -249,7 +266,10 @@ class PlayerService {
 
     await (_player.platform as NativePlayer).observeProperty(
       'metadata',
-      (data) async => setMpvMetaData(MpvMetaData.fromJson(data)),
+      (data) async {
+        final mpvMetaData = MpvMetaData.fromJson(data);
+        setMpvMetaData(mpvMetaData);
+      },
     );
 
     _volumeSub = _player.stream.volume.listen((value) {
@@ -382,7 +402,7 @@ class PlayerService {
       );
     }
 
-    _position = libraryService.getLastPosition.call(_audio?.url);
+    _position = libraryService.getLastPosition(_audio?.url);
     _estimateNext();
     await play(newPosition: _position);
   }
@@ -390,7 +410,7 @@ class PlayerService {
   Color? _color;
   Color? get color => _color;
 
-  Future<void> _loadColor() async {
+  Future<void> loadColor({String? url}) async {
     if (audio == null) {
       _color = kCardColorDark;
       return;
@@ -403,10 +423,14 @@ class PlayerService {
       final generator = await PaletteGenerator.fromImageProvider(image);
       _color = generator.dominantColor?.color;
     } else {
-      if (audio?.imageUrl == null && audio?.albumArtUrl == null) return;
+      if (url == null &&
+          audio?.imageUrl == null &&
+          audio?.albumArtUrl == null) {
+        return;
+      }
 
       final image = NetworkImage(
-        audio!.imageUrl ?? audio!.albumArtUrl!,
+        url ?? audio!.imageUrl ?? audio!.albumArtUrl!,
       );
       final generator = await PaletteGenerator.fromImageProvider(image);
       _color = generator.dominantColor?.color;
@@ -414,7 +438,7 @@ class PlayerService {
   }
 
   Future<void> _readPlayerState() async {
-    final playerState = await libraryService.readPlayerState();
+    final playerState = await readPlayerState();
 
     if (playerState?.audio != null) {
       _setAudio(playerState!.audio!);
@@ -429,6 +453,10 @@ class PlayerService {
       if (playerState.queue?.isNotEmpty == true &&
           playerState.queueName?.isNotEmpty == true) {
         setQueue((playerState.queueName!, playerState.queue!));
+      }
+
+      if (playerState.volume != null) {
+        setVolume(double.tryParse(playerState.volume!) ?? 100.0);
       }
 
       _estimateNext();
@@ -656,6 +684,7 @@ class PlayerService {
   }
 
   Future<void> dispose() async {
+    await writePlayerState();
     await _smtcSub?.cancel();
     await _mpris?.dispose();
     await _smtc?.disableSmtc();
@@ -681,5 +710,35 @@ class PlayerService {
     await _rateController.close();
 
     await _player.dispose();
+  }
+
+  Future<void> writePlayerState() async {
+    final playerState = PlayerState(
+      audio: _audio,
+      duration: _duration?.toString(),
+      position: _position?.toString(),
+      queue: _queue.$2.take(100).toList(),
+      queueName: _queue.$1,
+      volume: _volume.toString(),
+    );
+
+    await writeJsonToFile(playerState.toMap(), kPlayerStateFileName);
+  }
+
+  Future<PlayerState?> readPlayerState() async {
+    try {
+      final workingDir = await getWorkingDir();
+      final file = File(p.join(workingDir, kPlayerStateFileName));
+
+      if (file.existsSync()) {
+        final jsonStr = await file.readAsString();
+
+        return PlayerState.fromJson(jsonStr);
+      } else {
+        return null;
+      }
+    } on Exception catch (_) {
+      return null;
+    }
   }
 }

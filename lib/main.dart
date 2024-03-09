@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github/github.dart';
 import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
@@ -10,17 +11,17 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:window_manager/window_manager.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:yaru/yaru.dart';
 
 import 'app.dart';
 import 'external_path.dart';
-import 'globals.dart';
 import 'library.dart';
 import 'local_audio.dart';
 import 'notifications.dart';
 import 'player.dart';
 import 'podcasts.dart';
 import 'radio.dart';
+import 'settings.dart';
 
 Future<void> main(List<String> args) async {
   if (!isMobile) {
@@ -37,6 +38,13 @@ Future<void> main(List<String> args) async {
     await SystemTheme.accentColor.load();
   }
 
+  final settingsService = SettingsService();
+  await settingsService.init();
+  registerService<SettingsService>(
+    () => settingsService,
+    dispose: (s) async => await s.dispose(),
+  );
+
   final libraryService = LibraryService();
 
   final playerService = PlayerService(
@@ -51,6 +59,7 @@ Future<void> main(List<String> args) async {
 
   registerService<PlayerService>(
     () => playerService,
+    dispose: (s) async => await s.dispose(),
   );
 
   registerService<LibraryService>(
@@ -58,7 +67,7 @@ Future<void> main(List<String> args) async {
     dispose: (s) async => await s.dispose(),
   );
   registerService<LocalAudioService>(
-    LocalAudioService.new,
+    () => LocalAudioService(settingsService: settingsService),
     dispose: (s) async => await s.dispose(),
   );
 
@@ -70,7 +79,10 @@ Future<void> main(List<String> args) async {
     dispose: (s) async => await s.dispose(),
   );
   registerService<PodcastService>(
-    () => PodcastService(notificationsService),
+    () => PodcastService(
+      notificationsService: notificationsService,
+      settingsService: settingsService,
+    ),
     dispose: (s) async => await s.dispose(),
   );
   final connectivity = Connectivity();
@@ -80,7 +92,8 @@ Future<void> main(List<String> args) async {
 
   registerService<ExternalPathService>(
     () => ExternalPathService(
-      Platform.isLinux ? GtkApplicationNotifier(args) : null,
+      gtkNotifier: Platform.isLinux ? GtkApplicationNotifier(args) : null,
+      playerService: playerService,
     ),
     dispose: (s) => s.dispose(),
   );
@@ -89,9 +102,11 @@ Future<void> main(List<String> args) async {
 
   registerService(GitHub.new);
 
-  if (Platform.isLinux) {
-    runApp(const GtkApplication(child: YaruMusicPodApp()));
-  } else {
-    runApp(const MaterialMusicPodApp());
-  }
+  runApp(
+    ProviderScope(
+      child: Platform.isLinux
+          ? const GtkApplication(child: YaruMusicPodApp())
+          : const MaterialMusicPodApp(),
+    ),
+  );
 }

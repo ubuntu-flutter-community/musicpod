@@ -1,14 +1,16 @@
-import 'package:file_selector/file_selector.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:yaru/yaru.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:yaru/yaru.dart';
+import 'package:path/path.dart' as p;
+
+import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../l10n.dart';
-import '../../library.dart';
 import '../../local_audio.dart';
 import '../../string_x.dart';
 import '../../theme_mode_x.dart';
@@ -17,7 +19,12 @@ import 'settings_model.dart';
 import 'theme_tile.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  const SettingsPage({super.key, required this.initLocalAudio});
+
+  final Future<void> Function({
+    required void Function(List<String>) onFail,
+    bool forceInit,
+  }) initLocalAudio;
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +37,11 @@ class SettingsPage extends StatelessWidget {
         ),
         Expanded(
           child: ListView(
-            children: const [
-              _ThemeSection(),
-              _PodcastSection(),
-              _LocalAudioSection(),
-              _AboutSection(),
+            children: [
+              const _ThemeSection(),
+              const _PodcastSection(),
+              _LocalAudioSection(initLocalAudio: initLocalAudio),
+              const _AboutSection(),
             ],
           ),
         ),
@@ -43,23 +50,15 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-class _ThemeSection extends StatefulWidget {
+class _ThemeSection extends ConsumerWidget {
   const _ThemeSection();
 
   @override
-  State<_ThemeSection> createState() => _ThemeSectionState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final model = ref.read(settingsModelProvider);
 
-class _ThemeSectionState extends State<_ThemeSection> {
-  @override
-  Widget build(BuildContext context) {
-    final model = context.read<SettingsModel>();
-
-    void onChanged(int index) {
-      model.setThemeIndex(index);
-      setState(() => themeNotifier.value = ThemeMode.values[index]);
-    }
-
+    final themeIndex =
+        ref.watch(settingsModelProvider.select((m) => m.themeIndex));
     return YaruSection(
       margin: const EdgeInsets.only(
         left: kYaruPagePadding,
@@ -80,8 +79,8 @@ class _ThemeSectionState extends State<_ThemeSection> {
                     YaruSelectableContainer(
                       padding: const EdgeInsets.all(1),
                       borderRadius: BorderRadius.circular(15),
-                      selected: themeNotifier.value == ThemeMode.values[i],
-                      onTap: () => onChanged(i),
+                      selected: themeIndex == i,
+                      onTap: () => model.setThemeIndex(i),
                       child: ThemeTile(ThemeMode.values[i]),
                     ),
                     Padding(
@@ -98,14 +97,14 @@ class _ThemeSectionState extends State<_ThemeSection> {
   }
 }
 
-class _PodcastSection extends StatefulWidget {
+class _PodcastSection extends ConsumerStatefulWidget {
   const _PodcastSection();
 
   @override
-  State<_PodcastSection> createState() => _PodcastSectionState();
+  ConsumerState<_PodcastSection> createState() => _PodcastSectionState();
 }
 
-class _PodcastSectionState extends State<_PodcastSection> {
+class _PodcastSectionState extends ConsumerState<_PodcastSection> {
   String? _initialKey;
   String? _initialSecret;
   late TextEditingController _keyController, _secretController;
@@ -113,7 +112,7 @@ class _PodcastSectionState extends State<_PodcastSection> {
   @override
   void initState() {
     super.initState();
-    final model = context.read<SettingsModel>();
+    final model = ref.read(settingsModelProvider);
     _initialKey = model.podcastIndexApiKey;
     _keyController = TextEditingController(text: _initialKey);
     _initialSecret = model.podcastIndexApiSecret;
@@ -130,13 +129,13 @@ class _PodcastSectionState extends State<_PodcastSection> {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final model = context.read<SettingsModel>();
+    final model = ref.read(settingsModelProvider);
     final usePodcastIndex =
-        context.select((SettingsModel m) => m.usePodcastIndex);
+        ref.watch(settingsModelProvider.select((m) => m.usePodcastIndex));
     final podcastIndexApiKey =
-        context.select((SettingsModel m) => m.podcastIndexApiKey);
+        ref.watch(settingsModelProvider.select((m) => m.podcastIndexApiKey));
     final podcastIndexApiSecret =
-        context.select((SettingsModel m) => m.podcastIndexApiSecret);
+        ref.watch(settingsModelProvider.select((m) => m.podcastIndexApiSecret));
 
     return YaruSection(
       margin: const EdgeInsets.all(kYaruPagePadding),
@@ -207,29 +206,33 @@ class _PodcastSectionState extends State<_PodcastSection> {
   }
 }
 
-class _LocalAudioSection extends StatelessWidget {
-  const _LocalAudioSection();
+class _LocalAudioSection extends ConsumerWidget {
+  const _LocalAudioSection({required this.initLocalAudio});
+
+  final Future<void> Function({
+    required void Function(List<String>) onFail,
+    bool forceInit,
+  }) initLocalAudio;
 
   @override
-  Widget build(BuildContext context) {
-    final libraryModel = context.read<LibraryModel>();
-    final localAudioModel = context.read<LocalAudioModel>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settingsModel = ref.read(settingsModelProvider);
     final directory =
-        context.select((LocalAudioModel m) => localAudioModel.directory ?? '');
+        ref.watch(settingsModelProvider.select((m) => m.directory ?? ''));
 
     Future<void> onDirectorySelected(String? directoryPath) async {
-      localAudioModel.setDirectory(directoryPath).then(
-            (value) async => await localAudioModel.init(
+      settingsModel.setDirectory(directoryPath).then(
+            (value) async => await initLocalAudio(
               forceInit: true,
               onFail: (failedImports) {
-                if (libraryModel.neverShowFailedImports) return;
+                if (settingsModel.neverShowFailedImports) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     duration: const Duration(seconds: 10),
                     content: FailedImportsContent(
                       failedImports: failedImports,
-                      onNeverShowFailedImports:
-                          libraryModel.setNeverShowLocalImports,
+                      onNeverShowFailedImports: () =>
+                          settingsModel.setNeverShowFailedImports(true),
                     ),
                   ),
                 );
@@ -248,7 +251,7 @@ class _LocalAudioSection extends StatelessWidget {
             subtitle: Text(directory),
             trailing: ImportantButton(
               onPressed: () async {
-                final directoryPath = await getDirectoryPath();
+                final directoryPath = await settingsModel.getPathOfDirectory();
                 await onDirectorySelected(directoryPath);
               },
               child: Text(
@@ -264,33 +267,68 @@ class _LocalAudioSection extends StatelessWidget {
   }
 }
 
-class _AboutSection extends StatelessWidget {
+class _AboutSection extends ConsumerWidget {
   const _AboutSection();
 
   @override
-  Widget build(BuildContext context) {
-    final appName = context.select((SettingsModel m) => m.appName);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appName = ref.watch(settingsModelProvider.select((m) => m.appName));
 
     final text = '${context.l10n.about} ${appName ?? ''}';
     return YaruSection(
       headline: Text(text),
       margin: const EdgeInsets.all(kYaruPagePadding),
-      child: Column(
-        children: [_AboutTile(text: text), const _LicenseTile()],
+      child: const Column(
+        children: [_AboutTile(), _LicenseTile()],
       ),
     );
   }
 }
 
-class _AboutTile extends StatelessWidget {
-  const _AboutTile({required this.text});
+class _AboutTile extends ConsumerStatefulWidget {
+  const _AboutTile();
 
-  final String text;
+  @override
+  ConsumerState<_AboutTile> createState() => _AboutTileState();
+}
+
+class _AboutTileState extends ConsumerState<_AboutTile> {
+  late Future<String?> _onlineVersion;
+
+  @override
+  void initState() {
+    super.initState();
+    final isOnline = ref.read(appModelProvider.select((a) => a.isOnline));
+
+    _onlineVersion = !isOnline || Platform.isLinux
+        ? Future.value(null)
+        : ref.read(settingsModelProvider).getOnlineVersion();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final model = ref.read(settingsModelProvider);
+    final currentVersion =
+        ref.watch(settingsModelProvider.select((m) => m.version));
     return YaruTile(
-      title: Text(text),
+      title: FutureBuilder(
+        future: _onlineVersion,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData ||
+              snapshot.data == null ||
+              (currentVersion?.isNotEmpty == true &&
+                  model.getExtendedVersionNumber(snapshot.data!) <=
+                      model.getExtendedVersionNumber(currentVersion!))) {
+            return Text('${context.l10n.version}: ${currentVersion ?? ''}');
+          }
+
+          return TapAbleText(
+            text: '${context.l10n.updateAvailable}: ${snapshot.data}',
+            style: TextStyle(color: context.t.colorScheme.success),
+            onTap: () => launchUrl(Uri.parse(p.join(kRepoUrl, 'releases'))),
+          );
+        },
+      ),
       trailing: OutlinedButton(
         onPressed: () => settingsNavigatorKey.currentState?.pushNamed('/about'),
         child: Text(context.l10n.contributors),

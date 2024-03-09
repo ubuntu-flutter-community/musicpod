@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_widgets/constants.dart';
+import 'package:yaru/constants.dart';
 
 const kAppName = 'musicpod';
 
@@ -27,7 +27,9 @@ const kSnackBarWidth = 500.0;
 
 const fullHeightPlayerImageSize = 300.0;
 
-const kAudioPageHeaderHeight = 240.0;
+const kMaxAudioPageHeaderHeight = 200.0;
+
+const kMinAudioPageHeaderHeight = 0.0;
 
 const kSnackBarDuration = Duration(seconds: 10);
 
@@ -66,37 +68,43 @@ const kHeaderPadding = EdgeInsets.only(
   bottom: kYaruPagePadding - 5,
 );
 
-const kCardHeight = 200.0;
+const kAudioCardDimension = 130.0;
 
-const kSmallCardHeight = kCardHeight - 70;
-
-const kCardBottomHeight = 30.0;
+const kAudioCardBottomHeight = 30.0;
 
 const kMasterDetailBreakPoint = 720.0;
 
-const kImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
-  maxCrossAxisExtent: kSmallCardHeight + 40,
-  mainAxisExtent: kSmallCardHeight + kCardBottomHeight + 10,
+const kMasterDetailSideBarWidth = 250.0;
+
+const kAudioCardGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
+  maxCrossAxisExtent: kAudioCardDimension + 40,
+  mainAxisExtent: kAudioCardDimension + kAudioCardBottomHeight + 8,
   mainAxisSpacing: 0,
   crossAxisSpacing: 10,
 );
 
-const kMobileImageGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
-  maxCrossAxisExtent: kSmallCardHeight + 60,
-  mainAxisExtent: kSmallCardHeight + kCardBottomHeight + 10,
+const kMobileAudioCardGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
+  maxCrossAxisExtent: kAudioCardDimension + 60,
+  mainAxisExtent: kAudioCardDimension + kAudioCardBottomHeight + 8,
   mainAxisSpacing: 0,
   crossAxisSpacing: 10,
 );
 
 const kDiskGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
-  maxCrossAxisExtent: kSmallCardHeight + 10,
+  maxCrossAxisExtent: kAudioCardDimension + 10,
   mainAxisSpacing: 10,
   crossAxisSpacing: 10,
 );
 
+const kAudioControlPanelPadding = EdgeInsets.only(
+  top: kYaruPagePadding / 2,
+  left: kYaruPagePadding,
+  right: kYaruPagePadding,
+  bottom: kYaruPagePadding / 2,
+);
+
 const kCardColorLight = Color.fromARGB(255, 233, 233, 233);
 const kCardColorDark = Color.fromARGB(255, 51, 51, 51);
-const kCardColorNeutral = Color.fromARGB(255, 133, 133, 133);
 
 const kAudioQueueThreshHold = 100;
 
@@ -107,13 +115,15 @@ const kTagFavsFileName = 'tagFavs.json';
 const kCountryFavsFileName = 'countryfavs.json';
 const kLastFav = 'lastFav';
 const kPlaylistsFileName = 'playlists.json';
-const kPinnedAlbumsFileName = 'newPinnedAlbums.json';
+const kPinnedAlbumsFileName = 'finallyFixedPinnedAlbums.json';
 const kPodcastsFileName = 'podcasts.json';
 const kPodcastsUpdates = 'podcastsupdates.json';
 const kStarredStationsFileName = 'betterStarredStations.json';
 const kSettingsFileName = 'settings.json';
 const kLastPositionsFileName = 'lastPositions.json';
 const kPlayerStateFileName = 'playerstate.json';
+const kAppStateFileName = 'appstate.json';
+const kRadioHistoryFileName = 'radiohistory.json';
 const kDownloads = 'downloads.json';
 const kFeedsWithDownloads = 'feedswithdownloads.json';
 const kDirectoryProperty = 'directory';
@@ -138,6 +148,7 @@ const kUsePodcastIndex = 'usePodcastIndex';
 const kThemeIndex = 'themeIndex';
 const kPodcastIndexApiKey = 'podcastIndexApiKey';
 const kPodcastIndexApiSecret = 'podcastIndexApiSecret';
+const kUseArtistGridView = 'useArtistGridView';
 
 const shops = <String, String>{
   'https://us.7digital.com/': '7digital',

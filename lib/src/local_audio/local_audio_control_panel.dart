@@ -1,35 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../library.dart';
+import '../../local_audio.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
 import 'local_audio_view.dart';
 
-class LocalAudioControlPanel extends StatelessWidget {
+class LocalAudioControlPanel extends ConsumerWidget {
   const LocalAudioControlPanel({
     super.key,
     this.titlesCount,
     this.artistCount,
     this.albumCount,
+    this.genresCounts,
   });
 
-  final int? titlesCount, artistCount, albumCount;
+  final int? titlesCount, artistCount, albumCount, genresCounts;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.t;
-    final libraryModel = context.read<LibraryModel>();
-    final index = context.select((LibraryModel m) => m.localAudioindex) ?? 0;
+    final libraryModel = ref.read(libraryModelProvider);
+    final localAudioModel = ref.read(localAudioModelProvider);
+    final index =
+        ref.watch(libraryModelProvider.select((l) => l.localAudioindex ?? 0));
+    final manualFilter =
+        ref.watch(localAudioModelProvider.select((l) => l.manualFilter));
 
-    return Row(
-      children: [
-        const SizedBox(
-          width: 20,
-        ),
-        YaruChoiceChipBar(
+    var i = index;
+    if (!manualFilter) {
+      if (titlesCount != null &&
+          titlesCount! > 0 &&
+          (artistCount == null || artistCount == 0) &&
+          (albumCount == null || albumCount == 0)) {
+        i = LocalAudioView.titles.index;
+      } else if (artistCount != null && artistCount! > 0) {
+        i = LocalAudioView.artists.index;
+      } else if (albumCount != null && albumCount! > 0) {
+        i = LocalAudioView.albums.index;
+      } else if (genresCounts != null && genresCounts! > 0) {
+        i = LocalAudioView.genres.index;
+      }
+    }
+
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.only(left: kYaruPagePadding),
+        child: YaruChoiceChipBar(
           chipBackgroundColor: chipColor(theme),
           selectedChipBackgroundColor: chipSelectionColor(theme, false),
           borderColor: chipBorder(theme, false),
@@ -47,14 +68,20 @@ class LocalAudioControlPanel extends StatelessWidget {
               LocalAudioView.albums => Text(
                   '${e.localize(context.l10n)}${albumCount != null ? ' ($albumCount)' : ''}',
                 ),
+              LocalAudioView.genres => Text(
+                  '${e.localize(context.l10n)}${genresCounts != null ? ' ($genresCounts)' : ''}',
+                ),
             };
           }).toList(),
           isSelected: LocalAudioView.values
-              .map((e) => e == LocalAudioView.values[index])
+              .map((e) => e == LocalAudioView.values[i])
               .toList(),
-          onSelected: libraryModel.setLocalAudioindex,
+          onSelected: (index) {
+            localAudioModel.setManualFilter(true);
+            libraryModel.setLocalAudioindex(index);
+          },
         ),
-      ],
+      ),
     );
   }
 }

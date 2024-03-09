@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 import '../../common.dart';
@@ -54,7 +55,7 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
             controller: _controller,
             padding: gridPadding,
             itemCount: widget.searchResult!.resultCount,
-            gridDelegate: imageGridDelegate,
+            gridDelegate: audioCardGridDelegate,
             itemBuilder: (context, index) {
               final podcastItem = widget.searchResult!.items.elementAt(index);
 
@@ -62,29 +63,35 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
               final image = SafeNetworkImage(
                 url: art,
                 fit: BoxFit.cover,
-                height: kSmallCardHeight,
-                width: kSmallCardHeight,
+                height: kAudioCardDimension,
+                width: kAudioCardDimension,
               );
 
-              return AudioCard(
-                bottom: AudioCardBottom(
-                  text: podcastItem.collectionName ?? podcastItem.trackName,
-                ),
-                image: image,
-                onPlay: () async => await searchAndPushPodcastPage(
-                  context: context,
-                  feedUrl: podcastItem.feedUrl,
-                  itemImageUrl: art,
-                  genre: podcastItem.primaryGenreName,
-                  play: true,
-                ),
-                onTap: () async => await searchAndPushPodcastPage(
-                  context: context,
-                  feedUrl: podcastItem.feedUrl,
-                  itemImageUrl: art,
-                  genre: podcastItem.primaryGenreName,
-                  play: false,
-                ),
+              return Consumer(
+                builder: (context, ref, _) {
+                  return AudioCard(
+                    bottom: AudioCardBottom(
+                      text: podcastItem.collectionName ?? podcastItem.trackName,
+                    ),
+                    image: image,
+                    onPlay: () => searchAndPushPodcastPage(
+                      context: context,
+                      feedUrl: podcastItem.feedUrl,
+                      itemImageUrl: art,
+                      genre: podcastItem.primaryGenreName,
+                      play: true,
+                      ref: ref,
+                    ),
+                    onTap: () => searchAndPushPodcastPage(
+                      context: context,
+                      feedUrl: podcastItem.feedUrl,
+                      itemImageUrl: art,
+                      genre: podcastItem.primaryGenreName,
+                      play: false,
+                      ref: ref,
+                    ),
+                  );
+                },
               );
             },
           ),

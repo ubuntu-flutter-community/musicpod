@@ -93,8 +93,48 @@ const kPatchNotes20240204 = 'Hello MusicPod Users 💙🐧🧡\n'
     '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
     '\n';
 
-const kRecentPatchNotesDisposed = kPatchNotes20240204disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20240204;
-const kRecentPatchNotes = kPatchNotes20240204;
+// 2024 02 18
+const kPatchNotes20240218disposed = 'patchNotes20240218disposed';
+const kPatchNotesTitle20240218 = 'Patch notes: 2024-02-18';
+const kPatchNotes20240218 = 'Hello MusicPod Users 💙🐧🧡\n'
+    '\n* with this release come several performance improvements'
+    '\n* bug fixes for podcast loading'
+    '\n* linux users can now set MusicPod as their default video and music player'
+    '\n* single video and audio files can be opened from the hamburger menu'
+    '\n* the artist pages have been improved'
+    '\n* audios are now correctly sorted when thanks to https://github.com/fsobolev'
+    '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
+    '\n';
+
+// 2024 03 01
+const kPatchNotes20240301disposed = 'patchNotes20240301disposed';
+const kPatchNotesTitle20240301 = 'Patch notes: 2024-03-01';
+const kPatchNotes20240301 = 'Hello MusicPod Users 💙🐧🧡\n'
+    '\n* player volume is now persisted, thanks mlee :)'
+    '\n* artist view can now be toggled between grid and list view'
+    '\n* multiple album discs are now gathered as one album, this needs re-pining :('
+    '\n* audios are now correctly sorted when thanks to https://github.com/fsobolev'
+    '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
+    '\n';
+
+// 2024 03 08
+const kPatchNotes20240308disposed = 'patchNotes20240308disposed';
+const kPatchNotesTitle20240308 = 'Patch notes: 2024-03-08';
+const kPatchNotes20240308 = 'Hello MusicPod Users 💙🐧🧡\n'
+    '\n* New feature: radio history & title art lookup!'
+    '\n* when radio stations send infos about the title, MusicPod will now'
+    '\n* show the title in the player view'
+    '\n* lookup the artwork on musicbrainz'
+    '\n* shows the artwork if listed on musicbrainz'
+    '\n* gather title and the artwork (if found) in the new radio history tab on your radio collection page'
+    '\n* streaming search provider buttons and additional info received is shown in a dialog'
+    '\n* when you click on a history element'
+    '\n* additionally several UI inconsistencies have been resolved'
+    '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
+    '\n';
+
+const kRecentPatchNotesDisposed = kPatchNotes20240308disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20240308;
+const kRecentPatchNotes = kPatchNotes20240308;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';

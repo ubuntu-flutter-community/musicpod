@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
-import '../../globals.dart';
 import '../l10n/l10n.dart';
 
 class AudioPage extends StatelessWidget {
@@ -38,6 +37,9 @@ class AudioPage extends StatelessWidget {
     this.showArtist = true,
     this.showAudioTileHeader = true,
     this.showControlPanel = true,
+    this.imageRadius,
+    this.onLabelTab,
+    this.onSubTitleTab,
   });
 
   final Set<Audio>? audios;
@@ -59,17 +61,14 @@ class AudioPage extends StatelessWidget {
   final bool showAudioTileHeader;
   final bool showControlPanel;
   final bool showTrack, showAlbum, showArtist;
-
-  final void Function({
-    required String text,
-    required AudioType audioType,
-  })? onAlbumTap, onArtistTap;
+  final BorderRadius? imageRadius;
+  final void Function(String text)? onSubTitleTab;
+  final void Function(String text)? onLabelTab;
+  final void Function(String text)? onAlbumTap;
+  final void Function(String text)? onArtistTap;
 
   @override
   Widget build(BuildContext context) {
-    final showWindowControls =
-        context.select((AppModel a) => a.showWindowControls);
-
     final body = AudioPageBody(
       key: ValueKey(audios?.length),
       pageId: pageId,
@@ -80,10 +79,13 @@ class AudioPage extends StatelessWidget {
       onArtistTap: onArtistTap,
       audioPageType: audioPageType,
       image: image,
+      imageRadius: imageRadius,
       headerDescription: headerDescription,
       controlPanelButton: controlPanelButton,
       headerLabel: headerLabel,
+      onLabelTab: onLabelTab,
       headerSubTitle: headerSubtile,
+      onSubTitleTab: onSubTitleTab,
       headerTitle: headerTitle,
       controlPanelTitle: controlPanelTitle,
       showAudioPageHeader: showAudioPageHeader,
@@ -100,18 +102,25 @@ class AudioPage extends StatelessWidget {
       showControlPanel: showControlPanel,
     );
 
-    return YaruDetailPage(
-      key: ValueKey(pageId),
-      appBar: HeaderBar(
-        style: showWindowControls
-            ? YaruTitleBarStyle.normal
-            : YaruTitleBarStyle.undecorated,
-        title: isMobile ? null : (title ?? Text(headerTitle ?? pageId)),
-        leading: Navigator.canPop(context)
-            ? const NavBackButton()
-            : const SizedBox.shrink(),
-      ),
-      body: body,
+    return Consumer(
+      builder: (context, ref, _) {
+        final showWindowControls =
+            ref.watch(appModelProvider.select((a) => a.showWindowControls));
+
+        return YaruDetailPage(
+          key: ValueKey(pageId),
+          appBar: HeaderBar(
+            style: showWindowControls
+                ? YaruTitleBarStyle.normal
+                : YaruTitleBarStyle.undecorated,
+            title: isMobile ? null : (title ?? Text(headerTitle ?? pageId)),
+            leading: Navigator.canPop(context)
+                ? const NavBackButton()
+                : const SizedBox.shrink(),
+          ),
+          body: body,
+        );
+      },
     );
   }
 }

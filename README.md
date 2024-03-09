@@ -1,13 +1,16 @@
 # Musicpod
 
-Music, Radio, Television and Podcast player for ***Ubuntu*** made with Flutter.
+Music, Radio, Television and Podcast player for Linux Desktop, MacOS, Windows and Android made with Flutter.
 
-Windows, MacOs, Android and other Linux Distributions support are WIP.
-
-INSTALL FOR UBUNTU:
+Install for Linux Desktop:
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/musicpod)
 
+Install For MacOS & Windows:
+
+[Release Page](https://github.com/ubuntu-flutter-community/musicpod/releases)
+
+Android release is WIP!
 
 
 |Dark | Light|
@@ -21,13 +24,15 @@ INSTALL FOR UBUNTU:
 
 ## Credits
 
-Thank you @amugofjava for creating the very easy to use and reliable [podcast_search](https://github.com/amugofjava/podcast_search)!
+Thank you [@amugofjava](https://github.com/amugofjava) for creating the very easy to use and reliable [podcast_search](https://github.com/amugofjava/podcast_search)!
 
-Thanks @alexmercerind for the super performant [Mediakit library](https://github.com/alexmercerind/media_kit) and [mpris_service](https://github.com/alexmercerind/mpris_service) dart implementation!
+Thanks [@alexmercerind](https://github.com/alexmercerind) for the super performant [Mediakit library](https://github.com/alexmercerind/media_kit) and [mpris_service](https://github.com/alexmercerind/mpris_service) dart implementation!
 
-Thank you @KRTirtho for the very easy to use [Metadata God](https://github.com/KRTirtho/metadata_god) package
+Thank you [@KRTirtho](https://github.com/KRTirtho) for the very easy to use [smtc_windows](https://github.com/KRTirtho/smtc_windows) package!
 
-Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https://github.com/tomassasovsky/radio-browser-api.dart)
+Thank you [@tomassasovsky](https://github.com/tomassasovsky) for the [dart implementation of radiobrowser-api](https://github.com/tomassasovsky/radio-browser-api.dart)!
+
+Thank you [@ClementBeal](https://github.com/ClementBeal) for the super fast, pure dart [Audio Metadata Reader](https://github.com/ClementBeal/audio_metadata_reader)!
 
 ## MusicPod Level 1
 
@@ -65,9 +70,34 @@ Thank you @tomassasovsky for the [dart implementation of radiobrowser-api](https
   - [ ] Flatpak ([WIP](https://github.com/ubuntu-flutter-community/musicpod/issues/10))
 - [X] Windows Support
   - [ ] Windows Store
+  - [X] [Exe](https://github.com/ubuntu-flutter-community/musicpod/releases)
 - [X] Android Support (Media Controls are WIP)
   - [ ] PlayStore
 - [X] MacOs Support
   - [ ] Apple?Store?
+  - [X] [DMG](https://github.com/ubuntu-flutter-community/musicpod/releases)
 - [ ] iOS Support
   - [ ] AppStore
+
+# Contributing
+
+Contributions are highly welcome. Especially translations.
+Please [fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) MusicPod to your GitHub namespace, [clone](https://docs.github.com/de/repositories/creating-and-managing-repositories/cloning-a-repository) it to your computer, create a branch named by yourself, commit your changes to your local branch, push them to your fork and then make a pull request from your fork to this repository.
+I recommend the vscode extension [GitHub Pull Requests](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github) especially for people new to [Git](https://git-scm.com/doc) and [GitHub](https://docs.github.com/en/get-started/start-your-journey).
+
+## Translations
+For translations into your language change the corresponding `app_xx.arb` file where `xx` is the language code of your language in lower case.
+If the file does not exist yet please create it and copy the `whole` content of app_en.arb into it and change only the values to your translation but leave the keys untouched.
+The vscode extension [arb editor by Google](https://marketplace.visualstudio.com/items?itemName=Google.arb-editor) is highly recommended to avoid arb syntax errors.
+Also recommended is the [Google Translate Extension](https://marketplace.visualstudio.com/items?itemName=funkyremi.vscode-google-translate).
+
+## Code contributions
+
+If you find any error please feel free to report it as an issue and describe it as good as you can.
+If you want to contribute code, please create an issue first.
+
+## Testing
+
+Test mocks are generated with [Mockito](https://github.com/dart-lang/mockito). You need to run the `build_runner` command in order to re-generate mocks, in case you changed the signatures of service methods.
+
+`flutter pub run build_runner build`

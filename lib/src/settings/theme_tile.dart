@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 
 class ThemeTile extends StatelessWidget {
   const ThemeTile(this.themeMode, {super.key});

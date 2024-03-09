@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -12,7 +12,7 @@ import '../l10n/l10n.dart';
 import 'album_page.dart';
 import 'local_audio_model.dart';
 
-class AlbumsView extends StatelessWidget {
+class AlbumsView extends ConsumerWidget {
   const AlbumsView({
     super.key,
     required this.albums,
@@ -24,7 +24,7 @@ class AlbumsView extends StatelessWidget {
   final Widget? noResultMessage, noResultIcon;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.t;
 
     if (albums == null) {
@@ -40,17 +40,16 @@ class AlbumsView extends StatelessWidget {
       );
     }
 
-    final libraryModel = context.read<LibraryModel>();
-    final playerModel = context.read<PlayerModel>();
-    final model = context.read<LocalAudioModel>();
+    final libraryModel = ref.read(libraryModelProvider);
+    final playerModel = ref.read(playerModelProvider);
+    final model = ref.read(localAudioModelProvider);
 
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: GridView.builder(
-        shrinkWrap: true,
         padding: gridPadding,
         itemCount: albums!.length,
-        gridDelegate: imageGridDelegate,
+        gridDelegate: audioCardGridDelegate,
         itemBuilder: (context, index) {
           final audio = albums!.elementAt(index);
           String? id = generateAlbumId(audio);
@@ -67,7 +66,7 @@ class AlbumsView extends StatelessWidget {
               : Image.memory(
                   audio.pictureData!,
                   fit: BoxFit.cover,
-                  height: kSmallCardHeight,
+                  height: kAudioCardDimension,
                   filterQuality: FilterQuality.medium,
                 );
 
@@ -77,11 +76,11 @@ class AlbumsView extends StatelessWidget {
               child: AudioCardBottom(
                 text: audio.album?.isNotEmpty == false
                     ? context.l10n.unknown
-                    : audio.album!,
+                    : audio.album ?? '',
               ),
             ),
             image: image,
-            onTap: id == null
+            onTap: id == null || albumAudios == null
                 ? null
                 : () => Navigator.of(context).push(
                       MaterialPageRoute(

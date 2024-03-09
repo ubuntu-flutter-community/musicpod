@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
-import 'package:yaru_icons/yaru_icons.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:yaru/yaru.dart';
 
-import '../../globals.dart';
 import '../../theme.dart';
 
 class Iconz {
@@ -278,6 +276,11 @@ class Iconz {
       ? YaruIcons.image_missing
       : appleStyled
           ? CupertinoIcons.question_diamond
+          : Icons.image_not_supported_outlined;
+  IconData get imageMissingFilled => yaruStyled
+      ? YaruIcons.image_missing_filled
+      : appleStyled
+          ? CupertinoIcons.question_diamond_fill
           : Icons.image_not_supported;
   IconData get plus => yaruStyled
       ? YaruIcons.plus
@@ -304,13 +307,31 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.clear
           : Icons.clear;
+  IconData get list => yaruStyled
+      ? YaruIcons.unordered_list
+      : appleStyled
+          ? CupertinoIcons.list_bullet
+          : Icons.list;
+  IconData get grid => yaruStyled
+      ? YaruIcons.app_grid
+      : appleStyled
+          ? CupertinoIcons.square_grid_3x2_fill
+          : Icons.grid_on;
+  IconData get reorder => yaruStyled
+      ? YaruIcons.ordered_list
+      : appleStyled
+          ? CupertinoIcons.move
+          : Icons.move_down_rounded;
+  IconData get info => yaruStyled
+      ? YaruIcons.information
+      : appleStyled
+          ? CupertinoIcons.info
+          : Icons.info;
 
   Widget getAnimatedStar(bool isStarred, [Color? color]) {
     if (yaruStyled) {
-      return YaruAnimatedIcon(
-        isStarred
-            ? const YaruAnimatedStarIcon(filled: true)
-            : const YaruAnimatedStarIcon(filled: false),
+      return YaruAnimatedVectorIcon(
+        isStarred ? YaruAnimatedIcons.star_filled : YaruAnimatedIcons.star,
         initialProgress: 1.0,
         color: color,
         size: iconSize,
@@ -330,10 +351,8 @@ class Iconz {
 
   Widget getAnimatedHeartIcon({required bool liked, Color? color}) {
     if (yaruStyled) {
-      return YaruAnimatedIcon(
-        liked
-            ? const YaruAnimatedHeartIcon(filled: true)
-            : const YaruAnimatedHeartIcon(filled: false),
+      return YaruAnimatedVectorIcon(
+        liked ? YaruAnimatedIcons.heart_filled : YaruAnimatedIcons.heart,
         initialProgress: 1.0,
         color: color,
         size: iconSize,

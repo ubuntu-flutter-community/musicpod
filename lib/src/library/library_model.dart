@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
@@ -22,17 +24,12 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _radioIndexSub;
   StreamSubscription<bool>? _lastPositionsSub;
   StreamSubscription<bool>? _updatesChangedSub;
-  StreamSubscription<bool>? _neverShowFailedImportsSub;
   StreamSubscription<bool>? _favTagsSub;
   StreamSubscription<bool>? _favCountriesSub;
-
   StreamSubscription<bool>? _lastFavSub;
   StreamSubscription<bool>? _lastCountryCodeSub;
   StreamSubscription<bool>? _downloadsSub;
-
-  bool get neverShowFailedImports => _service.neverShowFailedImports;
-  Future<void> setNeverShowLocalImports() async =>
-      await _service.setNeverShowFailedImports();
+  StreamSubscription<bool>? _radioHistoryChangedSub;
 
   Future<void> init() async {
     if (totalListAmount - 1 >= _service.appIndex) {
@@ -58,8 +55,7 @@ class LibraryModel extends SafeChangeNotifier {
         _service.lastPositionsChanged.listen((_) => notifyListeners());
     _updatesChangedSub =
         _service.updatesChanged.listen((_) => notifyListeners());
-    _neverShowFailedImportsSub =
-        _service.neverShowFailedImportsChanged.listen((_) => notifyListeners());
+
     _favTagsSub = _service.favTagsChanged.listen((_) => notifyListeners());
     _favCountriesSub =
         _service.favCountriesChanged.listen((_) => notifyListeners());
@@ -68,32 +64,30 @@ class LibraryModel extends SafeChangeNotifier {
     _downloadsSub = _service.downloadsChanged.listen((_) => notifyListeners());
     _lastCountryCodeSub =
         _service.lastCountryCodeChanged.listen((_) => notifyListeners());
+    _radioHistoryChangedSub =
+        _service.radioHistoryChanged.listen((_) => notifyListeners());
 
     notifyListeners();
   }
 
-  Future<void> safeStates() async {
-    await _service.safeStates();
-  }
-
   @override
   Future<void> dispose() async {
-    _localAudioIndexSub?.cancel();
-    _radioIndexSub?.cancel();
-    _podcastIndexSub?.cancel();
-    _likedAudiosSub?.cancel();
-    _playlistsSub?.cancel();
-    _albumsSub?.cancel();
-    _podcastsSub?.cancel();
-    _stationsSub?.cancel();
-    _lastPositionsSub?.cancel();
-    _updatesChangedSub?.cancel();
-    _neverShowFailedImportsSub?.cancel();
-    _favTagsSub?.cancel();
-    _favCountriesSub?.cancel();
-    _lastFavSub?.cancel();
-    _downloadsSub?.cancel();
-    _lastCountryCodeSub?.cancel();
+    await _localAudioIndexSub?.cancel();
+    await _radioIndexSub?.cancel();
+    await _podcastIndexSub?.cancel();
+    await _likedAudiosSub?.cancel();
+    await _playlistsSub?.cancel();
+    await _albumsSub?.cancel();
+    await _podcastsSub?.cancel();
+    await _stationsSub?.cancel();
+    await _lastPositionsSub?.cancel();
+    await _updatesChangedSub?.cancel();
+    await _favTagsSub?.cancel();
+    await _favCountriesSub?.cancel();
+    await _lastFavSub?.cancel();
+    await _downloadsSub?.cancel();
+    await _lastCountryCodeSub?.cancel();
+    await _radioHistoryChangedSub?.cancel();
 
     super.dispose();
   }
@@ -173,7 +167,7 @@ class LibraryModel extends SafeChangeNotifier {
   void removeFavTag(String value) => _service.removeFavTag(value);
 
   String? get lastFav => _service.lastFav;
-  void setLastFav(String? value) => _service.setLastFav(value);
+  void setLastRadioTag(String? value) => _service.setLastRadioTag(value);
 
   String? get lastCountryCode => _service.lastCountryCode;
   void setLastCountryCode(String? value) => _service.setLastCountryCode(value);
@@ -226,6 +220,17 @@ class LibraryModel extends SafeChangeNotifier {
 
   List<String> getPlaylistNames() =>
       playlists.entries.map((e) => e.key).toList();
+
+  void moveAudioInPlaylist({
+    required int oldIndex,
+    required int newIndex,
+    required String id,
+  }) =>
+      _service.moveAudioInPlaylist(
+        oldIndex: oldIndex,
+        newIndex: newIndex,
+        id: id,
+      );
 
   // Podcasts
 
@@ -329,7 +334,9 @@ class LibraryModel extends SafeChangeNotifier {
   void addLastPosition(String url, Duration lastPosition) =>
       _service.addLastPosition(url, lastPosition);
 
-  Future<void> disposePatchNotes() async => await _service.disposePatchNotes();
-
-  bool get recentPatchNotesDisposed => _service.recentPatchNotesDisposed;
+  Map<String, MpvMetaData> get radioHistory => _service.radioHistory;
 }
+
+final libraryModelProvider = ChangeNotifierProvider<LibraryModel>((ref) {
+  return LibraryModel(getService<LibraryService>());
+});

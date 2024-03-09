@@ -1,31 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:flutter/foundation.dart';
-import 'package:metadata_god/metadata_god.dart';
 
-import '../../constants.dart';
 import '../../data.dart';
 import '../../utils.dart';
+import '../settings/settings_service.dart';
 
 class LocalAudioService {
-  String? _directory;
-  String? get directory => _directory;
-  Future<void> setDirectory(String? value) async {
-    if (value == null || value == _directory) return;
-    await writeSetting(kDirectoryProperty, value).then((_) {
-      _updateDirectory(value);
-    });
-  }
-
-  final _directoryController = StreamController<bool>.broadcast();
-  Stream<bool> get directoryChanged => _directoryController.stream;
-  void _updateDirectory(String? value) {
-    _directory = value;
-    _directoryController.add(true);
-  }
+  final SettingsService _settingsService;
 
   Set<Audio>? _audios;
+  LocalAudioService({required SettingsService settingsService})
+      : _settingsService = settingsService;
   Set<Audio>? get audios => _audios;
   set audios(Set<Audio>? value) {
     _updateAudios(value);
@@ -38,34 +26,22 @@ class LocalAudioService {
     _audiosController.add(true);
   }
 
-  Future<List<String>> init({
-    @visibleForTesting String? testDir,
-  }) async {
-    if (testDir != null) {
-      _directory = testDir;
-    } else {
-      _directory = await readSetting(kDirectoryProperty);
-      _directory ??= await getMusicDir();
-    }
-
-    final result = await compute(_init, directory);
+  Future<List<String>> init({@visibleForTesting String? testDir}) async {
+    final result = await compute(_init, testDir ?? _settingsService.directory);
 
     _audios = result.$2;
 
     _audiosController.add(true);
-    _directoryController.add(true);
 
     return result.$1;
   }
 
   Future<void> dispose() async {
     await _audiosController.close();
-    await _directoryController.close();
   }
 }
 
 FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
-  MetadataGod.initialize();
   Set<Audio>? newAudios = {};
   List<String> failedImports = [];
 
@@ -84,13 +60,8 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
     }
     for (var e in onlyFiles) {
       try {
-        final metadata = await MetadataGod.readMetadata(file: e.path);
-
-        final audio = createLocalAudio(
-          path: e.path,
-          tag: metadata,
-          fileName: File(e.path).uri.pathSegments.lastOrNull,
-        );
+        final metadata = await readMetadata(File(e.path), getImage: true);
+        final audio = Audio.fromMetadata(path: e.path, data: metadata);
 
         newAudios.add(audio);
       } catch (error) {

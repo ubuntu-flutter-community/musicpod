@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../build_context_x.dart';
+import '../../l10n.dart';
 import '../common/icons.dart';
 import 'player_model.dart';
 
-class PlayButton extends StatelessWidget {
+class PlayButton extends ConsumerWidget {
   const PlayButton({
     super.key,
     required this.active,
@@ -15,13 +17,13 @@ class PlayButton extends StatelessWidget {
   final Color? iconColor;
 
   @override
-  Widget build(BuildContext context) {
-    final playerModel = context.read<PlayerModel>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playerModel = ref.read(playerModelProvider);
     final pause = playerModel.pause;
     final playOrPause = playerModel.playOrPause;
-    final isPlaying = context.select((PlayerModel m) => m.isPlaying);
+    final isPlaying = ref.watch(playerModelProvider.select((m) => m.isPlaying));
     return IconButton(
-      color: iconColor,
+      tooltip: isPlaying ? context.l10n.pause : context.l10n.play,
       onPressed: !active
           ? null
           : () {
@@ -31,11 +33,10 @@ class PlayButton extends StatelessWidget {
                 playOrPause();
               }
             },
-      icon: isPlaying
-          ? Icon(Iconz().pause)
-          : Icon(
-              Iconz().playFilled,
-            ),
+      icon: Icon(
+        isPlaying ? Iconz().pause : Iconz().playFilled,
+        color: iconColor ?? context.t.colorScheme.onSurface,
+      ),
     );
   }
 }

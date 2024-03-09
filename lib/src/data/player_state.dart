@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
+import 'package:collection/collection.dart';
 
 import 'audio.dart';
 
@@ -10,6 +10,7 @@ class PlayerState {
   final Audio? audio;
   final String? queueName;
   final List<Audio>? queue;
+  final String? volume;
 
   const PlayerState({
     this.position,
@@ -17,6 +18,7 @@ class PlayerState {
     this.audio,
     this.queueName,
     this.queue,
+    this.volume,
   });
 
   PlayerState copyWith({
@@ -25,6 +27,7 @@ class PlayerState {
     Audio? audio,
     String? queueName,
     List<Audio>? queue,
+    String? volume,
   }) {
     return PlayerState(
       position: position ?? this.position,
@@ -32,6 +35,7 @@ class PlayerState {
       audio: audio ?? this.audio,
       queueName: queueName ?? this.queueName,
       queue: queue ?? this.queue,
+      volume: volume ?? this.volume,
     );
   }
 
@@ -53,6 +57,9 @@ class PlayerState {
     if (queue != null) {
       result.addAll({'queue': queue!.map((x) => x.toMap()).toList()});
     }
+    if (volume != null) {
+      result.addAll({'volume': volume});
+    }
 
     return result;
   }
@@ -66,6 +73,7 @@ class PlayerState {
       queue: map['queue'] != null
           ? List<Audio>.from(map['queue']?.map((x) => Audio.fromMap(x)))
           : null,
+      volume: map['volume'],
     );
   }
 
@@ -76,19 +84,21 @@ class PlayerState {
 
   @override
   String toString() {
-    return 'PlayerState(position: $position, duration: $duration, audio: $audio, queueName: $queueName, queue: $queue)';
+    return 'PlayerState(position: $position, duration: $duration, audio: $audio, queueName: $queueName, queue: $queue, volume: $volume)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
+    final listEquals = const DeepCollectionEquality().equals;
 
     return other is PlayerState &&
         other.position == position &&
         other.duration == duration &&
         other.audio == audio &&
         other.queueName == queueName &&
-        listEquals(other.queue, queue);
+        listEquals(other.queue, queue) &&
+        other.volume == volume;
   }
 
   @override
@@ -97,6 +107,7 @@ class PlayerState {
         duration.hashCode ^
         audio.hashCode ^
         queueName.hashCode ^
-        queue.hashCode;
+        queue.hashCode ^
+        volume.hashCode;
   }
 }

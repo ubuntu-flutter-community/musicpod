@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../theme.dart';
 import '../common/icons.dart';
 import 'player_model.dart';
 
-class SeekButton extends StatelessWidget {
+class SeekButton extends ConsumerWidget {
   const SeekButton({
     super.key,
     required this.active,
@@ -16,29 +16,17 @@ class SeekButton extends StatelessWidget {
   final bool forward;
 
   @override
-  Widget build(BuildContext context) {
-    final playerModel = context.read<PlayerModel>();
-    final position = context.select((PlayerModel m) => m.position);
-    final setPosition = playerModel.setPosition;
-    final duration = context.select((PlayerModel m) => m.duration);
-    final seek = playerModel.seek;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = context.t;
+    final playerModel = ref.read(playerModelProvider);
+
     final icon = Icon(
       forward ? Iconz().forward30 : Iconz().backward10,
     );
     return IconButton(
+      color: active ? theme.colorScheme.onSurface : theme.disabledColor,
       onPressed: () async {
-        if (position == null ||
-            duration == null ||
-            (forward
-                ? (position.inSeconds + 30 > duration.inSeconds)
-                : (position.inSeconds - 10 < 0))) return;
-        setPosition(
-          Duration(
-            seconds:
-                forward ? position.inSeconds + 30 : position.inSeconds - 10,
-          ),
-        );
-        await seek();
+        playerModel.seekInSeconds(forward ? 30 : -10);
       },
       icon: yaruStyled
           ? Stack(

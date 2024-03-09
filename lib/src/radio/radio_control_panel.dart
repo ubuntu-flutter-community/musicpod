@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../l10n.dart';
 import '../../library.dart';
 import '../../radio.dart';
 import '../../theme.dart';
-import 'radio_search.dart';
 
-class RadioControlPanel extends StatelessWidget {
+class RadioControlPanel extends ConsumerWidget {
   const RadioControlPanel({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.t;
-    final libraryModel = context.read<LibraryModel>();
-    final model = context.read<RadioModel>();
-    final index = context.select((LibraryModel m) => m.radioindex);
+    final libraryModel = ref.read(libraryModelProvider);
+    final model = ref.read(radioModelProvider);
+    final index = ref.watch(libraryModelProvider.select((m) => m.radioindex));
 
     return Padding(
       padding: const EdgeInsets.only(left: 30),

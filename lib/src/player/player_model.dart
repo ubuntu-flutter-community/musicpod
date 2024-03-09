@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../data.dart';
-import 'mpv_meta_data.dart';
 import 'player_service.dart';
 
 const rateValues = [1.0, 1.5, 2.0];
@@ -47,6 +48,17 @@ class PlayerModel extends SafeChangeNotifier {
 
   Duration? get position => service.position;
   void setPosition(Duration? value) => service.setPosition(value);
+
+  Future<void> seekInSeconds(int seconds) async {
+    if (position != null && position!.inSeconds + seconds >= 0) {
+      setPosition(
+        Duration(
+          seconds: position!.inSeconds + seconds,
+        ),
+      );
+      await seek();
+    }
+  }
 
   bool get repeatSingle => service.repeatSingle;
   void setRepeatSingle(bool value) => service.setRepeatSingle(value);
@@ -134,6 +146,8 @@ class PlayerModel extends SafeChangeNotifier {
 
   void safeLastPosition() => service.safeLastPosition();
 
+  Future<void> loadColor({String? url}) async => service.loadColor(url: url);
+
   @override
   Future<void> dispose() async {
     await _queueNameChangedSub?.cancel();
@@ -152,3 +166,7 @@ class PlayerModel extends SafeChangeNotifier {
     super.dispose();
   }
 }
+
+final playerModelProvider = ChangeNotifierProvider<PlayerModel>((ref) {
+  return PlayerModel(service: getService<PlayerService>());
+});

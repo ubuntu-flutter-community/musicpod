@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:path/path.dart' as p;
+import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../data.dart';
 import '../../l10n.dart';
@@ -14,11 +16,21 @@ class DownloadModel extends SafeChangeNotifier {
 
   final LibraryService _service;
 
-  double? _value;
-  double? get value => _value;
-  void setValue(int received, int total) {
+  final _values = <String, double?>{};
+  final _cancelTokens = <String, CancelToken?>{};
+
+  double? getValue(String? url) => _values[url];
+  void setValue({
+    required int received,
+    required int total,
+    required String url,
+  }) {
     if (total <= 0) return;
-    _value = received / total;
+    final v = received / total;
+    _values.containsKey(url)
+        ? _values.update(url, (value) => v)
+        : _values.putIfAbsent(url, () => v);
+
     notifyListeners();
   }
 
@@ -30,7 +42,10 @@ class DownloadModel extends SafeChangeNotifier {
         _service.downloadsDir != null &&
         audio?.website != null) {
       _service.removeDownload(url: audio!.url!, feedUrl: audio.website!);
-      _value = null;
+      if (_values.containsKey(audio.url)) {
+        _values.update(audio.url!, (value) => null);
+      }
+
       notifyListeners();
     }
   }
@@ -41,10 +56,14 @@ class DownloadModel extends SafeChangeNotifier {
   }) async {
     final downloadsDir = _service.downloadsDir;
     if (audio?.url == null || downloadsDir == null) return;
-    if (_cancelToken != null) {
-      _cancelToken?.cancel();
-      _value = null;
-      _cancelToken = null;
+    final url = audio!.url!;
+
+    if (_cancelTokens[url] != null) {
+      _cancelTokens[url]?.cancel();
+      _values.containsKey(url)
+          ? _values.update(url, (value) => null)
+          : _values.putIfAbsent(url, () => null);
+      _cancelTokens.update(url, (value) => null);
       notifyListeners();
       return;
     }
@@ -56,8 +75,7 @@ class DownloadModel extends SafeChangeNotifier {
       Directory(downloadsDir).createSync();
     }
 
-    final url = audio!.url!;
-    final path = p.join(downloadsDir, audio.toShortPath());
+    final path = p.join(downloadsDir, _createAudioDownloadId(audio));
     await _download(
       context: context,
       url: url,
@@ -73,28 +91,38 @@ class DownloadModel extends SafeChangeNotifier {
             ),
           );
         }
-        _cancelToken = null;
+        _cancelTokens.containsKey(url)
+            ? _cancelTokens.update(url, (value) => null)
+            : _cancelTokens.putIfAbsent(url, () => null);
       }
     });
   }
 
-  CancelToken? _cancelToken;
+  String _createAudioDownloadId(Audio audio) {
+    final now = DateTime.now().toUtc().toString();
+    return '${audio.artist ?? ''}${audio.title ?? ''}${audio.durationMs ?? ''}${audio.year ?? ''})$now'
+        .replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
+  }
+
   Future<Response<dynamic>?> _download({
     required BuildContext context,
     required String url,
     required String path,
     required String name,
   }) async {
-    _cancelToken = CancelToken();
+    _cancelTokens.containsKey(url)
+        ? _cancelTokens.update(url, (value) => CancelToken())
+        : _cancelTokens.putIfAbsent(url, () => CancelToken());
     try {
       return await _service.dio.download(
         url,
         path,
-        onReceiveProgress: setValue,
-        cancelToken: _cancelToken,
+        onReceiveProgress: (count, total) =>
+            setValue(received: count, total: total, url: url),
+        cancelToken: _cancelTokens[url],
       );
     } catch (e) {
-      _cancelToken?.cancel();
+      _cancelTokens[url]?.cancel();
 
       String? message;
       if (e.toString().contains('[request cancelled]')) {
@@ -109,3 +137,7 @@ class DownloadModel extends SafeChangeNotifier {
     }
   }
 }
+
+final downloadProvider = ChangeNotifierProvider(
+  (ref) => DownloadModel(getService<LibraryService>()),
+);

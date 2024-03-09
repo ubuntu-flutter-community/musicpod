@@ -1,90 +1,138 @@
 import 'dart:async';
 
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:github/github.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 
-import '../../library.dart';
+import '../../constants.dart';
+import '../../external_path.dart';
+import 'settings_service.dart';
 
 class SettingsModel extends SafeChangeNotifier {
-  final LibraryService _libraryService;
+  SettingsModel({
+    required SettingsService service,
+    required ExternalPathService externalPathService,
+    required GitHub gitHub,
+  })  : _service = service,
+        _externalPathService = externalPathService,
+        _gitHub = gitHub;
 
-  String? _appName;
+  final SettingsService _service;
+  final ExternalPathService _externalPathService;
+  final GitHub _gitHub;
+
   StreamSubscription<bool>? _usePodcastIndexChangedSub;
   StreamSubscription<bool>? _podcastIndexApiKeyChangedSub;
   StreamSubscription<bool>? _podcastIndexApiSecretChangedSub;
+  StreamSubscription<bool>? _neverShowFailedImportsSub;
+  StreamSubscription<bool>? _directoryChangedSub;
+  StreamSubscription<bool>? _themeIndexChangedSub;
+  StreamSubscription<bool>? _recentPatchNotesDisposedChangedSub;
+  StreamSubscription<bool>? _useArtistGridViewChangedSub;
 
-  SettingsModel({
-    required LibraryService libraryService,
-  }) : _libraryService = libraryService;
-
-  String? get appName => _appName;
-  set appName(String? value) {
-    if (value == null || value == _appName) return;
-    _appName = value;
-    notifyListeners();
+  String? get appName => _service.appName;
+  String? get packageName => _service.packageName;
+  String? get version => _service.version;
+  String? get buildNumber => _service.buildNumber;
+  String? get directory => _service.directory;
+  Future<void> setDirectory(String? value) async {
+    if (value != null) {
+      await _service.setDirectory(value);
+    }
   }
 
-  String? _packageName;
-  String? get packageName => _packageName;
-  set packageName(String? value) {
-    if (value == null || value == _packageName) return;
-    _packageName = value;
-    notifyListeners();
-  }
+  bool get recentPatchNotesDisposed => _service.recentPatchNotesDisposed;
+  Future<void> disposePatchNotes() async => await _service.disposePatchNotes();
 
-  String? _version;
-  String? get version => _version;
-  set version(String? value) {
-    if (value == null || value == _version) return;
-    _version = value;
-    notifyListeners();
-  }
+  bool get neverShowFailedImports => _service.neverShowFailedImports;
+  void setNeverShowFailedImports(bool value) =>
+      _service.setNeverShowFailedImports(value);
 
-  String? _buildNumber;
-  String? get buildNumber => _buildNumber;
-  set buildNumber(String? value) {
-    if (value == null || value == _buildNumber) return;
-    _buildNumber = value;
-    notifyListeners();
-  }
+  bool get usePodcastIndex => _service.usePodcastIndex;
+  void setUsePodcastIndex(bool value) => _service.setUsePodcastIndex(value);
 
-  Future<void> init() async {
-    final packageInfo = await PackageInfo.fromPlatform();
-    appName = packageInfo.appName;
-    packageName = packageInfo.packageName;
-    version = packageInfo.version;
-    buildNumber = packageInfo.buildNumber;
+  int get themeIndex => _service.themeIndex;
+  void setThemeIndex(int value) => _service.setThemeIndex(value);
 
+  String? get podcastIndexApiKey => _service.podcastIndexApiKey;
+  void setPodcastIndexApiKey(String value) =>
+      _service.setPodcastIndexApiKey(value);
+
+  String? get podcastIndexApiSecret => _service.podcastIndexApiSecret;
+  void setPodcastIndexApiSecret(String value) async =>
+      _service.setPodcastIndexApiSecret(value);
+
+  void playOpenedFile() => _externalPathService.playOpenedFile();
+
+  Future<String?> getPathOfDirectory() async =>
+      await _externalPathService.getPathOfDirectory();
+
+  bool get useArtistGridView => _service.useArtistGridView;
+  void setUseArtistGridView(bool value) => _service.setUseArtistGridView(value);
+
+  void init() {
+    _themeIndexChangedSub =
+        _service.themeIndexChanged.listen((_) => notifyListeners());
     _usePodcastIndexChangedSub =
-        _libraryService.usePodcastIndexChanged.listen((_) => notifyListeners());
-    _podcastIndexApiKeyChangedSub = _libraryService.podcastIndexApiKeyChanged
-        .listen((_) => notifyListeners());
-    _podcastIndexApiSecretChangedSub = _libraryService
-        .podcastIndexApiSecretChanged
-        .listen((_) => notifyListeners());
+        _service.usePodcastIndexChanged.listen((_) => notifyListeners());
+    _podcastIndexApiKeyChangedSub =
+        _service.podcastIndexApiKeyChanged.listen((_) => notifyListeners());
+    _podcastIndexApiSecretChangedSub =
+        _service.podcastIndexApiSecretChanged.listen((_) => notifyListeners());
+    _neverShowFailedImportsSub =
+        _service.neverShowFailedImportsChanged.listen((_) => notifyListeners());
+    _directoryChangedSub =
+        _service.directoryChanged.listen((_) => notifyListeners());
+    _useArtistGridViewChangedSub =
+        _service.useArtistGridViewChanged.listen((_) => notifyListeners());
 
+    _recentPatchNotesDisposedChangedSub = _service
+        .recentPatchNotesDisposedChanged
+        .listen((_) => notifyListeners());
     notifyListeners();
   }
 
   @override
   Future<void> dispose() async {
-    _usePodcastIndexChangedSub?.cancel();
-    _podcastIndexApiKeyChangedSub?.cancel();
-    _podcastIndexApiSecretChangedSub?.cancel();
+    await _themeIndexChangedSub?.cancel();
+    await _usePodcastIndexChangedSub?.cancel();
+    await _podcastIndexApiKeyChangedSub?.cancel();
+    await _podcastIndexApiSecretChangedSub?.cancel();
+    await _neverShowFailedImportsSub?.cancel();
+    await _directoryChangedSub?.cancel();
+    await _recentPatchNotesDisposedChangedSub?.cancel();
+    await _useArtistGridViewChangedSub?.cancel();
     super.dispose();
   }
 
-  bool get usePodcastIndex => _libraryService.usePodcastIndex;
-  void setUsePodcastIndex(bool value) =>
-      _libraryService.setUsePodcastIndex(value);
+  Future<String?> getOnlineVersion() async {
+    final release = await (_gitHub.repositories
+            .listReleases(RepositorySlug.full(kGitHubShortLink)))
+        .toList();
+    return release.firstOrNull?.tagName;
+  }
 
-  void setThemeIndex(int value) => _libraryService.setThemeIndex(value);
+  Future<List<Contributor>> getContributors() async {
+    return (await _gitHub.repositories
+        .listContributors(
+          RepositorySlug.full(kGitHubShortLink),
+        )
+        .where((c) => c.type == 'User')
+        .toList());
+  }
 
-  String? get podcastIndexApiKey => _libraryService.podcastIndexApiKey;
-  Future<void> setPodcastIndexApiKey(String podcastIndexApiKey) async =>
-      await _libraryService.setPodcastIndexApiKey(podcastIndexApiKey);
-
-  String? get podcastIndexApiSecret => _libraryService.podcastIndexApiSecret;
-  Future<void> setPodcastIndexApiSecret(String podcastIndexApiSecret) async =>
-      await _libraryService.setPodcastIndexApiSecret(podcastIndexApiSecret);
+  int getExtendedVersionNumber(String version) {
+    List versionCells = version.split('.');
+    versionCells = versionCells.map((i) => int.parse(i)).toList();
+    return versionCells[0] * 100000 + versionCells[1] * 1000 + versionCells[2];
+  }
 }
+
+final settingsModelProvider = ChangeNotifierProvider(
+  (ref) => SettingsModel(
+    service: getService<SettingsService>(),
+    externalPathService: getService<ExternalPathService>(),
+    gitHub: getService<GitHub>(),
+  )..init(),
+);

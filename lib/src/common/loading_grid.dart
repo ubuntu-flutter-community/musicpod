@@ -13,13 +13,13 @@ class LoadingGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView(
-      gridDelegate: imageGridDelegate,
+      gridDelegate: audioCardGridDelegate,
       padding: gridPadding,
       children: List.generate(limit, (index) => const Audio())
           .map(
             (e) => const AudioCard(
               color: Colors.transparent,
-              elevation: 0,
+              showBorder: false,
               bottom: AudioCardBottom(),
             ),
           )

@@ -9,12 +9,14 @@ class TapAbleText extends StatelessWidget {
     required this.text,
     this.style,
     this.maxLines,
+    this.overflow = TextOverflow.ellipsis,
   });
 
   final void Function()? onTap;
   final String text;
   final TextStyle? style;
   final int? maxLines;
+  final TextOverflow overflow;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class TapAbleText extends StatelessWidget {
               text,
               style: style,
               maxLines: maxLines ?? 1,
-              overflow: TextOverflow.ellipsis,
+              overflow: overflow,
             ),
           ),
         ),

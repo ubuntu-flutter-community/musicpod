@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../../l10n.dart';
 import '../../player.dart';
 import 'playback_rate_button.dart';
 
@@ -28,7 +29,7 @@ class FullHeightPlayerTopControls extends StatelessWidget {
       spacing: 5.0,
       children: [
         if (audio?.audioType != AudioType.podcast)
-          LikeIconButton(
+          PlayerLikeIcon(
             audio: audio,
             color: iconColor,
           ),
@@ -49,6 +50,9 @@ class FullHeightPlayerTopControls extends StatelessWidget {
           color: iconColor,
         ),
         IconButton(
+          tooltip: playerViewMode == PlayerViewMode.fullWindow
+              ? context.l10n.leaveFullWindow
+              : context.l10n.fullWindow,
           icon: Icon(
             playerViewMode == PlayerViewMode.fullWindow
                 ? Iconz().fullScreenExit

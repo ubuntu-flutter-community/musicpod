@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../player.dart';
 
-class AudioProgress extends StatelessWidget {
+class AudioProgress extends ConsumerWidget {
   const AudioProgress({
     super.key,
     this.lastPosition,
@@ -18,17 +18,18 @@ class AudioProgress extends StatelessWidget {
   final bool selected;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.t;
 
     final pos = (selected
-            ? context.select((PlayerModel m) => m.position)
+            ? ref.watch(playerModelProvider.select((m) => m.position))
             : lastPosition) ??
         Duration.zero;
 
-    final dur =
-        (selected ? context.select((PlayerModel m) => m.duration) : duration) ??
-            Duration.zero;
+    final dur = (selected
+            ? ref.watch(playerModelProvider.select((m) => m.duration))
+            : duration) ??
+        Duration.zero;
 
     bool sliderActive = dur.inSeconds > pos.inSeconds;
 

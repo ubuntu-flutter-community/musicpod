@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github/github.dart';
-import 'package:provider/provider.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:yaru_icons/yaru_icons.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -14,13 +12,26 @@ import 'settings_model.dart';
 
 const _kTileSize = 50.0;
 
-class AboutPage extends StatelessWidget {
+class AboutPage extends ConsumerStatefulWidget {
   const AboutPage({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _AboutPageState();
+}
+
+class _AboutPageState extends ConsumerState<AboutPage> {
+  late Future<List<Contributor>> _contributors;
+
+  @override
+  void initState() {
+    super.initState();
+    _contributors = ref.read(settingsModelProvider).getContributors();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final appName = context.select((SettingsModel m) => m.appName);
+    final appName = ref.watch(settingsModelProvider.select((m) => m.appName));
     final linkStyle = theme.textTheme.bodyLarge
         ?.copyWith(color: Colors.lightBlue, overflow: TextOverflow.visible);
     const maxLines = 3;
@@ -97,7 +108,7 @@ class AboutPage extends StatelessWidget {
                   ),
                   Expanded(
                     child: FutureBuilder<List<Contributor>>(
-                      future: _loadContributors(),
+                      future: _contributors,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return SizedBox(
@@ -158,15 +169,5 @@ class AboutPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Future<List<Contributor>> _loadContributors() async {
-    final github = getService<GitHub>();
-    return (await github.repositories
-        .listContributors(
-          RepositorySlug.full(kGitHubShortLink),
-        )
-        .where((c) => c.type == 'User')
-        .toList());
   }
 }

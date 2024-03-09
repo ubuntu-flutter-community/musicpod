@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
@@ -8,13 +8,14 @@ import '../../l10n.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
 
-Future<void> searchAndPushPodcastPage({
+void searchAndPushPodcastPage({
   required BuildContext context,
   required String? feedUrl,
   required String? itemImageUrl,
   required String? genre,
   required bool play,
-}) async {
+  required WidgetRef ref,
+}) {
   ScaffoldMessenger.of(context).clearSnackBars();
 
   if (feedUrl == null) {
@@ -25,8 +26,8 @@ Future<void> searchAndPushPodcastPage({
     );
     return;
   }
-  final model = context.read<PodcastModel>();
-  final startPlaylist = context.read<PlayerModel>().startPlaylist;
+  final model = ref.read(podcastModelProvider);
+  final startPlaylist = ref.read(playerModelProvider).startPlaylist;
   final selectedFeedUrl = model.selectedFeedUrl;
   final setSelectedFeedUrl = model.setSelectedFeedUrl;
 
@@ -48,11 +49,12 @@ Future<void> searchAndPushPodcastPage({
     ),
   );
 
-  await findEpisodes(
+  findEpisodes(
     feedUrl: feedUrl,
     itemImageUrl: itemImageUrl,
     genre: genre,
   ).then((podcast) async {
+    ScaffoldMessenger.of(context).clearSnackBars();
     if (selectedFeedUrl == feedUrl) {
       return;
     }
@@ -81,24 +83,23 @@ Future<void> searchAndPushPodcastPage({
         },
       );
     } else {
-      await navigatorKey.currentState?.push(
-        MaterialPageRoute(
-          builder: (context) {
-            final id = feedUrl;
-
-            ScaffoldMessenger.of(context).clearSnackBars();
-
-            return PodcastPage(
-              imageUrl: itemImageUrl,
-              audios: podcast,
-              pageId: id,
-              title: podcast.firstOrNull?.album ??
-                  podcast.firstOrNull?.title ??
-                  feedUrl,
-            );
-          },
-        ),
-      ).then((_) => setSelectedFeedUrl(null));
+      navigatorKey.currentState
+          ?.push(
+            MaterialPageRoute(
+              builder: (context) {
+                return PodcastPage(
+                  imageUrl: itemImageUrl,
+                  audios: podcast,
+                  pageId: feedUrl,
+                  title: podcast.firstOrNull?.album ??
+                      podcast.firstOrNull?.title ??
+                      feedUrl,
+                );
+              },
+            ),
+          )
+          .then((_) => setSelectedFeedUrl(null))
+          .then((_) => ScaffoldMessenger.of(context).clearSnackBars());
     }
   });
 }

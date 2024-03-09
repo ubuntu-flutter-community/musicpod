@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../build_context_x.dart';
-import '../../theme.dart';
 import '../l10n/l10n.dart';
 import 'stream_provider_share_button.dart';
 
@@ -18,6 +17,8 @@ class CopyClipboardContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    final textColor =
+        theme.snackBarTheme.contentTextStyle?.color?.withOpacity(0.8);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Row(
@@ -31,7 +32,7 @@ class CopyClipboardContent extends StatelessWidget {
                 Text(
                   context.l10n.copiedToClipBoard,
                   style: TextStyle(
-                    color: getSnackBarTextColor(theme),
+                    color: textColor,
                   ),
                 ),
                 Text(
@@ -42,7 +43,7 @@ class CopyClipboardContent extends StatelessWidget {
             ),
           ),
           StreamProviderRow(
-            iconColor: getSnackBarTextColor(theme),
+            iconColor: theme.snackBarTheme.actionTextColor,
             onSearch: onSearch,
             text: text,
           ),

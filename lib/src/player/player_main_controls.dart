@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
+import '../../l10n.dart';
 import 'play_button.dart';
 import 'repeat_button.dart';
 import 'seek_button.dart';
@@ -25,6 +26,7 @@ class PlayerMainControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    final defaultColor = theme.colorScheme.onSurface;
     final children = <Widget>[
       if (podcast)
         SeekButton(
@@ -35,6 +37,8 @@ class PlayerMainControls extends StatelessWidget {
         ShuffleButton(active: active),
       _flex,
       IconButton(
+        tooltip: context.l10n.back,
+        color: defaultColor,
         onPressed: !active ? null : () => playPrevious(),
         icon: Icon(Iconz().skipBackward),
       ),
@@ -49,11 +53,18 @@ class PlayerMainControls extends StatelessWidget {
       ),
       _flex,
       IconButton(
+        tooltip: context.l10n.next,
+        color: defaultColor,
         onPressed: !active ? null : () => playNext(),
         icon: Icon(Iconz().skipForward),
       ),
       _flex,
-      if (podcast) SeekButton(active: active) else RepeatButton(active: active),
+      if (podcast)
+        SeekButton(
+          active: active,
+        )
+      else
+        RepeatButton(active: active),
     ];
 
     return Row(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common.dart';
@@ -10,15 +10,17 @@ import '../../globals.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
 import '../../podcasts.dart';
+import '../../radio.dart';
 import '../../utils.dart';
 import '../app/app_model.dart';
 
 void onLocalAudioTitleTap({
   required Audio audio,
   required BuildContext context,
+  required WidgetRef ref,
 }) {
-  final libraryModel = context.read<LibraryModel>();
-  final localAudioModel = context.read<LocalAudioModel>();
+  final libraryModel = ref.read(libraryModelProvider);
+  final localAudioModel = ref.read(localAudioModelProvider);
 
   final albumAudios = localAudioModel.findAlbum(audio);
   if (albumAudios?.firstOrNull == null) return;
@@ -43,9 +45,9 @@ void onLocalAudioTitleTap({
 void onLocalAudioArtistTap({
   required Audio audio,
   required BuildContext context,
+  required WidgetRef ref,
 }) {
-  final localAudioModel = context.read<LocalAudioModel>();
-
+  final localAudioModel = ref.read(localAudioModelProvider);
   final artistAudios = localAudioModel.findArtist(audio);
   if (artistAudios?.firstOrNull == null) return;
   final images = localAudioModel.findImages(artistAudios ?? {});
@@ -63,15 +65,13 @@ void onLocalAudioArtistTap({
 }
 
 void onTitleTap({
-  required Audio? audio,
-  required String? text,
+  Audio? audio,
+  String? text,
   required BuildContext context,
+  required WidgetRef ref,
 }) {
-  if (audio?.audioType == null || audio?.title == null) {
-    return;
-  }
   if (audio?.audioType == AudioType.local) {
-    context.read<AppModel>().setFullScreen(false);
+    ref.read(appModelProvider).setFullScreen(false);
   }
 
   if (text?.isNotEmpty == true) {
@@ -79,7 +79,6 @@ void onTitleTap({
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        width: snackBarWidth,
         duration: kSnackBarDuration,
         content: CopyClipboardContent(text: text),
       ),
@@ -91,7 +90,6 @@ void onTitleTap({
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        width: snackBarWidth,
         duration: kSnackBarDuration,
         content: CopyClipboardContent(
           text: audio.url!,
@@ -104,52 +102,60 @@ void onTitleTap({
       ),
     );
   } else {
+    if (audio?.audioType == null || audio?.title == null) {
+      return;
+    }
     onLocalAudioTitleTap(
       audio: audio!,
       context: context,
+      ref: ref,
     );
   }
 }
 
-Future<void> onArtistTap({
+void onArtistTap({
   required Audio? audio,
   required String? artist,
   required BuildContext context,
-}) async {
+  required WidgetRef ref,
+}) {
   if (audio?.audioType == null || audio?.artist == null) {
     return;
   }
   if (audio?.audioType != AudioType.radio) {
-    context.read<AppModel>().setFullScreen(false);
+    ref.read(appModelProvider).setFullScreen(false);
   }
   if (audio!.audioType == AudioType.radio && audio.url?.isNotEmpty == true) {
-    Clipboard.setData(ClipboardData(text: audio.url!));
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        width: snackBarWidth,
-        duration: kSnackBarDuration,
-        content: CopyClipboardContent(
-          text: audio.url!,
-          onSearch: () {
-            if (audio.url != null) {
-              launchUrl(Uri.parse(audio.url!));
-            }
-          },
-        ),
+    final libModel = ref.read(libraryModelProvider);
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (context) {
+          return StationPage(
+            station: audio,
+            name: audio.title ?? '',
+            unStarStation: libModel.unStarStation,
+            starStation: (station) =>
+                libModel.addStarredStation(audio.url!, {audio}),
+          );
+        },
       ),
     );
   } else if (audio.audioType == AudioType.podcast &&
       audio.website?.isNotEmpty == true) {
-    await searchAndPushPodcastPage(
+    searchAndPushPodcastPage(
       context: context,
       feedUrl: audio.website,
       itemImageUrl: audio.albumArtUrl,
       genre: audio.genre,
       play: false,
+      ref: ref,
     );
   } else {
-    onLocalAudioArtistTap(audio: audio, context: context);
+    onLocalAudioArtistTap(
+      audio: audio,
+      context: context,
+      ref: ref,
+    );
   }
 }
 

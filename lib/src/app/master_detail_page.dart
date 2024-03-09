@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:yaru/yaru.dart';
 
+import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../library.dart';
+import '../../local_audio.dart';
 import '../../settings.dart';
 import '../../theme.dart';
 import '../globals.dart';
-import 'connectivity_notifier.dart';
 import 'master_items.dart';
 
-class MasterDetailPage extends StatelessWidget {
+class MasterDetailPage extends ConsumerWidget {
   const MasterDetailPage({
     super.key,
     required this.countryCode,
@@ -21,12 +22,15 @@ class MasterDetailPage extends StatelessWidget {
   final String? countryCode;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // Connectivity
-    final isOnline = context.watch<ConnectivityNotifier>().isOnline;
+    final isOnline =
+        ref.watch(appModelProvider.select((value) => value.isOnline));
 
     // Library
-    final libraryModel = context.watch<LibraryModel>();
+    final libraryModel = ref.watch(libraryModelProvider);
+
+    final localAudioModel = ref.read(localAudioModelProvider);
 
     final masterItems = createMasterItems(
       libraryModel: libraryModel,
@@ -41,18 +45,20 @@ class MasterDetailPage extends StatelessWidget {
       child: YaruMasterDetailPage(
         navigatorKey: navigatorKey,
         onSelected: (value) => libraryModel.setIndex(value ?? 0),
-        appBar: const HeaderBar(
+        appBar: HeaderBar(
           style: YaruTitleBarStyle.undecorated,
-          title: Text('MusicPod'),
+          title: const Text('MusicPod'),
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: 10),
-              child: SettingsButton(),
+              padding: const EdgeInsets.only(right: 10),
+              child: SettingsButton(
+                initLocalAudio: localAudioModel.init,
+              ),
             ),
           ],
         ),
         layoutDelegate: const YaruMasterFixedPaneDelegate(
-          paneWidth: 250,
+          paneWidth: kMasterDetailSideBarWidth,
         ),
         breakpoint: kMasterDetailBreakPoint,
         controller: YaruPageController(

@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../../l10n.dart';
 
 class ShareButton extends StatelessWidget {
   const ShareButton({
@@ -24,6 +25,7 @@ class ShareButton extends StatelessWidget {
     final content =
         audio?.url ?? '${audio?.artist ?? ''} - ${audio?.title ?? ''}';
     return IconButton(
+      tooltip: context.l10n.share,
       onPressed: !active
           ? null
           : () {
@@ -34,7 +36,6 @@ class ShareButton extends StatelessWidget {
               );
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  width: snackBarWidth,
                   content: CopyClipboardContent(
                     text: content,
                     onSearch: audio?.url == null

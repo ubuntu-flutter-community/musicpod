@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common.dart';
 import '../../data.dart';
@@ -10,7 +10,7 @@ import '../common/fall_back_header_image.dart';
 import '../l10n/l10n.dart';
 import '../theme.dart';
 
-class PlaylistPage extends StatelessWidget {
+class PlaylistPage extends ConsumerWidget {
   const PlaylistPage({
     super.key,
     required this.playlist,
@@ -21,11 +21,11 @@ class PlaylistPage extends StatelessWidget {
   final LibraryModel libraryModel;
 
   @override
-  Widget build(BuildContext context) {
-    final model = context.read<LocalAudioModel>();
-    final libraryModel = context.read<LibraryModel>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final model = ref.read(localAudioModelProvider);
+    final libraryModel = ref.read(libraryModelProvider);
     return AudioPage(
-      onAlbumTap: ({required audioType, required text}) {
+      onAlbumTap: (text) {
         final albumAudios = model.findAlbum(Audio(album: text));
         if (albumAudios?.firstOrNull == null) return;
         final id = generateAlbumId(albumAudios!.first);
@@ -45,7 +45,7 @@ class PlaylistPage extends StatelessWidget {
           ),
         );
       },
-      onArtistTap: ({required audioType, required text}) {
+      onArtistTap: (text) {
         final artistAudios = model.findArtist(Audio(artist: text));
         final images = model.findImages(artistAudios ?? {});
 

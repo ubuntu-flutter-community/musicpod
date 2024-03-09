@@ -1,7 +1,7 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
@@ -11,11 +11,11 @@ import '../../library.dart';
 import '../../player.dart';
 import '../../radio.dart';
 import '../../theme.dart';
-import 'radio_search.dart';
-import 'radio_search_page.dart';
+import 'open_radio_discover_page_button.dart';
+import 'radio_history_list.dart';
 import 'station_card.dart';
 
-class RadioLibPage extends StatelessWidget {
+class RadioLibPage extends ConsumerWidget {
   const RadioLibPage({
     super.key,
     required this.isOnline,
@@ -24,14 +24,15 @@ class RadioLibPage extends StatelessWidget {
   final bool isOnline;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (!isOnline) {
       return const OfflinePage();
     }
 
     final theme = context.t;
-    final showTags = context.select((RadioModel m) => m.showTags);
-    final radioModel = context.read<RadioModel>();
+    final radioCollectionView =
+        ref.watch(radioModelProvider.select((m) => m.radioCollectionView));
+    final radioModel = ref.read(radioModelProvider);
 
     return Column(
       children: [
@@ -46,53 +47,67 @@ class RadioLibPage extends StatelessWidget {
               borderColor: chipBorder(theme, false),
               selectedFirst: false,
               clearOnSelect: false,
-              onSelected: (index) =>
-                  radioModel.setShowTags(index == 0 ? false : true),
+              onSelected: (index) => radioModel
+                  .setRadioCollectionView(RadioCollectionView.values[index]),
               yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
               labels: [
                 Text(context.l10n.station),
                 Text(context.l10n.tags),
+                Text(context.l10n.hearingHistory),
               ],
-              isSelected: [!showTags, showTags],
+              isSelected: RadioCollectionView.values
+                  .map((e) => e == radioCollectionView)
+                  .toList(),
             ),
           ],
         ),
         const SizedBox(
           height: 15,
         ),
-        if (showTags)
-          const Expanded(child: TagGrid())
-        else
-          const Expanded(
-            child: StationGrid(),
-          ),
+        Expanded(
+          child: switch (radioCollectionView) {
+            RadioCollectionView.stations => const StationGrid(),
+            RadioCollectionView.tags => const TagGrid(),
+            RadioCollectionView.history => const RadioHistoryList(),
+          },
+        ),
       ],
     );
   }
 }
 
-class StationGrid extends StatelessWidget {
+class StationGrid extends ConsumerWidget {
   const StationGrid({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final stations = context.select((LibraryModel m) => m.starredStations);
-    final length = context.select((LibraryModel m) => m.starredStationsLength);
-    final libraryModel = context.read<LibraryModel>();
-    final playerModel = context.read<PlayerModel>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stations =
+        ref.watch(libraryModelProvider.select((m) => m.starredStations));
+    final length =
+        ref.watch(libraryModelProvider.select((m) => m.starredStationsLength));
+    final libraryModel = ref.read(libraryModelProvider);
+    final playerModel = ref.read(playerModelProvider);
 
     if (length == 0) {
       return NoSearchResultPage(
-        message: Text(context.l10n.noStarredStations),
+        message: Column(
+          children: [
+            Text(context.l10n.noStarredStations),
+            const SizedBox(
+              height: kYaruPagePadding,
+            ),
+            const OpenRadioDiscoverPageButton(),
+          ],
+        ),
         icons: const AnimatedEmoji(AnimatedEmojis.glowingStar),
       );
     }
 
     return GridView.builder(
       padding: gridPadding,
-      gridDelegate: imageGridDelegate,
+      gridDelegate: audioCardGridDelegate,
       itemCount: length,
       itemBuilder: (context, index) {
         final station = stations.entries.elementAt(index).value.firstOrNull;
@@ -108,26 +123,35 @@ class StationGrid extends StatelessWidget {
   }
 }
 
-class TagGrid extends StatelessWidget {
+class TagGrid extends ConsumerWidget {
   const TagGrid({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final favTagsLength = context.select((LibraryModel m) => m.favTags.length);
-    final favTags = context.select((LibraryModel m) => m.favTags);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favTagsLength =
+        ref.watch(libraryModelProvider.select((m) => m.favTags.length));
+    final favTags = ref.watch(libraryModelProvider.select((m) => m.favTags));
 
     if (favTagsLength == 0) {
       return NoSearchResultPage(
-        message: Text(context.l10n.noStarredTags),
+        message: Column(
+          children: [
+            Text(context.l10n.noStarredTags),
+            const SizedBox(
+              height: kYaruPagePadding,
+            ),
+            const OpenRadioDiscoverPageButton(),
+          ],
+        ),
         icons: const AnimatedEmoji(AnimatedEmojis.glowingStar),
       );
     }
 
     return GridView.builder(
       padding: gridPadding,
-      gridDelegate: imageGridDelegate,
+      gridDelegate: audioCardGridDelegate,
       itemCount: favTagsLength,
       itemBuilder: (context, index) {
         final tag = favTags.elementAt(index);

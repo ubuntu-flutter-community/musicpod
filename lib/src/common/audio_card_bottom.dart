@@ -28,7 +28,7 @@ class AudioCardBottom extends StatelessWidget {
       child: Tooltip(
         message: text ?? '',
         child: Container(
-          width: kSmallCardHeight,
+          width: kAudioCardDimension,
           margin: const EdgeInsets.all(1),
           padding: const EdgeInsets.symmetric(
             vertical: 5,
@@ -39,7 +39,7 @@ class AudioCardBottom extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5),
                   child: SizedBox(
                     height: 15,
-                    width: kSmallCardHeight - 20,
+                    width: kAudioCardDimension - 20,
                     child: Shimmer.fromColors(
                       baseColor: light ? kCardColorLight : kCardColorDark,
                       highlightColor: light

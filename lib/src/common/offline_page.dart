@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../build_context_x.dart';
 import 'common_widgets.dart';
-import 'package:yaru_icons/yaru_icons.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:yaru/yaru.dart';
 
 import '../l10n/l10n.dart';
 
@@ -21,8 +20,8 @@ class OfflinePage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            YaruAnimatedIcon(
-              const YaruAnimatedNoNetworkIcon(),
+            YaruAnimatedVectorIcon(
+              YaruAnimatedIcons.no_network,
               size: 200,
               color: theme.disabledColor,
             ),

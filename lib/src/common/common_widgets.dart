@@ -1,14 +1,13 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
-import 'package:yaru_icons/yaru_icons.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../constants.dart';
-import '../../globals.dart' hide isMobile;
+import '../../globals.dart';
 import '../../theme.dart';
 import 'icons.dart';
 
@@ -221,37 +220,52 @@ class SearchButton extends StatelessWidget {
   }
 }
 
-class SearchingBar extends StatelessWidget {
+class SearchingBar extends ConsumerWidget {
   const SearchingBar({
     super.key,
     this.text,
     this.onClear,
     this.onSubmitted,
     this.onChanged,
+    this.hintText,
   });
 
   final String? text;
   final void Function()? onClear;
   final void Function(String?)? onSubmitted;
   final void Function(String)? onChanged;
+  final String? hintText;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appModel = ref.read(appModelProvider);
+    void onChanged2(v) {
+      appModel.setLockSpace(true);
+      onChanged?.call(v);
+    }
+
+    void onSubmitted2(v) {
+      appModel.setLockSpace(false);
+      onSubmitted?.call(v);
+    }
+
     return yaruStyled
         ? YaruSearchField(
+            hintText: hintText,
             clearIcon: yaruStyled ? null : Icon(Iconz().clear),
             key: key,
             text: text,
             onClear: onClear,
-            onSubmitted: onSubmitted,
-            onChanged: onChanged,
+            onSubmitted: onSubmitted2,
+            onChanged: onChanged2,
           )
         : MaterialSearchBar(
+            hintText: hintText,
             text: text,
             key: key,
-            onSubmitted: onSubmitted,
+            onSubmitted: onSubmitted2,
             onClear: onClear,
-            onChanged: onChanged,
+            onChanged: onChanged2,
           );
   }
 }
@@ -263,11 +277,13 @@ class MaterialSearchBar extends StatefulWidget {
     this.onClear,
     this.onSubmitted,
     this.onChanged,
+    this.hintText,
   });
   final String? text;
   final void Function()? onClear;
   final void Function(String?)? onSubmitted;
   final void Function(String)? onChanged;
+  final String? hintText;
 
   @override
   State<MaterialSearchBar> createState() => _NormalSearchBarState();
@@ -305,6 +321,7 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
         onSubmitted: widget.onSubmitted,
         onChanged: widget.onChanged,
         decoration: InputDecoration(
+          hintText: widget.hintText,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
           contentPadding:
               const EdgeInsets.only(top: 10, bottom: 8, left: 15, right: 15),
@@ -339,8 +356,6 @@ double get likeButtonWidth => yaruStyled ? 62 : 70;
 
 double? get avatarIconSize => yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
 
-double? get snackBarWidth => yaruStyled ? kSnackBarWidth : null;
-
 double get searchBarWidth => isMobile ? kSearchBarWidth : 600;
 
 bool get showSideBarFilter => yaruStyled ? true : false;
@@ -364,8 +379,8 @@ EdgeInsetsGeometry get tabViewPadding =>
 EdgeInsetsGeometry get gridPadding =>
     isMobile ? kMobileGridPadding : kGridPadding;
 
-SliverGridDelegate get imageGridDelegate =>
-    isMobile ? kMobileImageGridDelegate : kImageGridDelegate;
+SliverGridDelegate get audioCardGridDelegate =>
+    isMobile ? kMobileAudioCardGridDelegate : kAudioCardGridDelegate;
 
 EdgeInsetsGeometry get appBarActionSpacing => Platform.isMacOS
     ? const EdgeInsets.only(right: 5, left: 20)
@@ -384,9 +399,24 @@ class CommonSwitch extends StatelessWidget {
             value: value,
             onChanged: onChanged,
           )
-        : appleStyled
-            ? CupertinoSwitch(value: value, onChanged: onChanged)
-            : Switch(value: value, onChanged: onChanged);
+        : Switch(value: value, onChanged: onChanged);
+  }
+}
+
+class CommonCheckBox extends StatelessWidget {
+  const CommonCheckBox({super.key, required this.value, this.onChanged});
+
+  final bool value;
+  final void Function(bool?)? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return yaruStyled
+        ? YaruCheckbox(
+            value: value,
+            onChanged: onChanged,
+          )
+        : Checkbox(value: value, onChanged: onChanged);
   }
 }
 

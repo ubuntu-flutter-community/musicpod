@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../utils.dart';
 import 'player_model.dart';
 
-class PlayerTrack extends StatelessWidget {
+class PlayerTrack extends ConsumerWidget {
   const PlayerTrack({
     super.key,
     this.bottomPlayer = false,
@@ -15,16 +15,16 @@ class PlayerTrack extends StatelessWidget {
   final bool bottomPlayer, active;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.t;
 
     final mainColor = theme.colorScheme.onSurface;
 
-    final playerModel = context.read<PlayerModel>();
+    final playerModel = ref.read(playerModelProvider);
 
-    final position = context.select((PlayerModel m) => m.position);
+    final position = ref.watch(playerModelProvider.select((m) => m.position));
     final setPosition = playerModel.setPosition;
-    final duration = context.select((PlayerModel m) => m.duration);
+    final duration = ref.watch(playerModelProvider.select((m) => m.duration));
     final seek = playerModel.seek;
 
     bool sliderActive = active &&
@@ -84,7 +84,9 @@ class PlayerTrack extends StatelessWidget {
           children: [
             RepaintBoundary(
               child: SizedBox(
-                width: 40,
+                width: (position?.inHours != null && position!.inHours > 0)
+                    ? 60
+                    : 40,
                 height: 15,
                 child: Text(
                   formatTime(position ?? Duration.zero),
@@ -105,7 +107,9 @@ class PlayerTrack extends StatelessWidget {
           children: [
             RepaintBoundary(
               child: SizedBox(
-                width: 40,
+                width: (duration?.inHours != null && duration!.inHours > 0)
+                    ? 60
+                    : 40,
                 height: 15,
                 child: Text(
                   formatTime(duration ?? Duration.zero),

@@ -5,12 +5,17 @@ import 'package:podcast_search/podcast_search.dart';
 
 import '../../common.dart';
 import '../../data.dart';
-import '../../utils.dart';
+import '../../settings.dart';
 import '../notifications/notifications_service.dart';
 
 class PodcastService {
   final NotificationsService _notificationsService;
-  PodcastService(this._notificationsService) : _search = Search();
+  final SettingsService _settingsService;
+  PodcastService({
+    required NotificationsService notificationsService,
+    required SettingsService settingsService,
+  })  : _notificationsService = notificationsService,
+        _settingsService = settingsService;
 
   final _searchChangedController = StreamController<bool>.broadcast();
   Stream<bool> get searchChanged => _searchChangedController.stream;
@@ -18,25 +23,21 @@ class PodcastService {
   SearchResult? get searchResult => _searchResult;
   Search? _search;
 
-  Future<void> init({
-    bool? usePodcastIndex,
-    String? podcastIndexApiKey,
-    String? podcastIndexApiSecret,
-  }) async {
+  Future<void> init() async {
     _search = Search(
-      searchProvider: usePodcastIndex == true &&
-              podcastIndexApiKey != null &&
-              podcastIndexApiSecret != null
+      searchProvider: _settingsService.usePodcastIndex == true &&
+              _settingsService.podcastIndexApiKey != null &&
+              _settingsService.podcastIndexApiSecret != null
           ? PodcastIndexProvider(
-              key: podcastIndexApiKey,
-              secret: podcastIndexApiSecret,
+              key: _settingsService.podcastIndexApiKey!,
+              secret: _settingsService.podcastIndexApiSecret!,
             )
           : const ITunesProvider(),
     );
   }
 
   Future<void> dispose() async {
-    _searchChangedController.close();
+    await _searchChangedController.close();
   }
 
   Future<SearchResult?> search({

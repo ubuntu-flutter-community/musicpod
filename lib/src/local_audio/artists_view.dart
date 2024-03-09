@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
@@ -9,7 +9,7 @@ import '../l10n/l10n.dart';
 import 'artist_page.dart';
 import 'local_audio_model.dart';
 
-class ArtistsView extends StatelessWidget {
+class ArtistsView extends ConsumerWidget {
   const ArtistsView({
     super.key,
     this.artists,
@@ -21,7 +21,7 @@ class ArtistsView extends StatelessWidget {
   final Widget? noResultMessage, noResultIcon;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (artists == null) {
       return const Center(
         child: Progress(),
@@ -34,15 +34,12 @@ class ArtistsView extends StatelessWidget {
         message: noResultMessage,
       );
     }
-
-    final model = context.read<LocalAudioModel>();
-
+    final model = ref.read(localAudioModelProvider);
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: GridView.builder(
         itemCount: artists!.length,
         padding: gridPadding,
-        shrinkWrap: true,
         gridDelegate: kDiskGridDelegate,
         itemBuilder: (context, index) {
           final artistAudios = model.findArtist(
@@ -50,8 +47,7 @@ class ArtistsView extends StatelessWidget {
           );
           final images = model.findImages(artistAudios ?? {});
 
-          final artistname =
-              artists!.elementAt(index).artist ?? context.l10n.unknown;
+          final text = artists!.elementAt(index).artist ?? context.l10n.unknown;
 
           return YaruSelectableContainer(
             selected: false,
@@ -66,9 +62,19 @@ class ArtistsView extends StatelessWidget {
               ),
             ),
             borderRadius: BorderRadius.circular(300),
-            child: RoundImageContainer(
-              image: images?.firstOrNull,
-              text: artistname.isNotEmpty ? artistname : context.l10n.unknown,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: RoundImageContainer(
+                    images: images,
+                    fallBackText: text,
+                  ),
+                ),
+                ArtistVignette(text: text),
+              ],
             ),
           );
         },
