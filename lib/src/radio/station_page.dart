@@ -79,12 +79,16 @@ class StationPage extends ConsumerWidget {
 
     final showWindowControls =
         ref.watch(appModelProvider.select((m) => m.showWindowControls));
-    final startPlaylist = ref.read(playerModelProvider).startPlaylist;
+    final playerModel = ref.read(playerModelProvider);
     final libraryModel = ref.read(libraryModelProvider);
     final isStarred = station.url == null
         ? false
         : libraryModel.isStarredStation(station.url!);
     ref.watch(libraryModelProvider.select((m) => m.starredStations.length));
+    final isAudioStation = ref.watch(
+      playerModelProvider.select((v) => v.audio == station),
+    );
+    final isPlaying = ref.watch(playerModelProvider.select((v) => v.isPlaying));
 
     final body = Column(
       children: [
@@ -153,14 +157,30 @@ class StationPage extends ConsumerWidget {
                 ),
               ),
             ),
-            onTap: () {
-              station.url == null
-                  ? null
-                  : () => startPlaylist(
-                        audios: {station},
-                        listName: station.url!,
-                      );
-            },
+            icon: isPlaying && isAudioStation ? Iconz().pause : Iconz().play,
+            onTap: station.url == null
+                ? null
+                : () {
+                    if (isPlaying) {
+                      if (isAudioStation) {
+                        playerModel.pause();
+                      } else {
+                        playerModel.startPlaylist(
+                          audios: {station},
+                          listName: station.url!,
+                        );
+                      }
+                    } else {
+                      if (isAudioStation) {
+                        playerModel.resume();
+                      } else {
+                        playerModel.startPlaylist(
+                          audios: {station},
+                          listName: station.url!,
+                        );
+                      }
+                    }
+                  },
           ),
         ),
         const SizedBox(
@@ -169,7 +189,8 @@ class StationPage extends ConsumerWidget {
         Expanded(
           child: RadioHistoryList(
             filter: station.title,
-            emptyMessage: Text(context.l10n.emptyPlaylist),
+            emptyMessage: const SizedBox.shrink(),
+            emptyIcon: const SizedBox.shrink(),
             padding: const EdgeInsets.only(left: 5),
           ),
         ),

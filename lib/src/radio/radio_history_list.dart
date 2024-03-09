@@ -17,10 +17,12 @@ class RadioHistoryList extends ConsumerWidget {
     this.filter,
     this.emptyMessage,
     this.padding,
+    this.emptyIcon,
   });
 
   final String? filter;
   final Widget? emptyMessage;
+  final Widget? emptyIcon;
   final EdgeInsetsGeometry? padding;
 
   @override
@@ -39,7 +41,7 @@ class RadioHistoryList extends ConsumerWidget {
 
     if (radioHistory.isEmpty) {
       return NoSearchResultPage(
-        icons: const AnimatedEmoji(AnimatedEmojis.crystalBall),
+        icons: emptyIcon ?? const AnimatedEmoji(AnimatedEmojis.crystalBall),
         message: emptyMessage ?? Text(context.l10n.emptyHearingHistory),
       );
     }
