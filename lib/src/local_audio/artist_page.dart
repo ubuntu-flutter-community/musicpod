@@ -191,8 +191,6 @@ class _ArtistAlbumsCardGrid extends StatelessWidget {
                           audios: artistAudios!,
                           listName: artist,
                         ),
-                        pause: () {},
-                        resume: () {},
                       ),
                     ),
                     Expanded(

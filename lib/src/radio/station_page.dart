@@ -15,6 +15,7 @@ import '../../radio.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
 import 'radio_fall_back_icon.dart';
+import 'radio_history_list.dart';
 
 class StationPage extends ConsumerWidget {
   const StationPage({
@@ -68,7 +69,6 @@ class StationPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = context.t;
     final radioModel = ref.read(radioModelProvider);
     final tags = station.album?.isNotEmpty == false
         ? null
@@ -86,6 +86,96 @@ class StationPage extends ConsumerWidget {
         : libraryModel.isStarredStation(station.url!);
     ref.watch(libraryModelProvider.select((m) => m.starredStations.length));
 
+    final body = Column(
+      children: [
+        AudioPageHeader(
+          padding: const EdgeInsets.only(
+            left: kYaruPagePadding,
+            top: kYaruPagePadding,
+            bottom: kYaruPagePadding,
+          ),
+          height: kMaxAudioPageHeaderHeight,
+          title: name,
+          subTitle: '',
+          label: '',
+          image: SafeNetworkImage(
+            fallBackIcon: RadioFallBackIcon(
+              iconSize: size / 2,
+              station: station,
+            ),
+            url: station.imageUrl,
+            fit: BoxFit.scaleDown,
+            width: size,
+            height: size,
+          ),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AudioPageHeaderTitle(title: station.title ?? ''),
+              const SizedBox(
+                height: 5,
+              ),
+              AudioPageHeaderSubTitle(
+                label: context.l10n.station,
+                subTitle: station.artist,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: _createTagBar(
+                  tags,
+                  radioModel,
+                  libraryModel,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: kAudioControlPanelPadding,
+          child: AudioPageControlPanel(
+            audios: {station},
+            controlButton: Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: IconButton(
+                tooltip: isStarred
+                    ? context.l10n.removeFromCollection
+                    : context.l10n.addToCollection,
+                onPressed: station.url == null
+                    ? null
+                    : isStarred
+                        ? () => unStarStation(station.url!)
+                        : () => starStation(station.url!),
+                icon: Iconz().getAnimatedStar(
+                  isStarred,
+                ),
+              ),
+            ),
+            onTap: () {
+              station.url == null
+                  ? null
+                  : () => startPlaylist(
+                        audios: {station},
+                        listName: station.url!,
+                      );
+            },
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Expanded(
+          child: RadioHistoryList(
+            filter: station.title,
+            emptyMessage: Text(context.l10n.emptyPlaylist),
+            padding: const EdgeInsets.only(left: 5),
+          ),
+        ),
+      ],
+    );
+
     return YaruDetailPage(
       appBar: HeaderBar(
         style: showWindowControls
@@ -96,140 +186,52 @@ class StationPage extends ConsumerWidget {
             ? const NavBackButton()
             : const SizedBox.shrink(),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 50),
-          child: Center(
-            child: SizedBox(
-              width: size,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 5,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Tooltip(
-                            message:
-                                station.title?.replaceAll('_', '').trim() ?? '',
-                            child: Text(
-                              station.title?.replaceAll('_', '').trim() ?? '',
-                              style: theme.textTheme.bodyLarge,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          tooltip: isStarred
-                              ? context.l10n.removeFromCollection
-                              : context.l10n.addToCollection,
-                          onPressed: station.url == null
-                              ? null
-                              : isStarred
-                                  ? () => unStarStation(station.url!)
-                                  : () => starStation(station.url!),
-                          icon: Iconz().getAnimatedStar(
-                            isStarred,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  AudioCard(
-                    color: theme.isLight ? theme.dividerColor : kCardColorDark,
-                    height: size,
-                    width: size,
-                    onTap: station.url == null
-                        ? null
-                        : () => startPlaylist(
-                              audios: {station},
-                              listName: station.url!,
-                            ),
-                    onPlay: station.url == null
-                        ? null
-                        : () => startPlaylist(
-                              audios: {station},
-                              listName: station.url!,
-                            ),
-                    image: SizedBox(
-                      height: size,
-                      width: size,
-                      child: SafeNetworkImage(
-                        fallBackIcon: RadioFallBackIcon(
-                          iconSize: size / 2,
-                          station: station,
-                        ),
-                        url: station.imageUrl,
-                        fit: BoxFit.scaleDown,
-                        width: size,
-                        height: size,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 15,
-                        left: 5,
-                        right: 5,
-                      ),
-                      child: (tags?.isNotEmpty == true)
-                          ? YaruChoiceChipBar(
-                              goNextIcon: Padding(
-                                padding: appleStyled
-                                    ? const EdgeInsets.only(left: 3)
-                                    : EdgeInsets.zero,
-                                child: Icon(Iconz().goNext),
-                              ),
-                              goPreviousIcon: Padding(
-                                padding: appleStyled
-                                    ? const EdgeInsets.only(right: 3)
-                                    : EdgeInsets.zero,
-                                child: Icon(Iconz().goBack),
-                              ),
-                              chipHeight: chipHeight,
-                              yaruChoiceChipBarStyle:
-                                  YaruChoiceChipBarStyle.stack,
-                              shrinkWrap: false,
-                              labels: tags!.map((e) => Text(e)).toList(),
-                              isSelected: tags.map((e) => false).toList(),
-                              onSelected: (index) {
-                                radioModel
-                                    .init(
-                                      countryCode: countryCode,
-                                      index: libraryModel.radioindex,
-                                    )
-                                    .then(
-                                      (_) => navigatorKey.currentState?.push(
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return RadioSearchPage(
-                                              radioSearch: RadioSearch.tag,
-                                              searchQuery: tags[index],
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    );
-                              },
-                            )
-                          : SizedBox(
-                              height: chipHeight,
-                            ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+      body: body,
+    );
+  }
+
+  Widget _createTagBar(
+    List<String>? tags,
+    RadioModel radioModel,
+    LibraryModel libraryModel,
+  ) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(right: kYaruPagePadding),
+      child: YaruChoiceChipBar(
+        goNextIcon: Padding(
+          padding:
+              appleStyled ? const EdgeInsets.only(left: 3) : EdgeInsets.zero,
+          child: Icon(Iconz().goNext),
         ),
+        goPreviousIcon: Padding(
+          padding:
+              appleStyled ? const EdgeInsets.only(right: 3) : EdgeInsets.zero,
+          child: Icon(Iconz().goBack),
+        ),
+        chipHeight: chipHeight,
+        yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+        labels: tags!.map((e) => Text(e)).toList(),
+        isSelected: tags.map((e) => false).toList(),
+        clearOnSelect: false,
+        onSelected: (index) {
+          radioModel
+              .init(
+                countryCode: countryCode,
+                index: libraryModel.radioindex,
+              )
+              .then(
+                (_) => navigatorKey.currentState?.push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return RadioSearchPage(
+                        radioSearch: RadioSearch.tag,
+                        searchQuery: tags[index],
+                      );
+                    },
+                  ),
+                ),
+              );
+        },
       ),
     );
   }

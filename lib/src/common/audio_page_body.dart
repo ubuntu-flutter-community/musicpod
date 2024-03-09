@@ -143,8 +143,6 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
       padding: kAudioControlPanelPadding,
       child: AudioPageControlPanel(
         title: widget.controlPanelTitle,
-        pause: pause,
-        resume: resume,
         onTap: widget.audios?.isNotEmpty == false
             ? null
             : () => startPlaylist(
