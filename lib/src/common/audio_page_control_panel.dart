@@ -14,6 +14,7 @@ class AudioPageControlPanel extends StatelessWidget {
     this.controlButton,
     required this.onTap,
     this.title,
+    this.icon,
   });
 
   final Set<Audio> audios;
@@ -21,6 +22,7 @@ class AudioPageControlPanel extends StatelessWidget {
 
   final Widget? controlButton;
   final void Function()? onTap;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +57,7 @@ class AudioPageControlPanel extends StatelessWidget {
                       ? const EdgeInsets.only(left: 3)
                       : EdgeInsets.zero,
                   child: Icon(
-                    Iconz().playFilled,
+                    icon ?? Iconz().playFilled,
                     color: theme.colorScheme.onInverseSurface,
                   ),
                 ),
