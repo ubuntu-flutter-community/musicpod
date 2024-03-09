@@ -12,19 +12,35 @@ import '../../radio.dart';
 import '../common/icy_image.dart';
 
 class RadioHistoryList extends ConsumerWidget {
-  const RadioHistoryList({super.key});
+  const RadioHistoryList({
+    super.key,
+    this.filter,
+    this.emptyMessage,
+    this.padding,
+  });
+
+  final String? filter;
+  final Widget? emptyMessage;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final radioHistory =
-        ref.watch(libraryModelProvider.select((l) => l.radioHistory));
+    final radioHistory = ref.watch(
+      libraryModelProvider.select(
+        (l) => l.radioHistory.entries.where(
+          (e) =>
+              e.value.icyName.contains(filter ?? '') ||
+              (filter?.contains(e.value.icyName) ?? true),
+        ),
+      ),
+    );
     final current = ref.watch(playerModelProvider.select((p) => p.mpvMetaData));
     final radioModel = ref.read(radioModelProvider);
 
     if (radioHistory.isEmpty) {
       return NoSearchResultPage(
         icons: const AnimatedEmoji(AnimatedEmojis.crystalBall),
-        message: Text(context.l10n.emptyHearingHistory),
+        message: emptyMessage ?? Text(context.l10n.emptyHearingHistory),
       );
     }
 
@@ -34,13 +50,14 @@ class RadioHistoryList extends ConsumerWidget {
         physics: const PositionRetainedScrollPhysics(),
         reverse: true,
         shrinkWrap: true,
-        padding: const EdgeInsets.only(
-          left: 10,
-          bottom: kYaruPagePadding,
-        ),
+        padding: padding ??
+            const EdgeInsets.only(
+              left: 10,
+              bottom: kYaruPagePadding,
+            ),
         itemCount: radioHistory.length,
         itemBuilder: (context, index) {
-          final e = radioHistory.entries.elementAt(index);
+          final e = radioHistory.elementAt(index);
           return ListTile(
             selected: current?.icyTitle != null &&
                 current?.icyTitle == e.value.icyTitle,

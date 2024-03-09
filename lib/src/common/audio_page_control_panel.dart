@@ -13,8 +13,6 @@ class AudioPageControlPanel extends StatelessWidget {
     required this.audios,
     this.controlButton,
     required this.onTap,
-    required this.pause,
-    required this.resume,
     this.title,
   });
 
@@ -23,8 +21,6 @@ class AudioPageControlPanel extends StatelessWidget {
 
   final Widget? controlButton;
   final void Function()? onTap;
-  final void Function() pause;
-  final void Function() resume;
 
   @override
   Widget build(BuildContext context) {

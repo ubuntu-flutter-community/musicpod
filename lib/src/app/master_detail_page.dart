@@ -58,7 +58,7 @@ class MasterDetailPage extends ConsumerWidget {
           ],
         ),
         layoutDelegate: const YaruMasterFixedPaneDelegate(
-          paneWidth: 250,
+          paneWidth: kMasterDetailSideBarWidth,
         ),
         breakpoint: kMasterDetailBreakPoint,
         controller: YaruPageController(
