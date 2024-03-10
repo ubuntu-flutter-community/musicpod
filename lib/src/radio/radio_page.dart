@@ -12,14 +12,7 @@ import 'radio_lib_page.dart';
 import 'radio_model.dart';
 
 class RadioPage extends ConsumerStatefulWidget {
-  const RadioPage({
-    super.key,
-    required this.isOnline,
-    this.countryCode,
-  });
-
-  final bool isOnline;
-  final String? countryCode;
+  const RadioPage({super.key});
 
   @override
   ConsumerState<RadioPage> createState() => _RadioPageState();
@@ -32,16 +25,17 @@ class _RadioPageState extends ConsumerState<RadioPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final model = ref.read(radioModelProvider);
+      final appModel = ref.read(appModelProvider);
       final libraryModel = ref.read(libraryModelProvider);
       final index = libraryModel.radioindex;
       model
           .init(
-        countryCode: widget.countryCode,
+        countryCode: appModel.countryCode,
         index: index,
       )
           .then(
         (connectedHost) {
-          if (!widget.isOnline) {
+          if (!appModel.isOnline) {
             return;
           }
 
@@ -58,6 +52,8 @@ class _RadioPageState extends ConsumerState<RadioPage> {
     RadioModel model,
     int index,
   ) {
+    final appModel = ref.read(appModelProvider);
+
     return SnackBar(
       duration: connectedHost != null
           ? const Duration(seconds: 1)
@@ -70,7 +66,7 @@ class _RadioPageState extends ConsumerState<RadioPage> {
       action: (connectedHost == null)
           ? SnackBarAction(
               onPressed: () => model.init(
-                countryCode: widget.countryCode,
+                countryCode: appModel.countryCode,
                 index: index,
               ),
               label: context.l10n.tryReconnect,
@@ -83,44 +79,43 @@ class _RadioPageState extends ConsumerState<RadioPage> {
   Widget build(BuildContext context) {
     final showWindowControls =
         ref.watch(appModelProvider.select((m) => m.showWindowControls));
+    final isOnline = ref.watch(appModelProvider.select((m) => m.isOnline));
+    if (!isOnline) return const OfflinePage();
 
     ref.watch(libraryModelProvider.select((m) => m.favTagsLength));
+    final appModel = ref.read(appModelProvider);
 
-    if (!widget.isOnline) {
-      return const OfflinePage();
-    } else {
-      return Scaffold(
-        appBar: HeaderBar(
-          style: showWindowControls
-              ? YaruTitleBarStyle.normal
-              : YaruTitleBarStyle.undecorated,
-          titleSpacing: 0,
-          leading: navigatorKey.currentState?.canPop() == true
-              ? const NavBackButton()
-              : const SizedBox.shrink(),
-          actions: [
-            Flexible(
-              child: Padding(
-                padding: appBarActionSpacing,
-                child: SearchButton(
-                  active: false,
-                  onPressed: () {
-                    navigatorKey.currentState?.push(
-                      MaterialPageRoute(
-                        builder: (context) => const RadioDiscoverPage(),
-                      ),
-                    );
-                  },
-                ),
+    return Scaffold(
+      appBar: HeaderBar(
+        style: showWindowControls
+            ? YaruTitleBarStyle.normal
+            : YaruTitleBarStyle.undecorated,
+        titleSpacing: 0,
+        leading: navigatorKey.currentState?.canPop() == true
+            ? const NavBackButton()
+            : const SizedBox.shrink(),
+        actions: [
+          Flexible(
+            child: Padding(
+              padding: appBarActionSpacing,
+              child: SearchButton(
+                active: false,
+                onPressed: () {
+                  navigatorKey.currentState?.push(
+                    MaterialPageRoute(
+                      builder: (context) => const RadioDiscoverPage(),
+                    ),
+                  );
+                },
               ),
             ),
-          ],
-          title: Text('${context.l10n.radio} ${context.l10n.collection}'),
-        ),
-        body: RadioLibPage(
-          isOnline: widget.isOnline,
-        ),
-      );
-    }
+          ),
+        ],
+        title: Text('${context.l10n.radio} ${context.l10n.collection}'),
+      ),
+      body: RadioLibPage(
+        isOnline: appModel.isOnline,
+      ),
+    );
   }
 }

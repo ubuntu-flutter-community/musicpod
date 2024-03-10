@@ -1,12 +1,20 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 
 class AppModel extends SafeChangeNotifier {
-  AppModel({required Connectivity connectivity}) : _connectivity = connectivity;
+  AppModel({required Connectivity connectivity})
+      : _connectivity = connectivity,
+        _countryCode = WidgetsBinding
+            .instance.platformDispatcher.locale.countryCode
+            ?.toLowerCase();
+
+  final String? _countryCode;
+  String? get countryCode => _countryCode;
 
   final Connectivity _connectivity;
   StreamSubscription? _subscription;
