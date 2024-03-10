@@ -47,9 +47,16 @@ class AudioPageHeader extends StatelessWidget {
     final radius = imageRadius ?? BorderRadius.circular(10);
 
     return Padding(
-      padding: height != kMinAudioPageHeaderHeight
-          ? padding ?? const EdgeInsets.all(20)
-          : const EdgeInsets.only(left: 20),
+      padding: height == kMinAudioPageHeaderHeight
+          ? EdgeInsets.zero
+          : !smallWindow
+              ? (padding ??
+                  const EdgeInsets.only(
+                    bottom: kYaruPagePadding,
+                    left: kYaruPagePadding,
+                    right: kYaruPagePadding,
+                  ))
+              : const EdgeInsets.symmetric(vertical: kYaruPagePadding),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         height: height,

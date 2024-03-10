@@ -4,7 +4,6 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
-import '../../theme.dart';
 import '../l10n/l10n.dart';
 
 class AudioPageControlPanel extends StatelessWidget {
@@ -52,14 +51,9 @@ class AudioPageControlPanel extends StatelessWidget {
                     onCancel: () {},
                   );
                 },
-                icon: Padding(
-                  padding: appleStyled
-                      ? const EdgeInsets.only(left: 3)
-                      : EdgeInsets.zero,
-                  child: Icon(
-                    icon ?? Iconz().playFilled,
-                    color: theme.colorScheme.onInverseSurface,
-                  ),
+                icon: Icon(
+                  icon ?? Iconz().playFilled,
+                  color: theme.colorScheme.onInverseSurface,
                 ),
               ),
             ),
