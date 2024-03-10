@@ -24,14 +24,12 @@ class StationPage extends ConsumerWidget {
     required this.name,
     required this.unStarStation,
     required this.starStation,
-    this.countryCode,
   });
 
   final Audio station;
   final String name;
   final void Function(String station) unStarStation;
   final void Function(String station) starStation;
-  final String? countryCode;
 
   static Widget createIcon({
     required BuildContext context,
@@ -69,6 +67,11 @@ class StationPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final appModel = ref.read(appModelProvider);
+    final isOnline =
+        ref.watch(appModelProvider.select((value) => value.isOnline));
+    if (!isOnline) return const OfflinePage();
+
     final radioModel = ref.read(radioModelProvider);
     final tags = station.album?.isNotEmpty == false
         ? null
@@ -129,9 +132,10 @@ class StationPage extends ConsumerWidget {
               ),
               Expanded(
                 child: _createTagBar(
-                  tags,
-                  radioModel,
-                  libraryModel,
+                  tags: tags,
+                  radioModel: radioModel,
+                  libraryModel: libraryModel,
+                  appModel: appModel,
                 ),
               ),
             ],
@@ -211,11 +215,12 @@ class StationPage extends ConsumerWidget {
     );
   }
 
-  Widget _createTagBar(
-    List<String>? tags,
-    RadioModel radioModel,
-    LibraryModel libraryModel,
-  ) {
+  Widget _createTagBar({
+    required List<String>? tags,
+    required RadioModel radioModel,
+    required LibraryModel libraryModel,
+    required AppModel appModel,
+  }) {
     return SingleChildScrollView(
       padding: const EdgeInsets.only(right: kYaruPagePadding),
       child: YaruChoiceChipBar(
@@ -237,7 +242,7 @@ class StationPage extends ConsumerWidget {
         onSelected: (index) {
           radioModel
               .init(
-                countryCode: countryCode,
+                countryCode: appModel.countryCode,
                 index: libraryModel.radioindex,
               )
               .then(

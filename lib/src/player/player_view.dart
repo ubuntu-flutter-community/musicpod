@@ -9,12 +9,9 @@ import '../../theme_data_x.dart';
 import '../theme.dart';
 
 class PlayerView extends ConsumerStatefulWidget {
-  const PlayerView({
-    super.key,
-    required this.playerViewMode,
-  });
+  const PlayerView({super.key, required this.mode});
 
-  final PlayerViewMode playerViewMode;
+  final PlayerViewMode mode;
 
   @override
   ConsumerState<PlayerView> createState() => _PlayerViewState();
@@ -28,7 +25,7 @@ class _PlayerViewState extends ConsumerState<PlayerView> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
       ref.read(appModelProvider).setShowWindowControls(
-            widget.playerViewMode != PlayerViewMode.sideBar,
+            widget.mode != PlayerViewMode.sideBar,
           );
     });
   }
@@ -40,7 +37,7 @@ class _PlayerViewState extends ConsumerState<PlayerView> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
       ref.read(appModelProvider).setShowWindowControls(
-            widget.playerViewMode != PlayerViewMode.sideBar,
+            widget.mode != PlayerViewMode.sideBar,
           );
     });
   }
@@ -65,11 +62,11 @@ class _PlayerViewState extends ConsumerState<PlayerView> {
     final isVideo = ref.watch(playerModelProvider.select((m) => m.isVideo));
 
     Widget player;
-    if (widget.playerViewMode != PlayerViewMode.bottom) {
+    if (widget.mode != PlayerViewMode.bottom) {
       player = FullHeightPlayer(
         isVideo: isVideo == true,
         videoController: playerModel.controller,
-        playerViewMode: widget.playerViewMode,
+        playerViewMode: widget.mode,
         appModel: appModel,
         nextAudio: nextAudio,
         audio: audio,

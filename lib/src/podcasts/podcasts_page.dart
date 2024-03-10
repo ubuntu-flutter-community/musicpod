@@ -19,14 +19,7 @@ import 'podcasts_discover_grid.dart';
 import 'podcasts_page_title.dart';
 
 class PodcastsPage extends ConsumerStatefulWidget {
-  const PodcastsPage({
-    super.key,
-    required this.isOnline,
-    this.countryCode,
-  });
-
-  final bool isOnline;
-  final String? countryCode;
+  const PodcastsPage({super.key});
 
   @override
   ConsumerState<PodcastsPage> createState() => _PodcastsPageState();
@@ -38,10 +31,12 @@ class _PodcastsPageState extends ConsumerState<PodcastsPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final settingsModel = ref.read(settingsModelProvider);
+      final appModel = ref.read(appModelProvider);
+
       ref.read(podcastModelProvider).init(
-            countryCode: widget.countryCode,
+            countryCode: appModel.countryCode,
             updateMessage: context.l10n.newEpisodeAvailable,
-            isOnline: widget.isOnline,
+            isOnline: appModel.isOnline,
             usePodcastIndex: settingsModel.usePodcastIndex,
             podcastIndexApiKey: settingsModel.podcastIndexApiKey,
             podcastIndexApiSecret: settingsModel.podcastIndexApiSecret,
@@ -51,9 +46,9 @@ class _PodcastsPageState extends ConsumerState<PodcastsPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.isOnline) {
-      return const OfflinePage();
-    }
+    final isOnline =
+        ref.watch(appModelProvider.select((value) => value.isOnline));
+    if (!isOnline) return const OfflinePage();
 
     final model = ref.read(podcastModelProvider);
     final searchResult =
@@ -148,7 +143,7 @@ class _PodcastsPageState extends ConsumerState<PodcastsPage> {
 
     final subsBody = PodcastsCollectionBody(
       loading: checkingForUpdates,
-      isOnline: widget.isOnline,
+      isOnline: isOnline,
     );
 
     return Scaffold(

@@ -24,16 +24,11 @@ class App extends ConsumerStatefulWidget {
 }
 
 class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
-  String? _countryCode;
-
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addObserver(this);
-
-    _countryCode = WidgetsBinding.instance.platformDispatcher.locale.countryCode
-        ?.toLowerCase();
 
     final libraryModel = ref.read(libraryModelProvider);
     final settingsModel = ref.read(settingsModelProvider);
@@ -87,7 +82,8 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final playerToTheRight = context.m.size.width > kSideBarThreshHold;
 
-    final appModel = ref.read(appModelProvider);
+    final lockSpace =
+        ref.watch(appModelProvider.select((value) => value.lockSpace));
     final isFullScreen =
         ref.watch(appModelProvider.select((value) => value.fullScreen));
     final playerModel = ref.read(playerModelProvider);
@@ -97,7 +93,7 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
       onKeyEvent: (value) async {
         if (value.runtimeType == KeyDownEvent &&
             value.logicalKey == LogicalKeyboardKey.space) {
-          if (!appModel.lockSpace) {
+          if (!lockSpace) {
             playerModel.playOrPause();
           }
         }
@@ -110,32 +106,22 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
               Expanded(
                 child: Column(
                   children: [
-                    Expanded(
-                      child: MasterDetailPage(
-                        countryCode: _countryCode,
-                      ),
-                    ),
+                    const Expanded(child: MasterDetailPage()),
                     if (!playerToTheRight)
-                      const PlayerView(
-                        playerViewMode: PlayerViewMode.bottom,
-                      ),
+                      const PlayerView(mode: PlayerViewMode.bottom),
                   ],
                 ),
               ),
               if (playerToTheRight)
                 const SizedBox(
                   width: kSideBarPlayerWidth,
-                  child: PlayerView(
-                    playerViewMode: PlayerViewMode.sideBar,
-                  ),
+                  child: PlayerView(mode: PlayerViewMode.sideBar),
                 ),
             ],
           ),
           if (isFullScreen == true)
             const Scaffold(
-              body: PlayerView(
-                playerViewMode: PlayerViewMode.fullWindow,
-              ),
+              body: PlayerView(mode: PlayerViewMode.fullWindow),
             ),
         ],
       ),
