@@ -14,6 +14,7 @@ import 'package:smtc_windows/smtc_windows.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
+import '../../string_x.dart';
 import '../../utils.dart';
 import 'my_audio_handler.dart';
 
@@ -74,7 +75,7 @@ class PlayerService {
     }
     if (validHistoryElement) {
       libraryService.addRadioHistoryElement(
-        icyTitle: mpvMetaData!.icyTitle,
+        icyTitle: mpvMetaData!.icyTitle.capitalizeEveryWord(),
         mpvMetaData: mpvMetaData!.copyWith(
           icyName: audio?.title?.trim() ?? _mpvMetaData?.icyName ?? '',
         ),

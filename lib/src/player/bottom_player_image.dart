@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
@@ -44,14 +45,20 @@ class BottomPlayerImage extends ConsumerWidget {
     }
     if (isVideo == true) {
       return RepaintBoundary(
-        child: Video(
-          height: size,
-          width: size,
-          filterQuality: FilterQuality.medium,
-          controller: videoController,
-          controls: (state) {
-            return const SizedBox.shrink();
-          },
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () => ref.read(appModelProvider).setFullScreen(true),
+            child: Video(
+              height: size,
+              width: size,
+              filterQuality: FilterQuality.medium,
+              controller: videoController,
+              controls: (state) {
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
         ),
       );
     } else if (audio?.pictureData != null) {
