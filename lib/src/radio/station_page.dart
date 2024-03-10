@@ -221,6 +221,8 @@ class StationPage extends ConsumerWidget {
     required LibraryModel libraryModel,
     required AppModel appModel,
   }) {
+    if (tags == null || tags.isEmpty) return const SizedBox.shrink();
+
     return SingleChildScrollView(
       padding: const EdgeInsets.only(right: kYaruPagePadding),
       child: YaruChoiceChipBar(
@@ -236,7 +238,7 @@ class StationPage extends ConsumerWidget {
         ),
         chipHeight: chipHeight,
         yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-        labels: tags!.map((e) => Text(e)).toList(),
+        labels: tags.map((e) => Text(e)).toList(),
         isSelected: tags.map((e) => false).toList(),
         clearOnSelect: false,
         onSelected: (index) {
