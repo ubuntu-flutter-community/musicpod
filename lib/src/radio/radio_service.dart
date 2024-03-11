@@ -63,50 +63,31 @@ class RadioService {
     }
 
     RadioBrowserListResponse<Station>? response;
+    final parameters = InputParameters(
+      hidebroken: true,
+      order: 'stationcount',
+      limit: limit,
+    );
     try {
       if (name?.isEmpty == false) {
-        response = await _radioBrowserApi!.getStationsByName(
-          name: name!,
-          parameters: InputParameters(
-            hidebroken: true,
-            order: 'stationcount',
-            limit: limit,
-          ),
-        );
+        response = await _radioBrowserApi!
+            .getStationsByName(name: name!, parameters: parameters);
       } else if (country?.isEmpty == false) {
-        response = await _radioBrowserApi!.getStationsByCountry(
-          country: country!,
-          parameters: InputParameters(
-            hidebroken: true,
-            order: 'stationcount',
-            limit: limit,
-          ),
-        );
-      } else if (tag != null) {
-        response = await _radioBrowserApi!.getStationsByTag(
-          tag: tag,
-          parameters: InputParameters(
-            hidebroken: true,
-            order: 'stationcount',
-            limit: limit,
-          ),
-        );
+        response = await _radioBrowserApi!
+            .getStationsByCountry(country: country!, parameters: parameters);
+      } else if (tag?.isEmpty == false) {
+        response = await _radioBrowserApi!
+            .getStationsByTag(tag: tag!, parameters: parameters);
       } else if (state?.isEmpty == false) {
-        response = await _radioBrowserApi!.getStationsByState(
-          state: state!,
-          parameters: InputParameters(
-            hidebroken: true,
-            order: 'stationcount',
-            limit: limit,
-          ),
-        );
+        response = await _radioBrowserApi!
+            .getStationsByState(state: state!, parameters: parameters);
       }
     } on Exception catch (e) {
       if (e is SocketException) {
         return [];
       }
     }
-    return response?.items;
+    return response?.items ?? [];
   }
 
   List<Tag>? _tags;

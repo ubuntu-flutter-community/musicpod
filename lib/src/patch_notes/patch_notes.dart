@@ -133,8 +133,19 @@ const kPatchNotes20240308 = 'Hello MusicPod Users 💙🐧🧡\n'
     '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
     '\n';
 
-const kRecentPatchNotesDisposed = kPatchNotes20240308disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20240308;
-const kRecentPatchNotes = kPatchNotes20240308;
+// 2024 03 11
+const kPatchNotes20240311disposed = 'patchNotes20240311disposed';
+const kPatchNotesTitle20240311 = 'Patch notes: 2024-03-11';
+const kPatchNotes20240311 = 'Hello MusicPod Users 💙🐧🧡\n'
+    '\n* New features:'
+    '\n* drag and drop files to a playlist page'
+    '\n* fast add media from the + button on a playlist page'
+    '\n* + several bug fixes'
+    '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
+    '\n';
+
+const kRecentPatchNotesDisposed = kPatchNotes20240311disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20240311;
+const kRecentPatchNotes = kPatchNotes20240311;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';
