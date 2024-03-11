@@ -57,28 +57,37 @@ class _RadioSearchPageState extends ConsumerState<RadioSearchPage> {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return LoadingGrid(limit: widget.limit);
-        }
-        if (snapshot.data?.isEmpty == true) {
-          return NoSearchResultPage(
-            icons: const AnimatedEmoji(AnimatedEmojis.dog),
-            message: Text(context.l10n.noStationFound),
-          );
         } else {
-          return GridView.builder(
-            padding: gridPadding,
-            gridDelegate: audioCardGridDelegate,
-            itemCount: snapshot.data?.length,
-            itemBuilder: (context, index) {
-              final station = snapshot.data?.elementAt(index);
-              return StationCard(
-                station: station,
-                startPlaylist: playerModel.startPlaylist,
-                isStarredStation: libraryModel.isStarredStation,
-                unstarStation: libraryModel.unStarStation,
-                starStation: libraryModel.addStarredStation,
-              );
-            },
-          );
+          if (snapshot.data?.isEmpty == true) {
+            return NoSearchResultPage(
+              icons: AnimatedEmoji(
+                widget.searchQuery?.isNotEmpty == true
+                    ? AnimatedEmojis.dog
+                    : AnimatedEmojis.drum,
+              ),
+              message: Text(
+                widget.searchQuery?.isNotEmpty == true
+                    ? context.l10n.noStationFound
+                    : '',
+              ),
+            );
+          } else {
+            return GridView.builder(
+              padding: gridPadding,
+              gridDelegate: audioCardGridDelegate,
+              itemCount: snapshot.data?.length,
+              itemBuilder: (context, index) {
+                final station = snapshot.data?.elementAt(index);
+                return StationCard(
+                  station: station,
+                  startPlaylist: playerModel.startPlaylist,
+                  isStarredStation: libraryModel.isStarredStation,
+                  unstarStation: libraryModel.unStarStation,
+                  starStation: libraryModel.addStarredStation,
+                );
+              },
+            );
+          }
         }
       },
     );
