@@ -14,8 +14,8 @@ import 'podcast_service_test.mocks.dart';
 const Audio episodeOneAudio = Audio(
   url:
       'https://aphid.fireside.fm/d/1437767933/f31a453c-fa15-491f-8618-3f71f1d565e5/1c572137-1d75-4eb6-a07b-0bd4859d6e1a.mp3',
-  website: 'https://feeds.fireside.fm/linuxunplugged/rss',
-  album: 'LINUX Unplugged',
+  website: 'https://feeds.jupiterbroadcasting.com/lup',
+  album: 'LUP LIVE Only - From Yuba City California',
   artist: 'Jupiter Broadcasting',
   title: 'Episode 1: Too Much Choice | LU1',
 );
@@ -41,6 +41,7 @@ Future<void> main() async {
     if (feedUrl != null) {
       episodes = await findEpisodes(feedUrl: feedUrl);
     }
+
     expect(episodes?.last.url == episodeOneAudio.url, true);
     expect(episodes?.last.website == episodeOneAudio.website, true);
     expect(episodes?.last.artist == episodeOneAudio.artist, true);
