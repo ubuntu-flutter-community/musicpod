@@ -56,17 +56,18 @@ class SuperNetworkImage extends StatelessWidget {
       color: theme.isLight ? kCardColorLight : kCardColorDark,
       height: height,
       width: width,
-      child: mpvMetaData?.icyTitle != null
-          ? IcyImage(
-              mpvMetaData: mpvMetaData!,
-              fallBackWidget: safeNetworkImage,
-              height: height,
-              width: width,
-              fit: fit,
-              onImageFind: onImageFind,
-              onGenreTap: onGenreTap,
-            )
-          : safeNetworkImage,
+      child:
+          mpvMetaData?.icyTitle != null && audio?.audioType == AudioType.radio
+              ? IcyImage(
+                  mpvMetaData: mpvMetaData!,
+                  fallBackWidget: safeNetworkImage,
+                  height: height,
+                  width: width,
+                  fit: fit,
+                  onImageFind: onImageFind,
+                  onGenreTap: onGenreTap,
+                )
+              : safeNetworkImage,
     );
   }
 }
