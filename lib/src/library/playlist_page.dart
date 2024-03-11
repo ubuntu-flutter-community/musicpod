@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 import '../../common.dart';
 import '../../data.dart';
@@ -24,67 +28,117 @@ class PlaylistPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final model = ref.read(localAudioModelProvider);
     final libraryModel = ref.read(libraryModelProvider);
-    return AudioPage(
-      onAlbumTap: (text) {
-        final albumAudios = model.findAlbum(Audio(album: text));
-        if (albumAudios?.firstOrNull == null) return;
-        final id = generateAlbumId(albumAudios!.first);
-        if (id == null) return;
+    final failedImports = <String>[];
+    return DropRegion(
+      formats: Formats.standardFormats,
+      hitTestBehavior: HitTestBehavior.opaque,
+      onDropEnded: (p0) {
+        if (failedImports.isEmpty) return;
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) {
-              return AlbumPage(
-                isPinnedAlbum: libraryModel.isPinnedAlbum,
-                removePinnedAlbum: libraryModel.removePinnedAlbum,
-                addPinnedAlbum: libraryModel.addPinnedAlbum,
-                id: id,
-                album: albumAudios,
-              );
-            },
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: const Duration(seconds: 10),
+            content: FailedImportsContent(
+              onNeverShowFailedImports: () {},
+              failedImports: failedImports,
+            ),
           ),
         );
       },
-      onArtistTap: (text) {
-        final artistAudios = model.findArtist(Audio(artist: text));
-        final images = model.findImages(artistAudios ?? {});
+      onPerformDrop: (event) async {
+        for (var item in event.session.items) {
+          final reader = item.dataReader!;
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) {
-              return ArtistPage(
-                images: images,
-                artistAudios: artistAudios,
+          reader.getValue(
+            Formats.fileUri,
+            (value) {
+              if (value == null) return;
+              final file = File.fromUri(value);
+              if (!isValidFile(file.path)) return;
+              readMetadata(file, getImage: true).then(
+                (data) {
+                  libraryModel.addAudioToPlaylist(
+                    playlist.key,
+                    Audio.fromMetadata(path: file.path, data: data),
+                  );
+                },
               );
             },
-          ),
-        );
+            onError: (value) {
+              failedImports.add(value.toString());
+            },
+          );
+        }
       },
-      showAudioTileHeader:
-          playlist.value.any((e) => e.audioType != AudioType.podcast),
-      audioPageType: AudioPageType.playlist,
-      image: FallBackHeaderImage(
-        color: getAlphabetColor(playlist.key),
-        child: Icon(
-          Iconz().playlist,
-          size: 65,
+      onDropOver: (event) {
+        if (event.session.allowedOperations.contains(DropOperation.copy)) {
+          return DropOperation.copy;
+        } else {
+          return DropOperation.none;
+        }
+      },
+      child: AudioPage(
+        onAlbumTap: (text) {
+          final albumAudios = model.findAlbum(Audio(album: text));
+          if (albumAudios?.firstOrNull == null) return;
+          final id = generateAlbumId(albumAudios!.first);
+          if (id == null) return;
+
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) {
+                return AlbumPage(
+                  isPinnedAlbum: libraryModel.isPinnedAlbum,
+                  removePinnedAlbum: libraryModel.removePinnedAlbum,
+                  addPinnedAlbum: libraryModel.addPinnedAlbum,
+                  id: id,
+                  album: albumAudios,
+                );
+              },
+            ),
+          );
+        },
+        onArtistTap: (text) {
+          final artistAudios = model.findArtist(Audio(artist: text));
+          final images = model.findImages(artistAudios ?? {});
+
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) {
+                return ArtistPage(
+                  images: images,
+                  artistAudios: artistAudios,
+                );
+              },
+            ),
+          );
+        },
+        showAudioTileHeader:
+            playlist.value.any((e) => e.audioType != AudioType.podcast),
+        audioPageType: AudioPageType.playlist,
+        image: FallBackHeaderImage(
+          color: getAlphabetColor(playlist.key),
+          child: Icon(
+            Iconz().playlist,
+            size: 65,
+          ),
         ),
-      ),
-      headerLabel: context.l10n.playlist,
-      headerTitle: playlist.key,
-      audios: playlist.value,
-      pageId: playlist.key,
-      noResultMessage: Text(context.l10n.emptyPlaylist),
-      controlPanelButton: IconButton(
-        icon: Icon(Iconz().pen),
-        onPressed: () => showDialog(
-          context: context,
-          builder: (context) => PlaylistDialog(
-            playlistName: playlist.key,
-            initialValue: playlist.key,
-            allowDelete: true,
-            allowRename: true,
-            libraryModel: libraryModel,
+        headerLabel: context.l10n.playlist,
+        headerTitle: playlist.key,
+        audios: playlist.value,
+        pageId: playlist.key,
+        noResultMessage: Text(context.l10n.emptyPlaylist),
+        controlPanelButton: IconButton(
+          icon: Icon(Iconz().pen),
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => PlaylistDialog(
+              playlistName: playlist.key,
+              initialValue: playlist.key,
+              allowDelete: true,
+              allowRename: true,
+              libraryModel: libraryModel,
+            ),
           ),
         ),
       ),
