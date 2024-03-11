@@ -64,7 +64,6 @@ class PodcastPage extends ConsumerWidget {
         ref.watch(podcastModelProvider.select((m) => m.checkingForUpdates));
 
     return AudioPage(
-      showAudioTileHeader: false,
       audioPageType: AudioPageType.podcast,
       image: imageUrl == null
           ? null

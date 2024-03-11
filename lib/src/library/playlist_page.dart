@@ -114,8 +114,6 @@ class PlaylistPage extends ConsumerWidget {
             ),
           );
         },
-        showAudioTileHeader:
-            playlist.value.any((e) => e.audioType != AudioType.podcast),
         audioPageType: AudioPageType.playlist,
         image: FallBackHeaderImage(
           color: getAlphabetColor(playlist.key),

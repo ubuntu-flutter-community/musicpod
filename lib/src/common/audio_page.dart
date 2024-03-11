@@ -5,7 +5,6 @@ import 'package:yaru/yaru.dart';
 import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
-import '../l10n/l10n.dart';
 
 class AudioPage extends StatelessWidget {
   const AudioPage({
@@ -20,7 +19,6 @@ class AudioPage extends StatelessWidget {
     this.headerLabel,
     this.headerDescription,
     this.image,
-    this.showAudioPageHeader = true,
     this.onAlbumTap,
     this.onArtistTap,
     this.noResultMessage,
@@ -35,8 +33,6 @@ class AudioPage extends StatelessWidget {
     this.showTrack = true,
     this.showAlbum = true,
     this.showArtist = true,
-    this.showAudioTileHeader = true,
-    this.showControlPanel = true,
     this.imageRadius,
     this.onLabelTab,
     this.onSubTitleTab,
@@ -57,9 +53,6 @@ class AudioPage extends StatelessWidget {
   final Widget? noResultIcon;
   final String? titleLabel, artistLabel, albumLabel;
   final int titleFlex, artistFlex, albumFlex;
-  final bool showAudioPageHeader;
-  final bool showAudioTileHeader;
-  final bool showControlPanel;
   final bool showTrack, showAlbum, showArtist;
   final BorderRadius? imageRadius;
   final void Function(String text)? onSubTitleTab;
@@ -88,8 +81,6 @@ class AudioPage extends StatelessWidget {
       onSubTitleTab: onSubTitleTab,
       headerTitle: headerTitle,
       controlPanelTitle: controlPanelTitle,
-      showAudioPageHeader: showAudioPageHeader,
-      showAudioTileHeader: showAudioTileHeader,
       albumFlex: albumFlex,
       titleFlex: titleFlex,
       artistFlex: artistFlex,
@@ -99,7 +90,6 @@ class AudioPage extends StatelessWidget {
       showTrack: showTrack,
       showAlbum: showAlbum,
       showArtist: showArtist,
-      showControlPanel: showControlPanel,
     );
 
     return Consumer(
@@ -126,38 +116,11 @@ class AudioPage extends StatelessWidget {
 }
 
 enum AudioPageType {
-  immutable,
+  allTitlesView,
   artist,
   likedAudio,
   podcast,
   playlist,
   album,
   radio;
-
-  String localize(AppLocalizations l10n) {
-    switch (this) {
-      case AudioPageType.immutable:
-        return 'immutable';
-      case AudioPageType.artist:
-        return l10n.artists;
-      case AudioPageType.likedAudio:
-        return l10n.likedSongs;
-      case AudioPageType.podcast:
-        return l10n.podcasts;
-      case AudioPageType.playlist:
-        return l10n.playlists;
-      case AudioPageType.album:
-        return l10n.albums;
-      case AudioPageType.radio:
-        return l10n.radio;
-    }
-  }
 }
-
-final mainPageType = AudioPageType.values.where(
-  (e) => !<AudioPageType>[
-    AudioPageType.immutable,
-    AudioPageType.likedAudio,
-    AudioPageType.artist,
-  ].contains(e),
-);

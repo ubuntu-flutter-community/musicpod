@@ -96,6 +96,11 @@ class ArtistPage extends ConsumerWidget {
       );
     }
 
+    final roundImageContainer = RoundImageContainer(
+      images: images,
+      fallBackText: artistAudios?.firstOrNull?.artist ?? 'a',
+    );
+
     if (!useGridView) {
       return AudioPage(
         showArtist: false,
@@ -104,11 +109,7 @@ class ArtistPage extends ConsumerWidget {
         audioPageType: AudioPageType.artist,
         headerLabel: context.l10n.artist,
         headerTitle: artistAudios?.firstOrNull?.artist,
-        showAudioPageHeader: images?.isNotEmpty == true,
-        image: RoundImageContainer(
-          images: images,
-          fallBackText: artistAudios?.firstOrNull?.artist ?? 'a',
-        ),
+        image: roundImageContainer,
         imageRadius: BorderRadius.circular(10000),
         headerSubtile: artistAudios?.firstOrNull?.genre,
         audios: artistAudios,
@@ -120,7 +121,7 @@ class ArtistPage extends ConsumerWidget {
     return _ArtistAlbumsCardGrid(
       onLabelTab: onAlbumTap,
       onSubTitleTab: onSubTitleTab,
-      images: images,
+      image: roundImageContainer,
       artistAudios: artistAudios,
       controlPanelButton: controlPanelButton,
     );
@@ -131,7 +132,7 @@ class _ArtistAlbumsCardGrid extends StatelessWidget {
   const _ArtistAlbumsCardGrid({
     required this.onLabelTab,
     required this.controlPanelButton,
-    required this.images,
+    required this.image,
     required this.artistAudios,
     this.onSubTitleTab,
   });
@@ -141,7 +142,7 @@ class _ArtistAlbumsCardGrid extends StatelessWidget {
 
   final Widget controlPanelButton;
 
-  final Set<Uint8List>? images;
+  final Widget? image;
   final Set<Audio>? artistAudios;
 
   @override
@@ -170,13 +171,9 @@ class _ArtistAlbumsCardGrid extends StatelessWidget {
               : Column(
                   children: [
                     AudioPageHeader(
-                      height: kMaxAudioPageHeaderHeight,
                       imageRadius: BorderRadius.circular(10000),
                       title: artistAudios?.firstOrNull?.artist ?? '',
-                      image: RoundImageContainer(
-                        images: images,
-                        fallBackText: artistAudios?.firstOrNull?.artist ?? 'a',
-                      ),
+                      image: image,
                       subTitle: artistAudios?.firstOrNull?.genre,
                       label: context.l10n.artist,
                       onLabelTab: onLabelTab,

@@ -5,10 +5,15 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../l10n.dart';
+import '../../library.dart';
 
 class AudioTile extends StatelessWidget {
   const AudioTile({
     super.key,
+    required this.audioPageType,
+    required this.pageId,
+    required this.libraryModel,
+    required this.insertIntoQueue,
     required this.selected,
     required this.audio,
     this.onLike,
@@ -44,6 +49,11 @@ class AudioTile extends StatelessWidget {
   final void Function(String text)? onArtistTap;
 
   final int titleFlex, artistFlex, albumFlex;
+
+  final AudioPageType audioPageType;
+  final String pageId;
+  final LibraryModel libraryModel;
+  final void Function(Audio audio) insertIntoQueue;
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +136,14 @@ class AudioTile extends StatelessWidget {
             ),
         ],
       ),
-      trailing: likeIcon,
+      trailing: LikeButton(
+        selected: selected && isPlayerPlaying,
+        libraryModel: libraryModel,
+        playlistId: pageId,
+        audio: audio,
+        allowRemove: audioPageType == AudioPageType.playlist,
+        insertIntoQueue: () => insertIntoQueue(audio),
+      ),
     );
 
     return listTile;

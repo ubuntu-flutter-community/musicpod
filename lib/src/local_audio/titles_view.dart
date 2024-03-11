@@ -63,13 +63,11 @@ class _TitlesViewState extends ConsumerState<TitlesView> {
     return AudioPageBody(
       padding: const EdgeInsets.only(top: 10),
       showTrack: false,
-      showControlPanel: false,
       noResultIcon: widget.noResultIcon,
       noResultMessage: widget.noResultMessage,
       audios: _titles == null ? null : Set.from(_titles!),
-      audioPageType: AudioPageType.immutable,
+      audioPageType: AudioPageType.allTitlesView,
       pageId: kLocalAudioPageId,
-      showAudioPageHeader: false,
       onAlbumTap: (text) {
         final albumAudios = model.findAlbum(Audio(album: text));
         if (albumAudios?.firstOrNull == null) return;
