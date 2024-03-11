@@ -59,7 +59,7 @@ class _AudioCardState extends State<AudioCard> {
             child: Stack(
               children: [
                 if (widget.background != null) widget.background!,
-                if (widget.image == null && widget.background != null)
+                if (widget.image == null)
                   Shimmer.fromColors(
                     baseColor: light ? kCardColorLight : kCardColorDark,
                     highlightColor: light
@@ -68,9 +68,8 @@ class _AudioCardState extends State<AudioCard> {
                     child: Container(
                       color: light ? kCardColorLight : kCardColorDark,
                     ),
-                  )
-                else
-                  widget.image!,
+                  ),
+                if (widget.image != null) widget.image!,
                 if (_hovered && widget.onPlay != null)
                   Positioned(
                     bottom: 10,
