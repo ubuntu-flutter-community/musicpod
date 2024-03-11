@@ -24,7 +24,7 @@ class GenrePage extends ConsumerWidget {
 
     final artistAudiosWithGenre = model.findArtistsOfGenre(Audio(genre: genre));
 
-    return Scaffold(
+    return YaruDetailPage(
       appBar: HeaderBar(
         style: showWindowControls
             ? YaruTitleBarStyle.normal

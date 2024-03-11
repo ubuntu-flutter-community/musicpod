@@ -386,6 +386,9 @@ EdgeInsetsGeometry get appBarActionSpacing => Platform.isMacOS
     ? const EdgeInsets.only(right: 5, left: 20)
     : const EdgeInsets.only(right: 10, left: 20);
 
+EdgeInsetsGeometry get radioHistoryListPadding =>
+    EdgeInsets.only(left: yaruStyled ? 0 : 5);
+
 class CommonSwitch extends StatelessWidget {
   const CommonSwitch({super.key, required this.value, this.onChanged});
 

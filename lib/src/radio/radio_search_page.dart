@@ -89,7 +89,7 @@ class _RadioSearchPageState extends ConsumerState<RadioSearchPage> {
 
     final isFavTag = libraryModel.favTags.contains(widget.searchQuery);
 
-    return Scaffold(
+    return YaruDetailPage(
       appBar: HeaderBar(
         style: showWindowControls
             ? YaruTitleBarStyle.normal

@@ -112,7 +112,7 @@ class _LocalAudioPageState extends ConsumerState<LocalAudioPage> {
       title: Text(context.l10n.localAudio),
     );
 
-    return Scaffold(
+    return YaruDetailPage(
       appBar: headerBar,
       body: Column(
         children: [

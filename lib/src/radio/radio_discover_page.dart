@@ -97,7 +97,7 @@ class RadioDiscoverPage extends ConsumerWidget {
         ),
     };
 
-    return Scaffold(
+    return YaruDetailPage(
       appBar: HeaderBar(
         style: showWindowControls
             ? YaruTitleBarStyle.normal
