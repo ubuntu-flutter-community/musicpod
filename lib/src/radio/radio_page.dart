@@ -85,7 +85,7 @@ class _RadioPageState extends ConsumerState<RadioPage> {
     ref.watch(libraryModelProvider.select((m) => m.favTagsLength));
     final appModel = ref.read(appModelProvider);
 
-    return Scaffold(
+    return YaruDetailPage(
       appBar: HeaderBar(
         style: showWindowControls
             ? YaruTitleBarStyle.normal

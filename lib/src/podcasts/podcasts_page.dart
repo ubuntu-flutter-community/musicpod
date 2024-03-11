@@ -146,7 +146,7 @@ class _PodcastsPageState extends ConsumerState<PodcastsPage> {
       isOnline: isOnline,
     );
 
-    return Scaffold(
+    return YaruDetailPage(
       appBar: HeaderBar(
         leading: (Navigator.canPop(context))
             ? NavBackButton(

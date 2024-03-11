@@ -98,7 +98,6 @@ class StationPage extends ConsumerWidget {
         AudioPageHeader(
           padding: const EdgeInsets.only(
             left: kYaruPagePadding,
-            top: kYaruPagePadding,
             bottom: kYaruPagePadding,
           ),
           height: kMaxAudioPageHeaderHeight,
@@ -195,7 +194,7 @@ class StationPage extends ConsumerWidget {
             filter: station.title,
             emptyMessage: const SizedBox.shrink(),
             emptyIcon: const SizedBox.shrink(),
-            padding: const EdgeInsets.only(left: 5),
+            padding: radioHistoryListPadding,
           ),
         ),
       ],
