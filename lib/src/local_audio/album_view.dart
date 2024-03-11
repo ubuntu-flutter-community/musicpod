@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../library.dart';
@@ -25,8 +24,6 @@ class AlbumsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = context.t;
-
     if (albums == null) {
       return const Center(
         child: Progress(),
@@ -56,19 +53,19 @@ class AlbumsView extends ConsumerWidget {
           final albumAudios = model.findAlbum(audio);
 
           final image = audio.pictureData == null
-              ? Center(
-                  child: Icon(
-                    Iconz().musicNote,
-                    size: 70,
-                    color: theme.hintColor,
-                  ),
-                )
+              ? null
               : Image.memory(
                   audio.pictureData!,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fitHeight,
                   height: kAudioCardDimension,
                   filterQuality: FilterQuality.medium,
                 );
+
+          final fallback = Image.asset(
+            'assets/images/media-optical.png',
+            height: kAudioCardDimension,
+            width: kAudioCardDimension,
+          );
 
           return AudioCard(
             bottom: Align(
@@ -79,7 +76,8 @@ class AlbumsView extends ConsumerWidget {
                     : audio.album ?? '',
               ),
             ),
-            image: image,
+            image: image ?? fallback,
+            background: fallback,
             onTap: id == null || albumAudios == null
                 ? null
                 : () => Navigator.of(context).push(
