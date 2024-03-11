@@ -254,8 +254,7 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
         insertIntoQueue: () => insertIntoQueue(audio),
       );
 
-      return AudioTile(
-        key: isReorderAble ? ObjectKey(audio) : null,
+      final audioTile = AudioTile(
         trackLabel: (widget.audioPageType == AudioPageType.playlist ||
                 widget.audioPageType == AudioPageType.likedAudio)
             ? (index + 1).toString().padLeft(2, '0')
@@ -282,6 +281,14 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
         audio: audio,
         likeIcon: likeButton,
       );
+
+      return isReorderAble
+          ? ReorderableDragStartListener(
+              key: ObjectKey(audio),
+              index: index,
+              child: audioTile,
+            )
+          : audioTile;
     }
 
     return Padding(
@@ -309,6 +316,7 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
               Expanded(
                 child: isReorderAble && widget.audios != null
                     ? ReorderableListView.builder(
+                        buildDefaultDragHandles: false,
                         scrollController: _controller,
                         itemBuilder: itemBuilder,
                         itemCount: widget.audios!.length,
