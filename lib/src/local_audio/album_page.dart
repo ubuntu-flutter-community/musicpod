@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -52,13 +53,20 @@ class AlbumPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final model = ref.read(localAudioModelProvider);
-    final image = album.firstOrNull?.pictureData != null
-        ? Image.memory(
-            album.firstOrNull!.pictureData!,
+    final pictureData =
+        album.firstWhereOrNull((e) => e.pictureData != null)?.pictureData;
+
+    final image = Stack(
+      children: [
+        Image.asset('assets/images/media-optical.png'),
+        if (pictureData != null)
+          Image.memory(
+            pictureData,
             fit: BoxFit.fitHeight,
             filterQuality: FilterQuality.medium,
-          )
-        : null;
+          ),
+      ],
+    );
 
     void onArtistTap(text) {
       final artistName = album.firstOrNull?.artist;
