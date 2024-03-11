@@ -100,7 +100,6 @@ class StationPage extends ConsumerWidget {
             left: kYaruPagePadding,
             bottom: kYaruPagePadding,
           ),
-          height: kMaxAudioPageHeaderHeight,
           title: name,
           subTitle: '',
           label: '',

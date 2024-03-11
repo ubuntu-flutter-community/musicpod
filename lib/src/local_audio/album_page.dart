@@ -80,7 +80,6 @@ class AlbumPage extends ConsumerWidget {
     }
 
     return AudioPage(
-      showAudioPageHeader: image != null,
       showAlbum: false,
       onArtistTap: onArtistTap,
       onSubTitleTab: onArtistTap,
