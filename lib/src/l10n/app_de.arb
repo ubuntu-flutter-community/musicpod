@@ -296,5 +296,7 @@
     "playAll": "Alles abspielen",
     "hearingHistory": "Hörverlauf",
     "emptyHearingHistory": "Du hast noch keinem Radiosender in dieser Sitzung zugehört.",
-    "searchForRadioStationsWithGenreName": "Suche nach Radiosendern mit diesem Genre"
+    "searchForRadioStationsWithGenreName": "Suche nach Radiosendern mit diesem Genre",
+    "clearPlaylist": "Alle Medien aus Wiedergabeliste löschen",
+    "editPlaylist": "Wiedergabeliste editieren"
 }

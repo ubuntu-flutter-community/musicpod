@@ -58,6 +58,7 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
           : null,
       titlePadding: yaruStyled ? EdgeInsets.zero : null,
       content: TextField(
+        autofocus: true,
         decoration: InputDecoration(label: Text(context.l10n.playlist)),
         controller: _controller,
       ),
@@ -98,11 +99,9 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
                 widget.audios ?? {},
               );
               Navigator.pop(context);
-              showAddedToPlaylistSnackBar(
-                context: context,
-                libraryModel: widget.libraryModel,
-                id: _controller.text,
-              );
+              final index =
+                  widget.libraryModel.getIndexOfPlaylist(_controller.text);
+              widget.libraryModel.setIndex(index);
             },
             child: Text(
               context.l10n.add,

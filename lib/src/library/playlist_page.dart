@@ -13,6 +13,7 @@ import '../../utils.dart';
 import '../common/fall_back_header_image.dart';
 import '../l10n/l10n.dart';
 import '../theme.dart';
+import 'playlst_add_audios_dialog.dart';
 
 class PlaylistPage extends ConsumerWidget {
   const PlaylistPage({
@@ -128,18 +129,38 @@ class PlaylistPage extends ConsumerWidget {
         audios: playlist.value,
         pageId: playlist.key,
         noResultMessage: Text(context.l10n.emptyPlaylist),
-        controlPanelButton: IconButton(
-          icon: Icon(Iconz().pen),
-          onPressed: () => showDialog(
-            context: context,
-            builder: (context) => PlaylistDialog(
-              playlistName: playlist.key,
-              initialValue: playlist.key,
-              allowDelete: true,
-              allowRename: true,
-              libraryModel: libraryModel,
+        controlPanelButton: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              tooltip: context.l10n.editPlaylist,
+              icon: Icon(Iconz().pen),
+              onPressed: () => showDialog(
+                context: context,
+                builder: (context) => PlaylistDialog(
+                  playlistName: playlist.key,
+                  initialValue: playlist.key,
+                  allowDelete: true,
+                  allowRename: true,
+                  libraryModel: libraryModel,
+                ),
+              ),
             ),
-          ),
+            IconButton(
+              tooltip: context.l10n.clearPlaylist,
+              icon: Icon(Iconz().clearAll),
+              onPressed: () => libraryModel.clearPlaylist(playlist.key),
+            ),
+            IconButton(
+              tooltip: context.l10n.add,
+              icon: Icon(Iconz().plus),
+              onPressed: () => showDialog(
+                context: context,
+                builder: (context) =>
+                    PlaylistAddAudiosDialog(playlistId: playlist.key),
+              ),
+            ),
+          ],
         ),
       ),
     );

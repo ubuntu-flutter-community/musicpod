@@ -337,6 +337,11 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.info
           : Icons.info;
+  IconData get clearAll => yaruStyled
+      ? YaruIcons.edit_clear_all
+      : appleStyled
+          ? CupertinoIcons.paintbrush
+          : Icons.cleaning_services;
 
   Widget getAnimatedStar(bool isStarred, [Color? color]) {
     if (yaruStyled) {
