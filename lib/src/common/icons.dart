@@ -108,6 +108,16 @@ class Iconz {
             : Icons.computer;
   }
 
+  IconData get drag {
+    if (appleStyled) {
+      return CupertinoIcons.move;
+    }
+    if (yaruStyled) {
+      return YaruIcons.drag_handle;
+    }
+    return Icons.drag_handle_rounded;
+  }
+
   IconData get localAudioFilled {
     if (appleStyled) {
       if (isMobile) {
@@ -320,7 +330,7 @@ class Iconz {
   IconData get reorder => yaruStyled
       ? YaruIcons.ordered_list
       : appleStyled
-          ? CupertinoIcons.move
+          ? CupertinoIcons.arrow_up_down
           : Icons.move_down_rounded;
   IconData get info => yaruStyled
       ? YaruIcons.information
