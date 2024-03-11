@@ -43,6 +43,7 @@ class AudioPageHeader extends StatelessWidget {
     final size = context.m.size;
     final smallWindow = size.width < kMasterDetailBreakPoint;
     final radius = imageRadius ?? BorderRadius.circular(10);
+    final descriptionStyle = theme.textTheme.bodyMedium;
 
     return Padding(
       padding: !smallWindow
@@ -94,10 +95,12 @@ class AudioPageHeader extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Expanded(
+                        Flexible(
+                          flex: 2,
                           child: AudioPageHeaderTitle(title: title),
                         ),
                         Expanded(
+                          flex: 1,
                           child: AudioPageHeaderSubTitle(
                             onLabelTab: onLabelTab,
                             label: label,
@@ -106,7 +109,7 @@ class AudioPageHeader extends StatelessWidget {
                           ),
                         ),
                         Expanded(
-                          flex: 4,
+                          flex: 7,
                           child: (description != null)
                               ? Padding(
                                   padding: const EdgeInsets.only(
@@ -123,19 +126,20 @@ class AudioPageHeader extends StatelessWidget {
                                         launchUrl(Uri.parse(url));
                                       },
                                       style: {
-                                        // 'height': Style(height: Height.auto()),
                                         'img': Style(display: Display.none),
-                                        'html': Style(
-                                          margin: Margins.zero,
-                                          padding: HtmlPaddings.zero,
-                                          textAlign: TextAlign.start,
-                                          textOverflow: TextOverflow.fade,
-                                        ),
                                         'body': Style(
+                                          height: Height.auto(),
                                           margin: Margins.zero,
                                           padding: HtmlPaddings.zero,
                                           textOverflow: TextOverflow.fade,
                                           textAlign: TextAlign.start,
+                                          fontSize: FontSize(
+                                            descriptionStyle?.fontSize ?? 10,
+                                          ),
+                                          fontWeight:
+                                              descriptionStyle?.fontWeight,
+                                          fontFamily:
+                                              descriptionStyle?.fontFamily,
                                         ),
                                       },
                                     ),
