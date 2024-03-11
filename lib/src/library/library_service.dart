@@ -262,6 +262,15 @@ class LibraryService {
     }
   }
 
+  void clearPlaylist(String id) {
+    final playlist = _playlists[id];
+    if (playlist != null) {
+      playlist.clear();
+      writeAudioMap(_playlists, kPlaylistsFileName)
+          .then((_) => _playlistsController.add(true));
+    }
+  }
+
   // Podcasts
   final dio = Dio();
   Map<String, String> _downloads = {};

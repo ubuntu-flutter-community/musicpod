@@ -296,5 +296,7 @@
     "playAll": "Play all",
     "hearingHistory": "Hearing history",
     "emptyHearingHistory": "You did not listen to radio in this app session yet",
-    "searchForRadioStationsWithGenreName": "Search for radio stations with this genre"
+    "searchForRadioStationsWithGenreName": "Search for radio stations with this genre",
+    "clearPlaylist": "Delete all media from the playlist",
+    "editPlaylist": "Edit playlist"
 }

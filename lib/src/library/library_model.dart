@@ -218,6 +218,8 @@ class LibraryModel extends SafeChangeNotifier {
   void removeAudioFromPlaylist(String playlist, Audio audio) =>
       _service.removeAudioFromPlaylist(playlist, audio);
 
+  void clearPlaylist(String id) => _service.clearPlaylist(id);
+
   List<String> getPlaylistNames() =>
       playlists.entries.map((e) => e.key).toList();
 
