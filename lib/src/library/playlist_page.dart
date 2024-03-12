@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
@@ -115,13 +116,7 @@ class PlaylistPage extends ConsumerWidget {
           );
         },
         audioPageType: AudioPageType.playlist,
-        image: FallBackHeaderImage(
-          color: getAlphabetColor(playlist.key),
-          child: Icon(
-            Iconz().playlist,
-            size: 65,
-          ),
-        ),
+        image: PlaylistHeaderImage(playlist: playlist),
         headerLabel: context.l10n.playlist,
         headerTitle: playlist.key,
         audios: playlist.value,
@@ -161,6 +156,72 @@ class PlaylistPage extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class PlaylistHeaderImage extends ConsumerWidget {
+  const PlaylistHeaderImage({
+    super.key,
+    required this.playlist,
+  });
+
+  final MapEntry<String, Set<Audio>> playlist;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final model = ref.read(localAudioModelProvider);
+    final playlistImages = model.findImages(playlist.value);
+    final length = playlistImages == null ? 0 : playlistImages.take(16).length;
+
+    final padding = length == 1 ? 0.0 : 8.0;
+    final spacing = length == 1 ? 0.0 : 16.0;
+    final width = length == 1
+        ? kMaxAudioPageHeaderHeight
+        : length < 10
+            ? 50.0
+            : 32.0;
+    final height = length == 1
+        ? kMaxAudioPageHeaderHeight
+        : length < 10
+            ? 50.0
+            : 32.0;
+    final radius = length == 1 ? 0.0 : width / 2;
+
+    Widget image;
+    if (length == 0) {
+      image = Icon(
+        Iconz().playlist,
+        size: 65,
+      );
+    } else {
+      image = Center(
+        child: Padding(
+          padding: EdgeInsets.all(padding),
+          child: Wrap(
+            spacing: spacing,
+            runSpacing: spacing,
+            children: List.generate(
+              length,
+              (index) => ClipRRect(
+                borderRadius: BorderRadius.circular(radius),
+                child: Image.memory(
+                  playlistImages!.elementAt(index),
+                  width: width,
+                  height: height,
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.medium,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return FallBackHeaderImage(
+      color: getAlphabetColor(playlist.key),
+      child: image,
     );
   }
 }
