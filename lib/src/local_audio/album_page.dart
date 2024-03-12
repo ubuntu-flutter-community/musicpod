@@ -4,9 +4,12 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../build_context_x.dart';
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
+import '../../theme_data_x.dart';
 import '../l10n/l10n.dart';
 
 class AlbumPage extends ConsumerWidget {
@@ -56,18 +59,6 @@ class AlbumPage extends ConsumerWidget {
     final pictureData =
         album.firstWhereOrNull((e) => e.pictureData != null)?.pictureData;
 
-    final image = Stack(
-      children: [
-        Image.asset('assets/images/media-optical.png'),
-        if (pictureData != null)
-          Image.memory(
-            pictureData,
-            fit: BoxFit.fitHeight,
-            filterQuality: FilterQuality.medium,
-          ),
-      ],
-    );
-
     void onArtistTap(text) {
       final artistName = album.firstOrNull?.artist;
       if (artistName == null) return;
@@ -94,7 +85,7 @@ class AlbumPage extends ConsumerWidget {
       audioPageType: AudioPageType.album,
       headerLabel: context.l10n.album,
       headerSubtile: album.firstOrNull?.artist,
-      image: image,
+      image: AlbumPageImage(pictureData: pictureData),
       controlPanelButton: Row(
         children: [
           Padding(
@@ -126,6 +117,41 @@ class AlbumPage extends ConsumerWidget {
       audios: album,
       pageId: id,
       headerTitle: album.firstOrNull?.album,
+    );
+  }
+}
+
+class AlbumPageImage extends StatelessWidget {
+  const AlbumPageImage({
+    super.key,
+    required this.pictureData,
+  });
+
+  final Uint8List? pictureData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: context.t.isLight ? kCardColorLight : kCardColorDark,
+            image: const DecorationImage(
+              image: AssetImage('assets/images/media-optical.png'),
+            ),
+          ),
+        ),
+        if (pictureData != null)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Image.memory(
+              pictureData!,
+              fit: BoxFit.fitHeight,
+              filterQuality: FilterQuality.medium,
+            ),
+          ),
+      ],
     );
   }
 }
