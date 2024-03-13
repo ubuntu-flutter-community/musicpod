@@ -326,4 +326,12 @@ bool isValidFile(String path) {
       _validExtensions.any((e) => path.endsWith(e));
 }
 
-const _validExtensions = ['.mp3', '.flac', '.mp4', '.opus', '.ogg'];
+const _validExtensions = [
+  '.mp3',
+  '.flac',
+  '.mp4',
+  '.opus',
+  '.ogg',
+  '.m3u',
+  '.aac',
+];
