@@ -148,11 +148,11 @@ class _IcyImageState extends State<IcyImage> {
   Future<String?> _fetchAlbumArt(String icyTitle) async {
     String? songName;
     String? artist;
-    var split = icyTitle.split(' - ');
-
-    songName = split.lastOrNull;
-    artist = split.elementAtOrNull(split.indexOf(split.last) - 1);
-
+    final split = icyTitle.split(' - ');
+    if (split.isNotEmpty) {
+      artist = split.elementAtOrNull(0);
+      songName = split.elementAtOrNull(1);
+    }
     if (artist == null || songName == null) return null;
 
     final searchUrl = Uri.parse(

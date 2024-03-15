@@ -37,6 +37,7 @@ dependencies:
   handy_window: ^0.3.1
   http: ^1.2.0
   intl: ^0.18.0
+  m3u_parser_nullsafe: ^1.0.3
   media_kit: ^1.1.10
   media_kit_libs_video: ^1.0.4
   media_kit_video: ^1.2.4

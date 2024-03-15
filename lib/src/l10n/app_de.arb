@@ -302,5 +302,7 @@
     "stationUrl": "URL des Radiosenders",
     "podcastFeedUrl": "URL des Podcast-feeds",
     "stationName": "Name des Radiosenders",
-    "podcastName": "Name des Podcasts"
+    "podcastName": "Name des Podcasts",
+    "url": "Url",
+    "loadFromFileOptional": "Aus Datei laden (optional)"
 }
