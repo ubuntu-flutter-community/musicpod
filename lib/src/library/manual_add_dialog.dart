@@ -166,7 +166,7 @@ class _PlaylistContentState extends State<PlaylistContent> {
             TextField(
               controller: _fileController,
               decoration: InputDecoration(
-                label: const Text('Load from file (optional)'),
+                label: Text(context.l10n.loadFromFileOptional),
                 suffixIcon: Consumer(
                   builder: (context, ref, _) {
                     return TextButton(
