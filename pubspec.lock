@@ -749,6 +749,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.7.0"
+  m3u_parser_nullsafe:
+    dependency: "direct main"
+    description:
+      name: m3u_parser_nullsafe
+      sha256: "7f65c30d1a2cd75e4114a43c2c96ab7f8490ee53f530bf86b1725605e1677fcf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   markdown:
     dependency: transitive
     description:

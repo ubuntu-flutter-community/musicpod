@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../external_path.dart';
 import '../../globals.dart';
 import '../../library.dart';
 import '../../podcasts.dart';
@@ -125,16 +127,22 @@ class PlaylistContent extends StatefulWidget {
 
 class _PlaylistContentState extends State<PlaylistContent> {
   late TextEditingController _controller;
+  late TextEditingController _fileController;
+
+  Set<Audio>? _audios;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.initialValue);
+    _fileController = TextEditingController();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _fileController.dispose();
+
     super.dispose();
   }
 
@@ -145,7 +153,8 @@ class _PlaylistContentState extends State<PlaylistContent> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Flexible(
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
             child: TextField(
               autofocus: true,
               decoration: InputDecoration(label: Text(context.l10n.playlist)),
@@ -153,66 +162,82 @@ class _PlaylistContentState extends State<PlaylistContent> {
               onChanged: (v) => setState(() => _controller.text = v),
             ),
           ),
-          const SizedBox(
-            height: kYaruPagePadding,
-          ),
-          Flexible(
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Wrap(
-                spacing: 10,
-                runSpacing: 10,
-                children: [
+          if (widget.allowCreate)
+            TextField(
+              controller: _fileController,
+              decoration: InputDecoration(
+                label: const Text('Load from file (optional)'),
+                suffixIcon: Consumer(
+                  builder: (context, ref, _) {
+                    return TextButton(
+                      onPressed: () async {
+                        final audios = await getService<ExternalPathService>()
+                            .loadPlaylistFromFile();
+                        setState(() {
+                          _audios = audios.$2;
+                          _fileController.text = audios.$1 ?? '';
+                        });
+                      },
+                      child: Text(context.l10n.open),
+                    );
+                  },
+                ),
+              ),
+            ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                OutlinedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    context.l10n.cancel,
+                  ),
+                ),
+                if (widget.allowDelete && widget.playlistName != null)
                   OutlinedButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      widget.libraryModel.removePlaylist(widget.playlistName!);
+                      Navigator.of(context).pop();
+                    },
                     child: Text(
-                      context.l10n.cancel,
+                      context.l10n.deletePlaylist,
                     ),
                   ),
-                  if (widget.allowDelete && widget.playlistName != null)
-                    OutlinedButton(
-                      onPressed: () {
-                        widget.libraryModel
-                            .removePlaylist(widget.playlistName!);
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        context.l10n.deletePlaylist,
-                      ),
+                if (widget.allowRename && widget.playlistName != null)
+                  ImportantButton(
+                    onPressed: () {
+                      widget.libraryModel.updatePlaylistName(
+                        widget.playlistName!,
+                        _controller.text,
+                      );
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      context.l10n.save,
                     ),
-                  if (widget.allowRename && widget.playlistName != null)
-                    ImportantButton(
-                      onPressed: () {
-                        widget.libraryModel.updatePlaylistName(
-                          widget.playlistName!,
-                          _controller.text,
-                        );
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        context.l10n.save,
-                      ),
+                  ),
+                if (widget.allowCreate)
+                  ImportantButton(
+                    onPressed: _controller.text.isEmpty
+                        ? null
+                        : () {
+                            widget.libraryModel.addPlaylist(
+                              _controller.text,
+                              _audios ?? widget.audios ?? {},
+                            );
+                            Navigator.pop(context);
+                            final index = widget.libraryModel
+                                .getIndexOfPlaylist(_controller.text);
+                            widget.libraryModel.setIndex(index);
+                          },
+                    child: Text(
+                      context.l10n.add,
                     ),
-                  if (widget.allowCreate)
-                    ImportantButton(
-                      onPressed: _controller.text.isEmpty
-                          ? null
-                          : () {
-                              widget.libraryModel.addPlaylist(
-                                _controller.text,
-                                widget.audios ?? {},
-                              );
-                              Navigator.pop(context);
-                              final index = widget.libraryModel
-                                  .getIndexOfPlaylist(_controller.text);
-                              widget.libraryModel.setIndex(index);
-                            },
-                      child: Text(
-                        context.l10n.add,
-                      ),
-                    ),
-                ],
-              ),
+                  ),
+              ],
             ),
           ),
         ],

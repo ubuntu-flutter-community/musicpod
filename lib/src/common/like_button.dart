@@ -152,6 +152,10 @@ class MetaDataDialog extends StatelessWidget {
         context.l10n.genre,
         '${audio.genre}',
       ),
+      (
+        context.l10n.url,
+        (audio.url ?? ''),
+      ),
     };
 
     return AlertDialog(
