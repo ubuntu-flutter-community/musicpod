@@ -298,5 +298,9 @@
     "emptyHearingHistory": "You did not listen to radio in this app session yet",
     "searchForRadioStationsWithGenreName": "Search for radio stations with this genre",
     "clearPlaylist": "Delete all media from the playlist",
-    "editPlaylist": "Edit playlist"
+    "editPlaylist": "Edit playlist",
+    "stationUrl": "Station Url",
+    "podcastFeedUrl": "Podcast feed url",
+    "stationName": "Station name",
+    "podcastName": "Podcast name"
 }

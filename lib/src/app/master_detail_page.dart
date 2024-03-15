@@ -102,7 +102,7 @@ class MasterDetailPage extends ConsumerWidget {
       ),
       _MasterItem(
         iconBuilder: (context, selected) => Icon(Iconz().plus),
-        titleBuilder: (context) => Text(context.l10n.playlistDialogTitleNew),
+        titleBuilder: (context) => Text(context.l10n.add),
         pageBuilder: (context) => const SizedBox.shrink(),
         pageId: kNewPlaylistPageId,
       ),

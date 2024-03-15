@@ -84,8 +84,8 @@ class LibraryService {
   final _starredStationsController = StreamController<bool>.broadcast();
   Stream<bool> get starredStationsChanged => _starredStationsController.stream;
 
-  void addStarredStation(String name, Set<Audio> audios) {
-    _starredStations.putIfAbsent(name, () => audios);
+  void addStarredStation(String url, Set<Audio> audios) {
+    _starredStations.putIfAbsent(url, () => audios);
     writeAudioMap(_starredStations, kStarredStationsFileName)
         .then((_) => _starredStationsController.add(true));
   }
