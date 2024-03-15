@@ -4,3 +4,5 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> playlistNavigatorKey =
     GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> settingsNavigatorKey = GlobalKey();
+final GlobalKey<NavigatorState> manualAddNavigatorKey =
+    GlobalKey<NavigatorState>();

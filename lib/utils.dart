@@ -332,6 +332,6 @@ const _validExtensions = [
   '.mp4',
   '.opus',
   '.ogg',
-  '.m3u',
+  '.m4a',
   '.aac',
 ];

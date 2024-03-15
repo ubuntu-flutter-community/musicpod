@@ -5,7 +5,6 @@ import 'package:yaru/yaru.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
-import '../../l10n.dart';
 import '../../library.dart';
 import '../../player.dart';
 
@@ -41,11 +40,7 @@ class MasterTile extends StatelessWidget {
             ? () => showDialog(
                   context: context,
                   builder: (context) {
-                    return PlaylistDialog(
-                      playlistName: context.l10n.createNewPlaylist,
-                      allowCreate: true,
-                      libraryModel: libraryModel,
-                    );
+                    return const ManualAddDialog();
                   },
                 )
             : null,

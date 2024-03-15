@@ -298,5 +298,9 @@
     "emptyHearingHistory": "Du hast noch keinem Radiosender in dieser Sitzung zugehört.",
     "searchForRadioStationsWithGenreName": "Suche nach Radiosendern mit diesem Genre",
     "clearPlaylist": "Alle Medien aus Wiedergabeliste löschen",
-    "editPlaylist": "Wiedergabeliste editieren"
+    "editPlaylist": "Wiedergabeliste editieren",
+    "stationUrl": "URL des Radiosenders",
+    "podcastFeedUrl": "URL des Podcast-feeds",
+    "stationName": "Name des Radiosenders",
+    "podcastName": "Name des Podcasts"
 }

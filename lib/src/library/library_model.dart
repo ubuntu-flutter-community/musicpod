@@ -135,8 +135,8 @@ class LibraryModel extends SafeChangeNotifier {
 
   Map<String, Set<Audio>> get starredStations => _service.starredStations;
   int get starredStationsLength => _service.starredStations.length;
-  void addStarredStation(String name, Set<Audio> audios) =>
-      _service.addStarredStation(name, audios);
+  void addStarredStation(String url, Set<Audio> audios) =>
+      _service.addStarredStation(url, audios);
 
   void unStarStation(String url) {
     final stationIndex = indexOfStation(url);

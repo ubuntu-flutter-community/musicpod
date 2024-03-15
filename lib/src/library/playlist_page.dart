@@ -130,12 +130,18 @@ class PlaylistPage extends ConsumerWidget {
               icon: Icon(Iconz().pen),
               onPressed: () => showDialog(
                 context: context,
-                builder: (context) => PlaylistDialog(
-                  playlistName: playlist.key,
-                  initialValue: playlist.key,
-                  allowDelete: true,
-                  allowRename: true,
-                  libraryModel: libraryModel,
+                builder: (context) => AlertDialog(
+                  content: SizedBox(
+                    height: 200,
+                    width: 500,
+                    child: PlaylistContent(
+                      playlistName: playlist.key,
+                      initialValue: playlist.key,
+                      allowDelete: true,
+                      allowRename: true,
+                      libraryModel: libraryModel,
+                    ),
+                  ),
                 ),
               ),
             ),
