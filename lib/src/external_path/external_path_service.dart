@@ -92,6 +92,11 @@ class ExternalPathService {
                   ? e.link.replaceAll('file://', '')
                   : null,
               url: e.link.startsWith('http') ? e.link : null,
+              audioType: e.link.startsWith('file://')
+                  ? AudioType.local
+                  : e.link.startsWith('http')
+                      ? AudioType.radio
+                      : null,
             ),
           );
         }
