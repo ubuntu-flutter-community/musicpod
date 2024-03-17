@@ -1030,6 +1030,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.4"
+  pls:
+    dependency: "direct main"
+    description:
+      name: pls
+      sha256: "268fc553655be2ea494789b444aa847dcb21ab5da5a174f5363c95874c0df8fa"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   plugin_platform_interface:
     dependency: transitive
     description:
