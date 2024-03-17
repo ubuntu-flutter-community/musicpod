@@ -1,8 +1,12 @@
-name: AppImage Release
+# TODO: fix AppImage release, see https://github.com/ubuntu-flutter-community/musicpod/issues/379
+# Apart from snap which is released via ci/cd pipeline to edge and then manually promoted from edge to stable
+# AppImage, Windows and MacOs releases should be created via this manual release action which is triggered when a tag is added to git
+name: Release
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - release
 
 env:
   FLUTTER_VERSION: '3.16.x'

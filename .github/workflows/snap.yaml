@@ -1,9 +1,9 @@
-name: publish
+name: Publish Snap
 
 on:
   push:
     branches:
-      - main  
+      - snap  
 
 
 env:
