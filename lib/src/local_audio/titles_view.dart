@@ -5,12 +5,13 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
+import '../../player.dart';
 import '../../utils.dart';
 import 'album_page.dart';
 import 'artist_page.dart';
 import 'local_audio_model.dart';
 
-class TitlesView extends ConsumerStatefulWidget {
+class TitlesView extends ConsumerWidget {
   const TitlesView({
     super.key,
     required this.audios,
@@ -22,50 +23,21 @@ class TitlesView extends ConsumerStatefulWidget {
   final Widget? noResultMessage, noResultIcon;
 
   @override
-  ConsumerState<TitlesView> createState() => _TitlesViewState();
-}
-
-class _TitlesViewState extends ConsumerState<TitlesView> {
-  List<Audio>? _titles;
-
-  void _initTitles() {
-    _titles = widget.audios?.toList();
-    if (_titles == null) return;
-    sortListByAudioFilter(
-      audioFilter: AudioFilter.album,
-      audios: _titles!,
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _initTitles();
-  }
-
-  @override
-  void didUpdateWidget(covariant TitlesView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _initTitles();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.audios == null) {
-      return const Center(
-        child: Progress(),
-      );
-    }
-
+  Widget build(BuildContext context, WidgetRef ref) {
     final libraryModel = ref.read(libraryModelProvider);
     final model = ref.read(localAudioModelProvider);
+    final playerModel = ref.read(playerModelProvider);
 
     return AudioPageBody(
       padding: const EdgeInsets.only(top: 10),
       showTrack: false,
-      noResultIcon: widget.noResultIcon,
-      noResultMessage: widget.noResultMessage,
-      audios: _titles == null ? null : Set.from(_titles!),
+      noResultIcon: noResultIcon,
+      noResultMessage: noResultMessage,
+      audios: audios,
+      onAudioFilterSelected: (v) {
+        model.setTitlesViewAudioFilterIndex(v.index);
+        sortListByAudioFilter(audioFilter: v, audios: playerModel.queue);
+      },
       audioPageType: AudioPageType.allTitlesView,
       pageId: kLocalAudioPageId,
       onAlbumTap: (text) {

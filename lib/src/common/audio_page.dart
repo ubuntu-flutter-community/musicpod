@@ -36,6 +36,7 @@ class AudioPage extends StatelessWidget {
     this.imageRadius,
     this.onLabelTab,
     this.onSubTitleTab,
+    this.onAudioFilterSelected,
   });
 
   final Set<Audio>? audios;
@@ -59,6 +60,7 @@ class AudioPage extends StatelessWidget {
   final void Function(String text)? onLabelTab;
   final void Function(String text)? onAlbumTap;
   final void Function(String text)? onArtistTap;
+  final void Function(AudioFilter)? onAudioFilterSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +92,7 @@ class AudioPage extends StatelessWidget {
       showTrack: showTrack,
       showAlbum: showAlbum,
       showArtist: showArtist,
+      onAudioFilterSelected: onAudioFilterSelected,
     );
 
     return Consumer(

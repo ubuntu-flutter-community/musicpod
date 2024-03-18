@@ -8,19 +8,21 @@ import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../common.dart';
 import '../../data.dart';
-import '../../library.dart';
 import '../../local_audio.dart';
+import '../../settings.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
   LocalAudioModel({
-    required this.localAudioService,
-    required this.libraryService,
-  });
+    required LocalAudioService localAudioService,
+    required SettingsService settingsService,
+  })  : _localAudioService = localAudioService,
+        _settingsService = settingsService;
 
-  final LocalAudioService localAudioService;
-  final LibraryService libraryService;
+  final LocalAudioService _localAudioService;
+  final SettingsService _settingsService;
 
   StreamSubscription<bool>? _audiosChangedSub;
+  StreamSubscription<bool>? _titlesViewAudioFilterIndexSub;
 
   Set<Audio>? _albumSearchResult;
   Set<Audio>? get albumSearchResult => _albumSearchResult;
@@ -108,6 +110,19 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  Set<Audio>? _audios;
+  Set<Audio>? get audios => _audios;
+  Set<Audio>? _findAllTitles() {
+    if (_localAudioService.audios == null) return null;
+    final list = (_localAudioService.audios!).toList();
+    sortListByAudioFilter(
+      audioFilter: AudioFilter.values[titlesViewAudioFilterIndex],
+      audios: list,
+    );
+
+    return Set.from(list);
+  }
+
   Set<Audio>? _allArtists;
   Set<Audio>? get allArtists => _allArtists;
   Set<Audio>? _findAllArtists() {
@@ -166,18 +181,6 @@ class LocalAudioModel extends SafeChangeNotifier {
       audios: list,
     );
     return Set.from(list);
-  }
-
-  AudioFilter _audioFilter = AudioFilter.title;
-  AudioFilter get audioFilter => _audioFilter;
-  set audioFilter(AudioFilter value) {
-    if (value == _audioFilter) return;
-    _audioFilter = value;
-    notifyListeners();
-  }
-
-  Set<Audio>? get audios {
-    return localAudioService.audios;
   }
 
   Set<Audio>? findAlbum(
@@ -278,29 +281,41 @@ class LocalAudioModel extends SafeChangeNotifier {
     bool forceInit = false,
   }) async {
     if (forceInit ||
-        (localAudioService.audios == null ||
-            localAudioService.audios?.isEmpty == true)) {
-      final failedImports = await localAudioService.init();
+        (_localAudioService.audios == null ||
+            _localAudioService.audios?.isEmpty == true)) {
+      final failedImports = await _localAudioService.init();
 
       if (failedImports.isNotEmpty) {
         onFail(failedImports);
       }
-
+      _audios = _findAllTitles();
       _allAlbums = findAllAlbums();
       _allArtists = _findAllArtists();
       _allGenres = _findAllGenres();
     }
 
-    _audiosChangedSub = localAudioService.audiosChanged.listen((_) {
+    _audiosChangedSub = _localAudioService.audiosChanged.listen((_) {
+      notifyListeners();
+    });
+
+    _titlesViewAudioFilterIndexSub =
+        _settingsService.titlesViewAudioFilterIndexChanged.listen((_) {
+      _audios = _findAllTitles();
       notifyListeners();
     });
 
     notifyListeners();
   }
 
+  int get titlesViewAudioFilterIndex =>
+      _settingsService.titlesViewAudioFilterIndex;
+  void setTitlesViewAudioFilterIndex(int value) =>
+      _settingsService.setTitlesViewAudioFilterIndex(value);
+
   @override
   Future<void> dispose() async {
     await _audiosChangedSub?.cancel();
+    await _titlesViewAudioFilterIndexSub?.cancel();
     super.dispose();
   }
 
@@ -316,6 +331,6 @@ class LocalAudioModel extends SafeChangeNotifier {
 final localAudioModelProvider = ChangeNotifierProvider(
   (ref) => LocalAudioModel(
     localAudioService: getService<LocalAudioService>(),
-    libraryService: getService<LibraryService>(),
+    settingsService: getService<SettingsService>(),
   ),
 );

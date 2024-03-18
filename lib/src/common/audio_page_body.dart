@@ -42,6 +42,7 @@ class AudioPageBody extends ConsumerStatefulWidget {
     this.imageRadius,
     this.onLabelTab,
     this.onSubTitleTab,
+    this.onAudioFilterSelected,
   })  : showAudioTileHeader = audioPageType != AudioPageType.podcast,
         showAudioPageHeader = audioPageType != AudioPageType.allTitlesView,
         showControlPanel = audioPageType != AudioPageType.allTitlesView;
@@ -70,6 +71,7 @@ class AudioPageBody extends ConsumerStatefulWidget {
   final void Function(String text)? onLabelTab;
   final void Function(String text)? onAlbumTap;
   final void Function(String text)? onArtistTap;
+  final void Function(AudioFilter)? onAudioFilterSelected;
 
   @override
   ConsumerState<AudioPageBody> createState() => _AudioPageBodyState();
@@ -160,7 +162,7 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
       return Column(
         children: [
           if (widget.showAudioPageHeader == true) audioPageHeader,
-          audioControlPanel,
+          if (widget.showControlPanel) audioControlPanel,
           const Expanded(
             child: Center(
               child: Progress(),
@@ -173,7 +175,7 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
         return Column(
           children: [
             if (widget.showAudioPageHeader == true) audioPageHeader,
-            audioControlPanel,
+            if (widget.showControlPanel) audioControlPanel,
             Expanded(
               child: NoSearchResultPage(
                 icons: widget.noResultIcon,
@@ -264,6 +266,7 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
               showAlbum: widget.showAlbum,
               showArtist: widget.showArtist,
               audioFilter: AudioFilter.title,
+              onAudioFilterSelected: widget.onAudioFilterSelected,
             ),
           if (widget.showAudioTileHeader) const Divider(),
           if (isReorderAble && widget.audios != null)
