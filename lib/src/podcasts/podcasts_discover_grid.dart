@@ -107,7 +107,7 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
                     await Future.delayed(const Duration(milliseconds: 300));
                     _controller.jumpTo(_controller.position.maxScrollExtent);
                   },
-                  child: const Text('Load more'),
+                  child: Text(context.l10n.loadMore),
                 ),
               ],
             ),

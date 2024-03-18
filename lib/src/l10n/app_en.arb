@@ -304,5 +304,6 @@
     "stationName": "Station name",
     "podcastName": "Podcast name",
     "url": "Url",
-    "loadFromFileOptional": "Load from file (optional)"
+    "loadFromFileOptional": "Load from file (optional)",
+    "loadMore": "Load more"
 }

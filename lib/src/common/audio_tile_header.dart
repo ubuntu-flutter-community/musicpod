@@ -113,17 +113,14 @@ class _HeaderElement extends StatelessWidget {
               ? theme.colorScheme.onSurface.withOpacity(0.8)
               : theme.colorScheme.onSurface,
         );
-    return InkWell(
-      borderRadius: BorderRadius.circular(5),
+    return TapAbleText(
+      style: textStyle,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
       onTap: onAudioFilterSelected == null
           ? null
           : () => onAudioFilterSelected!(audioFilter),
-      child: Text(
-        label,
-        style: textStyle,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
+      text: label,
     );
   }
 }
