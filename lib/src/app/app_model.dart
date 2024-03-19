@@ -69,5 +69,5 @@ class AppModel extends SafeChangeNotifier {
 }
 
 final appModelProvider = ChangeNotifierProvider(
-  (ref) => AppModel(connectivity: getService<Connectivity>()),
+  (ref) => AppModel(connectivity: getService<Connectivity>())..init(),
 );

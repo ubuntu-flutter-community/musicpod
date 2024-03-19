@@ -36,7 +36,6 @@ class _PodcastsPageState extends ConsumerState<PodcastsPage> {
       ref.read(podcastModelProvider).init(
             countryCode: appModel.countryCode,
             updateMessage: context.l10n.newEpisodeAvailable,
-            isOnline: appModel.isOnline,
             usePodcastIndex: settingsModel.usePodcastIndex,
             podcastIndexApiKey: settingsModel.podcastIndexApiKey,
             podcastIndexApiSecret: settingsModel.podcastIndexApiSecret,

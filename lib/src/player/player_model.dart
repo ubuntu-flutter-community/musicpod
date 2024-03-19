@@ -108,8 +108,6 @@ class PlayerModel extends SafeChangeNotifier {
         service.durationChanged.listen((_) => notifyListeners());
     _positionChangedSub =
         service.positionChanged.listen((_) => notifyListeners());
-
-    notifyListeners();
   }
 
   Future<void> playNext() async => await service.playNext();
@@ -168,5 +166,5 @@ class PlayerModel extends SafeChangeNotifier {
 }
 
 final playerModelProvider = ChangeNotifierProvider<PlayerModel>((ref) {
-  return PlayerModel(service: getService<PlayerService>());
+  return PlayerModel(service: getService<PlayerService>())..init();
 });

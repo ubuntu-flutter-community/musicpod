@@ -11,8 +11,6 @@ import '../../theme.dart';
 import '../../theme_data_x.dart';
 import '../l10n/l10n.dart';
 
-// TODO: create general purpose generic auto complete
-// or extract more
 class CountryAutoComplete extends StatelessWidget {
   const CountryAutoComplete({
     super.key,

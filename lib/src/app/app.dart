@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,10 +8,8 @@ import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../constants.dart';
 import '../../external_path.dart';
-import '../../library.dart';
 import '../../patch_notes.dart';
 import '../../player.dart';
-import '../settings/settings_model.dart';
 import 'master_detail_page.dart';
 
 class App extends ConsumerStatefulWidget {
@@ -30,12 +26,7 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addObserver(this);
 
-    final libraryModel = ref.read(libraryModelProvider);
-    final settingsModel = ref.read(settingsModelProvider);
-    final playerModel = ref.read(playerModelProvider);
-    final appModel = ref.read(appModelProvider);
-
-    if (!Platform.isAndroid && !Platform.isIOS) {
+    if (!isMobile) {
       YaruWindow.of(context).onClose(
         () async {
           await resetAllServices();
@@ -46,22 +37,8 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      appModel.init().then(
-        (_) {
-          libraryModel.init().then(
-            (_) {
-              playerModel.init().then((_) {
-                if (settingsModel.recentPatchNotesDisposed == false) {
-                  showPatchNotes(
-                    context,
-                    settingsModel.disposePatchNotes,
-                  );
-                }
-              }).then((_) => getService<ExternalPathService>().init());
-            },
-          );
-        },
-      );
+      showPatchNotes(context, ref);
+      getService<ExternalPathService>().init();
     });
   }
 
@@ -82,10 +59,9 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final playerToTheRight = context.m.size.width > kSideBarThreshHold;
 
-    final lockSpace =
-        ref.watch(appModelProvider.select((value) => value.lockSpace));
+    final lockSpace = ref.watch(appModelProvider.select((a) => a.lockSpace));
     final isFullScreen =
-        ref.watch(appModelProvider.select((value) => value.fullScreen));
+        ref.watch(appModelProvider.select((a) => a.fullScreen));
     final playerModel = ref.read(playerModelProvider);
 
     return KeyboardListener(

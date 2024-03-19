@@ -9,8 +9,6 @@ const kRepoUrl = 'http://github.com/ubuntu-flutter-community/musicpod';
 
 const kSnapDesktopEntry = '/var/lib/snapd/desktop/applications/musicpod';
 
-// TODO: find the correct flatpak desktop entry path
-// and sed into line 16
 const kFlatPakDesktopEntry = '';
 
 const kDesktopEntry = kSnapDesktopEntry;
