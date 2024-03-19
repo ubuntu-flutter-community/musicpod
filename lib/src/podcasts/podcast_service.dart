@@ -24,7 +24,7 @@ class PodcastService {
   Search? _search;
 
   Future<void> init() async {
-    _search = Search(
+    _search ??= Search(
       searchProvider: _settingsService.usePodcastIndex == true &&
               _settingsService.podcastIndexApiKey != null &&
               _settingsService.podcastIndexApiSecret != null

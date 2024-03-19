@@ -1,3 +1,4 @@
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
@@ -53,7 +54,20 @@ class PodcastsCollectionBody extends ConsumerWidget {
 
     return subsLength == 0
         ? NoSearchResultPage(
-            message: Text(context.l10n.noPodcastSubsFound),
+            icons: const AnimatedEmoji(AnimatedEmojis.faceInClouds),
+            message: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(context.l10n.noPodcastSubsFound),
+                const SizedBox(
+                  height: 10,
+                ),
+                ImportantButton(
+                  onPressed: () => model.setSearchActive(true),
+                  child: Text(context.l10n.discover),
+                ),
+              ],
+            ),
           )
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,

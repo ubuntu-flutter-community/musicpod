@@ -93,7 +93,6 @@ class PodcastModel extends SafeChangeNotifier {
   Future<void> init({
     String? countryCode,
     required String updateMessage,
-    required bool isOnline,
     bool? usePodcastIndex,
     String? podcastIndexApiKey,
     String? podcastIndexApiSecret,
@@ -112,8 +111,6 @@ class PodcastModel extends SafeChangeNotifier {
     _searchChangedSub = _podcastService.searchChanged.listen((_) {
       notifyListeners();
     });
-
-    if (!isOnline) return;
 
     if (_podcastService.searchResult == null ||
         _podcastService.searchResult?.items.isEmpty == true) {
