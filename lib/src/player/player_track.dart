@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
-import '../../theme.dart';
 import '../../utils.dart';
 import 'player_model.dart';
 
@@ -99,7 +98,7 @@ class PlayerTrack extends ConsumerWidget {
         ),
         Expanded(
           child: Padding(
-            padding: EdgeInsets.only(top: bottomPlayer || !yaruStyled ? 0 : 3),
+            padding: EdgeInsets.only(top: bottomPlayer ? 0 : 3),
             child: slider,
           ),
         ),
