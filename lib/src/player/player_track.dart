@@ -96,12 +96,7 @@ class PlayerTrack extends ConsumerWidget {
             ),
           ],
         ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(top: bottomPlayer ? 0 : 3),
-            child: slider,
-          ),
-        ),
+        Expanded(child: slider),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -114,6 +109,7 @@ class PlayerTrack extends ConsumerWidget {
                 child: Text(
                   formatTime(duration ?? Duration.zero),
                   style: textStyle,
+                  textAlign: TextAlign.end,
                 ),
               ),
             ),
