@@ -10,11 +10,11 @@ class RoundImageContainer extends StatelessWidget {
   const RoundImageContainer({
     super.key,
     this.images,
-    required this.fallBackText,
+    this.fallBackText,
   });
 
   final Set<Uint8List>? images;
-  final String fallBackText;
+  final String? fallBackText;
 
   @override
   Widget build(BuildContext context) {

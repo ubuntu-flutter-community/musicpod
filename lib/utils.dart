@@ -304,10 +304,9 @@ Future<Uri?> createUriFromAudio(Audio audio) async {
 String? generateAlbumId(Audio audio) {
   final albumName = audio.album;
   final artistName = audio.artist;
-  final id = albumName == null && artistName == null
+  return albumName == null || artistName == null
       ? null
-      : '${artistName ?? ''}:${albumName ?? ''}';
-  return id;
+      : '$artistName:$albumName';
 }
 
 /// | Bytes | extension | Description |

@@ -101,8 +101,11 @@ class LikeButton extends StatelessWidget {
           ),
           PopupMenuItem(
             padding: EdgeInsets.zero,
-            child: StreamProviderRow(
-              text: '${audio.artist ?? ''} - ${audio.title ?? ''}',
+            child: Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: StreamProviderRow(
+                text: '${audio.artist ?? ''} - ${audio.title ?? ''}',
+              ),
             ),
           ),
         ];
