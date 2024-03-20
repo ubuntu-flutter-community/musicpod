@@ -37,6 +37,7 @@ class AudioPage extends StatelessWidget {
     this.onLabelTab,
     this.onSubTitleTab,
     this.onAudioFilterSelected,
+    this.classicTiles = true,
   });
 
   final Set<Audio>? audios;
@@ -61,11 +62,13 @@ class AudioPage extends StatelessWidget {
   final void Function(String text)? onAlbumTap;
   final void Function(String text)? onArtistTap;
   final void Function(AudioFilter)? onAudioFilterSelected;
+  final bool classicTiles;
 
   @override
   Widget build(BuildContext context) {
     final body = AudioPageBody(
       key: ValueKey(audios?.length),
+      classicTiles: classicTiles,
       pageId: pageId,
       audios: audios,
       noResultMessage: noResultMessage,

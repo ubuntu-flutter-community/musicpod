@@ -9,7 +9,6 @@ class AudioTileHeader extends StatelessWidget {
   const AudioTileHeader({
     super.key,
     this.onAudioFilterSelected,
-    required this.audioFilter,
     this.showTrack = true,
     this.showArtist = true,
     this.showAlbum = true,
@@ -23,7 +22,6 @@ class AudioTileHeader extends StatelessWidget {
   });
 
   final void Function(AudioFilter audioFilter)? onAudioFilterSelected;
-  final AudioFilter audioFilter;
   final bool showTrack;
   final bool showArtist;
   final bool showAlbum;
@@ -34,7 +32,7 @@ class AudioTileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: kAudioTilePadding,
+      contentPadding: kClassicAudioTilePadding,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

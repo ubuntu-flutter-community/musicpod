@@ -195,7 +195,7 @@ class SettingsService {
       StreamController<bool>.broadcast();
   Stream<bool> get titlesViewAudioFilterIndexChanged =>
       _titlesViewAudioFilterIndexController.stream;
-  int _titlesViewAudioFilterIndex = AudioFilter.album.index;
+  int _titlesViewAudioFilterIndex = AudioFilter.title.index;
   int get titlesViewAudioFilterIndex => _titlesViewAudioFilterIndex;
   void setTitlesViewAudioFilterIndex(int value) {
     if (value == _titlesViewAudioFilterIndex) return;
