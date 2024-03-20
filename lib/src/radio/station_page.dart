@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
@@ -145,18 +146,47 @@ class StationPage extends ConsumerWidget {
             audios: {station},
             controlButton: Padding(
               padding: const EdgeInsets.only(left: 5),
-              child: IconButton(
-                tooltip: isStarred
-                    ? context.l10n.removeFromCollection
-                    : context.l10n.addToCollection,
-                onPressed: station.url == null
-                    ? null
-                    : isStarred
-                        ? () => unStarStation(station.url!)
-                        : () => starStation(station.url!),
-                icon: Iconz().getAnimatedStar(
-                  isStarred,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    tooltip: isStarred
+                        ? context.l10n.removeFromCollection
+                        : context.l10n.addToCollection,
+                    onPressed: station.url == null
+                        ? null
+                        : isStarred
+                            ? () => unStarStation(station.url!)
+                            : () => starStation(station.url!),
+                    icon: Iconz().getAnimatedStar(
+                      isStarred,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  IconButton(
+                    tooltip: context.l10n.copyToClipBoard,
+                    onPressed: () {
+                      final text =
+                          ref.read(libraryModelProvider).radioHistoryList;
+                      Clipboard.setData(
+                        ClipboardData(
+                          text: text,
+                        ),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: CopyClipboardContent(
+                            text: text,
+                            showActions: false,
+                          ),
+                        ),
+                      );
+                    },
+                    icon: Icon(Iconz().copy),
+                  ),
+                ],
               ),
             ),
             icon: isPlaying && isAudioStation ? Iconz().pause : Iconz().play,

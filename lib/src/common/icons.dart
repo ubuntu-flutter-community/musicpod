@@ -108,6 +108,14 @@ class Iconz {
             : Icons.computer;
   }
 
+  IconData get copy {
+    return yaruStyled
+        ? YaruIcons.copy
+        : appleStyled
+            ? CupertinoIcons.doc_on_clipboard
+            : Icons.copy;
+  }
+
   IconData get drag {
     if (appleStyled) {
       return CupertinoIcons.move;
