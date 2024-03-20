@@ -9,10 +9,12 @@ class CopyClipboardContent extends StatelessWidget {
     super.key,
     required this.text,
     this.onSearch,
+    this.showActions = true,
   });
 
   final String text;
   final void Function()? onSearch;
+  final bool showActions;
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +44,12 @@ class CopyClipboardContent extends StatelessWidget {
               ],
             ),
           ),
-          StreamProviderRow(
-            iconColor: theme.snackBarTheme.actionTextColor,
-            onSearch: onSearch,
-            text: text,
-          ),
+          if (showActions)
+            StreamProviderRow(
+              iconColor: theme.snackBarTheme.actionTextColor,
+              onSearch: onSearch,
+              text: text,
+            ),
         ],
       ),
     );

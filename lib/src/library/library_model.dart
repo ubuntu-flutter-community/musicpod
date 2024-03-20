@@ -337,6 +337,16 @@ class LibraryModel extends SafeChangeNotifier {
       _service.addLastPosition(url, lastPosition);
 
   Map<String, MpvMetaData> get radioHistory => _service.radioHistory;
+
+  String get radioHistoryList => radioHistory.isEmpty
+      ? ''
+      : radioHistory.entries
+          .map((e) => '${e.key}\n')
+          .toList()
+          .toString()
+          .replaceAll(', ', '')
+          .replaceAll('[', '')
+          .replaceAll(']', '');
 }
 
 final libraryModelProvider = ChangeNotifierProvider<LibraryModel>((ref) {

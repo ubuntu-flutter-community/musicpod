@@ -121,6 +121,7 @@
     },
     "emptyPlaylist": "This playlist is empty.",
     "copiedToClipBoard": "Copied to clipboard:",
+    "copyToClipBoard": "Copy to clipboard",
     "insertIntoQueue": "Insert into queue",
     "about": "About",
     "localAudioCacheSuggestion": "You have {length} local audio files. Do you want to create a cache to improve start-up time?",
