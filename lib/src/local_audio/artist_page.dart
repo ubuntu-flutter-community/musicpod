@@ -14,7 +14,6 @@ import '../../local_audio.dart';
 import '../../player.dart';
 import '../../settings.dart';
 import '../../utils.dart';
-import '../common/unknown_page.dart';
 import '../l10n/l10n.dart';
 import 'genre_page.dart';
 
@@ -30,12 +29,6 @@ class ArtistPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pageId =
-        artistAudios?.firstWhereOrNull((e) => e.artist != null)?.artist;
-    if (pageId == null) {
-      return const UnknownPage();
-    }
-
     final libraryModel = ref.read(libraryModelProvider);
     final model = ref.read(localAudioModelProvider);
 
@@ -65,8 +58,7 @@ class ArtistPage extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: StreamProviderRow(
-            text:
-                artistAudios?.firstWhereOrNull((e) => e.artist != null)?.artist,
+            text: artistAudios?.firstOrNull?.artist,
           ),
         ),
         listModeToggle,
@@ -75,13 +67,8 @@ class ArtistPage extends ConsumerWidget {
 
     void onAlbumTap(text) {
       final audios = model.findAlbum(Audio(album: text));
-      if (audios == null ||
-          audios.none((a) => a.artist != null && a.album != null) == true) {
-        return;
-      }
-      final id = generateAlbumId(
-        audios.firstWhere((e) => e.artist != null && e.album != null),
-      );
+      if (audios?.firstOrNull == null) return;
+      final id = generateAlbumId(audios!.first);
       if (id == null) return;
 
       Navigator.of(context).push(
@@ -111,8 +98,7 @@ class ArtistPage extends ConsumerWidget {
 
     final roundImageContainer = RoundImageContainer(
       images: images,
-      fallBackText:
-          artistAudios?.firstWhereOrNull((e) => e.artist != null)?.artist,
+      fallBackText: artistAudios?.firstOrNull?.artist ?? 'a',
     );
 
     if (!useGridView) {
@@ -123,14 +109,12 @@ class ArtistPage extends ConsumerWidget {
         onSubTitleTab: onSubTitleTab,
         audioPageType: AudioPageType.artist,
         headerLabel: context.l10n.artist,
-        headerTitle:
-            artistAudios?.firstWhereOrNull((e) => e.artist != null)?.artist,
+        headerTitle: artistAudios?.firstOrNull?.artist,
         image: roundImageContainer,
         imageRadius: BorderRadius.circular(10000),
-        headerSubtile:
-            artistAudios?.firstWhereOrNull((e) => e.genre != null)?.genre,
+        headerSubtile: artistAudios?.firstOrNull?.genre,
         audios: artistAudios,
-        pageId: pageId,
+        pageId: artistAudios?.firstOrNull?.artist ?? artistAudios.toString(),
         controlPanelButton: controlPanelButton,
       );
     }
@@ -169,8 +153,7 @@ class _ArtistAlbumsCardGrid extends StatelessWidget {
         final showWindowControls =
             ref.watch(appModelProvider.select((a) => a.showWindowControls));
 
-        final artist =
-            artistAudios?.firstWhereOrNull((e) => e.artist != null)?.artist;
+        final artist = artistAudios?.firstOrNull?.artist;
         final model = ref.read(localAudioModelProvider);
         final playerModel = ref.read(playerModelProvider);
 
@@ -190,11 +173,9 @@ class _ArtistAlbumsCardGrid extends StatelessWidget {
                   children: [
                     AudioPageHeader(
                       imageRadius: BorderRadius.circular(10000),
-                      title: artist,
+                      title: artistAudios?.firstOrNull?.artist ?? '',
                       image: image,
-                      subTitle: artistAudios
-                          ?.firstWhereOrNull((e) => e.genre != null)
-                          ?.genre,
+                      subTitle: artistAudios?.firstOrNull?.genre,
                       label: context.l10n.artist,
                       onLabelTab: onLabelTab,
                       onSubTitleTab: onSubTitleTab,

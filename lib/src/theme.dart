@@ -161,8 +161,8 @@ const alphabetColors = {
   'Z': Colors.deepOrangeAccent,
 };
 
-Color getAlphabetColor(String? text, [Color fallBackColor = Colors.black]) {
-  final letter = text == null || text.isEmpty == true ? null : text[0];
+Color getAlphabetColor(String text, [Color fallBackColor = Colors.black]) {
+  final letter = text.isEmpty ? null : text[0];
   return alphabetColors[letter?.toUpperCase()] ?? fallBackColor;
 }
 
