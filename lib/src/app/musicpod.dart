@@ -24,7 +24,7 @@ class YaruMusicPodApp extends StatelessWidget {
     return YaruTheme(
       builder: (context, yaru, child) {
         return _MusicPodApp(
-          hightContrastTheme: yaruHighContrastLight,
+          highContrastTheme: yaruHighContrastLight,
           highContrastDarkTheme: yaruHighContrastDark,
           lightTheme: yaru.theme?.copyWith(
             actionIconTheme: ActionIconThemeData(
@@ -81,13 +81,13 @@ class _MusicPodApp extends StatefulWidget {
     this.lightTheme,
     this.darkTheme,
     this.accent,
-    this.hightContrastTheme,
+    this.highContrastTheme,
     this.highContrastDarkTheme,
   });
 
   final ThemeData? lightTheme,
       darkTheme,
-      hightContrastTheme,
+      highContrastTheme,
       highContrastDarkTheme;
   final Color? accent;
 
@@ -117,10 +117,10 @@ class _MusicPodAppState extends State<_MusicPodApp> {
         final themeIndex = ref
             .watch(settingsModelProvider.select((value) => value.themeIndex));
         return MaterialApp(
-          highContrastTheme: widget.hightContrastTheme,
-          highContrastDarkTheme: widget.highContrastDarkTheme,
           debugShowCheckedModeBanner: false,
           themeMode: ThemeMode.values[themeIndex],
+          highContrastTheme: widget.highContrastTheme,
+          highContrastDarkTheme: widget.highContrastDarkTheme,
           theme: widget.lightTheme ??
               m3Theme(color: widget.accent ?? Colors.greenAccent),
           darkTheme: widget.darkTheme ??

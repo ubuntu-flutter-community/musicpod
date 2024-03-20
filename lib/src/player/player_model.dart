@@ -166,5 +166,5 @@ class PlayerModel extends SafeChangeNotifier {
 }
 
 final playerModelProvider = ChangeNotifierProvider<PlayerModel>((ref) {
-  return PlayerModel(service: getService<PlayerService>())..init();
+  return PlayerModel(service: getService<PlayerService>());
 });

@@ -8,8 +8,10 @@ import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../constants.dart';
 import '../../external_path.dart';
+import '../../library.dart';
 import '../../patch_notes.dart';
 import '../../player.dart';
+import '../../settings.dart';
 import 'master_detail_page.dart';
 
 class App extends ConsumerStatefulWidget {
@@ -26,6 +28,11 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addObserver(this);
 
+    final libraryModel = ref.read(libraryModelProvider);
+    final appModel = ref.read(appModelProvider);
+    final settingsModel = ref.read(settingsModelProvider);
+    final playerModel = ref.read(playerModelProvider);
+
     if (!isMobile) {
       YaruWindow.of(context).onClose(
         () async {
@@ -37,8 +44,20 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      showPatchNotes(context, ref);
-      getService<ExternalPathService>().init();
+
+      appModel.init().then(
+        (_) {
+          libraryModel.init().then(
+            (_) {
+              playerModel.init().then((_) {
+                if (settingsModel.recentPatchNotesDisposed == false) {
+                  showPatchNotes(context, ref);
+                }
+              }).then((_) => getService<ExternalPathService>().init());
+            },
+          );
+        },
+      );
     });
   }
 

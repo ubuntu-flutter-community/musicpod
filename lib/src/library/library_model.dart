@@ -350,5 +350,5 @@ class LibraryModel extends SafeChangeNotifier {
 }
 
 final libraryModelProvider = ChangeNotifierProvider<LibraryModel>((ref) {
-  return LibraryModel(getService<LibraryService>())..init();
+  return LibraryModel(getService<LibraryService>());
 });
