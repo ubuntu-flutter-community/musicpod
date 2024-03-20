@@ -31,7 +31,9 @@ const kMinAudioPageHeaderHeight = 0.0;
 
 const kSnackBarDuration = Duration(seconds: 10);
 
-const kAudioTilePadding = EdgeInsets.only(left: 25, right: 25);
+const kClassicAudioTilePadding = EdgeInsets.symmetric(horizontal: 25);
+
+const kModernAudioTilePadding = EdgeInsets.symmetric(horizontal: 20);
 
 const kAudioTileTrackPadding = EdgeInsets.only(right: 20);
 

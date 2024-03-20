@@ -80,6 +80,7 @@ class PlaylistPage extends ConsumerWidget {
         }
       },
       child: AudioPage(
+        classicTiles: false,
         onAlbumTap: (text) {
           final albumAudios = model.findAlbum(Audio(album: text));
           if (albumAudios?.firstOrNull == null) return;

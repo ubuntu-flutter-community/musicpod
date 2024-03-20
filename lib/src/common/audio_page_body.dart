@@ -43,6 +43,7 @@ class AudioPageBody extends ConsumerStatefulWidget {
     this.onLabelTab,
     this.onSubTitleTab,
     this.onAudioFilterSelected,
+    this.classicTiles = true,
   })  : showAudioTileHeader = audioPageType != AudioPageType.podcast,
         showAudioPageHeader = audioPageType != AudioPageType.allTitlesView,
         showControlPanel = audioPageType != AudioPageType.allTitlesView;
@@ -72,6 +73,7 @@ class AudioPageBody extends ConsumerStatefulWidget {
   final void Function(String text)? onAlbumTap;
   final void Function(String text)? onArtistTap;
   final void Function(AudioFilter)? onAudioFilterSelected;
+  final bool classicTiles;
 
   @override
   ConsumerState<AudioPageBody> createState() => _AudioPageBodyState();
@@ -216,7 +218,7 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
       }
 
       return AudioTile(
-        key: ObjectKey(audio),
+        key: reorderAblePageType ? ObjectKey(audio) : null,
         trackLabel: (widget.audioPageType == AudioPageType.playlist ||
                 widget.audioPageType == AudioPageType.likedAudio)
             ? (index + 1).toString().padLeft(2, '0')
@@ -245,8 +247,24 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
         pageId: widget.pageId,
         libraryModel: libraryModel,
         audioPageType: widget.audioPageType,
+        classic: widget.classicTiles,
       );
     }
+
+    final audioTileHeader = widget.classicTiles
+        ? AudioTileHeader(
+            titleFlex: widget.titleFlex,
+            artistFlex: widget.artistFlex,
+            albumFlex: widget.albumFlex,
+            titleLabel: widget.titleLabel,
+            artistLabel: widget.artistLabel,
+            albumLabel: widget.albumLabel,
+            showTrack: widget.showTrack,
+            showAlbum: widget.showAlbum,
+            showArtist: widget.showArtist,
+            onAudioFilterSelected: widget.onAudioFilterSelected,
+          )
+        : const SizedBox(height: 10);
 
     return Padding(
       padding: widget.padding ?? EdgeInsets.zero,
@@ -254,21 +272,9 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
         children: [
           if (widget.showAudioPageHeader == true) audioPageHeader,
           if (widget.showControlPanel) audioControlPanel,
-          if (widget.showAudioTileHeader)
-            AudioTileHeader(
-              titleFlex: widget.titleFlex,
-              artistFlex: widget.artistFlex,
-              albumFlex: widget.albumFlex,
-              titleLabel: widget.titleLabel,
-              artistLabel: widget.artistLabel,
-              albumLabel: widget.albumLabel,
-              showTrack: widget.showTrack,
-              showAlbum: widget.showAlbum,
-              showArtist: widget.showArtist,
-              audioFilter: AudioFilter.title,
-              onAudioFilterSelected: widget.onAudioFilterSelected,
-            ),
-          if (widget.showAudioTileHeader) const Divider(),
+          if (widget.showAudioTileHeader) audioTileHeader,
+          if (widget.showAudioTileHeader && widget.classicTiles)
+            const Divider(),
           if (isReorderAble && widget.audios != null)
             Expanded(
               child: ReorderableListView.builder(

@@ -34,6 +34,7 @@ class LikedAudioPage extends ConsumerWidget {
     final model = ref.read(localAudioModelProvider);
     final libraryModel = ref.read(libraryModelProvider);
     return AudioPage(
+      classicTiles: false,
       onAlbumTap: (text) {
         final albumAudios = model.findAlbum(Audio(album: text));
         if (albumAudios?.firstOrNull == null) return;

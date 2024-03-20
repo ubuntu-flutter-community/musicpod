@@ -17,10 +17,12 @@ class TitlesView extends ConsumerWidget {
     required this.audios,
     this.noResultMessage,
     this.noResultIcon,
+    required this.classicTiles,
   });
 
   final Set<Audio>? audios;
   final Widget? noResultMessage, noResultIcon;
+  final bool classicTiles;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,6 +31,8 @@ class TitlesView extends ConsumerWidget {
     final playerModel = ref.read(playerModelProvider);
 
     return AudioPageBody(
+      classicTiles: classicTiles,
+      showAlbum: classicTiles,
       padding: const EdgeInsets.only(top: 10),
       showTrack: false,
       noResultIcon: noResultIcon,

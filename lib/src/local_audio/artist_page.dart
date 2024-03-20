@@ -103,6 +103,7 @@ class ArtistPage extends ConsumerWidget {
 
     if (!useGridView) {
       return AudioPage(
+        classicTiles: false,
         showArtist: false,
         onAlbumTap: onAlbumTap,
         onSubTitleTab: onSubTitleTab,

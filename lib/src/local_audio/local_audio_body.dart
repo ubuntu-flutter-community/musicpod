@@ -30,6 +30,7 @@ class LocalAudioBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return switch (localAudioView) {
       LocalAudioView.titles => TitlesView(
+          classicTiles: false,
           audios: titles,
           noResultMessage: noResultMessage,
           noResultIcon: noResultIcon,
