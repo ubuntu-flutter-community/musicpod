@@ -27,12 +27,6 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
     super.initState();
 
     WidgetsBinding.instance.addObserver(this);
-
-    final libraryModel = ref.read(libraryModelProvider);
-    final appModel = ref.read(appModelProvider);
-    final settingsModel = ref.read(settingsModelProvider);
-    final playerModel = ref.read(playerModelProvider);
-
     if (!isMobile) {
       YaruWindow.of(context).onClose(
         () async {
@@ -42,23 +36,7 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
       );
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-
-      appModel.init().then(
-        (_) {
-          libraryModel.init().then(
-            (_) {
-              playerModel.init().then((_) {
-                if (settingsModel.recentPatchNotesDisposed == false) {
-                  showPatchNotes(context, ref);
-                }
-              }).then((_) => getService<ExternalPathService>().init());
-            },
-          );
-        },
-      );
-    });
+    _init(ref);
   }
 
   @override
@@ -72,6 +50,31 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
     if (state == AppLifecycleState.paused) {
       await resetAllServices();
     }
+  }
+
+  void _init(WidgetRef ref) {
+    final libraryModel = ref.read(libraryModelProvider);
+    final appModel = ref.read(appModelProvider);
+    final settingsModel = ref.read(settingsModelProvider);
+    final playerModel = ref.read(playerModelProvider);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      appModel.init().then(
+        (_) {
+          libraryModel.init().then(
+            (_) {
+              playerModel.init().then((_) {
+                settingsModel.init();
+                if (settingsModel.recentPatchNotesDisposed == false) {
+                  showPatchNotes(context, ref);
+                }
+              }).then((_) => getService<ExternalPathService>().init());
+            },
+          );
+        },
+      );
+    });
   }
 
   @override
