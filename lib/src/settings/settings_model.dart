@@ -134,5 +134,5 @@ final settingsModelProvider = ChangeNotifierProvider(
     service: getService<SettingsService>(),
     externalPathService: getService<ExternalPathService>(),
     gitHub: getService<GitHub>(),
-  )..init(),
+  ),
 );
