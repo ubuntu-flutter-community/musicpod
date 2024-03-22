@@ -14,6 +14,7 @@ import '../../local_audio.dart';
 import '../../player.dart';
 import '../../settings.dart';
 import '../../utils.dart';
+import '../common/explore_online_popup.dart';
 import '../l10n/l10n.dart';
 import 'genre_page.dart';
 
@@ -37,33 +38,8 @@ class ArtistPage extends ConsumerWidget {
     );
     final setUseGridView = ref.read(settingsModelProvider).setUseArtistGridView;
 
-    var listModeToggle = Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-          icon: Icon(Iconz().list),
-          isSelected: !useGridView,
-          onPressed: () => setUseGridView(false),
-        ),
-        IconButton(
-          icon: Icon(Iconz().grid),
-          isSelected: useGridView,
-          onPressed: () => setUseGridView(true),
-        ),
-      ],
-    );
-
-    final controlPanelButton = Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: StreamProviderRow(
-            text: artistAudios?.firstOrNull?.artist,
-          ),
-        ),
-        listModeToggle,
-      ],
-    );
+    final controlPanelButton =
+        _buildControlRow(useGridView, setUseGridView, context);
 
     void onAlbumTap(text) {
       final audios = model.findAlbum(Audio(album: text));
@@ -125,6 +101,30 @@ class ArtistPage extends ConsumerWidget {
       image: roundImageContainer,
       artistAudios: artistAudios,
       controlPanelButton: controlPanelButton,
+    );
+  }
+
+  Widget _buildControlRow(
+    bool useGridView,
+    void Function(bool value) setUseGridView,
+    BuildContext context,
+  ) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          icon: Icon(Iconz().list),
+          isSelected: !useGridView,
+          onPressed: () => setUseGridView(false),
+        ),
+        IconButton(
+          icon: Icon(Iconz().grid),
+          isSelected: useGridView,
+          onPressed: () => setUseGridView(true),
+        ),
+        if (artistAudios?.firstOrNull?.artist != null)
+          ExploreOnlinePopup(text: artistAudios!.firstOrNull!.artist!),
+      ],
     );
   }
 }

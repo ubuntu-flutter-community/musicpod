@@ -306,5 +306,6 @@
     "podcastName": "Name des Podcasts",
     "url": "Url",
     "loadFromFileOptional": "Aus Datei laden (optional)",
-    "loadMore": "Mehr laden"
+    "loadMore": "Mehr laden",
+    "searchOnline": "Im Internet suchen"
 }

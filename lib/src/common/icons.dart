@@ -116,6 +116,14 @@ class Iconz {
             : Icons.copy;
   }
 
+  IconData get explore {
+    return yaruStyled
+        ? YaruIcons.compass
+        : appleStyled
+            ? CupertinoIcons.compass
+            : Icons.explore;
+  }
+
   IconData get drag {
     if (appleStyled) {
       return CupertinoIcons.move;

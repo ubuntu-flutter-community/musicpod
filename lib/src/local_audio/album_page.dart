@@ -10,6 +10,7 @@ import '../../constants.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
 import '../../theme_data_x.dart';
+import '../common/explore_online_popup.dart';
 import '../l10n/l10n.dart';
 
 class AlbumPage extends ConsumerWidget {
@@ -86,37 +87,41 @@ class AlbumPage extends ConsumerWidget {
       headerLabel: context.l10n.album,
       headerSubtile: album.firstOrNull?.artist,
       image: AlbumPageImage(pictureData: pictureData),
-      controlPanelButton: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 5),
-            child: IconButton(
-              tooltip: context.l10n.pinAlbum,
-              isSelected: isPinnedAlbum(id),
-              icon: Icon(
-                isPinnedAlbum(id) ? Iconz().pinFilled : Iconz().pin,
-              ),
-              onPressed: () {
-                if (isPinnedAlbum(id)) {
-                  removePinnedAlbum(id);
-                } else {
-                  addPinnedAlbum(id, album);
-                }
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: StreamProviderRow(
-              text:
-                  '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
-            ),
-          ),
-        ],
-      ),
+      controlPanelButton: _buildControlButton(context),
       audios: album,
       pageId: id,
       headerTitle: album.firstOrNull?.album,
+    );
+  }
+
+  Widget _buildControlButton(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 5),
+          child: IconButton(
+            tooltip: context.l10n.pinAlbum,
+            isSelected: isPinnedAlbum(id),
+            icon: Icon(
+              isPinnedAlbum(id) ? Iconz().pinFilled : Iconz().pin,
+            ),
+            onPressed: () {
+              if (isPinnedAlbum(id)) {
+                removePinnedAlbum(id);
+              } else {
+                addPinnedAlbum(id, album);
+              }
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 5),
+          child: ExploreOnlinePopup(
+            text: '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
+          ),
+        ),
+      ],
     );
   }
 }

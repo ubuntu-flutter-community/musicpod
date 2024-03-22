@@ -79,6 +79,8 @@ class StreamProviderRow extends StatelessWidget {
     this.onSearch,
     this.spacing = 0.0,
     this.iconColor,
+    this.mainAxisSize = MainAxisSize.max,
+    this.mainAxisAlignment = MainAxisAlignment.start,
   });
 
   final String? text;
@@ -86,10 +88,14 @@ class StreamProviderRow extends StatelessWidget {
 
   final double spacing;
   final Color? iconColor;
+  final MainAxisSize mainAxisSize;
+  final MainAxisAlignment mainAxisAlignment;
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: mainAxisSize,
+      mainAxisAlignment: mainAxisAlignment,
       children: [
         StreamProviderShareButton(
           color: iconColor,
