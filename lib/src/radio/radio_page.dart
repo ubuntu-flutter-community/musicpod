@@ -5,6 +5,7 @@ import 'package:yaru/yaru.dart';
 import '../../app.dart';
 import '../../common.dart';
 import '../../globals.dart';
+import '../common/adaptive_container.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import 'radio_discover_page.dart';
@@ -113,8 +114,10 @@ class _RadioPageState extends ConsumerState<RadioPage> {
         ],
         title: Text('${context.l10n.radio} ${context.l10n.collection}'),
       ),
-      body: RadioLibPage(
-        isOnline: appModel.isOnline,
+      body: AdaptiveContainer(
+        child: RadioLibPage(
+          isOnline: appModel.isOnline,
+        ),
       ),
     );
   }
