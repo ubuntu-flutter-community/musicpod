@@ -10,6 +10,7 @@ import '../../data.dart';
 import '../../globals.dart';
 import '../../local_audio.dart';
 import '../../player.dart';
+import '../common/adaptive_container.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import '../settings/settings_model.dart';
@@ -114,19 +115,21 @@ class _LocalAudioPageState extends ConsumerState<LocalAudioPage> {
 
     return YaruDetailPage(
       appBar: headerBar,
-      body: Column(
-        children: [
-          const LocalAudioControlPanel(),
-          Expanded(
-            child: LocalAudioBody(
-              localAudioView: localAudioView,
-              titles: audios,
-              albums: model.allAlbums,
-              artists: model.allArtists,
-              genres: model.allGenres,
+      body: AdaptiveContainer(
+        child: Column(
+          children: [
+            const LocalAudioControlPanel(),
+            Expanded(
+              child: LocalAudioBody(
+                localAudioView: localAudioView,
+                titles: audios,
+                albums: model.allAlbums,
+                artists: model.allArtists,
+                genres: model.allGenres,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

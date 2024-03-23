@@ -15,6 +15,7 @@ import '../../player.dart';
 import '../../radio.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
+import '../common/adaptive_container.dart';
 import 'radio_fall_back_icon.dart';
 import 'radio_history_list.dart';
 
@@ -94,139 +95,141 @@ class StationPage extends ConsumerWidget {
     );
     final isPlaying = ref.watch(playerModelProvider.select((v) => v.isPlaying));
 
-    final body = Column(
-      children: [
-        AudioPageHeader(
-          padding: const EdgeInsets.only(
-            left: kYaruPagePadding,
-            bottom: kYaruPagePadding,
-          ),
-          title: name,
-          subTitle: '',
-          label: '',
-          image: SafeNetworkImage(
-            fallBackIcon: RadioFallBackIcon(
-              iconSize: size / 2,
-              station: station,
+    final body = AdaptiveContainer(
+      child: Column(
+        children: [
+          AudioPageHeader(
+            padding: const EdgeInsets.only(
+              left: kYaruPagePadding,
+              bottom: kYaruPagePadding,
             ),
-            url: station.imageUrl,
-            fit: BoxFit.scaleDown,
-            width: size,
-            height: size,
+            title: name,
+            subTitle: '',
+            label: '',
+            image: SafeNetworkImage(
+              fallBackIcon: RadioFallBackIcon(
+                iconSize: size / 2,
+                station: station,
+              ),
+              url: station.imageUrl,
+              fit: BoxFit.scaleDown,
+              width: size,
+              height: size,
+            ),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AudioPageHeaderTitle(title: station.title ?? ''),
+                const SizedBox(
+                  height: 5,
+                ),
+                AudioPageHeaderSubTitle(
+                  label: context.l10n.station,
+                  subTitle: station.artist,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: _createTagBar(
+                    tags: tags,
+                    radioModel: radioModel,
+                    libraryModel: libraryModel,
+                    appModel: appModel,
+                  ),
+                ),
+              ],
+            ),
           ),
-          content: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AudioPageHeaderTitle(title: station.title ?? ''),
-              const SizedBox(
-                height: 5,
-              ),
-              AudioPageHeaderSubTitle(
-                label: context.l10n.station,
-                subTitle: station.artist,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                child: _createTagBar(
-                  tags: tags,
-                  radioModel: radioModel,
-                  libraryModel: libraryModel,
-                  appModel: appModel,
+          Padding(
+            padding: kAudioControlPanelPadding,
+            child: AudioPageControlPanel(
+              audios: {station},
+              controlButton: Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      tooltip: isStarred
+                          ? context.l10n.removeFromCollection
+                          : context.l10n.addToCollection,
+                      onPressed: station.url == null
+                          ? null
+                          : isStarred
+                              ? () => unStarStation(station.url!)
+                              : () => starStation(station.url!),
+                      icon: Iconz().getAnimatedStar(
+                        isStarred,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    IconButton(
+                      tooltip: context.l10n.copyToClipBoard,
+                      onPressed: () {
+                        final text =
+                            ref.read(libraryModelProvider).radioHistoryList;
+                        Clipboard.setData(
+                          ClipboardData(
+                            text: text,
+                          ),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: CopyClipboardContent(
+                              text: text,
+                              showActions: false,
+                            ),
+                          ),
+                        );
+                      },
+                      icon: Icon(Iconz().copy),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: kAudioControlPanelPadding,
-          child: AudioPageControlPanel(
-            audios: {station},
-            controlButton: Padding(
-              padding: const EdgeInsets.only(left: 5),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    tooltip: isStarred
-                        ? context.l10n.removeFromCollection
-                        : context.l10n.addToCollection,
-                    onPressed: station.url == null
-                        ? null
-                        : isStarred
-                            ? () => unStarStation(station.url!)
-                            : () => starStation(station.url!),
-                    icon: Iconz().getAnimatedStar(
-                      isStarred,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  IconButton(
-                    tooltip: context.l10n.copyToClipBoard,
-                    onPressed: () {
-                      final text =
-                          ref.read(libraryModelProvider).radioHistoryList;
-                      Clipboard.setData(
-                        ClipboardData(
-                          text: text,
-                        ),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: CopyClipboardContent(
-                            text: text,
-                            showActions: false,
-                          ),
-                        ),
-                      );
+              icon: isPlaying && isAudioStation ? Iconz().pause : Iconz().play,
+              onTap: station.url == null
+                  ? null
+                  : () {
+                      if (isPlaying) {
+                        if (isAudioStation) {
+                          playerModel.pause();
+                        } else {
+                          playerModel.startPlaylist(
+                            audios: {station},
+                            listName: station.url!,
+                          );
+                        }
+                      } else {
+                        if (isAudioStation) {
+                          playerModel.resume();
+                        } else {
+                          playerModel.startPlaylist(
+                            audios: {station},
+                            listName: station.url!,
+                          );
+                        }
+                      }
                     },
-                    icon: Icon(Iconz().copy),
-                  ),
-                ],
-              ),
             ),
-            icon: isPlaying && isAudioStation ? Iconz().pause : Iconz().play,
-            onTap: station.url == null
-                ? null
-                : () {
-                    if (isPlaying) {
-                      if (isAudioStation) {
-                        playerModel.pause();
-                      } else {
-                        playerModel.startPlaylist(
-                          audios: {station},
-                          listName: station.url!,
-                        );
-                      }
-                    } else {
-                      if (isAudioStation) {
-                        playerModel.resume();
-                      } else {
-                        playerModel.startPlaylist(
-                          audios: {station},
-                          listName: station.url!,
-                        );
-                      }
-                    }
-                  },
           ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Expanded(
-          child: RadioHistoryList(
-            filter: station.title,
-            emptyMessage: const SizedBox.shrink(),
-            emptyIcon: const SizedBox.shrink(),
-            padding: radioHistoryListPadding,
+          const SizedBox(
+            height: 10,
           ),
-        ),
-      ],
+          Expanded(
+            child: RadioHistoryList(
+              filter: station.title,
+              emptyMessage: const SizedBox.shrink(),
+              emptyIcon: const SizedBox.shrink(),
+              padding: radioHistoryListPadding,
+            ),
+          ),
+        ],
+      ),
     );
 
     return YaruDetailPage(
