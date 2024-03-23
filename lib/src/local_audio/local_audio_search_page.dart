@@ -9,6 +9,7 @@ import '../../constants.dart';
 import '../../globals.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
+import '../common/adaptive_container.dart';
 import '../l10n/l10n.dart';
 import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
@@ -136,7 +137,7 @@ class LocalAudioSearchPage extends ConsumerWidget {
           ),
         ),
       ),
-      body: body,
+      body: AdaptiveContainer(child: body),
     );
   }
 }

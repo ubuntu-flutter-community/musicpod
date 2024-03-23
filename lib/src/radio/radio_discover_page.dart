@@ -9,6 +9,7 @@ import '../../constants.dart';
 import '../../globals.dart';
 import '../../l10n.dart';
 import '../../radio.dart';
+import '../common/adaptive_container.dart';
 import '../library/library_model.dart';
 import 'radio_control_panel.dart';
 
@@ -117,30 +118,32 @@ class RadioDiscoverPage extends ConsumerWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          const Row(
-            children: [
-              RadioControlPanel(),
-            ],
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Expanded(
-            child: RadioSearchPage(
-              key: ValueKey(
-                searchQuery.toString() +
-                    tag.toString() +
-                    country.toString() +
-                    radioSearch.toString(),
-              ),
-              includeHeader: false,
-              radioSearch: radioSearch,
-              searchQuery: searchQuery,
+      body: AdaptiveContainer(
+        child: Column(
+          children: [
+            const Row(
+              children: [
+                RadioControlPanel(),
+              ],
             ),
-          ),
-        ],
+            const SizedBox(
+              height: 15,
+            ),
+            Expanded(
+              child: RadioSearchPage(
+                key: ValueKey(
+                  searchQuery.toString() +
+                      tag.toString() +
+                      country.toString() +
+                      radioSearch.toString(),
+                ),
+                includeHeader: false,
+                radioSearch: radioSearch,
+                searchQuery: searchQuery,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
