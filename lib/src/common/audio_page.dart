@@ -5,6 +5,7 @@ import 'package:yaru/yaru.dart';
 import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
+import 'adaptive_container.dart';
 
 class AudioPage extends StatelessWidget {
   const AudioPage({
@@ -114,7 +115,7 @@ class AudioPage extends StatelessWidget {
                 ? const NavBackButton()
                 : const SizedBox.shrink(),
           ),
-          body: body,
+          body: AdaptiveContainer(child: body),
         );
       },
     );
