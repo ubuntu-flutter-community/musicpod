@@ -10,14 +10,18 @@ class AdaptiveContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final smallWindow = context.m.size.width < 1800;
+    final smallWindow = context.m.size.width < 1200;
 
     return Center(
       child: Container(
         padding: smallWindow
             ? EdgeInsets.zero
-            : const EdgeInsets.all(kYaruPagePadding),
-        width: smallWindow ? double.infinity : 1000,
+            : const EdgeInsets.only(
+                left: kYaruPagePadding,
+                right: kYaruPagePadding,
+                bottom: kYaruPagePadding,
+              ),
+        width: smallWindow ? double.infinity : 800,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(kYaruContainerRadius),
           child: YaruBorderContainer(

@@ -307,5 +307,8 @@
     "url": "Url",
     "loadFromFileOptional": "Load from file (optional)",
     "loadMore": "Load more",
-    "searchOnline": "Search online"
+    "searchOnline": "Search online",
+    "shareThisEpisode": "Share this episode",
+    "downloadEpisode": "Download episode",
+    "removeDownloadEpisode": "Remove episode download"
 }

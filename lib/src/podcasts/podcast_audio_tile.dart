@@ -8,7 +8,6 @@ import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
-import '../../constants.dart';
 import '../../data.dart';
 import '../../l10n.dart';
 import '../../theme.dart';
@@ -70,61 +69,87 @@ class PodcastAudioTile extends StatelessWidget {
           : Duration.zero,
     );
 
-    final narrow = context.m.size.width < 600;
-
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: narrow ? 550 : double.infinity),
-      child: YaruExpandable(
-        expandIcon: const SizedBox.shrink(),
-        isExpanded: isExpanded,
-        gapHeight: 0,
-        header: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              bottom: 10,
-              left: 19,
-              right: 20,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                AvatarWithProgress(
+    return YaruExpandable(
+      isExpanded: isExpanded,
+      expandIconPadding: const EdgeInsets.only(
+        right: kYaruPagePadding,
+        bottom: 15,
+      ),
+      gapHeight: 0,
+      header: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: 15,
+            bottom: 10,
+            left: kYaruPagePadding,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AvatarWithProgress(
+                selected: selected,
+                lastPosition: lastPosition,
+                audio: audio,
+                isPlayerPlaying: isPlayerPlaying,
+                pause: pause,
+                resume: resume,
+                safeLastPosition: safeLastPosition,
+                startPlaylist: startPlaylist,
+                removeUpdate: removeUpdate,
+              ),
+              const SizedBox(
+                width: _kGap,
+              ),
+              Expanded(
+                child: _Center(
                   selected: selected,
-                  lastPosition: lastPosition,
-                  audio: audio,
-                  isPlayerPlaying: isPlayerPlaying,
-                  pause: pause,
-                  resume: resume,
-                  safeLastPosition: safeLastPosition,
-                  startPlaylist: startPlaylist,
-                  removeUpdate: removeUpdate,
+                  title: audio.title ?? '',
+                  date: date,
+                  duration: duration,
+                  addPodcast: addPodcast,
                 ),
-                const SizedBox(
-                  width: _kGap,
-                ),
-                Expanded(
-                  child: _Right(
-                    narrow: narrow,
-                    selected: selected,
-                    audio: audio,
-                    date: date,
-                    duration: duration,
-                    addPodcast: addPodcast,
-                    insertIntoQueue: insertIntoQueue,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: _Bottom(
-            narrow: narrow,
-            audio: audio,
+      ),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: _kGap + podcastProgressSize + 15,
+            right: 60,
+          ),
+          child: Column(
+            children: [
+              _Description(
+                description: audio.description,
+                title: audio.title,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Wrap(
+                  spacing: 5,
+                  children: [
+                    DownloadButton(
+                      audio: audio,
+                      addPodcast: addPodcast,
+                    ),
+                    ShareButton(
+                      active: true,
+                      audio: audio,
+                    ),
+                    IconButton(
+                      tooltip: context.l10n.insertIntoQueue,
+                      onPressed: insertIntoQueue,
+                      icon: Icon(Iconz().insertIntoQueue),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -132,24 +157,20 @@ class PodcastAudioTile extends StatelessWidget {
   }
 }
 
-class _Right extends StatelessWidget {
-  const _Right({
-    required this.audio,
+class _Center extends StatelessWidget {
+  const _Center({
+    required this.title,
     required this.selected,
     required this.date,
     required this.duration,
     required this.addPodcast,
-    this.insertIntoQueue,
-    this.narrow = false,
   });
 
-  final Audio audio;
+  final String title;
   final String date;
   final String duration;
   final bool selected;
   final void Function()? addPodcast;
-  final void Function()? insertIntoQueue;
-  final bool narrow;
 
   @override
   Widget build(BuildContext context) {
@@ -163,13 +184,13 @@ class _Right extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          audio.title ?? '',
+          title,
           style: textStyle,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
         SizedBox(
-          width: narrow ? double.infinity : 280,
+          width: double.infinity,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
@@ -180,100 +201,10 @@ class _Right extends StatelessWidget {
                   style: theme.textTheme.labelMedium,
                 ),
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    height: kTinyButtonSize,
-                    width: kTinyButtonSize,
-                    child: ShareButton(
-                      active: true,
-                      audio: audio,
-                      iconSize: kTinyButtonIconSize,
-                    ),
-                  ),
-                  SizedBox(
-                    height: kTinyButtonSize,
-                    width: kTinyButtonSize,
-                    child: DownloadButton(
-                      iconSize: kTinyButtonIconSize,
-                      audio: audio,
-                      addPodcast: addPodcast,
-                    ),
-                  ),
-                  _ViewMoreButton(
-                    insertIntoQueue: insertIntoQueue,
-                  ),
-                ],
-              ),
             ],
           ),
         ),
       ],
-    );
-  }
-}
-
-class _ViewMoreButton extends StatelessWidget {
-  const _ViewMoreButton({
-    required this.insertIntoQueue,
-  });
-
-  final void Function()? insertIntoQueue;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: kTinyButtonSize,
-      width: kTinyButtonSize,
-      child: Material(
-        color: Colors.transparent,
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(kTinyButtonSize),
-        ),
-        child: PopupMenuButton(
-          splashRadius: 100,
-          tooltip: context.l10n.moreOptions,
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem(
-                onTap: insertIntoQueue,
-                child: Text(context.l10n.playNext),
-              ),
-            ];
-          },
-          child: Icon(
-            Iconz().viewMore,
-            size: kTinyButtonIconSize,
-            color: context.t.colorScheme.onSurface,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Bottom extends StatelessWidget {
-  const _Bottom({
-    required this.audio,
-    this.narrow = false,
-  });
-
-  final Audio audio;
-  final bool narrow;
-
-  @override
-  Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: narrow ? 480 : 600),
-      child: Padding(
-        padding: EdgeInsets.only(left: _kGap + podcastProgressSize + 15),
-        child: _Description(
-          description: audio.description,
-          title: audio.title,
-        ),
-      ),
     );
   }
 }
