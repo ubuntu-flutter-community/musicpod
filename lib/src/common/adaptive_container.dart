@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
+import '../../theme_data_x.dart';
 
 class AdaptiveContainer extends StatelessWidget {
   const AdaptiveContainer({super.key, required this.child});
@@ -25,11 +26,15 @@ class AdaptiveContainer extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(kYaruContainerRadius),
           child: YaruBorderContainer(
+            color: smallWindow
+                ? null
+                : theme.colorScheme.onSurface
+                    .withOpacity(theme.isLight ? 0.04 : 0.03),
             padding: smallWindow
                 ? EdgeInsets.zero
                 : const EdgeInsets.only(top: kYaruPagePadding),
             border: Border.all(
-              color: smallWindow ? Colors.transparent : theme.dividerColor,
+              color: Colors.transparent,
             ),
             child: child,
           ),
