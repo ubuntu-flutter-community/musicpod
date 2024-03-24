@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../l10n.dart';
 import 'download_model.dart';
 
 class DownloadButton extends ConsumerWidget {
@@ -32,8 +33,12 @@ class DownloadButton extends ConsumerWidget {
           backgroundColor: Colors.transparent,
         ),
         IconButton(
+          tooltip: audio?.path != null
+              ? context.l10n.removeDownloadEpisode
+              : context.l10n.downloadEpisode,
           icon: Icon(
             audio?.path != null ? Iconz().downloadFilled : Iconz().download,
+            color: audio?.path != null ? theme.colorScheme.primary : null,
           ),
           onPressed: () {
             if (audio?.path != null) {

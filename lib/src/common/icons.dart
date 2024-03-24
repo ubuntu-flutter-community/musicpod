@@ -359,6 +359,12 @@ class Iconz {
           ? CupertinoIcons.paintbrush
           : Icons.cleaning_services;
 
+  IconData get insertIntoQueue => yaruStyled
+      ? YaruIcons.music_queue
+      : appleStyled
+          ? CupertinoIcons.plus_app
+          : Icons.queue;
+
   Widget getAnimatedStar(bool isStarred, [Color? color]) {
     if (yaruStyled) {
       return YaruAnimatedVectorIcon(

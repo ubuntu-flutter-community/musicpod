@@ -307,5 +307,8 @@
     "url": "Url",
     "loadFromFileOptional": "Aus Datei laden (optional)",
     "loadMore": "Mehr laden",
-    "searchOnline": "Im Internet suchen"
+    "searchOnline": "Im Internet suchen",
+    "shareThisEpisode": "Diese Episode teilen",
+    "downloadEpisode": "Episode herunterladen",
+    "removeDownloadEpisode": "Episode-Download entfernen"
 }

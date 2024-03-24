@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../common/explore_online_popup.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import 'podcast_model.dart';
@@ -121,9 +122,7 @@ class PodcastPage extends ConsumerWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10),
-            child: StreamProviderRow(
-              text: title,
-            ),
+            child: ExploreOnlinePopup(text: title),
           ),
         ],
       ),

@@ -9,6 +9,7 @@ import '../../l10n.dart';
 import '../../library.dart';
 import '../../player.dart';
 import '../../radio.dart';
+import '../../theme.dart';
 import '../common/icy_image.dart';
 
 class RadioHistoryList extends ConsumerWidget {
@@ -63,20 +64,25 @@ class RadioHistoryList extends ConsumerWidget {
           return ListTile(
             selected: current?.icyTitle != null &&
                 current?.icyTitle == e.value.icyTitle,
-            leading: IcyImage(
-              mpvMetaData: e.value,
-              onGenreTap: (tag) => radioModel.init().then(
-                    (_) => navigatorKey.currentState?.push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return RadioSearchPage(
-                            radioSearch: RadioSearch.tag,
-                            searchQuery: tag.toLowerCase(),
-                          );
-                        },
+            leading: Padding(
+              padding: EdgeInsets.only(left: yaruStyled ? 5 : 0),
+              child: IcyImage(
+                height: yaruStyled ? 34 : 40,
+                width: yaruStyled ? 34 : 40,
+                mpvMetaData: e.value,
+                onGenreTap: (tag) => radioModel.init().then(
+                      (_) => navigatorKey.currentState?.push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return RadioSearchPage(
+                              radioSearch: RadioSearch.tag,
+                              searchQuery: tag.toLowerCase(),
+                            );
+                          },
+                        ),
                       ),
                     ),
-                  ),
+              ),
             ),
             title: TapAbleText(
               overflow: TextOverflow.visible,

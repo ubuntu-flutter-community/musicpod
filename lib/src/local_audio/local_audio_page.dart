@@ -1,3 +1,4 @@
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
@@ -126,6 +127,8 @@ class _LocalAudioPageState extends ConsumerState<LocalAudioPage> {
                 albums: model.allAlbums,
                 artists: model.allArtists,
                 genres: model.allGenres,
+                noResultIcon: const AnimatedEmoji(AnimatedEmojis.bird),
+                noResultMessage: Text(context.l10n.noLocalTitlesFound),
               ),
             ),
           ],
