@@ -156,8 +156,18 @@ const kPatchNotes20240317 = 'Hello MusicPod Users 💙🐧🧡\n'
     '\n\nIf you like MusicPod please consider sponsoring me 🙏:'
     '\n';
 
-const kRecentPatchNotesDisposed = kPatchNotes20240317disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20240317;
-const kRecentPatchNotes = kPatchNotes20240317;
+// 2024 03 25
+const kPatchNotes20240325disposed = 'patchNotes20240325disposed';
+const kPatchNotesTitle20240325 = 'Patch notes: 2024-03-25';
+const kPatchNotes20240325 = 'Hello MusicPod Users\n'
+    '\n* UI improvements:'
+    '\n* better wide window layout'
+    '\n* modern tiles everywhere except album page'
+    '\n\nIf you like MusicPod please consider sponsoring me:'
+    '\n';
+
+const kRecentPatchNotesDisposed = kPatchNotes20240325disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20240325;
+const kRecentPatchNotes = kPatchNotes20240325;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';

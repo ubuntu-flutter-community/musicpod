@@ -1,3 +1,4 @@
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,9 +24,17 @@ class PatchNotesDialog extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: AnimatedEmoji(AnimatedEmojis.musicalNotes),
+          ),
           Text(
             kRecentPatchNotes,
             style: context.t.textTheme.bodyLarge,
+          ),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: AnimatedEmoji(AnimatedEmojis.foldedHands),
           ),
           const Row(
             children: [
