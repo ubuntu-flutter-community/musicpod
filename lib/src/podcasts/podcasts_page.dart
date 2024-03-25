@@ -10,7 +10,6 @@ import '../../constants.dart';
 import '../../data.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
-import '../common/adaptive_container.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import '../settings/settings_model.dart';

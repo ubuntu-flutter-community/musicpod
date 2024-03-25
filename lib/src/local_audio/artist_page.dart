@@ -14,7 +14,6 @@ import '../../local_audio.dart';
 import '../../player.dart';
 import '../../settings.dart';
 import '../../utils.dart';
-import '../common/adaptive_container.dart';
 import '../common/explore_online_popup.dart';
 import '../l10n/l10n.dart';
 import 'genre_page.dart';
