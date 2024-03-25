@@ -21,7 +21,7 @@ class RadioControlPanel extends ConsumerWidget {
     final index = ref.watch(libraryModelProvider.select((m) => m.radioindex));
 
     return Padding(
-      padding: const EdgeInsets.only(left: 30),
+      padding: const EdgeInsets.only(left: kYaruPagePadding),
       child: YaruChoiceChipBar(
         chipBackgroundColor: chipColor(theme),
         selectedChipBackgroundColor: chipSelectionColor(theme, false),
