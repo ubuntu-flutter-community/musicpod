@@ -61,8 +61,10 @@ class GenrePage extends ConsumerWidget {
           ],
         ),
       ),
-      body: ArtistsView(
-        artists: artistAudiosWithGenre,
+      body: AdaptiveContainer(
+        child: ArtistsView(
+          artists: artistAudiosWithGenre,
+        ),
       ),
     );
   }
