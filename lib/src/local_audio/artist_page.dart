@@ -14,6 +14,7 @@ import '../../local_audio.dart';
 import '../../player.dart';
 import '../../settings.dart';
 import '../../utils.dart';
+import '../common/adaptive_container.dart';
 import '../common/explore_online_popup.dart';
 import '../l10n/l10n.dart';
 import 'genre_page.dart';
@@ -167,37 +168,39 @@ class _ArtistAlbumsCardGrid extends StatelessWidget {
                 ? const NavBackButton()
                 : const SizedBox.shrink(),
           ),
-          body: artist == null || artistAudios == null
-              ? const SizedBox.shrink()
-              : Column(
-                  children: [
-                    AudioPageHeader(
-                      imageRadius: BorderRadius.circular(10000),
-                      title: artistAudios?.firstOrNull?.artist ?? '',
-                      image: image,
-                      subTitle: artistAudios?.firstOrNull?.genre,
-                      label: context.l10n.artist,
-                      onLabelTab: onLabelTab,
-                      onSubTitleTab: onSubTitleTab,
-                    ),
-                    Padding(
-                      padding: kAudioControlPanelPadding,
-                      child: AudioPageControlPanel(
-                        controlButton: controlPanelButton,
-                        audios: artistAudios!,
-                        onTap: () => playerModel.startPlaylist(
+          body: AdaptiveContainer(
+            child: artist == null || artistAudios == null
+                ? const SizedBox.shrink()
+                : Column(
+                    children: [
+                      AudioPageHeader(
+                        imageRadius: BorderRadius.circular(10000),
+                        title: artistAudios?.firstOrNull?.artist ?? '',
+                        image: image,
+                        subTitle: artistAudios?.firstOrNull?.genre,
+                        label: context.l10n.artist,
+                        onLabelTab: onLabelTab,
+                        onSubTitleTab: onSubTitleTab,
+                      ),
+                      Padding(
+                        padding: kAudioControlPanelPadding,
+                        child: AudioPageControlPanel(
+                          controlButton: controlPanelButton,
                           audios: artistAudios!,
-                          listName: artist,
+                          onTap: () => playerModel.startPlaylist(
+                            audios: artistAudios!,
+                            listName: artist,
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: AlbumsView(
-                        albums: model.findAllAlbums(newAudios: artistAudios),
+                      Expanded(
+                        child: AlbumsView(
+                          albums: model.findAllAlbums(newAudios: artistAudios),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+          ),
         );
       },
     );

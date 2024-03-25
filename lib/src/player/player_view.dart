@@ -63,16 +63,25 @@ class _PlayerViewState extends ConsumerState<PlayerView> {
 
     Widget player;
     if (widget.mode != PlayerViewMode.bottom) {
-      player = FullHeightPlayer(
-        isVideo: isVideo == true,
-        videoController: playerModel.controller,
-        playerViewMode: widget.mode,
-        appModel: appModel,
-        nextAudio: nextAudio,
-        audio: audio,
-        playPrevious: playPrevious,
-        playNext: playNext,
-        isOnline: isOnline,
+      player = Row(
+        children: [
+          VerticalDivider(
+            color: theme.colorScheme.onSurface.withOpacity(0.005),
+          ),
+          Expanded(
+            child: FullHeightPlayer(
+              isVideo: isVideo == true,
+              videoController: playerModel.controller,
+              playerViewMode: widget.mode,
+              appModel: appModel,
+              nextAudio: nextAudio,
+              audio: audio,
+              playPrevious: playPrevious,
+              playNext: playNext,
+              isOnline: isOnline,
+            ),
+          ),
+        ],
       );
     } else {
       player = BottomPlayer(
