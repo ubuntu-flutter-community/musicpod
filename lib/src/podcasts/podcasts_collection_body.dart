@@ -75,7 +75,7 @@ class PodcastsCollectionBody extends ConsumerWidget {
               Row(
                 children: [
                   const SizedBox(
-                    width: 25,
+                    width: kYaruPagePadding,
                   ),
                   YaruChoiceChipBar(
                     chipBackgroundColor: chipColor(theme),

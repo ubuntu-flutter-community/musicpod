@@ -34,7 +34,7 @@ class AdaptiveContainer extends StatelessWidget {
                 ? EdgeInsets.zero
                 : const EdgeInsets.only(top: kYaruPagePadding),
             border: Border.all(
-              color: Colors.transparent,
+              color: smallWindow ? Colors.transparent : theme.dividerColor,
             ),
             child: child,
           ),

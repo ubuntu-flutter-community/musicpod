@@ -44,6 +44,7 @@ class _AudioCardState extends State<AudioCard> {
     final light = theme.isLight;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _AudioCard(
           width: widget.width,
@@ -95,7 +96,8 @@ class _AudioCardState extends State<AudioCard> {
             ),
           ),
         ),
-        if (widget.bottom != null) widget.bottom!,
+        if (widget.bottom != null)
+          Align(alignment: Alignment.centerLeft, child: widget.bottom!),
       ],
     );
   }

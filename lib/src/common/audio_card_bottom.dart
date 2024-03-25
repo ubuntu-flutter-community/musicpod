@@ -23,45 +23,42 @@ class AudioCardBottom extends StatelessWidget {
     final theme = context.t;
     final light = theme.isLight;
 
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Tooltip(
-        message: text ?? '',
-        child: Container(
-          width: kAudioCardDimension,
-          margin: const EdgeInsets.all(1),
-          padding: const EdgeInsets.symmetric(
-            vertical: 5,
-            horizontal: 5,
-          ),
-          child: text == null
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: SizedBox(
-                    height: 15,
-                    width: kAudioCardDimension - 20,
-                    child: Shimmer.fromColors(
-                      baseColor: light ? kCardColorLight : kCardColorDark,
-                      highlightColor: light
-                          ? kCardColorLight.scale(lightness: -0.1)
-                          : kCardColorDark.scale(lightness: 0.05),
-                      child: Container(
-                        color: light ? kCardColorLight : kCardColorDark,
-                      ),
+    return Tooltip(
+      message: text ?? '',
+      child: Container(
+        width: kAudioCardDimension,
+        margin: const EdgeInsets.all(1),
+        padding: const EdgeInsets.symmetric(
+          vertical: 5,
+          horizontal: 5,
+        ),
+        child: text == null
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: SizedBox(
+                  height: 15,
+                  width: kAudioCardDimension - 20,
+                  child: Shimmer.fromColors(
+                    baseColor: light ? kCardColorLight : kCardColorDark,
+                    highlightColor: light
+                        ? kCardColorLight.scale(lightness: -0.1)
+                        : kCardColorDark.scale(lightness: 0.05),
+                    child: Container(
+                      color: light ? kCardColorLight : kCardColorDark,
                     ),
                   ),
-                )
-              : Text(
-                  text ?? '',
-                  style: style ??
-                      theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.9),
-                      ),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: maxLines,
                 ),
-        ),
+              )
+            : Text(
+                text ?? '',
+                style: style ??
+                    theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.9),
+                    ),
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                maxLines: maxLines,
+              ),
       ),
     );
   }

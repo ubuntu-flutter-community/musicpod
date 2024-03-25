@@ -68,13 +68,10 @@ class AlbumsView extends ConsumerWidget {
           );
 
           return AudioCard(
-            bottom: Align(
-              alignment: Alignment.bottomCenter,
-              child: AudioCardBottom(
-                text: audio.album?.isNotEmpty == false
-                    ? context.l10n.unknown
-                    : audio.album ?? '',
-              ),
+            bottom: AudioCardBottom(
+              text: audio.album?.isNotEmpty == false
+                  ? context.l10n.unknown
+                  : audio.album ?? '',
             ),
             image: image ?? fallback,
             background: fallback,
