@@ -1,0 +1,190 @@
+{
+    "appId": "org.feichtmeier.Musicpod",
+    "lowercaseAppName": "musicpod",
+    "releases": [
+        {
+            "version": "0.1.1",
+            "date": "2023-03-12"
+        }
+    ],
+    "runtimeVersion": "22.08",
+    "linuxReleaseBundleDirPath": "../build/linux/x64/release/bundle",
+    "appDataPath": "./org.feichtmeier.Musicpod.appdata.xml",
+    "desktopPath": "./org.feichtmeier.Musicpod.desktop",
+    "icons": {
+        "64x64": "icon64.png",
+        "128x128": "icon128.png",
+        "256x256": "../snap/gui/musicpod.png"
+    },
+    "finishArgs": [
+        "--share=ipc",
+        "--share=network",
+        "--socket=fallback-x11",
+        "--socket=wayland",
+        "--filesystem=home",
+        "--device=dri",
+        "--socket=pulseaudio",
+        "--own-name=org.mpris.MediaPlayer2.musicpod.*",
+        "--talk-name=org.gnome.SessionManager",
+        "--talk-name=org.gnome.SettingsDaemon.MediaKeys",
+        "--talk-name=org.mate.SettingsDaemon",
+        "--talk-name=org.xfce.SessionManager"
+    ],
+    "extraModules": [
+        {
+            "name": "libmpv",
+            "cleanup": [
+                 "/include",
+                 "/lib/pkgconfig",
+                 "/share/applications",
+                 "/share/bash-completion",
+                 "/share/doc",
+                 "/share/icons",
+                 "/share/man",
+                 "/share/zsh"
+            ],
+            "buildsystem": "simple",
+            "build-commands": [
+                 "python3 waf configure --prefix=/app --enable-libmpv-shared --disable-build-date --disable-alsa",
+                 "python3 waf build",
+                 "python3 waf install"
+            ],
+            "sources": [
+                 {
+                      "type": "archive",
+                      "url": "https://github.com/mpv-player/mpv/archive/v0.35.1.tar.gz",
+                      "sha256": "41df981b7b84e33a2ef4478aaf81d6f4f5c8b9cd2c0d337ac142fc20b387d1a9",
+                      "x-checker-data": {
+                           "type": "anitya",
+                           "project-id": 5348,
+                           "stable-only": true,
+                           "url-template": "https://github.com/mpv-player/mpv/archive/v$version.tar.gz"
+                      }
+                 },
+                 {
+                      "type": "file",
+                      "url": "https://waf.io/waf-2.0.25",
+                      "sha256": "21199cd220ccf60434133e1fd2ab8c8e5217c3799199c82722543970dc8e38d5",
+                      "dest-filename": "waf",
+                      "x-checker-data": {
+                           "type": "anitya",
+                           "project-id": 5116,
+                           "stable-only": true,
+                           "url-template": "https://waf.io/waf-$version"
+                      }
+                 }
+            ],
+            "modules": [
+                 {
+                      "name": "nv-codec-headers",
+                      "cleanup": [
+                           "*"
+                      ],
+                      "no-autogen": true,
+                      "make-install-args": [
+                           "PREFIX=/app"
+                      ],
+                      "sources": [
+                           {
+                                "type": "git",
+                                "url": "https://git.videolan.org/git/ffmpeg/nv-codec-headers.git",
+                                "tag": "n12.0.16.0",
+                                "commit": "c5e4af74850a616c42d39ed45b9b8568b71bf8bf",
+                                "x-checker-data": {
+                                     "type": "git",
+                                     "tag-pattern": "^n([\\d.]+)$"
+                                }
+                           }
+                      ]
+                 },
+                 {
+                      "name": "ffmpeg",
+                      "cleanup": [
+                           "/include",
+                           "/lib/pkgconfig",
+                           "/share/ffmpeg/examples"
+                      ],
+                      "config-opts": [
+                           "--enable-shared",
+                           "--disable-static",
+                           "--enable-gnutls",
+                           "--enable-gpl",
+                           "--disable-doc",
+                           "--disable-programs",
+                           "--disable-encoders",
+                           "--disable-muxers",
+                           "--enable-encoder=png",
+                           "--enable-libv4l2",
+                           "--enable-libdav1d"
+                      ],
+                      "sources": [
+                           {
+                                "type": "archive",
+                                "url": "https://ffmpeg.org/releases/ffmpeg-6.0.tar.xz",
+                                "sha256": "57be87c22d9b49c112b6d24bc67d42508660e6b718b3db89c44e47e289137082",
+                                "x-checker-data": {
+                                     "type": "anitya",
+                                     "project-id": 5405,
+                                     "stable-only": true,
+                                     "url-template": "https://ffmpeg.org/releases/ffmpeg-$version.tar.xz"
+                                }
+                           }
+                      ]
+                 },
+                 {
+                      "name": "libass",
+                      "cleanup": [
+                           "/include",
+                           "/lib/*.la",
+                           "/lib/pkgconfig"
+                      ],
+                      "config-opts": [
+                           "--disable-static"
+                      ],
+                      "sources": [
+                           {
+                                "type": "archive",
+                                "url": "https://github.com/libass/libass/releases/download/0.17.1/libass-0.17.1.tar.xz",
+                                "sha256": "f0da0bbfba476c16ae3e1cfd862256d30915911f7abaa1b16ce62ee653192784",
+                                "x-checker-data": {
+                                     "type": "anitya",
+                                     "project-id": 1560,
+                                     "stable-only": true,
+                                     "url-template": "https://github.com/libass/libass/releases/download/$version/libass-$version.tar.xz"
+                                }
+                           }
+                      ]
+                 },
+                 {
+                      "name": "uchardet",
+                      "buildsystem": "cmake-ninja",
+                      "config-opts": [
+                           "-DCMAKE_BUILD_TYPE=Release",
+                           "-DBUILD_STATIC=0"
+                      ],
+                      "cleanup": [
+                           "/bin",
+                           "/include",
+                           "/lib/pkgconfig",
+                           "/share/man"
+                      ],
+                      "sources": [
+                           {
+                                "type": "archive",
+                                "url": "https://www.freedesktop.org/software/uchardet/releases/uchardet-0.0.8.tar.xz",
+                                "sha256": "e97a60cfc00a1c147a674b097bb1422abd9fa78a2d9ce3f3fdcc2e78a34ac5f0",
+                                "x-checker-data": {
+                                     "type": "anitya",
+                                     "project-id": 9265,
+                                     "stable-only": true,
+                                     "url-template": "https://www.freedesktop.org/software/uchardet/releases/uchardet-$version.tar.xz"
+                                }
+                           }
+                      ]
+                 }
+            ]
+       }
+    ],
+    "githubReleaseOrganization": "ubuntu-flutter-community",
+    "githubReleaseProject": "musicpod"
+}
