@@ -65,9 +65,7 @@ class _PlayerViewState extends ConsumerState<PlayerView> {
     if (widget.mode != PlayerViewMode.bottom) {
       player = Row(
         children: [
-          VerticalDivider(
-            color: theme.colorScheme.onSurface.withOpacity(0.005),
-          ),
+          const Material(child: VerticalDivider()),
           Expanded(
             child: FullHeightPlayer(
               isVideo: isVideo == true,
