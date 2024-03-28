@@ -175,7 +175,9 @@ class PodcastsCollectionBody extends ConsumerWidget {
                                 context: context,
                                 noConfirm: podcast.value.length <
                                     kAudioQueueThreshHold,
-                                message: podcast.value.length.toString(),
+                                message: context.l10n.queueConfirmMessage(
+                                  podcast.value.length.toString(),
+                                ),
                                 run: () => playerModel
                                     .startPlaylist(
                                       audios: podcast.value,
