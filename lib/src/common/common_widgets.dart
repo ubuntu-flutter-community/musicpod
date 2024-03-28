@@ -314,25 +314,9 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
         style: yaruStyled ? theme.textTheme.bodyMedium : null,
         decoration: yaruStyled
             ? createYaruDecoration(theme: theme, hintText: widget.hintText)
-            : InputDecoration(
+            : createMaterialDecoration(
+                colorScheme: theme.colorScheme,
                 hintText: widget.hintText,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                contentPadding: const EdgeInsets.only(
-                  top: 10,
-                  bottom: 8,
-                  left: 15,
-                  right: 15,
-                ),
-                filled: true,
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    widget.onClear?.call();
-                    _controller.clear();
-                  },
-                  icon: const Icon(Icons.clear),
-                ),
               ),
       ),
     );
