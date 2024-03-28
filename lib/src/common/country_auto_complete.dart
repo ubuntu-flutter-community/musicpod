@@ -95,7 +95,7 @@ class CountryAutoComplete extends StatelessWidget {
                         fillColor: fillColor,
                         contentPadding: contentPadding,
                         hintText: hintText,
-                        borderRadius: BorderRadius.circular(100),
+                        border: border,
                       )
                     : createMaterialDecoration(
                         colorScheme: theme.colorScheme,

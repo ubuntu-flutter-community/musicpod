@@ -206,7 +206,7 @@ InputDecoration createYaruDecoration({
   Color? fillColor,
   EdgeInsets? contentPadding,
   String? hintText,
-  BorderRadius? borderRadius,
+  OutlineInputBorder? border,
 }) {
   final fill = theme.inputDecorationTheme.fillColor;
 
@@ -216,13 +216,6 @@ InputDecoration createYaruDecoration({
         fontWeight: FontWeight.normal,
       );
 
-  final border = borderRadius != null
-      ? OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: borderRadius,
-        )
-      : null;
-
   return InputDecoration(
     hintText: hintText,
     filled: true,
@@ -231,8 +224,11 @@ InputDecoration createYaruDecoration({
     suffixIconConstraints:
         const BoxConstraints(maxWidth: kYaruTitleBarItemHeight),
     border: border,
-    focusedBorder: border,
+    errorBorder: border,
     enabledBorder: border,
+    focusedBorder: border,
+    disabledBorder: border,
+    focusedErrorBorder: border,
     isDense: true,
     contentPadding: contentPadding ??
         const EdgeInsets.only(

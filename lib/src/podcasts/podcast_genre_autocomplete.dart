@@ -88,7 +88,7 @@ class PodcastGenreAutoComplete extends StatelessWidget {
                         style: style,
                         fillColor: fillColor,
                         contentPadding: contentPadding,
-                        borderRadius: BorderRadius.circular(100),
+                        border: border,
                       )
                     : createMaterialDecoration(
                         colorScheme: theme.colorScheme,

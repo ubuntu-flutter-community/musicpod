@@ -65,11 +65,7 @@ class PodcastsControlPanel extends ConsumerWidget {
             filled: true,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(100),
-              borderSide: BorderSide(
-                color: theme.colorScheme.outline,
-                width: 1.3,
-                strokeAlign: 1,
-              ),
+              borderSide: BorderSide.none,
             ),
             style: theme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w500,
@@ -110,11 +106,7 @@ class PodcastsControlPanel extends ConsumerWidget {
             filled: podcastGenre != PodcastGenre.all,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(100),
-              borderSide: BorderSide(
-                color: theme.colorScheme.outline,
-                width: 1.3,
-                strokeAlign: 1,
-              ),
+              borderSide: BorderSide.none,
             ),
             style: theme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w500,
