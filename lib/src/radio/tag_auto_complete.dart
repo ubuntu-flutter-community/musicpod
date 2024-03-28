@@ -72,7 +72,7 @@ class TagAutoComplete extends StatelessWidget {
                 cursorWidth: yaruStyled ? 1 : 2.0,
                 decoration: yaruStyled
                     ? createYaruDecoration(
-                        isLight: theme.isLight,
+                        theme: theme,
                         hintText: hintText,
                       )
                     : createMaterialDecoration(

@@ -249,24 +249,14 @@ class SearchingBar extends ConsumerWidget {
       onSubmitted?.call(v);
     }
 
-    return yaruStyled
-        ? YaruSearchField(
-            hintText: hintText,
-            clearIcon: yaruStyled ? null : Icon(Iconz().clear),
-            key: key,
-            text: text,
-            onClear: onClear,
-            onSubmitted: onSubmitted2,
-            onChanged: onChanged2,
-          )
-        : MaterialSearchBar(
-            hintText: hintText,
-            text: text,
-            key: key,
-            onSubmitted: onSubmitted2,
-            onClear: onClear,
-            onChanged: onChanged2,
-          );
+    return MaterialSearchBar(
+      hintText: hintText,
+      text: text,
+      key: key,
+      onSubmitted: onSubmitted2,
+      onClear: onClear,
+      onChanged: onChanged2,
+    );
   }
 }
 
@@ -306,8 +296,9 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.t;
     return SizedBox(
-      height: 38,
+      height: yaruStyled ? kYaruTitleBarItemHeight : 38,
       child: TextField(
         onTap: () {
           _controller.selection = TextSelection(
@@ -320,20 +311,29 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
         autofocus: true,
         onSubmitted: widget.onSubmitted,
         onChanged: widget.onChanged,
-        decoration: InputDecoration(
-          hintText: widget.hintText,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
-          contentPadding:
-              const EdgeInsets.only(top: 10, bottom: 8, left: 15, right: 15),
-          filled: true,
-          suffixIcon: IconButton(
-            onPressed: () {
-              widget.onClear?.call();
-              _controller.clear();
-            },
-            icon: const Icon(Icons.clear),
-          ),
-        ),
+        style: yaruStyled ? theme.textTheme.bodyMedium : null,
+        decoration: yaruStyled
+            ? createYaruDecoration(theme: theme, hintText: widget.hintText)
+            : InputDecoration(
+                hintText: widget.hintText,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                contentPadding: const EdgeInsets.only(
+                  top: 10,
+                  bottom: 8,
+                  left: 15,
+                  right: 15,
+                ),
+                filled: true,
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    widget.onClear?.call();
+                    _controller.clear();
+                  },
+                  icon: const Icon(Icons.clear),
+                ),
+              ),
       ),
     );
   }
