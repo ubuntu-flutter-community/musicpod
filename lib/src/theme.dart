@@ -201,15 +201,14 @@ InputDecoration createMaterialDecoration({
 }
 
 InputDecoration createYaruDecoration({
-  required bool isLight,
+  required ThemeData theme,
   TextStyle? style,
   Color? fillColor,
   EdgeInsets? contentPadding,
   String? hintText,
+  OutlineInputBorder? border,
 }) {
-  final radius = BorderRadius.circular(100);
-
-  final fill = isLight ? const Color(0xffdcdcdc) : const Color(0xff2f2f2f);
+  final fill = theme.inputDecorationTheme.fillColor;
 
   final textStyle = style ??
       const TextStyle(
@@ -221,21 +220,15 @@ InputDecoration createYaruDecoration({
     hintText: hintText,
     filled: true,
     fillColor: fillColor ?? fill,
-    hoverColor: (fillColor ?? fill).scale(lightness: 0.1),
+    hoverColor: (fillColor ?? fill)?.scale(lightness: 0.1),
     suffixIconConstraints:
         const BoxConstraints(maxWidth: kYaruTitleBarItemHeight),
-    border: OutlineInputBorder(
-      borderSide: BorderSide.none,
-      borderRadius: radius,
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide.none,
-      borderRadius: radius,
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide.none,
-      borderRadius: radius,
-    ),
+    border: border,
+    errorBorder: border,
+    enabledBorder: border,
+    focusedBorder: border,
+    disabledBorder: border,
+    focusedErrorBorder: border,
     isDense: true,
     contentPadding: contentPadding ??
         const EdgeInsets.only(

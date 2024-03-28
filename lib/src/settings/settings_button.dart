@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common.dart';
 import '../../l10n.dart';
+import '../theme.dart';
 import 'settings_dialog.dart';
 import 'settings_model.dart';
 
@@ -18,45 +19,44 @@ class SettingsButton extends StatelessWidget {
     return Consumer(
       builder: (context, ref, _) {
         final model = ref.read(settingsModelProvider);
-        return Center(
-          child: PopupMenuButton(
-            tooltip: context.l10n.moreOptions,
-            icon: Icon(Iconz().menu),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                enabled: false,
-                child: Center(
-                  child: ImportantButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      model.playOpenedFile();
-                    },
-                    child: Text(context.l10n.open),
-                  ),
+        return PopupMenuButton(
+          padding: yaruStyled ? EdgeInsets.zero : const EdgeInsets.all(8.0),
+          tooltip: context.l10n.moreOptions,
+          icon: Icon(Iconz().menu),
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              enabled: false,
+              child: Center(
+                child: ImportantButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    model.playOpenedFile();
+                  },
+                  child: Text(context.l10n.open),
                 ),
               ),
-              PopupMenuItem(
-                enabled: false,
-                child: Center(
-                  child: TextButton(
-                    child: Text(context.l10n.settings),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      showDialog(
-                        context: context,
-                        builder: (_) => ProviderScope(
-                          parent: ProviderScope.containerOf(context),
-                          child: SettingsDialog(
-                            initLocalAudio: initLocalAudio,
-                          ),
+            ),
+            PopupMenuItem(
+              enabled: false,
+              child: Center(
+                child: TextButton(
+                  child: Text(context.l10n.settings),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    showDialog(
+                      context: context,
+                      builder: (_) => ProviderScope(
+                        parent: ProviderScope.containerOf(context),
+                        child: SettingsDialog(
+                          initLocalAudio: initLocalAudio,
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
