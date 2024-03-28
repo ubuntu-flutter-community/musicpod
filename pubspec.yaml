@@ -34,7 +34,7 @@ dependencies:
   flutter_tabler_icons: ^1.7.0
   github: ^9.22.0
   gtk: ^2.1.0
-  handy_window: ^0.3.1
+  handy_window: ^0.4.0
   http: ^1.2.0
   intl: ^0.18.0
   m3u_parser_nullsafe: ^1.0.3
