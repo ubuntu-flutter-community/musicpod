@@ -298,7 +298,7 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
   Widget build(BuildContext context) {
     final theme = context.t;
     return SizedBox(
-      height: yaruStyled ? kYaruTitleBarItemHeight : 38,
+      height: yaruStyled ? null : 38,
       child: TextField(
         onTap: () {
           _controller.selection = TextSelection(
