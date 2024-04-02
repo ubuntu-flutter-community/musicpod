@@ -10,12 +10,10 @@ class BlurredFullHeightPlayerImage extends StatelessWidget {
     super.key,
     required this.size,
     required this.audio,
-    required this.isOnline,
   });
 
   final Size size;
   final Audio? audio;
-  final bool isOnline;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +34,7 @@ class BlurredFullHeightPlayerImage extends StatelessWidget {
             fit: BoxFit.cover,
             height: size.height,
             width: size.width,
-            isOnline: isOnline,
+            isOnline: true,
           ),
         ),
       ),

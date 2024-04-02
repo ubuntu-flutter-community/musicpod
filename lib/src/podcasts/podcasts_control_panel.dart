@@ -108,7 +108,11 @@ class PodcastsControlPanel extends ConsumerWidget {
           ),
           PodcastGenreAutoComplete(
             contentPadding: contentPadding,
-            fillColor: podcastGenre != PodcastGenre.all ? fillColor : null,
+            fillColor: podcastGenre != PodcastGenre.all
+                ? fillColor
+                : yaruStyled
+                    ? theme.dividerColor
+                    : null,
             filled: podcastGenre != PodcastGenre.all,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(100),
