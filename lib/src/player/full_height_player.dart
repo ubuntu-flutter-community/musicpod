@@ -190,11 +190,11 @@ class FullHeightPlayer extends ConsumerWidget {
         audio?.pictureData != null)) {
       return Stack(
         children: [
-          BlurredFullHeightPlayerImage(
-            size: size,
-            audio: audio,
-            isOnline: isOnline,
-          ),
+          if (isOnline)
+            BlurredFullHeightPlayerImage(
+              size: size,
+              audio: audio,
+            ),
           fullHeightPlayer,
         ],
       );
