@@ -45,11 +45,8 @@ class SettingsButton extends StatelessWidget {
                     Navigator.of(context).pop();
                     showDialog(
                       context: context,
-                      builder: (_) => ProviderScope(
-                        parent: ProviderScope.containerOf(context),
-                        child: SettingsDialog(
-                          initLocalAudio: initLocalAudio,
-                        ),
+                      builder: (_) => SettingsDialog(
+                        initLocalAudio: initLocalAudio,
                       ),
                     );
                   },
