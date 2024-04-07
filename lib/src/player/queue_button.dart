@@ -30,11 +30,8 @@ class QueueButton extends ConsumerWidget {
         showDialog(
           context: context,
           builder: (context) {
-            return ProviderScope(
-              parent: ProviderScope.containerOf(context),
-              child: QueueDialog(
-                addPlaylist: libraryModel.addPlaylist,
-              ),
+            return QueueDialog(
+              addPlaylist: libraryModel.addPlaylist,
             );
           },
         );

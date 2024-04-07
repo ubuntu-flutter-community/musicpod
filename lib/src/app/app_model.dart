@@ -39,9 +39,9 @@ class AppModel extends SafeChangeNotifier {
     super.dispose();
   }
 
-  void _updateConnectivity(ConnectivityResult result) {
-    if (_result == result) return;
-    _result = result;
+  void _updateConnectivity(List<ConnectivityResult> result) {
+    if (_result == result.firstOrNull) return;
+    _result = result.firstOrNull;
     notifyListeners();
   }
 
