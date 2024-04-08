@@ -1,11 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:yaru/yaru.dart';
+
 import '../../build_context_x.dart';
 import '../../common.dart';
-import '../../constants.dart';
 import '../../data.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
-import 'package:flutter/material.dart';
-import 'package:yaru/yaru.dart';
 
 class RadioFallBackIcon extends StatelessWidget {
   const RadioFallBackIcon({
@@ -21,7 +21,7 @@ class RadioFallBackIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.t;
     final light = theme.isLight;
-    final fallBackColor = light ? kCardColorLight : kCardColorDark;
+    final fallBackColor = theme.cardColor;
     return Container(
       height: double.infinity,
       width: double.infinity,

@@ -14,7 +14,6 @@ import '../../library.dart';
 import '../../player.dart';
 import '../../radio.dart';
 import '../../theme.dart';
-import '../../theme_data_x.dart';
 import 'radio_fall_back_icon.dart';
 import 'radio_history_list.dart';
 
@@ -40,7 +39,7 @@ class StationPage extends ConsumerWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(6),
       child: Container(
-        color: context.t.isLight ? kCardColorLight : kCardColorDark,
+        color: context.t.cardColor,
         height: sideBarImageSize,
         width: sideBarImageSize,
         child: SafeNetworkImage(

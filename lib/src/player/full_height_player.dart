@@ -151,38 +151,34 @@ class FullHeightPlayer extends ConsumerWidget {
       ],
     );
 
-    final fullHeightPlayer = Column(
-      children: [
-        if (!isMobile)
-          HeaderBar(
-            title: const Text(
-              '',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+    final fullHeightPlayer = Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: (isMobile)
+          ? null
+          : HeaderBar(
+              title: const Text(
+                '',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              foregroundColor: isVideo == true ? Colors.white : null,
+              backgroundColor:
+                  isVideo == true ? Colors.black : Colors.transparent,
             ),
-            foregroundColor: isVideo == true ? Colors.white : null,
-            backgroundColor:
-                isVideo == true ? Colors.black : Colors.transparent,
-          ),
-        isMobile
-            ? Expanded(
-                child: GestureDetector(
-                  onVerticalDragEnd: (details) {
-                    if (details.primaryVelocity != null &&
-                        details.primaryVelocity! > 150) {
-                      appModel.setFullScreen(false);
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: body,
-                  ),
-                ),
-              )
-            : Expanded(
+      body: isMobile
+          ? GestureDetector(
+              onVerticalDragEnd: (details) {
+                if (details.primaryVelocity != null &&
+                    details.primaryVelocity! > 150) {
+                  appModel.setFullScreen(false);
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 40),
                 child: body,
               ),
-      ],
+            )
+          : body,
     );
 
     if ((audio?.imageUrl != null ||

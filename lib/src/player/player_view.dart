@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app.dart';
 import '../../build_context_x.dart';
-import '../../constants.dart';
 import '../../player.dart';
-import '../../theme_data_x.dart';
 import '../theme.dart';
 
 class PlayerView extends ConsumerStatefulWidget {
@@ -53,7 +51,7 @@ class _PlayerViewState extends ConsumerState<PlayerView> {
     final c = ref.watch(playerModelProvider.select((m) => m.color));
     final color = getPlayerBg(
       c,
-      theme.isLight ? kCardColorLight : kCardColorDark,
+      theme.cardColor,
     );
     final playPrevious = playerModel.playPrevious;
     final playNext = playerModel.playNext;

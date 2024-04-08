@@ -50,7 +50,7 @@ class _AudioCardState extends State<AudioCard> {
           width: widget.width,
           height: widget.height,
           showBorder: widget.showBorder,
-          color: widget.color ?? (light ? kCardColorLight : kCardColorDark),
+          color: widget.color ?? theme.cardColor,
           onTap: widget.onTap,
           onHover: (value) => setState(() {
             _hovered = value;
@@ -62,12 +62,12 @@ class _AudioCardState extends State<AudioCard> {
                 if (widget.background != null) widget.background!,
                 if (widget.image == null)
                   Shimmer.fromColors(
-                    baseColor: light ? kCardColorLight : kCardColorDark,
+                    baseColor: theme.cardColor,
                     highlightColor: light
-                        ? kCardColorLight.scale(lightness: -0.01)
-                        : kCardColorDark.scale(lightness: 0.01),
+                        ? theme.cardColor.scale(lightness: -0.01)
+                        : theme.cardColor.scale(lightness: 0.01),
                     child: Container(
-                      color: light ? kCardColorLight : kCardColorDark,
+                      color: theme.cardColor,
                     ),
                   ),
                 if (widget.image != null) widget.image!,

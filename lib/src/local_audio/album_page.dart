@@ -6,10 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
-import '../../constants.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
-import '../../theme_data_x.dart';
 import '../common/explore_online_popup.dart';
 import '../l10n/l10n.dart';
 
@@ -141,7 +139,7 @@ class AlbumPageImage extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: context.t.isLight ? kCardColorLight : kCardColorDark,
+            color: context.t.cardColor,
             image: const DecorationImage(
               image: AssetImage('assets/images/media-optical.png'),
             ),

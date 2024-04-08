@@ -413,7 +413,7 @@ class PlayerService {
 
   Future<void> loadColor({String? url}) async {
     if (audio == null) {
-      _color = kCardColorDark;
+      _color = null;
       return;
     }
 
