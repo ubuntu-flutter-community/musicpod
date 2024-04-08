@@ -103,9 +103,6 @@ const kAudioControlPanelPadding = EdgeInsets.only(
   bottom: kYaruPagePadding / 2,
 );
 
-const kCardColorLight = Color.fromARGB(255, 233, 233, 233);
-const kCardColorDark = Color.fromARGB(255, 51, 51, 51);
-
 const kAudioQueueThreshHold = 100;
 
 const kMainPageIconPadding = EdgeInsets.only(right: 4.0);

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
-import '../../theme_data_x.dart';
 import 'radio_fall_back_icon.dart';
 import 'station_page.dart';
 
@@ -30,9 +28,7 @@ class StationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
     return AudioCard(
-      color: theme.isLight ? theme.dividerColor : kCardColorDark,
       bottom: AudioCardBottom(text: station?.title?.replaceAll('_', '') ?? ''),
       onPlay: station?.url == null
           ? null

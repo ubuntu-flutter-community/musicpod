@@ -40,8 +40,14 @@ ThemeData m3Theme({
         borderRadius: BorderRadius.circular(kYaruContainerRadius),
       ),
     ),
+    cardColor: getCardColor(colorScheme),
   );
 }
+
+Color? getCardColor(ColorScheme? colorScheme) => colorScheme?.onSurface.scale(
+      lightness: colorScheme.isLight == true ? 0.85 : -0.8,
+      saturation: -0.9,
+    );
 
 SnackBarThemeData _createSnackBarThemeData(ColorScheme scheme) {
   return SnackBarThemeData(
