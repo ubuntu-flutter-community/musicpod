@@ -31,6 +31,7 @@ class MasterDetailPage extends ConsumerWidget {
         navigatorKey: navigatorKey,
         onSelected: (value) => libraryModel.setIndex(value ?? 0),
         appBar: HeaderBar(
+          backgroundColor: getSideBarColor(context.t),
           style: YaruTitleBarStyle.undecorated,
           title: const Text('MusicPod'),
           actions: [

@@ -34,7 +34,6 @@ class YaruMusicPodApp extends StatelessWidget {
               behavior: SnackBarBehavior.floating,
               actionTextColor: yaru.theme?.colorScheme.primary,
             ),
-            cardColor: getCardColor(yaru.theme?.colorScheme),
           ),
           darkTheme: yaru.darkTheme?.copyWith(
             actionIconTheme: ActionIconThemeData(
@@ -51,7 +50,6 @@ class YaruMusicPodApp extends StatelessWidget {
               behavior: SnackBarBehavior.floating,
               actionTextColor: yaru.theme?.colorScheme.primary,
             ),
-            cardColor: getCardColor(yaru.theme?.colorScheme),
           ),
         );
       },

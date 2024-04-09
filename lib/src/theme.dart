@@ -44,7 +44,10 @@ ThemeData m3Theme({
   );
 }
 
-Color? getCardColor(ColorScheme? colorScheme) => colorScheme?.onSurface.scale(
+Color? getCardColor(
+  ColorScheme? colorScheme,
+) =>
+    colorScheme?.onSurface.scale(
       lightness: colorScheme.isLight == true ? 0.85 : -0.8,
       saturation: -0.9,
     );
