@@ -5,7 +5,6 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
-import '../../player.dart';
 import '../../utils.dart';
 import 'album_page.dart';
 import 'artist_page.dart';
@@ -28,7 +27,6 @@ class TitlesView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final libraryModel = ref.read(libraryModelProvider);
     final model = ref.read(localAudioModelProvider);
-    final playerModel = ref.read(playerModelProvider);
 
     return AudioPageBody(
       classicTiles: classicTiles,
@@ -38,10 +36,6 @@ class TitlesView extends ConsumerWidget {
       noResultIcon: noResultIcon,
       noResultMessage: noResultMessage,
       audios: audios,
-      onAudioFilterSelected: (v) {
-        model.setTitlesViewAudioFilterIndex(v.index);
-        sortListByAudioFilter(audioFilter: v, audios: playerModel.queue);
-      },
       audioPageType: AudioPageType.allTitlesView,
       pageId: kLocalAudioPageId,
       onAlbumTap: (text) {
