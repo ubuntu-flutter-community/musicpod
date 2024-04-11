@@ -91,9 +91,6 @@ class PlaylistPage extends ConsumerWidget {
             MaterialPageRoute(
               builder: (_) {
                 return AlbumPage(
-                  isPinnedAlbum: libraryModel.isPinnedAlbum,
-                  removePinnedAlbum: libraryModel.removePinnedAlbum,
-                  addPinnedAlbum: libraryModel.addPinnedAlbum,
                   id: id,
                   album: albumAudios,
                 );

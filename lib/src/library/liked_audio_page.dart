@@ -6,7 +6,6 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
-import '../../library.dart';
 import '../../local_audio.dart';
 import '../../utils.dart';
 import '../common/fall_back_header_image.dart';
@@ -32,7 +31,7 @@ class LikedAudioPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final model = ref.read(localAudioModelProvider);
-    final libraryModel = ref.read(libraryModelProvider);
+
     return AudioPage(
       classicTiles: false,
       onAlbumTap: (text) {
@@ -45,9 +44,6 @@ class LikedAudioPage extends ConsumerWidget {
           MaterialPageRoute(
             builder: (_) {
               return AlbumPage(
-                isPinnedAlbum: libraryModel.isPinnedAlbum,
-                removePinnedAlbum: libraryModel.removePinnedAlbum,
-                addPinnedAlbum: libraryModel.addPinnedAlbum,
                 id: id,
                 album: albumAudios,
               );

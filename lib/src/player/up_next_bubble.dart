@@ -17,6 +17,13 @@ class UpNextBubble extends ConsumerWidget {
   final Audio? audio;
   final Audio? nextAudio;
 
+  String createQueueElement(Audio? audio) {
+    final title = audio?.title?.isNotEmpty == true ? audio?.title! : '';
+    final artist =
+        audio?.artist?.isNotEmpty == true ? ' • ${audio?.artist}' : '';
+    return '$title$artist'.trim();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.t;

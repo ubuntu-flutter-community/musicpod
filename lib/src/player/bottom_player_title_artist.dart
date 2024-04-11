@@ -36,12 +36,14 @@ class BottomPlayerTitleArtist extends ConsumerWidget {
       children: [
         InkWell(
           borderRadius: BorderRadius.circular(4),
-          onTap: () => onTitleTap(
-            audio: audio,
-            text: icyTitle,
-            context: context,
-            ref: ref,
-          ),
+          onTap: audio == null
+              ? null
+              : () => onTitleTap(
+                    audio: audio!,
+                    text: icyTitle,
+                    context: context,
+                    ref: ref,
+                  ),
           child: Tooltip(
             message: title,
             child: Text(
@@ -59,12 +61,13 @@ class BottomPlayerTitleArtist extends ConsumerWidget {
             icyName?.isNotEmpty == true)
           InkWell(
             borderRadius: BorderRadius.circular(4),
-            onTap: () => onArtistTap(
-              audio: audio,
-              artist: icyTitle,
-              context: context,
-              ref: ref,
-            ),
+            onTap: audio == null
+                ? null
+                : () => onArtistTap(
+                      audio: audio!,
+                      context: context,
+                      ref: ref,
+                    ),
             child: Tooltip(
               message: subTitle,
               child: Text(
