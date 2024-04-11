@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github/github.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../constants.dart';
 import '../../external_path.dart';
+import '../../get.dart';
 import 'settings_service.dart';
 
 class SettingsModel extends SafeChangeNotifier {
@@ -131,8 +131,8 @@ class SettingsModel extends SafeChangeNotifier {
 
 final settingsModelProvider = ChangeNotifierProvider(
   (ref) => SettingsModel(
-    service: getService<SettingsService>(),
-    externalPathService: getService<ExternalPathService>(),
-    gitHub: getService<GitHub>(),
+    service: getIt<SettingsService>(),
+    externalPathService: getIt<ExternalPathService>(),
+    gitHub: getIt<GitHub>(),
   ),
 );

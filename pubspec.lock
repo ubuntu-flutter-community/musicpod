@@ -582,13 +582,13 @@ packages:
     source: hosted
     version: "4.0.0"
   get_it:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: get_it
-      sha256: "36524bfb3f0b4ec952c3202466fdd69ad1f7ac1dd9b0a7564177707e45bfaeb9"
+      sha256: ae30b28cc73053f79fd46b15f430db16cae22a0554e6cd25333c840b310b0270
       url: "https://pub.dev"
     source: hosted
-    version: "7.6.8"
+    version: "7.6.9"
   github:
     dependency: "direct main"
     description:
@@ -1443,14 +1443,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
-  ubuntu_service:
-    dependency: "direct main"
-    description:
-      name: ubuntu_service
-      sha256: "2612f96ca08948e8bd143a30180889aabc1ba1cfea4d92cde0d827715cfce4cb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.1"
   universal_platform:
     dependency: transitive
     description:

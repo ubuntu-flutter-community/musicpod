@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import 'library_service.dart';
 
 const kFixedListAmount = 5; // local, radio, podcasts, newplaylist, favs
@@ -350,5 +350,5 @@ class LibraryModel extends SafeChangeNotifier {
 }
 
 final libraryModelProvider = ChangeNotifierProvider<LibraryModel>((ref) {
-  return LibraryModel(getService<LibraryService>());
+  return LibraryModel(getIt<LibraryService>());
 });

@@ -3,11 +3,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:system_theme/system_theme.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
 import '../../common.dart';
+import '../../get.dart';
 import '../../library.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
@@ -101,7 +101,7 @@ class _MusicPodAppState extends State<_MusicPodApp> {
   @override
   void initState() {
     super.initState();
-    getService<LibraryService>().init().then(
+    getIt<LibraryService>().init().then(
       (value) {
         if (!initialized) {
           setState(() => initialized = value);
