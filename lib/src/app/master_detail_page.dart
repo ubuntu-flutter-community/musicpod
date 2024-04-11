@@ -23,51 +23,54 @@ class MasterDetailPage extends ConsumerWidget {
     final localAudioModel = ref.read(localAudioModelProvider);
     final masterItems = _createMasterItems(libraryModel: libraryModel);
 
-    return YaruMasterDetailTheme(
-      data: YaruMasterDetailTheme.of(context).copyWith(
-        sideBarColor: getSideBarColor(context.t),
-      ),
-      child: YaruMasterDetailPage(
-        navigatorKey: navigatorKey,
-        onSelected: (value) => libraryModel.setIndex(value ?? 0),
-        appBar: HeaderBar(
-          backgroundColor: getSideBarColor(context.t),
-          style: YaruTitleBarStyle.undecorated,
-          title: const Text('MusicPod'),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: SettingsButton(
-                initLocalAudio: localAudioModel.init,
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: YaruMasterDetailTheme(
+        data: YaruMasterDetailTheme.of(context).copyWith(
+          sideBarColor: getSideBarColor(context.t),
+        ),
+        child: YaruMasterDetailPage(
+          navigatorKey: navigatorKey,
+          onSelected: (value) => libraryModel.setIndex(value ?? 0),
+          appBar: HeaderBar(
+            backgroundColor: getSideBarColor(context.t),
+            style: YaruTitleBarStyle.undecorated,
+            title: const Text('MusicPod'),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: SettingsButton(
+                  initLocalAudio: localAudioModel.init,
+                ),
               ),
-            ),
-          ],
-        ),
-        layoutDelegate: const YaruMasterFixedPaneDelegate(
-          paneWidth: kMasterDetailSideBarWidth,
-        ),
-        breakpoint: kMasterDetailBreakPoint,
-        controller: YaruPageController(
-          length: libraryModel.totalListAmount,
-          initialIndex: libraryModel.index ?? 0,
-        ),
-        tileBuilder: (context, index, selected, availableWidth) {
-          final item = masterItems[index];
+            ],
+          ),
+          layoutDelegate: const YaruMasterFixedPaneDelegate(
+            paneWidth: kMasterDetailSideBarWidth,
+          ),
+          breakpoint: kMasterDetailBreakPoint,
+          controller: YaruPageController(
+            length: libraryModel.totalListAmount,
+            initialIndex: libraryModel.index ?? 0,
+          ),
+          tileBuilder: (context, index, selected, availableWidth) {
+            final item = masterItems[index];
 
-          return MasterTile(
-            pageId: item.pageId,
-            libraryModel: libraryModel,
-            selected: selected,
-            title: item.titleBuilder(context),
-            subtitle: item.subtitleBuilder?.call(context),
-            leading: item.iconBuilder?.call(
-              context,
-              selected,
-            ),
-          );
-        },
-        pageBuilder: (context, index) => YaruDetailPage(
-          body: masterItems[index].pageBuilder(context),
+            return MasterTile(
+              pageId: item.pageId,
+              libraryModel: libraryModel,
+              selected: selected,
+              title: item.titleBuilder(context),
+              subtitle: item.subtitleBuilder?.call(context),
+              leading: item.iconBuilder?.call(
+                context,
+                selected,
+              ),
+            );
+          },
+          pageBuilder: (context, index) => YaruDetailPage(
+            body: masterItems[index].pageBuilder(context),
+          ),
         ),
       ),
     );
