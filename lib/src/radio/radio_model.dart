@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide Country;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../data.dart';
+import '../../get.dart';
 import '../../l10n.dart';
 import '../../library.dart';
 import '../../string_x.dart';
@@ -153,7 +153,7 @@ enum RadioCollectionView {
 
 final radioModelProvider = ChangeNotifierProvider(
   (ref) => RadioModel(
-    radioService: getService<RadioService>(),
-    libraryService: getService<LibraryService>(),
+    radioService: getIt<RadioService>(),
+    libraryService: getIt<LibraryService>(),
   ),
 );

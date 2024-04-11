@@ -9,12 +9,12 @@ import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:system_theme/system_theme.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:yaru/yaru.dart';
 
 import 'app.dart';
 import 'external_path.dart';
+import 'get.dart';
 import 'library.dart';
 import 'local_audio.dart';
 import 'notifications.dart';
@@ -40,8 +40,9 @@ Future<void> main(List<String> args) async {
 
   final settingsService = SettingsService();
   await settingsService.init();
-  registerService<SettingsService>(
-    () => settingsService,
+
+  getIt.registerSingleton<SettingsService>(
+    settingsService,
     dispose: (s) async => await s.dispose(),
   );
 
@@ -57,50 +58,50 @@ Future<void> main(List<String> args) async {
   );
   await playerService.init();
 
-  registerService<PlayerService>(
-    () => playerService,
+  getIt.registerSingleton<PlayerService>(
+    playerService,
     dispose: (s) async => await s.dispose(),
   );
 
-  registerService<LibraryService>(
-    () => libraryService,
+  getIt.registerSingleton<LibraryService>(
+    libraryService,
     dispose: (s) async => await s.dispose(),
   );
-  registerService<LocalAudioService>(
-    () => LocalAudioService(settingsService: settingsService),
+  getIt.registerSingleton<LocalAudioService>(
+    LocalAudioService(settingsService: settingsService),
     dispose: (s) async => await s.dispose(),
   );
 
   final notificationsService =
       NotificationsService(Platform.isLinux ? NotificationsClient() : null);
 
-  registerService<NotificationsService>(
-    () => notificationsService,
+  getIt.registerSingleton<NotificationsService>(
+    notificationsService,
     dispose: (s) async => await s.dispose(),
   );
-  registerService<PodcastService>(
-    () => PodcastService(
+  getIt.registerSingleton<PodcastService>(
+    PodcastService(
       notificationsService: notificationsService,
       settingsService: settingsService,
     ),
     dispose: (s) async => await s.dispose(),
   );
   final connectivity = Connectivity();
-  registerService<Connectivity>(
-    () => connectivity,
+  getIt.registerSingleton<Connectivity>(
+    connectivity,
   );
 
-  registerService<ExternalPathService>(
-    () => ExternalPathService(
+  getIt.registerSingleton<ExternalPathService>(
+    ExternalPathService(
       gtkNotifier: Platform.isLinux ? GtkApplicationNotifier(args) : null,
       playerService: playerService,
     ),
     dispose: (s) => s.dispose(),
   );
 
-  registerService<RadioService>(() => RadioService());
+  getIt.registerSingleton<RadioService>(RadioService());
 
-  registerService(GitHub.new);
+  getIt.registerSingleton(GitHub());
 
   runApp(
     ProviderScope(

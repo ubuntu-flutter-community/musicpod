@@ -4,7 +4,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
+
+import '../../get.dart';
 
 class AppModel extends SafeChangeNotifier {
   AppModel({required Connectivity connectivity})
@@ -69,5 +70,5 @@ class AppModel extends SafeChangeNotifier {
 }
 
 final appModelProvider = ChangeNotifierProvider(
-  (ref) => AppModel(connectivity: getService<Connectivity>()),
+  (ref) => AppModel(connectivity: getIt<Connectivity>()),
 );

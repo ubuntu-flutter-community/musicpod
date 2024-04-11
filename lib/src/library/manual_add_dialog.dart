@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../external_path.dart';
+import '../../get.dart';
 import '../../globals.dart';
 import '../../library.dart';
 import '../../podcasts.dart';
@@ -171,7 +171,7 @@ class _PlaylistContentState extends State<PlaylistContent> {
                   builder: (context, ref, _) {
                     return TextButton(
                       onPressed: () async {
-                        final audios = await getService<ExternalPathService>()
+                        final audios = await getIt<ExternalPathService>()
                             .loadPlaylistFromFile();
                         setState(() {
                           _audios = audios.$2;

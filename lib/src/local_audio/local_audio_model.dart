@@ -4,10 +4,10 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../local_audio.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
@@ -313,6 +313,6 @@ class LocalAudioModel extends SafeChangeNotifier {
 
 final localAudioModelProvider = ChangeNotifierProvider(
   (ref) => LocalAudioModel(
-    localAudioService: getService<LocalAudioService>(),
+    localAudioService: getIt<LocalAudioService>(),
   ),
 );

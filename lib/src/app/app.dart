@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../constants.dart';
 import '../../external_path.dart';
+import '../../get.dart';
 import '../../library.dart';
 import '../../patch_notes.dart';
 import '../../player.dart';
@@ -30,7 +30,7 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
     if (!isMobile) {
       YaruWindow.of(context).onClose(
         () async {
-          await resetAllServices();
+          await getIt.reset();
           return true;
         },
       );
@@ -48,7 +48,7 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.paused) {
-      await resetAllServices();
+      await getIt.reset();
     }
   }
 
@@ -69,7 +69,7 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
                 if (settingsModel.recentPatchNotesDisposed == false) {
                   showPatchNotes(context, ref);
                 }
-              }).then((_) => getService<ExternalPathService>().init());
+              }).then((_) => getIt<ExternalPathService>().init());
             },
           );
         },
