@@ -21,15 +21,9 @@ class StationPage extends ConsumerWidget {
   const StationPage({
     super.key,
     required this.station,
-    required this.name,
-    required this.unStarStation,
-    required this.starStation,
   });
 
   final Audio station;
-  final String name;
-  final void Function(String station) unStarStation;
-  final void Function(String station) starStation;
 
   static Widget createIcon({
     required BuildContext context,
@@ -67,12 +61,10 @@ class StationPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appModel = ref.read(appModelProvider);
     final isOnline =
         ref.watch(appModelProvider.select((value) => value.isOnline));
     if (!isOnline) return const OfflinePage();
 
-    final radioModel = ref.read(radioModelProvider);
     final tags = station.album?.isNotEmpty == false
         ? null
         : <String>[
@@ -83,10 +75,7 @@ class StationPage extends ConsumerWidget {
     final showWindowControls =
         ref.watch(appModelProvider.select((m) => m.showWindowControls));
     final playerModel = ref.read(playerModelProvider);
-    final libraryModel = ref.read(libraryModelProvider);
-    final isStarred = station.url == null
-        ? false
-        : libraryModel.isStarredStation(station.url!);
+
     ref.watch(libraryModelProvider.select((m) => m.starredStations.length));
     final isAudioStation = ref.watch(
       playerModelProvider.select((v) => v.audio == station),
@@ -101,7 +90,7 @@ class StationPage extends ConsumerWidget {
               left: kYaruPagePadding,
               bottom: kYaruPagePadding,
             ),
-            title: name,
+            title: station.title ?? station.url ?? '',
             subTitle: '',
             label: '',
             image: SafeNetworkImage(
@@ -129,14 +118,10 @@ class StationPage extends ConsumerWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                Expanded(
-                  child: _createTagBar(
-                    tags: tags,
-                    radioModel: radioModel,
-                    libraryModel: libraryModel,
-                    appModel: appModel,
+                if (tags != null)
+                  Expanded(
+                    child: _RadioPageTagBar(tags),
                   ),
-                ),
               ],
             ),
           ),
@@ -144,51 +129,7 @@ class StationPage extends ConsumerWidget {
             padding: kAudioControlPanelPadding,
             child: AudioPageControlPanel(
               audios: {station},
-              controlButton: Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      tooltip: isStarred
-                          ? context.l10n.removeFromCollection
-                          : context.l10n.addToCollection,
-                      onPressed: station.url == null
-                          ? null
-                          : isStarred
-                              ? () => unStarStation(station.url!)
-                              : () => starStation(station.url!),
-                      icon: Iconz().getAnimatedStar(
-                        isStarred,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    IconButton(
-                      tooltip: context.l10n.copyToClipBoard,
-                      onPressed: () {
-                        final text =
-                            ref.read(libraryModelProvider).radioHistoryList;
-                        Clipboard.setData(
-                          ClipboardData(
-                            text: text,
-                          ),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: CopyClipboardContent(
-                              text: text,
-                              showActions: false,
-                            ),
-                          ),
-                        );
-                      },
-                      icon: Icon(Iconz().copy),
-                    ),
-                  ],
-                ),
-              ),
+              controlButton: _RadioPageControlButton(station: station),
               icon: isPlaying && isAudioStation ? Iconz().pause : Iconz().play,
               onTap: station.url == null
                   ? null
@@ -235,7 +176,7 @@ class StationPage extends ConsumerWidget {
         style: showWindowControls
             ? YaruTitleBarStyle.normal
             : YaruTitleBarStyle.undecorated,
-        title: Text(name.replaceAll('_', '')),
+        title: Text(station.title ?? station.url ?? ''),
         leading: Navigator.canPop(context)
             ? const NavBackButton()
             : const SizedBox.shrink(),
@@ -243,53 +184,128 @@ class StationPage extends ConsumerWidget {
       body: body,
     );
   }
+}
 
-  Widget _createTagBar({
-    required List<String>? tags,
-    required RadioModel radioModel,
-    required LibraryModel libraryModel,
-    required AppModel appModel,
-  }) {
-    if (tags == null || tags.isEmpty) return const SizedBox.shrink();
+class _RadioPageTagBar extends StatelessWidget {
+  const _RadioPageTagBar(this.tags);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(right: kYaruPagePadding),
-      child: YaruChoiceChipBar(
-        goNextIcon: Padding(
-          padding:
-              appleStyled ? const EdgeInsets.only(left: 3) : EdgeInsets.zero,
-          child: Icon(Iconz().goNext),
-        ),
-        goPreviousIcon: Padding(
-          padding:
-              appleStyled ? const EdgeInsets.only(right: 3) : EdgeInsets.zero,
-          child: Icon(Iconz().goBack),
-        ),
-        chipHeight: chipHeight,
-        yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-        labels: tags.map((e) => Text(e)).toList(),
-        isSelected: tags.map((e) => false).toList(),
-        clearOnSelect: false,
-        onSelected: (index) {
-          radioModel
-              .init(
-                countryCode: appModel.countryCode,
-                index: libraryModel.radioindex,
-              )
-              .then(
-                (_) => navigatorKey.currentState?.push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return RadioSearchPage(
-                        radioSearch: RadioSearch.tag,
-                        searchQuery: tags[index],
-                      );
-                    },
-                  ),
+  final List<String> tags;
+
+  @override
+  Widget build(BuildContext context) {
+    if (tags.isEmpty) return const SizedBox.shrink();
+
+    return Consumer(
+      builder: (context, ref, _) {
+        final radioModel = ref.read(radioModelProvider);
+        final libraryModel = ref.read(libraryModelProvider);
+        final appModel = ref.read(appModelProvider);
+        return SingleChildScrollView(
+          padding: const EdgeInsets.only(right: kYaruPagePadding),
+          child: YaruChoiceChipBar(
+            goNextIcon: Padding(
+              padding: appleStyled
+                  ? const EdgeInsets.only(left: 3)
+                  : EdgeInsets.zero,
+              child: Icon(Iconz().goNext),
+            ),
+            goPreviousIcon: Padding(
+              padding: appleStyled
+                  ? const EdgeInsets.only(right: 3)
+                  : EdgeInsets.zero,
+              child: Icon(Iconz().goBack),
+            ),
+            chipHeight: chipHeight,
+            yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+            labels: tags.map((e) => Text(e)).toList(),
+            isSelected: tags.map((e) => false).toList(),
+            clearOnSelect: false,
+            onSelected: (index) {
+              radioModel
+                  .init(
+                    countryCode: appModel.countryCode,
+                    index: libraryModel.radioindex,
+                  )
+                  .then(
+                    (_) => navigatorKey.currentState?.push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return RadioSearchPage(
+                            radioSearch: RadioSearch.tag,
+                            searchQuery: tags[index],
+                          );
+                        },
+                      ),
+                    ),
+                  );
+            },
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _RadioPageControlButton extends StatelessWidget {
+  const _RadioPageControlButton({
+    required this.station,
+  });
+
+  final Audio station;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, _) {
+        final libraryModel = ref.read(libraryModelProvider);
+        final isStarred = libraryModel.isStarredStation(station.url!);
+
+        return Padding(
+          padding: const EdgeInsets.only(left: 5),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                tooltip: libraryModel.isStarredStation(station.url!)
+                    ? context.l10n.removeFromCollection
+                    : context.l10n.addToCollection,
+                onPressed: station.url == null
+                    ? null
+                    : isStarred
+                        ? () => libraryModel.unStarStation(station.url!)
+                        : () => libraryModel
+                            .addStarredStation(station.url!, {station}),
+                icon: Iconz().getAnimatedStar(
+                  isStarred,
                 ),
-              );
-        },
-      ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              IconButton(
+                tooltip: context.l10n.copyToClipBoard,
+                onPressed: () {
+                  final text = ref.read(libraryModelProvider).radioHistoryList;
+                  Clipboard.setData(
+                    ClipboardData(
+                      text: text,
+                    ),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: CopyClipboardContent(
+                        text: text,
+                        showActions: false,
+                      ),
+                    ),
+                  );
+                },
+                icon: Icon(Iconz().copy),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

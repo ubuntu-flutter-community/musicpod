@@ -38,12 +38,14 @@ class FullHeightTitleAndArtist extends ConsumerWidget {
       children: [
         InkWell(
           borderRadius: BorderRadius.circular(10),
-          onTap: () => onTitleTap(
-            audio: audio,
-            text: mpvMetaData?.icyTitle,
-            context: context,
-            ref: ref,
-          ),
+          onTap: audio == null
+              ? null
+              : () => onTitleTap(
+                    audio: audio!,
+                    text: mpvMetaData?.icyTitle,
+                    context: context,
+                    ref: ref,
+                  ),
           child: Tooltip(
             message: title,
             child: Text(
@@ -61,12 +63,13 @@ class FullHeightTitleAndArtist extends ConsumerWidget {
         ),
         InkWell(
           borderRadius: BorderRadius.circular(8),
-          onTap: () => onArtistTap(
-            audio: audio,
-            artist: mpvMetaData?.icyName,
-            context: context,
-            ref: ref,
-          ),
+          onTap: audio == null
+              ? null
+              : () => onArtistTap(
+                    audio: audio!,
+                    context: context,
+                    ref: ref,
+                  ),
           child: Tooltip(
             message: subTitle,
             child: Text(

@@ -9,7 +9,6 @@ import '../../app.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
-import '../../library.dart';
 import '../../local_audio.dart';
 import '../../player.dart';
 import '../../settings.dart';
@@ -30,7 +29,6 @@ class ArtistPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final libraryModel = ref.read(libraryModelProvider);
     final model = ref.read(localAudioModelProvider);
 
     final useGridView = ref.watch(
@@ -51,9 +49,6 @@ class ArtistPage extends ConsumerWidget {
         MaterialPageRoute(
           builder: (_) {
             return AlbumPage(
-              isPinnedAlbum: libraryModel.isPinnedAlbum,
-              removePinnedAlbum: libraryModel.removePinnedAlbum,
-              addPinnedAlbum: libraryModel.addPinnedAlbum,
               id: id,
               album: audios,
             );

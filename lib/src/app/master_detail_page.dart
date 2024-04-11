@@ -174,16 +174,14 @@ class MasterDetailPage extends ConsumerWidget {
           pageBuilder: (context) => AlbumPage(
             album: album.value,
             id: album.key,
-            addPinnedAlbum: libraryModel.addPinnedAlbum,
-            isPinnedAlbum: libraryModel.isPinnedAlbum,
-            removePinnedAlbum: libraryModel.removePinnedAlbum,
           ),
           iconBuilder: (context, selected) => AlbumPage.createIcon(
             context,
             album.value.firstOrNull?.pictureData,
           ),
         ),
-      for (final station in libraryModel.starredStations.entries)
+      for (final station in libraryModel.starredStations.entries
+          .where((e) => e.value.isNotEmpty))
         _MasterItem(
           titleBuilder: (context) =>
               Text(station.value.first.title ?? station.key),
@@ -192,9 +190,6 @@ class MasterDetailPage extends ConsumerWidget {
           },
           pageId: station.key,
           pageBuilder: (context) => StationPage(
-            starStation: (station) {},
-            unStarStation: libraryModel.unStarStation,
-            name: station.value.first.title ?? station.key,
             station: station.value.first,
           ),
           iconBuilder: (context, selected) => StationPage.createIcon(

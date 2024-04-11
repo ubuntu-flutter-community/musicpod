@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../library.dart';
 import '../../local_audio.dart';
 import '../common/explore_online_popup.dart';
 import '../l10n/l10n.dart';
@@ -15,10 +16,7 @@ class AlbumPage extends ConsumerWidget {
   const AlbumPage({
     super.key,
     required this.id,
-    required this.isPinnedAlbum,
-    required this.removePinnedAlbum,
     required this.album,
-    required this.addPinnedAlbum,
   });
 
   static Widget createIcon(
@@ -47,10 +45,7 @@ class AlbumPage extends ConsumerWidget {
   }
 
   final String id;
-  final bool Function(String name) isPinnedAlbum;
-  final void Function(String name) removePinnedAlbum;
   final Set<Audio> album;
-  final void Function(String name, Set<Audio> audios) addPinnedAlbum;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -85,41 +80,10 @@ class AlbumPage extends ConsumerWidget {
       headerLabel: context.l10n.album,
       headerSubtile: album.firstOrNull?.artist,
       image: AlbumPageImage(pictureData: pictureData),
-      controlPanelButton: _buildControlButton(context),
+      controlPanelButton: _AlbumPageControlButton(album: album, id: id),
       audios: album,
       pageId: id,
       headerTitle: album.firstOrNull?.album,
-    );
-  }
-
-  Widget _buildControlButton(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 5),
-          child: IconButton(
-            tooltip: context.l10n.pinAlbum,
-            isSelected: isPinnedAlbum(id),
-            icon: Icon(
-              isPinnedAlbum(id) ? Iconz().pinFilled : Iconz().pin,
-            ),
-            onPressed: () {
-              if (isPinnedAlbum(id)) {
-                removePinnedAlbum(id);
-              } else {
-                addPinnedAlbum(id, album);
-              }
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 5),
-          child: ExploreOnlinePopup(
-            text: '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
-          ),
-        ),
-      ],
     );
   }
 }
@@ -155,6 +119,53 @@ class AlbumPageImage extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+class _AlbumPageControlButton extends StatelessWidget {
+  const _AlbumPageControlButton({required this.id, required this.album});
+
+  final String id;
+  final Set<Audio> album;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, _) {
+        final libraryModel = ref.read(libraryModelProvider);
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: IconButton(
+                tooltip: context.l10n.pinAlbum,
+                isSelected: libraryModel.isPinnedAlbum(id),
+                icon: Icon(
+                  libraryModel.isPinnedAlbum(id)
+                      ? Iconz().pinFilled
+                      : Iconz().pin,
+                ),
+                onPressed: () {
+                  if (libraryModel.isPinnedAlbum(id)) {
+                    libraryModel.removePinnedAlbum(id);
+                  } else {
+                    libraryModel.addPinnedAlbum(id, album);
+                  }
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: ExploreOnlinePopup(
+                text:
+                    '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

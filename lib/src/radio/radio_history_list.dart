@@ -107,7 +107,6 @@ class RadioHistoryList extends ConsumerWidget {
                   if (stations != null && stations.isNotEmpty) {
                     onArtistTap(
                       audio: stations.first,
-                      artist: e.value.icyTitle,
                       context: context,
                       ref: ref,
                     );

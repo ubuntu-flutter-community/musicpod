@@ -56,23 +56,7 @@ class StationCard extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          return StationPage(
-            station: station,
-            name: station.title ?? station.toString(),
-            unStarStation: (s) {
-              if (station.url == null) return;
-              unstarStation(
-                station.url!,
-              );
-            },
-            starStation: (s) {
-              if (station.url == null) return;
-              starStation(
-                station.url!,
-                {station},
-              );
-            },
-          );
+          return StationPage(station: station);
         },
       ),
     );

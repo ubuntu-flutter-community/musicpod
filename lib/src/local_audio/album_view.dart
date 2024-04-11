@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
-import '../../library.dart';
 import '../../player.dart';
 import '../../utils.dart';
 import '../data/audio.dart';
@@ -37,7 +36,6 @@ class AlbumsView extends ConsumerWidget {
       );
     }
 
-    final libraryModel = ref.read(libraryModelProvider);
     final playerModel = ref.read(playerModelProvider);
     final model = ref.read(localAudioModelProvider);
 
@@ -82,10 +80,7 @@ class AlbumsView extends ConsumerWidget {
                         builder: (context) {
                           return AlbumPage(
                             id: id,
-                            isPinnedAlbum: libraryModel.isPinnedAlbum,
-                            removePinnedAlbum: libraryModel.removePinnedAlbum,
                             album: albumAudios,
-                            addPinnedAlbum: libraryModel.addPinnedAlbum,
                           );
                         },
                       ),

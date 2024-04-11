@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
-import '../../library.dart';
 import '../../utils.dart';
 import 'album_page.dart';
 import 'artist_page.dart';
@@ -25,7 +24,6 @@ class TitlesView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final libraryModel = ref.read(libraryModelProvider);
     final model = ref.read(localAudioModelProvider);
 
     return AudioPageBody(
@@ -48,9 +46,6 @@ class TitlesView extends ConsumerWidget {
           MaterialPageRoute(
             builder: (_) {
               return AlbumPage(
-                isPinnedAlbum: libraryModel.isPinnedAlbum,
-                removePinnedAlbum: libraryModel.removePinnedAlbum,
-                addPinnedAlbum: libraryModel.addPinnedAlbum,
                 id: id,
                 album: albumAudios,
               );
