@@ -29,6 +29,7 @@ Future<void> main(List<String> args) async {
     if (!Platform.isLinux) {
       await windowManager.ensureInitialized();
       WindowManager.instance.setMinimumSize(const Size(500, 700));
+      WindowManager.instance.setSize(const Size(950, 820));
     }
   }
   WidgetsFlutterBinding.ensureInitialized();
