@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../l10n.dart';
 import '../common/icons.dart';
 import 'player_model.dart';
 
-class PlayButton extends ConsumerWidget {
+class PlayButton extends StatelessWidget {
   const PlayButton({
     super.key,
     required this.active,
@@ -17,8 +16,8 @@ class PlayButton extends ConsumerWidget {
   final Color? iconColor;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final playerModel = ref.read(playerModelProvider);
+  Widget build(BuildContext context) {
+    final playerModel = getIt<PlayerModel>();
     final pause = playerModel.pause;
     final playOrPause = playerModel.playOrPause;
     final isPlaying = ref.watch(playerModelProvider.select((m) => m.isPlaying));

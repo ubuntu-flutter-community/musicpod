@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
+import '../../get.dart';
 import '../../l10n.dart';
 import '../../library.dart';
 import '../../radio.dart';
 import '../../theme.dart';
 
-class RadioControlPanel extends ConsumerWidget {
+class RadioControlPanel extends StatelessWidget with WatchItMixin {
   const RadioControlPanel({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
-    final libraryModel = ref.read(libraryModelProvider);
-    final model = ref.read(radioModelProvider);
-    final index = ref.watch(libraryModelProvider.select((m) => m.radioindex));
+    final libraryModel = getIt<LibraryModel>();
+    final model = getIt<RadioModel>();
+    final index = watchPropertyValue((LibraryModel m) => m.radioindex);
 
     return Padding(
       padding: const EdgeInsets.only(left: kYaruPagePadding),

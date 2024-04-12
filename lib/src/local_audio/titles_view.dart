@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
@@ -9,7 +8,7 @@ import 'album_page.dart';
 import 'artist_page.dart';
 import 'local_audio_model.dart';
 
-class TitlesView extends ConsumerWidget {
+class TitlesView extends StatelessWidget {
   const TitlesView({
     super.key,
     required this.audios,
@@ -23,7 +22,7 @@ class TitlesView extends ConsumerWidget {
   final bool classicTiles;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final model = ref.read(localAudioModelProvider);
 
     return AudioPageBody(

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 import 'package:path/path.dart' as p;
@@ -10,6 +10,7 @@ import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
+import '../../get.dart';
 import '../../l10n.dart';
 import '../../local_audio.dart';
 import '../../string_x.dart';
@@ -50,15 +51,14 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-class _ThemeSection extends ConsumerWidget {
+class _ThemeSection extends StatelessWidget with WatchItMixin {
   const _ThemeSection();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final model = ref.read(settingsModelProvider);
+  Widget build(BuildContext context) {
+    final model = getIt<SettingsModel>();
 
-    final themeIndex =
-        ref.watch(settingsModelProvider.select((m) => m.themeIndex));
+    final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
     return YaruSection(
       margin: const EdgeInsets.only(
         left: kYaruPagePadding,
@@ -97,14 +97,14 @@ class _ThemeSection extends ConsumerWidget {
   }
 }
 
-class _PodcastSection extends ConsumerStatefulWidget {
+class _PodcastSection extends StatefulWidget with WatchItStatefulWidgetMixin {
   const _PodcastSection();
 
   @override
-  ConsumerState<_PodcastSection> createState() => _PodcastSectionState();
+  State<_PodcastSection> createState() => _PodcastSectionState();
 }
 
-class _PodcastSectionState extends ConsumerState<_PodcastSection> {
+class _PodcastSectionState extends State<_PodcastSection> {
   String? _initialKey;
   String? _initialSecret;
   late TextEditingController _keyController, _secretController;
@@ -112,7 +112,7 @@ class _PodcastSectionState extends ConsumerState<_PodcastSection> {
   @override
   void initState() {
     super.initState();
-    final model = ref.read(settingsModelProvider);
+    final model = getIt<SettingsModel>();
     _initialKey = model.podcastIndexApiKey;
     _keyController = TextEditingController(text: _initialKey);
     _initialSecret = model.podcastIndexApiSecret;
@@ -129,13 +129,13 @@ class _PodcastSectionState extends ConsumerState<_PodcastSection> {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final model = ref.read(settingsModelProvider);
+    final model = getIt<SettingsModel>();
     final usePodcastIndex =
-        ref.watch(settingsModelProvider.select((m) => m.usePodcastIndex));
+        watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
     final podcastIndexApiKey =
-        ref.watch(settingsModelProvider.select((m) => m.podcastIndexApiKey));
+        watchPropertyValue((SettingsModel m) => m.podcastIndexApiKey);
     final podcastIndexApiSecret =
-        ref.watch(settingsModelProvider.select((m) => m.podcastIndexApiSecret));
+        watchPropertyValue((SettingsModel m) => m.podcastIndexApiSecret);
 
     return YaruSection(
       margin: const EdgeInsets.all(kYaruPagePadding),
@@ -206,7 +206,7 @@ class _PodcastSectionState extends ConsumerState<_PodcastSection> {
   }
 }
 
-class _LocalAudioSection extends ConsumerWidget {
+class _LocalAudioSection extends StatelessWidget with WatchItMixin {
   const _LocalAudioSection({required this.initLocalAudio});
 
   final Future<void> Function({
@@ -215,10 +215,10 @@ class _LocalAudioSection extends ConsumerWidget {
   }) initLocalAudio;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final settingsModel = ref.read(settingsModelProvider);
+  Widget build(BuildContext context) {
+    final settingsModel = getIt<SettingsModel>();
     final directory =
-        ref.watch(settingsModelProvider.select((m) => m.directory ?? ''));
+        watchPropertyValue((SettingsModel m) => m.directory ?? '');
 
     Future<void> onDirectorySelected(String? directoryPath) async {
       settingsModel.setDirectory(directoryPath).then(
@@ -267,12 +267,12 @@ class _LocalAudioSection extends ConsumerWidget {
   }
 }
 
-class _AboutSection extends ConsumerWidget {
+class _AboutSection extends StatelessWidget with WatchItMixin {
   const _AboutSection();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final appName = ref.watch(settingsModelProvider.select((m) => m.appName));
+  Widget build(BuildContext context) {
+    final appName = watchPropertyValue((SettingsModel m) => m.appName);
 
     final text = '${context.l10n.about} ${appName ?? ''}';
     return YaruSection(
@@ -285,31 +285,30 @@ class _AboutSection extends ConsumerWidget {
   }
 }
 
-class _AboutTile extends ConsumerStatefulWidget {
+class _AboutTile extends StatefulWidget with WatchItStatefulWidgetMixin {
   const _AboutTile();
 
   @override
-  ConsumerState<_AboutTile> createState() => _AboutTileState();
+  State<_AboutTile> createState() => _AboutTileState();
 }
 
-class _AboutTileState extends ConsumerState<_AboutTile> {
+class _AboutTileState extends State<_AboutTile> {
   late Future<String?> _onlineVersion;
 
   @override
   void initState() {
     super.initState();
-    final isOnline = ref.read(appModelProvider.select((a) => a.isOnline));
+    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
 
     _onlineVersion = !isOnline || Platform.isLinux
         ? Future.value(null)
-        : ref.read(settingsModelProvider).getOnlineVersion();
+        : getIt<SettingsModel>().getOnlineVersion();
   }
 
   @override
   Widget build(BuildContext context) {
-    final model = ref.read(settingsModelProvider);
-    final currentVersion =
-        ref.watch(settingsModelProvider.select((m) => m.version));
+    final model = getIt<SettingsModel>();
+    final currentVersion = watchPropertyValue((SettingsModel m) => m.version);
     return YaruTile(
       title: FutureBuilder(
         future: _onlineVersion,

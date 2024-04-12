@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:yaru/yaru.dart';
 
 import '../../common.dart';
@@ -16,7 +16,7 @@ import '../common/explore_online_popup.dart';
 import '../l10n/l10n.dart';
 import 'genre_page.dart';
 
-class ArtistPage extends ConsumerWidget {
+class ArtistPage extends StatelessWidget {
   const ArtistPage({
     super.key,
     required this.images,
@@ -27,7 +27,7 @@ class ArtistPage extends ConsumerWidget {
   final Set<Audio>? artistAudios;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final model = ref.read(localAudioModelProvider);
 
     final useGridView = ref.watch(
@@ -146,7 +146,7 @@ class _ArtistAlbumsCardGrid extends StatelessWidget {
       builder: (context, ref, _) {
         final artist = artistAudios?.firstOrNull?.artist;
         final model = ref.read(localAudioModelProvider);
-        final playerModel = ref.read(playerModelProvider);
+        final playerModel = getIt<PlayerModel>();
 
         return YaruDetailPage(
           appBar: HeaderBar(

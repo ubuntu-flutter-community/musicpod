@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:yaru/yaru.dart';
 
@@ -14,7 +14,7 @@ import '../../theme.dart';
 import '../../theme_data_x.dart';
 import 'super_network_image.dart';
 
-class BottomPlayerImage extends ConsumerWidget {
+class BottomPlayerImage extends StatelessWidget {
   const BottomPlayerImage({
     super.key,
     this.audio,
@@ -30,7 +30,7 @@ class BottomPlayerImage extends ConsumerWidget {
   final bool isOnline;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     const iconSize = 40.0;
     final mpvMetaData =
         ref.watch(playerModelProvider.select((m) => m.mpvMetaData));
@@ -94,9 +94,8 @@ class BottomPlayerImage extends ConsumerWidget {
           mpvMetaData: mpvMetaData,
           fit: BoxFit.cover,
           iconSize: iconSize,
-          onImageFind: (url) =>
-              ref.read(playerModelProvider).loadColor(url: url),
-          onGenreTap: (genre) => ref.read(radioModelProvider).init().then(
+          onImageFind: (url) => getIt<PlayerModel>().loadColor(url: url),
+          onGenreTap: (genre) => getIt<RadioModel>().init().then(
                 (_) => navigatorKey.currentState?.push(
                   MaterialPageRoute(
                     builder: (context) {

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../common/icons.dart';
 import 'player_model.dart';
 
-class PlaybackRateButton extends ConsumerWidget {
+class PlaybackRateButton extends StatelessWidget {
   const PlaybackRateButton({
     super.key,
     required this.active,
@@ -16,10 +15,10 @@ class PlaybackRateButton extends ConsumerWidget {
   final Color? color;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
     final rate = ref.watch(playerModelProvider.select((m) => m.rate));
-    final setRate = ref.read(playerModelProvider).setRate;
+    final setRate = getIt<PlayerModel>().setRate;
 
     return PopupMenuButton(
       icon: Icon(

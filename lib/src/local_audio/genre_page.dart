@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:yaru/yaru.dart';
 
 import '../../common.dart';
@@ -9,15 +9,15 @@ import '../../l10n.dart';
 import '../../local_audio.dart';
 import '../../radio.dart';
 
-class GenrePage extends ConsumerWidget {
+class GenrePage extends StatelessWidget {
   const GenrePage({required this.genre, super.key});
 
   final String genre;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final model = ref.read(localAudioModelProvider);
-    final radioModel = ref.read(radioModelProvider);
+    final radioModel = getIt<RadioModel>();
 
     final artistAudiosWithGenre = model.findArtistsOfGenre(Audio(genre: genre));
 

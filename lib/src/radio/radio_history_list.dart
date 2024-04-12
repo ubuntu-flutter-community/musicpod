@@ -1,9 +1,10 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:yaru/yaru.dart';
 
 import '../../common.dart';
+import '../../get.dart';
 import '../../globals.dart';
 import '../../l10n.dart';
 import '../../library.dart';
@@ -12,7 +13,7 @@ import '../../radio.dart';
 import '../../theme.dart';
 import '../common/icy_image.dart';
 
-class RadioHistoryList extends ConsumerWidget {
+class RadioHistoryList extends StatelessWidget with WatchItMixin {
   const RadioHistoryList({
     super.key,
     this.filter,
@@ -27,18 +28,16 @@ class RadioHistoryList extends ConsumerWidget {
   final EdgeInsetsGeometry? padding;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final radioHistory = ref.watch(
-      libraryModelProvider.select(
-        (l) => l.radioHistory.entries.where(
-          (e) =>
-              e.value.icyName.contains(filter ?? '') ||
-              (filter?.contains(e.value.icyName) ?? true),
-        ),
+  Widget build(BuildContext context) {
+    final radioHistory = watchPropertyValue(
+      (LibraryModel m) => m.radioHistory.entries.where(
+        (e) =>
+            e.value.icyName.contains(filter ?? '') ||
+            (filter?.contains(e.value.icyName) ?? true),
       ),
     );
-    final current = ref.watch(playerModelProvider.select((p) => p.mpvMetaData));
-    final radioModel = ref.read(radioModelProvider);
+    final current = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
+    final radioModel = getIt<RadioModel>();
 
     if (radioHistory.isEmpty) {
       return NoSearchResultPage(
@@ -91,25 +90,19 @@ class RadioHistoryList extends ConsumerWidget {
               onTap: () => onTitleTap(
                 text: e.value.icyTitle,
                 context: context,
-                ref: ref,
               ),
             ),
             subtitle: TapAbleText(
               text: e.value.icyName,
               onTap: () {
-                ref
-                    .read(radioModelProvider)
+                radioModel
                     .getStations(
-                      radioSearch: RadioSearch.name,
-                      query: e.value.icyName,
-                    )
+                  radioSearch: RadioSearch.name,
+                  query: e.value.icyName,
+                )
                     .then((stations) {
                   if (stations != null && stations.isNotEmpty) {
-                    onArtistTap(
-                      audio: stations.first,
-                      context: context,
-                      ref: ref,
-                    );
+                    onArtistTap(audio: stations.first, context: context);
                   }
                 });
               },

@@ -1,13 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:system_theme/system_theme.dart';
+import '../../get.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
 import '../../common.dart';
-import '../../get.dart';
 import '../../library.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
@@ -74,7 +74,7 @@ class MaterialMusicPodApp extends StatelessWidget {
   }
 }
 
-class _MusicPodApp extends StatefulWidget {
+class _MusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
   const _MusicPodApp({
     // ignore: unused_element
     super.key,
@@ -112,37 +112,32 @@ class _MusicPodAppState extends State<_MusicPodApp> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final themeIndex = ref
-            .watch(settingsModelProvider.select((value) => value.themeIndex));
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          themeMode: ThemeMode.values[themeIndex],
-          highContrastTheme: widget.highContrastTheme,
-          highContrastDarkTheme: widget.highContrastDarkTheme,
-          theme: widget.lightTheme ??
-              m3Theme(color: widget.accent ?? Colors.greenAccent),
-          darkTheme: widget.darkTheme ??
-              m3Theme(
-                brightness: Brightness.dark,
-                color: widget.accent ?? Colors.greenAccent,
-              ),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: supportedLocales,
-          onGenerateTitle: (context) => 'MusicPod',
-          home: initialized ? const App() : const SplashScreen(),
-          scrollBehavior: const MaterialScrollBehavior().copyWith(
-            dragDevices: {
-              PointerDeviceKind.mouse,
-              PointerDeviceKind.touch,
-              PointerDeviceKind.stylus,
-              PointerDeviceKind.unknown,
-              PointerDeviceKind.trackpad,
-            },
+    final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.values[themeIndex],
+      highContrastTheme: widget.highContrastTheme,
+      highContrastDarkTheme: widget.highContrastDarkTheme,
+      theme: widget.lightTheme ??
+          m3Theme(color: widget.accent ?? Colors.greenAccent),
+      darkTheme: widget.darkTheme ??
+          m3Theme(
+            brightness: Brightness.dark,
+            color: widget.accent ?? Colors.greenAccent,
           ),
-        );
-      },
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: supportedLocales,
+      onGenerateTitle: (context) => 'MusicPod',
+      home: initialized ? const App() : const SplashScreen(),
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: {
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.touch,
+          PointerDeviceKind.stylus,
+          PointerDeviceKind.unknown,
+          PointerDeviceKind.trackpad,
+        },
+      ),
     );
   }
 }

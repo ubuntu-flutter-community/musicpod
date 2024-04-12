@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
+import '../../get.dart';
 import '../../l10n.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
@@ -14,13 +14,13 @@ import '../../settings.dart';
 import '../../theme.dart';
 import '../globals.dart';
 
-class MasterDetailPage extends ConsumerWidget {
+class MasterDetailPage extends StatelessWidget {
   const MasterDetailPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final libraryModel = ref.watch(libraryModelProvider);
-    final localAudioModel = ref.read(localAudioModelProvider);
+  Widget build(BuildContext context) {
+    final libraryModel = watchIt<LibraryModel>();
+    final localAudioModel = getIt<LocalAudioModel>();
     final masterItems = _createMasterItems(libraryModel: libraryModel);
 
     return Scaffold(

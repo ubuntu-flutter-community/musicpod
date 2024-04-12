@@ -1,12 +1,12 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../l10n.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
@@ -14,7 +14,7 @@ import '../../theme.dart';
 import '../globals.dart';
 import '../library/library_model.dart';
 
-class PodcastsCollectionBody extends ConsumerWidget {
+class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
   const PodcastsCollectionBody({
     super.key,
     required this.isOnline,
@@ -25,25 +25,23 @@ class PodcastsCollectionBody extends ConsumerWidget {
   final bool loading;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
-    final subs = ref.watch(libraryModelProvider.select((m) => m.podcasts));
-    ref.watch(libraryModelProvider.select((m) => m.podcastUpdatesLength));
-    final playerModel = ref.read(playerModelProvider);
-    final libraryModel = ref.read(libraryModelProvider);
+    final subs = watchPropertyValue((LibraryModel m) => m.podcasts);
+    watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
+    final playerModel = getIt<PlayerModel>();
+    final libraryModel = getIt<LibraryModel>();
     final podcastUpdateAvailable = libraryModel.podcastUpdateAvailable;
     final feedHasDownload = libraryModel.feedHasDownload;
     final updatesLength =
-        ref.watch(libraryModelProvider.select((m) => m.podcastUpdatesLength));
-    final model = ref.read(podcastModelProvider);
-    final updatesOnly =
-        ref.watch(podcastModelProvider.select((m) => m.updatesOnly));
+        watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
+    final model = getIt<PodcastModel>();
+    final updatesOnly = watchPropertyValue((PodcastModel m) => m.updatesOnly);
     final downloadsOnly =
-        ref.watch(podcastModelProvider.select((m) => m.downloadsOnly));
-    final subsLength =
-        ref.watch(libraryModelProvider.select((m) => m.podcastsLength));
-    final feedsWithDownloadLength = ref
-        .watch(libraryModelProvider.select((m) => m.feedsWithDownloadsLength));
+        watchPropertyValue((PodcastModel m) => m.downloadsOnly);
+    final subsLength = watchPropertyValue((LibraryModel m) => m.podcastsLength);
+    final feedsWithDownloadLength =
+        watchPropertyValue((LibraryModel m) => m.feedsWithDownloadsLength);
     final setUpdatesOnly = model.setUpdatesOnly;
     final setDownloadsOnly = model.setDownloadsOnly;
     final removeUpdate = libraryModel.removePodcastUpdate;

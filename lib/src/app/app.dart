@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../get.dart';
+
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../constants.dart';
 import '../../external_path.dart';
-import '../../get.dart';
 import '../../library.dart';
 import '../../patch_notes.dart';
 import '../../player.dart';
 import '../../settings.dart';
 import 'master_detail_page.dart';
 
-class App extends ConsumerStatefulWidget {
+class App extends StatefulWidget with WatchItStatefulWidgetMixin {
   const App({super.key});
 
   @override
-  ConsumerState<App> createState() => _AppState();
+  State<App> createState() => _AppState();
 }
 
-class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
+class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -30,13 +30,13 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
     if (!isMobile) {
       YaruWindow.of(context).onClose(
         () async {
-          await getIt.reset();
+          await di.reset();
           return true;
         },
       );
     }
 
-    _init(ref);
+    _init();
   }
 
   @override
@@ -48,15 +48,15 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.paused) {
-      await getIt.reset();
+      await di.reset();
     }
   }
 
-  void _init(WidgetRef ref) {
-    final libraryModel = ref.read(libraryModelProvider);
-    final appModel = ref.read(appModelProvider);
-    final settingsModel = ref.read(settingsModelProvider);
-    final playerModel = ref.read(playerModelProvider);
+  void _init() {
+    final libraryModel = getIt<LibraryModel>();
+    final appModel = getIt<AppModel>();
+    final settingsModel = getIt<SettingsModel>();
+    final playerModel = getIt<PlayerModel>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -67,7 +67,7 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
               playerModel.init().then((_) {
                 settingsModel.init();
                 if (settingsModel.recentPatchNotesDisposed == false) {
-                  showPatchNotes(context, ref);
+                  showPatchNotes(context);
                 }
               }).then((_) => getIt<ExternalPathService>().init());
             },
@@ -81,10 +81,9 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final playerToTheRight = context.m.size.width > kSideBarThreshHold;
 
-    final lockSpace = ref.watch(appModelProvider.select((a) => a.lockSpace));
-    final isFullScreen =
-        ref.watch(appModelProvider.select((a) => a.fullScreen));
-    final playerModel = ref.read(playerModelProvider);
+    final lockSpace = watchPropertyValue((AppModel m) => m.lockSpace);
+    final isFullScreen = watchPropertyValue((AppModel m) => m.fullScreen);
+    final playerModel = getIt<PlayerModel>();
 
     return KeyboardListener(
       focusNode: FocusNode(),

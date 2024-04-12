@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 import '../../common.dart';
@@ -67,31 +66,25 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
                 width: kAudioCardDimension,
               );
 
-              return Consumer(
-                builder: (context, ref, _) {
-                  return AudioCard(
-                    bottom: AudioCardBottom(
-                      text: podcastItem.collectionName ?? podcastItem.trackName,
-                    ),
-                    image: image,
-                    onPlay: () => searchAndPushPodcastPage(
-                      context: context,
-                      feedUrl: podcastItem.feedUrl,
-                      itemImageUrl: art,
-                      genre: podcastItem.primaryGenreName,
-                      play: true,
-                      ref: ref,
-                    ),
-                    onTap: () => searchAndPushPodcastPage(
-                      context: context,
-                      feedUrl: podcastItem.feedUrl,
-                      itemImageUrl: art,
-                      genre: podcastItem.primaryGenreName,
-                      play: false,
-                      ref: ref,
-                    ),
-                  );
-                },
+              return AudioCard(
+                bottom: AudioCardBottom(
+                  text: podcastItem.collectionName ?? podcastItem.trackName,
+                ),
+                image: image,
+                onPlay: () => searchAndPushPodcastPage(
+                  context: context,
+                  feedUrl: podcastItem.feedUrl,
+                  itemImageUrl: art,
+                  genre: podcastItem.primaryGenreName,
+                  play: true,
+                ),
+                onTap: () => searchAndPushPodcastPage(
+                  context: context,
+                  feedUrl: podcastItem.feedUrl,
+                  itemImageUrl: art,
+                  genre: podcastItem.primaryGenreName,
+                  play: false,
+                ),
               );
             },
           ),

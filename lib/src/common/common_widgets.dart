@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../constants.dart';
+import '../../get.dart';
 import '../../globals.dart';
 import '../../theme.dart';
 import 'icons.dart';
@@ -123,7 +123,9 @@ class Progress extends StatelessWidget {
   }
 }
 
-class HeaderBar extends StatelessWidget implements PreferredSizeWidget {
+class HeaderBar extends StatelessWidget
+    with WatchItMixin
+    implements PreferredSizeWidget {
   const HeaderBar({
     super.key,
     this.title,
@@ -158,27 +160,22 @@ class HeaderBar extends StatelessWidget implements PreferredSizeWidget {
       );
     }
 
-    return Consumer(
-      builder: (context, ref, child) {
-        var theStyle = style;
-        if (adaptive) {
-          theStyle =
-              ref.watch(appModelProvider.select((a) => a.showWindowControls))
-                  ? YaruTitleBarStyle.normal
-                  : YaruTitleBarStyle.undecorated;
-        }
+    var theStyle = style;
+    if (adaptive) {
+      theStyle = watchPropertyValue((AppModel m) => m.showWindowControls)
+          ? YaruTitleBarStyle.normal
+          : YaruTitleBarStyle.undecorated;
+    }
 
-        return YaruWindowTitleBar(
-          titleSpacing: titleSpacing,
-          actions: actions,
-          leading: leading,
-          title: title,
-          border: BorderSide.none,
-          backgroundColor: backgroundColor,
-          style: theStyle,
-          foregroundColor: foregroundColor,
-        );
-      },
+    return YaruWindowTitleBar(
+      titleSpacing: titleSpacing,
+      actions: actions,
+      leading: leading,
+      title: title,
+      border: BorderSide.none,
+      backgroundColor: backgroundColor,
+      style: theStyle,
+      foregroundColor: foregroundColor,
     );
   }
 
@@ -236,7 +233,7 @@ class SearchButton extends StatelessWidget {
   }
 }
 
-class SearchingBar extends ConsumerWidget {
+class SearchingBar extends StatelessWidget {
   const SearchingBar({
     super.key,
     this.text,
@@ -253,8 +250,8 @@ class SearchingBar extends ConsumerWidget {
   final String? hintText;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final appModel = ref.read(appModelProvider);
+  Widget build(BuildContext context) {
+    final appModel = getIt<AppModel>();
     void onChanged2(v) {
       appModel.setLockSpace(true);
       onChanged?.call(v);

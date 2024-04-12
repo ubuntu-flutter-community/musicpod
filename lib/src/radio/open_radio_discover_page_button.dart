@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app.dart';
 import '../../common.dart';
+import '../../get.dart';
 import '../../globals.dart';
 import '../../l10n.dart';
 import 'radio_discover_page.dart';
 
-class OpenRadioDiscoverPageButton extends ConsumerWidget {
+class OpenRadioDiscoverPageButton extends StatelessWidget {
   const OpenRadioDiscoverPageButton({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isOnline =
-        ref.watch(appModelProvider.select((value) => value.isOnline));
+  Widget build(BuildContext context) {
+    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
     return ImportantButton(
       onPressed: () {
         navigatorKey.currentState?.push(

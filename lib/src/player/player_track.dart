@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../utils.dart';
 import 'player_model.dart';
 
-class PlayerTrack extends ConsumerWidget {
+class PlayerTrack extends StatelessWidget {
   const PlayerTrack({
     super.key,
     this.bottomPlayer = false,
@@ -15,12 +14,12 @@ class PlayerTrack extends ConsumerWidget {
   final bool bottomPlayer, active;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
 
     final mainColor = theme.colorScheme.onSurface;
 
-    final playerModel = ref.read(playerModelProvider);
+    final playerModel = getIt<PlayerModel>();
 
     final position = ref.watch(playerModelProvider.select((m) => m.position));
     final setPosition = playerModel.setPosition;

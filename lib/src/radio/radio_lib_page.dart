@@ -1,10 +1,11 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
+import '../../get.dart';
 import '../../globals.dart';
 import '../../l10n.dart';
 import '../../library.dart';
@@ -15,7 +16,7 @@ import 'open_radio_discover_page_button.dart';
 import 'radio_history_list.dart';
 import 'station_card.dart';
 
-class RadioLibPage extends ConsumerWidget {
+class RadioLibPage extends StatelessWidget with WatchItMixin {
   const RadioLibPage({
     super.key,
     required this.isOnline,
@@ -24,15 +25,15 @@ class RadioLibPage extends ConsumerWidget {
   final bool isOnline;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     if (!isOnline) {
       return const OfflinePage();
     }
 
     final theme = context.t;
     final radioCollectionView =
-        ref.watch(radioModelProvider.select((m) => m.radioCollectionView));
-    final radioModel = ref.read(radioModelProvider);
+        watchPropertyValue((RadioModel m) => m.radioCollectionView);
+    final radioModel = getIt<RadioModel>();
 
     return Column(
       children: [
@@ -76,19 +77,18 @@ class RadioLibPage extends ConsumerWidget {
   }
 }
 
-class StationGrid extends ConsumerWidget {
+class StationGrid extends StatelessWidget with WatchItMixin {
   const StationGrid({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final stations =
-        ref.watch(libraryModelProvider.select((m) => m.starredStations));
+  Widget build(BuildContext context) {
+    final stations = watchPropertyValue((LibraryModel m) => m.starredStations);
     final length =
-        ref.watch(libraryModelProvider.select((m) => m.starredStationsLength));
-    final libraryModel = ref.read(libraryModelProvider);
-    final playerModel = ref.read(playerModelProvider);
+        watchPropertyValue((LibraryModel m) => m.starredStationsLength);
+    final libraryModel = getIt<LibraryModel>();
+    final playerModel = getIt<PlayerModel>();
 
     if (length == 0) {
       return NoSearchResultPage(
@@ -123,16 +123,16 @@ class StationGrid extends ConsumerWidget {
   }
 }
 
-class TagGrid extends ConsumerWidget {
+class TagGrid extends StatelessWidget with WatchItMixin {
   const TagGrid({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final favTagsLength =
-        ref.watch(libraryModelProvider.select((m) => m.favTags.length));
-    final favTags = ref.watch(libraryModelProvider.select((m) => m.favTags));
+        watchPropertyValue((LibraryModel m) => m.favTags.length);
+    final favTags = watchPropertyValue((LibraryModel m) => m.favTags);
 
     if (favTagsLength == 0) {
       return NoSearchResultPage(

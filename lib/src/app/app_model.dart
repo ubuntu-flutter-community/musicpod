@@ -2,10 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-
-import '../../get.dart';
 
 class AppModel extends SafeChangeNotifier {
   AppModel({required Connectivity connectivity})
@@ -68,7 +65,3 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 }
-
-final appModelProvider = ChangeNotifierProvider(
-  (ref) => AppModel(connectivity: getIt<Connectivity>()),
-);

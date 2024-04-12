@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru/yaru.dart';
 
@@ -8,6 +8,7 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
 import '../l10n/l10n.dart';
@@ -18,48 +19,45 @@ import 'podcasts_control_panel.dart';
 import 'podcasts_discover_grid.dart';
 import 'podcasts_page_title.dart';
 
-class PodcastsPage extends ConsumerStatefulWidget {
+class PodcastsPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const PodcastsPage({super.key});
 
   @override
-  ConsumerState<PodcastsPage> createState() => _PodcastsPageState();
+  State<PodcastsPage> createState() => _PodcastsPageState();
 }
 
-class _PodcastsPageState extends ConsumerState<PodcastsPage> {
+class _PodcastsPageState extends State<PodcastsPage> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final settingsModel = ref.read(settingsModelProvider);
-      final appModel = ref.read(appModelProvider);
+      final settingsModel = getIt<SettingsModel>();
+      final appModel = getIt<AppModel>();
 
-      ref.read(podcastModelProvider).init(
-            countryCode: appModel.countryCode,
-            updateMessage: context.l10n.newEpisodeAvailable,
-            usePodcastIndex: settingsModel.usePodcastIndex,
-            podcastIndexApiKey: settingsModel.podcastIndexApiKey,
-            podcastIndexApiSecret: settingsModel.podcastIndexApiSecret,
-          );
+      getIt<PodcastModel>().init(
+        countryCode: appModel.countryCode,
+        updateMessage: context.l10n.newEpisodeAvailable,
+        usePodcastIndex: settingsModel.usePodcastIndex,
+        podcastIndexApiKey: settingsModel.podcastIndexApiKey,
+        podcastIndexApiSecret: settingsModel.podcastIndexApiSecret,
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final isOnline =
-        ref.watch(appModelProvider.select((value) => value.isOnline));
+    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
 
-    final model = ref.read(podcastModelProvider);
-    final searchResult =
-        ref.watch(podcastModelProvider.select((m) => m.searchResult));
+    final model = getIt<PodcastModel>();
+    final searchResult = watchPropertyValue((PodcastModel m) => m.searchResult);
 
-    final searchActive =
-        ref.watch(podcastModelProvider.select((m) => m.searchActive));
+    final searchActive = watchPropertyValue((PodcastModel m) => m.searchActive);
     final setSearchActive = model.setSearchActive;
     final theme = context.t;
-    final libraryModel = ref.read(libraryModelProvider);
+    final libraryModel = getIt<LibraryModel>();
 
-    final limit = ref.watch(podcastModelProvider.select((m) => m.limit));
+    final limit = watchPropertyValue((PodcastModel m) => m.limit);
     final setLimit = model.setLimit;
 
     final search = model.search;
@@ -72,28 +70,25 @@ class _PodcastsPageState extends ConsumerState<PodcastsPage> {
       ),
     );
 
-    final searchQuery =
-        ref.watch(podcastModelProvider.select((m) => m.searchQuery));
+    final searchQuery = watchPropertyValue((PodcastModel m) => m.searchQuery);
 
-    final country = ref.watch(podcastModelProvider.select((m) => m.country));
+    final country = watchPropertyValue((PodcastModel m) => m.country);
     final sortedCountries =
-        ref.watch(podcastModelProvider.select((m) => m.sortedCountries));
+        watchPropertyValue((PodcastModel m) => m.sortedCountries);
 
     final checkingForUpdates =
-        ref.watch(podcastModelProvider.select((m) => m.checkingForUpdates));
+        watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
 
     void setCountry(Country? country) {
       model.setCountry(country);
       libraryModel.setLastCountryCode(country?.code);
     }
 
-    final podcastGenre =
-        ref.watch(podcastModelProvider.select((m) => m.podcastGenre));
-    final sortedGenres =
-        ref.watch(podcastModelProvider.select((m) => m.sortedGenres));
+    final podcastGenre = watchPropertyValue((PodcastModel m) => m.podcastGenre);
+    final sortedGenres = watchPropertyValue((PodcastModel m) => m.sortedGenres);
     final setPodcastGenre = model.setPodcastGenre;
     final usePodcastIndex =
-        ref.watch(settingsModelProvider.select((m) => m.usePodcastIndex));
+        watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
 
     final controlPanel = PodcastsControlPanel(
       limit: limit,
@@ -179,7 +174,7 @@ class _PodcastsPageState extends ConsumerState<PodcastsPage> {
   }
 }
 
-class PodcastsPageIcon extends ConsumerWidget {
+class PodcastsPageIcon extends StatelessWidget with WatchItMixin {
   const PodcastsPageIcon({
     super.key,
     required this.selected,
@@ -188,13 +183,12 @@ class PodcastsPageIcon extends ConsumerWidget {
   final bool selected;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
-    final audioType =
-        ref.watch(playerModelProvider.select((m) => m.audio?.audioType));
+    final audioType = watchPropertyValue((PlayerModel m) => m.audio?.audioType);
 
     final checkingForUpdates =
-        ref.watch(podcastModelProvider.select((m) => m.checkingForUpdates));
+        watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
 
     if (checkingForUpdates) {
       return const SideBarProgress();

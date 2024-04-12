@@ -1,6 +1,6 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
@@ -18,16 +18,16 @@ import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 import 'local_audio_view.dart';
 
-class LocalAudioPage extends ConsumerStatefulWidget {
+class LocalAudioPage extends StatefulWidget {
   const LocalAudioPage({
     super.key,
   });
 
   @override
-  ConsumerState<LocalAudioPage> createState() => _LocalAudioPageState();
+  State<LocalAudioPage> createState() => _LocalAudioPageState();
 }
 
-class _LocalAudioPageState extends ConsumerState<LocalAudioPage> {
+class _LocalAudioPageState extends State<LocalAudioPage> {
   @override
   void initState() {
     super.initState();
@@ -133,7 +133,7 @@ class _LocalAudioPageState extends ConsumerState<LocalAudioPage> {
   }
 }
 
-class LocalAudioPageIcon extends ConsumerWidget {
+class LocalAudioPageIcon extends StatelessWidget {
   const LocalAudioPageIcon({
     super.key,
     required this.selected,
@@ -142,7 +142,7 @@ class LocalAudioPageIcon extends ConsumerWidget {
   final bool selected;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final audioType =
         ref.watch(playerModelProvider.select((m) => m.audio?.audioType));
 

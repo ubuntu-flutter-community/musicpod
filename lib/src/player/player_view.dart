@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../get.dart';
 
 import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../player.dart';
 import '../theme.dart';
 
-class PlayerView extends ConsumerStatefulWidget {
+class PlayerView extends StatefulWidget with WatchItStatefulWidgetMixin {
   const PlayerView({super.key, required this.mode});
 
   final PlayerViewMode mode;
 
   @override
-  ConsumerState<PlayerView> createState() => _PlayerViewState();
+  State<PlayerView> createState() => _PlayerViewState();
 }
 
-class _PlayerViewState extends ConsumerState<PlayerView> {
+class _PlayerViewState extends State<PlayerView> {
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
-      ref.read(appModelProvider).setShowWindowControls(
-            widget.mode != PlayerViewMode.sideBar,
-          );
+      getIt<AppModel>().setShowWindowControls(
+        widget.mode != PlayerViewMode.sideBar,
+      );
     });
   }
 
@@ -34,9 +34,9 @@ class _PlayerViewState extends ConsumerState<PlayerView> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
-      ref.read(appModelProvider).setShowWindowControls(
-            widget.mode != PlayerViewMode.sideBar,
-          );
+      getIt<AppModel>().setShowWindowControls(
+        widget.mode != PlayerViewMode.sideBar,
+      );
     });
   }
 
@@ -44,20 +44,20 @@ class _PlayerViewState extends ConsumerState<PlayerView> {
   Widget build(BuildContext context) {
     final theme = context.t;
 
-    final isOnline = ref.watch(appModelProvider.select((c) => c.isOnline));
-    final playerModel = ref.read(playerModelProvider);
-    final appModel = ref.read(appModelProvider);
-    final nextAudio = ref.watch(playerModelProvider.select((m) => m.nextAudio));
-    final c = ref.watch(playerModelProvider.select((m) => m.color));
+    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
+    final playerModel = getIt<PlayerModel>();
+    final appModel = getIt<AppModel>();
+    final nextAudio = watchPropertyValue((PlayerModel m) => m.nextAudio);
+    final c = watchPropertyValue((PlayerModel m) => m.color);
     final color = getPlayerBg(
       c,
       theme.cardColor,
     );
     final playPrevious = playerModel.playPrevious;
     final playNext = playerModel.playNext;
-    final audio = ref.watch(playerModelProvider.select((m) => m.audio));
+    final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
-    final isVideo = ref.watch(playerModelProvider.select((m) => m.isVideo));
+    final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo);
 
     Widget player;
     if (widget.mode != PlayerViewMode.bottom) {

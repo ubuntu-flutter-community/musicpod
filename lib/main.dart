@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github/github.dart';
 import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
@@ -12,9 +11,9 @@ import 'package:system_theme/system_theme.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../get.dart';
 import 'app.dart';
 import 'external_path.dart';
-import 'get.dart';
 import 'library.dart';
 import 'local_audio.dart';
 import 'notifications.dart';
@@ -39,9 +38,10 @@ Future<void> main(List<String> args) async {
     await SystemTheme.accentColor.load();
   }
 
+  // Services
+
   final settingsService = SettingsService();
   await settingsService.init();
-
   getIt.registerSingleton<SettingsService>(
     settingsService,
     dispose: (s) async => await s.dispose(),
@@ -68,8 +68,9 @@ Future<void> main(List<String> args) async {
     libraryService,
     dispose: (s) async => await s.dispose(),
   );
+  final localAudioService = LocalAudioService(settingsService: settingsService);
   getIt.registerSingleton<LocalAudioService>(
-    LocalAudioService(settingsService: settingsService),
+    localAudioService,
     dispose: (s) async => await s.dispose(),
   );
 
@@ -92,23 +93,52 @@ Future<void> main(List<String> args) async {
     connectivity,
   );
 
+  final externalPathService = ExternalPathService(
+    gtkNotifier: Platform.isLinux ? GtkApplicationNotifier(args) : null,
+    playerService: playerService,
+  );
   getIt.registerSingleton<ExternalPathService>(
-    ExternalPathService(
-      gtkNotifier: Platform.isLinux ? GtkApplicationNotifier(args) : null,
-      playerService: playerService,
-    ),
+    externalPathService,
     dispose: (s) => s.dispose(),
   );
 
-  getIt.registerSingleton<RadioService>(RadioService());
+  final radioService = RadioService();
+  getIt.registerSingleton<RadioService>(radioService);
+  final gitHub = GitHub();
+  getIt.registerSingleton<GitHub>(gitHub);
 
-  getIt.registerSingleton(GitHub());
+  // ViewModels
+
+  getIt.registerSingleton<AppModel>(AppModel(connectivity: connectivity));
+  getIt.registerSingleton<PlayerModel>(PlayerModel(service: playerService));
+  getIt.registerSingleton<LibraryModel>(LibraryModel(libraryService));
+  getIt.registerSingleton<LocalAudioModel>(
+    LocalAudioModel(localAudioService: localAudioService),
+  );
+  getIt.registerSingleton<PodcastModel>(
+    PodcastModel(
+      libraryService: libraryService,
+      podcastService: di.get<PodcastService>(),
+    ),
+  );
+  getIt.registerSingleton<RadioModel>(
+    RadioModel(radioService: radioService, libraryService: libraryService),
+  );
+  getIt.registerSingleton<SettingsModel>(
+    SettingsModel(
+      service: settingsService,
+      externalPathService: externalPathService,
+      gitHub: gitHub,
+    ),
+  );
+
+  // settings
+  // download
+  // local
 
   runApp(
-    ProviderScope(
-      child: Platform.isLinux
-          ? const GtkApplication(child: YaruMusicPodApp())
-          : const MaterialMusicPodApp(),
-    ),
+    Platform.isLinux
+        ? const GtkApplication(child: YaruMusicPodApp())
+        : const MaterialMusicPodApp(),
   );
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
@@ -14,7 +14,7 @@ import '../../theme.dart';
 import '../../theme_data_x.dart';
 import 'super_network_image.dart';
 
-class FullHeightPlayerImage extends ConsumerWidget {
+class FullHeightPlayerImage extends StatelessWidget {
   const FullHeightPlayerImage({
     super.key,
     this.audio,
@@ -32,7 +32,7 @@ class FullHeightPlayerImage extends ConsumerWidget {
   final BorderRadius? borderRadius;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
 
     final mpvMetaData =
@@ -72,9 +72,8 @@ class FullHeightPlayerImage extends ConsumerWidget {
           theme: theme,
           mpvMetaData: mpvMetaData,
           iconSize: fullHeightPlayerImageSize * 0.7,
-          onImageFind: (url) =>
-              ref.read(playerModelProvider).loadColor(url: url),
-          onGenreTap: (genre) => ref.read(radioModelProvider).init().then(
+          onImageFind: (url) => getIt<PlayerModel>().loadColor(url: url),
+          onGenreTap: (genre) => getIt<RadioModel>().init().then(
             (_) {
               ref.read(appModelProvider).setFullScreen(false);
               navigatorKey.currentState?.push(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:github/github.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
@@ -7,31 +7,32 @@ import 'package:yaru/yaru.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
+import '../../get.dart';
 import '../../l10n.dart';
 import 'settings_model.dart';
 
 const _kTileSize = 50.0;
 
-class AboutPage extends ConsumerStatefulWidget {
+class AboutPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const AboutPage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _AboutPageState();
+  State<StatefulWidget> createState() => _AboutPageState();
 }
 
-class _AboutPageState extends ConsumerState<AboutPage> {
+class _AboutPageState extends State<AboutPage> {
   late Future<List<Contributor>> _contributors;
 
   @override
   void initState() {
     super.initState();
-    _contributors = ref.read(settingsModelProvider).getContributors();
+    _contributors = getIt<SettingsModel>().getContributors();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final appName = ref.watch(settingsModelProvider.select((m) => m.appName));
+    final appName = watchPropertyValue((SettingsModel m) => m.appName);
     final linkStyle = theme.textTheme.bodyLarge
         ?.copyWith(color: Colors.lightBlue, overflow: TextOverflow.visible);
     const maxLines = 3;

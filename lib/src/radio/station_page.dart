@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
@@ -8,6 +8,7 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../globals.dart';
 import '../../l10n.dart';
 import '../../library.dart';
@@ -17,7 +18,7 @@ import '../../theme.dart';
 import 'radio_fall_back_icon.dart';
 import 'radio_history_list.dart';
 
-class StationPage extends ConsumerWidget {
+class StationPage extends StatelessWidget with WatchItMixin {
   const StationPage({
     super.key,
     required this.station,
@@ -60,9 +61,8 @@ class StationPage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isOnline =
-        ref.watch(appModelProvider.select((value) => value.isOnline));
+  Widget build(BuildContext context) {
+    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
 
     final tags = station.album?.isNotEmpty == false
@@ -72,13 +72,13 @@ class StationPage extends ConsumerWidget {
           ];
     const size = fullHeightPlayerImageSize - 20;
 
-    final playerModel = ref.read(playerModelProvider);
+    final playerModel = getIt<PlayerModel>();
 
-    ref.watch(libraryModelProvider.select((m) => m.starredStations.length));
-    final isAudioStation = ref.watch(
-      playerModelProvider.select((v) => v.audio == station),
+    watchPropertyValue((LibraryModel m) => m.starredStations.length);
+    final isAudioStation = watchPropertyValue(
+      (PlayerModel m) => m.audio == station,
     );
-    final isPlaying = ref.watch(playerModelProvider.select((v) => v.isPlaying));
+    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
 
     final body = AdaptiveContainer(
       child: Column(
@@ -182,7 +182,7 @@ class StationPage extends ConsumerWidget {
   }
 }
 
-class _RadioPageTagBar extends StatelessWidget {
+class _RadioPageTagBar extends StatelessWidget with WatchItMixin {
   const _RadioPageTagBar(this.tags);
 
   final List<String> tags;
@@ -191,53 +191,47 @@ class _RadioPageTagBar extends StatelessWidget {
   Widget build(BuildContext context) {
     if (tags.isEmpty) return const SizedBox.shrink();
 
-    return Consumer(
-      builder: (context, ref, _) {
-        final radioModel = ref.read(radioModelProvider);
-        final libraryModel = ref.read(libraryModelProvider);
-        final appModel = ref.read(appModelProvider);
-        return SingleChildScrollView(
-          padding: const EdgeInsets.only(right: kYaruPagePadding),
-          child: YaruChoiceChipBar(
-            goNextIcon: Padding(
-              padding: appleStyled
-                  ? const EdgeInsets.only(left: 3)
-                  : EdgeInsets.zero,
-              child: Icon(Iconz().goNext),
-            ),
-            goPreviousIcon: Padding(
-              padding: appleStyled
-                  ? const EdgeInsets.only(right: 3)
-                  : EdgeInsets.zero,
-              child: Icon(Iconz().goBack),
-            ),
-            chipHeight: chipHeight,
-            yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-            labels: tags.map((e) => Text(e)).toList(),
-            isSelected: tags.map((e) => false).toList(),
-            clearOnSelect: false,
-            onSelected: (index) {
-              radioModel
-                  .init(
-                    countryCode: appModel.countryCode,
-                    index: libraryModel.radioindex,
-                  )
-                  .then(
-                    (_) => navigatorKey.currentState?.push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return RadioSearchPage(
-                            radioSearch: RadioSearch.tag,
-                            searchQuery: tags[index],
-                          );
-                        },
-                      ),
-                    ),
-                  );
-            },
-          ),
-        );
-      },
+    final radioModel = getIt<RadioModel>();
+    final libraryModel = getIt<LibraryModel>();
+    final appModel = getIt<AppModel>();
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(right: kYaruPagePadding),
+      child: YaruChoiceChipBar(
+        goNextIcon: Padding(
+          padding:
+              appleStyled ? const EdgeInsets.only(left: 3) : EdgeInsets.zero,
+          child: Icon(Iconz().goNext),
+        ),
+        goPreviousIcon: Padding(
+          padding:
+              appleStyled ? const EdgeInsets.only(right: 3) : EdgeInsets.zero,
+          child: Icon(Iconz().goBack),
+        ),
+        chipHeight: chipHeight,
+        yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+        labels: tags.map((e) => Text(e)).toList(),
+        isSelected: tags.map((e) => false).toList(),
+        clearOnSelect: false,
+        onSelected: (index) {
+          radioModel
+              .init(
+                countryCode: appModel.countryCode,
+                index: libraryModel.radioindex,
+              )
+              .then(
+                (_) => navigatorKey.currentState?.push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return RadioSearchPage(
+                        radioSearch: RadioSearch.tag,
+                        searchQuery: tags[index],
+                      );
+                    },
+                  ),
+                ),
+              );
+        },
+      ),
     );
   }
 }
@@ -251,57 +245,53 @@ class _RadioPageControlButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final libraryModel = ref.read(libraryModelProvider);
-        final isStarred = libraryModel.isStarredStation(station.url!);
+    final libraryModel = getIt<LibraryModel>();
+    final isStarred = libraryModel.isStarredStation(station.url!);
 
-        return Padding(
-          padding: const EdgeInsets.only(left: 5),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                tooltip: libraryModel.isStarredStation(station.url!)
-                    ? context.l10n.removeFromCollection
-                    : context.l10n.addToCollection,
-                onPressed: station.url == null
-                    ? null
-                    : isStarred
-                        ? () => libraryModel.unStarStation(station.url!)
-                        : () => libraryModel
-                            .addStarredStation(station.url!, {station}),
-                icon: Iconz().getAnimatedStar(
-                  isStarred,
-                ),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              IconButton(
-                tooltip: context.l10n.copyToClipBoard,
-                onPressed: () {
-                  final text = ref.read(libraryModelProvider).radioHistoryList;
-                  Clipboard.setData(
-                    ClipboardData(
-                      text: text,
-                    ),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: CopyClipboardContent(
-                        text: text,
-                        showActions: false,
-                      ),
-                    ),
-                  );
-                },
-                icon: Icon(Iconz().copy),
-              ),
-            ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 5),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            tooltip: libraryModel.isStarredStation(station.url!)
+                ? context.l10n.removeFromCollection
+                : context.l10n.addToCollection,
+            onPressed: station.url == null
+                ? null
+                : isStarred
+                    ? () => libraryModel.unStarStation(station.url!)
+                    : () =>
+                        libraryModel.addStarredStation(station.url!, {station}),
+            icon: Iconz().getAnimatedStar(
+              isStarred,
+            ),
           ),
-        );
-      },
+          const SizedBox(
+            width: 5,
+          ),
+          IconButton(
+            tooltip: context.l10n.copyToClipBoard,
+            onPressed: () {
+              final text = getIt<LibraryModel>().radioHistoryList;
+              Clipboard.setData(
+                ClipboardData(
+                  text: text,
+                ),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: CopyClipboardContent(
+                    text: text,
+                    showActions: false,
+                  ),
+                ),
+              );
+            },
+            icon: Icon(Iconz().copy),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../build_context_x.dart';
@@ -9,15 +9,15 @@ import '../../library.dart';
 import '../../player.dart';
 import '../l10n/l10n.dart';
 
-class QueueButton extends ConsumerWidget {
+class QueueButton extends StatelessWidget {
   const QueueButton({super.key, this.color});
 
   final Color? color;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
-    final libraryModel = ref.read(libraryModelProvider);
+    final libraryModel = getIt<LibraryModel>();
 
     return IconButton(
       color: color ?? theme.colorScheme.onSurface,
@@ -40,7 +40,7 @@ class QueueButton extends ConsumerWidget {
   }
 }
 
-class QueueDialog extends ConsumerStatefulWidget {
+class QueueDialog extends StatefulWidget {
   const QueueDialog({
     super.key,
     required this.addPlaylist,
@@ -49,10 +49,10 @@ class QueueDialog extends ConsumerStatefulWidget {
   final void Function(String name, Set<Audio> audios) addPlaylist;
 
   @override
-  ConsumerState<QueueDialog> createState() => _QueueDialogState();
+  State<QueueDialog> createState() => _QueueDialogState();
 }
 
-class _QueueDialogState extends ConsumerState<QueueDialog> {
+class _QueueDialogState extends State<QueueDialog> {
   late AutoScrollController _controller;
 
   @override
@@ -63,7 +63,7 @@ class _QueueDialogState extends ConsumerState<QueueDialog> {
   }
 
   void _jump() {
-    final model = ref.read(playerModelProvider);
+    final model = getIt<PlayerModel>();
     final currentAudio = model.audio;
     if (currentAudio != null && model.queue.isNotEmpty == true) {
       _controller.scrollToIndex(
@@ -86,7 +86,7 @@ class _QueueDialogState extends ConsumerState<QueueDialog> {
     final queueLength =
         ref.watch(playerModelProvider.select((m) => m.queue.length));
     final currentAudio = ref.watch(playerModelProvider.select((m) => m.audio));
-    final playerModel = ref.read(playerModelProvider);
+    final playerModel = getIt<PlayerModel>();
 
     return AlertDialog(
       key: ValueKey(queueLength),

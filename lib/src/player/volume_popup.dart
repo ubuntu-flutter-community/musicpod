@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
+import '../../get.dart';
 import '../l10n/l10n.dart';
 import 'player_model.dart';
 
-class VolumeSliderPopup extends ConsumerWidget {
+class VolumeSliderPopup extends StatelessWidget {
   const VolumeSliderPopup({
     super.key,
     this.color,
@@ -15,10 +15,10 @@ class VolumeSliderPopup extends ConsumerWidget {
   final Color? color;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
-    final playerModel = ref.read(playerModelProvider);
-    final volume = ref.watch(playerModelProvider.select((m) => m.volume));
+    final playerModel = getIt<PlayerModel>();
+    final volume = watchPropertyValue((PlayerModel m) => m.volume);
     final setVolume = playerModel.setVolume;
     IconData iconData;
     if (volume <= 0) {
@@ -52,7 +52,7 @@ class VolumeSliderPopup extends ConsumerWidget {
   }
 }
 
-class _Slider extends StatelessWidget {
+class _Slider extends StatelessWidget with WatchItMixin {
   const _Slider({
     required this.setVolume,
   });
@@ -61,19 +61,14 @@ class _Slider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final volume = watchPropertyValue((PlayerModel m) => m.volume);
     return RotatedBox(
       quarterTurns: 3,
-      child: Consumer(
-        builder: (context, ref, _) {
-          final volume = ref.watch(playerModelProvider.select((m) => m.volume));
-
-          return Slider(
-            value: volume,
-            onChanged: setVolume,
-            max: 100,
-            min: 0,
-          );
-        },
+      child: Slider(
+        value: volume,
+        onChanged: setVolume,
+        max: 100,
+        min: 0,
       ),
     );
   }

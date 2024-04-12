@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
+import '../../get.dart';
 import '../../player.dart';
 
-class AudioProgress extends ConsumerWidget {
+class AudioProgress extends StatelessWidget with WatchItMixin {
   const AudioProgress({
     super.key,
     this.lastPosition,
@@ -18,16 +18,16 @@ class AudioProgress extends ConsumerWidget {
   final bool selected;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
 
     final pos = (selected
-            ? ref.watch(playerModelProvider.select((m) => m.position))
+            ? watchPropertyValue((PlayerModel m) => m.position)
             : lastPosition) ??
         Duration.zero;
 
     final dur = (selected
-            ? ref.watch(playerModelProvider.select((m) => m.duration))
+            ? watchPropertyValue((PlayerModel m) => m.duration)
             : duration) ??
         Duration.zero;
 

@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
 import '../../utils.dart';
@@ -16,7 +16,7 @@ import '../l10n/l10n.dart';
 import '../theme.dart';
 import 'playlst_add_audios_dialog.dart';
 
-class PlaylistPage extends ConsumerWidget {
+class PlaylistPage extends StatelessWidget {
   const PlaylistPage({
     super.key,
     required this.playlist,
@@ -27,9 +27,9 @@ class PlaylistPage extends ConsumerWidget {
   final LibraryModel libraryModel;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final model = ref.read(localAudioModelProvider);
-    final libraryModel = ref.read(libraryModelProvider);
+  Widget build(BuildContext context) {
+    final model = getIt<LocalAudioModel>();
+    final libraryModel = getIt<LibraryModel>();
     final failedImports = <String>[];
     return DropRegion(
       formats: Formats.standardFormats,
@@ -164,7 +164,7 @@ class PlaylistPage extends ConsumerWidget {
   }
 }
 
-class PlaylistHeaderImage extends ConsumerWidget {
+class PlaylistHeaderImage extends StatelessWidget {
   const PlaylistHeaderImage({
     super.key,
     required this.playlist,
@@ -173,8 +173,8 @@ class PlaylistHeaderImage extends ConsumerWidget {
   final MapEntry<String, Set<Audio>> playlist;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final model = ref.read(localAudioModelProvider);
+  Widget build(BuildContext context) {
+    final model = getIt<LocalAudioModel>();
     final playlistImages = model.findImages(playlist.value);
     final length = playlistImages == null ? 0 : playlistImages.take(16).length;
 

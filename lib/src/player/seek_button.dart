@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../theme.dart';
 import '../common/icons.dart';
 import 'player_model.dart';
 
-class SeekButton extends ConsumerWidget {
+class SeekButton extends StatelessWidget {
   const SeekButton({
     super.key,
     required this.active,
@@ -16,9 +15,9 @@ class SeekButton extends ConsumerWidget {
   final bool forward;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
-    final playerModel = ref.read(playerModelProvider);
+    final playerModel = getIt<PlayerModel>();
 
     final icon = Icon(
       forward ? Iconz().forward30 : Iconz().backward10,

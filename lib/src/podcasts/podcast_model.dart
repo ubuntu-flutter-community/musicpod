@@ -1,20 +1,21 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../../get.dart';
 import '../../library.dart';
 import '../../podcasts.dart';
 import '../data/podcast_genre.dart';
+import '../library/library_service.dart';
+import 'podcast_service.dart';
 
 class PodcastModel extends SafeChangeNotifier {
-  PodcastModel(
-    this._podcastService,
-    this._libraryService,
-  );
+  PodcastModel({
+    required PodcastService podcastService,
+    required LibraryService libraryService,
+  })  : _podcastService = podcastService,
+        _libraryService = libraryService;
 
   final PodcastService _podcastService;
   final LibraryService _libraryService;
@@ -177,10 +178,3 @@ class PodcastModel extends SafeChangeNotifier {
     );
   }
 }
-
-final podcastModelProvider = ChangeNotifierProvider(
-  (ref) => PodcastModel(
-    getIt<PodcastService>(),
-    getIt<LibraryService>(),
-  ),
-);

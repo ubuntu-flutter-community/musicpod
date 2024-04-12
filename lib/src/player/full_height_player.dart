@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:media_kit_video/media_kit_video.dart';
+import '../../get.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
@@ -17,7 +18,7 @@ import 'full_height_player_top_controls.dart';
 import 'full_height_title_and_artist.dart';
 import 'up_next_bubble.dart';
 
-class FullHeightPlayer extends ConsumerWidget {
+class FullHeightPlayer extends StatelessWidget with WatchItMixin {
   const FullHeightPlayer({
     super.key,
     required this.audio,
@@ -44,11 +45,11 @@ class FullHeightPlayer extends ConsumerWidget {
   final bool isOnline;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
     final size = context.m.size;
     final playerToTheRight = size.width > kSideBarThreshHold;
-    final fullScreen = ref.watch(appModelProvider.select((m) => m.fullScreen));
+    final fullScreen = watchPropertyValue((AppModel m) => m.fullScreen);
 
     final active = audio?.path != null || isOnline;
     final activeControls = audio?.path != null || isOnline;
