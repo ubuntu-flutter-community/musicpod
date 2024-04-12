@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../globals.dart';
@@ -19,8 +18,6 @@ class RadioDiscoverPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showWindowControls =
-        ref.watch(appModelProvider.select((m) => m.showWindowControls));
     final model = ref.read(radioModelProvider);
     final libraryModel = ref.read(libraryModelProvider);
     final searchQuery =
@@ -99,9 +96,7 @@ class RadioDiscoverPage extends ConsumerWidget {
 
     return YaruDetailPage(
       appBar: HeaderBar(
-        style: showWindowControls
-            ? YaruTitleBarStyle.normal
-            : YaruTitleBarStyle.undecorated,
+        adaptive: true,
         leading: const NavBackButton(),
         title: SizedBox(
           width: kSearchBarWidth,

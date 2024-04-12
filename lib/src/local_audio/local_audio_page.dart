@@ -58,8 +58,6 @@ class _LocalAudioPageState extends ConsumerState<LocalAudioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final showWindowControls =
-        ref.watch(appModelProvider.select((a) => a.showWindowControls));
     final appModel = ref.read(appModelProvider);
 
     final model = ref.read(localAudioModelProvider);
@@ -87,9 +85,7 @@ class _LocalAudioPageState extends ConsumerState<LocalAudioPage> {
     final localAudioView = LocalAudioView.values[index];
 
     final headerBar = HeaderBar(
-      style: showWindowControls
-          ? YaruTitleBarStyle.normal
-          : YaruTitleBarStyle.undecorated,
+      adaptive: true,
       leading: (navigatorKey.currentState?.canPop() == true)
           ? NavBackButton(
               onPressed: () => search(text: null),

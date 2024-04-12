@@ -21,9 +21,6 @@ class LocalAudioSearchPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showWindowControls =
-        ref.watch(appModelProvider.select((a) => a.showWindowControls));
-
     final model = ref.read(localAudioModelProvider);
     final appModel = ref.read(appModelProvider);
     final titlesResult =
@@ -102,9 +99,7 @@ class LocalAudioSearchPage extends ConsumerWidget {
 
     return YaruDetailPage(
       appBar: HeaderBar(
-        style: showWindowControls
-            ? YaruTitleBarStyle.normal
-            : YaruTitleBarStyle.undecorated,
+        adaptive: true,
         leading: (Navigator.of(context).canPop())
             ? const NavBackButton()
             : const SizedBox.shrink(),

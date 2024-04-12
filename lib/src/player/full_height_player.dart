@@ -155,6 +155,7 @@ class FullHeightPlayer extends ConsumerWidget {
       children: [
         if (!isMobile)
           HeaderBar(
+            adaptive: false,
             title: const Text(
               '',
               maxLines: 1,

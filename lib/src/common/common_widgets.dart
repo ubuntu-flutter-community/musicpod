@@ -133,6 +133,7 @@ class HeaderBar extends StatelessWidget implements PreferredSizeWidget {
     this.titleSpacing,
     this.backgroundColor = Colors.transparent,
     this.foregroundColor,
+    required this.adaptive,
   });
 
   final Widget? title;
@@ -142,28 +143,43 @@ class HeaderBar extends StatelessWidget implements PreferredSizeWidget {
   final double? titleSpacing;
   final Color? foregroundColor;
   final Color? backgroundColor;
+  final bool adaptive;
 
   @override
   Widget build(BuildContext context) {
-    return !isMobile
-        ? YaruWindowTitleBar(
-            titleSpacing: titleSpacing,
-            actions: actions,
-            leading: leading,
-            title: title,
-            border: BorderSide.none,
-            backgroundColor: backgroundColor,
-            style: style,
-            foregroundColor: foregroundColor,
-          )
-        : AppBar(
-            titleSpacing: titleSpacing,
-            centerTitle: true,
-            leading: leading,
-            title: title,
-            actions: actions,
-            foregroundColor: foregroundColor,
-          );
+    if (isMobile) {
+      return AppBar(
+        titleSpacing: titleSpacing,
+        centerTitle: true,
+        leading: leading,
+        title: title,
+        actions: actions,
+        foregroundColor: foregroundColor,
+      );
+    }
+
+    return Consumer(
+      builder: (context, ref, child) {
+        var theStyle = style;
+        if (adaptive) {
+          theStyle =
+              ref.watch(appModelProvider.select((a) => a.showWindowControls))
+                  ? YaruTitleBarStyle.normal
+                  : YaruTitleBarStyle.undecorated;
+        }
+
+        return YaruWindowTitleBar(
+          titleSpacing: titleSpacing,
+          actions: actions,
+          leading: leading,
+          title: title,
+          border: BorderSide.none,
+          backgroundColor: backgroundColor,
+          style: theStyle,
+          foregroundColor: foregroundColor,
+        );
+      },
+    );
   }
 
   @override

@@ -72,8 +72,6 @@ class StationPage extends ConsumerWidget {
           ];
     const size = fullHeightPlayerImageSize - 20;
 
-    final showWindowControls =
-        ref.watch(appModelProvider.select((m) => m.showWindowControls));
     final playerModel = ref.read(playerModelProvider);
 
     ref.watch(libraryModelProvider.select((m) => m.starredStations.length));
@@ -173,9 +171,7 @@ class StationPage extends ConsumerWidget {
 
     return YaruDetailPage(
       appBar: HeaderBar(
-        style: showWindowControls
-            ? YaruTitleBarStyle.normal
-            : YaruTitleBarStyle.undecorated,
+        adaptive: true,
         title: Text(station.title ?? station.url ?? ''),
         leading: Navigator.canPop(context)
             ? const NavBackButton()

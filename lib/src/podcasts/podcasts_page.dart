@@ -95,9 +95,6 @@ class _PodcastsPageState extends ConsumerState<PodcastsPage> {
     final usePodcastIndex =
         ref.watch(settingsModelProvider.select((m) => m.usePodcastIndex));
 
-    final showWindowControls =
-        ref.watch(appModelProvider.select((m) => m.showWindowControls));
-
     final controlPanel = PodcastsControlPanel(
       limit: limit,
       setLimit: setLimit,
@@ -155,9 +152,7 @@ class _PodcastsPageState extends ConsumerState<PodcastsPage> {
               )
             : const SizedBox.shrink(),
         titleSpacing: 0,
-        style: showWindowControls
-            ? YaruTitleBarStyle.normal
-            : YaruTitleBarStyle.undecorated,
+        adaptive: true,
         actions: [
           Flexible(
             child: Padding(
