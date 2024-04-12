@@ -35,6 +35,7 @@ class MasterDetailPage extends ConsumerWidget {
           appBar: HeaderBar(
             backgroundColor: getSideBarColor(context.t),
             style: YaruTitleBarStyle.undecorated,
+            adaptive: false,
             title: const Text('MusicPod'),
             actions: [
               Padding(

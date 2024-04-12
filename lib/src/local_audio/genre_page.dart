@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../globals.dart';
@@ -17,8 +16,6 @@ class GenrePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showWindowControls =
-        ref.watch(appModelProvider.select((a) => a.showWindowControls));
     final model = ref.read(localAudioModelProvider);
     final radioModel = ref.read(radioModelProvider);
 
@@ -26,9 +23,7 @@ class GenrePage extends ConsumerWidget {
 
     return YaruDetailPage(
       appBar: HeaderBar(
-        style: showWindowControls
-            ? YaruTitleBarStyle.normal
-            : YaruTitleBarStyle.undecorated,
+        adaptive: true,
         leading: (navigatorKey.currentState?.canPop() == true)
             ? const NavBackButton()
             : const SizedBox.shrink(),

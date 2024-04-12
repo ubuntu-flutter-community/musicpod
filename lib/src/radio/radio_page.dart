@@ -77,8 +77,6 @@ class _RadioPageState extends ConsumerState<RadioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final showWindowControls =
-        ref.watch(appModelProvider.select((m) => m.showWindowControls));
     final isOnline = ref.watch(appModelProvider.select((m) => m.isOnline));
     if (!isOnline) return const OfflinePage();
 
@@ -87,9 +85,7 @@ class _RadioPageState extends ConsumerState<RadioPage> {
 
     return YaruDetailPage(
       appBar: HeaderBar(
-        style: showWindowControls
-            ? YaruTitleBarStyle.normal
-            : YaruTitleBarStyle.undecorated,
+        adaptive: true,
         titleSpacing: 0,
         leading: navigatorKey.currentState?.canPop() == true
             ? const NavBackButton()
