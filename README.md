@@ -24,6 +24,8 @@ Android release is WIP!
 
 ## Credits
 
+Thanks to all the [MPV](https://github.com/mpv-player/mpv) contributors!
+
 Thank you [@amugofjava](https://github.com/amugofjava) for creating the very easy to use and reliable [podcast_search](https://github.com/amugofjava/podcast_search)!
 
 Thanks [@alexmercerind](https://github.com/alexmercerind) for the super performant [Mediakit library](https://github.com/alexmercerind/media_kit) and [mpris_service](https://github.com/alexmercerind/mpris_service) dart implementation!
@@ -33,6 +35,8 @@ Thank you [@KRTirtho](https://github.com/KRTirtho) for the very easy to use [smt
 Thank you [@tomassasovsky](https://github.com/tomassasovsky) for the [dart implementation of radiobrowser-api](https://github.com/tomassasovsky/radio-browser-api.dart)!
 
 Thank you [@ClementBeal](https://github.com/ClementBeal) for the super fast, pure dart [Audio Metadata Reader](https://github.com/ClementBeal/audio_metadata_reader)!
+
+Thank you [@escamoteur](https://github.com/escamoteur) for creating [get_it](https://pub.dev/packages/get_it) and [watch_it](https://pub.dev/packages/watch_it), which made my application faster and the source code cleaner!
 
 ## MusicPod Level 1
 
@@ -106,7 +110,9 @@ Test mocks are generated with [Mockito](https://github.com/dart-lang/mockito). Y
 
 ## Boring developer things
 
-###
+### Under the flutter hood
+
+MusicPod is basically a fancy front-end for [MPV](https://github.com/mpv-player/mpv)! Without it it would still look nice, but it wouldn't play any media :D!
 
 ### Architecture: [model, view, viewmodel (MVVM)](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)
 
