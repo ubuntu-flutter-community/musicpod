@@ -21,6 +21,7 @@ import 'player.dart';
 import 'podcasts.dart';
 import 'radio.dart';
 import 'settings.dart';
+import 'src/podcasts/download_model.dart';
 
 Future<void> main(List<String> args) async {
   if (!isMobile) {
@@ -38,7 +39,7 @@ Future<void> main(List<String> args) async {
     await SystemTheme.accentColor.load();
   }
 
-  // Services
+  // Register services
 
   final settingsService = SettingsService();
   await settingsService.init();
@@ -107,22 +108,34 @@ Future<void> main(List<String> args) async {
   final gitHub = GitHub();
   getIt.registerSingleton<GitHub>(gitHub);
 
-  // ViewModels
+  // Register ViewModels
 
-  getIt.registerSingleton<AppModel>(AppModel(connectivity: connectivity));
-  getIt.registerSingleton<PlayerModel>(PlayerModel(service: playerService));
-  getIt.registerSingleton<LibraryModel>(LibraryModel(libraryService));
+  getIt.registerSingleton<AppModel>(
+    AppModel(connectivity: connectivity),
+    dispose: (s) => s.dispose(),
+  );
+  getIt.registerSingleton<PlayerModel>(
+    PlayerModel(service: playerService),
+    dispose: (s) => s.dispose(),
+  );
+  getIt.registerSingleton<LibraryModel>(
+    LibraryModel(libraryService),
+    dispose: (s) => s.dispose(),
+  );
   getIt.registerSingleton<LocalAudioModel>(
     LocalAudioModel(localAudioService: localAudioService),
+    dispose: (s) => s.dispose(),
   );
   getIt.registerSingleton<PodcastModel>(
     PodcastModel(
       libraryService: libraryService,
-      podcastService: di.get<PodcastService>(),
+      podcastService: getIt.get<PodcastService>(),
     ),
+    dispose: (s) => s.dispose(),
   );
   getIt.registerSingleton<RadioModel>(
     RadioModel(radioService: radioService, libraryService: libraryService),
+    dispose: (s) => s.dispose(),
   );
   getIt.registerSingleton<SettingsModel>(
     SettingsModel(
@@ -130,11 +143,12 @@ Future<void> main(List<String> args) async {
       externalPathService: externalPathService,
       gitHub: gitHub,
     ),
+    dispose: (s) => s.dispose(),
   );
-
-  // settings
-  // download
-  // local
+  getIt.registerSingleton<DownloadModel>(
+    DownloadModel(libraryService),
+    dispose: (s) => s.dispose(),
+  );
 
   runApp(
     Platform.isLinux

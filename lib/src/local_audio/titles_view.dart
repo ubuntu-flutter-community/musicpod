@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../utils.dart';
 import 'album_page.dart';
 import 'artist_page.dart';
@@ -23,7 +24,7 @@ class TitlesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = ref.read(localAudioModelProvider);
+    final model = getIt<LocalAudioModel>();
 
     return AudioPageBody(
       classicTiles: classicTiles,

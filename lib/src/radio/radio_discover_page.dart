@@ -27,7 +27,8 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
     watchPropertyValue((LibraryModel m) => m.favCountriesLength);
 
     final radioSearch = watchPropertyValue(
-        (LibraryModel m) => RadioSearch.values[m.radioindex]);
+      (LibraryModel m) => RadioSearch.values[m.radioindex],
+    );
 
     final country = watchPropertyValue((RadioModel m) => m.country);
     final tag = watchPropertyValue((RadioModel m) => m.tag);

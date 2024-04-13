@@ -1,9 +1,10 @@
 import '../../common.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../player.dart';
 import 'package:flutter/material.dart';
 
-class BottomPlayerTitleArtist extends StatelessWidget {
+class BottomPlayerTitleArtist extends StatelessWidget with WatchItMixin {
   const BottomPlayerTitleArtist({
     super.key,
     required this.audio,
@@ -12,8 +13,7 @@ class BottomPlayerTitleArtist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mpvMetaData =
-        ref.watch(playerModelProvider.select((m) => m.mpvMetaData));
+    final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
     final icyName = mpvMetaData?.icyName;
     final icyTitle = mpvMetaData?.icyTitle;
 
@@ -40,7 +40,6 @@ class BottomPlayerTitleArtist extends StatelessWidget {
                     audio: audio!,
                     text: icyTitle,
                     context: context,
-                    ref: ref,
                   ),
           child: Tooltip(
             message: title,
@@ -64,7 +63,6 @@ class BottomPlayerTitleArtist extends StatelessWidget {
                 : () => onArtistTap(
                       audio: audio!,
                       context: context,
-                      ref: ref,
                     ),
             child: Tooltip(
               message: subTitle,

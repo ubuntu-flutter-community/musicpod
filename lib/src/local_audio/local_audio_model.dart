@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import '../../get.dart';
 
 import '../../common.dart';
 import '../../data.dart';
@@ -310,9 +308,3 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 }
-
-final localAudioModelProvider = ChangeNotifierProvider(
-  (ref) => LocalAudioModel(
-    localAudioService: getIt<LocalAudioService>(),
-  ),
-);

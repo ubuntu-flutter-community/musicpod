@@ -2,12 +2,12 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-
 import 'package:yaru/yaru.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../local_audio.dart';
 import '../../player.dart';
 import '../../settings.dart';
@@ -16,7 +16,7 @@ import '../common/explore_online_popup.dart';
 import '../l10n/l10n.dart';
 import 'genre_page.dart';
 
-class ArtistPage extends StatelessWidget {
+class ArtistPage extends StatelessWidget with WatchItMixin {
   const ArtistPage({
     super.key,
     required this.images,
@@ -28,15 +28,17 @@ class ArtistPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = ref.read(localAudioModelProvider);
+    final model = getIt<LocalAudioModel>();
 
-    final useGridView = ref.watch(
-      settingsModelProvider.select((v) => v.useArtistGridView),
+    final useGridView =
+        watchPropertyValue((SettingsModel m) => m.useArtistGridView);
+    final setUseGridView = getIt<SettingsModel>().setUseArtistGridView;
+
+    final controlPanelButton = _ArtistPageControlButton(
+      useGridView: useGridView,
+      setUseGridView: setUseGridView,
+      artist: artistAudios?.firstOrNull?.artist,
     );
-    final setUseGridView = ref.read(settingsModelProvider).setUseArtistGridView;
-
-    final controlPanelButton =
-        _buildControlRow(useGridView, setUseGridView, context);
 
     void onAlbumTap(text) {
       final audios = model.findAlbum(Audio(album: text));
@@ -97,12 +99,21 @@ class ArtistPage extends StatelessWidget {
       controlPanelButton: controlPanelButton,
     );
   }
+}
 
-  Widget _buildControlRow(
-    bool useGridView,
-    void Function(bool value) setUseGridView,
-    BuildContext context,
-  ) {
+class _ArtistPageControlButton extends StatelessWidget {
+  const _ArtistPageControlButton({
+    required this.useGridView,
+    required this.setUseGridView,
+    required this.artist,
+  });
+
+  final bool useGridView;
+  final void Function(bool) setUseGridView;
+  final String? artist;
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -116,8 +127,7 @@ class ArtistPage extends StatelessWidget {
           isSelected: useGridView,
           onPressed: () => setUseGridView(true),
         ),
-        if (artistAudios?.firstOrNull?.artist != null)
-          ExploreOnlinePopup(text: artistAudios!.firstOrNull!.artist!),
+        if (artist != null) ExploreOnlinePopup(text: artist!),
       ],
     );
   }
@@ -142,55 +152,51 @@ class _ArtistAlbumsCardGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final artist = artistAudios?.firstOrNull?.artist;
-        final model = ref.read(localAudioModelProvider);
-        final playerModel = getIt<PlayerModel>();
+    final artist = artistAudios?.firstOrNull?.artist;
+    final model = getIt<LocalAudioModel>();
+    final playerModel = getIt<PlayerModel>();
 
-        return YaruDetailPage(
-          appBar: HeaderBar(
-            adaptive: true,
-            title: isMobile ? null : Text(artist ?? ''),
-            leading: Navigator.canPop(context)
-                ? const NavBackButton()
-                : const SizedBox.shrink(),
-          ),
-          body: AdaptiveContainer(
-            child: artist == null || artistAudios == null
-                ? const SizedBox.shrink()
-                : Column(
-                    children: [
-                      AudioPageHeader(
-                        imageRadius: BorderRadius.circular(10000),
-                        title: artistAudios?.firstOrNull?.artist ?? '',
-                        image: image,
-                        subTitle: artistAudios?.firstOrNull?.genre,
-                        label: context.l10n.artist,
-                        onLabelTab: onLabelTab,
-                        onSubTitleTab: onSubTitleTab,
-                      ),
-                      Padding(
-                        padding: kAudioControlPanelPadding,
-                        child: AudioPageControlPanel(
-                          controlButton: controlPanelButton,
-                          audios: artistAudios!,
-                          onTap: () => playerModel.startPlaylist(
-                            audios: artistAudios!,
-                            listName: artist,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: AlbumsView(
-                          albums: model.findAllAlbums(newAudios: artistAudios),
-                        ),
-                      ),
-                    ],
+    return YaruDetailPage(
+      appBar: HeaderBar(
+        adaptive: true,
+        title: isMobile ? null : Text(artist ?? ''),
+        leading: Navigator.canPop(context)
+            ? const NavBackButton()
+            : const SizedBox.shrink(),
+      ),
+      body: AdaptiveContainer(
+        child: artist == null || artistAudios == null
+            ? const SizedBox.shrink()
+            : Column(
+                children: [
+                  AudioPageHeader(
+                    imageRadius: BorderRadius.circular(10000),
+                    title: artistAudios?.firstOrNull?.artist ?? '',
+                    image: image,
+                    subTitle: artistAudios?.firstOrNull?.genre,
+                    label: context.l10n.artist,
+                    onLabelTab: onLabelTab,
+                    onSubTitleTab: onSubTitleTab,
                   ),
-          ),
-        );
-      },
+                  Padding(
+                    padding: kAudioControlPanelPadding,
+                    child: AudioPageControlPanel(
+                      controlButton: controlPanelButton,
+                      audios: artistAudios!,
+                      onTap: () => playerModel.startPlaylist(
+                        audios: artistAudios!,
+                        listName: artist,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: AlbumsView(
+                      albums: model.findAllAlbums(newAudios: artistAudios),
+                    ),
+                  ),
+                ],
+              ),
+      ),
     );
   }
 }

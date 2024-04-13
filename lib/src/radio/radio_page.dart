@@ -12,7 +12,7 @@ import 'radio_discover_page.dart';
 import 'radio_lib_page.dart';
 import 'radio_model.dart';
 
-class RadioPage extends StatefulWidget {
+class RadioPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const RadioPage({super.key});
 
   @override

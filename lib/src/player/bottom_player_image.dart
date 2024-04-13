@@ -7,6 +7,7 @@ import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../globals.dart';
 import '../../player.dart';
 import '../../radio.dart';
@@ -14,7 +15,7 @@ import '../../theme.dart';
 import '../../theme_data_x.dart';
 import 'super_network_image.dart';
 
-class BottomPlayerImage extends StatelessWidget {
+class BottomPlayerImage extends StatelessWidget with WatchItMixin {
   const BottomPlayerImage({
     super.key,
     this.audio,
@@ -32,8 +33,7 @@ class BottomPlayerImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const iconSize = 40.0;
-    final mpvMetaData =
-        ref.watch(playerModelProvider.select((m) => m.mpvMetaData));
+    final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
     final theme = context.t;
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
@@ -48,7 +48,7 @@ class BottomPlayerImage extends StatelessWidget {
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
-            onTap: () => ref.read(appModelProvider).setFullScreen(true),
+            onTap: () => getIt<AppModel>().setFullScreen(true),
             child: Video(
               height: size,
               width: size,

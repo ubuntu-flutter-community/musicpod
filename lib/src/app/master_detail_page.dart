@@ -14,7 +14,7 @@ import '../../settings.dart';
 import '../../theme.dart';
 import '../globals.dart';
 
-class MasterDetailPage extends StatelessWidget {
+class MasterDetailPage extends StatelessWidget with WatchItMixin {
   const MasterDetailPage({super.key});
 
   @override

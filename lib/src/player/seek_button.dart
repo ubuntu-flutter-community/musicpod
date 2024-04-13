@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../build_context_x.dart';
+import '../../get.dart';
 import '../../theme.dart';
 import '../common/icons.dart';
 import 'player_model.dart';

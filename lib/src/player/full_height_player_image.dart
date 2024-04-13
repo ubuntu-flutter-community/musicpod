@@ -7,6 +7,7 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../globals.dart';
 import '../../player.dart';
 import '../../radio.dart';
@@ -14,7 +15,7 @@ import '../../theme.dart';
 import '../../theme_data_x.dart';
 import 'super_network_image.dart';
 
-class FullHeightPlayerImage extends StatelessWidget {
+class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
   const FullHeightPlayerImage({
     super.key,
     this.audio,
@@ -35,8 +36,7 @@ class FullHeightPlayerImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.t;
 
-    final mpvMetaData =
-        ref.watch(playerModelProvider.select((m) => m.mpvMetaData));
+    final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
 
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
@@ -75,7 +75,7 @@ class FullHeightPlayerImage extends StatelessWidget {
           onImageFind: (url) => getIt<PlayerModel>().loadColor(url: url),
           onGenreTap: (genre) => getIt<RadioModel>().init().then(
             (_) {
-              ref.read(appModelProvider).setFullScreen(false);
+              getIt<AppModel>().setFullScreen(false);
               navigatorKey.currentState?.push(
                 MaterialPageRoute(
                   builder: (context) {

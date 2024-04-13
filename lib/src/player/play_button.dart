@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../build_context_x.dart';
+import '../../get.dart';
 import '../../l10n.dart';
 import '../common/icons.dart';
 import 'player_model.dart';
 
-class PlayButton extends StatelessWidget {
+class PlayButton extends StatelessWidget with WatchItMixin {
   const PlayButton({
     super.key,
     required this.active,
@@ -20,7 +21,7 @@ class PlayButton extends StatelessWidget {
     final playerModel = getIt<PlayerModel>();
     final pause = playerModel.pause;
     final playOrPause = playerModel.playOrPause;
-    final isPlaying = ref.watch(playerModelProvider.select((m) => m.isPlaying));
+    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     return IconButton(
       tooltip: isPlaying ? context.l10n.pause : context.l10n.play,
       onPressed: !active

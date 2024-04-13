@@ -8,6 +8,7 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../globals.dart';
 import '../../local_audio.dart';
 import '../../player.dart';
@@ -18,7 +19,7 @@ import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 import 'local_audio_view.dart';
 
-class LocalAudioPage extends StatefulWidget {
+class LocalAudioPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const LocalAudioPage({
     super.key,
   });
@@ -31,8 +32,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   @override
   void initState() {
     super.initState();
-    final model = ref.read(localAudioModelProvider);
-    final settingsModel = ref.read(settingsModelProvider);
+    final model = getIt<LocalAudioModel>();
+    final settingsModel = getIt<SettingsModel>();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
@@ -58,10 +59,12 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final appModel = ref.read(appModelProvider);
-
-    final model = ref.read(localAudioModelProvider);
-    final audios = ref.watch(localAudioModelProvider.select((l) => l.audios));
+    final appModel = getIt<AppModel>();
+    final model = getIt<LocalAudioModel>();
+    final audios = watchPropertyValue((LocalAudioModel m) => m.audios);
+    final index =
+        watchPropertyValue((LibraryModel m) => m.localAudioindex ?? 0);
+    final localAudioView = LocalAudioView.values[index];
 
     void search({
       required String? text,
@@ -79,10 +82,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
         navigatorKey.currentState?.maybePop();
       }
     }
-
-    final index =
-        ref.watch(libraryModelProvider.select((l) => l.localAudioindex ?? 0));
-    final localAudioView = LocalAudioView.values[index];
 
     final headerBar = HeaderBar(
       adaptive: true,
@@ -133,7 +132,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   }
 }
 
-class LocalAudioPageIcon extends StatelessWidget {
+class LocalAudioPageIcon extends StatelessWidget with WatchItMixin {
   const LocalAudioPageIcon({
     super.key,
     required this.selected,
@@ -143,8 +142,7 @@ class LocalAudioPageIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audioType =
-        ref.watch(playerModelProvider.select((m) => m.audio?.audioType));
+    final audioType = watchPropertyValue((PlayerModel m) => m.audio?.audioType);
 
     final theme = context.t;
     if (audioType == AudioType.local) {

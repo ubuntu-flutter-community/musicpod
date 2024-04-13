@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../l10n.dart';
 import '../../library.dart';
 import '../common/icons.dart';
 
-class PlayerLikeIcon extends StatelessWidget {
+class PlayerLikeIcon extends StatelessWidget with WatchItMixin {
   const PlayerLikeIcon({
     super.key,
     required this.audio,
@@ -21,8 +22,8 @@ class PlayerLikeIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final libraryModel = getIt<LibraryModel>();
 
-    ref.watch(libraryModelProvider.select((m) => m.likedAudios.length));
-    ref.watch(libraryModelProvider.select((m) => m.starredStations.length));
+    watchPropertyValue((LibraryModel m) => m.likedAudios.length);
+    watchPropertyValue((LibraryModel m) => m.starredStations.length);
 
     final isStarredStation = libraryModel.isStarredStation(audio?.url);
     final liked = libraryModel.liked(audio);

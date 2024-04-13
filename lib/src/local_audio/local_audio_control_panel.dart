@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
+import '../../get.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
 import 'local_audio_view.dart';
 
-class LocalAudioControlPanel extends StatelessWidget {
+class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
   const LocalAudioControlPanel({
     super.key,
     this.titlesCount,
@@ -24,11 +24,12 @@ class LocalAudioControlPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.t;
     final libraryModel = getIt<LibraryModel>();
-    final localAudioModel = ref.read(localAudioModelProvider);
+    final localAudioModel = getIt<LocalAudioModel>();
+
     final index =
-        ref.watch(libraryModelProvider.select((l) => l.localAudioindex ?? 0));
+        watchPropertyValue((LibraryModel m) => m.localAudioindex ?? 0);
     final manualFilter =
-        ref.watch(localAudioModelProvider.select((l) => l.manualFilter));
+        watchPropertyValue((LocalAudioModel m) => m.manualFilter);
 
     var i = index;
     if (!manualFilter) {

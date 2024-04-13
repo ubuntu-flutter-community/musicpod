@@ -30,7 +30,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     if (!isMobile) {
       YaruWindow.of(context).onClose(
         () async {
-          await di.reset();
+          await getIt.reset();
           return true;
         },
       );
@@ -48,7 +48,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.paused) {
-      await di.reset();
+      await getIt.reset();
     }
   }
 

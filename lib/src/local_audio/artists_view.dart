@@ -5,6 +5,7 @@ import 'package:yaru/yaru.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../l10n/l10n.dart';
 import 'artist_page.dart';
 import 'local_audio_model.dart';
@@ -34,7 +35,8 @@ class ArtistsView extends StatelessWidget {
         message: noResultMessage,
       );
     }
-    final model = ref.read(localAudioModelProvider);
+    final model = getIt<LocalAudioModel>();
+
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: GridView.builder(

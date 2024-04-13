@@ -5,6 +5,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../library.dart';
 import '../../player.dart';
 import '../l10n/l10n.dart';
@@ -40,7 +41,7 @@ class QueueButton extends StatelessWidget {
   }
 }
 
-class QueueDialog extends StatefulWidget {
+class QueueDialog extends StatefulWidget with WatchItStatefulWidgetMixin {
   const QueueDialog({
     super.key,
     required this.addPlaylist,
@@ -82,10 +83,9 @@ class _QueueDialogState extends State<QueueDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final queue = ref.watch(playerModelProvider.select((m) => m.queue));
-    final queueLength =
-        ref.watch(playerModelProvider.select((m) => m.queue.length));
-    final currentAudio = ref.watch(playerModelProvider.select((m) => m.audio));
+    final queue = watchPropertyValue((PlayerModel m) => m.queue);
+    final queueLength = watchPropertyValue((PlayerModel m) => m.queue.length);
+    final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
     final playerModel = getIt<PlayerModel>();
 
     return AlertDialog(

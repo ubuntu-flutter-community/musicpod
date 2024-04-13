@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../build_context_x.dart';
+import '../../get.dart';
 import '../common/icons.dart';
 import 'player_model.dart';
 
-class PlaybackRateButton extends StatelessWidget {
+class PlaybackRateButton extends StatelessWidget with WatchItMixin {
   const PlaybackRateButton({
     super.key,
     required this.active,
@@ -17,7 +18,7 @@ class PlaybackRateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final rate = ref.watch(playerModelProvider.select((m) => m.rate));
+    final rate = watchPropertyValue((PlayerModel m) => m.rate);
     final setRate = getIt<PlayerModel>().setRate;
 
     return PopupMenuButton(

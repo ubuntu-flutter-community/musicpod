@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../build_context_x.dart';
+import '../../get.dart';
 import '../../utils.dart';
 import 'player_model.dart';
 
-class PlayerTrack extends StatelessWidget {
+class PlayerTrack extends StatelessWidget with WatchItMixin {
   const PlayerTrack({
     super.key,
     this.bottomPlayer = false,
@@ -21,9 +22,9 @@ class PlayerTrack extends StatelessWidget {
 
     final playerModel = getIt<PlayerModel>();
 
-    final position = ref.watch(playerModelProvider.select((m) => m.position));
+    final position = watchPropertyValue((PlayerModel m) => m.position);
     final setPosition = playerModel.setPosition;
-    final duration = ref.watch(playerModelProvider.select((m) => m.duration));
+    final duration = watchPropertyValue((PlayerModel m) => m.duration);
     final seek = playerModel.seek;
 
     bool sliderActive = active &&

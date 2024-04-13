@@ -6,6 +6,7 @@ import 'package:yaru/yaru.dart';
 import '../../app.dart';
 import '../../common.dart';
 import '../../constants.dart';
+import '../../get.dart';
 import '../../globals.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
@@ -14,31 +15,30 @@ import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 import 'local_audio_view.dart';
 
-class LocalAudioSearchPage extends StatelessWidget {
+class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
   const LocalAudioSearchPage({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final model = ref.read(localAudioModelProvider);
-    final appModel = ref.read(appModelProvider);
+    final model = getIt<LocalAudioModel>();
+    final appModel = getIt<AppModel>();
     final titlesResult =
-        ref.watch(localAudioModelProvider.select((m) => m.titlesSearchResult));
-    final artistsResult = ref.watch(
-      localAudioModelProvider.select((m) => m.similarArtistsSearchResult),
-    );
+        watchPropertyValue((LocalAudioModel m) => m.titlesSearchResult);
+    final artistsResult =
+        watchPropertyValue((LocalAudioModel m) => m.similarArtistsSearchResult);
     final albumsResult =
-        ref.watch(localAudioModelProvider.select((m) => m.albumSearchResult));
+        watchPropertyValue((LocalAudioModel m) => m.albumSearchResult);
     final genresResult =
-        ref.watch(localAudioModelProvider.select((m) => m.genresSearchResult));
+        watchPropertyValue((LocalAudioModel m) => m.genresSearchResult);
     final searchQuery =
-        ref.watch(localAudioModelProvider.select((m) => m.searchQuery));
+        watchPropertyValue((LocalAudioModel m) => m.searchQuery);
     final index =
-        ref.watch(libraryModelProvider.select((m) => m.localAudioindex ?? 0));
+        watchPropertyValue((LibraryModel m) => m.localAudioindex ?? 0);
     final localAudioView = LocalAudioView.values[index];
     final manualFilter =
-        ref.watch(localAudioModelProvider.select((m) => m.manualFilter));
+        watchPropertyValue((LocalAudioModel m) => m.manualFilter);
 
     void search({required String? text}) {
       if (text != null) {

@@ -6,7 +6,7 @@ import '../../get.dart';
 import '../l10n/l10n.dart';
 import 'player_model.dart';
 
-class VolumeSliderPopup extends StatelessWidget {
+class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
   const VolumeSliderPopup({
     super.key,
     this.color,
