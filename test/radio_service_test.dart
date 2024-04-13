@@ -7,12 +7,14 @@ const Audio sixFortyStation = Audio(
 );
 
 Future<void> main() async {
-  group('radio tests', () {
-    final service = RadioService();
-    String? host;
+  final service = RadioService();
+  String? host;
+  setUp(() async {
+    host = await service.init();
+  });
 
-    test('initRadioService', () async {
-      host = await service.init();
+  group('radio tests', () {
+    test('initRadioService', () {
       expect(host != null, true);
     });
 
