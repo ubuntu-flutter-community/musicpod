@@ -30,16 +30,18 @@ Future<void> main(List<String> args) async {
       WindowManager.instance.setMinimumSize(const Size(500, 700));
       WindowManager.instance.setSize(const Size(950, 820));
     }
+  } else {
+    WidgetsFlutterBinding.ensureInitialized();
   }
-  WidgetsFlutterBinding.ensureInitialized();
+
   MediaKit.ensureInitialized();
+
   if (!Platform.isLinux) {
     SystemTheme.fallbackColor = Colors.greenAccent;
     await SystemTheme.accentColor.load();
   }
 
   // Register services
-
   final settingsService = SettingsService();
   await settingsService.init();
   getIt.registerSingleton<SettingsService>(
@@ -76,11 +78,11 @@ Future<void> main(List<String> args) async {
 
   final notificationsService =
       NotificationsService(Platform.isLinux ? NotificationsClient() : null);
-
   getIt.registerSingleton<NotificationsService>(
     notificationsService,
     dispose: (s) async => await s.dispose(),
   );
+
   getIt.registerSingleton<PodcastService>(
     PodcastService(
       notificationsService: notificationsService,
@@ -88,6 +90,7 @@ Future<void> main(List<String> args) async {
     ),
     dispose: (s) async => await s.dispose(),
   );
+
   final connectivity = Connectivity();
   getIt.registerSingleton<Connectivity>(
     connectivity,
@@ -104,17 +107,25 @@ Future<void> main(List<String> args) async {
 
   final radioService = RadioService();
   getIt.registerSingleton<RadioService>(radioService);
+
   final gitHub = GitHub();
   getIt.registerSingleton<GitHub>(gitHub);
 
   // Register ViewModels
-
-  getIt.registerSingleton<AppModel>(
-    AppModel(connectivity: connectivity),
+  getIt.registerSingleton<SettingsModel>(
+    SettingsModel(
+      service: settingsService,
+      externalPathService: externalPathService,
+      gitHub: gitHub,
+    )..init(),
     dispose: (s) => s.dispose(),
   );
   getIt.registerSingleton<PlayerModel>(
-    PlayerModel(service: playerService),
+    PlayerModel(service: playerService)..init(),
+    dispose: (s) => s.dispose(),
+  );
+  getIt.registerSingleton<AppModel>(
+    AppModel(connectivity: connectivity),
     dispose: (s) => s.dispose(),
   );
   getIt.registerSingleton<LibraryModel>(
@@ -134,14 +145,6 @@ Future<void> main(List<String> args) async {
   );
   getIt.registerSingleton<RadioModel>(
     RadioModel(radioService: radioService, libraryService: libraryService),
-    dispose: (s) => s.dispose(),
-  );
-  getIt.registerSingleton<SettingsModel>(
-    SettingsModel(
-      service: settingsService,
-      externalPathService: externalPathService,
-      gitHub: gitHub,
-    ),
     dispose: (s) => s.dispose(),
   );
   getIt.registerSingleton<DownloadModel>(

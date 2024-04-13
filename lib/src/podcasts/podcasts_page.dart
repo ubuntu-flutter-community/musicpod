@@ -31,15 +31,11 @@ class _PodcastsPageState extends State<PodcastsPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final settingsModel = getIt<SettingsModel>();
       final appModel = getIt<AppModel>();
 
       getIt<PodcastModel>().init(
         countryCode: appModel.countryCode,
         updateMessage: context.l10n.newEpisodeAvailable,
-        usePodcastIndex: settingsModel.usePodcastIndex,
-        podcastIndexApiKey: settingsModel.podcastIndexApiKey,
-        podcastIndexApiSecret: settingsModel.podcastIndexApiSecret,
       );
     });
   }

@@ -70,25 +70,23 @@ class SettingsModel extends SafeChangeNotifier {
   void setUseArtistGridView(bool value) => _service.setUseArtistGridView(value);
 
   void init() {
-    _themeIndexChangedSub =
+    _themeIndexChangedSub ??=
         _service.themeIndexChanged.listen((_) => notifyListeners());
-    _usePodcastIndexChangedSub =
+    _usePodcastIndexChangedSub ??=
         _service.usePodcastIndexChanged.listen((_) => notifyListeners());
-    _podcastIndexApiKeyChangedSub =
+    _podcastIndexApiKeyChangedSub ??=
         _service.podcastIndexApiKeyChanged.listen((_) => notifyListeners());
-    _podcastIndexApiSecretChangedSub =
+    _podcastIndexApiSecretChangedSub ??=
         _service.podcastIndexApiSecretChanged.listen((_) => notifyListeners());
-    _neverShowFailedImportsSub =
+    _neverShowFailedImportsSub ??=
         _service.neverShowFailedImportsChanged.listen((_) => notifyListeners());
-    _directoryChangedSub =
+    _directoryChangedSub ??=
         _service.directoryChanged.listen((_) => notifyListeners());
-    _useArtistGridViewChangedSub =
+    _useArtistGridViewChangedSub ??=
         _service.useArtistGridViewChanged.listen((_) => notifyListeners());
-
-    _recentPatchNotesDisposedChangedSub = _service
+    _recentPatchNotesDisposedChangedSub ??= _service
         .recentPatchNotesDisposedChanged
         .listen((_) => notifyListeners());
-    notifyListeners();
   }
 
   @override

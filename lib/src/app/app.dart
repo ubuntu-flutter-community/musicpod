@@ -56,20 +56,21 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     final libraryModel = getIt<LibraryModel>();
     final appModel = getIt<AppModel>();
     final settingsModel = getIt<SettingsModel>();
-    final playerModel = getIt<PlayerModel>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
+      // Init here for connectivity
       appModel.init().then(
         (_) {
+          // Init here for the index
           libraryModel.init().then(
             (_) {
-              playerModel.init().then((_) {
-                settingsModel.init();
-                if (settingsModel.recentPatchNotesDisposed == false) {
-                  showPatchNotes(context);
-                }
-              }).then((_) => getIt<ExternalPathService>().init());
+              // Init here for patch notes dialog
+              if (settingsModel.recentPatchNotesDisposed == false) {
+                showPatchNotes(context);
+              }
+              // Init here for when musicpod is called with a file path
+              getIt<ExternalPathService>().init();
             },
           );
         },

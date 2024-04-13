@@ -34,35 +34,34 @@ class LibraryModel extends SafeChangeNotifier {
       _index = _service.appIndex;
     }
 
-    _localAudioIndexSub =
+    _localAudioIndexSub ??=
         _service.localAudioIndexChanged.listen((_) => notifyListeners());
-    _radioIndexSub =
+    _radioIndexSub ??=
         _service.radioIndexChanged.listen((_) => notifyListeners());
-    _podcastIndexSub =
+    _podcastIndexSub ??=
         _service.podcastIndexChanged.listen((_) => notifyListeners());
-    _likedAudiosSub =
+    _likedAudiosSub ??=
         _service.likedAudiosChanged.listen((event) => notifyListeners());
-    _playlistsSub =
+    _playlistsSub ??=
         _service.playlistsChanged.listen((event) => notifyListeners());
     _albumsSub = _service.albumsChanged.listen((event) => notifyListeners());
-    _podcastsSub =
+    _podcastsSub ??=
         _service.podcastsChanged.listen((event) => notifyListeners());
-    _stationsSub =
+    _stationsSub ??=
         _service.starredStationsChanged.listen((event) => notifyListeners());
-    _lastPositionsSub =
+    _lastPositionsSub ??=
         _service.lastPositionsChanged.listen((_) => notifyListeners());
-    _updatesChangedSub =
+    _updatesChangedSub ??=
         _service.updatesChanged.listen((_) => notifyListeners());
-
-    _favTagsSub = _service.favTagsChanged.listen((_) => notifyListeners());
-    _favCountriesSub =
+    _favTagsSub ??= _service.favTagsChanged.listen((_) => notifyListeners());
+    _favCountriesSub ??=
         _service.favCountriesChanged.listen((_) => notifyListeners());
-
-    _lastFavSub = _service.lastFavChanged.listen((_) => notifyListeners());
-    _downloadsSub = _service.downloadsChanged.listen((_) => notifyListeners());
-    _lastCountryCodeSub =
+    _lastFavSub ??= _service.lastFavChanged.listen((_) => notifyListeners());
+    _downloadsSub ??=
+        _service.downloadsChanged.listen((_) => notifyListeners());
+    _lastCountryCodeSub ??=
         _service.lastCountryCodeChanged.listen((_) => notifyListeners());
-    _radioHistoryChangedSub =
+    _radioHistoryChangedSub ??=
         _service.radioHistoryChanged.listen((_) => notifyListeners());
 
     notifyListeners();
