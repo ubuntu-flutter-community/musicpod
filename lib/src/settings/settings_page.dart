@@ -298,7 +298,7 @@ class _AboutTileState extends State<_AboutTile> {
   @override
   void initState() {
     super.initState();
-    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
+    final isOnline = getIt<AppModel>().isOnline;
 
     _onlineVersion = !isOnline || Platform.isLinux
         ? Future.value(null)
