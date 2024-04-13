@@ -37,6 +37,7 @@ class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
       tooltip: context.l10n.volume,
       icon: Icon(
         iconData,
+        color: color ?? theme.colorScheme.onSurface,
       ),
       itemBuilder: (context) {
         return [

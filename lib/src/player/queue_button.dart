@@ -26,6 +26,7 @@ class QueueButton extends StatelessWidget {
       tooltip: context.l10n.queue,
       icon: Icon(
         Iconz().playlist,
+        color: color ?? theme.colorScheme.onSurface,
       ),
       onPressed: () {
         showDialog(
