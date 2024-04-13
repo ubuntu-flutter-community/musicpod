@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
+import '../../get.dart';
 import '../../l10n.dart';
 import 'player_model.dart';
 
-class RepeatButton extends ConsumerWidget {
+class RepeatButton extends StatelessWidget with WatchItMixin {
   const RepeatButton({
     super.key,
     required this.active,
@@ -15,11 +15,10 @@ class RepeatButton extends ConsumerWidget {
   final bool active;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
-    final setRepeatSingle = ref.read(playerModelProvider).setRepeatSingle;
-    final repeatSingle =
-        ref.watch(playerModelProvider.select((m) => m.repeatSingle));
+    final setRepeatSingle = getIt<PlayerModel>().setRepeatSingle;
+    final repeatSingle = watchPropertyValue((PlayerModel m) => m.repeatSingle);
 
     return IconButton(
       tooltip: context.l10n.repeat,

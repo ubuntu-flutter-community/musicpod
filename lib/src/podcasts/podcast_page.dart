@@ -1,16 +1,16 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../common/explore_online_popup.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import 'podcast_model.dart';
 
-class PodcastPage extends ConsumerWidget {
+class PodcastPage extends StatelessWidget with WatchItMixin {
   const PodcastPage({
     super.key,
     this.imageUrl,
@@ -51,18 +51,18 @@ class PodcastPage extends ConsumerWidget {
   final Set<Audio>? audios;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
     final genre = audios?.firstWhereOrNull((e) => e.genre != null)?.genre;
-    final libraryModel = ref.read(libraryModelProvider);
+    final libraryModel = getIt<LibraryModel>();
 
     final subscribed = libraryModel.podcastSubscribed(pageId);
 
-    ref.watch(libraryModelProvider.select((m) => m.lastPositions?.length));
-    ref.watch(libraryModelProvider.select((m) => m.downloadsLength));
+    watchPropertyValue((LibraryModel m) => m.lastPositions?.length);
+    watchPropertyValue((LibraryModel m) => m.downloadsLength);
 
     final checkingForUpdates =
-        ref.watch(podcastModelProvider.select((m) => m.checkingForUpdates));
+        watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
 
     return AudioPage(
       audioPageType: AudioPageType.podcast,
@@ -130,7 +130,7 @@ class PodcastPage extends ConsumerWidget {
   }
 }
 
-class PodcastPageTitle extends ConsumerWidget {
+class PodcastPageTitle extends StatelessWidget with WatchItMixin {
   const PodcastPageTitle({
     super.key,
     required this.feedUrl,
@@ -141,10 +141,9 @@ class PodcastPageTitle extends ConsumerWidget {
   final String title;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(libraryModelProvider.select((m) => m.podcastUpdatesLength));
-    final visible =
-        ref.read(libraryModelProvider).podcastUpdateAvailable(feedUrl);
+  Widget build(BuildContext context) {
+    watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
+    final visible = getIt<LibraryModel>().podcastUpdateAvailable(feedUrl);
     return Badge(
       backgroundColor: context.t.colorScheme.primary,
       isLabelVisible: visible,

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../globals.dart';
 import '../../local_audio.dart';
 import '../../podcasts.dart';
@@ -15,7 +16,6 @@ void onTitleTap({
   Audio? audio,
   String? text,
   required BuildContext context,
-  required WidgetRef ref,
 }) {
   if (text?.isNotEmpty == true) {
     showSnackBar(context: context, content: CopyClipboardContent(text: text!));
@@ -26,7 +26,6 @@ void onTitleTap({
     case AudioType.local:
       _onLocalAudioTitleTap(
         audio: audio!,
-        ref: ref,
       );
       return;
     case AudioType.radio:
@@ -45,18 +44,15 @@ void onTitleTap({
   }
 }
 
-void _onLocalAudioTitleTap({
-  required Audio audio,
-  required WidgetRef ref,
-}) {
-  final localAudioModel = ref.read(localAudioModelProvider);
+void _onLocalAudioTitleTap({required Audio audio}) {
+  final localAudioModel = getIt<LocalAudioModel>();
 
   final albumAudios = localAudioModel.findAlbum(audio);
   if (albumAudios?.firstOrNull == null) return;
   final id = generateAlbumId(albumAudios!.first);
   if (id == null) return;
 
-  ref.read(appModelProvider).setFullScreen(false);
+  getIt<AppModel>().setFullScreen(false);
 
   navigatorKey.currentState?.push(
     MaterialPageRoute(
@@ -70,16 +66,11 @@ void _onLocalAudioTitleTap({
   );
 }
 
-void onArtistTap({
-  required Audio audio,
-  required BuildContext context,
-  required WidgetRef ref,
-}) {
+void onArtistTap({required Audio audio, required BuildContext context}) {
   switch (audio.audioType) {
     case AudioType.local:
       _onLocalAudioArtistTap(
         audio: audio,
-        ref: ref,
       );
       return;
     case AudioType.radio:
@@ -98,7 +89,6 @@ void onArtistTap({
         itemImageUrl: audio.albumArtUrl,
         genre: audio.genre,
         play: false,
-        ref: ref,
       );
       break;
     default:
@@ -106,16 +96,12 @@ void onArtistTap({
   }
 }
 
-void _onLocalAudioArtistTap({
-  required Audio audio,
-  required WidgetRef ref,
-}) {
-  final localAudioModel = ref.read(localAudioModelProvider);
+void _onLocalAudioArtistTap({required Audio audio}) {
+  final localAudioModel = getIt<LocalAudioModel>();
   final artistAudios = localAudioModel.findArtist(audio);
   if (artistAudios?.firstOrNull == null) return;
   final images = localAudioModel.findImages(artistAudios ?? {});
-
-  ref.read(appModelProvider).setFullScreen(false);
+  getIt<AppModel>().setFullScreen(false);
 
   navigatorKey.currentState?.push(
     MaterialPageRoute(

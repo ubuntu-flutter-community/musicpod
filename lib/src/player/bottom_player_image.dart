@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:yaru/yaru.dart';
 
@@ -7,6 +7,7 @@ import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../globals.dart';
 import '../../player.dart';
 import '../../radio.dart';
@@ -14,7 +15,7 @@ import '../../theme.dart';
 import '../../theme_data_x.dart';
 import 'super_network_image.dart';
 
-class BottomPlayerImage extends ConsumerWidget {
+class BottomPlayerImage extends StatelessWidget with WatchItMixin {
   const BottomPlayerImage({
     super.key,
     this.audio,
@@ -30,10 +31,9 @@ class BottomPlayerImage extends ConsumerWidget {
   final bool isOnline;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     const iconSize = 40.0;
-    final mpvMetaData =
-        ref.watch(playerModelProvider.select((m) => m.mpvMetaData));
+    final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
     final theme = context.t;
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
@@ -48,7 +48,7 @@ class BottomPlayerImage extends ConsumerWidget {
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
-            onTap: () => ref.read(appModelProvider).setFullScreen(true),
+            onTap: () => getIt<AppModel>().setFullScreen(true),
             child: Video(
               height: size,
               width: size,
@@ -94,9 +94,8 @@ class BottomPlayerImage extends ConsumerWidget {
           mpvMetaData: mpvMetaData,
           fit: BoxFit.cover,
           iconSize: iconSize,
-          onImageFind: (url) =>
-              ref.read(playerModelProvider).loadColor(url: url),
-          onGenreTap: (genre) => ref.read(radioModelProvider).init().then(
+          onImageFind: (url) => getIt<PlayerModel>().loadColor(url: url),
+          onGenreTap: (genre) => getIt<RadioModel>().init().then(
                 (_) => navigatorKey.currentState?.push(
                   MaterialPageRoute(
                     builder: (context) {

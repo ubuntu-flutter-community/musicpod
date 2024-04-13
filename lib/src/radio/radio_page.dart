@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
 import '../../common.dart';
+import '../../get.dart';
 import '../../globals.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
@@ -11,22 +12,22 @@ import 'radio_discover_page.dart';
 import 'radio_lib_page.dart';
 import 'radio_model.dart';
 
-class RadioPage extends ConsumerStatefulWidget {
+class RadioPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const RadioPage({super.key});
 
   @override
-  ConsumerState<RadioPage> createState() => _RadioPageState();
+  State<RadioPage> createState() => _RadioPageState();
 }
 
-class _RadioPageState extends ConsumerState<RadioPage> {
+class _RadioPageState extends State<RadioPage> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      final model = ref.read(radioModelProvider);
-      final appModel = ref.read(appModelProvider);
-      final libraryModel = ref.read(libraryModelProvider);
+      final model = getIt<RadioModel>();
+      final appModel = getIt<AppModel>();
+      final libraryModel = getIt<LibraryModel>();
       final index = libraryModel.radioindex;
       model
           .init(
@@ -52,7 +53,7 @@ class _RadioPageState extends ConsumerState<RadioPage> {
     RadioModel model,
     int index,
   ) {
-    final appModel = ref.read(appModelProvider);
+    final appModel = getIt<AppModel>();
 
     return SnackBar(
       duration: connectedHost != null
@@ -77,11 +78,11 @@ class _RadioPageState extends ConsumerState<RadioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = ref.watch(appModelProvider.select((m) => m.isOnline));
+    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
 
-    ref.watch(libraryModelProvider.select((m) => m.favTagsLength));
-    final appModel = ref.read(appModelProvider);
+    watchPropertyValue((LibraryModel m) => m.favTagsLength);
+    final appModel = getIt<AppModel>();
 
     return YaruDetailPage(
       appBar: HeaderBar(

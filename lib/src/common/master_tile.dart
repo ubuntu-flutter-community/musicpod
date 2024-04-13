@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
+import '../../get.dart';
 import '../../library.dart';
 import '../../player.dart';
 
@@ -99,7 +99,8 @@ class _FramedMasterTile extends StatelessWidget {
   }
 }
 
-class _PlayAbleMasterTile extends ConsumerStatefulWidget {
+class _PlayAbleMasterTile extends StatefulWidget
+    with WatchItStatefulWidgetMixin {
   const _PlayAbleMasterTile({
     required this.pageId,
     required this.tile,
@@ -113,11 +114,10 @@ class _PlayAbleMasterTile extends ConsumerStatefulWidget {
   final LibraryModel libraryModel;
 
   @override
-  ConsumerState<_PlayAbleMasterTile> createState() =>
-      __PlayAbleMasterTileState();
+  State<_PlayAbleMasterTile> createState() => __PlayAbleMasterTileState();
 }
 
-class __PlayAbleMasterTileState extends ConsumerState<_PlayAbleMasterTile> {
+class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
   bool _hovered = false;
 
   @override
@@ -128,12 +128,11 @@ class __PlayAbleMasterTileState extends ConsumerState<_PlayAbleMasterTile> {
       return widget.tile;
     }
 
-    final isEnQueued = ref.watch(
-      playerModelProvider
-          .select((m) => m.queueName != null && m.queueName == widget.pageId),
+    final isEnQueued = watchPropertyValue(
+      (PlayerModel m) => m.queueName != null && m.queueName == widget.pageId,
     );
-    final isPlaying = ref.watch(playerModelProvider.select((m) => m.isPlaying));
-    final playerModel = ref.read(playerModelProvider);
+    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
+    final playerModel = getIt<PlayerModel>();
 
     void onPlay() {
       if (isEnQueued) {

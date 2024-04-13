@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:yaru/yaru.dart';
 
+import '../../get.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
 import '../common/audio_autocomplete.dart';
 import '../data/audio.dart';
 
-class PlaylistAddAudiosDialog extends ConsumerWidget {
+class PlaylistAddAudiosDialog extends StatelessWidget {
   const PlaylistAddAudiosDialog({
     super.key,
     required this.playlistId,
@@ -16,10 +17,9 @@ class PlaylistAddAudiosDialog extends ConsumerWidget {
   final String playlistId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final audios =
-        ref.read(localAudioModelProvider).audios?.toList() ?? <Audio>[];
-    final libraryModel = ref.read(libraryModelProvider);
+  Widget build(BuildContext context) {
+    final audios = getIt<LocalAudioModel>().audios?.toList() ?? <Audio>[];
+    final libraryModel = getIt<LibraryModel>();
     return SimpleDialog(
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,

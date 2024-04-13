@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../l10n.dart';
 import '../../library.dart';
 import '../common/icons.dart';
 
-class PlayerLikeIcon extends ConsumerWidget {
+class PlayerLikeIcon extends StatelessWidget with WatchItMixin {
   const PlayerLikeIcon({
     super.key,
     required this.audio,
@@ -19,11 +19,11 @@ class PlayerLikeIcon extends ConsumerWidget {
   final Color? color;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final libraryModel = ref.read(libraryModelProvider);
+  Widget build(BuildContext context) {
+    final libraryModel = getIt<LibraryModel>();
 
-    ref.watch(libraryModelProvider.select((m) => m.likedAudios.length));
-    ref.watch(libraryModelProvider.select((m) => m.starredStations.length));
+    watchPropertyValue((LibraryModel m) => m.likedAudios.length);
+    watchPropertyValue((LibraryModel m) => m.starredStations.length);
 
     final isStarredStation = libraryModel.isStarredStation(audio?.url);
     final liked = libraryModel.liked(audio);

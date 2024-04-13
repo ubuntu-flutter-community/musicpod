@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
@@ -7,6 +7,7 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../globals.dart';
 import '../../player.dart';
 import '../../radio.dart';
@@ -14,7 +15,7 @@ import '../../theme.dart';
 import '../../theme_data_x.dart';
 import 'super_network_image.dart';
 
-class FullHeightPlayerImage extends ConsumerWidget {
+class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
   const FullHeightPlayerImage({
     super.key,
     this.audio,
@@ -32,11 +33,10 @@ class FullHeightPlayerImage extends ConsumerWidget {
   final BorderRadius? borderRadius;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = context.t;
 
-    final mpvMetaData =
-        ref.watch(playerModelProvider.select((m) => m.mpvMetaData));
+    final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
 
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
@@ -72,11 +72,10 @@ class FullHeightPlayerImage extends ConsumerWidget {
           theme: theme,
           mpvMetaData: mpvMetaData,
           iconSize: fullHeightPlayerImageSize * 0.7,
-          onImageFind: (url) =>
-              ref.read(playerModelProvider).loadColor(url: url),
-          onGenreTap: (genre) => ref.read(radioModelProvider).init().then(
+          onImageFind: (url) => getIt<PlayerModel>().loadColor(url: url),
+          onGenreTap: (genre) => getIt<RadioModel>().init().then(
             (_) {
-              ref.read(appModelProvider).setFullScreen(false);
+              getIt<AppModel>().setFullScreen(false);
               navigatorKey.currentState?.push(
                 MaterialPageRoute(
                   builder: (context) {

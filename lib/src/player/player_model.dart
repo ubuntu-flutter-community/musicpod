@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../data.dart';
-import '../../get.dart';
 import 'player_service.dart';
 
 const rateValues = [1.0, 1.5, 2.0];
@@ -164,7 +162,3 @@ class PlayerModel extends SafeChangeNotifier {
     super.dispose();
   }
 }
-
-final playerModelProvider = ChangeNotifierProvider<PlayerModel>((ref) {
-  return PlayerModel(service: getIt<PlayerService>());
-});

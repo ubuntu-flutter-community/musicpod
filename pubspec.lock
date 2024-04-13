@@ -531,14 +531,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.22+1"
-  flutter_riverpod:
-    dependency: "direct main"
-    description:
-      name: flutter_riverpod
-      sha256: "0f1974eff5bbe774bf1d870e406fc6f29e3d6f1c46bd9c58e7172ff68a785d7d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.5.1"
   flutter_rust_bridge:
     dependency: transitive
     description:
@@ -581,8 +573,16 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  functional_listener:
+    dependency: transitive
+    description:
+      name: functional_listener
+      sha256: "026d1bd4f66367f11d9ec9f1f1ddb42b89e4484b356972c76d983266cf82f33f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.1"
   get_it:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: get_it
       sha256: ae30b28cc73053f79fd46b15f430db16cae22a0554e6cd25333c840b310b0270
@@ -1134,14 +1134,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  riverpod:
-    dependency: transitive
-    description:
-      name: riverpod
-      sha256: f21b32ffd26a36555e501b04f4a5dca43ed59e16343f1a30c13632b2351dfa4d
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.5.1"
   rss_dart:
     dependency: transitive
     description:
@@ -1571,6 +1563,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+  watch_it:
+    dependency: "direct main"
+    description:
+      name: watch_it
+      sha256: "9dc3f552d31f6ae121b0de794ab3cdea5d93627fe69337876ebe4b41bfc3729d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.1"
   watcher:
     dependency: transitive
     description:

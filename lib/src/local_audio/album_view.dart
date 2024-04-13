@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
+import '../../get.dart';
 import '../../player.dart';
 import '../../utils.dart';
 import '../data/audio.dart';
@@ -10,7 +10,7 @@ import '../l10n/l10n.dart';
 import 'album_page.dart';
 import 'local_audio_model.dart';
 
-class AlbumsView extends ConsumerWidget {
+class AlbumsView extends StatelessWidget {
   const AlbumsView({
     super.key,
     required this.albums,
@@ -22,7 +22,7 @@ class AlbumsView extends ConsumerWidget {
   final Widget? noResultMessage, noResultIcon;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     if (albums == null) {
       return const Center(
         child: Progress(),
@@ -36,8 +36,8 @@ class AlbumsView extends ConsumerWidget {
       );
     }
 
-    final playerModel = ref.read(playerModelProvider);
-    final model = ref.read(localAudioModelProvider);
+    final playerModel = getIt<PlayerModel>();
+    final model = getIt<LocalAudioModel>();
 
     return Padding(
       padding: const EdgeInsets.only(top: 15),

@@ -2,17 +2,17 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
 import '../common/explore_online_popup.dart';
 import '../l10n/l10n.dart';
 
-class AlbumPage extends ConsumerWidget {
+class AlbumPage extends StatelessWidget {
   const AlbumPage({
     super.key,
     required this.id,
@@ -48,8 +48,8 @@ class AlbumPage extends ConsumerWidget {
   final Set<Audio> album;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final model = ref.read(localAudioModelProvider);
+  Widget build(BuildContext context) {
+    final model = getIt<LocalAudioModel>();
     final pictureData =
         album.firstWhereOrNull((e) => e.pictureData != null)?.pictureData;
 
@@ -131,41 +131,34 @@ class _AlbumPageControlButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final libraryModel = ref.read(libraryModelProvider);
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 5),
-              child: IconButton(
-                tooltip: context.l10n.pinAlbum,
-                isSelected: libraryModel.isPinnedAlbum(id),
-                icon: Icon(
-                  libraryModel.isPinnedAlbum(id)
-                      ? Iconz().pinFilled
-                      : Iconz().pin,
-                ),
-                onPressed: () {
-                  if (libraryModel.isPinnedAlbum(id)) {
-                    libraryModel.removePinnedAlbum(id);
-                  } else {
-                    libraryModel.addPinnedAlbum(id, album);
-                  }
-                },
-              ),
+    final libraryModel = getIt<LibraryModel>();
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 5),
+          child: IconButton(
+            tooltip: context.l10n.pinAlbum,
+            isSelected: libraryModel.isPinnedAlbum(id),
+            icon: Icon(
+              libraryModel.isPinnedAlbum(id) ? Iconz().pinFilled : Iconz().pin,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 5),
-              child: ExploreOnlinePopup(
-                text:
-                    '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
-              ),
-            ),
-          ],
-        );
-      },
+            onPressed: () {
+              if (libraryModel.isPinnedAlbum(id)) {
+                libraryModel.removePinnedAlbum(id);
+              } else {
+                libraryModel.addPinnedAlbum(id, album);
+              }
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 5),
+          child: ExploreOnlinePopup(
+            text: '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:podcast_search/podcast_search.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../library.dart';
 import '../../theme.dart';
 import 'podcast_genre_autocomplete.dart';
 
-class PodcastsControlPanel extends ConsumerWidget {
+class PodcastsControlPanel extends StatelessWidget {
   const PodcastsControlPanel({
     super.key,
     required this.limit,
@@ -40,8 +41,8 @@ class PodcastsControlPanel extends ConsumerWidget {
   final List<PodcastGenre> sortedGenres;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final libraryModel = ref.read(libraryModelProvider);
+  Widget build(BuildContext context) {
+    final libraryModel = getIt<LibraryModel>();
     final theme = context.t;
     final fillColor = theme.chipTheme.selectedColor;
     final contentPadding = yaruStyled

@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../get.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../external_path.dart';
-import '../../get.dart';
 import '../../globals.dart';
 import '../../library.dart';
 import '../../podcasts.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
 
-class ManualAddDialog extends ConsumerWidget {
+class ManualAddDialog extends StatelessWidget {
   const ManualAddDialog({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return AlertDialog(
       title: yaruStyled
           ? YaruDialogTitleBar(
@@ -38,7 +38,7 @@ class ManualAddDialog extends ConsumerWidget {
             Widget page = switch (settings.name) {
               '/addPlaylist' => PlaylistContent(
                   playlistName: context.l10n.createNewPlaylist,
-                  libraryModel: ref.read(libraryModelProvider),
+                  libraryModel: getIt<LibraryModel>(),
                   allowCreate: true,
                 ),
               '/addPodcast' => const AddPodcastContent(),
@@ -167,20 +167,16 @@ class _PlaylistContentState extends State<PlaylistContent> {
               controller: _fileController,
               decoration: InputDecoration(
                 label: Text(context.l10n.loadFromFileOptional),
-                suffixIcon: Consumer(
-                  builder: (context, ref, _) {
-                    return TextButton(
-                      onPressed: () async {
-                        final audios = await getIt<ExternalPathService>()
-                            .loadPlaylistFromFile();
-                        setState(() {
-                          _audios = audios.$2;
-                          _fileController.text = audios.$1 ?? '';
-                        });
-                      },
-                      child: Text(context.l10n.open),
-                    );
+                suffixIcon: TextButton(
+                  onPressed: () async {
+                    final audios = await getIt<ExternalPathService>()
+                        .loadPlaylistFromFile();
+                    setState(() {
+                      _audios = audios.$2;
+                      _fileController.text = audios.$1 ?? '';
+                    });
                   },
+                  child: Text(context.l10n.open),
                 ),
               ),
             ),
@@ -246,14 +242,14 @@ class _PlaylistContentState extends State<PlaylistContent> {
   }
 }
 
-class AddStationContent extends ConsumerStatefulWidget {
+class AddStationContent extends StatefulWidget {
   const AddStationContent({super.key});
 
   @override
-  ConsumerState<AddStationContent> createState() => _AddStationDialogState();
+  State<AddStationContent> createState() => _AddStationDialogState();
 }
 
-class _AddStationDialogState extends ConsumerState<AddStationContent> {
+class _AddStationDialogState extends State<AddStationContent> {
   late TextEditingController _urlController;
   late TextEditingController _nameController;
 
@@ -311,8 +307,7 @@ class _AddStationDialogState extends ConsumerState<AddStationContent> {
                     _urlController.text.isEmpty || _nameController.text.isEmpty
                         ? null
                         : () {
-                            ref
-                                .read(libraryModelProvider)
+                            getIt<LibraryModel>()
                                 .addStarredStation(_urlController.text, {
                               Audio(
                                 url: _urlController.text,
@@ -333,14 +328,14 @@ class _AddStationDialogState extends ConsumerState<AddStationContent> {
   }
 }
 
-class AddPodcastContent extends ConsumerStatefulWidget {
+class AddPodcastContent extends StatefulWidget {
   const AddPodcastContent({super.key});
 
   @override
-  ConsumerState<AddPodcastContent> createState() => _AddPodcastContentState();
+  State<AddPodcastContent> createState() => _AddPodcastContentState();
 }
 
-class _AddPodcastContentState extends ConsumerState<AddPodcastContent> {
+class _AddPodcastContentState extends State<AddPodcastContent> {
   late TextEditingController _urlController;
 
   @override
@@ -390,7 +385,6 @@ class _AddPodcastContentState extends ConsumerState<AddPodcastContent> {
                           context: context,
                           feedUrl: _urlController.text,
                           play: false,
-                          ref: ref,
                         );
                       },
                 child: Text(

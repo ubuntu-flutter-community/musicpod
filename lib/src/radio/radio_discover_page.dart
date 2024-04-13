@@ -1,37 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
+import '../../get.dart';
 import '../../globals.dart';
 import '../../l10n.dart';
 import '../../radio.dart';
 import '../library/library_model.dart';
 import 'radio_control_panel.dart';
 
-class RadioDiscoverPage extends ConsumerWidget {
+class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
   const RadioDiscoverPage({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final model = ref.read(radioModelProvider);
-    final libraryModel = ref.read(libraryModelProvider);
-    final searchQuery =
-        ref.watch(radioModelProvider.select((m) => m.searchQuery));
+  Widget build(BuildContext context) {
+    final model = getIt<RadioModel>();
+    final libraryModel = getIt<LibraryModel>();
+    final searchQuery = watchPropertyValue((RadioModel m) => m.searchQuery);
 
-    ref.watch(libraryModelProvider.select((m) => m.favTagsLength));
-    ref.watch(libraryModelProvider.select((m) => m.favCountriesLength));
+    watchPropertyValue((LibraryModel m) => m.favTagsLength);
+    watchPropertyValue((LibraryModel m) => m.favCountriesLength);
 
-    final radioSearch = ref.watch(
-      libraryModelProvider.select((m) => RadioSearch.values[m.radioindex]),
+    final radioSearch = watchPropertyValue(
+      (LibraryModel m) => RadioSearch.values[m.radioindex],
     );
 
-    final country = ref.watch(radioModelProvider.select((m) => m.country));
-    final tag = ref.watch(radioModelProvider.select((m) => m.tag));
+    final country = watchPropertyValue((RadioModel m) => m.country);
+    final tag = watchPropertyValue((RadioModel m) => m.tag);
 
     final Widget input = switch (radioSearch) {
       RadioSearch.country => CountryAutoComplete(

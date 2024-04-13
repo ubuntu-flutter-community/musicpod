@@ -2,12 +2,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:path/path.dart' as p;
+import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../data.dart';
-import '../../get.dart';
 import '../../l10n.dart';
 import '../../library.dart';
 
@@ -137,7 +135,3 @@ class DownloadModel extends SafeChangeNotifier {
     }
   }
 }
-
-final downloadProvider = ChangeNotifierProvider(
-  (ref) => DownloadModel(getIt<LibraryService>()),
-);
