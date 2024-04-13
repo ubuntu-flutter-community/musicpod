@@ -103,3 +103,56 @@ If you want to contribute code, please create an issue first.
 Test mocks are generated with [Mockito](https://github.com/dart-lang/mockito). You need to run the `build_runner` command in order to re-generate mocks, in case you changed the signatures of service methods.
 
 `flutter pub run build_runner build`
+
+## Boring developer things
+
+###
+
+### Architecture: [model, view, viewmodel (MVVM)](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)
+
+The app, the player and each page have their own set of widgets, 1 view model and 1 service.
+There are additional view models for downloads or a service for all external path things but that's it.
+
+Since all views need access to each other all the time, disposing the view models all the time makes no sense and is CPU intensive for no need so all services and view models are registered as singletons before the flutter tree is created.
+
+Important services are also initialized once before the Flutter `runApp` call, the view models are initialized when the view is accessed but most of the internal calls are skipped when the views are accessed again after that.
+
+```mermaid
+
+flowchart LR
+
+classDef view fill:#0e84207d
+classDef viewmodel fill:#e9542080
+classDef model fill:#77216f80
+
+View["`
+  **View**
+  (Widgets)
+`"]:::view--watch-->ViewModel["`
+  **ViewModel**
+  (ChangeNotifier)
+`"]:::viewmodel--listen-->Model["`
+  **(Domain) Model**
+  (Service)
+`"]:::model
+
+ViewModel--notify-->View
+Model--stream.add-->ViewModel
+
+```
+
+### Dependency choices, dependency injection and state management
+
+Regarding the packages to implement this architecture I've had quite a journey from [provider](https://pub.dev/packages/provider) to [riverpod](https://pub.dev/packages/riverpod) with [get_it](https://pub.dev/packages/get_it).
+
+I found my personal favorite solution with [get_it](https://pub.dev/packages/get_it) plus its [watch_it](https://pub.dev/packages/watch_it) extension because this fits the need of this application the most without being too invasive into the API of the flutter widget tree.
+
+This way all layers are clearly separated and easy to follow, even if this brings a little bit of boilerplate code.
+
+I am a big fan of the [KISS principle](https://en.wikipedia.org/wiki/KISS_principle) (keep it simple, stupid), so when it comes to organizing software source code and choosing architectural patterns simplicity is a big goal for me.
+
+Though performance is the biggest goal, especially for flutter apps on the desktop that compete against toolkits that are so slim and performant they could run on a toaster (exaggeration), so if simple things perform badly, I am willing to switch to more complicated approaches ;)
+
+### Persistence
+
+For persisting both setting and application state I've chosen a home cooked solution  inside the LibraryService and SettingsService that writes json files to disk. It is simple and fast and sufficient for the needs of this application. Eventually at some point it might make sense to switch to a real database though :).
