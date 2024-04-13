@@ -21,7 +21,6 @@ import 'player.dart';
 import 'podcasts.dart';
 import 'radio.dart';
 import 'settings.dart';
-import 'src/podcasts/download_model.dart';
 
 Future<void> main(List<String> args) async {
   if (!isMobile) {
