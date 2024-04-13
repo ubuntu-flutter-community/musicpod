@@ -114,29 +114,6 @@ class PodcastService {
   }
 }
 
-Audio _createAudio(
-  Episode episode,
-  Podcast? podcast, [
-  String? itemImageUrl,
-  String? genre,
-]) {
-  return Audio(
-    url: episode.contentUrl,
-    audioType: AudioType.podcast,
-    imageUrl: episode.imageUrl,
-    albumArtUrl: itemImageUrl ?? podcast?.image,
-    title: episode.title,
-    album: podcast?.title,
-    artist: podcast?.copyright,
-    albumArtist: podcast?.description,
-    durationMs: episode.duration?.inMilliseconds.toDouble(),
-    year: episode.publicationDate?.millisecondsSinceEpoch,
-    description: episode.description,
-    website: podcast?.url,
-    genre: genre,
-  );
-}
-
 Future<Set<Audio>> findEpisodes({
   required String feedUrl,
   String? itemImageUrl,
@@ -148,11 +125,11 @@ Future<Set<Audio>> findEpisodes({
   if (podcast?.episodes.isNotEmpty == true) {
     for (var episode in podcast?.episodes ?? []) {
       if (episode.contentUrl != null) {
-        final audio = _createAudio(
-          episode,
-          podcast,
-          itemImageUrl,
-          genre,
+        final audio = Audio.fromPodcast(
+          episode: episode,
+          podcast: podcast,
+          itemImageUrl: itemImageUrl,
+          genre: genre,
         );
         episodes.add(audio);
       }

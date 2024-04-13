@@ -287,7 +287,7 @@ class LocalAudioModel extends SafeChangeNotifier {
       _allGenres = _findAllGenres();
     }
 
-    _audiosChangedSub = _localAudioService.audiosChanged.listen((_) {
+    _audiosChangedSub ??= _localAudioService.audiosChanged.listen((_) {
       notifyListeners();
     });
 

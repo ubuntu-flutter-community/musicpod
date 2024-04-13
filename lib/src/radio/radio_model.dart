@@ -70,19 +70,7 @@ class RadioModel extends SafeChangeNotifier {
     }
 
     return Set.from(
-      stations.map(
-        (e) {
-          return Audio(
-            url: e.urlResolved,
-            title: e.name,
-            artist: e.language ?? e.name,
-            album: e.tags ?? '',
-            audioType: AudioType.radio,
-            imageUrl: e.favicon,
-            website: e.homepage,
-          );
-        },
-      ),
+      stations.map((e) => Audio.fromStation(e)),
     );
   }
 

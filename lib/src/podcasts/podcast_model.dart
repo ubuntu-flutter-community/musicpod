@@ -94,9 +94,6 @@ class PodcastModel extends SafeChangeNotifier {
   Future<void> init({
     String? countryCode,
     required String updateMessage,
-    bool? usePodcastIndex,
-    String? podcastIndexApiKey,
-    String? podcastIndexApiSecret,
   }) async {
     await _podcastService.init();
     final lastCountryCode = _libraryService.lastCountryCode;
@@ -109,7 +106,7 @@ class PodcastModel extends SafeChangeNotifier {
       _country = c;
     }
 
-    _searchChangedSub = _podcastService.searchChanged.listen((_) {
+    _searchChangedSub ??= _podcastService.searchChanged.listen((_) {
       notifyListeners();
     });
 
