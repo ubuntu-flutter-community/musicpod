@@ -18,9 +18,8 @@ Future<void> main() async {
       expect(host != null, true);
     });
 
-    test('loadTags', () async {
-      final tags = await service.loadTags();
-      expect(tags?.any((e) => e.name == 'metal'), true);
+    test('loadTags', () {
+      expect(service.tags?.any((e) => e.name == 'metal'), true);
     });
 
     test('find6forty', () async {

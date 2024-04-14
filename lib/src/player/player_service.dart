@@ -189,8 +189,10 @@ class PlayerService {
     await _player.setRate(value);
   }
 
+  /// To not mess up with the queue, this method is private
+  /// Use [startPlaylist] instead
   bool _firstPlay = true;
-  Future<void> play({Duration? newPosition, Audio? newAudio}) async {
+  Future<void> _play({Duration? newPosition, Audio? newAudio}) async {
     try {
       if (newAudio != null) {
         _setAudio(newAudio);
@@ -225,7 +227,7 @@ class PlayerService {
   }
 
   Future<void> playOrPause() async {
-    return _firstPlay ? play(newPosition: _position) : _player.playOrPause();
+    return _firstPlay ? _play(newPosition: _position) : _player.playOrPause();
   }
 
   Future<void> pause() async {
@@ -300,7 +302,7 @@ class PlayerService {
       _setAudio(nextAudio!);
       _estimateNext();
     }
-    await play();
+    await _play();
   }
 
   void insertIntoQueue(Audio newAudio) {
@@ -380,7 +382,7 @@ class PlayerService {
         if (mightBePrevious == null) return;
         _setAudio(mightBePrevious);
         _estimateNext();
-        await play();
+        await _play();
       }
     }
   }
@@ -405,7 +407,7 @@ class PlayerService {
 
     _position = libraryService.getLastPosition(_audio?.url);
     _estimateNext();
-    await play(newPosition: _position);
+    await _play(newPosition: _position);
   }
 
   Color? _color;
@@ -539,7 +541,7 @@ class PlayerService {
               : playOrPause();
         },
         play: () async {
-          play();
+          _play();
         },
         pause: () async {
           pause();

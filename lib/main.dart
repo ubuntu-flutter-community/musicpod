@@ -96,12 +96,13 @@ Future<void> main(List<String> args) async {
     connectivity,
   );
 
-  final externalPathService = ExternalPathService(
-    gtkNotifier: Platform.isLinux ? GtkApplicationNotifier(args) : null,
-    playerService: playerService,
-  );
+  // For some reason GtkApplication needs to be instantiated
+  // when the service is registered and not before
   getIt.registerSingleton<ExternalPathService>(
-    externalPathService,
+    ExternalPathService(
+      gtkNotifier: Platform.isLinux ? GtkApplicationNotifier(args) : null,
+      playerService: playerService,
+    ),
     dispose: (s) => s.dispose(),
   );
 
@@ -115,7 +116,7 @@ Future<void> main(List<String> args) async {
   getIt.registerSingleton<SettingsModel>(
     SettingsModel(
       service: settingsService,
-      externalPathService: externalPathService,
+      externalPathService: getIt<ExternalPathService>(),
       gitHub: gitHub,
     )..init(),
     dispose: (s) => s.dispose(),
