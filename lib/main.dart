@@ -113,8 +113,8 @@ Future<void> main(List<String> args) async {
   getIt.registerSingleton<GitHub>(gitHub);
 
   // Register ViewModels
-  getIt.registerSingleton<SettingsModel>(
-    SettingsModel(
+  getIt.registerLazySingleton<SettingsModel>(
+    () => SettingsModel(
       service: settingsService,
       externalPathService: getIt<ExternalPathService>(),
       gitHub: gitHub,
