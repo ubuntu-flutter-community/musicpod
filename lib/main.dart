@@ -98,8 +98,8 @@ Future<void> main(List<String> args) async {
 
   // For some reason GtkApplication needs to be instantiated
   // when the service is registered and not before
-  getIt.registerSingleton<ExternalPathService>(
-    ExternalPathService(
+  getIt.registerLazySingleton<ExternalPathService>(
+    () => ExternalPathService(
       gtkNotifier: Platform.isLinux ? GtkApplicationNotifier(args) : null,
       playerService: playerService,
     ),
