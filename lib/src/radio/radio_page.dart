@@ -66,10 +66,18 @@ class _RadioPageState extends State<RadioPage> {
       ),
       action: (connectedHost == null)
           ? SnackBarAction(
-              onPressed: () => model.init(
-                countryCode: appModel.countryCode,
-                index: index,
-              ),
+              onPressed: () {
+                model
+                    .init(
+                      countryCode: appModel.countryCode,
+                      index: index,
+                    )
+                    .then(
+                      (value) => ScaffoldMessenger.of(context).showSnackBar(
+                        _buildConnectSnackBar(value, model, index),
+                      ),
+                    );
+              },
               label: context.l10n.tryReconnect,
             )
           : null,

@@ -311,6 +311,7 @@ class Audio {
       audioType: AudioType.radio,
       imageUrl: station.favicon,
       website: station.homepage,
+      description: station.stationUUID,
     );
   }
 

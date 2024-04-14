@@ -74,13 +74,24 @@ class RadioModel extends SafeChangeNotifier {
     );
   }
 
+// TODO: use when radio audios are played
+  Future<void> clickStation(Audio station) async {
+    if (station.description != null) {
+      return await _radioService.clickStation(station.description!);
+    }
+  }
+
+  // TODO: use in state autocomplete depending on [country]
+  Future<List<State>?> loadStates(String country) async {
+    return await _radioService.loadStates(country);
+  }
+
   String? _connectedHost;
   Future<String?> init({
     String? countryCode,
     int index = 0,
   }) async {
     _connectedHost ??= await _radioService.init();
-    await _radioService.loadTags();
 
     final lastFav = _libraryService.lastFav;
 

@@ -70,9 +70,6 @@ class PlayerModel extends SafeChangeNotifier {
   double get rate => service.rate;
   Future<void> setRate(double value) async => await service.setRate(value);
 
-  Future<void> play({Duration? newPosition, Audio? newAudio}) async =>
-      await service.play(newAudio: newAudio, newPosition: newPosition);
-
   Future<void> playOrPause() async => await service.playOrPause();
 
   Future<void> pause() async => await service.pause();
