@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
@@ -41,56 +40,21 @@ class _RadioPageState extends State<RadioPage> {
           }
 
           ScaffoldMessenger.of(context).showSnackBar(
-            _buildConnectSnackBar(connectedHost, model, index),
+            _buildConnectSnackBar(
+              connectedHost: connectedHost,
+              context: context,
+            ),
           );
         },
       );
     });
   }
 
-  SnackBar _buildConnectSnackBar(
-    String? connectedHost,
-    RadioModel model,
-    int index,
-  ) {
-    final appModel = getIt<AppModel>();
-
-    return SnackBar(
-      duration: connectedHost != null
-          ? const Duration(seconds: 1)
-          : const Duration(seconds: 30),
-      content: Text(
-        connectedHost != null
-            ? '${context.l10n.connectedTo}: $connectedHost'
-            : context.l10n.noRadioServerFound,
-      ),
-      action: (connectedHost == null)
-          ? SnackBarAction(
-              onPressed: () {
-                model
-                    .init(
-                      countryCode: appModel.countryCode,
-                      index: index,
-                    )
-                    .then(
-                      (value) => ScaffoldMessenger.of(context).showSnackBar(
-                        _buildConnectSnackBar(value, model, index),
-                      ),
-                    );
-              },
-              label: context.l10n.tryReconnect,
-            )
-          : null,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
-
-    watchPropertyValue((LibraryModel m) => m.favTagsLength);
-    final appModel = getIt<AppModel>();
+    final connectedHost = watchPropertyValue((RadioModel m) => m.connectedHost);
 
     return YaruDetailPage(
       appBar: HeaderBar(
@@ -103,26 +67,99 @@ class _RadioPageState extends State<RadioPage> {
           Flexible(
             child: Padding(
               padding: appBarActionSpacing,
-              child: SearchButton(
-                active: false,
-                onPressed: () {
-                  navigatorKey.currentState?.push(
-                    MaterialPageRoute(
-                      builder: (context) => const RadioDiscoverPage(),
+              child: connectedHost == null
+                  ? const _RadioReconnectButton()
+                  : SearchButton(
+                      active: false,
+                      onPressed: () {
+                        navigatorKey.currentState?.push(
+                          MaterialPageRoute(
+                            builder: (context) => const RadioDiscoverPage(),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           ),
         ],
         title: Text('${context.l10n.radio} ${context.l10n.collection}'),
       ),
-      body: AdaptiveContainer(
-        child: RadioLibPage(
-          isOnline: appModel.isOnline,
-        ),
-      ),
+      body: const AdaptiveContainer(child: RadioLibPage()),
     );
   }
+}
+
+class _RadioReconnectButton extends StatelessWidget {
+  const _RadioReconnectButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final model = getIt<RadioModel>();
+    final libraryModel = getIt<LibraryModel>();
+    final appModel = getIt<AppModel>();
+
+    return IconButton(
+      tooltip:
+          '${context.l10n.noRadioServerFound}: ${context.l10n.tryReconnect}',
+      onPressed: () => model
+          .init(
+        countryCode: appModel.countryCode,
+        index: libraryModel.radioindex,
+      )
+          .then(
+        (host) {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(
+            _buildConnectSnackBar(
+              connectedHost: host,
+              context: context,
+            ),
+          );
+        },
+      ),
+      icon: const DisconnectedServerIcon(),
+    );
+  }
+}
+
+SnackBar _buildConnectSnackBar({
+  required String? connectedHost,
+  required BuildContext context,
+}) {
+  final appModel = getIt<AppModel>();
+  final model = getIt<RadioModel>();
+  final libraryModel = getIt<LibraryModel>();
+  final index = libraryModel.radioindex;
+
+  return SnackBar(
+    duration: connectedHost != null
+        ? const Duration(seconds: 1)
+        : const Duration(seconds: 30),
+    content: Text(
+      connectedHost != null
+          ? '${context.l10n.connectedTo}: $connectedHost'
+          : context.l10n.noRadioServerFound,
+    ),
+    action: (connectedHost == null)
+        ? SnackBarAction(
+            onPressed: () {
+              ScaffoldMessenger.of(context).clearSnackBars();
+              model
+                  .init(
+                    countryCode: appModel.countryCode,
+                    index: index,
+                  )
+                  .then(
+                    (value) => ScaffoldMessenger.of(context).showSnackBar(
+                      _buildConnectSnackBar(
+                        connectedHost: value,
+                        context: context,
+                      ),
+                    ),
+                  );
+            },
+            label: context.l10n.tryReconnect,
+          )
+        : null,
+  );
 }

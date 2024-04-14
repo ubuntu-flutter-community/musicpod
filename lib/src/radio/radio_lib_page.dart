@@ -17,19 +17,10 @@ import 'radio_history_list.dart';
 import 'station_card.dart';
 
 class RadioLibPage extends StatelessWidget with WatchItMixin {
-  const RadioLibPage({
-    super.key,
-    required this.isOnline,
-  });
-
-  final bool isOnline;
+  const RadioLibPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    if (!isOnline) {
-      return const OfflinePage();
-    }
-
     final theme = context.t;
     final radioCollectionView =
         watchPropertyValue((RadioModel m) => m.radioCollectionView);

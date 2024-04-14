@@ -87,6 +87,7 @@ class RadioModel extends SafeChangeNotifier {
   }
 
   String? _connectedHost;
+  String? get connectedHost => _connectedHost;
   Future<String?> init({
     String? countryCode,
     int index = 0,
