@@ -63,7 +63,8 @@ class _PlayerViewState extends State<PlayerView> {
     if (widget.mode != PlayerViewMode.bottom) {
       player = Row(
         children: [
-          const Material(child: VerticalDivider()),
+          if (widget.mode == PlayerViewMode.sideBar)
+            const Material(child: VerticalDivider()),
           Expanded(
             child: FullHeightPlayer(
               isVideo: isVideo == true,
