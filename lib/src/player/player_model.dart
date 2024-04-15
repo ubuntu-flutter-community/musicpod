@@ -64,7 +64,7 @@ class PlayerModel extends SafeChangeNotifier {
   bool get shuffle => service.shuffle;
   void setShuffle(bool value) => service.setShuffle(value);
 
-  double get volume => service.volume;
+  double? get volume => service.volume;
   Future<void> setVolume(double value) async => await service.setVolume(value);
 
   double get rate => service.rate;

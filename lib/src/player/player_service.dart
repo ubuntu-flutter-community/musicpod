@@ -173,8 +173,8 @@ class PlayerService {
 
   final _volumeController = StreamController<bool>.broadcast();
   Stream<bool> get volumeChanged => _volumeController.stream;
-  double _volume = 100.0;
-  double get volume => _volume;
+  double? _volume;
+  double? get volume => _volume;
   Future<void> setVolume(double value) async {
     if (value == _volume) return;
     await _player.setVolume(value);
@@ -209,11 +209,12 @@ class PlayerService {
         _player.state.tracks;
       });
       if (newPosition != null && _audio!.audioType != AudioType.radio) {
+        final tempVol = _volume;
         _player.setVolume(0).then(
               (_) => Future.delayed(const Duration(seconds: 3)).then(
                 (_) => _player
                     .seek(newPosition)
-                    .then((_) => _player.setVolume(100.0)),
+                    .then((_) => _player.setVolume(tempVol ?? 100.0)),
               ),
             );
       }
@@ -246,8 +247,6 @@ class PlayerService {
 
   Future<void> init() async {
     await _initMediaControl();
-
-    await _readPlayerState();
 
     _isPlayingSub = _player.stream.playing.listen((value) {
       setIsPlaying(value);
@@ -294,6 +293,8 @@ class PlayerService {
         }
       }
     });
+
+    await _readPlayerState();
   }
 
   Future<void> playNext() async {

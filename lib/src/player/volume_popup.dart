@@ -21,11 +21,11 @@ class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
     final volume = watchPropertyValue((PlayerModel m) => m.volume);
     final setVolume = playerModel.setVolume;
     IconData iconData;
-    if (volume <= 0) {
+    if (volume != null && volume <= 0) {
       iconData = Iconz().speakerMutedFilled;
-    } else if (volume <= 20) {
+    } else if (volume != null && volume <= 20) {
       iconData = Iconz().speakerLowFilled;
-    } else if (volume <= 50 && volume > 20) {
+    } else if (volume != null && volume <= 50 && volume > 20) {
       iconData = Iconz().speakerMediumFilled;
     } else {
       iconData = Iconz().speakerHighFilled;
@@ -66,7 +66,7 @@ class _Slider extends StatelessWidget with WatchItMixin {
     return RotatedBox(
       quarterTurns: 3,
       child: Slider(
-        value: volume,
+        value: volume ?? 100.0,
         onChanged: setVolume,
         max: 100,
         min: 0,
