@@ -7,7 +7,7 @@ import '../../globals.dart';
 import '../../l10n.dart';
 import 'radio_discover_page.dart';
 
-class OpenRadioDiscoverPageButton extends StatelessWidget {
+class OpenRadioDiscoverPageButton extends StatelessWidget with WatchItMixin {
   const OpenRadioDiscoverPageButton({super.key});
 
   @override

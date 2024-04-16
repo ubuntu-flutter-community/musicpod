@@ -1,9 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-
 import 'package:media_kit_video/media_kit_video.dart';
-import '../../get.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
@@ -11,6 +7,7 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../player.dart';
 import 'blurred_full_height_player_image.dart';
 import 'full_height_player_image.dart';
@@ -72,7 +69,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final body = Stack(
+    final bodyWithControls = Stack(
       alignment: Alignment.topRight,
       children: [
         if (isVideo)
@@ -118,24 +115,13 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
               ),
             ),
           ),
-        Padding(
-          padding: EdgeInsets.only(
-            right: kYaruPagePadding,
-            top: Platform.isMacOS ? 0 : kYaruPagePadding,
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              color: isVideo ? Colors.black.withOpacity(0.6) : null,
-            ),
-            child: FullHeightPlayerTopControls(
-              audio: audio,
-              iconColor: iconColor,
-              activeControls: activeControls,
-              playerViewMode: playerViewMode,
-              onFullScreenPressed: onFullScreenPressed,
-            ),
-          ),
+        FullHeightPlayerTopControls(
+          audio: audio,
+          iconColor: iconColor,
+          activeControls: activeControls,
+          playerViewMode: playerViewMode,
+          onFullScreenPressed: onFullScreenPressed,
+          isVideo: isVideo,
         ),
         if (nextAudio?.title != null &&
             nextAudio?.artist != null &&
@@ -152,56 +138,63 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
       ],
     );
 
-    final fullHeightPlayer = Column(
-      children: [
-        if (!isMobile)
-          HeaderBar(
-            adaptive: false,
-            title: const Text(
-              '',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+    final body = isMobile
+        ? GestureDetector(
+            onVerticalDragEnd: (details) {
+              if (details.primaryVelocity != null &&
+                  details.primaryVelocity! > 150) {
+                appModel.setFullScreen(false);
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(top: 40),
+              child: bodyWithControls,
             ),
-            foregroundColor: isVideo == true ? Colors.white : null,
-            backgroundColor:
-                isVideo == true ? Colors.black : Colors.transparent,
-          ),
-        isMobile
-            ? Expanded(
-                child: GestureDetector(
-                  onVerticalDragEnd: (details) {
-                    if (details.primaryVelocity != null &&
-                        details.primaryVelocity! > 150) {
-                      appModel.setFullScreen(false);
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: body,
-                  ),
-                ),
-              )
-            : Expanded(
-                child: body,
-              ),
-      ],
+          )
+        : bodyWithControls;
+
+    final headerBar = HeaderBar(
+      adaptive: false,
+      title: const Text(
+        '',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      foregroundColor: isVideo == true ? Colors.white : null,
+      backgroundColor: isVideo == true ? Colors.black : Colors.transparent,
     );
 
+    final fullHeightPlayer = isVideo
+        ? Scaffold(
+            backgroundColor: Colors.black,
+            appBar: headerBar,
+            body: body,
+          )
+        : Column(
+            children: [
+              if (!isMobile) headerBar,
+              Expanded(
+                child: body,
+              ),
+            ],
+          );
+
     if ((audio?.imageUrl != null ||
-        audio?.albumArtUrl != null ||
-        audio?.pictureData != null)) {
+            audio?.albumArtUrl != null ||
+            audio?.pictureData != null) &&
+        isOnline &&
+        !isVideo) {
       return Stack(
         children: [
-          if (isOnline)
-            BlurredFullHeightPlayerImage(
-              size: size,
-              audio: audio,
-            ),
+          BlurredFullHeightPlayerImage(
+            size: size,
+            audio: audio,
+          ),
           fullHeightPlayer,
         ],
       );
-    } else {
-      return fullHeightPlayer;
     }
+
+    return fullHeightPlayer;
   }
 }

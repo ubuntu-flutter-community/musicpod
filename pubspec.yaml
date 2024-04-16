@@ -65,7 +65,10 @@ dependencies:
   watch_it: ^1.4.1
   window_manager: ^0.3.8
   xdg_directories: ^1.0.4
-  yaru: ^4.1.0
+  yaru:
+    git:
+      url: https://github.com/ubuntu/yaru.dart
+      ref: 7b485d56d17576ff07964683c91d48eef1dc1297
   yaru_window: ^0.2.1
   yaru_window_linux: ^0.2.0
 
