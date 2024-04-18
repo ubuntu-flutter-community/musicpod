@@ -94,7 +94,9 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
           mpvMetaData: mpvMetaData,
           fit: BoxFit.cover,
           iconSize: iconSize,
-          onImageFind: (url) => getIt<PlayerModel>().loadColor(url: url),
+          onImageFind: !isOnline
+              ? null
+              : (url) => getIt<PlayerModel>().loadColor(url: url),
           onGenreTap: (genre) => getIt<RadioModel>().init().then(
                 (_) => navigatorKey.currentState?.push(
                   MaterialPageRoute(

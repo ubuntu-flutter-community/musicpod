@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
@@ -7,6 +6,7 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../l10n.dart';
 import '../../player.dart';
 import 'bottom_player_image.dart';
@@ -16,39 +16,32 @@ import 'playback_rate_button.dart';
 
 const kBottomPlayerHeight = 90.0;
 
-class BottomPlayer extends StatelessWidget {
+class BottomPlayer extends StatelessWidget with WatchItMixin {
   const BottomPlayer({
     super.key,
-    required this.audio,
-    required this.playPrevious,
-    required this.playNext,
-    this.isVideo,
-    required this.videoController,
-    required this.isOnline,
-    required this.appModel,
   });
-
-  final Audio? audio;
-
-  final Future<void> Function() playPrevious;
-  final Future<void> Function() playNext;
-  final AppModel appModel;
-  final bool? isVideo;
-  final VideoController videoController;
-  final bool isOnline;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
     final veryNarrow = context.m.size.width < kMasterDetailBreakPoint;
+    final audio = watchPropertyValue((PlayerModel m) => m.audio);
+    final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo);
+
+    final model = getIt<PlayerModel>();
+    final appModel = getIt<AppModel>();
+    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
+
     final active = audio?.path != null || isOnline;
+    final showQueueButton =
+        watchPropertyValue((PlayerModel m) => m.queue.length > 1);
 
     final bottomPlayerImage = ClipRRect(
       borderRadius: BorderRadius.circular(4),
       child: BottomPlayerImage(
         audio: audio,
         size: kBottomPlayerHeight - 24,
-        videoController: videoController,
+        videoController: model.controller,
         isVideo: isVideo,
         isOnline: isOnline,
       ),
@@ -59,10 +52,9 @@ class BottomPlayer extends StatelessWidget {
     );
 
     final bottomPlayerControls = PlayerMainControls(
-      playPrevious: playPrevious,
-      playNext: playNext,
+      playPrevious: model.playPrevious,
+      playNext: model.playNext,
       active: active,
-      podcast: audio?.audioType == AudioType.podcast,
     );
 
     final track = PlayerTrack(
@@ -112,7 +104,7 @@ class BottomPlayer extends StatelessWidget {
                   if (audio?.audioType == AudioType.podcast)
                     PlaybackRateButton(active: active),
                   const VolumeSliderPopup(),
-                  const QueueButton(),
+                  if (showQueueButton) const QueueButton(),
                   IconButton(
                     tooltip: context.l10n.fullWindow,
                     icon: Icon(

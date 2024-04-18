@@ -97,7 +97,6 @@ class _QueueDialogState extends State<QueueDialog> {
       title: Column(
         children: [
           PlayerMainControls(
-            podcast: false,
             playPrevious: () async => await playerModel.playPrevious().then(
                   (_) => _jump(),
                 ),

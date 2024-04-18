@@ -43,21 +43,8 @@ class _PlayerViewState extends State<PlayerView> {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-
-    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
-    final playerModel = getIt<PlayerModel>();
-    final appModel = getIt<AppModel>();
-    final nextAudio = watchPropertyValue((PlayerModel m) => m.nextAudio);
     final c = watchPropertyValue((PlayerModel m) => m.color);
-    final color = getPlayerBg(
-      c,
-      theme.cardColor,
-    );
-    final playPrevious = playerModel.playPrevious;
-    final playNext = playerModel.playNext;
-    final audio = watchPropertyValue((PlayerModel m) => m.audio);
-
-    final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo);
+    final color = getPlayerBg(c, theme.cardColor);
 
     Widget player;
     if (widget.mode != PlayerViewMode.bottom) {
@@ -66,30 +53,12 @@ class _PlayerViewState extends State<PlayerView> {
           if (widget.mode == PlayerViewMode.sideBar)
             const Material(child: VerticalDivider()),
           Expanded(
-            child: FullHeightPlayer(
-              isVideo: isVideo == true,
-              videoController: playerModel.controller,
-              playerViewMode: widget.mode,
-              appModel: appModel,
-              nextAudio: nextAudio,
-              audio: audio,
-              playPrevious: playPrevious,
-              playNext: playNext,
-              isOnline: isOnline,
-            ),
+            child: FullHeightPlayer(playerViewMode: widget.mode),
           ),
         ],
       );
     } else {
-      player = BottomPlayer(
-        isVideo: isVideo,
-        videoController: playerModel.controller,
-        appModel: appModel,
-        audio: audio,
-        playPrevious: playPrevious,
-        playNext: playNext,
-        isOnline: isOnline,
-      );
+      player = const BottomPlayer();
     }
 
     // VERY important to reduce CPU usage
