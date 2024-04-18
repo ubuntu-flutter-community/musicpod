@@ -5,8 +5,6 @@ import 'package:yaru/yaru.dart';
 import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../common.dart';
-import '../../constants.dart';
-import '../../data.dart';
 import '../../get.dart';
 import '../../player.dart';
 import 'blurred_full_height_player_image.dart';
@@ -18,56 +16,29 @@ import 'up_next_bubble.dart';
 class FullHeightPlayer extends StatelessWidget with WatchItMixin {
   const FullHeightPlayer({
     super.key,
-    required this.audio,
-    required this.nextAudio,
-    required this.playPrevious,
-    required this.playNext,
     required this.playerViewMode,
-    required this.videoController,
-    required this.isVideo,
-    required this.isOnline,
-    required this.appModel,
   });
 
-  final Audio? audio;
-  final Audio? nextAudio;
-  final Future<void> Function() playPrevious;
-  final Future<void> Function() playNext;
-
   final PlayerViewMode playerViewMode;
-  final AppModel appModel;
-
-  final VideoController videoController;
-  final bool isVideo;
-  final bool isOnline;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
     final size = context.m.size;
-    final playerToTheRight = size.width > kSideBarThreshHold;
-    final fullScreen = watchPropertyValue((AppModel m) => m.fullScreen);
-
+    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
+    final appModel = getIt<AppModel>();
+    final nextAudio = watchPropertyValue((PlayerModel m) => m.nextAudio);
+    final audio = watchPropertyValue((PlayerModel m) => m.audio);
+    final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo == true);
+    final notAlone = watchPropertyValue((PlayerModel m) => m.queue.length > 1);
+    final showUpNextBubble = notAlone &&
+        nextAudio?.title != null &&
+        nextAudio?.artist != null &&
+        !isVideo &&
+        size.width > 600;
+    final model = getIt<PlayerModel>();
     final active = audio?.path != null || isOnline;
-    final activeControls = audio?.path != null || isOnline;
-
-    final titleAndArtist = FullHeightTitleAndArtist(
-      audio: audio,
-    );
-
-    const sliderAndTime = PlayerTrack();
-
     final iconColor = isVideo ? Colors.white : theme.colorScheme.onSurface;
-
-    void onFullScreenPressed() {
-      appModel.setFullScreen(
-        playerViewMode == PlayerViewMode.fullWindow ? false : true,
-      );
-
-      appModel.setShowWindowControls(
-        (fullScreen == true && playerToTheRight) ? false : true,
-      );
-    }
 
     final bodyWithControls = Stack(
       alignment: Alignment.topRight,
@@ -75,7 +46,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
         if (isVideo)
           RepaintBoundary(
             child: Video(
-              controller: videoController,
+              controller: model.controller,
             ),
           )
         else
@@ -93,22 +64,23 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
                   const SizedBox(
                     height: kYaruPagePadding,
                   ),
-                  titleAndArtist,
+                  FullHeightTitleAndArtist(
+                    audio: audio,
+                  ),
                   const SizedBox(
                     height: kYaruPagePadding,
                   ),
                   const SizedBox(
                     height: kYaruPagePadding,
                     width: 400,
-                    child: sliderAndTime,
+                    child: PlayerTrack(),
                   ),
                   const SizedBox(
                     height: kYaruPagePadding,
                   ),
                   PlayerMainControls(
-                    podcast: audio?.audioType == AudioType.podcast,
-                    playPrevious: playPrevious,
-                    playNext: playNext,
+                    playPrevious: model.playPrevious,
+                    playNext: model.playNext,
                     active: active,
                   ),
                 ],
@@ -116,17 +88,10 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
             ),
           ),
         FullHeightPlayerTopControls(
-          audio: audio,
           iconColor: iconColor,
-          activeControls: activeControls,
           playerViewMode: playerViewMode,
-          onFullScreenPressed: onFullScreenPressed,
-          isVideo: isVideo,
         ),
-        if (nextAudio?.title != null &&
-            nextAudio?.artist != null &&
-            !isVideo &&
-            size.width > 600)
+        if (showUpNextBubble)
           Positioned(
             left: 10,
             bottom: 10,
