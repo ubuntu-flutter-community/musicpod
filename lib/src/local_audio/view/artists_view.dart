@@ -2,53 +2,63 @@ import 'package:flutter/material.dart';
 
 import 'package:yaru/yaru.dart';
 
-import '../../common.dart';
-import '../../constants.dart';
-import '../../data.dart';
-import '../l10n/l10n.dart';
-import 'genre_page.dart';
+import '../../../common.dart';
+import '../../../constants.dart';
+import '../../../data.dart';
+import '../../../get.dart';
+import '../../l10n/l10n.dart';
+import 'artist_page.dart';
+import '../local_audio_model.dart';
 
-class GenresView extends StatelessWidget {
-  const GenresView({
+class ArtistsView extends StatelessWidget {
+  const ArtistsView({
     super.key,
-    this.genres,
+    this.artists,
     this.noResultMessage,
     this.noResultIcon,
   });
 
-  final Set<Audio>? genres;
+  final Set<Audio>? artists;
   final Widget? noResultMessage, noResultIcon;
 
   @override
   Widget build(BuildContext context) {
-    if (genres == null) {
+    if (artists == null) {
       return const Center(
         child: Progress(),
       );
     }
 
-    if (genres!.isEmpty) {
+    if (artists!.isEmpty) {
       return NoSearchResultPage(
         icons: noResultIcon,
         message: noResultMessage,
       );
     }
+    final model = getIt<LocalAudioModel>();
+
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: GridView.builder(
-        itemCount: genres!.length,
+        itemCount: artists!.length,
         padding: gridPadding,
         gridDelegate: kDiskGridDelegate,
         itemBuilder: (context, index) {
-          final text = genres!.elementAt(index).genre ?? context.l10n.unknown;
+          final artistAudios = model.findArtist(
+            artists!.elementAt(index),
+          );
+          final images = model.findImages(artistAudios ?? {});
+
+          final text = artists!.elementAt(index).artist ?? context.l10n.unknown;
 
           return YaruSelectableContainer(
             selected: false,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {
-                  return GenrePage(
-                    genre: text,
+                  return ArtistPage(
+                    images: images,
+                    artistAudios: artistAudios,
                   );
                 },
               ),
@@ -61,7 +71,7 @@ class GenresView extends StatelessWidget {
                   width: double.infinity,
                   height: double.infinity,
                   child: RoundImageContainer(
-                    images: const {},
+                    images: images,
                     fallBackText: text,
                   ),
                 ),

@@ -1,21 +1,19 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 
-import '../../build_context_x.dart';
-import '../../common.dart';
-import '../../constants.dart';
-import '../../data.dart';
-import '../../get.dart';
-import '../../local_audio.dart';
-import '../../utils.dart';
-import '../common/fall_back_header_image.dart';
-import '../l10n/l10n.dart';
+import '../../../build_context_x.dart';
+import '../../../common.dart';
+import '../../../constants.dart';
+import '../../../data.dart';
+import '../../../get.dart';
+import '../../../library.dart';
+import '../../../local_audio.dart';
+import '../../../utils.dart';
+import '../../common/fall_back_header_image.dart';
+import '../../l10n/l10n.dart';
 
-class LikedAudioPage extends StatelessWidget {
-  const LikedAudioPage({
-    super.key,
-    this.likedLocalAudios,
-  });
+class LikedAudioPage extends StatelessWidget with WatchItMixin {
+  const LikedAudioPage({super.key});
 
   static Widget createIcon({
     required BuildContext context,
@@ -26,11 +24,10 @@ class LikedAudioPage extends StatelessWidget {
     );
   }
 
-  final Set<Audio>? likedLocalAudios;
-
   @override
   Widget build(BuildContext context) {
     final model = getIt<LocalAudioModel>();
+    final likedAudios = watchPropertyValue((LibraryModel m) => m.likedAudios);
 
     return AudioPage(
       classicTiles: false,
@@ -72,13 +69,13 @@ class LikedAudioPage extends StatelessWidget {
           right: 10,
         ),
         child: Text(
-          '${likedLocalAudios?.length} ${context.l10n.titles}',
+          '${likedAudios.length} ${context.l10n.titles}',
           style: getControlPanelStyle(context.t.textTheme),
         ),
       ),
       noResultMessage: Text(context.l10n.likedSongsSubtitle),
       noResultIcon: const AnimatedEmoji(AnimatedEmojis.twoHearts),
-      audios: likedLocalAudios ?? {},
+      audios: likedAudios,
       audioPageType: AudioPageType.likedAudio,
       pageId: kLikedAudiosPageId,
       title: Text(context.l10n.likedSongs),

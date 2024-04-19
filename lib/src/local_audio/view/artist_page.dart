@@ -4,16 +4,16 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common.dart';
-import '../../constants.dart';
-import '../../data.dart';
-import '../../get.dart';
-import '../../local_audio.dart';
-import '../../player.dart';
-import '../../settings.dart';
-import '../../utils.dart';
-import '../common/explore_online_popup.dart';
-import '../l10n/l10n.dart';
+import '../../../common.dart';
+import '../../../constants.dart';
+import '../../../data.dart';
+import '../../../get.dart';
+import '../../../local_audio.dart';
+import '../../../player.dart';
+import '../../../settings.dart';
+import '../../../utils.dart';
+import '../../common/explore_online_popup.dart';
+import '../../l10n/l10n.dart';
 import 'genre_page.dart';
 
 class ArtistPage extends StatelessWidget with WatchItMixin {

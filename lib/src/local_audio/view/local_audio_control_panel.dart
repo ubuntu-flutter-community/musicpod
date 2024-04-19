@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../build_context_x.dart';
-import '../../get.dart';
-import '../../library.dart';
-import '../../local_audio.dart';
-import '../../theme.dart';
-import '../l10n/l10n.dart';
+import '../../../build_context_x.dart';
+import '../../../get.dart';
+import '../../../library.dart';
+import '../../../local_audio.dart';
+import '../../../theme.dart';
+import '../../l10n/l10n.dart';
 import 'local_audio_view.dart';
 
 class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {

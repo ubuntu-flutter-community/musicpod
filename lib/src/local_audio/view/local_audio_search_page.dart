@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 import 'package:yaru/yaru.dart';
 
-import '../../app.dart';
-import '../../common.dart';
-import '../../constants.dart';
-import '../../get.dart';
-import '../../globals.dart';
-import '../../library.dart';
-import '../../local_audio.dart';
-import '../l10n/l10n.dart';
+import '../../../app.dart';
+import '../../../common.dart';
+import '../../../constants.dart';
+import '../../../get.dart';
+import '../../../globals.dart';
+import '../../../library.dart';
+import '../../../local_audio.dart';
+import '../../l10n/l10n.dart';
 import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 import 'local_audio_view.dart';

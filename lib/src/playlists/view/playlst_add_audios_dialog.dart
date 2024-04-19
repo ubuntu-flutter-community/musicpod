@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:yaru/yaru.dart';
 
-import '../../get.dart';
-import '../../library.dart';
-import '../../local_audio.dart';
-import '../common/audio_autocomplete.dart';
-import '../data/audio.dart';
+import '../../../get.dart';
+import '../../../library.dart';
+import '../../../local_audio.dart';
+import '../../common/audio_autocomplete.dart';
+import '../../data/audio.dart';
 
 class PlaylistAddAudiosDialog extends StatelessWidget {
   const PlaylistAddAudiosDialog({

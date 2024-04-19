@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data.dart';
+import '../../../data.dart';
 import 'album_view.dart';
 import 'artists_view.dart';
 import 'genres_view.dart';

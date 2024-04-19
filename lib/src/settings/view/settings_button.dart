@@ -8,12 +8,8 @@ import 'settings_dialog.dart';
 import '../settings_model.dart';
 
 class SettingsButton extends StatelessWidget {
-  const SettingsButton({super.key, required this.initLocalAudio});
+  const SettingsButton({super.key});
 
-  final Future<void> Function({
-    required void Function(List<String>) onFail,
-    bool forceInit,
-  }) initLocalAudio;
   @override
   Widget build(BuildContext context) {
     final model = getIt<SettingsModel>();
@@ -43,9 +39,7 @@ class SettingsButton extends StatelessWidget {
                 Navigator.of(context).pop();
                 showDialog(
                   context: context,
-                  builder: (_) => SettingsDialog(
-                    initLocalAudio: initLocalAudio,
-                  ),
+                  builder: (_) => const SettingsDialog(),
                 );
               },
             ),
