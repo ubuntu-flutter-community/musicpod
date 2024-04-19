@@ -1,11 +1,4 @@
-export 'src/player/bottom_player.dart';
-export 'src/player/player_main_controls.dart';
-export 'src/player/full_height_player.dart';
-export 'src/player/player_like_icon.dart';
 export 'src/player/player_model.dart';
 export 'src/player/player_service.dart';
-export 'src/player/player_track.dart';
 export 'src/player/player_utils.dart';
-export 'src/player/player_view.dart';
-export 'src/player/queue_button.dart';
-export 'src/player/volume_popup.dart';
+export 'src/player/view/player_view.dart';

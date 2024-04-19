@@ -11,9 +11,9 @@ import 'package:system_theme/system_theme.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../get.dart';
 import 'app.dart';
 import 'external_path.dart';
+import 'get.dart';
 import 'library.dart';
 import 'local_audio.dart';
 import 'notifications.dart';

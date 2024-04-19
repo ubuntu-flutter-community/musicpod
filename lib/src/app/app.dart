@@ -1,126 +1,144 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import '../../get.dart';
+import 'dart:ui';
 
+import 'package:flutter/material.dart';
+import 'package:system_theme/system_theme.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
-import '../../build_context_x.dart';
-import '../../constants.dart';
-import '../../external_path.dart';
+import '../../common.dart';
+import '../../get.dart';
 import '../../library.dart';
-import '../../patch_notes.dart';
-import '../../player.dart';
-import '../../settings.dart';
-import 'master_detail_page.dart';
+import '../../theme.dart';
+import '../l10n/l10n.dart';
+import '../settings/settings_model.dart';
+import 'view/scaffold.dart';
 
-class App extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const App({super.key});
+class YaruMusicPodApp extends StatelessWidget {
+  const YaruMusicPodApp({
+    super.key,
+  });
 
   @override
-  State<App> createState() => _AppState();
+  Widget build(BuildContext context) {
+    return YaruTheme(
+      builder: (context, yaru, child) {
+        return _MusicPodApp(
+          highContrastTheme: yaruHighContrastLight,
+          highContrastDarkTheme: yaruHighContrastDark,
+          lightTheme: yaru.theme?.copyWith(
+            actionIconTheme: ActionIconThemeData(
+              backButtonIconBuilder: (context) => Icon(Iconz().goBack),
+            ),
+            snackBarTheme: SnackBarThemeData(
+              behavior: SnackBarBehavior.floating,
+              actionTextColor: yaru.theme?.colorScheme.primary,
+            ),
+            cardColor: yaru.theme?.dividerColor.scale(
+              lightness: -0.01,
+            ),
+          ),
+          darkTheme: yaru.darkTheme?.copyWith(
+            actionIconTheme: ActionIconThemeData(
+              backButtonIconBuilder: (context) => Icon(Iconz().goBack),
+            ),
+            scaffoldBackgroundColor: const Color(0xFF1e1e1e),
+            dividerColor: darkDividerColor,
+            dividerTheme: const DividerThemeData(
+              color: darkDividerColor,
+              space: 1.0,
+              thickness: 0.0,
+            ),
+            snackBarTheme: SnackBarThemeData(
+              behavior: SnackBarBehavior.floating,
+              actionTextColor: yaru.theme?.colorScheme.primary,
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
-class _AppState extends State<App> with WidgetsBindingObserver {
+class MaterialMusicPodApp extends StatelessWidget {
+  const MaterialMusicPodApp({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SystemThemeBuilder(
+      builder: (context, accent) {
+        return _MusicPodApp(
+          accent: accent.accent,
+        );
+      },
+    );
+  }
+}
+
+class _MusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
+  const _MusicPodApp({
+    // ignore: unused_element
+    super.key,
+    this.lightTheme,
+    this.darkTheme,
+    this.accent,
+    this.highContrastTheme,
+    this.highContrastDarkTheme,
+  });
+
+  final ThemeData? lightTheme,
+      darkTheme,
+      highContrastTheme,
+      highContrastDarkTheme;
+  final Color? accent;
+
+  @override
+  State<_MusicPodApp> createState() => _MusicPodAppState();
+}
+
+class _MusicPodAppState extends State<_MusicPodApp> {
+  bool initialized = false;
+
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addObserver(this);
-    if (!isMobile) {
-      YaruWindow.of(context).onClose(
-        () async {
-          await getIt.reset();
-          return true;
-        },
-      );
-    }
-
-    _init();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.paused) {
-      await getIt.reset();
-    }
-  }
-
-  void _init() {
-    final libraryModel = getIt<LibraryModel>();
-    final appModel = getIt<AppModel>();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      // Init here for connectivity
-      appModel.init().then(
-        (_) {
-          // Init here for the index
-          libraryModel.init().then(
-            (_) {
-              // Init here for when musicpod is called with a file path
-              getIt<ExternalPathService>().init();
-              // Init here for patch notes dialog
-              if (getIt<SettingsModel>().recentPatchNotesDisposed == false) {
-                showPatchNotes(context);
-              }
-            },
-          );
-        },
-      );
-    });
+    getIt<LibraryService>().init().then(
+      (value) {
+        if (!initialized) {
+          setState(() => initialized = value);
+        }
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final playerToTheRight = context.m.size.width > kSideBarThreshHold;
-
-    final lockSpace = watchPropertyValue((AppModel m) => m.lockSpace);
-    final isFullScreen = watchPropertyValue((AppModel m) => m.fullScreen);
-    final playerModel = getIt<PlayerModel>();
-
-    return KeyboardListener(
-      focusNode: FocusNode(),
-      onKeyEvent: (value) async {
-        if (value.runtimeType == KeyDownEvent &&
-            value.logicalKey == LogicalKeyboardKey.space) {
-          if (!lockSpace) {
-            playerModel.playOrPause();
-          }
-        }
-      },
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    const Expanded(child: MasterDetailPage()),
-                    if (!playerToTheRight)
-                      const PlayerView(mode: PlayerViewMode.bottom),
-                  ],
-                ),
-              ),
-              if (playerToTheRight)
-                const SizedBox(
-                  width: kSideBarPlayerWidth,
-                  child: PlayerView(mode: PlayerViewMode.sideBar),
-                ),
-            ],
+    final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.values[themeIndex],
+      highContrastTheme: widget.highContrastTheme,
+      highContrastDarkTheme: widget.highContrastDarkTheme,
+      theme: widget.lightTheme ??
+          m3Theme(color: widget.accent ?? Colors.greenAccent),
+      darkTheme: widget.darkTheme ??
+          m3Theme(
+            brightness: Brightness.dark,
+            color: widget.accent ?? Colors.greenAccent,
           ),
-          if (isFullScreen == true)
-            const Scaffold(
-              body: PlayerView(mode: PlayerViewMode.fullWindow),
-            ),
-        ],
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: supportedLocales,
+      onGenerateTitle: (context) => 'MusicPod',
+      home: initialized ? const MusicPodScaffold() : const SplashScreen(),
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: {
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.touch,
+          PointerDeviceKind.stylus,
+          PointerDeviceKind.unknown,
+          PointerDeviceKind.trackpad,
+        },
       ),
     );
   }
