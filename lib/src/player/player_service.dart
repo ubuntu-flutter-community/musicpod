@@ -16,7 +16,6 @@ import '../../data.dart';
 import '../../library.dart';
 import '../../string_x.dart';
 import '../../utils.dart';
-import 'my_audio_handler.dart';
 
 class PlayerService {
   PlayerService({
@@ -29,7 +28,7 @@ class PlayerService {
 
   MPRIS? _mpris;
   SMTCWindows? _smtc;
-  MyAudioHandler? _audioService;
+  _AudioHandler? _audioService;
 
   StreamSubscription<PressedButton>? _smtcSub;
   StreamSubscription<bool>? _isPlayingSub;
@@ -564,7 +563,7 @@ class PlayerService {
         androidNotificationChannelName: 'MusicPod',
       ),
       builder: () {
-        return MyAudioHandler(
+        return _AudioHandler(
           onPlay: playOrPause,
           onNext: playNext,
           onPause: pause,
@@ -744,5 +743,46 @@ class PlayerService {
     } on Exception catch (_) {
       return null;
     }
+  }
+}
+
+class _AudioHandler extends BaseAudioHandler with SeekHandler {
+  final Future<void> Function() onPlay;
+  final Future<void> Function() onPause;
+  final Future<void> Function() onNext;
+  final Future<void> Function() onPrevious;
+  final Future<void> Function(Duration position) onSeek;
+
+  _AudioHandler({
+    required this.onPlay,
+    required this.onPause,
+    required this.onNext,
+    required this.onPrevious,
+    required this.onSeek,
+  });
+
+  @override
+  Future<void> play() async {
+    await onPlay();
+  }
+
+  @override
+  Future<void> pause() async {
+    await onPause();
+  }
+
+  @override
+  Future<void> skipToNext() async {
+    await onNext();
+  }
+
+  @override
+  Future<void> skipToPrevious() async {
+    await onPrevious();
+  }
+
+  @override
+  Future<void> seek(Duration position) async {
+    await onSeek(position);
   }
 }

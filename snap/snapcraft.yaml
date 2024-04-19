@@ -1,4 +1,5 @@
 name: musicpod
+title: MusicPod
 version: git
 summary: Music, podcast and internet radio player
 description: Play local audio files, browse podcasts online or listen to internet radio stations.

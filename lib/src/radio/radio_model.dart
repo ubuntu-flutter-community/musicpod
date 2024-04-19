@@ -9,7 +9,7 @@ import '../../data.dart';
 import '../../l10n.dart';
 import '../../library.dart';
 import '../../string_x.dart';
-import 'radio_search.dart';
+import 'view/radio_search.dart';
 import 'radio_service.dart';
 
 class RadioModel extends SafeChangeNotifier {
