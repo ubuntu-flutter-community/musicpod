@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
@@ -274,17 +272,11 @@ class _RadioPageControlButton extends StatelessWidget {
             tooltip: context.l10n.copyToClipBoard,
             onPressed: () {
               final text = getIt<LibraryModel>().radioHistoryList;
-              Clipboard.setData(
-                ClipboardData(
+              showSnackBar(
+                context: context,
+                content: CopyClipboardContent(
                   text: text,
-                ),
-              );
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: CopyClipboardContent(
-                    text: text,
-                    showActions: false,
-                  ),
+                  showActions: false,
                 ),
               );
             },
