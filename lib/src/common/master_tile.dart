@@ -7,6 +7,7 @@ import '../../constants.dart';
 import '../../get.dart';
 import '../../library.dart';
 import '../../player.dart';
+import '../../playlists.dart';
 
 class MasterTile extends StatelessWidget {
   const MasterTile({

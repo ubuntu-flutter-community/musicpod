@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../common.dart';
-import '../../constants.dart';
-import '../../data.dart';
-import '../../get.dart';
-import '../../utils.dart';
+import '../../../common.dart';
+import '../../../constants.dart';
+import '../../../data.dart';
+import '../../../get.dart';
+import '../../../utils.dart';
 import 'album_page.dart';
 import 'artist_page.dart';
-import 'local_audio_model.dart';
+import '../local_audio_model.dart';
 
 class TitlesView extends StatelessWidget {
   const TitlesView({

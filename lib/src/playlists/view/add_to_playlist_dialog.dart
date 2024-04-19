@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common.dart';
-import '../../data.dart';
-import '../../globals.dart';
-import '../../l10n.dart';
-import '../../library.dart';
-import '../../theme.dart';
+import '../../../common.dart';
+import '../../../data.dart';
+import '../../../globals.dart';
+import '../../../l10n.dart';
+import '../../../library.dart';
+import '../../../theme.dart';
 
 class AddToPlaylistDialog extends StatelessWidget {
   const AddToPlaylistDialog({

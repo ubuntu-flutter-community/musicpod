@@ -8,6 +8,7 @@ import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../../library.dart';
 import '../../../local_audio.dart';
+import '../../../playlists.dart';
 import '../../../podcasts.dart';
 import '../../../radio.dart';
 import '../../../settings.dart';
@@ -114,9 +115,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
       _MasterItem(
         titleBuilder: (context) => Text(context.l10n.likedSongs),
         pageId: kLikedAudiosPageId,
-        pageBuilder: (context) => LikedAudioPage(
-          likedLocalAudios: libraryModel.likedAudios,
-        ),
+        pageBuilder: (context) => const LikedAudioPage(),
         subtitleBuilder: (context) => Text(context.l10n.playlist),
         iconBuilder: (context, selected) =>
             LikedAudioPage.createIcon(context: context, selected: selected),
@@ -126,10 +125,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
           titleBuilder: (context) => Text(playlist.key),
           subtitleBuilder: (context) => Text(context.l10n.playlist),
           pageId: playlist.key,
-          pageBuilder: (context) => PlaylistPage(
-            playlist: playlist,
-            libraryModel: libraryModel,
-          ),
+          pageBuilder: (context) => PlaylistPage(playlist: playlist),
           iconBuilder: (context, selected) => SideBarFallBackImage(
             color: getAlphabetColor(playlist.key),
             child: Icon(

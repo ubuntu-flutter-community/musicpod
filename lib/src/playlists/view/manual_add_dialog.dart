@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../get.dart';
+import '../../../get.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../build_context_x.dart';
-import '../../common.dart';
-import '../../data.dart';
-import '../../external_path.dart';
-import '../../globals.dart';
-import '../../library.dart';
-import '../../podcasts.dart';
-import '../../theme.dart';
-import '../l10n/l10n.dart';
+import '../../../build_context_x.dart';
+import '../../../common.dart';
+import '../../../data.dart';
+import '../../../external_path.dart';
+import '../../../globals.dart';
+import '../../../library.dart';
+import '../../../podcasts.dart';
+import '../../../theme.dart';
+import '../../l10n/l10n.dart';
 
 class ManualAddDialog extends StatelessWidget {
   const ManualAddDialog({super.key});

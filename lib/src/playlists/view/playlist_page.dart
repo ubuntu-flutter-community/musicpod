@@ -4,27 +4,26 @@ import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
-import '../../common.dart';
-import '../../constants.dart';
-import '../../data.dart';
-import '../../get.dart';
-import '../../library.dart';
-import '../../local_audio.dart';
-import '../../utils.dart';
-import '../common/fall_back_header_image.dart';
-import '../l10n/l10n.dart';
-import '../theme.dart';
+import '../../../common.dart';
+import '../../../constants.dart';
+import '../../../data.dart';
+import '../../../get.dart';
+import '../../../library.dart';
+import '../../../local_audio.dart';
+import '../../../playlists.dart';
+import '../../../utils.dart';
+import '../../common/fall_back_header_image.dart';
+import '../../l10n/l10n.dart';
+import '../../theme.dart';
 import 'playlst_add_audios_dialog.dart';
 
 class PlaylistPage extends StatelessWidget {
   const PlaylistPage({
     super.key,
     required this.playlist,
-    required this.libraryModel,
   });
 
   final MapEntry<String, Set<Audio>> playlist;
-  final LibraryModel libraryModel;
 
   @override
   Widget build(BuildContext context) {

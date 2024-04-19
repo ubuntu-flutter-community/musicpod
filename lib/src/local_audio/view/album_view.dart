@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../common.dart';
-import '../../constants.dart';
-import '../../get.dart';
-import '../../player.dart';
-import '../../utils.dart';
-import '../data/audio.dart';
-import '../l10n/l10n.dart';
+import '../../../common.dart';
+import '../../../constants.dart';
+import '../../../get.dart';
+import '../../../player.dart';
+import '../../../utils.dart';
+import '../../data/audio.dart';
+import '../../l10n/l10n.dart';
 import 'album_page.dart';
-import 'local_audio_model.dart';
+import '../local_audio_model.dart';
 
 class AlbumsView extends StatelessWidget {
   const AlbumsView({

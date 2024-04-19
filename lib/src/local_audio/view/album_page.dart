@@ -3,14 +3,14 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import '../../build_context_x.dart';
-import '../../common.dart';
-import '../../data.dart';
-import '../../get.dart';
-import '../../library.dart';
-import '../../local_audio.dart';
-import '../common/explore_online_popup.dart';
-import '../l10n/l10n.dart';
+import '../../../build_context_x.dart';
+import '../../../common.dart';
+import '../../../data.dart';
+import '../../../get.dart';
+import '../../../library.dart';
+import '../../../local_audio.dart';
+import '../../common/explore_online_popup.dart';
+import '../../l10n/l10n.dart';
 
 class AlbumPage extends StatelessWidget {
   const AlbumPage({

@@ -6,9 +6,9 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
+import '../../playlists.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
-import '../library/add_to_playlist_dialog.dart';
 
 class LikeButton extends StatelessWidget {
   const LikeButton({

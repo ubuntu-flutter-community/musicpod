@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../build_context_x.dart';
-import '../l10n/l10n.dart';
+import '../../../build_context_x.dart';
+import '../../l10n/l10n.dart';
 
 class FailedImportsContent extends StatelessWidget {
   const FailedImportsContent({

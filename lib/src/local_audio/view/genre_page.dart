@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common.dart';
-import '../../data.dart';
-import '../../get.dart';
-import '../../globals.dart';
-import '../../l10n.dart';
-import '../../local_audio.dart';
-import '../../radio.dart';
+import '../../../common.dart';
+import '../../../data.dart';
+import '../../../get.dart';
+import '../../../globals.dart';
+import '../../../l10n.dart';
+import '../../../local_audio.dart';
+import '../../../radio.dart';
 
 class GenrePage extends StatelessWidget {
   const GenrePage({required this.genre, super.key});
