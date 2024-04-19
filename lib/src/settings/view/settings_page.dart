@@ -1,10 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
+import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
-import 'package:path/path.dart' as p;
 
 import '../../../app.dart';
 import '../../../build_context_x.dart';
@@ -20,12 +19,7 @@ import '../settings_model.dart';
 import 'theme_tile.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key, required this.initLocalAudio});
-
-  final Future<void> Function({
-    required void Function(List<String>) onFail,
-    bool forceInit,
-  }) initLocalAudio;
+  const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +32,11 @@ class SettingsPage extends StatelessWidget {
         ),
         Expanded(
           child: ListView(
-            children: [
-              const _ThemeSection(),
-              const _PodcastSection(),
-              _LocalAudioSection(initLocalAudio: initLocalAudio),
-              const _AboutSection(),
+            children: const [
+              _ThemeSection(),
+              _PodcastSection(),
+              _LocalAudioSection(),
+              _AboutSection(),
             ],
           ),
         ),
@@ -207,22 +201,18 @@ class _PodcastSectionState extends State<_PodcastSection> {
 }
 
 class _LocalAudioSection extends StatelessWidget with WatchItMixin {
-  const _LocalAudioSection({required this.initLocalAudio});
-
-  final Future<void> Function({
-    required void Function(List<String>) onFail,
-    bool forceInit,
-  }) initLocalAudio;
+  const _LocalAudioSection();
 
   @override
   Widget build(BuildContext context) {
     final settingsModel = getIt<SettingsModel>();
+    final localAudioModel = getIt<LocalAudioModel>();
     final directory =
         watchPropertyValue((SettingsModel m) => m.directory ?? '');
 
     Future<void> onDirectorySelected(String? directoryPath) async {
       settingsModel.setDirectory(directoryPath).then(
-            (value) async => await initLocalAudio(
+            (value) async => await localAudioModel.init(
               forceInit: true,
               onFail: (failedImports) {
                 if (settingsModel.neverShowFailedImports) return;

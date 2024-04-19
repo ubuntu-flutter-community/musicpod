@@ -21,7 +21,6 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final libraryModel = watchIt<LibraryModel>();
-    final localAudioModel = getIt<LocalAudioModel>();
     final masterItems = _createMasterItems(libraryModel: libraryModel);
 
     return Scaffold(
@@ -38,12 +37,10 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
             style: YaruTitleBarStyle.undecorated,
             adaptive: false,
             title: const Text('MusicPod'),
-            actions: [
+            actions: const [
               Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: SettingsButton(
-                  initLocalAudio: localAudioModel.init,
-                ),
+                padding: EdgeInsets.only(right: 10),
+                child: SettingsButton(),
               ),
             ],
           ),
