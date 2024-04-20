@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
@@ -13,8 +11,10 @@ import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../../local_audio.dart';
 import '../../../string_x.dart';
+import '../../../theme_data_x.dart';
 import '../../../theme_mode_x.dart';
 import '../../globals.dart';
+import '../../theme.dart';
 import '../settings_model.dart';
 import 'theme_tile.dart';
 
@@ -283,41 +283,55 @@ class _AboutTile extends StatefulWidget with WatchItStatefulWidgetMixin {
 }
 
 class _AboutTileState extends State<_AboutTile> {
-  late Future<String?> _onlineVersion;
-
   @override
   void initState() {
     super.initState();
-    final isOnline = getIt<AppModel>().isOnline;
-
-    _onlineVersion = !isOnline || Platform.isLinux
-        ? Future.value(null)
-        : getIt<SettingsModel>().getOnlineVersion();
+    final settingsModel = getIt<SettingsModel>();
+    if (settingsModel.allowManualUpdate && getIt<AppModel>().isOnline) {
+      settingsModel.checkForUpdate();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final model = getIt<SettingsModel>();
+    final theme = context.t;
+    final updateAvailable =
+        watchPropertyValue((SettingsModel m) => m.updateAvailable);
+    final onlineVersion =
+        watchPropertyValue((SettingsModel m) => m.onlineVersion);
     final currentVersion = watchPropertyValue((SettingsModel m) => m.version);
-    return YaruTile(
-      title: FutureBuilder(
-        future: _onlineVersion,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData ||
-              snapshot.data == null ||
-              (currentVersion?.isNotEmpty == true &&
-                  model.getExtendedVersionNumber(snapshot.data!) <=
-                      model.getExtendedVersionNumber(currentVersion!))) {
-            return Text('${context.l10n.version}: ${currentVersion ?? ''}');
-          }
 
-          return TapAbleText(
-            text: '${context.l10n.updateAvailable}: ${snapshot.data}',
-            style: TextStyle(color: context.t.colorScheme.success),
-            onTap: () => launchUrl(Uri.parse(p.join(kRepoUrl, 'releases'))),
-          );
-        },
-      ),
+    return YaruTile(
+      title: updateAvailable == null
+          ? Center(
+              child: SizedBox.square(
+                dimension: yaruStyled ? kYaruTitleBarItemHeight : 40,
+                child: const Progress(
+                  padding: EdgeInsets.all(10),
+                ),
+              ),
+            )
+          : TapAbleText(
+              text: updateAvailable == true
+                  ? '${context.l10n.updateAvailable}: $onlineVersion'
+                  : currentVersion ?? context.l10n.unknown,
+              style: updateAvailable == true
+                  ? TextStyle(
+                      color: context.t.colorScheme.success
+                          .scale(lightness: theme.isLight ? 0 : 0.3),
+                    )
+                  : null,
+              onTap: () => launchUrl(
+                Uri.parse(
+                  p.join(
+                    kRepoUrl,
+                    'releases',
+                    'tag',
+                    'onlineVersion',
+                  ),
+                ),
+              ),
+            ),
       trailing: OutlinedButton(
         onPressed: () => settingsNavigatorKey.currentState?.pushNamed('/about'),
         child: Text(context.l10n.contributors),

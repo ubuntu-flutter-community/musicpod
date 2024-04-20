@@ -29,6 +29,7 @@ class SettingsModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _recentPatchNotesDisposedChangedSub;
   StreamSubscription<bool>? _useArtistGridViewChangedSub;
 
+  bool get allowManualUpdate => _service.allowManualUpdates;
   String? get appName => _service.appName;
   String? get packageName => _service.packageName;
   String? get version => _service.version;
@@ -118,7 +119,27 @@ class SettingsModel extends SafeChangeNotifier {
         .toList());
   }
 
-  int getExtendedVersionNumber(String version) {
+  bool? _updateAvailable;
+  bool? get updateAvailable => _updateAvailable;
+  String? _onlineVersion;
+  String? get onlineVersion => _onlineVersion;
+  Future<void> checkForUpdate() async {
+    _updateAvailable == null;
+    notifyListeners();
+
+    _onlineVersion = await getOnlineVersion();
+    final onlineVersion = getExtendedVersionNumber(_onlineVersion) ?? 0;
+    final currentVersion = getExtendedVersionNumber(version) ?? 0;
+    if (onlineVersion > currentVersion) {
+      _updateAvailable = true;
+    } else {
+      _updateAvailable = false;
+    }
+    notifyListeners();
+  }
+
+  int? getExtendedVersionNumber(String? version) {
+    if (version == null) return null;
     List versionCells = version.split('.');
     versionCells = versionCells.map((i) => int.parse(i)).toList();
     return versionCells[0] * 100000 + versionCells[1] * 1000 + versionCells[2];

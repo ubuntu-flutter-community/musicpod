@@ -8,6 +8,10 @@ import '../../patch_notes.dart';
 import '../../utils.dart';
 
 class SettingsService {
+  SettingsService({required this.allowManualUpdates});
+
+  final bool allowManualUpdates;
+
   String? _appName;
   String? get appName => _appName;
   String? _packageName;

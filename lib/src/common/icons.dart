@@ -20,6 +20,14 @@ class Iconz {
             : Icons.menu;
   }
 
+  IconData get updateAvailable {
+    return yaruStyled
+        ? YaruIcons.update_available
+        : appleStyled
+            ? CupertinoIcons.arrow_up_circle
+            : Icons.arrow_circle_up;
+  }
+
   IconData get check => yaruStyled
       ? YaruIcons.checkmark
       : appleStyled

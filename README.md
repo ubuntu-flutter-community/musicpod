@@ -106,7 +106,7 @@ If you want to contribute code, please create an issue first.
 
 Test mocks are generated with [Mockito](https://github.com/dart-lang/mockito). You need to run the `build_runner` command in order to re-generate mocks, in case you changed the signatures of service methods.
 
-`flutter pub run build_runner build`
+`dart run build_runner build`
 
 ## Boring developer things
 
