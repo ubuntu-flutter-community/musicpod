@@ -31,11 +31,9 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
     final defaultColor = theme.colorScheme.onSurface;
     final queueLength = watchPropertyValue((PlayerModel m) => m.queue.length);
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
-    final showShuffleAndRepeat =
-        queueLength < 2 ? false : (audio?.audioType != AudioType.podcast);
-    final showSkipButtons = audio?.audioType == AudioType.local
-        ? true
-        : (queueLength < 2 ? false : audio?.audioType == AudioType.podcast);
+    final showShuffleAndRepeat = audio?.audioType == AudioType.local;
+    final showSkipButtons =
+        queueLength > 1 || audio?.audioType == AudioType.local;
     final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
 
@@ -43,10 +41,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
       if (showShuffleAndRepeat)
         ShuffleButton(active: active)
       else if (audio?.audioType == AudioType.podcast)
-        SeekButton(
-          active: active,
-          forward: false,
-        ),
+        SeekButton(active: active, forward: false),
       _flex,
       if (showSkipButtons)
         IconButton(
@@ -69,16 +64,14 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
         IconButton(
           tooltip: context.l10n.next,
           color: defaultColor,
-          onPressed: !active ? null : () => playNext(),
+          onPressed: !active || queueLength < 2 ? null : () => playNext(),
           icon: Icon(Iconz().skipForward),
         ),
       _flex,
       if (showShuffleAndRepeat)
         RepeatButton(active: active)
       else if (audio?.audioType == AudioType.podcast)
-        SeekButton(
-          active: active,
-        ),
+        SeekButton(active: active),
     ];
 
     return Row(

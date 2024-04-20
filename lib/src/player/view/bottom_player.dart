@@ -38,8 +38,10 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
 
     final active = audio?.path != null || isOnline;
-    final showQueueButton =
-        watchPropertyValue((PlayerModel m) => m.queue.length > 1);
+    final showQueueButton = watchPropertyValue(
+      (PlayerModel m) =>
+          m.queue.length > 1 || audio?.audioType == AudioType.local,
+    );
 
     final bottomPlayerImage = ClipRRect(
       borderRadius: BorderRadius.circular(4),
