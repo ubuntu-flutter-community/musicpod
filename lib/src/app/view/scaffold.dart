@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../../app.dart';
 import '../../../build_context_x.dart';
 import '../../../constants.dart';
 import '../../../external_path.dart';
@@ -11,6 +10,7 @@ import '../../../library.dart';
 import '../../../patch_notes.dart';
 import '../../../player.dart';
 import '../../../settings.dart';
+import '../app_model.dart';
 import 'master_detail_page.dart';
 
 class MusicPodScaffold extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -55,12 +55,16 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold>
   void _init() {
     final libraryModel = getIt<LibraryModel>();
     final appModel = getIt<AppModel>();
+    final settingsModel = getIt<SettingsModel>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       // Init here for connectivity
       appModel.init().then(
         (_) {
+          if (appModel.isOnline && settingsModel.allowManualUpdate) {
+            settingsModel.checkForUpdate();
+          }
           // Init here for the index
           libraryModel.init().then(
             (_) {

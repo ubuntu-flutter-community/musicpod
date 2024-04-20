@@ -42,7 +42,9 @@ Future<void> main(List<String> args) async {
   }
 
   // Register services
-  final settingsService = SettingsService();
+  // TODO: when the app is in appstore/windowsstore enable/disable this only via args
+  final settingsService =
+      SettingsService(allowManualUpdates: Platform.isLinux ? false : true);
   await settingsService.init();
   getIt.registerSingleton<SettingsService>(
     settingsService,
