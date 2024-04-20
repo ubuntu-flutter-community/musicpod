@@ -53,6 +53,7 @@ class RadioService {
     String? name,
     String? state,
     String? tag,
+    String? language,
     int limit = 100,
   }) async {
     if (_radioBrowserApi == null) {
@@ -78,6 +79,9 @@ class RadioService {
       } else if (state?.isEmpty == false) {
         response = await _radioBrowserApi!
             .getStationsByState(state: state!, parameters: parameters);
+      } else if (language?.isEmpty == false) {
+        response = await _radioBrowserApi!
+            .getStationsByLanguage(language: language!, parameters: parameters);
       }
     } on Exception catch (_) {}
     return response?.items ?? [];

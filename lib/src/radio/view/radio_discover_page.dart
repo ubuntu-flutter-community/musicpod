@@ -9,6 +9,7 @@ import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../l10n.dart';
 import '../../../radio.dart';
+import '../../common/language_autocomplete.dart';
 import '../../library/library_model.dart';
 import 'radio_control_panel.dart';
 
@@ -32,6 +33,7 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
 
     final country = watchPropertyValue((RadioModel m) => m.country);
     final tag = watchPropertyValue((RadioModel m) => m.tag);
+    final language = watchPropertyValue((RadioModel m) => m.language);
 
     final Widget input = switch (radioSearch) {
       RadioSearch.country => CountryAutoComplete(
@@ -86,6 +88,14 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
             ),
           ],
         ),
+      RadioSearch.language => LanguageAutoComplete(
+          value: language,
+          onSelected: (language) {
+            model.setLanguage(language);
+          },
+          addFav: (language) {},
+          removeFav: (language) {},
+        ),
       _ => SearchingBar(
           hintText: '${context.l10n.search}: ${context.l10n.radio}',
           text: searchQuery,
@@ -115,11 +125,7 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
       body: AdaptiveContainer(
         child: Column(
           children: [
-            const Row(
-              children: [
-                RadioControlPanel(),
-              ],
-            ),
+            const RadioControlPanel(),
             const SizedBox(
               height: 15,
             ),

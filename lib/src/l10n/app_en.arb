@@ -310,5 +310,6 @@
     "searchOnline": "Search online",
     "shareThisEpisode": "Share this episode",
     "downloadEpisode": "Download episode",
-    "removeDownloadEpisode": "Remove episode download"
+    "removeDownloadEpisode": "Remove episode download",
+    "language": "Language"
 }
