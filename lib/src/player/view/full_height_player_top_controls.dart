@@ -28,9 +28,11 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final showQueueButton =
-        watchPropertyValue((PlayerModel m) => m.queue.length > 1);
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
+    final showQueueButton = watchPropertyValue(
+      (PlayerModel m) =>
+          m.queue.length > 1 || audio?.audioType == AudioType.local,
+    );
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo == true);
     final playerToTheRight = context.m.size.width > kSideBarThreshHold;
     final fullScreen = watchPropertyValue((AppModel m) => m.fullScreen);
