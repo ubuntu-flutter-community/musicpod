@@ -8,42 +8,44 @@ import '../../../data.dart';
 import '../../../get.dart';
 import '../../../library.dart';
 import '../../../theme.dart';
+import '../../app/app_model.dart';
+import '../../common/language_autocomplete.dart';
+import '../../settings/settings_model.dart';
+import '../podcast_model.dart';
 import 'podcast_genre_autocomplete.dart';
 
-class PodcastsControlPanel extends StatelessWidget {
-  const PodcastsControlPanel({
-    super.key,
-    required this.limit,
-    required this.setLimit,
-    required this.search,
-    required this.searchQuery,
-    required this.setCountry,
-    required this.country,
-    required this.sortedCountries,
-    required this.buttonStyle,
-    required this.setPodcastGenre,
-    required this.podcastGenre,
-    required this.textStyle,
-    required this.sortedGenres,
-  });
-
-  final int limit;
-  final void Function(int? value) setLimit;
-  final void Function({String? searchQuery}) search;
-  final String? searchQuery;
-  final void Function(Country? value) setCountry;
-  final Country? country;
-  final List<Country> sortedCountries;
-  final ButtonStyle buttonStyle;
-  final void Function(PodcastGenre value) setPodcastGenre;
-  final PodcastGenre podcastGenre;
-  final TextStyle? textStyle;
-  final List<PodcastGenre> sortedGenres;
+class PodcastsControlPanel extends StatelessWidget with WatchItMixin {
+  const PodcastsControlPanel({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
+    if (!isOnline) return const OfflinePage();
+
     final libraryModel = getIt<LibraryModel>();
     final theme = context.t;
+    final model = getIt<PodcastModel>();
+    final searchQuery = watchPropertyValue((PodcastModel m) => m.searchQuery);
+    final country = watchPropertyValue((PodcastModel m) => m.country);
+
+    void setCountry(Country? country) {
+      model.setCountry(country);
+      libraryModel.setLastCountryCode(country?.code);
+    }
+
+    final podcastGenre = watchPropertyValue((PodcastModel m) => m.podcastGenre);
+    final sortedGenrez = watchPropertyValue((PodcastModel m) => m.sortedGenres);
+    final setPodcastGenre = model.setPodcastGenre;
+    final usePodcastIndex =
+        watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
+
+    final sortedGenres = usePodcastIndex
+        ? sortedGenrez.where((e) => !e.name.contains('XXXITunesOnly')).toList()
+        : sortedGenrez
+            .where((e) => !e.name.contains('XXXPodcastIndexOnly'))
+            .toList();
+    final language = watchPropertyValue((PodcastModel m) => m.language);
+
     final fillColor = theme.chipTheme.selectedColor;
     final contentPadding = yaruStyled
         ? const EdgeInsets.only(
@@ -60,53 +62,92 @@ class PodcastsControlPanel extends StatelessWidget {
         spacing: 10,
         runSpacing: 20,
         children: [
-          CountryAutoComplete(
-            contentPadding: contentPadding,
-            fillColor: fillColor,
-            filled: true,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(100),
-              borderSide: yaruStyled
-                  ? BorderSide.none
-                  : BorderSide(
-                      color: theme.colorScheme.outline,
-                      width: 1.3,
-                      strokeAlign: 1,
+          usePodcastIndex
+              ? LanguageAutoComplete(
+                  contentPadding: contentPadding,
+                  fillColor: language != null
+                      ? fillColor
+                      : yaruStyled
+                          ? theme.dividerColor
+                          : null,
+                  filled: language != null,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: yaruStyled
+                        ? BorderSide.none
+                        : BorderSide(
+                            color: theme.colorScheme.outline,
+                            width: 1.3,
+                            strokeAlign: 1,
+                          ),
+                  ),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                  isDense: true,
+                  width: 150,
+                  height: chipHeight,
+                  value: language,
+                  addFav: (language) {},
+                  removeFav: (language) {},
+                  onSelected: (language) {
+                    model.setCountry(null);
+                    model.setLanguage(language);
+                    model.setLimit(20);
+                    model.search(searchQuery: searchQuery);
+                  },
+                )
+              : CountryAutoComplete(
+                  contentPadding: contentPadding,
+                  fillColor: fillColor,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: yaruStyled
+                        ? BorderSide.none
+                        : BorderSide(
+                            color: theme.colorScheme.outline,
+                            width: 1.3,
+                            strokeAlign: 1,
+                          ),
+                  ),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                  isDense: true,
+                  width: 150,
+                  height: chipHeight,
+                  countries: [
+                    ...[
+                      ...Country.values,
+                    ].where(
+                      (e) =>
+                          libraryModel.favCountryCodes.contains(e.code) == true,
                     ),
-            ),
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-            isDense: true,
-            width: 150,
-            height: chipHeight,
-            countries: [
-              ...[
-                ...Country.values,
-              ].where(
-                (e) => libraryModel.favCountryCodes.contains(e.code) == true,
-              ),
-              ...[...Country.values].where(
-                (e) => libraryModel.favCountryCodes.contains(e.code) == false,
-              ),
-            ]..remove(Country.none),
-            onSelected: (country) {
-              setCountry(country);
-              setLimit(20);
+                    ...[...Country.values].where(
+                      (e) =>
+                          libraryModel.favCountryCodes.contains(e.code) ==
+                          false,
+                    ),
+                  ]..remove(Country.none),
+                  onSelected: (country) {
+                    model.setLanguage(null);
+                    setCountry(country);
+                    model.setLimit(20);
 
-              search(searchQuery: searchQuery);
-            },
-            value: country,
-            addFav: (v) {
-              if (country?.code == null) return;
-              libraryModel.addFavCountry(v!.code);
-            },
-            removeFav: (v) {
-              if (country?.code == null) return;
-              libraryModel.removeFavCountry(v!.code);
-            },
-            favs: libraryModel.favCountryCodes,
-          ),
+                    model.search(searchQuery: searchQuery);
+                  },
+                  value: country,
+                  addFav: (v) {
+                    if (country?.code == null) return;
+                    libraryModel.addFavCountry(v!.code);
+                  },
+                  removeFav: (v) {
+                    if (country?.code == null) return;
+                    libraryModel.removeFavCountry(v!.code);
+                  },
+                  favs: libraryModel.favCountryCodes,
+                ),
           PodcastGenreAutoComplete(
             contentPadding: contentPadding,
             fillColor: podcastGenre != PodcastGenre.all
@@ -136,10 +177,10 @@ class PodcastsControlPanel extends StatelessWidget {
               if (podcastGenre != null) {
                 setPodcastGenre(podcastGenre);
 
-                setLimit(20);
+                model.setLimit(20);
               }
 
-              search(searchQuery: searchQuery);
+              model.search(searchQuery: searchQuery);
             },
             value: podcastGenre,
 

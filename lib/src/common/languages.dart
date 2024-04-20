@@ -56,7 +56,7 @@ class Languages {
       SimpleLanguage('ny', 'Chewa (Nyanja)');
 
   static SimpleLanguage get cantonese => SimpleLanguage('yue', 'Cantonese');
-  static SimpleLanguage get chinese => SimpleLanguage('zh_Hant', 'Chinese');
+  static SimpleLanguage get chinese => SimpleLanguage('zh-CN', 'Chinese');
 
   static SimpleLanguage get churchSlavonic =>
       SimpleLanguage('cu', 'Church Slavonic');

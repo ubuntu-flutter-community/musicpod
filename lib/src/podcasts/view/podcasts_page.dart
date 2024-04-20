@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
@@ -11,9 +9,7 @@ import '../../../data.dart';
 import '../../../get.dart';
 import '../../../podcasts.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../player/player_model.dart';
-import '../../settings/settings_model.dart';
 import 'podcasts_collection_body.dart';
 import 'podcasts_control_panel.dart';
 import 'podcasts_discover_grid.dart';
@@ -50,67 +46,21 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
     final searchActive = watchPropertyValue((PodcastModel m) => m.searchActive);
     final setSearchActive = model.setSearchActive;
-    final theme = context.t;
-    final libraryModel = getIt<LibraryModel>();
 
     final limit = watchPropertyValue((PodcastModel m) => m.limit);
     final setLimit = model.setLimit;
 
     final search = model.search;
     final setSearchQuery = model.setSearchQuery;
-    final textStyle =
-        theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
-    final buttonStyle = TextButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(100),
-      ),
-    );
 
     final searchQuery = watchPropertyValue((PodcastModel m) => m.searchQuery);
-
-    final country = watchPropertyValue((PodcastModel m) => m.country);
-    final sortedCountries =
-        watchPropertyValue((PodcastModel m) => m.sortedCountries);
-
     final checkingForUpdates =
         watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
-
-    void setCountry(Country? country) {
-      model.setCountry(country);
-      libraryModel.setLastCountryCode(country?.code);
-    }
-
-    final podcastGenre = watchPropertyValue((PodcastModel m) => m.podcastGenre);
-    final sortedGenres = watchPropertyValue((PodcastModel m) => m.sortedGenres);
-    final setPodcastGenre = model.setPodcastGenre;
-    final usePodcastIndex =
-        watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
-
-    final controlPanel = PodcastsControlPanel(
-      limit: limit,
-      setLimit: setLimit,
-      search: search,
-      searchQuery: searchQuery,
-      setCountry: setCountry,
-      country: country,
-      sortedCountries: sortedCountries,
-      buttonStyle: buttonStyle,
-      setPodcastGenre: setPodcastGenre,
-      podcastGenre: podcastGenre,
-      textStyle: textStyle,
-      sortedGenres: usePodcastIndex
-          ? sortedGenres
-              .where((e) => !e.name.contains('XXXITunesOnly'))
-              .toList()
-          : sortedGenres
-              .where((e) => !e.name.contains('XXXPodcastIndexOnly'))
-              .toList(),
-    );
 
     final searchBody = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        controlPanel,
+        const PodcastsControlPanel(),
         const SizedBox(
           height: 15,
         ),
