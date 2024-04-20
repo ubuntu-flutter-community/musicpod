@@ -295,6 +295,8 @@ class _AboutTileState extends State<_AboutTile> {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    final settingsModel = getIt<SettingsModel>();
+    final appModel = getIt<AppModel>();
     final updateAvailable =
         watchPropertyValue((SettingsModel m) => m.updateAvailable);
     final onlineVersion =
@@ -302,36 +304,38 @@ class _AboutTileState extends State<_AboutTile> {
     final currentVersion = watchPropertyValue((SettingsModel m) => m.version);
 
     return YaruTile(
-      title: updateAvailable == null
-          ? Center(
-              child: SizedBox.square(
-                dimension: yaruStyled ? kYaruTitleBarItemHeight : 40,
-                child: const Progress(
-                  padding: EdgeInsets.all(10),
-                ),
-              ),
-            )
-          : TapAbleText(
-              text: updateAvailable == true
-                  ? '${context.l10n.updateAvailable}: $onlineVersion'
-                  : currentVersion ?? context.l10n.unknown,
-              style: updateAvailable == true
-                  ? TextStyle(
-                      color: context.t.colorScheme.success
-                          .scale(lightness: theme.isLight ? 0 : 0.3),
-                    )
-                  : null,
-              onTap: () => launchUrl(
-                Uri.parse(
-                  p.join(
-                    kRepoUrl,
-                    'releases',
-                    'tag',
-                    'onlineVersion',
+      title: !appModel.isOnline || !settingsModel.allowManualUpdate
+          ? Text(settingsModel.version ?? '')
+          : updateAvailable == null
+              ? Center(
+                  child: SizedBox.square(
+                    dimension: yaruStyled ? kYaruTitleBarItemHeight : 40,
+                    child: const Progress(
+                      padding: EdgeInsets.all(10),
+                    ),
+                  ),
+                )
+              : TapAbleText(
+                  text: updateAvailable == true
+                      ? '${context.l10n.updateAvailable}: $onlineVersion'
+                      : currentVersion ?? context.l10n.unknown,
+                  style: updateAvailable == true
+                      ? TextStyle(
+                          color: context.t.colorScheme.success
+                              .scale(lightness: theme.isLight ? 0 : 0.3),
+                        )
+                      : null,
+                  onTap: () => launchUrl(
+                    Uri.parse(
+                      p.join(
+                        kRepoUrl,
+                        'releases',
+                        'tag',
+                        onlineVersion,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
       trailing: OutlinedButton(
         onPressed: () => settingsNavigatorKey.currentState?.pushNamed('/about'),
         child: Text(context.l10n.contributors),
