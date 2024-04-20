@@ -310,5 +310,6 @@
     "searchOnline": "Im Internet suchen",
     "shareThisEpisode": "Diese Episode teilen",
     "downloadEpisode": "Episode herunterladen",
-    "removeDownloadEpisode": "Episode-Download entfernen"
+    "removeDownloadEpisode": "Episode-Download entfernen",
+    "language": "Sprache"
 }

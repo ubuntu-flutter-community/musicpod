@@ -140,7 +140,8 @@
     "searchOnline",
     "shareThisEpisode",
     "downloadEpisode",
-    "removeDownloadEpisode"
+    "removeDownloadEpisode",
+    "language"
   ],
 
   "da": [
@@ -381,7 +382,8 @@
     "searchOnline",
     "shareThisEpisode",
     "downloadEpisode",
-    "removeDownloadEpisode"
+    "removeDownloadEpisode",
+    "language"
   ],
 
   "es": [
@@ -571,7 +573,8 @@
     "searchOnline",
     "shareThisEpisode",
     "downloadEpisode",
-    "removeDownloadEpisode"
+    "removeDownloadEpisode",
+    "language"
   ],
 
   "fr": [
@@ -792,7 +795,8 @@
     "searchOnline",
     "shareThisEpisode",
     "downloadEpisode",
-    "removeDownloadEpisode"
+    "removeDownloadEpisode",
+    "language"
   ],
 
   "it": [
@@ -1033,7 +1037,8 @@
     "searchOnline",
     "shareThisEpisode",
     "downloadEpisode",
-    "removeDownloadEpisode"
+    "removeDownloadEpisode",
+    "language"
   ],
 
   "nl": [
@@ -1251,7 +1256,8 @@
     "searchOnline",
     "shareThisEpisode",
     "downloadEpisode",
-    "removeDownloadEpisode"
+    "removeDownloadEpisode",
+    "language"
   ],
 
   "pl": [
@@ -1289,7 +1295,8 @@
     "searchOnline",
     "shareThisEpisode",
     "downloadEpisode",
-    "removeDownloadEpisode"
+    "removeDownloadEpisode",
+    "language"
   ],
 
   "pt": [
@@ -1478,7 +1485,8 @@
     "searchOnline",
     "shareThisEpisode",
     "downloadEpisode",
-    "removeDownloadEpisode"
+    "removeDownloadEpisode",
+    "language"
   ],
 
   "pt_BR": [
@@ -1667,11 +1675,17 @@
     "searchOnline",
     "shareThisEpisode",
     "downloadEpisode",
-    "removeDownloadEpisode"
+    "removeDownloadEpisode",
+    "language"
   ],
 
   "ru": [
-    "copyToClipBoard"
+    "copyToClipBoard",
+    "language"
+  ],
+
+  "sk": [
+    "language"
   ],
 
   "sv": [
@@ -1850,7 +1864,8 @@
     "searchOnline",
     "shareThisEpisode",
     "downloadEpisode",
-    "removeDownloadEpisode"
+    "removeDownloadEpisode",
+    "language"
   ],
 
   "tr": [
@@ -1859,7 +1874,8 @@
     "searchOnline",
     "shareThisEpisode",
     "downloadEpisode",
-    "removeDownloadEpisode"
+    "removeDownloadEpisode",
+    "language"
   ],
 
   "zh": [
@@ -2080,6 +2096,7 @@
     "searchOnline",
     "shareThisEpisode",
     "downloadEpisode",
-    "removeDownloadEpisode"
+    "removeDownloadEpisode",
+    "language"
   ]
 }

@@ -6,6 +6,7 @@ import 'package:podcast_search/podcast_search.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../settings.dart';
+import '../common/languages.dart';
 import '../notifications/notifications_service.dart';
 
 class PodcastService {
@@ -44,10 +45,11 @@ class PodcastService {
     String? searchQuery,
     PodcastGenre podcastGenre = PodcastGenre.all,
     Country? country,
+    SimpleLanguage? language,
     int limit = 10,
   }) async {
     _searchResult = null;
-
+    _searchChangedController.add(true);
     SearchResult? result;
     String? error;
     try {
@@ -56,13 +58,17 @@ class PodcastService {
           genre: podcastGenre == PodcastGenre.all ? '' : podcastGenre.id,
           limit: limit,
           country: country ?? Country.none,
-          language: country?.code ?? '',
+          language: country != null || language?.isoCode == null
+              ? ''
+              : language!.isoCode,
         );
       } else {
         result = await _search?.search(
           searchQuery,
           country: country ?? Country.none,
-          language: country?.code ?? '',
+          language: country != null || language?.isoCode == null
+              ? ''
+              : language!.isoCode,
           limit: limit,
         );
       }

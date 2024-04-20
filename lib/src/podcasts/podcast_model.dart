@@ -6,6 +6,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../library.dart';
 import '../../podcasts.dart';
+import '../common/languages.dart';
 import '../data/podcast_genre.dart';
 import '../library/library_service.dart';
 import 'podcast_service.dart';
@@ -45,6 +46,14 @@ class PodcastModel extends SafeChangeNotifier {
   void setCountry(Country? value) {
     if (value == _country) return;
     _country = value;
+    notifyListeners();
+  }
+
+  SimpleLanguage? _language;
+  SimpleLanguage? get language => _language;
+  void setLanguage(SimpleLanguage? value) {
+    if (value == _language) return;
+    _language = value;
     notifyListeners();
   }
 
@@ -172,6 +181,7 @@ class PodcastModel extends SafeChangeNotifier {
       country: _country,
       podcastGenre: podcastGenre,
       limit: limit,
+      language: _language,
     );
   }
 }

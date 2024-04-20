@@ -9,6 +9,7 @@ import '../../data.dart';
 import '../../l10n.dart';
 import '../../library.dart';
 import '../../string_x.dart';
+import '../common/languages.dart';
 import 'view/radio_search.dart';
 import 'radio_service.dart';
 
@@ -50,6 +51,14 @@ class RadioModel extends SafeChangeNotifier {
     setSearchQuery(search: RadioSearch.tag);
   }
 
+  SimpleLanguage? _language;
+  SimpleLanguage? get language => _language;
+  void setLanguage(SimpleLanguage? value) {
+    if (value == _language) return;
+    _language = value;
+    setSearchQuery(search: RadioSearch.language);
+  }
+
   Future<Set<Audio>?> getStations({
     required RadioSearch radioSearch,
     required String? query,
@@ -61,6 +70,7 @@ class RadioModel extends SafeChangeNotifier {
         ),
       RadioSearch.name => await _radioService.getStations(name: query),
       RadioSearch.state => await _radioService.getStations(state: query),
+      RadioSearch.language => await _radioService.getStations(language: query),
     };
 
     if (stations == null) return null;
@@ -120,6 +130,8 @@ class RadioModel extends SafeChangeNotifier {
         break;
       case RadioSearch.tag:
         _searchQuery = tag?.name;
+      case RadioSearch.language:
+        _searchQuery = language?.name.toLowerCase();
       default:
         _searchQuery = query ?? _searchQuery;
     }
