@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.feichtmeier.Musicpod</id>
+  
+  <name>musicpod</name>
+  <summary>Music, podcast and internet radio player</summary>
+  
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MPL-2.0</project_license>
+  <url type="homepage">https://github.com/ubuntu-flutter-community/musicpod</url>
+  
+  <description>
+    <p>
+      Play local audio files, browse podcasts online or listen to internet radio stations.
+    </p>
+  </description>
+  
+  <screenshots>
+    <screenshot type="default">
+      <caption>Album - light</caption>
+      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/album_light.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <caption>Album - dark</caption>
+      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/album_dark.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <caption>Fullscreen - light</caption>
+      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/fullscreen_light.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <caption>Fullscreen - dark</caption>
+      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/fullscreen_dark.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <caption>Podcast overview - light</caption>
+      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/wide_light.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <caption>Podcast overview - dark</caption>
+      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/wide_dark.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <caption>Slim view - light</caption>
+      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/slim_light.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <caption>Slim view - dark</caption>
+      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/slim_dark.png</image>
+    </screenshot>
+  </screenshots>
+  
+  <releases>
+    <release date="2022-03-12" version="0.1.1"/>
+  </releases>
+
+  <content_rating type="oars-1.1" />
+
+  <launchable type="desktop-id">org.feichtmeier.Musicpod.desktop</launchable>
+</component>

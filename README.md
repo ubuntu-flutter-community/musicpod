@@ -69,11 +69,9 @@ Thank you [@escamoteur](https://github.com/escamoteur) for creating [get_it](htt
 
 ## Supported operating systems and package formats
 
-> [!IMPORTANT]
-> I will not support Flatpaks, no time to dig into this, [see this explanation](https://github.com/ubuntu-flutter-community/musicpod/issues/10#issuecomment-2020016027)
-
 - [X] Ubuntu Desktop
   - [X] [snap package](https://snapcraft.io/musicpod) (this is the primary supported package!)
+  - [ ] Flatpak ([WIP](https://github.com/ubuntu-flutter-community/musicpod/issues/10))
 - [X] Windows Support
   - [ ] Windows Store
   - [X] [Exe](https://github.com/ubuntu-flutter-community/musicpod/releases)
