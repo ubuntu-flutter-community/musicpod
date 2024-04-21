@@ -419,22 +419,21 @@ class PlayerService {
       return;
     }
 
+    ImageProvider? image;
     if (audio?.path != null && audio?.pictureData != null) {
-      final image = MemoryImage(
+      image = MemoryImage(
         audio!.pictureData!,
       );
-      final generator = await PaletteGenerator.fromImageProvider(image);
-      _color = generator.dominantColor?.color;
     } else {
-      if (url == null &&
-          audio?.imageUrl == null &&
-          audio?.albumArtUrl == null) {
-        return;
+      if (url != null ||
+          audio?.imageUrl != null ||
+          audio?.albumArtUrl != null) {
+        image = NetworkImage(
+          url ?? audio!.imageUrl ?? audio!.albumArtUrl!,
+        );
       }
-
-      final image = NetworkImage(
-        url ?? audio!.imageUrl ?? audio!.albumArtUrl!,
-      );
+    }
+    if (image != null) {
       final generator = await PaletteGenerator.fromImageProvider(image);
       _color = generator.dominantColor?.color;
     }
