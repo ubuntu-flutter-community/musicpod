@@ -24,8 +24,9 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
     final libraryModel = getIt<LibraryModel>();
     final searchQuery = watchPropertyValue((RadioModel m) => m.searchQuery);
 
-    watchPropertyValue((LibraryModel m) => m.favTagsLength);
+    watchPropertyValue((LibraryModel m) => m.favRadioTagsLength);
     watchPropertyValue((LibraryModel m) => m.favCountriesLength);
+    watchPropertyValue((LibraryModel m) => m.favLanguagesLength);
 
     final radioSearch = watchPropertyValue(
       (LibraryModel m) => RadioSearch.values[m.radioindex],
@@ -34,6 +35,9 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
     final country = watchPropertyValue((RadioModel m) => m.country);
     final tag = watchPropertyValue((RadioModel m) => m.tag);
     final language = watchPropertyValue((RadioModel m) => m.language);
+    watchPropertyValue((LibraryModel m) => m.favLanguagesLength);
+    final favLanguageCodes =
+        watchPropertyValue((LibraryModel m) => m.favLanguageCodes);
 
     final Widget input = switch (radioSearch) {
       RadioSearch.country => CountryAutoComplete(
@@ -54,11 +58,11 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
           value: country,
           addFav: (v) {
             if (country?.code == null) return;
-            libraryModel.addFavCountry(v!.code);
+            libraryModel.addFavCountryCode(v!.code);
           },
           removeFav: (v) {
             if (country?.code == null) return;
-            libraryModel.removeFavCountry(v!.code);
+            libraryModel.removeFavCountryCode(v!.code);
           },
           favs: libraryModel.favCountryCodes,
         ),
@@ -66,13 +70,13 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
           value: tag,
           addFav: (tag) {
             if (tag?.name == null) return;
-            libraryModel.addFavTag(tag!.name);
+            libraryModel.addFavRadioTag(tag!.name);
           },
           removeFav: (tag) {
             if (tag?.name == null) return;
-            libraryModel.removeFavTag(tag!.name);
+            libraryModel.removeRadioFavTag(tag!.name);
           },
-          favs: libraryModel.favTags,
+          favs: libraryModel.favRadioTags,
           onSelected: (v) {
             model.setTag(v);
             libraryModel.setLastRadioTag(v?.name);
@@ -81,10 +85,10 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
             ...[
               ...?model.tags,
             ].where(
-              (e) => libraryModel.favTags.contains(e.name) == true,
+              (e) => libraryModel.favRadioTags.contains(e.name) == true,
             ),
             ...[...?model.tags].where(
-              (e) => libraryModel.favTags.contains(e.name) == false,
+              (e) => libraryModel.favRadioTags.contains(e.name) == false,
             ),
           ],
         ),
@@ -92,9 +96,17 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
           value: language,
           onSelected: (language) {
             model.setLanguage(language);
+            libraryModel.setLastLanguage(language?.isoCode);
           },
-          addFav: (language) {},
-          removeFav: (language) {},
+          favs: favLanguageCodes,
+          addFav: (language) {
+            if (language?.isoCode == null) return;
+            libraryModel.addFavLanguageCode(language!.isoCode);
+          },
+          removeFav: (language) {
+            if (language?.isoCode == null) return;
+            libraryModel.removeFavLanguageCode(language!.isoCode);
+          },
         ),
       _ => SearchingBar(
           hintText: '${context.l10n.search}: ${context.l10n.radio}',

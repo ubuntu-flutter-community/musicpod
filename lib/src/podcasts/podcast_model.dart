@@ -103,23 +103,26 @@ class PodcastModel extends SafeChangeNotifier {
   Future<void> init({
     String? countryCode,
     required String updateMessage,
+    bool forceInit = false,
   }) async {
-    await _podcastService.init();
-    final lastCountryCode = _libraryService.lastCountryCode;
+    await _podcastService.init(forceInit: forceInit);
 
     _searchActive = _libraryService.podcasts.isEmpty;
 
-    final c = Country.values
-        .firstWhereOrNull((c) => c.code == (lastCountryCode ?? countryCode));
-    if (c != null) {
-      _country = c;
-    }
+    _country ??= Country.values.firstWhereOrNull(
+      (c) => c.code == (_libraryService.lastCountryCode ?? countryCode),
+    );
+
+    _language ??= Languages.defaultLanguages.firstWhereOrNull(
+      (c) => c.isoCode == _libraryService.lastLanguageCode,
+    );
 
     _searchChangedSub ??= _podcastService.searchChanged.listen((_) {
       notifyListeners();
     });
 
-    if (_podcastService.searchResult == null ||
+    if (forceInit ||
+        _podcastService.searchResult == null ||
         _podcastService.searchResult?.items.isEmpty == true) {
       search();
     }
@@ -178,10 +181,10 @@ class PodcastModel extends SafeChangeNotifier {
   }) async {
     return await _podcastService.search(
       searchQuery: searchQuery,
-      country: _country,
+      country: _podcastService.searchWithPodcastIndex ? null : _country,
       podcastGenre: podcastGenre,
       limit: limit,
-      language: _language,
+      language: _podcastService.searchWithPodcastIndex ? _language : null,
     );
   }
 }

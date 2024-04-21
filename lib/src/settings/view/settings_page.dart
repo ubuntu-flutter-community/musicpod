@@ -10,6 +10,7 @@ import '../../../constants.dart';
 import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../../local_audio.dart';
+import '../../../podcasts.dart';
 import '../../../string_x.dart';
 import '../../../theme_data_x.dart';
 import '../../../theme_mode_x.dart';
@@ -138,10 +139,15 @@ class _PodcastSectionState extends State<_PodcastSection> {
         children: [
           YaruTile(
             title: Text(context.l10n.usePodcastIndex),
-            subtitle: Text(context.l10n.requiresAppRestart),
             trailing: CommonSwitch(
               value: usePodcastIndex,
-              onChanged: model.setUsePodcastIndex,
+              onChanged: (v) => model.setUsePodcastIndex(v).then(
+                    (_) => getIt<PodcastModel>().init(
+                      forceInit: true,
+                      countryCode: getIt<AppModel>().countryCode,
+                      updateMessage: context.l10n.newEpisodeAvailable,
+                    ),
+                  ),
             ),
           ),
           if (usePodcastIndex)

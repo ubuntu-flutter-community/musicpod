@@ -94,7 +94,7 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
       return futureBuilder;
     }
 
-    final isFavTag = libraryModel.favTags.contains(widget.searchQuery);
+    final isFavTag = libraryModel.favRadioTags.contains(widget.searchQuery);
 
     return YaruDetailPage(
       appBar: HeaderBar(
@@ -108,9 +108,9 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
                   ? null
                   : () {
                       if (isFavTag) {
-                        libraryModel.removeFavTag(widget.searchQuery!);
+                        libraryModel.removeRadioFavTag(widget.searchQuery!);
                       } else {
-                        libraryModel.addFavTag(widget.searchQuery!);
+                        libraryModel.addFavRadioTag(widget.searchQuery!);
                       }
                     },
               icon: Icon(

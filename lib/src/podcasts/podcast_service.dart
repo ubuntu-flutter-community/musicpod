@@ -23,18 +23,22 @@ class PodcastService {
   SearchResult? _searchResult;
   SearchResult? get searchResult => _searchResult;
   Search? _search;
+  bool get searchWithPodcastIndex =>
+      _search?.searchProvider is PodcastIndexProvider;
 
-  Future<void> init() async {
-    _search ??= Search(
-      searchProvider: _settingsService.usePodcastIndex == true &&
-              _settingsService.podcastIndexApiKey != null &&
-              _settingsService.podcastIndexApiSecret != null
-          ? PodcastIndexProvider(
-              key: _settingsService.podcastIndexApiKey!,
-              secret: _settingsService.podcastIndexApiSecret!,
-            )
-          : const ITunesProvider(),
-    );
+  Future<void> init({bool forceInit = false}) async {
+    if (_search == null || forceInit) {
+      _search = Search(
+        searchProvider: _settingsService.usePodcastIndex == true &&
+                _settingsService.podcastIndexApiKey != null &&
+                _settingsService.podcastIndexApiSecret != null
+            ? PodcastIndexProvider(
+                key: _settingsService.podcastIndexApiKey!,
+                secret: _settingsService.podcastIndexApiSecret!,
+              )
+            : const ITunesProvider(),
+      );
+    }
   }
 
   Future<void> dispose() async {

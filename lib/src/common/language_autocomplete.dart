@@ -171,10 +171,18 @@ class LanguageAutoComplete extends StatelessWidget {
               );
             },
             optionsBuilder: (textEditingValue) {
+              final langs = [
+                ...Languages.defaultLanguages.where(
+                  (e) => favs?.contains(e.isoCode) == true,
+                ),
+                ...Languages.defaultLanguages.where(
+                  (e) => favs?.contains(e.isoCode) == false,
+                ),
+              ];
               if (textEditingValue.text.isEmpty) {
-                return Languages.defaultLanguages;
+                return langs;
               }
-              return Languages.defaultLanguages.where(
+              return langs.where(
                 (e) => e.name
                     .toLowerCase()
                     .contains(textEditingValue.text.toLowerCase()),

@@ -38,13 +38,14 @@ class _RadioPageState extends State<RadioPage> {
           if (!appModel.isOnline) {
             return;
           }
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            _buildConnectSnackBar(
-              connectedHost: connectedHost,
-              context: context,
-            ),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              _buildConnectSnackBar(
+                connectedHost: connectedHost,
+                context: context,
+              ),
+            );
+          }
         },
       );
     });

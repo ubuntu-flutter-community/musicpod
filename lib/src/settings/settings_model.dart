@@ -49,7 +49,8 @@ class SettingsModel extends SafeChangeNotifier {
       _service.setNeverShowFailedImports(value);
 
   bool get usePodcastIndex => _service.usePodcastIndex;
-  void setUsePodcastIndex(bool value) => _service.setUsePodcastIndex(value);
+  Future<void> setUsePodcastIndex(bool value) async =>
+      await _service.setUsePodcastIndex(value);
 
   int get themeIndex => _service.themeIndex;
   void setThemeIndex(int value) => _service.setThemeIndex(value);

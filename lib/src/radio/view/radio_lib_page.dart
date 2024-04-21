@@ -122,8 +122,8 @@ class TagGrid extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final favTagsLength =
-        watchPropertyValue((LibraryModel m) => m.favTags.length);
-    final favTags = watchPropertyValue((LibraryModel m) => m.favTags);
+        watchPropertyValue((LibraryModel m) => m.favRadioTags.length);
+    final favTags = watchPropertyValue((LibraryModel m) => m.favRadioTags);
 
     if (favTagsLength == 0) {
       return NoSearchResultPage(

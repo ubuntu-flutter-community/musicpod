@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:podcast_search/podcast_search.dart';
 
 import '../../../common.dart';
 import '../../../constants.dart';
+import '../../../get.dart';
 import '../../../l10n.dart';
+import '../podcast_model.dart';
 import '../podcast_utils.dart';
 
-class PodcastsDiscoverGrid extends StatefulWidget {
+class PodcastsDiscoverGrid extends StatefulWidget
+    with WatchItStatefulWidgetMixin {
   const PodcastsDiscoverGrid({
     super.key,
     required this.checkingForUpdates,
-    required this.limit,
-    required this.searchResult,
-    required this.incrementLimit,
   });
 
   final bool checkingForUpdates;
-  final int limit;
-  final SearchResult? searchResult;
-  final Future<void> Function() incrementLimit;
 
   @override
   State<PodcastsDiscoverGrid> createState() => _PodcastsDiscoverGridState();
@@ -41,9 +37,18 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.searchResult == null || widget.checkingForUpdates) {
-      return LoadingGrid(limit: widget.limit);
-    } else if (widget.searchResult?.items.isEmpty == true) {
+    final searchResult = watchPropertyValue((PodcastModel m) => m.searchResult);
+    final limit = watchPropertyValue((PodcastModel m) => m.limit);
+    final model = getIt<PodcastModel>();
+    final setLimit = model.setLimit;
+    Future<void> incrementLimit() async {
+      setLimit(limit + 20);
+      await model.search();
+    }
+
+    if (searchResult == null || widget.checkingForUpdates) {
+      return LoadingGrid(limit: limit);
+    } else if (searchResult.items.isEmpty == true) {
       return NoSearchResultPage(message: Text(context.l10n.noPodcastFound));
     }
 
@@ -53,10 +58,10 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
           child: GridView.builder(
             controller: _controller,
             padding: gridPadding,
-            itemCount: widget.searchResult!.resultCount,
+            itemCount: searchResult.resultCount,
             gridDelegate: audioCardGridDelegate,
             itemBuilder: (context, index) {
-              final podcastItem = widget.searchResult!.items.elementAt(index);
+              final podcastItem = searchResult.items.elementAt(index);
 
               final art = podcastItem.artworkUrl600 ?? podcastItem.artworkUrl;
               final image = SafeNetworkImage(
@@ -89,14 +94,14 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
             },
           ),
         ),
-        if (widget.searchResult != null && widget.searchResult!.resultCount > 0)
+        if (searchResult.resultCount > 0)
           Padding(
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
                 OutlinedButton(
                   onPressed: () async {
-                    await widget.incrementLimit();
+                    await incrementLimit();
                     await Future.delayed(const Duration(milliseconds: 300));
                     _controller.jumpTo(_controller.position.maxScrollExtent);
                   },
