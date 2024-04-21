@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
@@ -26,6 +24,7 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _updatesChangedSub;
   StreamSubscription<bool>? _favTagsSub;
   StreamSubscription<bool>? _favCountriesSub;
+  StreamSubscription<bool>? _favLanguageCodeFavsSub;
   StreamSubscription<bool>? _lastFavSub;
   StreamSubscription<bool>? _lastCountryCodeSub;
   StreamSubscription<bool>? _downloadsSub;
@@ -36,35 +35,37 @@ class LibraryModel extends SafeChangeNotifier {
       _index = _service.appIndex;
     }
 
-    _localAudioIndexSub =
+    _localAudioIndexSub ??=
         _service.localAudioIndexChanged.listen((_) => notifyListeners());
-    _radioIndexSub =
+    _radioIndexSub ??=
         _service.radioIndexChanged.listen((_) => notifyListeners());
-    _podcastIndexSub =
+    _podcastIndexSub ??=
         _service.podcastIndexChanged.listen((_) => notifyListeners());
-    _likedAudiosSub =
+    _likedAudiosSub ??=
         _service.likedAudiosChanged.listen((event) => notifyListeners());
-    _playlistsSub =
+    _playlistsSub ??=
         _service.playlistsChanged.listen((event) => notifyListeners());
     _albumsSub = _service.albumsChanged.listen((event) => notifyListeners());
-    _podcastsSub =
+    _podcastsSub ??=
         _service.podcastsChanged.listen((event) => notifyListeners());
-    _stationsSub =
+    _stationsSub ??=
         _service.starredStationsChanged.listen((event) => notifyListeners());
-    _lastPositionsSub =
+    _lastPositionsSub ??=
         _service.lastPositionsChanged.listen((_) => notifyListeners());
-    _updatesChangedSub =
+    _updatesChangedSub ??=
         _service.updatesChanged.listen((_) => notifyListeners());
-
-    _favTagsSub = _service.favTagsChanged.listen((_) => notifyListeners());
-    _favCountriesSub =
+    _favTagsSub ??= _service.favTagsChanged.listen((_) => notifyListeners());
+    _favCountriesSub ??=
         _service.favCountriesChanged.listen((_) => notifyListeners());
-
-    _lastFavSub = _service.lastFavChanged.listen((_) => notifyListeners());
-    _downloadsSub = _service.downloadsChanged.listen((_) => notifyListeners());
-    _lastCountryCodeSub =
+    _favLanguageCodeFavsSub ??=
+        _service.favLanguagesChanged.listen((_) => notifyListeners());
+    _lastFavSub ??=
+        _service.lastFavRadioTagChanged.listen((_) => notifyListeners());
+    _downloadsSub ??=
+        _service.downloadsChanged.listen((_) => notifyListeners());
+    _lastCountryCodeSub ??=
         _service.lastCountryCodeChanged.listen((_) => notifyListeners());
-    _radioHistoryChangedSub =
+    _radioHistoryChangedSub ??=
         _service.radioHistoryChanged.listen((_) => notifyListeners());
 
     notifyListeners();
@@ -84,6 +85,7 @@ class LibraryModel extends SafeChangeNotifier {
     await _updatesChangedSub?.cancel();
     await _favTagsSub?.cancel();
     await _favCountriesSub?.cancel();
+    await _favLanguageCodeFavsSub?.cancel();
     await _lastFavSub?.cancel();
     await _downloadsSub?.cancel();
     await _lastCountryCodeSub?.cancel();
@@ -160,23 +162,28 @@ class LibraryModel extends SafeChangeNotifier {
   bool isStarredStation(String? url) =>
       url?.isNotEmpty == false ? false : _service.isStarredStation(url);
 
-  Set<String> get favTags => _service.favTags;
-  int get favTagsLength => _service.favTags.length;
-
-  void addFavTag(String value) => _service.addFavTag(value);
-  void removeFavTag(String value) => _service.removeFavTag(value);
-
-  String? get lastFav => _service.lastFav;
+  String? get lastRadioTag => _service.lastRadioTag;
   void setLastRadioTag(String? value) => _service.setLastRadioTag(value);
+  void addFavRadioTag(String value) => _service.addFavRadioTag(value);
+  void removeRadioFavTag(String value) => _service.removeFavRadioTag(value);
+  Set<String> get favRadioTags => _service.favRadioTags;
+  int get favRadioTagsLength => _service.favRadioTags.length;
 
   String? get lastCountryCode => _service.lastCountryCode;
   void setLastCountryCode(String? value) => _service.setLastCountryCode(value);
+  void addFavCountryCode(String value) => _service.addFavCountryCode(value);
+  void removeFavCountryCode(String value) =>
+      _service.removeFavCountryCode(value);
+  Set<String> get favCountryCodes => _service.favCountryCodes;
+  int get favCountriesLength => _service.favCountryCodes.length;
 
-  void addFavCountry(String value) => _service.addFavCountry(value);
-  void removeFavCountry(String value) => _service.removeFavCountry(value);
-
-  Set<String> get favCountryCodes => _service.favCountries;
-  int get favCountriesLength => _service.favCountries.length;
+  String? get lastLanguageCode => _service.lastLanguageCode;
+  void setLastLanguage(String? value) => _service.setLastLanguageCode(value);
+  void addFavLanguageCode(String value) => _service.addFavLanguageCode(value);
+  void removeFavLanguageCode(String value) =>
+      _service.removeFavLanguageCode(value);
+  Set<String> get favLanguageCodes => _service.favLanguageCodes;
+  int get favLanguagesLength => _service.favLanguageCodes.length;
 
   //
   // Playlists
@@ -348,7 +355,3 @@ class LibraryModel extends SafeChangeNotifier {
           .replaceAll('[', '')
           .replaceAll(']', '');
 }
-
-final libraryModelProvider = ChangeNotifierProvider<LibraryModel>((ref) {
-  return LibraryModel(getService<LibraryService>());
-});

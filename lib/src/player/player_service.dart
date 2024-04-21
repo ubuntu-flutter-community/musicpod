@@ -16,7 +16,6 @@ import '../../data.dart';
 import '../../library.dart';
 import '../../string_x.dart';
 import '../../utils.dart';
-import 'my_audio_handler.dart';
 
 class PlayerService {
   PlayerService({
@@ -29,7 +28,7 @@ class PlayerService {
 
   MPRIS? _mpris;
   SMTCWindows? _smtc;
-  MyAudioHandler? _audioService;
+  _AudioHandler? _audioService;
 
   StreamSubscription<PressedButton>? _smtcSub;
   StreamSubscription<bool>? _isPlayingSub;
@@ -173,8 +172,8 @@ class PlayerService {
 
   final _volumeController = StreamController<bool>.broadcast();
   Stream<bool> get volumeChanged => _volumeController.stream;
-  double _volume = 100.0;
-  double get volume => _volume;
+  double? _volume;
+  double? get volume => _volume;
   Future<void> setVolume(double value) async {
     if (value == _volume) return;
     await _player.setVolume(value);
@@ -189,8 +188,10 @@ class PlayerService {
     await _player.setRate(value);
   }
 
+  /// To not mess up with the queue, this method is private
+  /// Use [startPlaylist] instead
   bool _firstPlay = true;
-  Future<void> play({Duration? newPosition, Audio? newAudio}) async {
+  Future<void> _play({Duration? newPosition, Audio? newAudio}) async {
     try {
       if (newAudio != null) {
         _setAudio(newAudio);
@@ -207,11 +208,12 @@ class PlayerService {
         _player.state.tracks;
       });
       if (newPosition != null && _audio!.audioType != AudioType.radio) {
+        final tempVol = _volume;
         _player.setVolume(0).then(
               (_) => Future.delayed(const Duration(seconds: 3)).then(
                 (_) => _player
                     .seek(newPosition)
-                    .then((_) => _player.setVolume(100.0)),
+                    .then((_) => _player.setVolume(tempVol ?? 100.0)),
               ),
             );
       }
@@ -225,7 +227,7 @@ class PlayerService {
   }
 
   Future<void> playOrPause() async {
-    return _firstPlay ? play(newPosition: _position) : _player.playOrPause();
+    return _firstPlay ? _play(newPosition: _position) : _player.playOrPause();
   }
 
   Future<void> pause() async {
@@ -244,8 +246,6 @@ class PlayerService {
 
   Future<void> init() async {
     await _initMediaControl();
-
-    await _readPlayerState();
 
     _isPlayingSub = _player.stream.playing.listen((value) {
       setIsPlaying(value);
@@ -292,6 +292,8 @@ class PlayerService {
         }
       }
     });
+
+    await _readPlayerState();
   }
 
   Future<void> playNext() async {
@@ -300,7 +302,7 @@ class PlayerService {
       _setAudio(nextAudio!);
       _estimateNext();
     }
-    await play();
+    await _play();
   }
 
   void insertIntoQueue(Audio newAudio) {
@@ -380,7 +382,7 @@ class PlayerService {
         if (mightBePrevious == null) return;
         _setAudio(mightBePrevious);
         _estimateNext();
-        await play();
+        await _play();
       }
     }
   }
@@ -405,7 +407,7 @@ class PlayerService {
 
     _position = libraryService.getLastPosition(_audio?.url);
     _estimateNext();
-    await play(newPosition: _position);
+    await _play(newPosition: _position);
   }
 
   Color? _color;
@@ -413,26 +415,25 @@ class PlayerService {
 
   Future<void> loadColor({String? url}) async {
     if (audio == null) {
-      _color = kCardColorDark;
+      _color = null;
       return;
     }
 
+    ImageProvider? image;
     if (audio?.path != null && audio?.pictureData != null) {
-      final image = MemoryImage(
+      image = MemoryImage(
         audio!.pictureData!,
       );
-      final generator = await PaletteGenerator.fromImageProvider(image);
-      _color = generator.dominantColor?.color;
     } else {
-      if (url == null &&
-          audio?.imageUrl == null &&
-          audio?.albumArtUrl == null) {
-        return;
+      if (url != null ||
+          audio?.imageUrl != null ||
+          audio?.albumArtUrl != null) {
+        image = NetworkImage(
+          url ?? audio!.imageUrl ?? audio!.albumArtUrl!,
+        );
       }
-
-      final image = NetworkImage(
-        url ?? audio!.imageUrl ?? audio!.albumArtUrl!,
-      );
+    }
+    if (image != null) {
       final generator = await PaletteGenerator.fromImageProvider(image);
       _color = generator.dominantColor?.color;
     }
@@ -539,7 +540,7 @@ class PlayerService {
               : playOrPause();
         },
         play: () async {
-          play();
+          _play();
         },
         pause: () async {
           pause();
@@ -561,7 +562,7 @@ class PlayerService {
         androidNotificationChannelName: 'MusicPod',
       ),
       builder: () {
-        return MyAudioHandler(
+        return _AudioHandler(
           onPlay: playOrPause,
           onNext: playNext,
           onPause: pause,
@@ -741,5 +742,46 @@ class PlayerService {
     } on Exception catch (_) {
       return null;
     }
+  }
+}
+
+class _AudioHandler extends BaseAudioHandler with SeekHandler {
+  final Future<void> Function() onPlay;
+  final Future<void> Function() onPause;
+  final Future<void> Function() onNext;
+  final Future<void> Function() onPrevious;
+  final Future<void> Function(Duration position) onSeek;
+
+  _AudioHandler({
+    required this.onPlay,
+    required this.onPause,
+    required this.onNext,
+    required this.onPrevious,
+    required this.onSeek,
+  });
+
+  @override
+  Future<void> play() async {
+    await onPlay();
+  }
+
+  @override
+  Future<void> pause() async {
+    await onPause();
+  }
+
+  @override
+  Future<void> skipToNext() async {
+    await onNext();
+  }
+
+  @override
+  Future<void> skipToPrevious() async {
+    await onPrevious();
+  }
+
+  @override
+  Future<void> seek(Duration position) async {
+    await onSeek(position);
   }
 }

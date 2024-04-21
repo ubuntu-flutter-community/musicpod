@@ -5,11 +5,11 @@ on:
     branches: [main]
 
 env:
-  FLUTTER_VERSION: '3.16.x'
+  FLUTTER_VERSION: '3.19.x'
 
 jobs:
   analyze:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -20,7 +20,7 @@ jobs:
       - run: flutter analyze --fatal-infos
 
   format:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -31,7 +31,7 @@ jobs:
       - run: dart format --set-exit-if-changed .
 
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -41,7 +41,7 @@ jobs:
       - run: flutter test
 
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2

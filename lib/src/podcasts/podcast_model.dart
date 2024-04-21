@@ -1,20 +1,22 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../library.dart';
 import '../../podcasts.dart';
+import '../common/languages.dart';
 import '../data/podcast_genre.dart';
+import '../library/library_service.dart';
+import 'podcast_service.dart';
 
 class PodcastModel extends SafeChangeNotifier {
-  PodcastModel(
-    this._podcastService,
-    this._libraryService,
-  );
+  PodcastModel({
+    required PodcastService podcastService,
+    required LibraryService libraryService,
+  })  : _podcastService = podcastService,
+        _libraryService = libraryService;
 
   final PodcastService _podcastService;
   final LibraryService _libraryService;
@@ -44,6 +46,14 @@ class PodcastModel extends SafeChangeNotifier {
   void setCountry(Country? value) {
     if (value == _country) return;
     _country = value;
+    notifyListeners();
+  }
+
+  SimpleLanguage? _language;
+  SimpleLanguage? get language => _language;
+  void setLanguage(SimpleLanguage? value) {
+    if (value == _language) return;
+    _language = value;
     notifyListeners();
   }
 
@@ -93,26 +103,26 @@ class PodcastModel extends SafeChangeNotifier {
   Future<void> init({
     String? countryCode,
     required String updateMessage,
-    bool? usePodcastIndex,
-    String? podcastIndexApiKey,
-    String? podcastIndexApiSecret,
+    bool forceInit = false,
   }) async {
-    await _podcastService.init();
-    final lastCountryCode = _libraryService.lastCountryCode;
+    await _podcastService.init(forceInit: forceInit);
 
     _searchActive = _libraryService.podcasts.isEmpty;
 
-    final c = Country.values
-        .firstWhereOrNull((c) => c.code == (lastCountryCode ?? countryCode));
-    if (c != null) {
-      _country = c;
-    }
+    _country ??= Country.values.firstWhereOrNull(
+      (c) => c.code == (_libraryService.lastCountryCode ?? countryCode),
+    );
 
-    _searchChangedSub = _podcastService.searchChanged.listen((_) {
+    _language ??= Languages.defaultLanguages.firstWhereOrNull(
+      (c) => c.isoCode == _libraryService.lastLanguageCode,
+    );
+
+    _searchChangedSub ??= _podcastService.searchChanged.listen((_) {
       notifyListeners();
     });
 
-    if (_podcastService.searchResult == null ||
+    if (forceInit ||
+        _podcastService.searchResult == null ||
         _podcastService.searchResult?.items.isEmpty == true) {
       search();
     }
@@ -171,16 +181,10 @@ class PodcastModel extends SafeChangeNotifier {
   }) async {
     return await _podcastService.search(
       searchQuery: searchQuery,
-      country: _country,
+      country: _podcastService.searchWithPodcastIndex ? null : _country,
       podcastGenre: podcastGenre,
       limit: limit,
+      language: _podcastService.searchWithPodcastIndex ? _language : null,
     );
   }
 }
-
-final podcastModelProvider = ChangeNotifierProvider(
-  (ref) => PodcastModel(
-    getService<PodcastService>(),
-    getService<LibraryService>(),
-  ),
-);

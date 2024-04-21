@@ -142,7 +142,13 @@ class _IcyImageState extends State<IcyImage> {
       );
 
   Future<String?> fetchAlbumArt(String icyTitle) async {
-    return UrlStore().get(icyTitle) ?? await _fetchAlbumArt(icyTitle);
+    final url = UrlStore().get(icyTitle);
+    if (url != null) {
+      widget.onImageFind?.call(url);
+      return url;
+    } else {
+      return await _fetchAlbumArt(icyTitle);
+    }
   }
 
   Future<String?> _fetchAlbumArt(String icyTitle) async {

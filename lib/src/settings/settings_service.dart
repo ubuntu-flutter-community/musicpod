@@ -3,12 +3,15 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import '../../common.dart';
 import '../../constants.dart';
 import '../../patch_notes.dart';
 import '../../utils.dart';
 
 class SettingsService {
+  SettingsService({required this.allowManualUpdates});
+
+  final bool allowManualUpdates;
+
   String? _appName;
   String? get appName => _appName;
   String? _packageName;
@@ -95,8 +98,8 @@ class SettingsService {
   Stream<bool> get usePodcastIndexChanged => _usePodcastIndexController.stream;
   bool _usePodcastIndex = false;
   bool get usePodcastIndex => _usePodcastIndex;
-  void setUsePodcastIndex(bool value) {
-    writeSetting(kUsePodcastIndex, value.toString()).then((_) {
+  Future<void> setUsePodcastIndex(bool value) async {
+    return writeSetting(kUsePodcastIndex, value.toString()).then((_) {
       _usePodcastIndex = value;
       _usePodcastIndexController.add(true);
     });
@@ -191,31 +194,6 @@ class SettingsService {
     await _initSettings(testDir);
   }
 
-  final _titlesViewAudioFilterIndexController =
-      StreamController<bool>.broadcast();
-  Stream<bool> get titlesViewAudioFilterIndexChanged =>
-      _titlesViewAudioFilterIndexController.stream;
-  int _titlesViewAudioFilterIndex = AudioFilter.title.index;
-  int get titlesViewAudioFilterIndex => _titlesViewAudioFilterIndex;
-  void setTitlesViewAudioFilterIndex(int value) {
-    if (value == _titlesViewAudioFilterIndex) return;
-    writeSetting(kTitlesViewAudioFilterIndex, value.toString()).then((_) {
-      _titlesViewAudioFilterIndex = value;
-      _titlesViewAudioFilterIndexController.add(true);
-    });
-  }
-
-  Future<void> _initTitlesViewAudioFilterIndex() async {
-    final titlesViewAudioFilterIndexStringOrNull =
-        await readSetting(kTitlesViewAudioFilterIndex);
-    if (titlesViewAudioFilterIndexStringOrNull != null) {
-      final sortParse = int.tryParse(titlesViewAudioFilterIndexStringOrNull);
-      if (sortParse != null) {
-        _titlesViewAudioFilterIndex = sortParse;
-      }
-    }
-  }
-
   Future<void> _initSettings(String? testDir) async {
     await _initThemeIndex();
     await _initDirectory(testDir);
@@ -225,7 +203,6 @@ class SettingsService {
     await _initRecentPatchNotesDisposed();
     await _initNeverShowImports();
     await _initUseArtistGridView();
-    await _initTitlesViewAudioFilterIndex();
   }
 
   Future<void> dispose() async {

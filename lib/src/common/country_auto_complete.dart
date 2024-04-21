@@ -90,11 +90,12 @@ class CountryAutoComplete extends StatelessWidget {
                 cursorWidth: yaruStyled ? 1 : 2.0,
                 decoration: yaruStyled
                     ? createYaruDecoration(
-                        isLight: theme.isLight,
+                        theme: theme,
                         style: style,
                         fillColor: fillColor,
                         contentPadding: contentPadding,
                         hintText: hintText,
+                        border: border,
                       )
                     : createMaterialDecoration(
                         colorScheme: theme.colorScheme,

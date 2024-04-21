@@ -103,17 +103,15 @@ const kAudioControlPanelPadding = EdgeInsets.only(
   bottom: kYaruPagePadding / 2,
 );
 
-const kCardColorLight = Color.fromARGB(255, 233, 233, 233);
-const kCardColorDark = Color.fromARGB(255, 51, 51, 51);
-
 const kAudioQueueThreshHold = 100;
 
 const kMainPageIconPadding = EdgeInsets.only(right: 4.0);
 
 const kLikedAudiosFileName = 'likedAudios.json';
-const kTagFavsFileName = 'tagFavs.json';
+const kRadioTagFavsFileName = 'tagFavs.json';
 const kCountryFavsFileName = 'countryfavs.json';
-const kLastFav = 'lastFav';
+const kFavLanguageCodesFileName = 'languagefavs.json';
+const kLastRadioTag = 'lastFav';
 const kPlaylistsFileName = 'playlists.json';
 const kPinnedAlbumsFileName = 'finallyFixedPinnedAlbums.json';
 const kPodcastsFileName = 'podcasts.json';
@@ -138,6 +136,7 @@ const kRadioIndex = 'radioIndex';
 const kPodcastIndex = 'podcastIndex';
 const kNeverShowImportFails = 'neverShowImportFails';
 const kLastCountryCode = 'lastCountryCode';
+const kLastLanguageCode = 'lastLanguageCode';
 const kSearchResult = 'searchResult';
 const kLocalAudioPageId = 'localAudio';
 const kPodcastsPageId = 'podcasts';
@@ -149,7 +148,6 @@ const kThemeIndex = 'themeIndex';
 const kPodcastIndexApiKey = 'podcastIndexApiKey';
 const kPodcastIndexApiSecret = 'podcastIndexApiSecret';
 const kUseArtistGridView = 'useArtistGridView';
-const kTitlesViewAudioFilterIndex = 'titlesViewAudioFilterIndex';
 
 const shops = <String, String>{
   'https://us.7digital.com/': '7digital',

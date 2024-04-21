@@ -39,12 +39,12 @@ class AudioCardBottom extends StatelessWidget {
                   height: 15,
                   width: kAudioCardDimension - 20,
                   child: Shimmer.fromColors(
-                    baseColor: light ? kCardColorLight : kCardColorDark,
+                    baseColor: theme.cardColor,
                     highlightColor: light
-                        ? kCardColorLight.scale(lightness: -0.1)
-                        : kCardColorDark.scale(lightness: 0.05),
+                        ? theme.cardColor.scale(lightness: -0.1)
+                        : theme.cardColor.scale(lightness: 0.05),
                     child: Container(
-                      color: light ? kCardColorLight : kCardColorDark,
+                      color: theme.cardColor,
                     ),
                   ),
                 ),

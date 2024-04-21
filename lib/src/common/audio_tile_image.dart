@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
@@ -8,7 +8,7 @@ import '../../data.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
 
-class AudioTileImage extends ConsumerWidget {
+class AudioTileImage extends StatelessWidget {
   const AudioTileImage({
     super.key,
     this.audio,
@@ -18,7 +18,7 @@ class AudioTileImage extends ConsumerWidget {
   final double size;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final iconSize = size / (1.65);
     final theme = context.t;
     IconData iconData;

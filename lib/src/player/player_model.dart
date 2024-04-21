@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../data.dart';
 import 'player_service.dart';
@@ -66,14 +64,11 @@ class PlayerModel extends SafeChangeNotifier {
   bool get shuffle => service.shuffle;
   void setShuffle(bool value) => service.setShuffle(value);
 
-  double get volume => service.volume;
+  double? get volume => service.volume;
   Future<void> setVolume(double value) async => await service.setVolume(value);
 
   double get rate => service.rate;
   Future<void> setRate(double value) async => await service.setRate(value);
-
-  Future<void> play({Duration? newPosition, Audio? newAudio}) async =>
-      await service.play(newAudio: newAudio, newPosition: newPosition);
 
   Future<void> playOrPause() async => await service.playOrPause();
 
@@ -83,30 +78,29 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> resume() async => await service.resume();
 
-  Future<void> init() async {
-    _queueNameChangedSub =
+  void init() async {
+    _queueNameChangedSub ??=
         service.queueChanged.listen((_) => notifyListeners());
-    _queueChangedSub = service.queueChanged.listen((_) => notifyListeners());
-    _mpvMetaDataChangedSub =
+    _queueChangedSub ??= service.queueChanged.listen((_) => notifyListeners());
+    _mpvMetaDataChangedSub ??=
         service.mpvMetaDataChanged.listen((_) => notifyListeners());
-
     _audioChangedSub = service.audioChanged.listen((_) => notifyListeners());
-    _isVideoChangedSub =
+    _isVideoChangedSub ??=
         service.isVideoChanged.listen((_) => notifyListeners());
-    _nextAudioChangedSub =
+    _nextAudioChangedSub ??=
         service.nextAudioChanged.listen((_) => notifyListeners());
-    _shuffleChangedSub =
+    _shuffleChangedSub ??=
         service.shuffleChanged.listen((_) => notifyListeners());
-    _repeatSingleChangedSub =
+    _repeatSingleChangedSub ??=
         service.repeatSingleChanged.listen((_) => notifyListeners());
-    _volumeChangedSub = service.volumeChanged.listen((_) => notifyListeners());
-    _rateChanged = service.rateChanged.listen((_) => notifyListeners());
-
-    _isPlayingChangedSub =
+    _volumeChangedSub ??=
+        service.volumeChanged.listen((_) => notifyListeners());
+    _rateChanged ??= service.rateChanged.listen((_) => notifyListeners());
+    _isPlayingChangedSub ??=
         service.isPlayingChanged.listen((_) => notifyListeners());
-    _durationChangedSub =
+    _durationChangedSub ??=
         service.durationChanged.listen((_) => notifyListeners());
-    _positionChangedSub =
+    _positionChangedSub ??=
         service.positionChanged.listen((_) => notifyListeners());
   }
 
@@ -164,7 +158,3 @@ class PlayerModel extends SafeChangeNotifier {
     super.dispose();
   }
 }
-
-final playerModelProvider = ChangeNotifierProvider<PlayerModel>((ref) {
-  return PlayerModel(service: getService<PlayerService>());
-});

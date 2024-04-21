@@ -1,4 +1,5 @@
 name: musicpod
+title: MusicPod
 version: git
 summary: Music, podcast and internet radio player
 description: Play local audio files, browse podcasts online or listen to internet radio stations.
@@ -60,7 +61,7 @@ parts:
 
   flutter-git:
     source: https://github.com/flutter/flutter.git
-    source-tag: 3.16.0
+    source-tag: 3.19.5
     source-depth: 1
     plugin: nil
     override-build: |

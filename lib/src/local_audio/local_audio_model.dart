@@ -2,27 +2,20 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../common.dart';
 import '../../data.dart';
 import '../../local_audio.dart';
-import '../../settings.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
   LocalAudioModel({
     required LocalAudioService localAudioService,
-    required SettingsService settingsService,
-  })  : _localAudioService = localAudioService,
-        _settingsService = settingsService;
+  }) : _localAudioService = localAudioService;
 
   final LocalAudioService _localAudioService;
-  final SettingsService _settingsService;
 
   StreamSubscription<bool>? _audiosChangedSub;
-  StreamSubscription<bool>? _titlesViewAudioFilterIndexSub;
 
   Set<Audio>? _albumSearchResult;
   Set<Audio>? get albumSearchResult => _albumSearchResult;
@@ -116,7 +109,7 @@ class LocalAudioModel extends SafeChangeNotifier {
     if (_localAudioService.audios == null) return null;
     final list = (_localAudioService.audios!).toList();
     sortListByAudioFilter(
-      audioFilter: AudioFilter.values[titlesViewAudioFilterIndex],
+      audioFilter: AudioFilter.title,
       audios: list,
     );
 
@@ -294,28 +287,16 @@ class LocalAudioModel extends SafeChangeNotifier {
       _allGenres = _findAllGenres();
     }
 
-    _audiosChangedSub = _localAudioService.audiosChanged.listen((_) {
-      notifyListeners();
-    });
-
-    _titlesViewAudioFilterIndexSub =
-        _settingsService.titlesViewAudioFilterIndexChanged.listen((_) {
-      _audios = _findAllTitles();
+    _audiosChangedSub ??= _localAudioService.audiosChanged.listen((_) {
       notifyListeners();
     });
 
     notifyListeners();
   }
 
-  int get titlesViewAudioFilterIndex =>
-      _settingsService.titlesViewAudioFilterIndex;
-  void setTitlesViewAudioFilterIndex(int value) =>
-      _settingsService.setTitlesViewAudioFilterIndex(value);
-
   @override
   Future<void> dispose() async {
     await _audiosChangedSub?.cancel();
-    await _titlesViewAudioFilterIndexSub?.cancel();
     super.dispose();
   }
 
@@ -327,10 +308,3 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 }
-
-final localAudioModelProvider = ChangeNotifierProvider(
-  (ref) => LocalAudioModel(
-    localAudioService: getService<LocalAudioService>(),
-    settingsService: getService<SettingsService>(),
-  ),
-);

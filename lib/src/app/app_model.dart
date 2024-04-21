@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 
 class AppModel extends SafeChangeNotifier {
   AppModel({required Connectivity connectivity})
@@ -39,9 +37,9 @@ class AppModel extends SafeChangeNotifier {
     super.dispose();
   }
 
-  void _updateConnectivity(ConnectivityResult result) {
-    if (_result == result) return;
-    _result = result;
+  void _updateConnectivity(List<ConnectivityResult> result) {
+    if (_result == result.firstOrNull) return;
+    _result = result.firstOrNull;
     notifyListeners();
   }
 
@@ -67,7 +65,3 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 }
-
-final appModelProvider = ChangeNotifierProvider(
-  (ref) => AppModel(connectivity: getService<Connectivity>()),
-);

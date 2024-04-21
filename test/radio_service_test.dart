@@ -7,18 +7,19 @@ const Audio sixFortyStation = Audio(
 );
 
 Future<void> main() async {
-  group('radio tests', () {
-    final service = RadioService();
-    String? host;
+  final service = RadioService();
+  String? host;
+  setUp(() async {
+    host = await service.init();
+  });
 
-    test('initRadioService', () async {
-      host = await service.init();
+  group('radio tests', () {
+    test('initRadioService', () {
       expect(host != null, true);
     });
 
-    test('loadTags', () async {
-      final tags = await service.loadTags();
-      expect(tags?.any((e) => e.name == 'metal'), true);
+    test('loadTags', () {
+      expect(service.tags?.any((e) => e.name == 'metal'), true);
     });
 
     test('find6forty', () async {

@@ -1,18 +1,18 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../get.dart';
 import '../../l10n.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
 import '../library/library_model.dart';
 
-class AudioPageBody extends ConsumerStatefulWidget {
+class AudioPageBody extends StatefulWidget with WatchItStatefulWidgetMixin {
   const AudioPageBody({
     super.key,
     required this.pageId,
@@ -76,10 +76,10 @@ class AudioPageBody extends ConsumerStatefulWidget {
   final bool classicTiles;
 
   @override
-  ConsumerState<AudioPageBody> createState() => _AudioPageBodyState();
+  State<AudioPageBody> createState() => _AudioPageBodyState();
 }
 
-class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
+class _AudioPageBodyState extends State<AudioPageBody> {
   bool reorderAble = false;
 
   @override
@@ -88,30 +88,26 @@ class _AudioPageBodyState extends ConsumerState<AudioPageBody> {
         (widget.audioPageType == AudioPageType.playlist ||
             widget.audioPageType == AudioPageType.likedAudio);
     final isReorderAble = reorderAble && reorderAblePageType;
-    final isOnline = ref.watch((appModelProvider.select((c) => c.isOnline)));
-    final isPlaying =
-        ref.watch((playerModelProvider.select((c) => c.isPlaying)));
+    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
+    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
 
-    final playerModel = ref.read(playerModelProvider);
+    final playerModel = getIt<PlayerModel>();
     final startPlaylist = playerModel.startPlaylist;
 
-    final currentAudio =
-        ref.watch((playerModelProvider.select((c) => c.audio)));
+    final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
     final pause = playerModel.pause;
     final resume = playerModel.resume;
 
     if (widget.audioPageType != AudioPageType.podcast) {
-      ref.watch(libraryModelProvider.select((m) => m.likedAudios.length));
+      watchPropertyValue((LibraryModel m) => m.likedAudios.length);
     }
     if (widget.audioPageType == AudioPageType.playlist) {
-      ref.watch(
-        libraryModelProvider.select(
-          (m) => m.playlists[widget.pageId]?.length,
-        ),
+      watchPropertyValue(
+        (LibraryModel m) => m.playlists[widget.pageId]?.length,
       );
     }
 
-    final libraryModel = ref.read(libraryModelProvider);
+    final libraryModel = getIt<LibraryModel>();
 
     final audioControlPanel = Padding(
       padding: kAudioControlPanelPadding,
