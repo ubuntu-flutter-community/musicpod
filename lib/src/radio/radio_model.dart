@@ -84,11 +84,11 @@ class RadioModel extends SafeChangeNotifier {
     );
   }
 
-// TODO: use when radio audios are played
-  Future<void> clickStation(Audio station) async {
-    if (station.description != null) {
-      return await _radioService.clickStation(station.description!);
-    }
+// TODO: https://github.com/tomassasovsky/radio-browser-api.dart/issues/9
+  Future<void> clickStation(Audio? station) async {
+    // if (station?.description != null) {
+    //   return await _radioService.clickStation(station!.description!);
+    // }
   }
 
   // TODO: use in state autocomplete depending on [country]

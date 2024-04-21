@@ -49,6 +49,7 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
   Widget build(BuildContext context) {
     final libraryModel = getIt<LibraryModel>();
     final playerModel = getIt<PlayerModel>();
+    final radioModel = getIt<RadioModel>();
 
     final futureBuilder = FutureBuilder(
       future: _future,
@@ -78,7 +79,14 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
                 final station = snapshot.data?.elementAt(index);
                 return StationCard(
                   station: station,
-                  startPlaylist: playerModel.startPlaylist,
+                  startPlaylist: ({required audios, index, required listName}) {
+                    return playerModel
+                        .startPlaylist(
+                          audios: audios,
+                          listName: listName,
+                        )
+                        .then((_) => radioModel.clickStation(station));
+                  },
                   isStarredStation: libraryModel.isStarredStation,
                   unstarStation: libraryModel.unStarStation,
                   starStation: libraryModel.addStarredStation,
