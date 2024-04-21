@@ -98,8 +98,8 @@ class SettingsService {
   Stream<bool> get usePodcastIndexChanged => _usePodcastIndexController.stream;
   bool _usePodcastIndex = false;
   bool get usePodcastIndex => _usePodcastIndex;
-  void setUsePodcastIndex(bool value) {
-    writeSetting(kUsePodcastIndex, value.toString()).then((_) {
+  Future<void> setUsePodcastIndex(bool value) async {
+    return writeSetting(kUsePodcastIndex, value.toString()).then((_) {
       _usePodcastIndex = value;
       _usePodcastIndexController.add(true);
     });

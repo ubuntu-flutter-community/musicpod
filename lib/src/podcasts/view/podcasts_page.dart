@@ -42,13 +42,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
     if (!isOnline) return const OfflinePage();
 
     final model = getIt<PodcastModel>();
-    final searchResult = watchPropertyValue((PodcastModel m) => m.searchResult);
 
     final searchActive = watchPropertyValue((PodcastModel m) => m.searchActive);
     final setSearchActive = model.setSearchActive;
-
-    final limit = watchPropertyValue((PodcastModel m) => m.limit);
-    final setLimit = model.setLimit;
 
     final search = model.search;
     final setSearchQuery = model.setSearchQuery;
@@ -65,15 +61,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
           height: 15,
         ),
         Expanded(
-          child: PodcastsDiscoverGrid(
-            searchResult: searchResult,
-            checkingForUpdates: checkingForUpdates,
-            limit: limit,
-            incrementLimit: () async {
-              setLimit(limit + 20);
-              await search();
-            },
-          ),
+          child: PodcastsDiscoverGrid(checkingForUpdates: checkingForUpdates),
         ),
       ],
     );

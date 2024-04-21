@@ -104,10 +104,13 @@ class RadioModel extends SafeChangeNotifier {
   }) async {
     _connectedHost ??= await _radioService.init();
 
-    final lastFav = _libraryService.lastFav;
+    final lastFav = _libraryService.lastRadioTag;
 
     _country ??= Country.values.firstWhereOrNull(
       (c) => c.code == (_libraryService.lastCountryCode ?? countryCode),
+    );
+    _language ??= Languages.defaultLanguages.firstWhereOrNull(
+      (c) => c.isoCode == _libraryService.lastLanguageCode,
     );
 
     if (_connectedHost?.isNotEmpty == true) {
