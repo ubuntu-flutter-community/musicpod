@@ -1,12 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common.dart';
 import '../../l10n.dart';
+import '../../utils.dart';
 import '../data/mpv_meta_data.dart';
 
 class IcyImage extends StatefulWidget {
@@ -19,7 +17,6 @@ class IcyImage extends StatefulWidget {
     this.fallBackWidget,
     this.fit,
     this.errorWidget,
-    this.onImageFind,
     this.onGenreTap,
     this.fallBackImageUrl,
   });
@@ -31,7 +28,6 @@ class IcyImage extends StatefulWidget {
   final Widget? fallBackWidget;
   final Widget? errorWidget;
   final BoxFit? fit;
-  final Function({String? url, String? title, String? artist})? onImageFind;
   final Function(String tag)? onGenreTap;
   final String? fallBackImageUrl;
 
@@ -142,96 +138,4 @@ class _IcyImageState extends State<IcyImage> {
         filterQuality: FilterQuality.medium,
         fit: widget.fit ?? BoxFit.fitHeight,
       );
-
-  Future<String?> fetchAlbumArt(String icyTitle) async {
-    String? url = UrlStore().get(icyTitle) ?? await _fetchAlbumArt(icyTitle);
-    final res = _splitIcyTitle(icyTitle);
-    widget.onImageFind?.call(
-      url: url ?? widget.fallBackImageUrl,
-      title: res.songName,
-      artist: res.artist,
-    );
-    return url;
-  }
-
-  ({String? songName, String? artist}) _splitIcyTitle(String icyTitle) {
-    String? songName;
-    String? artist;
-    final split = icyTitle.split(' - ');
-    if (split.isNotEmpty) {
-      artist = split.elementAtOrNull(0);
-      songName = split.elementAtOrNull(1);
-    }
-    return (songName: songName, artist: artist);
-  }
-
-  Future<String?> _fetchAlbumArt(String icyTitle) async {
-    final res = _splitIcyTitle(icyTitle);
-    if (res.songName == null || res.artist == null) return null;
-
-    final searchUrl = Uri.parse(
-      'https://musicbrainz.org/ws/2/recording/?query=recording:"${res.songName}"%20AND%20artist:"${res.artist}"',
-    );
-
-    try {
-      final searchResponse = await http.get(
-        searchUrl,
-        headers: {
-          'Accept': 'application/json',
-          'User-Agent':
-              'MusicPod (https://github.com/ubuntu-flutter-community/musicpod)',
-        },
-      );
-
-      if (searchResponse.statusCode == 200) {
-        final searchData = jsonDecode(searchResponse.body);
-        final recordings = searchData['recordings'] as List;
-
-        final firstRecording = recordings.first;
-
-        final releaseId = firstRecording['releases'][0]['id'];
-
-        if (releaseId == null) return null;
-
-        final albumArtUrl = await _fetchAlbumArtUrlFromReleaseId(releaseId);
-
-        return albumArtUrl;
-      }
-    } on Exception catch (_) {
-      return null;
-    }
-
-    return null;
-  }
-
-  Future<String?> _fetchAlbumArtUrlFromReleaseId(String releaseId) async {
-    final url = Uri.parse(
-      'https://coverartarchive.org/release/$releaseId',
-    );
-    try {
-      final response = await http.get(
-        url,
-        headers: {
-          'Accept': 'application/json',
-          'User-Agent':
-              'MusicPod (https://github.com/ubuntu-flutter-community/musicpod)',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final images = data['images'] as List;
-
-        if (images.isNotEmpty) {
-          final artwork = images[0];
-
-          return (artwork['image']) as String?;
-        }
-      }
-    } on Exception catch (_) {
-      return null;
-    }
-
-    return null;
-  }
 }

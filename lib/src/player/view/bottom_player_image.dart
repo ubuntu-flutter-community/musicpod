@@ -34,7 +34,6 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     const iconSize = 40.0;
     final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
-    final playerModel = getIt<PlayerModel>();
     final theme = context.t;
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
@@ -95,16 +94,6 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
           mpvMetaData: mpvMetaData,
           fit: BoxFit.cover,
           iconSize: iconSize,
-          onImageFind: !isOnline
-              ? null
-              : ({String? artist, String? title, String? url}) {
-                  playerModel.setMediaControlsMetaData(
-                    artist: artist,
-                    title: title,
-                    url: url,
-                  );
-                  playerModel.loadColor(url: url);
-                },
           onGenreTap: (genre) => getIt<RadioModel>().init().then(
                 (_) => navigatorKey.currentState?.push(
                   MaterialPageRoute(
