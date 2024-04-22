@@ -84,11 +84,10 @@ class RadioModel extends SafeChangeNotifier {
     );
   }
 
-// TODO: https://github.com/tomassasovsky/radio-browser-api.dart/issues/9
   Future<void> clickStation(Audio? station) async {
-    // if (station?.description != null) {
-    //   return await _radioService.clickStation(station!.description!);
-    // }
+    if (station?.description != null) {
+      return await _radioService.clickStation(station!.description!);
+    }
   }
 
   // TODO: use in state autocomplete depending on [country]
@@ -102,9 +101,7 @@ class RadioModel extends SafeChangeNotifier {
     String? countryCode,
     int index = 0,
   }) async {
-    _connectedHost ??= await _radioService.init();
-
-    final lastFav = _libraryService.lastRadioTag;
+    _connectedHost = await _radioService.init();
 
     _country ??= Country.values.firstWhereOrNull(
       (c) => c.code == (_libraryService.lastCountryCode ?? countryCode),
@@ -113,7 +110,9 @@ class RadioModel extends SafeChangeNotifier {
       (c) => c.isoCode == _libraryService.lastLanguageCode,
     );
 
-    if (_connectedHost?.isNotEmpty == true) {
+    if (_connectedHost != null) {
+      final lastFav = _libraryService.lastRadioTag;
+
       _tag ??= lastFav == null || tags == null || tags!.isEmpty
           ? null
           : tags!.firstWhere((t) => t.name.contains(lastFav));

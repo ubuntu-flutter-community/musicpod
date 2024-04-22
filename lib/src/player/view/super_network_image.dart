@@ -27,7 +27,7 @@ class SuperNetworkImage extends StatelessWidget {
   final ThemeData theme;
   final MpvMetaData? mpvMetaData;
   final double iconSize;
-  final Function(String url)? onImageFind;
+  final Function({String? artist, String? title, String? url})? onImageFind;
   final Function(String genre)? onGenreTap;
 
   @override
@@ -65,6 +65,7 @@ class SuperNetworkImage extends StatelessWidget {
                   fit: fit,
                   onImageFind: onImageFind,
                   onGenreTap: onGenreTap,
+                  fallBackImageUrl: audio?.imageUrl,
                 )
               : safeNetworkImage,
     );
