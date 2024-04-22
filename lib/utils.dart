@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/services.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -273,32 +272,6 @@ Duration? parseDuration(String? durationAsString) {
   }
   micros = (double.parse(parts[parts.length - 1]) * 1000000).round();
   return Duration(hours: hours, minutes: minutes, microseconds: micros);
-}
-
-Future<Uri?> createUriFromAudio(Audio audio) async {
-  if (audio.imageUrl != null || audio.albumArtUrl != null) {
-    return Uri.parse(
-      audio.imageUrl ?? audio.albumArtUrl!,
-    );
-  } else if (audio.pictureData != null) {
-    Uint8List imageInUnit8List = audio.pictureData!;
-    final workingDir = await getWorkingDir();
-
-    final imagesDir = p.join(workingDir, 'images');
-
-    if (Directory(imagesDir).existsSync()) {
-      Directory(imagesDir).deleteSync(recursive: true);
-    }
-    Directory(imagesDir).createSync();
-    final now =
-        DateTime.now().toUtc().toString().replaceAll(RegExp(r'[^0-9]'), '');
-    final file = File(p.join(imagesDir, '$now.png'));
-    final newFile = await file.writeAsBytes(imageInUnit8List);
-
-    return Uri.file(newFile.path, windows: Platform.isWindows);
-  } else {
-    return null;
-  }
 }
 
 String? generateAlbumId(Audio audio) {

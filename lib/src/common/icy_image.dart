@@ -21,6 +21,7 @@ class IcyImage extends StatefulWidget {
     this.errorWidget,
     this.onImageFind,
     this.onGenreTap,
+    this.fallBackImageUrl,
   });
 
   final MpvMetaData mpvMetaData;
@@ -30,8 +31,9 @@ class IcyImage extends StatefulWidget {
   final Widget? fallBackWidget;
   final Widget? errorWidget;
   final BoxFit? fit;
-  final Function(String url)? onImageFind;
+  final Function({String? url, String? title, String? artist})? onImageFind;
   final Function(String tag)? onGenreTap;
+  final String? fallBackImageUrl;
 
   @override
   State<IcyImage> createState() => _IcyImageState();
@@ -144,14 +146,19 @@ class _IcyImageState extends State<IcyImage> {
   Future<String?> fetchAlbumArt(String icyTitle) async {
     final url = UrlStore().get(icyTitle);
     if (url != null) {
-      widget.onImageFind?.call(url);
+      final res = _splitIcyTitle(icyTitle);
+      widget.onImageFind?.call(
+        url: url,
+        title: res.songName,
+        artist: res.artist,
+      );
       return url;
     } else {
       return await _fetchAlbumArt(icyTitle);
     }
   }
 
-  Future<String?> _fetchAlbumArt(String icyTitle) async {
+  ({String? songName, String? artist}) _splitIcyTitle(String icyTitle) {
     String? songName;
     String? artist;
     final split = icyTitle.split(' - ');
@@ -159,10 +166,15 @@ class _IcyImageState extends State<IcyImage> {
       artist = split.elementAtOrNull(0);
       songName = split.elementAtOrNull(1);
     }
-    if (artist == null || songName == null) return null;
+    return (songName: songName, artist: artist);
+  }
+
+  Future<String?> _fetchAlbumArt(String icyTitle) async {
+    final res = _splitIcyTitle(icyTitle);
+    if (res.songName == null || res.artist == null) return null;
 
     final searchUrl = Uri.parse(
-      'https://musicbrainz.org/ws/2/recording/?query=recording:"$songName"%20AND%20artist:"$artist"',
+      'https://musicbrainz.org/ws/2/recording/?query=recording:"${res.songName}"%20AND%20artist:"${res.artist}"',
     );
 
     try {
@@ -183,10 +195,21 @@ class _IcyImageState extends State<IcyImage> {
 
         final releaseId = firstRecording['releases'][0]['id'];
 
-        if (releaseId == null) return null;
+        if (releaseId == null) {
+          widget.onImageFind?.call(
+            title: res.songName,
+            artist: res.artist,
+            url: widget.fallBackImageUrl,
+          );
+          return null;
+        }
 
         final albumArtUrl = await _fetchAlbumArtUrlFromReleaseId(releaseId);
-        if (albumArtUrl != null) widget.onImageFind?.call(albumArtUrl);
+        widget.onImageFind?.call(
+          title: res.songName,
+          artist: res.artist,
+          url: albumArtUrl ?? widget.fallBackImageUrl,
+        );
         return albumArtUrl;
       }
     } on Exception catch (_) {

@@ -1122,10 +1122,10 @@ packages:
     dependency: "direct main"
     description:
       name: radio_browser_api
-      sha256: "0a362b9937f9881ea17d9d44aebc4c1381b6f159006aa4471a1cabfc2f2cebc8"
+      sha256: "73da0aa774ebfb28315d7c4590f4b231105772860fe1a4ba5c20ee05cf0e8d63"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "2.0.0+1"
   reorderableitemsview:
     dependency: "direct main"
     description:
