@@ -144,18 +144,14 @@ class _IcyImageState extends State<IcyImage> {
       );
 
   Future<String?> fetchAlbumArt(String icyTitle) async {
-    final url = UrlStore().get(icyTitle);
-    if (url != null) {
-      final res = _splitIcyTitle(icyTitle);
-      widget.onImageFind?.call(
-        url: url,
-        title: res.songName,
-        artist: res.artist,
-      );
-      return url;
-    } else {
-      return await _fetchAlbumArt(icyTitle);
-    }
+    String? url = UrlStore().get(icyTitle) ?? await _fetchAlbumArt(icyTitle);
+    final res = _splitIcyTitle(icyTitle);
+    widget.onImageFind?.call(
+      url: url ?? widget.fallBackImageUrl,
+      title: res.songName,
+      artist: res.artist,
+    );
+    return url;
   }
 
   ({String? songName, String? artist}) _splitIcyTitle(String icyTitle) {
@@ -195,21 +191,10 @@ class _IcyImageState extends State<IcyImage> {
 
         final releaseId = firstRecording['releases'][0]['id'];
 
-        if (releaseId == null) {
-          widget.onImageFind?.call(
-            title: res.songName,
-            artist: res.artist,
-            url: widget.fallBackImageUrl,
-          );
-          return null;
-        }
+        if (releaseId == null) return null;
 
         final albumArtUrl = await _fetchAlbumArtUrlFromReleaseId(releaseId);
-        widget.onImageFind?.call(
-          title: res.songName,
-          artist: res.artist,
-          url: albumArtUrl ?? widget.fallBackImageUrl,
-        );
+
         return albumArtUrl;
       }
     } on Exception catch (_) {
