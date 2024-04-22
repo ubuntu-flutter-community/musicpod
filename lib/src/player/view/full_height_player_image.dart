@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
@@ -37,7 +36,6 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
     final theme = context.t;
 
     final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
-    final playerModel = getIt<PlayerModel>();
 
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
@@ -73,16 +71,6 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
           theme: theme,
           mpvMetaData: mpvMetaData,
           iconSize: fullHeightPlayerImageSize * 0.7,
-          onImageFind: !isOnline
-              ? null
-              : ({String? artist, String? title, String? url}) {
-                  playerModel.setMediaControlsMetaData(
-                    artist: artist,
-                    title: title,
-                    url: url,
-                  );
-                  playerModel.loadColor(url: url);
-                },
           onGenreTap: (genre) => getIt<RadioModel>().init().then(
             (_) {
               getIt<AppModel>().setFullScreen(false);

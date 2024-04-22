@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:xdg_directories/xdg_directories.dart';
 
+import 'common.dart';
 import 'constants.dart';
 import 'data.dart';
 
@@ -308,3 +310,90 @@ const _validExtensions = [
   '.m4a',
   '.aac',
 ];
+
+({String? songName, String? artist}) splitIcyTitle(String icyTitle) {
+  String? songName;
+  String? artist;
+  final split = icyTitle.split(' - ');
+  if (split.isNotEmpty) {
+    artist = split.elementAtOrNull(0);
+    songName = split.elementAtOrNull(1);
+  }
+  return (songName: songName, artist: artist);
+}
+
+Future<String?> fetchAlbumArt(String icyTitle) async {
+  return UrlStore().get(icyTitle) ?? await _fetchAlbumArt(icyTitle);
+}
+
+Future<String?> _fetchAlbumArt(String icyTitle) async {
+  final res = splitIcyTitle(icyTitle);
+  if (res.songName == null || res.artist == null) return null;
+
+  final searchUrl = Uri.parse(
+    'https://musicbrainz.org/ws/2/recording/?query=recording:"${res.songName}"%20AND%20artist:"${res.artist}"',
+  );
+
+  try {
+    final searchResponse = await http.get(
+      searchUrl,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent':
+            'MusicPod (https://github.com/ubuntu-flutter-community/musicpod)',
+      },
+    );
+
+    if (searchResponse.statusCode == 200) {
+      final searchData = jsonDecode(searchResponse.body);
+      final recordings = searchData['recordings'] as List;
+
+      final firstRecording = recordings.firstOrNull;
+
+      final releaseId = firstRecording == null
+          ? null
+          : firstRecording?['releases']?[0]?['id'];
+
+      if (releaseId == null) return null;
+
+      final albumArtUrl = await _fetchAlbumArtUrlFromReleaseId(releaseId);
+
+      return albumArtUrl;
+    }
+  } on Exception catch (_) {
+    return null;
+  }
+
+  return null;
+}
+
+Future<String?> _fetchAlbumArtUrlFromReleaseId(String releaseId) async {
+  final url = Uri.parse(
+    'https://coverartarchive.org/release/$releaseId',
+  );
+  try {
+    final response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent':
+            'MusicPod (https://github.com/ubuntu-flutter-community/musicpod)',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final images = data['images'] as List;
+
+      if (images.isNotEmpty) {
+        final artwork = images[0];
+
+        return (artwork['image']) as String?;
+      }
+    }
+  } on Exception catch (_) {
+    return null;
+  }
+
+  return null;
+}

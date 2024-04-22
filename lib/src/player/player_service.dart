@@ -271,6 +271,17 @@ class PlayerService {
       (data) async {
         final mpvMetaData = MpvMetaData.fromJson(data);
         setMpvMetaData(mpvMetaData);
+        final res = splitIcyTitle(mpvMetaData.icyTitle);
+        fetchAlbumArt(mpvMetaData.icyTitle).then(
+          (albumArt) {
+            setMediaControlsMetaData(
+              title: res.songName,
+              artist: res.artist,
+              url: albumArt ?? audio?.imageUrl,
+            );
+            loadColor(url: albumArt);
+          },
+        );
       },
     );
 
