@@ -722,16 +722,21 @@ class PlayerService {
     String? title,
     String? artist,
   }) {
-    if (_mpris == null || audio?.url == null && audio?.path == null) return;
+    if (_mpris == null ||
+        (audio?.url == null && audio?.path == null && _audio?.url == null)) {
+      return;
+    }
     _mpris!.metadata = MPRISMetadata(
-      audio?.path != null ? Uri.file(audio!.path!) : Uri.parse(audio!.url!),
+      audio?.path != null
+          ? Uri.file(audio!.path!)
+          : Uri.parse(audio?.url != null ? audio!.url! : _audio!.url!),
       artUrl: artUri,
-      album: audio.album,
-      albumArtist: [audio.albumArtist ?? ''],
-      artist: [artist ?? audio.artist ?? ''],
-      discNumber: audio.discNumber,
-      title: title ?? audio.title,
-      trackNumber: audio.trackNumber,
+      album: audio?.album,
+      albumArtist: [audio?.albumArtist ?? ''],
+      artist: [artist ?? audio?.artist ?? ''],
+      discNumber: audio?.discNumber,
+      title: title ?? audio?.title,
+      trackNumber: audio?.trackNumber,
     );
   }
 
