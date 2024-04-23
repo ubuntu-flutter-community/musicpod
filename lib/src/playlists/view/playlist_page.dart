@@ -4,6 +4,7 @@ import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
+import '../../../media_file_x.dart';
 import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
@@ -11,7 +12,6 @@ import '../../../get.dart';
 import '../../../library.dart';
 import '../../../local_audio.dart';
 import '../../../playlists.dart';
-import '../../../utils.dart';
 import '../../common/fall_back_header_image.dart';
 import '../../l10n/l10n.dart';
 import '../../theme.dart';
@@ -55,7 +55,7 @@ class PlaylistPage extends StatelessWidget {
             (value) {
               if (value == null) return;
               final file = File.fromUri(value);
-              if (!isValidFile(file.path)) return;
+              if (!file.isValidMedia) return;
               readMetadata(file, getImage: true).then(
                 (data) {
                   libraryModel.addAudioToPlaylist(
@@ -83,7 +83,7 @@ class PlaylistPage extends StatelessWidget {
         onAlbumTap: (text) {
           final albumAudios = model.findAlbum(Audio(album: text));
           if (albumAudios?.firstOrNull == null) return;
-          final id = generateAlbumId(albumAudios!.first);
+          final id = albumAudios!.first.albumId;
           if (id == null) return;
 
           Navigator.of(context).push(

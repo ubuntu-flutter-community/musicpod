@@ -13,7 +13,7 @@ import '../../../radio.dart';
 import '../../../theme.dart';
 import '../../common/icy_image.dart';
 
-class RadioHistoryList extends StatelessWidget with WatchItMixin {
+class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
   const RadioHistoryList({
     super.key,
     this.filter,

@@ -4,10 +4,9 @@ import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
 import '../../../get.dart';
-import '../../../utils.dart';
+import '../local_audio_model.dart';
 import 'album_page.dart';
 import 'artist_page.dart';
-import '../local_audio_model.dart';
 
 class TitlesView extends StatelessWidget {
   const TitlesView({
@@ -39,7 +38,7 @@ class TitlesView extends StatelessWidget {
       onAlbumTap: (text) {
         final albumAudios = model.findAlbum(Audio(album: text));
         if (albumAudios?.firstOrNull == null) return;
-        final id = generateAlbumId(albumAudios!.first);
+        final id = albumAudios!.first.albumId;
         if (id == null) return;
 
         Navigator.of(context).push(

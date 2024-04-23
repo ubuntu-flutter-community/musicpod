@@ -158,7 +158,7 @@ class _PodcastSectionState extends State<_PodcastSection> {
                 onChanged: (v) => setState(() => _initialKey = v),
                 obscureText: true,
                 decoration: InputDecoration(
-                  label: Text(kPodcastIndexApiKey.camelToSentence()),
+                  label: Text(kPodcastIndexApiKey.camelToSentence),
                   suffixIcon: IconButton(
                     tooltip: context.l10n.save,
                     onPressed: () =>
@@ -185,7 +185,7 @@ class _PodcastSectionState extends State<_PodcastSection> {
                 onChanged: (v) => setState(() => _initialSecret = v),
                 obscureText: true,
                 decoration: InputDecoration(
-                  label: Text(kPodcastIndexApiSecret.camelToSentence()),
+                  label: Text(kPodcastIndexApiSecret.camelToSentence),
                   suffixIcon: IconButton(
                     tooltip: context.l10n.save,
                     onPressed: () =>

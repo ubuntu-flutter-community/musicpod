@@ -66,7 +66,7 @@ class RadioModel extends SafeChangeNotifier {
     final stations = switch (radioSearch) {
       RadioSearch.tag => await _radioService.getStations(tag: query),
       RadioSearch.country => await _radioService.getStations(
-          country: query?.camelToSentence(),
+          country: query?.camelToSentence,
         ),
       RadioSearch.name => await _radioService.getStations(name: query),
       RadioSearch.state => await _radioService.getStations(state: query),

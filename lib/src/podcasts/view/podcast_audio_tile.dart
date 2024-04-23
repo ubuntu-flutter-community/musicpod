@@ -9,9 +9,9 @@ import 'package:yaru/yaru.dart';
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../data.dart';
+import '../../../duration_x.dart';
 import '../../../l10n.dart';
 import '../../../theme.dart';
-import '../../../utils.dart';
 import 'avatar_with_progress.dart';
 import 'download_button.dart';
 
@@ -63,11 +63,9 @@ class PodcastAudioTile extends StatelessWidget {
     final date = audio.year == null
         ? ''
         : '${DateFormat.yMMMEd(Platform.localeName).format(DateTime.fromMillisecondsSinceEpoch(audio.year!))} | ';
-    final duration = formatTime(
-      audio.durationMs != null
-          ? Duration(milliseconds: audio.durationMs!.toInt())
-          : Duration.zero,
-    );
+    final duration = audio.durationMs != null
+        ? Duration(milliseconds: audio.durationMs!.toInt()).formattedTime
+        : Duration.zero.formattedTime;
 
     return YaruExpandable(
       isExpanded: isExpanded,

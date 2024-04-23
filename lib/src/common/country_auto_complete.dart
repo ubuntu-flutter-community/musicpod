@@ -58,11 +58,11 @@ class CountryAutoComplete extends StatelessWidget {
           return Autocomplete<Country>(
             key: ValueKey(value?.name),
             initialValue: TextEditingValue(
-              text: value?.name.camelToSentence().capitalizeEveryWord() ??
+              text: value?.name.camelToSentence.everyWordCapitalized ??
                   context.l10n.all,
             ),
             displayStringForOption: (option) =>
-                option.name.camelToSentence().capitalizeEveryWord(),
+                option.name.camelToSentence.everyWordCapitalized,
             fieldViewBuilder: (
               context,
               textEditingController,
@@ -227,7 +227,7 @@ class _CountryTile extends StatelessWidget {
       hoverColor: highlight ? theme.focusColor : null,
       tileColor: highlight ? theme.focusColor : null,
       onTap: () => onSelected(t),
-      title: Text(t.name.camelToSentence().capitalizeEveryWord()),
+      title: Text(t.name.camelToSentence.everyWordCapitalized),
       trailing: IconButton(
         onPressed: () {
           favs?.contains(t.code) == false ? addFav(t) : removeFav(t);

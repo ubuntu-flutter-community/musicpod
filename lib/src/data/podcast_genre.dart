@@ -141,7 +141,7 @@ enum PodcastGenre {
         return name
             .replaceAll('XXXITunesOnly', '')
             .replaceAll('XXXPodcastIndexOnly', '')
-            .capitalize();
+            .capitalized;
     }
   }
 
@@ -379,7 +379,7 @@ enum PodcastGenre {
         return name
             .replaceAll('XXXITunesOnly', '')
             .replaceAll('XXXPodcastIndexOnly', '')
-            .capitalize();
+            .capitalized;
     }
   }
 }

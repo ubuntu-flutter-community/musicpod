@@ -4,7 +4,8 @@ import 'package:yaru/yaru.dart';
 
 import '../../common.dart';
 import '../../l10n.dart';
-import '../../utils.dart';
+import '../../online_album_art_utils.dart';
+import '../../url_store.dart';
 import '../data/mpv_meta_data.dart';
 
 class IcyImage extends StatefulWidget {
@@ -119,8 +120,8 @@ class _IcyImageState extends State<IcyImage> {
                     builder: (context, snapshot) {
                       return _buildImage(
                         UrlStore().put(
-                          icyTitle: widget.mpvMetaData.icyTitle,
-                          imageUrl: snapshot.data,
+                          key: widget.mpvMetaData.icyTitle,
+                          url: snapshot.data,
                         ),
                       );
                     },

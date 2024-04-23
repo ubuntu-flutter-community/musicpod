@@ -15,6 +15,8 @@ const kDesktopEntry = kSnapDesktopEntry;
 
 const kGitHubShortLink = 'ubuntu-flutter-community/musicpod';
 
+const kAppTitle = 'MusicPod';
+
 const kTinyButtonSize = 30.0;
 
 const kTinyButtonIconSize = 13.0;

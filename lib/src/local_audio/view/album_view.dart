@@ -4,11 +4,10 @@ import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../get.dart';
 import '../../../player.dart';
-import '../../../utils.dart';
 import '../../data/audio.dart';
 import '../../l10n/l10n.dart';
-import 'album_page.dart';
 import '../local_audio_model.dart';
+import 'album_page.dart';
 
 class AlbumsView extends StatelessWidget {
   const AlbumsView({
@@ -47,7 +46,7 @@ class AlbumsView extends StatelessWidget {
         gridDelegate: audioCardGridDelegate,
         itemBuilder: (context, index) {
           final audio = albums!.elementAt(index);
-          String? id = generateAlbumId(audio);
+          String? id = audio.albumId;
           final albumAudios = model.findAlbum(audio);
 
           final image = audio.pictureData == null

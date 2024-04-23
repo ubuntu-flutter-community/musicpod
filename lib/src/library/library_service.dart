@@ -6,7 +6,8 @@ import 'package:dio/dio.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
-import '../../utils.dart';
+import '../../string_x.dart';
+import '../../persistence_utils.dart';
 
 class LibraryService {
   //
@@ -507,7 +508,7 @@ class LibraryService {
     _podcastUpdates ??= {};
     _starredStations = await readAudioMap(kStarredStationsFileName);
     _lastPositions = (await getSettings(kLastPositionsFileName)).map(
-      (key, value) => MapEntry(key, parseDuration(value) ?? Duration.zero),
+      (key, value) => MapEntry(key, value.parsedDuration ?? Duration.zero),
     );
     _likedAudios =
         (await readAudioMap(kLikedAudiosFileName)).entries.firstOrNull?.value ??
