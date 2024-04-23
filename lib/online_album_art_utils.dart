@@ -7,7 +7,9 @@ import 'string_x.dart';
 import 'url_store.dart';
 
 Future<String?> fetchAlbumArt(String icyTitle) async {
-  return UrlStore().get(icyTitle) ?? await compute(_fetchAlbumArt, icyTitle);
+  return UrlStore().get(icyTitle) ??
+      UrlStore()
+          .put(key: icyTitle, url: await compute(_fetchAlbumArt, icyTitle));
 }
 
 Future<String?> _fetchAlbumArt(String icyTitle) async {
@@ -18,13 +20,7 @@ Future<String?> _fetchAlbumArt(String icyTitle) async {
   if (searchUrl == null) return null;
 
   try {
-    final searchResponse = await http.get(
-      searchUrl,
-      headers: {
-        'Accept': 'application/json',
-        'User-Agent': '$kAppTitle ($kRepoUrl)',
-      },
-    );
+    final searchResponse = await http.get(searchUrl, headers: kAlbumArtHeaders);
 
     if (searchResponse.statusCode == 200) {
       final searchData = jsonDecode(searchResponse.body);
@@ -54,14 +50,7 @@ Future<String?> _fetchAlbumArtUrlFromReleaseId(String releaseId) async {
     'https://coverartarchive.org/release/$releaseId',
   );
   try {
-    final response = await http.get(
-      url,
-      headers: {
-        'Accept': 'application/json',
-        'User-Agent':
-            'MusicPod (https://github.com/ubuntu-flutter-community/musicpod)',
-      },
-    );
+    final response = await http.get(url, headers: kAlbumArtHeaders);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);

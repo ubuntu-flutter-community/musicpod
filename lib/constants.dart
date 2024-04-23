@@ -160,3 +160,8 @@ const shops = <String, String>{
 };
 
 const kSponsorLink = 'https://github.com/sponsors/Feichtmeier';
+
+const kAlbumArtHeaders = {
+  'Accept': 'application/json',
+  'User-Agent': '$kAppTitle ($kRepoUrl)',
+};
