@@ -14,7 +14,9 @@
       Play local audio files, browse podcasts online or listen to internet radio stations.
     </p>
   </description>
-  
+  <developer>
+    <name>Ubuntu Flutter Comunity</name>
+  </developer>
   <screenshots>
     <screenshot type="default">
       <caption>Album - light</caption>
