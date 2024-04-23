@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
@@ -72,7 +71,6 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
           theme: theme,
           mpvMetaData: mpvMetaData,
           iconSize: fullHeightPlayerImageSize * 0.7,
-          onImageFind: (url) => getIt<PlayerModel>().loadColor(url: url),
           onGenreTap: (genre) => getIt<RadioModel>().init().then(
             (_) {
               getIt<AppModel>().setFullScreen(false);

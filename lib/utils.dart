@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:xdg_directories/xdg_directories.dart';
 
+import 'common.dart';
 import 'constants.dart';
 import 'data.dart';
 
@@ -275,32 +276,6 @@ Duration? parseDuration(String? durationAsString) {
   return Duration(hours: hours, minutes: minutes, microseconds: micros);
 }
 
-Future<Uri?> createUriFromAudio(Audio audio) async {
-  if (audio.imageUrl != null || audio.albumArtUrl != null) {
-    return Uri.parse(
-      audio.imageUrl ?? audio.albumArtUrl!,
-    );
-  } else if (audio.pictureData != null) {
-    Uint8List imageInUnit8List = audio.pictureData!;
-    final workingDir = await getWorkingDir();
-
-    final imagesDir = p.join(workingDir, 'images');
-
-    if (Directory(imagesDir).existsSync()) {
-      Directory(imagesDir).deleteSync(recursive: true);
-    }
-    Directory(imagesDir).createSync();
-    final now =
-        DateTime.now().toUtc().toString().replaceAll(RegExp(r'[^0-9]'), '');
-    final file = File(p.join(imagesDir, '$now.png'));
-    final newFile = await file.writeAsBytes(imageInUnit8List);
-
-    return Uri.file(newFile.path, windows: Platform.isWindows);
-  } else {
-    return null;
-  }
-}
-
 String? generateAlbumId(Audio audio) {
   final albumName = audio.album;
   final artistName = audio.artist;
@@ -335,3 +310,90 @@ const _validExtensions = [
   '.m4a',
   '.aac',
 ];
+
+({String? songName, String? artist}) splitIcyTitle(String icyTitle) {
+  String? songName;
+  String? artist;
+  final split = icyTitle.split(' - ');
+  if (split.isNotEmpty) {
+    artist = split.elementAtOrNull(0);
+    songName = split.elementAtOrNull(1);
+  }
+  return (songName: songName, artist: artist);
+}
+
+Future<String?> fetchAlbumArt(String icyTitle) async {
+  return UrlStore().get(icyTitle) ?? await _fetchAlbumArt(icyTitle);
+}
+
+Future<String?> _fetchAlbumArt(String icyTitle) async {
+  final res = splitIcyTitle(icyTitle);
+  if (res.songName == null || res.artist == null) return null;
+
+  final searchUrl = Uri.parse(
+    'https://musicbrainz.org/ws/2/recording/?query=recording:"${res.songName}"%20AND%20artist:"${res.artist}"',
+  );
+
+  try {
+    final searchResponse = await http.get(
+      searchUrl,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent':
+            'MusicPod (https://github.com/ubuntu-flutter-community/musicpod)',
+      },
+    );
+
+    if (searchResponse.statusCode == 200) {
+      final searchData = jsonDecode(searchResponse.body);
+      final recordings = searchData['recordings'] as List;
+
+      final firstRecording = recordings.firstOrNull;
+
+      final releaseId = firstRecording == null
+          ? null
+          : firstRecording?['releases']?[0]?['id'];
+
+      if (releaseId == null) return null;
+
+      final albumArtUrl = await _fetchAlbumArtUrlFromReleaseId(releaseId);
+
+      return albumArtUrl;
+    }
+  } on Exception catch (_) {
+    return null;
+  }
+
+  return null;
+}
+
+Future<String?> _fetchAlbumArtUrlFromReleaseId(String releaseId) async {
+  final url = Uri.parse(
+    'https://coverartarchive.org/release/$releaseId',
+  );
+  try {
+    final response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent':
+            'MusicPod (https://github.com/ubuntu-flutter-community/musicpod)',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final images = data['images'] as List;
+
+      if (images.isNotEmpty) {
+        final artwork = images[0];
+
+        return (artwork['image']) as String?;
+      }
+    }
+  } on Exception catch (_) {
+    return null;
+  }
+
+  return null;
+}
