@@ -14,7 +14,7 @@
       Play local audio files, browse podcasts online or listen to internet radio stations.
     </p>
   </description>
-  <developer>
+  <developer id="org.ubuntufluttercommunity">
     <name>Ubuntu Flutter Comunity</name>
   </developer>
   <screenshots>
