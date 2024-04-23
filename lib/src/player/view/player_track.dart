@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../build_context_x.dart';
+import '../../../duration_x.dart';
 import '../../../get.dart';
-import '../../../utils.dart';
 import '../player_model.dart';
 
 class PlayerTrack extends StatelessWidget with WatchItMixin {
@@ -44,7 +44,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
     final slider = Tooltip(
       preferBelow: false,
       message:
-          '${formatTime(position ?? Duration.zero)} / ${formatTime(duration ?? Duration.zero)}',
+          '${(position ?? Duration.zero).formattedTime} / ${(duration ?? Duration.zero).formattedTime}',
       child: SliderTheme(
         data: theme.sliderTheme.copyWith(
           thumbColor: Colors.white,
@@ -89,7 +89,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                     : 40,
                 height: 15,
                 child: Text(
-                  formatTime(position ?? Duration.zero),
+                  (position ?? Duration.zero).formattedTime,
                   style: textStyle,
                 ),
               ),
@@ -112,7 +112,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                     : 40,
                 height: 15,
                 child: Text(
-                  formatTime(duration ?? Duration.zero),
+                  (duration ?? Duration.zero).formattedTime,
                   style: textStyle,
                   textAlign: TextAlign.end,
                 ),

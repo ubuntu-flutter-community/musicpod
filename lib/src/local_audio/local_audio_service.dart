@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../media_file_x.dart';
 import '../../data.dart';
-import '../../utils.dart';
 import '../settings/settings_service.dart';
 
 class LocalAudioService {
@@ -54,7 +54,7 @@ FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
 
     for (var fileSystemEntity in allFileSystemEntities) {
       if (!await FileSystemEntity.isDirectory(fileSystemEntity.path) &&
-          isValidFile(fileSystemEntity.path)) {
+          fileSystemEntity.isValidMedia) {
         onlyFiles.add(fileSystemEntity);
       }
     }

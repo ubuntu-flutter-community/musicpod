@@ -230,7 +230,7 @@ class _LanguageTile extends StatelessWidget {
       hoverColor: highlight ? theme.focusColor : null,
       tileColor: highlight ? theme.focusColor : null,
       onTap: () => onSelected(t),
-      title: Text(t.name.camelToSentence().capitalizeEveryWord()),
+      title: Text(t.name.capitalized),
       trailing: IconButton(
         onPressed: () {
           favs?.contains(t.isoCode) == false ? addFav(t) : removeFav(t);

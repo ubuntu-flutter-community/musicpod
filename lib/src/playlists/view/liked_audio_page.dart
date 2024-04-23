@@ -8,7 +8,6 @@ import '../../../data.dart';
 import '../../../get.dart';
 import '../../../library.dart';
 import '../../../local_audio.dart';
-import '../../../utils.dart';
 import '../../common/fall_back_header_image.dart';
 import '../../l10n/l10n.dart';
 
@@ -34,7 +33,7 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
       onAlbumTap: (text) {
         final albumAudios = model.findAlbum(Audio(album: text));
         if (albumAudios?.firstOrNull == null) return;
-        final id = generateAlbumId(albumAudios!.first);
+        final id = albumAudios!.first.albumId;
         if (id == null) return;
 
         Navigator.of(context).push(

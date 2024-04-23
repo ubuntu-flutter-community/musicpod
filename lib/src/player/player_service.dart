@@ -15,8 +15,9 @@ import 'package:smtc_windows/smtc_windows.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
+import '../../online_album_art_utils.dart';
 import '../../string_x.dart';
-import '../../utils.dart';
+import '../../persistence_utils.dart';
 
 class PlayerService {
   PlayerService({
@@ -75,7 +76,7 @@ class PlayerService {
     }
     if (validHistoryElement) {
       libraryService.addRadioHistoryElement(
-        icyTitle: mpvMetaData!.icyTitle.capitalizeEveryWord(),
+        icyTitle: mpvMetaData!.icyTitle.everyWordCapitalized,
         mpvMetaData: mpvMetaData!.copyWith(
           icyName: audio?.title?.trim() ?? _mpvMetaData?.icyName ?? '',
         ),
@@ -271,12 +272,12 @@ class PlayerService {
       (data) async {
         final mpvMetaData = MpvMetaData.fromJson(data);
         setMpvMetaData(mpvMetaData);
-        final res = splitIcyTitle(mpvMetaData.icyTitle);
+        final songInfo = mpvMetaData.icyTitle.splitByDash;
         fetchAlbumArt(mpvMetaData.icyTitle).then(
           (albumArt) {
             setMediaControlsMetaData(
-              title: res.songName,
-              artist: res.artist,
+              title: songInfo.songName,
+              artist: songInfo.artist,
               url: albumArt ?? audio?.imageUrl,
             );
             loadColor(url: albumArt);
@@ -458,10 +459,10 @@ class PlayerService {
       _setAudio(playerState!.audio!);
 
       if (playerState.duration != null) {
-        setDuration(parseDuration(playerState.duration!));
+        setDuration(playerState.duration!.parsedDuration);
       }
       if (playerState.position != null) {
-        setPosition(parseDuration(playerState.position!));
+        setPosition(playerState.position!.parsedDuration);
       }
 
       if (playerState.queue?.isNotEmpty == true &&

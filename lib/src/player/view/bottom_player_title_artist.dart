@@ -4,9 +4,10 @@ import '../../../get.dart';
 import 'package:flutter/material.dart';
 
 import '../player_model.dart';
-import '../player_utils.dart';
+import '../player_mixin.dart';
 
-class BottomPlayerTitleArtist extends StatelessWidget with WatchItMixin {
+class BottomPlayerTitleArtist extends StatelessWidget
+    with WatchItMixin, PlayerMixin {
   const BottomPlayerTitleArtist({
     super.key,
     required this.audio,

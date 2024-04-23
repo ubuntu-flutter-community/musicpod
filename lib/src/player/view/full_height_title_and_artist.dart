@@ -5,9 +5,10 @@ import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../data.dart';
 import '../player_model.dart';
-import '../player_utils.dart';
+import '../player_mixin.dart';
 
-class FullHeightTitleAndArtist extends StatelessWidget with WatchItMixin {
+class FullHeightTitleAndArtist extends StatelessWidget
+    with WatchItMixin, PlayerMixin {
   const FullHeightTitleAndArtist({
     super.key,
     required this.audio,

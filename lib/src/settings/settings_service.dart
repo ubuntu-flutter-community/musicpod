@@ -5,7 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../constants.dart';
 import '../../patch_notes.dart';
-import '../../utils.dart';
+import '../../persistence_utils.dart';
 
 class SettingsService {
   SettingsService({required this.allowManualUpdates});

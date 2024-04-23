@@ -279,7 +279,7 @@ class Audio {
         ? tagGenres[data.genres.firstOrNull
                 ?.replaceAll('(', '')
                 .replaceAll(')', '')]
-            ?.capitalizeEveryWord()
+            ?.everyWordCapitalized
         : data.genres.firstOrNull;
 
     return Audio(
@@ -336,6 +336,15 @@ class Audio {
       website: podcast?.url,
       genre: genre,
     );
+  }
+
+  String? get albumId {
+    final albumName = album;
+    final artistName = artist;
+    final id = albumName == null && artistName == null
+        ? null
+        : '${artistName ?? ''}:${albumName ?? ''}';
+    return id;
   }
 }
 

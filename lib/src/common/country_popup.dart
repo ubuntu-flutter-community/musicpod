@@ -35,7 +35,7 @@ class CountryPopup extends StatelessWidget {
       onSelected: onSelected,
       initialValue: value,
       child: Text(
-        '${context.l10n.country}: ${value?.name.camelToSentence().capitalizeEveryWord() ?? context.l10n.all}',
+        '${context.l10n.country}: ${value?.name.camelToSentence.everyWordCapitalized ?? context.l10n.all}',
         style: textStyle ?? fallBackTextStyle,
       ),
       itemBuilder: (context) {
@@ -44,7 +44,7 @@ class CountryPopup extends StatelessWidget {
               in countries ?? Country.values.where((c) => c != Country.none))
             PopupMenuItem(
               value: c,
-              child: Text(c.name.camelToSentence().capitalizeEveryWord()),
+              child: Text(c.name.camelToSentence.everyWordCapitalized),
             ),
         ];
       },
