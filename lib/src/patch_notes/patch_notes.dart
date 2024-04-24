@@ -185,8 +185,19 @@ const kPatchNotes20240421 = 'Hello MusicPod Users, this update includes\n'
     '\n\nIf you like MusicPod please consider sponsoring me:'
     '\n';
 
-const kRecentPatchNotesDisposed = kPatchNotes20240421disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20240421;
-const kRecentPatchNotes = kPatchNotes20240421;
+// 2024 04 24
+const kPatchNotes20240424disposed = 'patchNotes20240424disposed';
+const kPatchNotesTitle20240424 = 'Patch notes: 2024-04-24';
+const kPatchNotes20240424 = 'Hello MusicPod Users, this update includes\n'
+    '\n* icy tags and images in the media control tray'
+    '\n* improved performance'
+    '\n* better fallback widgets for streams'
+    '\n* bug fixes'
+    '\n\nIf you like MusicPod please consider sponsoring me:'
+    '\n';
+
+const kRecentPatchNotesDisposed = kPatchNotes20240424disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20240424;
+const kRecentPatchNotes = kPatchNotes20240424;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';
