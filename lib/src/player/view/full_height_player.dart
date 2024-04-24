@@ -146,11 +146,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
             ],
           );
 
-    if ((audio?.imageUrl != null ||
-            audio?.albumArtUrl != null ||
-            audio?.pictureData != null) &&
-        isOnline &&
-        !isVideo) {
+    if (!isVideo) {
       return Stack(
         children: [
           BlurredFullHeightPlayerImage(

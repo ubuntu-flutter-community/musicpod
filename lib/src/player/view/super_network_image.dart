@@ -1,49 +1,44 @@
 import 'package:flutter/material.dart';
 
+import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../data.dart';
+import '../../../get.dart';
 import '../../common/icy_image.dart';
+import '../player_model.dart';
 
-class SuperNetworkImage extends StatelessWidget {
+class SuperNetworkImage extends StatelessWidget with WatchItMixin {
   const SuperNetworkImage({
     super.key,
     required this.height,
     required this.width,
     required this.audio,
     required this.fit,
-    required this.iconData,
-    required this.theme,
-    this.mpvMetaData,
-    required this.iconSize,
     this.onGenreTap,
+    required this.fallBackIcon,
+    required this.errorIcon,
   });
 
   final double height;
   final double width;
   final Audio? audio;
   final BoxFit? fit;
-  final IconData iconData;
-  final ThemeData theme;
-  final MpvMetaData? mpvMetaData;
-  final double iconSize;
+  final Widget fallBackIcon;
+  final Widget errorIcon;
+
   final Function(String genre)? onGenreTap;
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.t;
+    final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
+
     final safeNetworkImage = SafeNetworkImage(
       url: audio?.imageUrl ?? audio?.albumArtUrl,
       filterQuality: FilterQuality.medium,
       fit: fit ?? BoxFit.scaleDown,
-      fallBackIcon: Icon(
-        iconData,
-        size: iconSize,
-        color: theme.hintColor,
-      ),
-      errorIcon: Icon(
-        iconData,
-        size: iconSize,
-        color: theme.hintColor,
-      ),
+      fallBackIcon: fallBackIcon,
+      errorIcon: errorIcon,
       height: height,
       width: width,
     );

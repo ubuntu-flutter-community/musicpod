@@ -28,6 +28,7 @@ class StationPage extends StatelessWidget with WatchItMixin {
     required BuildContext context,
     required String? imageUrl,
     required bool selected,
+    required Color fallBackColor,
   }) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(6),
@@ -37,6 +38,7 @@ class StationPage extends StatelessWidget with WatchItMixin {
         width: sideBarImageSize,
         child: SafeNetworkImage(
           fallBackIcon: SideBarFallBackImage(
+            color: fallBackColor,
             child: selected
                 ? Icon(Iconz().starFilled)
                 : Icon(
@@ -44,6 +46,7 @@ class StationPage extends StatelessWidget with WatchItMixin {
                   ),
           ),
           errorIcon: SideBarFallBackImage(
+            color: fallBackColor,
             child: selected
                 ? Icon(Iconz().imageMissingFilled)
                 : Icon(

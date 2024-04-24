@@ -8,7 +8,6 @@ import '../../../constants.dart';
 import '../../../data.dart';
 import '../../../get.dart';
 import '../../../globals.dart';
-import '../../../player.dart';
 import '../../../radio.dart';
 import '../../../theme.dart';
 import '../../../theme_data_x.dart';
@@ -35,8 +34,6 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.t;
 
-    final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
-
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
       iconData = Iconz().radio;
@@ -45,6 +42,40 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
     } else {
       iconData = Iconz().musicNote;
     }
+
+    final fallBackImage = Container(
+      height: height ?? fullHeightPlayerImageSize,
+      width: width ?? fullHeightPlayerImageSize,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+          colors: [
+            getAlphabetColor(
+              audio?.title ?? audio?.album ?? 'a',
+            ).scale(
+              lightness: theme.isLight ? 0 : -0.4,
+              saturation: -0.5,
+            ),
+            getAlphabetColor(
+              audio?.title ?? audio?.album ?? 'a',
+            ).scale(
+              lightness: theme.isLight ? -0.1 : -0.2,
+              saturation: -0.5,
+            ),
+          ],
+        ),
+      ),
+      child: Icon(
+        iconData,
+        size: fullHeightPlayerImageSize * 0.7,
+        color: contrastColor(
+          getAlphabetColor(
+            audio?.title ?? audio?.album ?? 'a',
+          ),
+        ),
+      ),
+    );
 
     Widget image;
     if (audio?.pictureData != null) {
@@ -55,22 +86,14 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
         fit: fit ?? BoxFit.fitHeight,
       );
     } else {
-      if (!isOnline) {
-        image = Icon(
-          iconData,
-          size: fullHeightPlayerImageSize * 0.7,
-          color: theme.hintColor,
-        );
-      } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
+      if (audio?.path == null && isOnline) {
         image = SuperNetworkImage(
           height: height ?? fullHeightPlayerImageSize,
           width: width ?? fullHeightPlayerImageSize,
           audio: audio,
           fit: fit,
-          iconData: iconData,
-          theme: theme,
-          mpvMetaData: mpvMetaData,
-          iconSize: fullHeightPlayerImageSize * 0.7,
+          fallBackIcon: fallBackImage,
+          errorIcon: fallBackImage,
           onGenreTap: (genre) => getIt<RadioModel>().init().then(
             (_) {
               getIt<AppModel>().setFullScreen(false);
@@ -88,39 +111,7 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
           ),
         );
       } else {
-        image = Container(
-          height: height ?? fullHeightPlayerImageSize,
-          width: width ?? fullHeightPlayerImageSize,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomLeft,
-              end: Alignment.topRight,
-              colors: [
-                getAlphabetColor(
-                  audio?.title ?? audio?.album ?? 'a',
-                ).scale(
-                  lightness: theme.isLight ? 0 : -0.4,
-                  saturation: -0.5,
-                ),
-                getAlphabetColor(
-                  audio?.title ?? audio?.album ?? 'a',
-                ).scale(
-                  lightness: theme.isLight ? -0.1 : -0.2,
-                  saturation: -0.5,
-                ),
-              ],
-            ),
-          ),
-          child: Icon(
-            iconData,
-            size: fullHeightPlayerImageSize * 0.7,
-            color: contrastColor(
-              getAlphabetColor(
-                audio?.title ?? audio?.album ?? 'a',
-              ),
-            ),
-          ),
-        );
+        image = fallBackImage;
       }
     }
 

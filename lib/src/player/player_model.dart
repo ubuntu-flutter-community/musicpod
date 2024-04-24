@@ -138,21 +138,6 @@ class PlayerModel extends SafeChangeNotifier {
 
   void safeLastPosition() => _service.safeLastPosition();
 
-  Future<void> loadColor({String? url}) async => _service.loadColor(url: url);
-
-  Future<void> setMediaControlsMetaData({
-    Audio? audio,
-    String? url,
-    String? title,
-    String? artist,
-  }) async =>
-      await _service.setMediaControlsMetaData(
-        audio: audio,
-        url: url,
-        title: title,
-        artist: artist,
-      );
-
   @override
   Future<void> dispose() async {
     await _queueNameChangedSub?.cancel();

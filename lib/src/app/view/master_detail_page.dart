@@ -189,6 +189,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
           iconBuilder: (context, selected) => StationPage.createIcon(
             context: context,
             imageUrl: station.value.first.imageUrl,
+            fallBackColor: getAlphabetColor(station.value.first.title ?? 'a'),
             selected: selected,
           ),
         ),
