@@ -43,9 +43,7 @@ class SafeNetworkImage extends StatelessWidget {
           ),
     );
 
-    if (url == null ||
-        url?.endsWith('.svg') == true ||
-        url?.endsWith('.ico') == true) return fallBack;
+    if (url == null) return fallBack;
 
     final errorWidget = Center(
       child: errorIcon ??

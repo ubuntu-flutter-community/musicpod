@@ -18,6 +18,7 @@ import '../../library.dart';
 import '../../online_album_art_utils.dart';
 import '../../string_x.dart';
 import '../../persistence_utils.dart';
+import '../../theme.dart';
 
 class PlayerService {
   PlayerService({
@@ -219,8 +220,8 @@ class PlayerService {
               ),
             );
       }
-      setMediaControlsMetaData(audio: audio!);
-      loadColor();
+      _setMediaControlsMetaData(audio: audio!);
+      _loadColor();
       _firstPlay = false;
     } on Exception catch (_) {
       // TODO: instead of disallowing certain file types
@@ -275,12 +276,14 @@ class PlayerService {
         final songInfo = mpvMetaData.icyTitle.splitByDash;
         fetchAlbumArt(mpvMetaData.icyTitle).then(
           (albumArt) {
-            setMediaControlsMetaData(
-              title: songInfo.songName,
-              artist: songInfo.artist,
-              url: albumArt ?? audio?.imageUrl,
+            _setMediaControlsMetaData(
+              audio: (_audio ?? const Audio()).copyWith(
+                imageUrl: albumArt,
+                title: songInfo.songName,
+                artist: songInfo.artist,
+              ),
             );
-            loadColor(url: albumArt);
+            _loadColor(artUrl: albumArt);
           },
         );
       },
@@ -426,30 +429,27 @@ class PlayerService {
   Color? _color;
   Color? get color => _color;
 
-  Future<void> loadColor({String? url}) async {
-    if (audio == null) {
-      _color = null;
+  Future<void> _loadColor({String? artUrl}) async {
+    if (_audio?.pictureData == null &&
+        audio?.imageUrl == null &&
+        audio?.albumArtUrl == null &&
+        artUrl == null) {
+      _color = getAlphabetColor(_audio?.title ?? 'a');
       return;
     }
 
     ImageProvider? image;
-    if (audio?.path != null && audio?.pictureData != null) {
+    if (_audio?.pictureData != null) {
       image = MemoryImage(
-        audio!.pictureData!,
+        _audio!.pictureData!,
       );
     } else {
-      if (url != null ||
-          audio?.imageUrl != null ||
-          audio?.albumArtUrl != null) {
-        image = NetworkImage(
-          url ?? audio!.imageUrl ?? audio!.albumArtUrl!,
-        );
-      }
+      image = NetworkImage(
+        artUrl ?? _audio!.imageUrl ?? _audio!.albumArtUrl!,
+      );
     }
-    if (image != null) {
-      final generator = await PaletteGenerator.fromImageProvider(image);
-      _color = generator.dominantColor?.color;
-    }
+    final generator = await PaletteGenerator.fromImageProvider(image);
+    _color = generator.dominantColor?.color;
   }
 
   Future<void> _readPlayerState() async {
@@ -476,7 +476,7 @@ class PlayerService {
 
       _estimateNext();
 
-      await setMediaControlsMetaData(audio: playerState.audio!);
+      await _setMediaControlsMetaData(audio: playerState.audio!);
     }
   }
 
@@ -622,46 +622,17 @@ class PlayerService {
         .add(_audioService!.mediaItem.value!.copyWith(duration: duration));
   }
 
-  Future<void> setMediaControlsMetaData({
-    Audio? audio,
-    String? url,
-    String? title,
-    String? artist,
-  }) async {
-    final artUri = await createMediaControlsUri(
-      audio: audio,
-      extraUrl: url,
-    );
-
-    _setMprisMetadata(
-      audio: audio,
-      artUri: artUri,
-      title: title,
-      artist: artist,
-    );
-    _setSmtcMetaData(
-      audio: audio,
-      artUri: artUri,
-      title: title,
-      artist: artist,
-    );
-    _setAudioServiceMetaData(
-      audio: audio,
-      artUri: artUri,
-      title: title,
-      artist: artist,
-    );
+  Future<void> _setMediaControlsMetaData({required Audio audio}) async {
+    final artUri = await _createMediaControlsArtUri(audio: audio);
+    _setMprisMetadata(audio: audio, artUri: artUri);
+    _setSmtcMetaData(audio: audio, artUri: artUri);
+    _setAudioServiceMetaData(audio: audio, artUri: artUri);
   }
 
-  Future<Uri?> createMediaControlsUri({
-    Audio? audio,
-    String? extraUrl,
-  }) async {
-    if (extraUrl != null ||
-        audio?.imageUrl != null ||
-        audio?.albumArtUrl != null) {
+  Future<Uri?> _createMediaControlsArtUri({Audio? audio}) async {
+    if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
       return Uri.tryParse(
-        extraUrl ?? audio?.imageUrl ?? audio!.albumArtUrl!,
+        audio?.imageUrl ?? audio!.albumArtUrl!,
       );
     } else if (audio?.pictureData != null) {
       Uint8List imageInUnit8List = audio!.pictureData!;
@@ -706,20 +677,15 @@ class PlayerService {
     }
   }
 
-  void _setSmtcMetaData({
-    Audio? audio,
-    required Uri? artUri,
-    String? title,
-    String? artist,
-  }) {
+  void _setSmtcMetaData({required Audio audio, required Uri? artUri}) {
     if (_smtc == null) return;
     _smtc!.updateMetadata(
       MusicMetadata(
-        title: title ?? audio?.title,
-        album: audio?.album,
-        albumArtist: audio?.artist,
-        artist: artist ?? audio?.artist,
-        thumbnail: audio?.audioType == AudioType.local
+        title: audio.title ?? kAppTitle,
+        album: audio.album,
+        albumArtist: audio.artist,
+        artist: audio.artist ?? '',
+        thumbnail: audio.audioType == AudioType.local
             ? kFallbackThumbnail
             : artUri == null
                 ? null
@@ -728,45 +694,32 @@ class PlayerService {
     );
   }
 
-  void _setMprisMetadata({
-    required Audio? audio,
-    required Uri? artUri,
-    String? title,
-    String? artist,
-  }) {
-    if (_mpris == null ||
-        (audio?.url == null && audio?.path == null && _audio?.url == null)) {
+  void _setMprisMetadata({required Audio audio, required Uri? artUri}) {
+    if (_mpris == null || (audio.url == null && audio.path == null)) {
       return;
     }
     _mpris!.metadata = MPRISMetadata(
-      audio?.path != null
-          ? Uri.file(audio!.path!)
-          : Uri.parse(audio?.url != null ? audio!.url! : _audio!.url!),
+      audio.path != null ? Uri.file(audio.path!) : Uri.parse(audio.url!),
       artUrl: artUri,
-      album: audio?.album,
-      albumArtist: [audio?.albumArtist ?? ''],
-      artist: [artist ?? audio?.artist ?? ''],
-      discNumber: audio?.discNumber,
-      title: title ?? audio?.title,
-      trackNumber: audio?.trackNumber,
+      album: audio.album,
+      albumArtist: [audio.albumArtist ?? ''],
+      artist: [audio.artist ?? ''],
+      discNumber: audio.discNumber,
+      title: audio.title ?? '',
+      trackNumber: audio.trackNumber,
     );
   }
 
-  void _setAudioServiceMetaData({
-    Audio? audio,
-    required Uri? artUri,
-    String? title,
-    String? artist,
-  }) {
+  void _setAudioServiceMetaData({required Audio audio, required Uri? artUri}) {
     if (_audioService == null) return;
     _audioService!.mediaItem.add(
       MediaItem(
         id: audio.toString(),
-        duration: audio?.durationMs == null
+        duration: audio.durationMs == null
             ? null
-            : Duration(milliseconds: audio!.durationMs!.toInt()),
-        title: title ?? audio?.title ?? '',
-        artist: artist ?? audio?.artist,
+            : Duration(milliseconds: audio.durationMs!.toInt()),
+        title: audio.title ?? kAppTitle,
+        artist: audio.artist ?? '',
         artUri: artUri,
       ),
     );
