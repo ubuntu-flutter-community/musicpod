@@ -10,7 +10,7 @@ import '../../playlists.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
 
-class LikeButton extends StatelessWidget {
+class LikeButton extends StatefulWidget {
   const LikeButton({
     super.key,
     required this.audio,
@@ -30,27 +30,45 @@ class LikeButton extends StatelessWidget {
   final bool selected;
 
   @override
+  State<LikeButton> createState() => _LikeButtonState();
+}
+
+class _LikeButtonState extends State<LikeButton> {
+  late bool liked;
+
+  @override
+  void initState() {
+    super.initState();
+    liked = widget.libraryModel.liked(widget.audio);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final liked = libraryModel.liked(audio);
 
     final heartButton = InkWell(
       borderRadius: BorderRadius.circular(10),
       onTap: () {
         if (liked) {
-          libraryModel.removeLikedAudio(audio);
+          setState(() {
+            liked = false;
+          });
+          widget.libraryModel.removeLikedAudio(widget.audio);
         } else {
-          libraryModel.addLikedAudio(audio);
+          setState(() {
+            liked = true;
+          });
+          widget.libraryModel.addLikedAudio(widget.audio);
           showAddedToPlaylistSnackBar(
             context: context,
-            libraryModel: libraryModel,
+            libraryModel: widget.libraryModel,
             id: kLikedAudiosPageId,
           );
         }
       },
       child: Iconz().getAnimatedHeartIcon(
         liked: liked,
-        color: selected ? theme.colorScheme.primary : null,
+        color: widget.selected ? theme.colorScheme.primary : null,
       ),
     );
 
@@ -65,22 +83,22 @@ class LikeButton extends StatelessWidget {
       itemBuilder: (context) {
         return [
           PopupMenuItem(
-            onTap: insertIntoQueue,
+            onTap: widget.insertIntoQueue,
             child: Text(context.l10n.playNext),
           ),
-          if (allowRemove)
+          if (widget.allowRemove)
             PopupMenuItem(
-              onTap: () =>
-                  libraryModel.removeAudioFromPlaylist(playlistId, audio),
-              child: Text('${context.l10n.removeFrom} $playlistId'),
+              onTap: () => widget.libraryModel
+                  .removeAudioFromPlaylist(widget.playlistId, widget.audio),
+              child: Text('${context.l10n.removeFrom} ${widget.playlistId}'),
             ),
           PopupMenuItem(
             onTap: () => showDialog(
               context: context,
               builder: (context) {
                 return AddToPlaylistDialog(
-                  audio: audio,
-                  libraryModel: libraryModel,
+                  audio: widget.audio,
+                  libraryModel: widget.libraryModel,
                 );
               },
             ),
@@ -92,7 +110,7 @@ class LikeButton extends StatelessWidget {
             onTap: () => showDialog(
               context: context,
               builder: (context) {
-                return MetaDataDialog(audio: audio);
+                return MetaDataDialog(audio: widget.audio);
               },
             ),
             child: Text(
@@ -102,7 +120,8 @@ class LikeButton extends StatelessWidget {
           PopupMenuItem(
             padding: EdgeInsets.zero,
             child: StreamProviderRow(
-              text: '${audio.artist ?? ''} - ${audio.title ?? ''}',
+              text:
+                  '${widget.audio.artist ?? ''} - ${widget.audio.title ?? ''}',
             ),
           ),
         ];
