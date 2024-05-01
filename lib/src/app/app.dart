@@ -102,8 +102,14 @@ class _MusicPodAppState extends State<_MusicPodApp>
     with WidgetsBindingObserver {
   late Future<bool> _initFuture;
 
-  Future<bool> _init() async {
+  @override
+  void initState() {
+    super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _initFuture = _init();
+  }
+
+  Future<bool> _init() async {
     if (!isMobile) {
       YaruWindow.of(context).onClose(
         () async {
@@ -125,12 +131,6 @@ class _MusicPodAppState extends State<_MusicPodApp>
   }
 
   @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.paused) {
       await getIt.reset();
@@ -138,9 +138,9 @@ class _MusicPodAppState extends State<_MusicPodApp>
   }
 
   @override
-  void initState() {
-    super.initState();
-    _initFuture = _init();
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override

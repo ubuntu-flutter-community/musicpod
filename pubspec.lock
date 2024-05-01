@@ -69,10 +69,10 @@ packages:
     dependency: "direct main"
     description:
       name: audio_metadata_reader
-      sha256: e149aba2e1027303626aeb67d2cc281a6eea50429f03f9186e8e71a92f60ef6c
+      sha256: a259de0bd3af7bac5ac7737128e499949bf7b33dda762315a51b262980d08036
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.4"
+    version: "0.0.5"
   audio_service:
     dependency: "direct main"
     description:
@@ -285,10 +285,10 @@ packages:
     dependency: "direct main"
     description:
       name: connectivity_plus
-      sha256: ebe15d94de9dd7c31dc2ac54e42780acdf3384b1497c69290c9f3c5b0279fc57
+      sha256: db7a4e143dc72cc3cb2044ef9b052a7ebfe729513e6a82943bc3526f784365b8
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.2"
+    version: "6.0.3"
   connectivity_plus_platform_interface:
     dependency: transitive
     description:
@@ -551,10 +551,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_tabler_icons
-      sha256: "21d39936fcaee429c3a8d298b32ecc3f3f2c50829d6582dafde644e7ed2978ef"
+      sha256: f20c3f4dc3755f330bdcde80b96ee92bde2677fdbb55b0d5f385a719a25ad384
       url: "https://pub.dev"
     source: hosted
-    version: "1.26.0"
+    version: "1.27.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
