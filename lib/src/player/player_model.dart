@@ -28,6 +28,7 @@ class PlayerModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _durationChangedSub;
   StreamSubscription<bool>? _positionChangedSub;
   StreamSubscription<bool>? _rateChanged;
+  StreamSubscription<bool>? _radioHistoryChangedSub;
 
   String? get queueName => _service.queue.$1;
 
@@ -102,6 +103,8 @@ class PlayerModel extends SafeChangeNotifier {
         _service.durationChanged.listen((_) => notifyListeners());
     _positionChangedSub ??=
         _service.positionChanged.listen((_) => notifyListeners());
+    _radioHistoryChangedSub ??=
+        _service.radioHistoryChanged.listen((_) => notifyListeners());
   }
 
   Future<void> playNext() async => await _service.playNext();
@@ -138,6 +141,32 @@ class PlayerModel extends SafeChangeNotifier {
 
   void safeLastPosition() => _service.safeLastPosition();
 
+  Map<String, MpvMetaData> get radioHistory => _service.radioHistory;
+
+  Iterable<MapEntry<String, MpvMetaData>> filteredRadioHistory({
+    required String? filter,
+  }) {
+    return radioHistory.entries.where(
+      (e) => filter == null
+          ? true
+          : e.value.icyName.contains(filter) ||
+              filter.contains(e.value.icyName),
+    );
+  }
+
+  String getRadioHistoryList({String? filter}) {
+    return filteredRadioHistory(filter: filter)
+        .map((e) => '${e.value.icyTitle}\n')
+        .toList()
+        .reversed
+        .toString()
+        .replaceAll(', ', '')
+        .replaceAll('[', '')
+        .replaceAll(']', '')
+        .replaceAll('(', '')
+        .replaceAll(')', '');
+  }
+
   @override
   Future<void> dispose() async {
     await _queueNameChangedSub?.cancel();
@@ -153,6 +182,7 @@ class PlayerModel extends SafeChangeNotifier {
     await _durationChangedSub?.cancel();
     await _positionChangedSub?.cancel();
     await _rateChanged?.cancel();
+    await _radioHistoryChangedSub?.cancel();
     super.dispose();
   }
 }

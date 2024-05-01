@@ -76,7 +76,7 @@ class PlayerService {
       validHistoryElement = false;
     }
     if (validHistoryElement) {
-      libraryService.addRadioHistoryElement(
+      _addRadioHistoryElement(
         icyTitle: mpvMetaData!.icyTitle.everyWordCapitalized,
         mpvMetaData: mpvMetaData!.copyWith(
           icyName: audio?.title?.trim() ?? _mpvMetaData?.icyName ?? '',
@@ -725,6 +725,21 @@ class PlayerService {
     );
   }
 
+  final Map<String, MpvMetaData> _radioHistory = {};
+  Map<String, MpvMetaData> get radioHistory => _radioHistory;
+  final _radioHistoryController = StreamController<bool>.broadcast();
+  Stream<bool> get radioHistoryChanged => _radioHistoryController.stream;
+  void _addRadioHistoryElement({
+    required String icyTitle,
+    required MpvMetaData mpvMetaData,
+  }) {
+    _radioHistory.putIfAbsent(
+      icyTitle,
+      () => mpvMetaData,
+    );
+    _radioHistoryController.add(true);
+  }
+
   Future<void> dispose() async {
     await writePlayerState();
     await _smtcSub?.cancel();
@@ -750,6 +765,7 @@ class PlayerService {
     await _tracksSub?.cancel();
     await _rateSub?.cancel();
     await _rateController.close();
+    await _radioHistoryController.close();
 
     await _player.dispose();
   }

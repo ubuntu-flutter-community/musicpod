@@ -237,7 +237,7 @@ class _RadioPageTagBar extends StatelessWidget with WatchItMixin {
   }
 }
 
-class _RadioPageControlButton extends StatelessWidget {
+class _RadioPageControlButton extends StatelessWidget with WatchItMixin {
   const _RadioPageControlButton({
     required this.station,
   });
@@ -247,6 +247,11 @@ class _RadioPageControlButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final libraryModel = getIt<LibraryModel>();
+    watchPropertyValue(
+      (PlayerModel m) => m.filteredRadioHistory(filter: station.title),
+    );
+    final text =
+        getIt<PlayerModel>().getRadioHistoryList(filter: station.title);
     final isStarred = libraryModel.isStarredStation(station.url!);
 
     return Padding(
@@ -273,16 +278,19 @@ class _RadioPageControlButton extends StatelessWidget {
           ),
           IconButton(
             tooltip: context.l10n.copyToClipBoard,
-            onPressed: () {
-              final text = getIt<LibraryModel>().radioHistoryList;
-              showSnackBar(
-                context: context,
-                content: CopyClipboardContent(
-                  text: text,
-                  showActions: false,
-                ),
-              );
-            },
+            onPressed: text.isEmpty
+                ? null
+                : () {
+                    showSnackBar(
+                      context: context,
+                      content: SingleChildScrollView(
+                        child: CopyClipboardContent(
+                          text: text,
+                          showActions: false,
+                        ),
+                      ),
+                    );
+                  },
             icon: Icon(Iconz().copy),
           ),
         ],

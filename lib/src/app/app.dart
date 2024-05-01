@@ -6,6 +6,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
 import '../../common.dart';
+import '../../external_path.dart';
 import '../../get.dart';
 import '../../library.dart';
 import '../../theme.dart';
@@ -97,19 +98,49 @@ class _MusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
   State<_MusicPodApp> createState() => _MusicPodAppState();
 }
 
-class _MusicPodAppState extends State<_MusicPodApp> {
-  bool initialized = false;
+class _MusicPodAppState extends State<_MusicPodApp>
+    with WidgetsBindingObserver {
+  late Future<bool> _initFuture;
+
+  Future<bool> _init() async {
+    WidgetsBinding.instance.addObserver(this);
+    if (!isMobile) {
+      YaruWindow.of(context).onClose(
+        () async {
+          await getIt.reset();
+          return true;
+        },
+      );
+    }
+
+    final appModel = getIt<AppModel>();
+    await getIt<LibraryModel>().init();
+
+    if (!mounted) return false;
+    await appModel.init();
+
+    getIt<ExternalPathService>().init();
+
+    return true;
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.paused) {
+      await getIt.reset();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    getIt<LibraryService>().init().then(
-      (value) {
-        if (!initialized) {
-          setState(() => initialized = value);
-        }
-      },
-    );
+    _initFuture = _init();
   }
 
   @override
@@ -130,7 +161,14 @@ class _MusicPodAppState extends State<_MusicPodApp> {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => 'MusicPod',
-      home: initialized ? const MusicPodScaffold() : const SplashScreen(),
+      home: FutureBuilder(
+        future: _initFuture,
+        builder: (context, snapshot) {
+          return snapshot.data == true
+              ? const MusicPodScaffold()
+              : const SplashScreen();
+        },
+      ),
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,

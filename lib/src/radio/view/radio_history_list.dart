@@ -1,13 +1,11 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-
 import 'package:yaru/yaru.dart';
 
 import '../../../common.dart';
 import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../l10n.dart';
-import '../../../library.dart';
 import '../../../player.dart';
 import '../../../radio.dart';
 import '../../../theme.dart';
@@ -30,11 +28,7 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
   @override
   Widget build(BuildContext context) {
     final radioHistory = watchPropertyValue(
-      (LibraryModel m) => m.radioHistory.entries.where(
-        (e) =>
-            e.value.icyName.contains(filter ?? '') ||
-            (filter?.contains(e.value.icyName) ?? true),
-      ),
+      (PlayerModel m) => m.filteredRadioHistory(filter: filter),
     );
     final current = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
     final radioModel = getIt<RadioModel>();
