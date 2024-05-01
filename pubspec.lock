@@ -69,10 +69,10 @@ packages:
     dependency: "direct main"
     description:
       name: audio_metadata_reader
-      sha256: e149aba2e1027303626aeb67d2cc281a6eea50429f03f9186e8e71a92f60ef6c
+      sha256: a259de0bd3af7bac5ac7737128e499949bf7b33dda762315a51b262980d08036
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.4"
+    version: "0.0.5"
   audio_service:
     dependency: "direct main"
     description:
