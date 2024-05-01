@@ -457,29 +457,10 @@ class LibraryService {
         .then((_) => _albumsController.add(true));
   }
 
-  bool _libraryInitialized = false;
+  bool? _libraryInitialized;
   Future<bool> init() async {
-    await _initLibrary();
-    return _libraryInitialized;
-  }
-
-  final Map<String, MpvMetaData> _radioHistory = {};
-  Map<String, MpvMetaData> get radioHistory => _radioHistory;
-  final _radioHistoryController = StreamController<bool>.broadcast();
-  Stream<bool> get radioHistoryChanged => _radioHistoryController.stream;
-  void addRadioHistoryElement({
-    required String icyTitle,
-    required MpvMetaData mpvMetaData,
-  }) {
-    _radioHistory.putIfAbsent(
-      icyTitle,
-      () => mpvMetaData,
-    );
-    _radioHistoryController.add(true);
-  }
-
-  Future<void> _initLibrary() async {
-    if (_libraryInitialized) return;
+    // Ensure [init] is only called once
+    if (_libraryInitialized == true) return _libraryInitialized!;
     final appIndexOrNull = await readAppState(kAppIndex);
     _appIndex = appIndexOrNull == null ? 0 : int.parse(appIndexOrNull);
 
@@ -532,8 +513,7 @@ class LibraryService {
     _lastLanguageCode = (await readAppState(kLastLanguageCode)) as String?;
     _lastRadioTag = (await readAppState(kLastRadioTag)) as String?;
 
-    // _radioHistory = await readSimpleAudioMap(kRadioHistoryFileName);
-    _libraryInitialized = true;
+    return true;
   }
 
   int _localAudioIndex = 0;
@@ -590,7 +570,6 @@ class LibraryService {
     await _lastFavRadioTagController.close();
     await _updateController.close();
     await _downloadsController.close();
-    await _radioHistoryController.close();
   }
 
   Future<void> _safeAppState() async {

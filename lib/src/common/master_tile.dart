@@ -158,7 +158,7 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
       child: Stack(
         children: [
           widget.tile,
-          if (_hovered || widget.selected == true)
+          if (isEnQueued || _hovered || widget.selected == true)
             Positioned(
               right: 25,
               top: 12,

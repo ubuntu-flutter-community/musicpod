@@ -292,10 +292,7 @@ class _AboutTileState extends State<_AboutTile> {
   @override
   void initState() {
     super.initState();
-    final settingsModel = getIt<SettingsModel>();
-    if (settingsModel.allowManualUpdate && getIt<AppModel>().isOnline) {
-      settingsModel.checkForUpdate();
-    }
+    getIt<SettingsModel>().checkForUpdate(getIt<AppModel>().isOnline);
   }
 
   @override

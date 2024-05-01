@@ -124,10 +124,15 @@ class SettingsModel extends SafeChangeNotifier {
   bool? get updateAvailable => _updateAvailable;
   String? _onlineVersion;
   String? get onlineVersion => _onlineVersion;
-  Future<void> checkForUpdate() async {
+  Future<void> checkForUpdate(bool isOnline) async {
     _updateAvailable == null;
     notifyListeners();
 
+    if (!_service.allowManualUpdates || !isOnline) {
+      _updateAvailable = false;
+      notifyListeners();
+      return Future.value();
+    }
     _onlineVersion = await getOnlineVersion();
     final onlineVersion = getExtendedVersionNumber(_onlineVersion) ?? 0;
     final currentVersion = getExtendedVersionNumber(version) ?? 0;
