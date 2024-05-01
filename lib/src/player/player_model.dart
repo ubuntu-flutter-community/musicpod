@@ -143,8 +143,9 @@ class PlayerModel extends SafeChangeNotifier {
 
   Map<String, MpvMetaData> get radioHistory => _service.radioHistory;
 
-  Iterable<MapEntry<String, MpvMetaData>> filteredRadioHistory(
-      {required String? filter}) {
+  Iterable<MapEntry<String, MpvMetaData>> filteredRadioHistory({
+    required String? filter,
+  }) {
     return radioHistory.entries.where(
       (e) => filter == null
           ? true

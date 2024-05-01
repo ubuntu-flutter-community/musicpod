@@ -5,11 +5,30 @@ import '../../../build_context_x.dart';
 import '../../../constants.dart';
 import '../../../get.dart';
 import '../../../player.dart';
+import '../../patch_notes/patch_notes_dialog.dart';
+import '../../settings/settings_model.dart';
 import '../app_model.dart';
 import 'master_detail_page.dart';
 
-class MusicPodScaffold extends StatelessWidget with WatchItMixin {
+class MusicPodScaffold extends StatefulWidget with WatchItStatefulWidgetMixin {
   const MusicPodScaffold({super.key});
+
+  @override
+  State<MusicPodScaffold> createState() => _MusicPodScaffoldState();
+}
+
+class _MusicPodScaffoldState extends State<MusicPodScaffold> {
+  @override
+  void initState() {
+    super.initState();
+    final settingsModel = getIt<SettingsModel>();
+    settingsModel.checkForUpdate(getIt<AppModel>().isOnline).then((_) {
+      if (!mounted) return;
+      if (settingsModel.recentPatchNotesDisposed == false) {
+        showPatchNotes(context);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

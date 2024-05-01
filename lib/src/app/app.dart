@@ -9,7 +9,6 @@ import '../../common.dart';
 import '../../external_path.dart';
 import '../../get.dart';
 import '../../library.dart';
-import '../../patch_notes.dart';
 import '../../theme.dart';
 import '../l10n/l10n.dart';
 import '../settings/settings_model.dart';
@@ -115,18 +114,12 @@ class _MusicPodAppState extends State<_MusicPodApp>
     }
 
     final appModel = getIt<AppModel>();
-    final settingsModel = getIt<SettingsModel>();
     await getIt<LibraryModel>().init();
 
     if (!mounted) return false;
     await appModel.init();
-    getIt<ExternalPathService>().init();
 
-    settingsModel.checkForUpdate(appModel.isOnline).then((value) {
-      if (getIt<SettingsModel>().recentPatchNotesDisposed == false && mounted) {
-        showPatchNotes(context);
-      }
-    });
+    getIt<ExternalPathService>().init();
 
     return true;
   }
