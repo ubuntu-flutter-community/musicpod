@@ -90,6 +90,12 @@ class RadioModel extends SafeChangeNotifier {
     }
   }
 
+  Future<List<Tag>?> loadTags({
+    String? filter,
+    int? limit,
+  }) async =>
+      await _radioService.loadTags(filter: filter, limit: limit);
+
   // TODO: use in state autocomplete depending on [country]
   Future<List<State>?> loadStates(String country) async {
     return await _radioService.loadStates(country);

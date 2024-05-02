@@ -17,7 +17,7 @@ class RadioService {
     for (var host in hosts) {
       try {
         _radioBrowserApi = RadioBrowserApi.fromHost(host);
-        _tags = await _loadTags();
+        _tags = await loadTags();
         if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
           return _radioBrowserApi?.host;
         }
@@ -89,16 +89,20 @@ class RadioService {
 
   List<Tag>? _tags;
   List<Tag>? get tags => _tags;
-  Future<List<Tag>?> _loadTags() async {
+  Future<List<Tag>?> loadTags({
+    String? filter,
+    int? limit,
+  }) async {
     if (_radioBrowserApi == null) return null;
     if (_tags?.isNotEmpty == true) return _tags;
     RadioBrowserListResponse<Tag>? response;
 
     try {
       response = await _radioBrowserApi!.getTags(
-        parameters: const InputParameters(
+        filter: filter,
+        parameters: InputParameters(
           hidebroken: true,
-          limit: 500,
+          limit: limit ?? 5000,
           order: 'stationcount',
           reverse: true,
         ),
@@ -109,7 +113,11 @@ class RadioService {
   }
 
   Future<void> clickStation(String uuid) async {
-    await _radioBrowserApi?.clickStation(uuid: uuid);
+    try {
+      await _radioBrowserApi?.clickStation(uuid: uuid);
+    } on Exception catch (_) {
+      // TODO: find the cause and report to https://github.com/tomassasovsky/radio-browser-api.dart/issues/9
+    }
   }
 
   Future<List<State>?> loadStates(String country) async {
