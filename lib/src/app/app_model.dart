@@ -28,7 +28,11 @@ class AppModel extends SafeChangeNotifier {
   Future<void> init() async {
     _subscription ??=
         _connectivity.onConnectivityChanged.listen(_updateConnectivity);
-    return _connectivity.checkConnectivity().then(_updateConnectivity);
+
+    return _connectivity
+        .checkConnectivity()
+        .then(_updateConnectivity)
+        .catchError((e) => _updateConnectivity([ConnectivityResult.none]));
   }
 
   @override
