@@ -101,6 +101,17 @@ class _AboutPageState extends State<AboutPage> {
                     maxLines: maxLines,
                   ),
                   const SizedBox(
+                    height: kYaruPagePadding,
+                  ),
+                  TapAbleText(
+                    onTap: () =>
+                        launchUrl(Uri.parse('https://github.com/ClementBeal')),
+                    text:
+                        'MusicPod metadata reading is enabled by Clement Beal, please sponsor him!',
+                    style: linkStyle,
+                    maxLines: maxLines,
+                  ),
+                  const SizedBox(
                     height: 2 * kYaruPagePadding,
                   ),
                   Text(
