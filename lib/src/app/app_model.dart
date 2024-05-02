@@ -32,7 +32,7 @@ class AppModel extends SafeChangeNotifier {
     return _connectivity
         .checkConnectivity()
         .then(_updateConnectivity)
-        .catchError((e) => _updateConnectivity([ConnectivityResult.none]));
+        .catchError((e) => _updateConnectivity([ConnectivityResult.wifi]));
   }
 
   @override
