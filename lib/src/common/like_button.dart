@@ -8,6 +8,7 @@ import '../../data.dart';
 import '../../library.dart';
 import '../../playlists.dart';
 import '../../theme.dart';
+import '../../theme_data_x.dart';
 import '../l10n/l10n.dart';
 
 class LikeButton extends StatelessWidget {
@@ -50,7 +51,7 @@ class LikeButton extends StatelessWidget {
       },
       child: Iconz().getAnimatedHeartIcon(
         liked: liked,
-        color: selected ? theme.colorScheme.primary : null,
+        color: selected ? theme.contrastyPrimary : null,
       ),
     );
 

@@ -304,7 +304,8 @@ class LibraryModel extends SafeChangeNotifier {
     _service.removePinnedAlbum(name);
   }
 
-  int? indexOfAlbum(String id) {
+  int? indexOfAlbum(String? id) {
+    if (id == null) return null;
     final album = pinnedAlbums[id];
     if (album == null) return null;
     final allAlbums = pinnedAlbums.entries.map((e) => e.value).toList();

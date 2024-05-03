@@ -3,6 +3,7 @@ import '../../../data.dart';
 import '../../../get.dart';
 import 'package:flutter/material.dart';
 
+import '../../data/audio.dart';
 import '../player_model.dart';
 import '../player_mixin.dart';
 
@@ -16,16 +17,15 @@ class BottomPlayerTitleArtist extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
-    final icyName = mpvMetaData?.icyName;
-    final icyTitle = mpvMetaData?.icyTitle;
+    final icyTitle =
+        watchPropertyValue((PlayerModel m) => m.mpvMetaData?.icyTitle);
 
-    final subTitle = icyName?.isNotEmpty == true
-        ? icyName!
-        : (audio?.audioType == AudioType.podcast
-                ? audio?.album
-                : audio?.artist ?? ' ') ??
-            '';
+    final subTitle = switch (audio?.audioType) {
+          AudioType.podcast => audio?.album,
+          AudioType.radio => audio?.title,
+          _ => audio?.artist
+        } ??
+        '';
 
     final title = icyTitle?.isNotEmpty == true
         ? icyTitle!
@@ -57,29 +57,27 @@ class BottomPlayerTitleArtist extends StatelessWidget
             ),
           ),
         ),
-        if (audio?.artist?.trim().isNotEmpty == true ||
-            icyName?.isNotEmpty == true)
-          InkWell(
-            borderRadius: BorderRadius.circular(4),
-            onTap: audio == null
-                ? null
-                : () => onArtistTap(
-                      audio: audio!,
-                      context: context,
-                    ),
-            child: Tooltip(
-              message: subTitle,
-              child: Text(
-                subTitle,
-                style: TextStyle(
-                  fontWeight: smallTextFontWeight,
-                  fontSize: 12,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+        InkWell(
+          borderRadius: BorderRadius.circular(4),
+          onTap: audio == null
+              ? null
+              : () => onArtistTap(
+                    audio: audio!,
+                    context: context,
+                  ),
+          child: Tooltip(
+            message: subTitle,
+            child: Text(
+              subTitle,
+              style: TextStyle(
+                fontWeight: smallTextFontWeight,
+                fontSize: 12,
               ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
+        ),
       ],
     );
   }

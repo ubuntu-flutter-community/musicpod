@@ -19,16 +19,15 @@ class FullHeightTitleAndArtist extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
-    final icyName = mpvMetaData?.icyName;
-    final icyTitle = mpvMetaData?.icyTitle;
+    final icyTitle =
+        watchPropertyValue((PlayerModel m) => m.mpvMetaData?.icyTitle);
 
-    final subTitle = icyName?.isNotEmpty == true
-        ? icyName!
-        : (audio?.audioType == AudioType.podcast
-                ? audio?.album
-                : audio?.artist ?? ' ') ??
-            '';
+    final subTitle = switch (audio?.audioType) {
+          AudioType.podcast => audio?.album,
+          AudioType.radio => audio?.title,
+          _ => audio?.artist
+        } ??
+        '';
 
     final title = icyTitle?.isNotEmpty == true
         ? icyTitle!
@@ -43,7 +42,7 @@ class FullHeightTitleAndArtist extends StatelessWidget
               ? null
               : () => onTitleTap(
                     audio: audio!,
-                    text: mpvMetaData?.icyTitle,
+                    text: icyTitle,
                     context: context,
                   ),
           child: Tooltip(

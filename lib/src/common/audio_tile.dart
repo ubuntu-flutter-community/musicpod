@@ -6,6 +6,7 @@ import '../../constants.dart';
 import '../../data.dart';
 import '../../l10n.dart';
 import '../../library.dart';
+import '../../theme_data_x.dart';
 import 'audio_tile_image.dart';
 
 class AudioTile extends StatelessWidget {
@@ -78,7 +79,7 @@ class AudioTile extends StatelessWidget {
             ),
       selected: selected,
       selectedColor: isPlayerPlaying
-          ? theme.colorScheme.primary
+          ? theme.contrastyPrimary
           : theme.colorScheme.onSurface,
       selectedTileColor: theme.colorScheme.onSurface.withOpacity(0.05),
       contentPadding:

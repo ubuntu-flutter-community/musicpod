@@ -103,8 +103,8 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Set<Audio>? _audios;
-  Set<Audio>? get audios => _audios;
+  Set<Audio>? _titles;
+  Set<Audio>? get audios => _titles;
   Set<Audio>? _findAllTitles() {
     if (_localAudioService.audios == null) return null;
     final list = (_localAudioService.audios!).toList();
@@ -281,10 +281,16 @@ class LocalAudioModel extends SafeChangeNotifier {
       if (failedImports.isNotEmpty) {
         onFail(failedImports);
       }
-      _audios = _findAllTitles();
+
+      _titles = _findAllTitles();
       _allAlbums = findAllAlbums();
       _allArtists = _findAllArtists();
       _allGenres = _findAllGenres();
+    } else {
+      _titles ??= _findAllTitles();
+      _allAlbums ??= findAllAlbums();
+      _allArtists ??= _findAllArtists();
+      _allGenres ??= _findAllGenres();
     }
 
     _audiosChangedSub ??= _localAudioService.audiosChanged.listen((_) {
