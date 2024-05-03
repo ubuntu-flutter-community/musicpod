@@ -105,14 +105,11 @@ mixin PlayerMixin {
 
   void _onRadioArtistTap(Audio audio) {
     final libraryModel = getIt<LibraryModel>();
-    int? index;
-    if (audio.url != null) {
-      index = libraryModel.indexOfStation(audio.url!);
-      if (index != null) {
-        navigatorKey.currentState
-            ?.maybePop()
-            .then((value) => libraryModel.setIndex(index));
-      }
+    int? index = libraryModel.indexOfStation(audio.url!);
+    if (index != null) {
+      navigatorKey.currentState
+          ?.maybePop()
+          .then((value) => libraryModel.setIndex(index));
     } else {
       navigatorKey.currentState?.push(
         MaterialPageRoute(
@@ -129,14 +126,11 @@ mixin PlayerMixin {
     required BuildContext context,
   }) {
     final libraryModel = getIt<LibraryModel>();
-    int? index;
-    if (audio.url != null) {
-      index = libraryModel.indexOfPodcast(audio.website!);
-      if (index != null) {
-        navigatorKey.currentState
-            ?.maybePop()
-            .then((value) => libraryModel.setIndex(index));
-      }
+    int? index = libraryModel.indexOfPodcast(audio.website!);
+    if (index != null) {
+      navigatorKey.currentState
+          ?.maybePop()
+          .then((value) => libraryModel.setIndex(index));
     } else {
       searchAndPushPodcastPage(
         context: context,
