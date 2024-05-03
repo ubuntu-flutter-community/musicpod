@@ -2,6 +2,7 @@ import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../get.dart';
 import '../../../globals.dart';
@@ -9,6 +10,7 @@ import '../../../l10n.dart';
 import '../../../player.dart';
 import '../../../radio.dart';
 import '../../../theme.dart';
+import '../../../theme_data_x.dart';
 import '../../common/icy_image.dart';
 
 class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
@@ -57,6 +59,7 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
           return ListTile(
             selected: current?.icyTitle != null &&
                 current?.icyTitle == e.value.icyTitle,
+            selectedColor: context.t.contrastyPrimary,
             leading: Padding(
               padding: EdgeInsets.only(left: yaruStyled ? 5 : 0),
               child: IcyImage(
