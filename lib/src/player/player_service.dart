@@ -271,7 +271,8 @@ class PlayerService {
     await (_player.platform as NativePlayer).observeProperty(
       'metadata',
       (data) async {
-        if (audio?.audioType != AudioType.radio || !data.contains('icy')) {
+        if (audio?.audioType != AudioType.radio ||
+            !data.contains('icy-title')) {
           return;
         }
         final mpvMetaData = MpvMetaData.fromJson(data);
