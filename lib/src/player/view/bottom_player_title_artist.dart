@@ -27,9 +27,10 @@ class BottomPlayerTitleArtist extends StatelessWidget
         } ??
         '';
 
-    final title = icyTitle?.isNotEmpty == true
-        ? icyTitle!
-        : (audio?.title?.isNotEmpty == true ? audio!.title! : ' ');
+    final title =
+        icyTitle?.isNotEmpty == true && audio?.audioType == AudioType.radio
+            ? icyTitle!
+            : (audio?.title?.isNotEmpty == true ? audio!.title! : ' ');
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
