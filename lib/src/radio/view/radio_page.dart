@@ -7,9 +7,10 @@ import '../../../get.dart';
 import '../../../globals.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../player/player_model.dart';
+import '../radio_model.dart';
 import 'radio_discover_page.dart';
 import 'radio_lib_page.dart';
-import '../radio_model.dart';
 
 class RadioPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const RadioPage({super.key});
@@ -26,6 +27,7 @@ class _RadioPageState extends State<RadioPage> {
       if (!mounted) return;
       final model = getIt<RadioModel>();
       final appModel = getIt<AppModel>();
+      final playerModel = getIt<PlayerModel>();
       final libraryModel = getIt<LibraryModel>();
       final index = libraryModel.radioindex;
       model
@@ -35,7 +37,7 @@ class _RadioPageState extends State<RadioPage> {
       )
           .then(
         (connectedHost) {
-          if (!appModel.isOnline) {
+          if (!playerModel.isOnline) {
             return;
           }
           if (mounted) {
@@ -53,7 +55,7 @@ class _RadioPageState extends State<RadioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
     final connectedHost = watchPropertyValue((RadioModel m) => m.connectedHost);
 

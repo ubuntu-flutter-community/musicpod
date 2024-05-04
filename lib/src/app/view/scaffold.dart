@@ -22,7 +22,7 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
   void initState() {
     super.initState();
     final settingsModel = getIt<SettingsModel>();
-    settingsModel.checkForUpdate(getIt<AppModel>().isOnline).then((_) {
+    settingsModel.checkForUpdate(getIt<PlayerModel>().isOnline).then((_) {
       if (!mounted) return;
       if (settingsModel.recentPatchNotesDisposed == false) {
         showPatchNotes(context);

@@ -27,7 +27,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.t;
     final size = context.m.size;
-    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     final appModel = getIt<AppModel>();
     final nextAudio = watchPropertyValue((PlayerModel m) => m.nextAudio);
     final audio = watchPropertyValue((PlayerModel m) => m.audio);

@@ -8,7 +8,7 @@ import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../get.dart';
 import '../../../l10n.dart';
-import '../../app/app_model.dart';
+import '../../player/player_model.dart';
 import '../../theme.dart';
 import '../settings_model.dart';
 import 'settings_dialog.dart';
@@ -19,7 +19,7 @@ class SettingsButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final model = getIt<SettingsModel>();
-    final appModel = getIt<AppModel>();
+    final playerModel = getIt<PlayerModel>();
     final popupMenuButton = PopupMenuButton(
       padding: yaruStyled ? EdgeInsets.zero : const EdgeInsets.all(8.0),
       tooltip: context.l10n.moreOptions,
@@ -55,7 +55,9 @@ class SettingsButton extends StatelessWidget with WatchItMixin {
       ],
     );
 
-    if (!appModel.isOnline || !model.allowManualUpdate) return popupMenuButton;
+    if (!playerModel.isOnline || !model.allowManualUpdate) {
+      return popupMenuButton;
+    }
 
     final updateAvailable =
         watchPropertyValue((SettingsModel m) => m.updateAvailable);

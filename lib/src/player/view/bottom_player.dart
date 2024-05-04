@@ -35,7 +35,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
 
     final model = getIt<PlayerModel>();
     final appModel = getIt<AppModel>();
-    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
 
     final active = audio?.path != null || isOnline;
     final showQueueButton = watchPropertyValue(

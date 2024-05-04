@@ -37,7 +37,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
     final playerToTheRight = context.m.size.width > kSideBarThreshHold;
     final fullScreen = watchPropertyValue((AppModel m) => m.fullScreen);
     final appModel = getIt<AppModel>();
-    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
 
     return Padding(

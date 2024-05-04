@@ -38,7 +38,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
 
     final model = getIt<PodcastModel>();

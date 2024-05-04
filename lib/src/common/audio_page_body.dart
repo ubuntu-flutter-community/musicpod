@@ -2,7 +2,6 @@ import 'package:animated_emoji/animated_emoji.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import '../../app.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
@@ -88,7 +87,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
         (widget.audioPageType == AudioPageType.playlist ||
             widget.audioPageType == AudioPageType.likedAudio);
     final isReorderAble = reorderAble && reorderAblePageType;
-    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
 
     final playerModel = getIt<PlayerModel>();
