@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../app.dart';
 import '../../../common.dart';
 import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../l10n.dart';
+import '../../player/player_model.dart';
 import 'radio_discover_page.dart';
 
 class OpenRadioDiscoverPageButton extends StatelessWidget with WatchItMixin {
@@ -12,7 +12,7 @@ class OpenRadioDiscoverPageButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     return ImportantButton(
       onPressed: () {
         navigatorKey.currentState?.push(

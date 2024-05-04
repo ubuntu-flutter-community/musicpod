@@ -123,8 +123,13 @@ Future<void> main(List<String> args) async {
     )..init(),
     dispose: (s) => s.dispose(),
   );
+  final playerModel = PlayerModel(
+    service: playerService,
+    connectivity: connectivity,
+  );
+  await playerModel.init();
   getIt.registerSingleton<PlayerModel>(
-    PlayerModel(service: playerService)..init(),
+    playerModel,
     dispose: (s) => s.dispose(),
   );
   getIt.registerSingleton<AppModel>(

@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/yaru.dart';
 
-import '../../app.dart';
 import '../../common.dart';
 import '../l10n/l10n.dart';
-import 'package:flutter/material.dart';
-import 'package:yaru/yaru.dart';
+import '../player/player_model.dart';
 
 class ExploreOnlinePopup extends StatelessWidget with WatchItMixin {
   const ExploreOnlinePopup({
@@ -16,7 +16,7 @@ class ExploreOnlinePopup extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     return YaruPopupMenuButton(
       enabled: isOnline,
       tooltip: context.l10n.searchOnline,

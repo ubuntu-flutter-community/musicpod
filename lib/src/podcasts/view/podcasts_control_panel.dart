@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:podcast_search/podcast_search.dart';
 
 import '../../../build_context_x.dart';
@@ -8,8 +7,8 @@ import '../../../data.dart';
 import '../../../get.dart';
 import '../../../library.dart';
 import '../../../theme.dart';
-import '../../app/app_model.dart';
 import '../../common/language_autocomplete.dart';
+import '../../player/player_model.dart';
 import '../../settings/settings_model.dart';
 import '../podcast_model.dart';
 import 'podcast_genre_autocomplete.dart';
@@ -19,7 +18,7 @@ class PodcastsControlPanel extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((AppModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
 
     final libraryModel = getIt<LibraryModel>();

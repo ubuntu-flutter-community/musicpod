@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
@@ -11,9 +12,14 @@ const rateValues = [1.0, 1.5, 2.0];
 
 class PlayerModel extends SafeChangeNotifier {
   final PlayerService _service;
-  PlayerModel({required PlayerService service}) : _service = service;
+  PlayerModel({
+    required PlayerService service,
+    required Connectivity connectivity,
+  })  : _service = service,
+        _connectivity = connectivity;
 
   VideoController get controller => _service.controller;
+  final Connectivity _connectivity;
 
   StreamSubscription<bool>? _queueNameChangedSub;
   StreamSubscription<bool>? _queueChangedSub;
@@ -29,6 +35,7 @@ class PlayerModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _positionChangedSub;
   StreamSubscription<bool>? _rateChanged;
   StreamSubscription<bool>? _radioHistoryChangedSub;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   String? get queueName => _service.queue.$1;
 
@@ -79,7 +86,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> resume() async => await _service.resume();
 
-  void init() async {
+  Future<void> init() async {
     _queueNameChangedSub ??=
         _service.queueChanged.listen((_) => notifyListeners());
     _queueChangedSub ??= _service.queueChanged.listen((_) => notifyListeners());
@@ -105,6 +112,49 @@ class PlayerModel extends SafeChangeNotifier {
         _service.positionChanged.listen((_) => notifyListeners());
     _radioHistoryChangedSub ??=
         _service.radioHistoryChanged.listen((_) => notifyListeners());
+
+    // TODO: fix https://github.com/fluttercommunity/plus_plugins/issues/1451
+    _connectivitySubscription ??= _connectivity.onConnectivityChanged.listen(
+      (r) => _updateConnectivity(newResult: r),
+      onError: (e) => _result = [ConnectivityResult.wifi],
+    );
+
+    return await _connectivity
+        .checkConnectivity()
+        .then(
+          (r) => _updateConnectivity(newResult: r),
+        )
+        .catchError(
+          (e) => _updateConnectivity(newResult: [ConnectivityResult.wifi]),
+        );
+  }
+
+  bool get isOnline => _isOnline(_result);
+
+  bool _isOnline(List<ConnectivityResult>? res) =>
+      res?.contains(ConnectivityResult.ethernet) == true ||
+      res?.contains(ConnectivityResult.bluetooth) == true ||
+      res?.contains(ConnectivityResult.mobile) == true ||
+      res?.contains(ConnectivityResult.vpn) == true ||
+      res?.contains(ConnectivityResult.wifi) == true;
+
+  // Needed to prevent auto resume on app start
+  bool _firstCheck = true;
+  List<ConnectivityResult>? _result;
+  void _updateConnectivity({required List<ConnectivityResult> newResult}) {
+    if (!_isOnline(_result) && _isOnline(newResult) && !_firstCheck) {
+      switch (audio?.audioType) {
+        case AudioType.radio:
+          playNext();
+          break;
+        default:
+      }
+    }
+    _result = newResult;
+    if (!_firstCheck) {
+      notifyListeners();
+    }
+    _firstCheck = false;
   }
 
   Future<void> playNext() async => await _service.playNext();
@@ -183,6 +233,7 @@ class PlayerModel extends SafeChangeNotifier {
     await _positionChangedSub?.cancel();
     await _rateChanged?.cancel();
     await _radioHistoryChangedSub?.cancel();
+    await _connectivitySubscription?.cancel();
     super.dispose();
   }
 }

@@ -104,8 +104,11 @@ class _AboutPageState extends State<AboutPage> {
                     height: kYaruPagePadding,
                   ),
                   TapAbleText(
-                    onTap: () =>
-                        launchUrl(Uri.parse('https://github.com/ClementBeal')),
+                    onTap: () => launchUrl(
+                      Uri.parse(
+                        'https://github.com/sponsors/ClementBeal',
+                      ),
+                    ),
                     text:
                         'MusicPod metadata reading is enabled by Clement Beal, please sponsor him!',
                     style: linkStyle,

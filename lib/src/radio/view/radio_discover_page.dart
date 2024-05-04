@@ -11,6 +11,7 @@ import '../../../l10n.dart';
 import '../../../radio.dart';
 import '../../common/language_autocomplete.dart';
 import '../../library/library_model.dart';
+import '../../player/player_model.dart';
 import 'radio_control_panel.dart';
 
 class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
@@ -20,6 +21,11 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
+    if (!isOnline) {
+      return const OfflinePage();
+    }
+
     final model = getIt<RadioModel>();
     final libraryModel = getIt<LibraryModel>();
     final searchQuery = watchPropertyValue((RadioModel m) => m.searchQuery);

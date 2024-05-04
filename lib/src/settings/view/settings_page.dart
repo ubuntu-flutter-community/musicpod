@@ -15,6 +15,7 @@ import '../../../string_x.dart';
 import '../../../theme_data_x.dart';
 import '../../../theme_mode_x.dart';
 import '../../globals.dart';
+import '../../player/player_model.dart';
 import '../../theme.dart';
 import '../settings_model.dart';
 import 'theme_tile.dart';
@@ -292,14 +293,14 @@ class _AboutTileState extends State<_AboutTile> {
   @override
   void initState() {
     super.initState();
-    getIt<SettingsModel>().checkForUpdate(getIt<AppModel>().isOnline);
+    getIt<SettingsModel>().checkForUpdate(getIt<PlayerModel>().isOnline);
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
     final settingsModel = getIt<SettingsModel>();
-    final appModel = getIt<AppModel>();
+    final playerModel = getIt<PlayerModel>();
     final updateAvailable =
         watchPropertyValue((SettingsModel m) => m.updateAvailable);
     final onlineVersion =
@@ -307,7 +308,7 @@ class _AboutTileState extends State<_AboutTile> {
     final currentVersion = watchPropertyValue((SettingsModel m) => m.version);
 
     return YaruTile(
-      title: !appModel.isOnline || !settingsModel.allowManualUpdate
+      title: !playerModel.isOnline || !settingsModel.allowManualUpdate
           ? Text(settingsModel.version ?? '')
           : updateAvailable == null
               ? Center(
