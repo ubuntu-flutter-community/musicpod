@@ -271,6 +271,9 @@ class PlayerService {
     await (_player.platform as NativePlayer).observeProperty(
       'metadata',
       (data) async {
+        if (audio?.audioType != AudioType.radio || !data.contains('icy')) {
+          return;
+        }
         final mpvMetaData = MpvMetaData.fromJson(data);
         setMpvMetaData(mpvMetaData);
         final songInfo = mpvMetaData.icyTitle.splitByDash;
