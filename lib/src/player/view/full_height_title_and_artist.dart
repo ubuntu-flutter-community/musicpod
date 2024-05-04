@@ -22,17 +22,6 @@ class FullHeightTitleAndArtist extends StatelessWidget
     final icyTitle =
         watchPropertyValue((PlayerModel m) => m.mpvMetaData?.icyTitle);
 
-    final subTitle = switch (audio?.audioType) {
-          AudioType.podcast => audio?.album,
-          AudioType.radio => audio?.title,
-          _ => audio?.artist
-        } ??
-        '';
-
-    final title = icyTitle?.isNotEmpty == true
-        ? icyTitle!
-        : (audio?.title?.isNotEmpty == true ? audio!.title! : ' ');
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -46,9 +35,9 @@ class FullHeightTitleAndArtist extends StatelessWidget
                     context: context,
                   ),
           child: Tooltip(
-            message: title,
+            message: getTitle(audio: audio, icyTitle: icyTitle),
             child: Text(
-              title,
+              getTitle(audio: audio, icyTitle: icyTitle),
               style: TextStyle(
                 fontWeight: largeTextWeight,
                 fontSize: 30,
@@ -69,9 +58,9 @@ class FullHeightTitleAndArtist extends StatelessWidget
                     context: context,
                   ),
           child: Tooltip(
-            message: subTitle,
+            message: getSubTitle(audio),
             child: Text(
-              subTitle,
+              getSubTitle(audio),
               style: TextStyle(
                 fontWeight: smallTextFontWeight,
                 fontSize: 20,

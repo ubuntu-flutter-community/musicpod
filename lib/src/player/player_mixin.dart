@@ -12,6 +12,19 @@ import '../../radio.dart';
 import '../app/app_model.dart';
 
 mixin PlayerMixin {
+  String getSubTitle(Audio? audio) =>
+      switch (audio?.audioType) {
+        AudioType.podcast => audio?.album,
+        AudioType.radio => audio?.title,
+        _ => audio?.artist
+      } ??
+      '';
+
+  String getTitle({required Audio? audio, required String? icyTitle}) =>
+      icyTitle?.isNotEmpty == true && audio?.audioType == AudioType.radio
+          ? icyTitle!
+          : (audio?.title?.isNotEmpty == true ? audio!.title! : '');
+
   void onTitleTap({
     Audio? audio,
     String? text,
