@@ -115,9 +115,7 @@ class RadioService {
   Future<void> clickStation(String uuid) async {
     try {
       await _radioBrowserApi?.clickStation(uuid: uuid);
-    } on Exception catch (_) {
-      // TODO: find the cause and report to https://github.com/tomassasovsky/radio-browser-api.dart/issues/9
-    }
+    } on Exception catch (_) {}
   }
 
   Future<List<State>?> loadStates(String country) async {

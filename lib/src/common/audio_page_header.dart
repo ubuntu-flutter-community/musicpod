@@ -5,6 +5,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../constants.dart';
+import '../../theme_data_x.dart';
 import '../l10n/l10n.dart';
 
 const _kBigTextMitigation = 2.0;
@@ -239,13 +240,7 @@ class AudioPageHeaderTitle extends StatelessWidget {
           : const EdgeInsets.only(right: kYaruPagePadding),
       child: Text(
         title,
-        style: theme.textTheme.headlineLarge?.copyWith(
-          fontWeight: FontWeight.w300,
-          letterSpacing: 0,
-          leadingDistribution: TextLeadingDistribution.proportional,
-          fontSize: 30,
-          color: theme.colorScheme.onSurface.withOpacity(0.9),
-        ),
+        style: theme.pageHeaderStyle,
         overflow: TextOverflow.ellipsis,
       ),
     );
