@@ -14,12 +14,7 @@ class AdaptiveContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.t;
     final smallWindow = context.m.size.width < 1200;
-    final color = smallWindow
-        ? null
-        : theme.colorScheme.background.scale(
-            lightness: theme.isLight ? -0.02 : 0.02,
-            saturation: -0.5,
-          );
+    final color = smallWindow ? null : theme.containerBg;
 
     return Center(
       child: Container(
