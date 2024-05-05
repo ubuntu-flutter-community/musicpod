@@ -23,6 +23,7 @@ class SliverRadioPageHeader extends StatelessWidget {
     final smallWindow = context.m.size.width < kMasterDetailBreakPoint;
 
     return SliverAppBar(
+      shape: const RoundedRectangleBorder(side: BorderSide.none),
       backgroundColor: Colors.transparent,
       automaticallyImplyLeading: false,
       expandedHeight: size,

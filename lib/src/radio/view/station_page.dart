@@ -29,12 +29,7 @@ class StationPage extends StatelessWidget with WatchItMixin {
     final size = context.m.size;
     final wrappedInContainer = size.width < 1200;
 
-    final color = wrappedInContainer
-        ? null
-        : theme.colorScheme.background.scale(
-            lightness: theme.isLight ? -0.02 : 0.02,
-            saturation: -0.5,
-          );
+    final color = wrappedInContainer ? Colors.transparent : theme.containerBg;
 
     return YaruDetailPage(
       appBar: HeaderBar(
@@ -49,6 +44,8 @@ class StationPage extends StatelessWidget with WatchItMixin {
           slivers: [
             SliverRadioPageHeader(station: station),
             SliverAppBar(
+              shape: const RoundedRectangleBorder(side: BorderSide.none),
+              elevation: 0,
               backgroundColor: color,
               automaticallyImplyLeading: false,
               toolbarHeight: 80,
