@@ -42,7 +42,6 @@ class StationPage extends StatelessWidget with WatchItMixin {
             : const SizedBox.shrink(),
       ),
       body: AdaptiveContainer(
-        padding: EdgeInsets.zero,
         child: CustomScrollView(
           slivers: [
             SliverRadioPageHeader(station: station),

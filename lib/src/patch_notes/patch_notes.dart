@@ -196,8 +196,19 @@ const kPatchNotes20240424 = 'Hello MusicPod Users, this update includes\n'
     '\n\nIf you like MusicPod please consider sponsoring me:'
     '\n';
 
-const kRecentPatchNotesDisposed = kPatchNotes20240424disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20240424;
-const kRecentPatchNotes = kPatchNotes20240424;
+// 2024 05 205
+const kPatchNotes20240505disposed = 'patchNotes20240505disposed';
+const kPatchNotesTitle20240505 = 'Patch notes: 2024-05-05';
+const kPatchNotes20240505 = 'Hello MusicPod Users, this update includes\n'
+    '\n* improvements to the tray, should be more reliable now'
+    '\n* station pages give you more space on scroll now'
+    '\n* other pages will follow'
+    '\n* bug fixes'
+    '\n\nIf you like MusicPod please consider sponsoring me:'
+    '\n';
+
+const kRecentPatchNotesDisposed = kPatchNotes20240505disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20240505;
+const kRecentPatchNotes = kPatchNotes20240505;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';
