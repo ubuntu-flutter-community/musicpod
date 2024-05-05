@@ -145,7 +145,7 @@ class LibraryModel extends SafeChangeNotifier {
     _service.unStarStation(url);
   }
 
-  int? indexOfStation(String id) {
+  int? indexOfStation(String? id) {
     final station = starredStations[id];
     if (station == null) return null;
     final allStations = starredStations.entries.map((e) => e.value).toList();
@@ -255,7 +255,7 @@ class LibraryModel extends SafeChangeNotifier {
     _service.removePodcast(feedUrl);
   }
 
-  int? indexOfPodcast(String id) {
+  int? indexOfPodcast(String? id) {
     final podcast = podcasts[id];
     if (podcast == null) return null;
     final allPodcasts = podcasts.entries.map((e) => e.value).toList();

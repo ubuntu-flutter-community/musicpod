@@ -14,6 +14,7 @@ import '../../../radio.dart';
 import '../../../settings.dart';
 import '../../../theme.dart';
 import '../../globals.dart';
+import '../../radio/view/station_page_icon.dart';
 
 class MasterDetailPage extends StatelessWidget with WatchItMixin {
   const MasterDetailPage({super.key});
@@ -186,8 +187,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
           pageBuilder: (context) => StationPage(
             station: station.value.first,
           ),
-          iconBuilder: (context, selected) => StationPage.createIcon(
-            context: context,
+          iconBuilder: (context, selected) => StationPageIcon(
             imageUrl: station.value.first.imageUrl,
             fallBackColor: getAlphabetColor(station.value.first.title ?? 'a'),
             selected: selected,

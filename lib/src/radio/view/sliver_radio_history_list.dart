@@ -7,8 +7,9 @@ import '../../../l10n.dart';
 import '../../../player.dart';
 import 'radio_history_tile.dart';
 
-class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
-  const RadioHistoryList({
+class SliverRadioHistoryList extends StatelessWidget
+    with WatchItMixin, PlayerMixin {
+  const SliverRadioHistoryList({
     super.key,
     this.filter,
     this.emptyMessage,
@@ -29,18 +30,17 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
     final current = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
 
     if (radioHistory.isEmpty) {
-      return NoSearchResultPage(
-        icons: emptyIcon ?? const AnimatedEmoji(AnimatedEmojis.crystalBall),
-        message: emptyMessage ?? Text(context.l10n.emptyHearingHistory),
+      return SliverToBoxAdapter(
+        child: NoSearchResultPage(
+          icons: emptyIcon ?? const AnimatedEmoji(AnimatedEmojis.crystalBall),
+          message: emptyMessage ?? Text(context.l10n.emptyHearingHistory),
+        ),
       );
     }
 
-    return Align(
-      alignment: Alignment.topCenter,
-      child: ListView.builder(
-        padding: padding ?? EdgeInsets.zero,
-        itemCount: radioHistory.length,
-        itemBuilder: (context, index) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
           final reversedIndex = radioHistory.length - index - 1;
           final e = radioHistory.elementAt(reversedIndex);
           return RadioHistoryTile(
@@ -49,6 +49,7 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
                 current?.icyTitle == e.value.icyTitle,
           );
         },
+        childCount: radioHistory.length,
       ),
     );
   }
