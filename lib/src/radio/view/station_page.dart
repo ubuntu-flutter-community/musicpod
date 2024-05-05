@@ -3,6 +3,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
+import '../../../constants.dart';
 import '../../../data.dart';
 import '../../../get.dart';
 import '../../../theme_data_x.dart';
@@ -25,8 +26,10 @@ class StationPage extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
     final theme = context.t;
-    final smallWindow = context.m.size.width < 1200;
-    final color = smallWindow
+    final size = context.m.size;
+    final wrappedInContainer = size.width < 1200;
+
+    final color = wrappedInContainer
         ? null
         : theme.colorScheme.background.scale(
             lightness: theme.isLight ? -0.02 : 0.02,
@@ -42,7 +45,6 @@ class StationPage extends StatelessWidget with WatchItMixin {
             : const SizedBox.shrink(),
       ),
       body: AdaptiveContainer(
-        padding: EdgeInsets.zero,
         child: CustomScrollView(
           slivers: [
             SliverRadioPageHeader(station: station),
@@ -79,7 +81,11 @@ class _StationPageControlPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = context.m.size;
+    final smallWindow = size.width < kMasterDetailBreakPoint;
     return Row(
+      mainAxisAlignment:
+          smallWindow ? MainAxisAlignment.center : MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         Center(

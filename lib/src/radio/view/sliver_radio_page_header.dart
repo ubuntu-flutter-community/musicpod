@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
@@ -19,40 +20,42 @@ class SliverRadioPageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const size = kMaxAudioPageHeaderHeight;
+    final smallWindow = context.m.size.width < kMasterDetailBreakPoint;
 
     return SliverAppBar(
       backgroundColor: Colors.transparent,
       automaticallyImplyLeading: false,
-      expandedHeight: size + kYaruPagePadding,
+      expandedHeight: size,
       flexibleSpace: Align(
         alignment: Alignment.centerLeft,
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: kYaruPagePadding,
-          ),
-          child: Row(
-            children: [
+        child: Row(
+          mainAxisAlignment:
+              smallWindow ? MainAxisAlignment.center : MainAxisAlignment.start,
+          children: [
+            if (!smallWindow)
               const SizedBox(
                 width: 20,
               ),
-              SizedBox(
-                width: size,
-                height: size,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: SafeNetworkImage(
-                    fallBackIcon: RadioFallBackIcon(
-                      iconSize: size / 2,
-                      station: station,
-                    ),
-                    url: station.imageUrl,
-                    fit: BoxFit.scaleDown,
+            SizedBox(
+              width: size,
+              height: size,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: SafeNetworkImage(
+                  fallBackIcon: RadioFallBackIcon(
+                    iconSize: size / 2,
+                    station: station,
                   ),
+                  url: station.imageUrl,
+                  fit: BoxFit.scaleDown,
                 ),
               ),
+            ),
+            if (!smallWindow)
               const SizedBox(
                 width: kYaruPagePadding,
               ),
+            if (!smallWindow)
               Expanded(
                 child: SizedBox(
                   height: size,
@@ -84,8 +87,11 @@ class SliverRadioPageHeader extends StatelessWidget {
                   ),
                 ),
               ),
-            ],
-          ),
+            if (!smallWindow)
+              const SizedBox(
+                width: kYaruPagePadding,
+              ),
+          ],
         ),
       ),
     );

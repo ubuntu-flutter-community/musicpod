@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../../get.dart';
@@ -9,7 +10,6 @@ import '../../library/library_model.dart';
 import '../radio_model.dart';
 import 'radio_search.dart';
 import 'radio_search_page.dart';
-import 'package:collection/collection.dart';
 
 class RadioPageTagBar extends StatelessWidget {
   const RadioPageTagBar({super.key, required this.station});
