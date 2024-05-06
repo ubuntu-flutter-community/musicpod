@@ -114,8 +114,6 @@ enum AudioPageType {
   allTitlesView,
   artist,
   likedAudio,
-  podcast,
   playlist,
-  album,
-  radio;
+  album;
 }

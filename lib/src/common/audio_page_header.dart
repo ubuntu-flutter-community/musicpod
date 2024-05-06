@@ -52,7 +52,7 @@ class AudioPageHeader extends StatelessWidget {
                 bottom: kYaruPagePadding,
                 left: kYaruPagePadding,
               ))
-          : const EdgeInsets.symmetric(vertical: kYaruPagePadding),
+          : const EdgeInsets.only(bottom: kYaruPagePadding),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         height: height,
