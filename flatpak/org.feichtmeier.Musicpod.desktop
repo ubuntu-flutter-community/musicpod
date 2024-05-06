@@ -1,9 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Musicpod
-Comment=Music, podcast and internet radio player
-Keywords=Music;Podcast;Radio;
-Exec=musicpod
-Icon=org.feichtmeier.Musicpod
-Terminal=false
-Categories=AudioVideo;Audio
