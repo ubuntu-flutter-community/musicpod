@@ -141,7 +141,7 @@ class _PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
       children: [
         AvatarPlayButton(audios: audios, pageId: pageId),
         Padding(
-          padding: const EdgeInsets.only(left: 5),
+          padding: const EdgeInsets.only(left: 10),
           child: IconButton(
             tooltip: subscribed
                 ? context.l10n.removeFromCollection
@@ -167,10 +167,7 @@ class _PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
                   },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: ExploreOnlinePopup(text: title),
-        ),
+        ExploreOnlinePopup(text: title),
       ],
     );
   }
