@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../media_file_x.dart';
 import '../../data.dart';
+import '../../media_file_x.dart';
 import '../settings/settings_service.dart';
 
 class LocalAudioService {
@@ -28,12 +28,8 @@ class LocalAudioService {
 
   Future<List<String>> init({@visibleForTesting String? testDir}) async {
     final result = await compute(_init, testDir ?? _settingsService.directory);
-
-    _audios = result.$2;
-
-    _audiosController.add(true);
-
-    return result.$1;
+    audios = result.audios;
+    return result.failedImports;
   }
 
   Future<void> dispose() async {
@@ -41,42 +37,26 @@ class LocalAudioService {
   }
 }
 
-FutureOr<(List<String>, Set<Audio>?)> _init(String? directory) async {
-  Set<Audio>? newAudios = {};
+FutureOr<ImportResult> _init(String? directory) async {
+  Set<Audio> newAudios = {};
   List<String> failedImports = [];
 
   if (directory != null) {
-    final allFileSystemEntities = Set<FileSystemEntity>.from(
-      await _getFlattenedFileSystemEntities(path: directory),
-    );
-
-    final onlyFiles = <FileSystemEntity>[];
-
-    for (var fileSystemEntity in allFileSystemEntities) {
-      if (!await FileSystemEntity.isDirectory(fileSystemEntity.path) &&
-          fileSystemEntity.isValidMedia) {
-        onlyFiles.add(fileSystemEntity);
-      }
-    }
-    for (var e in onlyFiles) {
+    for (var e in Directory(directory)
+        .listSync(recursive: true, followLinks: false)
+        .whereType<File>()
+        .where((e) => e.isValidMedia)
+        .toList()) {
       try {
-        final metadata = await readMetadata(File(e.path), getImage: true);
-        final audio = Audio.fromMetadata(path: e.path, data: metadata);
-
-        newAudios.add(audio);
+        final metadata = await readMetadata(e, getImage: true);
+        newAudios.add(Audio.fromMetadata(path: e.path, data: metadata));
       } catch (error) {
         failedImports.add(e.path);
       }
     }
   }
 
-  return (failedImports, newAudios);
+  return (audios: newAudios, failedImports: failedImports);
 }
 
-Future<List<FileSystemEntity>> _getFlattenedFileSystemEntities({
-  required String path,
-}) async {
-  return await Directory(path)
-      .list(recursive: true, followLinks: false)
-      .toList();
-}
+typedef ImportResult = ({List<String> failedImports, Set<Audio> audios});
