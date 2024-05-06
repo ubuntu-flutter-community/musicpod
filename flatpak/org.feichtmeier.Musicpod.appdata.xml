@@ -21,40 +21,33 @@
   <screenshots>
     <screenshot type="default">
       <caption>Album - light</caption>
-      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/album_light.png</image>
+      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/main/.github/album_light.png</image>
     </screenshot>
     <screenshot type="default">
       <caption>Album - dark</caption>
-      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/album_dark.png</image>
+      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/main/.github/album_dark.png</image>
     </screenshot>
     <screenshot type="default">
       <caption>Fullscreen - light</caption>
-      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/fullscreen_light.png</image>
+      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/main/.github/full_window_light.png</image>
     </screenshot>
     <screenshot type="default">
       <caption>Fullscreen - dark</caption>
-      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/fullscreen_dark.png</image>
+      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/main/.github/full_window_dark.png</image>
     </screenshot>
     <screenshot type="default">
       <caption>Podcast overview - light</caption>
-      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/wide_light.png</image>
+      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/main/.github/wide_window_light.png</image>
     </screenshot>
     <screenshot type="default">
       <caption>Podcast overview - dark</caption>
-      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/wide_dark.png</image>
-    </screenshot>
-    <screenshot type="default">
-      <caption>Slim view - light</caption>
-      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/slim_light.png</image>
-    </screenshot>
-    <screenshot type="default">
-      <caption>Slim view - dark</caption>
-      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/5ddbe04c50bd831bd3ac56d4ae235f746bcdfbd5/.github/slim_dark.png</image>
+      <image type="source">https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/main/.github/wide_window_dark.png</image>
     </screenshot>
   </screenshots>
   
   <releases>
     <release date="2022-03-12" version="0.1.1"/>
+    <release date="2024-05-06" version="0.3.7"/>
   </releases>
 
   <content_rating type="oars-1.1" />
