@@ -6,12 +6,13 @@ import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
 import '../../../get.dart';
-import '../../../theme_data_x.dart';
+import '../../common/sliver_audio_page_control_panel.dart';
 import '../../player/player_model.dart';
+import 'radio_fall_back_icon.dart';
 import 'radio_page_copy_histoy_button.dart';
 import 'radio_page_star_button.dart';
+import 'radio_page_tag_bar.dart';
 import 'sliver_radio_history_list.dart';
-import 'sliver_radio_page_header.dart';
 
 class StationPage extends StatelessWidget with WatchItMixin {
   const StationPage({
@@ -25,11 +26,6 @@ class StationPage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
-    final theme = context.t;
-    final size = context.m.size;
-    final wrappedInContainer = size.width < 1200;
-
-    final color = wrappedInContainer ? Colors.transparent : theme.containerBg;
 
     return YaruDetailPage(
       appBar: HeaderBar(
@@ -42,19 +38,23 @@ class StationPage extends StatelessWidget with WatchItMixin {
       body: AdaptiveContainer(
         child: CustomScrollView(
           slivers: [
-            SliverRadioPageHeader(station: station),
-            SliverAppBar(
-              shape: const RoundedRectangleBorder(side: BorderSide.none),
-              elevation: 0,
-              backgroundColor: color,
-              automaticallyImplyLeading: false,
-              toolbarHeight: 80,
-              pinned: true,
-              floating: true,
-              flexibleSpace: Padding(
-                padding: const EdgeInsets.all(kYaruPagePadding),
-                child: _StationPageControlPanel(station: station),
+            SliverToBoxAdapter(
+              child: AudioPageHeader(
+                title: station.title ?? station.url ?? '',
+                label: station.artist,
+                descriptionWidget: RadioPageTagBar(station: station),
+                image: SafeNetworkImage(
+                  fallBackIcon: RadioFallBackIcon(
+                    iconSize: kMaxAudioPageHeaderHeight / 2,
+                    station: station,
+                  ),
+                  url: station.imageUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
+            ),
+            SliverAudioPageControlPanel(
+              controlPanel: _StationPageControlPanel(station: station),
             ),
             SliverRadioHistoryList(
               filter: station.title,
