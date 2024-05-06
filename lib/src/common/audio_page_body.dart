@@ -8,7 +8,6 @@ import '../../data.dart';
 import '../../get.dart';
 import '../../l10n.dart';
 import '../../player.dart';
-import '../../podcasts.dart';
 import '../library/library_model.dart';
 
 class AudioPageBody extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -43,8 +42,8 @@ class AudioPageBody extends StatefulWidget with WatchItStatefulWidgetMixin {
     this.onSubTitleTab,
     this.onAudioFilterSelected,
     this.classicTiles = true,
-  })  : showAudioTileHeader = audioPageType != AudioPageType.podcast,
-        showAudioPageHeader = audioPageType != AudioPageType.allTitlesView,
+    this.showAudioTileHeader = true,
+  })  : showAudioPageHeader = audioPageType != AudioPageType.allTitlesView,
         showControlPanel = audioPageType != AudioPageType.allTitlesView;
 
   final String pageId;
@@ -87,7 +86,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
         (widget.audioPageType == AudioPageType.playlist ||
             widget.audioPageType == AudioPageType.likedAudio);
     final isReorderAble = reorderAble && reorderAblePageType;
-    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
 
     final playerModel = getIt<PlayerModel>();
@@ -97,9 +95,7 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     final pause = playerModel.pause;
     final resume = playerModel.resume;
 
-    if (widget.audioPageType != AudioPageType.podcast) {
-      watchPropertyValue((LibraryModel m) => m.likedAudios.length);
-    }
+    watchPropertyValue((LibraryModel m) => m.likedAudios.length);
     if (widget.audioPageType == AudioPageType.playlist) {
       watchPropertyValue(
         (LibraryModel m) => m.playlists[widget.pageId]?.length,
@@ -187,30 +183,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
     Widget itemBuilder(BuildContext context, int index) {
       final audio = widget.audios!.elementAt(index);
       final audioSelected = currentAudio == audio;
-      final download = libraryModel.getDownload(audio.url);
-
-      if (audio.audioType == AudioType.podcast) {
-        return PodcastAudioTile(
-          addPodcast: audio.website == null || widget.audios == null
-              ? null
-              : () => libraryModel.addPodcast(
-                    audio.website!,
-                    widget.audios!,
-                  ),
-          removeUpdate: () => libraryModel.removePodcastUpdate(widget.pageId),
-          isExpanded: audioSelected,
-          audio: download != null ? audio.copyWith(path: download) : audio,
-          isPlayerPlaying: isPlaying,
-          selected: audioSelected,
-          pause: pause,
-          resume: resume,
-          startPlaylist: startPlaylist,
-          lastPosition: libraryModel.getLastPosition(audio.url),
-          safeLastPosition: playerModel.safeLastPosition,
-          isOnline: isOnline,
-          insertIntoQueue: () => playerModel.insertIntoQueue(audio),
-        );
-      }
 
       return AudioTile(
         key: reorderAblePageType ? ObjectKey(audio) : null,

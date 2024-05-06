@@ -78,8 +78,7 @@ class _StationPageControlPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = context.m.size;
-    final smallWindow = size.width < kMasterDetailBreakPoint;
+    final smallWindow = context.m.size.width < kMasterDetailBreakPoint;
     return Row(
       mainAxisAlignment:
           smallWindow ? MainAxisAlignment.center : MainAxisAlignment.start,
