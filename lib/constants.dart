@@ -78,6 +78,8 @@ const kMasterDetailBreakPoint = 720.0;
 
 const kMasterDetailSideBarWidth = 250.0;
 
+const kAdaptivContainerBreakPoint = 1200.0;
+
 const kAudioCardGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
   maxCrossAxisExtent: kAudioCardDimension + 40,
   mainAxisExtent: kAudioCardDimension + kAudioCardBottomHeight + 8,

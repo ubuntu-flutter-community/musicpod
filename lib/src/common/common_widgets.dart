@@ -19,12 +19,8 @@ class NavBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void onTap() {
-      if (onPressed == null) {
-        navigatorKey.currentState?.maybePop(context);
-      } else {
-        onPressed?.call();
-        navigatorKey.currentState?.maybePop(context);
-      }
+      onPressed?.call();
+      navigatorKey.currentState?.maybePop(context);
     }
 
     if (yaruStyled) {
@@ -314,6 +310,7 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
       height: yaruStyled ? null : 38,
       child: TextField(
         onTap: () {
+          getIt<AppModel>().setLockSpace(true);
           _controller.selection = TextSelection(
             baseOffset: 0,
             extentOffset: _controller.value.text.length,

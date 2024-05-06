@@ -21,13 +21,13 @@ class AudioPageHeader extends StatelessWidget {
     this.imageRadius,
     this.onSubTitleTab,
     this.onLabelTab,
-    this.content,
+    this.descriptionWidget,
     this.padding,
   });
 
   final String title;
   final String? description;
-  final Widget? content;
+  final Widget? descriptionWidget;
   final Widget? image;
   final String? label;
   final String? subTitle;
@@ -44,7 +44,6 @@ class AudioPageHeader extends StatelessWidget {
     final size = context.m.size;
     final smallWindow = size.width < kMasterDetailBreakPoint;
     final radius = imageRadius ?? BorderRadius.circular(10);
-    final descriptionStyle = theme.textTheme.bodyMedium;
 
     return Padding(
       padding: !smallWindow
@@ -91,67 +90,82 @@ class AudioPageHeader extends StatelessWidget {
               ),
             if (!smallWindow)
               Expanded(
-                child: content ??
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          flex: 2,
-                          child: AudioPageHeaderTitle(title: title),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: AudioPageHeaderSubTitle(
-                            onLabelTab: onLabelTab,
-                            label: label,
-                            subTitle: subTitle,
-                            onSubTitleTab: onSubTitleTab,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 7,
-                          child: (description != null)
-                              ? Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: _kBigTextMitigation,
-                                  ),
-                                  child: SingleChildScrollView(
-                                    padding: const EdgeInsets.only(
-                                      right: kYaruPagePadding,
-                                    ),
-                                    child: Html(
-                                      data: description,
-                                      onAnchorTap: (url, attributes, element) {
-                                        if (url == null) return;
-                                        launchUrl(Uri.parse(url));
-                                      },
-                                      style: {
-                                        'img': Style(display: Display.none),
-                                        'body': Style(
-                                          height: Height.auto(),
-                                          margin: Margins.zero,
-                                          padding: HtmlPaddings.zero,
-                                          textOverflow: TextOverflow.fade,
-                                          textAlign: TextAlign.start,
-                                          fontSize: FontSize(
-                                            descriptionStyle?.fontSize ?? 10,
-                                          ),
-                                          fontWeight:
-                                              descriptionStyle?.fontWeight,
-                                          fontFamily:
-                                              descriptionStyle?.fontFamily,
-                                        ),
-                                      },
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox.expand(),
-                        ),
-                      ],
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      child: AudioPageHeaderTitle(title: title),
                     ),
+                    Expanded(
+                      flex: 1,
+                      child: AudioPageHeaderSubTitle(
+                        onLabelTab: onLabelTab,
+                        label: label,
+                        subTitle: subTitle,
+                        onSubTitleTab: onSubTitleTab,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 7,
+                      child: descriptionWidget ??
+                          (description != null
+                              ? AudioPageHeaderHtmlDescription(
+                                  description: description,
+                                )
+                              : const SizedBox.expand()),
+                    ),
+                  ],
+                ),
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class AudioPageHeaderHtmlDescription extends StatelessWidget {
+  const AudioPageHeaderHtmlDescription({
+    super.key,
+    required this.description,
+  });
+
+  final String? description;
+
+  @override
+  Widget build(BuildContext context) {
+    final descriptionStyle = context.t.textTheme.bodyMedium;
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 2,
+      ),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.only(
+          right: kYaruPagePadding,
+        ),
+        child: Html(
+          data: description,
+          onAnchorTap: (url, attributes, element) {
+            if (url == null) return;
+            launchUrl(Uri.parse(url));
+          },
+          style: {
+            'img': Style(display: Display.none),
+            'body': Style(
+              height: Height.auto(),
+              margin: Margins.zero,
+              padding: HtmlPaddings.zero,
+              textOverflow: TextOverflow.fade,
+              textAlign: TextAlign.start,
+              fontSize: FontSize(
+                descriptionStyle?.fontSize ?? 10,
+              ),
+              fontWeight: descriptionStyle?.fontWeight,
+              fontFamily: descriptionStyle?.fontFamily,
+            ),
+          },
         ),
       ),
     );

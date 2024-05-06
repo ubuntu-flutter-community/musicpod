@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common.dart';
+import '../../constants.dart';
 import '../../l10n.dart';
 import '../../online_album_art_utils.dart';
 import '../../url_store.dart';
@@ -12,8 +13,8 @@ class IcyImage extends StatefulWidget {
   const IcyImage({
     super.key,
     required this.mpvMetaData,
-    this.height = 40,
-    this.width = 40,
+    this.height = kAudioTrackWidth,
+    this.width = kAudioTrackWidth,
     this.borderRadius,
     this.fallBackWidget,
     this.fit,
