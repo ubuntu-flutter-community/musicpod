@@ -46,8 +46,8 @@
   </screenshots>
   
   <releases>
-    <release date="2022-03-12" version="0.1.1"/>
     <release date="2024-05-06" version="0.3.7"/>
+    <release date="2022-03-12" version="0.1.1"/>
   </releases>
 
   <content_rating type="oars-1.1" />
