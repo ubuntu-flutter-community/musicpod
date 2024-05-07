@@ -18,7 +18,7 @@ class SliverAudioPageControlPanel extends StatelessWidget {
     final smallWindow = size.width < kMasterDetailBreakPoint;
 
     final color =
-        wrappedInContainer ? theme.colorScheme.background : theme.containerBg;
+        wrappedInContainer ? theme.scaffoldBackgroundColor : theme.containerBg;
 
     return SliverAppBar(
       shape: const RoundedRectangleBorder(side: BorderSide.none),
