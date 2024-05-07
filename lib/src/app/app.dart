@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:phoenix_theme/phoenix_theme.dart' hide ColorX;
 import 'package:system_theme/system_theme.dart';
 import 'package:yaru/yaru.dart';
 
@@ -43,9 +44,9 @@ class YaruMusicPodApp extends StatelessWidget {
               backButtonIconBuilder: (context) => Icon(Iconz().goBack),
             ),
             scaffoldBackgroundColor: const Color(0xFF1e1e1e),
-            dividerColor: darkDividerColor,
+            dividerColor: yaruFixDarkDividerColor,
             dividerTheme: const DividerThemeData(
-              color: darkDividerColor,
+              color: yaruFixDarkDividerColor,
               space: 1.0,
               thickness: 0.0,
             ),
@@ -146,18 +147,14 @@ class _MusicPodAppState extends State<_MusicPodApp>
   @override
   Widget build(BuildContext context) {
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
+    final phoenix = phoenixTheme(color: widget.accent ?? Colors.greenAccent);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.values[themeIndex],
       highContrastTheme: widget.highContrastTheme,
       highContrastDarkTheme: widget.highContrastDarkTheme,
-      theme: widget.lightTheme ??
-          m3Theme(color: widget.accent ?? Colors.greenAccent),
-      darkTheme: widget.darkTheme ??
-          m3Theme(
-            brightness: Brightness.dark,
-            color: widget.accent ?? Colors.greenAccent,
-          ),
+      theme: widget.lightTheme ?? phoenix.lightTheme,
+      darkTheme: widget.darkTheme ?? phoenix.darkTheme,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => 'MusicPod',
