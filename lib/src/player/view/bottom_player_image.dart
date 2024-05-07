@@ -30,6 +30,26 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    if (isVideo == true) {
+      return RepaintBoundary(
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () => getIt<AppModel>().setFullScreen(true),
+            child: Video(
+              height: size,
+              width: size,
+              filterQuality: FilterQuality.medium,
+              controller: videoController,
+              controls: (state) {
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ),
+      );
+    }
+
     const iconSize = 40.0;
     final theme = context.t;
     IconData iconData;
@@ -77,25 +97,7 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
       ),
     );
 
-    if (isVideo == true) {
-      return RepaintBoundary(
-        child: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: GestureDetector(
-            onTap: () => getIt<AppModel>().setFullScreen(true),
-            child: Video(
-              height: size,
-              width: size,
-              filterQuality: FilterQuality.medium,
-              controller: videoController,
-              controls: (state) {
-                return const SizedBox.shrink();
-              },
-            ),
-          ),
-        ),
-      );
-    } else if (audio?.pictureData != null) {
+    if (audio?.pictureData != null) {
       return AnimatedContainer(
         height: size,
         width: size,
@@ -107,31 +109,31 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
           height: size,
         ),
       );
-    } else {
-      if (!isOnline || audio?.path != null) {
-        return fallBackImage;
-      } else {
-        return SuperNetworkImage(
-          height: size,
-          width: size,
-          audio: audio,
-          fit: BoxFit.cover,
-          fallBackIcon: fallBackImage,
-          errorIcon: fallBackImage,
-          onGenreTap: (genre) => getIt<RadioModel>().init().then(
-                (_) => navigatorKey.currentState?.push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return RadioSearchPage(
-                        radioSearch: RadioSearch.tag,
-                        searchQuery: genre.toLowerCase(),
-                      );
-                    },
-                  ),
+    }
+
+    if (audio?.albumArtUrl != null || audio?.imageUrl != null) {
+      return SuperNetworkImage(
+        height: size,
+        width: size,
+        audio: audio,
+        fit: BoxFit.cover,
+        fallBackIcon: fallBackImage,
+        errorIcon: fallBackImage,
+        onGenreTap: (genre) => getIt<RadioModel>().init().then(
+              (_) => navigatorKey.currentState?.push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return RadioSearchPage(
+                      radioSearch: RadioSearch.tag,
+                      searchQuery: genre.toLowerCase(),
+                    );
+                  },
                 ),
               ),
-        );
-      }
+            ),
+      );
     }
+
+    return fallBackImage;
   }
 }
