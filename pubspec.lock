@@ -1038,6 +1038,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.2"
+  phoenix_theme:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "7ce9dadf3f021aa3e2cfa721c68675fe29d3e378"
+      resolved-ref: "7ce9dadf3f021aa3e2cfa721c68675fe29d3e378"
+      url: "https://github.com/Feichtmeier/phoenix_theme"
+    source: git
+    version: "0.0.1"
   pixel_snap:
     dependency: transitive
     description:

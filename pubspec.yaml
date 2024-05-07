@@ -51,6 +51,10 @@ dependencies:
   palette_generator: ^0.3.3+3
   path: ^1.9.0
   path_provider: ^2.1.2
+  phoenix_theme:
+    git:
+      url: https://github.com/Feichtmeier/phoenix_theme
+      ref: 7ce9dadf3f021aa3e2cfa721c68675fe29d3e378
   pls: ^1.1.0
   podcast_search: ^0.6.9
   radio_browser_api: ^2.0.0+1
