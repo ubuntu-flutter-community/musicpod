@@ -26,6 +26,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
+        childCount: audios.length,
         (context, index) {
           final episode = audios.elementAt(index);
           final download = libraryModel.getDownload(episode.url);
