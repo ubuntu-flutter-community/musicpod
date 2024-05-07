@@ -69,43 +69,46 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
             ? const NavBackButton()
             : const SizedBox.shrink(),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: AudioPageHeader(
-              image: imageUrl == null
-                  ? null
-                  : SafeNetworkImage(
-                      fallBackIcon: Icon(
-                        Iconz().podcast,
-                        size: 80,
-                        color: theme.hintColor,
+      body: AdaptiveContainer(
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: AudioPageHeader(
+                image: imageUrl == null
+                    ? null
+                    : SafeNetworkImage(
+                        fallBackIcon: Icon(
+                          Iconz().podcast,
+                          size: 80,
+                          color: theme.hintColor,
+                        ),
+                        errorIcon: Icon(
+                          Iconz().podcast,
+                          size: 80,
+                          color: theme.hintColor,
+                        ),
+                        url: imageUrl,
+                        fit: BoxFit.fitHeight,
+                        filterQuality: FilterQuality.medium,
                       ),
-                      errorIcon: Icon(
-                        Iconz().podcast,
-                        size: 80,
-                        color: theme.hintColor,
-                      ),
-                      url: imageUrl,
-                      fit: BoxFit.fitHeight,
-                      filterQuality: FilterQuality.medium,
-                    ),
-              label: audios?.firstWhereOrNull((e) => e.genre != null)?.genre ??
-                  context.l10n.podcast,
-              subTitle: audios?.firstOrNull?.artist,
-              description: audios?.firstOrNull?.albumArtist,
-              title: title,
+                label:
+                    audios?.firstWhereOrNull((e) => e.genre != null)?.genre ??
+                        context.l10n.podcast,
+                subTitle: audios?.firstOrNull?.artist,
+                description: audios?.firstOrNull?.albumArtist,
+                title: title,
+              ),
             ),
-          ),
-          SliverAudioPageControlPanel(
-            controlPanel: _PodcastPageControlPanel(
-              audios: audios ?? {},
-              pageId: pageId,
-              title: title,
+            SliverAudioPageControlPanel(
+              controlPanel: _PodcastPageControlPanel(
+                audios: audios ?? {},
+                pageId: pageId,
+                title: title,
+              ),
             ),
-          ),
-          SliverPodcastPageList(audios: audios ?? {}, pageId: pageId),
-        ],
+            SliverPodcastPageList(audios: audios ?? {}, pageId: pageId),
+          ],
+        ),
       ),
     );
   }

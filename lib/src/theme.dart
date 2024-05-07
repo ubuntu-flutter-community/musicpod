@@ -5,62 +5,7 @@ import 'package:yaru/yaru.dart';
 
 import '../theme_data_x.dart';
 
-const darkDividerColor = Color.fromARGB(19, 255, 255, 255);
-
-ThemeData m3Theme({
-  Brightness brightness = Brightness.light,
-  Color color = Colors.greenAccent,
-}) {
-  final dividerColor = brightness == Brightness.light
-      ? const Color.fromARGB(48, 0, 0, 0)
-      : darkDividerColor;
-  final colorScheme = ColorScheme.fromSeed(
-    surfaceTint: Colors.transparent,
-    seedColor: color,
-    brightness: brightness,
-  );
-  return ThemeData(
-    useMaterial3: true,
-    dividerColor: dividerColor,
-    dividerTheme: DividerThemeData(
-      color: dividerColor,
-      space: 1.0,
-      thickness: 0.0,
-    ),
-    menuTheme: _createMenuTheme(colorScheme),
-    popupMenuTheme: _createPopupMenuTheme(colorScheme),
-    dropdownMenuTheme: _createDropdownMenuTheme(colorScheme),
-    colorScheme: colorScheme,
-    splashFactory:
-        Platform.isMacOS || Platform.isIOS ? NoSplash.splashFactory : null,
-    snackBarTheme: _createSnackBarThemeData(colorScheme),
-    dialogTheme: DialogTheme(
-      backgroundColor: colorScheme.background,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(kYaruContainerRadius),
-      ),
-    ),
-    cardColor: getCardColor(colorScheme),
-  );
-}
-
-Color? getCardColor(
-  ColorScheme? colorScheme,
-) =>
-    colorScheme?.onSurface.scale(
-      lightness: colorScheme.isLight == true ? 0.85 : -0.8,
-      saturation: -0.9,
-    );
-
-SnackBarThemeData _createSnackBarThemeData(ColorScheme scheme) {
-  return SnackBarThemeData(
-    behavior: SnackBarBehavior.floating,
-    actionTextColor: scheme.primary.scale(
-      saturation: 0.5,
-      lightness: (scheme.isLight ? 0.2 : -0.5),
-    ),
-  );
-}
+const yaruFixDarkDividerColor = Color.fromARGB(19, 255, 255, 255);
 
 Color? getSideBarColor(ThemeData theme) => theme.scaffoldBackgroundColor;
 
@@ -80,66 +25,6 @@ Color getPlayerBg(Color? surfaceTintColor, Color fallbackColor) {
 bool get yaruStyled => Platform.isLinux;
 
 bool get appleStyled => Platform.isMacOS || Platform.isIOS;
-
-PopupMenuThemeData _createPopupMenuTheme(ColorScheme colorScheme) {
-  final bgColor =
-      colorScheme.isLight ? colorScheme.surface : colorScheme.surfaceVariant;
-  return PopupMenuThemeData(
-    color: bgColor,
-    surfaceTintColor: bgColor,
-    shape: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide(
-        color: colorScheme.onSurface.withOpacity(
-          colorScheme.isLight ? 0.3 : 0.2,
-        ),
-        width: 1,
-      ),
-    ),
-  );
-}
-
-MenuStyle _createMenuStyle(ColorScheme colorScheme) {
-  final bgColor =
-      colorScheme.isLight ? colorScheme.surface : colorScheme.surfaceVariant;
-
-  return MenuStyle(
-    surfaceTintColor: MaterialStateColor.resolveWith((states) => bgColor),
-    shape: MaterialStateProperty.resolveWith(
-      (states) => RoundedRectangleBorder(
-        side: BorderSide(
-          color: colorScheme.onSurface.withOpacity(
-            colorScheme.isLight ? 0.3 : 0.2,
-          ),
-          width: 1,
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
-    ),
-    side: MaterialStateBorderSide.resolveWith(
-      (states) => BorderSide(
-        color: colorScheme.onSurface.withOpacity(
-          colorScheme.isLight ? 0.3 : 0.2,
-        ),
-        width: 1,
-      ),
-    ),
-    elevation: MaterialStateProperty.resolveWith((states) => 1),
-    backgroundColor: MaterialStateProperty.resolveWith((states) => bgColor),
-  );
-}
-
-MenuThemeData _createMenuTheme(ColorScheme colorScheme) {
-  return MenuThemeData(
-    style: _createMenuStyle(colorScheme),
-  );
-}
-
-DropdownMenuThemeData _createDropdownMenuTheme(ColorScheme colorScheme) {
-  return DropdownMenuThemeData(
-    menuStyle: _createMenuStyle(colorScheme),
-  );
-}
 
 const alphabetColors = {
   'A': Colors.red,
