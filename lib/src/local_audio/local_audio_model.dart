@@ -269,18 +269,16 @@ class LocalAudioModel extends SafeChangeNotifier {
     return images;
   }
 
+  List<String>? _failedImports;
+  List<String>? get failedImports => _failedImports;
+
   Future<void> init({
-    required void Function(List<String> failedImports) onFail,
     bool forceInit = false,
   }) async {
     if (forceInit ||
         (_localAudioService.audios == null ||
             _localAudioService.audios?.isEmpty == true)) {
-      final failedImports = await _localAudioService.init();
-
-      if (failedImports.isNotEmpty) {
-        onFail(failedImports);
-      }
+      _failedImports = await _localAudioService.init();
 
       _titles = _findAllTitles();
       _allAlbums = findAllAlbums();

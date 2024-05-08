@@ -219,22 +219,7 @@ class _LocalAudioSection extends StatelessWidget with WatchItMixin {
 
     Future<void> onDirectorySelected(String? directoryPath) async {
       settingsModel.setDirectory(directoryPath).then(
-            (value) async => await localAudioModel.init(
-              forceInit: true,
-              onFail: (failedImports) {
-                if (settingsModel.neverShowFailedImports) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    duration: const Duration(seconds: 10),
-                    content: FailedImportsContent(
-                      failedImports: failedImports,
-                      onNeverShowFailedImports: () =>
-                          settingsModel.setNeverShowFailedImports(true),
-                    ),
-                  ),
-                );
-              },
-            ),
+            (_) async => await localAudioModel.init(forceInit: true),
           );
     }
 

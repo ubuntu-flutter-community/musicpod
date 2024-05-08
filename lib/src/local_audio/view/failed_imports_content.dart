@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../build_context_x.dart';
+import '../../../get.dart';
+import '../../common/snackbars.dart';
 import '../../l10n/l10n.dart';
+import '../../settings/settings_model.dart';
 
 class FailedImportsContent extends StatelessWidget {
   const FailedImportsContent({
@@ -68,4 +71,21 @@ class FailedImportsContent extends StatelessWidget {
       ),
     );
   }
+}
+
+ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
+    showFailedImportsSnackBar({
+  required List<String> failedImports,
+  required BuildContext context,
+}) {
+  final settingsModel = getIt<SettingsModel>();
+  if (settingsModel.neverShowFailedImports) return null;
+  return showSnackBar(
+    context: context,
+    content: FailedImportsContent(
+      failedImports: failedImports,
+      onNeverShowFailedImports: () =>
+          settingsModel.setNeverShowFailedImports(true),
+    ),
+  );
 }
