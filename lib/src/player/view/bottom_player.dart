@@ -115,7 +115,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                   IconButton(
                     tooltip: context.l10n.fullWindow,
                     icon: Icon(
-                      Iconz().fullScreen,
+                      Iconz().fullWindow,
                       color: theme.colorScheme.onSurface,
                     ),
                     onPressed: () => appModel.setFullScreen(true),

@@ -55,6 +55,8 @@ class PlayerModel extends SafeChangeNotifier {
   Duration? get position => _service.position;
   void setPosition(Duration? value) => _service.setPosition(value);
 
+  Duration? get buffer => _service.buffer;
+
   Future<void> seekInSeconds(int seconds) async {
     if (position != null && position!.inSeconds + seconds >= 0) {
       setPosition(

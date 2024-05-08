@@ -12,6 +12,8 @@
     "rewind10": "10 Sekunden zurückspulen",
     "fullWindow": "Vollfenstermodus",
     "leaveFullWindow": "Vollfenstermodus verlassen",
+    "fullScreen": "Vollbildmodus",
+    "leaveFullScreen": "Vollbildmodus verlassen",
     "playbackRate": "Wiedergabegeschwindigkeit",
     "addToFavorites": "Zu Favoriten hinzufügen",
     "removeFromFavorites": "Aus Favoriten entfernen",

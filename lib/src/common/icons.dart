@@ -197,6 +197,16 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.volume_off
           : Icons.volume_off;
+  IconData get fullWindowExit => yaruStyled
+      ? YaruIcons.arrow_down
+      : appleStyled
+          ? CupertinoIcons.arrow_down
+          : Icons.arrow_downward;
+  IconData get fullWindow => yaruStyled
+      ? YaruIcons.arrow_up
+      : appleStyled
+          ? CupertinoIcons.arrow_up
+          : Icons.arrow_upward;
   IconData get fullScreenExit => yaruStyled
       ? YaruIcons.fullscreen_exit
       : appleStyled

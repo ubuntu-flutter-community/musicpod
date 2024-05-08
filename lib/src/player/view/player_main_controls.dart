@@ -17,17 +17,20 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
     required this.active,
     required this.playPrevious,
     required this.playNext,
+    this.iconColor,
+    this.avatarColor,
   });
 
   final Future<void> Function() playPrevious;
   final Future<void> Function() playNext;
 
   final bool active;
+  final Color? iconColor, avatarColor;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final defaultColor = theme.colorScheme.onSurface;
+    final defaultColor = iconColor ?? theme.colorScheme.onSurface;
     final queueLength = watchPropertyValue((PlayerModel m) => m.queue.length);
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
     final showShuffleAndRepeat = audio?.audioType == AudioType.local;
@@ -40,21 +43,28 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
       if (showShuffleAndRepeat)
         ShuffleButton(active: active)
       else if (audio?.audioType == AudioType.podcast)
-        SeekButton(active: active, forward: false),
+        SeekButton(
+          active: active,
+          forward: false,
+          iconColor: defaultColor,
+        ),
       _flex,
       if (showSkipButtons)
         IconButton(
           tooltip: context.l10n.back,
           color: defaultColor,
           onPressed: !active ? null : () => playPrevious(),
-          icon: Icon(Iconz().skipBackward),
+          icon: Icon(
+            Iconz().skipBackward,
+            color: defaultColor,
+          ),
         ),
       _flex,
       CircleAvatar(
         radius: avatarIconSize,
-        backgroundColor: theme.colorScheme.inverseSurface,
+        backgroundColor: avatarColor ?? theme.colorScheme.inverseSurface,
         child: PlayButton(
-          iconColor: theme.colorScheme.onInverseSurface,
+          iconColor: iconColor ?? theme.colorScheme.onInverseSurface,
           active: active,
         ),
       ),
@@ -64,13 +74,22 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
           tooltip: context.l10n.next,
           color: defaultColor,
           onPressed: !active || queueLength < 2 ? null : () => playNext(),
-          icon: Icon(Iconz().skipForward),
+          icon: Icon(
+            Iconz().skipForward,
+            color: defaultColor,
+          ),
         ),
       _flex,
       if (showShuffleAndRepeat)
-        RepeatButton(active: active)
+        RepeatButton(
+          active: active,
+          iconColor: defaultColor,
+        )
       else if (audio?.audioType == AudioType.podcast)
-        SeekButton(active: active),
+        SeekButton(
+          active: active,
+          iconColor: defaultColor,
+        ),
     ];
 
     return Row(

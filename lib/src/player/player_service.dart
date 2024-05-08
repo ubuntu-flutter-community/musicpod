@@ -37,6 +37,7 @@ class PlayerService {
   StreamSubscription<bool>? _isPlayingSub;
   StreamSubscription<Duration>? _durationSub;
   StreamSubscription<Duration>? _positionSub;
+  StreamSubscription<Duration>? _bufferSub;
   StreamSubscription<bool>? _isCompletedSub;
   StreamSubscription<double>? _volumeSub;
   StreamSubscription<Tracks>? _tracksSub;
@@ -147,6 +148,16 @@ class PlayerService {
     _position = value;
     _positionController.add(true);
     _setMediaControlPosition(value);
+  }
+
+  final _bufferController = StreamController<bool>.broadcast();
+  Stream<bool> get bufferChanged => _bufferController.stream;
+  Duration? _buffer = Duration.zero;
+  Duration? get buffer => _buffer;
+  void setBuffer(Duration? value) {
+    if (buffer?.inSeconds == value?.inSeconds) return;
+    _buffer = value;
+    _bufferController.add(true);
   }
 
   final _repeatSingleController = StreamController<bool>.broadcast();
@@ -260,6 +271,10 @@ class PlayerService {
 
     _positionSub = _player.stream.position.listen((newPosition) {
       setPosition(newPosition);
+    });
+
+    _bufferSub = _player.stream.buffer.listen((event) {
+      setBuffer(event);
     });
 
     _isCompletedSub = _player.stream.completed.listen((value) async {
@@ -770,6 +785,7 @@ class PlayerService {
     await _rateSub?.cancel();
     await _rateController.close();
     await _radioHistoryController.close();
+    await _bufferSub?.cancel();
 
     await _player.dispose();
   }

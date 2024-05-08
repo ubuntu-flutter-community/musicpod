@@ -23,6 +23,8 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
     final playerModel = getIt<PlayerModel>();
 
     final position = watchPropertyValue((PlayerModel m) => m.position);
+    final buffer = watchPropertyValue((PlayerModel m) => m.buffer);
+
     final setPosition = playerModel.setPosition;
     final duration = watchPropertyValue((PlayerModel m) => m.duration);
     final seek = playerModel.seek;
@@ -56,12 +58,15 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
           inactiveTrackColor: mainColor.withOpacity(0.35),
           activeTrackColor: mainColor.withOpacity(0.8),
           overlayColor: mainColor,
+          secondaryActiveTrackColor: mainColor.withOpacity(0.4),
         ),
         child: RepaintBoundary(
           child: Slider(
             min: 0,
             max: sliderActive ? duration.inSeconds.toDouble() : 1.0,
             value: sliderActive ? position.inSeconds.toDouble() : 0,
+            secondaryTrackValue:
+                sliderActive ? buffer?.inSeconds.toDouble() : 0,
             onChanged: sliderActive
                 ? (v) async {
                     setPosition(Duration(seconds: v.toInt()));
