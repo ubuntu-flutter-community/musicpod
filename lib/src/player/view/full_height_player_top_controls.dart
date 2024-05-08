@@ -35,7 +35,6 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
       (PlayerModel m) =>
           m.queue.length > 1 || audio?.audioType == AudioType.local,
     );
-    final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo == true);
     final playerToTheRight = context.m.size.width > kSideBarThreshHold;
     final fullScreen = watchPropertyValue((AppModel m) => m.fullScreen);
     final appModel = getIt<AppModel>();
@@ -48,54 +47,48 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
             right: kYaruPagePadding,
             top: Platform.isMacOS ? 0 : kYaruPagePadding,
           ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          color: isVideo ? Colors.black.withOpacity(0.6) : null,
-        ),
-        child: Wrap(
-          alignment: WrapAlignment.end,
-          spacing: 5.0,
-          children: [
-            if (audio?.audioType != AudioType.podcast)
-              PlayerLikeIcon(
-                audio: audio,
-                color: iconColor,
-              ),
-            if (showQueueButton) QueueButton(color: iconColor),
-            ShareButton(
+      child: Wrap(
+        alignment: WrapAlignment.end,
+        spacing: 5.0,
+        children: [
+          if (audio?.audioType != AudioType.podcast)
+            PlayerLikeIcon(
               audio: audio,
+              color: iconColor,
+            ),
+          if (showQueueButton) QueueButton(color: iconColor),
+          ShareButton(
+            audio: audio,
+            active: active,
+            color: iconColor,
+          ),
+          if (audio?.audioType == AudioType.podcast)
+            PlaybackRateButton(
               active: active,
               color: iconColor,
             ),
-            if (audio?.audioType == AudioType.podcast)
-              PlaybackRateButton(
-                active: active,
-                color: iconColor,
-              ),
-            VolumeSliderPopup(color: iconColor),
-            IconButton(
-              tooltip: playerViewMode == PlayerViewMode.fullWindow
-                  ? context.l10n.leaveFullWindow
-                  : context.l10n.fullWindow,
-              icon: Icon(
-                playerViewMode == PlayerViewMode.fullWindow
-                    ? Iconz().fullWindowExit
-                    : Iconz().fullWindow,
-                color: iconColor,
-              ),
-              onPressed: () {
-                appModel.setFullScreen(
-                  playerViewMode == PlayerViewMode.fullWindow ? false : true,
-                );
-
-                appModel.setShowWindowControls(
-                  (fullScreen == true && playerToTheRight) ? false : true,
-                );
-              },
+          VolumeSliderPopup(color: iconColor),
+          IconButton(
+            tooltip: playerViewMode == PlayerViewMode.fullWindow
+                ? context.l10n.leaveFullWindow
+                : context.l10n.fullWindow,
+            icon: Icon(
+              playerViewMode == PlayerViewMode.fullWindow
+                  ? Iconz().fullWindowExit
+                  : Iconz().fullWindow,
+              color: iconColor,
             ),
-          ],
-        ),
+            onPressed: () {
+              appModel.setFullScreen(
+                playerViewMode == PlayerViewMode.fullWindow ? false : true,
+              );
+
+              appModel.setShowWindowControls(
+                (fullScreen == true && playerToTheRight) ? false : true,
+              );
+            },
+          ),
+        ],
       ),
     );
   }

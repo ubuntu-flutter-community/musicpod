@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
@@ -19,13 +18,14 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
     required this.playPrevious,
     required this.playNext,
     this.iconColor,
+    this.avatarColor,
   });
 
   final Future<void> Function() playPrevious;
   final Future<void> Function() playNext;
 
   final bool active;
-  final Color? iconColor;
+  final Color? iconColor, avatarColor;
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +62,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
       _flex,
       CircleAvatar(
         radius: avatarIconSize,
-        backgroundColor:
-            contrastColor(iconColor ?? theme.colorScheme.onInverseSurface),
+        backgroundColor: avatarColor ?? theme.colorScheme.inverseSurface,
         child: PlayButton(
           iconColor: iconColor ?? theme.colorScheme.onInverseSurface,
           active: active,

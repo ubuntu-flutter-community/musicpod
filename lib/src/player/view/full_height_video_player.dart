@@ -36,6 +36,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
       seekBarPositionColor: baseColor.withOpacity(0.9),
       seekBarBufferColor: baseColor.withOpacity(0.6),
       buttonBarButtonColor: baseColor,
+      controlsHoverDuration: const Duration(seconds: 10),
       primaryButtonBar: [
         SizedBox(
           width: 300,
@@ -44,15 +45,13 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
             playPrevious: playerModel.playNext,
             playNext: playerModel.playNext,
             iconColor: baseColor,
+            avatarColor: baseColor.withOpacity(0.1),
           ),
         ),
       ],
       seekBarMargin: const EdgeInsets.all(kYaruPagePadding),
-      bottomButtonBarMargin: const EdgeInsets.only(
-        right: kYaruPagePadding,
-        bottom: 25,
-      ),
-      bottomButtonBar: [
+      topButtonBarMargin: const EdgeInsets.only(right: kYaruPagePadding),
+      topButtonBar: [
         const Spacer(),
         controls,
         Tooltip(
@@ -65,6 +64,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
           ),
         ),
       ],
+      bottomButtonBar: [],
       padding: const EdgeInsets.all(20),
     );
 
@@ -72,7 +72,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
       key: ValueKey(audio?.url),
       fullscreen: mediaKitTheme,
       normal: mediaKitTheme.copyWith(
-        bottomButtonBar: [
+        topButtonBar: [
           const Spacer(),
           controls,
           Tooltip(
