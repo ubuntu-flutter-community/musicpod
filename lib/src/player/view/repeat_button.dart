@@ -10,9 +10,11 @@ class RepeatButton extends StatelessWidget with WatchItMixin {
   const RepeatButton({
     super.key,
     required this.active,
+    this.iconColor,
   });
 
   final bool active;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class RepeatButton extends StatelessWidget with WatchItMixin {
     final repeatSingle = watchPropertyValue((PlayerModel m) => m.repeatSingle);
 
     return IconButton(
+      color: iconColor,
       tooltip: context.l10n.repeat,
       icon: Icon(
         Iconz().repeatSingle,

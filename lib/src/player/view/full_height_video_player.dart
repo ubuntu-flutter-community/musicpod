@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:yaru/constants.dart';
 
-import '../../../build_context_x.dart';
 import '../../../common.dart';
-import '../../../constants.dart';
 import '../../../get.dart';
 import '../../../l10n.dart';
-import '../../app/app_model.dart';
-import '../../data/audio.dart';
 import '../player_model.dart';
 import 'full_height_player_top_controls.dart';
-import 'play_button.dart';
+import 'player_main_controls.dart';
 import 'player_view.dart';
 
 class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
@@ -24,25 +20,14 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
     const baseColor = Colors.white;
 
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
-    final showQueueButton = watchPropertyValue(
-      (PlayerModel m) =>
-          m.queue.length > 1 || audio?.audioType == AudioType.local,
-    );
-    final playerToTheRight = context.m.size.width > kSideBarThreshHold;
-    final fullScreen = watchPropertyValue((AppModel m) => m.fullScreen);
-    final appModel = getIt<AppModel>();
+    final playerModel = getIt<PlayerModel>();
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
-    final controls = createFullheightPlayerControls(
-      audio: audio,
-      showQueueButton: showQueueButton,
-      active: active,
-      context: context,
-      appModel: appModel,
-      fullScreen: fullScreen,
-      playerToTheRight: playerToTheRight,
+
+    final controls = FullHeightPlayerTopControls(
       iconColor: baseColor,
       playerViewMode: playerViewMode,
+      padding: EdgeInsets.zero,
     );
 
     final mediaKitTheme = MaterialVideoControlsThemeData(
@@ -52,9 +37,14 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
       seekBarBufferColor: baseColor.withOpacity(0.6),
       buttonBarButtonColor: baseColor,
       primaryButtonBar: [
-        PlayButton(
-          active: active,
-          iconColor: baseColor,
+        SizedBox(
+          width: 300,
+          child: PlayerMainControls(
+            active: active,
+            playPrevious: playerModel.playNext,
+            playNext: playerModel.playNext,
+            iconColor: baseColor,
+          ),
         ),
       ],
       seekBarMargin: const EdgeInsets.all(kYaruPagePadding),
@@ -64,7 +54,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
       ),
       bottomButtonBar: [
         const Spacer(),
-        ...controls,
+        controls,
         Tooltip(
           message: context.l10n.leaveFullScreen,
           child: MaterialFullscreenButton(
@@ -79,11 +69,12 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
     );
 
     return MaterialVideoControlsTheme(
+      key: ValueKey(audio?.url),
       fullscreen: mediaKitTheme,
       normal: mediaKitTheme.copyWith(
         bottomButtonBar: [
           const Spacer(),
-          ...controls,
+          controls,
           Tooltip(
             message: context.l10n.fullScreen,
             child: MaterialFullscreenButton(

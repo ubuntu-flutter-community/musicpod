@@ -43,7 +43,9 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
 
     final Widget bodyWithControls;
     if (isVideo) {
-      bodyWithControls = FullHeightVideoPlayer(playerViewMode: playerViewMode);
+      bodyWithControls = FullHeightVideoPlayer(
+        playerViewMode: playerViewMode,
+      );
     } else {
       bodyWithControls = Stack(
         alignment: Alignment.topRight,

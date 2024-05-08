@@ -11,9 +11,11 @@ class SeekButton extends StatelessWidget {
     super.key,
     required this.active,
     this.forward = true,
+    this.iconColor,
   });
   final bool active;
   final bool forward;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +24,11 @@ class SeekButton extends StatelessWidget {
 
     final icon = Icon(
       forward ? Iconz().forward30 : Iconz().backward10,
+      color: iconColor,
     );
     return IconButton(
-      color: active ? theme.colorScheme.onSurface : theme.disabledColor,
+      color: iconColor ??
+          (active ? (theme.colorScheme.onSurface) : theme.disabledColor),
       onPressed: () async {
         playerModel.seekInSeconds(forward ? 30 : -10);
       },
@@ -38,8 +42,10 @@ class SeekButton extends StatelessWidget {
                   right: 5,
                   child: Text(
                     forward ? '30' : '10',
-                    style:
-                        context.t.textTheme.labelSmall?.copyWith(fontSize: 7),
+                    style: context.t.textTheme.labelSmall?.copyWith(
+                      fontSize: 7,
+                      color: iconColor,
+                    ),
                   ),
                 ),
               ],
