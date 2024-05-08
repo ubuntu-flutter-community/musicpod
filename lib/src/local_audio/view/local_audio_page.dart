@@ -1,6 +1,5 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
@@ -14,15 +13,12 @@ import '../../../local_audio.dart';
 import '../../../player.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../settings/settings_model.dart';
 import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 import 'local_audio_view.dart';
 
 class LocalAudioPage extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const LocalAudioPage({
-    super.key,
-  });
+  const LocalAudioPage({super.key});
 
   @override
   State<LocalAudioPage> createState() => _LocalAudioPageState();
@@ -32,29 +28,13 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   @override
   void initState() {
     super.initState();
-    final model = getIt<LocalAudioModel>();
-    final settingsModel = getIt<SettingsModel>();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (!mounted) return;
-      model.init(
-        onFail: (failedImports) {
-          if (!mounted || settingsModel.neverShowFailedImports) {
-            return;
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              duration: const Duration(seconds: 10),
-              content: FailedImportsContent(
-                onNeverShowFailedImports: () =>
-                    settingsModel.setNeverShowFailedImports(true),
-                failedImports: failedImports,
-              ),
-            ),
-          );
-        },
+    final failedImports = getIt<LocalAudioModel>().failedImports;
+    if (mounted && failedImports?.isNotEmpty == true) {
+      showFailedImportsSnackBar(
+        failedImports: failedImports!,
+        context: context,
       );
-    });
+    }
   }
 
   @override
