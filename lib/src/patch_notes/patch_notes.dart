@@ -196,7 +196,7 @@ const kPatchNotes20240424 = 'Hello MusicPod Users, this update includes\n'
     '\n\nIf you like MusicPod please consider sponsoring me:'
     '\n';
 
-// 2024 05 205
+// 2024 05 05
 const kPatchNotes20240505disposed = 'patchNotes20240505disposed';
 const kPatchNotesTitle20240505 = 'Patch notes: 2024-05-05';
 const kPatchNotes20240505 = 'Hello MusicPod Users, this update includes\n'
@@ -207,8 +207,21 @@ const kPatchNotes20240505 = 'Hello MusicPod Users, this update includes\n'
     '\n\nIf you like MusicPod please consider sponsoring me:'
     '\n';
 
-const kRecentPatchNotesDisposed = kPatchNotes20240505disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20240505;
-const kRecentPatchNotes = kPatchNotes20240505;
+// 2024 05 09
+const kPatchNotes20240509disposed = 'patchNotes20240509disposed';
+const kPatchNotesTitle20240509 = 'Patch notes: 2024-05-09';
+const kPatchNotes20240509 = 'Hello MusicPod Users, this update includes\n'
+    '\n* All pages are now fully reworked, so that headers will now scroll away to give you more space'
+    '\n* MacOs and Windows has a new theme (Phoenix Theme), which is a moderate version of Material, without surface tint, without ripple effect, with better contrast and with improved menus and dialogs'
+    '\n* you can now search podcast category and authors from a podcast page label and subtitle'
+    '\n* more controls for full height player videos on hover'
+    '\n* full window and full screen have now better icons'
+    '\n* bug fixes'
+    '\n\nIf you like MusicPod please consider sponsoring me:'
+    '\n';
+
+const kRecentPatchNotesDisposed = kPatchNotes20240509disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20240509;
+const kRecentPatchNotes = kPatchNotes20240509;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';

@@ -402,10 +402,12 @@ class Iconz {
           ? Icon(
               Iconz().starFilled,
               size: iconSize,
+              color: isStarred ? color : null,
             )
           : Icon(
               Iconz().star,
               size: iconSize,
+              color: isStarred ? color : null,
             );
     }
   }
