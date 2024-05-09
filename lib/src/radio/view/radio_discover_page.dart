@@ -125,7 +125,6 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
     return YaruDetailPage(
       appBar: HeaderBar(
         adaptive: true,
-        leading: const NavBackButton(),
         title: SizedBox(
           width: kSearchBarWidth,
           child: input,

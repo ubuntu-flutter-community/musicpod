@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
@@ -170,9 +171,9 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
             album: album.value,
             id: album.key,
           ),
-          iconBuilder: (context, selected) => AlbumPage.createIcon(
-            context,
-            album.value.firstOrNull?.pictureData,
+          iconBuilder: (context, selected) => AlbumPageSideBarIcon(
+            picture: album.value.firstOrNull?.pictureData,
+            album: album.value.firstWhereOrNull((e) => e.album != null)?.album,
           ),
         ),
       for (final station in libraryModel.starredStations.entries

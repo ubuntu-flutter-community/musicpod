@@ -4,7 +4,6 @@ import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
-import '../../../constants.dart';
 import '../../../data.dart';
 import '../../../get.dart';
 import '../../common/explore_online_popup.dart';
@@ -65,9 +64,6 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       appBar: HeaderBar(
         adaptive: true,
         title: Text(title),
-        leading: Navigator.canPop(context)
-            ? const NavBackButton()
-            : const SizedBox.shrink(),
       ),
       body: AdaptiveContainer(
         child: CustomScrollView(
@@ -137,10 +133,10 @@ class _PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
 
     final checkingForUpdates =
         watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
-    final smallWindow = context.m.size.width < kMasterDetailBreakPoint;
     return Row(
-      mainAxisAlignment:
-          smallWindow ? MainAxisAlignment.center : MainAxisAlignment.start,
+      mainAxisAlignment: context.smallWindow
+          ? MainAxisAlignment.center
+          : MainAxisAlignment.start,
       children: [
         AvatarPlayButton(audios: audios, pageId: pageId),
         Padding(

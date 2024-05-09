@@ -28,7 +28,7 @@ class AudioPageControlPanel extends StatelessWidget {
     final theme = context.t;
 
     return Row(
-      mainAxisAlignment: context.m.size.width < kMasterDetailBreakPoint
+      mainAxisAlignment: context.smallWindow
           ? MainAxisAlignment.center
           : MainAxisAlignment.start,
       children: [

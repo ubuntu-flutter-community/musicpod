@@ -159,9 +159,6 @@ class _ArtistAlbumsCardGrid extends StatelessWidget {
       appBar: HeaderBar(
         adaptive: true,
         title: isMobile ? null : Text(artist ?? ''),
-        leading: Navigator.canPop(context)
-            ? const NavBackButton()
-            : const SizedBox.shrink(),
       ),
       body: AdaptiveContainer(
         child: artist == null || artistAudios == null

@@ -63,9 +63,6 @@ class _RadioPageState extends State<RadioPage> {
       appBar: HeaderBar(
         adaptive: true,
         titleSpacing: 0,
-        leading: navigatorKey.currentState?.canPop() == true
-            ? const NavBackButton()
-            : const SizedBox.shrink(),
         actions: [
           Flexible(
             child: Padding(

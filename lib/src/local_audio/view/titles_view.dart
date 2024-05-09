@@ -4,8 +4,8 @@ import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
 import '../../../get.dart';
+import '../../common/sliver_audio_tile_list.dart';
 import '../local_audio_model.dart';
-import 'album_page.dart';
 import 'artist_page.dart';
 
 class TitlesView extends StatelessWidget {
@@ -25,48 +25,45 @@ class TitlesView extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = getIt<LocalAudioModel>();
 
-    return AudioPageBody(
-      classicTiles: classicTiles,
-      showAlbum: classicTiles,
-      padding: const EdgeInsets.only(top: 10),
-      showTrack: false,
-      noResultIcon: noResultIcon,
-      noResultMessage: noResultMessage,
-      audios: audios,
-      audioPageType: AudioPageType.allTitlesView,
-      pageId: kLocalAudioPageId,
-      onAlbumTap: (text) {
-        final albumAudios = model.findAlbum(Audio(album: text));
-        if (albumAudios?.firstOrNull == null) return;
-        final id = albumAudios!.first.albumId;
-        if (id == null) return;
+    if (audios == null) {
+      return const Center(
+        child: Progress(),
+      );
+    }
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) {
-              return AlbumPage(
-                id: id,
-                album: albumAudios,
+    if (audios!.isEmpty) {
+      return NoSearchResultPage(
+        icons: noResultIcon,
+        message: noResultMessage,
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 15),
+      child: CustomScrollView(
+        slivers: [
+          SliverAudioTileList(
+            audios: audios!,
+            audioPageType: AudioPageType.allTitlesView,
+            pageId: kLocalAudioPageId,
+            onSubTitleTab: (text) {
+              final artistAudios = model.findArtist(Audio(artist: text));
+              final images = model.findImages(artistAudios ?? {});
+
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) {
+                    return ArtistPage(
+                      images: images,
+                      artistAudios: artistAudios,
+                    );
+                  },
+                ),
               );
             },
           ),
-        );
-      },
-      onArtistTap: (text) {
-        final artistAudios = model.findArtist(Audio(artist: text));
-        final images = model.findImages(artistAudios ?? {});
-
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) {
-              return ArtistPage(
-                images: images,
-                artistAudios: artistAudios,
-              );
-            },
-          ),
-        );
-      },
+        ],
+      ),
     );
   }
 }

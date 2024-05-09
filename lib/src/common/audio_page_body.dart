@@ -185,19 +185,11 @@ class _AudioPageBodyState extends State<AudioPageBody> {
       final audioSelected = currentAudio == audio;
 
       return AudioTile(
+        onSubTitleTap: switch (widget.audioPageType) {
+          AudioPageType.artist => widget.onAlbumTap,
+          _ => widget.onArtistTap,
+        },
         key: reorderAblePageType ? ObjectKey(audio) : null,
-        trackLabel: (widget.audioPageType == AudioPageType.playlist ||
-                widget.audioPageType == AudioPageType.likedAudio)
-            ? (index + 1).toString().padLeft(2, '0')
-            : null,
-        showAlbum: widget.showAlbum,
-        showArtist: widget.showArtist,
-        showTrack: widget.showTrack,
-        titleFlex: widget.titleFlex,
-        artistFlex: widget.artistFlex,
-        albumFlex: widget.albumFlex,
-        onAlbumTap: widget.onAlbumTap,
-        onArtistTap: widget.onArtistTap,
         isPlayerPlaying: isPlaying,
         pause: pause,
         startPlaylist: widget.audios == null
@@ -214,7 +206,6 @@ class _AudioPageBodyState extends State<AudioPageBody> {
         pageId: widget.pageId,
         libraryModel: libraryModel,
         audioPageType: widget.audioPageType,
-        classic: widget.classicTiles,
       );
     }
 

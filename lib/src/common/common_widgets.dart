@@ -125,7 +125,6 @@ class HeaderBar extends StatelessWidget
   const HeaderBar({
     super.key,
     this.title,
-    this.leading,
     this.actions,
     this.style = YaruTitleBarStyle.normal,
     this.titleSpacing,
@@ -135,7 +134,6 @@ class HeaderBar extends StatelessWidget
   });
 
   final Widget? title;
-  final Widget? leading;
   final List<Widget>? actions;
   final YaruTitleBarStyle style;
   final double? titleSpacing;
@@ -149,7 +147,9 @@ class HeaderBar extends StatelessWidget
       return AppBar(
         titleSpacing: titleSpacing,
         centerTitle: true,
-        leading: leading,
+        leading: Navigator.canPop(context)
+            ? const NavBackButton()
+            : const SizedBox.shrink(),
         title: title,
         actions: actions,
         foregroundColor: foregroundColor,
@@ -166,7 +166,9 @@ class HeaderBar extends StatelessWidget
     return YaruWindowTitleBar(
       titleSpacing: titleSpacing,
       actions: actions,
-      leading: leading,
+      leading: Navigator.canPop(context)
+          ? const NavBackButton()
+          : const SizedBox.shrink(),
       title: title,
       border: BorderSide.none,
       backgroundColor: backgroundColor,

@@ -65,11 +65,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
 
     final headerBar = HeaderBar(
       adaptive: true,
-      leading: (navigatorKey.currentState?.canPop() == true)
-          ? NavBackButton(
-              onPressed: () => search(text: null),
-            )
-          : const SizedBox.shrink(),
       titleSpacing: 0,
       actions: [
         Flexible(

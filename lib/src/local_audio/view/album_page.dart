@@ -9,7 +9,9 @@ import '../../../data.dart';
 import '../../../get.dart';
 import '../../../library.dart';
 import '../../../local_audio.dart';
+import '../../../theme.dart';
 import '../../common/explore_online_popup.dart';
+import '../../common/sliver_audio_page.dart';
 import '../../l10n/l10n.dart';
 
 class AlbumPage extends StatelessWidget {
@@ -18,31 +20,6 @@ class AlbumPage extends StatelessWidget {
     required this.id,
     required this.album,
   });
-
-  static Widget createIcon(
-    BuildContext context,
-    Uint8List? picture,
-  ) {
-    Widget? albumArt;
-    if (picture != null) {
-      albumArt = SizedBox.square(
-        dimension: sideBarImageSize,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(5),
-          child: Image.memory(
-            picture,
-            height: sideBarImageSize,
-            fit: BoxFit.fitHeight,
-            filterQuality: FilterQuality.medium,
-          ),
-        ),
-      );
-    }
-    return albumArt ??
-        Icon(
-          Iconz().startPlayList,
-        );
-  }
 
   final String id;
   final Set<Audio> album;
@@ -72,18 +49,48 @@ class AlbumPage extends StatelessWidget {
       );
     }
 
-    return AudioPage(
-      showAlbum: false,
-      onArtistTap: onArtistTap,
-      onSubTitleTab: onArtistTap,
-      audioPageType: AudioPageType.album,
-      headerLabel: context.l10n.album,
-      headerSubtile: album.firstOrNull?.artist,
-      image: AlbumPageImage(pictureData: pictureData),
-      controlPanelButton: _AlbumPageControlButton(album: album, id: id),
-      audios: album,
+    return SliverAudioPage(
       pageId: id,
-      headerTitle: album.firstOrNull?.album,
+      audioPageType: AudioPageType.album,
+      audios: album,
+      image: AlbumPageImage(pictureData: pictureData),
+      pageTitle: album.firstWhereOrNull((e) => e.album != null)?.album,
+      pageSubTitle: album.firstWhereOrNull((e) => e.artist != null)?.artist,
+      onPageLabelTab: onArtistTap,
+      onPageSubTitleTab: onArtistTap,
+      controlPanel: AlbumPageControlButton(album: album, id: id),
+    );
+  }
+}
+
+class AlbumPageSideBarIcon extends StatelessWidget {
+  const AlbumPageSideBarIcon({super.key, this.picture, this.album});
+
+  final Uint8List? picture;
+  final String? album;
+
+  @override
+  Widget build(BuildContext context) {
+    if (picture == null) {
+      return SideBarFallBackImage(
+        child: Icon(
+          Iconz().startPlayList,
+          color: getAlphabetColor(album ?? 'c'),
+        ),
+      );
+    }
+
+    return SizedBox.square(
+      dimension: sideBarImageSize,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: Image.memory(
+          picture!,
+          height: sideBarImageSize,
+          fit: BoxFit.fitHeight,
+          filterQuality: FilterQuality.medium,
+        ),
+      ),
     );
   }
 }
@@ -123,8 +130,12 @@ class AlbumPageImage extends StatelessWidget {
   }
 }
 
-class _AlbumPageControlButton extends StatelessWidget {
-  const _AlbumPageControlButton({required this.id, required this.album});
+class AlbumPageControlButton extends StatelessWidget {
+  const AlbumPageControlButton({
+    super.key,
+    required this.id,
+    required this.album,
+  });
 
   final String id;
   final Set<Audio> album;
@@ -135,8 +146,9 @@ class _AlbumPageControlButton extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
+        AvatarPlayButton(audios: album, pageId: id),
         Padding(
-          padding: const EdgeInsets.only(left: 5),
+          padding: const EdgeInsets.only(left: 10),
           child: IconButton(
             tooltip: context.l10n.pinAlbum,
             isSelected: libraryModel.isPinnedAlbum(id),
