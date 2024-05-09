@@ -153,8 +153,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
             imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
                 podcast.value.firstOrNull?.imageUrl,
           ),
-          iconBuilder: (context, selected) => PodcastPage.createIcon(
-            context: context,
+          iconBuilder: (context, selected) => PodcastPageSideBarIcon(
             imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
                 podcast.value.firstOrNull?.imageUrl,
           ),

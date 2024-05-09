@@ -155,7 +155,7 @@ class AlbumPageControlButton extends StatelessWidget {
             isSelected: libraryModel.isPinnedAlbum(id),
             icon: Icon(
               pinnedAlbum ? Iconz().pinFilled : Iconz().pin,
-              color: pinnedAlbum ? context.t.primaryColor : null,
+              color: pinnedAlbum ? context.t.colorScheme.primary : null,
             ),
             onPressed: () {
               if (libraryModel.isPinnedAlbum(id)) {

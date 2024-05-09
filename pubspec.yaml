@@ -1,6 +1,6 @@
 name: musicpod
 description: Ubuntu music, radio and podcast player.
-version: 1.3.7
+version: 1.3.8
 
 publish_to: "none"
 
@@ -54,7 +54,7 @@ dependencies:
   phoenix_theme:
     git:
       url: https://github.com/Feichtmeier/phoenix_theme
-      ref: 7ce9dadf3f021aa3e2cfa721c68675fe29d3e378
+      ref: 4486490240ba42cc668079064ad41f3ae8869d01
   pls: ^1.1.0
   podcast_search: ^0.6.9
   radio_browser_api: ^2.0.0+1

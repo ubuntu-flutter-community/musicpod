@@ -6,6 +6,7 @@ import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../data.dart';
 import '../../../get.dart';
+import '../../../podcasts.dart';
 import '../../common/explore_online_popup.dart';
 import '../../common/sliver_audio_page_control_panel.dart';
 import '../../l10n/l10n.dart';
@@ -22,32 +23,6 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     required this.title,
   });
 
-  static Widget createIcon({
-    required BuildContext context,
-    String? imageUrl,
-  }) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: SizedBox(
-        width: sideBarImageSize,
-        height: sideBarImageSize,
-        child: SafeNetworkImage(
-          url: imageUrl,
-          fit: BoxFit.fitHeight,
-          filterQuality: FilterQuality.medium,
-          fallBackIcon: Icon(
-            Iconz().podcast,
-            size: sideBarImageSize,
-          ),
-          errorIcon: Icon(
-            Iconz().podcast,
-            size: sideBarImageSize,
-          ),
-        ),
-      ),
-    );
-  }
-
   final String? imageUrl;
   final String pageId;
   final String title;
@@ -59,6 +34,13 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
     watchPropertyValue((LibraryModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
+
+    void onTap(text) {
+      final podcastModel = getIt<PodcastModel>();
+      Navigator.of(context).maybePop();
+      podcastModel.setSearchQuery(text);
+      podcastModel.search(searchQuery: text);
+    }
 
     return YaruDetailPage(
       appBar: HeaderBar(
@@ -93,6 +75,8 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                 subTitle: audios?.firstOrNull?.artist,
                 description: audios?.firstOrNull?.albumArtist,
                 title: title,
+                onLabelTab: onTap,
+                onSubTitleTab: onTap,
               ),
             ),
             SliverAudioPageControlPanel(
@@ -193,6 +177,42 @@ class PodcastPageTitle extends StatelessWidget with WatchItMixin {
       child: Padding(
         padding: EdgeInsets.only(right: visible ? 10 : 0),
         child: Text(title),
+      ),
+    );
+  }
+}
+
+class PodcastPageSideBarIcon extends StatelessWidget {
+  const PodcastPageSideBarIcon({super.key, this.imageUrl});
+
+  final String? imageUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    if (imageUrl == null) {
+      return SideBarFallBackImage(
+        child: Icon(Iconz().podcast),
+      );
+    }
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: SizedBox(
+        width: sideBarImageSize,
+        height: sideBarImageSize,
+        child: SafeNetworkImage(
+          url: imageUrl,
+          fit: BoxFit.fitHeight,
+          filterQuality: FilterQuality.medium,
+          fallBackIcon: Icon(
+            Iconz().podcast,
+            size: sideBarImageSize,
+          ),
+          errorIcon: Icon(
+            Iconz().podcast,
+            size: sideBarImageSize,
+          ),
+        ),
       ),
     );
   }

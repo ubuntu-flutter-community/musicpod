@@ -138,7 +138,7 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
         IconButton(
           icon: Icon(
             Iconz().list,
-            color: !useGridView ? context.t.primaryColor : null,
+            color: !useGridView ? context.t.colorScheme.primary : null,
           ),
           isSelected: !useGridView,
           onPressed: () => setUseGridView(false),
@@ -146,7 +146,7 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
         IconButton(
           icon: Icon(
             Iconz().grid,
-            color: useGridView ? context.t.primaryColor : null,
+            color: useGridView ? context.t.colorScheme.primary : null,
           ),
           isSelected: useGridView,
           onPressed: () => setUseGridView(true),

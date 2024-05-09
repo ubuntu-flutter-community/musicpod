@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../build_context_x.dart';
 import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../../library.dart';
@@ -27,9 +28,7 @@ class RadioPageStarButton extends StatelessWidget with WatchItMixin {
           : isStarred
               ? () => libraryModel.unStarStation(station.url!)
               : () => libraryModel.addStarredStation(station.url!, {station}),
-      icon: Iconz().getAnimatedStar(
-        isStarred,
-      ),
+      icon: Iconz().getAnimatedStar(isStarred, context.t.colorScheme.primary),
     );
   }
 }
