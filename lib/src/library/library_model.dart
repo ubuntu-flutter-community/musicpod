@@ -197,6 +197,9 @@ class LibraryModel extends SafeChangeNotifier {
   void addPlaylist(String name, Set<Audio> audios) =>
       _service.addPlaylist(name, audios);
 
+  Future<void> updatePlaylist(String id, Set<Audio> audios) async =>
+      await _service.updatePlaylist(id, audios);
+
   void removePlaylist(String id) {
     final playlistIndex = getIndexOfPlaylist(id);
     if (index == playlistIndex) {

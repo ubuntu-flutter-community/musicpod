@@ -311,4 +311,12 @@ class LocalAudioModel extends SafeChangeNotifier {
     _manualFilter = value;
     notifyListeners();
   }
+
+  bool _allowReorder = false;
+  bool get allowReorder => _allowReorder;
+  void setAllowReorder(bool value) {
+    if (value == _allowReorder) return;
+    _allowReorder = value;
+    notifyListeners();
+  }
 }

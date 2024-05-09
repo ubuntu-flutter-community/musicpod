@@ -4,14 +4,15 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../../build_context_x.dart';
 import '../../../common.dart';
-import '../../../constants.dart';
 import '../../../data.dart';
 import '../../../get.dart';
 import '../../../local_audio.dart';
-import '../../../player.dart';
 import '../../../settings.dart';
 import '../../common/explore_online_popup.dart';
+import '../../common/sliver_audio_page_control_panel.dart';
+import '../../common/sliver_audio_tile_list.dart';
 import '../../l10n/l10n.dart';
 import 'genre_page.dart';
 
@@ -28,16 +29,15 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final model = getIt<LocalAudioModel>();
+    final pageId = artistAudios?.firstOrNull?.artist;
+    final albums = model.findAllAlbums(newAudios: artistAudios);
+
+    if (pageId == null || albums == null) {
+      return const SizedBox.shrink();
+    }
 
     final useGridView =
         watchPropertyValue((SettingsModel m) => m.useArtistGridView);
-    final setUseGridView = getIt<SettingsModel>().setUseArtistGridView;
-
-    final controlPanelButton = _ArtistPageControlButton(
-      useGridView: useGridView,
-      setUseGridView: setUseGridView,
-      artist: artistAudios?.firstOrNull?.artist,
-    );
 
     void onAlbumTap(text) {
       final audios = model.findAlbum(Audio(album: text));
@@ -67,132 +67,92 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final roundImageContainer = RoundImageContainer(
-      images: images,
-      fallBackText: artistAudios?.firstOrNull?.artist ?? 'a',
-    );
-
-    if (!useGridView) {
-      return AudioPage(
-        classicTiles: false,
-        showArtist: false,
-        onAlbumTap: onAlbumTap,
-        onSubTitleTab: onSubTitleTab,
-        audioPageType: AudioPageType.artist,
-        headerLabel: context.l10n.artist,
-        headerTitle: artistAudios?.firstOrNull?.artist,
-        image: roundImageContainer,
-        imageRadius: BorderRadius.circular(10000),
-        headerSubtile: artistAudios?.firstOrNull?.genre,
-        audios: artistAudios,
-        pageId: artistAudios?.firstOrNull?.artist ?? artistAudios.toString(),
-        controlPanelButton: controlPanelButton,
-      );
-    }
-
-    return _ArtistAlbumsCardGrid(
-      onLabelTab: onAlbumTap,
-      onSubTitleTab: onSubTitleTab,
-      image: roundImageContainer,
-      artistAudios: artistAudios,
-      controlPanelButton: controlPanelButton,
+    return YaruDetailPage(
+      appBar: HeaderBar(
+        adaptive: true,
+        title: Text(pageId),
+      ),
+      body: AdaptiveContainer(
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: AudioPageHeader(
+                imageRadius: BorderRadius.circular(10000),
+                title: artistAudios?.firstOrNull?.artist ?? '',
+                image: RoundImageContainer(
+                  images: images,
+                  fallBackText: pageId,
+                ),
+                subTitle: artistAudios?.firstOrNull?.genre,
+                label: context.l10n.artist,
+                onLabelTab: onAlbumTap,
+                onSubTitleTab: onSubTitleTab,
+              ),
+            ),
+            SliverAudioPageControlPanel(
+              controlPanel: _ArtistPageControlPanel(
+                pageId: pageId,
+                audios: artistAudios!,
+              ),
+            ),
+            if (useGridView)
+              AlbumsView(
+                sliver: true,
+                albums: albums,
+              )
+            else
+              SliverAudioTileList(
+                audios: artistAudios!,
+                pageId: pageId,
+                audioPageType: AudioPageType.artist,
+                onSubTitleTab: onAlbumTap,
+              ),
+          ],
+        ),
+      ),
     );
   }
 }
 
-class _ArtistPageControlButton extends StatelessWidget {
-  const _ArtistPageControlButton({
-    required this.useGridView,
-    required this.setUseGridView,
-    required this.artist,
+class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
+  const _ArtistPageControlPanel({
+    required this.audios,
+    required this.pageId,
   });
 
-  final bool useGridView;
-  final void Function(bool) setUseGridView;
-  final String? artist;
+  final Set<Audio> audios;
+  final String pageId;
 
   @override
   Widget build(BuildContext context) {
+    final useGridView =
+        watchPropertyValue((SettingsModel m) => m.useArtistGridView);
+    final setUseGridView = getIt<SettingsModel>().setUseArtistGridView;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
+        AvatarPlayButton(audios: audios, pageId: pageId),
+        const SizedBox(
+          width: 10,
+        ),
         IconButton(
-          icon: Icon(Iconz().list),
+          icon: Icon(
+            Iconz().list,
+            color: !useGridView ? context.t.primaryColor : null,
+          ),
           isSelected: !useGridView,
           onPressed: () => setUseGridView(false),
         ),
         IconButton(
-          icon: Icon(Iconz().grid),
+          icon: Icon(
+            Iconz().grid,
+            color: useGridView ? context.t.primaryColor : null,
+          ),
           isSelected: useGridView,
           onPressed: () => setUseGridView(true),
         ),
-        if (artist != null) ExploreOnlinePopup(text: artist!),
+        ExploreOnlinePopup(text: pageId),
       ],
-    );
-  }
-}
-
-class _ArtistAlbumsCardGrid extends StatelessWidget {
-  const _ArtistAlbumsCardGrid({
-    required this.onLabelTab,
-    required this.controlPanelButton,
-    required this.image,
-    required this.artistAudios,
-    this.onSubTitleTab,
-  });
-
-  final void Function(String)? onLabelTab;
-  final void Function(String text)? onSubTitleTab;
-
-  final Widget controlPanelButton;
-
-  final Widget? image;
-  final Set<Audio>? artistAudios;
-
-  @override
-  Widget build(BuildContext context) {
-    final artist = artistAudios?.firstOrNull?.artist;
-    final model = getIt<LocalAudioModel>();
-    final playerModel = getIt<PlayerModel>();
-
-    return YaruDetailPage(
-      appBar: HeaderBar(
-        adaptive: true,
-        title: isMobile ? null : Text(artist ?? ''),
-      ),
-      body: AdaptiveContainer(
-        child: artist == null || artistAudios == null
-            ? const SizedBox.shrink()
-            : Column(
-                children: [
-                  AudioPageHeader(
-                    imageRadius: BorderRadius.circular(10000),
-                    title: artistAudios?.firstOrNull?.artist ?? '',
-                    image: image,
-                    subTitle: artistAudios?.firstOrNull?.genre,
-                    label: context.l10n.artist,
-                    onLabelTab: onLabelTab,
-                    onSubTitleTab: onSubTitleTab,
-                  ),
-                  Padding(
-                    padding: kAudioControlPanelPadding,
-                    child: AudioPageControlPanel(
-                      controlButton: controlPanelButton,
-                      audios: artistAudios!,
-                      onTap: () => playerModel.startPlaylist(
-                        audios: artistAudios!,
-                        listName: artist,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: AlbumsView(
-                      albums: model.findAllAlbums(newAudios: artistAudios),
-                    ),
-                  ),
-                ],
-              ),
-      ),
     );
   }
 }

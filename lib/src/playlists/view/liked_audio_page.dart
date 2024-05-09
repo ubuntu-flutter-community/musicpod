@@ -45,15 +45,20 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
           ),
         );
       },
-      controlPanel: Padding(
-        padding: const EdgeInsets.only(
-          left: 10,
-          right: 10,
-        ),
-        child: Text(
-          '${likedAudios.length} ${context.l10n.titles}',
-          style: getControlPanelStyle(context.t.textTheme),
-        ),
+      controlPanel: Row(
+        children: [
+          AvatarPlayButton(audios: likedAudios, pageId: kLikedAudiosPageId),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+            ),
+            child: Text(
+              '${likedAudios.length} ${context.l10n.titles}',
+              style: getControlPanelStyle(context.t.textTheme),
+            ),
+          ),
+        ],
       ),
       noSearchResultMessage: Text(context.l10n.likedSongsSubtitle),
       noSearchResultIcons: const AnimatedEmoji(AnimatedEmojis.twoHearts),
@@ -61,8 +66,8 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
       audioPageType: AudioPageType.likedAudio,
       pageId: kLikedAudiosPageId,
       pageTitle: context.l10n.likedSongs,
-      pageSubTitle: context.l10n.likedSongsSubtitle,
-      pageLabel: context.l10n.playlist,
+      // pageSubTitle: context.l10n.likedSongsSubtitle,
+      pageLabel: context.l10n.likedSongsSubtitle,
       image: FallBackHeaderImage(
         child: Icon(
           Iconz().heart,

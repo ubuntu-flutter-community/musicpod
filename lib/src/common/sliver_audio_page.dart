@@ -65,7 +65,9 @@ class SliverAudioPage extends StatelessWidget {
                           image: image,
                           subTitle: pageSubTitle,
                           label: pageLabel,
-                          onLabelTab: onPageLabelTab,
+                          onLabelTab: audioPageType == AudioPageType.likedAudio
+                              ? null
+                              : onPageLabelTab,
                           onSubTitleTab: onPageSubTitleTab,
                         ),
                       ),

@@ -41,6 +41,7 @@ class LocalAudioBody extends StatelessWidget {
           noResultIcon: noResultIcon,
         ),
       LocalAudioView.albums => AlbumsView(
+          sliver: false,
           albums: albums,
           noResultMessage: noResultMessage,
           noResultIcon: noResultIcon,
