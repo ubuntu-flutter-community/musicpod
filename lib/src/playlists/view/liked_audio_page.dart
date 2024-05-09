@@ -66,7 +66,6 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
       audioPageType: AudioPageType.likedAudio,
       pageId: kLikedAudiosPageId,
       pageTitle: context.l10n.likedSongs,
-      // pageSubTitle: context.l10n.likedSongsSubtitle,
       pageLabel: context.l10n.likedSongsSubtitle,
       image: FallBackHeaderImage(
         child: Icon(

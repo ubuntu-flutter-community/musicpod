@@ -25,8 +25,8 @@ class PodcastModel extends SafeChangeNotifier {
 
   SearchResult? get searchResult => _podcastService.searchResult;
 
-  bool _searchActive = false;
-  bool get searchActive => _searchActive;
+  bool? _searchActive;
+  bool? get searchActive => _searchActive;
   void setSearchActive(bool value) {
     if (value == _searchActive) return;
     _searchActive = value;
@@ -107,7 +107,7 @@ class PodcastModel extends SafeChangeNotifier {
   }) async {
     await _podcastService.init(forceInit: forceInit);
 
-    _searchActive = _libraryService.podcasts.isEmpty;
+    _searchActive ??= _libraryService.podcasts.isEmpty;
 
     _country ??= Country.values.firstWhereOrNull(
       (c) => c.code == (_libraryService.lastCountryCode ?? countryCode),

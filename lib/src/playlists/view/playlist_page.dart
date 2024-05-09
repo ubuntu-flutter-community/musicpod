@@ -354,6 +354,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
               audios: audios,
               pageId: pageId,
               audioPageType: AudioPageType.playlist,
+              onSubTitleTab: onArtistTap,
             ),
         ],
       ),
