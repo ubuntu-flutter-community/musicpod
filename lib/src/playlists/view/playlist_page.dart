@@ -300,61 +300,63 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
       descriptionWidget: _PlaylistGenreBar(audios: audios),
     );
 
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child: audioPageHeader,
-        ),
-        SliverAudioPageControlPanel(controlPanel: audioControlPanel),
-        if (allowReorder)
-          SliverReorderableList(
-            itemCount: audios.length,
-            itemBuilder: (BuildContext context, int index) {
-              final audio = audios.elementAt(index);
-              final audioSelected = currentAudio == audio;
-
-              return ReorderableDragStartListener(
-                key: ValueKey(audio.path ?? audio.url),
-                index: index,
-                child: AudioTile(
-                  onSubTitleTap: onArtistTap,
-                  key: ValueKey(audio.path ?? audio.url),
-                  isPlayerPlaying: isPlaying,
-                  pause: playerModel.pause,
-                  startPlaylist: () => playerModel.startPlaylist(
-                    audios: audios,
-                    listName: pageId,
-                    index: index,
-                  ),
-                  resume: playerModel.resume,
-                  selected: audioSelected,
-                  audio: audio,
-                  insertIntoQueue: playerModel.insertIntoQueue,
-                  pageId: pageId,
-                  libraryModel: libraryModel,
-                  audioPageType: AudioPageType.playlist,
-                ),
-              );
-            },
-            onReorder: (oldIndex, newIndex) {
-              if (playerModel.queueName == pageId) {
-                playerModel.moveAudioInQueue(oldIndex, newIndex);
-              }
-
-              libraryModel.moveAudioInPlaylist(
-                oldIndex: oldIndex,
-                newIndex: newIndex,
-                id: pageId,
-              );
-            },
-          )
-        else
-          SliverAudioTileList(
-            audios: audios,
-            pageId: pageId,
-            audioPageType: AudioPageType.playlist,
+    return AdaptiveContainer(
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: audioPageHeader,
           ),
-      ],
+          SliverAudioPageControlPanel(controlPanel: audioControlPanel),
+          if (allowReorder)
+            SliverReorderableList(
+              itemCount: audios.length,
+              itemBuilder: (BuildContext context, int index) {
+                final audio = audios.elementAt(index);
+                final audioSelected = currentAudio == audio;
+
+                return ReorderableDragStartListener(
+                  key: ValueKey(audio.path ?? audio.url),
+                  index: index,
+                  child: AudioTile(
+                    onSubTitleTap: onArtistTap,
+                    key: ValueKey(audio.path ?? audio.url),
+                    isPlayerPlaying: isPlaying,
+                    pause: playerModel.pause,
+                    startPlaylist: () => playerModel.startPlaylist(
+                      audios: audios,
+                      listName: pageId,
+                      index: index,
+                    ),
+                    resume: playerModel.resume,
+                    selected: audioSelected,
+                    audio: audio,
+                    insertIntoQueue: playerModel.insertIntoQueue,
+                    pageId: pageId,
+                    libraryModel: libraryModel,
+                    audioPageType: AudioPageType.playlist,
+                  ),
+                );
+              },
+              onReorder: (oldIndex, newIndex) {
+                if (playerModel.queueName == pageId) {
+                  playerModel.moveAudioInQueue(oldIndex, newIndex);
+                }
+
+                libraryModel.moveAudioInPlaylist(
+                  oldIndex: oldIndex,
+                  newIndex: newIndex,
+                  id: pageId,
+                );
+              },
+            )
+          else
+            SliverAudioTileList(
+              audios: audios,
+              pageId: pageId,
+              audioPageType: AudioPageType.playlist,
+            ),
+        ],
+      ),
     );
   }
 }
