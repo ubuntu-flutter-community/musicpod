@@ -143,6 +143,7 @@ class AlbumPageControlButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final libraryModel = getIt<LibraryModel>();
+    final pinnedAlbum = libraryModel.isPinnedAlbum(id);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -153,7 +154,8 @@ class AlbumPageControlButton extends StatelessWidget {
             tooltip: context.l10n.pinAlbum,
             isSelected: libraryModel.isPinnedAlbum(id),
             icon: Icon(
-              libraryModel.isPinnedAlbum(id) ? Iconz().pinFilled : Iconz().pin,
+              pinnedAlbum ? Iconz().pinFilled : Iconz().pin,
+              color: pinnedAlbum ? context.t.primaryColor : null,
             ),
             onPressed: () {
               if (libraryModel.isPinnedAlbum(id)) {

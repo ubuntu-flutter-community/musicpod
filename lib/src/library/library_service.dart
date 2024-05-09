@@ -222,6 +222,18 @@ class LibraryService {
     }
   }
 
+  Future<void> updatePlaylist(String id, Set<Audio> audios) async {
+    if (_playlists.containsKey(id)) {
+      await writeAudioMap(_playlists, kPlaylistsFileName).then((_) {
+        _playlists.update(
+          id,
+          (value) => audios,
+        );
+        _playlistsController.add(true);
+      });
+    }
+  }
+
   void removePlaylist(String id) {
     if (_playlists.containsKey(id)) {
       _playlists.remove(id);
