@@ -24,9 +24,6 @@ class GenrePage extends StatelessWidget {
     return YaruDetailPage(
       appBar: HeaderBar(
         adaptive: true,
-        leading: (navigatorKey.currentState?.canPop() == true)
-            ? const NavBackButton()
-            : const SizedBox.shrink(),
         titleSpacing: 0,
         title: Row(
           mainAxisSize: MainAxisSize.min,

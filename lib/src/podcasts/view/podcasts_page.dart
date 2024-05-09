@@ -73,13 +73,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
     return YaruDetailPage(
       appBar: HeaderBar(
-        leading: (Navigator.canPop(context))
-            ? NavBackButton(
-                onPressed: () {
-                  setSearchActive(false);
-                },
-              )
-            : const SizedBox.shrink(),
         titleSpacing: 0,
         adaptive: true,
         actions: [

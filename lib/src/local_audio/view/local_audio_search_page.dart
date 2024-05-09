@@ -100,9 +100,6 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
     return YaruDetailPage(
       appBar: HeaderBar(
         adaptive: true,
-        leading: (Navigator.of(context).canPop())
-            ? const NavBackButton()
-            : const SizedBox.shrink(),
         titleSpacing: 0,
         actions: [
           Flexible(

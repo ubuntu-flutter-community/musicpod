@@ -4,6 +4,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
+import '../../constants.dart';
 import '../../data.dart';
 import '../../theme.dart';
 import '../../theme_data_x.dart';
@@ -29,8 +30,9 @@ class AudioTileImage extends StatelessWidget {
     } else {
       iconData = Iconz().musicNote;
     }
+    Widget image;
     if (audio?.pictureData != null) {
-      return Image.memory(
+      image = Image.memory(
         filterQuality: FilterQuality.medium,
         fit: BoxFit.cover,
         audio!.pictureData!,
@@ -38,13 +40,13 @@ class AudioTileImage extends StatelessWidget {
       );
     } else {
       if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
-        return SafeNetworkImage(
+        image = SafeNetworkImage(
           url: audio?.imageUrl ?? audio?.albumArtUrl,
           height: size,
           fit: BoxFit.cover,
         );
       } else {
-        return Center(
+        image = Center(
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -81,5 +83,13 @@ class AudioTileImage extends StatelessWidget {
         );
       }
     }
+
+    return SizedBox.square(
+      dimension: kAudioTrackWidth,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: image,
+      ),
+    );
   }
 }

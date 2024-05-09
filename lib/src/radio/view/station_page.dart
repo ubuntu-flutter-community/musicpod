@@ -31,9 +31,6 @@ class StationPage extends StatelessWidget with WatchItMixin {
       appBar: HeaderBar(
         adaptive: true,
         title: Text(station.title ?? station.url ?? ''),
-        leading: Navigator.canPop(context)
-            ? const NavBackButton()
-            : const SizedBox.shrink(),
       ),
       body: AdaptiveContainer(
         child: CustomScrollView(
@@ -54,7 +51,9 @@ class StationPage extends StatelessWidget with WatchItMixin {
               ),
             ),
             SliverAudioPageControlPanel(
-              controlPanel: _StationPageControlPanel(station: station),
+              controlPanel: _StationPageControlPanel(
+                station: station,
+              ),
             ),
             SliverRadioHistoryList(
               filter: station.title,
@@ -70,18 +69,16 @@ class StationPage extends StatelessWidget with WatchItMixin {
 }
 
 class _StationPageControlPanel extends StatelessWidget {
-  const _StationPageControlPanel({
-    required this.station,
-  });
+  const _StationPageControlPanel({required this.station});
 
   final Audio station;
 
   @override
   Widget build(BuildContext context) {
-    final smallWindow = context.m.size.width < kMasterDetailBreakPoint;
     return Row(
-      mainAxisAlignment:
-          smallWindow ? MainAxisAlignment.center : MainAxisAlignment.start,
+      mainAxisAlignment: context.smallWindow
+          ? MainAxisAlignment.center
+          : MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         Center(

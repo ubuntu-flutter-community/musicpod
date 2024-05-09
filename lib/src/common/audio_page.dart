@@ -101,19 +101,8 @@ class AudioPage extends StatelessWidget {
       appBar: HeaderBar(
         adaptive: true,
         title: isMobile ? null : (title ?? Text(headerTitle ?? pageId)),
-        leading: Navigator.canPop(context)
-            ? const NavBackButton()
-            : const SizedBox.shrink(),
       ),
       body: AdaptiveContainer(child: body),
     );
   }
-}
-
-enum AudioPageType {
-  allTitlesView,
-  artist,
-  likedAudio,
-  playlist,
-  album;
 }

@@ -6,6 +6,7 @@ export 'src/common/audio_page.dart';
 export 'src/common/audio_page_body.dart';
 export 'src/common/audio_page_control_panel.dart';
 export 'src/common/audio_page_header.dart';
+export 'src/common/audio_page_type.dart';
 export 'src/common/audio_tile.dart';
 export 'src/common/audio_tile_header.dart';
 export 'src/common/avatar_play_button.dart';
