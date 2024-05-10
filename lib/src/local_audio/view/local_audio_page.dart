@@ -13,6 +13,7 @@ import '../../../local_audio.dart';
 import '../../../player.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../settings/view/settings_dialog.dart';
 import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 import 'local_audio_view.dart';
@@ -97,7 +98,24 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                 artists: model.allArtists,
                 genres: model.allGenres,
                 noResultIcon: const AnimatedEmoji(AnimatedEmojis.bird),
-                noResultMessage: Text(context.l10n.noLocalTitlesFound),
+                noResultMessage: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(context.l10n.noLocalTitlesFound),
+                    const SizedBox(
+                      height: kYaruPagePadding,
+                    ),
+                    ElevatedButton(
+                      child: Text(context.l10n.settings),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => const SettingsDialog(),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
