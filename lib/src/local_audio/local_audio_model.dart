@@ -278,6 +278,11 @@ class LocalAudioModel extends SafeChangeNotifier {
     if (forceInit ||
         (_localAudioService.audios == null ||
             _localAudioService.audios?.isEmpty == true)) {
+      if (forceInit) {
+        _titles = null;
+        notifyListeners();
+      }
+
       _failedImports = await _localAudioService.init();
 
       _titles = _findAllTitles();

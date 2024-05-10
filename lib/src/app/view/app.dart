@@ -5,16 +5,16 @@ import 'package:phoenix_theme/phoenix_theme.dart' hide ColorX;
 import 'package:system_theme/system_theme.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app.dart';
-import '../../common.dart';
-import '../../external_path.dart';
-import '../../get.dart';
-import '../../library.dart';
-import '../../theme.dart';
-import '../l10n/l10n.dart';
-import '../local_audio/local_audio_model.dart';
-import '../settings/settings_model.dart';
-import 'view/scaffold.dart';
+import '../../../app.dart';
+import '../../../common.dart';
+import '../../../external_path.dart';
+import '../../../get.dart';
+import '../../../library.dart';
+import '../../../theme.dart';
+import '../../l10n/l10n.dart';
+import '../../local_audio/local_audio_model.dart';
+import '../../settings/settings_model.dart';
+import 'scaffold.dart';
 
 class YaruMusicPodApp extends StatelessWidget {
   const YaruMusicPodApp({

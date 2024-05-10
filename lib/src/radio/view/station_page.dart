@@ -9,10 +9,10 @@ import '../../../get.dart';
 import '../../common/sliver_audio_page_control_panel.dart';
 import '../../player/player_model.dart';
 import 'radio_fall_back_icon.dart';
+import 'radio_history_list.dart';
 import 'radio_page_copy_histoy_button.dart';
 import 'radio_page_star_button.dart';
 import 'radio_page_tag_bar.dart';
-import 'sliver_radio_history_list.dart';
 
 class StationPage extends StatelessWidget with WatchItMixin {
   const StationPage({

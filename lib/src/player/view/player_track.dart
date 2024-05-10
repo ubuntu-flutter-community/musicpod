@@ -55,10 +55,10 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
           minThumbSeparation: 0,
           trackShape: bottomPlayer ? const RectangularSliderTrackShape() : null,
           trackHeight: bottomPlayer ? 4 : 2,
-          inactiveTrackColor: mainColor.withOpacity(0.35),
-          activeTrackColor: mainColor.withOpacity(0.8),
+          inactiveTrackColor: mainColor.withOpacity(0.2),
+          activeTrackColor: mainColor.withOpacity(0.85),
           overlayColor: mainColor,
-          secondaryActiveTrackColor: mainColor.withOpacity(0.4),
+          secondaryActiveTrackColor: mainColor.withOpacity(0.3),
         ),
         child: RepaintBoundary(
           child: Slider(
