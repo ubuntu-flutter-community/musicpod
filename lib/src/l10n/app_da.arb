@@ -124,9 +124,7 @@
     "emptyPlaylist": "Denne afspilningsliste er tom.",
     "copiedToClipBoard": "Kopieret til udklipsholder:",
     "copyToClipBoard": "Kopier til udklipsholder",
-    "insertIntoQueue": "Ind
-
-sæt i køen",
+    "insertIntoQueue": "Indsæt i køen",
     "about": "Om",
     "localAudioCacheSuggestion": "Du har {length} lokale lydfiler. Vil du oprette en cache for at forbedre opstartstiden?",
     "@localAudioCacheSuggestion": {
