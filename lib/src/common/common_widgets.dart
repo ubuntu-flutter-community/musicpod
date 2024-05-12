@@ -352,10 +352,11 @@ class LinearProgress extends StatelessWidget {
     this.color,
     this.trackHeight,
     this.value,
+    this.backgroundColor,
   });
 
   final double? value;
-  final Color? color;
+  final Color? color, backgroundColor;
   final double? trackHeight;
 
   @override
@@ -371,6 +372,8 @@ class LinearProgress extends StatelessWidget {
             value: value,
             minHeight: trackHeight,
             color: color,
+            backgroundColor: backgroundColor,
+            borderRadius: BorderRadius.circular(2),
           );
   }
 }

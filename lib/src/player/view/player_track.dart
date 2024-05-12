@@ -51,42 +51,54 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
     final secondaryTrackValue =
         bufferActive ? buffer.inSeconds.toDouble() : 0.0;
 
+    final trackShape = bottomPlayer
+        ? const RectangularSliderTrackShape()
+        : _CustomTrackShape();
+
     final slider = (duration?.inSeconds != null && duration!.inSeconds < 30)
-        ? LinearProgress(
-            value: null,
-            trackHeight: 4.0,
-            color: mainColor,
+        ? Padding(
+            padding: bottomPlayer
+                ? EdgeInsets.zero
+                : const EdgeInsets.only(left: 7, right: 7, top: 3),
+            child: LinearProgress(
+              value: null,
+              trackHeight: 4.0,
+              color: mainColor.withOpacity(0.8),
+              backgroundColor: mainColor.withOpacity(0.4),
+            ),
           )
-        : Tooltip(
-            preferBelow: false,
-            message:
-                '${(position ?? Duration.zero).formattedTime} / ${(duration ?? Duration.zero).formattedTime}',
-            child: SliderTheme(
-              data: theme.sliderTheme.copyWith(
-                thumbColor: Colors.white,
-                thumbShape: thumbShape,
-                overlayShape: thumbShape,
-                minThumbSeparation: 0,
-                trackShape:
-                    bottomPlayer ? const RectangularSliderTrackShape() : null,
-                trackHeight: bottomPlayer ? 4.0 : 2.0,
-                inactiveTrackColor: mainColor.withOpacity(0.2),
-                activeTrackColor: mainColor.withOpacity(0.85),
-                overlayColor: mainColor,
-                secondaryActiveTrackColor: mainColor.withOpacity(0.3),
-              ),
-              child: RepaintBoundary(
-                child: Slider(
-                  min: 0,
-                  max: sliderActive ? duration.inSeconds.toDouble() : 1.0,
-                  value: sliderActive ? position.inSeconds.toDouble() : 0,
-                  secondaryTrackValue: secondaryTrackValue,
-                  onChanged: sliderActive
-                      ? (v) async {
-                          setPosition(Duration(seconds: v.toInt()));
-                          await seek();
-                        }
-                      : null,
+        : Padding(
+            padding: EdgeInsets.only(top: bottomPlayer ? 0 : 3),
+            child: Tooltip(
+              preferBelow: false,
+              message:
+                  '${(position ?? Duration.zero).formattedTime} / ${(duration ?? Duration.zero).formattedTime}',
+              child: SliderTheme(
+                data: theme.sliderTheme.copyWith(
+                  thumbColor: Colors.white,
+                  thumbShape: thumbShape,
+                  overlayShape: thumbShape,
+                  minThumbSeparation: 0,
+                  trackShape: trackShape as SliderTrackShape,
+                  trackHeight: bottomPlayer ? 4.0 : 4.0,
+                  inactiveTrackColor: mainColor.withOpacity(0.2),
+                  activeTrackColor: mainColor.withOpacity(0.85),
+                  overlayColor: mainColor,
+                  secondaryActiveTrackColor: mainColor.withOpacity(0.3),
+                ),
+                child: RepaintBoundary(
+                  child: Slider(
+                    min: 0,
+                    max: sliderActive ? duration.inSeconds.toDouble() : 1.0,
+                    value: sliderActive ? position.inSeconds.toDouble() : 0,
+                    secondaryTrackValue: secondaryTrackValue,
+                    onChanged: sliderActive
+                        ? (v) async {
+                            setPosition(Duration(seconds: v.toInt()));
+                            await seek();
+                          }
+                        : null,
+                  ),
                 ),
               ),
             ),
@@ -115,12 +127,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
             ),
           ],
         ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(top: bottomPlayer ? 0 : 3),
-            child: slider,
-          ),
-        ),
+        Expanded(child: slider),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -140,6 +147,36 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
           ],
         ),
       ],
+    );
+  }
+}
+
+class _CustomTrackShape extends RoundedRectSliderTrackShape {
+  @override
+  void paint(
+    PaintingContext context,
+    Offset offset, {
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required Animation<double> enableAnimation,
+    required TextDirection textDirection,
+    required Offset thumbCenter,
+    Offset? secondaryOffset,
+    bool isDiscrete = false,
+    bool isEnabled = false,
+    double additionalActiveTrackHeight = 0,
+  }) {
+    super.paint(
+      context,
+      offset,
+      parentBox: parentBox,
+      sliderTheme: sliderTheme,
+      enableAnimation: enableAnimation,
+      textDirection: textDirection,
+      thumbCenter: thumbCenter,
+      isDiscrete: isDiscrete,
+      isEnabled: isEnabled,
+      additionalActiveTrackHeight: 0,
     );
   }
 }
