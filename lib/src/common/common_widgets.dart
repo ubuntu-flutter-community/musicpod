@@ -346,6 +346,38 @@ class DropDownArrow extends StatelessWidget {
   }
 }
 
+class LinearProgress extends StatelessWidget {
+  const LinearProgress({
+    super.key,
+    this.color,
+    this.trackHeight,
+    this.value,
+    this.backgroundColor,
+  });
+
+  final double? value;
+  final Color? color, backgroundColor;
+  final double? trackHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return yaruStyled
+        ? YaruLinearProgressIndicator(
+            value: value,
+            minHeight: trackHeight,
+            strokeWidth: trackHeight,
+            color: color,
+          )
+        : LinearProgressIndicator(
+            value: value,
+            minHeight: trackHeight,
+            color: color,
+            backgroundColor: backgroundColor,
+            borderRadius: BorderRadius.circular(2),
+          );
+  }
+}
+
 double get podcastProgressSize => yaruStyled ? 34 : 45;
 
 double get likeButtonWidth => yaruStyled ? 62 : 70;
