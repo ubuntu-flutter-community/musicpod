@@ -5,6 +5,7 @@ import '../../../common.dart';
 import '../../../data.dart';
 import '../../../duration_x.dart';
 import '../../../get.dart';
+import '../../theme.dart';
 import '../player_model.dart';
 
 class PlayerTrack extends StatelessWidget with WatchItMixin {
@@ -65,7 +66,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                 : const EdgeInsets.only(left: 7, right: 7, top: 3),
             child: LinearProgress(
               value: null,
-              trackHeight: 4.0,
+              trackHeight: yaruStyled && !bottomPlayer ? 5.0 : 4.0,
               color: mainColor.withOpacity(0.8),
               backgroundColor: mainColor.withOpacity(0.4),
             ),
