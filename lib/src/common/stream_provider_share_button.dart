@@ -97,7 +97,7 @@ class StreamProviderShareButton extends StatelessWidget {
       'sg' => 'com.sg',
       'es' => 'es',
       'ae' => 'ae',
-      'uk' || 'ie' => 'co.uk',
+      'gb' || 'ie' => 'co.uk',
       'us' => 'com',
       _ => 'com',
     };
