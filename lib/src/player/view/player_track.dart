@@ -43,6 +43,12 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
       disabledThumbRadius: bottomPlayer ? 0 : 5.0,
     );
 
+    final bufferActive = active &&
+        buffer != null &&
+        position != null &&
+        buffer.inSeconds >= position.inSeconds;
+    final secondaryTrackValue =
+        bufferActive ? buffer.inSeconds.toDouble() : 0.0;
     final slider = Tooltip(
       preferBelow: false,
       message:
@@ -65,8 +71,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
             min: 0,
             max: sliderActive ? duration.inSeconds.toDouble() : 1.0,
             value: sliderActive ? position.inSeconds.toDouble() : 0,
-            secondaryTrackValue:
-                sliderActive ? buffer?.inSeconds.toDouble() : 0,
+            secondaryTrackValue: secondaryTrackValue,
             onChanged: sliderActive
                 ? (v) async {
                     setPosition(Duration(seconds: v.toInt()));

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../get.dart';
+import '../app/app_model.dart';
 import 'icons.dart';
 import '../l10n/l10n.dart';
 
@@ -40,17 +42,8 @@ class StreamProviderShareButton extends StatelessWidget {
     final clearedText =
         text?.replaceAll(RegExp(r"[:/?#\[\]@!$&'()*+,;=%]"), ' ') ?? '';
 
-    final address = switch (streamProvider) {
-      StreamProvider.youTubeMusic =>
-        'https://music.youtube.com/search?q=$clearedText',
-      StreamProvider.appleMusic =>
-        'https://music.apple.com/us/search?term=$clearedText',
-      StreamProvider.spotify => 'https://open.spotify.com/search/$clearedText',
-      StreamProvider.amazonMusic =>
-        'https://music.amazon.de/search/$clearedText?filter=IsLibrary%7Cfalse&sc=none',
-      StreamProvider.amazon =>
-        'https://www.amazon.de/s?k=$clearedText&i=digital-music'
-    };
+    String address = buildAddress(clearedText);
+
     return IconButton(
       tooltip: onSearch != null
           ? context.l10n.search
@@ -69,6 +62,45 @@ class StreamProviderShareButton extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String buildAddress(String query) {
+    final address = switch (streamProvider) {
+      StreamProvider.youTubeMusic =>
+        'https://music.youtube.com/search?q=$query',
+      StreamProvider.appleMusic =>
+        'https://music.apple.com/us/search?term=$query',
+      StreamProvider.spotify => 'https://open.spotify.com/search/$query',
+      StreamProvider.amazonMusic =>
+        'https://music.amazon.${getAmazonSuffix()}/search/$query?filter=IsLibrary%7Cfalse&sc=none',
+      StreamProvider.amazon =>
+        'https://www.amazon.${getAmazonSuffix()}/s?k=$query&i=digital-music'
+    };
+    return address;
+  }
+
+  String getAmazonSuffix() {
+    final countryCode = getIt<AppModel>().countryCode;
+    return switch (countryCode) {
+      'au' => 'com.au',
+      'at' => 'at',
+      'br' => 'com.br',
+      'ca' => 'ca',
+      'fr' => 'fr',
+      'de' => 'de',
+      'in' => 'in',
+      'it' => 'it',
+      'jp' => 'co.jp',
+      'mx' => 'com.mx',
+      'nl' => 'nl',
+      'pl' => 'pl',
+      'sg' => 'com.sg',
+      'es' => 'es',
+      'ae' => 'ae',
+      'uk' || 'ie' => 'co.uk',
+      'us' => 'com',
+      _ => 'com',
+    };
   }
 }
 
