@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
+import '../../../data.dart';
 import '../../../duration_x.dart';
 import '../../../get.dart';
 import '../player_model.dart';
@@ -25,6 +26,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
 
     final position = watchPropertyValue((PlayerModel m) => m.position);
     final buffer = watchPropertyValue((PlayerModel m) => m.buffer);
+    final audioType = watchPropertyValue((PlayerModel m) => m.audio?.audioType);
 
     final setPosition = playerModel.setPosition;
     final duration = watchPropertyValue((PlayerModel m) => m.duration);
@@ -55,7 +57,8 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
         ? const RectangularSliderTrackShape()
         : _CustomTrackShape();
 
-    final slider = (duration?.inSeconds != null && duration!.inSeconds < 30)
+    final slider = (duration?.inSeconds != null && duration!.inSeconds < 30) &&
+            audioType == AudioType.radio
         ? Padding(
             padding: bottomPlayer
                 ? EdgeInsets.zero
