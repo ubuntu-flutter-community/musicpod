@@ -77,6 +77,7 @@ class _ThemeSection extends StatelessWidget with WatchItMixin {
                       borderRadius: BorderRadius.circular(15),
                       selected: themeIndex == i,
                       onTap: () => model.setThemeIndex(i),
+                      selectionColor: context.t.colorScheme.primary,
                       child: ThemeTile(ThemeMode.values[i]),
                     ),
                     Padding(

@@ -6,11 +6,19 @@ Install for Linux Desktop:
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/musicpod)
 
+<a href='https://flathub.org/apps/org.feichtmeier.Musicpod'>
+  <img width='180' alt='Download on Flathub' src='https://flathub.org/api/badge?locale=en'/>
+</a>
+
+<br/>
 Install For MacOS & Windows:
 
 [Release Page](https://github.com/ubuntu-flutter-community/musicpod/releases)
 
+<br/>
 Android release is WIP!
+<br/>
+<br/>
 
 
 |Dark | Light|
@@ -71,7 +79,7 @@ Thank you [@escamoteur](https://github.com/escamoteur) for creating [get_it](htt
 
 - [X] Ubuntu Desktop
   - [X] [snap package](https://snapcraft.io/musicpod) (this is the primary supported package!)
-  - [ ] Flatpak ([WIP](https://github.com/ubuntu-flutter-community/musicpod/issues/10))
+  - [X] [Flatpak](https://flathub.org/apps/org.feichtmeier.Musicpod)
 - [X] Windows Support
   - [ ] Windows Store
   - [X] [Exe](https://github.com/ubuntu-flutter-community/musicpod/releases)
