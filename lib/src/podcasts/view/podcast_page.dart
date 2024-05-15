@@ -11,6 +11,7 @@ import '../../common/explore_online_popup.dart';
 import '../../common/sliver_audio_page_control_panel.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../player/player_model.dart';
 import '../podcast_model.dart';
 import 'sliver_podcast_page_list.dart';
 
@@ -32,7 +33,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.t;
 
-    watchPropertyValue((LibraryModel m) => m.lastPositions?.length);
+    watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
 
     void onTap(text) {
@@ -114,7 +115,7 @@ class _PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
 
     final subscribed = libraryModel.podcastSubscribed(pageId);
 
-    watchPropertyValue((LibraryModel m) => m.lastPositions?.length);
+    watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
 
     final checkingForUpdates =
