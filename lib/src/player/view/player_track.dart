@@ -86,7 +86,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                   trackShape: trackShape as SliderTrackShape,
                   trackHeight: bottomPlayer ? 4.0 : 4.0,
                   inactiveTrackColor: mainColor.withOpacity(0.2),
-                  activeTrackColor: mainColor.withOpacity(0.9),
+                  activeTrackColor: mainColor.withOpacity(0.85),
                   overlayColor: mainColor,
                   secondaryActiveTrackColor: mainColor.withOpacity(0.25),
                 ),
@@ -95,7 +95,9 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                     min: 0,
                     max: sliderActive ? duration.inSeconds.toDouble() : 1.0,
                     value: sliderActive ? position.inSeconds.toDouble() : 0,
-                    secondaryTrackValue: secondaryTrackValue,
+                    secondaryTrackValue: sliderActive && bufferActive
+                        ? secondaryTrackValue
+                        : null,
                     onChanged: sliderActive
                         ? (v) async {
                             setPosition(Duration(seconds: v.toInt()));

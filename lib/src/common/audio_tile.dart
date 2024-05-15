@@ -93,15 +93,13 @@ class AudioTile extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            audio.durationMs != null
-                ? Duration(milliseconds: audio.durationMs!.toInt())
-                    .formattedTime
-                : Duration.zero.formattedTime,
-          ),
-          const SizedBox(
-            width: 10,
-          ),
+          if (audio.audioType != AudioType.radio && audio.durationMs != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Text(
+                Duration(milliseconds: audio.durationMs!.toInt()).formattedTime,
+              ),
+            ),
           LikeButton(
             selected: selected && isPlayerPlaying,
             libraryModel: libraryModel,
