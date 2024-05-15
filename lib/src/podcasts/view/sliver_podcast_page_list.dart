@@ -48,7 +48,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
             pause: playerModel.pause,
             resume: playerModel.resume,
             startPlaylist: playerModel.startPlaylist,
-            lastPosition: libraryModel.getLastPosition(episode.url),
+            lastPosition: playerModel.getLastPosition(episode.url),
             safeLastPosition: playerModel.safeLastPosition,
             isOnline: isOnline,
             insertIntoQueue: () => playerModel.insertIntoQueue(episode),

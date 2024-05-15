@@ -35,6 +35,7 @@ class PlayerModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _positionChangedSub;
   StreamSubscription<bool>? _rateChanged;
   StreamSubscription<bool>? _radioHistoryChangedSub;
+  StreamSubscription<bool>? _lastPositionsSub;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   String? get queueName => _service.queue.$1;
@@ -114,6 +115,8 @@ class PlayerModel extends SafeChangeNotifier {
         _service.positionChanged.listen((_) => notifyListeners());
     _radioHistoryChangedSub ??=
         _service.radioHistoryChanged.listen((_) => notifyListeners());
+    _lastPositionsSub ??=
+        _service.lastPositionsChanged.listen((_) => notifyListeners());
 
     // TODO: fix https://github.com/fluttercommunity/plus_plugins/issues/1451
     _connectivitySubscription ??= _connectivity.onConnectivityChanged.listen(
@@ -193,6 +196,11 @@ class PlayerModel extends SafeChangeNotifier {
 
   void safeLastPosition() => _service.safeLastPosition();
 
+  Map<String, Duration>? get lastPositions => _service.lastPositions;
+  Duration? getLastPosition(String? url) => _service.getLastPosition(url);
+  void addLastPosition(String url, Duration lastPosition) =>
+      _service.addLastPosition(url, lastPosition);
+
   Map<String, MpvMetaData> get radioHistory => _service.radioHistory;
 
   Iterable<MapEntry<String, MpvMetaData>> filteredRadioHistory({
@@ -236,6 +244,7 @@ class PlayerModel extends SafeChangeNotifier {
     await _rateChanged?.cancel();
     await _radioHistoryChangedSub?.cancel();
     await _connectivitySubscription?.cancel();
+    await _lastPositionsSub?.cancel();
     super.dispose();
   }
 }

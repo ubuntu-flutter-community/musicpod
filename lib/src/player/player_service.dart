@@ -440,7 +440,7 @@ class PlayerService {
       );
     }
 
-    _position = libraryService.getLastPosition(_audio?.url);
+    _position = getLastPosition(_audio?.url);
     _estimateNext();
     await _play(newPosition: _position);
   }
@@ -474,6 +474,10 @@ class PlayerService {
   Future<void> _readPlayerState() async {
     final playerState = await readPlayerState();
 
+    _lastPositions = (await getSettings(kLastPositionsFileName)).map(
+      (key, value) => MapEntry(key, value.parsedDuration ?? Duration.zero),
+    );
+
     if (playerState?.audio != null) {
       _setAudio(playerState!.audio!);
 
@@ -499,11 +503,32 @@ class PlayerService {
     }
   }
 
+  //
+  // last positions
+  //
+  Map<String, Duration> _lastPositions = {};
+  Map<String, Duration> get lastPositions => _lastPositions;
+  final _lastPositionsController = StreamController<bool>.broadcast();
+  Stream<bool> get lastPositionsChanged => _lastPositionsController.stream;
+  void addLastPosition(String url, Duration lastPosition) {
+    writeSetting(url, lastPosition.toString(), kLastPositionsFileName)
+        .then((_) {
+      if (_lastPositions.containsKey(url) == true) {
+        _lastPositions.update(url, (value) => lastPosition);
+      } else {
+        _lastPositions.putIfAbsent(url, () => lastPosition);
+      }
+      _lastPositionsController.add(true);
+    });
+  }
+
+  Duration? getLastPosition(String? url) => _lastPositions[url];
+
   void safeLastPosition() {
     if (_audio?.audioType == AudioType.radio ||
         _audio?.url == null ||
         _position == null) return;
-    libraryService.addLastPosition(_audio!.url!, _position!);
+    addLastPosition(_audio!.url!, _position!);
   }
 
   Future<void> _initMediaControl() async {
