@@ -24,6 +24,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
     final mainColor = theme.colorScheme.onSurface;
 
     final playerModel = getIt<PlayerModel>();
+    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
 
     final position = watchPropertyValue((PlayerModel m) => m.position);
     final buffer = watchPropertyValue((PlayerModel m) => m.buffer);
@@ -60,8 +61,9 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
         ? const RectangularSliderTrackShape()
         : _CustomTrackShape();
 
-    final slider = (duration?.inSeconds != null && duration!.inSeconds < 30) &&
-            audioType == AudioType.radio
+    final slider = (duration?.inSeconds != null && duration!.inSeconds < 10) &&
+            audioType == AudioType.radio &&
+            isPlaying
         ? Padding(
             padding: bottomPlayer
                 ? EdgeInsets.zero
