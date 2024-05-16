@@ -30,7 +30,8 @@ mixin PlayerMixin {
     String? text,
     required BuildContext context,
   }) {
-    if (text?.isNotEmpty == true && audio?.audioType == AudioType.radio) {
+    if (text?.isNotEmpty == true && audio?.audioType == AudioType.radio ||
+        audio?.audioType == null) {
       showSnackBar(
         context: context,
         content: CopyClipboardContent(text: text!),
@@ -67,7 +68,7 @@ mixin PlayerMixin {
     final id = albumAudios!.first.albumId;
     if (id == null) return;
 
-    getIt<AppModel>().setFullScreen(false);
+    getIt<AppModel>().setFullWindowMode(false);
 
     navigatorKey.currentState?.push(
       MaterialPageRoute(
@@ -146,7 +147,7 @@ mixin PlayerMixin {
     final artistAudios = localAudioModel.findArtist(audio);
     if (artistAudios?.firstOrNull == null) return;
     final images = localAudioModel.findImages(artistAudios ?? {});
-    getIt<AppModel>().setFullScreen(false);
+    getIt<AppModel>().setFullWindowMode(false);
 
     navigatorKey.currentState?.push(
       MaterialPageRoute(

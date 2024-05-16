@@ -72,6 +72,7 @@ class _RadioPageState extends State<RadioPage> {
                   : SearchButton(
                       active: false,
                       onPressed: () {
+                        getIt<AppModel>().setLockSpace(true);
                         navigatorKey.currentState?.push(
                           MaterialPageRoute(
                             builder: (context) => const RadioDiscoverPage(),

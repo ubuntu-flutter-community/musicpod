@@ -82,7 +82,10 @@ class _PodcastsPageState extends State<PodcastsPage> {
               padding: appBarActionSpacing,
               child: SearchButton(
                 active: searchActive,
-                onPressed: () => setSearchActive(!(searchActive)),
+                onPressed: () {
+                  setSearchActive(!(searchActive));
+                  getIt<AppModel>().setLockSpace(!searchActive);
+                },
               ),
             ),
           ),

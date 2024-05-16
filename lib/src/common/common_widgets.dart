@@ -249,24 +249,16 @@ class SearchingBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appModel = getIt<AppModel>();
-    void onChanged2(v) {
-      appModel.setLockSpace(true);
-      onChanged?.call(v);
-    }
-
-    void onSubmitted2(v) {
-      appModel.setLockSpace(false);
-      onSubmitted?.call(v);
-    }
-
     return MaterialSearchBar(
       hintText: hintText,
       text: text,
       key: key,
-      onSubmitted: onSubmitted2,
+      onSubmitted: (v) {
+        getIt<AppModel>().setLockSpace(false);
+        onSubmitted?.call(v);
+      },
       onClear: onClear,
-      onChanged: onChanged2,
+      onChanged: onChanged,
     );
   }
 }
