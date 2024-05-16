@@ -50,7 +50,9 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
     final bufferActive = active &&
         buffer != null &&
         position != null &&
-        buffer.inSeconds >= position.inSeconds;
+        duration != null &&
+        buffer.inSeconds >= 0 &&
+        buffer.inSeconds <= duration.inSeconds;
     final secondaryTrackValue =
         bufferActive ? buffer.inSeconds.toDouble() : 0.0;
 
@@ -95,9 +97,8 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                     min: 0,
                     max: sliderActive ? duration.inSeconds.toDouble() : 1.0,
                     value: sliderActive ? position.inSeconds.toDouble() : 0,
-                    secondaryTrackValue: sliderActive && bufferActive
-                        ? secondaryTrackValue
-                        : null,
+                    secondaryTrackValue:
+                        bufferActive ? secondaryTrackValue : null,
                     onChanged: sliderActive
                         ? (v) async {
                             setPosition(Duration(seconds: v.toInt()));

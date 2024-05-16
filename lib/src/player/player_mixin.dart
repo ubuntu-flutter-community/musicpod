@@ -30,7 +30,8 @@ mixin PlayerMixin {
     String? text,
     required BuildContext context,
   }) {
-    if (text?.isNotEmpty == true && audio?.audioType == AudioType.radio) {
+    if (text?.isNotEmpty == true && audio?.audioType == AudioType.radio ||
+        audio?.audioType == null) {
       showSnackBar(
         context: context,
         content: CopyClipboardContent(text: text!),
