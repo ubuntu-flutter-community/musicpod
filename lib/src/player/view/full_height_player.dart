@@ -109,7 +109,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
             onVerticalDragEnd: (details) {
               if (details.primaryVelocity != null &&
                   details.primaryVelocity! > 150) {
-                appModel.setFullScreen(false);
+                appModel.setFullWindowMode(false);
               }
             },
             child: Padding(

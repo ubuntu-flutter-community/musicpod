@@ -96,7 +96,7 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
           errorIcon: fallBackImage,
           onGenreTap: (genre) => getIt<RadioModel>().init().then(
             (_) {
-              getIt<AppModel>().setFullScreen(false);
+              getIt<AppModel>().setFullWindowMode(false);
               navigatorKey.currentState?.push(
                 MaterialPageRoute(
                   builder: (context) {

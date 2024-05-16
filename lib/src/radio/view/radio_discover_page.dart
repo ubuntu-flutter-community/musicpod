@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru/yaru.dart';
 
@@ -9,6 +8,7 @@ import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../l10n.dart';
 import '../../../radio.dart';
+import '../../app/app_model.dart';
 import '../../common/language_autocomplete.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
@@ -134,7 +134,10 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
             padding: appBarActionSpacing,
             child: SearchButton(
               active: true,
-              onPressed: () => navigatorKey.currentState?.maybePop(),
+              onPressed: () {
+                getIt<AppModel>().setLockSpace(false);
+                navigatorKey.currentState?.maybePop();
+              },
             ),
           ),
         ],

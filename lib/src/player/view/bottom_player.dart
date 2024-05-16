@@ -117,7 +117,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                       Iconz().fullWindow,
                       color: theme.colorScheme.onSurface,
                     ),
-                    onPressed: () => appModel.setFullScreen(true),
+                    onPressed: () => appModel.setFullWindowMode(true),
                   ),
                 ],
               ),
@@ -138,7 +138,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
           track,
           if (smallWindow)
             InkWell(
-              onTap: () => appModel.setFullScreen(true),
+              onTap: () => appModel.setFullWindowMode(true),
               child: bottom,
             )
           else
@@ -152,7 +152,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
         onVerticalDragEnd: (details) {
           if (details.primaryVelocity != null &&
               details.primaryVelocity! < 150) {
-            appModel.setFullScreen(true);
+            appModel.setFullWindowMode(true);
           }
         },
         child: player,

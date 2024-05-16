@@ -68,7 +68,7 @@ mixin PlayerMixin {
     final id = albumAudios!.first.albumId;
     if (id == null) return;
 
-    getIt<AppModel>().setFullScreen(false);
+    getIt<AppModel>().setFullWindowMode(false);
 
     navigatorKey.currentState?.push(
       MaterialPageRoute(
@@ -147,7 +147,7 @@ mixin PlayerMixin {
     final artistAudios = localAudioModel.findArtist(audio);
     if (artistAudios?.firstOrNull == null) return;
     final images = localAudioModel.findImages(artistAudios ?? {});
-    getIt<AppModel>().setFullScreen(false);
+    getIt<AppModel>().setFullWindowMode(false);
 
     navigatorKey.currentState?.push(
       MaterialPageRoute(

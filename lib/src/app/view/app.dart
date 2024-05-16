@@ -55,6 +55,9 @@ class YaruMusicPodApp extends StatelessWidget {
               behavior: SnackBarBehavior.floating,
               actionTextColor: yaru.theme?.colorScheme.primary,
             ),
+            cardColor: yaru.darkTheme?.cardColor.scale(
+              lightness: 0.05,
+            ),
           ),
         );
       },

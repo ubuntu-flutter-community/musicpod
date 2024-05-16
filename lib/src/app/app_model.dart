@@ -50,11 +50,11 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  bool? _fullScreen;
-  bool? get fullScreen => _fullScreen;
-  void setFullScreen(bool? value) {
-    if (value == null || value == _fullScreen) return;
-    _fullScreen = value;
+  bool? _fullWindowMode;
+  bool? get fullWindowMode => _fullWindowMode;
+  void setFullWindowMode(bool? value) {
+    if (value == null || value == _fullWindowMode) return;
+    _fullWindowMode = value;
     notifyListeners();
   }
 

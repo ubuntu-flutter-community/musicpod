@@ -35,7 +35,7 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
-            onTap: () => getIt<AppModel>().setFullScreen(true),
+            onTap: () => getIt<AppModel>().setFullWindowMode(true),
             child: Video(
               height: size,
               width: size,

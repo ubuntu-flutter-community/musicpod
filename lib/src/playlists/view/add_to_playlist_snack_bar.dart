@@ -24,8 +24,8 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
       action: SnackBarAction(
         onPressed: () {
           final appModel = getIt<AppModel>();
-          if (appModel.fullScreen == true) {
-            appModel.setFullScreen(false);
+          if (appModel.fullWindowMode == true) {
+            appModel.setFullWindowMode(false);
           }
           navigatorKey.currentState
               ?.maybePop()

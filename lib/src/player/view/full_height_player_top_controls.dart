@@ -36,7 +36,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
           m.queue.length > 1 || audio?.audioType == AudioType.local,
     );
     final playerToTheRight = context.m.size.width > kSideBarThreshHold;
-    final fullScreen = watchPropertyValue((AppModel m) => m.fullScreen);
+    final fullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
     final appModel = getIt<AppModel>();
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
@@ -79,7 +79,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
               color: iconColor,
             ),
             onPressed: () {
-              appModel.setFullScreen(
+              appModel.setFullWindowMode(
                 playerViewMode == PlayerViewMode.fullWindow ? false : true,
               );
 
