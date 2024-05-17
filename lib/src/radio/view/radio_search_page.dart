@@ -1,12 +1,10 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-
 import 'package:yaru/yaru.dart';
 
 import '../../../common.dart';
 import '../../../data.dart';
 import '../../../get.dart';
-import '../../../globals.dart';
 import '../../../l10n.dart';
 import '../../../library.dart';
 import '../../../player.dart';
@@ -133,9 +131,6 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
             ),
           ],
         ),
-        leading: navigatorKey.currentState?.canPop() == true
-            ? const NavBackButton()
-            : const SizedBox.shrink(),
       ),
       body: AdaptiveContainer(child: futureBuilder),
     );

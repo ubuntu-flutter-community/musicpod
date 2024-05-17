@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../build_context_x.dart';
+import '../../../common.dart';
+import '../../../data.dart';
 import '../../../duration_x.dart';
 import '../../../get.dart';
+import '../../theme.dart';
 import '../player_model.dart';
 
 class PlayerTrack extends StatelessWidget with WatchItMixin {
@@ -21,8 +24,12 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
     final mainColor = theme.colorScheme.onSurface;
 
     final playerModel = getIt<PlayerModel>();
+    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
 
     final position = watchPropertyValue((PlayerModel m) => m.position);
+    final buffer = watchPropertyValue((PlayerModel m) => m.buffer);
+    final audioType = watchPropertyValue((PlayerModel m) => m.audio?.audioType);
+
     final setPosition = playerModel.setPosition;
     final duration = watchPropertyValue((PlayerModel m) => m.duration);
     final seek = playerModel.seek;
@@ -37,41 +44,74 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
 
     final thumbShape = RoundSliderThumbShape(
       elevation: 5,
-      enabledThumbRadius: bottomPlayer ? 0 : 5.0,
-      disabledThumbRadius: bottomPlayer ? 0 : 5.0,
+      enabledThumbRadius: bottomPlayer ? 0 : 8.0,
+      disabledThumbRadius: bottomPlayer ? 0 : 8.0,
     );
 
-    final slider = Tooltip(
-      preferBelow: false,
-      message:
-          '${(position ?? Duration.zero).formattedTime} / ${(duration ?? Duration.zero).formattedTime}',
-      child: SliderTheme(
-        data: theme.sliderTheme.copyWith(
-          thumbColor: Colors.white,
-          thumbShape: thumbShape,
-          overlayShape: thumbShape,
-          minThumbSeparation: 0,
-          trackShape: bottomPlayer ? const RectangularSliderTrackShape() : null,
-          trackHeight: bottomPlayer ? 4 : 2,
-          inactiveTrackColor: mainColor.withOpacity(0.35),
-          activeTrackColor: mainColor.withOpacity(0.8),
-          overlayColor: mainColor,
-        ),
-        child: RepaintBoundary(
-          child: Slider(
-            min: 0,
-            max: sliderActive ? duration.inSeconds.toDouble() : 1.0,
-            value: sliderActive ? position.inSeconds.toDouble() : 0,
-            onChanged: sliderActive
-                ? (v) async {
-                    setPosition(Duration(seconds: v.toInt()));
-                    await seek();
-                  }
-                : null,
-          ),
-        ),
-      ),
-    );
+    final bufferActive = active &&
+        buffer != null &&
+        position != null &&
+        duration != null &&
+        buffer.inSeconds >= 0 &&
+        buffer.inSeconds <= duration.inSeconds;
+    final secondaryTrackValue =
+        bufferActive ? buffer.inSeconds.toDouble() : 0.0;
+
+    final trackShape = bottomPlayer
+        ? const RectangularSliderTrackShape()
+        : _CustomTrackShape();
+
+    final slider = (duration?.inSeconds != null && duration!.inSeconds < 10) &&
+            audioType == AudioType.radio &&
+            isPlaying
+        ? Padding(
+            padding: bottomPlayer
+                ? EdgeInsets.zero
+                : const EdgeInsets.only(left: 7, right: 7, top: 3),
+            child: LinearProgress(
+              value: null,
+              trackHeight: yaruStyled && !bottomPlayer ? 5.0 : 4.0,
+              color: mainColor.withOpacity(0.8),
+              backgroundColor: mainColor.withOpacity(0.4),
+            ),
+          )
+        : Padding(
+            padding: EdgeInsets.only(top: bottomPlayer ? 0 : 3),
+            child: Tooltip(
+              preferBelow: false,
+              message:
+                  '${(position ?? Duration.zero).formattedTime} / ${(duration ?? Duration.zero).formattedTime}',
+              child: SliderTheme(
+                data: theme.sliderTheme.copyWith(
+                  thumbColor: Colors.white,
+                  thumbShape: thumbShape,
+                  overlayShape: thumbShape,
+                  minThumbSeparation: 0,
+                  trackShape: trackShape as SliderTrackShape,
+                  trackHeight: bottomPlayer ? 4.0 : 4.0,
+                  inactiveTrackColor: mainColor.withOpacity(0.2),
+                  activeTrackColor: mainColor.withOpacity(0.85),
+                  overlayColor: mainColor,
+                  secondaryActiveTrackColor: mainColor.withOpacity(0.25),
+                ),
+                child: RepaintBoundary(
+                  child: Slider(
+                    min: 0,
+                    max: sliderActive ? duration.inSeconds.toDouble() : 1.0,
+                    value: sliderActive ? position.inSeconds.toDouble() : 0,
+                    secondaryTrackValue:
+                        bufferActive ? secondaryTrackValue : null,
+                    onChanged: sliderActive
+                        ? (v) async {
+                            setPosition(Duration(seconds: v.toInt()));
+                            await seek();
+                          }
+                        : null,
+                  ),
+                ),
+              ),
+            ),
+          );
 
     if (bottomPlayer) {
       return slider;
@@ -96,12 +136,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
             ),
           ],
         ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(top: bottomPlayer ? 0 : 3),
-            child: slider,
-          ),
-        ),
+        Expanded(child: slider),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -121,6 +156,36 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
           ],
         ),
       ],
+    );
+  }
+}
+
+class _CustomTrackShape extends RoundedRectSliderTrackShape {
+  @override
+  void paint(
+    PaintingContext context,
+    Offset offset, {
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required Animation<double> enableAnimation,
+    required TextDirection textDirection,
+    required Offset thumbCenter,
+    Offset? secondaryOffset,
+    bool isDiscrete = false,
+    bool isEnabled = false,
+    double additionalActiveTrackHeight = 0,
+  }) {
+    super.paint(
+      context,
+      offset,
+      parentBox: parentBox,
+      sliderTheme: sliderTheme,
+      enableAnimation: enableAnimation,
+      textDirection: textDirection,
+      thumbCenter: thumbCenter,
+      isDiscrete: isDiscrete,
+      isEnabled: isEnabled,
+      additionalActiveTrackHeight: 0,
     );
   }
 }

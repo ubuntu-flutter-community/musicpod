@@ -20,7 +20,6 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _localAudioIndexSub;
   StreamSubscription<bool>? _podcastIndexSub;
   StreamSubscription<bool>? _radioIndexSub;
-  StreamSubscription<bool>? _lastPositionsSub;
   StreamSubscription<bool>? _updatesChangedSub;
   StreamSubscription<bool>? _favTagsSub;
   StreamSubscription<bool>? _favCountriesSub;
@@ -50,8 +49,6 @@ class LibraryModel extends SafeChangeNotifier {
         _service.podcastsChanged.listen((event) => notifyListeners());
     _stationsSub ??=
         _service.starredStationsChanged.listen((event) => notifyListeners());
-    _lastPositionsSub ??=
-        _service.lastPositionsChanged.listen((_) => notifyListeners());
     _updatesChangedSub ??=
         _service.updatesChanged.listen((_) => notifyListeners());
     _favTagsSub ??= _service.favTagsChanged.listen((_) => notifyListeners());
@@ -80,7 +77,6 @@ class LibraryModel extends SafeChangeNotifier {
     await _albumsSub?.cancel();
     await _podcastsSub?.cancel();
     await _stationsSub?.cancel();
-    await _lastPositionsSub?.cancel();
     await _updatesChangedSub?.cancel();
     await _favTagsSub?.cancel();
     await _favCountriesSub?.cancel();
@@ -196,6 +192,9 @@ class LibraryModel extends SafeChangeNotifier {
 
   void addPlaylist(String name, Set<Audio> audios) =>
       _service.addPlaylist(name, audios);
+
+  Future<void> updatePlaylist(String id, Set<Audio> audios) async =>
+      await _service.updatePlaylist(id, audios);
 
   void removePlaylist(String id) {
     final playlistIndex = getIndexOfPlaylist(id);
@@ -335,9 +334,4 @@ class LibraryModel extends SafeChangeNotifier {
 
   int get podcastIndex => _service.podcastIndex;
   void setPodcastIndex(int value) => _service.setPodcastIndex(value);
-
-  Map<String, Duration>? get lastPositions => _service.lastPositions;
-  Duration? getLastPosition(String? url) => _service.getLastPosition(url);
-  void addLastPosition(String url, Duration lastPosition) =>
-      _service.addLastPosition(url, lastPosition);
 }

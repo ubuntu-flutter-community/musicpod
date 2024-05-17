@@ -43,7 +43,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
     final model = getIt<PodcastModel>();
 
-    final searchActive = watchPropertyValue((PodcastModel m) => m.searchActive);
+    final searchActive =
+        watchPropertyValue((PodcastModel m) => m.searchActive ?? false);
     final setSearchActive = model.setSearchActive;
 
     final search = model.search;
@@ -73,13 +74,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
     return YaruDetailPage(
       appBar: HeaderBar(
-        leading: (Navigator.canPop(context))
-            ? NavBackButton(
-                onPressed: () {
-                  setSearchActive(false);
-                },
-              )
-            : const SizedBox.shrink(),
         titleSpacing: 0,
         adaptive: true,
         actions: [
@@ -88,7 +82,10 @@ class _PodcastsPageState extends State<PodcastsPage> {
               padding: appBarActionSpacing,
               child: SearchButton(
                 active: searchActive,
-                onPressed: () => setSearchActive(!searchActive),
+                onPressed: () {
+                  setSearchActive(!(searchActive));
+                  getIt<AppModel>().setLockSpace(!searchActive);
+                },
               ),
             ),
           ),

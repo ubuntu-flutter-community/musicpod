@@ -4,7 +4,6 @@ import 'package:yaru/yaru.dart';
 import '../../../app.dart';
 import '../../../build_context_x.dart';
 import '../../../common.dart';
-import '../../../constants.dart';
 import '../../../data.dart';
 import '../../../get.dart';
 import '../../../l10n.dart';
@@ -29,7 +28,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final veryNarrow = context.m.size.width < kMasterDetailBreakPoint;
+    final smallWindow = context.smallWindow;
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo);
 
@@ -86,7 +85,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                   flex: 5,
                   child: titleAndArtist,
                 ),
-                if (audio?.audioType != AudioType.podcast && !veryNarrow)
+                if (audio?.audioType != AudioType.podcast && !smallWindow)
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: PlayerLikeIcon(
@@ -97,12 +96,12 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
               ],
             ),
           ),
-          if (!veryNarrow)
+          if (!smallWindow)
             Expanded(
               flex: 6,
               child: bottomPlayerControls,
             ),
-          if (!veryNarrow)
+          if (!smallWindow)
             Flexible(
               flex: 4,
               child: Row(
@@ -115,10 +114,10 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                   IconButton(
                     tooltip: context.l10n.fullWindow,
                     icon: Icon(
-                      Iconz().fullScreen,
+                      Iconz().fullWindow,
                       color: theme.colorScheme.onSurface,
                     ),
-                    onPressed: () => appModel.setFullScreen(true),
+                    onPressed: () => appModel.setFullWindowMode(true),
                   ),
                 ],
               ),
@@ -137,9 +136,9 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
       child: Column(
         children: [
           track,
-          if (veryNarrow)
+          if (smallWindow)
             InkWell(
-              onTap: () => appModel.setFullScreen(true),
+              onTap: () => appModel.setFullWindowMode(true),
               child: bottom,
             )
           else
@@ -153,7 +152,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
         onVerticalDragEnd: (details) {
           if (details.primaryVelocity != null &&
               details.primaryVelocity! < 150) {
-            appModel.setFullScreen(true);
+            appModel.setFullWindowMode(true);
           }
         },
         child: player,

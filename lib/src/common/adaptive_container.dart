@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
-import '../../constants.dart';
 import '../../theme_data_x.dart';
 
 class AdaptiveContainer extends StatelessWidget {
@@ -14,11 +13,12 @@ class AdaptiveContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final wrapInContainer = context.m.size.width < kAdaptivContainerBreakPoint;
+    final wrapInContainer = context.wideWindow;
     final color = wrapInContainer ? null : theme.containerBg;
 
     return Center(
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 100),
         padding: wrapInContainer
             ? EdgeInsets.zero
             : const EdgeInsets.only(
@@ -26,7 +26,7 @@ class AdaptiveContainer extends StatelessWidget {
                 right: kYaruPagePadding,
                 bottom: kYaruPagePadding,
               ),
-        width: wrapInContainer ? double.infinity : 800,
+        width: wrapInContainer ? null : 800,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(kYaruContainerRadius),
           child: YaruBorderContainer(

@@ -6,31 +6,9 @@ import 'package:dio/dio.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
-import '../../string_x.dart';
 import '../../persistence_utils.dart';
 
 class LibraryService {
-  //
-  // last positions
-  //
-  Map<String, Duration> _lastPositions = {};
-  Map<String, Duration> get lastPositions => _lastPositions;
-  final _lastPositionsController = StreamController<bool>.broadcast();
-  Stream<bool> get lastPositionsChanged => _lastPositionsController.stream;
-  void addLastPosition(String url, Duration lastPosition) {
-    writeSetting(url, lastPosition.toString(), kLastPositionsFileName)
-        .then((_) {
-      if (_lastPositions.containsKey(url) == true) {
-        _lastPositions.update(url, (value) => lastPosition);
-      } else {
-        _lastPositions.putIfAbsent(url, () => lastPosition);
-      }
-      _lastPositionsController.add(true);
-    });
-  }
-
-  Duration? getLastPosition(String? url) => _lastPositions[url];
-
   //
   // Liked Audios
   //
@@ -219,6 +197,18 @@ class LibraryService {
       _playlists.putIfAbsent(id, () => audios);
       writeAudioMap(_playlists, kPlaylistsFileName)
           .then((_) => _playlistsController.add(true));
+    }
+  }
+
+  Future<void> updatePlaylist(String id, Set<Audio> audios) async {
+    if (_playlists.containsKey(id)) {
+      await writeAudioMap(_playlists, kPlaylistsFileName).then((_) {
+        _playlists.update(
+          id,
+          (value) => audios,
+        );
+        _playlistsController.add(true);
+      });
     }
   }
 
@@ -488,9 +478,7 @@ class LibraryService {
     );
     _podcastUpdates ??= {};
     _starredStations = await readAudioMap(kStarredStationsFileName);
-    _lastPositions = (await getSettings(kLastPositionsFileName)).map(
-      (key, value) => MapEntry(key, value.parsedDuration ?? Duration.zero),
-    );
+
     _likedAudios =
         (await readAudioMap(kLikedAudiosFileName)).entries.firstOrNull?.value ??
             <Audio>{};
@@ -563,7 +551,6 @@ class LibraryService {
     await _favTagsController.close();
     await _favCountriesController.close();
     await _favLanguagesController.close();
-    await _lastPositionsController.close();
     await _localAudioIndexController.close();
     await _radioIndexController.close();
     await _podcastIndexController.close();

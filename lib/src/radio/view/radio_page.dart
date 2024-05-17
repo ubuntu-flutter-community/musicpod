@@ -63,9 +63,6 @@ class _RadioPageState extends State<RadioPage> {
       appBar: HeaderBar(
         adaptive: true,
         titleSpacing: 0,
-        leading: navigatorKey.currentState?.canPop() == true
-            ? const NavBackButton()
-            : const SizedBox.shrink(),
         actions: [
           Flexible(
             child: Padding(
@@ -75,6 +72,7 @@ class _RadioPageState extends State<RadioPage> {
                   : SearchButton(
                       active: false,
                       onPressed: () {
+                        getIt<AppModel>().setLockSpace(true);
                         navigatorKey.currentState?.push(
                           MaterialPageRoute(
                             builder: (context) => const RadioDiscoverPage(),

@@ -125,7 +125,6 @@ class HeaderBar extends StatelessWidget
   const HeaderBar({
     super.key,
     this.title,
-    this.leading,
     this.actions,
     this.style = YaruTitleBarStyle.normal,
     this.titleSpacing,
@@ -135,7 +134,6 @@ class HeaderBar extends StatelessWidget
   });
 
   final Widget? title;
-  final Widget? leading;
   final List<Widget>? actions;
   final YaruTitleBarStyle style;
   final double? titleSpacing;
@@ -149,7 +147,9 @@ class HeaderBar extends StatelessWidget
       return AppBar(
         titleSpacing: titleSpacing,
         centerTitle: true,
-        leading: leading,
+        leading: Navigator.canPop(context)
+            ? const NavBackButton()
+            : const SizedBox.shrink(),
         title: title,
         actions: actions,
         foregroundColor: foregroundColor,
@@ -166,7 +166,9 @@ class HeaderBar extends StatelessWidget
     return YaruWindowTitleBar(
       titleSpacing: titleSpacing,
       actions: actions,
-      leading: leading,
+      leading: Navigator.canPop(context)
+          ? const NavBackButton()
+          : const SizedBox.shrink(),
       title: title,
       border: BorderSide.none,
       backgroundColor: backgroundColor,
@@ -247,24 +249,16 @@ class SearchingBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appModel = getIt<AppModel>();
-    void onChanged2(v) {
-      appModel.setLockSpace(true);
-      onChanged?.call(v);
-    }
-
-    void onSubmitted2(v) {
-      appModel.setLockSpace(false);
-      onSubmitted?.call(v);
-    }
-
     return MaterialSearchBar(
       hintText: hintText,
       text: text,
       key: key,
-      onSubmitted: onSubmitted2,
+      onSubmitted: (v) {
+        getIt<AppModel>().setLockSpace(false);
+        onSubmitted?.call(v);
+      },
       onClear: onClear,
-      onChanged: onChanged2,
+      onChanged: onChanged,
     );
   }
 }
@@ -341,6 +335,38 @@ class DropDownArrow extends StatelessWidget {
     return yaruStyled
         ? const Icon(YaruIcons.pan_down)
         : const Icon(Icons.arrow_drop_down);
+  }
+}
+
+class LinearProgress extends StatelessWidget {
+  const LinearProgress({
+    super.key,
+    this.color,
+    this.trackHeight,
+    this.value,
+    this.backgroundColor,
+  });
+
+  final double? value;
+  final Color? color, backgroundColor;
+  final double? trackHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return yaruStyled
+        ? YaruLinearProgressIndicator(
+            value: value,
+            minHeight: trackHeight,
+            strokeWidth: trackHeight,
+            color: color,
+          )
+        : LinearProgressIndicator(
+            value: value,
+            minHeight: trackHeight,
+            color: color,
+            backgroundColor: backgroundColor,
+            borderRadius: BorderRadius.circular(2),
+          );
   }
 }
 

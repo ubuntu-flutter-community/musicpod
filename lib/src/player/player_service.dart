@@ -37,6 +37,7 @@ class PlayerService {
   StreamSubscription<bool>? _isPlayingSub;
   StreamSubscription<Duration>? _durationSub;
   StreamSubscription<Duration>? _positionSub;
+  StreamSubscription<Duration>? _bufferSub;
   StreamSubscription<bool>? _isCompletedSub;
   StreamSubscription<double>? _volumeSub;
   StreamSubscription<Tracks>? _tracksSub;
@@ -147,6 +148,16 @@ class PlayerService {
     _position = value;
     _positionController.add(true);
     _setMediaControlPosition(value);
+  }
+
+  final _bufferController = StreamController<bool>.broadcast();
+  Stream<bool> get bufferChanged => _bufferController.stream;
+  Duration? _buffer = Duration.zero;
+  Duration? get buffer => _buffer;
+  void setBuffer(Duration? value) {
+    if (buffer?.inSeconds == value?.inSeconds) return;
+    _buffer = value;
+    _bufferController.add(true);
   }
 
   final _repeatSingleController = StreamController<bool>.broadcast();
@@ -260,6 +271,10 @@ class PlayerService {
 
     _positionSub = _player.stream.position.listen((newPosition) {
       setPosition(newPosition);
+    });
+
+    _bufferSub = _player.stream.buffer.listen((event) {
+      setBuffer(event);
     });
 
     _isCompletedSub = _player.stream.completed.listen((value) async {
@@ -425,7 +440,7 @@ class PlayerService {
       );
     }
 
-    _position = libraryService.getLastPosition(_audio?.url);
+    _position = getLastPosition(_audio?.url);
     _estimateNext();
     await _play(newPosition: _position);
   }
@@ -459,6 +474,10 @@ class PlayerService {
   Future<void> _readPlayerState() async {
     final playerState = await readPlayerState();
 
+    _lastPositions = (await getSettings(kLastPositionsFileName)).map(
+      (key, value) => MapEntry(key, value.parsedDuration ?? Duration.zero),
+    );
+
     if (playerState?.audio != null) {
       _setAudio(playerState!.audio!);
 
@@ -484,11 +503,32 @@ class PlayerService {
     }
   }
 
+  //
+  // last positions
+  //
+  Map<String, Duration> _lastPositions = {};
+  Map<String, Duration> get lastPositions => _lastPositions;
+  final _lastPositionsController = StreamController<bool>.broadcast();
+  Stream<bool> get lastPositionsChanged => _lastPositionsController.stream;
+  void addLastPosition(String url, Duration lastPosition) {
+    writeSetting(url, lastPosition.toString(), kLastPositionsFileName)
+        .then((_) {
+      if (_lastPositions.containsKey(url) == true) {
+        _lastPositions.update(url, (value) => lastPosition);
+      } else {
+        _lastPositions.putIfAbsent(url, () => lastPosition);
+      }
+      _lastPositionsController.add(true);
+    });
+  }
+
+  Duration? getLastPosition(String? url) => _lastPositions[url];
+
   void safeLastPosition() {
     if (_audio?.audioType == AudioType.radio ||
         _audio?.url == null ||
         _position == null) return;
-    libraryService.addLastPosition(_audio!.url!, _position!);
+    addLastPosition(_audio!.url!, _position!);
   }
 
   Future<void> _initMediaControl() async {
@@ -770,6 +810,7 @@ class PlayerService {
     await _rateSub?.cancel();
     await _rateController.close();
     await _radioHistoryController.close();
+    await _bufferSub?.cancel();
 
     await _player.dispose();
   }

@@ -3,6 +3,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../../common.dart';
 import '../../../data.dart';
+import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../l10n.dart';
 import '../../../library.dart';
@@ -25,38 +26,13 @@ class AddToPlaylistDialog extends StatelessWidget {
       key: playlistNavigatorKey,
       initialRoute: '/',
       onGenerateRoute: (settings) {
-        final listView = ListView(
-          shrinkWrap: true,
-          children: [
-            ListTile(
-              onTap: () => playlistNavigatorKey.currentState?.pushNamed('/new'),
-              leading: SideBarFallBackImage(
-                color: Colors.transparent,
-                child: Icon(Iconz().plus),
-              ),
-              title: Text(context.l10n.createNewPlaylist),
-            ),
-            ...libraryModel.getPlaylistNames().map(
-                  (playlistId) => Builder(
-                    builder: (context) {
-                      return _PlaylistTile(
-                        playlistId: playlistId,
-                        libraryModel: libraryModel,
-                        audio: audio,
-                      );
-                    },
-                  ),
-                ),
-          ],
-        );
-
         return PageRouteBuilder(
           pageBuilder: (_, __, ___) => settings.name == '/new'
               ? _NewView(
                   libraryModel: libraryModel,
                   audio: audio,
                 )
-              : listView,
+              : _PlaylistTilesList(audio: audio),
           transitionDuration: const Duration(milliseconds: 500),
         );
       },
@@ -73,6 +49,45 @@ class AddToPlaylistDialog extends StatelessWidget {
           : const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
       content: SizedBox(height: 200, width: 400, child: nav),
       contentPadding: const EdgeInsets.symmetric(vertical: 20),
+    );
+  }
+}
+
+class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
+  const _PlaylistTilesList({
+    required this.audio,
+  });
+
+  final Audio audio;
+
+  @override
+  Widget build(BuildContext context) {
+    final playlistNames = watchPropertyValue(
+      (LibraryModel m) => m.playlists.keys.map((e) => e.toString()),
+    );
+    return ListView(
+      shrinkWrap: true,
+      children: [
+        ListTile(
+          onTap: () => playlistNavigatorKey.currentState?.pushNamed('/new'),
+          leading: SideBarFallBackImage(
+            color: Colors.transparent,
+            child: Icon(Iconz().plus),
+          ),
+          title: Text(context.l10n.createNewPlaylist),
+        ),
+        ...playlistNames.map(
+          (playlistId) => Builder(
+            builder: (context) {
+              return _PlaylistTile(
+                playlistId: playlistId,
+                libraryModel: getIt<LibraryModel>(),
+                audio: audio,
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

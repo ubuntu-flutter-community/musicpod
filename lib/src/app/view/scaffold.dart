@@ -34,7 +34,7 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
   Widget build(BuildContext context) {
     final playerToTheRight = context.m.size.width > kSideBarThreshHold;
     final lockSpace = watchPropertyValue((AppModel m) => m.lockSpace);
-    final isFullScreen = watchPropertyValue((AppModel m) => m.fullScreen);
+    final isFullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
     final playerModel = getIt<PlayerModel>();
 
     return KeyboardListener(

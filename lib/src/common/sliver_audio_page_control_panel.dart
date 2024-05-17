@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:yaru/constants.dart';
 
 import '../../build_context_x.dart';
-import '../../constants.dart';
 import '../../theme_data_x.dart';
 
 class SliverAudioPageControlPanel extends StatelessWidget {
@@ -13,9 +12,8 @@ class SliverAudioPageControlPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final size = context.m.size;
-    final wrappedInContainer = size.width < kAdaptivContainerBreakPoint;
-    final smallWindow = size.width < kMasterDetailBreakPoint;
+    final wrappedInContainer = context.wideWindow;
+    final smallWindow = context.smallWindow;
 
     final color =
         wrappedInContainer ? theme.scaffoldBackgroundColor : theme.containerBg;

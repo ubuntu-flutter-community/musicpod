@@ -1,4 +1,6 @@
+import '../../../app.dart';
 import '../../../constants.dart';
+import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../l10n.dart';
 import '../../../library.dart';
@@ -21,6 +23,10 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
       ),
       action: SnackBarAction(
         onPressed: () {
+          final appModel = getIt<AppModel>();
+          if (appModel.fullWindowMode == true) {
+            appModel.setFullWindowMode(false);
+          }
           navigatorKey.currentState
               ?.maybePop()
               .then((value) => libraryModel.setIndex(index));

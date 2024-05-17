@@ -9,6 +9,7 @@ import '../../../get.dart';
 import '../../../library.dart';
 import '../../../local_audio.dart';
 import '../../common/fall_back_header_image.dart';
+import '../../common/sliver_audio_page.dart';
 import '../../l10n/l10n.dart';
 
 class LikedAudioPage extends StatelessWidget with WatchItMixin {
@@ -28,26 +29,8 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
     final model = getIt<LocalAudioModel>();
     final likedAudios = watchPropertyValue((LibraryModel m) => m.likedAudios);
 
-    return AudioPage(
-      classicTiles: false,
-      onAlbumTap: (text) {
-        final albumAudios = model.findAlbum(Audio(album: text));
-        if (albumAudios?.firstOrNull == null) return;
-        final id = albumAudios!.first.albumId;
-        if (id == null) return;
-
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) {
-              return AlbumPage(
-                id: id,
-                album: albumAudios,
-              );
-            },
-          ),
-        );
-      },
-      onArtistTap: (text) {
+    return SliverAudioPage(
+      onPageLabelTab: (text) {
         final artistAudios = model.findArtist(Audio(artist: text));
         final images = model.findImages(artistAudios ?? {});
 
@@ -62,25 +45,28 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
           ),
         );
       },
-      controlPanelButton: Padding(
-        padding: const EdgeInsets.only(
-          left: 10,
-          right: 10,
-        ),
-        child: Text(
-          '${likedAudios.length} ${context.l10n.titles}',
-          style: getControlPanelStyle(context.t.textTheme),
-        ),
+      controlPanel: Row(
+        children: [
+          AvatarPlayButton(audios: likedAudios, pageId: kLikedAudiosPageId),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+            ),
+            child: Text(
+              '${likedAudios.length} ${context.l10n.titles}',
+              style: getControlPanelStyle(context.t.textTheme),
+            ),
+          ),
+        ],
       ),
-      noResultMessage: Text(context.l10n.likedSongsSubtitle),
-      noResultIcon: const AnimatedEmoji(AnimatedEmojis.twoHearts),
+      noSearchResultMessage: Text(context.l10n.likedSongsSubtitle),
+      noSearchResultIcons: const AnimatedEmoji(AnimatedEmojis.twoHearts),
       audios: likedAudios,
       audioPageType: AudioPageType.likedAudio,
       pageId: kLikedAudiosPageId,
-      title: Text(context.l10n.likedSongs),
-      headerTitle: context.l10n.likedSongs,
-      headerSubtile: context.l10n.likedSongsSubtitle,
-      headerLabel: context.l10n.playlist,
+      pageTitle: context.l10n.likedSongs,
+      pageLabel: context.l10n.likedSongsSubtitle,
       image: FallBackHeaderImage(
         child: Icon(
           Iconz().heart,

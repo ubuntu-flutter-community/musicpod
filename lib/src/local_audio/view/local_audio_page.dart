@@ -1,6 +1,5 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
@@ -14,15 +13,13 @@ import '../../../local_audio.dart';
 import '../../../player.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/view/settings_dialog.dart';
 import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 import 'local_audio_view.dart';
 
 class LocalAudioPage extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const LocalAudioPage({
-    super.key,
-  });
+  const LocalAudioPage({super.key});
 
   @override
   State<LocalAudioPage> createState() => _LocalAudioPageState();
@@ -32,29 +29,13 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   @override
   void initState() {
     super.initState();
-    final model = getIt<LocalAudioModel>();
-    final settingsModel = getIt<SettingsModel>();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (!mounted) return;
-      model.init(
-        onFail: (failedImports) {
-          if (!mounted || settingsModel.neverShowFailedImports) {
-            return;
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              duration: const Duration(seconds: 10),
-              content: FailedImportsContent(
-                onNeverShowFailedImports: () =>
-                    settingsModel.setNeverShowFailedImports(true),
-                failedImports: failedImports,
-              ),
-            ),
-          );
-        },
+    final failedImports = getIt<LocalAudioModel>().failedImports;
+    if (mounted && failedImports?.isNotEmpty == true) {
+      showFailedImportsSnackBar(
+        failedImports: failedImports!,
+        context: context,
       );
-    });
+    }
   }
 
   @override
@@ -85,11 +66,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
 
     final headerBar = HeaderBar(
       adaptive: true,
-      leading: (navigatorKey.currentState?.canPop() == true)
-          ? NavBackButton(
-              onPressed: () => search(text: null),
-            )
-          : const SizedBox.shrink(),
       titleSpacing: 0,
       actions: [
         Flexible(
@@ -122,7 +98,24 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                 artists: model.allArtists,
                 genres: model.allGenres,
                 noResultIcon: const AnimatedEmoji(AnimatedEmojis.bird),
-                noResultMessage: Text(context.l10n.noLocalTitlesFound),
+                noResultMessage: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(context.l10n.noLocalTitlesFound),
+                    const SizedBox(
+                      height: kYaruPagePadding,
+                    ),
+                    ElevatedButton(
+                      child: Text(context.l10n.settings),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => const SettingsDialog(),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

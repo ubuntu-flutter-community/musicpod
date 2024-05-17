@@ -19,6 +19,7 @@ class BlurredFullHeightPlayerImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.t;
     return Opacity(
+      key: ValueKey(audio?.url),
       opacity: theme.isLight ? 0.8 : 0.9,
       child: SizedBox(
         width: size.width,

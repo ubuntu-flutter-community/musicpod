@@ -5,15 +5,16 @@ import 'package:phoenix_theme/phoenix_theme.dart' hide ColorX;
 import 'package:system_theme/system_theme.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app.dart';
-import '../../common.dart';
-import '../../external_path.dart';
-import '../../get.dart';
-import '../../library.dart';
-import '../../theme.dart';
-import '../l10n/l10n.dart';
-import '../settings/settings_model.dart';
-import 'view/scaffold.dart';
+import '../../../app.dart';
+import '../../../common.dart';
+import '../../../external_path.dart';
+import '../../../get.dart';
+import '../../../library.dart';
+import '../../../theme.dart';
+import '../../l10n/l10n.dart';
+import '../../local_audio/local_audio_model.dart';
+import '../../settings/settings_model.dart';
+import 'scaffold.dart';
 
 class YaruMusicPodApp extends StatelessWidget {
   const YaruMusicPodApp({
@@ -53,6 +54,9 @@ class YaruMusicPodApp extends StatelessWidget {
             snackBarTheme: SnackBarThemeData(
               behavior: SnackBarBehavior.floating,
               actionTextColor: yaru.theme?.colorScheme.primary,
+            ),
+            cardColor: yaru.darkTheme?.cardColor.scale(
+              lightness: 0.05,
             ),
           ),
         );
@@ -120,11 +124,15 @@ class _MusicPodAppState extends State<_MusicPodApp>
       );
     }
 
-    final appModel = getIt<AppModel>();
     await getIt<LibraryModel>().init();
+    // Note: if users have small local audio libs this will hardly be visible
+    // if users have huge local libs they will probably use MusicPod a lot
+    // for local audios and will land here sooner or later.
+    // So do this right away to avoid an uninitialized LocalAudioModel
+    await getIt<LocalAudioModel>().init();
 
     if (!mounted) return false;
-    await appModel.init();
+    await getIt<AppModel>().init();
 
     getIt<ExternalPathService>().init();
 

@@ -41,8 +41,7 @@ class AudioPageHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     const height = kMaxAudioPageHeaderHeight;
     final theme = context.t;
-    final size = context.m.size;
-    final smallWindow = size.width < kMasterDetailBreakPoint;
+    final smallWindow = context.smallWindow;
     final radius = imageRadius ?? BorderRadius.circular(10);
 
     return Padding(
@@ -96,7 +95,16 @@ class AudioPageHeader extends StatelessWidget {
                   children: [
                     Flexible(
                       flex: 2,
-                      child: AudioPageHeaderTitle(title: title),
+                      child: Padding(
+                        padding: context.smallWindow
+                            ? EdgeInsets.zero
+                            : const EdgeInsets.only(right: kYaruPagePadding),
+                        child: Text(
+                          title,
+                          style: theme.pageHeaderStyle,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ),
                     Expanded(
                       flex: 1,
@@ -230,33 +238,6 @@ class AudioPageHeaderSubTitle extends StatelessWidget {
             ),
           ),
       ],
-    );
-  }
-}
-
-class AudioPageHeaderTitle extends StatelessWidget {
-  const AudioPageHeaderTitle({
-    super.key,
-    required this.title,
-  });
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.t;
-    final size = context.m.size;
-    final smallWindow = size.width < kMasterDetailBreakPoint;
-
-    return Padding(
-      padding: smallWindow
-          ? EdgeInsets.zero
-          : const EdgeInsets.only(right: kYaruPagePadding),
-      child: Text(
-        title,
-        style: theme.pageHeaderStyle,
-        overflow: TextOverflow.ellipsis,
-      ),
     );
   }
 }

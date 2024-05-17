@@ -77,6 +77,7 @@ class _ThemeSection extends StatelessWidget with WatchItMixin {
                       borderRadius: BorderRadius.circular(15),
                       selected: themeIndex == i,
                       onTap: () => model.setThemeIndex(i),
+                      selectionColor: context.t.colorScheme.primary,
                       child: ThemeTile(ThemeMode.values[i]),
                     ),
                     Padding(
@@ -219,22 +220,7 @@ class _LocalAudioSection extends StatelessWidget with WatchItMixin {
 
     Future<void> onDirectorySelected(String? directoryPath) async {
       settingsModel.setDirectory(directoryPath).then(
-            (value) async => await localAudioModel.init(
-              forceInit: true,
-              onFail: (failedImports) {
-                if (settingsModel.neverShowFailedImports) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    duration: const Duration(seconds: 10),
-                    content: FailedImportsContent(
-                      failedImports: failedImports,
-                      onNeverShowFailedImports: () =>
-                          settingsModel.setNeverShowFailedImports(true),
-                    ),
-                  ),
-                );
-              },
-            ),
+            (_) async => await localAudioModel.init(forceInit: true),
           );
     }
 

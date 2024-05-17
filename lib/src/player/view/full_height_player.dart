@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
@@ -11,6 +10,7 @@ import 'blurred_full_height_player_image.dart';
 import 'full_height_player_image.dart';
 import 'full_height_player_top_controls.dart';
 import 'full_height_title_and_artist.dart';
+import 'full_height_video_player.dart';
 import 'player_main_controls.dart';
 import 'player_track.dart';
 import 'up_next_bubble.dart';
@@ -36,22 +36,20 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
     final showUpNextBubble = notAlone &&
         nextAudio?.title != null &&
         nextAudio?.artist != null &&
-        !isVideo &&
         size.width > 600;
     final model = getIt<PlayerModel>();
     final active = audio?.path != null || isOnline;
     final iconColor = isVideo ? Colors.white : theme.colorScheme.onSurface;
 
-    final bodyWithControls = Stack(
-      alignment: Alignment.topRight,
-      children: [
-        if (isVideo)
-          RepaintBoundary(
-            child: Video(
-              controller: model.controller,
-            ),
-          )
-        else
+    final Widget bodyWithControls;
+    if (isVideo) {
+      bodyWithControls = FullHeightVideoPlayer(
+        playerViewMode: playerViewMode,
+      );
+    } else {
+      bodyWithControls = Stack(
+        alignment: Alignment.topRight,
+        children: [
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 35),
@@ -89,28 +87,29 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
               ),
             ),
           ),
-        FullHeightPlayerTopControls(
-          iconColor: iconColor,
-          playerViewMode: playerViewMode,
-        ),
-        if (showUpNextBubble)
-          Positioned(
-            left: 10,
-            bottom: 10,
-            child: UpNextBubble(
-              audio: audio,
-              nextAudio: nextAudio,
-            ),
+          FullHeightPlayerTopControls(
+            iconColor: iconColor,
+            playerViewMode: playerViewMode,
           ),
-      ],
-    );
+          if (showUpNextBubble)
+            Positioned(
+              left: 10,
+              bottom: 10,
+              child: UpNextBubble(
+                audio: audio,
+                nextAudio: nextAudio,
+              ),
+            ),
+        ],
+      );
+    }
 
     final body = isMobile
         ? GestureDetector(
             onVerticalDragEnd: (details) {
               if (details.primaryVelocity != null &&
                   details.primaryVelocity! > 150) {
-                appModel.setFullScreen(false);
+                appModel.setFullWindowMode(false);
               }
             },
             child: Padding(

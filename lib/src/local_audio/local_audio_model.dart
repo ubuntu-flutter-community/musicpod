@@ -269,18 +269,21 @@ class LocalAudioModel extends SafeChangeNotifier {
     return images;
   }
 
+  List<String>? _failedImports;
+  List<String>? get failedImports => _failedImports;
+
   Future<void> init({
-    required void Function(List<String> failedImports) onFail,
     bool forceInit = false,
   }) async {
     if (forceInit ||
         (_localAudioService.audios == null ||
             _localAudioService.audios?.isEmpty == true)) {
-      final failedImports = await _localAudioService.init();
-
-      if (failedImports.isNotEmpty) {
-        onFail(failedImports);
+      if (forceInit) {
+        _titles = null;
+        notifyListeners();
       }
+
+      _failedImports = await _localAudioService.init();
 
       _titles = _findAllTitles();
       _allAlbums = findAllAlbums();
@@ -311,6 +314,14 @@ class LocalAudioModel extends SafeChangeNotifier {
   void setManualFilter(bool value) {
     if (value == _manualFilter) return;
     _manualFilter = value;
+    notifyListeners();
+  }
+
+  bool _allowReorder = false;
+  bool get allowReorder => _allowReorder;
+  void setAllowReorder(bool value) {
+    if (value == _allowReorder) return;
+    _allowReorder = value;
     notifyListeners();
   }
 }
