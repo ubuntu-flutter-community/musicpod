@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:phoenix_theme/phoenix_theme.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../get.dart';
+import '../../common/custom_track_shape.dart';
 import '../../l10n/l10n.dart';
 import '../player_model.dart';
 
@@ -30,8 +32,10 @@ class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
     } else {
       iconData = Iconz().speakerHighFilled;
     }
-
     return PopupMenuButton(
+      color: theme.isLight
+          ? theme.colorScheme.background.scale(lightness: -0.04)
+          : null,
       iconColor: color ?? theme.colorScheme.onSurface,
       padding: EdgeInsets.zero,
       tooltip: context.l10n.volume,
@@ -65,11 +69,15 @@ class _Slider extends StatelessWidget with WatchItMixin {
     final volume = watchPropertyValue((PlayerModel m) => m.volume);
     return RotatedBox(
       quarterTurns: 3,
-      child: Slider(
-        value: volume ?? 100.0,
-        onChanged: setVolume,
-        max: 100,
-        min: 0,
+      child: SliderTheme(
+        data:
+            context.theme.sliderTheme.copyWith(trackShape: CustomTrackShape()),
+        child: Slider(
+          value: volume ?? 100.0,
+          onChanged: setVolume,
+          max: 100,
+          min: 0,
+        ),
       ),
     );
   }

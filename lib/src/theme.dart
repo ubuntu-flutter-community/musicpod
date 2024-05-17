@@ -12,7 +12,7 @@ Color? getSideBarColor(ThemeData theme) => theme.scaffoldBackgroundColor;
 Color getPlayerBg(Color? surfaceTintColor, Color fallbackColor) {
   if (surfaceTintColor != null) {
     return (Platform.isLinux
-        ? surfaceTintColor.withOpacity(0.05)
+        ? surfaceTintColor.withOpacity(0.08)
         : Color.alphaBlend(
             surfaceTintColor.withOpacity(0.2),
             fallbackColor,
