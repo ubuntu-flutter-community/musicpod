@@ -6,7 +6,7 @@
   <summary>Music, podcast and internet radio player</summary>
   
   <metadata_license>CC0-1.0</metadata_license>
-  <project_license>=GPL-3.0</project_license>
+  <project_license>GPL-3.0</project_license>
   <url type="homepage">https://github.com/ubuntu-flutter-community/musicpod</url>
   
   <description>
