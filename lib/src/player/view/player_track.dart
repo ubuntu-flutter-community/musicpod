@@ -5,6 +5,7 @@ import '../../../common.dart';
 import '../../../data.dart';
 import '../../../duration_x.dart';
 import '../../../get.dart';
+import '../../common/custom_track_shape.dart';
 import '../../theme.dart';
 import '../player_model.dart';
 
@@ -57,9 +58,8 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
         buffer.inSeconds <=
             (sliderActive ? duration.inSeconds.toDouble() : 1.0);
 
-    final trackShape = bottomPlayer
-        ? const RectangularSliderTrackShape()
-        : _CustomTrackShape();
+    final trackShape =
+        bottomPlayer ? const RectangularSliderTrackShape() : CustomTrackShape();
 
     final slider = (duration?.inSeconds != null && duration!.inSeconds < 10) &&
             audioType == AudioType.radio &&
@@ -156,36 +156,6 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
           ],
         ),
       ],
-    );
-  }
-}
-
-class _CustomTrackShape extends RoundedRectSliderTrackShape {
-  @override
-  void paint(
-    PaintingContext context,
-    Offset offset, {
-    required RenderBox parentBox,
-    required SliderThemeData sliderTheme,
-    required Animation<double> enableAnimation,
-    required TextDirection textDirection,
-    required Offset thumbCenter,
-    Offset? secondaryOffset,
-    bool isDiscrete = false,
-    bool isEnabled = false,
-    double additionalActiveTrackHeight = 0,
-  }) {
-    super.paint(
-      context,
-      offset,
-      parentBox: parentBox,
-      sliderTheme: sliderTheme,
-      enableAnimation: enableAnimation,
-      textDirection: textDirection,
-      thumbCenter: thumbCenter,
-      isDiscrete: isDiscrete,
-      isEnabled: isEnabled,
-      additionalActiveTrackHeight: 0,
     );
   }
 }
