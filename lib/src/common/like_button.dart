@@ -63,17 +63,23 @@ class LikeButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(100),
         ),
       ),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       itemBuilder: (context) {
         return [
           PopupMenuItem(
             onTap: insertIntoQueue,
-            child: Text(context.l10n.playNext),
+            child: YaruTile(
+              leading: Icon(Iconz().insertIntoQueue),
+              title: Text(context.l10n.playNext),
+            ),
           ),
           if (allowRemove)
             PopupMenuItem(
               onTap: () =>
                   libraryModel.removeAudioFromPlaylist(playlistId, audio),
-              child: Text('${context.l10n.removeFrom} $playlistId'),
+              child: YaruTile(
+                leading: Icon(Iconz().remove),
+              ),
             ),
           PopupMenuItem(
             onTap: () => showDialog(
@@ -85,8 +91,11 @@ class LikeButton extends StatelessWidget {
                 );
               },
             ),
-            child: Text(
-              '${context.l10n.addToPlaylist} ...',
+            child: YaruTile(
+              leading: Icon(Iconz().plus),
+              title: Text(
+                '${context.l10n.addToPlaylist} ...',
+              ),
             ),
           ),
           PopupMenuItem(
@@ -96,14 +105,23 @@ class LikeButton extends StatelessWidget {
                 return MetaDataDialog(audio: audio);
               },
             ),
-            child: Text(
-              '${context.l10n.showMetaData} ...',
+            child: YaruTile(
+              leading: Icon(Iconz().info),
+              title: Text(
+                '${context.l10n.showMetaData} ...',
+              ),
             ),
           ),
           PopupMenuItem(
             padding: EdgeInsets.zero,
-            child: StreamProviderRow(
-              text: '${audio.artist ?? ''} - ${audio.title ?? ''}',
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: StreamProviderRow(
+                iconColor: theme.colorScheme.onSurface,
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                text: '${audio.artist ?? ''} - ${audio.title ?? ''}',
+              ),
             ),
           ),
         ];
