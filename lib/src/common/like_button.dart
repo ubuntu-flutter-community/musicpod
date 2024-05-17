@@ -67,7 +67,15 @@ class LikeButton extends StatelessWidget {
       itemBuilder: (context) {
         return [
           PopupMenuItem(
-            onTap: insertIntoQueue,
+            onTap: () {
+              insertIntoQueue?.call();
+              showSnackBar(
+                context: context,
+                content: Text(
+                  '${context.l10n.addedTo} ${context.l10n.queue}: ${audio.artist} - ${audio.title}',
+                ),
+              );
+            },
             child: YaruTile(
               leading: Icon(Iconz().insertIntoQueue),
               title: Text(context.l10n.playNext),
@@ -79,6 +87,7 @@ class LikeButton extends StatelessWidget {
                   libraryModel.removeAudioFromPlaylist(playlistId, audio),
               child: YaruTile(
                 leading: Icon(Iconz().remove),
+                title: Text('${context.l10n.removeFrom} $playlistId'),
               ),
             ),
           PopupMenuItem(
@@ -113,14 +122,18 @@ class LikeButton extends StatelessWidget {
             ),
           ),
           PopupMenuItem(
+            enabled: false,
             padding: EdgeInsets.zero,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: StreamProviderRow(
-                iconColor: theme.colorScheme.onSurface,
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                text: '${audio.artist ?? ''} - ${audio.title ?? ''}',
+            child: Theme(
+              data: theme.copyWith(disabledColor: theme.colorScheme.onSurface),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 13),
+                child: StreamProviderRow(
+                  iconColor: theme.colorScheme.onSurface,
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  text: '${audio.artist ?? ''} - ${audio.title ?? ''}',
+                ),
               ),
             ),
           ),

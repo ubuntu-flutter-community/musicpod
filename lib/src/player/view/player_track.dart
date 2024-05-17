@@ -48,7 +48,8 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
       disabledThumbRadius: bottomPlayer ? 0 : 8.0,
     );
 
-    final bufferActive = active &&
+    final bufferActive = audioType != AudioType.local &&
+        active &&
         buffer != null &&
         position != null &&
         duration != null &&

@@ -108,6 +108,7 @@ class _PlaylistTile extends StatelessWidget {
     return ListTile(
       onTap: () {
         libraryModel.addAudioToPlaylist(playlistId, audio);
+        Navigator.of(context, rootNavigator: true).maybePop();
         showAddedToPlaylistSnackBar(
           context: context,
           libraryModel: libraryModel,
