@@ -28,6 +28,14 @@ class Iconz {
             : Icons.arrow_circle_up;
   }
 
+  IconData get remove {
+    return yaruStyled
+        ? YaruIcons.minus
+        : appleStyled
+            ? CupertinoIcons.minus
+            : Icons.remove;
+  }
+
   IconData get check => yaruStyled
       ? YaruIcons.checkmark
       : appleStyled
