@@ -220,8 +220,16 @@ const kPatchNotes20240509 = 'Hello MusicPod Users, this update includes\n'
     '\n\nIf you like MusicPod please consider sponsoring me:'
     '\n';
 
-const kRecentPatchNotesDisposed = kPatchNotes20240509disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20240509;
-const kRecentPatchNotes = kPatchNotes20240509;
+// 2024 05 18
+const kPatchNotes20240518disposed = 'patchNotes20240518disposed';
+const kPatchNotesTitle20240518 = 'Patch notes: 2024-05-18';
+const kPatchNotes20240518 = 'Hello MusicPod Users, this update includes\n'
+    '\n* Context menu improvements'
+    '\n* Bug fixes, thanks Mads ;)'
+    '\n';
+
+const kRecentPatchNotesDisposed = kPatchNotes20240518disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20240518;
+const kRecentPatchNotes = kPatchNotes20240518;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';

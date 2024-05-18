@@ -248,6 +248,9 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
     final audioControlPanel = Row(
       children: [
         AvatarPlayButton(audios: audios, pageId: pageId),
+        const SizedBox(
+          width: 10,
+        ),
         IconButton(
           tooltip: context.l10n.editPlaylist,
           icon: Icon(Iconz().pen),
