@@ -35,6 +35,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
           navigatorKey: navigatorKey,
           onSelected: (value) => libraryModel.setIndex(value ?? 0),
           appBar: HeaderBar(
+            includeBackButton: false,
             backgroundColor: getSideBarColor(context.t),
             style: YaruTitleBarStyle.undecorated,
             adaptive: false,

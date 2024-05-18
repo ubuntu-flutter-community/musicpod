@@ -131,6 +131,7 @@ class HeaderBar extends StatelessWidget
     this.backgroundColor = Colors.transparent,
     this.foregroundColor,
     required this.adaptive,
+    this.includeBackButton = true,
   });
 
   final Widget? title;
@@ -140,6 +141,7 @@ class HeaderBar extends StatelessWidget
   final Color? foregroundColor;
   final Color? backgroundColor;
   final bool adaptive;
+  final bool includeBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +149,7 @@ class HeaderBar extends StatelessWidget
       return AppBar(
         titleSpacing: titleSpacing,
         centerTitle: true,
-        leading: Navigator.canPop(context)
+        leading: includeBackButton && Navigator.canPop(context)
             ? const NavBackButton()
             : const SizedBox.shrink(),
         title: title,
@@ -166,7 +168,7 @@ class HeaderBar extends StatelessWidget
     return YaruWindowTitleBar(
       titleSpacing: titleSpacing,
       actions: actions,
-      leading: Navigator.canPop(context)
+      leading: includeBackButton && Navigator.canPop(context)
           ? const NavBackButton()
           : const SizedBox.shrink(),
       title: title,
