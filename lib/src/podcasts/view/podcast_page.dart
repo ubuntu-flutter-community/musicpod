@@ -126,32 +126,30 @@ class _PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
           : MainAxisAlignment.start,
       children: [
         AvatarPlayButton(audios: audios, pageId: pageId),
-        Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: IconButton(
-            tooltip: subscribed
-                ? context.l10n.removeFromCollection
-                : context.l10n.addToCollection,
-            icon: checkingForUpdates
-                ? const SideBarProgress()
-                : Icon(
-                    subscribed
-                        ? Iconz().removeFromLibrary
-                        : Iconz().addToLibrary,
-                    color: subscribed
-                        ? theme.colorScheme.primary
-                        : theme.colorScheme.onSurface,
-                  ),
-            onPressed: checkingForUpdates
-                ? null
-                : () {
-                    if (subscribed) {
-                      libraryModel.removePodcast(pageId);
-                    } else if (audios.isNotEmpty) {
-                      libraryModel.addPodcast(pageId, audios);
-                    }
-                  },
-          ),
+        const SizedBox(
+          width: 10,
+        ),
+        IconButton(
+          tooltip: subscribed
+              ? context.l10n.removeFromCollection
+              : context.l10n.addToCollection,
+          icon: checkingForUpdates
+              ? const SideBarProgress()
+              : Icon(
+                  subscribed ? Iconz().removeFromLibrary : Iconz().addToLibrary,
+                  color: subscribed
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.onSurface,
+                ),
+          onPressed: checkingForUpdates
+              ? null
+              : () {
+                  if (subscribed) {
+                    libraryModel.removePodcast(pageId);
+                  } else if (audios.isNotEmpty) {
+                    libraryModel.addPodcast(pageId, audios);
+                  }
+                },
         ),
         ExploreOnlinePopup(text: title),
       ],

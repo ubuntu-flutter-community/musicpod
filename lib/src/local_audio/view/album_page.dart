@@ -148,29 +148,26 @@ class AlbumPageControlButton extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         AvatarPlayButton(audios: album, pageId: id),
-        Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: IconButton(
-            tooltip: context.l10n.pinAlbum,
-            isSelected: libraryModel.isPinnedAlbum(id),
-            icon: Icon(
-              pinnedAlbum ? Iconz().pinFilled : Iconz().pin,
-              color: pinnedAlbum ? context.t.colorScheme.primary : null,
-            ),
-            onPressed: () {
-              if (libraryModel.isPinnedAlbum(id)) {
-                libraryModel.removePinnedAlbum(id);
-              } else {
-                libraryModel.addPinnedAlbum(id, album);
-              }
-            },
-          ),
+        const SizedBox(
+          width: 10,
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 5),
-          child: ExploreOnlinePopup(
-            text: '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
+        IconButton(
+          tooltip: context.l10n.pinAlbum,
+          isSelected: libraryModel.isPinnedAlbum(id),
+          icon: Icon(
+            pinnedAlbum ? Iconz().pinFilled : Iconz().pin,
+            color: pinnedAlbum ? context.t.colorScheme.primary : null,
           ),
+          onPressed: () {
+            if (libraryModel.isPinnedAlbum(id)) {
+              libraryModel.removePinnedAlbum(id);
+            } else {
+              libraryModel.addPinnedAlbum(id, album);
+            }
+          },
+        ),
+        ExploreOnlinePopup(
+          text: '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
         ),
       ],
     );

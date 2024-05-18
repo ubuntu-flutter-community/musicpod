@@ -91,9 +91,6 @@ class _StationPageControlPanel extends StatelessWidget {
           width: 10,
         ),
         RadioPageStarButton(station: station),
-        const SizedBox(
-          width: 5,
-        ),
         RadioPageCopyHistoryButton(station: station),
       ],
     );
