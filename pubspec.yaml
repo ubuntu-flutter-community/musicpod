@@ -39,7 +39,11 @@ dependencies:
   m3u_parser_nullsafe: ^1.0.3
   media_kit: ^1.1.10+1
   media_kit_libs_video: ^1.0.4
-  media_kit_video: ^1.2.4
+  media_kit_video:
+    git:
+      url: https://github.com/media-kit/media-kit
+      path: media_kit_video/
+      ref: 13f6b3f0ef9ccf8a711e396bc49cb05af9b3e497
   mime: ^1.0.5
   mime_type: ^1.0.0
   mockito: ^5.4.4
@@ -91,3 +95,8 @@ flutter:
 
 dependency_overrides:
   intl: 0.19.0
+  media_kit_video:
+    git:
+      url: https://github.com/media-kit/media-kit
+      path: media_kit_video/
+      ref: 13f6b3f0ef9ccf8a711e396bc49cb05af9b3e497

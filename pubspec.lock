@@ -69,10 +69,10 @@ packages:
     dependency: "direct main"
     description:
       name: audio_metadata_reader
-      sha256: a259de0bd3af7bac5ac7737128e499949bf7b33dda762315a51b262980d08036
+      sha256: "40bd155e2ab0de725656235c51bb8441d2af49e793f0a643653801e05a693eb4"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.5"
+    version: "0.0.6"
   audio_service:
     dependency: "direct main"
     description:
@@ -872,10 +872,11 @@ packages:
   media_kit_video:
     dependency: "direct main"
     description:
-      name: media_kit_video
-      sha256: c048d11a19e379aebbe810647636e3fc6d18374637e2ae12def4ff8a4b99a882
-      url: "https://pub.dev"
-    source: hosted
+      path: media_kit_video
+      ref: "13f6b3f0ef9ccf8a711e396bc49cb05af9b3e497"
+      resolved-ref: "13f6b3f0ef9ccf8a711e396bc49cb05af9b3e497"
+      url: "https://github.com/media-kit/media-kit"
+    source: git
     version: "1.2.4"
   meta:
     dependency: transitive
