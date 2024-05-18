@@ -2,13 +2,23 @@
 
 Music, Radio, Television and Podcast player for Linux Desktop, MacOS, Windows and Android made with Flutter.
 
-Install for Linux Desktop:
+Install for Linux Desktop (snapd is preinstalled on Ubuntu):
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/musicpod)
+
+- How to install snapd on...
+  - [Fedora](https://snapcraft.io/docs/installing-snap-on-fedora)
+  - [Arch Linux](https://snapcraft.io/docs/installing-snap-on-arch-linux)
+  - [Debian](https://snapcraft.io/docs/installing-snap-on-debian)
+  - [Manjaro](https://snapcraft.io/docs/installing-snap-on-manjaro-linux)
 
 <a href='https://flathub.org/apps/org.feichtmeier.Musicpod'>
   <img width='180' alt='Download on Flathub' src='https://flathub.org/api/badge?locale=en'/>
 </a>
+
+> [!CAUTION]
+>  Flatpak support is ***EXPERIMENTAL***, there are currently heavy graphic issues with Fedora.
+> See [#747](https://github.com/ubuntu-flutter-community/musicpod/issues/747). If you are using Fedora, currently use the snap.
 
 <br/>
 Install For MacOS & Windows:
