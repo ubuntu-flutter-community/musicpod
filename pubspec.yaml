@@ -29,7 +29,7 @@ dependencies:
   flutter_html: ^3.0.0-beta.2
   flutter_localizations:
     sdk: flutter
-  flutter_markdown: ^0.6.23
+  flutter_markdown: ^0.7.1
   flutter_tabler_icons: ^1.27.0
   github: ^9.24.0
   gtk: ^2.1.0
@@ -37,7 +37,7 @@ dependencies:
   http: ^1.2.1
   intl: ^0.18.0
   m3u_parser_nullsafe: ^1.0.3
-  media_kit: ^1.1.10
+  media_kit: ^1.1.10+1
   media_kit_libs_video: ^1.0.4
   media_kit_video: ^1.2.4
   mime: ^1.0.5
@@ -47,7 +47,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/mpris_service
       ref: 3a4a721
-  package_info_plus: ^6.0.0
+  package_info_plus: ^8.0.0
   palette_generator: ^0.3.3+3
   path: ^1.9.0
   path_provider: ^2.1.2
@@ -79,7 +79,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
   build_runner: ^2.4.8
 
 flutter:
