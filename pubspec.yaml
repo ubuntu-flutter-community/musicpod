@@ -29,7 +29,7 @@ dependencies:
   flutter_html: ^3.0.0-beta.2
   flutter_localizations:
     sdk: flutter
-  flutter_markdown: ^0.6.23
+  flutter_markdown: ^0.7.0
   flutter_tabler_icons: ^1.27.0
   github: ^9.24.0
   gtk: ^2.1.0
