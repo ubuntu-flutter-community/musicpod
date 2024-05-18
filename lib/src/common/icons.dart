@@ -170,6 +170,12 @@ class Iconz {
             : Icons.computer;
   }
 
+  IconData get settings => yaruStyled
+      ? YaruIcons.settings
+      : appleStyled
+          ? CupertinoIcons.settings
+          : Icons.settings;
+
   IconData get addToLibrary => yaruStyled
       ? YaruIcons.bell
       : appleStyled
