@@ -862,12 +862,13 @@ packages:
     source: hosted
     version: "1.0.9"
   media_kit_native_event_loop:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: media_kit_native_event_loop
-      sha256: a605cf185499d14d58935b8784955a92a4bf0ff4e19a23de3d17a9106303930e
-      url: "https://pub.dev"
-    source: hosted
+      path: media_kit_native_event_loop
+      ref: "13f6b3f0ef9ccf8a711e396bc49cb05af9b3e497"
+      resolved-ref: "13f6b3f0ef9ccf8a711e396bc49cb05af9b3e497"
+      url: "https://github.com/media-kit/media-kit"
+    source: git
     version: "1.0.8"
   media_kit_video:
     dependency: "direct main"

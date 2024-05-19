@@ -100,3 +100,8 @@ dependency_overrides:
       url: https://github.com/media-kit/media-kit
       path: media_kit_video/
       ref: 13f6b3f0ef9ccf8a711e396bc49cb05af9b3e497
+  media_kit_native_event_loop:
+    git:
+      url: https://github.com/media-kit/media-kit
+      path: media_kit_native_event_loop/
+      ref: 13f6b3f0ef9ccf8a711e396bc49cb05af9b3e497
