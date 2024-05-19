@@ -40,12 +40,6 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
             style: YaruTitleBarStyle.undecorated,
             adaptive: false,
             title: const Text('MusicPod'),
-            actions: const [
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: SettingsButton(),
-              ),
-            ],
           ),
           layoutDelegate: const YaruMasterFixedPaneDelegate(
             paneWidth: kMasterDetailSideBarWidth,
@@ -73,6 +67,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
           pageBuilder: (context, index) => YaruDetailPage(
             body: masterItems[index].pageBuilder(context),
           ),
+          bottomBar: const SettingsTile(),
         ),
       ),
     );
