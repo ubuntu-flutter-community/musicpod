@@ -7,7 +7,7 @@ on:
 
 
 env:
-  FLUTTER_VERSION: '3.19.x'
+  FLUTTER_VERSION: '3.19.5'
 
 jobs:
   build_and_publish:
