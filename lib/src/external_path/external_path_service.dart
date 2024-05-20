@@ -22,12 +22,12 @@ class ExternalPathService {
 
   void init() {
     if (_gtkNotifier != null) {
-      _gtkNotifier!.addCommandLineListener(
+      _gtkNotifier.addCommandLineListener(
         (args) => _playPath(
-          _gtkNotifier?.commandLine?.firstOrNull,
+          _gtkNotifier.commandLine?.firstOrNull,
         ),
       );
-      _playPath(_gtkNotifier?.commandLine?.firstOrNull);
+      _playPath(_gtkNotifier.commandLine?.firstOrNull);
     }
   }
 
