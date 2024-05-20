@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
@@ -25,35 +24,6 @@ import '../../player/player_model.dart';
 import '../../theme.dart';
 import 'playlst_add_audios_dialog.dart';
 
-// TODO: do this in an isolate, or import it first with local audio model
-Future<void> _import(
-  ({
-    PerformDropEvent event,
-    String id,
-    Set<Audio> audios,
-    Future<void> Function(String id, Set<Audio> audios) updatePlaylist
-  }) arg,
-) async {
-  Set<Audio> oldAudios = Set.from(arg.audios);
-
-  for (var item in arg.event.session.items.take(100)) {
-    item.dataReader?.getValue(
-      Formats.fileUri,
-      (value) async {
-        if (value == null) return;
-        final file = File.fromUri(value);
-        if (file.isValidMedia) {
-          final data = await readMetadata(file, getImage: true);
-          oldAudios.add(Audio.fromMetadata(path: file.path, data: data));
-        }
-      },
-      onError: (value) {},
-    );
-  }
-
-  await arg.updatePlaylist(arg.id, oldAudios);
-}
-
 class PlaylistPage extends StatelessWidget {
   const PlaylistPage({
     super.key,
@@ -66,33 +36,32 @@ class PlaylistPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = getIt<LocalAudioModel>();
     final libraryModel = getIt<LibraryModel>();
-    final failedImports = <String>[];
     return DropRegion(
       formats: Formats.standardFormats,
       hitTestBehavior: HitTestBehavior.opaque,
-      onDropEnded: (p0) {
-        if (failedImports.isEmpty) return;
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            duration: const Duration(seconds: 10),
-            content: FailedImportsContent(
-              onNeverShowFailedImports: () {},
-              failedImports: failedImports,
-            ),
-          ),
+      onDropEnded: (e) async {
+        Future.delayed(
+          const Duration(milliseconds: 300),
+        ).then(
+          (_) => libraryModel.updatePlaylist(playlist.key, playlist.value),
         );
       },
-      onPerformDrop: (event) async {
-        // await compute(_import, (event: event, id: playlist.key));
-        await _import(
-          (
-            event: event,
-            id: playlist.key,
-            audios: playlist.value,
-            updatePlaylist: libraryModel.updatePlaylist,
-          ),
-        );
+      onPerformDrop: (e) async {
+        for (var item in e.session.items.take(100)) {
+          item.dataReader?.getValue(
+            Formats.fileUri,
+            (value) async {
+              if (value == null) return;
+              final file = File.fromUri(value);
+              if (file.isValidMedia) {
+                final data = await readMetadata(file, getImage: true);
+                var audio = Audio.fromMetadata(path: file.path, data: data);
+                playlist.value.add(audio);
+              }
+            },
+            onError: (_) {},
+          );
+        }
       },
       onDropOver: (event) {
         if (event.session.allowedOperations.contains(DropOperation.copy)) {
