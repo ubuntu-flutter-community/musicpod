@@ -120,6 +120,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
         : bodyWithControls;
 
     final headerBar = HeaderBar(
+      includeBackButton: false,
       adaptive: false,
       title: const Text(
         '',
