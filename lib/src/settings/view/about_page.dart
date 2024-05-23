@@ -39,7 +39,7 @@ class _AboutPageState extends State<AboutPage> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).colorScheme.background,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(

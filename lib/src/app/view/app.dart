@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:phoenix_theme/phoenix_theme.dart' as p hide ColorX;
+import 'package:phoenix_theme/phoenix_theme.dart' hide ColorX;
 import 'package:system_theme/system_theme.dart';
 import 'package:yaru/yaru.dart';
 
@@ -155,7 +155,7 @@ class _MusicPodAppState extends State<_MusicPodApp>
   @override
   Widget build(BuildContext context) {
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
-    final phoenix = p.phoenixTheme(color: widget.accent ?? Colors.greenAccent);
+    final phoenix = phoenixTheme(color: widget.accent ?? Colors.greenAccent);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.values[themeIndex],
