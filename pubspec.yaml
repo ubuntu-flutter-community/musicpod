@@ -58,7 +58,7 @@ dependencies:
   phoenix_theme:
     git:
       url: https://github.com/Feichtmeier/phoenix_theme
-      ref: 28ea613c6d73b5a6fb751c39fa18cef4a1370e86
+      ref: 4486490240ba42cc668079064ad41f3ae8869d01
   pls: ^1.1.0
   podcast_search: ^0.6.9
   radio_browser_api: ^2.0.0+1
@@ -76,7 +76,7 @@ dependencies:
   yaru:
     git:
       url: https://github.com/ubuntu/yaru.dart
-      ref: cdaec73a472a3ed3de3697ff5022072af9b2c39e
+      ref: 7b485d56d17576ff07964683c91d48eef1dc1297
   yaru_window: ^0.2.1
   yaru_window_linux: ^0.2.0
 

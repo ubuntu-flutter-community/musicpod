@@ -9,7 +9,7 @@ on:
       - release
 
 env:
-  FLUTTER_VERSION: '3.22.0'
+  FLUTTER_VERSION: '3.19.x'
 
 jobs:
   build-appimage:

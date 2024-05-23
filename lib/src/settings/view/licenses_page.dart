@@ -8,7 +8,7 @@ class LicensesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).colorScheme.background,
         borderRadius: BorderRadius.circular(kYaruContainerRadius),
       ),
       child: ClipRRect(

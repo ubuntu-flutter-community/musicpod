@@ -90,7 +90,7 @@ class AudioAutoComplete extends StatelessWidget {
                     child: Material(
                       color: theme.isLight
                           ? theme.colorScheme.surface
-                          : theme.colorScheme.surfaceContainerHighest,
+                          : theme.colorScheme.surfaceVariant,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6),
                         side: BorderSide(
