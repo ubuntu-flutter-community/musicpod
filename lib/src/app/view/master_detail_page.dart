@@ -41,8 +41,8 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
             adaptive: false,
             title: const Text('MusicPod'),
           ),
-          layoutDelegate: const YaruMasterFixedPaneDelegate(
-            paneWidth: kMasterDetailSideBarWidth,
+          paneLayoutDelegate: const YaruFixedPaneDelegate(
+            paneSize: kMasterDetailSideBarWidth,
           ),
           breakpoint: kMasterDetailBreakPoint,
           controller: YaruPageController(
@@ -64,9 +64,8 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
               ),
             );
           },
-          pageBuilder: (context, index) => YaruDetailPage(
-            body: masterItems[index].pageBuilder(context),
-          ),
+          pageBuilder: (context, index) =>
+              masterItems[index].pageBuilder(context),
           bottomBar: const SettingsTile(),
         ),
       ),
