@@ -64,9 +64,8 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
               ),
             );
           },
-          pageBuilder: (context, index) => YaruDetailPage(
-            body: masterItems[index].pageBuilder(context),
-          ),
+          pageBuilder: (context, index) =>
+              masterItems[index].pageBuilder(context),
           bottomBar: const SettingsTile(),
         ),
       ),
