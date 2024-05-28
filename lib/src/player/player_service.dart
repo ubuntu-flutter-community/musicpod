@@ -7,7 +7,6 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:mpris_service/mpris_service.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:path/path.dart' as p;
 import 'package:smtc_windows/smtc_windows.dart';
@@ -29,7 +28,6 @@ class PlayerService {
   final VideoController controller;
   final LibraryService libraryService;
 
-  MPRIS? _mpris;
   SMTCWindows? _smtc;
   _AudioHandler? _audioService;
 
@@ -266,7 +264,9 @@ class PlayerService {
     });
 
     _durationSub = _player.stream.duration.listen((newDuration) {
-      setDuration(newDuration);
+      if (newDuration.inSeconds != 0) {
+        setDuration(newDuration);
+      }
     });
 
     _positionSub = _player.stream.position.listen((newPosition) {
@@ -532,11 +532,9 @@ class PlayerService {
   }
 
   Future<void> _initMediaControl() async {
-    if (Platform.isLinux) {
-      await _initMpris();
-    } else if (Platform.isWindows) {
+    if (Platform.isWindows) {
       _initSmtc();
-    } else if (Platform.isAndroid || Platform.isMacOS) {
+    } else if (Platform.isLinux || Platform.isAndroid || Platform.isMacOS) {
       await _initAudioService();
     }
   }
@@ -583,40 +581,12 @@ class PlayerService {
     });
   }
 
-  Future<void> _initMpris() async {
-    _mpris = await MPRIS.create(
-      busName: kBusName,
-      identity: kAppName,
-      desktopEntry: kDesktopEntry,
-    );
-    _mpris?.setEventHandler(
-      MPRISEventHandler(
-        playPause: () async {
-          _mpris?.playbackStatus == MPRISPlaybackStatus.playing
-              ? pause()
-              : playOrPause();
-        },
-        play: () async {
-          _play();
-        },
-        pause: () async {
-          pause();
-        },
-        next: () async {
-          playNext();
-        },
-        previous: () async {
-          playPrevious();
-        },
-      ),
-    );
-  }
-
   Future<void> _initAudioService() async {
     _audioService = await AudioService.init(
       config: const AudioServiceConfig(
         androidNotificationChannelId: 'org.feichtmeier.musicpod.channel.audio',
         androidNotificationChannelName: 'MusicPod',
+        androidNotificationOngoing: true,
       ),
       builder: () {
         return _AudioHandler(
@@ -630,24 +600,6 @@ class PlayerService {
           },
         );
       },
-    );
-    if (_audioService == null) return;
-    _audioService!.playbackState.add(
-      PlaybackState(
-        playing: false,
-        systemActions: {
-          MediaAction.seek,
-          MediaAction.seekBackward,
-          MediaAction.seekForward,
-        },
-        controls: [
-          MediaControl.skipToPrevious,
-          MediaControl.rewind,
-          MediaControl.play,
-          MediaControl.fastForward,
-          MediaControl.skipToNext,
-        ],
-      ),
     );
   }
 
@@ -668,7 +620,6 @@ class PlayerService {
 
   Future<void> _setMediaControlsMetaData({required Audio audio}) async {
     final artUri = await _createMediaControlsArtUri(audio: audio);
-    _setMprisMetadata(audio: audio, artUri: artUri);
     _setSmtcMetaData(audio: audio, artUri: artUri);
     _setAudioServiceMetaData(audio: audio, artUri: artUri);
   }
@@ -700,8 +651,6 @@ class PlayerService {
   }
 
   Future<void> _setMediaControlsIsPlaying(bool playing) async {
-    _mpris?.playbackStatus =
-        playing ? MPRISPlaybackStatus.playing : MPRISPlaybackStatus.paused;
     _smtc?.setPlaybackStatus(
       playing ? PlaybackStatus.Playing : PlaybackStatus.Paused,
     );
@@ -738,22 +687,6 @@ class PlayerService {
     );
   }
 
-  void _setMprisMetadata({required Audio audio, required Uri? artUri}) {
-    if (_mpris == null || (audio.url == null && audio.path == null)) {
-      return;
-    }
-    _mpris!.metadata = MPRISMetadata(
-      audio.path != null ? Uri.file(audio.path!) : Uri.parse(audio.url!),
-      artUrl: artUri,
-      album: audio.album,
-      albumArtist: [audio.albumArtist ?? ''],
-      artist: [audio.artist ?? ''],
-      discNumber: audio.discNumber,
-      title: audio.title ?? '',
-      trackNumber: audio.trackNumber,
-    );
-  }
-
   void _setAudioServiceMetaData({required Audio audio, required Uri? artUri}) {
     if (_audioService == null) return;
     _audioService!.mediaItem.add(
@@ -787,7 +720,6 @@ class PlayerService {
   Future<void> dispose() async {
     await writePlayerState();
     await _smtcSub?.cancel();
-    await _mpris?.dispose();
     await _smtc?.disableSmtc();
     await _smtc?.dispose();
     await _queueController.close();
@@ -853,13 +785,32 @@ class _AudioHandler extends BaseAudioHandler with SeekHandler {
   final Future<void> Function() onPrevious;
   final Future<void> Function(Duration position) onSeek;
 
+  @override
   _AudioHandler({
     required this.onPlay,
     required this.onPause,
     required this.onNext,
     required this.onPrevious,
     required this.onSeek,
-  });
+  }) {
+    playbackState.add(
+      PlaybackState(
+        playing: false,
+        systemActions: {
+          MediaAction.seek,
+          MediaAction.seekBackward,
+          MediaAction.seekForward,
+        },
+        controls: [
+          MediaControl.skipToPrevious,
+          MediaControl.rewind,
+          MediaControl.play,
+          MediaControl.fastForward,
+          MediaControl.skipToNext,
+        ],
+      ),
+    );
+  }
 
   @override
   Future<void> play() async {
