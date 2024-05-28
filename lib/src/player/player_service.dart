@@ -604,12 +604,15 @@ class PlayerService {
   }
 
   void _setMediaControlPosition(Duration? position) {
-    if (_audioService == null) return;
-    _audioService!.playbackState.add(
-      _audioService!.playbackState.value.copyWith(
-        updatePosition: position ?? Duration.zero,
-      ),
-    );
+    if (_audioService != null) {
+      _audioService!.playbackState.add(
+        _audioService!.playbackState.value.copyWith(
+          updatePosition: position ?? Duration.zero,
+        ),
+      );
+    } else if (_smtc != null && position != null) {
+      _smtc?.setPosition(position);
+    }
   }
 
   void _setMediaControlDuration(Duration? duration) {
@@ -651,23 +654,50 @@ class PlayerService {
   }
 
   Future<void> _setMediaControlsIsPlaying(bool playing) async {
-    _smtc?.setPlaybackStatus(
-      playing ? PlaybackStatus.Playing : PlaybackStatus.Paused,
-    );
     if (_audioService != null) {
       _audioService!.playbackState.add(
         _audioService!.playbackState.value.copyWith(
           playing: playing,
-          controls: [
-            MediaControl.skipToPrevious,
-            MediaControl.rewind,
-            playing ? MediaControl.pause : MediaControl.play,
-            MediaControl.fastForward,
-            MediaControl.skipToNext,
-          ],
+          controls: _determineMediaControls(playing),
         ),
       );
+    } else if (_smtc != null) {
+      _smtc!.setPlaybackStatus(
+        playing ? PlaybackStatus.Playing : PlaybackStatus.Paused,
+      );
     }
+  }
+
+  List<MediaControl> _determineMediaControls(bool playing) {
+    final showSkipControls =
+        _queue.$2.isNotEmpty && _audio?.audioType != AudioType.radio;
+
+    final showSeekControls = _audio?.audioType == AudioType.podcast &&
+        (Platform.isMacOS || Platform.isAndroid);
+
+    return [
+      if (showSeekControls)
+        MediaControl.rewind
+      else if (showSkipControls)
+        MediaControl.skipToPrevious,
+      playing ? MediaControl.pause : MediaControl.play,
+      if (showSeekControls)
+        MediaControl.fastForward
+      else if (showSkipControls)
+        MediaControl.skipToNext,
+    ];
+  }
+
+  void _setAudioServiceMetaData({required Audio audio, required Uri? artUri}) {
+    if (_audioService == null) return;
+    _audioService!.mediaItem.add(
+      MediaItem(
+        id: audio.toString(),
+        title: audio.title ?? kAppTitle,
+        artist: audio.artist ?? '',
+        artUri: artUri,
+      ),
+    );
   }
 
   void _setSmtcMetaData({required Audio audio, required Uri? artUri}) {
@@ -683,21 +713,6 @@ class PlayerService {
             : artUri == null
                 ? null
                 : '$artUri',
-      ),
-    );
-  }
-
-  void _setAudioServiceMetaData({required Audio audio, required Uri? artUri}) {
-    if (_audioService == null) return;
-    _audioService!.mediaItem.add(
-      MediaItem(
-        id: audio.toString(),
-        duration: audio.durationMs == null
-            ? null
-            : Duration(milliseconds: audio.durationMs!.toInt()),
-        title: audio.title ?? kAppTitle,
-        artist: audio.artist ?? '',
-        artUri: artUri,
       ),
     );
   }
