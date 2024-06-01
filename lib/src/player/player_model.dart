@@ -38,9 +38,9 @@ class PlayerModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _lastPositionsSub;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
-  String? get queueName => _service.queue.$1;
+  String? get queueName => _service.queue.name;
 
-  List<Audio> get queue => _service.queue.$2;
+  List<Audio> get queue => _service.queue.audios;
   MpvMetaData? get mpvMetaData => _service.mpvMetaData;
 
   Audio? get audio => _service.audio;
@@ -194,12 +194,9 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  void safeLastPosition() => _service.safeLastPosition();
-
   Map<String, Duration>? get lastPositions => _service.lastPositions;
   Duration? getLastPosition(String? url) => _service.getLastPosition(url);
-  void addLastPosition(String url, Duration lastPosition) =>
-      _service.addLastPosition(url, lastPosition);
+  Future<void> safeLastPosition() => _service.safeLastPosition();
 
   Map<String, MpvMetaData> get radioHistory => _service.radioHistory;
 

@@ -19,6 +19,8 @@ import '../../string_x.dart';
 import '../../persistence_utils.dart';
 import '../../theme.dart';
 
+typedef Queue = ({String name, List<Audio> audios});
+
 class PlayerService {
   PlayerService({
     required this.controller,
@@ -45,10 +47,10 @@ class PlayerService {
 
   final _queueController = StreamController<bool>.broadcast();
   Stream<bool> get queueChanged => _queueController.stream;
-  (String, List<Audio>) _queue = ('', []);
-  (String, List<Audio>) get queue => _queue;
-  void setQueue((String, List<Audio>) value) {
-    if (value == _queue || value.$2.isEmpty) return;
+  Queue _queue = (name: '', audios: []);
+  Queue get queue => _queue;
+  void setQueue(Queue value) {
+    if (value == _queue || value.audios.isEmpty) return;
     _queue = value;
     _queueController.add(true);
   }
@@ -176,7 +178,7 @@ class PlayerService {
   void setShuffle(bool value) {
     if (value == _shuffle) return;
     _shuffle = value;
-    if (value && queue.$2.length > 1) {
+    if (value && queue.audios.length > 1) {
       _randomNext();
     }
     _shuffleController.add(true);
@@ -279,7 +281,11 @@ class PlayerService {
 
     _isCompletedSub = _player.stream.completed.listen((value) async {
       if (value) {
-        await playNext();
+        if (_queue.audios.length > 1) {
+          await playNext();
+        }
+      } else {
+        await safeLastPosition();
       }
     });
 
@@ -328,11 +334,11 @@ class PlayerService {
       }
     });
 
-    await _readPlayerState();
+    await _setPlayerState();
   }
 
   Future<void> playNext() async {
-    safeLastPosition();
+    await safeLastPosition();
     if (!repeatSingle && nextAudio != null) {
       _setAudio(nextAudio!);
       _estimateNext();
@@ -341,23 +347,23 @@ class PlayerService {
   }
 
   void insertIntoQueue(Audio newAudio) {
-    if (_queue.$2.isNotEmpty &&
-        !_queue.$2.contains(newAudio) &&
+    if (_queue.audios.isNotEmpty &&
+        !_queue.audios.contains(newAudio) &&
         _audio != null) {
-      final currentIndex = queue.$2.indexOf(_audio!);
-      _queue.$2.insert(currentIndex + 1, newAudio);
+      final currentIndex = queue.audios.indexOf(_audio!);
+      _queue.audios.insert(currentIndex + 1, newAudio);
       nextAudio = newAudio;
     }
   }
 
   void moveAudioInQueue(int oldIndex, int newIndex) {
-    if (_queue.$2.isNotEmpty && newIndex < _queue.$2.length) {
+    if (_queue.audios.isNotEmpty && newIndex < _queue.audios.length) {
       if (oldIndex < newIndex) {
         newIndex -= 1;
       }
 
-      final audio = _queue.$2.removeAt(oldIndex);
-      _queue.$2.insert(newIndex, audio);
+      final audio = _queue.audios.removeAt(oldIndex);
+      _queue.audios.insert(newIndex, audio);
 
       _estimateNext();
 
@@ -366,7 +372,7 @@ class PlayerService {
   }
 
   void remove(Audio deleteMe) {
-    _queue.$2.remove(deleteMe);
+    _queue.audios.remove(deleteMe);
     _estimateNext();
     _queueController.add(true);
   }
@@ -374,16 +380,16 @@ class PlayerService {
   void _estimateNext() {
     if (audio == null) return;
 
-    if (queue.$2.isNotEmpty == true && queue.$2.contains(audio)) {
-      final currentIndex = queue.$2.indexOf(audio!);
+    if (queue.audios.isNotEmpty && queue.audios.contains(audio)) {
+      final currentIndex = queue.audios.indexOf(audio!);
 
-      if (shuffle && queue.$2.length > 1) {
+      if (shuffle && queue.audios.length > 1) {
         _randomNext();
       } else {
-        if (currentIndex == queue.$2.length - 1) {
-          nextAudio = queue.$2.elementAt(0);
+        if (currentIndex == queue.audios.length - 1) {
+          nextAudio = queue.audios.elementAt(0);
         } else {
-          nextAudio = queue.$2.elementAt(queue.$2.indexOf(audio!) + 1);
+          nextAudio = queue.audios.elementAt(queue.audios.indexOf(audio!) + 1);
         }
       }
     }
@@ -391,29 +397,29 @@ class PlayerService {
 
   void _randomNext() {
     if (audio == null) return;
-    final currentIndex = queue.$2.indexOf(audio!);
-    final max = queue.$2.length;
+    final currentIndex = queue.audios.indexOf(audio!);
+    final max = queue.audios.length;
     final random = Random();
     var randomIndex = random.nextInt(max);
     while (randomIndex == currentIndex) {
       randomIndex = random.nextInt(max);
     }
-    nextAudio = queue.$2.elementAt(randomIndex);
+    nextAudio = queue.audios.elementAt(randomIndex);
   }
 
   Future<void> playPrevious() async {
-    if (queue.$2.isNotEmpty == true &&
+    if (queue.audios.isNotEmpty == true &&
         audio != null &&
-        queue.$2.contains(audio)) {
+        queue.audios.contains(audio)) {
       if (position != null && position!.inSeconds > 10) {
         setPosition(Duration.zero);
         await seek();
       } else {
-        final currentIndex = queue.$2.indexOf(audio!);
+        final currentIndex = queue.audios.indexOf(audio!);
         if (currentIndex == 0) {
           return;
         }
-        final mightBePrevious = queue.$2.elementAtOrNull(currentIndex - 1);
+        final mightBePrevious = queue.audios.elementAtOrNull(currentIndex - 1);
         if (mightBePrevious == null) return;
         _setAudio(mightBePrevious);
         _estimateNext();
@@ -427,12 +433,12 @@ class PlayerService {
     required String listName,
     int? index,
   }) async {
-    if (listName == _queue.$1 &&
+    if (listName == _queue.name &&
         index != null &&
         audios.elementAtOrNull(index) != null) {
       _setAudio(audios.elementAtOrNull(index)!);
     } else {
-      setQueue((listName, audios.toList()));
+      setQueue((name: listName, audios: audios.toList()));
       _setAudio(
         (index != null && audios.elementAtOrNull(index) != null)
             ? audios.elementAtOrNull(index)!
@@ -471,8 +477,8 @@ class PlayerService {
     _color = generator.dominantColor?.color;
   }
 
-  Future<void> _readPlayerState() async {
-    final playerState = await readPlayerState();
+  Future<void> _setPlayerState() async {
+    final playerState = await _readPlayerState();
 
     _lastPositions = (await getSettings(kLastPositionsFileName)).map(
       (key, value) => MapEntry(key, value.parsedDuration ?? Duration.zero),
@@ -490,7 +496,7 @@ class PlayerService {
 
       if (playerState.queue?.isNotEmpty == true &&
           playerState.queueName?.isNotEmpty == true) {
-        setQueue((playerState.queueName!, playerState.queue!));
+        setQueue((name: playerState.queueName!, audios: playerState.queue!));
       }
 
       if (playerState.volume != null) {
@@ -510,25 +516,23 @@ class PlayerService {
   Map<String, Duration> get lastPositions => _lastPositions;
   final _lastPositionsController = StreamController<bool>.broadcast();
   Stream<bool> get lastPositionsChanged => _lastPositionsController.stream;
-  void addLastPosition(String url, Duration lastPosition) {
-    writeSetting(url, lastPosition.toString(), kLastPositionsFileName)
-        .then((_) {
-      if (_lastPositions.containsKey(url) == true) {
-        _lastPositions.update(url, (value) => lastPosition);
-      } else {
-        _lastPositions.putIfAbsent(url, () => lastPosition);
-      }
-      _lastPositionsController.add(true);
-    });
+  Future<void> addLastPosition(String url, Duration lastPosition) async {
+    await writeSetting(url, lastPosition.toString(), kLastPositionsFileName);
+    if (_lastPositions.containsKey(url) == true) {
+      _lastPositions.update(url, (value) => lastPosition);
+    } else {
+      _lastPositions.putIfAbsent(url, () => lastPosition);
+    }
+    _lastPositionsController.add(true);
   }
 
   Duration? getLastPosition(String? url) => _lastPositions[url];
 
-  void safeLastPosition() {
+  Future<void> safeLastPosition() async {
     if (_audio?.audioType == AudioType.radio ||
         _audio?.url == null ||
         _position == null) return;
-    addLastPosition(_audio!.url!, _position!);
+    await addLastPosition(_audio!.url!, _position!);
   }
 
   Future<void> _initMediaControl() async {
@@ -670,7 +674,7 @@ class PlayerService {
 
   List<MediaControl> _determineMediaControls(bool playing) {
     final showSkipControls =
-        _queue.$2.isNotEmpty && _audio?.audioType != AudioType.radio;
+        _queue.audios.isNotEmpty && _audio?.audioType != AudioType.radio;
 
     final showSeekControls = _audio?.audioType == AudioType.podcast &&
         (Platform.isMacOS || Platform.isAndroid);
@@ -696,6 +700,9 @@ class PlayerService {
         title: audio.title ?? kAppTitle,
         artist: audio.artist ?? '',
         artUri: artUri,
+        duration: audio.durationMs == null
+            ? null
+            : Duration(milliseconds: audio.durationMs!.toInt()),
       ),
     );
   }
@@ -733,7 +740,7 @@ class PlayerService {
   }
 
   Future<void> dispose() async {
-    await writePlayerState();
+    await _writePlayerState();
     await _smtcSub?.cancel();
     await _smtc?.disableSmtc();
     await _smtc?.dispose();
@@ -762,20 +769,21 @@ class PlayerService {
     await _player.dispose();
   }
 
-  Future<void> writePlayerState() async {
+  Future<void> _writePlayerState() async {
     final playerState = PlayerState(
       audio: _audio,
       duration: _duration?.toString(),
       position: _position?.toString(),
-      queue: _queue.$2.take(100).toList(),
-      queueName: _queue.$1,
+      queue:
+          _queue.audios.length <= 100 ? _queue.audios.take(100).toList() : null,
+      queueName: _queue.audios.length <= 100 ? _queue.name : null,
       volume: _volume.toString(),
     );
 
     await writeJsonToFile(playerState.toMap(), kPlayerStateFileName);
   }
 
-  Future<PlayerState?> readPlayerState() async {
+  Future<PlayerState?> _readPlayerState() async {
     try {
       final workingDir = await getWorkingDir();
       final file = File(p.join(workingDir, kPlayerStateFileName));

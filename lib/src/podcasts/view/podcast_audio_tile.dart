@@ -40,13 +40,9 @@ class PodcastAudioTile extends StatelessWidget {
   final bool selected;
   final void Function() pause;
   final Future<void> Function() resume;
-  final Future<void> Function({
-    required Set<Audio> audios,
-    required String listName,
-    int? index,
-  }) startPlaylist;
+  final void Function()? startPlaylist;
   final void Function()? removeUpdate;
-  final void Function() safeLastPosition;
+  final Future<void> Function() safeLastPosition;
   final void Function()? addPodcast;
   final void Function()? insertIntoQueue;
 
