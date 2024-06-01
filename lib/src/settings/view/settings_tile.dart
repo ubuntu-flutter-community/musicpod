@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../constants.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../player/player_model.dart';
 import '../../theme.dart';
@@ -20,8 +20,7 @@ class SettingsTile extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget? trailing;
     // To not show any progress for Snap/Flatpak
-    if (getIt<PlayerModel>().isOnline &&
-        getIt<SettingsModel>().allowManualUpdate) {
+    if (di<PlayerModel>().isOnline && di<SettingsModel>().allowManualUpdate) {
       trailing = const _UpdateButton();
     }
 
@@ -67,7 +66,7 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
                 kRepoUrl,
                 'releases',
                 'tag',
-                getIt<SettingsModel>().onlineVersion,
+                di<SettingsModel>().onlineVersion,
               ),
             ),
           ),

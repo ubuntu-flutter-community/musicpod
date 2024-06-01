@@ -1,11 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
+
 import '../../../common.dart';
 import '../../../data.dart';
-import '../../../get.dart';
-import 'package:flutter/material.dart';
-
 import '../../data/audio.dart';
-import '../player_model.dart';
 import '../player_mixin.dart';
+import '../player_model.dart';
 
 class BottomPlayerTitleArtist extends StatelessWidget
     with WatchItMixin, PlayerMixin {

@@ -1,8 +1,8 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../common.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../../player.dart';
 import 'radio_history_tile.dart';

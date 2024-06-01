@@ -1,5 +1,6 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
@@ -7,7 +8,6 @@ import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../local_audio.dart';
 import '../../../player.dart';
@@ -29,7 +29,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   @override
   void initState() {
     super.initState();
-    final failedImports = getIt<LocalAudioModel>().failedImports;
+    final failedImports = di<LocalAudioModel>().failedImports;
     if (mounted && failedImports?.isNotEmpty == true) {
       showFailedImportsSnackBar(
         failedImports: failedImports!,
@@ -40,8 +40,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final appModel = getIt<AppModel>();
-    final model = getIt<LocalAudioModel>();
+    final appModel = di<AppModel>();
+    final model = di<LocalAudioModel>();
     final audios = watchPropertyValue((LocalAudioModel m) => m.audios);
     final index =
         watchPropertyValue((LibraryModel m) => m.localAudioindex ?? 0);

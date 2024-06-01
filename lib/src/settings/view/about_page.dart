@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-
 import 'package:github/github.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../constants.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../settings_model.dart';
 
@@ -26,7 +25,7 @@ class _AboutPageState extends State<AboutPage> {
   @override
   void initState() {
     super.initState();
-    _contributors = getIt<SettingsModel>().getContributors();
+    _contributors = di<SettingsModel>().getContributors();
   }
 
   @override

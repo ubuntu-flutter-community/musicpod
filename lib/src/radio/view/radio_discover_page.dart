@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../common.dart';
 import '../../../constants.dart';
-import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../l10n.dart';
 import '../../../radio.dart';
@@ -26,8 +26,8 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
       return const OfflinePage();
     }
 
-    final model = getIt<RadioModel>();
-    final libraryModel = getIt<LibraryModel>();
+    final model = di<RadioModel>();
+    final libraryModel = di<LibraryModel>();
     final searchQuery = watchPropertyValue((RadioModel m) => m.searchQuery);
 
     watchPropertyValue((LibraryModel m) => m.favRadioTagsLength);
@@ -135,7 +135,7 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
             child: SearchButton(
               active: true,
               onPressed: () {
-                getIt<AppModel>().setLockSpace(false);
+                di<AppModel>().setLockSpace(false);
                 navigatorKey.currentState?.maybePop();
               },
             ),

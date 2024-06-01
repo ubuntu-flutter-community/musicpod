@@ -1,11 +1,10 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
-import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../l10n.dart';
 import '../../../library.dart';
@@ -24,7 +23,7 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
     final theme = context.t;
     final radioCollectionView =
         watchPropertyValue((RadioModel m) => m.radioCollectionView);
-    final radioModel = getIt<RadioModel>();
+    final radioModel = di<RadioModel>();
 
     return Column(
       children: [
@@ -78,8 +77,8 @@ class StationGrid extends StatelessWidget with WatchItMixin {
     final stations = watchPropertyValue((LibraryModel m) => m.starredStations);
     final length =
         watchPropertyValue((LibraryModel m) => m.starredStationsLength);
-    final libraryModel = getIt<LibraryModel>();
-    final playerModel = getIt<PlayerModel>();
+    final libraryModel = di<LibraryModel>();
+    final playerModel = di<PlayerModel>();
 
     if (length == 0) {
       return NoSearchResultPage(

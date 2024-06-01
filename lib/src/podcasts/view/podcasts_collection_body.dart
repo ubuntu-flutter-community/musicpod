@@ -1,12 +1,12 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../../player.dart';
 import '../../../podcasts.dart';
@@ -29,13 +29,13 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     final theme = context.t;
     final subs = watchPropertyValue((LibraryModel m) => m.podcasts);
     watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
-    final playerModel = getIt<PlayerModel>();
-    final libraryModel = getIt<LibraryModel>();
+    final playerModel = di<PlayerModel>();
+    final libraryModel = di<LibraryModel>();
     final podcastUpdateAvailable = libraryModel.podcastUpdateAvailable;
     final feedHasDownload = libraryModel.feedHasDownload;
     final updatesLength =
         watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
-    final model = getIt<PodcastModel>();
+    final model = di<PodcastModel>();
     final updatesOnly = watchPropertyValue((PodcastModel m) => m.updatesOnly);
     final downloadsOnly =
         watchPropertyValue((PodcastModel m) => m.downloadsOnly);

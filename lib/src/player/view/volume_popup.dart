@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:phoenix_theme/phoenix_theme.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
-import '../../../get.dart';
 import '../../common/custom_track_shape.dart';
 import '../../l10n/l10n.dart';
 import '../player_model.dart';
@@ -19,7 +19,7 @@ class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final playerModel = getIt<PlayerModel>();
+    final playerModel = di<PlayerModel>();
     final volume = watchPropertyValue((PlayerModel m) => m.volume);
     final setVolume = playerModel.setVolume;
     IconData iconData;

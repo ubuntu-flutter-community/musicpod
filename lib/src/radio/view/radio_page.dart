@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
 import '../../../common.dart';
-import '../../../get.dart';
 import '../../../globals.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -25,10 +25,10 @@ class _RadioPageState extends State<RadioPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      final model = getIt<RadioModel>();
-      final appModel = getIt<AppModel>();
-      final playerModel = getIt<PlayerModel>();
-      final libraryModel = getIt<LibraryModel>();
+      final model = di<RadioModel>();
+      final appModel = di<AppModel>();
+      final playerModel = di<PlayerModel>();
+      final libraryModel = di<LibraryModel>();
       final index = libraryModel.radioindex;
       model
           .init(
@@ -72,7 +72,7 @@ class _RadioPageState extends State<RadioPage> {
                   : SearchButton(
                       active: false,
                       onPressed: () {
-                        getIt<AppModel>().setLockSpace(true);
+                        di<AppModel>().setLockSpace(true);
                         navigatorKey.currentState?.push(
                           MaterialPageRoute(
                             builder: (context) => const RadioDiscoverPage(),
@@ -95,9 +95,9 @@ class _RadioReconnectButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = getIt<RadioModel>();
-    final libraryModel = getIt<LibraryModel>();
-    final appModel = getIt<AppModel>();
+    final model = di<RadioModel>();
+    final libraryModel = di<LibraryModel>();
+    final appModel = di<AppModel>();
 
     return IconButton(
       tooltip:
@@ -127,9 +127,9 @@ SnackBar _buildConnectSnackBar({
   required String? connectedHost,
   required BuildContext context,
 }) {
-  final appModel = getIt<AppModel>();
-  final model = getIt<RadioModel>();
-  final libraryModel = getIt<LibraryModel>();
+  final appModel = di<AppModel>();
+  final model = di<RadioModel>();
+  final libraryModel = di<LibraryModel>();
   final index = libraryModel.radioindex;
 
   return SnackBar(

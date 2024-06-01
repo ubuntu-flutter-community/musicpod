@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
-import '../../../get.dart';
 import '../../app/app_model.dart';
 import '../../common/tapable_text.dart';
 import '../../data/audio.dart';
@@ -25,9 +25,9 @@ class RadioPageTagBar extends StatelessWidget {
           ];
     if (tags == null || tags.isEmpty) return const SizedBox.shrink();
 
-    final radioModel = getIt<RadioModel>();
-    final libraryModel = getIt<LibraryModel>();
-    final appModel = getIt<AppModel>();
+    final radioModel = di<RadioModel>();
+    final libraryModel = di<LibraryModel>();
+    final appModel = di<AppModel>();
 
     return SingleChildScrollView(
       padding: const EdgeInsets.only(top: 5, left: 2),

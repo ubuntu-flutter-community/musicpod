@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../common/sliver_audio_tile_list.dart';
 import '../local_audio_model.dart';
 import 'artist_page.dart';
@@ -23,7 +23,7 @@ class TitlesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = getIt<LocalAudioModel>();
+    final model = di<LocalAudioModel>();
 
     if (audios == null) {
       return const Center(

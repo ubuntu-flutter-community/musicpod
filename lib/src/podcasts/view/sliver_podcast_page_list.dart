@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
-import '../../../get.dart';
 import '../../../library.dart';
 import '../../../podcasts.dart';
 import '../../data/audio.dart';
@@ -18,8 +18,8 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final playerModel = getIt<PlayerModel>();
-    final libraryModel = getIt<LibraryModel>();
+    final playerModel = di<PlayerModel>();
+    final libraryModel = di<LibraryModel>();
     final isPlayerPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final selectedAudio = watchPropertyValue((PlayerModel m) => m.audio);
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);

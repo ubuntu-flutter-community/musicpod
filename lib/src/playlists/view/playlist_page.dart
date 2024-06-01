@@ -4,13 +4,13 @@ import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../library.dart';
 import '../../../local_audio.dart';
 import '../../../media_file_x.dart';
@@ -34,8 +34,8 @@ class PlaylistPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = getIt<LocalAudioModel>();
-    final libraryModel = getIt<LibraryModel>();
+    final model = di<LocalAudioModel>();
+    final libraryModel = di<LibraryModel>();
     return DropRegion(
       formats: Formats.standardFormats,
       hitTestBehavior: HitTestBehavior.opaque,
@@ -127,7 +127,7 @@ class PlaylistHeaderImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = getIt<LocalAudioModel>();
+    final model = di<LocalAudioModel>();
     final playlistImages = model.findImages(playlist.value);
     final length = playlistImages == null ? 0 : playlistImages.take(16).length;
 
@@ -201,12 +201,12 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final localAudioModel = getIt<LocalAudioModel>();
+    final localAudioModel = di<LocalAudioModel>();
     final allowReorder =
         watchPropertyValue((LocalAudioModel m) => m.allowReorder);
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
-    final libraryModel = getIt<LibraryModel>();
-    final playerModel = getIt<PlayerModel>();
+    final libraryModel = di<LibraryModel>();
+    final playerModel = di<PlayerModel>();
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
 
     watchPropertyValue((LibraryModel m) => m.likedAudios.length);

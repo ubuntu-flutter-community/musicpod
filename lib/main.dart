@@ -8,12 +8,12 @@ import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:system_theme/system_theme.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:yaru/yaru.dart';
 
 import 'app.dart';
 import 'external_path.dart';
-import 'get.dart';
 import 'library.dart';
 import 'local_audio.dart';
 import 'notifications.dart';
@@ -46,7 +46,7 @@ Future<void> main(List<String> args) async {
   final settingsService =
       SettingsService(allowManualUpdates: Platform.isLinux ? false : true);
   await settingsService.init();
-  getIt.registerSingleton<SettingsService>(
+  di.registerSingleton<SettingsService>(
     settingsService,
     dispose: (s) async => await s.dispose(),
   );
@@ -63,29 +63,29 @@ Future<void> main(List<String> args) async {
   );
   await playerService.init();
 
-  getIt.registerSingleton<PlayerService>(
+  di.registerSingleton<PlayerService>(
     playerService,
     dispose: (s) async => await s.dispose(),
   );
 
-  getIt.registerSingleton<LibraryService>(
+  di.registerSingleton<LibraryService>(
     libraryService,
     dispose: (s) async => await s.dispose(),
   );
   final localAudioService = LocalAudioService(settingsService: settingsService);
-  getIt.registerSingleton<LocalAudioService>(
+  di.registerSingleton<LocalAudioService>(
     localAudioService,
     dispose: (s) async => await s.dispose(),
   );
 
   final notificationsService =
       NotificationsService(Platform.isLinux ? NotificationsClient() : null);
-  getIt.registerSingleton<NotificationsService>(
+  di.registerSingleton<NotificationsService>(
     notificationsService,
     dispose: (s) async => await s.dispose(),
   );
 
-  getIt.registerSingleton<PodcastService>(
+  di.registerSingleton<PodcastService>(
     PodcastService(
       notificationsService: notificationsService,
       settingsService: settingsService,
@@ -94,13 +94,13 @@ Future<void> main(List<String> args) async {
   );
 
   final connectivity = Connectivity();
-  getIt.registerSingleton<Connectivity>(
+  di.registerSingleton<Connectivity>(
     connectivity,
   );
 
   // For some reason GtkApplication needs to be instantiated
   // when the service is registered and not before
-  getIt.registerLazySingleton<ExternalPathService>(
+  di.registerLazySingleton<ExternalPathService>(
     () => ExternalPathService(
       gtkNotifier: Platform.isLinux ? GtkApplicationNotifier(args) : null,
       playerService: playerService,
@@ -109,16 +109,16 @@ Future<void> main(List<String> args) async {
   );
 
   final radioService = RadioService();
-  getIt.registerSingleton<RadioService>(radioService);
+  di.registerSingleton<RadioService>(radioService);
 
   final gitHub = GitHub();
-  getIt.registerSingleton<GitHub>(gitHub);
+  di.registerSingleton<GitHub>(gitHub);
 
   // Register ViewModels
-  getIt.registerLazySingleton<SettingsModel>(
+  di.registerLazySingleton<SettingsModel>(
     () => SettingsModel(
       service: settingsService,
-      externalPathService: getIt<ExternalPathService>(),
+      externalPathService: di<ExternalPathService>(),
       gitHub: gitHub,
     )..init(),
     dispose: (s) => s.dispose(),
@@ -128,34 +128,34 @@ Future<void> main(List<String> args) async {
     connectivity: connectivity,
   );
   await playerModel.init();
-  getIt.registerSingleton<PlayerModel>(
+  di.registerSingleton<PlayerModel>(
     playerModel,
     dispose: (s) => s.dispose(),
   );
-  getIt.registerSingleton<AppModel>(
+  di.registerSingleton<AppModel>(
     AppModel(connectivity: connectivity),
     dispose: (s) => s.dispose(),
   );
-  getIt.registerSingleton<LibraryModel>(
+  di.registerSingleton<LibraryModel>(
     LibraryModel(libraryService),
     dispose: (s) => s.dispose(),
   );
-  getIt.registerSingleton<LocalAudioModel>(
+  di.registerSingleton<LocalAudioModel>(
     LocalAudioModel(localAudioService: localAudioService),
     dispose: (s) => s.dispose(),
   );
-  getIt.registerSingleton<PodcastModel>(
+  di.registerSingleton<PodcastModel>(
     PodcastModel(
       libraryService: libraryService,
-      podcastService: getIt.get<PodcastService>(),
+      podcastService: di.get<PodcastService>(),
     ),
     dispose: (s) => s.dispose(),
   );
-  getIt.registerSingleton<RadioModel>(
+  di.registerSingleton<RadioModel>(
     RadioModel(radioService: radioService, libraryService: libraryService),
     dispose: (s) => s.dispose(),
   );
-  getIt.registerSingleton<DownloadModel>(
+  di.registerSingleton<DownloadModel>(
     DownloadModel(libraryService),
     dispose: (s) => s.dispose(),
   );

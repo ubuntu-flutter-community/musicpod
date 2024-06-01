@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../build_context_x.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../common/icons.dart';
 import '../player_model.dart';
@@ -18,7 +18,7 @@ class ShuffleButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.t;
     final shuffle = watchPropertyValue((PlayerModel m) => m.shuffle);
-    final setShuffle = getIt<PlayerModel>().setShuffle;
+    final setShuffle = di<PlayerModel>().setShuffle;
 
     return IconButton(
       tooltip: context.l10n.shuffle,

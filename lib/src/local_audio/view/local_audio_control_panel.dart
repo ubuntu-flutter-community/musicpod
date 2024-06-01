@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
-import '../../../get.dart';
 import '../../../library.dart';
 import '../../../local_audio.dart';
 import '../../../theme.dart';
@@ -23,8 +23,8 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final libraryModel = getIt<LibraryModel>();
-    final localAudioModel = getIt<LocalAudioModel>();
+    final libraryModel = di<LibraryModel>();
+    final localAudioModel = di<LocalAudioModel>();
 
     final index =
         watchPropertyValue((LibraryModel m) => m.localAudioindex ?? 0);

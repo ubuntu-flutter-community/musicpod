@@ -2,11 +2,11 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../library.dart';
 import '../../../local_audio.dart';
 import '../../../theme.dart';
@@ -26,7 +26,7 @@ class AlbumPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = getIt<LocalAudioModel>();
+    final model = di<LocalAudioModel>();
     final pictureData =
         album.firstWhereOrNull((e) => e.pictureData != null)?.pictureData;
 
@@ -142,7 +142,7 @@ class AlbumPageControlButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = getIt<LibraryModel>();
+    final libraryModel = di<LibraryModel>();
     final pinnedAlbum = libraryModel.isPinnedAlbum(id);
     return Row(
       mainAxisSize: MainAxisSize.min,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../library.dart';
 import '../../../theme.dart';
 import '../../common/language_autocomplete.dart';
@@ -21,9 +21,9 @@ class PodcastsControlPanel extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
 
-    final libraryModel = getIt<LibraryModel>();
+    final libraryModel = di<LibraryModel>();
     final theme = context.t;
-    final model = getIt<PodcastModel>();
+    final model = di<PodcastModel>();
     final searchQuery = watchPropertyValue((PodcastModel m) => m.searchQuery);
     final country = watchPropertyValue((PodcastModel m) => m.country);
 

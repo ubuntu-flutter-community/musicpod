@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
 import '../../../build_context_x.dart';
 import '../../../common.dart';
-import '../../../get.dart';
 import '../../../player.dart';
 import 'blurred_full_height_player_image.dart';
 import 'full_height_player_image.dart';
@@ -28,7 +28,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
     final theme = context.t;
     final size = context.m.size;
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
-    final appModel = getIt<AppModel>();
+    final appModel = di<AppModel>();
     final nextAudio = watchPropertyValue((PlayerModel m) => m.nextAudio);
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo == true);
@@ -37,7 +37,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
         nextAudio?.title != null &&
         nextAudio?.artist != null &&
         size.width > 600;
-    final model = getIt<PlayerModel>();
+    final model = di<PlayerModel>();
     final active = audio?.path != null || isOnline;
     final iconColor = isVideo ? Colors.white : theme.colorScheme.onSurface;
 

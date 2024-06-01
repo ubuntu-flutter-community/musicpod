@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../player.dart';
 import '../../l10n/l10n.dart';
 
@@ -28,7 +27,7 @@ class UpNextBubble extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final setUpNextExpanded = getIt<PlayerModel>().setUpNextExpanded;
+    final setUpNextExpanded = di<PlayerModel>().setUpNextExpanded;
     final isUpNextExpanded =
         watchPropertyValue((PlayerModel m) => m.isUpNextExpanded);
     final queue = watchPropertyValue((PlayerModel m) => m.queue);

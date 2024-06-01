@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
-import '../../../get.dart';
 import '../../player/player_model.dart';
 
 class AudioProgress extends StatelessWidget with WatchItMixin {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../common.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../l10n.dart';
 import '../../../library.dart';
@@ -81,7 +81,7 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
             builder: (context) {
               return _PlaylistTile(
                 playlistId: playlistId,
-                libraryModel: getIt<LibraryModel>(),
+                libraryModel: di<LibraryModel>(),
                 audio: audio,
               );
             },

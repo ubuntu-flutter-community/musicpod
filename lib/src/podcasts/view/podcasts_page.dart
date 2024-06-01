@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
@@ -6,7 +7,6 @@ import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../podcasts.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
@@ -27,9 +27,9 @@ class _PodcastsPageState extends State<PodcastsPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final appModel = getIt<AppModel>();
+      final appModel = di<AppModel>();
 
-      getIt<PodcastModel>().init(
+      di<PodcastModel>().init(
         countryCode: appModel.countryCode,
         updateMessage: context.l10n.newEpisodeAvailable,
       );
@@ -41,7 +41,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
 
-    final model = getIt<PodcastModel>();
+    final model = di<PodcastModel>();
 
     final searchActive =
         watchPropertyValue((PodcastModel m) => m.searchActive ?? false);
@@ -84,7 +84,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
                 active: searchActive,
                 onPressed: () {
                   setSearchActive(!(searchActive));
-                  getIt<AppModel>().setLockSpace(!searchActive);
+                  di<AppModel>().setLockSpace(!searchActive);
                 },
               ),
             ),

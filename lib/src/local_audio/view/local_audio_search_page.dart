@@ -1,12 +1,11 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
 import '../../../common.dart';
 import '../../../constants.dart';
-import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../library.dart';
 import '../../../local_audio.dart';
@@ -22,8 +21,8 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final model = getIt<LocalAudioModel>();
-    final appModel = getIt<AppModel>();
+    final model = di<LocalAudioModel>();
+    final appModel = di<AppModel>();
     final titlesResult =
         watchPropertyValue((LocalAudioModel m) => m.titlesSearchResult);
     final artistsResult =

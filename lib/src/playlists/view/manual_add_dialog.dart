@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../common.dart';
 import '../../../data.dart';
 import '../../../external_path.dart';
-import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../library.dart';
 import '../../../podcasts.dart';
@@ -35,7 +35,7 @@ class ManualAddDialog extends StatelessWidget {
             Widget page = switch (settings.name) {
               '/addPlaylist' => PlaylistContent(
                   playlistName: context.l10n.createNewPlaylist,
-                  libraryModel: getIt<LibraryModel>(),
+                  libraryModel: di<LibraryModel>(),
                   allowCreate: true,
                 ),
               '/addPodcast' => const AddPodcastContent(),
@@ -165,7 +165,7 @@ class _PlaylistContentState extends State<PlaylistContent> {
               suffixIcon: TextButton(
                 onPressed: () async {
                   final audios =
-                      await getIt<ExternalPathService>().loadPlaylistFromFile();
+                      await di<ExternalPathService>().loadPlaylistFromFile();
                   setState(() {
                     _audios = audios.$2;
                     _fileController.text = audios.$1 ?? '';
@@ -304,7 +304,7 @@ class _AddStationDialogState extends State<AddStationContent> {
                     _urlController.text.isEmpty || _nameController.text.isEmpty
                         ? null
                         : () {
-                            getIt<LibraryModel>()
+                            di<LibraryModel>()
                                 .addStarredStation(_urlController.text, {
                               Audio(
                                 url: _urlController.text,

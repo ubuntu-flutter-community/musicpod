@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../build_context_x.dart';
-import '../../../get.dart';
 import '../../../theme.dart';
 import '../../common/icons.dart';
 import '../player_model.dart';
@@ -20,7 +20,7 @@ class SeekButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final playerModel = getIt<PlayerModel>();
+    final playerModel = di<PlayerModel>();
 
     final icon = Icon(
       forward ? Iconz().forward30 : Iconz().backward10,

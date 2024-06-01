@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../common.dart';
 import '../../../constants.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../podcast_model.dart';
 import '../podcast_utils.dart';
@@ -39,7 +39,7 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
   Widget build(BuildContext context) {
     final searchResult = watchPropertyValue((PodcastModel m) => m.searchResult);
     final limit = watchPropertyValue((PodcastModel m) => m.limit);
-    final model = getIt<PodcastModel>();
+    final model = di<PodcastModel>();
     final setLimit = model.setLimit;
     Future<void> incrementLimit() async {
       setLimit(limit + 20);

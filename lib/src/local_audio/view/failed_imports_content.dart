@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../build_context_x.dart';
-import '../../../get.dart';
 import '../../common/snackbars.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
@@ -78,7 +78,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
   required List<String> failedImports,
   required BuildContext context,
 }) {
-  final settingsModel = getIt<SettingsModel>();
+  final settingsModel = di<SettingsModel>();
   if (settingsModel.neverShowFailedImports) return null;
   return showSnackBar(
     context: context,

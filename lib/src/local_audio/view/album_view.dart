@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../common.dart';
 import '../../../constants.dart';
-import '../../../get.dart';
 import '../../../player.dart';
 import '../../data/audio.dart';
 import '../local_audio_model.dart';
@@ -76,8 +76,8 @@ class AlbumsView extends StatelessWidget {
   }
 
   Widget itemBuilder(context, index) {
-    final playerModel = getIt<PlayerModel>();
-    final model = getIt<LocalAudioModel>();
+    final playerModel = di<PlayerModel>();
+    final model = di<LocalAudioModel>();
     final audio = albums!.elementAt(index);
     String? id = audio.albumId;
     final albumAudios = model.findAlbum(audio);
