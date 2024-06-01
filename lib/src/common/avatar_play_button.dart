@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
-import '../../get.dart';
 import '../../l10n.dart';
 import '../../player.dart';
 import '../data/audio.dart';
@@ -21,7 +21,7 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final playerModel = getIt<PlayerModel>();
+    final playerModel = di<PlayerModel>();
     final isPlayerPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final pageIsQueue = watchPropertyValue(
       (PlayerModel m) => m.queueName != null && m.queueName == pageId,

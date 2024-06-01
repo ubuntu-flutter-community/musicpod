@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../common.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../l10n.dart';
 import '../../../local_audio.dart';
@@ -16,8 +16,8 @@ class GenrePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = getIt<LocalAudioModel>();
-    final radioModel = getIt<RadioModel>();
+    final model = di<LocalAudioModel>();
+    final radioModel = di<RadioModel>();
 
     final artistAudiosWithGenre = model.findArtistsOfGenre(Audio(genre: genre));
 

@@ -1,10 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
+
 import '../../../app.dart';
 import '../../../constants.dart';
-import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../l10n.dart';
 import '../../../library.dart';
-import 'package:flutter/material.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
     showAddedToPlaylistSnackBar({
@@ -23,7 +24,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
       ),
       action: SnackBarAction(
         onPressed: () {
-          final appModel = getIt<AppModel>();
+          final appModel = di<AppModel>();
           if (appModel.fullWindowMode == true) {
             appModel.setFullWindowMode(false);
           }

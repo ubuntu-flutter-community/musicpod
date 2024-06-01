@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../build_context_x.dart';
 import '../../../constants.dart';
-import '../../../get.dart';
 import '../../../player.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../settings/settings_model.dart';
@@ -21,8 +21,8 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
   @override
   void initState() {
     super.initState();
-    final settingsModel = getIt<SettingsModel>();
-    settingsModel.checkForUpdate(getIt<PlayerModel>().isOnline).then((_) {
+    final settingsModel = di<SettingsModel>();
+    settingsModel.checkForUpdate(di<PlayerModel>().isOnline).then((_) {
       if (!mounted) return;
       if (settingsModel.recentPatchNotesDisposed == false) {
         showPatchNotes(context);
@@ -35,7 +35,7 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
     final playerToTheRight = context.m.size.width > kSideBarThreshHold;
     final lockSpace = watchPropertyValue((AppModel m) => m.lockSpace);
     final isFullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
-    final playerModel = getIt<PlayerModel>();
+    final playerModel = di<PlayerModel>();
 
     return KeyboardListener(
       focusNode: FocusNode(),

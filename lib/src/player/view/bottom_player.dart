@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../../player.dart';
 import 'bottom_player_image.dart';
@@ -32,8 +32,8 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo);
 
-    final model = getIt<PlayerModel>();
-    final appModel = getIt<AppModel>();
+    final model = di<PlayerModel>();
+    final appModel = di<AppModel>();
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
 
     final active = audio?.path != null || isOnline;

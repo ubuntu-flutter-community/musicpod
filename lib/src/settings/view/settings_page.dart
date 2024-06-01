@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../constants.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../../local_audio.dart';
 import '../../../podcasts.dart';
@@ -52,7 +52,7 @@ class _ThemeSection extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final model = getIt<SettingsModel>();
+    final model = di<SettingsModel>();
 
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
     return YaruSection(
@@ -109,7 +109,7 @@ class _PodcastSectionState extends State<_PodcastSection> {
   @override
   void initState() {
     super.initState();
-    final model = getIt<SettingsModel>();
+    final model = di<SettingsModel>();
     _initialKey = model.podcastIndexApiKey;
     _keyController = TextEditingController(text: _initialKey);
     _initialSecret = model.podcastIndexApiSecret;
@@ -126,7 +126,7 @@ class _PodcastSectionState extends State<_PodcastSection> {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final model = getIt<SettingsModel>();
+    final model = di<SettingsModel>();
     final usePodcastIndex =
         watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
     final podcastIndexApiKey =
@@ -144,9 +144,9 @@ class _PodcastSectionState extends State<_PodcastSection> {
             trailing: CommonSwitch(
               value: usePodcastIndex,
               onChanged: (v) => model.setUsePodcastIndex(v).then(
-                    (_) => getIt<PodcastModel>().init(
+                    (_) => di<PodcastModel>().init(
                       forceInit: true,
-                      countryCode: getIt<AppModel>().countryCode,
+                      countryCode: di<AppModel>().countryCode,
                       updateMessage: context.l10n.newEpisodeAvailable,
                     ),
                   ),
@@ -213,8 +213,8 @@ class _LocalAudioSection extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final settingsModel = getIt<SettingsModel>();
-    final localAudioModel = getIt<LocalAudioModel>();
+    final settingsModel = di<SettingsModel>();
+    final localAudioModel = di<LocalAudioModel>();
     final directory =
         watchPropertyValue((SettingsModel m) => m.directory ?? '');
 
@@ -279,14 +279,14 @@ class _AboutTileState extends State<_AboutTile> {
   @override
   void initState() {
     super.initState();
-    getIt<SettingsModel>().checkForUpdate(getIt<PlayerModel>().isOnline);
+    di<SettingsModel>().checkForUpdate(di<PlayerModel>().isOnline);
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final settingsModel = getIt<SettingsModel>();
-    final playerModel = getIt<PlayerModel>();
+    final settingsModel = di<SettingsModel>();
+    final playerModel = di<PlayerModel>();
     final updateAvailable =
         watchPropertyValue((SettingsModel m) => m.updateAvailable);
     final onlineVersion =

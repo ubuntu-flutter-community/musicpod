@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../radio.dart';
 import '../../../theme_data_x.dart';
@@ -35,7 +35,7 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
-            onTap: () => getIt<AppModel>().setFullWindowMode(true),
+            onTap: () => di<AppModel>().setFullWindowMode(true),
             child: Video(
               height: size,
               width: size,
@@ -119,7 +119,7 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
         fit: BoxFit.cover,
         fallBackIcon: fallBackImage,
         errorIcon: fallBackImage,
-        onGenreTap: (genre) => getIt<RadioModel>().init().then(
+        onGenreTap: (genre) => di<RadioModel>().init().then(
               (_) => navigatorKey.currentState?.push(
                 MaterialPageRoute(
                   builder: (context) {

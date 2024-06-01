@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../library.dart';
 import '../../l10n/l10n.dart';
 import '../player_model.dart';
@@ -19,7 +18,7 @@ class QueueButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final libraryModel = getIt<LibraryModel>();
+    final libraryModel = di<LibraryModel>();
 
     return IconButton(
       color: color ?? theme.colorScheme.onSurface,
@@ -66,7 +65,7 @@ class _QueueDialogState extends State<QueueDialog> {
   }
 
   void _jump() {
-    final model = getIt<PlayerModel>();
+    final model = di<PlayerModel>();
     final currentAudio = model.audio;
     if (currentAudio != null && model.queue.isNotEmpty == true) {
       _controller.scrollToIndex(
@@ -88,7 +87,7 @@ class _QueueDialogState extends State<QueueDialog> {
     final queue = watchPropertyValue((PlayerModel m) => m.queue);
     final queueLength = watchPropertyValue((PlayerModel m) => m.queue.length);
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
-    final playerModel = getIt<PlayerModel>();
+    final playerModel = di<PlayerModel>();
 
     return AlertDialog(
       key: ValueKey(queueLength),

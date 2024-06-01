@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/constants.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../../player.dart';
 import '../../app/app_model.dart';
@@ -37,7 +37,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
     );
     final playerToTheRight = context.m.size.width > kSideBarThreshHold;
     final fullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
-    final appModel = getIt<AppModel>();
+    final appModel = di<AppModel>();
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
 

@@ -1,11 +1,11 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../library.dart';
 import '../../../local_audio.dart';
 import '../../common/fall_back_header_image.dart';
@@ -26,7 +26,7 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final model = getIt<LocalAudioModel>();
+    final model = di<LocalAudioModel>();
     final likedAudios = watchPropertyValue((LibraryModel m) => m.likedAudios);
 
     return SliverAudioPage(

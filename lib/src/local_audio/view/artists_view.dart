@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../l10n/l10n.dart';
-import 'artist_page.dart';
 import '../local_audio_model.dart';
+import 'artist_page.dart';
 
 class ArtistsView extends StatelessWidget {
   const ArtistsView({
@@ -35,7 +34,7 @@ class ArtistsView extends StatelessWidget {
         message: noResultMessage,
       );
     }
-    final model = getIt<LocalAudioModel>();
+    final model = di<LocalAudioModel>();
 
     return Padding(
       padding: const EdgeInsets.only(top: 15),

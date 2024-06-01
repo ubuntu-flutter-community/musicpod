@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
-import '../../get.dart';
 import '../../library.dart';
 import '../../player.dart';
 import '../../playlists.dart';
@@ -133,7 +133,7 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
       (PlayerModel m) => m.queueName != null && m.queueName == widget.pageId,
     );
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
-    final playerModel = getIt<PlayerModel>();
+    final playerModel = di<PlayerModel>();
 
     void onPlay() {
       if (isEnQueued) {

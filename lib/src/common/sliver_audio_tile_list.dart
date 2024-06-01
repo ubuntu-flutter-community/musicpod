@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../common.dart';
-import '../../get.dart';
 import '../data/audio.dart';
 import '../library/library_model.dart';
 import '../player/player_model.dart';
@@ -24,9 +24,9 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = getIt<LibraryModel>();
+    final libraryModel = di<LibraryModel>();
     watchPropertyValue((LibraryModel m) => m.likedAudios.length);
-    final playerModel = getIt<PlayerModel>();
+    final playerModel = di<PlayerModel>();
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
 

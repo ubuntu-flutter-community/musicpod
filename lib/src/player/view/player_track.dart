@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../data.dart';
 import '../../../duration_x.dart';
-import '../../../get.dart';
 import '../../common/custom_track_shape.dart';
 import '../../theme.dart';
 import '../player_model.dart';
@@ -24,7 +24,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
 
     final mainColor = theme.colorScheme.onSurface;
 
-    final playerModel = getIt<PlayerModel>();
+    final playerModel = di<PlayerModel>();
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
 
     final position = watchPropertyValue((PlayerModel m) => m.position);

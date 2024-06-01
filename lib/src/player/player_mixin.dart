@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../common.dart';
 import '../../data.dart';
-import '../../get.dart';
 import '../../globals.dart';
 import '../../library.dart';
 import '../../local_audio.dart';
@@ -62,13 +62,13 @@ mixin PlayerMixin {
   }
 
   void _onLocalAudioTitleTap({required Audio audio}) {
-    final localAudioModel = getIt<LocalAudioModel>();
+    final localAudioModel = di<LocalAudioModel>();
     final albumAudios = localAudioModel.findAlbum(audio);
     if (albumAudios?.firstOrNull == null) return;
     final id = albumAudios!.first.albumId;
     if (id == null) return;
 
-    getIt<AppModel>().setFullWindowMode(false);
+    di<AppModel>().setFullWindowMode(false);
 
     navigatorKey.currentState?.push(
       MaterialPageRoute(
@@ -104,7 +104,7 @@ mixin PlayerMixin {
   }
 
   void _onRadioArtistTap(Audio audio) {
-    final libraryModel = getIt<LibraryModel>();
+    final libraryModel = di<LibraryModel>();
     int? index = libraryModel.indexOfStation(audio.url!);
     if (index != null) {
       navigatorKey.currentState
@@ -125,7 +125,7 @@ mixin PlayerMixin {
     required Audio audio,
     required BuildContext context,
   }) {
-    final libraryModel = getIt<LibraryModel>();
+    final libraryModel = di<LibraryModel>();
     int? index = libraryModel.indexOfPodcast(audio.website!);
     if (index != null) {
       navigatorKey.currentState
@@ -143,11 +143,11 @@ mixin PlayerMixin {
   }
 
   void _onLocalAudioArtistTap({required Audio audio}) {
-    final localAudioModel = getIt<LocalAudioModel>();
+    final localAudioModel = di<LocalAudioModel>();
     final artistAudios = localAudioModel.findArtist(audio);
     if (artistAudios?.firstOrNull == null) return;
     final images = localAudioModel.findImages(artistAudios ?? {});
-    getIt<AppModel>().setFullWindowMode(false);
+    di<AppModel>().setFullWindowMode(false);
 
     navigatorKey.currentState?.push(
       MaterialPageRoute(

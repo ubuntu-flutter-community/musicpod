@@ -3,12 +3,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:phoenix_theme/phoenix_theme.dart' hide ColorX;
 import 'package:system_theme/system_theme.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
 import '../../../common.dart';
 import '../../../external_path.dart';
-import '../../../get.dart';
 import '../../../library.dart';
 import '../../../theme.dart';
 import '../../l10n/l10n.dart';
@@ -118,23 +118,23 @@ class _MusicPodAppState extends State<_MusicPodApp>
     if (!isMobile) {
       YaruWindow.of(context).onClose(
         () async {
-          await getIt.reset();
+          await di.reset();
           return true;
         },
       );
     }
 
-    await getIt<LibraryModel>().init();
+    await di<LibraryModel>().init();
     // Note: if users have small local audio libs this will hardly be visible
     // if users have huge local libs they will probably use MusicPod a lot
     // for local audios and will land here sooner or later.
     // So do this right away to avoid an uninitialized LocalAudioModel
-    await getIt<LocalAudioModel>().init();
+    await di<LocalAudioModel>().init();
 
     if (!mounted) return false;
-    await getIt<AppModel>().init();
+    await di<AppModel>().init();
 
-    getIt<ExternalPathService>().init();
+    di<ExternalPathService>().init();
 
     return true;
   }
@@ -142,7 +142,7 @@ class _MusicPodAppState extends State<_MusicPodApp>
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.paused) {
-      await getIt.reset();
+      await di.reset();
     }
   }
 

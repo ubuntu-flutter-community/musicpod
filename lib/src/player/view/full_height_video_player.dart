@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/constants.dart';
 
 import '../../../common.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../player_model.dart';
 import 'full_height_player_top_controls.dart';
@@ -20,7 +20,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
     const baseColor = Colors.white;
 
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
-    final playerModel = getIt<PlayerModel>();
+    final playerModel = di<PlayerModel>();
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
 
@@ -88,7 +88,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
       ),
       child: RepaintBoundary(
         child: Video(
-          controller: getIt<PlayerModel>().controller,
+          controller: di<PlayerModel>().controller,
           controls: (state) => MaterialVideoControls(state),
         ),
       ),

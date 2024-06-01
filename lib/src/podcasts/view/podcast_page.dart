@@ -1,11 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../podcasts.dart';
 import '../../common/explore_online_popup.dart';
 import '../../common/sliver_audio_page_control_panel.dart';
@@ -37,9 +37,9 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
 
     void onTap(text) {
-      final podcastModel = getIt<PodcastModel>();
+      final podcastModel = di<PodcastModel>();
       Navigator.of(context).maybePop();
-      getIt<LibraryModel>().setIndex(2);
+      di<LibraryModel>().setIndex(2);
       podcastModel.setSearchActive(true);
       podcastModel.setSearchQuery(text);
       podcastModel.search(searchQuery: text);
@@ -111,7 +111,7 @@ class _PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final libraryModel = getIt<LibraryModel>();
+    final libraryModel = di<LibraryModel>();
 
     final subscribed = libraryModel.podcastSubscribed(pageId);
 
@@ -170,7 +170,7 @@ class PodcastPageTitle extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
-    final visible = getIt<LibraryModel>().podcastUpdateAvailable(feedUrl);
+    final visible = di<LibraryModel>().podcastUpdateAvailable(feedUrl);
     return Badge(
       backgroundColor: context.t.colorScheme.primary,
       isLabelVisible: visible,

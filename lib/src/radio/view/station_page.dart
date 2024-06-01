@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../common/sliver_audio_page_control_panel.dart';
 import '../../player/player_model.dart';
 import 'radio_fall_back_icon.dart';

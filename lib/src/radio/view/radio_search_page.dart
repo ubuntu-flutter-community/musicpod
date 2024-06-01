@@ -1,10 +1,10 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../common.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../../library.dart';
 import '../../../player.dart';
@@ -36,7 +36,7 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
   @override
   void initState() {
     super.initState();
-    final radioModel = getIt<RadioModel>();
+    final radioModel = di<RadioModel>();
     _future = radioModel.getStations(
       radioSearch: widget.radioSearch,
       query: widget.searchQuery,
@@ -45,9 +45,9 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = getIt<LibraryModel>();
-    final playerModel = getIt<PlayerModel>();
-    final radioModel = getIt<RadioModel>();
+    final libraryModel = di<LibraryModel>();
+    final playerModel = di<PlayerModel>();
+    final radioModel = di<RadioModel>();
 
     final futureBuilder = FutureBuilder(
       future: _future,
