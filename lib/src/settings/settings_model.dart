@@ -106,7 +106,7 @@ class SettingsModel extends SafeChangeNotifier {
 
   Future<String?> getOnlineVersion() async {
     final release = await _gitHub.repositories
-            .listReleases(RepositorySlug.full(kGitHubShortLink))
+        .listReleases(RepositorySlug.full(kGitHubShortLink))
         .toList();
     return release.firstOrNull?.tagName;
   }
