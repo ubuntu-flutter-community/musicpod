@@ -12,6 +12,10 @@ dependencies:
   animated_emoji: ^3.1.0
   audio_metadata_reader: ^0.0.6
   audio_service: ^0.18.12
+  audio_service_mpris:
+    git:
+      url: https://github.com/Feichtmeier/audio-service-mpris
+      ref: b15f72e5ff26af00a986dc127bec23c616a3c4bb
   basic_utils: ^5.7.0
   blur: ^3.1.0
   cached_network_image: ^3.3.1
@@ -47,10 +51,7 @@ dependencies:
   mime: ^1.0.5
   mime_type: ^1.0.0
   mockito: ^5.4.4
-  mpris_service:
-    git:
-      url: https://github.com/alexmercerind/mpris_service
-      ref: 3a4a721
+ 
   package_info_plus: ^8.0.0
   palette_generator: ^0.3.3+3
   path: ^1.9.0
