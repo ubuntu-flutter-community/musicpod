@@ -35,6 +35,11 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
+    final libraryModel = di<LibraryModel>();
+    final audiosWithDownloads = audios
+            ?.map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
+            .toSet() ??
+        {};
 
     void onTap(text) {
       final podcastModel = di<PodcastModel>();
@@ -84,12 +89,12 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
             ),
             SliverAudioPageControlPanel(
               controlPanel: _PodcastPageControlPanel(
-                audios: audios ?? {},
+                audios: audiosWithDownloads,
                 pageId: pageId,
                 title: title,
               ),
             ),
-            SliverPodcastPageList(audios: audios ?? {}, pageId: pageId),
+            SliverPodcastPageList(audios: audiosWithDownloads, pageId: pageId),
           ],
         ),
       ),

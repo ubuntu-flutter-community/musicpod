@@ -107,10 +107,10 @@ class ExternalPathService {
         audios.add(
           Audio.fromMetadata(
             path: path,
-            data: (await readMetadata(
+            data: await readMetadata(
               File(e.link.replaceAll('file://', '')),
               getImage: true,
-            )),
+            ),
           ),
         );
       } else if (e.link.startsWith('http')) {
@@ -154,7 +154,7 @@ class ExternalPathService {
         audios.add(
           Audio.fromMetadata(
             path: e.file!,
-            data: (await readMetadata(File(e.file!), getImage: true)),
+            data: await readMetadata(File(e.file!), getImage: true),
           ),
         );
       }
@@ -165,7 +165,7 @@ class ExternalPathService {
 
   Future<String?> getPathOfDirectory() async {
     if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-      return (await getDirectoryPath());
+      return await getDirectoryPath();
     }
     return null;
   }

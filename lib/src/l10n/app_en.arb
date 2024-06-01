@@ -125,6 +125,14 @@
     "copiedToClipBoard": "Copied to clipboard:",
     "copyToClipBoard": "Copy to clipboard",
     "insertIntoQueue": "Insert into queue",
+    "insertedIntoQueue": "Inserted to queue: {name}",
+    "@insertedIntoQueue": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
     "about": "About",
     "localAudioCacheSuggestion": "You have {length} local audio files. Do you want to create a cache to improve start-up time?",
     "@localAudioCacheSuggestion": {

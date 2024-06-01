@@ -83,7 +83,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               child: SearchButton(
                 active: searchActive,
                 onPressed: () {
-                  setSearchActive(!(searchActive));
+                  setSearchActive(!searchActive);
                   di<AppModel>().setLockSpace(!searchActive);
                 },
               ),

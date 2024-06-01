@@ -30,7 +30,7 @@ class ShuffleButton extends StatelessWidget with WatchItMixin {
                 ? theme.colorScheme.primary
                 : theme.colorScheme.onSurface),
       ),
-      onPressed: !active ? null : () => setShuffle(!(shuffle)),
+      onPressed: !active ? null : () => setShuffle(!shuffle),
     );
   }
 }

@@ -81,15 +81,16 @@ class _StationPageControlPanel extends StatelessWidget {
           : MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Center(
-          child: AvatarPlayButton(
-            audios: {station},
-            pageId: station.url,
+        if (station.url != null)
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Center(
+              child: AvatarPlayButton(
+                audios: {station},
+                pageId: station.url!,
+              ),
+            ),
           ),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
         RadioPageStarButton(station: station),
         RadioPageCopyHistoryButton(station: station),
       ],

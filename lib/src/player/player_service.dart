@@ -15,9 +15,8 @@ import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
 import '../../online_album_art_utils.dart';
-import '../../string_x.dart';
 import '../../persistence_utils.dart';
-import '../../theme.dart';
+import '../../string_x.dart';
 
 typedef Queue = ({String name, List<Audio> audios});
 
@@ -459,7 +458,7 @@ class PlayerService {
         audio?.imageUrl == null &&
         audio?.albumArtUrl == null &&
         artUrl == null) {
-      _color = getAlphabetColor(_audio?.title ?? 'a');
+      _color = null;
       return;
     }
 

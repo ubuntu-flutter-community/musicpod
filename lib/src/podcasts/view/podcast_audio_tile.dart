@@ -32,7 +32,7 @@ class PodcastAudioTile extends StatelessWidget {
     required this.safeLastPosition,
     this.isOnline = true,
     required this.addPodcast,
-    this.insertIntoQueue,
+    required this.insertIntoQueue,
   });
 
   final Audio audio;
@@ -44,7 +44,7 @@ class PodcastAudioTile extends StatelessWidget {
   final void Function()? removeUpdate;
   final Future<void> Function() safeLastPosition;
   final void Function()? addPodcast;
-  final void Function()? insertIntoQueue;
+  final void Function() insertIntoQueue;
 
   final Duration? lastPosition;
   final bool isExpanded;
@@ -137,7 +137,15 @@ class PodcastAudioTile extends StatelessWidget {
                     ),
                     IconButton(
                       tooltip: context.l10n.insertIntoQueue,
-                      onPressed: insertIntoQueue,
+                      onPressed: () {
+                        final text =
+                            '${audio.title != null ? '${audio.album} - ' : ''}${audio.title ?? ''}';
+                        insertIntoQueue();
+                        showSnackBar(
+                          context: context,
+                          content: Text(context.l10n.insertedIntoQueue(text)),
+                        );
+                      },
                       icon: Icon(Iconz().insertIntoQueue),
                     ),
                   ],
