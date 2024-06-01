@@ -125,6 +125,14 @@
     "copiedToClipBoard": "In die Zwischenablage kopiert:",
     "copyToClipBoard": "In die Zwischenablage kopieren",
     "insertIntoQueue": "In Warteschlange aufnehmen",
+    "insertedIntoQueue": "In Warteschlange aufgenommen: {name}",
+    "@insertedIntoQueue": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
     "about": "Über",
     "localAudioCacheSuggestion": "Du hast {length} lokale Audio-Dateien. Möchtest du einen Cache anlegen um den Programmstart zu beschleunigen?",
     "@localAudioCacheSuggestion": {

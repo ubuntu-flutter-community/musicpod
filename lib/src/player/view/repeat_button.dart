@@ -33,7 +33,7 @@ class RepeatButton extends StatelessWidget with WatchItMixin {
                 ? theme.colorScheme.primary
                 : theme.colorScheme.onSurface),
       ),
-      onPressed: !active ? null : () => setRepeatSingle(!(repeatSingle)),
+      onPressed: !active ? null : () => setRepeatSingle(!repeatSingle),
     );
   }
 }

@@ -25,6 +25,7 @@
     "totalDisks",
     "stations",
     "copyToClipBoard",
+    "insertedIntoQueue",
     "astronomyXXXPodcastIndexOnly",
     "automotiveXXXPodcastIndexOnly",
     "aviationXXXPodcastIndexOnly",
@@ -146,6 +147,10 @@
     "language"
   ],
 
+  "da": [
+    "insertedIntoQueue"
+  ],
+
   "es": [
     "shuffle",
     "repeat",
@@ -176,6 +181,7 @@
     "stations",
     "copyToClipBoard",
     "insertIntoQueue",
+    "insertedIntoQueue",
     "about",
     "localAudioCacheSuggestion",
     "noThankYou",
@@ -400,6 +406,7 @@
     "copiedToClipBoard",
     "copyToClipBoard",
     "insertIntoQueue",
+    "insertedIntoQueue",
     "about",
     "localAudioCacheSuggestion",
     "noThankYou",
@@ -644,6 +651,7 @@
     "copiedToClipBoard",
     "copyToClipBoard",
     "insertIntoQueue",
+    "insertedIntoQueue",
     "about",
     "localAudioCacheSuggestion",
     "noThankYou",
@@ -865,6 +873,7 @@
     "copiedToClipBoard",
     "copyToClipBoard",
     "insertIntoQueue",
+    "insertedIntoQueue",
     "about",
     "localAudioCacheSuggestion",
     "noThankYou",
@@ -1046,6 +1055,7 @@
     "share",
     "stations",
     "copyToClipBoard",
+    "insertedIntoQueue",
     "reorder",
     "move",
     "pinAlbum",
@@ -1098,6 +1108,7 @@
     "noStarredStations",
     "stations",
     "copyToClipBoard",
+    "insertedIntoQueue",
     "about",
     "localAudioCacheSuggestion",
     "noThankYou",
@@ -1290,6 +1301,7 @@
     "noStarredStations",
     "stations",
     "copyToClipBoard",
+    "insertedIntoQueue",
     "about",
     "localAudioCacheSuggestion",
     "noThankYou",
@@ -1457,12 +1469,14 @@
     "fullScreen",
     "leaveFullScreen",
     "copyToClipBoard",
+    "insertedIntoQueue",
     "language"
   ],
 
   "sk": [
     "fullScreen",
     "leaveFullScreen",
+    "insertedIntoQueue",
     "language"
   ],
 
@@ -1495,6 +1509,7 @@
     "noStarredStations",
     "stations",
     "copyToClipBoard",
+    "insertedIntoQueue",
     "downloadStarted",
     "downloadCancelled",
     "downloadFinished",
@@ -1652,6 +1667,7 @@
     "fullScreen",
     "leaveFullScreen",
     "copyToClipBoard",
+    "insertedIntoQueue",
     "loadMore",
     "searchOnline",
     "shareThisEpisode",
@@ -1721,6 +1737,7 @@
     "copiedToClipBoard",
     "copyToClipBoard",
     "insertIntoQueue",
+    "insertedIntoQueue",
     "about",
     "localAudioCacheSuggestion",
     "noThankYou",

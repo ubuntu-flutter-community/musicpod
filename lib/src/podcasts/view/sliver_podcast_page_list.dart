@@ -29,10 +29,9 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
         childCount: audios.length,
         (context, index) {
           final episode = audios.elementAt(index);
-          final download = libraryModel.getDownload(episode.url);
 
           return PodcastAudioTile(
-            key: ValueKey(episode.url),
+            key: ValueKey(episode.path ?? episode.url),
             addPodcast: episode.website == null
                 ? null
                 : () => libraryModel.addPodcast(
@@ -41,8 +40,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
                     ),
             removeUpdate: () => libraryModel.removePodcastUpdate(pageId),
             isExpanded: episode == selectedAudio,
-            audio:
-                download != null ? episode.copyWith(path: download) : episode,
+            audio: episode,
             isPlayerPlaying: isPlayerPlaying,
             selected: episode == selectedAudio,
             pause: playerModel.pause,

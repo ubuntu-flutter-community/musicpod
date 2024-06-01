@@ -483,14 +483,14 @@ class LibraryService {
         (await readAudioMap(kLikedAudiosFileName)).entries.firstOrNull?.value ??
             <Audio>{};
     _favTags = Set.from(
-      (await readStringIterable(filename: kRadioTagFavsFileName) ?? <String>{}),
+      await readStringIterable(filename: kRadioTagFavsFileName) ?? <String>{},
     );
     _favCountries = Set.from(
-      (await readStringIterable(filename: kCountryFavsFileName) ?? <String>{}),
+      await readStringIterable(filename: kCountryFavsFileName) ?? <String>{},
     );
     _favLanguages = Set.from(
-      (await readStringIterable(filename: kFavLanguageCodesFileName) ??
-          <String>{}),
+      await readStringIterable(filename: kFavLanguageCodesFileName) ??
+          <String>{},
     );
     _downloadsDir = await getDownloadsDir();
     _downloads = await readStringMap(kDownloads);
