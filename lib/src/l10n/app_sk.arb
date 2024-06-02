@@ -10,8 +10,10 @@
     "back": "Naspäť",
     "fastForward30": "Dopredu o 30 sekúnd",
     "rewind10": "Dozadu o 10 sekúnd",
-    "fullWindow": "Celá obrazovka",
-    "leaveFullWindow": "Ukončiť režim celej obrazovky",
+    "fullWindow": "Celé okno",
+    "leaveFullWindow": "Ukončiť režim celého okna",
+    "fullScreen": "Celá obrazovka",
+    "leaveFullScreen": "Ukončiť režim celej obrazovky",
     "playbackRate": "Rýchlosť prehrávania",
     "addToFavorites": "Pridať k obľúbeným",
     "removeFromFavorites": "Odstrániť z obľúbených",
@@ -30,7 +32,7 @@
     "add": "Pridať",
     "addTo": "Pridať k:",
     "deletePlaylist": "Odstrániť playlist",
-    "createNewPlaylist" : "Vytvoriť nový playlist",
+    "createNewPlaylist": "Vytvoriť nový playlist",
     "playlistDialogTitleNew": "Pridať playlist",
     "playlistDialogTitleEdit": "Upraviť playlist",
     "save": "Uložiť",
@@ -123,6 +125,14 @@
     "copiedToClipBoard": "Skopírované do schránky:",
     "copyToClipBoard": "Kopírovať do schránky",
     "insertIntoQueue": "Pridať do poradia",
+    "insertedIntoQueue": "Vložené do poradia: {name}",
+    "@insertedIntoQueue": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
     "about": "O",
     "localAudioCacheSuggestion": "Máte {length} lokálnych audio súborov. Chcete vytvoriť medzipamäť na urýchlenie spustenia aplikácie?",
     "@localAudioCacheSuggestion": {
@@ -296,7 +306,7 @@
     "pinAlbum": "Pripnúť album na bočný panel",
     "playAll": "Prehrať všetko",
     "hearingHistory": "História počúvania",
-    "emptyHearingHistory": "V tejto relácii aplikácie ste ešte nepočúvali rozhlasové stanice",
+    "emptyHearingHistory": "V tejto relácii aplikácie ste ešte nepočúvali rozhlasové stanice.",
     "searchForRadioStationsWithGenreName": "Vyhľadať rozhlasové stanice s týmto žánrom",
     "clearPlaylist": "Odstrániť všetky médiá z playlistu",
     "editPlaylist": "Upraviť playlist",
@@ -310,5 +320,7 @@
     "searchOnline": "Vyhľadať online",
     "shareThisEpisode": "Zdieľať túto epizódu",
     "downloadEpisode": "Stiahnuť epizódu",
-    "removeDownloadEpisode": "Odstrániť stiahnutú epizódu"
+    "removeDownloadEpisode": "Odstrániť stiahnutú epizódu",
+    "language": "Jazyk",
+    "duration": "Trvanie"
 }

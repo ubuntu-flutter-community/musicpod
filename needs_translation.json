@@ -1483,14 +1483,6 @@
     "duration"
   ],
 
-  "sk": [
-    "fullScreen",
-    "leaveFullScreen",
-    "insertedIntoQueue",
-    "language",
-    "duration"
-  ],
-
   "sv": [
     "shuffle",
     "repeat",
