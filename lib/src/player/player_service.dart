@@ -588,6 +588,7 @@ class PlayerService {
     _audioService = await AudioService.init(
       config: const AudioServiceConfig(
         androidNotificationOngoing: true,
+        androidNotificationChannelName: kAppName,
       ),
       builder: () {
         return _AudioHandler(
