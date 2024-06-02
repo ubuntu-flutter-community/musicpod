@@ -586,10 +586,7 @@ class PlayerService {
 
   Future<void> _initAudioService() async {
     _audioService = await AudioService.init(
-      config: AudioServiceConfig(
-        androidNotificationChannelId:
-            Platform.isLinux ? kLinuxDBusName : kAndroidChannelId,
-        androidNotificationChannelName: 'MusicPod',
+      config: const AudioServiceConfig(
         androidNotificationOngoing: true,
       ),
       builder: () {
