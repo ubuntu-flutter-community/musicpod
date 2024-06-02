@@ -586,8 +586,9 @@ class PlayerService {
 
   Future<void> _initAudioService() async {
     _audioService = await AudioService.init(
-      config: const AudioServiceConfig(
-        androidNotificationChannelId: 'org.feichtmeier.musicpod.channel.audio',
+      config: AudioServiceConfig(
+        androidNotificationChannelId:
+            Platform.isLinux ? kLinuxDBusName : kAndroidChannelId,
         androidNotificationChannelName: 'MusicPod',
         androidNotificationOngoing: true,
       ),
