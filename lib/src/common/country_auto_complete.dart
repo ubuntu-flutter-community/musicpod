@@ -227,7 +227,14 @@ class _CountryTile extends StatelessWidget {
       hoverColor: highlight ? theme.focusColor : null,
       tileColor: highlight ? theme.focusColor : null,
       onTap: () => onSelected(t),
-      title: Text(t.name.camelToSentence.everyWordCapitalized),
+      title: Tooltip(
+        message: t.name.camelToSentence.everyWordCapitalized,
+        child: Text(
+          t.name.camelToSentence.everyWordCapitalized,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
       trailing: IconButton(
         onPressed: () {
           favs?.contains(t.code) == false ? addFav(t) : removeFav(t);

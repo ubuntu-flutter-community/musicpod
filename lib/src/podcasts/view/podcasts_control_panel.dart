@@ -126,7 +126,7 @@ class PodcastsControlPanel extends StatelessWidget with WatchItMixin {
                 fontWeight: FontWeight.w500,
               ),
               isDense: true,
-              width: 150,
+              width: 200,
               height: chipHeight,
               countries: [
                 ...[
@@ -177,7 +177,7 @@ class PodcastsControlPanel extends StatelessWidget with WatchItMixin {
               fontWeight: FontWeight.w500,
             ),
             isDense: true,
-            width: 150,
+            width: 200,
             height: chipHeight,
             genres: sortedGenres,
             onSelected: (podcastGenre) {
