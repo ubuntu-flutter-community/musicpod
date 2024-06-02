@@ -85,8 +85,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: b15f72e5ff26af00a986dc127bec23c616a3c4bb
-      resolved-ref: b15f72e5ff26af00a986dc127bec23c616a3c4bb
+      ref: ad6f743b73e320670449026fa1852d9978438bb9
+      resolved-ref: ad6f743b73e320670449026fa1852d9978438bb9
       url: "https://github.com/Feichtmeier/audio-service-mpris"
     source: git
     version: "0.1.3"
