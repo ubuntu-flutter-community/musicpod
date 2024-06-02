@@ -321,5 +321,6 @@
     "shareThisEpisode": "Diese Episode teilen",
     "downloadEpisode": "Episode herunterladen",
     "removeDownloadEpisode": "Episode-Download entfernen",
-    "language": "Sprache"
+    "language": "Sprache",
+    "duration": "Dauer"
 }

@@ -58,10 +58,11 @@ class PodcastAudioTile extends StatelessWidget {
 
     final date = audio.year == null
         ? ''
-        : '${DateFormat.yMMMEd(Platform.localeName).format(DateTime.fromMillisecondsSinceEpoch(audio.year!))} | ';
+        : '${DateFormat.yMMMEd(Platform.localeName).format(DateTime.fromMillisecondsSinceEpoch(audio.year!))}, ';
     final duration = audio.durationMs != null
         ? Duration(milliseconds: audio.durationMs!.toInt()).formattedTime
-        : Duration.zero.formattedTime;
+        : context.l10n.unknown;
+    final label = '$date${context.l10n.duration}: $duration';
 
     return YaruExpandable(
       isExpanded: isExpanded,
@@ -100,8 +101,7 @@ class PodcastAudioTile extends StatelessWidget {
                 child: _Center(
                   selected: selected,
                   title: audio.title ?? '',
-                  date: date,
-                  duration: duration,
+                  label: label,
                   addPodcast: addPodcast,
                 ),
               ),
@@ -163,14 +163,12 @@ class _Center extends StatelessWidget {
   const _Center({
     required this.title,
     required this.selected,
-    required this.date,
-    required this.duration,
+    required this.label,
     required this.addPodcast,
   });
 
   final String title;
-  final String date;
-  final String duration;
+  final String label;
   final bool selected;
   final void Function()? addPodcast;
 
@@ -199,7 +197,7 @@ class _Center extends StatelessWidget {
             children: [
               Flexible(
                 child: Text(
-                  '$date$duration',
+                  label,
                   style: theme.textTheme.labelMedium,
                 ),
               ),
