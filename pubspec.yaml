@@ -15,7 +15,7 @@ dependencies:
   audio_service_mpris:
     git:
       url: https://github.com/Feichtmeier/audio-service-mpris
-      ref: b15f72e5ff26af00a986dc127bec23c616a3c4bb
+      ref: ad6f743b73e320670449026fa1852d9978438bb9
   basic_utils: ^5.7.0
   blur: ^3.1.0
   cached_network_image: ^3.3.1
