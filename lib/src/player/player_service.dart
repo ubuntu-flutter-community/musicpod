@@ -280,11 +280,7 @@ class PlayerService {
 
     _isCompletedSub = _player.stream.completed.listen((value) async {
       if (value) {
-        if (_queue.audios.length > 1) {
-          await playNext();
-        }
-      } else {
-        await safeLastPosition();
+        await playNext();
       }
     });
 

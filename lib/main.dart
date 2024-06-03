@@ -155,10 +155,7 @@ Future<void> main(List<String> args) async {
     RadioModel(radioService: radioService, libraryService: libraryService),
     dispose: (s) => s.dispose(),
   );
-  di.registerSingleton<DownloadModel>(
-    DownloadModel(libraryService),
-    dispose: (s) => s.dispose(),
-  );
+  di.registerSingleton<DownloadModel>(DownloadModel(libraryService));
 
   runApp(
     Platform.isLinux
