@@ -1,6 +1,6 @@
 name: musicpod
 description: Ubuntu music, radio and podcast player.
-version: 1.4.4
+version: 1.4.5
 
 publish_to: "none"
 
