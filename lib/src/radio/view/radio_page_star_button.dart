@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../build_context_x.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../../library.dart';
 import '../../common/icons.dart';
@@ -14,7 +14,7 @@ class RadioPageStarButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = getIt<LibraryModel>();
+    final libraryModel = di<LibraryModel>();
     final isStarred = watchPropertyValue(
       (LibraryModel m) => m.starredStations.containsKey(station.url),
     );

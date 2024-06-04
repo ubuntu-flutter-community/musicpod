@@ -32,7 +32,7 @@ class PodcastAudioTile extends StatelessWidget {
     required this.safeLastPosition,
     this.isOnline = true,
     required this.addPodcast,
-    this.insertIntoQueue,
+    required this.insertIntoQueue,
   });
 
   final Audio audio;
@@ -40,15 +40,11 @@ class PodcastAudioTile extends StatelessWidget {
   final bool selected;
   final void Function() pause;
   final Future<void> Function() resume;
-  final Future<void> Function({
-    required Set<Audio> audios,
-    required String listName,
-    int? index,
-  }) startPlaylist;
+  final void Function()? startPlaylist;
   final void Function()? removeUpdate;
-  final void Function() safeLastPosition;
+  final Future<void> Function() safeLastPosition;
   final void Function()? addPodcast;
-  final void Function()? insertIntoQueue;
+  final void Function() insertIntoQueue;
 
   final Duration? lastPosition;
   final bool isExpanded;
@@ -62,10 +58,11 @@ class PodcastAudioTile extends StatelessWidget {
 
     final date = audio.year == null
         ? ''
-        : '${DateFormat.yMMMEd(Platform.localeName).format(DateTime.fromMillisecondsSinceEpoch(audio.year!))} | ';
+        : '${DateFormat.yMMMEd(Platform.localeName).format(DateTime.fromMillisecondsSinceEpoch(audio.year!))}, ';
     final duration = audio.durationMs != null
         ? Duration(milliseconds: audio.durationMs!.toInt()).formattedTime
-        : Duration.zero.formattedTime;
+        : context.l10n.unknown;
+    final label = '$date${context.l10n.duration}: $duration';
 
     return YaruExpandable(
       isExpanded: isExpanded,
@@ -104,8 +101,7 @@ class PodcastAudioTile extends StatelessWidget {
                 child: _Center(
                   selected: selected,
                   title: audio.title ?? '',
-                  date: date,
-                  duration: duration,
+                  label: label,
                   addPodcast: addPodcast,
                 ),
               ),
@@ -141,7 +137,15 @@ class PodcastAudioTile extends StatelessWidget {
                     ),
                     IconButton(
                       tooltip: context.l10n.insertIntoQueue,
-                      onPressed: insertIntoQueue,
+                      onPressed: () {
+                        final text =
+                            '${audio.title != null ? '${audio.album} - ' : ''}${audio.title ?? ''}';
+                        insertIntoQueue();
+                        showSnackBar(
+                          context: context,
+                          content: Text(context.l10n.insertedIntoQueue(text)),
+                        );
+                      },
                       icon: Icon(Iconz().insertIntoQueue),
                     ),
                   ],
@@ -159,14 +163,12 @@ class _Center extends StatelessWidget {
   const _Center({
     required this.title,
     required this.selected,
-    required this.date,
-    required this.duration,
+    required this.label,
     required this.addPodcast,
   });
 
   final String title;
-  final String date;
-  final String duration;
+  final String label;
   final bool selected;
   final void Function()? addPodcast;
 
@@ -195,7 +197,7 @@ class _Center extends StatelessWidget {
             children: [
               Flexible(
                 child: Text(
-                  '$date$duration',
+                  label,
                   style: theme.textTheme.labelMedium,
                 ),
               ),

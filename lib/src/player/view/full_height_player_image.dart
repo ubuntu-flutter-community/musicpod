@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../app.dart';
@@ -6,7 +7,6 @@ import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../radio.dart';
 import '../../../theme.dart';
@@ -94,9 +94,9 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
           fit: fit,
           fallBackIcon: fallBackImage,
           errorIcon: fallBackImage,
-          onGenreTap: (genre) => getIt<RadioModel>().init().then(
+          onGenreTap: (genre) => di<RadioModel>().init().then(
             (_) {
-              getIt<AppModel>().setFullWindowMode(false);
+              di<AppModel>().setFullWindowMode(false);
               navigatorKey.currentState?.push(
                 MaterialPageRoute(
                   builder: (context) {

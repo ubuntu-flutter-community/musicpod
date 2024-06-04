@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/constants.dart';
 
 import '../../../build_context_x.dart';
-import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../player.dart';
 import '../../../radio.dart';
@@ -20,7 +20,7 @@ class RadioHistoryTile extends StatelessWidget with PlayerMixin {
 
   @override
   Widget build(BuildContext context) {
-    final radioModel = getIt<RadioModel>();
+    final radioModel = di<RadioModel>();
     return ListTile(
       key: ValueKey(e.value.icyTitle),
       selected: selected,

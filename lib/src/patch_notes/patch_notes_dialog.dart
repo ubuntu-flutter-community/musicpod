@@ -1,6 +1,6 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import '../../get.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../build_context_x.dart';
 import '../../settings.dart';
@@ -57,7 +57,7 @@ class PatchNotesDialog extends StatelessWidget {
 }
 
 Future<void> showPatchNotes(BuildContext context) {
-  final settingsModel = getIt<SettingsModel>();
+  final settingsModel = di<SettingsModel>();
   if (settingsModel.recentPatchNotesDisposed == true) return Future.value();
   return showDialog(
     barrierDismissible: false,

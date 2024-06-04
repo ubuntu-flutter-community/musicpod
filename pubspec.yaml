@@ -1,6 +1,6 @@
 name: musicpod
 description: Ubuntu music, radio and podcast player.
-version: 1.4.3
+version: 1.4.5
 
 publish_to: "none"
 
@@ -12,6 +12,10 @@ dependencies:
   animated_emoji: ^3.1.0
   audio_metadata_reader: ^0.0.6
   audio_service: ^0.18.12
+  audio_service_mpris:
+    git:
+      url: https://github.com/Feichtmeier/audio-service-mpris
+      ref: ad6f743b73e320670449026fa1852d9978438bb9
   basic_utils: ^5.7.0
   blur: ^3.1.0
   cached_network_image: ^3.3.1
@@ -47,10 +51,6 @@ dependencies:
   mime: ^1.0.5
   mime_type: ^1.0.0
   mockito: ^5.4.4
-  mpris_service:
-    git:
-      url: https://github.com/alexmercerind/mpris_service
-      ref: 3a4a721
   package_info_plus: ^8.0.0
   palette_generator: ^0.3.3+3
   path: ^1.9.0
@@ -81,10 +81,10 @@ dependencies:
   yaru_window_linux: ^0.2.0
 
 dev_dependencies:
+  build_runner: ^2.4.8
+  flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
-  build_runner: ^2.4.8
 
 flutter:
   generate: true
@@ -95,14 +95,14 @@ flutter:
 
 dependency_overrides:
   intl: 0.19.0
-  media_kit_video:
-    git:
-      url: https://github.com/media-kit/media-kit
-      path: media_kit_video/
-      ref: 13f6b3f0ef9ccf8a711e396bc49cb05af9b3e497
   media_kit_native_event_loop:
     git:
       url: https://github.com/media-kit/media-kit
       path: media_kit_native_event_loop/
+      ref: 13f6b3f0ef9ccf8a711e396bc49cb05af9b3e497
+  media_kit_video:
+    git:
+      url: https://github.com/media-kit/media-kit
+      path: media_kit_video/
       ref: 13f6b3f0ef9ccf8a711e396bc49cb05af9b3e497
   uuid: ^4.1.0

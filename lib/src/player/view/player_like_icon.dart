@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../constants.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../../library.dart';
 import '../../common/icons.dart';
@@ -20,7 +20,7 @@ class PlayerLikeIcon extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = getIt<LibraryModel>();
+    final libraryModel = di<LibraryModel>();
 
     watchPropertyValue((LibraryModel m) => m.likedAudios.length);
     watchPropertyValue((LibraryModel m) => m.starredStations.length);

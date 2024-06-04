@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../get.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../app.dart';
 import '../../../build_context_x.dart';
@@ -24,7 +24,7 @@ class _PlayerViewState extends State<PlayerView> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
-      getIt<AppModel>().setShowWindowControls(
+      di<AppModel>().setShowWindowControls(
         widget.mode != PlayerViewMode.sideBar,
       );
     });
@@ -36,7 +36,7 @@ class _PlayerViewState extends State<PlayerView> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
-      getIt<AppModel>().setShowWindowControls(
+      di<AppModel>().setShowWindowControls(
         widget.mode != PlayerViewMode.sideBar,
       );
     });

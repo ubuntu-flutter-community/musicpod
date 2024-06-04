@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
-import '../../../get.dart';
 import '../../player/player_model.dart';
 
 class AudioProgress extends StatelessWidget with WatchItMixin {
@@ -24,14 +24,14 @@ class AudioProgress extends StatelessWidget with WatchItMixin {
     final pos = (selected
             ? watchPropertyValue((PlayerModel m) => m.position)
             : lastPosition) ??
-        Duration.zero;
+        const Duration(seconds: 0);
 
     final dur = (selected
             ? watchPropertyValue((PlayerModel m) => m.duration)
             : duration) ??
-        Duration.zero;
+        const Duration(seconds: 1);
 
-    bool sliderActive = dur.inSeconds > pos.inSeconds;
+    bool sliderActive = dur.inSeconds >= pos.inSeconds;
 
     return RepaintBoundary(
       child: SizedBox(

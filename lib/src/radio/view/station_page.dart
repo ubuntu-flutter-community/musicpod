@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../constants.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../common/sliver_audio_page_control_panel.dart';
 import '../../player/player_model.dart';
 import 'radio_fall_back_icon.dart';
@@ -81,15 +81,16 @@ class _StationPageControlPanel extends StatelessWidget {
           : MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Center(
-          child: AvatarPlayButton(
-            audios: {station},
-            pageId: station.url,
+        if (station.url != null)
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Center(
+              child: AvatarPlayButton(
+                audios: {station},
+                pageId: station.url!,
+              ),
+            ),
           ),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
         RadioPageStarButton(station: station),
         RadioPageCopyHistoryButton(station: station),
       ],

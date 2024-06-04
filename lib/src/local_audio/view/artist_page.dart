@@ -2,12 +2,12 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../local_audio.dart';
 import '../../../settings.dart';
 import '../../common/explore_online_popup.dart';
@@ -28,7 +28,7 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final model = getIt<LocalAudioModel>();
+    final model = di<LocalAudioModel>();
     final pageId = artistAudios?.firstOrNull?.artist;
     final albums = model.findAllAlbums(newAudios: artistAudios);
 
@@ -127,7 +127,7 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final useGridView =
         watchPropertyValue((SettingsModel m) => m.useArtistGridView);
-    final setUseGridView = getIt<SettingsModel>().setUseArtistGridView;
+    final setUseGridView = di<SettingsModel>().setUseArtistGridView;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [

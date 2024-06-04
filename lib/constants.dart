@@ -3,7 +3,9 @@ import 'package:yaru/constants.dart';
 
 const kAppName = 'musicpod';
 
-const kBusName = 'org.mpris.MediaPlayer2.musicpod';
+const kLinuxDBusName = 'org.mpris.MediaPlayer2.musicpod';
+
+const kAndroidChannelId = 'org.feichtmeier.musicpod.channel.audio';
 
 const kRepoUrl = 'http://github.com/ubuntu-flutter-community/musicpod';
 

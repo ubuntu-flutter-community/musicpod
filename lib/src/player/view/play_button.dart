@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../build_context_x.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../common/icons.dart';
 import '../player_model.dart';
@@ -18,7 +18,7 @@ class PlayButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final playerModel = getIt<PlayerModel>();
+    final playerModel = di<PlayerModel>();
     final pause = playerModel.pause;
     final playOrPause = playerModel.playOrPause;
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);

@@ -105,19 +105,19 @@ class SettingsModel extends SafeChangeNotifier {
   }
 
   Future<String?> getOnlineVersion() async {
-    final release = await (_gitHub.repositories
-            .listReleases(RepositorySlug.full(kGitHubShortLink)))
+    final release = await _gitHub.repositories
+        .listReleases(RepositorySlug.full(kGitHubShortLink))
         .toList();
     return release.firstOrNull?.tagName;
   }
 
   Future<List<Contributor>> getContributors() async {
-    return (await _gitHub.repositories
+    return await _gitHub.repositories
         .listContributors(
           RepositorySlug.full(kGitHubShortLink),
         )
         .where((c) => c.type == 'User')
-        .toList());
+        .toList();
   }
 
   bool? _updateAvailable;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../common.dart';
-import '../../../get.dart';
 import '../../../globals.dart';
 import '../../../l10n.dart';
 import '../../player/player_model.dart';

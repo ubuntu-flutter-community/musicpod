@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../common/copy_clipboard_content.dart';
 import '../../common/icons.dart';
@@ -18,8 +18,7 @@ class RadioPageCopyHistoryButton extends StatelessWidget with WatchItMixin {
     watchPropertyValue(
       (PlayerModel m) => m.filteredRadioHistory(filter: station.title),
     );
-    final text =
-        getIt<PlayerModel>().getRadioHistoryList(filter: station.title);
+    final text = di<PlayerModel>().getRadioHistoryList(filter: station.title);
     return IconButton(
       tooltip: context.l10n.copyToClipBoard,
       onPressed: text.isEmpty

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../data.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../download_model.dart';
 
@@ -22,7 +22,7 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final model = getIt<DownloadModel>();
+    final model = di<DownloadModel>();
     final value =
         watchPropertyValue((DownloadModel m) => m.getValue(audio?.url));
     return Stack(

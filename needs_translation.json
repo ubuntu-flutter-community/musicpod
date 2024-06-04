@@ -25,6 +25,7 @@
     "totalDisks",
     "stations",
     "copyToClipBoard",
+    "insertedIntoQueue",
     "astronomyXXXPodcastIndexOnly",
     "automotiveXXXPodcastIndexOnly",
     "aviationXXXPodcastIndexOnly",
@@ -143,7 +144,13 @@
     "shareThisEpisode",
     "downloadEpisode",
     "removeDownloadEpisode",
-    "language"
+    "language",
+    "duration"
+  ],
+
+  "da": [
+    "insertedIntoQueue",
+    "duration"
   ],
 
   "es": [
@@ -176,6 +183,7 @@
     "stations",
     "copyToClipBoard",
     "insertIntoQueue",
+    "insertedIntoQueue",
     "about",
     "localAudioCacheSuggestion",
     "noThankYou",
@@ -336,7 +344,8 @@
     "shareThisEpisode",
     "downloadEpisode",
     "removeDownloadEpisode",
-    "language"
+    "language",
+    "duration"
   ],
 
   "fr": [
@@ -400,6 +409,7 @@
     "copiedToClipBoard",
     "copyToClipBoard",
     "insertIntoQueue",
+    "insertedIntoQueue",
     "about",
     "localAudioCacheSuggestion",
     "noThankYou",
@@ -560,7 +570,8 @@
     "shareThisEpisode",
     "downloadEpisode",
     "removeDownloadEpisode",
-    "language"
+    "language",
+    "duration"
   ],
 
   "it": [
@@ -644,6 +655,7 @@
     "copiedToClipBoard",
     "copyToClipBoard",
     "insertIntoQueue",
+    "insertedIntoQueue",
     "about",
     "localAudioCacheSuggestion",
     "noThankYou",
@@ -804,7 +816,8 @@
     "shareThisEpisode",
     "downloadEpisode",
     "removeDownloadEpisode",
-    "language"
+    "language",
+    "duration"
   ],
 
   "nl": [
@@ -865,6 +878,7 @@
     "copiedToClipBoard",
     "copyToClipBoard",
     "insertIntoQueue",
+    "insertedIntoQueue",
     "about",
     "localAudioCacheSuggestion",
     "noThankYou",
@@ -1025,7 +1039,8 @@
     "shareThisEpisode",
     "downloadEpisode",
     "removeDownloadEpisode",
-    "language"
+    "language",
+    "duration"
   ],
 
   "pl": [
@@ -1046,6 +1061,7 @@
     "share",
     "stations",
     "copyToClipBoard",
+    "insertedIntoQueue",
     "reorder",
     "move",
     "pinAlbum",
@@ -1066,7 +1082,8 @@
     "shareThisEpisode",
     "downloadEpisode",
     "removeDownloadEpisode",
-    "language"
+    "language",
+    "duration"
   ],
 
   "pt": [
@@ -1098,6 +1115,7 @@
     "noStarredStations",
     "stations",
     "copyToClipBoard",
+    "insertedIntoQueue",
     "about",
     "localAudioCacheSuggestion",
     "noThankYou",
@@ -1258,7 +1276,8 @@
     "shareThisEpisode",
     "downloadEpisode",
     "removeDownloadEpisode",
-    "language"
+    "language",
+    "duration"
   ],
 
   "pt_BR": [
@@ -1290,6 +1309,7 @@
     "noStarredStations",
     "stations",
     "copyToClipBoard",
+    "insertedIntoQueue",
     "about",
     "localAudioCacheSuggestion",
     "noThankYou",
@@ -1450,20 +1470,17 @@
     "shareThisEpisode",
     "downloadEpisode",
     "removeDownloadEpisode",
-    "language"
+    "language",
+    "duration"
   ],
 
   "ru": [
     "fullScreen",
     "leaveFullScreen",
     "copyToClipBoard",
-    "language"
-  ],
-
-  "sk": [
-    "fullScreen",
-    "leaveFullScreen",
-    "language"
+    "insertedIntoQueue",
+    "language",
+    "duration"
   ],
 
   "sv": [
@@ -1495,6 +1512,7 @@
     "noStarredStations",
     "stations",
     "copyToClipBoard",
+    "insertedIntoQueue",
     "downloadStarted",
     "downloadCancelled",
     "downloadFinished",
@@ -1645,19 +1663,22 @@
     "shareThisEpisode",
     "downloadEpisode",
     "removeDownloadEpisode",
-    "language"
+    "language",
+    "duration"
   ],
 
   "tr": [
     "fullScreen",
     "leaveFullScreen",
     "copyToClipBoard",
+    "insertedIntoQueue",
     "loadMore",
     "searchOnline",
     "shareThisEpisode",
     "downloadEpisode",
     "removeDownloadEpisode",
-    "language"
+    "language",
+    "duration"
   ],
 
   "zh": [
@@ -1721,6 +1742,7 @@
     "copiedToClipBoard",
     "copyToClipBoard",
     "insertIntoQueue",
+    "insertedIntoQueue",
     "about",
     "localAudioCacheSuggestion",
     "noThankYou",
@@ -1881,6 +1903,7 @@
     "shareThisEpisode",
     "downloadEpisode",
     "removeDownloadEpisode",
-    "language"
+    "language",
+    "duration"
   ]
 }

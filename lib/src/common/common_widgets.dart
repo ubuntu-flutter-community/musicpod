@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
 import '../../build_context_x.dart';
 import '../../constants.dart';
-import '../../get.dart';
 import '../../globals.dart';
 import '../../theme.dart';
 import 'icons.dart';
@@ -256,7 +256,7 @@ class SearchingBar extends StatelessWidget {
       text: text,
       key: key,
       onSubmitted: (v) {
-        getIt<AppModel>().setLockSpace(false);
+        di<AppModel>().setLockSpace(false);
         onSubmitted?.call(v);
       },
       onClear: onClear,
@@ -306,7 +306,7 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
       height: yaruStyled ? null : 38,
       child: TextField(
         onTap: () {
-          getIt<AppModel>().setLockSpace(true);
+          di<AppModel>().setLockSpace(true);
           _controller.selection = TextSelection(
             baseOffset: 0,
             extentOffset: _controller.value.text.length,

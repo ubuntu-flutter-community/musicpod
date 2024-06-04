@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
-import '../../../get.dart';
 import '../../../library.dart';
 import '../../../podcasts.dart';
 import '../../data/audio.dart';
@@ -18,8 +18,8 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final playerModel = getIt<PlayerModel>();
-    final libraryModel = getIt<LibraryModel>();
+    final playerModel = di<PlayerModel>();
+    final libraryModel = di<LibraryModel>();
     final isPlayerPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final selectedAudio = watchPropertyValue((PlayerModel m) => m.audio);
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
@@ -29,10 +29,9 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
         childCount: audios.length,
         (context, index) {
           final episode = audios.elementAt(index);
-          final download = libraryModel.getDownload(episode.url);
 
           return PodcastAudioTile(
-            key: ValueKey(episode.url),
+            key: ValueKey(episode.path ?? episode.url),
             addPodcast: episode.website == null
                 ? null
                 : () => libraryModel.addPodcast(
@@ -41,13 +40,16 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
                     ),
             removeUpdate: () => libraryModel.removePodcastUpdate(pageId),
             isExpanded: episode == selectedAudio,
-            audio:
-                download != null ? episode.copyWith(path: download) : episode,
+            audio: episode,
             isPlayerPlaying: isPlayerPlaying,
             selected: episode == selectedAudio,
             pause: playerModel.pause,
             resume: playerModel.resume,
-            startPlaylist: playerModel.startPlaylist,
+            startPlaylist: () => playerModel.startPlaylist(
+              audios: audios,
+              listName: pageId,
+              index: index,
+            ),
             lastPosition: playerModel.getLastPosition(episode.url),
             safeLastPosition: playerModel.safeLastPosition,
             isOnline: isOnline,

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
-import '../../../get.dart';
 import '../../../l10n.dart';
 import '../../../library.dart';
 import '../../../radio.dart';
@@ -17,8 +16,8 @@ class RadioControlPanel extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final libraryModel = getIt<LibraryModel>();
-    final model = getIt<RadioModel>();
+    final libraryModel = di<LibraryModel>();
+    final model = di<RadioModel>();
     final index = watchPropertyValue((LibraryModel m) => m.radioindex);
 
     return Align(
