@@ -1,14 +1,12 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../../build_context_x.dart';
 import '../../../common.dart';
 import '../../../data.dart';
+import '../../../date_time_utils.dart';
 import '../../../duration_x.dart';
 import '../../../l10n.dart';
 import '../../../theme.dart';
@@ -56,13 +54,11 @@ class PodcastAudioTile extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final date = audio.year == null
-        ? ''
-        : '${DateFormat.yMMMEd(Platform.localeName).format(DateTime.fromMillisecondsSinceEpoch(audio.year!))}, ';
+    final date = unixTimeToDateString(audio.year);
     final duration = audio.durationMs != null
         ? Duration(milliseconds: audio.durationMs!.toInt()).formattedTime
         : context.l10n.unknown;
-    final label = '$date${context.l10n.duration}: $duration';
+    final label = '$date, ${context.l10n.duration}: $duration';
 
     return YaruExpandable(
       isExpanded: isExpanded,
