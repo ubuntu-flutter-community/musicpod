@@ -34,7 +34,7 @@ class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
     }
     return PopupMenuButton(
       color: theme.isLight
-          ? theme.colorScheme.background.scale(lightness: -0.04)
+          ? theme.colorScheme.surface.scale(lightness: -0.04)
           : null,
       iconColor: color ?? theme.colorScheme.onSurface,
       padding: EdgeInsets.zero,

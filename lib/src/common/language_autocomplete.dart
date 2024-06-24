@@ -122,7 +122,7 @@ class LanguageAutoComplete extends StatelessWidget {
                     child: Material(
                       color: theme.isLight
                           ? theme.colorScheme.surface
-                          : theme.colorScheme.surfaceVariant,
+                          : theme.colorScheme.surfaceContainerHighest,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6),
                         side: BorderSide(

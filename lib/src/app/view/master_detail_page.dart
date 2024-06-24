@@ -41,8 +41,8 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
             adaptive: false,
             title: const Text('MusicPod'),
           ),
-          layoutDelegate: const YaruMasterFixedPaneDelegate(
-            paneWidth: kMasterDetailSideBarWidth,
+          paneLayoutDelegate: const YaruFixedPaneDelegate(
+            paneSize: kMasterDetailSideBarWidth,
           ),
           breakpoint: kMasterDetailBreakPoint,
           controller: YaruPageController(
