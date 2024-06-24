@@ -41,10 +41,9 @@ static void my_application_activate(GApplication* application) {
   FlView* view = fl_view_new(project);
   gtk_box_pack_end(GTK_BOX(box), GTK_WIDGET(view), true, true, 0);
 
-  fl_register_plugins(FL_PLUGIN_REGISTRY(view));
-
   gtk_widget_show(GTK_WIDGET(window));
   gtk_widget_show(GTK_WIDGET(view));
+  fl_register_plugins(FL_PLUGIN_REGISTRY(view));
   gtk_widget_grab_focus(GTK_WIDGET(view));
 }
 
