@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common.dart';
@@ -29,23 +28,17 @@ class ShareButton extends StatelessWidget {
       onPressed: !active
           ? null
           : () {
-              Clipboard.setData(
-                ClipboardData(
+              showSnackBar(
+                context: context,
+                content: CopyClipboardContent(
                   text: content,
-                ),
-              );
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: CopyClipboardContent(
-                    text: content,
-                    onSearch: audio?.url == null
-                        ? null
-                        : () {
-                            if (audio?.url != null) {
-                              launchUrl(Uri.parse(audio?.url ?? ''));
-                            }
-                          },
-                  ),
+                  onSearch: audio?.url == null
+                      ? null
+                      : () {
+                          if (audio?.url != null) {
+                            launchUrl(Uri.parse(audio?.url ?? ''));
+                          }
+                        },
                 ),
               );
             },

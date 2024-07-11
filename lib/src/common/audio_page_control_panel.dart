@@ -4,7 +4,6 @@ import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
-import '../../theme.dart';
 import '../l10n/l10n.dart';
 
 class AudioPageControlPanel extends StatelessWidget {
@@ -14,6 +13,7 @@ class AudioPageControlPanel extends StatelessWidget {
     this.controlButton,
     required this.onTap,
     this.title,
+    this.icon,
   });
 
   final Set<Audio> audios;
@@ -21,13 +21,14 @@ class AudioPageControlPanel extends StatelessWidget {
 
   final Widget? controlButton;
   final void Function()? onTap;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
 
     return Row(
-      mainAxisAlignment: context.m.size.width < kMasterDetailBreakPoint
+      mainAxisAlignment: context.smallWindow
           ? MainAxisAlignment.center
           : MainAxisAlignment.start,
       children: [
@@ -50,14 +51,9 @@ class AudioPageControlPanel extends StatelessWidget {
                     onCancel: () {},
                   );
                 },
-                icon: Padding(
-                  padding: appleStyled
-                      ? const EdgeInsets.only(left: 3)
-                      : EdgeInsets.zero,
-                  child: Icon(
-                    Iconz().playFilled,
-                    color: theme.colorScheme.onInverseSurface,
-                  ),
+                icon: Icon(
+                  icon ?? Iconz().playFilled,
+                  color: theme.colorScheme.onInverseSurface,
                 ),
               ),
             ),

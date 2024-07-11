@@ -3,19 +3,21 @@ import 'package:yaru/constants.dart';
 
 const kAppName = 'musicpod';
 
-const kBusName = 'org.mpris.MediaPlayer2.musicpod';
+const kLinuxDBusName = 'org.mpris.MediaPlayer2.musicpod';
+
+const kAndroidChannelId = 'org.feichtmeier.musicpod.channel.audio';
 
 const kRepoUrl = 'http://github.com/ubuntu-flutter-community/musicpod';
 
 const kSnapDesktopEntry = '/var/lib/snapd/desktop/applications/musicpod';
 
-// TODO: find the correct flatpak desktop entry path
-// and sed into line 16
 const kFlatPakDesktopEntry = '';
 
 const kDesktopEntry = kSnapDesktopEntry;
 
 const kGitHubShortLink = 'ubuntu-flutter-community/musicpod';
+
+const kAppTitle = 'MusicPod';
 
 const kTinyButtonSize = 30.0;
 
@@ -33,7 +35,9 @@ const kMinAudioPageHeaderHeight = 0.0;
 
 const kSnackBarDuration = Duration(seconds: 10);
 
-const kAudioTilePadding = EdgeInsets.only(left: 25, right: 25);
+const kClassicAudioTilePadding = EdgeInsets.symmetric(horizontal: 25);
+
+const kModernAudioTilePadding = EdgeInsets.symmetric(horizontal: 20);
 
 const kAudioTileTrackPadding = EdgeInsets.only(right: 20);
 
@@ -76,6 +80,8 @@ const kMasterDetailBreakPoint = 720.0;
 
 const kMasterDetailSideBarWidth = 250.0;
 
+const kAdaptivContainerBreakPoint = 1200.0;
+
 const kAudioCardGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
   maxCrossAxisExtent: kAudioCardDimension + 40,
   mainAxisExtent: kAudioCardDimension + kAudioCardBottomHeight + 8,
@@ -103,17 +109,15 @@ const kAudioControlPanelPadding = EdgeInsets.only(
   bottom: kYaruPagePadding / 2,
 );
 
-const kCardColorLight = Color.fromARGB(255, 233, 233, 233);
-const kCardColorDark = Color.fromARGB(255, 51, 51, 51);
-
 const kAudioQueueThreshHold = 100;
 
 const kMainPageIconPadding = EdgeInsets.only(right: 4.0);
 
 const kLikedAudiosFileName = 'likedAudios.json';
-const kTagFavsFileName = 'tagFavs.json';
+const kRadioTagFavsFileName = 'tagFavs.json';
 const kCountryFavsFileName = 'countryfavs.json';
-const kLastFav = 'lastFav';
+const kFavLanguageCodesFileName = 'languagefavs.json';
+const kLastRadioTag = 'lastFav';
 const kPlaylistsFileName = 'playlists.json';
 const kPinnedAlbumsFileName = 'finallyFixedPinnedAlbums.json';
 const kPodcastsFileName = 'podcasts.json';
@@ -138,6 +142,7 @@ const kRadioIndex = 'radioIndex';
 const kPodcastIndex = 'podcastIndex';
 const kNeverShowImportFails = 'neverShowImportFails';
 const kLastCountryCode = 'lastCountryCode';
+const kLastLanguageCode = 'lastLanguageCode';
 const kSearchResult = 'searchResult';
 const kLocalAudioPageId = 'localAudio';
 const kPodcastsPageId = 'podcasts';
@@ -159,3 +164,8 @@ const shops = <String, String>{
 };
 
 const kSponsorLink = 'https://github.com/sponsors/Feichtmeier';
+
+const kAlbumArtHeaders = {
+  'Accept': 'application/json',
+  'User-Agent': '$kAppTitle ($kRepoUrl)',
+};

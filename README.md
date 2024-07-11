@@ -2,15 +2,33 @@
 
 Music, Radio, Television and Podcast player for Linux Desktop, MacOS, Windows and Android made with Flutter.
 
-Install for Linux Desktop:
+Install for Linux Desktop (snapd is preinstalled on Ubuntu):
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/musicpod)
 
+- How to install snapd on...
+  - [Fedora](https://snapcraft.io/docs/installing-snap-on-fedora)
+  - [Arch Linux](https://snapcraft.io/docs/installing-snap-on-arch-linux)
+  - [Debian](https://snapcraft.io/docs/installing-snap-on-debian)
+  - [Manjaro](https://snapcraft.io/docs/installing-snap-on-manjaro-linux)
+
+<a href='https://flathub.org/apps/org.feichtmeier.Musicpod'>
+  <img width='180' alt='Download on Flathub' src='https://flathub.org/api/badge?locale=en'/>
+</a>
+
+> [!CAUTION]
+>  Flatpak support is ***EXPERIMENTAL***, there are currently heavy graphic issues with Fedora.
+> See [#747](https://github.com/ubuntu-flutter-community/musicpod/issues/747). If you are using Fedora, currently use the snap.
+
+<br/>
 Install For MacOS & Windows:
 
 [Release Page](https://github.com/ubuntu-flutter-community/musicpod/releases)
 
+<br/>
 Android release is WIP!
+<br/>
+<br/>
 
 
 |Dark | Light|
@@ -24,6 +42,8 @@ Android release is WIP!
 
 ## Credits
 
+Thanks to all the [MPV](https://github.com/mpv-player/mpv) contributors!
+
 Thank you [@amugofjava](https://github.com/amugofjava) for creating the very easy to use and reliable [podcast_search](https://github.com/amugofjava/podcast_search)!
 
 Thanks [@alexmercerind](https://github.com/alexmercerind) for the super performant [Mediakit library](https://github.com/alexmercerind/media_kit) and [mpris_service](https://github.com/alexmercerind/mpris_service) dart implementation!
@@ -33,6 +53,8 @@ Thank you [@KRTirtho](https://github.com/KRTirtho) for the very easy to use [smt
 Thank you [@tomassasovsky](https://github.com/tomassasovsky) for the [dart implementation of radiobrowser-api](https://github.com/tomassasovsky/radio-browser-api.dart)!
 
 Thank you [@ClementBeal](https://github.com/ClementBeal) for the super fast, pure dart [Audio Metadata Reader](https://github.com/ClementBeal/audio_metadata_reader)!
+
+Thank you [@escamoteur](https://github.com/escamoteur) for creating [get_it](https://pub.dev/packages/get_it) and [watch_it](https://pub.dev/packages/watch_it), which made my application faster and the source code cleaner!
 
 ## MusicPod Level 1
 
@@ -67,7 +89,7 @@ Thank you [@ClementBeal](https://github.com/ClementBeal) for the super fast, pur
 
 - [X] Ubuntu Desktop
   - [X] [snap package](https://snapcraft.io/musicpod) (this is the primary supported package!)
-  - [ ] Flatpak ([WIP](https://github.com/ubuntu-flutter-community/musicpod/issues/10))
+  - [X] [Flatpak](https://flathub.org/apps/org.feichtmeier.Musicpod)
 - [X] Windows Support
   - [ ] Windows Store
   - [X] [Exe](https://github.com/ubuntu-flutter-community/musicpod/releases)
@@ -100,4 +122,59 @@ If you want to contribute code, please create an issue first.
 
 Test mocks are generated with [Mockito](https://github.com/dart-lang/mockito). You need to run the `build_runner` command in order to re-generate mocks, in case you changed the signatures of service methods.
 
-`flutter pub run build_runner build`
+`dart run build_runner build`
+
+## Boring developer things
+
+### Under the flutter hood
+
+MusicPod is basically a fancy front-end for [MPV](https://github.com/mpv-player/mpv)! Without it it would still look nice, but it wouldn't play any media :D!
+
+### Architecture: [model, view, viewmodel (MVVM)](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)
+
+The app, the player and each page have their own set of widgets, 1 view model and 1 service.
+There are additional view models for downloads or a service for all external path things but that's it.
+
+Since all views need access to each other all the time, disposing the view models all the time makes no sense and is CPU intensive for no need so all services and view models are registered as singletons before the flutter tree is created.
+
+Important services are also initialized once before the Flutter `runApp` call, the view models are initialized when the view is accessed but most of the internal calls are skipped when the views are accessed again after that.
+
+```mermaid
+
+flowchart LR
+
+classDef view fill:#0e84207d
+classDef viewmodel fill:#e9542080
+classDef model fill:#77216f80
+
+View["`
+  **View**
+  (Widgets)
+`"]:::view--watch-->ViewModel["`
+  **ViewModel**
+  (ChangeNotifier)
+`"]:::viewmodel--listen-->Model["`
+  **(Domain) Model**
+  (Service)
+`"]:::model
+
+ViewModel--notify-->View
+Model--stream.add-->ViewModel
+
+```
+
+### Dependency choices, dependency injection and state management
+
+Regarding the packages to implement this architecture I've had quite a journey from [provider](https://pub.dev/packages/provider) to [riverpod](https://pub.dev/packages/riverpod) with [get_it](https://pub.dev/packages/get_it).
+
+I found my personal favorite solution with [get_it](https://pub.dev/packages/get_it) plus its [watch_it](https://pub.dev/packages/watch_it) extension because this fits the need of this application the most without being too invasive into the API of the flutter widget tree.
+
+This way all layers are clearly separated and easy to follow, even if this brings a little bit of boilerplate code.
+
+I am a big fan of the [KISS principle](https://en.wikipedia.org/wiki/KISS_principle) (keep it simple, stupid), so when it comes to organizing software source code and choosing architectural patterns simplicity is a big goal for me.
+
+Though performance is the biggest goal, especially for flutter apps on the desktop that compete against toolkits that are so slim and performant they could run on a toaster (exaggeration), so if simple things perform badly, I am willing to switch to more complicated approaches ;)
+
+### Persistence
+
+For persisting both setting and application state I've chosen a home cooked solution  inside the LibraryService and SettingsService that writes json files to disk. It is simple and fast and sufficient for the needs of this application. Eventually at some point it might make sense to switch to a real database though :).

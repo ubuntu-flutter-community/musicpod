@@ -5,9 +5,13 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../constants.dart';
 import '../../patch_notes.dart';
-import '../../utils.dart';
+import '../../persistence_utils.dart';
 
 class SettingsService {
+  SettingsService({required this.allowManualUpdates});
+
+  final bool allowManualUpdates;
+
   String? _appName;
   String? get appName => _appName;
   String? _packageName;
@@ -94,8 +98,8 @@ class SettingsService {
   Stream<bool> get usePodcastIndexChanged => _usePodcastIndexController.stream;
   bool _usePodcastIndex = false;
   bool get usePodcastIndex => _usePodcastIndex;
-  void setUsePodcastIndex(bool value) {
-    writeSetting(kUsePodcastIndex, value.toString()).then((_) {
+  Future<void> setUsePodcastIndex(bool value) async {
+    return writeSetting(kUsePodcastIndex, value.toString()).then((_) {
       _usePodcastIndex = value;
       _usePodcastIndexController.add(true);
     });

@@ -11,8 +11,6 @@ import '../../theme.dart';
 import '../../theme_data_x.dart';
 import '../l10n/l10n.dart';
 
-// TODO: create general purpose generic auto complete
-// or extract more
 class CountryAutoComplete extends StatelessWidget {
   const CountryAutoComplete({
     super.key,
@@ -60,11 +58,11 @@ class CountryAutoComplete extends StatelessWidget {
           return Autocomplete<Country>(
             key: ValueKey(value?.name),
             initialValue: TextEditingValue(
-              text: value?.name.camelToSentence().capitalizeEveryWord() ??
+              text: value?.name.camelToSentence.everyWordCapitalized ??
                   context.l10n.all,
             ),
             displayStringForOption: (option) =>
-                option.name.camelToSentence().capitalizeEveryWord(),
+                option.name.camelToSentence.everyWordCapitalized,
             fieldViewBuilder: (
               context,
               textEditingController,
@@ -92,11 +90,12 @@ class CountryAutoComplete extends StatelessWidget {
                 cursorWidth: yaruStyled ? 1 : 2.0,
                 decoration: yaruStyled
                     ? createYaruDecoration(
-                        isLight: theme.isLight,
+                        theme: theme,
                         style: style,
                         fillColor: fillColor,
                         contentPadding: contentPadding,
                         hintText: hintText,
+                        border: border,
                       )
                     : createMaterialDecoration(
                         colorScheme: theme.colorScheme,
@@ -228,7 +227,14 @@ class _CountryTile extends StatelessWidget {
       hoverColor: highlight ? theme.focusColor : null,
       tileColor: highlight ? theme.focusColor : null,
       onTap: () => onSelected(t),
-      title: Text(t.name.camelToSentence().capitalizeEveryWord()),
+      title: Tooltip(
+        message: t.name.camelToSentence.everyWordCapitalized,
+        child: Text(
+          t.name.camelToSentence.everyWordCapitalized,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
       trailing: IconButton(
         onPressed: () {
           favs?.contains(t.code) == false ? addFav(t) : removeFav(t);

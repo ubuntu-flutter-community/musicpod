@@ -1,18 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../build_context_x.dart';
 import '../l10n/l10n.dart';
 import 'stream_provider_share_button.dart';
 
-class CopyClipboardContent extends StatelessWidget {
+class CopyClipboardContent extends StatefulWidget {
   const CopyClipboardContent({
     super.key,
     required this.text,
     this.onSearch,
+    this.showActions = true,
   });
 
   final String text;
   final void Function()? onSearch;
+  final bool showActions;
+
+  @override
+  State<CopyClipboardContent> createState() => _CopyClipboardContentState();
+}
+
+class _CopyClipboardContentState extends State<CopyClipboardContent> {
+  @override
+  void initState() {
+    super.initState();
+    Clipboard.setData(ClipboardData(text: widget.text));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,17 +50,18 @@ class CopyClipboardContent extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  text,
+                  widget.text,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
           ),
-          StreamProviderRow(
-            iconColor: theme.snackBarTheme.actionTextColor,
-            onSearch: onSearch,
-            text: text,
-          ),
+          if (widget.showActions)
+            StreamProviderRow(
+              iconColor: theme.snackBarTheme.actionTextColor,
+              onSearch: widget.onSearch,
+              text: widget.text,
+            ),
         ],
       ),
     );

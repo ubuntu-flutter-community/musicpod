@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github/github.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../constants.dart';
 import '../../external_path.dart';
@@ -31,6 +29,7 @@ class SettingsModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _recentPatchNotesDisposedChangedSub;
   StreamSubscription<bool>? _useArtistGridViewChangedSub;
 
+  bool get allowManualUpdate => _service.allowManualUpdates;
   String? get appName => _service.appName;
   String? get packageName => _service.packageName;
   String? get version => _service.version;
@@ -50,7 +49,8 @@ class SettingsModel extends SafeChangeNotifier {
       _service.setNeverShowFailedImports(value);
 
   bool get usePodcastIndex => _service.usePodcastIndex;
-  void setUsePodcastIndex(bool value) => _service.setUsePodcastIndex(value);
+  Future<void> setUsePodcastIndex(bool value) async =>
+      await _service.setUsePodcastIndex(value);
 
   int get themeIndex => _service.themeIndex;
   void setThemeIndex(int value) => _service.setThemeIndex(value);
@@ -72,25 +72,23 @@ class SettingsModel extends SafeChangeNotifier {
   void setUseArtistGridView(bool value) => _service.setUseArtistGridView(value);
 
   void init() {
-    _themeIndexChangedSub =
+    _themeIndexChangedSub ??=
         _service.themeIndexChanged.listen((_) => notifyListeners());
-    _usePodcastIndexChangedSub =
+    _usePodcastIndexChangedSub ??=
         _service.usePodcastIndexChanged.listen((_) => notifyListeners());
-    _podcastIndexApiKeyChangedSub =
+    _podcastIndexApiKeyChangedSub ??=
         _service.podcastIndexApiKeyChanged.listen((_) => notifyListeners());
-    _podcastIndexApiSecretChangedSub =
+    _podcastIndexApiSecretChangedSub ??=
         _service.podcastIndexApiSecretChanged.listen((_) => notifyListeners());
-    _neverShowFailedImportsSub =
+    _neverShowFailedImportsSub ??=
         _service.neverShowFailedImportsChanged.listen((_) => notifyListeners());
-    _directoryChangedSub =
+    _directoryChangedSub ??=
         _service.directoryChanged.listen((_) => notifyListeners());
-    _useArtistGridViewChangedSub =
+    _useArtistGridViewChangedSub ??=
         _service.useArtistGridViewChanged.listen((_) => notifyListeners());
-
-    _recentPatchNotesDisposedChangedSub = _service
+    _recentPatchNotesDisposedChangedSub ??= _service
         .recentPatchNotesDisposedChanged
         .listen((_) => notifyListeners());
-    notifyListeners();
   }
 
   @override
@@ -107,32 +105,49 @@ class SettingsModel extends SafeChangeNotifier {
   }
 
   Future<String?> getOnlineVersion() async {
-    final release = await (_gitHub.repositories
-            .listReleases(RepositorySlug.full(kGitHubShortLink)))
+    final release = await _gitHub.repositories
+        .listReleases(RepositorySlug.full(kGitHubShortLink))
         .toList();
     return release.firstOrNull?.tagName;
   }
 
   Future<List<Contributor>> getContributors() async {
-    return (await _gitHub.repositories
+    return await _gitHub.repositories
         .listContributors(
           RepositorySlug.full(kGitHubShortLink),
         )
         .where((c) => c.type == 'User')
-        .toList());
+        .toList();
   }
 
-  int getExtendedVersionNumber(String version) {
+  bool? _updateAvailable;
+  bool? get updateAvailable => _updateAvailable;
+  String? _onlineVersion;
+  String? get onlineVersion => _onlineVersion;
+  Future<void> checkForUpdate(bool isOnline) async {
+    _updateAvailable == null;
+    notifyListeners();
+
+    if (!_service.allowManualUpdates || !isOnline) {
+      _updateAvailable = false;
+      notifyListeners();
+      return Future.value();
+    }
+    _onlineVersion = await getOnlineVersion();
+    final onlineVersion = getExtendedVersionNumber(_onlineVersion) ?? 0;
+    final currentVersion = getExtendedVersionNumber(version) ?? 0;
+    if (onlineVersion > currentVersion) {
+      _updateAvailable = true;
+    } else {
+      _updateAvailable = false;
+    }
+    notifyListeners();
+  }
+
+  int? getExtendedVersionNumber(String? version) {
+    if (version == null) return null;
     List versionCells = version.split('.');
     versionCells = versionCells.map((i) => int.parse(i)).toList();
     return versionCells[0] * 100000 + versionCells[1] * 1000 + versionCells[2];
   }
 }
-
-final settingsModelProvider = ChangeNotifierProvider(
-  (ref) => SettingsModel(
-    service: getService<SettingsService>(),
-    externalPathService: getService<ExternalPathService>(),
-    gitHub: getService<GitHub>(),
-  )..init(),
-);

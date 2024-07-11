@@ -43,9 +43,7 @@ class SafeNetworkImage extends StatelessWidget {
           ),
     );
 
-    if (url == null ||
-        url?.endsWith('.svg') == true ||
-        url?.endsWith('.ico') == true) return fallBack;
+    if (url == null) return fallBack;
 
     final errorWidget = Center(
       child: errorIcon ??
@@ -112,20 +110,4 @@ class XdgCacheManager extends CacheManager with ImageCacheManager {
   }
 
   XdgCacheManager._() : super(Config(key, fileSystem: _XdgFileSystem(key)));
-}
-
-class UrlStore {
-  static final UrlStore _instance = UrlStore._internal();
-  factory UrlStore() => _instance;
-  UrlStore._internal();
-
-  final _value = <String, String?>{};
-
-  String? put({required String icyTitle, String? imageUrl}) {
-    return _value.containsKey(icyTitle)
-        ? _value.update(icyTitle, (value) => imageUrl)
-        : _value.putIfAbsent(icyTitle, () => imageUrl);
-  }
-
-  String? get(String? icyTitle) => icyTitle == null ? null : _value[icyTitle];
 }

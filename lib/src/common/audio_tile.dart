@@ -1,60 +1,71 @@
 import 'package:flutter/material.dart';
+import 'package:yaru/constants.dart';
 
 import '../../build_context_x.dart';
 import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
+import '../../duration_x.dart';
 import '../../l10n.dart';
+import '../../library.dart';
+import '../../theme_data_x.dart';
+import 'audio_tile_image.dart';
 
 class AudioTile extends StatelessWidget {
   const AudioTile({
     super.key,
+    required this.pageId,
+    required this.libraryModel,
+    required this.insertIntoQueue,
     required this.selected,
     required this.audio,
-    this.onLike,
-    this.likeIcon,
     required this.isPlayerPlaying,
     required this.pause,
     required this.resume,
-    this.onAlbumTap,
-    this.onArtistTap,
-    this.showTrack = true,
-    this.showAlbum = true,
-    this.showArtist = true,
-    this.titleFlex = 1,
-    this.artistFlex = 1,
-    this.albumFlex = 1,
+    this.onSubTitleTap,
     this.startPlaylist,
-    this.trackLabel,
+    required this.audioPageType,
   });
 
-  final String? trackLabel;
+  final String pageId;
   final Audio audio;
+  final AudioPageType audioPageType;
   final bool selected;
-  final void Function()? onLike;
-  final Widget? likeIcon;
+
   final bool isPlayerPlaying;
   final Future<void> Function() resume;
   final void Function()? startPlaylist;
   final void Function() pause;
-  final bool showTrack;
-  final bool showArtist;
-  final bool showAlbum;
-  final void Function(String text)? onAlbumTap;
-  final void Function(String text)? onArtistTap;
-
-  final int titleFlex, artistFlex, albumFlex;
+  final void Function(String text)? onSubTitleTap;
+  final LibraryModel libraryModel;
+  final void Function(Audio audio) insertIntoQueue;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    final subTitle = switch (audioPageType) {
+      AudioPageType.artist => audio.album ?? context.l10n.unknown,
+      _ => audio.artist ?? context.l10n.unknown,
+    };
+
+    final leading = switch (audioPageType) {
+      AudioPageType.album => AlbumTileLead(trackNumber: audio.trackNumber),
+      _ => AudioTileImage(
+          size: kAudioTrackWidth,
+          audio: audio,
+        ),
+    };
+
     final listTile = ListTile(
+      dense: audioPageType == AudioPageType.album,
+      minLeadingWidth: kAudioTrackWidth,
+      leading: leading,
       selected: selected,
       selectedColor: isPlayerPlaying
-          ? theme.colorScheme.primary
+          ? theme.contrastyPrimary
           : theme.colorScheme.onSurface,
       selectedTileColor: theme.colorScheme.onSurface.withOpacity(0.05),
-      contentPadding: kAudioTilePadding,
+      contentPadding: kModernAudioTilePadding,
       onTap: () {
         if (selected) {
           if (isPlayerPlaying) {
@@ -63,72 +74,68 @@ class AudioTile extends StatelessWidget {
             resume();
           }
         } else {
-          startPlaylist!();
+          startPlaylist?.call();
         }
       },
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      title: Padding(
+        padding: const EdgeInsets.only(right: kYaruPagePadding),
+        child: Text(
+          audio.title ?? context.l10n.unknown,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+      ),
+      subtitle: TapAbleText(
+        text: subTitle,
+        onTap:
+            onSubTitleTap == null ? null : () => onSubTitleTap?.call(subTitle),
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          if (showTrack)
+          if (audio.audioType != AudioType.radio && audio.durationMs != null)
             Padding(
-              padding: kAudioTileTrackPadding,
+              padding: const EdgeInsets.only(right: 10),
               child: Text(
-                trackLabel ??
-                    (audio.trackNumber != null
-                        ? audio.trackNumber!.toString().padLeft(2, '0')
-                        : '00'),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                Duration(milliseconds: audio.durationMs!.toInt()).formattedTime,
               ),
             ),
-          Expanded(
-            flex: titleFlex,
-            child: Padding(
-              padding: kAudioTileSpacing,
-              child: Text(
-                audio.title ?? context.l10n.unknown,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+          LikeButton(
+            selected: selected && isPlayerPlaying,
+            libraryModel: libraryModel,
+            playlistId: pageId,
+            audio: audio,
+            allowRemove: audioPageType == AudioPageType.playlist,
+            insertIntoQueue: () => insertIntoQueue(audio),
           ),
-          if (showArtist)
-            Expanded(
-              flex: artistFlex,
-              child: Padding(
-                padding: kAudioTileSpacing,
-                child: TapAbleText(
-                  onTap: onArtistTap == null ||
-                          audio.audioType == null ||
-                          audio.artist == null
-                      ? null
-                      : () => onArtistTap!(audio.artist!),
-                  text: audio.artist?.isNotEmpty == false
-                      ? context.l10n.unknown
-                      : audio.artist ?? context.l10n.unknown,
-                ),
-              ),
-            ),
-          if (showAlbum)
-            Expanded(
-              flex: albumFlex,
-              child: TapAbleText(
-                onTap: onAlbumTap == null ||
-                        audio.audioType == null ||
-                        audio.audioType == AudioType.radio ||
-                        audio.album == null
-                    ? null
-                    : () => onAlbumTap!(audio.album!),
-                text: audio.album?.isNotEmpty == false
-                    ? context.l10n.unknown
-                    : audio.album ?? context.l10n.unknown,
-              ),
-            ),
         ],
       ),
-      trailing: likeIcon,
     );
 
     return listTile;
+  }
+}
+
+class AlbumTileLead extends StatelessWidget {
+  const AlbumTileLead({
+    super.key,
+    required this.trackNumber,
+  });
+
+  final int? trackNumber;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.square(
+      dimension: kAudioTrackWidth,
+      child: Center(
+        widthFactor: 1,
+        child: Text(
+          trackNumber?.toString() ?? '0',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    );
   }
 }

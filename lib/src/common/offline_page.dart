@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../build_context_x.dart';
-import 'common_widgets.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../build_context_x.dart';
 import '../l10n/l10n.dart';
+import 'common_widgets.dart';
 
 class OfflinePage extends StatelessWidget {
   const OfflinePage({super.key});
@@ -13,6 +13,7 @@ class OfflinePage extends StatelessWidget {
     final theme = context.t;
     return YaruDetailPage(
       appBar: HeaderBar(
+        adaptive: true,
         title: Text(context.l10n.offline),
         backgroundColor: Colors.transparent,
       ),

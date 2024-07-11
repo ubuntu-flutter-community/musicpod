@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
+import 'package:podcast_search/podcast_search.dart';
+import 'package:radio_browser_api/radio_browser_api.dart';
 
 import '../../../string_x.dart';
 import 'genres.dart';
@@ -277,7 +279,7 @@ class Audio {
         ? tagGenres[data.genres.firstOrNull
                 ?.replaceAll('(', '')
                 .replaceAll(')', '')]
-            ?.capitalizeEveryWord()
+            ?.everyWordCapitalized
         : data.genres.firstOrNull;
 
     return Audio(
@@ -298,6 +300,51 @@ class Audio {
       trackNumber: data.trackNumber,
       year: data.year?.year,
     );
+  }
+
+  factory Audio.fromStation(Station station) {
+    return Audio(
+      url: station.urlResolved,
+      title: station.name,
+      artist: station.language ?? station.name,
+      album: station.tags ?? '',
+      audioType: AudioType.radio,
+      imageUrl: station.favicon,
+      website: station.homepage,
+      description: station.stationUUID,
+    );
+  }
+
+  factory Audio.fromPodcast({
+    required Episode episode,
+    required Podcast? podcast,
+    required String? itemImageUrl,
+    required String? genre,
+  }) {
+    return Audio(
+      url: episode.contentUrl,
+      audioType: AudioType.podcast,
+      imageUrl: episode.imageUrl,
+      albumArtUrl: itemImageUrl ?? podcast?.image,
+      title: episode.title,
+      album: podcast?.title,
+      artist: podcast?.copyright,
+      albumArtist: podcast?.description,
+      durationMs: episode.duration?.inMilliseconds.toDouble(),
+      year: episode.publicationDate?.millisecondsSinceEpoch,
+      description: episode.description,
+      website: podcast?.url,
+      genre: genre,
+    );
+  }
+
+  String? get albumId {
+    final albumName = album;
+    final artistName = artist;
+    final id = albumName == null && artistName == null
+        ? null
+        : '${artistName ?? ''}:${albumName ?? ''}';
+    return id;
   }
 }
 

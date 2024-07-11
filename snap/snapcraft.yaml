@@ -1,4 +1,5 @@
 name: musicpod
+title: MusicPod
 version: git
 summary: Music, podcast and internet radio player
 description: Play local audio files, browse podcasts online or listen to internet radio stations.
@@ -60,7 +61,7 @@ parts:
 
   flutter-git:
     source: https://github.com/flutter/flutter.git
-    source-tag: 3.16.0
+    source-tag: 3.19.5
     source-depth: 1
     plugin: nil
     override-build: |
@@ -89,11 +90,12 @@ parts:
     build-environment:
       - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET:/snap/gnome-42-2204-sdk/current/lib/$CRAFT_ARCH_TRIPLET:/snap/gnome-42-2204-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET:/snap/gnome-42-2204-sdk/current/usr/lib:/snap/gnome-42-2204-sdk/current/usr/lib/vala-current:/snap/gnome-42-2204-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET/pulseaudio${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
     override-build: |
+      set -eux
+      curl https://sh.rustup.rs -sSf | sh -s -- -y
       mkdir -p $CRAFT_PART_INSTALL/bin/lib
       # work around pub get stack overflow # https://github.com/dart-lang/sdk/issues/51068#issuecomment-1396588253
       set +e
       dart pub get
-      set -eux
       flutter build linux --release -v
       cp -r build/linux/*/release/bundle/* $CRAFT_PART_INSTALL/bin/
 

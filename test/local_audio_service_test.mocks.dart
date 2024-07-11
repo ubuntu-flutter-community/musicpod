@@ -30,6 +30,12 @@ class MockSettingsService extends _i1.Mock implements _i2.SettingsService {
   }
 
   @override
+  bool get allowManualUpdates => (super.noSuchMethod(
+        Invocation.getter(#allowManualUpdates),
+        returnValue: false,
+      ) as bool);
+
+  @override
   _i3.Stream<bool> get themeIndexChanged => (super.noSuchMethod(
         Invocation.getter(#themeIndexChanged),
         returnValue: _i3.Stream<bool>.empty(),
@@ -96,6 +102,18 @@ class MockSettingsService extends _i1.Mock implements _i2.SettingsService {
       ) as _i3.Stream<bool>);
 
   @override
+  _i3.Stream<bool> get useArtistGridViewChanged => (super.noSuchMethod(
+        Invocation.getter(#useArtistGridViewChanged),
+        returnValue: _i3.Stream<bool>.empty(),
+      ) as _i3.Stream<bool>);
+
+  @override
+  bool get useArtistGridView => (super.noSuchMethod(
+        Invocation.getter(#useArtistGridView),
+        returnValue: false,
+      ) as bool);
+
+  @override
   void setThemeIndex(int? value) => super.noSuchMethod(
         Invocation.method(
           #setThemeIndex,
@@ -124,13 +142,14 @@ class MockSettingsService extends _i1.Mock implements _i2.SettingsService {
       ) as _i3.Future<void>);
 
   @override
-  void setUsePodcastIndex(bool? value) => super.noSuchMethod(
+  _i3.Future<void> setUsePodcastIndex(bool? value) => (super.noSuchMethod(
         Invocation.method(
           #setUsePodcastIndex,
           [value],
         ),
-        returnValueForMissingStub: null,
-      );
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
   void setPodcastIndexApiKey(String? value) => super.noSuchMethod(
@@ -159,6 +178,15 @@ class MockSettingsService extends _i1.Mock implements _i2.SettingsService {
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),
       ) as _i3.Future<void>);
+
+  @override
+  void setUseArtistGridView(bool? value) => super.noSuchMethod(
+        Invocation.method(
+          #setUseArtistGridView,
+          [value],
+        ),
+        returnValueForMissingStub: null,
+      );
 
   @override
   _i3.Future<void> init({String? testDir}) => (super.noSuchMethod(

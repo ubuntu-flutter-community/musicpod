@@ -6,9 +6,10 @@ import '../../common.dart';
 import '../../constants.dart';
 import '../../data.dart';
 import '../../library.dart';
+import '../../playlists.dart';
 import '../../theme.dart';
+import '../../theme_data_x.dart';
 import '../l10n/l10n.dart';
-import '../library/add_to_playlist_dialog.dart';
 
 class LikeButton extends StatelessWidget {
   const LikeButton({
@@ -50,7 +51,7 @@ class LikeButton extends StatelessWidget {
       },
       child: Iconz().getAnimatedHeartIcon(
         liked: liked,
-        color: selected ? theme.colorScheme.primary : null,
+        color: selected ? theme.contrastyPrimary : null,
       ),
     );
 
@@ -62,17 +63,32 @@ class LikeButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(100),
         ),
       ),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       itemBuilder: (context) {
         return [
           PopupMenuItem(
-            onTap: insertIntoQueue,
-            child: Text(context.l10n.playNext),
+            onTap: () {
+              insertIntoQueue?.call();
+              showSnackBar(
+                context: context,
+                content: Text(
+                  '${context.l10n.addedTo} ${context.l10n.queue}: ${audio.artist} - ${audio.title}',
+                ),
+              );
+            },
+            child: YaruTile(
+              leading: Icon(Iconz().insertIntoQueue),
+              title: Text(context.l10n.playNext),
+            ),
           ),
           if (allowRemove)
             PopupMenuItem(
               onTap: () =>
                   libraryModel.removeAudioFromPlaylist(playlistId, audio),
-              child: Text('${context.l10n.removeFrom} $playlistId'),
+              child: YaruTile(
+                leading: Icon(Iconz().remove),
+                title: Text('${context.l10n.removeFrom} $playlistId'),
+              ),
             ),
           PopupMenuItem(
             onTap: () => showDialog(
@@ -84,8 +100,11 @@ class LikeButton extends StatelessWidget {
                 );
               },
             ),
-            child: Text(
-              '${context.l10n.addToPlaylist} ...',
+            child: YaruTile(
+              leading: Icon(Iconz().plus),
+              title: Text(
+                '${context.l10n.addToPlaylist} ...',
+              ),
             ),
           ),
           PopupMenuItem(
@@ -95,14 +114,27 @@ class LikeButton extends StatelessWidget {
                 return MetaDataDialog(audio: audio);
               },
             ),
-            child: Text(
-              '${context.l10n.showMetaData} ...',
+            child: YaruTile(
+              leading: Icon(Iconz().info),
+              title: Text(
+                '${context.l10n.showMetaData} ...',
+              ),
             ),
           ),
           PopupMenuItem(
+            enabled: false,
             padding: EdgeInsets.zero,
-            child: StreamProviderRow(
-              text: '${audio.artist ?? ''} - ${audio.title ?? ''}',
+            child: Theme(
+              data: theme.copyWith(disabledColor: theme.colorScheme.onSurface),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 13),
+                child: StreamProviderRow(
+                  iconColor: theme.colorScheme.onSurface,
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  text: '${audio.artist ?? ''} - ${audio.title ?? ''}',
+                ),
+              ),
             ),
           ),
         ];
@@ -151,6 +183,10 @@ class MetaDataDialog extends StatelessWidget {
       (
         context.l10n.genre,
         '${audio.genre}',
+      ),
+      (
+        context.l10n.url,
+        (audio.url ?? ''),
       ),
     };
 

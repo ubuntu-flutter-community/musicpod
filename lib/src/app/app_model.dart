@@ -1,12 +1,18 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/widgets.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 
 class AppModel extends SafeChangeNotifier {
-  AppModel({required Connectivity connectivity}) : _connectivity = connectivity;
+  AppModel({required Connectivity connectivity})
+      : _connectivity = connectivity,
+        _countryCode = WidgetsBinding
+            .instance.platformDispatcher.locale.countryCode
+            ?.toLowerCase();
+
+  final String? _countryCode;
+  String? get countryCode => _countryCode;
 
   final Connectivity _connectivity;
   StreamSubscription? _subscription;
@@ -31,9 +37,9 @@ class AppModel extends SafeChangeNotifier {
     super.dispose();
   }
 
-  void _updateConnectivity(ConnectivityResult result) {
-    if (_result == result) return;
-    _result = result;
+  void _updateConnectivity(List<ConnectivityResult> result) {
+    if (_result == result.firstOrNull) return;
+    _result = result.firstOrNull;
     notifyListeners();
   }
 
@@ -44,11 +50,11 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  bool? _fullScreen;
-  bool? get fullScreen => _fullScreen;
-  void setFullScreen(bool? value) {
-    if (value == null || value == _fullScreen) return;
-    _fullScreen = value;
+  bool? _fullWindowMode;
+  bool? get fullWindowMode => _fullWindowMode;
+  void setFullWindowMode(bool? value) {
+    if (value == null || value == _fullWindowMode) return;
+    _fullWindowMode = value;
     notifyListeners();
   }
 
@@ -59,7 +65,3 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 }
-
-final appModelProvider = ChangeNotifierProvider(
-  (ref) => AppModel(connectivity: getService<Connectivity>()),
-);

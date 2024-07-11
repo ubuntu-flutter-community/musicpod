@@ -12,6 +12,8 @@
     "rewind10": "10 Sekunden zurückspulen",
     "fullWindow": "Vollfenstermodus",
     "leaveFullWindow": "Vollfenstermodus verlassen",
+    "fullScreen": "Vollbildmodus",
+    "leaveFullScreen": "Vollbildmodus verlassen",
     "playbackRate": "Wiedergabegeschwindigkeit",
     "addToFavorites": "Zu Favoriten hinzufügen",
     "removeFromFavorites": "Aus Favoriten entfernen",
@@ -121,7 +123,16 @@
     },
     "emptyPlaylist": "Diese Wiedergabeliste ist leer.",
     "copiedToClipBoard": "In die Zwischenablage kopiert:",
+    "copyToClipBoard": "In die Zwischenablage kopieren",
     "insertIntoQueue": "In Warteschlange aufnehmen",
+    "insertedIntoQueue": "In Warteschlange aufgenommen: {name}",
+    "@insertedIntoQueue": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
     "about": "Über",
     "localAudioCacheSuggestion": "Du hast {length} lokale Audio-Dateien. Möchtest du einen Cache anlegen um den Programmstart zu beschleunigen?",
     "@localAudioCacheSuggestion": {
@@ -296,5 +307,20 @@
     "playAll": "Alles abspielen",
     "hearingHistory": "Hörverlauf",
     "emptyHearingHistory": "Du hast noch keinem Radiosender in dieser Sitzung zugehört.",
-    "searchForRadioStationsWithGenreName": "Suche nach Radiosendern mit diesem Genre"
+    "searchForRadioStationsWithGenreName": "Suche nach Radiosendern mit diesem Genre",
+    "clearPlaylist": "Alle Medien aus Wiedergabeliste löschen",
+    "editPlaylist": "Wiedergabeliste editieren",
+    "stationUrl": "URL des Radiosenders",
+    "podcastFeedUrl": "URL des Podcast-feeds",
+    "stationName": "Name des Radiosenders",
+    "podcastName": "Name des Podcasts",
+    "url": "Url",
+    "loadFromFileOptional": "Aus Datei laden (optional)",
+    "loadMore": "Mehr laden",
+    "searchOnline": "Im Internet suchen",
+    "shareThisEpisode": "Diese Episode teilen",
+    "downloadEpisode": "Episode herunterladen",
+    "removeDownloadEpisode": "Episode-Download entfernen",
+    "language": "Sprache",
+    "duration": "Dauer"
 }

@@ -10,6 +10,7 @@ class TapAbleText extends StatelessWidget {
     this.style,
     this.maxLines,
     this.overflow = TextOverflow.ellipsis,
+    this.wrapInFlexible = true,
   });
 
   final void Function()? onTap;
@@ -17,29 +18,33 @@ class TapAbleText extends StatelessWidget {
   final TextStyle? style;
   final int? maxLines;
   final TextOverflow overflow;
+  final bool wrapInFlexible;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
 
-    return Row(
-      children: [
-        Flexible(
-          fit: FlexFit.loose,
-          child: InkWell(
-            hoverColor:
-                (style?.color ?? theme.colorScheme.primary).withOpacity(0.3),
-            borderRadius: BorderRadius.circular(4),
-            onTap: onTap == null ? null : () => onTap!(),
-            child: Text(
-              text,
-              style: style,
-              maxLines: maxLines ?? 1,
-              overflow: overflow,
-            ),
-          ),
-        ),
-      ],
+    final inkWell = InkWell(
+      hoverColor: (style?.color ?? theme.colorScheme.primary).withOpacity(0.3),
+      borderRadius: BorderRadius.circular(4),
+      onTap: onTap == null ? null : () => onTap!(),
+      child: Text(
+        text,
+        style: style,
+        maxLines: maxLines ?? 1,
+        overflow: overflow,
+      ),
     );
+
+    return wrapInFlexible
+        ? Row(
+            children: [
+              Flexible(
+                fit: FlexFit.loose,
+                child: inkWell,
+              ),
+            ],
+          )
+        : inkWell;
   }
 }

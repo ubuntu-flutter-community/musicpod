@@ -5,7 +5,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../build_context_x.dart';
 import '../../constants.dart';
-import '../../theme.dart';
+import '../../theme_data_x.dart';
 import '../l10n/l10n.dart';
 
 const _kBigTextMitigation = 2.0;
@@ -18,38 +18,40 @@ class AudioPageHeader extends StatelessWidget {
     this.image,
     this.label,
     this.subTitle,
-    this.height,
     this.imageRadius,
     this.onSubTitleTab,
     this.onLabelTab,
-    this.content,
+    this.descriptionWidget,
     this.padding,
   });
 
   final String title;
   final String? description;
-  final Widget? content;
+  final Widget? descriptionWidget;
   final Widget? image;
   final String? label;
   final String? subTitle;
   final void Function(String text)? onSubTitleTab;
   final void Function(String text)? onLabelTab;
 
-  final double? height;
   final BorderRadius? imageRadius;
   final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
+    const height = kMaxAudioPageHeaderHeight;
     final theme = context.t;
-    final size = context.m.size;
-    final smallWindow = size.width < kMasterDetailBreakPoint;
+    final smallWindow = context.smallWindow;
     final radius = imageRadius ?? BorderRadius.circular(10);
 
     return Padding(
-      padding: height != kMinAudioPageHeaderHeight
-          ? padding ?? const EdgeInsets.all(20)
-          : const EdgeInsets.only(left: 20),
+      padding: !smallWindow
+          ? (padding ??
+              const EdgeInsets.only(
+                bottom: kYaruPagePadding,
+                left: kYaruPagePadding,
+              ))
+          : const EdgeInsets.only(bottom: kYaruPagePadding),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         height: height,
@@ -87,78 +89,91 @@ class AudioPageHeader extends StatelessWidget {
               ),
             if (!smallWindow)
               Expanded(
-                child: content ??
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          fit: FlexFit.tight,
-                          child: AudioPageHeaderTitle(title: title),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      child: Padding(
+                        padding: context.smallWindow
+                            ? EdgeInsets.zero
+                            : const EdgeInsets.only(right: kYaruPagePadding),
+                        child: Text(
+                          title,
+                          style: theme.pageHeaderStyle,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        if (height != kMinAudioPageHeaderHeight)
-                          Flexible(
-                            child: AudioPageHeaderSubTitle(
-                              onLabelTab: onLabelTab,
-                              label: label,
-                              subTitle: subTitle,
-                              onSubTitleTab: onSubTitleTab,
-                            ),
-                          ),
-                        Expanded(
-                          flex: 3,
-                          child: (description != null) &&
-                                  height != kMinAudioPageHeaderHeight
-                              ? Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: _kBigTextMitigation,
-                                  ),
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.circular(
-                                      kYaruButtonRadius,
-                                    ),
-                                    onTap: () => showDialog(
-                                      context: context,
-                                      builder: (context) => _DescriptionDialog(
-                                        title: title,
-                                        description: description!,
-                                      ),
-                                    ),
-                                    child: SizedBox(
-                                      height: 100,
-                                      child: Html(
-                                        data: description,
-                                        onAnchorTap:
-                                            (url, attributes, element) {
-                                          if (url == null) return;
-                                          launchUrl(Uri.parse(url));
-                                        },
-                                        style: {
-                                          'img': Style(display: Display.none),
-                                          'html': Style(
-                                            margin: Margins.zero,
-                                            padding: HtmlPaddings.zero,
-                                            textAlign: TextAlign.start,
-                                            maxLines: 20,
-                                            textOverflow: TextOverflow.fade,
-                                          ),
-                                          'body': Style(
-                                            margin: Margins.zero,
-                                            textOverflow: TextOverflow.fade,
-                                            maxLines: 20,
-                                            textAlign: TextAlign.start,
-                                          ),
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox.expand(),
-                        ),
-                      ],
+                      ),
                     ),
+                    Expanded(
+                      flex: 1,
+                      child: AudioPageHeaderSubTitle(
+                        onLabelTab: onLabelTab,
+                        label: label,
+                        subTitle: subTitle,
+                        onSubTitleTab: onSubTitleTab,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 7,
+                      child: descriptionWidget ??
+                          (description != null
+                              ? AudioPageHeaderHtmlDescription(
+                                  description: description,
+                                )
+                              : const SizedBox.expand()),
+                    ),
+                  ],
+                ),
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class AudioPageHeaderHtmlDescription extends StatelessWidget {
+  const AudioPageHeaderHtmlDescription({
+    super.key,
+    required this.description,
+  });
+
+  final String? description;
+
+  @override
+  Widget build(BuildContext context) {
+    final descriptionStyle = context.t.textTheme.bodyMedium;
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 2,
+      ),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.only(
+          right: kYaruPagePadding,
+        ),
+        child: Html(
+          data: description,
+          onAnchorTap: (url, attributes, element) {
+            if (url == null) return;
+            launchUrl(Uri.parse(url));
+          },
+          style: {
+            'img': Style(display: Display.none),
+            'body': Style(
+              height: Height.auto(),
+              margin: Margins.zero,
+              padding: HtmlPaddings.zero,
+              textOverflow: TextOverflow.fade,
+              textAlign: TextAlign.start,
+              fontSize: FontSize(
+                descriptionStyle?.fontSize ?? 10,
+              ),
+              fontWeight: descriptionStyle?.fontWeight,
+              fontFamily: descriptionStyle?.fontFamily,
+            ),
+          },
         ),
       ),
     );
@@ -223,84 +238,6 @@ class AudioPageHeaderSubTitle extends StatelessWidget {
             ),
           ),
       ],
-    );
-  }
-}
-
-class AudioPageHeaderTitle extends StatelessWidget {
-  const AudioPageHeaderTitle({
-    super.key,
-    required this.title,
-  });
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.t;
-
-    return Text(
-      title,
-      style: theme.textTheme.headlineLarge?.copyWith(
-        fontWeight: FontWeight.w300,
-        letterSpacing: 0,
-        leadingDistribution: TextLeadingDistribution.proportional,
-        fontSize: 30,
-        color: theme.colorScheme.onSurface.withOpacity(0.9),
-      ),
-      overflow: TextOverflow.ellipsis,
-    );
-  }
-}
-
-class _DescriptionDialog extends StatelessWidget {
-  const _DescriptionDialog({
-    required this.title,
-    required this.description,
-  });
-
-  final String title;
-  final String description;
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: yaruStyled
-          ? YaruDialogTitleBar(
-              title: Text(title),
-              backgroundColor: Colors.transparent,
-              border: BorderSide.none,
-            )
-          : Text(title),
-      titlePadding: yaruStyled ? EdgeInsets.zero : null,
-      contentPadding: const EdgeInsets.only(
-        top: 10,
-        left: kYaruPagePadding,
-        right: kYaruPagePadding,
-        bottom: kYaruPagePadding,
-      ),
-      content: SizedBox(
-        width: 400,
-        height: 500,
-        child: Html(
-          onAnchorTap: (url, attributes, element) {
-            if (url == null) return;
-            launchUrl(Uri.parse(url));
-          },
-          data: description,
-          style: {
-            'html': Style(
-              margin: Margins.zero,
-              padding: HtmlPaddings.zero,
-            ),
-            'body': Style(
-              margin: Margins.zero,
-              padding: HtmlPaddings.zero,
-            ),
-          },
-        ),
-      ),
-      scrollable: true,
     );
   }
 }

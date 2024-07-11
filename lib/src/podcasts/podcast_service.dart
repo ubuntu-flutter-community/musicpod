@@ -6,6 +6,7 @@ import 'package:podcast_search/podcast_search.dart';
 import '../../common.dart';
 import '../../data.dart';
 import '../../settings.dart';
+import '../common/languages.dart';
 import '../notifications/notifications_service.dart';
 
 class PodcastService {
@@ -22,18 +23,22 @@ class PodcastService {
   SearchResult? _searchResult;
   SearchResult? get searchResult => _searchResult;
   Search? _search;
+  bool get searchWithPodcastIndex =>
+      _search?.searchProvider is PodcastIndexProvider;
 
-  Future<void> init() async {
-    _search = Search(
-      searchProvider: _settingsService.usePodcastIndex == true &&
-              _settingsService.podcastIndexApiKey != null &&
-              _settingsService.podcastIndexApiSecret != null
-          ? PodcastIndexProvider(
-              key: _settingsService.podcastIndexApiKey!,
-              secret: _settingsService.podcastIndexApiSecret!,
-            )
-          : const ITunesProvider(),
-    );
+  Future<void> init({bool forceInit = false}) async {
+    if (_search == null || forceInit) {
+      _search = Search(
+        searchProvider: _settingsService.usePodcastIndex == true &&
+                _settingsService.podcastIndexApiKey != null &&
+                _settingsService.podcastIndexApiSecret != null
+            ? PodcastIndexProvider(
+                key: _settingsService.podcastIndexApiKey!,
+                secret: _settingsService.podcastIndexApiSecret!,
+              )
+            : const ITunesProvider(),
+      );
+    }
   }
 
   Future<void> dispose() async {
@@ -44,10 +49,11 @@ class PodcastService {
     String? searchQuery,
     PodcastGenre podcastGenre = PodcastGenre.all,
     Country? country,
+    SimpleLanguage? language,
     int limit = 10,
   }) async {
     _searchResult = null;
-
+    _searchChangedController.add(true);
     SearchResult? result;
     String? error;
     try {
@@ -56,13 +62,17 @@ class PodcastService {
           genre: podcastGenre == PodcastGenre.all ? '' : podcastGenre.id,
           limit: limit,
           country: country ?? Country.none,
-          language: country?.code ?? '',
+          language: country != null || language?.isoCode == null
+              ? ''
+              : language!.isoCode,
         );
       } else {
         result = await _search?.search(
           searchQuery,
           country: country ?? Country.none,
-          language: country?.code ?? '',
+          language: country != null || language?.isoCode == null
+              ? ''
+              : language!.isoCode,
           limit: limit,
         );
       }
@@ -114,29 +124,6 @@ class PodcastService {
   }
 }
 
-Audio _createAudio(
-  Episode episode,
-  Podcast? podcast, [
-  String? itemImageUrl,
-  String? genre,
-]) {
-  return Audio(
-    url: episode.contentUrl,
-    audioType: AudioType.podcast,
-    imageUrl: episode.imageUrl,
-    albumArtUrl: itemImageUrl ?? podcast?.image,
-    title: episode.title,
-    album: podcast?.title,
-    artist: podcast?.copyright,
-    albumArtist: podcast?.description,
-    durationMs: episode.duration?.inMilliseconds.toDouble(),
-    year: episode.publicationDate?.millisecondsSinceEpoch,
-    description: episode.description,
-    website: podcast?.url,
-    genre: genre,
-  );
-}
-
 Future<Set<Audio>> findEpisodes({
   required String feedUrl,
   String? itemImageUrl,
@@ -148,11 +135,11 @@ Future<Set<Audio>> findEpisodes({
   if (podcast?.episodes.isNotEmpty == true) {
     for (var episode in podcast?.episodes ?? []) {
       if (episode.contentUrl != null) {
-        final audio = _createAudio(
-          episode,
-          podcast,
-          itemImageUrl,
-          genre,
+        final audio = Audio.fromPodcast(
+          episode: episode,
+          podcast: podcast,
+          itemImageUrl: itemImageUrl,
+          genre: genre,
         );
         episodes.add(audio);
       }

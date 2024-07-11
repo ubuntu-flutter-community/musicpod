@@ -72,11 +72,7 @@ void runOrConfirm({
       context: context,
       builder: (context) {
         return _ConfirmationDialog(
-          message: Text(
-            context.l10n.queueConfirmMessage(
-              message,
-            ),
-          ),
+          message: Text(message),
         );
       },
     ).then((value) {

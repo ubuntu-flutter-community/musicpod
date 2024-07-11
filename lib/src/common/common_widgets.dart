@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app.dart';
@@ -19,12 +19,8 @@ class NavBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void onTap() {
-      if (onPressed == null) {
-        navigatorKey.currentState?.maybePop(context);
-      } else {
-        onPressed?.call();
-        navigatorKey.currentState?.maybePop(context);
-      }
+      onPressed?.call();
+      navigatorKey.currentState?.maybePop(context);
     }
 
     if (yaruStyled) {
@@ -123,47 +119,64 @@ class Progress extends StatelessWidget {
   }
 }
 
-class HeaderBar extends StatelessWidget implements PreferredSizeWidget {
+class HeaderBar extends StatelessWidget
+    with WatchItMixin
+    implements PreferredSizeWidget {
   const HeaderBar({
     super.key,
     this.title,
-    this.leading,
     this.actions,
     this.style = YaruTitleBarStyle.normal,
     this.titleSpacing,
     this.backgroundColor = Colors.transparent,
     this.foregroundColor,
+    required this.adaptive,
+    this.includeBackButton = true,
   });
 
   final Widget? title;
-  final Widget? leading;
   final List<Widget>? actions;
   final YaruTitleBarStyle style;
   final double? titleSpacing;
   final Color? foregroundColor;
   final Color? backgroundColor;
+  final bool adaptive;
+  final bool includeBackButton;
 
   @override
   Widget build(BuildContext context) {
-    return !isMobile
-        ? YaruWindowTitleBar(
-            titleSpacing: titleSpacing,
-            actions: actions,
-            leading: leading,
-            title: title,
-            border: BorderSide.none,
-            backgroundColor: backgroundColor,
-            style: style,
-            foregroundColor: foregroundColor,
-          )
-        : AppBar(
-            titleSpacing: titleSpacing,
-            centerTitle: true,
-            leading: leading,
-            title: title,
-            actions: actions,
-            foregroundColor: foregroundColor,
-          );
+    if (isMobile) {
+      return AppBar(
+        titleSpacing: titleSpacing,
+        centerTitle: true,
+        leading: includeBackButton && Navigator.canPop(context)
+            ? const NavBackButton()
+            : const SizedBox.shrink(),
+        title: title,
+        actions: actions,
+        foregroundColor: foregroundColor,
+      );
+    }
+
+    var theStyle = style;
+    if (adaptive) {
+      theStyle = watchPropertyValue((AppModel m) => m.showWindowControls)
+          ? YaruTitleBarStyle.normal
+          : YaruTitleBarStyle.undecorated;
+    }
+
+    return YaruWindowTitleBar(
+      titleSpacing: titleSpacing,
+      actions: actions,
+      leading: includeBackButton && Navigator.canPop(context)
+          ? const NavBackButton()
+          : const SizedBox.shrink(),
+      title: title,
+      border: BorderSide.none,
+      backgroundColor: backgroundColor,
+      style: theStyle,
+      foregroundColor: foregroundColor,
+    );
   }
 
   @override
@@ -220,7 +233,7 @@ class SearchButton extends StatelessWidget {
   }
 }
 
-class SearchingBar extends ConsumerWidget {
+class SearchingBar extends StatelessWidget {
   const SearchingBar({
     super.key,
     this.text,
@@ -237,36 +250,18 @@ class SearchingBar extends ConsumerWidget {
   final String? hintText;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final appModel = ref.read(appModelProvider);
-    void onChanged2(v) {
-      appModel.setLockSpace(true);
-      onChanged?.call(v);
-    }
-
-    void onSubmitted2(v) {
-      appModel.setLockSpace(false);
-      onSubmitted?.call(v);
-    }
-
-    return yaruStyled
-        ? YaruSearchField(
-            hintText: hintText,
-            clearIcon: yaruStyled ? null : Icon(Iconz().clear),
-            key: key,
-            text: text,
-            onClear: onClear,
-            onSubmitted: onSubmitted2,
-            onChanged: onChanged2,
-          )
-        : MaterialSearchBar(
-            hintText: hintText,
-            text: text,
-            key: key,
-            onSubmitted: onSubmitted2,
-            onClear: onClear,
-            onChanged: onChanged2,
-          );
+  Widget build(BuildContext context) {
+    return MaterialSearchBar(
+      hintText: hintText,
+      text: text,
+      key: key,
+      onSubmitted: (v) {
+        di<AppModel>().setLockSpace(false);
+        onSubmitted?.call(v);
+      },
+      onClear: onClear,
+      onChanged: onChanged,
+    );
   }
 }
 
@@ -306,10 +301,12 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.t;
     return SizedBox(
-      height: 38,
+      height: yaruStyled ? null : 38,
       child: TextField(
         onTap: () {
+          di<AppModel>().setLockSpace(true);
           _controller.selection = TextSelection(
             baseOffset: 0,
             extentOffset: _controller.value.text.length,
@@ -320,20 +317,13 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
         autofocus: true,
         onSubmitted: widget.onSubmitted,
         onChanged: widget.onChanged,
-        decoration: InputDecoration(
-          hintText: widget.hintText,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
-          contentPadding:
-              const EdgeInsets.only(top: 10, bottom: 8, left: 15, right: 15),
-          filled: true,
-          suffixIcon: IconButton(
-            onPressed: () {
-              widget.onClear?.call();
-              _controller.clear();
-            },
-            icon: const Icon(Icons.clear),
-          ),
-        ),
+        style: yaruStyled ? theme.textTheme.bodyMedium : null,
+        decoration: yaruStyled
+            ? createYaruDecoration(theme: theme, hintText: widget.hintText)
+            : createMaterialDecoration(
+                colorScheme: theme.colorScheme,
+                hintText: widget.hintText,
+              ),
       ),
     );
   }
@@ -347,6 +337,38 @@ class DropDownArrow extends StatelessWidget {
     return yaruStyled
         ? const Icon(YaruIcons.pan_down)
         : const Icon(Icons.arrow_drop_down);
+  }
+}
+
+class LinearProgress extends StatelessWidget {
+  const LinearProgress({
+    super.key,
+    this.color,
+    this.trackHeight,
+    this.value,
+    this.backgroundColor,
+  });
+
+  final double? value;
+  final Color? color, backgroundColor;
+  final double? trackHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return yaruStyled
+        ? YaruLinearProgressIndicator(
+            value: value,
+            minHeight: trackHeight,
+            strokeWidth: trackHeight,
+            color: color,
+          )
+        : LinearProgressIndicator(
+            value: value,
+            minHeight: trackHeight,
+            color: color,
+            backgroundColor: backgroundColor,
+            borderRadius: BorderRadius.circular(2),
+          );
   }
 }
 
@@ -385,6 +407,9 @@ SliverGridDelegate get audioCardGridDelegate =>
 EdgeInsetsGeometry get appBarActionSpacing => Platform.isMacOS
     ? const EdgeInsets.only(right: 5, left: 20)
     : const EdgeInsets.only(right: 10, left: 20);
+
+EdgeInsetsGeometry get radioHistoryListPadding =>
+    EdgeInsets.only(left: yaruStyled ? 0 : 5);
 
 class CommonSwitch extends StatelessWidget {
   const CommonSwitch({super.key, required this.value, this.onChanged});

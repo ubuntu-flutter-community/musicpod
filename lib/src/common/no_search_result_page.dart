@@ -42,7 +42,7 @@ class NoSearchResultPage extends StatelessWidget {
             children: [
               icons ?? const AnimatedEmoji(AnimatedEmojis.thinkingFace),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               message ??
                   Text(

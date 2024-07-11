@@ -12,6 +12,8 @@
     "rewind10": "Rewind 10 seconds",
     "fullWindow": "Enter full window mode",
     "leaveFullWindow": "Leave full window mode",
+    "fullScreen": "Enter full screen mode",
+    "leaveFullScreen": "Leave full screen mode",
     "playbackRate": "Playback rate",
     "addToFavorites": "Add to favorites",
     "removeFromFavorites": "Remove from favorites",
@@ -121,7 +123,16 @@
     },
     "emptyPlaylist": "This playlist is empty.",
     "copiedToClipBoard": "Copied to clipboard:",
+    "copyToClipBoard": "Copy to clipboard",
     "insertIntoQueue": "Insert into queue",
+    "insertedIntoQueue": "Inserted to queue: {name}",
+    "@insertedIntoQueue": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
     "about": "About",
     "localAudioCacheSuggestion": "You have {length} local audio files. Do you want to create a cache to improve start-up time?",
     "@localAudioCacheSuggestion": {
@@ -296,5 +307,20 @@
     "playAll": "Play all",
     "hearingHistory": "Hearing history",
     "emptyHearingHistory": "You did not listen to radio in this app session yet",
-    "searchForRadioStationsWithGenreName": "Search for radio stations with this genre"
+    "searchForRadioStationsWithGenreName": "Search for radio stations with this genre",
+    "clearPlaylist": "Delete all media from the playlist",
+    "editPlaylist": "Edit playlist",
+    "stationUrl": "Station Url",
+    "podcastFeedUrl": "Podcast feed url",
+    "stationName": "Station name",
+    "podcastName": "Podcast name",
+    "url": "Url",
+    "loadFromFileOptional": "Load from file (optional)",
+    "loadMore": "Load more",
+    "searchOnline": "Search online",
+    "shareThisEpisode": "Share this episode",
+    "downloadEpisode": "Download episode",
+    "removeDownloadEpisode": "Remove episode download",
+    "language": "Language",
+    "duration": "Duration"
 }

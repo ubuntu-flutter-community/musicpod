@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../common.dart';
 import '../../constants.dart';
@@ -8,14 +8,13 @@ import '../../l10n.dart';
 import '../../player.dart';
 import '../../podcasts.dart';
 
-void searchAndPushPodcastPage({
+Future<void> searchAndPushPodcastPage({
   required BuildContext context,
   required String? feedUrl,
-  required String? itemImageUrl,
-  required String? genre,
+  String? itemImageUrl,
+  String? genre,
   required bool play,
-  required WidgetRef ref,
-}) {
+}) async {
   ScaffoldMessenger.of(context).clearSnackBars();
 
   if (feedUrl == null) {
@@ -26,8 +25,8 @@ void searchAndPushPodcastPage({
     );
     return;
   }
-  final model = ref.read(podcastModelProvider);
-  final startPlaylist = ref.read(playerModelProvider).startPlaylist;
+  final model = di<PodcastModel>();
+  final startPlaylist = di<PlayerModel>().startPlaylist;
   final selectedFeedUrl = model.selectedFeedUrl;
   final setSelectedFeedUrl = model.setSelectedFeedUrl;
 
@@ -49,7 +48,7 @@ void searchAndPushPodcastPage({
     ),
   );
 
-  findEpisodes(
+  return findEpisodes(
     feedUrl: feedUrl,
     itemImageUrl: itemImageUrl,
     genre: genre,
@@ -83,23 +82,22 @@ void searchAndPushPodcastPage({
         },
       );
     } else {
-      navigatorKey.currentState
-          ?.push(
-            MaterialPageRoute(
-              builder: (context) {
-                return PodcastPage(
-                  imageUrl: itemImageUrl,
-                  audios: podcast,
-                  pageId: feedUrl,
-                  title: podcast.firstOrNull?.album ??
-                      podcast.firstOrNull?.title ??
-                      feedUrl,
-                );
-              },
-            ),
-          )
-          .then((_) => setSelectedFeedUrl(null))
-          .then((_) => ScaffoldMessenger.of(context).clearSnackBars());
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(
+          builder: (context) {
+            return PodcastPage(
+              imageUrl: itemImageUrl ?? podcast.firstOrNull?.imageUrl,
+              audios: podcast,
+              pageId: feedUrl,
+              title: podcast.firstOrNull?.album ??
+                  podcast.firstOrNull?.title ??
+                  feedUrl,
+            );
+          },
+        ),
+      ).then((_) {
+        setSelectedFeedUrl(null);
+      });
     }
   });
 }

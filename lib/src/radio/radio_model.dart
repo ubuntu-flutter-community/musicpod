@@ -1,17 +1,16 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide Country;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
 
 import '../../data.dart';
 import '../../l10n.dart';
 import '../../library.dart';
 import '../../string_x.dart';
-import 'radio_search.dart';
+import '../common/languages.dart';
+import 'view/radio_search.dart';
 import 'radio_service.dart';
 
 class RadioModel extends SafeChangeNotifier {
@@ -52,6 +51,14 @@ class RadioModel extends SafeChangeNotifier {
     setSearchQuery(search: RadioSearch.tag);
   }
 
+  SimpleLanguage? _language;
+  SimpleLanguage? get language => _language;
+  void setLanguage(SimpleLanguage? value) {
+    if (value == _language) return;
+    _language = value;
+    setSearchQuery(search: RadioSearch.language);
+  }
+
   Future<Set<Audio>?> getStations({
     required RadioSearch radioSearch,
     required String? query,
@@ -59,10 +66,11 @@ class RadioModel extends SafeChangeNotifier {
     final stations = switch (radioSearch) {
       RadioSearch.tag => await _radioService.getStations(tag: query),
       RadioSearch.country => await _radioService.getStations(
-          country: query?.camelToSentence(),
+          country: query?.camelToSentence,
         ),
       RadioSearch.name => await _radioService.getStations(name: query),
       RadioSearch.state => await _radioService.getStations(state: query),
+      RadioSearch.language => await _radioService.getStations(language: query),
     };
 
     if (stations == null) return null;
@@ -72,37 +80,45 @@ class RadioModel extends SafeChangeNotifier {
     }
 
     return Set.from(
-      stations.map(
-        (e) {
-          return Audio(
-            url: e.urlResolved,
-            title: e.name,
-            artist: e.language ?? e.name,
-            album: e.tags ?? '',
-            audioType: AudioType.radio,
-            imageUrl: e.favicon,
-            website: e.homepage,
-          );
-        },
-      ),
+      stations.map((e) => Audio.fromStation(e)),
     );
   }
 
+  Future<void> clickStation(Audio? station) async {
+    if (station?.description != null) {
+      return await _radioService.clickStation(station!.description!);
+    }
+  }
+
+  Future<List<Tag>?> loadTags({
+    String? filter,
+    int? limit,
+  }) async =>
+      await _radioService.loadTags(filter: filter, limit: limit);
+
+  // TODO: use in state autocomplete depending on [country]
+  Future<List<State>?> loadStates(String country) async {
+    return await _radioService.loadStates(country);
+  }
+
   String? _connectedHost;
+  String? get connectedHost => _connectedHost;
   Future<String?> init({
     String? countryCode,
     int index = 0,
   }) async {
-    _connectedHost ??= await _radioService.init();
-    await _radioService.loadTags();
-
-    final lastFav = _libraryService.lastFav;
+    _connectedHost = await _radioService.init();
 
     _country ??= Country.values.firstWhereOrNull(
       (c) => c.code == (_libraryService.lastCountryCode ?? countryCode),
     );
+    _language ??= Languages.defaultLanguages.firstWhereOrNull(
+      (c) => c.isoCode == _libraryService.lastLanguageCode,
+    );
 
-    if (_connectedHost?.isNotEmpty == true) {
+    if (_connectedHost != null) {
+      final lastFav = _libraryService.lastRadioTag;
+
       _tag ??= lastFav == null || tags == null || tags!.isEmpty
           ? null
           : tags!.firstWhere((t) => t.name.contains(lastFav));
@@ -122,6 +138,8 @@ class RadioModel extends SafeChangeNotifier {
         break;
       case RadioSearch.tag:
         _searchQuery = tag?.name;
+      case RadioSearch.language:
+        _searchQuery = language?.name.toLowerCase();
       default:
         _searchQuery = query ?? _searchQuery;
     }
@@ -150,10 +168,3 @@ enum RadioCollectionView {
     };
   }
 }
-
-final radioModelProvider = ChangeNotifierProvider(
-  (ref) => RadioModel(
-    radioService: getService<RadioService>(),
-    libraryService: getService<LibraryService>(),
-  ),
-);

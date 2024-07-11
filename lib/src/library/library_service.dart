@@ -6,30 +6,9 @@ import 'package:dio/dio.dart';
 
 import '../../constants.dart';
 import '../../data.dart';
-import '../../utils.dart';
+import '../../persistence_utils.dart';
 
 class LibraryService {
-  //
-  // last positions
-  //
-  Map<String, Duration> _lastPositions = {};
-  Map<String, Duration> get lastPositions => _lastPositions;
-  final _lastPositionsController = StreamController<bool>.broadcast();
-  Stream<bool> get lastPositionsChanged => _lastPositionsController.stream;
-  void addLastPosition(String url, Duration lastPosition) {
-    writeSetting(url, lastPosition.toString(), kLastPositionsFileName)
-        .then((_) {
-      if (_lastPositions.containsKey(url) == true) {
-        _lastPositions.update(url, (value) => lastPosition);
-      } else {
-        _lastPositions.putIfAbsent(url, () => lastPosition);
-      }
-      _lastPositionsController.add(true);
-    });
-  }
-
-  Duration? getLastPosition(String? url) => _lastPositions[url];
-
   //
   // Liked Audios
   //
@@ -84,8 +63,8 @@ class LibraryService {
   final _starredStationsController = StreamController<bool>.broadcast();
   Stream<bool> get starredStationsChanged => _starredStationsController.stream;
 
-  void addStarredStation(String name, Set<Audio> audios) {
-    _starredStations.putIfAbsent(name, () => audios);
+  void addStarredStation(String url, Set<Audio> audios) {
+    _starredStations.putIfAbsent(url, () => audios);
     writeAudioMap(_starredStations, kStarredStationsFileName)
         .then((_) => _starredStationsController.add(true));
   }
@@ -101,37 +80,37 @@ class LibraryService {
   }
 
   Set<String> _favTags = {};
-  Set<String> get favTags => _favTags;
+  Set<String> get favRadioTags => _favTags;
   bool isFavTag(String value) => _favTags.contains(value);
   final _favTagsController = StreamController<bool>.broadcast();
   Stream<bool> get favTagsChanged => _favTagsController.stream;
 
-  void addFavTag(String name) {
-    if (favTags.contains(name)) return;
+  void addFavRadioTag(String name) {
+    if (favRadioTags.contains(name)) return;
     _favTags.add(name);
-    writeStringIterable(iterable: _favTags, filename: kTagFavsFileName)
+    writeStringIterable(iterable: _favTags, filename: kRadioTagFavsFileName)
         .then((_) => _favTagsController.add(true));
   }
 
-  void removeFavTag(String name) {
-    if (!favTags.contains(name)) return;
+  void removeFavRadioTag(String name) {
+    if (!favRadioTags.contains(name)) return;
     _favTags.remove(name);
-    writeStringIterable(iterable: _favTags, filename: kTagFavsFileName)
+    writeStringIterable(iterable: _favTags, filename: kRadioTagFavsFileName)
         .then((_) => _favTagsController.add(true));
   }
 
-  String? _lastFav;
-  String? get lastFav => _lastFav;
+  String? _lastRadioTag;
+  String? get lastRadioTag => _lastRadioTag;
   void setLastRadioTag(String? value) {
-    if (value == _lastFav) return;
-    writeAppState(kLastFav, value).then((_) {
-      _lastFav = value;
-      _lastFavController.add(true);
+    if (value == _lastRadioTag) return;
+    writeAppState(kLastRadioTag, value).then((_) {
+      _lastRadioTag = value;
+      _lastFavRadioTagController.add(true);
     });
   }
 
-  final _lastFavController = StreamController<bool>.broadcast();
-  Stream<bool> get lastFavChanged => _lastFavController.stream;
+  final _lastFavRadioTagController = StreamController<bool>.broadcast();
+  Stream<bool> get lastFavRadioTagChanged => _lastFavRadioTagController.stream;
 
   String? _lastCountryCode;
   String? get lastCountryCode => _lastCountryCode;
@@ -147,23 +126,61 @@ class LibraryService {
   Stream<bool> get lastCountryCodeChanged => _lastCountryCodeController.stream;
 
   Set<String> _favCountries = {};
-  Set<String> get favCountries => _favCountries;
+  Set<String> get favCountryCodes => _favCountries;
   bool isFavCountry(String value) => _favCountries.contains(value);
   final _favCountriesController = StreamController<bool>.broadcast();
   Stream<bool> get favCountriesChanged => _favCountriesController.stream;
 
-  void addFavCountry(String name) {
-    if (favCountries.contains(name)) return;
+  void addFavCountryCode(String name) {
+    if (favCountryCodes.contains(name)) return;
     _favCountries.add(name);
     writeStringIterable(iterable: _favCountries, filename: kCountryFavsFileName)
         .then((_) => _favCountriesController.add(true));
   }
 
-  void removeFavCountry(String name) {
-    if (!favCountries.contains(name)) return;
+  void removeFavCountryCode(String name) {
+    if (!favCountryCodes.contains(name)) return;
     _favCountries.remove(name);
     writeStringIterable(iterable: _favCountries, filename: kCountryFavsFileName)
         .then((_) => _favCountriesController.add(true));
+  }
+
+  String? _lastLanguageCode;
+  String? get lastLanguageCode => _lastLanguageCode;
+  void setLastLanguageCode(String? value) {
+    if (value == _lastLanguageCode) return;
+    writeAppState(kLastLanguageCode, value).then((_) {
+      _lastLanguageCodeController.add(true);
+      _lastLanguageCode = value;
+    });
+  }
+
+  final _lastLanguageCodeController = StreamController<bool>.broadcast();
+  Stream<bool> get lastLanguageCodeChanged =>
+      _lastLanguageCodeController.stream;
+
+  Set<String> _favLanguages = {};
+  Set<String> get favLanguageCodes => _favLanguages;
+  bool isFavLanguage(String value) => _favLanguages.contains(value);
+  final _favLanguagesController = StreamController<bool>.broadcast();
+  Stream<bool> get favLanguagesChanged => _favLanguagesController.stream;
+
+  void addFavLanguageCode(String name) {
+    if (favLanguageCodes.contains(name)) return;
+    _favLanguages.add(name);
+    writeStringIterable(
+      iterable: _favLanguages,
+      filename: kFavLanguageCodesFileName,
+    ).then((_) => _favLanguagesController.add(true));
+  }
+
+  void removeFavLanguageCode(String name) {
+    if (!favLanguageCodes.contains(name)) return;
+    _favLanguages.remove(name);
+    writeStringIterable(
+      iterable: _favLanguages,
+      filename: kFavLanguageCodesFileName,
+    ).then((_) => _favLanguagesController.add(true));
   }
 
   //
@@ -180,6 +197,18 @@ class LibraryService {
       _playlists.putIfAbsent(id, () => audios);
       writeAudioMap(_playlists, kPlaylistsFileName)
           .then((_) => _playlistsController.add(true));
+    }
+  }
+
+  Future<void> updatePlaylist(String id, Set<Audio> audios) async {
+    if (_playlists.containsKey(id)) {
+      await writeAudioMap(_playlists, kPlaylistsFileName).then((_) {
+        _playlists.update(
+          id,
+          (value) => audios,
+        );
+        _playlistsController.add(true);
+      });
     }
   }
 
@@ -257,6 +286,15 @@ class LibraryService {
     final playlist = _playlists[id];
     if (playlist != null && playlist.contains(audio)) {
       playlist.remove(audio);
+      writeAudioMap(_playlists, kPlaylistsFileName)
+          .then((_) => _playlistsController.add(true));
+    }
+  }
+
+  void clearPlaylist(String id) {
+    final playlist = _playlists[id];
+    if (playlist != null) {
+      playlist.clear();
       writeAudioMap(_playlists, kPlaylistsFileName)
           .then((_) => _playlistsController.add(true));
     }
@@ -409,29 +447,10 @@ class LibraryService {
         .then((_) => _albumsController.add(true));
   }
 
-  bool _libraryInitialized = false;
+  bool? _libraryInitialized;
   Future<bool> init() async {
-    await _initLibrary();
-    return _libraryInitialized;
-  }
-
-  final Map<String, MpvMetaData> _radioHistory = {};
-  Map<String, MpvMetaData> get radioHistory => _radioHistory;
-  final _radioHistoryController = StreamController<bool>.broadcast();
-  Stream<bool> get radioHistoryChanged => _radioHistoryController.stream;
-  void addRadioHistoryElement({
-    required String icyTitle,
-    required MpvMetaData mpvMetaData,
-  }) {
-    _radioHistory.putIfAbsent(
-      icyTitle,
-      () => mpvMetaData,
-    );
-    _radioHistoryController.add(true);
-  }
-
-  Future<void> _initLibrary() async {
-    if (_libraryInitialized) return;
+    // Ensure [init] is only called once
+    if (_libraryInitialized == true) return _libraryInitialized!;
     final appIndexOrNull = await readAppState(kAppIndex);
     _appIndex = appIndexOrNull == null ? 0 : int.parse(appIndexOrNull);
 
@@ -459,17 +478,19 @@ class LibraryService {
     );
     _podcastUpdates ??= {};
     _starredStations = await readAudioMap(kStarredStationsFileName);
-    _lastPositions = (await getSettings(kLastPositionsFileName)).map(
-      (key, value) => MapEntry(key, parseDuration(value) ?? Duration.zero),
-    );
+
     _likedAudios =
         (await readAudioMap(kLikedAudiosFileName)).entries.firstOrNull?.value ??
             <Audio>{};
     _favTags = Set.from(
-      (await readStringIterable(filename: kTagFavsFileName) ?? <String>{}),
+      await readStringIterable(filename: kRadioTagFavsFileName) ?? <String>{},
     );
     _favCountries = Set.from(
-      (await readStringIterable(filename: kCountryFavsFileName) ?? <String>{}),
+      await readStringIterable(filename: kCountryFavsFileName) ?? <String>{},
+    );
+    _favLanguages = Set.from(
+      await readStringIterable(filename: kFavLanguageCodesFileName) ??
+          <String>{},
     );
     _downloadsDir = await getDownloadsDir();
     _downloads = await readStringMap(kDownloads);
@@ -477,10 +498,10 @@ class LibraryService {
       await readStringIterable(filename: kFeedsWithDownloads) ?? <String>{},
     );
     _lastCountryCode = (await readAppState(kLastCountryCode)) as String?;
-    _lastFav = (await readAppState(kLastFav)) as String?;
+    _lastLanguageCode = (await readAppState(kLastLanguageCode)) as String?;
+    _lastRadioTag = (await readAppState(kLastRadioTag)) as String?;
 
-    // _radioHistory = await readSimpleAudioMap(kRadioHistoryFileName);
-    _libraryInitialized = true;
+    return true;
   }
 
   int _localAudioIndex = 0;
@@ -529,14 +550,13 @@ class LibraryService {
     await _starredStationsController.close();
     await _favTagsController.close();
     await _favCountriesController.close();
-    await _lastPositionsController.close();
+    await _favLanguagesController.close();
     await _localAudioIndexController.close();
     await _radioIndexController.close();
     await _podcastIndexController.close();
-    await _lastFavController.close();
+    await _lastFavRadioTagController.close();
     await _updateController.close();
     await _downloadsController.close();
-    await _radioHistoryController.close();
   }
 
   Future<void> _safeAppState() async {

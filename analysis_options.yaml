@@ -15,3 +15,5 @@ linter:
     use_super_parameters: true
     close_sinks: true
     prefer_relative_imports: true
+    sort_pub_dependencies: true
+    unnecessary_parenthesis: true
