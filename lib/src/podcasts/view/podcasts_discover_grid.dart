@@ -43,7 +43,7 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
     final setLimit = model.setLimit;
     Future<void> incrementLimit() async {
       setLimit(limit + 20);
-      await model.search();
+      await model.search(searchQuery: model.searchQuery);
     }
 
     if (searchResult == null || widget.checkingForUpdates) {
