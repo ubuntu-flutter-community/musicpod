@@ -105,7 +105,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                     const SizedBox(
                       height: kYaruPagePadding,
                     ),
-                    ElevatedButton(
+                    ImportantButton(
                       child: Text(context.l10n.settings),
                       onPressed: () {
                         showDialog(

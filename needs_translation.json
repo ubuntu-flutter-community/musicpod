@@ -1667,20 +1667,6 @@
     "duration"
   ],
 
-  "tr": [
-    "fullScreen",
-    "leaveFullScreen",
-    "copyToClipBoard",
-    "insertedIntoQueue",
-    "loadMore",
-    "searchOnline",
-    "shareThisEpisode",
-    "downloadEpisode",
-    "removeDownloadEpisode",
-    "language",
-    "duration"
-  ],
-
   "zh": [
     "shuffle",
     "repeat",

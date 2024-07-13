@@ -41,7 +41,7 @@ FutureOr<ImportResult> _init(String? directory) async {
   Set<Audio> newAudios = {};
   List<String> failedImports = [];
 
-  if (directory != null) {
+  if (directory != null && Directory(directory).existsSync()) {
     for (var e in Directory(directory)
         .listSync(recursive: true, followLinks: false)
         .whereType<File>()
