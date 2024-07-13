@@ -15,10 +15,11 @@ import 'podcast_service_test.mocks.dart';
 
 const Audio episodeOneAudio = Audio(
   url:
-      'https://aphid.fireside.fm/d/1437767933/f31a453c-fa15-491f-8618-3f71f1d565e5/1c572137-1d75-4eb6-a07b-0bd4859d6e1a.mp3',
-  website: 'https://feeds.jupiterbroadcasting.com/lup',
-  artist: 'Jupiter Broadcasting',
-  title: 'Episode 1: Too Much Choice | LU1',
+      'https://audio2.redcircle.com/episodes/28b15c18-4d42-4036-a6f2-dc403fa7c8a4/stream.mp3',
+  website: 'https://feeds.redcircle.com/1e717ca8-94d4-4a39-807e-a148884a9786',
+  artist: 'Allen Wyma',
+  title:
+      'Introduction to Flying High with Flutter - Flying High with Flutter #1',
 );
 
 @GenerateMocks([NotificationsService, SettingsService])
@@ -36,7 +37,8 @@ Future<void> main() async {
   await service.init();
 
   test('searchByQuery', () async {
-    final result = await service.search(searchQuery: 'LINUX Unplugged');
+    final result =
+        await service.search(searchQuery: 'Flying High with Flutter');
     final feedUrl = result?.items.first.feedUrl;
     Set<Audio>? episodes;
     if (feedUrl != null) {
