@@ -3,10 +3,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:musicpod/data.dart';
-import 'package:musicpod/podcasts.dart';
-import 'package:musicpod/src/notifications/notifications_service.dart';
-import 'package:musicpod/src/settings/settings_service.dart';
+import 'package:musicpod/common/data/audio.dart';
+import 'package:musicpod/common/data/podcast_genre.dart';
+import 'package:musicpod/notifications/notifications_service.dart';
+import 'package:musicpod/podcasts/podcast_service.dart';
+import 'package:musicpod/podcasts/podcast_utils.dart';
+import 'package:musicpod/settings/settings_service.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 import 'podcast_service_test.mocks.dart';
