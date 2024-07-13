@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:xdg_directories/xdg_directories.dart';
 
 import 'constants.dart';
-import 'data.dart';
+import 'common/data/audio.dart';
 
 String? _workingDir;
 Future<String> getWorkingDir() async {
@@ -58,7 +58,7 @@ Future<String?> getDownloadsDir() async {
 }
 
 Future<void> writeAppState(String key, dynamic value) async =>
-    await writeSetting(key, value, kAppStateFileName);
+    writeSetting(key, value, kAppStateFileName);
 
 Future<void> writeSetting(
   String? key,

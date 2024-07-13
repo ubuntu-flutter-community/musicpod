@@ -4,9 +4,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
-import 'package:musicpod/data.dart';
-import 'package:musicpod/local_audio.dart';
-import 'package:musicpod/settings.dart';
+import 'package:musicpod/common/data/audio.dart';
+import 'package:musicpod/local_audio/local_audio_service.dart';
+import 'package:musicpod/settings/settings_service.dart';
 
 import 'local_audio_service_test.mocks.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:musicpod/data.dart';
-import 'package:musicpod/radio.dart';
+import 'package:musicpod/common/data/audio.dart';
+import 'package:musicpod/radio/radio_service.dart';
 
 const Audio sixFortyStation = Audio(
   url: 'http://radio.6forty.com:8000/6forty',
