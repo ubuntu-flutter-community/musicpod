@@ -140,7 +140,6 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
             child: SearchButton(
               active: true,
               onPressed: () {
-                // TODO: FIX this crap
                 di<AppModel>().setLockSpace(false);
                 di<LibraryModel>().pop(popStack: false);
               },

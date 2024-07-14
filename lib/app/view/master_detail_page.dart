@@ -4,6 +4,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/common_widgets.dart';
+import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
@@ -34,11 +35,19 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
     final masterItems = createMasterItems(libraryModel: libraryModel);
 
     return Scaffold(
+      key: masterScaffoldKey,
+      drawer: Drawer(
+        width: kMasterDetailSideBarWidth,
+        child:
+            MasterPanel(masterItems: masterItems, libraryModel: libraryModel),
+      ),
       body: Row(
         children: [
-          // TODO: show drawer
           if (context.showMasterPanel)
-            MasterPanel(masterItems: masterItems, libraryModel: libraryModel),
+            MasterPanel(
+              masterItems: masterItems,
+              libraryModel: libraryModel,
+            ),
           const VerticalDivider(),
           Expanded(
             child: Navigator(
@@ -83,12 +92,12 @@ class MasterPanel extends StatelessWidget {
       width: kMasterDetailSideBarWidth,
       child: Column(
         children: [
-          HeaderBar(
+          const HeaderBar(
             includeBackButton: false,
-            backgroundColor: getSideBarColor(context.t),
+            backgroundColor: Colors.transparent,
             style: YaruTitleBarStyle.undecorated,
             adaptive: false,
-            title: const Text(kAppTitle),
+            title: Text(kAppTitle),
           ),
           Expanded(
             child: ListView.separated(
@@ -96,14 +105,22 @@ class MasterPanel extends StatelessWidget {
               itemBuilder: (context, index) {
                 final item = masterItems.elementAt(index);
                 return MasterTile(
-                  onTap: item.pageId == kNewPlaylistPageId
-                      ? () => showDialog(
-                            context: context,
-                            builder: (context) {
-                              return const ManualAddDialog();
-                            },
-                          )
-                      : () => libraryModel.pushNamed(item.pageId),
+                  onTap: () {
+                    if (item.pageId == kNewPlaylistPageId) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const ManualAddDialog();
+                        },
+                      );
+                    } else {
+                      libraryModel.pushNamed(item.pageId);
+                    }
+
+                    if (!context.showMasterPanel) {
+                      masterScaffoldKey.currentState?.closeDrawer();
+                    }
+                  },
                   pageId: item.pageId,
                   libraryModel: libraryModel,
                   leading: item.iconBuilder

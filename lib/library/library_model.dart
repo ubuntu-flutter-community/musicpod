@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
+import '../common/view/global_keys.dart';
 import '../constants.dart';
 import 'library_service.dart';
 
@@ -322,5 +323,3 @@ class LibraryModel extends SafeChangeNotifier {
   int get podcastIndex => _service.podcastIndex;
   void setPodcastIndex(int value) => _service.setPodcastIndex(value);
 }
-
-final GlobalKey<NavigatorState> masterNavigator = GlobalKey<NavigatorState>();

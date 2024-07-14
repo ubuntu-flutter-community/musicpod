@@ -38,28 +38,26 @@ class RadioPageTagBar extends StatelessWidget {
               (i, e) => Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: TapAbleText(
-                      wrapInFlexible: false,
-                      onTap: () {
-                        radioModel
-                            .init(
-                              countryCode: appModel.countryCode,
-                              index: libraryModel.radioindex,
-                            )
-                            .then(
-                              (_) => libraryModel.push(
-                                builder: (context) {
-                                  return RadioSearchPage(
-                                    radioSearch: RadioSearch.tag,
-                                    searchQuery: e,
-                                  );
-                                },
-                              ),
-                            );
-                      },
-                      text: e,
-                    ),
+                  TapAbleText(
+                    wrapInFlexible: false,
+                    onTap: () {
+                      radioModel
+                          .init(
+                            countryCode: appModel.countryCode,
+                            index: libraryModel.radioindex,
+                          )
+                          .then(
+                            (_) => libraryModel.push(
+                              builder: (context) {
+                                return RadioSearchPage(
+                                  radioSearch: RadioSearch.tag,
+                                  searchQuery: e,
+                                );
+                              },
+                            ),
+                          );
+                    },
+                    text: e.length > 40 ? e.substring(0, 40) : e,
                   ),
                   if (i != tags.length - 1) const Text(','),
                 ],

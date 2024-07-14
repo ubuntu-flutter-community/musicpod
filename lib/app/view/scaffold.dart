@@ -57,6 +57,8 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
                 child: Column(
                   children: [
                     const Expanded(child: MasterDetailPage()),
+                    // TODO: add bottom bar for mobile for Library / Search
+
                     if (!playerToTheRight)
                       const PlayerView(mode: PlayerPosition.bottom),
                   ],

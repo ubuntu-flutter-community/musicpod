@@ -20,6 +20,14 @@ class Iconz {
             : Icons.menu;
   }
 
+  IconData get sidebar {
+    return yaruStyled
+        ? YaruIcons.sidebar
+        : appleStyled
+            ? CupertinoIcons.sidebar_left
+            : Icons.view_sidebar;
+  }
+
   IconData get updateAvailable {
     return yaruStyled
         ? YaruIcons.update_available

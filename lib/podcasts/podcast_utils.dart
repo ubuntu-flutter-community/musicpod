@@ -76,7 +76,8 @@ Future<void> searchAndPushPodcastPage({
             (_) => setSelectedFeedUrl(null),
           );
     } else {
-      di<LibraryModel>().push(
+      di<LibraryModel>()
+          .push(
         builder: (_) {
           return PodcastPage(
             imageUrl: itemImageUrl ?? podcast.firstOrNull?.imageUrl,
@@ -87,7 +88,9 @@ Future<void> searchAndPushPodcastPage({
                 feedUrl,
           );
         },
-      ).then((_) {
+        pageId: feedUrl,
+      )
+          .then((_) {
         setSelectedFeedUrl(null);
       });
     }

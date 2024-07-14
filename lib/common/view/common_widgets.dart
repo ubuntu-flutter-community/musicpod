@@ -8,8 +8,11 @@ import '../../app/app_model.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../library/library_model.dart';
+import 'global_keys.dart';
 import 'icons.dart';
 import 'theme.dart';
+
+const kMacOsWindowControlMitigationPadding = EdgeInsets.only(top: 16, left: 13);
 
 class NavBackButton extends StatelessWidget {
   const NavBackButton({super.key});
@@ -165,9 +168,14 @@ class HeaderBar extends StatelessWidget
     return YaruWindowTitleBar(
       titleSpacing: titleSpacing,
       actions: actions,
-      leading: includeBackButton && Navigator.canPop(context)
-          ? const NavBackButton()
-          : const SizedBox.shrink(),
+      leading: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (includeBackButton && di<LibraryModel>().canPop())
+            const NavBackButton(),
+          if (!context.showMasterPanel) const SidebarButton(),
+        ],
+      ),
       title: title,
       border: BorderSide.none,
       backgroundColor: backgroundColor,
@@ -183,6 +191,38 @@ class HeaderBar extends StatelessWidget
             ? (style == YaruTitleBarStyle.hidden ? 0 : kYaruTitleBarHeight)
             : kToolbarHeight,
       );
+}
+
+class SidebarButton extends StatelessWidget {
+  const SidebarButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    if (Platform.isMacOS) {
+      return Padding(
+        padding: kMacOsWindowControlMitigationPadding,
+        child: SizedBox(
+          height: 15,
+          width: 15,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            child: Icon(
+              Iconz().sidebar,
+              size: 10,
+            ),
+            onTap: () => masterScaffoldKey.currentState?.openDrawer(),
+          ),
+        ),
+      );
+    }
+
+    return IconButton(
+      onPressed: () => masterScaffoldKey.currentState?.openDrawer(),
+      icon: Icon(
+        Iconz().sidebar,
+      ),
+    );
+  }
 }
 
 class TabsBar extends StatelessWidget {

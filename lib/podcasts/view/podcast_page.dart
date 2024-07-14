@@ -48,12 +48,13 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         {};
 
     Future<void> onTap(text) async {
-      // TODO: pop?
       final podcastModel = di<PodcastModel>();
       podcastModel.setSearchActive(true);
       podcastModel.setSearchQuery(text);
       await podcastModel.search(searchQuery: text);
-      di<LibraryModel>().pushNamed(kPodcastsPageId);
+      di<LibraryModel>()
+        ..pop()
+        ..pushNamed(kPodcastsPageId);
     }
 
     return YaruDetailPage(
