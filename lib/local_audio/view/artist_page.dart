@@ -18,6 +18,7 @@ import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';
 import '../local_audio_model.dart';
 import 'album_page.dart';
@@ -53,27 +54,17 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
       final id = audios!.first.albumId;
       if (id == null) return;
 
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) {
-            return AlbumPage(
-              id: id,
-              album: audios,
-            );
-          },
+      di<LibraryModel>().push(
+        builder: (_) => AlbumPage(
+          id: id,
+          album: audios,
         ),
+        pageId: id,
       );
     }
 
-    void onSubTitleTab(text) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) {
-            return GenrePage(genre: text);
-          },
-        ),
-      );
-    }
+    void onSubTitleTab(text) =>
+        di<LibraryModel>().push(builder: (context) => GenrePage(genre: text));
 
     return YaruDetailPage(
       appBar: HeaderBar(

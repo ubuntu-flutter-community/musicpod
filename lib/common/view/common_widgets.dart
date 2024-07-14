@@ -7,20 +7,17 @@ import 'package:yaru/yaru.dart';
 import '../../app/app_model.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
-import 'global_keys.dart';
+import '../../library/library_model.dart';
 import 'icons.dart';
 import 'theme.dart';
 
 class NavBackButton extends StatelessWidget {
-  const NavBackButton({super.key, this.onPressed});
-
-  final void Function()? onPressed;
+  const NavBackButton({super.key});
 
   @override
   Widget build(BuildContext context) {
     void onTap() {
-      onPressed?.call();
-      navigatorKey.currentState?.maybePop(context);
+      di<LibraryModel>().pop();
     }
 
     if (yaruStyled) {
@@ -149,7 +146,7 @@ class HeaderBar extends StatelessWidget
       return AppBar(
         titleSpacing: titleSpacing,
         centerTitle: true,
-        leading: includeBackButton && Navigator.canPop(context)
+        leading: includeBackButton && di<LibraryModel>().canPop()
             ? const NavBackButton()
             : const SizedBox.shrink(),
         title: title,

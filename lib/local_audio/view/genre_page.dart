@@ -5,9 +5,9 @@ import 'package:yaru/yaru.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
-import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import '../../radio/radio_model.dart';
 import '../../radio/view/radio_search.dart';
 import '../../radio/view/radio_search_page.dart';
@@ -35,20 +35,14 @@ class GenrePage extends StatelessWidget {
           children: [
             IconButton(
               tooltip: context.l10n.searchForRadioStationsWithGenreName,
-              onPressed: () {
-                radioModel.init().then(
-                      (_) => navigatorKey.currentState?.push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return RadioSearchPage(
-                              radioSearch: RadioSearch.tag,
-                              searchQuery: genre.toLowerCase(),
-                            );
-                          },
-                        ),
+              onPressed: () => radioModel.init().then(
+                    (_) => di<LibraryModel>().push(
+                      builder: (_) => RadioSearchPage(
+                        radioSearch: RadioSearch.tag,
+                        searchQuery: genre.toLowerCase(),
                       ),
-                    );
-              },
+                    ),
+                  ),
               icon: Icon(Iconz().radio),
             ),
             const SizedBox(

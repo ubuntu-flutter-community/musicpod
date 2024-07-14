@@ -3,7 +3,6 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../app/app_model.dart';
 import '../../constants.dart';
-import '../../common/view/global_keys.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 
@@ -13,7 +12,6 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
   required LibraryModel libraryModel,
   required String id,
 }) {
-  final index = libraryModel.getIndexOfPlaylist(id);
   ScaffoldMessenger.of(context).clearSnackBars();
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
@@ -28,9 +26,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
           if (appModel.fullWindowMode == true) {
             appModel.setFullWindowMode(false);
           }
-          navigatorKey.currentState
-              ?.maybePop()
-              .then((value) => libraryModel.setIndex(index));
+          libraryModel.pushNamed(id);
         },
         label: context.l10n.open,
       ),

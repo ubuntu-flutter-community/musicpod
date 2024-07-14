@@ -6,7 +6,6 @@ import 'package:yaru/yaru.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/common_widgets.dart';
-import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
@@ -163,18 +162,12 @@ class TagGrid extends StatelessWidget with WatchItMixin {
             ),
           ),
           bottom: AudioCardBottom(text: tag),
-          onTap: () {
-            navigatorKey.currentState?.push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return RadioSearchPage(
-                    searchQuery: tag,
-                    radioSearch: RadioSearch.tag,
-                  );
-                },
-              ),
-            );
-          },
+          onTap: () => di<LibraryModel>().push(
+            builder: (_) => RadioSearchPage(
+              searchQuery: tag,
+              radioSearch: RadioSearch.tag,
+            ),
+          ),
         );
       },
     );

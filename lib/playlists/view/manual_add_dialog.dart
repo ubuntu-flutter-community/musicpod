@@ -221,9 +221,8 @@ class _PlaylistContentState extends State<PlaylistContent> {
                             _audios ?? widget.audios ?? {},
                           );
                           Navigator.pop(context);
-                          final index = widget.libraryModel
-                              .getIndexOfPlaylist(_controller.text);
-                          widget.libraryModel.setIndex(index);
+
+                          widget.libraryModel.pushNamed(_controller.text);
                         },
                   child: Text(
                     context.l10n.add,

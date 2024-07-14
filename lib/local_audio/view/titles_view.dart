@@ -7,6 +7,7 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
 import '../../constants.dart';
+import '../../library/library_model.dart';
 import '../local_audio_model.dart';
 import 'artist_page.dart';
 
@@ -52,14 +53,10 @@ class TitlesView extends StatelessWidget {
               final artistAudios = model.findArtist(Audio(artist: text));
               final images = model.findImages(artistAudios ?? {});
 
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) {
-                    return ArtistPage(
-                      images: images,
-                      artistAudios: artistAudios,
-                    );
-                  },
+              di<LibraryModel>().push(
+                builder: (_) => ArtistPage(
+                  images: images,
+                  artistAudios: artistAudios,
                 ),
               );
             },

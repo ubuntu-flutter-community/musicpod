@@ -7,7 +7,6 @@ import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
-import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -54,17 +53,13 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     void search({
       required String? text,
     }) {
+      final libraryModel = di<LibraryModel>();
+
       if (text != null) {
         model.search(text);
-        navigatorKey.currentState?.push(
-          MaterialPageRoute(
-            builder: (context) {
-              return const LocalAudioSearchPage();
-            },
-          ),
-        );
+        libraryModel.push(builder: (_) => const LocalAudioSearchPage());
       } else {
-        navigatorKey.currentState?.maybePop();
+        libraryModel.pop();
       }
     }
 

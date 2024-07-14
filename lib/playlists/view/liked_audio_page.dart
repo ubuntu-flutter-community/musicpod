@@ -20,15 +20,6 @@ import '../../local_audio/view/artist_page.dart';
 class LikedAudioPage extends StatelessWidget with WatchItMixin {
   const LikedAudioPage({super.key});
 
-  static Widget createIcon({
-    required BuildContext context,
-    required bool selected,
-  }) {
-    return SideBarFallBackImage(
-      child: selected ? Icon(Iconz().heartFilled) : Icon(Iconz().heart),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
@@ -39,14 +30,10 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
         final artistAudios = model.findArtist(Audio(artist: text));
         final images = model.findImages(artistAudios ?? {});
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) {
-              return ArtistPage(
-                images: images,
-                artistAudios: artistAudios,
-              );
-            },
+        di<LibraryModel>().push(
+          builder: (_) => ArtistPage(
+            images: images,
+            artistAudios: artistAudios,
           ),
         );
       },
@@ -78,6 +65,19 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
           size: 65,
         ),
       ),
+    );
+  }
+}
+
+class LikedAudioPageIcon extends StatelessWidget {
+  const LikedAudioPageIcon({super.key, required this.selected});
+
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return SideBarFallBackImage(
+      child: selected ? Icon(Iconz().heartFilled) : Icon(Iconz().heart),
     );
   }
 }

@@ -7,8 +7,8 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
-import '../common/view/global_keys.dart';
 import '../l10n/l10n.dart';
+import '../library/library_model.dart';
 import '../player/player_model.dart';
 import 'podcast_model.dart';
 import 'view/podcast_page.dart';
@@ -76,19 +76,17 @@ Future<void> searchAndPushPodcastPage({
             (_) => setSelectedFeedUrl(null),
           );
     } else {
-      navigatorKey.currentState?.push(
-        MaterialPageRoute(
-          builder: (context) {
-            return PodcastPage(
-              imageUrl: itemImageUrl ?? podcast.firstOrNull?.imageUrl,
-              audios: podcast,
-              pageId: feedUrl,
-              title: podcast.firstOrNull?.album ??
-                  podcast.firstOrNull?.title ??
-                  feedUrl,
-            );
-          },
-        ),
+      di<LibraryModel>().push(
+        builder: (_) {
+          return PodcastPage(
+            imageUrl: itemImageUrl ?? podcast.firstOrNull?.imageUrl,
+            audios: podcast,
+            pageId: feedUrl,
+            title: podcast.firstOrNull?.album ??
+                podcast.firstOrNull?.title ??
+                feedUrl,
+          );
+        },
       ).then((_) {
         setSelectedFeedUrl(null);
       });

@@ -9,4 +9,5 @@ extension BuildContextX on BuildContext {
 
   bool get smallWindow => m.size.width < kMasterDetailBreakPoint;
   bool get wideWindow => m.size.width < kAdaptivContainerBreakPoint;
+  bool get showMasterPanel => m.size.width > kMasterDetailBreakPoint;
 }

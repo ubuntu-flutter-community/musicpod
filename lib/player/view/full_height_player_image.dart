@@ -3,14 +3,13 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
-
 import '../../common/data/audio.dart';
-import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
+import '../../library/library_model.dart';
 import '../../radio/radio_model.dart';
 import '../../radio/view/radio_search.dart';
 import '../../radio/view/radio_search_page.dart';
@@ -100,14 +99,10 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
           onGenreTap: (genre) => di<RadioModel>().init().then(
             (_) {
               di<AppModel>().setFullWindowMode(false);
-              navigatorKey.currentState?.push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return RadioSearchPage(
-                      radioSearch: RadioSearch.tag,
-                      searchQuery: genre.toLowerCase(),
-                    );
-                  },
+              di<LibraryModel>().push(
+                builder: (_) => RadioSearchPage(
+                  radioSearch: RadioSearch.tag,
+                  searchQuery: genre.toLowerCase(),
                 ),
               );
             },

@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/app_model.dart';
-import '../../common/view/tapable_text.dart';
 import '../../common/data/audio.dart';
-import '../../common/view/global_keys.dart';
+import '../../common/view/tapable_text.dart';
 import '../../library/library_model.dart';
 import '../radio_model.dart';
 import 'radio_search.dart';
@@ -39,17 +38,17 @@ class RadioPageTagBar extends StatelessWidget {
               (i, e) => Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TapAbleText(
-                    wrapInFlexible: false,
-                    onTap: () {
-                      radioModel
-                          .init(
-                            countryCode: appModel.countryCode,
-                            index: libraryModel.radioindex,
-                          )
-                          .then(
-                            (_) => navigatorKey.currentState?.push(
-                              MaterialPageRoute(
+                  Expanded(
+                    child: TapAbleText(
+                      wrapInFlexible: false,
+                      onTap: () {
+                        radioModel
+                            .init(
+                              countryCode: appModel.countryCode,
+                              index: libraryModel.radioindex,
+                            )
+                            .then(
+                              (_) => libraryModel.push(
                                 builder: (context) {
                                   return RadioSearchPage(
                                     radioSearch: RadioSearch.tag,
@@ -57,10 +56,10 @@ class RadioPageTagBar extends StatelessWidget {
                                   );
                                 },
                               ),
-                            ),
-                          );
-                    },
-                    text: e,
+                            );
+                      },
+                      text: e,
+                    ),
                   ),
                   if (i != tags.length - 1) const Text(','),
                 ],

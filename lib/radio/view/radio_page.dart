@@ -5,7 +5,6 @@ import 'package:yaru/yaru.dart';
 import '../../app/app_model.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
-import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/offline_page.dart';
 import '../../l10n/l10n.dart';
@@ -76,10 +75,8 @@ class _RadioPageState extends State<RadioPage> {
                       active: false,
                       onPressed: () {
                         di<AppModel>().setLockSpace(true);
-                        navigatorKey.currentState?.push(
-                          MaterialPageRoute(
-                            builder: (context) => const RadioDiscoverPage(),
-                          ),
+                        di<LibraryModel>().push(
+                          builder: (context) => const RadioDiscoverPage(),
                         );
                       },
                     ),

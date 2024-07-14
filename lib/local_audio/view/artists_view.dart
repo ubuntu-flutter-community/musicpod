@@ -8,6 +8,7 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/round_image_container.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import '../local_audio_model.dart';
 import 'artist_page.dart';
 
@@ -54,14 +55,10 @@ class ArtistsView extends StatelessWidget {
 
           return YaruSelectableContainer(
             selected: false,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return ArtistPage(
-                    images: images,
-                    artistAudios: artistAudios,
-                  );
-                },
+            onTap: () => di<LibraryModel>().push(
+              builder: (_) => ArtistPage(
+                images: images,
+                artistAudios: artistAudios,
               ),
             ),
             borderRadius: BorderRadius.circular(300),
