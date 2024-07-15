@@ -17,3 +17,6 @@ linter:
     prefer_relative_imports: true
     sort_pub_dependencies: true
     unnecessary_parenthesis: true
+    unnecessary_await_in_return: true
+    unnecessary_late: true
+    unnecessary_breaks: true

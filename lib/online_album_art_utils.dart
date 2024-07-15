@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+
 import 'constants.dart';
-import 'string_x.dart';
-import 'url_store.dart';
+import 'extensions/string_x.dart';
 
 Future<String?> fetchAlbumArt(String icyTitle) async {
   return UrlStore().get(icyTitle) ??
@@ -73,4 +73,20 @@ Uri? getAlbumArtServiceUri(({String? artist, String? songName}) artInfo) {
   final address =
       'https://musicbrainz.org/ws/2/recording/?query=recording:"${artInfo.songName}"%20AND%20artist:"${artInfo.artist}"';
   return Uri.tryParse(address);
+}
+
+class UrlStore {
+  static final UrlStore _instance = UrlStore._internal();
+  factory UrlStore() => _instance;
+  UrlStore._internal();
+
+  final _value = <String, String?>{};
+
+  String? put({required String key, String? url}) {
+    return _value.containsKey(key)
+        ? _value.update(key, (value) => url)
+        : _value.putIfAbsent(key, () => url);
+  }
+
+  String? get(String? icyTitle) => icyTitle == null ? null : _value[icyTitle];
 }
