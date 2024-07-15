@@ -22,6 +22,11 @@ Future<void> searchAndPushPodcastPage({
 }) async {
   ScaffoldMessenger.of(context).clearSnackBars();
 
+  final libraryModel = di<LibraryModel>();
+  if (feedUrl != null && libraryModel.isPageInLibrary(feedUrl)) {
+    return libraryModel.pushNamed(feedUrl);
+  }
+
   if (feedUrl == null) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

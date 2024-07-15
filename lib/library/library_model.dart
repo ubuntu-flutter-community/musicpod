@@ -287,8 +287,7 @@ class LibraryModel extends SafeChangeNotifier {
     required Widget Function(BuildContext) builder,
     required String pageId,
   }) async {
-    final forceUnnamed =
-        selectedPageId == kRadioPageId && pageId == kRadioPageId;
+    final forceUnnamed = _isForceUnnamed(pageId);
 
     if (!forceUnnamed && isPageInLibrary(pageId)) {
       await pushNamed(pageId);
@@ -303,6 +302,11 @@ class LibraryModel extends SafeChangeNotifier {
         ),
       );
     }
+  }
+
+  bool _isForceUnnamed(String pageId) {
+    return [kLocalAudioPageId, kRadioPageId]
+        .any((e) => selectedPageId == e && pageId == e);
   }
 
   void pop({bool popStack = true}) {
