@@ -145,11 +145,13 @@ class HeaderBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final canPop = watchPropertyValue((LibraryModel m) => m.canPop);
+
     if (isMobile) {
       return AppBar(
         titleSpacing: titleSpacing,
         centerTitle: true,
-        leading: includeBackButton && di<LibraryModel>().canPop()
+        leading: includeBackButton && canPop
             ? const NavBackButton()
             : const SizedBox.shrink(),
         title: title,
@@ -171,8 +173,7 @@ class HeaderBar extends StatelessWidget
       leading: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (includeBackButton && di<LibraryModel>().canPop())
-            const NavBackButton(),
+          if (includeBackButton && canPop) const NavBackButton(),
           if (!context.showMasterPanel) const SidebarButton(),
         ],
       ),

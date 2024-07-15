@@ -6,6 +6,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
+import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../radio/radio_model.dart';
@@ -41,6 +42,7 @@ class GenrePage extends StatelessWidget {
                         radioSearch: RadioSearch.tag,
                         searchQuery: genre.toLowerCase(),
                       ),
+                      pageId: kRadioPageId,
                     ),
                   ),
               icon: Icon(Iconz().radio),

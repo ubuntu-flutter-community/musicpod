@@ -48,6 +48,7 @@ class AlbumPage extends StatelessWidget {
             artistAudios: artistAudios,
           );
         },
+        pageId: artistName,
       );
     }
 

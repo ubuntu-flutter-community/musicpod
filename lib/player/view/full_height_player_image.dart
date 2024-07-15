@@ -104,6 +104,7 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
                   radioSearch: RadioSearch.tag,
                   searchQuery: genre.toLowerCase(),
                 ),
+                pageId: kRadioPageId,
               );
             },
           ),

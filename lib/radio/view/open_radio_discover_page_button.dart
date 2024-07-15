@@ -3,6 +3,7 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../common/view/common_widgets.dart';
 import '../../common/view/offline_page.dart';
+import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
@@ -19,6 +20,7 @@ class OpenRadioDiscoverPageButton extends StatelessWidget with WatchItMixin {
         di<LibraryModel>().push(
           builder: (context) =>
               isOnline ? const RadioDiscoverPage() : const OfflinePage(),
+          pageId: kRadioPageId,
         );
       },
       child: Text(context.l10n.discover),

@@ -7,6 +7,7 @@ import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/offline_page.dart';
+import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
@@ -77,6 +78,7 @@ class _RadioPageState extends State<RadioPage> {
                         di<AppModel>().setLockSpace(true);
                         di<LibraryModel>().push(
                           builder: (context) => const RadioDiscoverPage(),
+                          pageId: kRadioPageId,
                         );
                       },
                     ),

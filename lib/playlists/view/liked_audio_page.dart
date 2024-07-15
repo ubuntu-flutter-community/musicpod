@@ -28,6 +28,8 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
     return SliverAudioPage(
       onPageLabelTab: (text) {
         final artistAudios = model.findArtist(Audio(artist: text));
+        final artist = artistAudios?.firstOrNull?.artist;
+        if (artist == null) return;
         final images = model.findImages(artistAudios ?? {});
 
         di<LibraryModel>().push(
@@ -35,6 +37,7 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
             images: images,
             artistAudios: artistAudios,
           ),
+          pageId: artist,
         );
       },
       controlPanel: Row(

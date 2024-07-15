@@ -57,7 +57,10 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
 
       if (text != null) {
         model.search(text);
-        libraryModel.push(builder: (_) => const LocalAudioSearchPage());
+        libraryModel.push(
+          builder: (_) => const LocalAudioSearchPage(),
+          pageId: kLocalAudioPageId,
+        );
       } else {
         libraryModel.pop();
       }

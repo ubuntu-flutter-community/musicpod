@@ -268,22 +268,27 @@ class LibraryModel extends SafeChangeNotifier {
   String? get selectedPageId => _pageIdStack.lastOrNull;
   Future<void> pushNamed(String? pageId) async {
     if (pageId == null || pageId == _pageIdStack.lastOrNull) return;
-    _pageIdStack.add(pageId);
-    _service.selectedPageId = pageId;
-    notifyListeners();
+    _push(pageId);
     await masterNavigator.currentState?.pushNamed(pageId);
   }
 
-  bool canPop() =>
+  void _push(String pageId) {
+    _pageIdStack.add(pageId);
+    _service.selectedPageId = pageId;
+    notifyListeners();
+  }
+
+  bool get canPop =>
       _pageIdStack.length > 1 && masterNavigator.currentState?.canPop() == true;
 
   Future<void> push({
     required Widget Function(BuildContext) builder,
-    String? pageId,
+    required String pageId,
   }) async {
     if (isPageInLibrary(pageId)) {
       await pushNamed(pageId);
     } else {
+      _push(pageId);
       await masterNavigator.currentState?.push(
         MaterialPageRoute(
           builder: builder,

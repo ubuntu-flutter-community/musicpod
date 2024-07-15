@@ -6,6 +6,7 @@ import '../../common/data/mpv_meta_data.dart';
 import '../../common/view/icy_image.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/theme.dart';
+import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../library/library_model.dart';
@@ -38,6 +39,7 @@ class RadioHistoryTile extends StatelessWidget with PlayerMixin {
                   radioSearch: RadioSearch.tag,
                   searchQuery: tag.toLowerCase(),
                 ),
+                pageId: kRadioPageId,
               ),
             ),
       ),

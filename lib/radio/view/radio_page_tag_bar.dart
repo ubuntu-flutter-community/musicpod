@@ -5,6 +5,7 @@ import 'package:watch_it/watch_it.dart';
 import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/tapable_text.dart';
+import '../../constants.dart';
 import '../../library/library_model.dart';
 import '../radio_model.dart';
 import 'radio_search.dart';
@@ -54,6 +55,7 @@ class RadioPageTagBar extends StatelessWidget {
                                   searchQuery: e,
                                 );
                               },
+                              pageId: kRadioPageId,
                             ),
                           );
                     },

@@ -108,7 +108,7 @@ mixin PlayerMixin {
     if (audio.url == null) return;
     libraryModel.push(
       builder: (p0) => StationPage(station: audio),
-      pageId: audio.url,
+      pageId: audio.url!,
     );
   }
 
@@ -133,7 +133,8 @@ mixin PlayerMixin {
   void _onLocalAudioArtistTap({required Audio audio}) {
     final localAudioModel = di<LocalAudioModel>();
     final artistAudios = localAudioModel.findArtist(audio);
-    if (artistAudios?.firstOrNull == null) return;
+    final artist = artistAudios?.firstOrNull?.artist;
+    if (artist == null) return;
     final images = localAudioModel.findImages(artistAudios ?? {});
     di<AppModel>().setFullWindowMode(false);
 
@@ -142,6 +143,7 @@ mixin PlayerMixin {
         artistAudios: artistAudios,
         images: images,
       ),
+      pageId: artist,
     );
   }
 }

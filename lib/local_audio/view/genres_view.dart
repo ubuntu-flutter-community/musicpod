@@ -51,6 +51,7 @@ class GenresView extends StatelessWidget {
               builder: (_) => GenrePage(
                 genre: text,
               ),
+              pageId: text,
             ),
             borderRadius: BorderRadius.circular(300),
             child: Stack(

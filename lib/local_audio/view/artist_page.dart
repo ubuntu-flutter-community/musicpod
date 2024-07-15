@@ -63,8 +63,10 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
       );
     }
 
-    void onSubTitleTab(text) =>
-        di<LibraryModel>().push(builder: (context) => GenrePage(genre: text));
+    void onSubTitleTab(String text) => di<LibraryModel>().push(
+          builder: (context) => GenrePage(genre: text),
+          pageId: text,
+        );
 
     return YaruDetailPage(
       appBar: HeaderBar(

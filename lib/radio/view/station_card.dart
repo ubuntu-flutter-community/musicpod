@@ -44,7 +44,7 @@ class StationCard extends StatelessWidget {
           ? null
           : () => di<LibraryModel>().push(
                 builder: (_) => StationPage(station: station!),
-                pageId: station?.url,
+                pageId: station!.url!,
               ),
       image: SizedBox.expand(
         child: SafeNetworkImage(

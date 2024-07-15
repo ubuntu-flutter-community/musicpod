@@ -102,6 +102,8 @@ class PlaylistPage extends StatelessWidget {
           },
           onArtistTap: (text) {
             final artistAudios = model.findArtist(Audio(artist: text));
+            final artist = artistAudios?.firstOrNull?.artist;
+            if (artist == null) return;
             final images = model.findImages(artistAudios ?? {});
 
             di<LibraryModel>().push(
@@ -111,6 +113,7 @@ class PlaylistPage extends StatelessWidget {
                   artistAudios: artistAudios,
                 );
               },
+              pageId: artist,
             );
           },
           image: PlaylistHeaderImage(playlist: playlist),
@@ -370,8 +373,10 @@ class _PlaylistGenreBar extends StatelessWidget {
                     wrapInFlexible: false,
                     text: e,
                     onTap: () {
-                      di<LibraryModel>()
-                          .push(builder: (context) => GenrePage(genre: e));
+                      di<LibraryModel>().push(
+                        builder: (context) => GenrePage(genre: e),
+                        pageId: e,
+                      );
                     },
                   ),
                   if (i != genres.length - 1) const Text(', '),
