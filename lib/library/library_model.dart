@@ -274,7 +274,9 @@ class LibraryModel extends SafeChangeNotifier {
 
   void _push(String pageId) {
     _pageIdStack.add(pageId);
-    _service.selectedPageId = pageId;
+    if (isPageInLibrary(pageId)) {
+      _service.selectedPageId = pageId;
+    }
     notifyListeners();
   }
 
@@ -311,7 +313,10 @@ class LibraryModel extends SafeChangeNotifier {
 
   bool isPageInLibrary(String? pageId) =>
       pageId != null &&
-      (isPinnedAlbum(pageId) ||
+      (pageId == kLocalAudioPageId ||
+          pageId == kPodcastsPageId ||
+          pageId == kRadioPageId ||
+          isPinnedAlbum(pageId) ||
           isStarredStation(pageId) ||
           isPlaylistSaved(pageId) ||
           podcastSubscribed(pageId));
