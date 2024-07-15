@@ -38,8 +38,21 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
       key: masterScaffoldKey,
       drawer: Drawer(
         width: kMasterDetailSideBarWidth,
-        child:
+        child: Stack(
+          children: [
             MasterPanel(masterItems: masterItems, libraryModel: libraryModel),
+            Positioned(
+              top: 5,
+              right: 5,
+              child: IconButton(
+                onPressed: masterScaffoldKey.currentState?.closeDrawer,
+                icon: Icon(
+                  Iconz().close,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       body: Row(
         children: [

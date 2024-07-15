@@ -174,7 +174,9 @@ class HeaderBar extends StatelessWidget
         mainAxisSize: MainAxisSize.min,
         children: [
           if (includeBackButton && canPop) const NavBackButton(),
-          if (!context.showMasterPanel) const SidebarButton(),
+          if (!context.showMasterPanel &&
+              masterScaffoldKey.currentState?.isDrawerOpen == false)
+            const SidebarButton(),
         ],
       ),
       title: title,
