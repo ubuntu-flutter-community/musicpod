@@ -10,7 +10,6 @@ import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -168,7 +167,7 @@ class TagGrid extends StatelessWidget with WatchItMixin {
               searchQuery: tag,
               radioSearch: RadioSearch.tag,
             ),
-            pageId: kRadioPageId,
+            pageId: tag,
           ),
         );
       },

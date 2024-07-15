@@ -19,13 +19,12 @@ class NavBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void onTap() {
-      di<LibraryModel>().pop();
-    }
+    void onTap() => di<LibraryModel>().pop();
 
     if (yaruStyled) {
-      return const YaruBackButton(
+      return YaruBackButton(
         style: YaruBackButtonStyle.rounded,
+        onPressed: onTap,
       );
     } else {
       if (Platform.isMacOS) {
@@ -127,7 +126,7 @@ class HeaderBar extends StatelessWidget
     this.title,
     this.actions,
     this.style = YaruTitleBarStyle.normal,
-    this.titleSpacing,
+    this.titleSpacing = 0,
     this.backgroundColor = Colors.transparent,
     this.foregroundColor,
     required this.adaptive,
@@ -170,16 +169,28 @@ class HeaderBar extends StatelessWidget
     return YaruWindowTitleBar(
       titleSpacing: titleSpacing,
       actions: actions,
-      leading: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (includeBackButton && canPop) const NavBackButton(),
-          if (!context.showMasterPanel &&
-              masterScaffoldKey.currentState?.isDrawerOpen == false)
-            const SidebarButton(),
-        ],
-      ),
-      title: title,
+      leading: (includeBackButton && canPop) ? const NavBackButton() : null,
+      title: context.showMasterPanel ||
+              masterScaffoldKey.currentState?.isDrawerOpen == true
+          ? title
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: (includeBackButton && canPop) ? 0 : 10,
+                    right: !(includeBackButton && canPop) ? 60 : 10,
+                  ),
+                  child: const SidebarButton(),
+                ),
+                if (title != null)
+                  Expanded(
+                    child: Center(
+                      child: title!,
+                    ),
+                  ),
+              ],
+            ),
       border: BorderSide.none,
       backgroundColor: backgroundColor,
       style: theStyle,
@@ -291,16 +302,19 @@ class SearchingBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialSearchBar(
-      hintText: hintText,
-      text: text,
-      key: key,
-      onSubmitted: (v) {
-        di<AppModel>().setLockSpace(false);
-        onSubmitted?.call(v);
-      },
-      onClear: onClear,
-      onChanged: onChanged,
+    return Padding(
+      padding: const EdgeInsets.only(left: 10),
+      child: MaterialSearchBar(
+        hintText: hintText,
+        text: text,
+        key: key,
+        onSubmitted: (v) {
+          di<AppModel>().setLockSpace(false);
+          onSubmitted?.call(v);
+        },
+        onClear: onClear,
+        onChanged: onChanged,
+      ),
     );
   }
 }

@@ -65,7 +65,6 @@ class _RadioPageState extends State<RadioPage> {
     return YaruDetailPage(
       appBar: HeaderBar(
         adaptive: true,
-        titleSpacing: 0,
         actions: [
           Flexible(
             child: Padding(

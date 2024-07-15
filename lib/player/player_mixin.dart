@@ -107,7 +107,7 @@ mixin PlayerMixin {
     final libraryModel = di<LibraryModel>();
     if (audio.url == null) return;
     libraryModel.push(
-      builder: (p0) => StationPage(station: audio),
+      builder: (_) => StationPage(station: audio),
       pageId: audio.url!,
     );
   }
@@ -117,8 +117,9 @@ mixin PlayerMixin {
     required BuildContext context,
   }) {
     final libraryModel = di<LibraryModel>();
-    if (libraryModel.podcastSubscribed(audio.website)) {
-      libraryModel.pushNamed(audio.website);
+    if (audio.website != null &&
+        libraryModel.podcastSubscribed(audio.website)) {
+      libraryModel.pushNamed(audio.website!);
     } else {
       searchAndPushPodcastPage(
         context: context,

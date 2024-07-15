@@ -130,7 +130,7 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
             const SizedBox(
               width: 5,
             ),
-            Expanded(
+            Flexible(
               child: Text(
                 widget.searchQuery ?? '',
               ),

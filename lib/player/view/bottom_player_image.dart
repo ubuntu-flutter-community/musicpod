@@ -7,13 +7,8 @@ import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../library/library_model.dart';
-import '../../radio/radio_model.dart';
-import '../../radio/view/radio_search.dart';
-import '../../radio/view/radio_search_page.dart';
 import 'super_network_image.dart';
 
 class BottomPlayerImage extends StatelessWidget with WatchItMixin {
@@ -122,15 +117,6 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
         fit: BoxFit.cover,
         fallBackIcon: fallBackImage,
         errorIcon: fallBackImage,
-        onGenreTap: (genre) => di<RadioModel>().init().then(
-              (_) => di<LibraryModel>().push(
-                builder: (_) => RadioSearchPage(
-                  radioSearch: RadioSearch.tag,
-                  searchQuery: genre.toLowerCase(),
-                ),
-                pageId: kRadioPageId,
-              ),
-            ),
       );
     }
 
