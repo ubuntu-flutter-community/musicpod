@@ -8,8 +8,6 @@ import '../common/view/global_keys.dart';
 import '../constants.dart';
 import 'library_service.dart';
 
-const kFixedListAmount = 5; // local, radio, podcasts, newplaylist, favs
-
 class LibraryModel extends SafeChangeNotifier {
   LibraryModel(this._service);
 
@@ -87,14 +85,6 @@ class LibraryModel extends SafeChangeNotifier {
     await _downloadsSub?.cancel();
     await _lastCountryCodeSub?.cancel();
     super.dispose();
-  }
-
-  int get totalListAmount {
-    return starredStationsLength +
-        podcastsLength +
-        playlistsLength +
-        pinnedAlbumsLength +
-        kFixedListAmount;
   }
 
   Set<Audio>? getAudiosById(String pageId) {
@@ -175,7 +165,7 @@ class LibraryModel extends SafeChangeNotifier {
 
   bool isPlaylistSaved(String? name) => playlists.containsKey(name);
 
-  void addPlaylist(String name, Set<Audio> audios) =>
+  Future<void> addPlaylist(String name, Set<Audio> audios) async =>
       _service.addPlaylist(name, audios);
 
   Future<void> updatePlaylist(String id, Set<Audio> audios) async =>
@@ -225,7 +215,7 @@ class LibraryModel extends SafeChangeNotifier {
     pop();
   }
 
-  bool podcastSubscribed(String? feedUrl) =>
+  bool isPodcastSubscribed(String? feedUrl) =>
       feedUrl == null ? false : podcasts.containsKey(feedUrl);
 
   bool podcastUpdateAvailable(String feedUrl) =>
@@ -280,8 +270,7 @@ class LibraryModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  bool get canPop =>
-      _pageIdStack.length > 1 && masterNavigator.currentState?.canPop() == true;
+  bool get canPop => _pageIdStack.length > 1;
 
   Future<void> push({
     required Widget Function(BuildContext) builder,
@@ -320,13 +309,14 @@ class LibraryModel extends SafeChangeNotifier {
 
   bool isPageInLibrary(String? pageId) =>
       pageId != null &&
-      (pageId == kLocalAudioPageId ||
+      (pageId == kLikedAudiosPageId ||
+          pageId == kLocalAudioPageId ||
           pageId == kPodcastsPageId ||
           pageId == kRadioPageId ||
           isPinnedAlbum(pageId) ||
           isStarredStation(pageId) ||
           isPlaylistSaved(pageId) ||
-          podcastSubscribed(pageId));
+          isPodcastSubscribed(pageId));
 
   int? get localAudioindex => _service.localAudioIndex;
   void setLocalAudioindex(int? value) {

@@ -31,9 +31,12 @@ class PlayerLikeIcon extends StatelessWidget with WatchItMixin {
 
     Widget likeIcon;
     if (audio?.audioType == AudioType.radio) {
-      likeIcon = Iconz().getAnimatedStar(isStarredStation);
+      likeIcon = Iconz().getAnimatedStar(isStarredStation, color);
     } else {
-      likeIcon = Iconz().getAnimatedHeartIcon(liked: liked);
+      likeIcon = Iconz().getAnimatedHeartIcon(
+        liked: liked,
+        color: color,
+      );
     }
 
     final void Function()? onLike;

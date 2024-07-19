@@ -192,10 +192,10 @@ class LibraryService {
   final _playlistsController = StreamController<bool>.broadcast();
   Stream<bool> get playlistsChanged => _playlistsController.stream;
 
-  void addPlaylist(String id, Set<Audio> audios) {
+  Future<void> addPlaylist(String id, Set<Audio> audios) async {
     if (!_playlists.containsKey(id)) {
       _playlists.putIfAbsent(id, () => audios);
-      writeAudioMap(_playlists, kPlaylistsFileName)
+      await writeAudioMap(_playlists, kPlaylistsFileName)
           .then((_) => _playlistsController.add(true));
     }
   }

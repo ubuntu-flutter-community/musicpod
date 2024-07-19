@@ -118,7 +118,7 @@ mixin PlayerMixin {
   }) {
     final libraryModel = di<LibraryModel>();
     if (audio.website != null &&
-        libraryModel.podcastSubscribed(audio.website)) {
+        libraryModel.isPodcastSubscribed(audio.website)) {
       libraryModel.pushNamed(audio.website!);
     } else {
       searchAndPushPodcastPage(

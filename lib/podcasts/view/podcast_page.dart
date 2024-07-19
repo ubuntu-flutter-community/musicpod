@@ -125,7 +125,7 @@ class _PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
     final theme = context.t;
     final libraryModel = di<LibraryModel>();
 
-    final subscribed = libraryModel.podcastSubscribed(pageId);
+    final subscribed = libraryModel.isPodcastSubscribed(pageId);
 
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
