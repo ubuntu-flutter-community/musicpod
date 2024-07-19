@@ -275,6 +275,7 @@ class LibraryModel extends SafeChangeNotifier {
   Future<void> push({
     required Widget Function(BuildContext) builder,
     required String pageId,
+    bool maintainState = false,
   }) async {
     final forceUnnamed = _isForceUnnamed(pageId);
 
@@ -285,6 +286,7 @@ class LibraryModel extends SafeChangeNotifier {
       await masterNavigator.currentState?.push(
         MaterialPageRoute(
           builder: builder,
+          maintainState: maintainState,
           settings: RouteSettings(
             name: pageId,
           ),

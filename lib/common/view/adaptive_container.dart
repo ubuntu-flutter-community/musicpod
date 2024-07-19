@@ -3,6 +3,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
+import 'back_gesture.dart';
 
 class AdaptiveContainer extends StatelessWidget {
   const AdaptiveContainer({super.key, required this.child, this.padding});
@@ -38,7 +39,7 @@ class AdaptiveContainer extends StatelessWidget {
             border: Border.all(
               color: wrapInContainer ? Colors.transparent : theme.dividerColor,
             ),
-            child: child,
+            child: BackGesture(child: child),
           ),
         ),
       ),
