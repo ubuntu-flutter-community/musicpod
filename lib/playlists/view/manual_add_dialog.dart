@@ -215,15 +215,20 @@ class _PlaylistContentState extends State<PlaylistContent> {
                 ImportantButton(
                   onPressed: _controller.text.isEmpty
                       ? null
-                      : () {
-                          widget.libraryModel.addPlaylist(
+                      : () async {
+                          await widget.libraryModel
+                              .addPlaylist(
                             _controller.text,
                             _audios ?? widget.audios ?? {},
-                          );
-                          Navigator.pop(context);
-                          final index = widget.libraryModel
-                              .getIndexOfPlaylist(_controller.text);
-                          widget.libraryModel.setIndex(index);
+                          )
+                              .then((_) async {
+                            Navigator.of(context, rootNavigator: true).pop();
+                            await Future.delayed(
+                              const Duration(milliseconds: 300),
+                            );
+                            await widget.libraryModel
+                                .pushNamed(_controller.text);
+                          });
                         },
                   child: Text(
                     context.l10n.add,

@@ -7,6 +7,7 @@ import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../constants.dart';
+import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../local_audio_model.dart';
 import 'album_page.dart';
@@ -110,15 +111,9 @@ class AlbumsView extends StatelessWidget {
       background: fallback,
       onTap: id == null || albumAudios == null
           ? null
-          : () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return AlbumPage(
-                      id: id,
-                      album: albumAudios,
-                    );
-                  },
-                ),
+          : () => di<LibraryModel>().push(
+                builder: (context) => AlbumPage(id: id, album: albumAudios),
+                pageId: id,
               ),
       onPlay: albumAudios == null || albumAudios.isEmpty || id == null
           ? null

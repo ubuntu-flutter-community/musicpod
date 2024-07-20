@@ -7,25 +7,24 @@ import 'package:yaru/yaru.dart';
 import '../../app/app_model.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../library/library_model.dart';
 import 'global_keys.dart';
 import 'icons.dart';
 import 'theme.dart';
 
-class NavBackButton extends StatelessWidget {
-  const NavBackButton({super.key, this.onPressed});
+const kMacOsWindowControlMitigationPadding = EdgeInsets.only(top: 16, left: 13);
 
-  final void Function()? onPressed;
+class NavBackButton extends StatelessWidget {
+  const NavBackButton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    void onTap() {
-      onPressed?.call();
-      navigatorKey.currentState?.maybePop(context);
-    }
+    void onTap() => di<LibraryModel>().pop();
 
     if (yaruStyled) {
-      return const YaruBackButton(
+      return YaruBackButton(
         style: YaruBackButtonStyle.rounded,
+        onPressed: onTap,
       );
     } else {
       if (Platform.isMacOS) {
@@ -127,7 +126,7 @@ class HeaderBar extends StatelessWidget
     this.title,
     this.actions,
     this.style = YaruTitleBarStyle.normal,
-    this.titleSpacing,
+    this.titleSpacing = 0,
     this.backgroundColor = Colors.transparent,
     this.foregroundColor,
     required this.adaptive,
@@ -145,11 +144,13 @@ class HeaderBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final canPop = watchPropertyValue((LibraryModel m) => m.canPop);
+
     if (isMobile) {
       return AppBar(
         titleSpacing: titleSpacing,
         centerTitle: true,
-        leading: includeBackButton && Navigator.canPop(context)
+        leading: includeBackButton && canPop
             ? const NavBackButton()
             : const SizedBox.shrink(),
         title: title,
@@ -168,10 +169,28 @@ class HeaderBar extends StatelessWidget
     return YaruWindowTitleBar(
       titleSpacing: titleSpacing,
       actions: actions,
-      leading: includeBackButton && Navigator.canPop(context)
-          ? const NavBackButton()
-          : const SizedBox.shrink(),
-      title: title,
+      leading: (includeBackButton && canPop) ? const NavBackButton() : null,
+      title: context.showMasterPanel ||
+              masterScaffoldKey.currentState?.isDrawerOpen == true
+          ? title
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: (includeBackButton && canPop) ? 0 : 10,
+                    right: !(includeBackButton && canPop) ? 60 : 10,
+                  ),
+                  child: const SidebarButton(),
+                ),
+                if (title != null)
+                  Expanded(
+                    child: Center(
+                      child: title!,
+                    ),
+                  ),
+              ],
+            ),
       border: BorderSide.none,
       backgroundColor: backgroundColor,
       style: theStyle,
@@ -186,6 +205,38 @@ class HeaderBar extends StatelessWidget
             ? (style == YaruTitleBarStyle.hidden ? 0 : kYaruTitleBarHeight)
             : kToolbarHeight,
       );
+}
+
+class SidebarButton extends StatelessWidget {
+  const SidebarButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    if (Platform.isMacOS) {
+      return Padding(
+        padding: kMacOsWindowControlMitigationPadding,
+        child: SizedBox(
+          height: 15,
+          width: 15,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            child: Icon(
+              Iconz().sidebar,
+              size: 10,
+            ),
+            onTap: () => masterScaffoldKey.currentState?.openDrawer(),
+          ),
+        ),
+      );
+    }
+
+    return IconButton(
+      onPressed: () => masterScaffoldKey.currentState?.openDrawer(),
+      icon: Icon(
+        Iconz().sidebar,
+      ),
+    );
+  }
 }
 
 class TabsBar extends StatelessWidget {
@@ -251,16 +302,19 @@ class SearchingBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialSearchBar(
-      hintText: hintText,
-      text: text,
-      key: key,
-      onSubmitted: (v) {
-        di<AppModel>().setLockSpace(false);
-        onSubmitted?.call(v);
-      },
-      onClear: onClear,
-      onChanged: onChanged,
+    return Padding(
+      padding: const EdgeInsets.only(left: 10),
+      child: MaterialSearchBar(
+        hintText: hintText,
+        text: text,
+        key: key,
+        onSubmitted: (v) {
+          di<AppModel>().setLockSpace(false);
+          onSubmitted?.call(v);
+        },
+        onClear: onClear,
+        onChanged: onChanged,
+      ),
     );
   }
 }

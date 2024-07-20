@@ -7,8 +7,6 @@ import '../../extensions/theme_data_x.dart';
 
 const yaruFixDarkDividerColor = Color.fromARGB(19, 255, 255, 255);
 
-Color? getSideBarColor(ThemeData theme) => theme.scaffoldBackgroundColor;
-
 Color getPlayerBg(Color? surfaceTintColor, Color fallbackColor) {
   if (surfaceTintColor != null) {
     return (Platform.isLinux

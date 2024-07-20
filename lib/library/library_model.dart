@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../constants.dart';
 import '../common/data/audio.dart';
+import '../common/view/global_keys.dart';
+import '../constants.dart';
 import 'library_service.dart';
-
-const kFixedListAmount = 5; // local, radio, podcasts, newplaylist, favs
 
 class LibraryModel extends SafeChangeNotifier {
   LibraryModel(this._service);
@@ -30,8 +30,8 @@ class LibraryModel extends SafeChangeNotifier {
 
   Future<bool> init() async {
     await _service.init();
-    if (totalListAmount - 1 >= _service.appIndex) {
-      _index = _service.appIndex;
+    if (_service.selectedPageId != null) {
+      _pageIdStack.add(_service.selectedPageId!);
     }
 
     _localAudioIndexSub ??=
@@ -87,14 +87,6 @@ class LibraryModel extends SafeChangeNotifier {
     super.dispose();
   }
 
-  int get totalListAmount {
-    return starredStationsLength +
-        podcastsLength +
-        playlistsLength +
-        pinnedAlbumsLength +
-        kFixedListAmount;
-  }
-
   Set<Audio>? getAudiosById(String pageId) {
     if (pageId == kLikedAudiosPageId) {
       return likedAudios;
@@ -121,9 +113,6 @@ class LibraryModel extends SafeChangeNotifier {
   void removeLikedAudio(Audio audio, [bool notify = true]) =>
       _service.removeLikedAudio(audio, notify);
 
-  void removeLikedAudios(Set<Audio> audios) =>
-      _service.removeLikedAudios(audios);
-
   //
   // Starred stations
   //
@@ -134,22 +123,8 @@ class LibraryModel extends SafeChangeNotifier {
       _service.addStarredStation(url, audios);
 
   void unStarStation(String url) {
-    final stationIndex = indexOfStation(url);
-    if (stationIndex == index) {
-      setIndex(_service.appIndex - 1);
-    }
     _service.unStarStation(url);
-  }
-
-  int? indexOfStation(String? id) {
-    final station = starredStations[id];
-    if (station == null) return null;
-    final allStations = starredStations.entries.map((e) => e.value).toList();
-    return kFixedListAmount +
-        playlistsLength +
-        podcastsLength +
-        pinnedAlbumsLength +
-        allStations.indexOf(station);
+    pop();
   }
 
   bool isStarredStation(String? url) =>
@@ -190,26 +165,15 @@ class LibraryModel extends SafeChangeNotifier {
 
   bool isPlaylistSaved(String? name) => playlists.containsKey(name);
 
-  void addPlaylist(String name, Set<Audio> audios) =>
+  Future<void> addPlaylist(String name, Set<Audio> audios) async =>
       _service.addPlaylist(name, audios);
 
   Future<void> updatePlaylist(String id, Set<Audio> audios) async =>
       _service.updatePlaylist(id, audios);
 
   void removePlaylist(String id) {
-    final playlistIndex = getIndexOfPlaylist(id);
-    if (index == playlistIndex) {
-      setIndex(_service.appIndex - 1);
-    }
     _service.removePlaylist(id);
-  }
-
-  int? getIndexOfPlaylist(String id) {
-    if (id == kLikedAudiosPageId) return 4;
-    final playlist = getPlaylistById(id);
-    if (playlist == null) return null;
-    final allPlaylists = playlists.entries.map((e) => e.value).toList();
-    return kFixedListAmount + allPlaylists.indexOf(playlist);
+    pop();
   }
 
   void updatePlaylistName(String oldName, String newName) =>
@@ -247,21 +211,11 @@ class LibraryModel extends SafeChangeNotifier {
       _service.updatePodcast(feedUrl, audios);
 
   void removePodcast(String feedUrl) {
-    final podcastIndex = indexOfPodcast(feedUrl);
-    if (podcastIndex == index) {
-      setIndex(_service.appIndex - 1);
-    }
     _service.removePodcast(feedUrl);
+    pop();
   }
 
-  int? indexOfPodcast(String? id) {
-    final podcast = podcasts[id];
-    if (podcast == null) return null;
-    final allPodcasts = podcasts.entries.map((e) => e.value).toList();
-    return kFixedListAmount + playlistsLength + allPodcasts.indexOf(podcast);
-  }
-
-  bool podcastSubscribed(String? feedUrl) =>
+  bool isPodcastSubscribed(String? feedUrl) =>
       feedUrl == null ? false : podcasts.containsKey(feedUrl);
 
   bool podcastUpdateAvailable(String feedUrl) =>
@@ -296,32 +250,75 @@ class LibraryModel extends SafeChangeNotifier {
       _service.addPinnedAlbum(name, audios);
 
   void removePinnedAlbum(String name) {
-    final albumIndex = indexOfAlbum(name);
-    if (albumIndex == index) {
-      setIndex(_service.appIndex - 1);
-    }
     _service.removePinnedAlbum(name);
+    pop();
   }
 
-  int? indexOfAlbum(String? id) {
-    if (id == null) return null;
-    final album = pinnedAlbums[id];
-    if (album == null) return null;
-    final allAlbums = pinnedAlbums.entries.map((e) => e.value).toList();
-    return kFixedListAmount +
-        playlistsLength +
-        podcastsLength +
-        allAlbums.indexOf(album);
+  final List<String> _pageIdStack = [];
+  String? get selectedPageId => _pageIdStack.lastOrNull;
+  Future<void> pushNamed(String pageId) async {
+    if (pageId == _pageIdStack.lastOrNull) return;
+    _putOnStack(pageId);
+    await masterNavigator.currentState?.pushNamed(pageId);
   }
 
-  int? _index;
-  int? get index => _index;
-  void setIndex(int? value) {
-    if (value == null || value == _index) return;
-    _index = value;
-    _service.setAppIndex(value);
+  void _putOnStack(String pageId) {
+    _pageIdStack.add(pageId);
+    if (isPageInLibrary(pageId)) {
+      _service.selectedPageId = pageId;
+    }
     notifyListeners();
   }
+
+  bool get canPop => _pageIdStack.length > 1;
+
+  Future<void> push({
+    required Widget Function(BuildContext) builder,
+    required String pageId,
+    bool maintainState = false,
+  }) async {
+    final forceUnnamed = _isForceUnnamed(pageId);
+
+    if (!forceUnnamed && isPageInLibrary(pageId)) {
+      await pushNamed(pageId);
+    } else {
+      _putOnStack(pageId);
+      await masterNavigator.currentState?.push(
+        MaterialPageRoute(
+          builder: builder,
+          maintainState: maintainState,
+          settings: RouteSettings(
+            name: pageId,
+          ),
+        ),
+      );
+    }
+  }
+
+  bool _isForceUnnamed(String pageId) {
+    return [kLocalAudioPageId, kRadioPageId]
+        .any((e) => selectedPageId == e && pageId == e);
+  }
+
+  void pop({bool popStack = true}) {
+    if (_pageIdStack.length > 1 && popStack) {
+      _pageIdStack.removeLast();
+
+      notifyListeners();
+    }
+    masterNavigator.currentState?.maybePop();
+  }
+
+  bool isPageInLibrary(String? pageId) =>
+      pageId != null &&
+      (pageId == kLikedAudiosPageId ||
+          pageId == kLocalAudioPageId ||
+          pageId == kPodcastsPageId ||
+          pageId == kRadioPageId ||
+          isPinnedAlbum(pageId) ||
+          isStarredStation(pageId) ||
+          isPlaylistSaved(pageId) ||
+          isPodcastSubscribed(pageId));
 
   int? get localAudioindex => _service.localAudioIndex;
   void setLocalAudioindex(int? value) {

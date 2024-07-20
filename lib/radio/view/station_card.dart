@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../constants.dart';
+import '../../library/library_model.dart';
 import 'radio_fall_back_icon.dart';
 import 'station_page.dart';
 
@@ -38,7 +40,12 @@ class StationCard extends StatelessWidget {
                 audios: {station!},
                 listName: station!.url!,
               ),
-      onTap: station == null ? null : () => onTap(context, station!),
+      onTap: station?.url == null
+          ? null
+          : () => di<LibraryModel>().push(
+                builder: (_) => StationPage(station: station!),
+                pageId: station!.url!,
+              ),
       image: SizedBox.expand(
         child: SafeNetworkImage(
           fallBackIcon: RadioFallBackIcon(
@@ -50,16 +57,6 @@ class StationCard extends StatelessWidget {
           height: kAudioCardDimension,
           width: kAudioCardDimension,
         ),
-      ),
-    );
-  }
-
-  void onTap(BuildContext context, Audio station) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) {
-          return StationPage(station: station);
-        },
       ),
     );
   }

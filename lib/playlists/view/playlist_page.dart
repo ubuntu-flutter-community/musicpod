@@ -90,31 +90,30 @@ class PlaylistPage extends StatelessWidget {
             if (albumAudios?.firstOrNull == null) return;
             final id = albumAudios!.first.albumId;
             if (id == null) return;
-
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) {
-                  return AlbumPage(
-                    id: id,
-                    album: albumAudios,
-                  );
-                },
-              ),
+            di<LibraryModel>().push(
+              builder: (_) {
+                return AlbumPage(
+                  id: id,
+                  album: albumAudios,
+                );
+              },
+              pageId: id,
             );
           },
           onArtistTap: (text) {
             final artistAudios = model.findArtist(Audio(artist: text));
+            final artist = artistAudios?.firstOrNull?.artist;
+            if (artist == null) return;
             final images = model.findImages(artistAudios ?? {});
 
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) {
-                  return ArtistPage(
-                    images: images,
-                    artistAudios: artistAudios,
-                  );
-                },
-              ),
+            di<LibraryModel>().push(
+              builder: (_) {
+                return ArtistPage(
+                  images: images,
+                  artistAudios: artistAudios,
+                );
+              },
+              pageId: artist,
             );
           },
           image: PlaylistHeaderImage(playlist: playlist),
@@ -374,12 +373,9 @@ class _PlaylistGenreBar extends StatelessWidget {
                     wrapInFlexible: false,
                     text: e,
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return GenrePage(genre: e);
-                          },
-                        ),
+                      di<LibraryModel>().push(
+                        builder: (context) => GenrePage(genre: e),
+                        pageId: e,
                       );
                     },
                   ),

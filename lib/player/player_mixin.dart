@@ -5,7 +5,6 @@ import 'package:watch_it/watch_it.dart';
 import '../app/app_model.dart';
 import '../common/data/audio.dart';
 import '../common/view/copy_clipboard_content.dart';
-import '../common/view/global_keys.dart';
 import '../common/view/snackbars.dart';
 import '../library/library_model.dart';
 import '../local_audio/local_audio_model.dart';
@@ -73,15 +72,13 @@ mixin PlayerMixin {
 
     di<AppModel>().setFullWindowMode(false);
 
-    navigatorKey.currentState?.push(
-      MaterialPageRoute(
-        builder: (context) {
-          return AlbumPage(
-            id: id,
-            album: albumAudios,
-          );
-        },
+    final libraryModel = di<LibraryModel>();
+    libraryModel.push(
+      builder: (_) => AlbumPage(
+        id: id,
+        album: albumAudios,
       ),
+      pageId: id,
     );
   }
 
@@ -108,20 +105,11 @@ mixin PlayerMixin {
 
   void _onRadioArtistTap(Audio audio) {
     final libraryModel = di<LibraryModel>();
-    int? index = libraryModel.indexOfStation(audio.url!);
-    if (index != null) {
-      navigatorKey.currentState
-          ?.maybePop()
-          .then((value) => libraryModel.setIndex(index));
-    } else {
-      navigatorKey.currentState?.push(
-        MaterialPageRoute(
-          builder: (context) {
-            return StationPage(station: audio);
-          },
-        ),
-      );
-    }
+    if (audio.url == null) return;
+    libraryModel.push(
+      builder: (_) => StationPage(station: audio),
+      pageId: audio.url!,
+    );
   }
 
   void _onPodcastArtistTap({
@@ -129,11 +117,9 @@ mixin PlayerMixin {
     required BuildContext context,
   }) {
     final libraryModel = di<LibraryModel>();
-    int? index = libraryModel.indexOfPodcast(audio.website!);
-    if (index != null) {
-      navigatorKey.currentState
-          ?.maybePop()
-          .then((value) => libraryModel.setIndex(index));
+    if (audio.website != null &&
+        libraryModel.isPodcastSubscribed(audio.website)) {
+      libraryModel.pushNamed(audio.website!);
     } else {
       searchAndPushPodcastPage(
         context: context,
@@ -148,19 +134,17 @@ mixin PlayerMixin {
   void _onLocalAudioArtistTap({required Audio audio}) {
     final localAudioModel = di<LocalAudioModel>();
     final artistAudios = localAudioModel.findArtist(audio);
-    if (artistAudios?.firstOrNull == null) return;
+    final artist = artistAudios?.firstOrNull?.artist;
+    if (artist == null) return;
     final images = localAudioModel.findImages(artistAudios ?? {});
     di<AppModel>().setFullWindowMode(false);
 
-    navigatorKey.currentState?.push(
-      MaterialPageRoute(
-        builder: (context) {
-          return ArtistPage(
-            artistAudios: artistAudios,
-            images: images,
-          );
-        },
+    di<LibraryModel>().push(
+      builder: (_) => ArtistPage(
+        artistAudios: artistAudios,
+        images: images,
       ),
+      pageId: artist,
     );
   }
 }

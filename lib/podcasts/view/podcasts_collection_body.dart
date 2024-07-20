@@ -7,10 +7,8 @@ import '../../common/data/audio.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/common_widgets.dart';
-import '../../common/view/global_keys.dart';
 import '../../common/view/loading_grid.dart';
 import '../../common/view/no_search_result_page.dart';
-import '../../common/view/offline_page.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
@@ -19,7 +17,6 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../podcast_model.dart';
-import 'podcast_page.dart';
 
 class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
   const PodcastsCollectionBody({
@@ -181,24 +178,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                                   listName: podcast.key,
                                 )
                                 .then((_) => removeUpdate(podcast.key)),
-                            onTap: () => navigatorKey.currentState?.push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  if (!isOnline) return const OfflinePage();
-
-                                  return PodcastPage(
-                                    pageId: podcast.key,
-                                    title: podcast.value.firstOrNull?.album ??
-                                        podcast.value.firstOrNull?.title ??
-                                        podcast.value.firstOrNull.toString(),
-                                    audios: podcast.value,
-                                    imageUrl: podcast
-                                            .value.firstOrNull?.albumArtUrl ??
-                                        podcast.value.firstOrNull?.imageUrl,
-                                  );
-                                },
-                              ),
-                            ),
+                            onTap: () => libraryModel.pushNamed(podcast.key),
                           );
                         },
                       ),

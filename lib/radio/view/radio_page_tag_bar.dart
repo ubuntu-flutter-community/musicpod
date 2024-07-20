@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/app_model.dart';
-import '../../common/view/tapable_text.dart';
 import '../../common/data/audio.dart';
-import '../../common/view/global_keys.dart';
+import '../../common/view/tapable_text.dart';
 import '../../library/library_model.dart';
 import '../radio_model.dart';
 import 'radio_search.dart';
@@ -48,19 +47,16 @@ class RadioPageTagBar extends StatelessWidget {
                             index: libraryModel.radioindex,
                           )
                           .then(
-                            (_) => navigatorKey.currentState?.push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return RadioSearchPage(
-                                    radioSearch: RadioSearch.tag,
-                                    searchQuery: e,
-                                  );
-                                },
+                            (_) => libraryModel.push(
+                              builder: (_) => RadioSearchPage(
+                                radioSearch: RadioSearch.tag,
+                                searchQuery: e,
                               ),
+                              pageId: e,
                             ),
                           );
                     },
-                    text: e,
+                    text: e.length > 20 ? e.substring(0, 19) : e,
                   ),
                   if (i != tags.length - 1) const Text(','),
                 ],

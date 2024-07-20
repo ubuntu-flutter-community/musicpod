@@ -6,8 +6,10 @@ import '../../common/data/audio.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/round_image_container.dart';
+import '../../common/view/snackbars.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import '../local_audio_model.dart';
 import 'artist_page.dart';
 
@@ -54,16 +56,23 @@ class ArtistsView extends StatelessWidget {
 
           return YaruSelectableContainer(
             selected: false,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return ArtistPage(
+            onTap: () {
+              final artist = artistAudios?.firstOrNull?.artist;
+              if (artist == null) {
+                showSnackBar(
+                  context: context,
+                  content: Text(context.l10n.unknown),
+                );
+              } else {
+                di<LibraryModel>().push(
+                  builder: (_) => ArtistPage(
                     images: images,
                     artistAudios: artistAudios,
-                  );
-                },
-              ),
-            ),
+                  ),
+                  pageId: artist,
+                );
+              }
+            },
             borderRadius: BorderRadius.circular(300),
             child: Stack(
               alignment: Alignment.center,

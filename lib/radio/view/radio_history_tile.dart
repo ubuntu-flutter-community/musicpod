@@ -3,12 +3,12 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/constants.dart';
 
 import '../../common/data/mpv_meta_data.dart';
-import '../../common/view/global_keys.dart';
 import '../../common/view/icy_image.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
+import '../../library/library_model.dart';
 import '../../player/player_mixin.dart';
 import '../radio_model.dart';
 import 'radio_search.dart';
@@ -33,15 +33,12 @@ class RadioHistoryTile extends StatelessWidget with PlayerMixin {
         width: yaruStyled ? 34 : 40,
         mpvMetaData: e.value,
         onGenreTap: (tag) => radioModel.init().then(
-              (_) => navigatorKey.currentState?.push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return RadioSearchPage(
-                      radioSearch: RadioSearch.tag,
-                      searchQuery: tag.toLowerCase(),
-                    );
-                  },
+              (_) => di<LibraryModel>().push(
+                builder: (_) => RadioSearchPage(
+                  radioSearch: RadioSearch.tag,
+                  searchQuery: tag.toLowerCase(),
                 ),
+                pageId: tag.toLowerCase(),
               ),
             ),
       ),

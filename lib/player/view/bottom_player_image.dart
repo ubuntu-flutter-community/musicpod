@@ -4,16 +4,11 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
-
 import '../../common/data/audio.dart';
-import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../radio/radio_model.dart';
-import '../../radio/view/radio_search.dart';
-import '../../radio/view/radio_search_page.dart';
 import 'super_network_image.dart';
 
 class BottomPlayerImage extends StatelessWidget with WatchItMixin {
@@ -122,18 +117,6 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
         fit: BoxFit.cover,
         fallBackIcon: fallBackImage,
         errorIcon: fallBackImage,
-        onGenreTap: (genre) => di<RadioModel>().init().then(
-              (_) => navigatorKey.currentState?.push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return RadioSearchPage(
-                      radioSearch: RadioSearch.tag,
-                      searchQuery: genre.toLowerCase(),
-                    );
-                  },
-                ),
-              ),
-            ),
       );
     }
 

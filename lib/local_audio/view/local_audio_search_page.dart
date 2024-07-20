@@ -6,7 +6,6 @@ import 'package:yaru/yaru.dart';
 import '../../app/app_model.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
-import '../../common/view/global_keys.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -44,7 +43,7 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
       if (text != null) {
         model.search(text);
       } else {
-        navigatorKey.currentState?.maybePop();
+        di<LibraryModel>().pop();
       }
     }
 

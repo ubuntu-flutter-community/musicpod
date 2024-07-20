@@ -5,9 +5,9 @@ import 'package:yaru/yaru.dart';
 import '../../app/app_model.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
-import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/offline_page.dart';
+import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
@@ -65,7 +65,6 @@ class _RadioPageState extends State<RadioPage> {
     return YaruDetailPage(
       appBar: HeaderBar(
         adaptive: true,
-        titleSpacing: 0,
         actions: [
           Flexible(
             child: Padding(
@@ -76,10 +75,9 @@ class _RadioPageState extends State<RadioPage> {
                       active: false,
                       onPressed: () {
                         di<AppModel>().setLockSpace(true);
-                        navigatorKey.currentState?.push(
-                          MaterialPageRoute(
-                            builder: (context) => const RadioDiscoverPage(),
-                          ),
+                        di<LibraryModel>().push(
+                          builder: (context) => const RadioDiscoverPage(),
+                          pageId: kRadioPageId,
                         );
                       },
                     ),

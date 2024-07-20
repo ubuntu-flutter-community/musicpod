@@ -7,7 +7,6 @@ import '../../app/app_model.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/country_auto_complete.dart';
-import '../../common/view/global_keys.dart';
 import '../../common/view/language_autocomplete.dart';
 import '../../common/view/offline_page.dart';
 import '../../constants.dart';
@@ -142,7 +141,7 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
               active: true,
               onPressed: () {
                 di<AppModel>().setLockSpace(false);
-                navigatorKey.currentState?.maybePop();
+                di<LibraryModel>().pop(popStack: false);
               },
             ),
           ),

@@ -192,10 +192,10 @@ class LibraryService {
   final _playlistsController = StreamController<bool>.broadcast();
   Stream<bool> get playlistsChanged => _playlistsController.stream;
 
-  void addPlaylist(String id, Set<Audio> audios) {
+  Future<void> addPlaylist(String id, Set<Audio> audios) async {
     if (!_playlists.containsKey(id)) {
       _playlists.putIfAbsent(id, () => audios);
-      writeAudioMap(_playlists, kPlaylistsFileName)
+      await writeAudioMap(_playlists, kPlaylistsFileName)
           .then((_) => _playlistsController.add(true));
     }
   }
@@ -451,8 +451,8 @@ class LibraryService {
   Future<bool> init() async {
     // Ensure [init] is only called once
     if (_libraryInitialized == true) return _libraryInitialized!;
-    final appIndexOrNull = await readAppState(kAppIndex);
-    _appIndex = appIndexOrNull == null ? 0 : int.parse(appIndexOrNull);
+    final pageIdOrNull = await readAppState(kSelectedPageId);
+    selectedPageId = pageIdOrNull as String?;
 
     final localAudioIndexStringOrNull = await readAppState(kLocalAudioIndex);
     if (localAudioIndexStringOrNull != null) {
@@ -534,11 +534,7 @@ class LibraryService {
     _podcastIndexController.add(true);
   }
 
-  int _appIndex = 0;
-  int get appIndex => _appIndex;
-  void setAppIndex(int value) {
-    _appIndex = value;
-  }
+  String? selectedPageId;
 
   Future<void> dispose() async {
     dio.close();
@@ -569,6 +565,6 @@ class LibraryService {
       kPodcastIndex,
       _podcastIndex.toString(),
     );
-    await writeAppState(kAppIndex, _appIndex.toString());
+    await writeAppState(kSelectedPageId, selectedPageId.toString());
   }
 }

@@ -7,8 +7,8 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
-import '../common/view/global_keys.dart';
 import '../l10n/l10n.dart';
+import '../library/library_model.dart';
 import '../player/player_model.dart';
 import 'podcast_model.dart';
 import 'view/podcast_page.dart';
@@ -21,6 +21,11 @@ Future<void> searchAndPushPodcastPage({
   required bool play,
 }) async {
   ScaffoldMessenger.of(context).clearSnackBars();
+
+  final libraryModel = di<LibraryModel>();
+  if (feedUrl != null && libraryModel.isPageInLibrary(feedUrl)) {
+    return libraryModel.pushNamed(feedUrl);
+  }
 
   if (feedUrl == null) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -76,20 +81,21 @@ Future<void> searchAndPushPodcastPage({
             (_) => setSelectedFeedUrl(null),
           );
     } else {
-      navigatorKey.currentState?.push(
-        MaterialPageRoute(
-          builder: (context) {
-            return PodcastPage(
-              imageUrl: itemImageUrl ?? podcast.firstOrNull?.imageUrl,
-              audios: podcast,
-              pageId: feedUrl,
-              title: podcast.firstOrNull?.album ??
-                  podcast.firstOrNull?.title ??
-                  feedUrl,
-            );
-          },
-        ),
-      ).then((_) {
+      di<LibraryModel>()
+          .push(
+        builder: (_) {
+          return PodcastPage(
+            imageUrl: itemImageUrl ?? podcast.firstOrNull?.imageUrl,
+            audios: podcast,
+            pageId: feedUrl,
+            title: podcast.firstOrNull?.album ??
+                podcast.firstOrNull?.title ??
+                feedUrl,
+          );
+        },
+        pageId: feedUrl,
+      )
+          .then((_) {
         setSelectedFeedUrl(null);
       });
     }

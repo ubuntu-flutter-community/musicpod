@@ -13,6 +13,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
+import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -48,11 +49,12 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
     Future<void> onTap(text) async {
       final podcastModel = di<PodcastModel>();
-      Navigator.of(context).maybePop();
       podcastModel.setSearchActive(true);
       podcastModel.setSearchQuery(text);
       await podcastModel.search(searchQuery: text);
-      di<LibraryModel>().setIndex(2);
+      di<LibraryModel>()
+        ..pop()
+        ..pushNamed(kPodcastsPageId);
     }
 
     return YaruDetailPage(
@@ -123,7 +125,7 @@ class _PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
     final theme = context.t;
     final libraryModel = di<LibraryModel>();
 
-    final subscribed = libraryModel.podcastSubscribed(pageId);
+    final subscribed = libraryModel.isPodcastSubscribed(pageId);
 
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);

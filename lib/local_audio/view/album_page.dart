@@ -38,18 +38,17 @@ class AlbumPage extends StatelessWidget {
       final artistName = album.firstOrNull?.artist;
       if (artistName == null) return;
 
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) {
-            final artistAudios = model.findArtist(album.first);
-            final images = model.findImages(artistAudios ?? {});
+      di<LibraryModel>().push(
+        builder: (_) {
+          final artistAudios = model.findArtist(album.first);
+          final images = model.findImages(artistAudios ?? {});
 
-            return ArtistPage(
-              images: images,
-              artistAudios: artistAudios,
-            );
-          },
-        ),
+          return ArtistPage(
+            images: images,
+            artistAudios: artistAudios,
+          );
+        },
+        pageId: artistName,
       );
     }
 

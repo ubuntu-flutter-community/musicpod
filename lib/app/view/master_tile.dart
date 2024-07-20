@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../extensions/build_context_x.dart';
-
 import '../../constants.dart';
+import '../../extensions/build_context_x.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
-import '../../playlists/view/manual_add_dialog.dart';
-import 'icons.dart';
-import 'spaced_divider.dart';
+import '../../common/view/icons.dart';
+import '../../common/view/spaced_divider.dart';
 
 class MasterTile extends StatelessWidget {
   const MasterTile({
@@ -21,6 +19,7 @@ class MasterTile extends StatelessWidget {
     this.trailing,
     required this.libraryModel,
     required this.pageId,
+    required this.onTap,
   });
 
   final bool? selected;
@@ -30,6 +29,7 @@ class MasterTile extends StatelessWidget {
   final Widget? trailing;
   final LibraryModel libraryModel;
   final String pageId;
+  final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +39,7 @@ class MasterTile extends StatelessWidget {
           : EdgeInsets.zero,
       child: YaruMasterTile(
         title: title,
-        onTap: pageId == kNewPlaylistPageId
-            ? () => showDialog(
-                  context: context,
-                  builder: (context) {
-                    return const ManualAddDialog();
-                  },
-                )
-            : null,
+        onTap: onTap,
         selected: selected,
         leading: leading,
         subtitle: subtitle,
