@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../common/view/back_gesture.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
@@ -63,24 +64,26 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
             ),
           const VerticalDivider(),
           Expanded(
-            child: Navigator(
-              onPopPage: (route, result) => route.didPop(result),
-              key: masterNavigator,
-              onGenerateRoute: (settings) {
-                final page = (masterItems.firstWhereOrNull(
-                          (e) =>
-                              e.pageId == settings.name ||
-                              e.pageId == libraryModel.selectedPageId,
-                        ) ??
-                        masterItems.elementAt(0))
-                    .pageBuilder(context);
+            child: BackGesture(
+              child: Navigator(
+                onPopPage: (route, result) => route.didPop(result),
+                key: masterNavigator,
+                onGenerateRoute: (settings) {
+                  final page = (masterItems.firstWhereOrNull(
+                            (e) =>
+                                e.pageId == settings.name ||
+                                e.pageId == libraryModel.selectedPageId,
+                          ) ??
+                          masterItems.elementAt(0))
+                      .pageBuilder(context);
 
-                return PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => page,
-                  transitionsBuilder: (_, a, __, c) =>
-                      FadeTransition(opacity: a, child: c),
-                );
-              },
+                  return PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => page,
+                    transitionsBuilder: (_, a, __, c) =>
+                        FadeTransition(opacity: a, child: c),
+                  );
+                },
+              ),
             ),
           ),
         ],
