@@ -31,6 +31,8 @@ class RadioPageTagBar extends StatelessWidget {
     return SingleChildScrollView(
       padding: const EdgeInsets.only(top: 5, left: 2),
       child: Wrap(
+        alignment: WrapAlignment.center,
+        runAlignment: WrapAlignment.center,
         spacing: 5,
         runSpacing: 5,
         children: tags

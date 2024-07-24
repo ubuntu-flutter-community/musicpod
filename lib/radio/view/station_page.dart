@@ -44,7 +44,7 @@ class StationPage extends StatelessWidget with WatchItMixin {
               child: AudioPageHeader(
                 title: station.title ?? station.url ?? '',
                 label: station.artist,
-                descriptionWidget: RadioPageTagBar(station: station),
+                description: RadioPageTagBar(station: station),
                 image: SafeNetworkImage(
                   fallBackIcon: RadioFallBackIcon(
                     iconSize: kMaxAudioPageHeaderHeight / 2,
@@ -86,17 +86,11 @@ class _StationPageControlPanel extends StatelessWidget {
           : MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (station.url != null)
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Center(
-              child: AvatarPlayButton(
-                audios: {station},
-                pageId: station.url!,
-              ),
-            ),
-          ),
         RadioPageStarButton(station: station),
+        AvatarPlayButton(
+          audios: {station},
+          pageId: station.url!,
+        ),
         RadioPageCopyHistoryButton(station: station),
       ],
     );

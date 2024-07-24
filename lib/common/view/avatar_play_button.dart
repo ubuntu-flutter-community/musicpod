@@ -27,37 +27,40 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
       (PlayerModel m) => m.queueName != null && m.queueName == pageId,
     );
     final iconData =
-        isPlayerPlaying && pageIsQueue ? Iconz().pause : Iconz().play;
+        isPlayerPlaying && pageIsQueue ? Iconz().pause : Iconz().playFilled;
 
-    return CircleAvatar(
-      radius: avatarIconSize,
-      backgroundColor: theme.colorScheme.inverseSurface,
-      child: IconButton(
-        tooltip: context.l10n.playAll,
-        onPressed: () {
-          if (isPlayerPlaying) {
-            if (pageIsQueue) {
-              playerModel.pause();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: CircleAvatar(
+        radius: bigPlayButtonSize,
+        backgroundColor: theme.colorScheme.inverseSurface,
+        child: IconButton(
+          tooltip: context.l10n.playAll,
+          onPressed: () {
+            if (isPlayerPlaying) {
+              if (pageIsQueue) {
+                playerModel.pause();
+              } else {
+                playerModel.startPlaylist(
+                  audios: audios,
+                  listName: pageId,
+                );
+              }
             } else {
-              playerModel.startPlaylist(
-                audios: audios,
-                listName: pageId,
-              );
+              if (pageIsQueue) {
+                playerModel.resume();
+              } else {
+                playerModel.startPlaylist(
+                  audios: audios,
+                  listName: pageId,
+                );
+              }
             }
-          } else {
-            if (pageIsQueue) {
-              playerModel.resume();
-            } else {
-              playerModel.startPlaylist(
-                audios: audios,
-                listName: pageId,
-              );
-            }
-          }
-        },
-        icon: Icon(
-          iconData,
-          color: theme.colorScheme.onInverseSurface,
+          },
+          icon: Icon(
+            iconData,
+            color: theme.colorScheme.onInverseSurface,
+          ),
         ),
       ),
     );

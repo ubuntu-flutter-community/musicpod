@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
@@ -18,15 +17,9 @@ class ExploreOnlinePopup extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
-    return YaruPopupMenuButton(
+    return PopupMenuButton(
       enabled: isOnline,
       tooltip: context.l10n.searchOnline,
-      style: TextButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          side: BorderSide.none,
-          borderRadius: BorderRadius.circular(100),
-        ),
-      ),
       itemBuilder: (c) => [
         PopupMenuItem(
           padding: const EdgeInsets.only(left: 5),
@@ -38,7 +31,7 @@ class ExploreOnlinePopup extends StatelessWidget with WatchItMixin {
           ),
         ),
       ],
-      child: Icon(Iconz().explore),
+      icon: Icon(Iconz().explore),
     );
   }
 }

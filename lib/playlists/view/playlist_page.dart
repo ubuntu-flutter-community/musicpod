@@ -277,7 +277,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
       title: pageId,
       image: image,
       label: context.l10n.playlist,
-      descriptionWidget: _PlaylistGenreBar(audios: audios),
+      description: _PlaylistGenreBar(audios: audios),
     );
 
     return AdaptiveContainer(

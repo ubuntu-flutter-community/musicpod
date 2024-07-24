@@ -52,52 +52,58 @@ class SliverAudioPage extends StatelessWidget {
         adaptive: true,
         title: Text(pageTitle ?? pageId),
       ),
-      body: AdaptiveContainer(
-        child: audios == null
-            ? const Center(
-                child: Progress(),
-              )
-            : audios!.isEmpty
-                ? NoSearchResultPage(
-                    message: noSearchResultMessage,
-                    icons: noSearchResultIcons,
-                  )
-                : CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: AudioPageHeader(
-                          title: pageTitle ?? pageId,
-                          image: image,
-                          subTitle: pageSubTitle,
-                          label: pageLabel,
-                          onLabelTab: audioPageType == AudioPageType.likedAudio
-                              ? null
-                              : onPageLabelTab,
-                          onSubTitleTab: onPageSubTitleTab,
-                        ),
-                      ),
-                      SliverAudioPageControlPanel(
-                        controlPanel: controlPanel ??
-                            AvatarPlayButton(
-                              audios: audios ?? {},
-                              pageId: pageId,
-                            ),
-                      ),
-                      if (audios == null)
-                        const SliverToBoxAdapter(
-                          child: Center(
-                            child: Progress(),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return audios == null
+              ? const Center(
+                  child: Progress(),
+                )
+              : audios!.isEmpty
+                  ? NoSearchResultPage(
+                      message: noSearchResultMessage,
+                      icons: noSearchResultIcons,
+                    )
+                  : CustomScrollView(
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: AudioPageHeader(
+                            title: pageTitle ?? pageId,
+                            image: image,
+                            subTitle: pageSubTitle,
+                            label: pageLabel,
+                            onLabelTab:
+                                audioPageType == AudioPageType.likedAudio
+                                    ? null
+                                    : onPageLabelTab,
+                            onSubTitleTab: onPageSubTitleTab,
                           ),
-                        )
-                      else
-                        SliverAudioTileList(
-                          audioPageType: audioPageType,
-                          audios: audios!,
-                          pageId: pageId,
-                          onSubTitleTab: onPageLabelTab,
                         ),
-                    ],
-                  ),
+                        SliverAudioPageControlPanel(
+                          controlPanel: controlPanel ??
+                              AvatarPlayButton(
+                                audios: audios ?? {},
+                                pageId: pageId,
+                              ),
+                        ),
+                        if (audios == null)
+                          const SliverToBoxAdapter(
+                            child: Center(
+                              child: Progress(),
+                            ),
+                          )
+                        else
+                          SliverPadding(
+                            padding: getSliverHorizontalPadding(constraints),
+                            sliver: SliverAudioTileList(
+                              audioPageType: audioPageType,
+                              audios: audios!,
+                              pageId: pageId,
+                              onSubTitleTab: onPageLabelTab,
+                            ),
+                          ),
+                      ],
+                    );
+        },
       ),
     );
   }

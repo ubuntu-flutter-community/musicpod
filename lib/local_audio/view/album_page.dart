@@ -150,10 +150,6 @@ class AlbumPageControlButton extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        AvatarPlayButton(audios: album, pageId: id),
-        const SizedBox(
-          width: 10,
-        ),
         IconButton(
           tooltip: context.l10n.pinAlbum,
           isSelected: libraryModel.isPinnedAlbum(id),
@@ -169,6 +165,7 @@ class AlbumPageControlButton extends StatelessWidget {
             }
           },
         ),
+        AvatarPlayButton(audios: album, pageId: id),
         ExploreOnlinePopup(
           text: '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
         ),

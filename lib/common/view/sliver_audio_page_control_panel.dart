@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:yaru/constants.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../extensions/theme_data_x.dart';
 
 class SliverAudioPageControlPanel extends StatelessWidget {
   const SliverAudioPageControlPanel({super.key, required this.controlPanel});
@@ -12,19 +11,14 @@ class SliverAudioPageControlPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final wrappedInContainer = context.wideWindow;
-    final smallWindow = context.smallWindow;
-
-    final color =
-        wrappedInContainer ? theme.scaffoldBackgroundColor : theme.containerBg;
 
     return SliverAppBar(
       shape: const RoundedRectangleBorder(side: BorderSide.none),
       elevation: 0,
-      backgroundColor: color,
+      backgroundColor: theme.scaffoldBackgroundColor,
       automaticallyImplyLeading: false,
       pinned: true,
-      centerTitle: smallWindow,
+      centerTitle: true,
       titleSpacing: 0,
       title: Padding(
         padding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
