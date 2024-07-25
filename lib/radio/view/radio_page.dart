@@ -3,7 +3,6 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
-import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/offline_page.dart';
@@ -86,7 +85,7 @@ class _RadioPageState extends State<RadioPage> {
         ],
         title: Text('${context.l10n.radio} ${context.l10n.collection}'),
       ),
-      body: const AdaptiveContainer(child: RadioLibPage()),
+      body: const RadioLibPage(),
     );
   }
 }

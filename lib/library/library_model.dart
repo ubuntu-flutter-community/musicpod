@@ -108,6 +108,9 @@ class LibraryModel extends SafeChangeNotifier {
 
   void addLikedAudios(Set<Audio> audios) => _service.addLikedAudios(audios);
 
+  void removeLikedAudios(Set<Audio> audios) =>
+      _service.removeLikedAudios(audios);
+
   bool liked(Audio? audio) => audio == null ? false : _service.liked(audio);
 
   void removeLikedAudio(Audio audio, [bool notify = true]) =>

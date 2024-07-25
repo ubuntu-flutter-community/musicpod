@@ -11,22 +11,29 @@ class BlurredFullHeightPlayerImage extends StatelessWidget {
     super.key,
     required this.size,
     required this.audio,
+    this.blur = 20,
+    this.opacity,
+    this.borderRadius,
   });
 
   final Size size;
   final Audio? audio;
+  final double blur;
+  final double? opacity;
+  final BorderRadius? borderRadius;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
     return Opacity(
       key: ValueKey(audio?.url),
-      opacity: theme.isLight ? 0.8 : 0.9,
+      opacity: opacity ?? (theme.isLight ? 0.8 : 0.9),
       child: SizedBox(
         width: size.width,
         height: size.height,
         child: Blur(
-          blur: 20,
+          borderRadius: borderRadius,
+          blur: blur,
           colorOpacity: theme.isLight ? 0.6 : 0.7,
           blurColor:
               theme.isLight ? Colors.white : theme.scaffoldBackgroundColor,

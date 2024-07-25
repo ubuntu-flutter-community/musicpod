@@ -107,7 +107,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                 ),
               ),
               SliverPadding(
-                padding: getSliverHorizontalPadding(constraints),
+                padding: getAdaptiveHorizontalPadding(constraints),
                 sliver: SliverPodcastPageList(
                   audios: audiosWithDownloads,
                   pageId: pageId,

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
@@ -64,6 +65,28 @@ class AlbumPage extends StatelessWidget {
       controlPanel: AlbumPageControlButton(album: album, id: id),
     );
   }
+}
+
+// ignore: unused_element
+Future<Color?> _loadColor({Audio? audio}) async {
+  if (audio?.pictureData == null &&
+      audio?.imageUrl == null &&
+      audio?.albumArtUrl == null) {
+    return null;
+  }
+
+  ImageProvider? image;
+  if (audio?.pictureData != null) {
+    image = MemoryImage(
+      audio!.pictureData!,
+    );
+  } else {
+    image = NetworkImage(
+      audio!.imageUrl ?? audio.albumArtUrl!,
+    );
+  }
+  final generator = await PaletteGenerator.fromImageProvider(image);
+  return generator.dominantColor?.color;
 }
 
 class AlbumPageSideBarIcon extends StatelessWidget {

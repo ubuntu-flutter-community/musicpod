@@ -127,7 +127,14 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
           ),
         ),
       ),
-      body: AdaptiveContainer(child: body),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Padding(
+            padding: getAdaptiveHorizontalPadding(constraints),
+            child: body,
+          );
+        },
+      ),
     );
   }
 }

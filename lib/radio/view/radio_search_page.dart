@@ -4,7 +4,6 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/loading_grid.dart';
@@ -138,7 +137,7 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
           ],
         ),
       ),
-      body: AdaptiveContainer(child: futureBuilder),
+      body: futureBuilder,
     );
   }
 }

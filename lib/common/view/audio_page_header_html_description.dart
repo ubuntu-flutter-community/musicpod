@@ -1,3 +1,4 @@
+import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -19,7 +20,7 @@ class AudioPageHeaderHtmlDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     final descriptionStyle = context.t.textTheme.labelSmall;
     return SizedBox(
-      width: 400,
+      width: kAudioHeaderDescriptionWidth,
       child: InkWell(
         borderRadius: BorderRadius.circular(kButtonRadius),
         onTap: () => showDialog(

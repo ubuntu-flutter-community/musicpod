@@ -4,14 +4,11 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/audio_page_type.dart';
-import '../../common/view/avatar_play_button.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/fall_back_header_image.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page.dart';
 import '../../constants.dart';
-import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
@@ -40,21 +37,6 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
           pageId: artist,
         );
       },
-      controlPanel: Row(
-        children: [
-          AvatarPlayButton(audios: likedAudios, pageId: kLikedAudiosPageId),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 10,
-              right: 10,
-            ),
-            child: Text(
-              '${likedAudios.length} ${context.l10n.titles}',
-              style: getControlPanelStyle(context.t.textTheme),
-            ),
-          ),
-        ],
-      ),
       noSearchResultMessage: Text(context.l10n.likedSongsSubtitle),
       noSearchResultIcons: const AnimatedEmoji(AnimatedEmojis.twoHearts),
       audios: likedAudios,
@@ -62,6 +44,7 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
       pageId: kLikedAudiosPageId,
       pageTitle: context.l10n.likedSongs,
       pageLabel: context.l10n.likedSongsSubtitle,
+      pageSubTitle: '${likedAudios.length} ${context.l10n.titles}',
       image: FallBackHeaderImage(
         child: Icon(
           Iconz().heart,

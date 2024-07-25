@@ -93,7 +93,7 @@ class SliverAudioPage extends StatelessWidget {
                           )
                         else
                           SliverPadding(
-                            padding: getSliverHorizontalPadding(constraints),
+                            padding: getAdaptiveHorizontalPadding(constraints),
                             sliver: SliverAudioTileList(
                               audioPageType: audioPageType,
                               audios: audios!,

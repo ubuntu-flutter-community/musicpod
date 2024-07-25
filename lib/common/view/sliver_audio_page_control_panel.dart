@@ -10,21 +10,22 @@ class SliverAudioPageControlPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
-
-    return SliverAppBar(
-      shape: const RoundedRectangleBorder(side: BorderSide.none),
-      elevation: 0,
-      backgroundColor: theme.scaffoldBackgroundColor,
-      automaticallyImplyLeading: false,
-      pinned: true,
-      centerTitle: true,
-      titleSpacing: 0,
-      title: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
-        child: controlPanel,
+    return SliverPadding(
+      padding: const EdgeInsets.only(bottom: 10),
+      sliver: SliverAppBar(
+        shape: const RoundedRectangleBorder(side: BorderSide.none),
+        elevation: 0,
+        backgroundColor: context.t.scaffoldBackgroundColor,
+        automaticallyImplyLeading: false,
+        pinned: true,
+        centerTitle: true,
+        titleSpacing: 0,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
+          child: controlPanel,
+        ),
+        bottom: const _Space(),
       ),
-      bottom: const _Space(),
     );
   }
 }

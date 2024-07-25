@@ -5,7 +5,6 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
-import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../constants.dart';
@@ -88,40 +87,38 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
 
     return YaruDetailPage(
       appBar: headerBar,
-      body: AdaptiveContainer(
-        child: Column(
-          children: [
-            const LocalAudioControlPanel(),
-            Expanded(
-              child: LocalAudioBody(
-                localAudioView: localAudioView,
-                titles: audios,
-                albums: model.allAlbums,
-                artists: model.allArtists,
-                genres: model.allGenres,
-                noResultIcon: const AnimatedEmoji(AnimatedEmojis.bird),
-                noResultMessage: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(context.l10n.noLocalTitlesFound),
-                    const SizedBox(
-                      height: kYaruPagePadding,
-                    ),
-                    ImportantButton(
-                      child: Text(context.l10n.settings),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (_) => const SettingsDialog(),
-                        );
-                      },
-                    ),
-                  ],
-                ),
+      body: Column(
+        children: [
+          const LocalAudioControlPanel(),
+          Expanded(
+            child: LocalAudioBody(
+              localAudioView: localAudioView,
+              titles: audios,
+              albums: model.allAlbums,
+              artists: model.allArtists,
+              genres: model.allGenres,
+              noResultIcon: const AnimatedEmoji(AnimatedEmojis.bird),
+              noResultMessage: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(context.l10n.noLocalTitlesFound),
+                  const SizedBox(
+                    height: kYaruPagePadding,
+                  ),
+                  ImportantButton(
+                    child: Text(context.l10n.settings),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (_) => const SettingsDialog(),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -98,13 +98,16 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
                 ),
               ),
               if (useGridView)
-                AlbumsView(
-                  sliver: true,
-                  albums: albums,
+                SliverPadding(
+                  padding: getAdaptiveHorizontalPadding(constraints),
+                  sliver: AlbumsView(
+                    sliver: true,
+                    albums: albums,
+                  ),
                 )
               else
                 SliverPadding(
-                  padding: getSliverHorizontalPadding(constraints),
+                  padding: getAdaptiveHorizontalPadding(constraints),
                   sliver: SliverAudioTileList(
                     audios: artistAudios!,
                     pageId: pageId,
@@ -137,6 +140,7 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
+        LikeAllIcon(audios: audios),
         IconButton(
           icon: Icon(
             Iconz().list,
@@ -156,6 +160,26 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
         ),
         ExploreOnlinePopup(text: pageId),
       ],
+    );
+  }
+}
+
+class LikeAllIcon extends StatelessWidget with WatchItMixin {
+  const LikeAllIcon({super.key, required this.audios});
+
+  final Set<Audio> audios;
+
+  @override
+  Widget build(BuildContext context) {
+    final likedAudios = watchPropertyValue((LibraryModel m) => m.likedAudios);
+    final libraryModel = di<LibraryModel>();
+
+    final liked = likedAudios.containsAll(audios);
+    return IconButton(
+      onPressed: () => liked
+          ? libraryModel.removeLikedAudios(audios)
+          : libraryModel.addLikedAudios(audios),
+      icon: Iconz().getAnimatedHeartIcon(liked: liked),
     );
   }
 }
