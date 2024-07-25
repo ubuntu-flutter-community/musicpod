@@ -26,7 +26,6 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final libraryModel = di<LibraryModel>();
-    watchPropertyValue((LibraryModel m) => m.likedAudios.length);
     final playerModel = di<PlayerModel>();
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);

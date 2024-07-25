@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../playlists/view/add_to_playlist_dialog.dart';
-import '../../playlists/view/add_to_playlist_snack_bar.dart';
 import '../data/audio.dart';
 import 'icons.dart';
 import 'snackbars.dart';
 import 'stream_provider_share_button.dart';
 import 'theme.dart';
 
-class LikeButton extends StatelessWidget {
-  const LikeButton({
+class AudioTileOptionButton extends StatelessWidget {
+  const AudioTileOptionButton({
     super.key,
     required this.audio,
     required this.playlistId,
@@ -36,37 +33,10 @@ class LikeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final liked = libraryModel.liked(audio);
 
-    final heartButton = InkWell(
-      borderRadius: BorderRadius.circular(10),
-      onTap: () {
-        if (liked) {
-          libraryModel.removeLikedAudio(audio);
-        } else {
-          libraryModel.addLikedAudio(audio);
-          showAddedToPlaylistSnackBar(
-            context: context,
-            libraryModel: libraryModel,
-            id: kLikedAudiosPageId,
-          );
-        }
-      },
-      child: Iconz().getAnimatedHeartIcon(
-        liked: liked,
-        color: selected ? theme.contrastyPrimary : null,
-      ),
-    );
-
-    return YaruPopupMenuButton(
+    return PopupMenuButton(
       tooltip: context.l10n.moreOptions,
-      style: TextButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          side: BorderSide.none,
-          borderRadius: BorderRadius.circular(100),
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: EdgeInsets.zero,
       itemBuilder: (context) {
         return [
           PopupMenuItem(
@@ -142,7 +112,7 @@ class LikeButton extends StatelessWidget {
           ),
         ];
       },
-      child: heartButton,
+      icon: Icon(Iconz().viewMore),
     );
   }
 }

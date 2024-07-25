@@ -12,7 +12,7 @@ import 'bottom_player_image.dart';
 import 'bottom_player_title_artist.dart';
 import 'play_button.dart';
 import 'playback_rate_button.dart';
-import 'player_like_icon.dart';
+import '../../common/view/like_icon.dart';
 import 'player_main_controls.dart';
 import 'player_track.dart';
 import 'queue_button.dart';
@@ -85,13 +85,17 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                   flex: 5,
                   child: titleAndArtist,
                 ),
-                if (audio?.audioType != AudioType.podcast && !smallWindow)
+                if (!smallWindow)
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child: PlayerLikeIcon(
-                      audio: audio,
-                      color: theme.colorScheme.onSurface,
-                    ),
+                    child: switch (audio?.audioType) {
+                      AudioType.local => LikeIcon(
+                          audio: audio,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      AudioType.radio => RadioLikeIcon(audio: audio),
+                      _ => const SizedBox.shrink(),
+                    },
                   ),
               ],
             ),

@@ -14,7 +14,7 @@ import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import 'playback_rate_button.dart';
-import 'player_like_icon.dart';
+import '../../common/view/like_icon.dart';
 import 'player_view.dart';
 import 'queue_button.dart';
 import 'volume_popup.dart';
@@ -55,9 +55,16 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
         spacing: 5.0,
         children: [
           if (audio?.audioType != AudioType.podcast)
-            PlayerLikeIcon(
-              audio: audio,
-              color: iconColor,
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: switch (audio?.audioType) {
+                AudioType.local => LikeIcon(
+                    audio: audio,
+                    color: context.t.colorScheme.onSurface,
+                  ),
+                AudioType.radio => RadioLikeIcon(audio: audio),
+                _ => const SizedBox.shrink(),
+              },
             ),
           if (showQueueButton) QueueButton(color: iconColor),
           ShareButton(
