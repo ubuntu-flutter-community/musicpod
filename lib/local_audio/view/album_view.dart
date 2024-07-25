@@ -46,17 +46,10 @@ class AlbumsView extends StatelessWidget {
         );
       }
 
-      return LayoutBuilder(
-        builder: (context, constraints) {
-          return SliverPadding(
-            padding: getAdaptiveHorizontalPadding(constraints),
-            sliver: SliverGrid.builder(
-              itemCount: albums!.length,
-              gridDelegate: audioCardGridDelegate,
-              itemBuilder: itemBuilder,
-            ),
-          );
-        },
+      return SliverGrid.builder(
+        itemCount: albums!.length,
+        gridDelegate: audioCardGridDelegate,
+        itemBuilder: itemBuilder,
       );
     } else {
       if (albums == null) {

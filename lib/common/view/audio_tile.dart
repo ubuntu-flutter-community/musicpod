@@ -152,13 +152,6 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
       mainAxisSize: MainAxisSize.min,
       children: [
         Opacity(
-          opacity: hovered || selected || liked ? 1 : 0,
-          child: LikeIcon(audio: audio),
-        ),
-        const SizedBox(
-          width: 5,
-        ),
-        Opacity(
           opacity: hovered || selected ? 1 : 0,
           child: AudioTileOptionButton(
             selected: selected && isPlayerPlaying,
@@ -168,6 +161,13 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
             allowRemove: audioPageType == AudioPageType.playlist,
             insertIntoQueue: () => insertIntoQueue(audio),
           ),
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Opacity(
+          opacity: hovered || selected || liked ? 1 : 0,
+          child: LikeIcon(audio: audio),
         ),
         const SizedBox(
           width: 5,
