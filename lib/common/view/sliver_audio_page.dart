@@ -26,6 +26,7 @@ class SliverAudioPage extends StatelessWidget {
     this.controlPanel,
     this.noSearchResultMessage,
     this.noSearchResultIcons,
+    this.description,
   });
 
   final String pageId;
@@ -36,6 +37,7 @@ class SliverAudioPage extends StatelessWidget {
   final String? pageSubTitle;
   final String? pageLabel;
   final Widget? image;
+  final Widget? description;
 
   final void Function(String text)? onPageSubTitleTab;
   final void Function(String)? onPageLabelTab;
@@ -76,6 +78,7 @@ class SliverAudioPage extends StatelessWidget {
                                     ? null
                                     : onPageLabelTab,
                             onSubTitleTab: onPageSubTitleTab,
+                            description: description,
                           ),
                         ),
                         SliverAudioPageControlPanel(

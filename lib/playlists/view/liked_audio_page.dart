@@ -21,6 +21,7 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
     final likedAudios = watchPropertyValue((LibraryModel m) => m.likedAudios);
+    watchPropertyValue((LibraryModel m) => m.likedAudios.length);
 
     return SliverAudioPage(
       onPageLabelTab: (text) {
@@ -44,7 +45,7 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
       pageId: kLikedAudiosPageId,
       pageTitle: context.l10n.likedSongs,
       pageLabel: context.l10n.likedSongsSubtitle,
-      pageSubTitle: '${likedAudios.length} ${context.l10n.titles}',
+      pageSubTitle: '${likedAudios.length}',
       image: FallBackHeaderImage(
         child: Icon(
           Iconz().heart,
