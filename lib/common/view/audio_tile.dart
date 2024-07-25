@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/constants.dart';
 
 import '../../constants.dart';
@@ -10,10 +11,11 @@ import '../../library/library_model.dart';
 import '../data/audio.dart';
 import 'audio_page_type.dart';
 import 'audio_tile_image.dart';
-import 'like_button.dart';
+import 'audio_tile_option_button.dart';
+import 'like_icon.dart';
 import 'tapable_text.dart';
 
-class AudioTile extends StatelessWidget {
+class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
   const AudioTile({
     super.key,
     required this.pageId,
@@ -43,66 +45,122 @@ class AudioTile extends StatelessWidget {
   final void Function(Audio audio) insertIntoQueue;
 
   @override
+  State<AudioTile> createState() => _AudioTileState();
+}
+
+class _AudioTileState extends State<AudioTile> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final subTitle = switch (audioPageType) {
-      AudioPageType.artist => audio.album ?? context.l10n.unknown,
-      _ => audio.artist ?? context.l10n.unknown,
+    final liked = watchPropertyValue((LibraryModel m) => m.liked(widget.audio));
+    final subTitle = switch (widget.audioPageType) {
+      AudioPageType.artist => widget.audio.album ?? context.l10n.unknown,
+      _ => widget.audio.artist ?? context.l10n.unknown,
     };
 
-    final leading = switch (audioPageType) {
-      AudioPageType.album => AlbumTileLead(trackNumber: audio.trackNumber),
+    final leading = switch (widget.audioPageType) {
+      AudioPageType.album =>
+        AlbumTileLead(trackNumber: widget.audio.trackNumber),
       _ => AudioTileImage(
           size: kAudioTrackWidth,
-          audio: audio,
+          audio: widget.audio,
         ),
     };
 
-    final listTile = ListTile(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      minLeadingWidth: kAudioTrackWidth,
-      leading: leading,
-      selected: selected,
-      selectedColor: isPlayerPlaying
-          ? theme.contrastyPrimary
-          : theme.colorScheme.onSurface,
-      selectedTileColor: theme.colorScheme.onSurface.withOpacity(0.05),
-      contentPadding: kModernAudioTilePadding,
-      onTap: () {
-        if (selected) {
-          if (isPlayerPlaying) {
-            pause();
+    return MouseRegion(
+      onEnter: (e) => setState(() => _hovered = true),
+      onExit: (e) => setState(() => _hovered = false),
+      child: ListTile(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        minLeadingWidth: kAudioTrackWidth,
+        leading: leading,
+        selected: widget.selected,
+        selectedColor: widget.isPlayerPlaying
+            ? theme.contrastyPrimary
+            : theme.colorScheme.onSurface,
+        selectedTileColor: theme.colorScheme.onSurface.withOpacity(0.05),
+        contentPadding: kModernAudioTilePadding,
+        onTap: () {
+          if (widget.selected) {
+            if (widget.isPlayerPlaying) {
+              widget.pause();
+            } else {
+              widget.resume();
+            }
           } else {
-            resume();
+            widget.startPlaylist?.call();
           }
-        } else {
-          startPlaylist?.call();
-        }
-      },
-      title: Padding(
-        padding: const EdgeInsets.only(right: kYaruPagePadding),
-        child: Text(
-          audio.title ?? context.l10n.unknown,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
+        },
+        title: Padding(
+          padding: const EdgeInsets.only(right: kYaruPagePadding),
+          child: Text(
+            widget.audio.title ?? context.l10n.unknown,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+        subtitle: TapAbleText(
+          text: subTitle,
+          onTap: widget.onSubTitleTap == null
+              ? null
+              : () => widget.onSubTitleTap?.call(subTitle),
+        ),
+        trailing: _AudioTileTrail(
+          hovered: _hovered,
+          liked: liked,
+          audio: widget.audio,
+          selected: widget.selected,
+          isPlayerPlaying: widget.isPlayerPlaying,
+          libraryModel: widget.libraryModel,
+          pageId: widget.pageId,
+          audioPageType: widget.audioPageType,
+          insertIntoQueue: widget.insertIntoQueue,
         ),
       ),
-      subtitle: TapAbleText(
-        text: subTitle,
-        onTap:
-            onSubTitleTap == null ? null : () => onSubTitleTap?.call(subTitle),
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (audio.audioType != AudioType.radio && audio.durationMs != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: Text(
-                Duration(milliseconds: audio.durationMs!.toInt()).formattedTime,
-              ),
-            ),
-          LikeButton(
+    );
+  }
+}
+
+class _AudioTileTrail extends StatelessWidget with WatchItMixin {
+  const _AudioTileTrail({
+    required this.audio,
+    required this.selected,
+    required this.isPlayerPlaying,
+    required this.libraryModel,
+    required this.pageId,
+    required this.audioPageType,
+    required this.insertIntoQueue,
+    required this.hovered,
+    required this.liked,
+  });
+
+  final Audio audio;
+  final bool selected;
+  final bool isPlayerPlaying;
+  final LibraryModel libraryModel;
+  final String pageId;
+  final AudioPageType audioPageType;
+  final void Function(Audio audio) insertIntoQueue;
+  final bool hovered;
+  final bool liked;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Opacity(
+          opacity: hovered || selected || liked ? 1 : 0,
+          child: LikeIcon(audio: audio),
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Opacity(
+          opacity: hovered || selected ? 1 : 0,
+          child: AudioTileOptionButton(
             selected: selected && isPlayerPlaying,
             libraryModel: libraryModel,
             playlistId: pageId,
@@ -110,11 +168,22 @@ class AudioTile extends StatelessWidget {
             allowRemove: audioPageType == AudioPageType.playlist,
             insertIntoQueue: () => insertIntoQueue(audio),
           ),
-        ],
-      ),
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        if (audio.audioType != AudioType.radio && audio.durationMs != null)
+          SizedBox(
+            width: 60,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                Duration(milliseconds: audio.durationMs!.toInt()).formattedTime,
+              ),
+            ),
+          ),
+      ],
     );
-
-    return listTile;
   }
 }
 

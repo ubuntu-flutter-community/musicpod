@@ -217,7 +217,6 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
     final playerModel = di<PlayerModel>();
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
 
-    watchPropertyValue((LibraryModel m) => m.likedAudios.length);
     watchPropertyValue(
       (LibraryModel m) => m.playlists[pageId]?.length,
     );

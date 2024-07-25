@@ -98,18 +98,22 @@ class StationGrid extends StatelessWidget with WatchItMixin {
       );
     }
 
-    return GridView.builder(
-      padding: gridPadding,
-      gridDelegate: audioCardGridDelegate,
-      itemCount: length,
-      itemBuilder: (context, index) {
-        final station = stations.entries.elementAt(index).value.firstOrNull;
-        return StationCard(
-          station: station,
-          startPlaylist: playerModel.startPlaylist,
-          isStarredStation: libraryModel.isStarredStation,
-          unstarStation: libraryModel.unStarStation,
-          starStation: libraryModel.addStarredStation,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GridView.builder(
+          padding: getAdaptiveHorizontalPadding(constraints),
+          gridDelegate: audioCardGridDelegate,
+          itemCount: length,
+          itemBuilder: (context, index) {
+            final station = stations.entries.elementAt(index).value.firstOrNull;
+            return StationCard(
+              station: station,
+              startPlaylist: playerModel.startPlaylist,
+              isStarredStation: libraryModel.isStarredStation,
+              unstarStation: libraryModel.unStarStation,
+              starStation: libraryModel.addStarredStation,
+            );
+          },
         );
       },
     );
