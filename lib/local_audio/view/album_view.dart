@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/common_widgets.dart';
@@ -45,13 +46,17 @@ class AlbumsView extends StatelessWidget {
         );
       }
 
-      return SliverPadding(
-        padding: gridPadding,
-        sliver: SliverGrid.builder(
-          itemCount: albums!.length,
-          gridDelegate: audioCardGridDelegate,
-          itemBuilder: itemBuilder,
-        ),
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          return SliverPadding(
+            padding: getAdaptiveHorizontalPadding(constraints),
+            sliver: SliverGrid.builder(
+              itemCount: albums!.length,
+              gridDelegate: audioCardGridDelegate,
+              itemBuilder: itemBuilder,
+            ),
+          );
+        },
       );
     } else {
       if (albums == null) {
@@ -67,14 +72,18 @@ class AlbumsView extends StatelessWidget {
         );
       }
 
-      return Padding(
-        padding: const EdgeInsets.only(top: 15),
-        child: GridView.builder(
-          padding: gridPadding,
-          itemCount: albums!.length,
-          gridDelegate: audioCardGridDelegate,
-          itemBuilder: itemBuilder,
-        ),
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          return Padding(
+            padding: const EdgeInsets.only(top: 15),
+            child: GridView.builder(
+              padding: getAdaptiveHorizontalPadding(constraints),
+              itemCount: albums!.length,
+              gridDelegate: audioCardGridDelegate,
+              itemBuilder: itemBuilder,
+            ),
+          );
+        },
       );
     }
   }

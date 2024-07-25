@@ -22,7 +22,7 @@ class RadioControlPanel extends StatelessWidget with WatchItMixin {
     final index = watchPropertyValue((LibraryModel m) => m.radioindex);
 
     return Align(
-      alignment: isMobile ? Alignment.center : Alignment.centerLeft,
+      alignment: Alignment.center,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),

@@ -13,6 +13,7 @@ import '../../common/view/avatar_play_button.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/explore_online_popup.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/like_all_icon.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
@@ -140,7 +141,14 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        LikeAllIcon(audios: audios),
+        IconButton(
+          icon: Icon(
+            Iconz().grid,
+            color: useGridView ? context.t.colorScheme.primary : null,
+          ),
+          isSelected: useGridView,
+          onPressed: () => setUseGridView(true),
+        ),
         IconButton(
           icon: Icon(
             Iconz().list,
@@ -150,36 +158,9 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
           onPressed: () => setUseGridView(false),
         ),
         AvatarPlayButton(audios: audios, pageId: pageId),
-        IconButton(
-          icon: Icon(
-            Iconz().grid,
-            color: useGridView ? context.t.colorScheme.primary : null,
-          ),
-          isSelected: useGridView,
-          onPressed: () => setUseGridView(true),
-        ),
+        LikeAllIcon(audios: audios),
         ExploreOnlinePopup(text: pageId),
       ],
-    );
-  }
-}
-
-class LikeAllIcon extends StatelessWidget with WatchItMixin {
-  const LikeAllIcon({super.key, required this.audios});
-
-  final Set<Audio> audios;
-
-  @override
-  Widget build(BuildContext context) {
-    final likedAudios = watchPropertyValue((LibraryModel m) => m.likedAudios);
-    final libraryModel = di<LibraryModel>();
-
-    final liked = likedAudios.containsAll(audios);
-    return IconButton(
-      onPressed: () => liked
-          ? libraryModel.removeLikedAudios(audios)
-          : libraryModel.addLikedAudios(audios),
-      icon: Iconz().getAnimatedHeartIcon(liked: liked),
     );
   }
 }

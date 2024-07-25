@@ -2,6 +2,7 @@ import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../common/view/adaptive_container.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_mixin.dart';
@@ -38,16 +39,20 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
 
     return Align(
       alignment: Alignment.topCenter,
-      child: ListView.builder(
-        padding: padding ?? EdgeInsets.zero,
-        itemCount: radioHistory.length,
-        itemBuilder: (context, index) {
-          final reversedIndex = radioHistory.length - index - 1;
-          final e = radioHistory.elementAt(reversedIndex);
-          return RadioHistoryTile(
-            e: e,
-            selected: current?.icyTitle != null &&
-                current?.icyTitle == e.value.icyTitle,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return ListView.builder(
+            padding: getAdaptiveHorizontalPadding(constraints),
+            itemCount: radioHistory.length,
+            itemBuilder: (context, index) {
+              final reversedIndex = radioHistory.length - index - 1;
+              final e = radioHistory.elementAt(reversedIndex);
+              return RadioHistoryTile(
+                e: e,
+                selected: current?.icyTitle != null &&
+                    current?.icyTitle == e.value.icyTitle,
+              );
+            },
           );
         },
       ),
