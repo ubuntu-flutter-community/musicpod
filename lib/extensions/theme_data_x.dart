@@ -9,10 +9,10 @@ extension ThemeDataX on ThemeData {
       colorScheme.primary.scale(lightness: isLight ? -0.3 : 0.3);
 
   TextStyle? get pageHeaderStyle => textTheme.headlineLarge?.copyWith(
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w400,
         letterSpacing: 0,
         leadingDistribution: TextLeadingDistribution.proportional,
-        fontSize: 30,
+        fontSize: 21,
         color: colorScheme.onSurface.withOpacity(0.9),
       );
 

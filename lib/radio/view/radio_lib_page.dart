@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/common_widgets.dart';
@@ -33,30 +34,26 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
 
     return Column(
       children: [
-        Row(
-          children: [
-            const SizedBox(
-              width: kYaruPagePadding,
-            ),
-            YaruChoiceChipBar(
-              chipBackgroundColor: chipColor(theme),
-              selectedChipBackgroundColor: chipSelectionColor(theme, false),
-              borderColor: chipBorder(theme, false),
-              selectedFirst: false,
-              clearOnSelect: false,
-              onSelected: (index) => radioModel
-                  .setRadioCollectionView(RadioCollectionView.values[index]),
-              yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-              labels: [
-                Text(context.l10n.station),
-                Text(context.l10n.tags),
-                Text(context.l10n.hearingHistory),
-              ],
-              isSelected: RadioCollectionView.values
-                  .map((e) => e == radioCollectionView)
-                  .toList(),
-            ),
-          ],
+        Align(
+          alignment: Alignment.center,
+          child: YaruChoiceChipBar(
+            chipBackgroundColor: chipColor(theme),
+            selectedChipBackgroundColor: chipSelectionColor(theme, false),
+            borderColor: chipBorder(theme, false),
+            selectedFirst: false,
+            clearOnSelect: false,
+            onSelected: (index) => radioModel
+                .setRadioCollectionView(RadioCollectionView.values[index]),
+            yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+            labels: [
+              Text(context.l10n.station),
+              Text(context.l10n.tags),
+              Text(context.l10n.hearingHistory),
+            ],
+            isSelected: RadioCollectionView.values
+                .map((e) => e == radioCollectionView)
+                .toList(),
+          ),
         ),
         const SizedBox(
           height: 15,
@@ -145,30 +142,34 @@ class TagGrid extends StatelessWidget with WatchItMixin {
       );
     }
 
-    return GridView.builder(
-      padding: gridPadding,
-      gridDelegate: audioCardGridDelegate,
-      itemCount: favTagsLength,
-      itemBuilder: (context, index) {
-        final tag = favTags.elementAt(index);
-        return AudioCard(
-          image: SideBarFallBackImage(
-            color: getAlphabetColor(tag),
-            width: double.infinity,
-            height: double.infinity,
-            child: Icon(
-              getIconForTag(tag),
-              size: 65,
-            ),
-          ),
-          bottom: AudioCardBottom(text: tag),
-          onTap: () => di<LibraryModel>().push(
-            builder: (_) => RadioSearchPage(
-              searchQuery: tag,
-              radioSearch: RadioSearch.tag,
-            ),
-            pageId: tag,
-          ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GridView.builder(
+          padding: getAdaptiveHorizontalPadding(constraints),
+          gridDelegate: audioCardGridDelegate,
+          itemCount: favTagsLength,
+          itemBuilder: (context, index) {
+            final tag = favTags.elementAt(index);
+            return AudioCard(
+              image: SideBarFallBackImage(
+                color: getAlphabetColor(tag),
+                width: double.infinity,
+                height: double.infinity,
+                child: Icon(
+                  getIconForTag(tag),
+                  size: 65,
+                ),
+              ),
+              bottom: AudioCardBottom(text: tag),
+              onTap: () => di<LibraryModel>().push(
+                builder: (_) => RadioSearchPage(
+                  searchQuery: tag,
+                  radioSearch: RadioSearch.tag,
+                ),
+                pageId: tag,
+              ),
+            );
+          },
         );
       },
     );

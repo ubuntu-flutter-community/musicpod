@@ -4,7 +4,6 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
-import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/offline_page.dart';
@@ -101,9 +100,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               )
             : Text('${context.l10n.podcasts} ${context.l10n.collection}'),
       ),
-      body: AdaptiveContainer(
-        child: searchActive ? searchBody : subsBody,
-      ),
+      body: searchActive ? searchBody : subsBody,
     );
   }
 }

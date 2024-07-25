@@ -3,7 +3,6 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
@@ -53,10 +52,8 @@ class GenrePage extends StatelessWidget {
           ],
         ),
       ),
-      body: AdaptiveContainer(
-        child: ArtistsView(
-          artists: artistAudiosWithGenre,
-        ),
+      body: ArtistsView(
+        artists: artistAudiosWithGenre,
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/audio.dart';
+import 'adaptive_container.dart';
 import 'audio_card.dart';
 import 'audio_card_bottom.dart';
 import 'common_widgets.dart';
@@ -15,18 +16,22 @@ class LoadingGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView(
-      gridDelegate: audioCardGridDelegate,
-      padding: gridPadding,
-      children: List.generate(limit, (index) => const Audio())
-          .map(
-            (e) => const AudioCard(
-              color: Colors.transparent,
-              showBorder: false,
-              bottom: AudioCardBottom(),
-            ),
-          )
-          .toList(),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GridView(
+          gridDelegate: audioCardGridDelegate,
+          padding: getAdaptiveHorizontalPadding(constraints),
+          children: List.generate(limit, (index) => const Audio())
+              .map(
+                (e) => const AudioCard(
+                  color: Colors.transparent,
+                  showBorder: false,
+                  bottom: AudioCardBottom(),
+                ),
+              )
+              .toList(),
+        );
+      },
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/round_image_container.dart';
@@ -42,52 +43,57 @@ class ArtistsView extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(top: 15),
-      child: GridView.builder(
-        itemCount: artists!.length,
-        padding: gridPadding,
-        gridDelegate: kDiskGridDelegate,
-        itemBuilder: (context, index) {
-          final artistAudios = model.findArtist(
-            artists!.elementAt(index),
-          );
-          final images = model.findImages(artistAudios ?? {});
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return GridView.builder(
+            itemCount: artists!.length,
+            padding: getAdaptiveHorizontalPadding(constraints),
+            gridDelegate: kDiskGridDelegate,
+            itemBuilder: (context, index) {
+              final artistAudios = model.findArtist(
+                artists!.elementAt(index),
+              );
+              final images = model.findImages(artistAudios ?? {});
 
-          final text = artists!.elementAt(index).artist ?? context.l10n.unknown;
+              final text =
+                  artists!.elementAt(index).artist ?? context.l10n.unknown;
 
-          return YaruSelectableContainer(
-            selected: false,
-            onTap: () {
-              final artist = artistAudios?.firstOrNull?.artist;
-              if (artist == null) {
-                showSnackBar(
-                  context: context,
-                  content: Text(context.l10n.unknown),
-                );
-              } else {
-                di<LibraryModel>().push(
-                  builder: (_) => ArtistPage(
-                    images: images,
-                    artistAudios: artistAudios,
-                  ),
-                  pageId: artist,
-                );
-              }
-            },
-            borderRadius: BorderRadius.circular(300),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: RoundImageContainer(
-                    images: images,
-                    fallBackText: text,
-                  ),
+              return YaruSelectableContainer(
+                selected: false,
+                onTap: () {
+                  final artist = artistAudios?.firstOrNull?.artist;
+                  if (artist == null) {
+                    showSnackBar(
+                      context: context,
+                      content: Text(context.l10n.unknown),
+                    );
+                  } else {
+                    di<LibraryModel>().push(
+                      builder: (_) => ArtistPage(
+                        images: images,
+                        artistAudios: artistAudios,
+                      ),
+                      pageId: artist,
+                    );
+                  }
+                },
+                borderRadius: BorderRadius.circular(300),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: RoundImageContainer(
+                        images: images,
+                        fallBackText: text,
+                      ),
+                    ),
+                    ArtistVignette(text: text),
+                  ],
                 ),
-                ArtistVignette(text: text),
-              ],
-            ),
+              );
+            },
           );
         },
       ),

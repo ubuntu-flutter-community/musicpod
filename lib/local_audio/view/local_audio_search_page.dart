@@ -4,7 +4,6 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
-import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
@@ -66,35 +65,6 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
         (albumsResult?.isEmpty ?? true) &&
         (artistsResult?.isEmpty ?? true) &&
         searchQuery?.isNotEmpty == true;
-    Widget body = Column(
-      children: [
-        LocalAudioControlPanel(
-          titlesCount:
-              searchQuery?.isNotEmpty == true ? titlesResult?.length : null,
-          artistCount:
-              searchQuery?.isNotEmpty == true ? artistsResult?.length : null,
-          albumCount:
-              searchQuery?.isNotEmpty == true ? albumsResult?.length : null,
-          genresCounts:
-              searchQuery?.isNotEmpty == true ? genresResult?.length : null,
-        ),
-        Expanded(
-          child: LocalAudioBody(
-            noResultIcon: nothing
-                ? const AnimatedEmoji(AnimatedEmojis.eyes)
-                : const AnimatedEmoji(AnimatedEmojis.drum),
-            noResultMessage: Text(
-              nothing ? context.l10n.noLocalSearchFound : context.l10n.search,
-            ),
-            localAudioView: view,
-            titles: titlesResult,
-            artists: artistsResult,
-            albums: albumsResult,
-            genres: genresResult,
-          ),
-        ),
-      ],
-    );
 
     return YaruDetailPage(
       appBar: HeaderBar(
@@ -127,7 +97,35 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
           ),
         ),
       ),
-      body: AdaptiveContainer(child: body),
+      body: Column(
+        children: [
+          LocalAudioControlPanel(
+            titlesCount:
+                searchQuery?.isNotEmpty == true ? titlesResult?.length : null,
+            artistCount:
+                searchQuery?.isNotEmpty == true ? artistsResult?.length : null,
+            albumCount:
+                searchQuery?.isNotEmpty == true ? albumsResult?.length : null,
+            genresCounts:
+                searchQuery?.isNotEmpty == true ? genresResult?.length : null,
+          ),
+          Expanded(
+            child: LocalAudioBody(
+              noResultIcon: nothing
+                  ? const AnimatedEmoji(AnimatedEmojis.eyes)
+                  : const AnimatedEmoji(AnimatedEmojis.drum),
+              noResultMessage: Text(
+                nothing ? context.l10n.noLocalSearchFound : context.l10n.search,
+              ),
+              localAudioView: view,
+              titles: titlesResult,
+              artists: artistsResult,
+              albums: albumsResult,
+              genres: genresResult,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

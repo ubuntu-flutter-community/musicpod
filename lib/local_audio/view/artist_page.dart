@@ -13,6 +13,7 @@ import '../../common/view/avatar_play_button.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/explore_online_popup.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/like_all_icon.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
@@ -73,43 +74,51 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
         adaptive: true,
         title: Text(pageId),
       ),
-      body: AdaptiveContainer(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: AudioPageHeader(
-                imageRadius: BorderRadius.circular(10000),
-                title: artistAudios?.firstOrNull?.artist ?? '',
-                image: RoundImageContainer(
-                  images: images,
-                  fallBackText: pageId,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: AudioPageHeader(
+                  imageRadius: BorderRadius.circular(10000),
+                  title: artistAudios?.firstOrNull?.artist ?? '',
+                  image: RoundImageContainer(
+                    images: images,
+                    fallBackText: pageId,
+                  ),
+                  subTitle: artistAudios?.firstOrNull?.genre,
+                  label: context.l10n.artist,
+                  onLabelTab: onAlbumTap,
+                  onSubTitleTab: onSubTitleTab,
                 ),
-                subTitle: artistAudios?.firstOrNull?.genre,
-                label: context.l10n.artist,
-                onLabelTab: onAlbumTap,
-                onSubTitleTab: onSubTitleTab,
               ),
-            ),
-            SliverAudioPageControlPanel(
-              controlPanel: _ArtistPageControlPanel(
-                pageId: pageId,
-                audios: artistAudios!,
+              SliverAudioPageControlPanel(
+                controlPanel: _ArtistPageControlPanel(
+                  pageId: pageId,
+                  audios: artistAudios!,
+                ),
               ),
-            ),
-            if (useGridView)
-              AlbumsView(
-                sliver: true,
-                albums: albums,
-              )
-            else
-              SliverAudioTileList(
-                audios: artistAudios!,
-                pageId: pageId,
-                audioPageType: AudioPageType.artist,
-                onSubTitleTab: onAlbumTap,
-              ),
-          ],
-        ),
+              if (useGridView)
+                SliverPadding(
+                  padding: getAdaptiveHorizontalPadding(constraints),
+                  sliver: AlbumsView(
+                    sliver: true,
+                    albums: albums,
+                  ),
+                )
+              else
+                SliverPadding(
+                  padding: getAdaptiveHorizontalPadding(constraints),
+                  sliver: SliverAudioTileList(
+                    audios: artistAudios!,
+                    pageId: pageId,
+                    audioPageType: AudioPageType.artist,
+                    onSubTitleTab: onAlbumTap,
+                  ),
+                ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -132,9 +141,13 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        AvatarPlayButton(audios: audios, pageId: pageId),
-        const SizedBox(
-          width: 10,
+        IconButton(
+          icon: Icon(
+            Iconz().grid,
+            color: useGridView ? context.t.colorScheme.primary : null,
+          ),
+          isSelected: useGridView,
+          onPressed: () => setUseGridView(true),
         ),
         IconButton(
           icon: Icon(
@@ -144,14 +157,8 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
           isSelected: !useGridView,
           onPressed: () => setUseGridView(false),
         ),
-        IconButton(
-          icon: Icon(
-            Iconz().grid,
-            color: useGridView ? context.t.colorScheme.primary : null,
-          ),
-          isSelected: useGridView,
-          onPressed: () => setUseGridView(true),
-        ),
+        AvatarPlayButton(audios: audios, pageId: pageId),
+        LikeAllIcon(audios: audios),
         ExploreOnlinePopup(text: pageId),
       ],
     );

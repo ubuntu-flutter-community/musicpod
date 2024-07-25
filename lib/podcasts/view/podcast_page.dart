@@ -6,6 +6,7 @@ import 'package:yaru/yaru.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
+import '../../common/view/audio_page_header_html_description.dart';
 import '../../common/view/avatar_play_button.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/explore_online_popup.dart';
@@ -62,48 +63,59 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         adaptive: true,
         title: Text(title),
       ),
-      body: AdaptiveContainer(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: AudioPageHeader(
-                image: imageUrl == null
-                    ? null
-                    : SafeNetworkImage(
-                        fallBackIcon: Icon(
-                          Iconz().podcast,
-                          size: 80,
-                          color: theme.hintColor,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: AudioPageHeader(
+                  image: imageUrl == null
+                      ? null
+                      : SafeNetworkImage(
+                          fallBackIcon: Icon(
+                            Iconz().podcast,
+                            size: 80,
+                            color: theme.hintColor,
+                          ),
+                          errorIcon: Icon(
+                            Iconz().podcast,
+                            size: 80,
+                            color: theme.hintColor,
+                          ),
+                          url: imageUrl,
+                          fit: BoxFit.fitHeight,
+                          filterQuality: FilterQuality.medium,
                         ),
-                        errorIcon: Icon(
-                          Iconz().podcast,
-                          size: 80,
-                          color: theme.hintColor,
-                        ),
-                        url: imageUrl,
-                        fit: BoxFit.fitHeight,
-                        filterQuality: FilterQuality.medium,
-                      ),
-                label:
-                    audios?.firstWhereOrNull((e) => e.genre != null)?.genre ??
-                        context.l10n.podcast,
-                subTitle: audios?.firstOrNull?.artist,
-                description: audios?.firstOrNull?.albumArtist,
-                title: title,
-                onLabelTab: onTap,
-                onSubTitleTab: onTap,
+                  label:
+                      audios?.firstWhereOrNull((e) => e.genre != null)?.genre ??
+                          context.l10n.podcast,
+                  subTitle: audios?.firstOrNull?.artist,
+                  description: AudioPageHeaderHtmlDescription(
+                    description: audios?.firstOrNull?.albumArtist,
+                    title: title,
+                  ),
+                  title: title,
+                  onLabelTab: onTap,
+                  onSubTitleTab: onTap,
+                ),
               ),
-            ),
-            SliverAudioPageControlPanel(
-              controlPanel: _PodcastPageControlPanel(
-                audios: audiosWithDownloads,
-                pageId: pageId,
-                title: title,
+              SliverAudioPageControlPanel(
+                controlPanel: _PodcastPageControlPanel(
+                  audios: audiosWithDownloads,
+                  pageId: pageId,
+                  title: title,
+                ),
               ),
-            ),
-            SliverPodcastPageList(audios: audiosWithDownloads, pageId: pageId),
-          ],
-        ),
+              SliverPadding(
+                padding: getAdaptiveHorizontalPadding(constraints),
+                sliver: SliverPodcastPageList(
+                  audios: audiosWithDownloads,
+                  pageId: pageId,
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -133,14 +145,8 @@ class _PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
     final checkingForUpdates =
         watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
     return Row(
-      mainAxisAlignment: context.smallWindow
-          ? MainAxisAlignment.center
-          : MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        AvatarPlayButton(audios: audios, pageId: pageId),
-        const SizedBox(
-          width: 10,
-        ),
         IconButton(
           tooltip: subscribed
               ? context.l10n.removeFromCollection
@@ -163,6 +169,7 @@ class _PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
                   }
                 },
         ),
+        AvatarPlayButton(audios: audios, pageId: pageId),
         ExploreOnlinePopup(text: title),
       ],
     );

@@ -169,3 +169,5 @@ const kAlbumArtHeaders = {
   'Accept': 'application/json',
   'User-Agent': '$kAppTitle ($kRepoUrl)',
 };
+
+const kAudioHeaderDescriptionWidth = 400.0;

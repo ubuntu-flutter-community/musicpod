@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/no_search_result_page.dart';
@@ -43,28 +45,35 @@ class TitlesView extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(top: 15),
-      child: CustomScrollView(
-        slivers: [
-          SliverAudioTileList(
-            audios: audios!,
-            audioPageType: AudioPageType.allTitlesView,
-            pageId: kLocalAudioPageId,
-            onSubTitleTab: (text) {
-              final artistAudios = model.findArtist(Audio(artist: text));
-              final artist = artistAudios?.firstOrNull?.artist;
-              if (artist == null) return;
-              final images = model.findImages(artistAudios ?? {});
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: getAdaptiveHorizontalPadding(constraints),
+                sliver: SliverAudioTileList(
+                  audios: audios!,
+                  audioPageType: AudioPageType.allTitlesView,
+                  pageId: kLocalAudioPageId,
+                  onSubTitleTab: (text) {
+                    final artistAudios = model.findArtist(Audio(artist: text));
+                    final artist = artistAudios?.firstOrNull?.artist;
+                    if (artist == null) return;
+                    final images = model.findImages(artistAudios ?? {});
 
-              di<LibraryModel>().push(
-                builder: (_) => ArtistPage(
-                  images: images,
-                  artistAudios: artistAudios,
+                    di<LibraryModel>().push(
+                      builder: (_) => ArtistPage(
+                        images: images,
+                        artistAudios: artistAudios,
+                      ),
+                      pageId: artist,
+                    );
+                  },
                 ),
-                pageId: artist,
-              );
-            },
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }

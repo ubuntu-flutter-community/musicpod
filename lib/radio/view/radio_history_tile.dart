@@ -3,12 +3,16 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/constants.dart';
 
 import '../../common/data/mpv_meta_data.dart';
+import '../../common/view/icons.dart';
 import '../../common/view/icy_image.dart';
+import '../../common/view/mpv_metadata_dialog.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
+import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../online_album_art_utils.dart';
 import '../../player/player_mixin.dart';
 import '../radio_model.dart';
 import 'radio_search.dart';
@@ -41,6 +45,22 @@ class RadioHistoryTile extends StatelessWidget with PlayerMixin {
                 pageId: tag.toLowerCase(),
               ),
             ),
+      ),
+      trailing: IconButton(
+        tooltip: context.l10n.metadata,
+        onPressed: () => showDialog(
+          context: context,
+          builder: (context) {
+            final image = UrlStore().get(e.value.icyTitle);
+            return MpvMetadataDialog(
+              mpvMetaData: e.value,
+              image: image,
+            );
+          },
+        ),
+        icon: Icon(
+          Iconz().info,
+        ),
       ),
       title: TapAbleText(
         overflow: TextOverflow.visible,

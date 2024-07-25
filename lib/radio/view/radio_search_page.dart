@@ -73,25 +73,33 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
               ),
             );
           } else {
-            return GridView.builder(
-              padding: gridPadding,
-              gridDelegate: audioCardGridDelegate,
-              itemCount: snapshot.data?.length,
-              itemBuilder: (context, index) {
-                final station = snapshot.data?.elementAt(index);
-                return StationCard(
-                  station: station,
-                  startPlaylist: ({required audios, index, required listName}) {
-                    return playerModel
-                        .startPlaylist(
-                          audios: audios,
-                          listName: listName,
-                        )
-                        .then((_) => radioModel.clickStation(station));
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                return GridView.builder(
+                  padding: getAdaptiveHorizontalPadding(constraints),
+                  gridDelegate: audioCardGridDelegate,
+                  itemCount: snapshot.data?.length,
+                  itemBuilder: (context, index) {
+                    final station = snapshot.data?.elementAt(index);
+                    return StationCard(
+                      station: station,
+                      startPlaylist: ({
+                        required audios,
+                        index,
+                        required listName,
+                      }) {
+                        return playerModel
+                            .startPlaylist(
+                              audios: audios,
+                              listName: listName,
+                            )
+                            .then((_) => radioModel.clickStation(station));
+                      },
+                      isStarredStation: libraryModel.isStarredStation,
+                      unstarStation: libraryModel.unStarStation,
+                      starStation: libraryModel.addStarredStation,
+                    );
                   },
-                  isStarredStation: libraryModel.isStarredStation,
-                  unstarStation: libraryModel.unStarStation,
-                  starStation: libraryModel.addStarredStation,
                 );
               },
             );
@@ -138,7 +146,7 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
           ],
         ),
       ),
-      body: AdaptiveContainer(child: futureBuilder),
+      body: futureBuilder,
     );
   }
 }

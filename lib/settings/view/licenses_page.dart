@@ -13,13 +13,7 @@ class LicensesPage extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(kYaruContainerRadius),
-        child: Theme(
-          data: Theme.of(context).copyWith(
-            pageTransitionsTheme:
-                YaruMasterDetailTheme.of(context).landscapeTransitions,
-          ),
-          child: const LicensePage(),
-        ),
+        child: const LicensePage(),
       ),
     );
   }

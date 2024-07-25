@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
@@ -127,7 +128,7 @@ class HeaderBar extends StatelessWidget
     this.actions,
     this.style = YaruTitleBarStyle.normal,
     this.titleSpacing = 0,
-    this.backgroundColor = Colors.transparent,
+    this.backgroundColor,
     this.foregroundColor,
     required this.adaptive,
     this.includeBackButton = true,
@@ -192,7 +193,7 @@ class HeaderBar extends StatelessWidget
               ],
             ),
       border: BorderSide.none,
-      backgroundColor: backgroundColor,
+      backgroundColor: backgroundColor ?? context.theme.scaffoldBackgroundColor,
       style: theStyle,
       foregroundColor: foregroundColor,
     );
@@ -431,6 +432,8 @@ double get podcastProgressSize => yaruStyled ? 34 : 45;
 double get likeButtonWidth => yaruStyled ? 62 : 70;
 
 double? get avatarIconSize => yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
+
+double get bigPlayButtonSize => 25;
 
 double get searchBarWidth => isMobile ? kSearchBarWidth : 600;
 

@@ -48,7 +48,7 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
     }
 
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: Alignment.center,
       child: Padding(
         padding: const EdgeInsets.only(left: kYaruPagePadding),
         child: YaruChoiceChipBar(

@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../common/view/icons.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../online_album_art_utils.dart';
 import '../data/mpv_meta_data.dart';
+import 'mpv_metadata_dialog.dart';
 import 'safe_network_image.dart';
-import 'stream_provider_share_button.dart';
 
 class IcyImage extends StatefulWidget {
   const IcyImage({
@@ -62,53 +60,9 @@ class _IcyImageState extends State<IcyImage> {
             context: context,
             builder: (context) {
               final image = UrlStore().get(widget.mpvMetaData.icyTitle);
-              return SimpleDialog(
-                titlePadding: EdgeInsets.zero,
-                contentPadding: const EdgeInsets.only(bottom: 10),
-                children: [
-                  if (image != null)
-                    ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(kYaruContainerRadius),
-                        topRight: Radius.circular(kYaruContainerRadius),
-                      ),
-                      child: SizedBox(
-                        width: 250,
-                        child: SafeNetworkImage(
-                          errorIcon:
-                              widget.errorWidget ?? Icon(Iconz().imageMissing),
-                          fit: widget.fit ?? BoxFit.fitHeight,
-                          url: image,
-                        ),
-                      ),
-                    ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-                    child: StreamProviderRow(
-                      text: widget.mpvMetaData.icyTitle,
-                    ),
-                  ),
-                  ...widget.mpvMetaData
-                      .toMap()
-                      .entries
-                      .map(
-                        (e) => ListTile(
-                          onTap: switch (e.key) {
-                            'icy-url' => () => launchUrl(Uri.parse(e.value)),
-                            'icy-genre' => () {
-                                widget.onGenreTap?.call(e.value);
-                                Navigator.of(context).maybePop();
-                              },
-                            _ => null,
-                          },
-                          dense: true,
-                          title: Text(e.key),
-                          subtitle: Text(e.value),
-                        ),
-                      )
-                      .toList()
-                      .reversed,
-                ],
+              return MpvMetadataDialog(
+                image: image,
+                mpvMetaData: widget.mpvMetaData,
               );
             },
           ),
@@ -137,7 +91,7 @@ class _IcyImageState extends State<IcyImage> {
   Widget _buildImage(String? url) => SafeNetworkImage(
         errorIcon: widget.errorWidget ?? Icon(Iconz().imageMissing),
         url: url,
-        fallBackIcon: widget.fallBackWidget ?? Icon(Iconz().info),
+        fallBackIcon: widget.fallBackWidget ?? Icon(Iconz().radio),
         filterQuality: FilterQuality.medium,
         fit: widget.fit ?? BoxFit.fitHeight,
       );

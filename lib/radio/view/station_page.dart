@@ -37,37 +37,47 @@ class StationPage extends StatelessWidget with WatchItMixin {
         adaptive: true,
         title: Text(station.title ?? station.url ?? ''),
       ),
-      body: AdaptiveContainer(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: AudioPageHeader(
-                title: station.title ?? station.url ?? '',
-                label: station.artist,
-                descriptionWidget: RadioPageTagBar(station: station),
-                image: SafeNetworkImage(
-                  fallBackIcon: RadioFallBackIcon(
-                    iconSize: kMaxAudioPageHeaderHeight / 2,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Padding(
+            padding: getAdaptiveHorizontalPadding(constraints),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: AudioPageHeader(
+                    title: station.title ?? station.url ?? '',
+                    label: station.artist,
+                    description: SizedBox(
+                      width: kAudioHeaderDescriptionWidth,
+                      child: RadioPageTagBar(
+                        station: station,
+                      ),
+                    ),
+                    image: SafeNetworkImage(
+                      fallBackIcon: RadioFallBackIcon(
+                        iconSize: kMaxAudioPageHeaderHeight / 2,
+                        station: station,
+                      ),
+                      url: station.imageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                SliverAudioPageControlPanel(
+                  controlPanel: _StationPageControlPanel(
                     station: station,
                   ),
-                  url: station.imageUrl,
-                  fit: BoxFit.cover,
                 ),
-              ),
+                SliverRadioHistoryList(
+                  filter: station.title,
+                  emptyMessage: const SizedBox.shrink(),
+                  emptyIcon: const SizedBox.shrink(),
+                  padding: radioHistoryListPadding,
+                ),
+              ],
             ),
-            SliverAudioPageControlPanel(
-              controlPanel: _StationPageControlPanel(
-                station: station,
-              ),
-            ),
-            SliverRadioHistoryList(
-              filter: station.title,
-              emptyMessage: const SizedBox.shrink(),
-              emptyIcon: const SizedBox.shrink(),
-              padding: radioHistoryListPadding,
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -86,17 +96,11 @@ class _StationPageControlPanel extends StatelessWidget {
           : MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (station.url != null)
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Center(
-              child: AvatarPlayButton(
-                audios: {station},
-                pageId: station.url!,
-              ),
-            ),
-          ),
         RadioPageStarButton(station: station),
+        AvatarPlayButton(
+          audios: {station},
+          pageId: station.url!,
+        ),
         RadioPageCopyHistoryButton(station: station),
       ],
     );

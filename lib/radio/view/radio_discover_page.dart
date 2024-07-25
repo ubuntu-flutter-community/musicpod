@@ -4,7 +4,6 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
-import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/country_auto_complete.dart';
 import '../../common/view/language_autocomplete.dart';
@@ -147,28 +146,26 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
           ),
         ],
       ),
-      body: AdaptiveContainer(
-        child: Column(
-          children: [
-            const RadioControlPanel(),
-            const SizedBox(
-              height: 15,
-            ),
-            Expanded(
-              child: RadioSearchPage(
-                key: ValueKey(
-                  searchQuery.toString() +
-                      tag.toString() +
-                      country.toString() +
-                      radioSearch.toString(),
-                ),
-                includeHeader: false,
-                radioSearch: radioSearch,
-                searchQuery: searchQuery,
+      body: Column(
+        children: [
+          const RadioControlPanel(),
+          const SizedBox(
+            height: 15,
+          ),
+          Expanded(
+            child: RadioSearchPage(
+              key: ValueKey(
+                searchQuery.toString() +
+                    tag.toString() +
+                    country.toString() +
+                    radioSearch.toString(),
               ),
+              includeHeader: false,
+              radioSearch: radioSearch,
+              searchQuery: searchQuery,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

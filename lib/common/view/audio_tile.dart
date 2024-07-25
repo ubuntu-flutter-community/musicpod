@@ -59,7 +59,7 @@ class AudioTile extends StatelessWidget {
     };
 
     final listTile = ListTile(
-      dense: audioPageType == AudioPageType.album,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       minLeadingWidth: kAudioTrackWidth,
       leading: leading,
       selected: selected,

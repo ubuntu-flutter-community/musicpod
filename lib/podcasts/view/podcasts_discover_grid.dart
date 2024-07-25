@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/common_widgets.dart';
@@ -57,65 +58,74 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
       return NoSearchResultPage(message: Text(context.l10n.noPodcastFound));
     }
 
-    return Column(
-      children: [
-        Expanded(
-          child: GridView.builder(
-            controller: _controller,
-            padding: gridPadding,
-            itemCount: searchResult.resultCount,
-            gridDelegate: audioCardGridDelegate,
-            itemBuilder: (context, index) {
-              final podcastItem = searchResult.items.elementAt(index);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Column(
+          children: [
+            Expanded(
+              child: GridView.builder(
+                controller: _controller,
+                padding: getAdaptiveHorizontalPadding(constraints),
+                itemCount: searchResult.resultCount,
+                gridDelegate: audioCardGridDelegate,
+                itemBuilder: (context, index) {
+                  final podcastItem = searchResult.items.elementAt(index);
 
-              final art = podcastItem.artworkUrl600 ?? podcastItem.artworkUrl;
-              final image = SafeNetworkImage(
-                url: art,
-                fit: BoxFit.cover,
-                height: kAudioCardDimension,
-                width: kAudioCardDimension,
-              );
+                  final art =
+                      podcastItem.artworkUrl600 ?? podcastItem.artworkUrl;
+                  final image = SafeNetworkImage(
+                    url: art,
+                    fit: BoxFit.cover,
+                    height: kAudioCardDimension,
+                    width: kAudioCardDimension,
+                  );
 
-              return AudioCard(
-                bottom: AudioCardBottom(
-                  text: podcastItem.collectionName ?? podcastItem.trackName,
-                ),
-                image: image,
-                onPlay: () => searchAndPushPodcastPage(
-                  context: context,
-                  feedUrl: podcastItem.feedUrl,
-                  itemImageUrl: art,
-                  genre: podcastItem.primaryGenreName,
-                  play: true,
-                ),
-                onTap: () => searchAndPushPodcastPage(
-                  context: context,
-                  feedUrl: podcastItem.feedUrl,
-                  itemImageUrl: art,
-                  genre: podcastItem.primaryGenreName,
-                  play: false,
-                ),
-              );
-            },
-          ),
-        ),
-        if (searchResult.resultCount > 0)
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              children: [
-                OutlinedButton(
-                  onPressed: () async {
-                    await incrementLimit();
-                    await Future.delayed(const Duration(milliseconds: 300));
-                    _controller.jumpTo(_controller.position.maxScrollExtent);
-                  },
-                  child: Text(context.l10n.loadMore),
-                ),
-              ],
+                  return AudioCard(
+                    bottom: AudioCardBottom(
+                      text: podcastItem.collectionName ?? podcastItem.trackName,
+                    ),
+                    image: image,
+                    onPlay: () => searchAndPushPodcastPage(
+                      context: context,
+                      feedUrl: podcastItem.feedUrl,
+                      itemImageUrl: art,
+                      genre: podcastItem.primaryGenreName,
+                      play: true,
+                    ),
+                    onTap: () => searchAndPushPodcastPage(
+                      context: context,
+                      feedUrl: podcastItem.feedUrl,
+                      itemImageUrl: art,
+                      genre: podcastItem.primaryGenreName,
+                      play: false,
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-      ],
+            if (searchResult.resultCount > 0)
+              Padding(
+                padding: getAdaptiveHorizontalPadding(constraints).copyWith(
+                  bottom: 20,
+                  top: 20,
+                ),
+                child: Row(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () async {
+                        await incrementLimit();
+                        await Future.delayed(const Duration(milliseconds: 300));
+                        _controller
+                            .jumpTo(_controller.position.maxScrollExtent);
+                      },
+                      child: Text(context.l10n.loadMore),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }
