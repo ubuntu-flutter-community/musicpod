@@ -170,28 +170,13 @@ class HeaderBar extends StatelessWidget
     return YaruWindowTitleBar(
       titleSpacing: titleSpacing,
       actions: actions,
-      leading: (includeBackButton && canPop) ? const NavBackButton() : null,
-      title: context.showMasterPanel ||
-              masterScaffoldKey.currentState?.isDrawerOpen == true
-          ? title
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: (includeBackButton && canPop) ? 0 : 10,
-                    right: !(includeBackButton && canPop) ? 60 : 10,
-                  ),
-                  child: const SidebarButton(),
-                ),
-                if (title != null)
-                  Expanded(
-                    child: Center(
-                      child: title!,
-                    ),
-                  ),
-              ],
-            ),
+      leading: !context.showMasterPanel &&
+              masterScaffoldKey.currentState?.isDrawerOpen == false
+          ? const SidebarButton()
+          : (includeBackButton && canPop)
+              ? const NavBackButton()
+              : null,
+      title: title,
       border: BorderSide.none,
       backgroundColor: backgroundColor ?? context.theme.scaffoldBackgroundColor,
       style: theStyle,
@@ -214,18 +199,20 @@ class SidebarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (Platform.isMacOS) {
-      return Padding(
-        padding: kMacOsWindowControlMitigationPadding,
-        child: SizedBox(
-          height: 15,
-          width: 15,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(20),
-            child: Icon(
-              Iconz().sidebar,
-              size: 10,
+      return Center(
+        child: Padding(
+          padding: kMacOsWindowControlMitigationPadding,
+          child: SizedBox(
+            height: 15,
+            width: 15,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              child: Icon(
+                Iconz().sidebar,
+                size: 10,
+              ),
+              onTap: () => masterScaffoldKey.currentState?.openDrawer(),
             ),
-            onTap: () => masterScaffoldKey.currentState?.openDrawer(),
           ),
         ),
       );

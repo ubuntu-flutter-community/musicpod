@@ -6,6 +6,7 @@ import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/tapable_text.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/theme_data_x.dart';
 import '../../library/library_model.dart';
 import '../radio_model.dart';
 import 'radio_search.dart';
@@ -18,8 +19,7 @@ class RadioPageTagBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style =
-        context.t.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300);
+    final style = context.t.pageHeaderDescription;
     final tags = station.album?.isNotEmpty == false
         ? null
         : <String>[

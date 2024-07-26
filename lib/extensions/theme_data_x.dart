@@ -16,6 +16,9 @@ extension ThemeDataX on ThemeData {
         color: colorScheme.onSurface.withOpacity(0.9),
       );
 
+  TextStyle? get pageHeaderDescription =>
+      textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300);
+
   Color get containerBg => colorScheme.background.scale(
         lightness:
             isLight ? (yaruStyled ? -0.03 : -0.02) : (yaruStyled ? 0.01 : 0.02),

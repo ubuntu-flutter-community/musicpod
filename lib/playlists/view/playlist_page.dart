@@ -24,6 +24,7 @@ import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/media_file_x.dart';
+import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
@@ -353,8 +354,7 @@ class _PlaylistGenreBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style =
-        context.t.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300);
+    final style = context.t.pageHeaderDescription;
     Set<String> genres = {};
     for (var e in audios) {
       final g = e.genre?.trim();
