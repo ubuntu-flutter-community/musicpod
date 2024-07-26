@@ -1,20 +1,26 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../common/data/audio.dart';
 import '../common/view/adaptive_container.dart';
+import '../common/view/audio_card.dart';
+import '../common/view/audio_card_bottom.dart';
 import '../common/view/audio_page_type.dart';
 import '../common/view/common_widgets.dart';
 import '../common/view/no_search_result_page.dart';
+import '../common/view/safe_network_image.dart';
 import '../common/view/sliver_audio_tile_list.dart';
 import '../constants.dart';
 import '../extensions/build_context_x.dart';
 import '../l10n/l10n.dart';
 import '../player/player_model.dart';
+import '../podcasts/podcast_service.dart';
+import '../podcasts/podcast_utils.dart';
 import '../radio/radio_model.dart';
 import '../radio/radio_service.dart';
 import '../radio/view/radio_reconnect_button.dart';
@@ -42,6 +48,7 @@ class _SearchPageState extends State<SearchPage> {
     final searchModel = di<SearchModel>();
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
     final searchResult = watchPropertyValue((SearchModel m) => m.searchResult);
+    final audioType = watchPropertyValue((SearchModel m) => m.audioType);
 
     return Scaffold(
       appBar: HeaderBar(
@@ -77,12 +84,18 @@ class _SearchPageState extends State<SearchPage> {
               Expanded(
                 child: CustomScrollView(
                   slivers: [
-                    SliverPadding(
-                      padding: getAdaptiveHorizontalPadding(constraints),
-                      sliver: SliverSearchResults(
-                        key: ValueKey(searchResult?.length),
-                      ),
-                    ),
+                    if (audioType != AudioType.podcast)
+                      SliverPadding(
+                        padding: getAdaptiveHorizontalPadding(constraints),
+                        sliver: SliverSearchResults(
+                          key: ValueKey(searchResult?.length),
+                        ),
+                      )
+                    else
+                      SliverPadding(
+                        padding: getAdaptiveHorizontalPadding(constraints),
+                        sliver: const SliverPodcastSearchResults(),
+                      )
                   ],
                 ),
               ),
@@ -102,10 +115,9 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
     final searchModel = di<SearchModel>();
 
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
-    final audioType = watchPropertyValue((SearchModel m) => m.audioType);
 
-    final filteredSearchTypes =
-        SearchType.values.where((e) => e.name.contains(audioType.name));
+    final searchTypes = watchPropertyValue((SearchModel m) => m.searchTypes);
+
     return Material(
       color: context.t.scaffoldBackgroundColor,
       child: YaruChoiceChipBar(
@@ -114,19 +126,17 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
         clearOnSelect: false,
         selectedFirst: false,
         onSelected: (i) {
-          searchModel.searchType = filteredSearchTypes.elementAt(i);
+          searchModel.searchType = searchTypes.elementAt(i);
           searchModel.search();
         },
         // TODO: if offline disable podcast and radio labels
-        labels: filteredSearchTypes
-            .map((e) => Text(e.localize(context.l10n)))
-            .toList(),
-        isSelected: filteredSearchTypes.none((e) => e == searchType)
+        labels: searchTypes.map((e) => Text(e.localize(context.l10n))).toList(),
+        isSelected: searchTypes.none((e) => e == searchType)
             ? List.generate(
-                filteredSearchTypes.length,
+                searchTypes.length,
                 (index) => index == 0 ? true : false,
               )
-            : filteredSearchTypes.map((e) => e == searchType).toList(),
+            : searchTypes.map((e) => e == searchType).toList(),
       ),
     );
   }
@@ -144,9 +154,7 @@ class AudioTypFilterButton extends StatelessWidget with WatchItMixin {
 
     return PopupMenuButton<AudioType>(
       initialValue: audioType,
-      onSelected: (v) {
-        searchModel.audioType = v;
-      },
+      onSelected: (v) => searchModel.audioType = v,
       itemBuilder: (context) => AudioType.values
           .map(
             (e) => PopupMenuItem<AudioType>(
@@ -172,13 +180,79 @@ class AudioTypFilterButton extends StatelessWidget with WatchItMixin {
   }
 }
 
+class SliverPodcastSearchResults extends StatelessWidget with WatchItMixin {
+  const SliverPodcastSearchResults({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final searchResult =
+        watchPropertyValue((SearchModel m) => m.podcastSearchResult);
+
+    watchPropertyValue((SearchModel m) => m.audioType);
+
+    if (searchResult == null || searchResult.items.isEmpty) {
+      return SliverFillRemaining(
+        hasScrollBody: false,
+        child: NoSearchResultPage(
+          icons: searchResult == null
+              ? const AnimatedEmoji(AnimatedEmojis.drum)
+              : const AnimatedEmoji(AnimatedEmojis.eyes),
+          message: Text(
+            searchResult == null
+                ? context.l10n.search
+                : context.l10n.nothingFound,
+          ),
+        ),
+      );
+    }
+
+    return SliverGrid.builder(
+      itemCount: searchResult.resultCount,
+      gridDelegate: audioCardGridDelegate,
+      itemBuilder: (context, index) {
+        final podcastItem = searchResult.items.elementAt(index);
+
+        final art = podcastItem.artworkUrl600 ?? podcastItem.artworkUrl;
+        final image = SafeNetworkImage(
+          url: art,
+          fit: BoxFit.cover,
+          height: kAudioCardDimension,
+          width: kAudioCardDimension,
+        );
+
+        return AudioCard(
+          bottom: AudioCardBottom(
+            text: podcastItem.collectionName ?? podcastItem.trackName,
+          ),
+          image: image,
+          onPlay: () => searchAndPushPodcastPage(
+            context: context,
+            feedUrl: podcastItem.feedUrl,
+            itemImageUrl: art,
+            genre: podcastItem.primaryGenreName,
+            play: true,
+          ),
+          onTap: () => searchAndPushPodcastPage(
+            context: context,
+            feedUrl: podcastItem.feedUrl,
+            itemImageUrl: art,
+            genre: podcastItem.primaryGenreName,
+            play: false,
+          ),
+        );
+      },
+    );
+  }
+}
+
 class SliverSearchResults extends StatelessWidget with WatchItMixin {
   const SliverSearchResults({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: switch grid/list depending on filter
     final searchResult = watchPropertyValue((SearchModel m) => m.searchResult);
+    watchPropertyValue((SearchModel m) => m.audioType);
+    watchPropertyValue((SearchModel m) => m.searchQuery);
 
     if (searchResult == null || searchResult.isEmpty) {
       return SliverFillRemaining(
@@ -211,6 +285,17 @@ class SearchModel extends SafeChangeNotifier {
     if (value == _audioType) return;
     _audioType = value;
     notifyListeners();
+    _setSearchTypes(audioType);
+  }
+
+  Set<SearchType> _searchTypes = {};
+  Set<SearchType> get searchTypes => _searchTypes;
+  void _setSearchTypes(AudioType audioType) {
+    _searchTypes =
+        SearchType.values.where((e) => e.name.contains(audioType.name)).toSet();
+    setSearchQuery(null);
+    notifyListeners();
+    search();
   }
 
   SearchType _searchType = SearchType.radioName;
@@ -224,8 +309,20 @@ class SearchModel extends SafeChangeNotifier {
   String? _searchQuery;
   String? get searchQuery => _searchQuery;
 
+  SearchResult? _podcastSearchResult;
+  SearchResult? get podcastSearchResult => _podcastSearchResult;
+  void setPodcastSearchResult(SearchResult? value) {
+    _podcastSearchResult = value;
+    notifyListeners();
+  }
+
   List<Audio>? _searchResult;
   List<Audio>? get searchResult => _searchResult;
+  void setSearchResult(List<Audio>? value) {
+    _searchResult = value;
+    notifyListeners();
+  }
+
   void setSearchQuery(String? value) {
     if (value == null || value == _searchQuery) return;
     _searchQuery = value;
@@ -233,17 +330,17 @@ class SearchModel extends SafeChangeNotifier {
   }
 
   Future<void> search() async {
-    _searchResult = null;
-    notifyListeners();
+    setSearchResult(null);
     switch (_searchType) {
       case SearchType.radioName:
-        di<RadioService>()
-            .getStations(name: _searchQuery)
-            .then(
+        await di<RadioService>().getStations(name: _searchQuery).then(
               (v) =>
-                  _searchResult = v?.map((e) => Audio.fromStation(e)).toList(),
-            )
-            .then((_) => notifyListeners());
+                  setSearchResult(v?.map((e) => Audio.fromStation(e)).toList()),
+            );
+      case SearchType.podcastTitle:
+        await di<PodcastService>()
+            .search(searchQuery: _searchQuery)
+            .then((v) => setPodcastSearchResult(v));
       default:
     }
   }
