@@ -77,45 +77,48 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
             children: [
               Align(
                 alignment: Alignment.center,
-                child: YaruChoiceChipBar(
-                  chipBackgroundColor: chipColor(theme),
-                  selectedChipBackgroundColor:
-                      chipSelectionColor(theme, loading),
-                  borderColor: chipBorder(theme, loading),
-                  yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-                  clearOnSelect: false,
-                  selectedFirst: false,
-                  labels: [
-                    Text(context.l10n.newEpisodes),
-                    Text(
-                      context.l10n.downloadsOnly,
-                    ),
-                  ],
-                  isSelected: [
-                    updatesOnly,
-                    downloadsOnly,
-                  ],
-                  onSelected: loading
-                      ? null
-                      : (index) {
-                          if (index == 0) {
-                            if (updatesOnly) {
-                              setUpdatesOnly(false);
-                            } else {
-                              model.update(context.l10n.newEpisodeAvailable);
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: YaruChoiceChipBar(
+                    chipBackgroundColor: chipColor(theme),
+                    selectedChipBackgroundColor:
+                        chipSelectionColor(theme, loading),
+                    borderColor: chipBorder(theme, loading),
+                    yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+                    clearOnSelect: false,
+                    selectedFirst: false,
+                    labels: [
+                      Text(context.l10n.newEpisodes),
+                      Text(
+                        context.l10n.downloadsOnly,
+                      ),
+                    ],
+                    isSelected: [
+                      updatesOnly,
+                      downloadsOnly,
+                    ],
+                    onSelected: loading
+                        ? null
+                        : (index) {
+                            if (index == 0) {
+                              if (updatesOnly) {
+                                setUpdatesOnly(false);
+                              } else {
+                                model.update(context.l10n.newEpisodeAvailable);
 
-                              setUpdatesOnly(true);
-                              setDownloadsOnly(false);
-                            }
-                          } else {
-                            if (downloadsOnly) {
-                              setDownloadsOnly(false);
+                                setUpdatesOnly(true);
+                                setDownloadsOnly(false);
+                              }
                             } else {
-                              setDownloadsOnly(true);
-                              setUpdatesOnly(false);
+                              if (downloadsOnly) {
+                                setDownloadsOnly(false);
+                              } else {
+                                setDownloadsOnly(true);
+                                setUpdatesOnly(false);
+                              }
                             }
-                          }
-                        },
+                          },
+                  ),
                 ),
               ),
               const SizedBox(

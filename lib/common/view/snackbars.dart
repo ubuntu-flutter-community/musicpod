@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
+
+import '../../app/app_model.dart';
+import '../../l10n/l10n.dart';
+import '../../radio/radio_model.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar({
   required BuildContext context,
@@ -14,5 +19,46 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar({
       content: content,
       duration: duration ?? const Duration(seconds: 10),
     ),
+  );
+}
+
+SnackBar buildConnectSnackBar({
+  required String? connectedHost,
+  required BuildContext context,
+}) {
+  final appModel = di<AppModel>();
+  final model = di<RadioModel>();
+  final index = appModel.radioindex;
+
+  return SnackBar(
+    duration: connectedHost != null
+        ? const Duration(seconds: 1)
+        : const Duration(seconds: 30),
+    content: Text(
+      connectedHost != null
+          ? '${context.l10n.connectedTo}: $connectedHost'
+          : context.l10n.noRadioServerFound,
+    ),
+    action: (connectedHost == null)
+        ? SnackBarAction(
+            onPressed: () {
+              ScaffoldMessenger.of(context).clearSnackBars();
+              model
+                  .init(
+                    countryCode: appModel.countryCode,
+                    index: index,
+                  )
+                  .then(
+                    (value) => ScaffoldMessenger.of(context).showSnackBar(
+                      buildConnectSnackBar(
+                        connectedHost: value,
+                        context: context,
+                      ),
+                    ),
+                  );
+            },
+            label: context.l10n.tryReconnect,
+          )
+        : null,
   );
 }

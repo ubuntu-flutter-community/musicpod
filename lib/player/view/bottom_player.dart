@@ -140,13 +140,10 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
       child: Column(
         children: [
           track,
-          if (smallWindow)
-            InkWell(
-              onTap: () => appModel.setFullWindowMode(true),
-              child: bottom,
-            )
-          else
-            bottom,
+          InkWell(
+            onTap: () => appModel.setFullWindowMode(true),
+            child: bottom,
+          ),
         ],
       ),
     );

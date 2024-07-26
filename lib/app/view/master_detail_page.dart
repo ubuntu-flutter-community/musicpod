@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
@@ -24,6 +25,7 @@ import '../../radio/view/radio_page.dart';
 import '../../radio/view/radio_page_icon.dart';
 import '../../radio/view/station_page.dart';
 import '../../radio/view/station_page_icon.dart';
+import '../../search/search_page.dart';
 import '../../settings/view/settings_tile.dart';
 import 'master_tile.dart';
 
@@ -176,6 +178,13 @@ class MasterItem {
 
 List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
   return [
+    if (kDebugMode)
+      MasterItem(
+        titleBuilder: (context) => Text(context.l10n.search),
+        pageBuilder: (_) => const SearchPage(),
+        iconBuilder: (_) => Icon(Iconz().search),
+        pageId: kSearchPageId,
+      ),
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.localAudio),
       pageBuilder: (_) => const LocalAudioPage(),

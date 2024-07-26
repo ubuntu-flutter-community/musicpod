@@ -69,7 +69,7 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
           pageId: text,
         );
 
-    return YaruDetailPage(
+    return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
         title: isMobile ? null : Text(pageId),

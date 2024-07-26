@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/common_widgets.dart';
@@ -25,7 +24,7 @@ class GenrePage extends StatelessWidget {
 
     final artistAudiosWithGenre = model.findArtistsOfGenre(Audio(genre: genre));
 
-    return YaruDetailPage(
+    return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
         titleSpacing: 0,

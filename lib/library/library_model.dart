@@ -110,9 +110,11 @@ class LibraryModel extends SafeChangeNotifier {
   void addStarredStation(String url, Set<Audio> audios) =>
       _service.addStarredStation(url, audios);
 
-  void unStarStation(String url) {
+  void unStarStation(String url, [bool popIt = true]) {
     _service.unStarStation(url);
-    pop();
+    if (popIt) {
+      pop();
+    }
   }
 
   bool isStarredStation(String? url) =>

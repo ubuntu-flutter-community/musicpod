@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../common/view/common_widgets.dart';
@@ -123,7 +122,7 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
         ),
     };
 
-    return YaruDetailPage(
+    return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
         title: SizedBox(

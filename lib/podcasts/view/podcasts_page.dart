@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
@@ -74,7 +73,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
       isOnline: isOnline,
     );
 
-    return YaruDetailPage(
+    return Scaffold(
       appBar: HeaderBar(
         titleSpacing: 0,
         adaptive: true,

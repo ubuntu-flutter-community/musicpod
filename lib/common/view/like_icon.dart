@@ -64,10 +64,12 @@ class RadioLikeIcon extends StatelessWidget with WatchItMixin {
     super.key,
     required this.audio,
     this.color,
+    this.popOnUnstar = true,
   });
 
   final Audio? audio;
   final Color? color;
+  final bool popOnUnstar;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +85,7 @@ class RadioLikeIcon extends StatelessWidget with WatchItMixin {
     } else {
       onLike = () {
         isStarredStation
-            ? libraryModel.unStarStation(audio!.url!)
+            ? libraryModel.unStarStation(audio!.url!, popOnUnstar)
             : libraryModel.addStarredStation(
                 audio!.url!,
                 {audio!},

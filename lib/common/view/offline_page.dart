@@ -11,7 +11,7 @@ class OfflinePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    return YaruDetailPage(
+    return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
         title: Text(context.l10n.offline),

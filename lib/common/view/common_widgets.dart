@@ -280,6 +280,7 @@ class SearchingBar extends StatelessWidget {
     this.onSubmitted,
     this.onChanged,
     this.hintText,
+    this.suffixIcon,
   });
 
   final String? text;
@@ -287,12 +288,14 @@ class SearchingBar extends StatelessWidget {
   final void Function(String?)? onSubmitted;
   final void Function(String)? onChanged;
   final String? hintText;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 10),
       child: MaterialSearchBar(
+        suffixIcon: suffixIcon,
         hintText: hintText,
         text: text,
         key: key,
@@ -315,12 +318,14 @@ class MaterialSearchBar extends StatefulWidget {
     this.onSubmitted,
     this.onChanged,
     this.hintText,
+    this.suffixIcon,
   });
   final String? text;
   final void Function()? onClear;
   final void Function(String?)? onSubmitted;
   final void Function(String)? onChanged;
   final String? hintText;
+  final Widget? suffixIcon;
 
   @override
   State<MaterialSearchBar> createState() => _NormalSearchBarState();
@@ -361,10 +366,15 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
         onChanged: widget.onChanged,
         style: yaruStyled ? theme.textTheme.bodyMedium : null,
         decoration: yaruStyled
-            ? createYaruDecoration(theme: theme, hintText: widget.hintText)
+            ? createYaruDecoration(
+                theme: theme,
+                hintText: widget.hintText,
+                suffixIcon: widget.suffixIcon,
+              )
             : createMaterialDecoration(
                 colorScheme: theme.colorScheme,
                 hintText: widget.hintText,
+                suffixIcon: widget.suffixIcon,
               ),
       ),
     );

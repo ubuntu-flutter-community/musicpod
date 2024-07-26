@@ -84,7 +84,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
       title: Text(context.l10n.localAudio),
     );
 
-    return YaruDetailPage(
+    return Scaffold(
       appBar: headerBar,
       body: Column(
         children: [

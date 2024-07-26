@@ -33,7 +33,7 @@ class StationPage extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
 
-    return YaruDetailPage(
+    return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
         title: isMobile ? null : Text(station.title ?? station.url ?? ''),

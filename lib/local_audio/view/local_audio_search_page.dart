@@ -1,7 +1,6 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../common/view/common_widgets.dart';
@@ -64,7 +63,7 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
         (artistsResult?.isEmpty ?? true) &&
         searchQuery?.isNotEmpty == true;
 
-    return YaruDetailPage(
+    return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
         titleSpacing: 0,

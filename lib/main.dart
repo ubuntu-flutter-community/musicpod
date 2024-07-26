@@ -27,6 +27,7 @@ import 'podcasts/podcast_model.dart';
 import 'podcasts/podcast_service.dart';
 import 'radio/radio_model.dart';
 import 'radio/radio_service.dart';
+import 'search/search_page.dart';
 import 'settings/settings_model.dart';
 import 'settings/settings_service.dart';
 
@@ -164,6 +165,7 @@ Future<void> main(List<String> args) async {
     dispose: (s) => s.dispose(),
   );
   di.registerSingleton<DownloadModel>(DownloadModel(libraryService));
+  di.registerLazySingleton<SearchModel>(() => SearchModel());
 
   runApp(
     Platform.isLinux
