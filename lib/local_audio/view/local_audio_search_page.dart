@@ -32,11 +32,9 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
         watchPropertyValue((LocalAudioModel m) => m.genresSearchResult);
     final searchQuery =
         watchPropertyValue((LocalAudioModel m) => m.searchQuery);
-    final index =
-        watchPropertyValue((LibraryModel m) => m.localAudioindex ?? 0);
+    final index = watchPropertyValue((AppModel m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
-    final manualFilter =
-        watchPropertyValue((LocalAudioModel m) => m.manualFilter);
+    final manualFilter = watchPropertyValue((AppModel m) => m.manualFilter);
 
     void search({required String? text}) {
       if (text != null) {
@@ -91,7 +89,7 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
             text: searchQuery,
             onChanged: (value) {
               search(text: value);
-              model.setManualFilter(false);
+              di<AppModel>().setManualFilter(false);
             },
             onClear: () => search(text: ''),
           ),

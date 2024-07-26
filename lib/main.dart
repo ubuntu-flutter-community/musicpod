@@ -141,7 +141,7 @@ Future<void> main(List<String> args) async {
     dispose: (s) => s.dispose(),
   );
   di.registerSingleton<AppModel>(
-    AppModel(connectivity: connectivity),
+    AppModel(),
     dispose: (s) => s.dispose(),
   );
   di.registerSingleton<LibraryModel>(

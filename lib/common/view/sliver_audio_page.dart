@@ -52,7 +52,7 @@ class SliverAudioPage extends StatelessWidget {
     return YaruDetailPage(
       appBar: HeaderBar(
         adaptive: true,
-        title: Text(pageTitle ?? pageId),
+        title: isMobile ? null : Text(pageTitle ?? pageId),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {

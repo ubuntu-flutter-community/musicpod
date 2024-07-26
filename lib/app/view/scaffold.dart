@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/yaru.dart';
 
+import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../../constants.dart';
+import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/view/player_view.dart';
@@ -57,10 +61,10 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
                 child: Column(
                   children: [
                     const Expanded(child: MasterDetailPage()),
-                    // TODO: add bottom bar for mobile for Library / Search
-
-                    if (!playerToTheRight)
+                    if (!playerToTheRight || isMobile)
                       const PlayerView(mode: PlayerPosition.bottom),
+                    if (isMobile && context.m.size.width < 500)
+                      const MobileNavigationBar(),
                   ],
                 ),
               ),
@@ -77,6 +81,57 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
             ),
         ],
       ),
+    );
+  }
+}
+
+class MobileNavigationBar extends StatelessWidget with WatchItMixin {
+  const MobileNavigationBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedPageId =
+        watchPropertyValue((LibraryModel m) => m.selectedPageId);
+    final libraryModel = di<LibraryModel>();
+
+    return NavigationBar(
+      height: 60,
+      selectedIndex: switch (selectedPageId) {
+        kRadioPageId => 1,
+        kPodcastsPageId => 2,
+        _ => 0,
+      },
+      onDestinationSelected: (i) => libraryModel.pushNamed(
+        switch (i) {
+          1 => kRadioPageId,
+          2 => kPodcastsPageId,
+          _ => kLocalAudioPageId,
+        },
+      ),
+      destinations: [
+        NavigationDestination(
+          icon: Icon(Iconz().localAudio),
+          selectedIcon: Icon(Iconz().localAudioFilled),
+          label: context.l10n.localAudio,
+        ),
+        NavigationDestination(
+          icon: Icon(Iconz().radio),
+          selectedIcon: Icon(Iconz().radioFilled),
+          label: context.l10n.radio,
+        ),
+        NavigationDestination(
+          icon: Icon(Iconz().podcast),
+          selectedIcon: Icon(Iconz().podcastFilled),
+          label: context.l10n.podcasts,
+        ),
+      ]
+          .map(
+            (e) => Padding(
+              padding: const EdgeInsets.only(bottom: 23),
+              child: e,
+            ),
+          )
+          .toList(),
     );
   }
 }

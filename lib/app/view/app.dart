@@ -140,7 +140,7 @@ class _MusicPodAppState extends State<_MusicPodApp>
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.detached) {
-      await di.reset();
+      // TODO: correctly safe things we need here, if we need this at all
     }
   }
 

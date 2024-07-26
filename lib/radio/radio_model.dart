@@ -69,7 +69,6 @@ class RadioModel extends SafeChangeNotifier {
           country: query?.camelToSentence,
         ),
       RadioSearch.name => await _radioService.getStations(name: query),
-      RadioSearch.state => await _radioService.getStations(state: query),
       RadioSearch.language => await _radioService.getStations(language: query),
     };
 
@@ -115,14 +114,6 @@ class RadioModel extends SafeChangeNotifier {
     _language ??= Languages.defaultLanguages.firstWhereOrNull(
       (c) => c.isoCode == _libraryService.lastLanguageCode,
     );
-
-    if (_connectedHost != null) {
-      final lastFav = _libraryService.lastRadioTag;
-
-      _tag ??= lastFav == null || tags == null || tags!.isEmpty
-          ? null
-          : tags!.firstWhere((t) => t.name.contains(lastFav));
-    }
 
     setSearchQuery(search: RadioSearch.values[index]);
 

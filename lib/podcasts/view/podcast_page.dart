@@ -61,7 +61,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     return YaruDetailPage(
       appBar: HeaderBar(
         adaptive: true,
-        title: Text(title),
+        title: isMobile ? null : Text(title),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {

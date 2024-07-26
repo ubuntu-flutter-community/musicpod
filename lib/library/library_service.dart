@@ -99,19 +99,6 @@ class LibraryService {
         .then((_) => _favTagsController.add(true));
   }
 
-  String? _lastRadioTag;
-  String? get lastRadioTag => _lastRadioTag;
-  void setLastRadioTag(String? value) {
-    if (value == _lastRadioTag) return;
-    writeAppState(kLastRadioTag, value).then((_) {
-      _lastRadioTag = value;
-      _lastFavRadioTagController.add(true);
-    });
-  }
-
-  final _lastFavRadioTagController = StreamController<bool>.broadcast();
-  Stream<bool> get lastFavRadioTagChanged => _lastFavRadioTagController.stream;
-
   String? _lastCountryCode;
   String? get lastCountryCode => _lastCountryCode;
   void setLastCountryCode(String? value) {
@@ -454,22 +441,6 @@ class LibraryService {
     final pageIdOrNull = await readAppState(kSelectedPageId);
     selectedPageId = pageIdOrNull as String?;
 
-    final localAudioIndexStringOrNull = await readAppState(kLocalAudioIndex);
-    if (localAudioIndexStringOrNull != null) {
-      final localParse = int.tryParse(localAudioIndexStringOrNull);
-      if (localParse != null) {
-        _localAudioIndex = localParse;
-      }
-    }
-
-    final radioIndexStringOrNull = await readAppState(kRadioIndex);
-    if (radioIndexStringOrNull != null) {
-      final radioParse = int.tryParse(radioIndexStringOrNull);
-      if (radioParse != null) {
-        _radioIndex = radioParse;
-      }
-    }
-
     _playlists = await readAudioMap(kPlaylistsFileName);
     _pinnedAlbums = await readAudioMap(kPinnedAlbumsFileName);
     _podcasts = await readAudioMap(kPodcastsFileName);
@@ -499,39 +470,8 @@ class LibraryService {
     );
     _lastCountryCode = (await readAppState(kLastCountryCode)) as String?;
     _lastLanguageCode = (await readAppState(kLastLanguageCode)) as String?;
-    _lastRadioTag = (await readAppState(kLastRadioTag)) as String?;
 
     return true;
-  }
-
-  int _localAudioIndex = 0;
-  int get localAudioIndex => _localAudioIndex;
-  final _localAudioIndexController = StreamController<bool>.broadcast();
-  Stream<bool> get localAudioIndexChanged => _localAudioIndexController.stream;
-  void setLocalAudioIndex(int value) {
-    if (value == _localAudioIndex) return;
-    _localAudioIndex = value;
-    _localAudioIndexController.add(true);
-  }
-
-  int _radioIndex = 0; // Default to RadioSearch.name
-  int get radioIndex => _radioIndex;
-  final _radioIndexController = StreamController<bool>.broadcast();
-  Stream<bool> get radioIndexChanged => _radioIndexController.stream;
-  void setRadioIndex(int value) {
-    if (value == _radioIndex) return;
-    _radioIndex = value;
-    _radioIndexController.add(true);
-  }
-
-  int _podcastIndex = 0;
-  int get podcastIndex => _podcastIndex;
-  final _podcastIndexController = StreamController<bool>.broadcast();
-  Stream<bool> get podcastIndexChanged => _podcastIndexController.stream;
-  void setPodcastIndex(int value) {
-    if (value == _podcastIndex) return;
-    _podcastIndex = value;
-    _podcastIndexController.add(true);
   }
 
   String? selectedPageId;
@@ -547,24 +487,11 @@ class LibraryService {
     await _favTagsController.close();
     await _favCountriesController.close();
     await _favLanguagesController.close();
-    await _localAudioIndexController.close();
-    await _radioIndexController.close();
-    await _podcastIndexController.close();
-    await _lastFavRadioTagController.close();
     await _updateController.close();
     await _downloadsController.close();
   }
 
   Future<void> _safeAppState() async {
-    await writeAppState(
-      kLocalAudioIndex,
-      _localAudioIndex.toString(),
-    );
-    await writeAppState(kRadioIndex, _radioIndex.toString());
-    await writeAppState(
-      kPodcastIndex,
-      _podcastIndex.toString(),
-    );
     await writeAppState(kSelectedPageId, selectedPageId.toString());
   }
 }

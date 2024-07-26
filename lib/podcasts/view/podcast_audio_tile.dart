@@ -16,8 +16,6 @@ import '../../l10n/l10n.dart';
 import 'avatar_with_progress.dart';
 import 'download_button.dart';
 
-const _kGap = 20.0;
-
 class PodcastAudioTile extends StatelessWidget {
   const PodcastAudioTile({
     super.key,
@@ -66,7 +64,7 @@ class PodcastAudioTile extends StatelessWidget {
     return YaruExpandable(
       isExpanded: isExpanded,
       expandIconPadding: const EdgeInsets.only(
-        right: kYaruPagePadding,
+        right: 5,
         bottom: 15,
       ),
       gapHeight: 0,
@@ -76,7 +74,7 @@ class PodcastAudioTile extends StatelessWidget {
           padding: const EdgeInsets.only(
             top: 15,
             bottom: 10,
-            left: kYaruPagePadding,
+            left: 5,
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,7 +92,7 @@ class PodcastAudioTile extends StatelessWidget {
                 removeUpdate: removeUpdate,
               ),
               const SizedBox(
-                width: _kGap,
+                width: 25,
               ),
               Expanded(
                 child: _Center(
@@ -112,7 +110,7 @@ class PodcastAudioTile extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Padding(
           padding: EdgeInsets.only(
-            left: _kGap + podcastProgressSize + 15,
+            left: podcastProgressSize + 25,
             right: 60,
           ),
           child: Column(

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/app_model.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../radio_model.dart';
 import 'radio_search.dart';
 
@@ -17,15 +17,13 @@ class RadioControlPanel extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final libraryModel = di<LibraryModel>();
-    final model = di<RadioModel>();
-    final index = watchPropertyValue((LibraryModel m) => m.radioindex);
+    final index = watchPropertyValue((AppModel m) => m.radioindex);
 
     return Align(
       alignment: Alignment.center,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
+        padding: const EdgeInsets.only(top: 10),
         child: YaruChoiceChipBar(
           chipBackgroundColor: chipColor(theme),
           selectedChipBackgroundColor: chipSelectionColor(theme, false),
@@ -40,8 +38,8 @@ class RadioControlPanel extends StatelessWidget with WatchItMixin {
               .map((e) => e == RadioSearch.values[index])
               .toList(),
           onSelected: (index) {
-            libraryModel.setRadioIndex(index);
-            model.setSearchQuery(search: RadioSearch.values[index]);
+            di<AppModel>().radioindex = index;
+            di<RadioModel>().setSearchQuery(search: RadioSearch.values[index]);
           },
         ),
       ),

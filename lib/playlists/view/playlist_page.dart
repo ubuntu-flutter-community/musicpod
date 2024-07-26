@@ -7,6 +7,7 @@ import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
@@ -209,9 +210,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final localAudioModel = di<LocalAudioModel>();
-    final allowReorder =
-        watchPropertyValue((LocalAudioModel m) => m.allowReorder);
+    final allowReorder = watchPropertyValue((AppModel m) => m.allowReorder);
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final libraryModel = di<LibraryModel>();
     final playerModel = di<PlayerModel>();
@@ -261,7 +260,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
         IconButton(
           tooltip: context.l10n.move,
           isSelected: allowReorder,
-          onPressed: () => localAudioModel.setAllowReorder(!allowReorder),
+          onPressed: () => di<AppModel>().setAllowReorder(!allowReorder),
           icon: Icon(
             Iconz().reorder,
             color: allowReorder ? context.t.colorScheme.primary : null,
@@ -272,6 +271,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
 
     final audioPageHeader = AudioPageHeader(
       title: pageId,
+      subTitle: '${audios.length} ${context.l10n.titles}',
       image: image,
       label: context.l10n.playlist,
       description: _PlaylistGenreBar(audios: audios),
@@ -353,6 +353,8 @@ class _PlaylistGenreBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final style =
+        context.t.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300);
     Set<String> genres = {};
     for (var e in audios) {
       final g = e.genre?.trim();
@@ -362,16 +364,17 @@ class _PlaylistGenreBar extends StatelessWidget {
     }
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 5, left: 2),
       child: Wrap(
-        spacing: 5,
-        runSpacing: 5,
+        alignment: WrapAlignment.center,
+        runAlignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: genres
             .mapIndexed(
               (i, e) => Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TapAbleText(
+                    style: style,
                     wrapInFlexible: false,
                     text: e,
                     onTap: () {
@@ -381,7 +384,7 @@ class _PlaylistGenreBar extends StatelessWidget {
                       );
                     },
                   ),
-                  if (i != genres.length - 1) const Text(', '),
+                  if (i != genres.length - 1) const Text(' · '),
                 ],
               ),
             )

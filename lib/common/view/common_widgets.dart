@@ -369,7 +369,7 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
         },
         controller: _controller,
         key: widget.key,
-        autofocus: true,
+        autofocus: !isMobile,
         onSubmitted: widget.onSubmitted,
         onChanged: widget.onChanged,
         style: yaruStyled ? theme.textTheme.bodyMedium : null,

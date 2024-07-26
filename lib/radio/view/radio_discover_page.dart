@@ -39,7 +39,7 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
     watchPropertyValue((LibraryModel m) => m.favLanguagesLength);
 
     final radioSearch = watchPropertyValue(
-      (LibraryModel m) => RadioSearch.values[m.radioindex],
+      (AppModel m) => RadioSearch.values[m.radioindex],
     );
 
     final country = watchPropertyValue((RadioModel m) => m.country);
@@ -87,10 +87,7 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
             libraryModel.removeRadioFavTag(tag!.name);
           },
           favs: libraryModel.favRadioTags,
-          onSelected: (v) {
-            model.setTag(v);
-            libraryModel.setLastRadioTag(v?.name);
-          },
+          onSelected: (v) => model.setTag(v),
           tags: [
             ...[
               ...?model.tags,

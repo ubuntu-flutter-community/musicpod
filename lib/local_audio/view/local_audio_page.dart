@@ -45,8 +45,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     final appModel = di<AppModel>();
     final model = di<LocalAudioModel>();
     final audios = watchPropertyValue((LocalAudioModel m) => m.audios);
-    final index =
-        watchPropertyValue((LibraryModel m) => m.localAudioindex ?? 0);
+    final index = watchPropertyValue((AppModel m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
 
     void search({

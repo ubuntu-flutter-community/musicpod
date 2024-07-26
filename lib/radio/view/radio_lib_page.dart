@@ -36,23 +36,26 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
       children: [
         Align(
           alignment: Alignment.center,
-          child: YaruChoiceChipBar(
-            chipBackgroundColor: chipColor(theme),
-            selectedChipBackgroundColor: chipSelectionColor(theme, false),
-            borderColor: chipBorder(theme, false),
-            selectedFirst: false,
-            clearOnSelect: false,
-            onSelected: (index) => radioModel
-                .setRadioCollectionView(RadioCollectionView.values[index]),
-            yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-            labels: [
-              Text(context.l10n.station),
-              Text(context.l10n.tags),
-              Text(context.l10n.hearingHistory),
-            ],
-            isSelected: RadioCollectionView.values
-                .map((e) => e == radioCollectionView)
-                .toList(),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: YaruChoiceChipBar(
+              chipBackgroundColor: chipColor(theme),
+              selectedChipBackgroundColor: chipSelectionColor(theme, false),
+              borderColor: chipBorder(theme, false),
+              selectedFirst: false,
+              clearOnSelect: false,
+              onSelected: (index) => radioModel
+                  .setRadioCollectionView(RadioCollectionView.values[index]),
+              yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+              labels: [
+                Text(context.l10n.station),
+                Text(context.l10n.tags),
+                Text(context.l10n.hearingHistory),
+              ],
+              isSelected: RadioCollectionView.values
+                  .map((e) => e == radioCollectionView)
+                  .toList(),
+            ),
           ),
         ),
         const SizedBox(

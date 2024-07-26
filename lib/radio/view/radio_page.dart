@@ -30,8 +30,7 @@ class _RadioPageState extends State<RadioPage> {
       final model = di<RadioModel>();
       final appModel = di<AppModel>();
       final playerModel = di<PlayerModel>();
-      final libraryModel = di<LibraryModel>();
-      final index = libraryModel.radioindex;
+      final index = appModel.radioindex;
       model
           .init(
         countryCode: appModel.countryCode,
@@ -96,7 +95,6 @@ class _RadioReconnectButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = di<RadioModel>();
-    final libraryModel = di<LibraryModel>();
     final appModel = di<AppModel>();
 
     return IconButton(
@@ -105,7 +103,7 @@ class _RadioReconnectButton extends StatelessWidget {
       onPressed: () => model
           .init(
         countryCode: appModel.countryCode,
-        index: libraryModel.radioindex,
+        index: appModel.radioindex,
       )
           .then(
         (host) {
@@ -129,8 +127,7 @@ SnackBar _buildConnectSnackBar({
 }) {
   final appModel = di<AppModel>();
   final model = di<RadioModel>();
-  final libraryModel = di<LibraryModel>();
-  final index = libraryModel.radioindex;
+  final index = appModel.radioindex;
 
   return SnackBar(
     duration: connectedHost != null

@@ -17,14 +17,10 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _albumsSub;
   StreamSubscription<bool>? _podcastsSub;
   StreamSubscription<bool>? _stationsSub;
-  StreamSubscription<bool>? _localAudioIndexSub;
-  StreamSubscription<bool>? _podcastIndexSub;
-  StreamSubscription<bool>? _radioIndexSub;
   StreamSubscription<bool>? _updatesChangedSub;
   StreamSubscription<bool>? _favTagsSub;
   StreamSubscription<bool>? _favCountriesSub;
   StreamSubscription<bool>? _favLanguageCodeFavsSub;
-  StreamSubscription<bool>? _lastFavSub;
   StreamSubscription<bool>? _lastCountryCodeSub;
   StreamSubscription<bool>? _downloadsSub;
 
@@ -34,12 +30,6 @@ class LibraryModel extends SafeChangeNotifier {
       _pageIdStack.add(_service.selectedPageId!);
     }
 
-    _localAudioIndexSub ??=
-        _service.localAudioIndexChanged.listen((_) => notifyListeners());
-    _radioIndexSub ??=
-        _service.radioIndexChanged.listen((_) => notifyListeners());
-    _podcastIndexSub ??=
-        _service.podcastIndexChanged.listen((_) => notifyListeners());
     _likedAudiosSub ??=
         _service.likedAudiosChanged.listen((event) => notifyListeners());
     _playlistsSub ??=
@@ -56,8 +46,7 @@ class LibraryModel extends SafeChangeNotifier {
         _service.favCountriesChanged.listen((_) => notifyListeners());
     _favLanguageCodeFavsSub ??=
         _service.favLanguagesChanged.listen((_) => notifyListeners());
-    _lastFavSub ??=
-        _service.lastFavRadioTagChanged.listen((_) => notifyListeners());
+
     _downloadsSub ??=
         _service.downloadsChanged.listen((_) => notifyListeners());
     _lastCountryCodeSub ??=
@@ -69,9 +58,6 @@ class LibraryModel extends SafeChangeNotifier {
 
   @override
   Future<void> dispose() async {
-    await _localAudioIndexSub?.cancel();
-    await _radioIndexSub?.cancel();
-    await _podcastIndexSub?.cancel();
     await _likedAudiosSub?.cancel();
     await _playlistsSub?.cancel();
     await _albumsSub?.cancel();
@@ -81,7 +67,6 @@ class LibraryModel extends SafeChangeNotifier {
     await _favTagsSub?.cancel();
     await _favCountriesSub?.cancel();
     await _favLanguageCodeFavsSub?.cancel();
-    await _lastFavSub?.cancel();
     await _downloadsSub?.cancel();
     await _lastCountryCodeSub?.cancel();
     super.dispose();
@@ -133,8 +118,6 @@ class LibraryModel extends SafeChangeNotifier {
   bool isStarredStation(String? url) =>
       url?.isNotEmpty == false ? false : _service.isStarredStation(url);
 
-  String? get lastRadioTag => _service.lastRadioTag;
-  void setLastRadioTag(String? value) => _service.setLastRadioTag(value);
   void addFavRadioTag(String value) => _service.addFavRadioTag(value);
   void removeRadioFavTag(String value) => _service.removeFavRadioTag(value);
   Set<String> get favRadioTags => _service.favRadioTags;
@@ -322,16 +305,4 @@ class LibraryModel extends SafeChangeNotifier {
           isStarredStation(pageId) ||
           isPlaylistSaved(pageId) ||
           isPodcastSubscribed(pageId));
-
-  int? get localAudioindex => _service.localAudioIndex;
-  void setLocalAudioindex(int? value) {
-    if (value == null || value == _service.localAudioIndex) return;
-    _service.setLocalAudioIndex(value);
-  }
-
-  int get radioindex => _service.radioIndex;
-  void setRadioIndex(int value) => _service.setRadioIndex(value);
-
-  int get podcastIndex => _service.podcastIndex;
-  void setPodcastIndex(int value) => _service.setPodcastIndex(value);
 }

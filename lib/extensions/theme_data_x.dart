@@ -12,7 +12,7 @@ extension ThemeDataX on ThemeData {
         fontWeight: FontWeight.w400,
         letterSpacing: 0,
         leadingDistribution: TextLeadingDistribution.proportional,
-        fontSize: 21,
+        fontSize: 25,
         color: colorScheme.onSurface.withOpacity(0.9),
       );
 

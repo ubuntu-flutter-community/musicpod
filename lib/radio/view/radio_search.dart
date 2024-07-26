@@ -4,7 +4,6 @@ enum RadioSearch {
   name,
   tag,
   country,
-  state,
   language;
 
   String localize(AppLocalizations l10n) {
@@ -12,7 +11,6 @@ enum RadioSearch {
       name => l10n.name,
       tag => l10n.tag,
       country => l10n.country,
-      state => l10n.state,
       language => l10n.language,
     };
   }

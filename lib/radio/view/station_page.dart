@@ -12,6 +12,7 @@ import '../../common/view/safe_network_image.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import 'radio_fall_back_icon.dart';
 import 'radio_history_list.dart';
@@ -35,7 +36,7 @@ class StationPage extends StatelessWidget with WatchItMixin {
     return YaruDetailPage(
       appBar: HeaderBar(
         adaptive: true,
-        title: Text(station.title ?? station.url ?? ''),
+        title: isMobile ? null : Text(station.title ?? station.url ?? ''),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -46,7 +47,8 @@ class StationPage extends StatelessWidget with WatchItMixin {
                 SliverToBoxAdapter(
                   child: AudioPageHeader(
                     title: station.title ?? station.url ?? '',
-                    label: station.artist,
+                    subTitle: station.artist,
+                    label: context.l10n.station,
                     description: SizedBox(
                       width: kAudioHeaderDescriptionWidth,
                       child: RadioPageTagBar(

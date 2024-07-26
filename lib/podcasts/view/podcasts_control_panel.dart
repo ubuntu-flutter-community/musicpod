@@ -63,153 +63,167 @@ class PodcastsControlPanel extends StatelessWidget with WatchItMixin {
 
     return Align(
       alignment: Alignment.center,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Wrap(
-          spacing: 10,
-          runSpacing: 20,
-          alignment: WrapAlignment.center,
-          runAlignment: WrapAlignment.center,
-          children: [
-            if (usePodcastIndex)
-              LanguageAutoComplete(
-                contentPadding: contentPadding,
-                fillColor: language != null
-                    ? fillColor
-                    : yaruStyled
-                        ? theme.dividerColor
-                        : null,
-                filled: language != null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(100),
-                  borderSide: yaruStyled
-                      ? BorderSide.none
-                      : BorderSide(
-                          color: theme.colorScheme.outline,
-                          width: 1.3,
-                          strokeAlign: 1,
-                        ),
-                ),
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-                isDense: true,
-                width: 150,
-                height: chipHeight,
-                value: language,
-                favs: favLanguageCodes,
-                addFav: (language) {
-                  if (language?.isoCode == null) return;
-                  libraryModel.addFavLanguageCode(language!.isoCode);
-                },
-                removeFav: (language) {
-                  if (language?.isoCode == null) return;
-                  libraryModel.removeFavLanguageCode(language!.isoCode);
-                },
-                onSelected: (language) {
-                  model.setLanguage(language);
-                  libraryModel.setLastLanguage(language?.isoCode);
-                  model.setLimit(20);
-                  model.search(searchQuery: searchQuery);
-                },
-              )
-            else
-              CountryAutoComplete(
-                contentPadding: contentPadding,
-                fillColor: fillColor,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(100),
-                  borderSide: yaruStyled
-                      ? BorderSide.none
-                      : BorderSide(
-                          color: theme.colorScheme.outline,
-                          width: 1.3,
-                          strokeAlign: 1,
-                        ),
-                ),
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-                isDense: true,
-                width: 200,
-                height: chipHeight,
-                countries: [
-                  ...[
-                    ...Country.values,
-                  ].where(
-                    (e) =>
-                        libraryModel.favCountryCodes.contains(e.code) == true,
+      child: SizedBox(
+        width: 380,
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 10,
+          ),
+          child: Row(
+            children: [
+              if (usePodcastIndex)
+                Expanded(
+                  child: LanguageAutoComplete(
+                    contentPadding: contentPadding,
+                    fillColor: language != null
+                        ? fillColor
+                        : yaruStyled
+                            ? theme.dividerColor
+                            : null,
+                    filled: language != null,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(100),
+                      borderSide: yaruStyled
+                          ? BorderSide.none
+                          : BorderSide(
+                              color: theme.colorScheme.outline,
+                              width: 1.3,
+                              strokeAlign: 1,
+                            ),
+                    ),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                    isDense: true,
+                    width: 150,
+                    height: chipHeight,
+                    value: language,
+                    favs: favLanguageCodes,
+                    addFav: (language) {
+                      if (language?.isoCode == null) return;
+                      libraryModel.addFavLanguageCode(language!.isoCode);
+                    },
+                    removeFav: (language) {
+                      if (language?.isoCode == null) return;
+                      libraryModel.removeFavLanguageCode(language!.isoCode);
+                    },
+                    onSelected: (language) {
+                      model.setLanguage(language);
+                      libraryModel.setLastLanguage(language?.isoCode);
+                      model.setLimit(20);
+                      model.search(searchQuery: searchQuery);
+                    },
                   ),
-                  ...[...Country.values].where(
-                    (e) =>
-                        libraryModel.favCountryCodes.contains(e.code) == false,
-                  ),
-                ]..remove(Country.none),
-                onSelected: (country) {
-                  setCountry(country);
-                  model.setLimit(20);
-
-                  model.search(searchQuery: searchQuery);
-                },
-                value: country,
-                addFav: (v) {
-                  if (country?.code == null) return;
-                  libraryModel.addFavCountryCode(v!.code);
-                },
-                removeFav: (v) {
-                  if (country?.code == null) return;
-                  libraryModel.removeFavCountryCode(v!.code);
-                },
-                favs: libraryModel.favCountryCodes,
-              ),
-            PodcastGenreAutoComplete(
-              contentPadding: contentPadding,
-              fillColor: podcastGenre != PodcastGenre.all
-                  ? fillColor
-                  : yaruStyled
-                      ? theme.dividerColor
-                      : null,
-              filled: podcastGenre != PodcastGenre.all,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(100),
-                borderSide: yaruStyled
-                    ? BorderSide.none
-                    : BorderSide(
-                        color: theme.colorScheme.outline,
-                        width: 1.3,
-                        strokeAlign: 1,
+                )
+              else
+                Expanded(
+                  child: CountryAutoComplete(
+                    contentPadding: contentPadding,
+                    fillColor: fillColor,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(100),
+                      borderSide: yaruStyled
+                          ? BorderSide.none
+                          : BorderSide(
+                              color: theme.colorScheme.outline,
+                              width: 1.3,
+                              strokeAlign: 1,
+                            ),
+                    ),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                    isDense: true,
+                    width: 200,
+                    height: chipHeight,
+                    countries: [
+                      ...[
+                        ...Country.values,
+                      ].where(
+                        (e) =>
+                            libraryModel.favCountryCodes.contains(e.code) ==
+                            true,
                       ),
+                      ...[...Country.values].where(
+                        (e) =>
+                            libraryModel.favCountryCodes.contains(e.code) ==
+                            false,
+                      ),
+                    ]..remove(Country.none),
+                    onSelected: (country) {
+                      setCountry(country);
+                      model.setLimit(20);
+
+                      model.search(searchQuery: searchQuery);
+                    },
+                    value: country,
+                    addFav: (v) {
+                      if (country?.code == null) return;
+                      libraryModel.addFavCountryCode(v!.code);
+                    },
+                    removeFav: (v) {
+                      if (country?.code == null) return;
+                      libraryModel.removeFavCountryCode(v!.code);
+                    },
+                    favs: libraryModel.favCountryCodes,
+                  ),
+                ),
+              const SizedBox(
+                width: 10,
               ),
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
+              Expanded(
+                child: PodcastGenreAutoComplete(
+                  contentPadding: contentPadding,
+                  fillColor: podcastGenre != PodcastGenre.all
+                      ? fillColor
+                      : yaruStyled
+                          ? theme.dividerColor
+                          : null,
+                  filled: podcastGenre != PodcastGenre.all,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: yaruStyled
+                        ? BorderSide.none
+                        : BorderSide(
+                            color: theme.colorScheme.outline,
+                            width: 1.3,
+                            strokeAlign: 1,
+                          ),
+                  ),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                  isDense: true,
+                  width: 200,
+                  height: chipHeight,
+                  genres: sortedGenres,
+                  onSelected: (podcastGenre) {
+                    if (podcastGenre != null) {
+                      setPodcastGenre(podcastGenre);
+
+                      model.setLimit(20);
+                    }
+
+                    model.search(searchQuery: searchQuery);
+                  },
+                  value: podcastGenre,
+
+                  addFav: (v) {
+                    // if (country?.code == null) return;
+                    // libraryModel.addFavCountry(v!.code);
+                  },
+                  removeFav: (v) {
+                    // if (country?.code == null) return;
+                    // libraryModel.removeFavCountry(v!.code);
+                  },
+                  // favs: libraryModel.favCountryCodes,
+                ),
               ),
-              isDense: true,
-              width: 200,
-              height: chipHeight,
-              genres: sortedGenres,
-              onSelected: (podcastGenre) {
-                if (podcastGenre != null) {
-                  setPodcastGenre(podcastGenre);
-
-                  model.setLimit(20);
-                }
-
-                model.search(searchQuery: searchQuery);
-              },
-              value: podcastGenre,
-
-              addFav: (v) {
-                // if (country?.code == null) return;
-                // libraryModel.addFavCountry(v!.code);
-              },
-              removeFav: (v) {
-                // if (country?.code == null) return;
-                // libraryModel.removeFavCountry(v!.code);
-              },
-              // favs: libraryModel.favCountryCodes,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

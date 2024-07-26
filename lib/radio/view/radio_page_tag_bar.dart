@@ -5,6 +5,7 @@ import 'package:watch_it/watch_it.dart';
 import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/tapable_text.dart';
+import '../../extensions/build_context_x.dart';
 import '../../library/library_model.dart';
 import '../radio_model.dart';
 import 'radio_search.dart';
@@ -17,6 +18,8 @@ class RadioPageTagBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final style =
+        context.t.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300);
     final tags = station.album?.isNotEmpty == false
         ? null
         : <String>[
@@ -29,24 +32,23 @@ class RadioPageTagBar extends StatelessWidget {
     final appModel = di<AppModel>();
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 5, left: 2),
       child: Wrap(
         alignment: WrapAlignment.center,
         runAlignment: WrapAlignment.center,
-        spacing: 5,
-        runSpacing: 5,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: tags
             .mapIndexed(
               (i, e) => Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TapAbleText(
+                    style: style,
                     wrapInFlexible: false,
                     onTap: () {
                       radioModel
                           .init(
                             countryCode: appModel.countryCode,
-                            index: libraryModel.radioindex,
+                            index: appModel.radioindex,
                           )
                           .then(
                             (_) => libraryModel.push(
@@ -60,7 +62,7 @@ class RadioPageTagBar extends StatelessWidget {
                     },
                     text: e.length > 20 ? e.substring(0, 19) : e,
                   ),
-                  if (i != tags.length - 1) const Text(','),
+                  if (i != tags.length - 1) const Text(' · '),
                 ],
               ),
             )
