@@ -83,7 +83,6 @@ class StationGrid extends StatelessWidget with WatchItMixin {
     final stations = watchPropertyValue((LibraryModel m) => m.starredStations);
     final length =
         watchPropertyValue((LibraryModel m) => m.starredStationsLength);
-    final libraryModel = di<LibraryModel>();
     final playerModel = di<PlayerModel>();
 
     if (length == 0) {
@@ -112,9 +111,6 @@ class StationGrid extends StatelessWidget with WatchItMixin {
             return StationCard(
               station: station,
               startPlaylist: playerModel.startPlaylist,
-              isStarredStation: libraryModel.isStarredStation,
-              unstarStation: libraryModel.unStarStation,
-              starStation: libraryModel.addStarredStation,
             );
           },
         );

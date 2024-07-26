@@ -25,7 +25,7 @@ import '../../radio/view/radio_page.dart';
 import '../../radio/view/radio_page_icon.dart';
 import '../../radio/view/station_page.dart';
 import '../../radio/view/station_page_icon.dart';
-import '../../search/search_page.dart';
+import '../../search/view/search_page.dart';
 import '../../settings/view/settings_tile.dart';
 import 'master_tile.dart';
 

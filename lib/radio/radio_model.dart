@@ -95,11 +95,6 @@ class RadioModel extends SafeChangeNotifier {
   }) async =>
       _radioService.loadTags(filter: filter, limit: limit);
 
-  // TODO: use in state autocomplete depending on [country]
-  Future<List<State>?> loadStates(String country) async {
-    return _radioService.loadStates(country);
-  }
-
   String? _connectedHost;
   String? get connectedHost => _connectedHost;
   Future<String?> init({

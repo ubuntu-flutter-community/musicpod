@@ -94,9 +94,6 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
                             )
                             .then((_) => radioModel.clickStation(station));
                       },
-                      isStarredStation: libraryModel.isStarredStation,
-                      unstarStation: libraryModel.unStarStation,
-                      starStation: libraryModel.addStarredStation,
                     );
                   },
                 );
