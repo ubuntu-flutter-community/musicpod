@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
-import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
@@ -10,12 +9,11 @@ import '../../common/view/offline_page.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import '../../player/player_model.dart';
+import '../../search/search_model.dart';
 import '../podcast_model.dart';
 import 'podcasts_collection_body.dart';
-import 'podcasts_control_panel.dart';
-import 'podcasts_discover_grid.dart';
-import 'podcasts_page_title.dart';
 
 class PodcastsPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const PodcastsPage({super.key});
@@ -29,10 +27,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final appModel = di<AppModel>();
-
       di<PodcastModel>().init(
-        countryCode: appModel.countryCode,
         updateMessage: context.l10n.newEpisodeAvailable,
       );
     });
@@ -43,31 +38,8 @@ class _PodcastsPageState extends State<PodcastsPage> {
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
 
-    final model = di<PodcastModel>();
-
-    final searchActive =
-        watchPropertyValue((PodcastModel m) => m.searchActive ?? false);
-    final setSearchActive = model.setSearchActive;
-
-    final search = model.search;
-    final setSearchQuery = model.setSearchQuery;
-
-    final searchQuery = watchPropertyValue((PodcastModel m) => m.searchQuery);
     final checkingForUpdates =
         watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
-
-    final searchBody = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const PodcastsControlPanel(),
-        const SizedBox(
-          height: 15,
-        ),
-        Expanded(
-          child: PodcastsDiscoverGrid(checkingForUpdates: checkingForUpdates),
-        ),
-      ],
-    );
 
     final subsBody = PodcastsCollectionBody(
       loading: checkingForUpdates,
@@ -82,23 +54,22 @@ class _PodcastsPageState extends State<PodcastsPage> {
         actions: [
           Flexible(
             child: Padding(
-              padding: appBarActionSpacing,
+              padding: appBarSingleActionSpacing,
               child: SearchButton(
-                active: searchActive,
-                onPressed: () => setSearchActive(!searchActive),
+                onPressed: () {
+                  final searchModel = di<SearchModel>();
+                  di<LibraryModel>().pushNamed(kSearchPageId);
+                  searchModel
+                    ..setAudioType(AudioType.podcast)
+                    ..search();
+                },
               ),
             ),
           ),
         ],
-        title: searchActive
-            ? PodcastsPageTitle(
-                searchQuery: searchQuery,
-                setSearchQuery: setSearchQuery,
-                search: search,
-              )
-            : Text('${context.l10n.podcasts} ${context.l10n.collection}'),
+        title: Text('${context.l10n.podcasts} ${context.l10n.collection}'),
       ),
-      body: searchActive ? searchBody : subsBody,
+      body: subsBody,
     );
   }
 }

@@ -1,6 +1,9 @@
 import '../../common/data/audio.dart';
+import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
+import '../../local_audio/view/local_audio_search_page.dart';
 import '../search_model.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
@@ -15,9 +18,16 @@ class AudioTypeFilterButton extends StatelessWidget with WatchItMixin {
 
     return PopupMenuButton<AudioType>(
       initialValue: audioType,
-      onSelected: (v) {
-        searchModel.setAudioType(v);
-        searchModel.search();
+      onSelected: (v) async {
+        if (v == AudioType.local) {
+          await di<LibraryModel>().push(
+            builder: (_) => const LocalAudioSearchPage(),
+            pageId: kSearchPageId,
+          );
+        } else {
+          searchModel.setAudioType(v);
+          searchModel.search();
+        }
       },
       itemBuilder: (context) => AudioType.values
           .map(

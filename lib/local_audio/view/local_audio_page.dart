@@ -56,7 +56,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
         model.search(text);
         libraryModel.push(
           builder: (_) => const LocalAudioSearchPage(),
-          pageId: kLocalAudioPageId,
+          pageId: kSearchPageId,
         );
       } else {
         libraryModel.pop();
@@ -69,7 +69,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
       actions: [
         Flexible(
           child: Padding(
-            padding: appBarActionSpacing,
+            padding: appBarSingleActionSpacing,
             child: SearchButton(
               active: false,
               onPressed: () => search(text: ''),

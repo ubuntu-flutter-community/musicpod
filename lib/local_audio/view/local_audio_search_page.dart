@@ -72,7 +72,7 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
         actions: [
           Flexible(
             child: Padding(
-              padding: appBarActionSpacing,
+              padding: appBarSingleActionSpacing,
               child: SearchButton(
                 active: true,
                 onPressed: () => search(text: null),

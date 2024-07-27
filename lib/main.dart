@@ -99,7 +99,6 @@ Future<void> main(List<String> args) async {
       notificationsService: notificationsService,
       settingsService: settingsService,
     ),
-    dispose: (s) async => s.dispose(),
   );
 
   final connectivity = Connectivity();
@@ -161,13 +160,12 @@ Future<void> main(List<String> args) async {
     dispose: (s) => s.dispose(),
   );
   di.registerSingleton<RadioModel>(
-    RadioModel(radioService: radioService, libraryService: libraryService),
+    RadioModel(radioService: radioService),
     dispose: (s) => s.dispose(),
   );
   di.registerSingleton<DownloadModel>(DownloadModel(libraryService));
   di.registerLazySingleton<SearchModel>(
     () => SearchModel(
-      localAudioModel: di<LocalAudioModel>(),
       podcastService: di<PodcastService>(),
       radioService: di<RadioService>(),
       libraryService: di<LibraryService>(),

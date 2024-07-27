@@ -4,7 +4,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/app_model.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
@@ -148,7 +147,6 @@ class _PodcastSectionState extends State<_PodcastSection> {
               onChanged: (v) => model.setUsePodcastIndex(v).then(
                     (_) => di<PodcastModel>().init(
                       forceInit: true,
-                      countryCode: di<AppModel>().countryCode,
                       updateMessage: context.l10n.newEpisodeAvailable,
                     ),
                   ),

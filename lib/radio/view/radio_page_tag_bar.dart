@@ -1,16 +1,16 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/tapable_text.dart';
+import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../library/library_model.dart';
-import '../radio_model.dart';
-import 'radio_search.dart';
-import 'radio_search_page.dart';
+import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 
 class RadioPageTagBar extends StatelessWidget {
   const RadioPageTagBar({super.key, required this.station});
@@ -27,10 +27,6 @@ class RadioPageTagBar extends StatelessWidget {
           ];
     if (tags == null || tags.isEmpty) return const SizedBox.shrink();
 
-    final radioModel = di<RadioModel>();
-    final libraryModel = di<LibraryModel>();
-    final appModel = di<AppModel>();
-
     return SingleChildScrollView(
       child: Wrap(
         alignment: WrapAlignment.center,
@@ -45,20 +41,12 @@ class RadioPageTagBar extends StatelessWidget {
                     style: style,
                     wrapInFlexible: false,
                     onTap: () {
-                      radioModel
-                          .init(
-                            countryCode: appModel.countryCode,
-                            index: appModel.radioindex,
-                          )
-                          .then(
-                            (_) => libraryModel.push(
-                              builder: (_) => RadioSearchPage(
-                                radioSearch: RadioSearch.tag,
-                                searchQuery: e,
-                              ),
-                              pageId: e,
-                            ),
-                          );
+                      di<LibraryModel>().pushNamed(kSearchPageId);
+                      di<SearchModel>()
+                        ..setTag(Tag(name: e, stationCount: 1))
+                        ..setAudioType(AudioType.radio)
+                        ..setSearchType(SearchType.radioTag)
+                        ..search();
                     },
                     text: e.length > 20 ? e.substring(0, 19) : e,
                   ),

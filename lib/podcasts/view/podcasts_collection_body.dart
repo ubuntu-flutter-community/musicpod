@@ -17,6 +17,7 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
+import '../../search/search_model.dart';
 import '../podcast_model.dart';
 
 class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
@@ -66,7 +67,12 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                   height: 10,
                 ),
                 ImportantButton(
-                  onPressed: () => model.setSearchActive(true),
+                  onPressed: () {
+                    di<LibraryModel>().pushNamed(kSearchPageId);
+                    di<SearchModel>()
+                      ..setAudioType(AudioType.podcast)
+                      ..search();
+                  },
                   child: Text(context.l10n.discover),
                 ),
               ],

@@ -9,10 +9,8 @@ import '../common/data/podcast_genre.dart';
 import '../common/view/languages.dart';
 import '../extensions/string_x.dart';
 import '../library/library_service.dart';
-import '../local_audio/local_audio_model.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
-import 'local_audio_search_result.dart';
 import 'search_type.dart';
 
 const _initialAudioType = AudioType.radio;
@@ -21,17 +19,13 @@ class SearchModel extends SafeChangeNotifier {
   SearchModel({
     required RadioService radioService,
     required PodcastService podcastService,
-    required LocalAudioModel localAudioModel,
     required LibraryService libraryService,
   })  : _radioService = radioService,
         _podcastService = podcastService,
-        _localAudioModel = localAudioModel,
         _libraryService = libraryService;
 
   final RadioService _radioService;
   final PodcastService _podcastService;
-  // TODO: replace with service when all is migrated
-  final LocalAudioModel _localAudioModel;
   final LibraryService _libraryService;
 
   void init() {
@@ -68,13 +62,6 @@ class SearchModel extends SafeChangeNotifier {
 
   String? _searchQuery;
   String? get searchQuery => _searchQuery;
-
-  LocalAudioSearchResult? _localAudioSearchResult;
-  LocalAudioSearchResult? get localAudioSearchResult => _localAudioSearchResult;
-  void setLocalAudioSearchResult(LocalAudioSearchResult? value) {
-    _localAudioSearchResult = value;
-    notifyListeners();
-  }
 
   SearchResult? _podcastSearchResult;
   SearchResult? get podcastSearchResult => _podcastSearchResult;
@@ -152,16 +139,13 @@ class SearchModel extends SafeChangeNotifier {
       switch (_audioType) {
         case AudioType.podcast:
           setPodcastSearchResult(null);
-        case AudioType.local:
-          setLocalAudioSearchResult(null);
-        case AudioType.radio:
+        default:
           setRadioSearchResult(null);
       }
     }
 
     return switch (_searchType) {
-      SearchType.radioName => await _radioService
-          .search(name: _searchQuery)
+      SearchType.radioName => await radioNameSearch(_searchQuery)
           .then(
             (v) => setRadioSearchResult(
               v?.map((e) => Audio.fromStation(e)).toList(),
@@ -202,86 +186,10 @@ class SearchModel extends SafeChangeNotifier {
           )
           .then((v) => setPodcastSearchResult(v))
           .then((_) => _loading = false),
-      SearchType.localArtist ||
-      SearchType.localTitle ||
-      SearchType.localArtist ||
-      SearchType.localGenreName =>
-        localSearch(_localAudioModel.audios),
       _ => Future.value().then((_) => _loading = false)
     };
   }
 
-  LocalAudioSearchResult? localSearch(Set<Audio>? audios) {
-    if (_searchQuery == null) return null;
-    if (_searchQuery?.isEmpty == true) {
-      (
-        titlesSearchResult: {},
-        albumSearchResult: {},
-        artistsSearchResult: {},
-        genresSearchResult: {},
-      );
-    }
-
-    final allAlbumsFindings = audios?.where(
-      (audio) =>
-          audio.album?.isNotEmpty == true &&
-          audio.album!.toLowerCase().contains(_searchQuery!.toLowerCase()),
-    );
-
-    final albumsResult = <Audio>{};
-    if (allAlbumsFindings != null) {
-      for (var a in allAlbumsFindings) {
-        if (albumsResult.none((element) => element.album == a.album)) {
-          albumsResult.add(a);
-        }
-      }
-    }
-
-    final allGenresFindings = audios?.where(
-      (audio) =>
-          audio.genre?.isNotEmpty == true &&
-          audio.genre!.toLowerCase().contains(_searchQuery!.toLowerCase()),
-    );
-
-    final genreFindings = <Audio>{};
-    if (allGenresFindings != null) {
-      for (var a in allGenresFindings) {
-        if (genreFindings.none((element) => element.genre == a.genre)) {
-          genreFindings.add(a);
-        }
-      }
-    }
-
-    final allArtistFindings = audios?.where(
-      (audio) =>
-          audio.artist?.isNotEmpty == true &&
-          audio.artist!.toLowerCase().contains(_searchQuery!.toLowerCase()),
-    );
-    final artistsResult = <Audio>{};
-    if (allArtistFindings != null) {
-      for (var a in allArtistFindings) {
-        if (artistsResult.none(
-          (e) => e.artist == a.artist,
-        )) {
-          artistsResult.add(a);
-        }
-      }
-    }
-
-    return (
-      titlesSearchResult: Set.from(
-        audios?.where(
-              (audio) =>
-                  audio.title?.isNotEmpty == true &&
-                  audio.title!
-                      .toLowerCase()
-                      .contains(_searchQuery!.toLowerCase()),
-            ) ??
-            <Audio>[],
-      ),
-      albumSearchResult: albumsResult,
-      artistsSearchResult: artistsResult,
-      genresSearchResult: genreFindings,
-    );
-  }
+  Future<List<Station>?> radioNameSearch(String? searchQuery) async =>
+      _radioService.search(name: searchQuery);
 }

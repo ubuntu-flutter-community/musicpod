@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app/app_model.dart';
 import '../../l10n/l10n.dart';
 import '../../radio/radio_model.dart';
 
@@ -26,10 +25,6 @@ SnackBar buildConnectSnackBar({
   required String? connectedHost,
   required BuildContext context,
 }) {
-  final appModel = di<AppModel>();
-  final model = di<RadioModel>();
-  final index = appModel.radioindex;
-
   return SnackBar(
     duration: connectedHost != null
         ? const Duration(seconds: 1)
@@ -43,12 +38,7 @@ SnackBar buildConnectSnackBar({
         ? SnackBarAction(
             onPressed: () {
               ScaffoldMessenger.of(context).clearSnackBars();
-              model
-                  .init(
-                    countryCode: appModel.countryCode,
-                    index: index,
-                  )
-                  .then(
+              di<RadioModel>().init().then(
                     (value) => ScaffoldMessenger.of(context).showSnackBar(
                       buildConnectSnackBar(
                         connectedHost: value,

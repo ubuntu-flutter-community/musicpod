@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
-import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../podcasts/podcast_model.dart';
 import '../../radio/radio_model.dart';
@@ -29,13 +29,14 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    final countryCode = di<AppModel>().countryCode;
-    di<RadioModel>().init(countryCode: countryCode).then(
-          (value) => di<PodcastModel>().init(
-            countryCode: countryCode,
-            updateMessage: context.l10n.newEpisodeAvailable,
-          ),
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      if (context.mounted) {
+        await di<PodcastModel>().init(
+          updateMessage: context.l10n.newEpisodeAvailable,
         );
+        await di<RadioModel>().init();
+      }
+    });
   }
 
   @override
@@ -45,6 +46,7 @@ class _SearchPageState extends State<SearchPage> {
       (RadioModel m) => m.connectedHost != null && isOnline,
     );
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
+    final loading = watchPropertyValue((SearchModel m) => m.loading);
 
     return Scaffold(
       resizeToAvoidBottomInset: isMobile ? false : null,
@@ -57,11 +59,20 @@ class _SearchPageState extends State<SearchPage> {
               padding: EdgeInsets.only(right: 10),
               child: RadioReconnectButton(),
             ),
-          if (watchPropertyValue((SearchModel m) => m.loading))
-            const Padding(
-              padding: EdgeInsets.only(right: 10),
-              child: SideBarProgress(),
-            ),
+          Padding(
+            padding: appBarSingleActionSpacing,
+            child: loading
+                ? const Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 8),
+                      child: SideBarProgress(),
+                    ),
+                  )
+                : SearchButton(
+                    active: true,
+                    onPressed: () => di<LibraryModel>().pop(),
+                  ),
+          ),
         ],
       ),
       body: LayoutBuilder(
@@ -71,9 +82,10 @@ class _SearchPageState extends State<SearchPage> {
               SliverPadding(
                 padding: getAdaptiveHorizontalPadding(constraints)
                     .copyWith(bottom: 10),
-                sliver: audioType == AudioType.podcast
-                    ? const SliverPodcastFilterBar()
-                    : const SliverSearchTypeFilterBar(),
+                sliver: switch (audioType) {
+                  AudioType.podcast => const SliverPodcastFilterBar(),
+                  _ => const SliverSearchTypeFilterBar(),
+                },
               ),
               if (audioType == AudioType.radio)
                 SliverPadding(
@@ -85,8 +97,6 @@ class _SearchPageState extends State<SearchPage> {
                   padding: getAdaptiveHorizontalPadding(constraints),
                   sliver: const SliverPodcastSearchResults(),
                 ),
-              // TODO: recreate localaudiosearchpage simplified
-              // else
             ],
           );
         },

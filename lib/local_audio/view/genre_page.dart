@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
+import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../radio/radio_model.dart';
-import '../../radio/view/radio_search.dart';
-import '../../radio/view/radio_search_page.dart';
+import '../../search/search_model.dart';
 import '../local_audio_model.dart';
 import 'artists_view.dart';
 
@@ -35,15 +36,13 @@ class GenrePage extends StatelessWidget {
           children: [
             IconButton(
               tooltip: context.l10n.searchForRadioStationsWithGenreName,
-              onPressed: () => radioModel.init().then(
-                    (_) => di<LibraryModel>().push(
-                      builder: (_) => RadioSearchPage(
-                        radioSearch: RadioSearch.tag,
-                        searchQuery: genre.toLowerCase(),
-                      ),
-                      pageId: genre.toLowerCase(),
-                    ),
-                  ),
+              onPressed: () => radioModel.init().then((value) {
+                di<LibraryModel>().pushNamed(kSearchPageId);
+                di<SearchModel>()
+                  ..setTag(Tag(name: genre.toLowerCase(), stationCount: 1))
+                  ..setAudioType(AudioType.radio)
+                  ..search();
+              }),
               icon: Icon(Iconz().radio),
             ),
             const SizedBox(

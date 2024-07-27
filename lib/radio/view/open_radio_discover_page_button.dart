@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../common/data/audio.dart';
 import '../../common/view/common_widgets.dart';
-import '../../common/view/offline_page.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../player/player_model.dart';
-import 'radio_discover_page.dart';
+import '../../search/search_model.dart';
 
-class OpenRadioDiscoverPageButton extends StatelessWidget with WatchItMixin {
-  const OpenRadioDiscoverPageButton({super.key});
+class OpenRadioSearchButton extends StatelessWidget with WatchItMixin {
+  const OpenRadioSearchButton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     return ImportantButton(
       onPressed: () {
-        di<LibraryModel>().push(
-          builder: (context) =>
-              isOnline ? const RadioDiscoverPage() : const OfflinePage(),
-          pageId: kRadioPageId,
-        );
+        di<LibraryModel>().pushNamed(kSearchPageId);
+        di<SearchModel>()
+          ..setAudioType(AudioType.radio)
+          ..search();
       },
       child: Text(context.l10n.discover),
     );
