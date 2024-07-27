@@ -50,9 +50,9 @@ class CountryAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
     final libraryModel = di<LibraryModel>();
     final searchModel = di<SearchModel>();
     final country = watchPropertyValue((SearchModel m) => m.country);
-    watchPropertyValue((LibraryModel m) => m.favLanguagesLength);
-    final favLanguageCodes =
-        watchPropertyValue((LibraryModel m) => m.favLanguageCodes);
+    watchPropertyValue((LibraryModel m) => m.favCountriesLength);
+    final favCountryCodes =
+        watchPropertyValue((LibraryModel m) => m.favCountryCodes);
 
     return CountryAutoComplete(
       suffixIcon: const AudioTypeFilterButton(),
@@ -80,7 +80,7 @@ class CountryAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
         if (country?.code == null) return;
         libraryModel.removeFavCountryCode(v!.code);
       },
-      favs: favLanguageCodes,
+      favs: favCountryCodes,
     );
   }
 }
