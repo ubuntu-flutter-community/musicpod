@@ -1,3 +1,4 @@
+import '../../common/view/common_widgets.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../search_model.dart';
@@ -15,25 +16,48 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
     final searchTypes = watchPropertyValue((SearchModel m) => m.searchTypes);
 
-    return Material(
-      color: context.t.scaffoldBackgroundColor,
-      child: YaruChoiceChipBar(
-        yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-        clearOnSelect: false,
-        selectedFirst: false,
-        onSelected: (i) {
-          searchModel.setSearchType(searchTypes.elementAt(i));
-          searchModel.search();
-        },
-        // TODO: if offline disable podcast and radio labels
-        labels: searchTypes.map((e) => Text(e.localize(context.l10n))).toList(),
-        isSelected: searchTypes.none((e) => e == searchType)
-            ? List.generate(
-                searchTypes.length,
-                (index) => index == 0 ? true : false,
-              )
-            : searchTypes.map((e) => e == searchType).toList(),
+    return SliverAppBar(
+      shape: const RoundedRectangleBorder(side: BorderSide.none),
+      elevation: 0,
+      backgroundColor: context.t.scaffoldBackgroundColor,
+      automaticallyImplyLeading: false,
+      pinned: true,
+      centerTitle: true,
+      titleSpacing: 0,
+      title: Material(
+        color: context.t.scaffoldBackgroundColor,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: YaruChoiceChipBar(
+            yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+            chipHeight: chipHeight,
+            clearOnSelect: false,
+            selectedFirst: false,
+            onSelected: (i) {
+              searchModel.setSearchType(searchTypes.elementAt(i));
+              searchModel.search();
+            },
+            // TODO: if offline disable podcast and radio labels
+            labels:
+                searchTypes.map((e) => Text(e.localize(context.l10n))).toList(),
+            isSelected: searchTypes.none((e) => e == searchType)
+                ? List.generate(
+                    searchTypes.length,
+                    (index) => index == 0 ? true : false,
+                  )
+                : searchTypes.map((e) => e == searchType).toList(),
+          ),
+        ),
       ),
+      stretch: true,
+      onStretchTrigger: () async {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+          if (context.mounted) {
+            searchModel.incrementPodcastLimit(4);
+            return searchModel.search(clear: false);
+          }
+        });
+      },
     );
   }
 }

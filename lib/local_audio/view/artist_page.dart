@@ -70,6 +70,7 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
         );
 
     return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
         title: isMobile ? null : Text(pageId),

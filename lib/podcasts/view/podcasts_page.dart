@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/theme.dart';
 
 import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
@@ -74,6 +75,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         titleSpacing: 0,
         adaptive: true,
@@ -83,10 +85,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               padding: appBarActionSpacing,
               child: SearchButton(
                 active: searchActive,
-                onPressed: () {
-                  setSearchActive(!searchActive);
-                  di<AppModel>().setLockSpace(!searchActive);
-                },
+                onPressed: () => setSearchActive(!searchActive),
               ),
             ),
           ),

@@ -34,6 +34,7 @@ class StationPage extends StatelessWidget with WatchItMixin {
     if (!isOnline) return const OfflinePage();
 
     return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
         title: isMobile ? null : Text(station.title ?? station.url ?? ''),

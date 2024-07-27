@@ -16,16 +16,17 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final searchResult =
         watchPropertyValue((SearchModel m) => m.radioSearchResult);
+    final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
 
     if (searchResult == null || searchResult.isEmpty) {
       return SliverFillRemaining(
         hasScrollBody: false,
         child: NoSearchResultPage(
-          icons: searchResult == null
+          icons: searchResult == null || searchQuery?.isEmpty == true
               ? const AnimatedEmoji(AnimatedEmojis.drum)
               : const AnimatedEmoji(AnimatedEmojis.rabbit),
           message: Text(
-            searchResult == null
+            searchResult == null || searchQuery?.isEmpty == true
                 ? context.l10n.search
                 : context.l10n.noStationFound,
           ),

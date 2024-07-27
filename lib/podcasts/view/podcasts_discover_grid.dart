@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/view/adaptive_container.dart';
@@ -45,12 +46,6 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
   Widget build(BuildContext context) {
     final searchResult = watchPropertyValue((PodcastModel m) => m.searchResult);
     final limit = watchPropertyValue((PodcastModel m) => m.limit);
-    final model = di<PodcastModel>();
-    final setLimit = model.setLimit;
-    Future<void> incrementLimit() async {
-      setLimit(limit + 20);
-      await model.search(searchQuery: model.searchQuery);
-    }
 
     if (searchResult == null || widget.checkingForUpdates) {
       return LoadingGrid(limit: limit);
@@ -60,12 +55,11 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        return Column(
-          children: [
-            Expanded(
-              child: GridView.builder(
-                controller: _controller,
-                padding: getAdaptiveHorizontalPadding(constraints),
+        return CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: getAdaptiveHorizontalPadding(constraints),
+              sliver: SliverGrid.builder(
                 itemCount: searchResult.resultCount,
                 gridDelegate: audioCardGridDelegate,
                 itemBuilder: (context, index) {
@@ -103,26 +97,6 @@ class _PodcastsDiscoverGridState extends State<PodcastsDiscoverGrid> {
                 },
               ),
             ),
-            if (searchResult.resultCount > 0)
-              Padding(
-                padding: getAdaptiveHorizontalPadding(constraints).copyWith(
-                  bottom: 20,
-                  top: 20,
-                ),
-                child: Row(
-                  children: [
-                    OutlinedButton(
-                      onPressed: () async {
-                        await incrementLimit();
-                        await Future.delayed(const Duration(milliseconds: 300));
-                        _controller
-                            .jumpTo(_controller.position.maxScrollExtent);
-                      },
-                      child: Text(context.l10n.loadMore),
-                    ),
-                  ],
-                ),
-              ),
           ],
         );
       },

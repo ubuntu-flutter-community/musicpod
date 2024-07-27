@@ -1,6 +1,7 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/theme.dart';
 
 import '../../app/app_model.dart';
 import '../../common/view/common_widgets.dart';
@@ -20,7 +21,6 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
-    final appModel = di<AppModel>();
     final titlesResult =
         watchPropertyValue((LocalAudioModel m) => m.titlesSearchResult);
     final artistsResult =
@@ -65,6 +65,7 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
         searchQuery?.isNotEmpty == true;
 
     return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
         titleSpacing: 0,
@@ -74,10 +75,7 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
               padding: appBarActionSpacing,
               child: SearchButton(
                 active: true,
-                onPressed: () {
-                  search(text: null);
-                  appModel.setLockSpace(false);
-                },
+                onPressed: () => search(text: null),
               ),
             ),
           ),

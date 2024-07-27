@@ -10,6 +10,8 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:watch_it/watch_it.dart';
 import 'search_type.dart';
 
+const _initialAudioType = AudioType.radio;
+
 class SearchModel extends SafeChangeNotifier {
   SearchModel({
     required RadioService radioService,
@@ -24,9 +26,11 @@ class SearchModel extends SafeChangeNotifier {
   // TODO: replac with service when all is migrated
   final LocalAudioModel _localAudioModel;
 
-  Set<SearchType> _searchTypes = {};
+  Set<SearchType> _searchTypes = SearchType.values
+      .where((e) => e.name.contains(_initialAudioType.name))
+      .toSet();
   Set<SearchType> get searchTypes => _searchTypes;
-  AudioType _audioType = AudioType.radio;
+  AudioType _audioType = _initialAudioType;
   AudioType get audioType => _audioType;
   void setAudioType(AudioType value) {
     if (value == _audioType) return;
@@ -74,46 +78,52 @@ class SearchModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> search() async {
-    switch (_audioType) {
-      case AudioType.podcast:
-        setPodcastSearchResult(null);
-      case AudioType.local:
-        setLocalAudioSearchResult(null);
-      case AudioType.radio:
-        setRadioSearchResult(null);
+  int _podcastLimit = 20;
+  void incrementPodcastLimit(int value) => _podcastLimit += value;
+
+  Future<void> search({bool clear = true}) async {
+    if (clear) {
+      switch (_audioType) {
+        case AudioType.podcast:
+          setPodcastSearchResult(null);
+        case AudioType.local:
+          setLocalAudioSearchResult(null);
+        case AudioType.radio:
+          setRadioSearchResult(null);
+      }
     }
 
     return switch (_searchType) {
       SearchType.radioName =>
-        await _radioService.getStations(name: _searchQuery).then(
+        await _radioService.search(name: _searchQuery).then(
               (v) => setRadioSearchResult(
                 v?.map((e) => Audio.fromStation(e)).toList(),
               ),
             ),
       SearchType.radioTag =>
-        await di<RadioService>().getStations(tag: _searchQuery).then(
+        await di<RadioService>().search(tag: _searchQuery).then(
               (v) => setRadioSearchResult(
                 v?.map((e) => Audio.fromStation(e)).toList(),
               ),
             ),
       SearchType.radioCountry =>
-        await di<RadioService>().getStations(country: _searchQuery).then(
+        await di<RadioService>().search(country: _searchQuery).then(
               (v) => setRadioSearchResult(
                 v?.map((e) => Audio.fromStation(e)).toList(),
               ),
             ),
       SearchType.radioLanguage =>
-        await di<RadioService>().getStations(language: _searchQuery).then(
+        await di<RadioService>().search(language: _searchQuery).then(
               (v) => setRadioSearchResult(
                 v?.map((e) => Audio.fromStation(e)).toList(),
               ),
             ),
       SearchType.podcastTitle => await _podcastService
-          .search(searchQuery: _searchQuery)
+          .search(searchQuery: _searchQuery, limit: _podcastLimit)
           .then((v) => setPodcastSearchResult(v)),
       SearchType.podcastGenre => await _podcastService
           .search(
+            limit: _podcastLimit,
             podcastGenre: PodcastGenre.values.firstWhereOrNull(
                   (e) => e.name
                       .toLowerCase()

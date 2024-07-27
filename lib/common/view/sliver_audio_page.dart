@@ -50,6 +50,7 @@ class SliverAudioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
         title: isMobile ? null : Text(pageTitle ?? pageId),

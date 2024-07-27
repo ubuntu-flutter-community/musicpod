@@ -1,6 +1,7 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/theme.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
@@ -111,6 +112,7 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
     final isFavTag = libraryModel.favRadioTags.contains(widget.searchQuery);
 
     return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
         title: Row(

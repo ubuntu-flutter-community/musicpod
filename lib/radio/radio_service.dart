@@ -48,7 +48,7 @@ class RadioService {
     return hosts;
   }
 
-  Future<List<Station>?> getStations({
+  Future<List<Station>?> search({
     String? country,
     String? name,
     String? state,

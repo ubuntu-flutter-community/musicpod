@@ -23,30 +23,30 @@ Future<void> main() async {
     });
 
     test('find6forty', () async {
-      final result = await service.getStations(name: '6forty');
+      final result = await service.search(name: '6forty');
       expect(result?.isNotEmpty, true);
       expect(result?.any((e) => e.name.contains('6forty')), true);
       expect(result?.any((e) => e.url == sixFortyStation.url), true);
     });
 
     test('findByName', () async {
-      final result = await service.getStations(name: 'WDR');
+      final result = await service.search(name: 'WDR');
       expect(result?.isNotEmpty, true);
       expect(result?.any((e) => e.name.toLowerCase().contains('wdr')), true);
     });
 
     test('findByCountry', () async {
-      final result = await service.getStations(country: 'Germany');
+      final result = await service.search(country: 'Germany');
       expect(result?.isNotEmpty, true);
     });
 
     test('findByTag', () async {
-      final result = await service.getStations(tag: 'metal');
+      final result = await service.search(tag: 'metal');
       expect(result?.isNotEmpty, true);
     });
 
     test('findByState', () async {
-      final result = await service.getStations(
+      final result = await service.search(
         state: 'nordrhein',
       );
       expect(result?.isNotEmpty, true);

@@ -42,7 +42,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final appModel = di<AppModel>();
     final model = di<LocalAudioModel>();
     final audios = watchPropertyValue((LocalAudioModel m) => m.audios);
     final index = watchPropertyValue((AppModel m) => m.localAudioindex);
@@ -73,10 +72,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             padding: appBarActionSpacing,
             child: SearchButton(
               active: false,
-              onPressed: () {
-                appModel.setLockSpace(true);
-                search(text: '');
-              },
+              onPressed: () => search(text: ''),
             ),
           ),
         ),
@@ -85,6 +81,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: headerBar,
       body: Column(
         children: [

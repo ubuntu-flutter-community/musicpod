@@ -64,12 +64,12 @@ class RadioModel extends SafeChangeNotifier {
     required String? query,
   }) async {
     final stations = switch (radioSearch) {
-      RadioSearch.tag => await _radioService.getStations(tag: query),
-      RadioSearch.country => await _radioService.getStations(
+      RadioSearch.tag => await _radioService.search(tag: query),
+      RadioSearch.country => await _radioService.search(
           country: query?.camelToSentence,
         ),
-      RadioSearch.name => await _radioService.getStations(name: query),
-      RadioSearch.language => await _radioService.getStations(language: query),
+      RadioSearch.name => await _radioService.search(name: query),
+      RadioSearch.language => await _radioService.search(language: query),
     };
 
     if (stations == null) return null;

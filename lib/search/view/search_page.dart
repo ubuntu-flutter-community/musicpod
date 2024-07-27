@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/theme.dart';
 
 import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
@@ -47,6 +48,7 @@ class _SearchPageState extends State<SearchPage> {
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
 
     return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
         title: SizedBox(
@@ -64,36 +66,35 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ),
         actions: [
-          if (!connectedHost) const RadioReconnectButton(),
+          if (!connectedHost)
+            const RadioReconnectButton()
+          else
+            SizedBox.square(
+              dimension: chipHeight + 5,
+            ),
         ],
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          return Column(
-            children: [
-              Padding(
+          return CustomScrollView(
+            slivers: [
+              SliverPadding(
                 padding: getAdaptiveHorizontalPadding(constraints)
-                    .copyWith(bottom: 20, top: 10),
-                child: const SearchTypeFilterBar(),
+                    .copyWith(bottom: 10),
+                sliver: const SearchTypeFilterBar(),
               ),
-              Expanded(
-                child: CustomScrollView(
-                  slivers: [
-                    if (audioType == AudioType.radio)
-                      SliverPadding(
-                        padding: getAdaptiveHorizontalPadding(constraints),
-                        sliver: const SliverRadioSearchResults(),
-                      )
-                    else if (audioType == AudioType.podcast)
-                      SliverPadding(
-                        padding: getAdaptiveHorizontalPadding(constraints),
-                        sliver: const SliverPodcastSearchResults(),
-                      ),
-                    // TODO: recreate localaudiosearchpage simplified
-                    // else
-                  ],
+              if (audioType == AudioType.radio)
+                SliverPadding(
+                  padding: getAdaptiveHorizontalPadding(constraints),
+                  sliver: const SliverRadioSearchResults(),
+                )
+              else if (audioType == AudioType.podcast)
+                SliverPadding(
+                  padding: getAdaptiveHorizontalPadding(constraints),
+                  sliver: const SliverPodcastSearchResults(),
                 ),
-              ),
+              // TODO: recreate localaudiosearchpage simplified
+              // else
             ],
           );
         },

@@ -25,13 +25,6 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  bool _lockSpace = false;
-  bool get lockSpace => _lockSpace;
-  void setLockSpace(bool value) {
-    _lockSpace = value;
-    notifyListeners();
-  }
-
   int _localAudioIndex = 0;
   int get localAudioindex => _localAudioIndex;
   set localAudioindex(int value) {

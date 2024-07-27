@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -272,7 +273,7 @@ class SearchButton extends StatelessWidget {
   }
 }
 
-class SearchingBar extends StatelessWidget {
+class SearchingBar extends StatefulWidget {
   const SearchingBar({
     super.key,
     this.text,
@@ -281,44 +282,7 @@ class SearchingBar extends StatelessWidget {
     this.onChanged,
     this.hintText,
     this.suffixIcon,
-  });
-
-  final String? text;
-  final void Function()? onClear;
-  final void Function(String?)? onSubmitted;
-  final void Function(String)? onChanged;
-  final String? hintText;
-  final Widget? suffixIcon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10),
-      child: MaterialSearchBar(
-        suffixIcon: suffixIcon,
-        hintText: hintText,
-        text: text,
-        key: key,
-        onSubmitted: (v) {
-          di<AppModel>().setLockSpace(false);
-          onSubmitted?.call(v);
-        },
-        onClear: onClear,
-        onChanged: onChanged,
-      ),
-    );
-  }
-}
-
-class MaterialSearchBar extends StatefulWidget {
-  const MaterialSearchBar({
-    super.key,
-    this.text,
-    this.onClear,
-    this.onSubmitted,
-    this.onChanged,
-    this.hintText,
-    this.suffixIcon,
+    this.autoFocus = true,
   });
   final String? text;
   final void Function()? onClear;
@@ -326,13 +290,22 @@ class MaterialSearchBar extends StatefulWidget {
   final void Function(String)? onChanged;
   final String? hintText;
   final Widget? suffixIcon;
+  final bool autoFocus;
 
   @override
-  State<MaterialSearchBar> createState() => _NormalSearchBarState();
+  State<SearchingBar> createState() => _SearchingBarState();
 }
 
-class _NormalSearchBarState extends State<MaterialSearchBar> {
+class _SearchingBarState extends State<SearchingBar> {
   late TextEditingController _controller;
+  Timer? _debounce;
+
+  _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      widget.onChanged?.call(query);
+    });
+  }
 
   @override
   void initState() {
@@ -343,6 +316,7 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
   @override
   void dispose() {
     _controller.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
@@ -353,7 +327,6 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
       height: yaruStyled ? null : 38,
       child: TextField(
         onTap: () {
-          di<AppModel>().setLockSpace(true);
           _controller.selection = TextSelection(
             baseOffset: 0,
             extentOffset: _controller.value.text.length,
@@ -361,9 +334,9 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
         },
         controller: _controller,
         key: widget.key,
-        autofocus: !isMobile,
+        autofocus: widget.autoFocus,
         onSubmitted: widget.onSubmitted,
-        onChanged: widget.onChanged,
+        onChanged: _onSearchChanged,
         style: yaruStyled ? theme.textTheme.bodyMedium : null,
         decoration: yaruStyled
             ? createYaruDecoration(
@@ -447,7 +420,7 @@ FontWeight get largeTextWeight =>
 
 bool get shrinkTitleBarItems => yaruStyled;
 
-double get chipHeight => yaruStyled ? kYaruTitleBarItemHeight : 35;
+double get chipHeight => yaruStyled ? kYaruTitleBarItemHeight : 38;
 
 EdgeInsetsGeometry get tabViewPadding =>
     isMobile ? const EdgeInsets.only(top: 15) : const EdgeInsets.only(top: 5);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/theme.dart';
 
 import '../../app/app_model.dart';
 import '../../common/view/common_widgets.dart';
@@ -123,6 +124,7 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
     };
 
     return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
         title: SizedBox(
@@ -134,10 +136,7 @@ class RadioDiscoverPage extends StatelessWidget with WatchItMixin {
             padding: appBarActionSpacing,
             child: SearchButton(
               active: true,
-              onPressed: () {
-                di<AppModel>().setLockSpace(false);
-                di<LibraryModel>().pop(popStack: false);
-              },
+              onPressed: () => di<LibraryModel>().pop(popStack: false),
             ),
           ),
         ],

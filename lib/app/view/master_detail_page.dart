@@ -38,6 +38,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
     final masterItems = createMasterItems(libraryModel: libraryModel);
 
     return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
       key: masterScaffoldKey,
       drawer: Drawer(
         width: kMasterDetailSideBarWidth,

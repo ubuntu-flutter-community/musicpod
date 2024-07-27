@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/theme.dart';
 
 import '../../app/app_model.dart';
 import '../../common/view/common_widgets.dart';
@@ -61,6 +62,7 @@ class _RadioPageState extends State<RadioPage> {
     final connectedHost = watchPropertyValue((RadioModel m) => m.connectedHost);
 
     return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
         actions: [
@@ -71,13 +73,10 @@ class _RadioPageState extends State<RadioPage> {
                   ? const RadioReconnectButton()
                   : SearchButton(
                       active: false,
-                      onPressed: () {
-                        di<AppModel>().setLockSpace(true);
-                        di<LibraryModel>().push(
-                          builder: (context) => const RadioDiscoverPage(),
-                          pageId: kRadioPageId,
-                        );
-                      },
+                      onPressed: () => di<LibraryModel>().push(
+                        builder: (context) => const RadioDiscoverPage(),
+                        pageId: kRadioPageId,
+                      ),
                     ),
             ),
           ),
