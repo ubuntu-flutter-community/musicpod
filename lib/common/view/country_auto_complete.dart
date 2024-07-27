@@ -29,6 +29,7 @@ class CountryAutoComplete extends StatelessWidget {
     this.border,
     this.fillColor,
     this.contentPadding,
+    this.suffixIcon,
   });
 
   final void Function(Country? country)? onSelected;
@@ -45,6 +46,7 @@ class CountryAutoComplete extends StatelessWidget {
   final OutlineInputBorder? border;
   final Color? fillColor;
   final EdgeInsets? contentPadding;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +98,7 @@ class CountryAutoComplete extends StatelessWidget {
                         contentPadding: contentPadding,
                         hintText: hintText,
                         border: border,
+                        suffixIcon: suffixIcon,
                       )
                     : createMaterialDecoration(
                         colorScheme: theme.colorScheme,
@@ -106,6 +109,7 @@ class CountryAutoComplete extends StatelessWidget {
                         fillColor: fillColor,
                         contentPadding: contentPadding,
                         hintText: hintText,
+                        suffixIcon: suffixIcon,
                       ),
                 controller: textEditingController,
                 focusNode: focusNode,

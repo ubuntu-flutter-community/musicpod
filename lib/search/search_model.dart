@@ -1,10 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:podcast_search/podcast_search.dart';
+import 'package:radio_browser_api/radio_browser_api.dart' hide Country;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/podcast_genre.dart';
 import '../common/view/languages.dart';
+import '../extensions/string_x.dart';
 import '../local_audio/local_audio_model.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
@@ -78,6 +80,15 @@ class SearchModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  List<Tag>? get tags => _radioService.tags;
+  Tag? _tag;
+  Tag? get tag => _tag;
+  void setTag(Tag? value) {
+    if (value == _tag) return;
+    _tag = value;
+    notifyListeners();
+  }
+
   PodcastGenre _podcastGenre = PodcastGenre.all;
   PodcastGenre get podcastGenre => _podcastGenre;
   void setPodcastGenre(PodcastGenre value) {
@@ -91,17 +102,6 @@ class SearchModel extends SafeChangeNotifier {
         PodcastGenre.values.where((g) => g != podcastGenre).toList();
 
     return [podcastGenre, ...notSelected];
-  }
-
-  List<Country> get sortedCountries {
-    if (_country == null) return Country.values;
-    final notSelected =
-        Country.values.where((c) => c != _country).toList().sorted(
-              (a, b) => a.name.compareTo(b.name),
-            );
-    final list = <Country>[_country!, ...notSelected];
-
-    return list;
   }
 
   List<Audio>? _radioSearchResult;
@@ -150,7 +150,7 @@ class SearchModel extends SafeChangeNotifier {
           )
           .then((_) => _loading = false),
       SearchType.radioTag => await _radioService
-          .search(tag: _searchQuery)
+          .search(tag: _tag?.name)
           .then(
             (v) => setRadioSearchResult(
               v?.map((e) => Audio.fromStation(e)).toList(),
@@ -158,7 +158,7 @@ class SearchModel extends SafeChangeNotifier {
           )
           .then((_) => _loading = false),
       SearchType.radioCountry => await _radioService
-          .search(country: _searchQuery?.toLowerCase())
+          .search(country: _country?.name.camelToSentence)
           .then(
             (v) => setRadioSearchResult(
               v?.map((e) => Audio.fromStation(e)).toList(),
@@ -166,7 +166,7 @@ class SearchModel extends SafeChangeNotifier {
           )
           .then((_) => _loading = false),
       SearchType.radioLanguage => await _radioService
-          .search(language: _searchQuery?.toLowerCase())
+          .search(language: _language?.name.toLowerCase())
           .then(
             (v) => setRadioSearchResult(
               v?.map((e) => Audio.fromStation(e)).toList(),

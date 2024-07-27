@@ -6,18 +6,17 @@ import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
-import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../podcasts/podcast_model.dart';
 import '../../radio/radio_model.dart';
 import '../../radio/view/radio_reconnect_button.dart';
 import '../search_model.dart';
-import 'audio_type_filter_button.dart';
+import 'search_page_input.dart';
 import 'sliver_podcast_filter_bar.dart';
-import 'sliver_search_type_filter_bar.dart';
 import 'sliver_podcast_search_results.dart';
 import 'sliver_radio_search_results.dart';
+import 'sliver_search_type_filter_bar.dart';
 
 class SearchPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const SearchPage({super.key});
@@ -30,9 +29,10 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    di<RadioModel>().init().then(
+    final countryCode = di<AppModel>().countryCode;
+    di<RadioModel>().init(countryCode: countryCode).then(
           (value) => di<PodcastModel>().init(
-            countryCode: di<AppModel>().countryCode,
+            countryCode: countryCode,
             updateMessage: context.l10n.newEpisodeAvailable,
           ),
         );
@@ -44,27 +44,13 @@ class _SearchPageState extends State<SearchPage> {
     final connectedHost = watchPropertyValue(
       (RadioModel m) => m.connectedHost != null && isOnline,
     );
-    final searchModel = di<SearchModel>();
-    final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
 
     return Scaffold(
       resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
-        title: SizedBox(
-          width: kSearchBarWidth,
-          child: SearchingBar(
-            text: searchQuery,
-            key: ValueKey(searchQuery ?? 'ya'),
-            hintText: context.l10n.search,
-            onChanged: (v) async {
-              searchModel.setSearchQuery(v);
-              await searchModel.search();
-            },
-            suffixIcon: const AudioTypeFilterButton(),
-          ),
-        ),
+        title: const SearchPageInput(),
         actions: [
           if (!connectedHost)
             const Padding(

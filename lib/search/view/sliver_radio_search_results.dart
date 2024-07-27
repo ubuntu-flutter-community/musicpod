@@ -27,6 +27,7 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
         watchPropertyValue((SearchModel m) => m.radioSearchResult);
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
+    watchPropertyValue((SearchModel m) => m.country);
 
     if (radioSearchResult == null || searchQuery?.isEmpty == true) {
       return SliverFillNoSearchResultPage(
