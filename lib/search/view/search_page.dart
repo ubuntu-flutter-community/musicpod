@@ -81,7 +81,7 @@ class _SearchPageState extends State<SearchPage> {
             slivers: [
               SliverPadding(
                 padding: getAdaptiveHorizontalPadding(constraints)
-                    .copyWith(bottom: 10),
+                    .copyWith(bottom: 5),
                 sliver: switch (audioType) {
                   AudioType.podcast => const SliverPodcastFilterBar(),
                   _ => const SliverSearchTypeFilterBar(),

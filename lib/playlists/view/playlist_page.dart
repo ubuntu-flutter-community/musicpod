@@ -31,6 +31,7 @@ import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../local_audio/view/genre_page.dart';
+import '../../local_audio/view/local_audio_search_page.dart';
 import '../../player/player_model.dart';
 import 'manual_add_dialog.dart';
 import 'playlst_add_audios_dialog.dart';
@@ -86,6 +87,19 @@ class PlaylistPage extends StatelessWidget {
         appBar: HeaderBar(
           adaptive: true,
           title: Text(playlist.key),
+          actions: [
+            Padding(
+              padding: appBarSingleActionSpacing,
+              child: SearchButton(
+                onPressed: () {
+                  di<LibraryModel>().push(
+                    builder: (_) => const LocalAudioSearchPage(),
+                    pageId: kSearchPageId,
+                  );
+                },
+              ),
+            ),
+          ],
         ),
         body: _PlaylistPageBody(
           onAlbumTap: (text) {
