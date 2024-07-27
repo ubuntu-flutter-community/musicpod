@@ -47,6 +47,22 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
 
     final fillColor = theme.chipTheme.selectedColor;
 
+    const width = 150.0;
+    final height = chipHeight - 2;
+    var outlineInputBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(100),
+      borderSide: yaruStyled
+          ? BorderSide.none
+          : BorderSide(
+              color: theme.colorScheme.outline,
+              width: 1.3,
+              strokeAlign: 1,
+            ),
+    );
+    final style = theme.textTheme.bodyMedium?.copyWith(
+      fontWeight: FontWeight.w500,
+    );
+
     return SliverAppBar(
       shape: const RoundedRectangleBorder(side: BorderSide.none),
       elevation: 0,
@@ -80,22 +96,11 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
                             ? theme.dividerColor
                             : null,
                     filled: language != null,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(100),
-                      borderSide: yaruStyled
-                          ? BorderSide.none
-                          : BorderSide(
-                              color: theme.colorScheme.outline,
-                              width: 1.3,
-                              strokeAlign: 1,
-                            ),
-                    ),
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+                    border: outlineInputBorder,
+                    style: style,
                     isDense: true,
-                    width: 150,
-                    height: chipHeight,
+                    width: width,
+                    height: height,
                     value: language,
                     favs: favLanguageCodes,
                     addFav: (language) {
@@ -119,22 +124,11 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
                     contentPadding: countryPillPadding,
                     fillColor: fillColor,
                     filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(100),
-                      borderSide: yaruStyled
-                          ? BorderSide.none
-                          : BorderSide(
-                              color: theme.colorScheme.outline,
-                              width: 1.3,
-                              strokeAlign: 1,
-                            ),
-                    ),
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+                    border: outlineInputBorder,
+                    style: style,
                     isDense: true,
-                    width: 200,
-                    height: chipHeight,
+                    width: width,
+                    height: height,
                     countries: [
                       ...[
                         ...Country.values,
@@ -177,22 +171,11 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
                           ? theme.dividerColor
                           : null,
                   filled: podcastGenre != PodcastGenre.all,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(100),
-                    borderSide: yaruStyled
-                        ? BorderSide.none
-                        : BorderSide(
-                            color: theme.colorScheme.outline,
-                            width: 1.3,
-                            strokeAlign: 1,
-                          ),
-                  ),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  border: outlineInputBorder,
+                  style: style,
                   isDense: true,
-                  width: 200,
-                  height: chipHeight,
+                  width: width,
+                  height: height,
                   genres: sortedGenres,
                   onSelected: (podcastGenre) {
                     if (podcastGenre != null) {

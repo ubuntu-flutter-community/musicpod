@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide Country;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
@@ -7,6 +8,7 @@ import '../common/data/audio.dart';
 import '../common/data/podcast_genre.dart';
 import '../common/view/languages.dart';
 import '../extensions/string_x.dart';
+import '../library/library_service.dart';
 import '../local_audio/local_audio_model.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
@@ -20,14 +22,31 @@ class SearchModel extends SafeChangeNotifier {
     required RadioService radioService,
     required PodcastService podcastService,
     required LocalAudioModel localAudioModel,
+    required LibraryService libraryService,
   })  : _radioService = radioService,
         _podcastService = podcastService,
-        _localAudioModel = localAudioModel;
+        _localAudioModel = localAudioModel,
+        _libraryService = libraryService;
 
   final RadioService _radioService;
   final PodcastService _podcastService;
   // TODO: replace with service when all is migrated
   final LocalAudioModel _localAudioModel;
+  final LibraryService _libraryService;
+
+  void init() {
+    _country ??= Country.values.firstWhereOrNull(
+      (c) =>
+          c.code ==
+          (_libraryService.lastCountryCode ??
+              WidgetsBinding.instance.platformDispatcher.locale.countryCode
+                  ?.toLowerCase()),
+    );
+
+    _language ??= Languages.defaultLanguages.firstWhereOrNull(
+      (c) => c.isoCode == _libraryService.lastLanguageCode,
+    );
+  }
 
   Set<SearchType> _searchTypes = searchTypesFromAudioType(_initialAudioType);
   Set<SearchType> get searchTypes => _searchTypes;

@@ -170,7 +170,8 @@ Future<void> main(List<String> args) async {
       localAudioModel: di<LocalAudioModel>(),
       podcastService: di<PodcastService>(),
       radioService: di<RadioService>(),
-    ),
+      libraryService: di<LibraryService>(),
+    )..init(),
   );
 
   runApp(
