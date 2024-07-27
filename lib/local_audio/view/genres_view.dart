@@ -33,7 +33,7 @@ class GenresView extends StatelessWidget {
 
     if (genres!.isEmpty) {
       return NoSearchResultPage(
-        icons: noResultIcon,
+        icon: noResultIcon,
         message: noResultMessage,
       );
     }

@@ -17,6 +17,7 @@ import '../../common/view/like_all_icon.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
+import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -25,6 +26,7 @@ import '../local_audio_model.dart';
 import 'album_page.dart';
 import 'album_view.dart';
 import 'genre_page.dart';
+import 'local_audio_search_page.dart';
 
 class ArtistPage extends StatelessWidget with WatchItMixin {
   const ArtistPage({
@@ -69,10 +71,24 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
           pageId: text,
         );
 
-    return YaruDetailPage(
+    return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
-        title: Text(pageId),
+        title: isMobile ? null : Text(pageId),
+        actions: [
+          Padding(
+            padding: appBarSingleActionSpacing,
+            child: SearchButton(
+              onPressed: () {
+                di<LibraryModel>().push(
+                  builder: (_) => const LocalAudioSearchPage(),
+                  pageId: kSearchPageId,
+                );
+              },
+            ),
+          ),
+        ],
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {

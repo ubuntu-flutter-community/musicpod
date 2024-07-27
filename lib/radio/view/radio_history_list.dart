@@ -32,7 +32,7 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
 
     if (radioHistory.isEmpty) {
       return NoSearchResultPage(
-        icons: emptyIcon ?? const AnimatedEmoji(AnimatedEmojis.crystalBall),
+        icon: emptyIcon ?? const AnimatedEmoji(AnimatedEmojis.crystalBall),
         message: emptyMessage ?? Text(context.l10n.emptyHearingHistory),
       );
     }
@@ -48,7 +48,7 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
               final reversedIndex = radioHistory.length - index - 1;
               final e = radioHistory.elementAt(reversedIndex);
               return RadioHistoryTile(
-                e: e,
+                entry: e,
                 selected: current?.icyTitle != null &&
                     current?.icyTitle == e.value.icyTitle,
               );
@@ -85,7 +85,7 @@ class SliverRadioHistoryList extends StatelessWidget
     if (radioHistory.isEmpty) {
       return SliverToBoxAdapter(
         child: NoSearchResultPage(
-          icons: emptyIcon ?? const AnimatedEmoji(AnimatedEmojis.crystalBall),
+          icon: emptyIcon ?? const AnimatedEmoji(AnimatedEmojis.crystalBall),
           message: emptyMessage ?? Text(context.l10n.emptyHearingHistory),
         ),
       );
@@ -97,7 +97,7 @@ class SliverRadioHistoryList extends StatelessWidget
           final reversedIndex = radioHistory.length - index - 1;
           final e = radioHistory.elementAt(reversedIndex);
           return RadioHistoryTile(
-            e: e,
+            entry: e,
             selected: current?.icyTitle != null &&
                 current?.icyTitle == e.value.icyTitle,
           );

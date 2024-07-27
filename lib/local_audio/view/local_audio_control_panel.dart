@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/app_model.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
-import '../local_audio_model.dart';
 import 'local_audio_view.dart';
 
 class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
@@ -23,13 +22,10 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final libraryModel = di<LibraryModel>();
-    final localAudioModel = di<LocalAudioModel>();
+    final appModel = di<AppModel>();
 
-    final index =
-        watchPropertyValue((LibraryModel m) => m.localAudioindex ?? 0);
-    final manualFilter =
-        watchPropertyValue((LocalAudioModel m) => m.manualFilter);
+    final index = watchPropertyValue((AppModel m) => m.localAudioindex);
+    final manualFilter = watchPropertyValue((AppModel m) => m.manualFilter);
 
     var i = index;
     if (!manualFilter) {
@@ -50,7 +46,7 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
     return Align(
       alignment: Alignment.center,
       child: Padding(
-        padding: const EdgeInsets.only(left: kYaruPagePadding),
+        padding: const EdgeInsets.only(top: 10, right: 20, left: 20),
         child: YaruChoiceChipBar(
           chipBackgroundColor: chipColor(theme),
           selectedChipBackgroundColor: chipSelectionColor(theme, false),
@@ -78,8 +74,8 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
               .map((e) => e == LocalAudioView.values[i])
               .toList(),
           onSelected: (index) {
-            localAudioModel.setManualFilter(true);
-            libraryModel.setLocalAudioindex(index);
+            appModel.setManualFilter(true);
+            appModel.localAudioindex = index;
           },
         ),
       ),

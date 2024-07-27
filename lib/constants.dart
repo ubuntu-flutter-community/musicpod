@@ -90,8 +90,8 @@ const kAudioCardGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
 );
 
 const kMobileAudioCardGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
-  maxCrossAxisExtent: kAudioCardDimension + 60,
-  mainAxisExtent: kAudioCardDimension + kAudioCardBottomHeight + 8,
+  maxCrossAxisExtent: kAudioCardDimension,
+  mainAxisExtent: kAudioCardDimension + kAudioCardBottomHeight + 5,
   mainAxisSpacing: 0,
   crossAxisSpacing: 10,
 );
@@ -154,6 +154,7 @@ const kThemeIndex = 'themeIndex';
 const kPodcastIndexApiKey = 'podcastIndexApiKey';
 const kPodcastIndexApiSecret = 'podcastIndexApiSecret';
 const kUseArtistGridView = 'useArtistGridView';
+const kSearchPageId = 'searchPageId';
 
 const shops = <String, String>{
   'https://us.7digital.com/': '7digital',

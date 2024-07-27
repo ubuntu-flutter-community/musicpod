@@ -103,6 +103,9 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  // TODO: move all from here to service when search is migrated
+  // forward getters to model so model can be used when service is migrated to DB queries
+
   Set<Audio>? _titles;
   Set<Audio>? get audios => _titles;
   Set<Audio>? _findAllTitles() {
@@ -307,21 +310,5 @@ class LocalAudioModel extends SafeChangeNotifier {
   Future<void> dispose() async {
     await _audiosChangedSub?.cancel();
     super.dispose();
-  }
-
-  bool _manualFilter = false;
-  bool get manualFilter => _manualFilter;
-  void setManualFilter(bool value) {
-    if (value == _manualFilter) return;
-    _manualFilter = value;
-    notifyListeners();
-  }
-
-  bool _allowReorder = false;
-  bool get allowReorder => _allowReorder;
-  void setAllowReorder(bool value) {
-    if (value == _allowReorder) return;
-    _allowReorder = value;
-    notifyListeners();
   }
 }

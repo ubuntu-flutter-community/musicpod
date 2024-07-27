@@ -1,7 +1,7 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
+import 'package:yaru/theme.dart';
 
 import '../../app/app_model.dart';
 import '../../common/view/common_widgets.dart';
@@ -21,7 +21,6 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
-    final appModel = di<AppModel>();
     final titlesResult =
         watchPropertyValue((LocalAudioModel m) => m.titlesSearchResult);
     final artistsResult =
@@ -32,11 +31,10 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
         watchPropertyValue((LocalAudioModel m) => m.genresSearchResult);
     final searchQuery =
         watchPropertyValue((LocalAudioModel m) => m.searchQuery);
-    final index =
-        watchPropertyValue((LibraryModel m) => m.localAudioindex ?? 0);
+
+    final index = watchPropertyValue((AppModel m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
-    final manualFilter =
-        watchPropertyValue((LocalAudioModel m) => m.manualFilter);
+    final manualFilter = watchPropertyValue((AppModel m) => m.manualFilter);
 
     void search({required String? text}) {
       if (text != null) {
@@ -66,20 +64,18 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
         (artistsResult?.isEmpty ?? true) &&
         searchQuery?.isNotEmpty == true;
 
-    return YaruDetailPage(
+    return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
         titleSpacing: 0,
         actions: [
           Flexible(
             child: Padding(
-              padding: appBarActionSpacing,
+              padding: appBarSingleActionSpacing,
               child: SearchButton(
                 active: true,
-                onPressed: () {
-                  search(text: null);
-                  appModel.setLockSpace(false);
-                },
+                onPressed: () => search(text: null),
               ),
             ),
           ),
@@ -91,7 +87,7 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
             text: searchQuery,
             onChanged: (value) {
               search(text: value);
-              model.setManualFilter(false);
+              di<AppModel>().setManualFilter(false);
             },
             onClear: () => search(text: ''),
           ),

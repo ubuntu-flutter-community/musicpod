@@ -9,6 +9,8 @@ import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page.dart';
 import '../../constants.dart';
+import '../../extensions/build_context_x.dart';
+import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
@@ -44,8 +46,12 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
       audioPageType: AudioPageType.likedAudio,
       pageId: kLikedAudiosPageId,
       pageTitle: context.l10n.likedSongs,
-      pageLabel: context.l10n.likedSongsSubtitle,
-      pageSubTitle: '${likedAudios.length}',
+      pageLabel: context.l10n.playlist,
+      pageSubTitle: '${likedAudios.length} ${context.l10n.titles}',
+      description: Text(
+        context.l10n.likedSongsSubtitle,
+        style: context.t.pageHeaderDescription,
+      ),
       image: FallBackHeaderImage(
         child: Icon(
           Iconz().heart,

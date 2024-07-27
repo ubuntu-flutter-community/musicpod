@@ -1,14 +1,16 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/tapable_text.dart';
+import '../../constants.dart';
+import '../../extensions/build_context_x.dart';
+import '../../extensions/theme_data_x.dart';
 import '../../library/library_model.dart';
-import '../radio_model.dart';
-import 'radio_search.dart';
-import 'radio_search_page.dart';
+import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 
 class RadioPageTagBar extends StatelessWidget {
   const RadioPageTagBar({super.key, required this.station});
@@ -17,6 +19,7 @@ class RadioPageTagBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final style = context.t.pageHeaderDescription;
     final tags = station.album?.isNotEmpty == false
         ? null
         : <String>[
@@ -24,43 +27,30 @@ class RadioPageTagBar extends StatelessWidget {
           ];
     if (tags == null || tags.isEmpty) return const SizedBox.shrink();
 
-    final radioModel = di<RadioModel>();
-    final libraryModel = di<LibraryModel>();
-    final appModel = di<AppModel>();
-
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 5, left: 2),
       child: Wrap(
         alignment: WrapAlignment.center,
         runAlignment: WrapAlignment.center,
-        spacing: 5,
-        runSpacing: 5,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: tags
             .mapIndexed(
               (i, e) => Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TapAbleText(
+                    style: style,
                     wrapInFlexible: false,
                     onTap: () {
-                      radioModel
-                          .init(
-                            countryCode: appModel.countryCode,
-                            index: libraryModel.radioindex,
-                          )
-                          .then(
-                            (_) => libraryModel.push(
-                              builder: (_) => RadioSearchPage(
-                                radioSearch: RadioSearch.tag,
-                                searchQuery: e,
-                              ),
-                              pageId: e,
-                            ),
-                          );
+                      di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                      di<SearchModel>()
+                        ..setTag(Tag(name: e, stationCount: 1))
+                        ..setAudioType(AudioType.radio)
+                        ..setSearchType(SearchType.radioTag)
+                        ..search();
                     },
                     text: e.length > 20 ? e.substring(0, 19) : e,
                   ),
-                  if (i != tags.length - 1) const Text(','),
+                  if (i != tags.length - 1) const Text(' · '),
                 ],
               ),
             )

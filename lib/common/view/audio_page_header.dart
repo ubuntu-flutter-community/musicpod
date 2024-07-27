@@ -77,7 +77,11 @@ class AudioPageHeader extends StatelessWidget {
               subTitle: subTitle,
               onSubTitleTab: onSubTitleTab,
             ),
-          if (description != null) description!,
+          if (description != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: description!,
+            ),
         ],
       ),
     );
@@ -102,7 +106,7 @@ class _AudioPageHeaderSubTitle extends StatelessWidget {
     final theme = context.t;
 
     final style =
-        theme.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300);
+        theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w300);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [

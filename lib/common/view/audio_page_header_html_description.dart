@@ -19,71 +19,74 @@ class AudioPageHeaderHtmlDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final descriptionStyle = context.t.textTheme.labelSmall;
-    return SizedBox(
-      width: kAudioHeaderDescriptionWidth,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(kButtonRadius),
-        onTap: () => showDialog(
-          context: context,
-          builder: (context) => SimpleDialog(
-            titlePadding: EdgeInsets.zero,
-            contentPadding: EdgeInsets.zero,
-            title: YaruDialogTitleBar(
-              title: Text(title),
-              backgroundColor: Colors.transparent,
-              border: BorderSide.none,
-            ),
-            children: [
-              SizedBox(
-                width: 400,
-                child: Html(
-                  data: description,
-                  onAnchorTap: (url, attributes, element) {
-                    if (url == null) return;
-                    launchUrl(Uri.parse(url));
-                  },
-                  style: {
-                    'img': Style(display: Display.none),
-                    'body': Style(
-                      height: Height.auto(),
-                      textOverflow: TextOverflow.ellipsis,
-                      maxLines: 400,
-                      textAlign: TextAlign.center,
-                      fontSize: FontSize(
-                        descriptionStyle?.fontSize ?? 10,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
+      child: SizedBox(
+        width: kAudioHeaderDescriptionWidth,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(kButtonRadius),
+          onTap: () => showDialog(
+            context: context,
+            builder: (context) => SimpleDialog(
+              titlePadding: EdgeInsets.zero,
+              contentPadding: EdgeInsets.zero,
+              title: YaruDialogTitleBar(
+                title: Text(title),
+                backgroundColor: Colors.transparent,
+                border: BorderSide.none,
+              ),
+              children: [
+                SizedBox(
+                  width: 400,
+                  child: Html(
+                    data: description,
+                    onAnchorTap: (url, attributes, element) {
+                      if (url == null) return;
+                      launchUrl(Uri.parse(url));
+                    },
+                    style: {
+                      'img': Style(display: Display.none),
+                      'body': Style(
+                        height: Height.auto(),
+                        textOverflow: TextOverflow.ellipsis,
+                        maxLines: 400,
+                        textAlign: TextAlign.center,
+                        fontSize: FontSize(
+                          descriptionStyle?.fontSize ?? 10,
+                        ),
+                        fontWeight: descriptionStyle?.fontWeight,
+                        fontFamily: descriptionStyle?.fontFamily,
                       ),
-                      fontWeight: descriptionStyle?.fontWeight,
-                      fontFamily: descriptionStyle?.fontFamily,
-                    ),
-                  },
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        child: SizedBox(
-          child: Html(
-            data: description,
-            onAnchorTap: (url, attributes, element) {
-              if (url == null) return;
-              launchUrl(Uri.parse(url));
-            },
-            style: {
-              'img': Style(display: Display.none),
-              'body': Style(
-                height: Height.auto(),
-                margin: Margins.zero,
-                padding: HtmlPaddings.zero,
-                textOverflow: TextOverflow.ellipsis,
-                maxLines: 4,
-                textAlign: TextAlign.center,
-                fontSize: FontSize(
-                  descriptionStyle?.fontSize ?? 10,
+          child: SizedBox(
+            child: Html(
+              data: description,
+              onAnchorTap: (url, attributes, element) {
+                if (url == null) return;
+                launchUrl(Uri.parse(url));
+              },
+              style: {
+                'img': Style(display: Display.none),
+                'body': Style(
+                  height: Height.auto(),
+                  margin: Margins.zero,
+                  padding: HtmlPaddings.zero,
+                  textOverflow: TextOverflow.ellipsis,
+                  maxLines: 4,
+                  textAlign: TextAlign.center,
+                  fontSize: FontSize(
+                    descriptionStyle?.fontSize ?? 10,
+                  ),
+                  fontWeight: descriptionStyle?.fontWeight,
+                  fontFamily: descriptionStyle?.fontFamily,
                 ),
-                fontWeight: descriptionStyle?.fontWeight,
-                fontFamily: descriptionStyle?.fontFamily,
-              ),
-            },
+              },
+            ),
           ),
         ),
       ),

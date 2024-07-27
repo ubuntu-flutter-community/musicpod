@@ -20,6 +20,7 @@ class TagAutoComplete extends StatelessWidget {
     required this.addFav,
     required this.removeFav,
     this.favs,
+    this.suffixIcon,
   });
 
   final void Function(Tag? tag)? onSelected;
@@ -29,6 +30,7 @@ class TagAutoComplete extends StatelessWidget {
   final TextStyle? textStyle;
   final void Function(Tag? tag) addFav;
   final void Function(Tag? tag) removeFav;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +76,12 @@ class TagAutoComplete extends StatelessWidget {
                     ? createYaruDecoration(
                         theme: theme,
                         hintText: hintText,
+                        suffixIcon: suffixIcon,
                       )
                     : createMaterialDecoration(
                         colorScheme: theme.colorScheme,
                         hintText: hintText,
+                        suffixIcon: suffixIcon,
                       ),
                 controller: textEditingController,
                 focusNode: focusNode,

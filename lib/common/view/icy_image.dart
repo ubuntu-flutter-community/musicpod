@@ -18,7 +18,6 @@ class IcyImage extends StatefulWidget {
     this.fallBackWidget,
     this.fit,
     this.errorWidget,
-    this.onGenreTap,
     this.fallBackImageUrl,
   });
 
@@ -29,7 +28,6 @@ class IcyImage extends StatefulWidget {
   final Widget? fallBackWidget;
   final Widget? errorWidget;
   final BoxFit? fit;
-  final Function(String tag)? onGenreTap;
   final String? fallBackImageUrl;
 
   @override

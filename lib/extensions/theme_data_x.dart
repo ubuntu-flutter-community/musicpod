@@ -12,9 +12,12 @@ extension ThemeDataX on ThemeData {
         fontWeight: FontWeight.w400,
         letterSpacing: 0,
         leadingDistribution: TextLeadingDistribution.proportional,
-        fontSize: 21,
+        fontSize: 25,
         color: colorScheme.onSurface.withOpacity(0.9),
       );
+
+  TextStyle? get pageHeaderDescription =>
+      textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300);
 
   Color get containerBg => colorScheme.background.scale(
         lightness:

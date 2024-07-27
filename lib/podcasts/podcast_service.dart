@@ -19,13 +19,8 @@ class PodcastService {
   })  : _notificationsService = notificationsService,
         _settingsService = settingsService;
 
-  final _searchChangedController = StreamController<bool>.broadcast();
-  Stream<bool> get searchChanged => _searchChangedController.stream;
   SearchResult? _searchResult;
-  SearchResult? get searchResult => _searchResult;
   Search? _search;
-  bool get searchWithPodcastIndex =>
-      _search?.searchProvider is PodcastIndexProvider;
 
   Future<void> init({bool forceInit = false}) async {
     if (_search == null || forceInit) {
@@ -42,10 +37,6 @@ class PodcastService {
     }
   }
 
-  Future<void> dispose() async {
-    await _searchChangedController.close();
-  }
-
   Future<SearchResult?> search({
     String? searchQuery,
     PodcastGenre podcastGenre = PodcastGenre.all,
@@ -53,8 +44,6 @@ class PodcastService {
     SimpleLanguage? language,
     int limit = 10,
   }) async {
-    _searchResult = null;
-    _searchChangedController.add(true);
     SearchResult? result;
     String? error;
     try {
@@ -87,7 +76,6 @@ class PodcastService {
       _searchResult =
           SearchResult.fromError(lastError: error ?? 'Something went wrong');
     }
-    _searchChangedController.add(true);
     return _searchResult;
   }
 

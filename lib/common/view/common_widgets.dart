@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -170,28 +171,13 @@ class HeaderBar extends StatelessWidget
     return YaruWindowTitleBar(
       titleSpacing: titleSpacing,
       actions: actions,
-      leading: (includeBackButton && canPop) ? const NavBackButton() : null,
-      title: context.showMasterPanel ||
-              masterScaffoldKey.currentState?.isDrawerOpen == true
-          ? title
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: (includeBackButton && canPop) ? 0 : 10,
-                    right: !(includeBackButton && canPop) ? 60 : 10,
-                  ),
-                  child: const SidebarButton(),
-                ),
-                if (title != null)
-                  Expanded(
-                    child: Center(
-                      child: title!,
-                    ),
-                  ),
-              ],
-            ),
+      leading: !context.showMasterPanel &&
+              masterScaffoldKey.currentState?.isDrawerOpen == false
+          ? const SidebarButton()
+          : (includeBackButton && canPop)
+              ? const NavBackButton()
+              : null,
+      title: title,
       border: BorderSide.none,
       backgroundColor: backgroundColor ?? context.theme.scaffoldBackgroundColor,
       style: theStyle,
@@ -214,18 +200,20 @@ class SidebarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (Platform.isMacOS) {
-      return Padding(
-        padding: kMacOsWindowControlMitigationPadding,
-        child: SizedBox(
-          height: 15,
-          width: 15,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(20),
-            child: Icon(
-              Iconz().sidebar,
-              size: 10,
+      return Center(
+        child: Padding(
+          padding: kMacOsWindowControlMitigationPadding,
+          child: SizedBox(
+            height: 15,
+            width: 15,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              child: Icon(
+                Iconz().sidebar,
+                size: 10,
+              ),
+              onTap: () => masterScaffoldKey.currentState?.openDrawer(),
             ),
-            onTap: () => masterScaffoldKey.currentState?.openDrawer(),
           ),
         ),
       );
@@ -285,7 +273,7 @@ class SearchButton extends StatelessWidget {
   }
 }
 
-class SearchingBar extends StatelessWidget {
+class SearchingBar extends StatefulWidget {
   const SearchingBar({
     super.key,
     this.text,
@@ -293,54 +281,31 @@ class SearchingBar extends StatelessWidget {
     this.onSubmitted,
     this.onChanged,
     this.hintText,
-  });
-
-  final String? text;
-  final void Function()? onClear;
-  final void Function(String?)? onSubmitted;
-  final void Function(String)? onChanged;
-  final String? hintText;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10),
-      child: MaterialSearchBar(
-        hintText: hintText,
-        text: text,
-        key: key,
-        onSubmitted: (v) {
-          di<AppModel>().setLockSpace(false);
-          onSubmitted?.call(v);
-        },
-        onClear: onClear,
-        onChanged: onChanged,
-      ),
-    );
-  }
-}
-
-class MaterialSearchBar extends StatefulWidget {
-  const MaterialSearchBar({
-    super.key,
-    this.text,
-    this.onClear,
-    this.onSubmitted,
-    this.onChanged,
-    this.hintText,
+    this.suffixIcon,
+    this.autoFocus = true,
   });
   final String? text;
   final void Function()? onClear;
   final void Function(String?)? onSubmitted;
   final void Function(String)? onChanged;
   final String? hintText;
+  final Widget? suffixIcon;
+  final bool autoFocus;
 
   @override
-  State<MaterialSearchBar> createState() => _NormalSearchBarState();
+  State<SearchingBar> createState() => _SearchingBarState();
 }
 
-class _NormalSearchBarState extends State<MaterialSearchBar> {
+class _SearchingBarState extends State<SearchingBar> {
   late TextEditingController _controller;
+  Timer? _debounce;
+
+  _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      widget.onChanged?.call(query);
+    });
+  }
 
   @override
   void initState() {
@@ -351,6 +316,7 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
   @override
   void dispose() {
     _controller.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
@@ -361,7 +327,6 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
       height: yaruStyled ? null : 38,
       child: TextField(
         onTap: () {
-          di<AppModel>().setLockSpace(true);
           _controller.selection = TextSelection(
             baseOffset: 0,
             extentOffset: _controller.value.text.length,
@@ -369,15 +334,20 @@ class _NormalSearchBarState extends State<MaterialSearchBar> {
         },
         controller: _controller,
         key: widget.key,
-        autofocus: true,
+        autofocus: widget.autoFocus,
         onSubmitted: widget.onSubmitted,
-        onChanged: widget.onChanged,
+        onChanged: _onSearchChanged,
         style: yaruStyled ? theme.textTheme.bodyMedium : null,
         decoration: yaruStyled
-            ? createYaruDecoration(theme: theme, hintText: widget.hintText)
+            ? createYaruDecoration(
+                theme: theme,
+                hintText: widget.hintText,
+                suffixIcon: widget.suffixIcon,
+              )
             : createMaterialDecoration(
                 colorScheme: theme.colorScheme,
                 hintText: widget.hintText,
+                suffixIcon: widget.suffixIcon,
               ),
       ),
     );
@@ -450,7 +420,7 @@ FontWeight get largeTextWeight =>
 
 bool get shrinkTitleBarItems => yaruStyled;
 
-double get chipHeight => yaruStyled ? kYaruTitleBarItemHeight : 35;
+double get chipHeight => yaruStyled ? kYaruTitleBarItemHeight : 38;
 
 EdgeInsetsGeometry get tabViewPadding =>
     isMobile ? const EdgeInsets.only(top: 15) : const EdgeInsets.only(top: 5);
@@ -461,12 +431,21 @@ EdgeInsetsGeometry get gridPadding =>
 SliverGridDelegate get audioCardGridDelegate =>
     isMobile ? kMobileAudioCardGridDelegate : kAudioCardGridDelegate;
 
-EdgeInsetsGeometry get appBarActionSpacing => Platform.isMacOS
+EdgeInsetsGeometry get appBarSingleActionSpacing => Platform.isMacOS
     ? const EdgeInsets.only(right: 5, left: 20)
     : const EdgeInsets.only(right: 10, left: 20);
 
 EdgeInsetsGeometry get radioHistoryListPadding =>
     EdgeInsets.only(left: yaruStyled ? 0 : 5);
+
+EdgeInsets get countryPillPadding => yaruStyled
+    ? const EdgeInsets.only(
+        bottom: 9,
+        top: 9,
+        right: 15,
+        left: 15,
+      )
+    : const EdgeInsets.only(top: 11, bottom: 11, left: 15, right: 15);
 
 class CommonSwitch extends StatelessWidget {
   const CommonSwitch({super.key, required this.value, this.onChanged});

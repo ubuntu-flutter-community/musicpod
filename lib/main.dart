@@ -27,6 +27,7 @@ import 'podcasts/podcast_model.dart';
 import 'podcasts/podcast_service.dart';
 import 'radio/radio_model.dart';
 import 'radio/radio_service.dart';
+import 'search/search_model.dart';
 import 'settings/settings_model.dart';
 import 'settings/settings_service.dart';
 
@@ -98,7 +99,6 @@ Future<void> main(List<String> args) async {
       notificationsService: notificationsService,
       settingsService: settingsService,
     ),
-    dispose: (s) async => s.dispose(),
   );
 
   final connectivity = Connectivity();
@@ -141,7 +141,7 @@ Future<void> main(List<String> args) async {
     dispose: (s) => s.dispose(),
   );
   di.registerSingleton<AppModel>(
-    AppModel(connectivity: connectivity),
+    AppModel(),
     dispose: (s) => s.dispose(),
   );
   di.registerSingleton<LibraryModel>(
@@ -160,10 +160,17 @@ Future<void> main(List<String> args) async {
     dispose: (s) => s.dispose(),
   );
   di.registerSingleton<RadioModel>(
-    RadioModel(radioService: radioService, libraryService: libraryService),
+    RadioModel(radioService: radioService),
     dispose: (s) => s.dispose(),
   );
   di.registerSingleton<DownloadModel>(DownloadModel(libraryService));
+  di.registerLazySingleton<SearchModel>(
+    () => SearchModel(
+      podcastService: di<PodcastService>(),
+      radioService: di<RadioService>(),
+      libraryService: di<LibraryService>(),
+    )..init(),
+  );
 
   runApp(
     Platform.isLinux

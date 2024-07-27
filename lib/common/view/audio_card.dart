@@ -133,7 +133,7 @@ class _AudioCard extends StatelessWidget {
     final light = theme.isLight;
 
     return SizedBox(
-      height: height ?? kAudioCardDimension,
+      height: height ?? kAudioCardDimension - (isMobile ? 10 : 0),
       width: width ?? kAudioCardDimension,
       child: InkWell(
         onTap: onTap,

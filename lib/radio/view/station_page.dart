@@ -12,7 +12,11 @@ import '../../common/view/safe_network_image.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import '../../player/player_model.dart';
+import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 import 'radio_fall_back_icon.dart';
 import 'radio_history_list.dart';
 import 'radio_page_copy_histoy_button.dart';
@@ -32,10 +36,24 @@ class StationPage extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
 
-    return YaruDetailPage(
+    return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
-        title: Text(station.title ?? station.url ?? ''),
+        title: isMobile ? null : Text(station.title ?? station.url ?? ''),
+        actions: [
+          Padding(
+            padding: appBarSingleActionSpacing,
+            child: SearchButton(
+              onPressed: () {
+                di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                di<SearchModel>()
+                  ..setAudioType(AudioType.radio)
+                  ..setSearchType(SearchType.radioName);
+              },
+            ),
+          ),
+        ],
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -46,7 +64,8 @@ class StationPage extends StatelessWidget with WatchItMixin {
                 SliverToBoxAdapter(
                   child: AudioPageHeader(
                     title: station.title ?? station.url ?? '',
-                    label: station.artist,
+                    subTitle: station.artist,
+                    label: context.l10n.station,
                     description: SizedBox(
                       width: kAudioHeaderDescriptionWidth,
                       child: RadioPageTagBar(

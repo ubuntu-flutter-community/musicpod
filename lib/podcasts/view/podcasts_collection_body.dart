@@ -17,6 +17,7 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
+import '../../search/search_model.dart';
 import '../podcast_model.dart';
 
 class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
@@ -57,7 +58,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
 
     return subsLength == 0
         ? NoSearchResultPage(
-            icons: const AnimatedEmoji(AnimatedEmojis.faceInClouds),
+            icon: const AnimatedEmoji(AnimatedEmojis.faceInClouds),
             message: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -66,7 +67,12 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                   height: 10,
                 ),
                 ImportantButton(
-                  onPressed: () => model.setSearchActive(true),
+                  onPressed: () {
+                    di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                    di<SearchModel>()
+                      ..setAudioType(AudioType.podcast)
+                      ..search();
+                  },
                   child: Text(context.l10n.discover),
                 ),
               ],
@@ -77,45 +83,48 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
             children: [
               Align(
                 alignment: Alignment.center,
-                child: YaruChoiceChipBar(
-                  chipBackgroundColor: chipColor(theme),
-                  selectedChipBackgroundColor:
-                      chipSelectionColor(theme, loading),
-                  borderColor: chipBorder(theme, loading),
-                  yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-                  clearOnSelect: false,
-                  selectedFirst: false,
-                  labels: [
-                    Text(context.l10n.newEpisodes),
-                    Text(
-                      context.l10n.downloadsOnly,
-                    ),
-                  ],
-                  isSelected: [
-                    updatesOnly,
-                    downloadsOnly,
-                  ],
-                  onSelected: loading
-                      ? null
-                      : (index) {
-                          if (index == 0) {
-                            if (updatesOnly) {
-                              setUpdatesOnly(false);
-                            } else {
-                              model.update(context.l10n.newEpisodeAvailable);
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: YaruChoiceChipBar(
+                    chipBackgroundColor: chipColor(theme),
+                    selectedChipBackgroundColor:
+                        chipSelectionColor(theme, loading),
+                    borderColor: chipBorder(theme, loading),
+                    yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+                    clearOnSelect: false,
+                    selectedFirst: false,
+                    labels: [
+                      Text(context.l10n.newEpisodes),
+                      Text(
+                        context.l10n.downloadsOnly,
+                      ),
+                    ],
+                    isSelected: [
+                      updatesOnly,
+                      downloadsOnly,
+                    ],
+                    onSelected: loading
+                        ? null
+                        : (index) {
+                            if (index == 0) {
+                              if (updatesOnly) {
+                                setUpdatesOnly(false);
+                              } else {
+                                model.update(context.l10n.newEpisodeAvailable);
 
-                              setUpdatesOnly(true);
-                              setDownloadsOnly(false);
-                            }
-                          } else {
-                            if (downloadsOnly) {
-                              setDownloadsOnly(false);
+                                setUpdatesOnly(true);
+                                setDownloadsOnly(false);
+                              }
                             } else {
-                              setDownloadsOnly(true);
-                              setUpdatesOnly(false);
+                              if (downloadsOnly) {
+                                setDownloadsOnly(false);
+                              } else {
+                                setDownloadsOnly(true);
+                                setUpdatesOnly(false);
+                              }
                             }
-                          }
-                        },
+                          },
+                  ),
                 ),
               ),
               const SizedBox(
@@ -178,7 +187,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                                     )
                                     .then((_) => removeUpdate(podcast.key)),
                                 onTap: () =>
-                                    libraryModel.pushNamed(podcast.key),
+                                    libraryModel.pushNamed(pageId: podcast.key),
                               );
                             },
                           );

@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     final theme = context.t;
     return Scaffold(
-      appBar: const HeaderBar(adaptive: false),
+      appBar: const HeaderBar(adaptive: false, title: Text('')),
       backgroundColor: theme.scaffoldBackgroundColor,
       body: Center(
         child: AnimatedOpacity(

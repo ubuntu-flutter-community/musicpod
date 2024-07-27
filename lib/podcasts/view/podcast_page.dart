@@ -19,6 +19,8 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
+import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 import '../podcast_model.dart';
 import 'sliver_podcast_page_list.dart';
 
@@ -49,19 +51,34 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         {};
 
     Future<void> onTap(text) async {
-      final podcastModel = di<PodcastModel>();
-      podcastModel.setSearchActive(true);
-      podcastModel.setSearchQuery(text);
-      await podcastModel.search(searchQuery: text);
-      di<LibraryModel>()
-        ..pop()
-        ..pushNamed(kPodcastsPageId);
+      await di<PodcastModel>()
+          .init(updateMessage: context.l10n.updateAvailable);
+      di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+
+      di<SearchModel>()
+        ..setAudioType(AudioType.podcast)
+        ..setSearchQuery(text)
+        ..search();
     }
 
-    return YaruDetailPage(
+    return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
-        title: Text(title),
+        title: isMobile ? null : Text(title),
+        actions: [
+          Padding(
+            padding: appBarSingleActionSpacing,
+            child: SearchButton(
+              onPressed: () {
+                di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                di<SearchModel>()
+                  ..setAudioType(AudioType.podcast)
+                  ..setSearchType(SearchType.podcastTitle);
+              },
+            ),
+          ),
+        ],
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {

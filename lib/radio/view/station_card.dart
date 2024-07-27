@@ -15,9 +15,6 @@ class StationCard extends StatelessWidget {
     super.key,
     required this.station,
     required this.startPlaylist,
-    required this.isStarredStation,
-    required this.unstarStation,
-    required this.starStation,
   });
 
   final Audio? station;
@@ -26,9 +23,6 @@ class StationCard extends StatelessWidget {
     required String listName,
     int? index,
   }) startPlaylist;
-  final bool Function(String name) isStarredStation;
-  final void Function(String name) unstarStation;
-  final void Function(String name, Set<Audio> audios) starStation;
 
   @override
   Widget build(BuildContext context) {

@@ -44,10 +44,7 @@ class ExternalPathService {
           audios: {Audio.fromMetadata(path: path, data: data)},
         ),
       );
-    } catch (_) {
-      // TODO: instead of disallowing certain file types
-      // process via error stream if something went wrong
-    }
+    } catch (_) {}
   }
 
   void dispose() {

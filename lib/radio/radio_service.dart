@@ -48,7 +48,7 @@ class RadioService {
     return hosts;
   }
 
-  Future<List<Station>?> getStations({
+  Future<List<Station>?> search({
     String? country,
     String? name,
     String? state,
@@ -116,11 +116,5 @@ class RadioService {
     try {
       await _radioBrowserApi?.clickStation(uuid: uuid);
     } on Exception catch (_) {}
-  }
-
-  Future<List<State>?> loadStates(String country) async {
-    if (_radioBrowserApi == null) return null;
-    final response = await _radioBrowserApi!.getStates(country: country);
-    return response.items;
   }
 }

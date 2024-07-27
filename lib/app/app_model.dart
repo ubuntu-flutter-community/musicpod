@@ -1,9 +1,8 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class AppModel extends SafeChangeNotifier {
-  AppModel({required Connectivity connectivity})
+  AppModel()
       : _countryCode = WidgetsBinding
             .instance.platformDispatcher.locale.countryCode
             ?.toLowerCase();
@@ -26,10 +25,35 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  bool _lockSpace = false;
-  bool get lockSpace => _lockSpace;
-  void setLockSpace(bool value) {
-    _lockSpace = value;
+  int _localAudioIndex = 0;
+  int get localAudioindex => _localAudioIndex;
+  set localAudioindex(int value) {
+    if (value == _localAudioIndex) return;
+    _localAudioIndex = value;
+    notifyListeners();
+  }
+
+  int _radioIndex = 0;
+  int get radioindex => _radioIndex;
+  set radioindex(int value) {
+    if (value == _radioIndex) return;
+    _radioIndex = value;
+    notifyListeners();
+  }
+
+  bool _manualFilter = false;
+  bool get manualFilter => _manualFilter;
+  void setManualFilter(bool value) {
+    if (value == _manualFilter) return;
+    _manualFilter = value;
+    notifyListeners();
+  }
+
+  bool _allowReorder = false;
+  bool get allowReorder => _allowReorder;
+  void setAllowReorder(bool value) {
+    if (value == _allowReorder) return;
+    _allowReorder = value;
     notifyListeners();
   }
 }

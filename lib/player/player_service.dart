@@ -235,10 +235,7 @@ class PlayerService {
       _setMediaControlsMetaData(audio: audio!);
       _loadColor();
       _firstPlay = false;
-    } on Exception catch (_) {
-      // TODO: instead of disallowing certain file types
-      // process via error stream if something went wrong
-    }
+    } on Exception catch (_) {}
   }
 
   Future<void> playOrPause() async {

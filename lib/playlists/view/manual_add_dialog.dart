@@ -227,7 +227,7 @@ class _PlaylistContentState extends State<PlaylistContent> {
                               const Duration(milliseconds: 300),
                             );
                             await widget.libraryModel
-                                .pushNamed(_controller.text);
+                                .pushNamed(pageId: _controller.text);
                           });
                         },
                   child: Text(
