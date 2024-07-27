@@ -27,7 +27,6 @@ class RadioSearchPage extends StatefulWidget {
 
   final int limit;
   final String? searchQuery;
-
   final bool includeHeader;
   final RadioSearch radioSearch;
 
@@ -49,7 +48,6 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = di<LibraryModel>();
     final playerModel = di<PlayerModel>();
     final radioModel = di<RadioModel>();
 
@@ -109,42 +107,51 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
       return futureBuilder;
     }
 
-    final isFavTag = libraryModel.favRadioTags.contains(widget.searchQuery);
-
     return Scaffold(
       resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              tooltip: context.l10n.addToCollection,
-              onPressed: widget.searchQuery == null
-                  ? null
-                  : () {
-                      if (isFavTag) {
-                        libraryModel.removeRadioFavTag(widget.searchQuery!);
-                      } else {
-                        libraryModel.addFavRadioTag(widget.searchQuery!);
-                      }
-                    },
-              icon: Icon(
-                isFavTag ? Iconz().starFilled : Iconz().star,
-              ),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            Flexible(
-              child: Text(
-                widget.searchQuery ?? '',
-              ),
-            ),
-          ],
-        ),
+        title: widget.searchQuery != null
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FavTagButton(tag: widget.searchQuery!),
+                  const SizedBox(width: 5),
+                  Flexible(
+                    child: Text(widget.searchQuery!),
+                  ),
+                ],
+              )
+            : const Text(''),
       ),
       body: futureBuilder,
+    );
+  }
+}
+
+class FavTagButton extends StatelessWidget with WatchItMixin {
+  const FavTagButton({super.key, required this.tag});
+
+  final String tag;
+
+  @override
+  Widget build(BuildContext context) {
+    final libraryModel = di<LibraryModel>();
+    watchPropertyValue((LibraryModel m) => m.favRadioTagsLength);
+    final isFavTag = libraryModel.favRadioTags.contains(tag);
+
+    return IconButton(
+      tooltip: context.l10n.addToCollection,
+      onPressed: () {
+        if (isFavTag) {
+          libraryModel.removeRadioFavTag(tag);
+        } else {
+          libraryModel.addFavRadioTag(tag);
+        }
+      },
+      icon: Icon(
+        isFavTag ? Iconz().starFilled : Iconz().star,
+      ),
     );
   }
 }

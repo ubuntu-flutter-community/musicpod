@@ -10,10 +10,7 @@ enum SearchType {
   radioTag,
   radioCountry,
   radioLanguage,
-  podcastTitle,
-  podcastGenre,
-  podcastCountry,
-  podcastLanguage;
+  podcastTitle;
 
   String localize(AppLocalizations l10n) => switch (this) {
         localTitle => l10n.titles,
@@ -23,11 +20,8 @@ enum SearchType {
         radioName => l10n.name,
         radioTag => l10n.tag,
         podcastTitle => l10n.title,
-        podcastGenre => l10n.genres,
         radioCountry => l10n.country,
         radioLanguage => l10n.language,
-        podcastCountry => l10n.country,
-        podcastLanguage => l10n.language,
       };
 }
 

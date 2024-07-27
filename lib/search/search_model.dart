@@ -1,13 +1,14 @@
+import 'package:collection/collection.dart';
+import 'package:podcast_search/podcast_search.dart';
+import 'package:safe_change_notifier/safe_change_notifier.dart';
+
 import '../common/data/audio.dart';
 import '../common/data/podcast_genre.dart';
+import '../common/view/languages.dart';
 import '../local_audio/local_audio_model.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
 import 'local_audio_search_result.dart';
-import 'package:collection/collection.dart';
-import 'package:podcast_search/podcast_search.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:watch_it/watch_it.dart';
 import 'search_type.dart';
 
 const _initialAudioType = AudioType.radio;
@@ -23,7 +24,7 @@ class SearchModel extends SafeChangeNotifier {
 
   final RadioService _radioService;
   final PodcastService _podcastService;
-  // TODO: replac with service when all is migrated
+  // TODO: replace with service when all is migrated
   final LocalAudioModel _localAudioModel;
 
   Set<SearchType> _searchTypes = searchTypesFromAudioType(_initialAudioType);
@@ -59,6 +60,48 @@ class SearchModel extends SafeChangeNotifier {
   void setPodcastSearchResult(SearchResult? value) {
     _podcastSearchResult = value;
     notifyListeners();
+  }
+
+  Country? _country;
+  Country? get country => _country;
+  void setCountry(Country? value) {
+    if (value == _country) return;
+    _country = value;
+    notifyListeners();
+  }
+
+  SimpleLanguage? _language;
+  SimpleLanguage? get language => _language;
+  void setLanguage(SimpleLanguage? value) {
+    if (value == _language) return;
+    _language = value;
+    notifyListeners();
+  }
+
+  PodcastGenre _podcastGenre = PodcastGenre.all;
+  PodcastGenre get podcastGenre => _podcastGenre;
+  void setPodcastGenre(PodcastGenre value) {
+    if (value == _podcastGenre) return;
+    _podcastGenre = value;
+    notifyListeners();
+  }
+
+  List<PodcastGenre> get sortedGenres {
+    final notSelected =
+        PodcastGenre.values.where((g) => g != podcastGenre).toList();
+
+    return [podcastGenre, ...notSelected];
+  }
+
+  List<Country> get sortedCountries {
+    if (_country == null) return Country.values;
+    final notSelected =
+        Country.values.where((c) => c != _country).toList().sorted(
+              (a, b) => a.name.compareTo(b.name),
+            );
+    final list = <Country>[_country!, ...notSelected];
+
+    return list;
   }
 
   List<Audio>? _radioSearchResult;
@@ -106,7 +149,7 @@ class SearchModel extends SafeChangeNotifier {
             ),
           )
           .then((_) => _loading = false),
-      SearchType.radioTag => await di<RadioService>()
+      SearchType.radioTag => await _radioService
           .search(tag: _searchQuery)
           .then(
             (v) => setRadioSearchResult(
@@ -114,16 +157,16 @@ class SearchModel extends SafeChangeNotifier {
             ),
           )
           .then((_) => _loading = false),
-      SearchType.radioCountry => await di<RadioService>()
-          .search(country: _searchQuery)
+      SearchType.radioCountry => await _radioService
+          .search(country: _searchQuery?.toLowerCase())
           .then(
             (v) => setRadioSearchResult(
               v?.map((e) => Audio.fromStation(e)).toList(),
             ),
           )
           .then((_) => _loading = false),
-      SearchType.radioLanguage => await di<RadioService>()
-          .search(language: _searchQuery)
+      SearchType.radioLanguage => await _radioService
+          .search(language: _searchQuery?.toLowerCase())
           .then(
             (v) => setRadioSearchResult(
               v?.map((e) => Audio.fromStation(e)).toList(),
@@ -131,18 +174,12 @@ class SearchModel extends SafeChangeNotifier {
           )
           .then((_) => _loading = false),
       SearchType.podcastTitle => await _podcastService
-          .search(searchQuery: _searchQuery, limit: _podcastLimit)
-          .then((v) => setPodcastSearchResult(v))
-          .then((_) => _loading = false),
-      SearchType.podcastGenre => await _podcastService
           .search(
+            searchQuery: _searchQuery,
             limit: _podcastLimit,
-            podcastGenre: PodcastGenre.values.firstWhereOrNull(
-                  (e) => e.name
-                      .toLowerCase()
-                      .contains(_searchQuery?.toLowerCase() ?? ''),
-                ) ??
-                PodcastGenre.all,
+            country: _country,
+            language: _language,
+            podcastGenre: _podcastGenre,
           )
           .then((v) => setPodcastSearchResult(v))
           .then((_) => _loading = false),

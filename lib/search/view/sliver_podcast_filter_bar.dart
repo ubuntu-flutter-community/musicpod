@@ -9,29 +9,28 @@ import '../../common/view/language_autocomplete.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../library/library_model.dart';
+import '../../podcasts/view/podcast_genre_autocomplete.dart';
 import '../../settings/settings_model.dart';
-import '../podcast_model.dart';
-import 'podcast_genre_autocomplete.dart';
+import '../search_model.dart';
 
-class PodcastsControlPanel extends StatelessWidget with WatchItMixin {
-  const PodcastsControlPanel({super.key});
+class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
+  const SliverPodcastFilterBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     final libraryModel = di<LibraryModel>();
     final theme = context.t;
-    final model = di<PodcastModel>();
-    final searchQuery = watchPropertyValue((PodcastModel m) => m.searchQuery);
-    final country = watchPropertyValue((PodcastModel m) => m.country);
+    final searchModel = di<SearchModel>();
+    final country = watchPropertyValue((SearchModel m) => m.country);
 
     void setCountry(Country? country) {
-      model.setCountry(country);
+      searchModel.setCountry(country);
       libraryModel.setLastCountryCode(country?.code);
     }
 
-    final podcastGenre = watchPropertyValue((PodcastModel m) => m.podcastGenre);
-    final sortedGenrez = watchPropertyValue((PodcastModel m) => m.sortedGenres);
-    final setPodcastGenre = model.setPodcastGenre;
+    final podcastGenre = watchPropertyValue((SearchModel m) => m.podcastGenre);
+    final sortedGenrez = watchPropertyValue((SearchModel m) => m.sortedGenres);
+    final setPodcastGenre = searchModel.setPodcastGenre;
     final usePodcastIndex =
         watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
     watchPropertyValue((LibraryModel m) => m.favLanguagesLength);
@@ -44,20 +43,31 @@ class PodcastsControlPanel extends StatelessWidget with WatchItMixin {
         : sortedGenrez
             .where((e) => !e.name.contains('XXXPodcastIndexOnly'))
             .toList();
-    final language = watchPropertyValue((PodcastModel m) => m.language);
+    final language = watchPropertyValue((SearchModel m) => m.language);
 
     final fillColor = theme.chipTheme.selectedColor;
 
-    return Align(
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: 380,
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 10,
-          ),
+    return SliverAppBar(
+      shape: const RoundedRectangleBorder(side: BorderSide.none),
+      elevation: 0,
+      backgroundColor: context.t.scaffoldBackgroundColor,
+      automaticallyImplyLeading: false,
+      pinned: true,
+      centerTitle: true,
+      titleSpacing: 0,
+      stretch: true,
+      onStretchTrigger: () async {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+          if (context.mounted) {
+            searchModel.incrementPodcastLimit(4);
+            return searchModel.search();
+          }
+        });
+      },
+      title: Align(
+        alignment: Alignment.center,
+        child: SizedBox(
+          width: 380,
           child: Row(
             children: [
               if (usePodcastIndex)
@@ -97,9 +107,9 @@ class PodcastsControlPanel extends StatelessWidget with WatchItMixin {
                       libraryModel.removeFavLanguageCode(language!.isoCode);
                     },
                     onSelected: (language) {
-                      model.setLanguage(language);
+                      searchModel.setLanguage(language);
                       libraryModel.setLastLanguage(language?.isoCode);
-                      model.search(searchQuery: searchQuery);
+                      searchModel.search();
                     },
                   ),
                 )
@@ -141,9 +151,7 @@ class PodcastsControlPanel extends StatelessWidget with WatchItMixin {
                     ]..remove(Country.none),
                     onSelected: (country) {
                       setCountry(country);
-                      model.setLimit(20);
-
-                      model.search(searchQuery: searchQuery);
+                      searchModel.search();
                     },
                     value: country,
                     addFav: (v) {
@@ -189,23 +197,13 @@ class PodcastsControlPanel extends StatelessWidget with WatchItMixin {
                   onSelected: (podcastGenre) {
                     if (podcastGenre != null) {
                       setPodcastGenre(podcastGenre);
-
-                      model.setLimit(20);
                     }
 
-                    model.search(searchQuery: searchQuery);
+                    searchModel.search();
                   },
                   value: podcastGenre,
-
-                  addFav: (v) {
-                    // if (country?.code == null) return;
-                    // libraryModel.addFavCountry(v!.code);
-                  },
-                  removeFav: (v) {
-                    // if (country?.code == null) return;
-                    // libraryModel.removeFavCountry(v!.code);
-                  },
-                  // favs: libraryModel.favCountryCodes,
+                  addFav: (v) {},
+                  removeFav: (v) {},
                 ),
               ),
             ],

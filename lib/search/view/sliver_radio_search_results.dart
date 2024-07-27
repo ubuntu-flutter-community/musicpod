@@ -1,5 +1,6 @@
 import '../../common/view/common_widgets.dart';
 import '../../common/view/no_search_result_page.dart';
+import '../../common/view/offline_page.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_model.dart';
@@ -14,14 +15,24 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
+
+    if (!isOnline) {
+      return const SliverFillRemaining(
+        hasScrollBody: false,
+        child: OfflineBody(),
+      );
+    }
     final radioSearchResult =
         watchPropertyValue((SearchModel m) => m.radioSearchResult);
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
+    final searchType = watchPropertyValue((SearchModel m) => m.searchType);
 
     if (radioSearchResult == null || searchQuery?.isEmpty == true) {
       return SliverFillNoSearchResultPage(
         icon: const AnimatedEmoji(AnimatedEmojis.drum),
-        message: Text(context.l10n.search),
+        message:
+            Text('${context.l10n.search} ${searchType.localize(context.l10n)}'),
       );
     }
 

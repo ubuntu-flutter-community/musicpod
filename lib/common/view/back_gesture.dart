@@ -9,7 +9,7 @@ import '../../library/library_model.dart';
 import 'icons.dart';
 
 const double _kButtonSize = 50;
-const double _kMaxExtent = 800;
+const double _kMaxExtent = 400;
 
 class BackGesture extends StatefulWidget with WatchItStatefulWidgetMixin {
   final Widget child;

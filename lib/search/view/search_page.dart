@@ -14,7 +14,8 @@ import '../../radio/radio_model.dart';
 import '../../radio/view/radio_reconnect_button.dart';
 import '../search_model.dart';
 import 'audio_type_filter_button.dart';
-import 'search_type_filter_bar.dart';
+import 'sliver_podcast_filter_bar.dart';
+import 'sliver_search_type_filter_bar.dart';
 import 'sliver_podcast_search_results.dart';
 import 'sliver_radio_search_results.dart';
 
@@ -53,7 +54,6 @@ class _SearchPageState extends State<SearchPage> {
         adaptive: true,
         title: SizedBox(
           width: kSearchBarWidth,
-          // TODO: switch to country/language/tag autocomplete if selected
           child: SearchingBar(
             text: searchQuery,
             key: ValueKey(searchQuery ?? 'ya'),
@@ -66,7 +66,11 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ),
         actions: [
-          if (!connectedHost) const RadioReconnectButton(),
+          if (!connectedHost)
+            const Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: RadioReconnectButton(),
+            ),
           if (watchPropertyValue((SearchModel m) => m.loading))
             const Padding(
               padding: EdgeInsets.only(right: 10),
@@ -81,7 +85,9 @@ class _SearchPageState extends State<SearchPage> {
               SliverPadding(
                 padding: getAdaptiveHorizontalPadding(constraints)
                     .copyWith(bottom: 10),
-                sliver: const SearchTypeFilterBar(),
+                sliver: audioType == AudioType.podcast
+                    ? const SliverPodcastFilterBar()
+                    : const SliverSearchTypeFilterBar(),
               ),
               if (audioType == AudioType.radio)
                 SliverPadding(
