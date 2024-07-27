@@ -27,9 +27,10 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
         watchPropertyValue((SearchModel m) => m.radioSearchResult);
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
-    watchPropertyValue((SearchModel m) => m.country);
+    final loading = watchPropertyValue((SearchModel m) => m.loading);
 
-    if (radioSearchResult == null || searchQuery?.isEmpty == true) {
+    if (radioSearchResult == null ||
+        (searchQuery?.isEmpty == true && radioSearchResult.isEmpty == true)) {
       return SliverFillNoSearchResultPage(
         icon: const AnimatedEmoji(AnimatedEmojis.drum),
         message:
@@ -37,7 +38,7 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
       );
     }
 
-    if (radioSearchResult.isEmpty) {
+    if (radioSearchResult.isEmpty && !loading) {
       return SliverFillNoSearchResultPage(
         icon: const AnimatedEmoji(AnimatedEmojis.rabbit),
         message: Text(context.l10n.noStationFound),
