@@ -24,7 +24,7 @@ Future<void> searchAndPushPodcastPage({
 
   final libraryModel = di<LibraryModel>();
   if (feedUrl != null && libraryModel.isPageInLibrary(feedUrl)) {
-    return libraryModel.pushNamed(feedUrl);
+    return libraryModel.pushNamed(pageId: feedUrl);
   }
 
   if (feedUrl == null) {

@@ -133,7 +133,7 @@ class MasterPanel extends StatelessWidget {
                         },
                       );
                     } else {
-                      libraryModel.pushNamed(item.pageId);
+                      libraryModel.pushNamed(pageId: item.pageId);
                     }
 
                     if (!context.showMasterPanel) {

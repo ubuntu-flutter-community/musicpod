@@ -67,7 +67,7 @@ class _RadioPageState extends State<RadioPage> {
                   : SearchButton(
                       active: false,
                       onPressed: () {
-                        di<LibraryModel>().pushNamed(kSearchPageId);
+                        di<LibraryModel>().pushNamed(pageId: kSearchPageId);
                         di<SearchModel>()
                           ..setAudioType(AudioType.radio)
                           ..search();

@@ -46,7 +46,7 @@ class StationPage extends StatelessWidget with WatchItMixin {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                di<LibraryModel>().pushNamed(kSearchPageId);
+                di<LibraryModel>().pushNamed(pageId: kSearchPageId);
                 di<SearchModel>()
                   ..setAudioType(AudioType.radio)
                   ..setSearchType(SearchType.radioName);

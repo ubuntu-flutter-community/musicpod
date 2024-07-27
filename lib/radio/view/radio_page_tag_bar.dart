@@ -41,7 +41,7 @@ class RadioPageTagBar extends StatelessWidget {
                     style: style,
                     wrapInFlexible: false,
                     onTap: () {
-                      di<LibraryModel>().pushNamed(kSearchPageId);
+                      di<LibraryModel>().pushNamed(pageId: kSearchPageId);
                       di<SearchModel>()
                         ..setTag(Tag(name: e, stationCount: 1))
                         ..setAudioType(AudioType.radio)

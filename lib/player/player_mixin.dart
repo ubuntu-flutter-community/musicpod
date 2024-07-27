@@ -119,7 +119,7 @@ mixin PlayerMixin {
     final libraryModel = di<LibraryModel>();
     if (audio.website != null &&
         libraryModel.isPodcastSubscribed(audio.website)) {
-      libraryModel.pushNamed(audio.website!);
+      libraryModel.pushNamed(pageId: audio.website!);
     } else {
       searchAndPushPodcastPage(
         context: context,

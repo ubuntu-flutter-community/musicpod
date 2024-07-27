@@ -37,7 +37,7 @@ class GenrePage extends StatelessWidget {
             IconButton(
               tooltip: context.l10n.searchForRadioStationsWithGenreName,
               onPressed: () => radioModel.init().then((value) {
-                di<LibraryModel>().pushNamed(kSearchPageId);
+                di<LibraryModel>().pushNamed(pageId: kSearchPageId);
                 di<SearchModel>()
                   ..setTag(Tag(name: genre.toLowerCase(), stationCount: 1))
                   ..setAudioType(AudioType.radio)

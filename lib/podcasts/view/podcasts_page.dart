@@ -58,7 +58,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
               child: SearchButton(
                 onPressed: () {
                   final searchModel = di<SearchModel>();
-                  di<LibraryModel>().pushNamed(kSearchPageId);
+                  di<LibraryModel>().pushNamed(pageId: kSearchPageId);
                   searchModel
                     ..setAudioType(AudioType.podcast)
                     ..search();

@@ -53,7 +53,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     Future<void> onTap(text) async {
       await di<PodcastModel>()
           .init(updateMessage: context.l10n.updateAvailable);
-      di<LibraryModel>().pushNamed(kSearchPageId);
+      di<LibraryModel>().pushNamed(pageId: kSearchPageId);
 
       di<SearchModel>()
         ..setAudioType(AudioType.podcast)
@@ -71,7 +71,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                di<LibraryModel>().pushNamed(kSearchPageId);
+                di<LibraryModel>().pushNamed(pageId: kSearchPageId);
                 di<SearchModel>()
                   ..setAudioType(AudioType.podcast)
                   ..setSearchType(SearchType.podcastTitle);

@@ -87,7 +87,7 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
         _ => 3,
       },
       onDestinationSelected: (i) => libraryModel.pushNamed(
-        switch (i) {
+        pageId: switch (i) {
           0 => kSearchPageId,
           1 => kLocalAudioPageId,
           2 => kRadioPageId,

@@ -244,14 +244,26 @@ class LibraryModel extends SafeChangeNotifier {
 
   final List<String> _pageIdStack = [];
   String? get selectedPageId => _pageIdStack.lastOrNull;
-  Future<void> pushNamed(String pageId) async {
+  Future<void> pushNamed({required String pageId, bool replace = false}) async {
     if (pageId == _pageIdStack.lastOrNull) return;
-    _putOnStack(pageId);
-    await masterNavigator.currentState?.pushNamed(pageId);
+    _putOnStack(pageId: pageId, replace: replace);
+    if (replace) {
+      await masterNavigator.currentState?.pushReplacementNamed(pageId);
+    } else {
+      await masterNavigator.currentState?.pushNamed(pageId);
+    }
   }
 
-  void _putOnStack(String pageId) {
-    _pageIdStack.add(pageId);
+  void _putOnStack({
+    required String pageId,
+    bool replace = false,
+  }) {
+    if (replace) {
+      _pageIdStack.last = pageId;
+    } else {
+      _pageIdStack.add(pageId);
+    }
+
     if (isPageInLibrary(pageId)) {
       _service.selectedPageId = pageId;
     }
@@ -264,27 +276,29 @@ class LibraryModel extends SafeChangeNotifier {
     required Widget Function(BuildContext) builder,
     required String pageId,
     bool maintainState = false,
+    bool replace = false,
   }) async {
-    final forceUnnamed = _isForceUnnamed(pageId);
-
-    if (!forceUnnamed && isPageInLibrary(pageId)) {
-      await pushNamed(pageId);
+    if (isPageInLibrary(pageId)) {
+      await pushNamed(pageId: pageId, replace: replace);
     } else {
-      _putOnStack(pageId);
-      await masterNavigator.currentState?.push(
-        MaterialPageRoute(
-          builder: builder,
-          maintainState: maintainState,
-          settings: RouteSettings(
-            name: pageId,
-          ),
+      _putOnStack(pageId: pageId, replace: replace);
+      final materialPageRoute = MaterialPageRoute(
+        builder: builder,
+        maintainState: maintainState,
+        settings: RouteSettings(
+          name: pageId,
         ),
       );
+      if (replace) {
+        await masterNavigator.currentState?.pushReplacement(
+          materialPageRoute,
+        );
+      } else {
+        await masterNavigator.currentState?.push(
+          materialPageRoute,
+        );
+      }
     }
-  }
-
-  bool _isForceUnnamed(String pageId) {
-    return [kLocalAudioPageId].any((e) => selectedPageId == e && pageId == e);
   }
 
   void pop({bool popStack = true}) {

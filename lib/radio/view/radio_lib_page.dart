@@ -167,7 +167,7 @@ class TagGrid extends StatelessWidget with WatchItMixin {
               ),
               bottom: AudioCardBottom(text: tag),
               onTap: () {
-                di<LibraryModel>().pushNamed(kSearchPageId);
+                di<LibraryModel>().pushNamed(pageId: kSearchPageId);
                 di<SearchModel>()
                   ..setTag(Tag(name: tag.toLowerCase(), stationCount: 1))
                   ..setAudioType(AudioType.radio)
