@@ -20,6 +20,7 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 import '../podcast_model.dart';
 import 'sliver_podcast_page_list.dart';
 
@@ -65,6 +66,19 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       appBar: HeaderBar(
         adaptive: true,
         title: isMobile ? null : Text(title),
+        actions: [
+          Padding(
+            padding: appBarSingleActionSpacing,
+            child: SearchButton(
+              onPressed: () {
+                di<LibraryModel>().pushNamed(kSearchPageId);
+                di<SearchModel>()
+                  ..setAudioType(AudioType.podcast)
+                  ..setSearchType(SearchType.podcastTitle);
+              },
+            ),
+          ),
+        ],
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {

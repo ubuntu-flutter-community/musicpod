@@ -48,7 +48,7 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
               final reversedIndex = radioHistory.length - index - 1;
               final e = radioHistory.elementAt(reversedIndex);
               return RadioHistoryTile(
-                e: e,
+                entry: e,
                 selected: current?.icyTitle != null &&
                     current?.icyTitle == e.value.icyTitle,
               );
@@ -97,7 +97,7 @@ class SliverRadioHistoryList extends StatelessWidget
           final reversedIndex = radioHistory.length - index - 1;
           final e = radioHistory.elementAt(reversedIndex);
           return RadioHistoryTile(
-            e: e,
+            entry: e,
             selected: current?.icyTitle != null &&
                 current?.icyTitle == e.value.icyTitle,
           );

@@ -284,8 +284,7 @@ class LibraryModel extends SafeChangeNotifier {
   }
 
   bool _isForceUnnamed(String pageId) {
-    return [kLocalAudioPageId, kRadioPageId]
-        .any((e) => selectedPageId == e && pageId == e);
+    return [kLocalAudioPageId].any((e) => selectedPageId == e && pageId == e);
   }
 
   void pop({bool popStack = true}) {

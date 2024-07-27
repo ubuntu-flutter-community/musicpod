@@ -14,7 +14,6 @@ class SuperNetworkImage extends StatelessWidget with WatchItMixin {
     required this.width,
     required this.audio,
     required this.fit,
-    this.onGenreTap,
     required this.fallBackIcon,
     required this.errorIcon,
   });
@@ -25,8 +24,6 @@ class SuperNetworkImage extends StatelessWidget with WatchItMixin {
   final BoxFit? fit;
   final Widget fallBackIcon;
   final Widget errorIcon;
-
-  final Function(String genre)? onGenreTap;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +53,6 @@ class SuperNetworkImage extends StatelessWidget with WatchItMixin {
                   height: height,
                   width: width,
                   fit: fit,
-                  onGenreTap: onGenreTap,
                   fallBackImageUrl: audio?.imageUrl,
                 )
               : safeNetworkImage,
