@@ -11,6 +11,7 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../radio/radio_model.dart';
 import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 import '../local_audio_model.dart';
 import 'artists_view.dart';
 
@@ -41,6 +42,7 @@ class GenrePage extends StatelessWidget {
                 di<SearchModel>()
                   ..setTag(Tag(name: genre.toLowerCase(), stationCount: 1))
                   ..setAudioType(AudioType.radio)
+                  ..setSearchType(SearchType.radioTag)
                   ..search();
               }),
               icon: Icon(Iconz().radio),
