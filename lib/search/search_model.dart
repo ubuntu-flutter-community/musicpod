@@ -26,22 +26,18 @@ class SearchModel extends SafeChangeNotifier {
   // TODO: replac with service when all is migrated
   final LocalAudioModel _localAudioModel;
 
-  Set<SearchType> _searchTypes = SearchType.values
-      .where((e) => e.name.contains(_initialAudioType.name))
-      .toSet();
+  Set<SearchType> _searchTypes = searchTypesFromAudioType(_initialAudioType);
   Set<SearchType> get searchTypes => _searchTypes;
   AudioType _audioType = _initialAudioType;
   AudioType get audioType => _audioType;
   void setAudioType(AudioType value) {
     if (value == _audioType) return;
     _audioType = value;
-    _searchTypes = SearchType.values
-        .where((e) => e.name.contains(_audioType.name))
-        .toSet();
+    _searchTypes = searchTypesFromAudioType(_audioType);
     setSearchType(_searchTypes.first);
   }
 
-  SearchType _searchType = SearchType.radioName;
+  SearchType _searchType = searchTypesFromAudioType(_initialAudioType).first;
   SearchType get searchType => _searchType;
   void setSearchType(SearchType value) {
     _searchType = value;
@@ -81,7 +77,15 @@ class SearchModel extends SafeChangeNotifier {
   int _podcastLimit = 20;
   void incrementPodcastLimit(int value) => _podcastLimit += value;
 
-  Future<void> search({bool clear = true}) async {
+  bool loading = false;
+  set _loading(bool value) {
+    loading = value;
+    notifyListeners();
+  }
+
+  Future<void> search({bool clear = false}) async {
+    _loading = true;
+
     if (clear) {
       switch (_audioType) {
         case AudioType.podcast:
@@ -94,33 +98,42 @@ class SearchModel extends SafeChangeNotifier {
     }
 
     return switch (_searchType) {
-      SearchType.radioName =>
-        await _radioService.search(name: _searchQuery).then(
-              (v) => setRadioSearchResult(
-                v?.map((e) => Audio.fromStation(e)).toList(),
-              ),
+      SearchType.radioName => await _radioService
+          .search(name: _searchQuery)
+          .then(
+            (v) => setRadioSearchResult(
+              v?.map((e) => Audio.fromStation(e)).toList(),
             ),
-      SearchType.radioTag =>
-        await di<RadioService>().search(tag: _searchQuery).then(
-              (v) => setRadioSearchResult(
-                v?.map((e) => Audio.fromStation(e)).toList(),
-              ),
+          )
+          .then((_) => _loading = false),
+      SearchType.radioTag => await di<RadioService>()
+          .search(tag: _searchQuery)
+          .then(
+            (v) => setRadioSearchResult(
+              v?.map((e) => Audio.fromStation(e)).toList(),
             ),
-      SearchType.radioCountry =>
-        await di<RadioService>().search(country: _searchQuery).then(
-              (v) => setRadioSearchResult(
-                v?.map((e) => Audio.fromStation(e)).toList(),
-              ),
+          )
+          .then((_) => _loading = false),
+      SearchType.radioCountry => await di<RadioService>()
+          .search(country: _searchQuery)
+          .then(
+            (v) => setRadioSearchResult(
+              v?.map((e) => Audio.fromStation(e)).toList(),
             ),
-      SearchType.radioLanguage =>
-        await di<RadioService>().search(language: _searchQuery).then(
-              (v) => setRadioSearchResult(
-                v?.map((e) => Audio.fromStation(e)).toList(),
-              ),
+          )
+          .then((_) => _loading = false),
+      SearchType.radioLanguage => await di<RadioService>()
+          .search(language: _searchQuery)
+          .then(
+            (v) => setRadioSearchResult(
+              v?.map((e) => Audio.fromStation(e)).toList(),
             ),
+          )
+          .then((_) => _loading = false),
       SearchType.podcastTitle => await _podcastService
           .search(searchQuery: _searchQuery, limit: _podcastLimit)
-          .then((v) => setPodcastSearchResult(v)),
+          .then((v) => setPodcastSearchResult(v))
+          .then((_) => _loading = false),
       SearchType.podcastGenre => await _podcastService
           .search(
             limit: _podcastLimit,
@@ -131,13 +144,14 @@ class SearchModel extends SafeChangeNotifier {
                 ) ??
                 PodcastGenre.all,
           )
-          .then((v) => setPodcastSearchResult(v)),
+          .then((v) => setPodcastSearchResult(v))
+          .then((_) => _loading = false),
       SearchType.localArtist ||
       SearchType.localTitle ||
       SearchType.localArtist ||
       SearchType.localGenreName =>
         localSearch(_localAudioModel.audios),
-      _ => Future.value()
+      _ => Future.value().then((_) => _loading = false)
     };
   }
 

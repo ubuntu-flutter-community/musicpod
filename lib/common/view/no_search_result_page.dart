@@ -7,14 +7,10 @@ import '../../l10n/l10n.dart';
 import 'common_widgets.dart';
 
 class NoSearchResultPage extends StatelessWidget {
-  const NoSearchResultPage({
-    super.key,
-    this.message,
-    this.icons,
-  });
+  const NoSearchResultPage({super.key, this.message, this.icon});
 
   final Widget? message;
-  final Widget? icons;
+  final Widget? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +37,7 @@ class NoSearchResultPage extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              icons ?? const AnimatedEmoji(AnimatedEmojis.thinkingFace),
+              icon ?? const AnimatedEmoji(AnimatedEmojis.thinkingFace),
               const SizedBox(
                 height: 10,
               ),
@@ -54,6 +50,24 @@ class NoSearchResultPage extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class SliverFillNoSearchResultPage extends StatelessWidget {
+  const SliverFillNoSearchResultPage({super.key, this.message, this.icon});
+
+  final Widget? message;
+  final Widget? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverFillRemaining(
+      hasScrollBody: false,
+      child: NoSearchResultPage(
+        icon: icon,
+        message: message,
       ),
     );
   }

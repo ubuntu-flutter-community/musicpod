@@ -66,11 +66,11 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ),
         actions: [
-          if (!connectedHost)
-            const RadioReconnectButton()
-          else
-            SizedBox.square(
-              dimension: chipHeight + 5,
+          if (!connectedHost) const RadioReconnectButton(),
+          if (watchPropertyValue((SearchModel m) => m.loading))
+            const Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: SideBarProgress(),
             ),
         ],
       ),

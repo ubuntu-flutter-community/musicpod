@@ -14,31 +14,29 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final searchResult =
+    final radioSearchResult =
         watchPropertyValue((SearchModel m) => m.radioSearchResult);
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
 
-    if (searchResult == null || searchResult.isEmpty) {
-      return SliverFillRemaining(
-        hasScrollBody: false,
-        child: NoSearchResultPage(
-          icons: searchResult == null || searchQuery?.isEmpty == true
-              ? const AnimatedEmoji(AnimatedEmojis.drum)
-              : const AnimatedEmoji(AnimatedEmojis.rabbit),
-          message: Text(
-            searchResult == null || searchQuery?.isEmpty == true
-                ? context.l10n.search
-                : context.l10n.noStationFound,
-          ),
-        ),
+    if (radioSearchResult == null || searchQuery?.isEmpty == true) {
+      return SliverFillNoSearchResultPage(
+        icon: const AnimatedEmoji(AnimatedEmojis.drum),
+        message: Text(context.l10n.search),
+      );
+    }
+
+    if (radioSearchResult.isEmpty) {
+      return SliverFillNoSearchResultPage(
+        icon: const AnimatedEmoji(AnimatedEmojis.rabbit),
+        message: Text(context.l10n.noStationFound),
       );
     }
 
     return SliverGrid.builder(
       gridDelegate: audioCardGridDelegate,
-      itemCount: searchResult.length,
+      itemCount: radioSearchResult.length,
       itemBuilder: (context, index) {
-        final station = searchResult.elementAt(index);
+        final station = radioSearchResult.elementAt(index);
         return StationCard(
           station: station,
           startPlaylist: ({

@@ -57,7 +57,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
 
     return subsLength == 0
         ? NoSearchResultPage(
-            icons: const AnimatedEmoji(AnimatedEmojis.faceInClouds),
+            icon: const AnimatedEmoji(AnimatedEmojis.faceInClouds),
             message: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

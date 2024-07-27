@@ -54,7 +54,7 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
           if (context.mounted) {
             searchModel.incrementPodcastLimit(4);
-            return searchModel.search(clear: false);
+            return searchModel.search();
           }
         });
       },

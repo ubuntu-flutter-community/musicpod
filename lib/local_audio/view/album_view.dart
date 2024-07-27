@@ -40,7 +40,7 @@ class AlbumsView extends StatelessWidget {
       if (albums!.isEmpty) {
         return SliverToBoxAdapter(
           child: NoSearchResultPage(
-            icons: noResultIcon,
+            icon: noResultIcon,
             message: noResultMessage,
           ),
         );
@@ -60,7 +60,7 @@ class AlbumsView extends StatelessWidget {
 
       if (albums!.isEmpty) {
         return NoSearchResultPage(
-          icons: noResultIcon,
+          icon: noResultIcon,
           message: noResultMessage,
         );
       }

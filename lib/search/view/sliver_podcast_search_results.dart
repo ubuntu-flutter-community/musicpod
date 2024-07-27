@@ -20,17 +20,14 @@ class SliverPodcastSearchResults extends StatelessWidget with WatchItMixin {
         watchPropertyValue((SearchModel m) => m.podcastSearchResult?.items);
 
     if (searchResultItems == null || searchResultItems.isEmpty) {
-      return SliverFillRemaining(
-        hasScrollBody: false,
-        child: NoSearchResultPage(
-          icons: searchResultItems == null
-              ? const AnimatedEmoji(AnimatedEmojis.drum)
-              : const AnimatedEmoji(AnimatedEmojis.babyChick),
-          message: Text(
-            searchResultItems == null
-                ? context.l10n.search
-                : context.l10n.noPodcastFound,
-          ),
+      return SliverFillNoSearchResultPage(
+        icon: searchResultItems == null
+            ? const AnimatedEmoji(AnimatedEmojis.drum)
+            : const AnimatedEmoji(AnimatedEmojis.babyChick),
+        message: Text(
+          searchResultItems == null
+              ? context.l10n.search
+              : context.l10n.noPodcastFound,
         ),
       );
     }

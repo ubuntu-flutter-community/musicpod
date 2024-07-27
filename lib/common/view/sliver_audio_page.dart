@@ -64,7 +64,7 @@ class SliverAudioPage extends StatelessWidget {
               : audios!.isEmpty
                   ? NoSearchResultPage(
                       message: noSearchResultMessage,
-                      icons: noSearchResultIcons,
+                      icon: noSearchResultIcons,
                     )
                   : CustomScrollView(
                       slivers: [

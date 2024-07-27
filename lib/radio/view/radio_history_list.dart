@@ -32,7 +32,7 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
 
     if (radioHistory.isEmpty) {
       return NoSearchResultPage(
-        icons: emptyIcon ?? const AnimatedEmoji(AnimatedEmojis.crystalBall),
+        icon: emptyIcon ?? const AnimatedEmoji(AnimatedEmojis.crystalBall),
         message: emptyMessage ?? Text(context.l10n.emptyHearingHistory),
       );
     }
@@ -85,7 +85,7 @@ class SliverRadioHistoryList extends StatelessWidget
     if (radioHistory.isEmpty) {
       return SliverToBoxAdapter(
         child: NoSearchResultPage(
-          icons: emptyIcon ?? const AnimatedEmoji(AnimatedEmojis.crystalBall),
+          icon: emptyIcon ?? const AnimatedEmoji(AnimatedEmojis.crystalBall),
           message: emptyMessage ?? Text(context.l10n.emptyHearingHistory),
         ),
       );

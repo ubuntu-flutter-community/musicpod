@@ -35,7 +35,7 @@ class ArtistsView extends StatelessWidget {
 
     if (artists!.isEmpty) {
       return NoSearchResultPage(
-        icons: noResultIcon,
+        icon: noResultIcon,
         message: noResultMessage,
       );
     }

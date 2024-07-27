@@ -96,7 +96,7 @@ class StationGrid extends StatelessWidget with WatchItMixin {
             const OpenRadioDiscoverPageButton(),
           ],
         ),
-        icons: const AnimatedEmoji(AnimatedEmojis.glowingStar),
+        icon: const AnimatedEmoji(AnimatedEmojis.glowingStar),
       );
     }
 
@@ -141,7 +141,7 @@ class TagGrid extends StatelessWidget with WatchItMixin {
             const OpenRadioDiscoverPageButton(),
           ],
         ),
-        icons: const AnimatedEmoji(AnimatedEmojis.glowingStar),
+        icon: const AnimatedEmoji(AnimatedEmojis.glowingStar),
       );
     }
 

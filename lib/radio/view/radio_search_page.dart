@@ -61,7 +61,7 @@ class _RadioSearchPageState extends State<RadioSearchPage> {
         } else {
           if (snapshot.data?.isEmpty == true) {
             return NoSearchResultPage(
-              icons: AnimatedEmoji(
+              icon: AnimatedEmoji(
                 widget.searchQuery?.isNotEmpty == true
                     ? AnimatedEmojis.dog
                     : AnimatedEmojis.drum,

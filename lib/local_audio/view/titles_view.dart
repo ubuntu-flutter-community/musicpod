@@ -38,7 +38,7 @@ class TitlesView extends StatelessWidget {
 
     if (audios!.isEmpty) {
       return NoSearchResultPage(
-        icons: noResultIcon,
+        icon: noResultIcon,
         message: noResultMessage,
       );
     }
