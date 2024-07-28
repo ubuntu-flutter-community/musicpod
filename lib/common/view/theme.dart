@@ -9,12 +9,10 @@ const yaruFixDarkDividerColor = Color.fromARGB(19, 255, 255, 255);
 
 Color getPlayerBg(Color? surfaceTintColor, Color fallbackColor) {
   if (surfaceTintColor != null) {
-    return (Platform.isLinux
-        ? surfaceTintColor.withOpacity(0.08)
-        : Color.alphaBlend(
-            surfaceTintColor.withOpacity(0.2),
-            fallbackColor,
-          ));
+    return Color.alphaBlend(
+      surfaceTintColor.withOpacity(0.15),
+      fallbackColor,
+    );
   } else {
     return fallbackColor;
   }
@@ -117,8 +115,6 @@ InputDecoration createYaruDecoration({
     filled: true,
     fillColor: fillColor ?? fill,
     hoverColor: (fillColor ?? fill)?.scale(lightness: 0.1),
-    suffixIconConstraints:
-        const BoxConstraints(maxWidth: kYaruTitleBarItemHeight),
     border: border,
     errorBorder: border,
     enabledBorder: border,
