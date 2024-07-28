@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
@@ -179,13 +178,12 @@ class MasterItem {
 
 List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
   return [
-    if (kDebugMode)
-      MasterItem(
-        titleBuilder: (context) => Text(context.l10n.search),
-        pageBuilder: (_) => const SearchPage(),
-        iconBuilder: (_) => Icon(Iconz().search),
-        pageId: kSearchPageId,
-      ),
+    MasterItem(
+      titleBuilder: (context) => Text(context.l10n.search),
+      pageBuilder: (_) => const SearchPage(),
+      iconBuilder: (_) => Icon(Iconz().search),
+      pageId: kSearchPageId,
+    ),
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.localAudio),
       pageBuilder: (_) => const LocalAudioPage(),
