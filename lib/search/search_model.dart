@@ -62,6 +62,11 @@ class SearchModel extends SafeChangeNotifier {
 
   String? _searchQuery;
   String? get searchQuery => _searchQuery;
+  void setSearchQuery(String? value) {
+    if (value == _searchQuery) return;
+    _searchQuery = value;
+    notifyListeners();
+  }
 
   SearchResult? _podcastSearchResult;
   SearchResult? get podcastSearchResult => _podcastSearchResult;
@@ -114,12 +119,6 @@ class SearchModel extends SafeChangeNotifier {
   List<Audio>? get radioSearchResult => _radioSearchResult;
   void setRadioSearchResult(List<Audio>? value) {
     _radioSearchResult = value;
-    notifyListeners();
-  }
-
-  void setSearchQuery(String? value) {
-    if (value == _searchQuery) return;
-    _searchQuery = value;
     notifyListeners();
   }
 

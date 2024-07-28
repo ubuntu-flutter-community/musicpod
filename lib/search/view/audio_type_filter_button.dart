@@ -3,6 +3,7 @@ import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/view/local_audio_search_page.dart';
 import '../search_model.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class AudioTypeFilterButton extends StatelessWidget with WatchItMixin {
       initialValue: audioType,
       onSelected: (v) async {
         if (v == AudioType.local) {
+          di<LocalAudioModel>().search(di<SearchModel>().searchQuery);
           await di<LibraryModel>().push(
             builder: (_) => const LocalAudioSearchPage(),
             pageId: kSearchPageId,
@@ -47,6 +49,7 @@ class AudioTypeFilterButton extends StatelessWidget with WatchItMixin {
           audioType.localize(context.l10n),
           style: context.t.textTheme.labelSmall?.copyWith(
             color: context.t.colorScheme.primary,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

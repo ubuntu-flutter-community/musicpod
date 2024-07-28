@@ -228,8 +228,18 @@ const kPatchNotes20240518 = 'Hello MusicPod Users, this update includes\n'
     '\n* Bug fixes, thanks Mads ;)'
     '\n';
 
-const kRecentPatchNotesDisposed = kPatchNotes20240518disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20240518;
-const kRecentPatchNotes = kPatchNotes20240518;
+// 2024 07 28
+const kPatchNotes20240728disposed = 'patchNotes20240728disposed';
+const kPatchNotesTitle20240728 = 'Patch notes: 2024-07-28';
+const kPatchNotes20240728 = 'Hello MusicPod Users, this big update includes\n'
+    '\n* unified search for radio and podcasts under the new search page'
+    '\n* all album/artist/station/podcast/playlist pages are reworked to also work on android'
+    '\n* totally overhauled navigation under the hood, in preparation for android'
+    '\n* a lot of bugfixes'
+    '\n';
+
+const kRecentPatchNotesDisposed = kPatchNotes20240728disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20240728;
+const kRecentPatchNotes = kPatchNotes20240728;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';

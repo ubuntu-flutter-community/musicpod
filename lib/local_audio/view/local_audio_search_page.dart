@@ -13,6 +13,9 @@ import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 import 'local_audio_view.dart';
 
+// TODO: move local search to search model and page when
+// local audio model methods are migrated to service and only call
+// service methods
 class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
   const LocalAudioSearchPage({
     super.key,
@@ -82,6 +85,7 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
         ],
         title: SizedBox(
           width: kSearchBarWidth,
+          height: inputHeight,
           child: SearchingBar(
             hintText: '${context.l10n.search}: ${context.l10n.localAudio}',
             text: searchQuery,
