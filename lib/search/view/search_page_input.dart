@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../common/view/common_widgets.dart';
 import '../../common/view/country_auto_complete.dart';
@@ -23,6 +24,7 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
     return SizedBox(
       width: kSearchBarWidth,
+      height: kYaruTitleBarItemHeight,
       child: switch (searchType) {
         SearchType.radioCountry => const CountryAutoCompleteWithSuffix(),
         SearchType.radioTag => const TagAutoCompleteWithSuffix(),

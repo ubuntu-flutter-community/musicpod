@@ -117,8 +117,6 @@ InputDecoration createYaruDecoration({
     filled: true,
     fillColor: fillColor ?? fill,
     hoverColor: (fillColor ?? fill)?.scale(lightness: 0.1),
-    suffixIconConstraints:
-        const BoxConstraints(maxWidth: kYaruTitleBarItemHeight),
     border: border,
     errorBorder: border,
     enabledBorder: border,

@@ -447,6 +447,8 @@ EdgeInsets get countryPillPadding => yaruStyled
       )
     : const EdgeInsets.only(top: 11, bottom: 11, left: 15, right: 15);
 
+double get inputHeight => yaruStyled ? kYaruTitleBarItemHeight : 38;
+
 class CommonSwitch extends StatelessWidget {
   const CommonSwitch({super.key, required this.value, this.onChanged});
 

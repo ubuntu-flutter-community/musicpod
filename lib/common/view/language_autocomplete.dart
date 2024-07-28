@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:yaru/constants.dart';
 
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
+import 'common_widgets.dart';
 import 'icons.dart';
 import 'languages.dart';
 import 'theme.dart';
@@ -51,7 +51,7 @@ class LanguageAutoComplete extends StatelessWidget {
     final theme = context.t;
 
     return SizedBox(
-      height: height ?? (yaruStyled ? kYaruTitleBarItemHeight : 38),
+      height: height ?? inputHeight,
       width: width,
       child: LayoutBuilder(
         builder: (_, constraints) {

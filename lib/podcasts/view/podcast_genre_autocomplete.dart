@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:yaru/constants.dart';
 
 import '../../common/data/podcast_genre.dart';
+import '../../common/view/common_widgets.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -49,7 +49,7 @@ class PodcastGenreAutoComplete extends StatelessWidget {
     final theme = context.t;
 
     return SizedBox(
-      height: height ?? (yaruStyled ? kYaruTitleBarItemHeight : 38),
+      height: height ?? inputHeight,
       width: width,
       child: LayoutBuilder(
         builder: (_, constraints) {
