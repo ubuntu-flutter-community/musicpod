@@ -61,17 +61,18 @@ class _SearchPageState extends State<SearchPage> {
             ),
           Padding(
             padding: appBarSingleActionSpacing,
-            child: loading
-                ? const Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 8),
-                      child: SideBarProgress(),
-                    ),
-                  )
-                : SearchButton(
-                    active: true,
-                    onPressed: () => di<LibraryModel>().pop(),
-                  ),
+            child: SearchButton(
+              active: true,
+              onPressed: () => di<LibraryModel>().pop(),
+              icon: loading
+                  ? const SizedBox.square(
+                      dimension: 18,
+                      child: Progress(
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : null,
+            ),
           ),
         ],
       ),

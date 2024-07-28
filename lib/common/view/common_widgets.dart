@@ -249,10 +249,11 @@ class TabsBar extends StatelessWidget {
 }
 
 class SearchButton extends StatelessWidget {
-  const SearchButton({super.key, this.onPressed, this.active});
+  const SearchButton({super.key, this.onPressed, this.active, this.icon});
 
   final void Function()? onPressed;
   final bool? active;
+  final Widget? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -260,15 +261,18 @@ class SearchButton extends StatelessWidget {
         ? YaruSearchButton(
             searchActive: active,
             onPressed: onPressed,
+            icon: icon,
+            selectedIcon: icon,
           )
         : IconButton(
             isSelected: active,
             onPressed: onPressed,
-            selectedIcon: Icon(
-              Iconz().search,
-              color: context.t.colorScheme.primary,
-            ),
-            icon: Icon(Iconz().search),
+            selectedIcon: icon ??
+                Icon(
+                  Iconz().search,
+                  color: context.t.colorScheme.primary,
+                ),
+            icon: icon ?? Icon(Iconz().search),
           );
   }
 }
