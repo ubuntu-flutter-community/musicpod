@@ -56,7 +56,7 @@ class _SearchPageState extends State<SearchPage> {
         actions: [
           if (!connectedHost)
             const Padding(
-              padding: EdgeInsets.only(right: 10),
+              padding: EdgeInsets.only(left: 10),
               child: RadioReconnectButton(),
             ),
           Padding(
