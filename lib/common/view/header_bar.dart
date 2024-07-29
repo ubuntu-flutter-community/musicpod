@@ -23,8 +23,8 @@ class HeaderBar extends StatelessWidget
     this.backgroundColor,
     this.foregroundColor,
     required this.adaptive,
-    this.includeBackButtonAsLeading = true,
-    this.includeSidebarButtonAsLeading = true,
+    this.includeBackButton = true,
+    this.includeSidebarButton = true,
   });
 
   final Widget? title;
@@ -34,8 +34,8 @@ class HeaderBar extends StatelessWidget
   final Color? foregroundColor;
   final Color? backgroundColor;
   final bool adaptive;
-  final bool includeBackButtonAsLeading;
-  final bool includeSidebarButtonAsLeading;
+  final bool includeBackButton;
+  final bool includeSidebarButton;
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +43,12 @@ class HeaderBar extends StatelessWidget
 
     Widget? leading;
 
-    if (includeSidebarButtonAsLeading &&
+    if (includeSidebarButton &&
         !context.showMasterPanel &&
         masterScaffoldKey.currentState?.isDrawerOpen == false) {
       leading = const SidebarButton();
     } else {
-      if (includeBackButtonAsLeading && canPop) {
+      if (includeBackButton && canPop) {
         leading = const NavBackButton();
       } else {
         leading = null;
@@ -76,7 +76,11 @@ class HeaderBar extends StatelessWidget
     return YaruWindowTitleBar(
       titleSpacing: titleSpacing,
       actions: [
-        if (Platform.isMacOS && leading != null) leading,
+        if ((!context.showMasterPanel && Platform.isMacOS) && leading != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: leading,
+          ),
         ...?actions,
       ],
       leading: !context.showMasterPanel && Platform.isMacOS ? null : leading,
@@ -104,7 +108,13 @@ class SidebarButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: IconButton(
-        onPressed: () => masterScaffoldKey.currentState?.openDrawer(),
+        onPressed: () {
+          if (Platform.isMacOS) {
+            masterScaffoldKey.currentState?.openEndDrawer();
+          } else {
+            masterScaffoldKey.currentState?.openDrawer();
+          }
+        },
         icon: Icon(
           Iconz().sidebar,
         ),

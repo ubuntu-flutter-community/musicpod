@@ -123,8 +123,8 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
 
     final headerBar = HeaderBar(
       adaptive: false,
-      includeBackButtonAsLeading: false,
-      includeSidebarButtonAsLeading: false,
+      includeBackButton: false,
+      includeSidebarButton: false,
       title: const Text(
         '',
         maxLines: 1,

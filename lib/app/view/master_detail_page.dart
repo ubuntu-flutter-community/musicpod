@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
@@ -36,27 +38,33 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
     final libraryModel = watchIt<LibraryModel>();
     final masterItems = createMasterItems(libraryModel: libraryModel);
 
+    final drawer = Drawer(
+      width: kMasterDetailSideBarWidth,
+      child: Stack(
+        children: [
+          MasterPanel(masterItems: masterItems, libraryModel: libraryModel),
+          Positioned(
+            left: Platform.isMacOS ? 5 : null,
+            top: 5,
+            right: Platform.isMacOS ? null : 5,
+            child: IconButton(
+              onPressed: Platform.isMacOS
+                  ? masterScaffoldKey.currentState?.closeEndDrawer
+                  : masterScaffoldKey.currentState?.closeDrawer,
+              icon: Icon(
+                Iconz().close,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
     return Scaffold(
       resizeToAvoidBottomInset: isMobile ? false : null,
       key: masterScaffoldKey,
-      drawer: Drawer(
-        width: kMasterDetailSideBarWidth,
-        child: Stack(
-          children: [
-            MasterPanel(masterItems: masterItems, libraryModel: libraryModel),
-            Positioned(
-              top: 5,
-              right: 5,
-              child: IconButton(
-                onPressed: masterScaffoldKey.currentState?.closeDrawer,
-                icon: Icon(
-                  Iconz().close,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      endDrawer: Platform.isMacOS ? drawer : null,
+      drawer: Platform.isMacOS ? null : drawer,
       body: Row(
         children: [
           if (context.showMasterPanel)
@@ -111,7 +119,8 @@ class MasterPanel extends StatelessWidget {
       child: Column(
         children: [
           const HeaderBar(
-            includeBackButtonAsLeading: false,
+            includeBackButton: false,
+            includeSidebarButton: false,
             backgroundColor: Colors.transparent,
             style: YaruTitleBarStyle.undecorated,
             adaptive: false,
@@ -136,7 +145,11 @@ class MasterPanel extends StatelessWidget {
                     }
 
                     if (!context.showMasterPanel) {
-                      masterScaffoldKey.currentState?.closeDrawer();
+                      if (Platform.isMacOS) {
+                        masterScaffoldKey.currentState?.closeEndDrawer();
+                      } else {
+                        masterScaffoldKey.currentState?.closeDrawer();
+                      }
                     }
                   },
                   pageId: item.pageId,
