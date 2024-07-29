@@ -14,15 +14,11 @@ class NoSearchResultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final style = theme.textTheme.headlineSmall != null
-        ? theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: largeTextWeight,
-            color: theme.colorScheme.onSurface,
-          )
-        : TextStyle(
-            fontWeight: largeTextWeight,
-            color: theme.colorScheme.onSurface,
-          );
+    final style = theme.textTheme.headlineSmall?.copyWith(
+      fontWeight: largeTextWeight,
+      color: theme.colorScheme.onSurface,
+    );
+
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.only(
@@ -30,23 +26,30 @@ class NoSearchResultPage extends StatelessWidget {
           right: 50,
           bottom: 50,
         ),
-        child: DefaultTextStyle(
-          style: style!,
-          textAlign: TextAlign.center,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              icon ?? const AnimatedEmoji(AnimatedEmojis.thinkingFace),
-              const SizedBox(
-                height: 10,
-              ),
-              message ??
-                  Text(
-                    context.l10n.nothingFound,
-                    style: style,
-                    textAlign: TextAlign.center,
-                  ),
-            ],
+        child: SizedBox(
+          width: 500,
+          child: DefaultTextStyle(
+            style: style ??
+                TextStyle(
+                  fontWeight: largeTextWeight,
+                  color: theme.colorScheme.onSurface,
+                ),
+            textAlign: TextAlign.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                icon ?? const AnimatedEmoji(AnimatedEmojis.thinkingFace),
+                const SizedBox(
+                  height: 10,
+                ),
+                message ??
+                    Text(
+                      context.l10n.nothingFound,
+                      style: style,
+                      textAlign: TextAlign.center,
+                    ),
+              ],
+            ),
           ),
         ),
       ),

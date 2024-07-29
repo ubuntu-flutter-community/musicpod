@@ -46,6 +46,7 @@ class _AboutPageState extends State<AboutPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           YaruDialogTitleBar(
+            border: BorderSide.none,
             backgroundColor: context.t.dialogBackgroundColor,
             title: Text('${context.l10n.about} ${appName ?? ''}'),
             leading: YaruBackButton(

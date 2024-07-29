@@ -30,6 +30,7 @@ class SettingsPage extends StatelessWidget {
     return Column(
       children: [
         YaruDialogTitleBar(
+          border: BorderSide.none,
           backgroundColor: context.t.dialogBackgroundColor,
           onClose: (p0) => Navigator.of(rootNavigator: true, context).pop(),
           title: Text(context.l10n.settings),

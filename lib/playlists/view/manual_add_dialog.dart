@@ -20,11 +20,13 @@ class ManualAddDialog extends StatelessWidget {
     return AlertDialog(
       title: yaruStyled
           ? YaruDialogTitleBar(
+              border: BorderSide.none,
               backgroundColor: Colors.transparent,
               title: Text(context.l10n.add),
             )
           : null,
       titlePadding: yaruStyled ? EdgeInsets.zero : null,
+      contentPadding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
       content: SizedBox(
         height: 200,
         width: 400,

@@ -6,6 +6,7 @@ import '../../common/data/podcast_genre.dart';
 import '../../common/view/country_auto_complete.dart';
 import '../../common/view/language_autocomplete.dart';
 import '../../common/view/theme.dart';
+import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../library/library_model.dart';
 import '../../podcasts/view/podcast_genre_autocomplete.dart';
@@ -82,7 +83,7 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
       title: Align(
         alignment: Alignment.center,
         child: SizedBox(
-          width: 380,
+          width: kSearchBarWidth,
           child: Row(
             children: [
               if (usePodcastIndex)

@@ -88,7 +88,7 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
         ],
         title: SizedBox(
           width: kSearchBarWidth,
-          height: inputHeight,
+          height: inputHeight - (yaruStyled ? 2 : 0),
           child: SearchInput(
             hintText: '${context.l10n.search}: ${context.l10n.localAudio}',
             text: searchQuery,
