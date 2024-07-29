@@ -4,7 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/view/common_widgets.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/tapable_text.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -46,6 +46,7 @@ class _AboutPageState extends State<AboutPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           YaruDialogTitleBar(
+            border: BorderSide.none,
             backgroundColor: context.t.dialogBackgroundColor,
             title: Text('${context.l10n.about} ${appName ?? ''}'),
             leading: YaruBackButton(

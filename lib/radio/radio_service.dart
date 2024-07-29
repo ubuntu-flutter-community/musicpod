@@ -17,7 +17,7 @@ class RadioService {
     for (var host in hosts) {
       try {
         _radioBrowserApi = RadioBrowserApi.fromHost(host);
-        _tags = await loadTags();
+        _tags = await _loadTags();
         if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
           return _radioBrowserApi?.host;
         }
@@ -89,7 +89,7 @@ class RadioService {
 
   List<Tag>? _tags;
   List<Tag>? get tags => _tags;
-  Future<List<Tag>?> loadTags({
+  Future<List<Tag>?> _loadTags({
     String? filter,
     int? limit,
   }) async {

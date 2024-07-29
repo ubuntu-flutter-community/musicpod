@@ -1,21 +1,57 @@
-import '../../common/view/common_widgets.dart';
+import 'package:animated_emoji/animated_emoji.dart';
+import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
+
+import '../../app/connectivity_model.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
+import '../../common/view/snackbars.dart';
+import '../../common/view/theme.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_model.dart';
 import '../../radio/view/station_card.dart';
 import '../search_model.dart';
-import 'package:animated_emoji/animated_emoji.dart';
-import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
 
-class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
+class SliverRadioSearchResults extends StatefulWidget
+    with WatchItStatefulWidgetMixin {
   const SliverRadioSearchResults({super.key});
 
   @override
+  State<SliverRadioSearchResults> createState() =>
+      _SliverRadioSearchResultsState();
+}
+
+class _SliverRadioSearchResultsState extends State<SliverRadioSearchResults> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final model = di<RadioModel>();
+      final connectivityModel = di<ConnectivityModel>();
+      model.init().then(
+        (connectedHost) {
+          if (!connectivityModel.isOnline) {
+            return;
+          }
+          if (mounted && model.showConnectSnackBar) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              buildConnectSnackBar(
+                connectedHost: connectedHost,
+                context: context,
+              ),
+            );
+          }
+        },
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    final connectedHost = watchPropertyValue((RadioModel m) => m.connectedHost);
 
     if (!isOnline) {
       return const SliverFillRemaining(
@@ -23,6 +59,13 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
         child: OfflineBody(),
       );
     }
+
+    if (connectedHost == null) {
+      return const SliverFillRemaining(
+        hasScrollBody: false,
+      );
+    }
+
     final radioSearchResult =
         watchPropertyValue((SearchModel m) => m.radioSearchResult);
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);

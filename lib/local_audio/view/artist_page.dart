@@ -5,23 +5,25 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/avatar_play_button.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/explore_online_popup.dart';
+import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/like_all_icon.dart';
 import '../../common/view/round_image_container.dart';
+import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
+import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../settings/settings_model.dart';
 import '../local_audio_model.dart';
 import 'album_page.dart';
 import 'album_view.dart';
@@ -48,8 +50,7 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
       return const SizedBox.shrink();
     }
 
-    final useGridView =
-        watchPropertyValue((SettingsModel m) => m.useArtistGridView);
+    final useGridView = watchPropertyValue((AppModel m) => m.useArtistGridView);
 
     void onAlbumTap(text) {
       final audios = model.findAlbum(Audio(album: text));
@@ -94,18 +95,24 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
         builder: (context, constraints) {
           return CustomScrollView(
             slivers: [
-              SliverToBoxAdapter(
-                child: AudioPageHeader(
-                  imageRadius: BorderRadius.circular(10000),
-                  title: artistAudios?.firstOrNull?.artist ?? '',
-                  image: RoundImageContainer(
-                    images: images,
-                    fallBackText: pageId,
+              SliverPadding(
+                padding: getAdaptiveHorizontalPadding(
+                  constraints: constraints,
+                  min: 40,
+                ),
+                sliver: SliverToBoxAdapter(
+                  child: AudioPageHeader(
+                    imageRadius: BorderRadius.circular(10000),
+                    title: artistAudios?.firstOrNull?.artist ?? '',
+                    image: RoundImageContainer(
+                      images: images,
+                      fallBackText: pageId,
+                    ),
+                    subTitle: artistAudios?.firstOrNull?.genre,
+                    label: context.l10n.artist,
+                    onLabelTab: onAlbumTap,
+                    onSubTitleTab: onSubTitleTab,
                   ),
-                  subTitle: artistAudios?.firstOrNull?.genre,
-                  label: context.l10n.artist,
-                  onLabelTab: onAlbumTap,
-                  onSubTitleTab: onSubTitleTab,
                 ),
               ),
               SliverAudioPageControlPanel(
@@ -116,7 +123,8 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
               ),
               if (useGridView)
                 SliverPadding(
-                  padding: getAdaptiveHorizontalPadding(constraints),
+                  padding:
+                      getAdaptiveHorizontalPadding(constraints: constraints),
                   sliver: AlbumsView(
                     sliver: true,
                     albums: albums,
@@ -124,7 +132,8 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
                 )
               else
                 SliverPadding(
-                  padding: getAdaptiveHorizontalPadding(constraints),
+                  padding:
+                      getAdaptiveHorizontalPadding(constraints: constraints),
                   sliver: SliverAudioTileList(
                     audios: artistAudios!,
                     pageId: pageId,
@@ -151,9 +160,8 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final useGridView =
-        watchPropertyValue((SettingsModel m) => m.useArtistGridView);
-    final setUseGridView = di<SettingsModel>().setUseArtistGridView;
+    final useGridView = watchPropertyValue((AppModel m) => m.useArtistGridView);
+    final setUseGridView = di<AppModel>().setUseArtistGridView;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [

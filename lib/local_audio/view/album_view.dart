@@ -5,8 +5,9 @@ import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/no_search_result_page.dart';
+import '../../common/view/progress.dart';
+import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
@@ -70,7 +71,7 @@ class AlbumsView extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(top: 15),
             child: GridView.builder(
-              padding: getAdaptiveHorizontalPadding(constraints),
+              padding: getAdaptiveHorizontalPadding(constraints: constraints),
               itemCount: albums!.length,
               gridDelegate: audioCardGridDelegate,
               itemBuilder: itemBuilder,

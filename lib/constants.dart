@@ -23,7 +23,7 @@ const kTinyButtonSize = 30.0;
 
 const kTinyButtonIconSize = 13.0;
 
-const kSearchBarWidth = 350.0;
+const kSearchBarWidth = 335.0;
 
 const kSnackBarWidth = 500.0;
 

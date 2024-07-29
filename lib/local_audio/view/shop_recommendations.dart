@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../extensions/build_context_x.dart';
+import '../../common/view/theme.dart';
 import '../../constants.dart';
-import '../../common/view/common_widgets.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 
 class ShopRecommendations extends StatelessWidget {

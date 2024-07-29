@@ -21,7 +21,7 @@ class AudioTypeFilterButton extends StatelessWidget with WatchItMixin {
       initialValue: audioType,
       onSelected: (v) async {
         if (v == AudioType.local) {
-          di<LocalAudioModel>().search(di<SearchModel>().searchQuery);
+          di<LocalAudioModel>().search(di<SearchModel>().searchQuery ?? '');
           await di<LibraryModel>().push(
             builder: (_) => const LocalAudioSearchPage(),
             pageId: kSearchPageId,

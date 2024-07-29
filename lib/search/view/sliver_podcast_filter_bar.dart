@@ -3,10 +3,10 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/podcast_genre.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/country_auto_complete.dart';
 import '../../common/view/language_autocomplete.dart';
 import '../../common/view/theme.dart';
+import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../library/library_model.dart';
 import '../../podcasts/view/podcast_genre_autocomplete.dart';
@@ -75,7 +75,6 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
       onStretchTrigger: () async {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
           if (context.mounted) {
-            searchModel.incrementPodcastLimit(4);
             return searchModel.search();
           }
         });
@@ -83,7 +82,7 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
       title: Align(
         alignment: Alignment.center,
         child: SizedBox(
-          width: 380,
+          width: kSearchBarWidth,
           child: Row(
             children: [
               if (usePodcastIndex)

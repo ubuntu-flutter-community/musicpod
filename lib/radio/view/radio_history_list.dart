@@ -42,7 +42,7 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
       child: LayoutBuilder(
         builder: (context, constraints) {
           return ListView.builder(
-            padding: getAdaptiveHorizontalPadding(constraints),
+            padding: getAdaptiveHorizontalPadding(constraints: constraints),
             itemCount: radioHistory.length,
             itemBuilder: (context, index) {
               final reversedIndex = radioHistory.length - index - 1;

@@ -8,12 +8,15 @@ import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_header_html_description.dart';
 import '../../common/view/avatar_play_button.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/explore_online_popup.dart';
+import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
+import '../../common/view/search_button.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
+import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -84,36 +87,43 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         builder: (context, constraints) {
           return CustomScrollView(
             slivers: [
-              SliverToBoxAdapter(
-                child: AudioPageHeader(
-                  image: imageUrl == null
-                      ? null
-                      : SafeNetworkImage(
-                          fallBackIcon: Icon(
-                            Iconz().podcast,
-                            size: 80,
-                            color: theme.hintColor,
+              SliverPadding(
+                padding: getAdaptiveHorizontalPadding(
+                  constraints: constraints,
+                  min: 40,
+                ),
+                sliver: SliverToBoxAdapter(
+                  child: AudioPageHeader(
+                    image: imageUrl == null
+                        ? null
+                        : SafeNetworkImage(
+                            fallBackIcon: Icon(
+                              Iconz().podcast,
+                              size: 80,
+                              color: theme.hintColor,
+                            ),
+                            errorIcon: Icon(
+                              Iconz().podcast,
+                              size: 80,
+                              color: theme.hintColor,
+                            ),
+                            url: imageUrl,
+                            fit: BoxFit.fitHeight,
+                            filterQuality: FilterQuality.medium,
                           ),
-                          errorIcon: Icon(
-                            Iconz().podcast,
-                            size: 80,
-                            color: theme.hintColor,
-                          ),
-                          url: imageUrl,
-                          fit: BoxFit.fitHeight,
-                          filterQuality: FilterQuality.medium,
-                        ),
-                  label:
-                      audios?.firstWhereOrNull((e) => e.genre != null)?.genre ??
-                          context.l10n.podcast,
-                  subTitle: audios?.firstOrNull?.artist,
-                  description: AudioPageHeaderHtmlDescription(
-                    description: audios?.firstOrNull?.albumArtist,
+                    label: audios
+                            ?.firstWhereOrNull((e) => e.genre != null)
+                            ?.genre ??
+                        context.l10n.podcast,
+                    subTitle: audios?.firstOrNull?.artist,
+                    description: AudioPageHeaderHtmlDescription(
+                      description: audios?.firstOrNull?.albumArtist,
+                      title: title,
+                    ),
                     title: title,
+                    onLabelTab: onTap,
+                    onSubTitleTab: onTap,
                   ),
-                  title: title,
-                  onLabelTab: onTap,
-                  onSubTitleTab: onTap,
                 ),
               ),
               SliverAudioPageControlPanel(
@@ -124,7 +134,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                 ),
               ),
               SliverPadding(
-                padding: getAdaptiveHorizontalPadding(constraints),
+                padding: getAdaptiveHorizontalPadding(constraints: constraints),
                 sliver: SliverPodcastPageList(
                   audios: audiosWithDownloads,
                   pageId: pageId,

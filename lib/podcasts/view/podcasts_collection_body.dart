@@ -136,7 +136,9 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                     : LayoutBuilder(
                         builder: (context, constraints) {
                           return GridView.builder(
-                            padding: getAdaptiveHorizontalPadding(constraints),
+                            padding: getAdaptiveHorizontalPadding(
+                              constraints: constraints,
+                            ),
                             itemCount: itemCount,
                             gridDelegate: audioCardGridDelegate,
                             itemBuilder: (context, index) {

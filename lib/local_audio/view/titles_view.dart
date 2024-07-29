@@ -5,8 +5,8 @@ import 'package:watch_it/watch_it.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_type.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/no_search_result_page.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
 import '../../constants.dart';
 import '../../library/library_model.dart';
@@ -50,7 +50,7 @@ class TitlesView extends StatelessWidget {
           return CustomScrollView(
             slivers: [
               SliverPadding(
-                padding: getAdaptiveHorizontalPadding(constraints),
+                padding: getAdaptiveHorizontalPadding(constraints: constraints),
                 sliver: SliverAudioTileList(
                   audios: audios!,
                   audioPageType: AudioPageType.allTitlesView,

@@ -5,16 +5,16 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/constants.dart';
 
 import '../../app/app_model.dart';
-import '../../common/view/icons.dart';
-import '../../common/view/share_button.dart';
-import '../../extensions/build_context_x.dart';
-
+import '../../app/connectivity_model.dart';
 import '../../common/data/audio.dart';
+import '../../common/view/icons.dart';
+import '../../common/view/like_icon.dart';
+import '../../common/view/share_button.dart';
 import '../../constants.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import 'playback_rate_button.dart';
-import '../../common/view/like_icon.dart';
 import 'player_view.dart';
 import 'queue_button.dart';
 import 'volume_popup.dart';
@@ -41,7 +41,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
     final playerToTheRight = context.m.size.width > kSideBarThreshHold;
     final fullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
     final appModel = di<AppModel>();
-    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
 
     return Padding(

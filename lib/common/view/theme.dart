@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../constants.dart';
 import '../../extensions/theme_data_x.dart';
+
+// TODO: MOVE TO THEME EXTENSIONS where possible!
 
 const yaruFixDarkDividerColor = Color.fromARGB(19, 255, 255, 255);
 
@@ -156,3 +159,59 @@ Color? chipBorder(ThemeData theme, bool loading) {
 Color? chipSelectionColor(ThemeData theme, bool loading) {
   return yaruStyled ? (loading ? theme.colorScheme.outline : null) : null;
 }
+
+double get podcastProgressSize => yaruStyled ? 34 : 45;
+
+double get likeButtonWidth => yaruStyled ? 62 : 70;
+
+double? get avatarIconSize => yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
+
+double get bigPlayButtonSize => 25;
+
+double get searchBarWidth => isMobile ? kSearchBarWidth : 600;
+
+bool get showSideBarFilter => yaruStyled ? true : false;
+
+FontWeight get smallTextFontWeight =>
+    yaruStyled ? FontWeight.w100 : FontWeight.w400;
+
+FontWeight get mediumTextWeight =>
+    yaruStyled ? FontWeight.w400 : FontWeight.w400;
+
+FontWeight get largeTextWeight =>
+    yaruStyled ? FontWeight.w200 : FontWeight.w300;
+
+bool get shrinkTitleBarItems => yaruStyled;
+
+double get chipHeight => yaruStyled ? kYaruTitleBarItemHeight : 38;
+
+EdgeInsetsGeometry get tabViewPadding =>
+    isMobile ? const EdgeInsets.only(top: 15) : const EdgeInsets.only(top: 5);
+
+EdgeInsetsGeometry get gridPadding =>
+    isMobile ? kMobileGridPadding : kGridPadding;
+
+SliverGridDelegate get audioCardGridDelegate =>
+    isMobile ? kMobileAudioCardGridDelegate : kAudioCardGridDelegate;
+
+EdgeInsetsGeometry get appBarSingleActionSpacing => Platform.isMacOS
+    ? const EdgeInsets.only(right: 5, left: 5)
+    : const EdgeInsets.only(right: 10, left: 20);
+
+EdgeInsetsGeometry get radioHistoryListPadding =>
+    EdgeInsets.only(left: yaruStyled ? 0 : 5);
+
+EdgeInsets get countryPillPadding => yaruStyled
+    ? const EdgeInsets.only(
+        bottom: 9,
+        top: 9,
+        right: 15,
+        left: 15,
+      )
+    : const EdgeInsets.only(top: 11, bottom: 11, left: 15, right: 15);
+
+double get inputHeight => yaruStyled ? kYaruTitleBarItemHeight : 38;
+
+TextStyle getControlPanelStyle(TextTheme textTheme) =>
+    textTheme.headlineSmall?.copyWith(fontWeight: largeTextWeight) ??
+    const TextStyle(fontSize: 25);

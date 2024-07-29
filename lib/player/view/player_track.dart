@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/custom_track_shape.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';

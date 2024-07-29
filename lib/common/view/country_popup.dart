@@ -5,7 +5,7 @@ import 'package:yaru/yaru.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../l10n/l10n.dart';
-import 'common_widgets.dart';
+import 'drop_down_arrow.dart';
 
 class CountryPopup extends StatelessWidget {
   const CountryPopup({

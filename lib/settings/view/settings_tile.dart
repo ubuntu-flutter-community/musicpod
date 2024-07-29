@@ -4,13 +4,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/view/common_widgets.dart';
+import '../../app/connectivity_model.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../player/player_model.dart';
 import '../settings_model.dart';
 import 'settings_dialog.dart';
 
@@ -21,7 +21,8 @@ class SettingsTile extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget? trailing;
     // To not show any progress for Snap/Flatpak
-    if (di<PlayerModel>().isOnline && di<SettingsModel>().allowManualUpdate) {
+    if (di<ConnectivityModel>().isOnline &&
+        di<SettingsModel>().allowManualUpdate) {
       trailing = const _UpdateButton();
     }
 

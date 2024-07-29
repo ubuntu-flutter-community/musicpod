@@ -8,10 +8,10 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
-import '../../player/player_model.dart';
 import '../../player/view/player_view.dart';
 import '../../settings/settings_model.dart';
 import '../app_model.dart';
+import '../connectivity_model.dart';
 import 'master_detail_page.dart';
 
 class MusicPodScaffold extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -26,7 +26,7 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
   void initState() {
     super.initState();
     final settingsModel = di<SettingsModel>();
-    settingsModel.checkForUpdate(di<PlayerModel>().isOnline).then((_) {
+    settingsModel.checkForUpdate(di<ConnectivityModel>().isOnline).then((_) {
       if (!mounted) return;
       if (settingsModel.recentPatchNotesDisposed == false) {
         showPatchNotes(context);

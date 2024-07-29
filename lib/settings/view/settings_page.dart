@@ -4,9 +4,11 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/connectivity_model.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
@@ -16,7 +18,6 @@ import '../../extensions/theme_data_x.dart';
 import '../../extensions/theme_mode_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_model.dart';
-import '../../player/player_model.dart';
 import '../../podcasts/podcast_model.dart';
 import '../settings_model.dart';
 import 'theme_tile.dart';
@@ -29,6 +30,7 @@ class SettingsPage extends StatelessWidget {
     return Column(
       children: [
         YaruDialogTitleBar(
+          border: BorderSide.none,
           backgroundColor: context.t.dialogBackgroundColor,
           onClose: (p0) => Navigator.of(rootNavigator: true, context).pop(),
           title: Text(context.l10n.settings),
@@ -279,14 +281,13 @@ class _AboutTileState extends State<_AboutTile> {
   @override
   void initState() {
     super.initState();
-    di<SettingsModel>().checkForUpdate(di<PlayerModel>().isOnline);
+    di<SettingsModel>().checkForUpdate(di<ConnectivityModel>().isOnline);
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
     final settingsModel = di<SettingsModel>();
-    final playerModel = di<PlayerModel>();
     final updateAvailable =
         watchPropertyValue((SettingsModel m) => m.updateAvailable);
     final onlineVersion =
@@ -294,38 +295,39 @@ class _AboutTileState extends State<_AboutTile> {
     final currentVersion = watchPropertyValue((SettingsModel m) => m.version);
 
     return YaruTile(
-      title: !playerModel.isOnline || !settingsModel.allowManualUpdate
-          ? Text(settingsModel.version ?? '')
-          : updateAvailable == null
-              ? Center(
-                  child: SizedBox.square(
-                    dimension: yaruStyled ? kYaruTitleBarItemHeight : 40,
-                    child: const Progress(
-                      padding: EdgeInsets.all(10),
-                    ),
-                  ),
-                )
-              : TapAbleText(
-                  text: updateAvailable == true
-                      ? '${context.l10n.updateAvailable}: $onlineVersion'
-                      : currentVersion ?? context.l10n.unknown,
-                  style: updateAvailable == true
-                      ? TextStyle(
-                          color: context.t.colorScheme.success
-                              .scale(lightness: theme.isLight ? 0 : 0.3),
-                        )
-                      : null,
-                  onTap: () => launchUrl(
-                    Uri.parse(
-                      p.join(
-                        kRepoUrl,
-                        'releases',
-                        'tag',
-                        onlineVersion,
+      title:
+          !di<ConnectivityModel>().isOnline || !settingsModel.allowManualUpdate
+              ? Text(settingsModel.version ?? '')
+              : updateAvailable == null
+                  ? Center(
+                      child: SizedBox.square(
+                        dimension: yaruStyled ? kYaruTitleBarItemHeight : 40,
+                        child: const Progress(
+                          padding: EdgeInsets.all(10),
+                        ),
+                      ),
+                    )
+                  : TapAbleText(
+                      text: updateAvailable == true
+                          ? '${context.l10n.updateAvailable}: $onlineVersion'
+                          : currentVersion ?? context.l10n.unknown,
+                      style: updateAvailable == true
+                          ? TextStyle(
+                              color: context.t.colorScheme.success
+                                  .scale(lightness: theme.isLight ? 0 : 0.3),
+                            )
+                          : null,
+                      onTap: () => launchUrl(
+                        Uri.parse(
+                          p.join(
+                            kRepoUrl,
+                            'releases',
+                            'tag',
+                            onlineVersion,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
       trailing: OutlinedButton(
         onPressed: () => settingsNavigatorKey.currentState?.pushNamed('/about'),
         child: Text(context.l10n.contributors),

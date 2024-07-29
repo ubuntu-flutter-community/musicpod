@@ -4,7 +4,10 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
 import '../../app/app_model.dart';
-import '../../common/view/common_widgets.dart';
+import '../../common/view/header_bar.dart';
+import '../../common/view/search_button.dart';
+import '../../common/view/search_input.dart';
+import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -85,8 +88,8 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
         ],
         title: SizedBox(
           width: kSearchBarWidth,
-          height: inputHeight,
-          child: SearchingBar(
+          height: inputHeight - (yaruStyled ? 2 : 0),
+          child: SearchInput(
             hintText: '${context.l10n.search}: ${context.l10n.localAudio}',
             text: searchQuery,
             onChanged: (value) {

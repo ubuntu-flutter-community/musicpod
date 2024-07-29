@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../common/view/header_bar.dart';
 import '../../extensions/build_context_x.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 
 class SplashScreen extends StatefulWidget {

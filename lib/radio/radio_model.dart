@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:radio_browser_api/radio_browser_api.dart' hide Country;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
@@ -20,16 +19,16 @@ class RadioModel extends SafeChangeNotifier {
     }
   }
 
-  Future<List<Tag>?> loadTags({
-    String? filter,
-    int? limit,
-  }) async =>
-      _radioService.loadTags(filter: filter, limit: limit);
-
-  String? _connectedHost;
+  bool showConnectSnackBar = true;
+  // The empty string is used so before the first check the UI does not overreact
+  String? _connectedHost = '';
   String? get connectedHost => _connectedHost;
   Future<String?> init() async {
+    final oldHost = _connectedHost;
     _connectedHost = await _radioService.init();
+    if (oldHost == _connectedHost) {
+      showConnectSnackBar = false;
+    }
     notifyListeners();
     return _connectedHost;
   }

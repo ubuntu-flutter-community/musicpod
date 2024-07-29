@@ -3,9 +3,9 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
-import '../../common/view/common_widgets.dart';
+import '../../app/connectivity_model.dart';
+import '../../common/view/header_bar.dart';
 import '../../extensions/build_context_x.dart';
-
 import '../../player/player_model.dart';
 import 'blurred_full_height_player_image.dart';
 import 'full_height_player_image.dart';
@@ -29,7 +29,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.t;
     final size = context.m.size;
-    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     final appModel = di<AppModel>();
     final nextAudio = watchPropertyValue((PlayerModel m) => m.nextAudio);
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
@@ -124,6 +124,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
     final headerBar = HeaderBar(
       adaptive: false,
       includeBackButton: false,
+      includeSidebarButton: false,
       title: const Text(
         '',
         maxLines: 1,

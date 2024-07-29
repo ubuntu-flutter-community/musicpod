@@ -4,8 +4,8 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/no_search_result_page.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/round_image_container.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
@@ -43,7 +43,7 @@ class GenresView extends StatelessWidget {
           padding: const EdgeInsets.only(top: 15),
           child: GridView.builder(
             itemCount: genres!.length,
-            padding: getAdaptiveHorizontalPadding(constraints),
+            padding: getAdaptiveHorizontalPadding(constraints: constraints),
             gridDelegate: kDiskGridDelegate,
             itemBuilder: (context, index) {
               final text =

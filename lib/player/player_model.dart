@@ -16,11 +16,9 @@ class PlayerModel extends SafeChangeNotifier {
   PlayerModel({
     required PlayerService service,
     required Connectivity connectivity,
-  })  : _service = service,
-        _connectivity = connectivity;
+  }) : _service = service;
 
   VideoController get controller => _service.controller;
-  final Connectivity _connectivity;
 
   StreamSubscription<bool>? _queueNameChangedSub;
   StreamSubscription<bool>? _queueChangedSub;
@@ -90,7 +88,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> resume() async => _service.resume();
 
-  Future<void> init() async {
+  void init() {
     _queueNameChangedSub ??=
         _service.queueChanged.listen((_) => notifyListeners());
     _queueChangedSub ??= _service.queueChanged.listen((_) => notifyListeners());
@@ -118,48 +116,6 @@ class PlayerModel extends SafeChangeNotifier {
         _service.radioHistoryChanged.listen((_) => notifyListeners());
     _lastPositionsSub ??=
         _service.lastPositionsChanged.listen((_) => notifyListeners());
-
-    // TODO: fix https://github.com/fluttercommunity/plus_plugins/issues/1451
-    _connectivitySubscription ??= _connectivity.onConnectivityChanged.listen(
-      (r) => _updateConnectivity(newResult: r),
-      onError: (e) => _result = [ConnectivityResult.wifi],
-    );
-
-    return _connectivity
-        .checkConnectivity()
-        .then(
-          (r) => _updateConnectivity(newResult: r),
-        )
-        .catchError(
-          (e) => _updateConnectivity(newResult: [ConnectivityResult.wifi]),
-        );
-  }
-
-  bool get isOnline => _isOnline(_result);
-
-  bool _isOnline(List<ConnectivityResult>? res) =>
-      res?.contains(ConnectivityResult.ethernet) == true ||
-      res?.contains(ConnectivityResult.bluetooth) == true ||
-      res?.contains(ConnectivityResult.mobile) == true ||
-      res?.contains(ConnectivityResult.vpn) == true ||
-      res?.contains(ConnectivityResult.wifi) == true;
-
-  // Needed to prevent auto resume on app start
-  bool _firstCheck = true;
-  List<ConnectivityResult>? _result;
-  void _updateConnectivity({required List<ConnectivityResult> newResult}) {
-    if (!_isOnline(_result) && _isOnline(newResult) && !_firstCheck) {
-      switch (audio?.audioType) {
-        case AudioType.radio:
-          playNext();
-        default:
-      }
-    }
-    _result = newResult;
-    if (!_firstCheck) {
-      notifyListeners();
-    }
-    _firstCheck = false;
   }
 
   Future<void> playNext() async => _service.playNext();

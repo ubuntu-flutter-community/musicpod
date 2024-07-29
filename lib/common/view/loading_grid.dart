@@ -4,7 +4,7 @@ import '../data/audio.dart';
 import 'adaptive_container.dart';
 import 'audio_card.dart';
 import 'audio_card_bottom.dart';
-import 'common_widgets.dart';
+import 'theme.dart';
 
 class LoadingGrid extends StatelessWidget {
   const LoadingGrid({
@@ -20,7 +20,7 @@ class LoadingGrid extends StatelessWidget {
       builder: (context, constraints) {
         return GridView(
           gridDelegate: audioCardGridDelegate,
-          padding: getAdaptiveHorizontalPadding(constraints),
+          padding: getAdaptiveHorizontalPadding(constraints: constraints),
           children: List.generate(limit, (index) => const Audio())
               .map(
                 (e) => const AudioCard(

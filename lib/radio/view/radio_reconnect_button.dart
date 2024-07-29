@@ -13,9 +13,10 @@ class RadioReconnectButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = di<RadioModel>();
 
-    return IconButton(
-      tooltip:
-          '${context.l10n.noRadioServerFound}: ${context.l10n.tryReconnect}',
+    return TextButton.icon(
+      label: Text(
+        '${context.l10n.noRadioServerFound}: ${context.l10n.tryReconnect}',
+      ),
       onPressed: () => model.init().then(
         (host) {
           ScaffoldMessenger.of(context).clearSnackBars();

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/view/common_widgets.dart';
+import '../../common/view/theme.dart';
 import '../player_mixin.dart';
 import '../player_model.dart';
 
