@@ -57,9 +57,9 @@ class _SearchPageState extends State<SearchPage> {
               active: true,
               onPressed: () => di<LibraryModel>().pop(),
               icon: loading
-                  ? const SizedBox.square(
-                      dimension: 18,
-                      child: Progress(
+                  ? SizedBox.square(
+                      dimension: yaruStyled ? 18 : 25,
+                      child: const Progress(
                         strokeWidth: 2,
                       ),
                     )

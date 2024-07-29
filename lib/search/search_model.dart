@@ -122,7 +122,8 @@ class SearchModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  int _podcastLimit = 20;
+  // TODO: add limit increase on scroll
+  int _podcastLimit = 30;
   void incrementPodcastLimit(int value) => _podcastLimit += value;
 
   bool loading = false;

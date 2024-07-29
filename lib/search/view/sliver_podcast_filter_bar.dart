@@ -75,7 +75,6 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
       onStretchTrigger: () async {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
           if (context.mounted) {
-            searchModel.incrementPodcastLimit(4);
             return searchModel.search();
           }
         });
