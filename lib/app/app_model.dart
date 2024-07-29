@@ -33,14 +33,6 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  int _radioIndex = 0;
-  int get radioindex => _radioIndex;
-  set radioindex(int value) {
-    if (value == _radioIndex) return;
-    _radioIndex = value;
-    notifyListeners();
-  }
-
   bool _manualFilter = false;
   bool get manualFilter => _manualFilter;
   void setManualFilter(bool value) {
@@ -54,6 +46,14 @@ class AppModel extends SafeChangeNotifier {
   void setAllowReorder(bool value) {
     if (value == _allowReorder) return;
     _allowReorder = value;
+    notifyListeners();
+  }
+
+  bool _useArtistGridView = true;
+  bool get useArtistGridView => _useArtistGridView;
+  void setUseArtistGridView(bool value) {
+    if (value == _useArtistGridView) return;
+    _useArtistGridView = value;
     notifyListeners();
   }
 }

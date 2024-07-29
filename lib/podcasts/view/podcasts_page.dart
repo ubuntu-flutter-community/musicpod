@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
+import '../../app/connectivity_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
@@ -38,7 +39,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
 
     final checkingForUpdates =

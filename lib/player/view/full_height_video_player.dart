@@ -3,6 +3,7 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/constants.dart';
 
+import '../../app/connectivity_model.dart';
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
 import '../player_model.dart';
@@ -21,7 +22,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
 
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
     final playerModel = di<PlayerModel>();
-    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
 
     final controls = FullHeightPlayerTopControls(

@@ -19,10 +19,16 @@ class RadioModel extends SafeChangeNotifier {
     }
   }
 
-  String? _connectedHost;
+  bool showConnectSnackBar = true;
+  // The empty string is used so before the first check the UI does not overreact
+  String? _connectedHost = '';
   String? get connectedHost => _connectedHost;
   Future<String?> init() async {
+    final oldHost = _connectedHost;
     _connectedHost = await _radioService.init();
+    if (oldHost == _connectedHost) {
+      showConnectSnackBar = false;
+    }
     notifyListeners();
     return _connectedHost;
   }

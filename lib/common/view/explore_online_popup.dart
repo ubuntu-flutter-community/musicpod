@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/connectivity_model.dart';
 import '../../l10n/l10n.dart';
-import '../../player/player_model.dart';
 import 'icons.dart';
 import 'stream_provider_share_button.dart';
 
@@ -16,7 +16,7 @@ class ExploreOnlinePopup extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     return PopupMenuButton(
       enabled: isOnline,
       tooltip: context.l10n.searchOnline,

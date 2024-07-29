@@ -7,7 +7,6 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/mpv_meta_data.dart';
-import '../extensions/connectivity_x.dart';
 import 'player_service.dart';
 
 const rateValues = [1.0, 1.5, 2.0];
@@ -17,11 +16,9 @@ class PlayerModel extends SafeChangeNotifier {
   PlayerModel({
     required PlayerService service,
     required Connectivity connectivity,
-  })  : _service = service,
-        _connectivity = connectivity;
+  }) : _service = service;
 
   VideoController get controller => _service.controller;
-  final Connectivity _connectivity;
 
   StreamSubscription<bool>? _queueNameChangedSub;
   StreamSubscription<bool>? _queueChangedSub;
@@ -91,7 +88,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> resume() async => _service.resume();
 
-  Future<void> init() async {
+  void init() {
     _queueNameChangedSub ??=
         _service.queueChanged.listen((_) => notifyListeners());
     _queueChangedSub ??= _service.queueChanged.listen((_) => notifyListeners());
@@ -119,43 +116,6 @@ class PlayerModel extends SafeChangeNotifier {
         _service.radioHistoryChanged.listen((_) => notifyListeners());
     _lastPositionsSub ??=
         _service.lastPositionsChanged.listen((_) => notifyListeners());
-
-    // TODO: fix https://github.com/fluttercommunity/plus_plugins/issues/1451
-    _connectivitySubscription ??= _connectivity.onConnectivityChanged.listen(
-      (r) => _updateConnectivity(newResult: r),
-      onError: (e) => _result = [ConnectivityResult.wifi],
-    );
-
-    return _connectivity
-        .checkConnectivity()
-        .then(
-          (r) => _updateConnectivity(newResult: r),
-        )
-        .catchError(
-          (e) => _updateConnectivity(newResult: [ConnectivityResult.wifi]),
-        );
-  }
-
-  bool get isOnline => _connectivity.isOnline(_result);
-
-  // Needed to prevent auto resume on app start
-  bool _firstCheck = true;
-  List<ConnectivityResult>? _result;
-  void _updateConnectivity({required List<ConnectivityResult> newResult}) {
-    if (!_connectivity.isOnline(_result) &&
-        _connectivity.isOnline(newResult) &&
-        !_firstCheck) {
-      switch (audio?.audioType) {
-        case AudioType.radio:
-          playNext();
-        default:
-      }
-    }
-    _result = newResult;
-    if (!_firstCheck) {
-      notifyListeners();
-    }
-    _firstCheck = false;
   }
 
   Future<void> playNext() async => _service.playNext();

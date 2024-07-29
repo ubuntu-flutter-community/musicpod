@@ -2,6 +2,7 @@ import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/connectivity_model.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/no_search_result_page.dart';
@@ -10,7 +11,6 @@ import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
-import '../../player/player_model.dart';
 import '../../podcasts/podcast_utils.dart';
 import '../search_model.dart';
 
@@ -19,7 +19,7 @@ class SliverPodcastSearchResults extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
 
     if (!isOnline) {
       return const SliverFillRemaining(

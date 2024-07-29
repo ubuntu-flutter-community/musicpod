@@ -3,8 +3,10 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
+import '../../app/connectivity_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/like_icon.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
@@ -12,7 +14,6 @@ import 'bottom_player_image.dart';
 import 'bottom_player_title_artist.dart';
 import 'play_button.dart';
 import 'playback_rate_button.dart';
-import '../../common/view/like_icon.dart';
 import 'player_main_controls.dart';
 import 'player_track.dart';
 import 'queue_button.dart';
@@ -34,7 +35,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
 
     final model = di<PlayerModel>();
     final appModel = di<AppModel>();
-    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
 
     final active = audio?.path != null || isOnline;
     final showQueueButton = watchPropertyValue(

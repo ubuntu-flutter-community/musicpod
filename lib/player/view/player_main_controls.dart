@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/connectivity_model.dart';
+import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-
 import '../../l10n/l10n.dart';
-import '../../common/data/audio.dart';
 import '../player_model.dart';
 import 'play_button.dart';
 import 'repeat_button.dart';
@@ -38,7 +38,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
     final showShuffleAndRepeat = audio?.audioType == AudioType.local;
     final showSkipButtons =
         queueLength > 1 || audio?.audioType == AudioType.local;
-    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
 
     final children = <Widget>[

@@ -15,6 +15,7 @@ import 'package:yaru/yaru.dart';
 import '../../external_path/external_path_service.dart';
 import '../../library/library_model.dart';
 import 'app/app_model.dart';
+import 'app/connectivity_model.dart';
 import 'app/view/app.dart';
 import 'library/library_service.dart';
 import 'local_audio/local_audio_model.dart';
@@ -105,6 +106,14 @@ Future<void> main(List<String> args) async {
   di.registerSingleton<Connectivity>(
     connectivity,
   );
+  final connectivityModel = ConnectivityModel(
+    playerService: playerService,
+    connectivity: connectivity,
+  );
+  di.registerSingleton<ConnectivityModel>(
+    connectivityModel,
+  );
+  await connectivityModel.init();
 
   // For some reason GtkApplication needs to be instantiated
   // when the service is registered and not before
@@ -131,13 +140,12 @@ Future<void> main(List<String> args) async {
     )..init(),
     dispose: (s) => s.dispose(),
   );
-  final playerModel = PlayerModel(
-    service: playerService,
-    connectivity: connectivity,
-  );
-  await playerModel.init();
+
   di.registerSingleton<PlayerModel>(
-    playerModel,
+    PlayerModel(
+      service: playerService,
+      connectivity: connectivity,
+    )..init(),
     dispose: (s) => s.dispose(),
   );
   di.registerSingleton<AppModel>(
