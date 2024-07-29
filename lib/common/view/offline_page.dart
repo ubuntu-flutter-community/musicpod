@@ -6,7 +6,8 @@ import '../../l10n/l10n.dart';
 import 'header_bar.dart';
 
 class OfflinePage extends StatelessWidget {
-  const OfflinePage({super.key});
+  const OfflinePage({super.key, this.action});
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class OfflinePage extends StatelessWidget {
         title: Text(context.l10n.offline),
         backgroundColor: Colors.transparent,
       ),
-      body: const OfflineBody(),
+      body: OfflineBody(action: action),
     );
   }
 }
@@ -24,7 +25,10 @@ class OfflinePage extends StatelessWidget {
 class OfflineBody extends StatelessWidget {
   const OfflineBody({
     super.key,
+    this.action,
   });
+
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +57,7 @@ class OfflineBody extends StatelessWidget {
               ),
             ),
           ),
+          if (action != null) action!,
         ],
       ),
     );

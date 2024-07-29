@@ -15,7 +15,6 @@ import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../radio_model.dart';
 import 'radio_lib_page.dart';
-import 'radio_reconnect_button.dart';
 
 class RadioPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const RadioPage({super.key});
@@ -54,7 +53,6 @@ class _RadioPageState extends State<RadioPage> {
   Widget build(BuildContext context) {
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
-    final connectedHost = watchPropertyValue((RadioModel m) => m.connectedHost);
 
     return Scaffold(
       resizeToAvoidBottomInset: isMobile ? false : null,
@@ -64,17 +62,15 @@ class _RadioPageState extends State<RadioPage> {
           Flexible(
             child: Padding(
               padding: appBarSingleActionSpacing,
-              child: connectedHost == null
-                  ? const RadioReconnectButton()
-                  : SearchButton(
-                      active: false,
-                      onPressed: () {
-                        di<LibraryModel>().pushNamed(pageId: kSearchPageId);
-                        di<SearchModel>()
-                          ..setAudioType(AudioType.radio)
-                          ..search();
-                      },
-                    ),
+              child: SearchButton(
+                active: false,
+                onPressed: () {
+                  di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                  di<SearchModel>()
+                    ..setAudioType(AudioType.radio)
+                    ..search();
+                },
+              ),
             ),
           ),
         ],

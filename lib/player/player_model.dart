@@ -7,6 +7,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/mpv_meta_data.dart';
+import '../extensions/connectivity_x.dart';
 import 'player_service.dart';
 
 const rateValues = [1.0, 1.5, 2.0];
@@ -135,20 +136,15 @@ class PlayerModel extends SafeChangeNotifier {
         );
   }
 
-  bool get isOnline => _isOnline(_result);
-
-  bool _isOnline(List<ConnectivityResult>? res) =>
-      res?.contains(ConnectivityResult.ethernet) == true ||
-      res?.contains(ConnectivityResult.bluetooth) == true ||
-      res?.contains(ConnectivityResult.mobile) == true ||
-      res?.contains(ConnectivityResult.vpn) == true ||
-      res?.contains(ConnectivityResult.wifi) == true;
+  bool get isOnline => _connectivity.isOnline(_result);
 
   // Needed to prevent auto resume on app start
   bool _firstCheck = true;
   List<ConnectivityResult>? _result;
   void _updateConnectivity({required List<ConnectivityResult> newResult}) {
-    if (!_isOnline(_result) && _isOnline(newResult) && !_firstCheck) {
+    if (!_connectivity.isOnline(_result) &&
+        _connectivity.isOnline(newResult) &&
+        !_firstCheck) {
       switch (audio?.audioType) {
         case AudioType.radio:
           playNext();

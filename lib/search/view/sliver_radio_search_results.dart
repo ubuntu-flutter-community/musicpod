@@ -17,6 +17,7 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
+    final connectedHost = watchPropertyValue((RadioModel m) => m.connectedHost);
 
     if (!isOnline) {
       return const SliverFillRemaining(
@@ -24,6 +25,13 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
         child: OfflineBody(),
       );
     }
+
+    if (connectedHost != null) {
+      return const SliverFillRemaining(
+        hasScrollBody: false,
+      );
+    }
+
     final radioSearchResult =
         watchPropertyValue((SearchModel m) => m.radioSearchResult);
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
