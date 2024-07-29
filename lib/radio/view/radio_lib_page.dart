@@ -8,7 +8,6 @@ import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
@@ -105,7 +104,7 @@ class StationGrid extends StatelessWidget with WatchItMixin {
     return LayoutBuilder(
       builder: (context, constraints) {
         return GridView.builder(
-          padding: getAdaptiveHorizontalPadding(constraints),
+          padding: getAdaptiveHorizontalPadding(constraints: constraints),
           gridDelegate: audioCardGridDelegate,
           itemCount: length,
           itemBuilder: (context, index) {
@@ -150,7 +149,7 @@ class TagGrid extends StatelessWidget with WatchItMixin {
     return LayoutBuilder(
       builder: (context, constraints) {
         return GridView.builder(
-          padding: getAdaptiveHorizontalPadding(constraints),
+          padding: getAdaptiveHorizontalPadding(constraints: constraints),
           gridDelegate: audioCardGridDelegate,
           itemCount: favTagsLength,
           itemBuilder: (context, index) {

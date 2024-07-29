@@ -14,9 +14,10 @@ import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile.dart';
 import '../../common/view/avatar_play_button.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/fall_back_header_image.dart';
+import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
 import '../../common/view/tapable_text.dart';
@@ -297,8 +298,14 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
       builder: (context, constraints) {
         return CustomScrollView(
           slivers: [
-            SliverToBoxAdapter(
-              child: audioPageHeader,
+            SliverPadding(
+              padding: getAdaptiveHorizontalPadding(
+                constraints: constraints,
+                min: 40,
+              ),
+              sliver: SliverToBoxAdapter(
+                child: audioPageHeader,
+              ),
             ),
             SliverAudioPageControlPanel(controlPanel: audioControlPanel),
             if (allowReorder)
@@ -345,7 +352,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
               )
             else
               SliverPadding(
-                padding: getAdaptiveHorizontalPadding(constraints),
+                padding: getAdaptiveHorizontalPadding(constraints: constraints),
                 sliver: SliverAudioTileList(
                   audios: audios,
                   pageId: pageId,

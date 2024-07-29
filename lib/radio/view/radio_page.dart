@@ -3,9 +3,11 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/view/common_widgets.dart';
+import '../../common/view/header_bar.dart';
 import '../../common/view/offline_page.dart';
+import '../../common/view/search_button.dart';
 import '../../common/view/snackbars.dart';
+import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';

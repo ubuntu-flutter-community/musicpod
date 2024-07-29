@@ -4,8 +4,8 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/back_gesture.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/global_keys.dart';
+import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
@@ -111,7 +111,7 @@ class MasterPanel extends StatelessWidget {
       child: Column(
         children: [
           const HeaderBar(
-            includeBackButton: false,
+            includeBackButtonAsLeading: false,
             backgroundColor: Colors.transparent,
             style: YaruTitleBarStyle.undecorated,
             adaptive: false,

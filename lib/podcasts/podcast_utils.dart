@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
+import '../common/view/progress.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import '../player/player_model.dart';

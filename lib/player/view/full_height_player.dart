@@ -3,7 +3,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
-import '../../common/view/common_widgets.dart';
+import '../../common/view/header_bar.dart';
 import '../../extensions/build_context_x.dart';
 
 import '../../player/player_model.dart';
@@ -123,7 +123,8 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
 
     final headerBar = HeaderBar(
       adaptive: false,
-      includeBackButton: false,
+      includeBackButtonAsLeading: false,
+      includeSidebarButtonAsLeading: false,
       title: const Text(
         '',
         maxLines: 1,

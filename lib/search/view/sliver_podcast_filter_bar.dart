@@ -3,7 +3,6 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/podcast_genre.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/country_auto_complete.dart';
 import '../../common/view/language_autocomplete.dart';
 import '../../common/view/theme.dart';

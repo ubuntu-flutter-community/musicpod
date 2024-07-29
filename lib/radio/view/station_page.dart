@@ -6,10 +6,12 @@ import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/avatar_play_button.dart';
-import '../../common/view/common_widgets.dart';
+import '../../common/view/header_bar.dart';
 import '../../common/view/offline_page.dart';
 import '../../common/view/safe_network_image.dart';
+import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
+import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -57,11 +59,14 @@ class StationPage extends StatelessWidget with WatchItMixin {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          return Padding(
-            padding: getAdaptiveHorizontalPadding(constraints),
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
+          return CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: getAdaptiveHorizontalPadding(
+                  constraints: constraints,
+                  min: 40,
+                ),
+                sliver: SliverToBoxAdapter(
                   child: AudioPageHeader(
                     title: station.title ?? station.url ?? '',
                     subTitle: station.artist,
@@ -82,19 +87,22 @@ class StationPage extends StatelessWidget with WatchItMixin {
                     ),
                   ),
                 ),
-                SliverAudioPageControlPanel(
-                  controlPanel: _StationPageControlPanel(
-                    station: station,
-                  ),
+              ),
+              SliverAudioPageControlPanel(
+                controlPanel: _StationPageControlPanel(
+                  station: station,
                 ),
-                SliverRadioHistoryList(
+              ),
+              SliverPadding(
+                padding: getAdaptiveHorizontalPadding(constraints: constraints),
+                sliver: SliverRadioHistoryList(
                   filter: station.title,
                   emptyMessage: const SizedBox.shrink(),
                   emptyIcon: const SizedBox.shrink(),
                   padding: radioHistoryListPadding,
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         },
       ),

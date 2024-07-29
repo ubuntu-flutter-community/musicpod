@@ -4,8 +4,8 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/no_search_result_page.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/snackbars.dart';
 import '../../constants.dart';
@@ -47,7 +47,7 @@ class ArtistsView extends StatelessWidget {
         builder: (context, constraints) {
           return GridView.builder(
             itemCount: artists!.length,
-            padding: getAdaptiveHorizontalPadding(constraints),
+            padding: getAdaptiveHorizontalPadding(constraints: constraints),
             gridDelegate: kDiskGridDelegate,
             itemBuilder: (context, index) {
               final artistAudios = model.findArtist(

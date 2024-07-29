@@ -4,7 +4,10 @@ import 'package:yaru/theme.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
-import '../../common/view/common_widgets.dart';
+import '../../common/view/header_bar.dart';
+import '../../common/view/progress.dart';
+import '../../common/view/search_button.dart';
+import '../../common/view/theme.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
@@ -81,7 +84,7 @@ class _SearchPageState extends State<SearchPage> {
           return CustomScrollView(
             slivers: [
               SliverPadding(
-                padding: getAdaptiveHorizontalPadding(constraints)
+                padding: getAdaptiveHorizontalPadding(constraints: constraints)
                     .copyWith(bottom: 5),
                 sliver: switch (audioType) {
                   AudioType.podcast => const SliverPodcastFilterBar(),
@@ -90,12 +93,14 @@ class _SearchPageState extends State<SearchPage> {
               ),
               if (audioType == AudioType.radio)
                 SliverPadding(
-                  padding: getAdaptiveHorizontalPadding(constraints),
+                  padding:
+                      getAdaptiveHorizontalPadding(constraints: constraints),
                   sliver: const SliverRadioSearchResults(),
                 )
               else if (audioType == AudioType.podcast)
                 SliverPadding(
-                  padding: getAdaptiveHorizontalPadding(constraints),
+                  padding:
+                      getAdaptiveHorizontalPadding(constraints: constraints),
                   sliver: const SliverPodcastSearchResults(),
                 ),
             ],

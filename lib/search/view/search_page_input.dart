@@ -3,9 +3,9 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/view/common_widgets.dart';
 import '../../common/view/country_auto_complete.dart';
 import '../../common/view/language_autocomplete.dart';
+import '../../common/view/search_input.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -29,7 +29,7 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
         SearchType.radioCountry => const CountryAutoCompleteWithSuffix(),
         SearchType.radioTag => const TagAutoCompleteWithSuffix(),
         SearchType.radioLanguage => const LanguageAutoCompleteWithSuffix(),
-        _ => SearchingBar(
+        _ => SearchInput(
             text: searchQuery,
             key: ValueKey(searchType.name),
             hintText: context.l10n.search,

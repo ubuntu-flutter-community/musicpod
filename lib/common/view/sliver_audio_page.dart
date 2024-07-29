@@ -10,10 +10,13 @@ import 'adaptive_container.dart';
 import 'audio_page_header.dart';
 import 'audio_page_type.dart';
 import 'avatar_play_button.dart';
-import 'common_widgets.dart';
+import 'header_bar.dart';
 import 'no_search_result_page.dart';
+import 'progress.dart';
+import 'search_button.dart';
 import 'sliver_audio_page_control_panel.dart';
 import 'sliver_audio_tile_list.dart';
+import 'theme.dart';
 
 class SliverAudioPage extends StatelessWidget {
   const SliverAudioPage({
@@ -85,18 +88,24 @@ class SliverAudioPage extends StatelessWidget {
                     )
                   : CustomScrollView(
                       slivers: [
-                        SliverToBoxAdapter(
-                          child: AudioPageHeader(
-                            title: pageTitle ?? pageId,
-                            image: image,
-                            subTitle: pageSubTitle,
-                            label: pageLabel,
-                            onLabelTab:
-                                audioPageType == AudioPageType.likedAudio
-                                    ? null
-                                    : onPageLabelTab,
-                            onSubTitleTab: onPageSubTitleTab,
-                            description: description,
+                        SliverPadding(
+                          padding: getAdaptiveHorizontalPadding(
+                            constraints: constraints,
+                            min: 40,
+                          ),
+                          sliver: SliverToBoxAdapter(
+                            child: AudioPageHeader(
+                              title: pageTitle ?? pageId,
+                              image: image,
+                              subTitle: pageSubTitle,
+                              label: pageLabel,
+                              onLabelTab:
+                                  audioPageType == AudioPageType.likedAudio
+                                      ? null
+                                      : onPageLabelTab,
+                              onSubTitleTab: onPageSubTitleTab,
+                              description: description,
+                            ),
                           ),
                         ),
                         SliverAudioPageControlPanel(
@@ -114,7 +123,9 @@ class SliverAudioPage extends StatelessWidget {
                           )
                         else
                           SliverPadding(
-                            padding: getAdaptiveHorizontalPadding(constraints),
+                            padding: getAdaptiveHorizontalPadding(
+                              constraints: constraints,
+                            ),
                             sliver: SliverAudioTileList(
                               audioPageType: audioPageType,
                               audios: audios!,

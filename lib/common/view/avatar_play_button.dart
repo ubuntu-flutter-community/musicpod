@@ -5,8 +5,8 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../data/audio.dart';
-import 'common_widgets.dart';
 import 'icons.dart';
+import 'theme.dart';
 
 class AvatarPlayButton extends StatelessWidget with WatchItMixin {
   const AvatarPlayButton({

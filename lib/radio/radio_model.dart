@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:radio_browser_api/radio_browser_api.dart' hide Country;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
@@ -19,12 +18,6 @@ class RadioModel extends SafeChangeNotifier {
       return _radioService.clickStation(station!.description!);
     }
   }
-
-  Future<List<Tag>?> loadTags({
-    String? filter,
-    int? limit,
-  }) async =>
-      _radioService.loadTags(filter: filter, limit: limit);
 
   String? _connectedHost;
   String? get connectedHost => _connectedHost;
