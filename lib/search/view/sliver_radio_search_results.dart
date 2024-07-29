@@ -26,7 +26,7 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
       );
     }
 
-    if (connectedHost != null) {
+    if (connectedHost == null) {
       return const SliverFillRemaining(
         hasScrollBody: false,
       );

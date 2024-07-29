@@ -33,7 +33,7 @@ class SliverSearchTypeFilterBar extends StatelessWidget with WatchItMixin {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (connectedHost != null)
+            if (connectedHost == null)
               const Padding(
                 padding: EdgeInsets.only(right: 10),
                 child: RadioReconnectButton(),

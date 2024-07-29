@@ -10,10 +10,8 @@ import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../player/player_model.dart';
 import '../../podcasts/podcast_model.dart';
 import '../../radio/radio_model.dart';
-import '../../radio/view/radio_reconnect_button.dart';
 import '../search_model.dart';
 import 'search_page_input.dart';
 import 'sliver_podcast_filter_bar.dart';
@@ -44,10 +42,6 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
-    final connectedHost = watchPropertyValue(
-      (RadioModel m) => m.connectedHost != null && isOnline,
-    );
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
     final loading = watchPropertyValue((SearchModel m) => m.loading);
 
@@ -57,11 +51,6 @@ class _SearchPageState extends State<SearchPage> {
         adaptive: true,
         title: const SearchPageInput(),
         actions: [
-          if (!connectedHost)
-            const Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: RadioReconnectButton(),
-            ),
           Padding(
             padding: appBarSingleActionSpacing,
             child: SearchButton(
