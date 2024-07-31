@@ -322,5 +322,8 @@
     "downloadEpisode": "Download episode",
     "removeDownloadEpisode": "Remove episode download",
     "language": "Language",
-    "duration": "Duration"
+    "duration": "Duration",
+    "radioTagDisclaimerTitle": "This station sends a lot of tags.",
+    "radioTagDisclaimerSubTitle": "Sometimes stations send tags that do not match music genres. MusicPod is not responsible for the content!" 
+
 }

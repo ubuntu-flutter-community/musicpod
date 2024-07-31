@@ -1,7 +1,14 @@
 {
+  "cs": [
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle"
+  ],
+
   "da": [
     "insertedIntoQueue",
-    "duration"
+    "duration",
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle"
   ],
 
   "es": [
@@ -196,7 +203,9 @@
     "downloadEpisode",
     "removeDownloadEpisode",
     "language",
-    "duration"
+    "duration",
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle"
   ],
 
   "fr": [
@@ -422,7 +431,9 @@
     "downloadEpisode",
     "removeDownloadEpisode",
     "language",
-    "duration"
+    "duration",
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle"
   ],
 
   "it": [
@@ -668,7 +679,9 @@
     "downloadEpisode",
     "removeDownloadEpisode",
     "language",
-    "duration"
+    "duration",
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle"
   ],
 
   "nl": [
@@ -891,7 +904,9 @@
     "downloadEpisode",
     "removeDownloadEpisode",
     "language",
-    "duration"
+    "duration",
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle"
   ],
 
   "pl": [
@@ -934,7 +949,9 @@
     "downloadEpisode",
     "removeDownloadEpisode",
     "language",
-    "duration"
+    "duration",
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle"
   ],
 
   "pt": [
@@ -1128,7 +1145,9 @@
     "downloadEpisode",
     "removeDownloadEpisode",
     "language",
-    "duration"
+    "duration",
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle"
   ],
 
   "pt_BR": [
@@ -1322,7 +1341,9 @@
     "downloadEpisode",
     "removeDownloadEpisode",
     "language",
-    "duration"
+    "duration",
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle"
   ],
 
   "ru": [
@@ -1331,7 +1352,14 @@
     "copyToClipBoard",
     "insertedIntoQueue",
     "language",
-    "duration"
+    "duration",
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle"
+  ],
+
+  "sk": [
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle"
   ],
 
   "sv": [
@@ -1515,6 +1543,18 @@
     "downloadEpisode",
     "removeDownloadEpisode",
     "language",
-    "duration"
+    "duration",
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle"
+  ],
+
+  "tr": [
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle"
+  ],
+
+  "zh": [
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle"
   ]
 }

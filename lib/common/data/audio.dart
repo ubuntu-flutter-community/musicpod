@@ -347,6 +347,12 @@ class Audio {
         : '${artistName ?? ''}:${albumName ?? ''}';
     return id;
   }
+
+  List<String>? get tags => album?.isNotEmpty == false
+      ? null
+      : <String>[
+          for (final tag in album?.split(',') ?? <String>[]) tag,
+        ];
 }
 
 enum AudioType {

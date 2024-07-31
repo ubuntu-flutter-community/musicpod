@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../common/data/audio.dart';
 import '../extensions/connectivity_x.dart';
 import '../player/player_service.dart';
 
@@ -36,7 +37,8 @@ class ConnectivityModel extends SafeChangeNotifier {
 
   List<ConnectivityResult>? _result;
   void _updateConnectivity(List<ConnectivityResult> newResult) {
-    if (!_connectivity.isOnline(newResult)) {
+    if (!_connectivity.isOnline(newResult) &&
+        _playerService.audio?.audioType == AudioType.radio) {
       _playerService.pause();
     }
     _result = newResult;
