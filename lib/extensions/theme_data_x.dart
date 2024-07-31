@@ -17,7 +17,10 @@ extension ThemeDataX on ThemeData {
       );
 
   TextStyle? get pageHeaderDescription =>
-      textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300);
+      textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w500);
+
+  TextStyle? get pageHeaderSubtitleStyle =>
+      textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500);
 
   Color get containerBg => colorScheme.background.scale(
         lightness:

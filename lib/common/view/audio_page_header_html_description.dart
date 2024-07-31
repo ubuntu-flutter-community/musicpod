@@ -6,6 +6,8 @@ import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../extensions/theme_data_x.dart';
+
 class AudioPageHeaderHtmlDescription extends StatelessWidget {
   const AudioPageHeaderHtmlDescription({
     super.key,
@@ -18,7 +20,7 @@ class AudioPageHeaderHtmlDescription extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final descriptionStyle = context.t.textTheme.labelSmall;
+    final descriptionStyle = context.t.pageHeaderDescription;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
       child: SizedBox(

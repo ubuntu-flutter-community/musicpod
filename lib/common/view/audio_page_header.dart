@@ -105,8 +105,7 @@ class _AudioPageHeaderSubTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.t;
 
-    final style =
-        theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w300);
+    final style = theme.pageHeaderSubtitleStyle;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
