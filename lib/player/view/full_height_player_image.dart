@@ -8,6 +8,7 @@ import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
+import '../../local_audio/view/local_cover.dart';
 import 'super_network_image.dart';
 
 class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
@@ -75,11 +76,10 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
     );
 
     Widget image;
-    if (audio?.pictureData != null) {
-      image = Image.memory(
-        audio!.pictureData!,
-        height: height ?? fullHeightPlayerImageSize,
-        width: width ?? fullHeightPlayerImageSize,
+    if (audio != null) {
+      image = LocalCover(
+        audio: audio!,
+        dimension: fullHeightPlayerImageSize,
         fit: fit ?? BoxFit.fitHeight,
       );
     } else {

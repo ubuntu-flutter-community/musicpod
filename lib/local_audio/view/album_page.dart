@@ -13,11 +13,13 @@ import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page.dart';
 import '../../common/view/theme.dart';
+import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../local_audio_model.dart';
 import 'artist_page.dart';
+import 'local_cover.dart';
 
 class AlbumPage extends StatelessWidget {
   const AlbumPage({
@@ -32,8 +34,6 @@ class AlbumPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
-    final pictureData =
-        album.firstWhereOrNull((e) => e.pictureData != null)?.pictureData;
 
     void onArtistTap(text) {
       final artistName = album.firstOrNull?.artist;
@@ -57,7 +57,7 @@ class AlbumPage extends StatelessWidget {
       pageId: id,
       audioPageType: AudioPageType.album,
       audios: album,
-      image: AlbumPageImage(pictureData: pictureData),
+      image: album.isEmpty ? null : AlbumPageImage(audio: album.first),
       pageTitle: album.firstWhereOrNull((e) => e.album != null)?.album,
       pageSubTitle: album.firstWhereOrNull((e) => e.artist != null)?.artist,
       onPageLabelTab: onArtistTap,
@@ -124,10 +124,10 @@ class AlbumPageSideBarIcon extends StatelessWidget {
 class AlbumPageImage extends StatelessWidget {
   const AlbumPageImage({
     super.key,
-    required this.pictureData,
+    required this.audio,
   });
 
-  final Uint8List? pictureData;
+  final Audio audio;
 
   @override
   Widget build(BuildContext context) {
@@ -142,15 +142,13 @@ class AlbumPageImage extends StatelessWidget {
             ),
           ),
         ),
-        if (pictureData != null)
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Image.memory(
-              pictureData!,
-              fit: BoxFit.fitHeight,
-              filterQuality: FilterQuality.medium,
-            ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: LocalCover(
+            audio: audio,
+            dimension: kMaxAudioPageHeaderHeight,
           ),
+        ),
       ],
     );
   }

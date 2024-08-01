@@ -4,6 +4,7 @@ import 'package:yaru/yaru.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
+import '../../local_audio/view/local_cover.dart';
 import '../data/audio.dart';
 import 'icons.dart';
 import 'safe_network_image.dart';
@@ -31,12 +32,11 @@ class AudioTileImage extends StatelessWidget {
       iconData = Iconz().musicNote;
     }
     Widget image;
-    if (audio?.pictureData != null) {
-      image = Image.memory(
-        filterQuality: FilterQuality.medium,
+    if (audio != null && audio?.audioType == AudioType.local) {
+      image = LocalCover(
+        audio: audio!,
         fit: BoxFit.cover,
-        audio!.pictureData!,
-        height: size,
+        dimension: size,
       );
     } else {
       if (audio?.imageUrl != null || audio?.albumArtUrl != null) {

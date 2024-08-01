@@ -9,6 +9,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
+import '../../local_audio/view/local_cover.dart';
 import 'super_network_image.dart';
 
 class BottomPlayerImage extends StatelessWidget with WatchItMixin {
@@ -95,16 +96,16 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
       ),
     );
 
-    if (audio?.pictureData != null) {
+    if (audio != null) {
       return AnimatedContainer(
         height: size,
         width: size,
         duration: const Duration(milliseconds: 300),
-        child: Image.memory(
-          filterQuality: FilterQuality.medium,
+        child: LocalCover(
+          audio: audio!,
           fit: BoxFit.cover,
-          audio!.pictureData!,
-          height: size,
+          dimension: size,
+          fallback: fallBackImage,
         ),
       );
     }
