@@ -25,7 +25,7 @@ class GenrePage extends StatelessWidget {
     final model = di<LocalAudioModel>();
     final radioModel = di<RadioModel>();
 
-    final artistAudiosWithGenre = model.findArtistsOfGenre(Audio(genre: genre));
+    final artistAudiosWithGenre = model.findArtistsOfGenre(genre);
 
     return Scaffold(
       resizeToAvoidBottomInset: isMobile ? false : null,

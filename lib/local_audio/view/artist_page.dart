@@ -44,7 +44,7 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
     final pageId = artistAudios?.firstOrNull?.artist;
-    final albums = model.findAllAlbums(newAudios: artistAudios);
+    final albums = model.findAllAlbums(newAudios: artistAudios, clean: false);
 
     if (pageId == null || albums == null) {
       return const SizedBox.shrink();

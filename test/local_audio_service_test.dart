@@ -30,7 +30,7 @@ Future<void> main() async {
   final service = LocalAudioService(
     settingsService: MockSettingsService(),
   );
-  await service.init(testDir: Directory.current.path);
+  await service.init(directory: Directory.current.path);
 
   group('test metadata', () {
     test('testTestMp3', () {

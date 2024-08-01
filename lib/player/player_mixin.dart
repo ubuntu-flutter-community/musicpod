@@ -133,7 +133,9 @@ mixin PlayerMixin {
 
   void _onLocalAudioArtistTap({required Audio audio}) {
     final localAudioModel = di<LocalAudioModel>();
-    final artistAudios = localAudioModel.findArtist(audio);
+    final artistName = audio.artist;
+    if (artistName == null) return;
+    final artistAudios = localAudioModel.findTitlesOfArtist(artistName);
     final artist = artistAudios?.firstOrNull?.artist;
     if (artist == null) return;
     final images = localAudioModel.findImages(artistAudios ?? {});

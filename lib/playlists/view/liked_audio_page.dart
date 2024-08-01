@@ -2,7 +2,6 @@ import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../common/data/audio.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/fall_back_header_image.dart';
 import '../../common/view/icons.dart';
@@ -27,7 +26,7 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
 
     return SliverAudioPage(
       onPageLabelTab: (text) {
-        final artistAudios = model.findArtist(Audio(artist: text));
+        final artistAudios = model.findTitlesOfArtist(text);
         final artist = artistAudios?.firstOrNull?.artist;
         if (artist == null) return;
         final images = model.findImages(artistAudios ?? {});

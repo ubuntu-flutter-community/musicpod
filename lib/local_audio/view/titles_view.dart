@@ -56,7 +56,7 @@ class TitlesView extends StatelessWidget {
                   audioPageType: AudioPageType.allTitlesView,
                   pageId: kLocalAudioPageId,
                   onSubTitleTab: (text) {
-                    final artistAudios = model.findArtist(Audio(artist: text));
+                    final artistAudios = model.findTitlesOfArtist(text);
                     final artist = artistAudios?.firstOrNull?.artist;
                     if (artist == null) return;
                     final images = model.findImages(artistAudios ?? {});
