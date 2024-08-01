@@ -2,7 +2,10 @@ import 'dart:io';
 
 import '../../app/app_model.dart';
 import '../../extensions/build_context_x.dart';
+import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../settings/settings_model.dart';
+import '../data/close_btn_action.dart';
 import 'global_keys.dart';
 import 'icons.dart';
 import 'nav_back_button.dart';
@@ -10,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:phoenix_theme/phoenix_theme.dart' hide isMobile;
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
+
+import 'theme.dart';
 
 class HeaderBar extends StatelessWidget
     with WatchItMixin
@@ -40,6 +45,8 @@ class HeaderBar extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     final canPop = watchPropertyValue((LibraryModel m) => m.canPop);
+    final closeBtnAction =
+        watchPropertyValue((SettingsModel m) => m.closeBtnActionIndex);
 
     Widget? leading;
 
@@ -89,6 +96,21 @@ class HeaderBar extends StatelessWidget
       backgroundColor: backgroundColor ?? context.theme.scaffoldBackgroundColor,
       style: theStyle,
       foregroundColor: foregroundColor,
+      onClose: (context) {
+        switch (closeBtnAction) {
+          case CloseBtnAction.alwaysAsk:
+            showDialog(
+              context: context,
+              builder: (context) {
+                return const CloseWindowActionConfirmDialog();
+              },
+            );
+          case CloseBtnAction.hideToTray:
+            YaruWindow.hide(context);
+          case CloseBtnAction.close:
+            YaruWindow.close(context);
+        }
+      },
     );
   }
 
@@ -99,6 +121,77 @@ class HeaderBar extends StatelessWidget
             ? (style == YaruTitleBarStyle.hidden ? 0 : kYaruTitleBarHeight)
             : kToolbarHeight,
       );
+}
+
+class CloseWindowActionConfirmDialog extends StatefulWidget {
+  const CloseWindowActionConfirmDialog({super.key});
+
+  @override
+  State<CloseWindowActionConfirmDialog> createState() =>
+      _CloseWindowActionConfirmDialogState();
+}
+
+class _CloseWindowActionConfirmDialogState
+    extends State<CloseWindowActionConfirmDialog> {
+  bool rememberChoice = false;
+  @override
+  Widget build(BuildContext context) {
+    final model = di<SettingsModel>();
+    return AlertDialog(
+      title: yaruStyled
+          ? YaruDialogTitleBar(
+              backgroundColor: Colors.transparent,
+              title: Text(context.l10n.closeMusicPod),
+            )
+          : null,
+      titlePadding: yaruStyled ? EdgeInsets.zero : null,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(
+            Icons.error,
+            color: Colors.red,
+            size: 50,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            context.l10n.confirmCloseOrHideTip,
+          ),
+          CheckboxListTile(
+            title: Text(context.l10n.doNotAskAgain),
+            value: rememberChoice,
+            onChanged: (value) {
+              setState(() {
+                rememberChoice = value!;
+              });
+            },
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            if (rememberChoice) {
+              model.setCloseBtnActionIndex(CloseBtnAction.hideToTray);
+            }
+            Navigator.of(context).pop();
+            YaruWindow.hide(context);
+          },
+          child: Text(context.l10n.hideToTray),
+        ),
+        TextButton(
+          onPressed: () {
+            if (rememberChoice) {
+              model.setCloseBtnActionIndex(CloseBtnAction.close);
+            }
+            Navigator.of(context).pop();
+            YaruWindow.close(context);
+          },
+          child: Text(context.l10n.closeApp),
+        ),
+      ],
+    );
+  }
 }
 
 class SidebarButton extends StatelessWidget {

@@ -91,7 +91,7 @@
     "cryptocurrencyXXXPodcastIndexOnly": "加密货币",
     "cultureXXXPodcastIndexOnly": "文化",
     "dailyXXXPodcastIndexOnly": "每日",
-    "dark": "暗色",
+    "dark": "浅色",
     "decreaseSearchLimit": "请减少搜索限制",
     "deletePlaylist": "删除播放列表",
     "dependencies": "依赖",
@@ -330,5 +330,14 @@
     "writeMetadata": "写入元数据",
     "year": "年份",
     "years": "年份",
-    "playbackWillStopIn": "播放将在 {duration} （{timeOfDay}）后停止。"
+    "playbackWillStopIn": "播放将在 {duration} （{timeOfDay}）后停止。",
+    "schedulePlaybackStopTimer": "计划停止播放的时间",
+    "alwaysAsk": "总是询问",
+    "hideToTray": "隐藏到托盘",
+    "closeBtnAction": "关闭按钮的行为",
+    "whenCloseBtnClicked": "当点击关闭按钮时",
+    "closeApp": "关闭应用",
+    "closeMusicPod": "关闭 MusicPod？",
+    "confirmCloseOrHideTip": "请确定您想要退出应用还是隐藏到托盘？",
+    "doNotAskAgain": "不再询问"
 }
