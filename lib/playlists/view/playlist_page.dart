@@ -119,7 +119,7 @@ class PlaylistPage extends StatelessWidget {
             );
           },
           onArtistTap: (text) {
-            final artistAudios = model.findArtist(Audio(artist: text));
+            final artistAudios = model.findTitlesOfArtist(text);
             final artist = artistAudios?.firstOrNull?.artist;
             if (artist == null) return;
             final images = model.findImages(artistAudios ?? {});

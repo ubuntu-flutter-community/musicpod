@@ -50,9 +50,17 @@ class ArtistsView extends StatelessWidget {
             padding: getAdaptiveHorizontalPadding(constraints: constraints),
             gridDelegate: kDiskGridDelegate,
             itemBuilder: (context, index) {
-              final artistAudios = model.findArtist(
-                artists!.elementAt(index),
-              );
+              final artistName = artists!.elementAt(index).artist;
+              if (artistName == null) {
+                return SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: RoundImageContainer(
+                    fallBackText: context.l10n.unknown,
+                  ),
+                );
+              }
+              final artistAudios = model.findTitlesOfArtist(artistName);
               final images = model.findImages(artistAudios ?? {});
 
               final text =
