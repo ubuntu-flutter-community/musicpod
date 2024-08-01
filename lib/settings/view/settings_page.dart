@@ -5,7 +5,9 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/connectivity_model.dart';
+import '../../common/data/close_btn_action.dart';
 import '../../common/view/common_widgets.dart';
+import '../../common/view/drop_down_arrow.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
@@ -39,6 +41,7 @@ class SettingsPage extends StatelessWidget {
           child: ListView(
             children: const [
               _ThemeSection(),
+              _CloseActionSection(),
               _PodcastSection(),
               _LocalAudioSection(),
               _AboutSection(),
@@ -92,6 +95,51 @@ class _ThemeSection extends StatelessWidget with WatchItMixin {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _CloseActionSection extends StatelessWidget with WatchItMixin {
+  const _CloseActionSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final model = di<SettingsModel>();
+
+    final closeBtnAction =
+        watchPropertyValue((SettingsModel m) => m.closeBtnActionIndex);
+    return YaruSection(
+      margin: const EdgeInsets.only(
+        left: kYaruPagePadding,
+        top: kYaruPagePadding,
+        right: kYaruPagePadding,
+      ),
+      headline: Text(context.l10n.closeBtnAction),
+      child: Column(
+        children: [
+          YaruTile(
+            title: Text(context.l10n.whenCloseBtnClicked),
+            trailing: YaruPopupMenuButton<CloseBtnAction>(
+              icon: const DropDownArrow(),
+              initialValue: closeBtnAction,
+              child: Text(closeBtnAction.localize(context.l10n)),
+              onSelected: (value) {
+                model.setCloseBtnActionIndex(value);
+              },
+              itemBuilder: (context) {
+                return [
+                  for (var i = 0; i < CloseBtnAction.values.length; ++i)
+                    PopupMenuItem(
+                      value: CloseBtnAction.values[i],
+                      child:
+                          Text(CloseBtnAction.values[i].localize(context.l10n)),
+                    ),
+                ];
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

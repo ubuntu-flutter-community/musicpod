@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:tray_manager/tray_manager.dart';
 import 'package:xdg_directories/xdg_directories.dart';
 
 import 'constants.dart';
@@ -249,23 +248,3 @@ Future<void> writeStringMap(Map<String, String> map, String fileName) async {
   await file.writeAsString(jsonStr);
 }
 
-/// TODO: how to l10n labels?
-List<MenuItem> trayMenuItems = [
-  MenuItem(
-    key: 'restore_window',
-    label: 'Hide/Restore',
-  ),
-  MenuItem.separator(),
-  MenuItem(
-    key: 'close_application',
-    label: 'Close Application',
-  ),
-];
-
-String trayIcon() {
-  if (Platform.isWindows) {
-    return 'assets/images/tray_icon.ico';
-  } else {
-    return 'assets/images/tray_icon.png';
-  }
-}

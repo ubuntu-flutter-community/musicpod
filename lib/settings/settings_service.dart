@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../common/data/close_btn_action.dart';
 import '../constants.dart';
 import '../patch_notes/patch_notes.dart';
 import '../persistence_utils.dart';
@@ -170,6 +171,29 @@ class SettingsService {
     }
   }
 
+  final _closeBtnActionIndexController = StreamController<bool>.broadcast();
+  Stream<bool> get closeBtnActionChanged =>
+      _closeBtnActionIndexController.stream;
+  CloseBtnAction _closeBtnActionIndex = CloseBtnAction.alwaysAsk;
+  CloseBtnAction get closeBtnActionIndex => _closeBtnActionIndex;
+  void setCloseBtnActionIndex(CloseBtnAction value) {
+    if (value == _closeBtnActionIndex) return;
+    writeSetting(kCloseBtnAction, value.toString()).then((_) {
+      _closeBtnActionIndex = value;
+      _closeBtnActionIndexController.add(true);
+    });
+  }
+
+  Future<void> _initCloseBtnActionIndex() async {
+    final closeBtnActionIndexOrNull = await readSetting(kCloseBtnAction);
+    _closeBtnActionIndex = closeBtnActionIndexOrNull == null
+        ? CloseBtnAction.alwaysAsk
+        : CloseBtnAction.values.firstWhere(
+            (value) => value.toString() == closeBtnActionIndexOrNull,
+            orElse: () => CloseBtnAction.alwaysAsk,
+          );
+  }
+
   Future<void> init({@visibleForTesting String? testDir}) async {
     await _initPackageInfo();
     await _initSettings(testDir);
@@ -183,6 +207,7 @@ class SettingsService {
     await _initPodcastIndexApiSecret();
     await _initRecentPatchNotesDisposed();
     await _initNeverShowImports();
+    await _initCloseBtnActionIndex();
   }
 
   Future<void> dispose() async {
@@ -193,5 +218,6 @@ class SettingsService {
     await _podcastIndexApiSecretController.close();
     await _usePodcastIndexController.close();
     await _podcastIndexApiKeyController.close();
+    await _closeBtnActionIndexController.close();
   }
 }

@@ -324,6 +324,13 @@
     "language": "Language",
     "duration": "Duration",
     "radioTagDisclaimerTitle": "This station sends a lot of tags.",
-    "radioTagDisclaimerSubTitle": "Sometimes stations send tags that do not match music genres. MusicPod is not responsible for the content!" 
-
+    "radioTagDisclaimerSubTitle": "Sometimes stations send tags that do not match music genres. MusicPod is not responsible for the content!",
+    "alwaysAsk": "Always ask",
+    "hideToTray": "Hide to tray",
+    "closeApp": "Close Application",
+    "closeBtnAction": "Close Button Action",
+    "whenCloseBtnClicked": "When close button is clicked",
+    "closeMusicPod": "Close MusicPod?",
+    "confirmCloseOrHideTip": "Please confirm if you need to close the application or hide it?",
+    "doNotAskAgain": "Do not ask again"
 }

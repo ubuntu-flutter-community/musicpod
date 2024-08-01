@@ -17,6 +17,7 @@ import '../../library/library_model.dart';
 import 'app/app_model.dart';
 import 'app/connectivity_model.dart';
 import 'app/view/app.dart';
+import 'app/view/system_tray.dart';
 import 'library/library_service.dart';
 import 'local_audio/local_audio_model.dart';
 import 'local_audio/local_audio_service.dart';
@@ -130,6 +131,13 @@ Future<void> main(List<String> args) async {
 
   final gitHub = GitHub();
   di.registerSingleton<GitHub>(gitHub);
+
+  final systemTray = SystemTray();
+  await systemTray.init();
+  di.registerSingleton<SystemTray>(
+    systemTray,
+    dispose: (s) async => s.dispose(),
+  );
 
   // Register ViewModels
   di.registerLazySingleton<SettingsModel>(

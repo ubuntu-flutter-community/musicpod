@@ -1,14 +1,41 @@
 {
   "cs": [
     "radioTagDisclaimerTitle",
-    "radioTagDisclaimerSubTitle"
+    "radioTagDisclaimerSubTitle",
+    "alwaysAsk",
+    "hideToTray",
+    "closeApp",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "da": [
     "insertedIntoQueue",
     "duration",
     "radioTagDisclaimerTitle",
-    "radioTagDisclaimerSubTitle"
+    "radioTagDisclaimerSubTitle",
+    "alwaysAsk",
+    "hideToTray",
+    "closeApp",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
+  ],
+
+  "de": [
+    "alwaysAsk",
+    "hideToTray",
+    "closeApp",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "es": [
@@ -205,7 +232,15 @@
     "language",
     "duration",
     "radioTagDisclaimerTitle",
-    "radioTagDisclaimerSubTitle"
+    "radioTagDisclaimerSubTitle",
+    "alwaysAsk",
+    "hideToTray",
+    "closeApp",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "fr": [
@@ -433,7 +468,15 @@
     "language",
     "duration",
     "radioTagDisclaimerTitle",
-    "radioTagDisclaimerSubTitle"
+    "radioTagDisclaimerSubTitle",
+    "alwaysAsk",
+    "hideToTray",
+    "closeApp",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "it": [
@@ -681,7 +724,15 @@
     "language",
     "duration",
     "radioTagDisclaimerTitle",
-    "radioTagDisclaimerSubTitle"
+    "radioTagDisclaimerSubTitle",
+    "alwaysAsk",
+    "hideToTray",
+    "closeApp",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "nl": [
@@ -906,7 +957,15 @@
     "language",
     "duration",
     "radioTagDisclaimerTitle",
-    "radioTagDisclaimerSubTitle"
+    "radioTagDisclaimerSubTitle",
+    "alwaysAsk",
+    "hideToTray",
+    "closeApp",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "pl": [
@@ -951,7 +1010,15 @@
     "language",
     "duration",
     "radioTagDisclaimerTitle",
-    "radioTagDisclaimerSubTitle"
+    "radioTagDisclaimerSubTitle",
+    "alwaysAsk",
+    "hideToTray",
+    "closeApp",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "pt": [
@@ -1147,7 +1214,15 @@
     "language",
     "duration",
     "radioTagDisclaimerTitle",
-    "radioTagDisclaimerSubTitle"
+    "radioTagDisclaimerSubTitle",
+    "alwaysAsk",
+    "hideToTray",
+    "closeApp",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "pt_BR": [
@@ -1343,7 +1418,15 @@
     "language",
     "duration",
     "radioTagDisclaimerTitle",
-    "radioTagDisclaimerSubTitle"
+    "radioTagDisclaimerSubTitle",
+    "alwaysAsk",
+    "hideToTray",
+    "closeApp",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "ru": [
@@ -1354,12 +1437,28 @@
     "language",
     "duration",
     "radioTagDisclaimerTitle",
-    "radioTagDisclaimerSubTitle"
+    "radioTagDisclaimerSubTitle",
+    "alwaysAsk",
+    "hideToTray",
+    "closeApp",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "sk": [
     "radioTagDisclaimerTitle",
-    "radioTagDisclaimerSubTitle"
+    "radioTagDisclaimerSubTitle",
+    "alwaysAsk",
+    "hideToTray",
+    "closeApp",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "sv": [
@@ -1545,16 +1644,27 @@
     "language",
     "duration",
     "radioTagDisclaimerTitle",
-    "radioTagDisclaimerSubTitle"
+    "radioTagDisclaimerSubTitle",
+    "alwaysAsk",
+    "hideToTray",
+    "closeApp",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "tr": [
     "radioTagDisclaimerTitle",
-    "radioTagDisclaimerSubTitle"
-  ],
-
-  "zh": [
-    "radioTagDisclaimerTitle",
-    "radioTagDisclaimerSubTitle"
+    "radioTagDisclaimerSubTitle",
+    "alwaysAsk",
+    "hideToTray",
+    "closeApp",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ]
 }

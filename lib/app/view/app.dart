@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:phoenix_theme/phoenix_theme.dart' hide ColorX;
 import 'package:system_theme/system_theme.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:window_manager/window_manager.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/icons.dart';
@@ -105,16 +106,13 @@ class _MusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
 }
 
 class _MusicPodAppState extends State<_MusicPodApp>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, WindowListener {
   late Future<bool> _initFuture;
-  late SystemTray _tray;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _tray = SystemTray();
-    _tray.init();
     _initFuture = _init();
   }
 
@@ -137,6 +135,8 @@ class _MusicPodAppState extends State<_MusicPodApp>
 
     if (!mounted) return false;
     di<ExternalPathService>().init();
+    di<SystemTray>().updateTrayMenuItems(context);
+    windowManager.addListener(this);
 
     return true;
   }
@@ -151,7 +151,15 @@ class _MusicPodAppState extends State<_MusicPodApp>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    windowManager.removeListener(this);
     super.dispose();
+  }
+
+  @override
+  void onWindowEvent(String eventName) {
+    if ('show' == eventName || 'hide' == eventName) {
+      di<SystemTray>().updateTrayMenuItems(context);
+    }
   }
 
   @override

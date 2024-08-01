@@ -1,31 +1,53 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../../persistence_utils.dart';
+String trayIcon() {
+  if (Platform.isWindows) {
+    return 'assets/images/tray_icon.ico';
+  } else {
+    return 'assets/images/tray_icon.png';
+  }
+}
 
 class SystemTray with TrayListener {
+  late List<MenuItem> trayMenuItems;
+
   Future<void> init() async {
     trayManager.addListener(this);
     await trayManager.setIcon(trayIcon());
-    await trayManager.setContextMenu(Menu(items: trayMenuItems));
   }
 
-  // KDE@Arch Linux, this feature does not work.
-  // @override
-  // void onTrayIconMouseDown() {
-  //   print('onTrayIconMouseDown');
-  // }
+  Future<void> dispose() async {
+    trayManager.removeListener(this);
+  }
 
-  // KDE@Arch Linux, this feature does not work.
-  // @override
-  // void onTrayIconRightMouseDown() {
-  //   print('onTrayIconRightMouseDown');
-  // }
+  Future<void> updateTrayMenuItems(
+    BuildContext context,
+  ) async {
+    bool isVisible = await windowManager.isVisible();
+
+    trayMenuItems = [
+      MenuItem(
+        key: 'show_hide_window',
+        label: isVisible ? 'Hide Window' : 'Show Window',
+      ),
+      MenuItem.separator(),
+      MenuItem(
+        key: 'close_application',
+        label: 'Close Application',
+      ),
+    ];
+
+    await trayManager.setContextMenu(Menu(items: trayMenuItems));
+  }
 
   @override
   void onTrayMenuItemClick(MenuItem menuItem) {
     switch (menuItem.key) {
-      case 'restore_window':
+      case 'show_hide_window':
         windowManager.isVisible().then((value) {
           if (value) {
             windowManager.hide();

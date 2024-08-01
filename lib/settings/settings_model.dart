@@ -4,6 +4,7 @@ import 'package:github/github.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../external_path/external_path_service.dart';
+import '../common/data/close_btn_action.dart';
 import '../constants.dart';
 import 'settings_service.dart';
 
@@ -28,6 +29,7 @@ class SettingsModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _themeIndexChangedSub;
   StreamSubscription<bool>? _recentPatchNotesDisposedChangedSub;
   StreamSubscription<bool>? _useArtistGridViewChangedSub;
+  StreamSubscription<bool>? _closeBtnActionIndexChangedSub;
 
   bool get allowManualUpdate => _service.allowManualUpdates;
   String? get appName => _service.appName;
@@ -68,6 +70,10 @@ class SettingsModel extends SafeChangeNotifier {
   Future<String?> getPathOfDirectory() async =>
       _externalPathService.getPathOfDirectory();
 
+  CloseBtnAction get closeBtnActionIndex => _service.closeBtnActionIndex;
+  void setCloseBtnActionIndex(CloseBtnAction value) =>
+      _service.setCloseBtnActionIndex(value);
+
   void init() {
     _themeIndexChangedSub ??=
         _service.themeIndexChanged.listen((_) => notifyListeners());
@@ -84,6 +90,8 @@ class SettingsModel extends SafeChangeNotifier {
     _recentPatchNotesDisposedChangedSub ??= _service
         .recentPatchNotesDisposedChanged
         .listen((_) => notifyListeners());
+    _closeBtnActionIndexChangedSub ??=
+        _service.closeBtnActionChanged.listen((_) => notifyListeners());
   }
 
   @override
@@ -96,6 +104,7 @@ class SettingsModel extends SafeChangeNotifier {
     await _directoryChangedSub?.cancel();
     await _recentPatchNotesDisposedChangedSub?.cancel();
     await _useArtistGridViewChangedSub?.cancel();
+    await _closeBtnActionIndexChangedSub?.cancel();
     super.dispose();
   }
 
