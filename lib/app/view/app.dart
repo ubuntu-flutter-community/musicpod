@@ -15,6 +15,7 @@ import '../../local_audio/local_audio_model.dart';
 import '../../settings/settings_model.dart';
 import 'scaffold.dart';
 import 'splash_screen.dart';
+import 'system_tray.dart';
 
 class YaruMusicPodApp extends StatelessWidget {
   const YaruMusicPodApp({
@@ -106,11 +107,14 @@ class _MusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
 class _MusicPodAppState extends State<_MusicPodApp>
     with WidgetsBindingObserver {
   late Future<bool> _initFuture;
+  late SystemTray _tray;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _tray = SystemTray();
+    _tray.init();
     _initFuture = _init();
   }
 
