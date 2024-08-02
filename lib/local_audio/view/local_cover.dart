@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import '../../common/data/audio.dart';
-import '../../constants.dart';
 import '../cover_store.dart';
 
 class LocalCover extends StatefulWidget {
@@ -12,12 +11,16 @@ class LocalCover extends StatefulWidget {
     required this.audio,
     required this.fallback,
     this.dimension,
+    this.height,
     this.fit,
+    this.width,
   });
 
   final Audio audio;
   final Widget fallback;
   final double? dimension;
+  final double? height;
+  final double? width;
   final BoxFit? fit;
 
   @override
@@ -36,6 +39,9 @@ class _LocalCoverState extends State<LocalCover> {
 
   @override
   Widget build(BuildContext context) {
+    final fit = widget.fit ?? BoxFit.fitHeight;
+    const medium = FilterQuality.medium;
+
     Widget child = FutureBuilder(
       future: _future,
       builder: (context, snapshot) {
@@ -45,34 +51,28 @@ class _LocalCoverState extends State<LocalCover> {
             child: widget.fallback,
           );
         } else {
-          return _buildImage(
+          return Image.memory(
+            key: const ValueKey(1),
             snapshot.data!,
-            const ValueKey(1),
+            fit: fit,
+            height: widget.dimension ?? widget.height,
+            width: widget.width,
+            filterQuality: medium,
           );
         }
       },
     );
 
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 500),
-      transitionBuilder: (Widget child, Animation<double> animation) {
-        return FadeTransition(opacity: animation, child: child);
-      },
-      reverseDuration: const Duration(milliseconds: 500),
-      child: child,
-    );
-  }
-
-  Image _buildImage(Uint8List data, Key key) {
-    final fit = widget.fit ?? BoxFit.fitHeight;
-    const medium = FilterQuality.medium;
-    final dim = widget.dimension ?? kAudioCardDimension;
-    return Image.memory(
-      key: key,
-      data,
-      fit: fit,
-      height: dim,
-      filterQuality: medium,
+    return SizedBox(
+      height: widget.dimension ?? widget.height,
+      width: widget.dimension ?? widget.width,
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 500),
+        transitionBuilder: (Widget child, Animation<double> animation) =>
+            FadeTransition(opacity: animation, child: child),
+        reverseDuration: const Duration(milliseconds: 500),
+        child: child,
+      ),
     );
   }
 }

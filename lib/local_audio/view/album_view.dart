@@ -9,6 +9,7 @@ import '../../common/view/cover_background.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
+import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
@@ -110,6 +111,7 @@ class AlbumCard extends StatelessWidget {
             : audio.album ?? '',
       ),
       image: LocalCover(
+        dimension: kAudioCardDimension,
         audio: audio,
         fallback: fallback,
       ),

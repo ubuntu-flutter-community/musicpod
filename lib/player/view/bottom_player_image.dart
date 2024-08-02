@@ -96,7 +96,7 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
       ),
     );
 
-    if (audio != null) {
+    if (audio != null && audio?.audioType == AudioType.local) {
       return LocalCover(
         key: ValueKey(audio?.path),
         audio: audio!,
@@ -108,6 +108,7 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
 
     if (audio?.albumArtUrl != null || audio?.imageUrl != null) {
       return SuperNetworkImage(
+        key: ValueKey(audio?.albumArtUrl ?? audio?.imageUrl),
         height: size,
         width: size,
         audio: audio,
