@@ -28,7 +28,7 @@ class BottomPlayerTitleArtist extends StatelessWidget
           onTap: audio == null
               ? null
               : () => onTitleTap(
-                    audio: audio!,
+                    audio: audio,
                     text: icyTitle,
                     context: context,
                   ),

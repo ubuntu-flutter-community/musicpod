@@ -286,8 +286,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
           id: album.key,
         ),
         iconBuilder: (selected) => AlbumPageSideBarIcon(
-          picture: album.value.firstOrNull?.pictureData,
-          album: album.value.firstWhereOrNull((e) => e.album != null)?.album,
+          audio: album.value.firstOrNull,
         ),
       ),
     for (final station in libraryModel.starredStations.entries

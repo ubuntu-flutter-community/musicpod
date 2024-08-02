@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 
+import 'dart:typed_data';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart' hide PlayerState;
@@ -17,6 +17,7 @@ import '../common/data/player_state.dart';
 import '../constants.dart';
 import '../extensions/string_x.dart';
 import '../library/library_service.dart';
+import '../local_audio/cover_store.dart';
 import '../online_album_art_utils.dart';
 import '../persistence_utils.dart';
 
@@ -60,10 +61,8 @@ class PlayerService {
   Stream<bool> get mpvMetaDataChanged => _mpvMetaDataController.stream;
   MpvMetaData? _mpvMetaData;
   MpvMetaData? get mpvMetaData => _mpvMetaData;
-  void setMpvMetaData(MpvMetaData value) {
-    if (_mpvMetaData != null && value.icyTitle == _mpvMetaData?.icyTitle) {
-      return;
-    }
+  void setMpvMetaData(MpvMetaData? value) {
+    if (value?.icyTitle == _mpvMetaData?.icyTitle) return;
     _mpvMetaData = value;
 
     var validHistoryElement = _mpvMetaData?.icyTitle.isNotEmpty == true;
@@ -96,6 +95,7 @@ class PlayerService {
     if (value == _audio) return;
     _audio = value;
     _audioController.add(true);
+    setMpvMetaData(null);
   }
 
   final _isVideoController = StreamController<bool>.broadcast();
@@ -449,7 +449,8 @@ class PlayerService {
   Color? get color => _color;
 
   Future<void> _loadColor({String? artUrl}) async {
-    if (_audio?.pictureData == null &&
+    final pic = CoverStore().get(_audio?.albumId);
+    if (pic == null &&
         audio?.imageUrl == null &&
         audio?.albumArtUrl == null &&
         artUrl == null) {
@@ -458,10 +459,8 @@ class PlayerService {
     }
 
     ImageProvider? image;
-    if (_audio?.pictureData != null) {
-      image = MemoryImage(
-        _audio!.pictureData!,
-      );
+    if (pic != null) {
+      image = MemoryImage(pic);
     } else {
       image = NetworkImage(
         artUrl ?? _audio!.imageUrl ?? _audio!.albumArtUrl!,
@@ -625,25 +624,39 @@ class PlayerService {
       return Uri.tryParse(
         audio?.imageUrl ?? audio!.albumArtUrl!,
       );
-    } else if (audio?.pictureData != null) {
-      Uint8List imageInUnit8List = audio!.pictureData!;
-      final workingDir = await getWorkingDir();
+    } else if (audio?.albumId?.isNotEmpty == true) {
+      final maybeData = CoverStore().get(audio?.albumId);
+      if (maybeData != null) {
+        File newFile = await _safeTempCover(maybeData);
 
-      final imagesDir = p.join(workingDir, 'images');
+        return Uri.file(newFile.path, windows: Platform.isWindows);
+      } else if (audio != null) {
+        final newData = await getCover(audio);
+        if (newData != null) {
+          File newFile = await _safeTempCover(newData);
 
-      if (Directory(imagesDir).existsSync()) {
-        Directory(imagesDir).deleteSync(recursive: true);
+          return Uri.file(newFile.path, windows: Platform.isWindows);
+        }
       }
-      Directory(imagesDir).createSync();
-      final now =
-          DateTime.now().toUtc().toString().replaceAll(RegExp(r'[^0-9]'), '');
-      final file = File(p.join(imagesDir, '$now.png'));
-      final newFile = await file.writeAsBytes(imageInUnit8List);
-
-      return Uri.file(newFile.path, windows: Platform.isWindows);
-    } else {
-      return null;
     }
+
+    return null;
+  }
+
+  Future<File> _safeTempCover(Uint8List maybeData) async {
+    final workingDir = await getWorkingDir();
+
+    final imagesDir = p.join(workingDir, 'images');
+
+    if (Directory(imagesDir).existsSync()) {
+      Directory(imagesDir).deleteSync(recursive: true);
+    }
+    Directory(imagesDir).createSync();
+    final now =
+        DateTime.now().toUtc().toString().replaceAll(RegExp(r'[^0-9]'), '');
+    final file = File(p.join(imagesDir, '$now.png'));
+    final newFile = await file.writeAsBytes(maybeData);
+    return newFile;
   }
 
   Future<void> _setMediaControlsIsPlaying(bool playing) async {

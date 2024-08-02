@@ -1,23 +1,23 @@
-import 'dart:typed_data';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/avatar_play_button.dart';
+import '../../common/view/cover_background.dart';
 import '../../common/view/explore_online_popup.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page.dart';
 import '../../common/view/theme.dart';
+import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../local_audio_model.dart';
 import 'artist_page.dart';
+import 'local_cover.dart';
 
 class AlbumPage extends StatelessWidget {
   const AlbumPage({
@@ -32,8 +32,6 @@ class AlbumPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
-    final pictureData =
-        album.firstWhereOrNull((e) => e.pictureData != null)?.pictureData;
 
     void onArtistTap(text) {
       final artistName = album.firstOrNull?.artist;
@@ -57,7 +55,7 @@ class AlbumPage extends StatelessWidget {
       pageId: id,
       audioPageType: AudioPageType.album,
       audios: album,
-      image: AlbumPageImage(pictureData: pictureData),
+      image: album.isEmpty ? null : AlbumPageImage(audio: album.first),
       pageTitle: album.firstWhereOrNull((e) => e.album != null)?.album,
       pageSubTitle: album.firstWhereOrNull((e) => e.artist != null)?.artist,
       onPageLabelTab: onArtistTap,
@@ -67,56 +65,25 @@ class AlbumPage extends StatelessWidget {
   }
 }
 
-// ignore: unused_element
-Future<Color?> _loadColor({Audio? audio}) async {
-  if (audio?.pictureData == null &&
-      audio?.imageUrl == null &&
-      audio?.albumArtUrl == null) {
-    return null;
-  }
-
-  ImageProvider? image;
-  if (audio?.pictureData != null) {
-    image = MemoryImage(
-      audio!.pictureData!,
-    );
-  } else {
-    image = NetworkImage(
-      audio!.imageUrl ?? audio.albumArtUrl!,
-    );
-  }
-  final generator = await PaletteGenerator.fromImageProvider(image);
-  return generator.dominantColor?.color;
-}
-
 class AlbumPageSideBarIcon extends StatelessWidget {
-  const AlbumPageSideBarIcon({super.key, this.picture, this.album});
+  const AlbumPageSideBarIcon({super.key, required this.audio});
 
-  final Uint8List? picture;
-  final String? album;
+  final Audio? audio;
 
   @override
   Widget build(BuildContext context) {
-    if (picture == null) {
-      return SideBarFallBackImage(
-        child: Icon(
-          Iconz().startPlayList,
-          color: getAlphabetColor(album ?? 'c'),
-        ),
-      );
-    }
-
-    return SizedBox.square(
-      dimension: sideBarImageSize,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(5),
-        child: Image.memory(
-          picture!,
-          height: sideBarImageSize,
-          fit: BoxFit.fitHeight,
-          filterQuality: FilterQuality.medium,
-        ),
+    final fallBack = SideBarFallBackImage(
+      child: Icon(
+        Iconz().startPlayList,
+        color: getAlphabetColor(audio?.album ?? 'c'),
       ),
+    );
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: audio == null
+          ? fallBack
+          : LocalCover(audio: audio!, fallback: fallBack),
     );
   }
 }
@@ -124,10 +91,10 @@ class AlbumPageSideBarIcon extends StatelessWidget {
 class AlbumPageImage extends StatelessWidget {
   const AlbumPageImage({
     super.key,
-    required this.pictureData,
+    required this.audio,
   });
 
-  final Uint8List? pictureData;
+  final Audio audio;
 
   @override
   Widget build(BuildContext context) {
@@ -142,15 +109,16 @@ class AlbumPageImage extends StatelessWidget {
             ),
           ),
         ),
-        if (pictureData != null)
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Image.memory(
-              pictureData!,
-              fit: BoxFit.fitHeight,
-              filterQuality: FilterQuality.medium,
+        Align(
+          alignment: Alignment.centerLeft,
+          child: LocalCover(
+            audio: audio,
+            dimension: kMaxAudioPageHeaderHeight,
+            fallback: const CoverBackground(
+              dimension: kMaxAudioPageHeaderHeight,
             ),
           ),
+        ),
       ],
     );
   }

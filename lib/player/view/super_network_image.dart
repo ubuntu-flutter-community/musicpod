@@ -41,7 +41,9 @@ class SuperNetworkImage extends StatelessWidget with WatchItMixin {
     );
 
     return Container(
-      key: ValueKey(mpvMetaData?.icyTitle),
+      key: ValueKey(
+        mpvMetaData?.icyTitle ?? audio?.imageUrl ?? audio?.albumArtUrl,
+      ),
       color: theme.cardColor,
       height: height,
       width: width,

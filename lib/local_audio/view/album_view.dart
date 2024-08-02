@@ -5,14 +5,17 @@ import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
+import '../../common/view/cover_background.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
+import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../local_audio_model.dart';
 import 'album_page.dart';
+import 'local_cover.dart';
 
 class AlbumsView extends StatelessWidget {
   const AlbumsView({
@@ -83,26 +86,23 @@ class AlbumsView extends StatelessWidget {
   }
 
   Widget itemBuilder(context, index) {
-    final playerModel = di<PlayerModel>();
-    final model = di<LocalAudioModel>();
     final audio = albums!.elementAt(index);
-    String? id = audio.albumId;
-    final albumAudios = model.findAlbum(audio);
+    return AlbumCard(audio: audio);
+  }
+}
 
-    final image = audio.pictureData == null
-        ? null
-        : Image.memory(
-            audio.pictureData!,
-            fit: BoxFit.fitHeight,
-            height: kAudioCardDimension,
-            filterQuality: FilterQuality.medium,
-          );
+class AlbumCard extends StatelessWidget {
+  const AlbumCard({super.key, required this.audio});
 
-    final fallback = Image.asset(
-      'assets/images/media-optical.png',
-      height: kAudioCardDimension,
-      width: kAudioCardDimension,
-    );
+  final Audio audio;
+
+  @override
+  Widget build(BuildContext context) {
+    final playerModel = di<PlayerModel>();
+    final albumAudios = di<LocalAudioModel>().findAlbum(audio);
+    const fallback = CoverBackground();
+
+    final id = audio.albumId;
 
     return AudioCard(
       bottom: AudioCardBottom(
@@ -110,7 +110,11 @@ class AlbumsView extends StatelessWidget {
             ? context.l10n.unknown
             : audio.album ?? '',
       ),
-      image: image ?? fallback,
+      image: LocalCover(
+        dimension: kAudioCardDimension,
+        audio: audio,
+        fallback: fallback,
+      ),
       background: fallback,
       onTap: id == null || albumAudios == null
           ? null

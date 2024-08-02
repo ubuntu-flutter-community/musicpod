@@ -40,13 +40,15 @@ class _IcyImageState extends State<IcyImage> {
   @override
   void initState() {
     super.initState();
-    _imageUrl = fetchAlbumArt(widget.mpvMetaData.icyTitle);
+    final url = UrlStore().get(widget.mpvMetaData.icyTitle);
+    _imageUrl = url?.isNotEmpty == true
+        ? Future.value(url)
+        : fetchAlbumArt(widget.mpvMetaData.icyTitle);
   }
 
   @override
   Widget build(BuildContext context) {
     final bR = widget.borderRadius ?? BorderRadius.circular(4);
-    final storedUrl = UrlStore().get(widget.mpvMetaData.icyTitle);
 
     return Tooltip(
       message: context.l10n.metadata,
@@ -67,19 +69,10 @@ class _IcyImageState extends State<IcyImage> {
           child: SizedBox(
             height: widget.height,
             width: widget.width,
-            child: storedUrl != null
-                ? _buildImage(storedUrl)
-                : FutureBuilder(
-                    future: _imageUrl,
-                    builder: (context, snapshot) {
-                      return _buildImage(
-                        UrlStore().put(
-                          key: widget.mpvMetaData.icyTitle,
-                          url: snapshot.data,
-                        ),
-                      );
-                    },
-                  ),
+            child: FutureBuilder(
+              future: _imageUrl,
+              builder: (context, snapshot) => _buildImage(snapshot.data),
+            ),
           ),
         ),
       ),

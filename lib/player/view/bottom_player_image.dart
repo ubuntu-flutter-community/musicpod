@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
-import '../../common/view/icons.dart';
-import '../../common/view/theme.dart';
-import '../../extensions/build_context_x.dart';
-import '../../extensions/theme_data_x.dart';
+import '../../local_audio/view/local_cover.dart';
+import 'player_fall_back_image.dart';
 import 'super_network_image.dart';
 
 class BottomPlayerImage extends StatelessWidget with WatchItMixin {
@@ -48,69 +45,26 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
       );
     }
 
-    const iconSize = 40.0;
-    final theme = context.t;
-    IconData iconData;
-    if (audio?.audioType == AudioType.radio) {
-      iconData = Iconz().radio;
-    } else if (audio?.audioType == AudioType.podcast) {
-      iconData = Iconz().podcast;
-    } else {
-      iconData = Iconz().musicNote;
-    }
+    Widget child;
 
-    final fallBackImage = Center(
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-            colors: [
-              getAlphabetColor(
-                audio?.title ?? audio?.album ?? 'a',
-              ).scale(
-                lightness: theme.isLight ? 0 : -0.4,
-                saturation: -0.5,
-              ),
-              getAlphabetColor(
-                audio?.title ?? audio?.album ?? 'a',
-              ).scale(
-                lightness: theme.isLight ? -0.1 : -0.2,
-                saturation: -0.5,
-              ),
-            ],
-          ),
-        ),
-        width: size,
-        height: size,
-        child: Icon(
-          iconData,
-          size: iconSize,
-          color: contrastColor(
-            getAlphabetColor(
-              audio?.title ?? audio?.album ?? 'a',
-            ),
-          ),
-        ),
-      ),
+    final fallBackImage = PlayerFallBackImage(
+      key: const ValueKey(0),
+      audio: audio,
+      height: size,
+      width: size,
     );
 
-    if (audio?.pictureData != null) {
-      return AnimatedContainer(
-        height: size,
-        width: size,
-        duration: const Duration(milliseconds: 300),
-        child: Image.memory(
-          filterQuality: FilterQuality.medium,
-          fit: BoxFit.cover,
-          audio!.pictureData!,
-          height: size,
-        ),
+    if (audio != null && audio?.audioType == AudioType.local) {
+      child = LocalCover(
+        key: ValueKey(audio?.path),
+        audio: audio!,
+        fit: BoxFit.cover,
+        dimension: size,
+        fallback: fallBackImage,
       );
-    }
-
-    if (audio?.albumArtUrl != null || audio?.imageUrl != null) {
-      return SuperNetworkImage(
+    } else if (audio?.albumArtUrl != null || audio?.imageUrl != null) {
+      child = SuperNetworkImage(
+        key: ValueKey(audio?.albumArtUrl ?? audio?.imageUrl),
         height: size,
         width: size,
         audio: audio,
@@ -118,8 +72,13 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
         fallBackIcon: fallBackImage,
         errorIcon: fallBackImage,
       );
+    } else {
+      child = fallBackImage;
     }
 
-    return fallBackImage;
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 200),
+      child: child,
+    );
   }
 }

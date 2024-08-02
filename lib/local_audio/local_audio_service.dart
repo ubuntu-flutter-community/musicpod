@@ -9,12 +9,13 @@ import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
 import '../extensions/media_file_x.dart';
 import '../settings/settings_service.dart';
+import 'cover_store.dart';
 
 typedef LocalSearchResult = ({
   Set<Audio>? titles,
   Set<Audio>? artists,
   Set<Audio>? albums,
-  Set<Audio>? genres,
+  Set<String>? genres,
 });
 
 class LocalAudioService {
@@ -61,24 +62,22 @@ class LocalAudioService {
     _allArtists = Set.from(list);
   }
 
-  Set<Audio>? _allGenres;
-  Set<Audio>? get allGenres => _allGenres;
+  Set<String>? _allGenres;
+  Set<String>? get allGenres => _allGenres;
   void _findAllGenres() {
     if (_audios == null) return;
-    final genresResult = <Audio>{};
+    final genresResult = <String>{};
     for (var a in audios!) {
       if (genresResult.none(
-            (e) => e.genre == a.genre,
+            (e) => e == a.genre,
           ) &&
           a.genre?.isNotEmpty == true) {
-        genresResult.add(a);
+        genresResult.add(a.genre!);
       }
     }
     final list = genresResult.toList();
-    sortListByAudioFilter(
-      audioFilter: AudioFilter.genre,
-      audios: list,
-    );
+    list.sort();
+
     _allGenres = Set.from(list);
   }
 
@@ -164,6 +163,7 @@ class LocalAudioService {
 
   Set<Uint8List>? findImages(Set<Audio> audios) {
     final images = <Uint8List>{};
+
     final albumAudios = <Audio>{};
     for (var audio in audios) {
       if (albumAudios.none((a) => a.album == audio.album)) {
@@ -172,8 +172,9 @@ class LocalAudioService {
     }
 
     for (var audio in albumAudios) {
-      if (audio.pictureData != null) {
-        images.add(audio.pictureData!);
+      var uint8list = CoverStore().get(audio.albumId);
+      if (uint8list != null) {
+        images.add(uint8list);
       }
     }
 
@@ -205,11 +206,12 @@ class LocalAudioService {
           audio.genre!.toLowerCase().contains(query.toLowerCase()),
     );
 
-    final genreFindings = <Audio>{};
+    final genreFindings = <String>{};
     if (allGenresFindings != null) {
       for (var a in allGenresFindings) {
-        if (genreFindings.none((element) => element.genre == a.genre)) {
-          genreFindings.add(a);
+        if (a.genre?.isNotEmpty == true &&
+            genreFindings.none((element) => element == a.genre)) {
+          genreFindings.add(a.genre!);
         }
       }
     }
@@ -250,6 +252,7 @@ class LocalAudioService {
     bool forceInit = false,
   }) async {
     if (forceInit == false && _audios?.isNotEmpty == true) return;
+    await CoverStore().read();
     final result = await compute(
       _readAudiosFromDirectory,
       directory ?? _settingsService.directory,
@@ -263,7 +266,10 @@ class LocalAudioService {
     _audiosController.add(true);
   }
 
-  Future<void> dispose() async => _audiosController.close();
+  Future<void> dispose() async {
+    await CoverStore().write();
+    return _audiosController.close();
+  }
 }
 
 FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
@@ -277,7 +283,7 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
         .where((e) => e.isValidMedia)
         .toList()) {
       try {
-        final metadata = await readMetadata(e, getImage: true);
+        final metadata = await readMetadata(e, getImage: false);
         newAudios.add(Audio.fromMetadata(path: e.path, data: metadata));
       } catch (error) {
         failedImports.add(e.path);

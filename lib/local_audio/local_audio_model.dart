@@ -24,8 +24,8 @@ class LocalAudioModel extends SafeChangeNotifier {
   Set<Audio>? _artistsSearchResult;
   Set<Audio>? get similarArtistsSearchResult => _artistsSearchResult;
 
-  Set<Audio>? _genresSearchResult;
-  Set<Audio>? get genresSearchResult => _genresSearchResult;
+  Set<String>? _genresSearchResult;
+  Set<String>? get genresSearchResult => _genresSearchResult;
 
   String? _searchQuery;
   String? get searchQuery => _searchQuery;
@@ -52,7 +52,7 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   Set<Audio>? get audios => _service.audios;
   Set<Audio>? get allArtists => _service.allArtists;
-  Set<Audio>? get allGenres => _service.allGenres;
+  Set<String>? get allGenres => _service.allGenres;
   Set<Audio>? get allAlbums => _service.allAlbums;
 
   Set<Audio>? findAlbum(

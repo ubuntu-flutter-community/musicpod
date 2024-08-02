@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/view/icons.dart';
-import '../../common/view/theme.dart';
 import '../../constants.dart';
-import '../../extensions/build_context_x.dart';
-import '../../extensions/theme_data_x.dart';
+import '../../local_audio/view/local_cover.dart';
+import 'player_fall_back_image.dart';
 import 'super_network_image.dart';
 
 class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
@@ -29,62 +26,27 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
-
-    IconData iconData;
-    if (audio?.audioType == AudioType.radio) {
-      iconData = Iconz().radio;
-    } else if (audio?.audioType == AudioType.podcast) {
-      iconData = Iconz().podcast;
-    } else {
-      iconData = Iconz().musicNote;
-    }
-
-    final fallBackImage = Container(
+    final fallBackImage = PlayerFallBackImage(
+      key: const ValueKey(0),
+      audio: audio,
       height: height ?? fullHeightPlayerImageSize,
       width: width ?? fullHeightPlayerImageSize,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.bottomLeft,
-          end: Alignment.topRight,
-          colors: [
-            getAlphabetColor(
-              audio?.title ?? audio?.album ?? 'a',
-            ).scale(
-              lightness: theme.isLight ? 0 : -0.4,
-              saturation: -0.5,
-            ),
-            getAlphabetColor(
-              audio?.title ?? audio?.album ?? 'a',
-            ).scale(
-              lightness: theme.isLight ? -0.1 : -0.2,
-              saturation: -0.5,
-            ),
-          ],
-        ),
-      ),
-      child: Icon(
-        iconData,
-        size: fullHeightPlayerImageSize * 0.7,
-        color: contrastColor(
-          getAlphabetColor(
-            audio?.title ?? audio?.album ?? 'a',
-          ),
-        ),
-      ),
     );
 
     Widget image;
-    if (audio?.pictureData != null) {
-      image = Image.memory(
-        audio!.pictureData!,
-        height: height ?? fullHeightPlayerImageSize,
-        width: width ?? fullHeightPlayerImageSize,
+    if (audio != null && audio?.audioType == AudioType.local) {
+      image = LocalCover(
+        key: ValueKey(audio?.path),
+        audio: audio!,
+        width: width,
+        height: height,
         fit: fit ?? BoxFit.fitHeight,
+        fallback: fallBackImage,
       );
     } else {
       if (audio?.albumArtUrl != null || audio?.imageUrl != null) {
         image = SuperNetworkImage(
+          key: ValueKey(audio?.imageUrl ?? audio?.albumArtUrl),
           height: height ?? fullHeightPlayerImageSize,
           width: width ?? fullHeightPlayerImageSize,
           audio: audio,
@@ -102,7 +64,10 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
       width: width ?? fullHeightPlayerImageSize,
       child: ClipRRect(
         borderRadius: borderRadius ?? BorderRadius.circular(10),
-        child: image,
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: image,
+        ),
       ),
     );
   }
