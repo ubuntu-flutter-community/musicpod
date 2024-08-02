@@ -1,8 +1,5 @@
-import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:audio_metadata_reader/audio_metadata_reader.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/data/audio.dart';
@@ -30,26 +27,11 @@ class LocalCover extends StatefulWidget {
 class _LocalCoverState extends State<LocalCover> {
   late Future<Uint8List?> _future;
 
-  Future<Uint8List?> _getCover() async {
-    if (widget.audio.path != null && widget.audio.albumId?.isNotEmpty == true) {
-      final metadata =
-          await readMetadata(File(widget.audio.path!), getImage: true);
-      return CoverStore().put(
-        albumId: widget.audio.albumId!,
-        data: metadata.pictures
-            .firstWhereOrNull((e) => e.bytes.isNotEmpty)
-            ?.bytes,
-      );
-    }
-
-    return null;
-  }
-
   @override
   void initState() {
     super.initState();
     final init = CoverStore().get(widget.audio.albumId);
-    _future = init != null ? Future.value(init) : _getCover();
+    _future = init != null ? Future.value(init) : getCover(widget.audio);
   }
 
   @override

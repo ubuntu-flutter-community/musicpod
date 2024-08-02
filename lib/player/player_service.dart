@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'dart:typed_data';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart' hide PlayerState;
@@ -628,24 +629,36 @@ class PlayerService {
     } else if (audio?.albumId?.isNotEmpty == true) {
       final maybeData = CoverStore().get(audio?.albumId);
       if (maybeData != null) {
-        final workingDir = await getWorkingDir();
-
-        final imagesDir = p.join(workingDir, 'images');
-
-        if (Directory(imagesDir).existsSync()) {
-          Directory(imagesDir).deleteSync(recursive: true);
-        }
-        Directory(imagesDir).createSync();
-        final now =
-            DateTime.now().toUtc().toString().replaceAll(RegExp(r'[^0-9]'), '');
-        final file = File(p.join(imagesDir, '$now.png'));
-        final newFile = await file.writeAsBytes(maybeData);
+        File newFile = await _safeTempCover(maybeData);
 
         return Uri.file(newFile.path, windows: Platform.isWindows);
+      } else if (audio != null) {
+        final newData = await getCover(audio);
+        if (newData != null) {
+          File newFile = await _safeTempCover(newData);
+
+          return Uri.file(newFile.path, windows: Platform.isWindows);
+        }
       }
     }
 
     return null;
+  }
+
+  Future<File> _safeTempCover(Uint8List maybeData) async {
+    final workingDir = await getWorkingDir();
+
+    final imagesDir = p.join(workingDir, 'images');
+
+    if (Directory(imagesDir).existsSync()) {
+      Directory(imagesDir).deleteSync(recursive: true);
+    }
+    Directory(imagesDir).createSync();
+    final now =
+        DateTime.now().toUtc().toString().replaceAll(RegExp(r'[^0-9]'), '');
+    final file = File(p.join(imagesDir, '$now.png'));
+    final newFile = await file.writeAsBytes(maybeData);
+    return newFile;
   }
 
   Future<void> _setMediaControlsIsPlaying(bool playing) async {
