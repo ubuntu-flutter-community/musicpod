@@ -61,10 +61,8 @@ class PlayerService {
   Stream<bool> get mpvMetaDataChanged => _mpvMetaDataController.stream;
   MpvMetaData? _mpvMetaData;
   MpvMetaData? get mpvMetaData => _mpvMetaData;
-  void setMpvMetaData(MpvMetaData value) {
-    if (_mpvMetaData != null && value.icyTitle == _mpvMetaData?.icyTitle) {
-      return;
-    }
+  void setMpvMetaData(MpvMetaData? value) {
+    if (value?.icyTitle == _mpvMetaData?.icyTitle) return;
     _mpvMetaData = value;
 
     var validHistoryElement = _mpvMetaData?.icyTitle.isNotEmpty == true;
@@ -97,6 +95,7 @@ class PlayerService {
     if (value == _audio) return;
     _audio = value;
     _audioController.add(true);
+    setMpvMetaData(null);
   }
 
   final _isVideoController = StreamController<bool>.broadcast();
