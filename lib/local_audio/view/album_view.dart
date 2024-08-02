@@ -5,10 +5,10 @@ import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
+import '../../common/view/cover_background.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
@@ -126,21 +126,6 @@ class AlbumCard extends StatelessWidget {
                 audios: albumAudios,
                 listName: id,
               ),
-    );
-  }
-}
-
-class CoverBackground extends StatelessWidget {
-  const CoverBackground({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset(
-      'assets/images/media-optical.png',
-      height: kAudioCardDimension,
-      width: kAudioCardDimension,
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:watch_it/watch_it.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/avatar_play_button.dart';
+import '../../common/view/cover_background.dart';
 import '../../common/view/explore_online_popup.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
@@ -147,6 +148,9 @@ class AlbumPageImage extends StatelessWidget {
           child: LocalCover(
             audio: audio,
             dimension: kMaxAudioPageHeaderHeight,
+            fallback: const CoverBackground(
+              dimension: kMaxAudioPageHeaderHeight,
+            ),
           ),
         ),
       ],

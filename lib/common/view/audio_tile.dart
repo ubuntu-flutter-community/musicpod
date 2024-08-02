@@ -70,6 +70,7 @@ class _AudioTileState extends State<AudioTile> {
     };
 
     return MouseRegion(
+      key: ValueKey(widget.audio.audioType?.index),
       onEnter: (e) => setState(() => _hovered = true),
       onExit: (e) => setState(() => _hovered = false),
       child: ListTile(
