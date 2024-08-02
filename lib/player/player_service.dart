@@ -449,7 +449,8 @@ class PlayerService {
   Color? get color => _color;
 
   Future<void> _loadColor({String? artUrl}) async {
-    if (_audio?.pictureData == null &&
+    final pic = CoverStore().get(_audio?.albumId);
+    if (pic == null &&
         audio?.imageUrl == null &&
         audio?.albumArtUrl == null &&
         artUrl == null) {
@@ -458,10 +459,8 @@ class PlayerService {
     }
 
     ImageProvider? image;
-    if (_audio?.pictureData != null) {
-      image = MemoryImage(
-        _audio!.pictureData!,
-      );
+    if (pic != null) {
+      image = MemoryImage(pic);
     } else {
       image = NetworkImage(
         artUrl ?? _audio!.imageUrl ?? _audio!.albumArtUrl!,
