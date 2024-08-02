@@ -97,16 +97,12 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
     );
 
     if (audio != null) {
-      return AnimatedContainer(
-        height: size,
-        width: size,
-        duration: const Duration(milliseconds: 300),
-        child: LocalCover(
-          audio: audio!,
-          fit: BoxFit.cover,
-          dimension: size,
-          fallback: fallBackImage,
-        ),
+      return LocalCover(
+        key: ValueKey(audio?.path),
+        audio: audio!,
+        fit: BoxFit.cover,
+        dimension: size,
+        fallback: fallBackImage,
       );
     }
 

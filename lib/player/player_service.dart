@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +16,7 @@ import '../common/data/player_state.dart';
 import '../constants.dart';
 import '../extensions/string_x.dart';
 import '../library/library_service.dart';
+import '../local_audio/cover_store.dart';
 import '../online_album_art_utils.dart';
 import '../persistence_utils.dart';
 
@@ -625,25 +625,27 @@ class PlayerService {
       return Uri.tryParse(
         audio?.imageUrl ?? audio!.albumArtUrl!,
       );
-    } else if (audio?.pictureData != null) {
-      Uint8List imageInUnit8List = audio!.pictureData!;
-      final workingDir = await getWorkingDir();
+    } else if (audio?.albumId?.isNotEmpty == true) {
+      final maybeData = CoverStore().get(audio?.albumId);
+      if (maybeData != null) {
+        final workingDir = await getWorkingDir();
 
-      final imagesDir = p.join(workingDir, 'images');
+        final imagesDir = p.join(workingDir, 'images');
 
-      if (Directory(imagesDir).existsSync()) {
-        Directory(imagesDir).deleteSync(recursive: true);
+        if (Directory(imagesDir).existsSync()) {
+          Directory(imagesDir).deleteSync(recursive: true);
+        }
+        Directory(imagesDir).createSync();
+        final now =
+            DateTime.now().toUtc().toString().replaceAll(RegExp(r'[^0-9]'), '');
+        final file = File(p.join(imagesDir, '$now.png'));
+        final newFile = await file.writeAsBytes(maybeData);
+
+        return Uri.file(newFile.path, windows: Platform.isWindows);
       }
-      Directory(imagesDir).createSync();
-      final now =
-          DateTime.now().toUtc().toString().replaceAll(RegExp(r'[^0-9]'), '');
-      final file = File(p.join(imagesDir, '$now.png'));
-      final newFile = await file.writeAsBytes(imageInUnit8List);
-
-      return Uri.file(newFile.path, windows: Platform.isWindows);
-    } else {
-      return null;
     }
+
+    return null;
   }
 
   Future<void> _setMediaControlsIsPlaying(bool playing) async {
