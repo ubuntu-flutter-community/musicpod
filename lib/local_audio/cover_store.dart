@@ -19,12 +19,8 @@ class CoverStore {
 
   Future<void> write() async => writeUint8ListMap(_value, kCoverStore);
 
-  Future<void> read() async {
-    final result = await readUint8ListMap(kCoverStore);
-    if (result?.isNotEmpty == true) {
-      _value = result!;
-    }
-  }
+  Future<void> read() async =>
+      _value = await readUint8ListMap(kCoverStore) ?? {};
 }
 
 const kCoverStore = 'coverStore.json';

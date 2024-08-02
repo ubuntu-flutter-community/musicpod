@@ -253,7 +253,7 @@ class LocalAudioService {
   }) async {
     if (forceInit == false && _audios?.isNotEmpty == true) return;
 
-    // await  CoverStore().read();
+    await CoverStore().read();
 
     final result = await compute(
       _readAudiosFromDirectory,
@@ -269,7 +269,7 @@ class LocalAudioService {
   }
 
   Future<void> dispose() async {
-    // await CoverStore().write();
+    await CoverStore().write();
     return _audiosController.close();
   }
 }

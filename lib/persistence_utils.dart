@@ -254,37 +254,27 @@ Future<void> writeUint8ListMap(
   String fileName,
 ) async {
   final dynamicMap = map.map(
-    (key, value) => MapEntry<String?, Uint8List?>(
-      key,
-      value as dynamic,
-    ),
+    (key, value) => MapEntry<String, dynamic>(key, base64Encode(value!)),
   );
 
-  final jsonStr = jsonEncode(dynamicMap);
-
-  final workingDir = await getWorkingDir();
-
-  final file = File(p.join(workingDir, fileName));
-
-  if (!file.existsSync()) {
-    file.createSync();
-  }
-
-  await file.writeAsString(jsonStr);
+  await writeJsonToFile(dynamicMap, fileName);
 }
 
 Future<Map<String, Uint8List?>?> readUint8ListMap(String fileName) async {
   final workingDir = await getWorkingDir();
+  Map<String, Uint8List?>? theMap = {};
 
-  try {
-    final file = File(p.join(workingDir, fileName));
-    if (file.existsSync()) {
-      final jsonStr = await file.readAsString();
-      return jsonDecode(jsonStr) as Map<String, Uint8List?>;
+  final file = File(p.join(workingDir, fileName));
+  if (file.existsSync()) {
+    final jsonStr = await file.readAsString();
+    final decode = jsonDecode(jsonStr) as Map<String, dynamic>;
+    for (final e in decode.entries) {
+      final value = base64Decode(e.value);
+      if (value.isNotEmpty == true) {
+        theMap.putIfAbsent(e.key, () => value);
+      }
     }
-  } on Exception catch (_) {
-    return null;
   }
 
-  return null;
+  return theMap;
 }
