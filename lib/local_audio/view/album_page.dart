@@ -83,7 +83,11 @@ class AlbumPageSideBarIcon extends StatelessWidget {
       borderRadius: BorderRadius.circular(5),
       child: audio == null
           ? fallBack
-          : LocalCover(audio: audio!, fallback: fallBack),
+          : LocalCover(
+              audio: audio!,
+              fallback: fallBack,
+              dimension: sideBarImageSize,
+            ),
     );
   }
 }
