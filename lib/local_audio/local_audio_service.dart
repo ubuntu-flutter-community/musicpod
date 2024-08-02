@@ -252,7 +252,10 @@ class LocalAudioService {
     bool forceInit = false,
   }) async {
     if (forceInit == false && _audios?.isNotEmpty == true) return;
-    await CoverStore().read();
+    // TODO: Add a dialog for when people have X (too many) music files
+    // ask them to confirm that for them no local cache is being loaded and saved
+    // because such a cache will always be to big
+    if (kDebugMode) await CoverStore().read();
     final result = await compute(
       _readAudiosFromDirectory,
       directory ?? _settingsService.directory,
@@ -267,7 +270,8 @@ class LocalAudioService {
   }
 
   Future<void> dispose() async {
-    await CoverStore().write();
+    // TODO: delete this when the setting is added
+    if (kDebugMode) await CoverStore().write();
     return _audiosController.close();
   }
 }
