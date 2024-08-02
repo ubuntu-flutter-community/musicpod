@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import '../compute_isolate.dart';
 import '../persistence_utils.dart';
 
 class CoverStore {
@@ -20,7 +21,7 @@ class CoverStore {
   Future<void> write() async => writeUint8ListMap(_value, kCoverStore);
 
   Future<void> read() async =>
-      _value = await readUint8ListMap(kCoverStore) ?? {};
+      _value = await computeIsolate(() => readUint8ListMap(kCoverStore)) ?? {};
 }
 
 const kCoverStore = 'coverStore.json';

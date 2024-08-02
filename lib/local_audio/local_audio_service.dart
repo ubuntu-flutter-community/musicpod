@@ -252,9 +252,7 @@ class LocalAudioService {
     bool forceInit = false,
   }) async {
     if (forceInit == false && _audios?.isNotEmpty == true) return;
-
     await CoverStore().read();
-
     final result = await compute(
       _readAudiosFromDirectory,
       directory ?? _settingsService.directory,
