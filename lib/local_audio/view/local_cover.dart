@@ -64,8 +64,7 @@ class _LocalCoverState extends State<LocalCover> {
           );
         } else {
           return _buildImage(
-            CoverStore()
-                .put(albumId: widget.audio.albumId!, data: snapshot.data!)!,
+            snapshot.data!,
             const ValueKey(1),
           );
         }
