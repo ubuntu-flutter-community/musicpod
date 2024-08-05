@@ -72,7 +72,7 @@ class LibraryModel extends SafeChangeNotifier {
     super.dispose();
   }
 
-  Set<Audio>? getAudiosById(String pageId) {
+  List<Audio>? getAudiosById(String pageId) {
     if (pageId == kLikedAudiosPageId) {
       return likedAudios;
     } else {
@@ -86,14 +86,14 @@ class LibraryModel extends SafeChangeNotifier {
   //
   // Liked Audios
   //
-  Set<Audio> get likedAudios => _service.likedAudios;
+  List<Audio> get likedAudios => _service.likedAudios;
 
   void addLikedAudio(Audio audio, [bool notify = true]) =>
       _service.addLikedAudio(audio, notify);
 
-  void addLikedAudios(Set<Audio> audios) => _service.addLikedAudios(audios);
+  void addLikedAudios(List<Audio> audios) => _service.addLikedAudios(audios);
 
-  void removeLikedAudios(Set<Audio> audios) =>
+  void removeLikedAudios(List<Audio> audios) =>
       _service.removeLikedAudios(audios);
 
   bool liked(Audio? audio) => audio == null ? false : _service.liked(audio);
@@ -105,9 +105,9 @@ class LibraryModel extends SafeChangeNotifier {
   // Starred stations
   //
 
-  Map<String, Set<Audio>> get starredStations => _service.starredStations;
+  Map<String, List<Audio>> get starredStations => _service.starredStations;
   int get starredStationsLength => _service.starredStations.length;
-  void addStarredStation(String url, Set<Audio> audios) =>
+  void addStarredStation(String url, List<Audio> audios) =>
       _service.addStarredStation(url, audios);
 
   void unStarStation(String url, [bool popIt = true]) {
@@ -145,18 +145,18 @@ class LibraryModel extends SafeChangeNotifier {
   // Playlists
   //
 
-  Map<String, Set<Audio>> get playlists => _service.playlists;
+  Map<String, List<Audio>> get playlists => _service.playlists;
   int get playlistsLength => playlists.length;
   List<Audio> getPlaylistAt(int index) =>
       playlists.entries.elementAt(index).value.toList();
-  Set<Audio>? getPlaylistById(String id) => _service.playlists[id];
+  List<Audio>? getPlaylistById(String id) => _service.playlists[id];
 
   bool isPlaylistSaved(String? name) => playlists.containsKey(name);
 
-  Future<void> addPlaylist(String name, Set<Audio> audios) async =>
+  Future<void> addPlaylist(String name, List<Audio> audios) async =>
       _service.addPlaylist(name, audios);
 
-  Future<void> updatePlaylist(String id, Set<Audio> audios) async =>
+  Future<void> updatePlaylist(String id, List<Audio> audios) async =>
       _service.updatePlaylist(id, audios);
 
   void removePlaylist(String id) {
@@ -191,11 +191,11 @@ class LibraryModel extends SafeChangeNotifier {
 
   // Podcasts
 
-  Map<String, Set<Audio>> get podcasts => _service.podcasts;
+  Map<String, List<Audio>> get podcasts => _service.podcasts;
   int get podcastsLength => podcasts.length;
-  void addPodcast(String feedUrl, Set<Audio> audios) =>
+  void addPodcast(String feedUrl, List<Audio> audios) =>
       _service.addPodcast(feedUrl, audios);
-  void updatePodcast(String feedUrl, Set<Audio> audios) =>
+  void updatePodcast(String feedUrl, List<Audio> audios) =>
       _service.updatePodcast(feedUrl, audios);
 
   void removePodcast(String feedUrl) {
@@ -228,13 +228,13 @@ class LibraryModel extends SafeChangeNotifier {
   // Albums
   //
 
-  Map<String, Set<Audio>> get pinnedAlbums => _service.pinnedAlbums;
+  Map<String, List<Audio>> get pinnedAlbums => _service.pinnedAlbums;
   int get pinnedAlbumsLength => pinnedAlbums.length;
   List<Audio> getAlbumAt(int index) =>
       pinnedAlbums.entries.elementAt(index).value.toList();
   bool isPinnedAlbum(String name) => pinnedAlbums.containsKey(name);
 
-  void addPinnedAlbum(String name, Set<Audio> audios) =>
+  void addPinnedAlbum(String name, List<Audio> audios) =>
       _service.addPinnedAlbum(name, audios);
 
   void removePinnedAlbum(String name) {

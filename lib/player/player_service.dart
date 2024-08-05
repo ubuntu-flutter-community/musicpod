@@ -423,7 +423,7 @@ class PlayerService {
   }
 
   Future<void> startPlaylist({
-    required Set<Audio> audios,
+    required List<Audio> audios,
     required String listName,
     int? index,
   }) async {

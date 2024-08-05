@@ -38,7 +38,7 @@ Future<void> main() async {
     final result =
         await service.search(searchQuery: 'Flying High with Flutter');
     final feedUrl = result?.items.first.feedUrl;
-    Set<Audio>? episodes;
+    List<Audio>? episodes;
     if (feedUrl != null) {
       episodes = await findEpisodes(feedUrl: feedUrl);
     }

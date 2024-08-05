@@ -20,10 +20,10 @@ class LocalAudioBody extends StatelessWidget {
   });
 
   final LocalAudioView localAudioView;
-  final Set<Audio>? titles;
-  final Set<Audio>? artists;
-  final Set<Audio>? albums;
-  final Set<String>? genres;
+  final List<Audio>? titles;
+  final List<Audio>? artists;
+  final List<Audio>? albums;
+  final List<String>? genres;
   final Widget? noResultMessage, noResultIcon;
 
   @override

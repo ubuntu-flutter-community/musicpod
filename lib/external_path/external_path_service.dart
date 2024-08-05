@@ -41,7 +41,7 @@ class ExternalPathService {
       readMetadata(File(path), getImage: true).then(
         (data) => _playerService.startPlaylist(
           listName: path,
-          audios: {Audio.fromMetadata(path: path, data: data)},
+          audios: [Audio.fromMetadata(path: path, data: data)],
         ),
       );
     } catch (_) {}
@@ -59,7 +59,7 @@ class ExternalPathService {
           readMetadata(File(xfile!.path), getImage: true).then(
             (metadata) => _playerService.startPlaylist(
               listName: xfile.path,
-              audios: {Audio.fromMetadata(path: xfile.path, data: metadata)},
+              audios: [Audio.fromMetadata(path: xfile.path, data: metadata)],
             ),
           );
         });
@@ -67,8 +67,8 @@ class ExternalPathService {
     }
   }
 
-  Future<(String?, Set<Audio>?)> loadPlaylistFromFile() async {
-    Set<Audio>? audios;
+  Future<(String?, List<Audio>?)> loadPlaylistFromFile() async {
+    List<Audio>? audios;
     String? path;
 
     if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
@@ -87,8 +87,8 @@ class ExternalPathService {
     return (path, audios);
   }
 
-  Future<Set<Audio>> _parseM3uPlaylist(String path) async {
-    final audios = <Audio>{};
+  Future<List<Audio>> _parseM3uPlaylist(String path) async {
+    final audios = <Audio>[];
     final playlist = await M3uList.loadFromFile(path);
 
     for (var e in playlist.items) {
@@ -125,8 +125,8 @@ class ExternalPathService {
     return audios;
   }
 
-  Future<Set<Audio>> _parsePlsPlaylist(String path) async {
-    final audios = <Audio>{};
+  Future<List<Audio>> _parsePlsPlaylist(String path) async {
+    final audios = <Audio>[];
     final playlist = PlsPlaylist.parse(File(path).readAsStringSync());
 
     for (var e in playlist.entries) {

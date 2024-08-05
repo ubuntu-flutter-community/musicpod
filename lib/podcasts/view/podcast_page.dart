@@ -39,7 +39,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
   final String? imageUrl;
   final String pageId;
   final String title;
-  final Set<Audio>? audios;
+  final List<Audio>? audios;
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +50,8 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     final libraryModel = di<LibraryModel>();
     final audiosWithDownloads = audios
             ?.map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
-            .toSet() ??
-        {};
+            .toList() ??
+        [];
 
     Future<void> onTap(text) async {
       await di<PodcastModel>()
@@ -155,7 +155,7 @@ class _PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
     required this.title,
   });
 
-  final Set<Audio> audios;
+  final List<Audio> audios;
   final String pageId;
   final String title;
 

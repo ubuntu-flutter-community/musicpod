@@ -12,12 +12,13 @@ class LibraryService {
   //
   // Liked Audios
   //
-  Set<Audio> _likedAudios = {};
-  Set<Audio> get likedAudios => _likedAudios;
+  List<Audio> _likedAudios = [];
+  List<Audio> get likedAudios => _likedAudios;
   final _likedAudiosController = StreamController<bool>.broadcast();
   Stream<bool> get likedAudiosChanged => _likedAudiosController.stream;
 
   void addLikedAudio(Audio audio, [bool notify = true]) {
+    if (_likedAudios.contains(audio)) return;
     _likedAudios.add(audio);
     if (notify) {
       writeAudioMap({kLikedAudiosPageId: _likedAudios}, kLikedAudiosFileName)
@@ -25,7 +26,7 @@ class LibraryService {
     }
   }
 
-  void addLikedAudios(Set<Audio> audios) {
+  void addLikedAudios(List<Audio> audios) {
     for (var audio in audios) {
       addLikedAudio(audio, false);
     }
@@ -45,7 +46,7 @@ class LibraryService {
     }
   }
 
-  void removeLikedAudios(Set<Audio> audios) {
+  void removeLikedAudios(List<Audio> audios) {
     for (var audio in audios) {
       removeLikedAudio(audio, false);
     }
@@ -57,13 +58,13 @@ class LibraryService {
   // Starred stations
   //
 
-  Map<String, Set<Audio>> _starredStations = {};
-  Map<String, Set<Audio>> get starredStations => _starredStations;
+  Map<String, List<Audio>> _starredStations = {};
+  Map<String, List<Audio>> get starredStations => _starredStations;
   int get starredStationsLength => _starredStations.length;
   final _starredStationsController = StreamController<bool>.broadcast();
   Stream<bool> get starredStationsChanged => _starredStationsController.stream;
 
-  void addStarredStation(String url, Set<Audio> audios) {
+  void addStarredStation(String url, List<Audio> audios) {
     _starredStations.putIfAbsent(url, () => audios);
     writeAudioMap(_starredStations, kStarredStationsFileName)
         .then((_) => _starredStationsController.add(true));
@@ -174,12 +175,12 @@ class LibraryService {
   // Playlists
   //
 
-  Map<String, Set<Audio>> _playlists = {};
-  Map<String, Set<Audio>> get playlists => _playlists;
+  Map<String, List<Audio>> _playlists = {};
+  Map<String, List<Audio>> get playlists => _playlists;
   final _playlistsController = StreamController<bool>.broadcast();
   Stream<bool> get playlistsChanged => _playlistsController.stream;
 
-  Future<void> addPlaylist(String id, Set<Audio> audios) async {
+  Future<void> addPlaylist(String id, List<Audio> audios) async {
     if (!_playlists.containsKey(id)) {
       _playlists.putIfAbsent(id, () => audios);
       await writeAudioMap(_playlists, kPlaylistsFileName)
@@ -187,7 +188,7 @@ class LibraryService {
     }
   }
 
-  Future<void> updatePlaylist(String id, Set<Audio> audios) async {
+  Future<void> updatePlaylist(String id, List<Audio> audios) async {
     if (_playlists.containsKey(id)) {
       await writeAudioMap(_playlists, kPlaylistsFileName).then((_) {
         _playlists.update(
@@ -249,7 +250,7 @@ class LibraryService {
       });
     } else {
       writeAudioMap(_playlists, kPlaylistsFileName).then((_) {
-        _playlists.update(id, (value) => Set.from(audios));
+        _playlists.update(id, (value) => audios);
         _playlistsController.add(true);
       });
     }
@@ -257,16 +258,10 @@ class LibraryService {
 
   void addAudioToPlaylist(String id, Audio audio) {
     final playlist = _playlists[id];
-    if (playlist != null) {
-      for (var e in playlist) {
-        if (e.path == audio.path) {
-          return;
-        }
-      }
-      playlist.add(audio);
-      writeAudioMap(_playlists, kPlaylistsFileName)
-          .then((_) => _playlistsController.add(true));
-    }
+    if (playlist == null || playlist.contains(audio)) return;
+    playlist.add(audio);
+    writeAudioMap(_playlists, kPlaylistsFileName)
+        .then((_) => _playlistsController.add(true));
   }
 
   void removeAudioFromPlaylist(String id, Audio audio) {
@@ -354,20 +349,20 @@ class LibraryService {
 
   String? _downloadsDir;
   String? get downloadsDir => _downloadsDir;
-  Map<String, Set<Audio>> _podcasts = {};
-  Map<String, Set<Audio>> get podcasts => _podcasts;
+  Map<String, List<Audio>> _podcasts = {};
+  Map<String, List<Audio>> get podcasts => _podcasts;
   int get podcastsLength => _podcasts.length;
   final _podcastsController = StreamController<bool>.broadcast();
   Stream<bool> get podcastsChanged => _podcastsController.stream;
 
-  void addPodcast(String feedUrl, Set<Audio> audios) {
+  void addPodcast(String feedUrl, List<Audio> audios) {
     if (_podcasts.containsKey(feedUrl)) return;
     _podcasts.putIfAbsent(feedUrl, () => audios);
     writeAudioMap(_podcasts, kPodcastsFileName)
         .then((_) => _podcastsController.add(true));
   }
 
-  void updatePodcast(String feedUrl, Set<Audio> audios) {
+  void updatePodcast(String feedUrl, List<Audio> audios) {
     if (feedUrl.isEmpty || audios.isEmpty) return;
     _addPodcastUpdate(feedUrl);
     _podcasts.update(feedUrl, (value) => audios);
@@ -411,8 +406,8 @@ class LibraryService {
   // Albums
   //
 
-  Map<String, Set<Audio>> _pinnedAlbums = {};
-  Map<String, Set<Audio>> get pinnedAlbums => _pinnedAlbums;
+  Map<String, List<Audio>> _pinnedAlbums = {};
+  Map<String, List<Audio>> get pinnedAlbums => _pinnedAlbums;
   int get pinnedAlbumsLength => _pinnedAlbums.length;
   final _albumsController = StreamController<bool>.broadcast();
   Stream<bool> get albumsChanged => _albumsController.stream;
@@ -422,7 +417,7 @@ class LibraryService {
 
   bool isPinnedAlbum(String name) => _pinnedAlbums.containsKey(name);
 
-  void addPinnedAlbum(String name, Set<Audio> audios) {
+  void addPinnedAlbum(String name, List<Audio> audios) {
     _pinnedAlbums.putIfAbsent(name, () => audios);
     writeAudioMap(_pinnedAlbums, kPinnedAlbumsFileName)
         .then((_) => _albumsController.add(true));
@@ -452,7 +447,7 @@ class LibraryService {
 
     _likedAudios =
         (await readAudioMap(kLikedAudiosFileName)).entries.firstOrNull?.value ??
-            <Audio>{};
+            <Audio>[];
     _favTags = Set.from(
       await readStringIterable(filename: kRadioTagFavsFileName) ?? <String>{},
     );

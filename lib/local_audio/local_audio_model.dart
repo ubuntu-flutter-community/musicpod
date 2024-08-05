@@ -15,17 +15,17 @@ class LocalAudioModel extends SafeChangeNotifier {
   final LocalAudioService _service;
   StreamSubscription<bool>? _audiosChangedSub;
 
-  Set<Audio>? _albumSearchResult;
-  Set<Audio>? get albumSearchResult => _albumSearchResult;
+  List<Audio>? _albumSearchResult;
+  List<Audio>? get albumSearchResult => _albumSearchResult;
 
-  Set<Audio>? _titlesSearchResult;
-  Set<Audio>? get titlesSearchResult => _titlesSearchResult;
+  List<Audio>? _titlesSearchResult;
+  List<Audio>? get titlesSearchResult => _titlesSearchResult;
 
-  Set<Audio>? _artistsSearchResult;
-  Set<Audio>? get similarArtistsSearchResult => _artistsSearchResult;
+  List<Audio>? _artistsSearchResult;
+  List<Audio>? get similarArtistsSearchResult => _artistsSearchResult;
 
-  Set<String>? _genresSearchResult;
-  Set<String>? get genresSearchResult => _genresSearchResult;
+  List<String>? _genresSearchResult;
+  List<String>? get genresSearchResult => _genresSearchResult;
 
   String? _searchQuery;
   String? get searchQuery => _searchQuery;
@@ -33,10 +33,10 @@ class LocalAudioModel extends SafeChangeNotifier {
     _searchQuery = query;
     if (query == null) return;
     if (query.isEmpty) {
-      _titlesSearchResult = {};
-      _albumSearchResult = {};
-      _artistsSearchResult = {};
-      _genresSearchResult = {};
+      _titlesSearchResult = [];
+      _albumSearchResult = [];
+      _artistsSearchResult = [];
+      _genresSearchResult = [];
       notifyListeners();
       return;
     }
@@ -50,31 +50,31 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Set<Audio>? get audios => _service.audios;
-  Set<Audio>? get allArtists => _service.allArtists;
-  Set<String>? get allGenres => _service.allGenres;
-  Set<Audio>? get allAlbums => _service.allAlbums;
+  List<Audio>? get audios => _service.audios;
+  List<Audio>? get allArtists => _service.allArtists;
+  List<String>? get allGenres => _service.allGenres;
+  List<Audio>? get allAlbums => _service.allAlbums;
 
-  Set<Audio>? findAlbum(
+  List<Audio>? findAlbum(
     Audio audio, [
     AudioFilter audioFilter = AudioFilter.trackNumber,
   ]) =>
       _service.findAlbum(audio, audioFilter);
 
-  Set<Audio>? findTitlesOfArtist(
+  List<Audio>? findTitlesOfArtist(
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,
   ]) =>
       _service.findTitlesOfArtist(artist, audioFilter);
 
-  Set<Audio>? findArtistsOfGenre(String genre) =>
+  List<Audio>? findArtistsOfGenre(String genre) =>
       _service.findArtistsOfGenre(genre);
 
-  Set<Uint8List>? findImages(Set<Audio> audios) => _service.findImages(audios);
+  Set<Uint8List>? findImages(List<Audio> audios) => _service.findImages(audios);
 
   List<String>? get failedImports => _service.failedImports;
 
-  Set<Audio>? findAllAlbums({Iterable<Audio>? newAudios, bool clean = true}) =>
+  List<Audio>? findAllAlbums({Iterable<Audio>? newAudios, bool clean = true}) =>
       _service.findAllAlbums(newAudios: newAudios, clean: clean);
 
   Future<void> init({

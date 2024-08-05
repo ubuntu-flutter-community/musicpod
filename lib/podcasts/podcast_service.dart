@@ -80,13 +80,13 @@ class PodcastService {
   }
 
   Future<void> updatePodcasts({
-    required Map<String, Set<Audio>> oldPodcasts,
-    required void Function(String name, Set<Audio> audios) updatePodcast,
+    required Map<String, List<Audio>> oldPodcasts,
+    required void Function(String name, List<Audio> audios) updatePodcast,
     required String updateMessage,
   }) async {
     for (final old in oldPodcasts.entries) {
       if (old.value.isNotEmpty) {
-        final list = old.value.toList();
+        final list = old.value;
         sortListByAudioFilter(
           audioFilter: AudioFilter.year,
           audios: list,

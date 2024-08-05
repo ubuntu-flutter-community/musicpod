@@ -142,7 +142,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                             itemCount: itemCount,
                             gridDelegate: audioCardGridDelegate,
                             itemBuilder: (context, index) {
-                              final MapEntry<String, Set<Audio>> podcast;
+                              final MapEntry<String, List<Audio>> podcast;
                               if (updatesOnly) {
                                 podcast = subs.entries
                                     .where((e) => podcastUpdateAvailable(e.key))

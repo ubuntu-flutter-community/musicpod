@@ -125,7 +125,7 @@ class _StationPageControlPanel extends StatelessWidget {
       children: [
         RadioPageStarButton(station: station),
         AvatarPlayButton(
-          audios: {station},
+          audios: [station],
           pageId: station.url!,
         ),
         RadioPageCopyHistoryButton(station: station),

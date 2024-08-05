@@ -43,7 +43,7 @@ class PlaylistPage extends StatelessWidget {
     required this.playlist,
   });
 
-  final MapEntry<String, Set<Audio>> playlist;
+  final MapEntry<String, List<Audio>> playlist;
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +122,7 @@ class PlaylistPage extends StatelessWidget {
             final artistAudios = model.findTitlesOfArtist(text);
             final artist = artistAudios?.firstOrNull?.artist;
             if (artist == null) return;
-            final images = model.findImages(artistAudios ?? {});
+            final images = model.findImages(artistAudios ?? []);
 
             di<LibraryModel>().push(
               builder: (_) {
@@ -149,7 +149,7 @@ class PlaylistHeaderImage extends StatelessWidget {
     required this.playlist,
   });
 
-  final MapEntry<String, Set<Audio>> playlist;
+  final MapEntry<String, List<Audio>> playlist;
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +219,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
   });
 
   final String pageId;
-  final Set<Audio> audios;
+  final List<Audio> audios;
   final Widget? image;
 
   final void Function(String text)? onAlbumTap;
@@ -372,7 +372,7 @@ class _PlaylistGenreBar extends StatelessWidget {
     required this.audios,
   });
 
-  final Set<Audio> audios;
+  final List<Audio> audios;
 
   @override
   Widget build(BuildContext context) {

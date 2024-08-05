@@ -37,7 +37,7 @@ class SliverAudioPage extends StatelessWidget {
   });
 
   final String pageId;
-  final Set<Audio>? audios;
+  final List<Audio>? audios;
   final AudioPageType audioPageType;
 
   final String? pageTitle;
@@ -111,7 +111,7 @@ class SliverAudioPage extends StatelessWidget {
                         SliverAudioPageControlPanel(
                           controlPanel: controlPanel ??
                               AvatarPlayButton(
-                                audios: audios ?? {},
+                                audios: audios ?? [],
                                 pageId: pageId,
                               ),
                         ),

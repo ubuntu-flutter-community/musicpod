@@ -22,7 +22,7 @@ class ArtistsView extends StatelessWidget {
     this.noResultIcon,
   });
 
-  final Set<Audio>? artists;
+  final List<Audio>? artists;
   final Widget? noResultMessage, noResultIcon;
 
   @override
@@ -61,7 +61,7 @@ class ArtistsView extends StatelessWidget {
                 );
               }
               final artistAudios = model.findTitlesOfArtist(artistName);
-              final images = model.findImages(artistAudios ?? {});
+              final images = model.findImages(artistAudios ?? []);
 
               final text =
                   artists!.elementAt(index).artist ?? context.l10n.unknown;

@@ -102,12 +102,12 @@ Future<void> searchAndPushPodcastPage({
   });
 }
 
-Future<Set<Audio>> findEpisodes({
+Future<List<Audio>> findEpisodes({
   required String feedUrl,
   String? itemImageUrl,
   String? genre,
 }) async {
-  final episodes = <Audio>{};
+  final episodes = <Audio>[];
   final Podcast? podcast = await compute(loadPodcast, feedUrl);
 
   if (podcast?.episodes.isNotEmpty == true) {
@@ -129,7 +129,7 @@ Future<Set<Audio>> findEpisodes({
     audios: sortedEpisodes,
     descending: true,
   );
-  return Set<Audio>.from(sortedEpisodes);
+  return List<Audio>.from(sortedEpisodes);
 }
 
 Future<Podcast?> loadPodcast(String url) async {

@@ -147,7 +147,10 @@ Future<Iterable<String>?> readStringIterable({
   return content;
 }
 
-Future<void> writeAudioMap(Map<String, Set<Audio>> map, String fileName) async {
+Future<void> writeAudioMap(
+  Map<String, List<Audio>> map,
+  String fileName,
+) async {
   final dynamicMap = map.map(
     (key, value) => MapEntry<String, List<dynamic>>(
       key,
@@ -172,7 +175,7 @@ Future<void> writeJsonToFile(Map<String, dynamic> json, String fileName) async {
   await file.writeAsString(jsonStr);
 }
 
-Future<Map<String, Set<Audio>>> readAudioMap(String fileName) async {
+Future<Map<String, List<Audio>>> readAudioMap(String fileName) async {
   final workingDir = await getWorkingDir();
 
   try {
@@ -184,9 +187,9 @@ Future<Map<String, Set<Audio>>> readAudioMap(String fileName) async {
       final map = jsonDecode(jsonStr) as Map<String, dynamic>;
 
       final m = map.map(
-        (key, value) => MapEntry<String, Set<Audio>>(
+        (key, value) => MapEntry<String, List<Audio>>(
           key,
-          Set.from(
+          List.from(
             (value as List<dynamic>).map((e) => Audio.fromMap(e)),
           ),
         ),
@@ -194,10 +197,10 @@ Future<Map<String, Set<Audio>>> readAudioMap(String fileName) async {
 
       return m;
     } else {
-      return <String, Set<Audio>>{};
+      return <String, List<Audio>>{};
     }
   } on Exception catch (_) {
-    return <String, Set<Audio>>{};
+    return <String, List<Audio>>{};
   }
 }
 
