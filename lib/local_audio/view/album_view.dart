@@ -1,7 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
@@ -10,7 +10,6 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
-import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../local_audio_model.dart';
@@ -26,7 +25,7 @@ class AlbumsView extends StatelessWidget {
     required this.sliver,
   });
 
-  final List<Audio>? albums;
+  final List<String>? albums;
   final Widget? noResultMessage, noResultIcon;
   final bool sliver;
 
@@ -86,33 +85,31 @@ class AlbumsView extends StatelessWidget {
   }
 
   Widget itemBuilder(context, index) {
-    final audio = albums!.elementAt(index);
-    return AlbumCard(audio: audio);
+    final album = albums!.elementAt(index);
+    return AlbumCard(album: album);
   }
 }
 
 class AlbumCard extends StatelessWidget {
-  const AlbumCard({super.key, required this.audio});
+  const AlbumCard({super.key, required this.album});
 
-  final Audio audio;
+  final String album;
 
   @override
   Widget build(BuildContext context) {
     final playerModel = di<PlayerModel>();
-    final albumAudios = di<LocalAudioModel>().findAlbum(audio);
+    final albumAudios = di<LocalAudioModel>().findAlbum(album);
     const fallback = CoverBackground();
 
-    final id = audio.albumId;
+    final id = albumAudios?.firstWhereOrNull((e) => e.albumId != null)?.albumId;
+    final path = albumAudios?.firstWhereOrNull((e) => e.path != null)?.path;
 
     return AudioCard(
-      bottom: AudioCardBottom(
-        text: audio.album?.isNotEmpty == false
-            ? context.l10n.unknown
-            : audio.album ?? '',
-      ),
+      bottom: AudioCardBottom(text: album),
       image: LocalCover(
         dimension: kAudioCardDimension,
-        audio: audio,
+        albumId: id,
+        path: path,
         fallback: fallback,
       ),
       background: fallback,

@@ -84,7 +84,8 @@ class AlbumPageSideBarIcon extends StatelessWidget {
       child: audio == null
           ? fallBack
           : LocalCover(
-              audio: audio!,
+              albumId: audio!.albumId,
+              path: audio!.path,
               fallback: fallBack,
               dimension: sideBarImageSize,
             ),
@@ -116,7 +117,8 @@ class AlbumPageImage extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: LocalCover(
-            audio: audio,
+            albumId: audio.albumId,
+            path: audio.path,
             dimension: kMaxAudioPageHeaderHeight,
             fallback: const CoverBackground(
               dimension: kMaxAudioPageHeaderHeight,

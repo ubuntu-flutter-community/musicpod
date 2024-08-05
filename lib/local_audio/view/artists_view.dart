@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
@@ -22,7 +21,7 @@ class ArtistsView extends StatelessWidget {
     this.noResultIcon,
   });
 
-  final List<Audio>? artists;
+  final List<String>? artists;
   final Widget? noResultMessage, noResultIcon;
 
   @override
@@ -50,21 +49,11 @@ class ArtistsView extends StatelessWidget {
             padding: getAdaptiveHorizontalPadding(constraints: constraints),
             gridDelegate: kDiskGridDelegate,
             itemBuilder: (context, index) {
-              final artistName = artists!.elementAt(index).artist;
-              if (artistName == null) {
-                return SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: RoundImageContainer(
-                    fallBackText: context.l10n.unknown,
-                  ),
-                );
-              }
+              final artistName = artists!.elementAt(index);
               final artistAudios = model.findTitlesOfArtist(artistName);
               final images = model.findImages(artistAudios ?? []);
 
-              final text =
-                  artists!.elementAt(index).artist ?? context.l10n.unknown;
+              final text = artists!.elementAt(index);
 
               return YaruSelectableContainer(
                 selected: false,

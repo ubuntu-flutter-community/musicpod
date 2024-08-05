@@ -57,7 +57,8 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
     if (audio != null && audio?.audioType == AudioType.local) {
       child = LocalCover(
         key: ValueKey(audio?.path),
-        audio: audio!,
+        albumId: audio!.albumId,
+        path: audio!.path,
         fit: BoxFit.cover,
         dimension: size,
         fallback: fallBackImage,
