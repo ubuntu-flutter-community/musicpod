@@ -116,7 +116,7 @@ class PlaylistContent extends StatefulWidget {
   });
 
   final LibraryModel libraryModel;
-  final Set<Audio>? audios;
+  final List<Audio>? audios;
   final String? playlistName;
   final String? initialValue;
   final bool allowRename, allowDelete, allowCreate;
@@ -129,7 +129,7 @@ class _PlaylistContentState extends State<PlaylistContent> {
   late TextEditingController _controller;
   late TextEditingController _fileController;
 
-  Set<Audio>? _audios;
+  List<Audio>? _audios;
 
   @override
   void initState() {
@@ -221,7 +221,7 @@ class _PlaylistContentState extends State<PlaylistContent> {
                           await widget.libraryModel
                               .addPlaylist(
                             _controller.text,
-                            _audios ?? widget.audios ?? {},
+                            _audios ?? widget.audios ?? [],
                           )
                               .then((_) async {
                             Navigator.of(context, rootNavigator: true).pop();
@@ -313,12 +313,12 @@ class _AddStationDialogState extends State<AddStationContent> {
                         ? null
                         : () {
                             di<LibraryModel>()
-                                .addStarredStation(_urlController.text, {
+                                .addStarredStation(_urlController.text, [
                               Audio(
                                 url: _urlController.text,
                                 title: _nameController.text,
                               ),
-                            });
+                            ]);
                             Navigator.pop(context);
                           },
                 child: Text(

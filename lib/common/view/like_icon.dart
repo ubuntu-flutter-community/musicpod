@@ -88,7 +88,7 @@ class RadioLikeIcon extends StatelessWidget with WatchItMixin {
             ? libraryModel.unStarStation(audio!.url!, popOnUnstar)
             : libraryModel.addStarredStation(
                 audio!.url!,
-                {audio!},
+                [audio!],
               );
       };
     }

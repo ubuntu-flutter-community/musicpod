@@ -26,7 +26,7 @@ class AlbumsView extends StatelessWidget {
     required this.sliver,
   });
 
-  final Set<Audio>? albums;
+  final List<Audio>? albums;
   final Widget? noResultMessage, noResultIcon;
   final bool sliver;
 

@@ -29,7 +29,7 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
         final artistAudios = model.findTitlesOfArtist(text);
         final artist = artistAudios?.firstOrNull?.artist;
         if (artist == null) return;
-        final images = model.findImages(artistAudios ?? {});
+        final images = model.findImages(artistAudios ?? []);
 
         di<LibraryModel>().push(
           builder: (_) => ArtistPage(

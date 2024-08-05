@@ -14,7 +14,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
     required this.pageId,
   });
 
-  final Set<Audio> audios;
+  final List<Audio> audios;
   final String pageId;
 
   @override

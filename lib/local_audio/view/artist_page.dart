@@ -38,7 +38,7 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
   });
 
   final Set<Uint8List>? images;
-  final Set<Audio>? artistAudios;
+  final List<Audio>? artistAudios;
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +155,7 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
     required this.pageId,
   });
 
-  final Set<Audio> audios;
+  final List<Audio> audios;
   final String pageId;
 
   @override

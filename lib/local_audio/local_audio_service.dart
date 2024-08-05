@@ -12,10 +12,10 @@ import '../settings/settings_service.dart';
 import 'cover_store.dart';
 
 typedef LocalSearchResult = ({
-  Set<Audio>? titles,
-  Set<Audio>? artists,
-  Set<Audio>? albums,
-  Set<String>? genres,
+  List<Audio>? titles,
+  List<Audio>? artists,
+  List<Audio>? albums,
+  List<String>? genres,
 });
 
 class LocalAudioService {
@@ -24,8 +24,8 @@ class LocalAudioService {
   LocalAudioService({required SettingsService settingsService})
       : _settingsService = settingsService;
 
-  Set<Audio>? _audios;
-  Set<Audio>? get audios => _audios;
+  List<Audio>? _audios;
+  List<Audio>? get audios => _audios;
   final _audiosController = StreamController<bool>.broadcast();
   Stream<bool> get audiosChanged => _audiosController.stream;
   List<String>? _failedImports;
@@ -39,14 +39,14 @@ class LocalAudioService {
       audios: list,
     );
 
-    _audios = Set.from(list);
+    _audios = List.from(list);
   }
 
-  Set<Audio>? _allArtists;
-  Set<Audio>? get allArtists => _allArtists;
+  List<Audio>? _allArtists;
+  List<Audio>? get allArtists => _allArtists;
   void _findAllArtists() {
     if (_audios == null) return;
-    final artistsResult = <Audio>{};
+    final artistsResult = <Audio>[];
     for (var a in audios!) {
       if (artistsResult.none(
         (e) => e.artist == a.artist,
@@ -59,11 +59,11 @@ class LocalAudioService {
       audioFilter: AudioFilter.artist,
       audios: list,
     );
-    _allArtists = Set.from(list);
+    _allArtists = List.from(list);
   }
 
-  Set<String>? _allGenres;
-  Set<String>? get allGenres => _allGenres;
+  List<String>? _allGenres;
+  List<String>? get allGenres => _allGenres;
   void _findAllGenres() {
     if (_audios == null) return;
     final genresResult = <String>{};
@@ -78,15 +78,15 @@ class LocalAudioService {
     final list = genresResult.toList();
     list.sort();
 
-    _allGenres = Set.from(list);
+    _allGenres = List.from(list);
   }
 
-  Set<Audio>? _allAlbums;
-  Set<Audio>? get allAlbums => _allAlbums;
-  Set<Audio>? findAllAlbums({Iterable<Audio>? newAudios, bool clean = true}) {
+  List<Audio>? _allAlbums;
+  List<Audio>? get allAlbums => _allAlbums;
+  List<Audio>? findAllAlbums({Iterable<Audio>? newAudios, bool clean = true}) {
     final theAudios = newAudios ?? audios;
     if (theAudios == null) return null;
-    final albumsResult = <Audio>{};
+    final albumsResult = <Audio>[];
     for (var a in theAudios) {
       if (albumsResult.none((element) => element.album == a.album)) {
         albumsResult.add(a);
@@ -99,14 +99,14 @@ class LocalAudioService {
     );
 
     if (clean) {
-      _allAlbums = Set.from(list);
+      _allAlbums = List.from(list);
       return _allAlbums;
     } else {
-      return Set.from(list);
+      return List.from(list);
     }
   }
 
-  Set<Audio>? findAlbum(
+  List<Audio>? findAlbum(
     Audio audio, [
     AudioFilter audioFilter = AudioFilter.trackNumber,
   ]) {
@@ -124,10 +124,10 @@ class LocalAudioService {
       albumList = splitByDiscs(albumList).toList();
     }
 
-    return albumList != null ? Set.from(albumList) : null;
+    return albumList != null ? List.from(albumList) : null;
   }
 
-  Set<Audio>? findTitlesOfArtist(
+  List<Audio>? findTitlesOfArtist(
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,
   ]) {
@@ -143,12 +143,12 @@ class LocalAudioService {
       );
       artistList = splitByDiscs(artistList).toList();
     }
-    return artistList != null ? Set.from(artistList) : null;
+    return artistList != null ? List.from(artistList) : null;
   }
 
-  Set<Audio>? findArtistsOfGenre(String genre) {
+  List<Audio>? findArtistsOfGenre(String genre) {
     if (audios == null) return null;
-    final artistsOfGenre = <Audio>{};
+    final artistsOfGenre = <Audio>[];
 
     for (var artistAudio in audios!) {
       if (artistAudio.genre?.trim().isNotEmpty == true &&
@@ -161,10 +161,10 @@ class LocalAudioService {
     return artistsOfGenre;
   }
 
-  Set<Uint8List>? findImages(Set<Audio> audios) {
+  Set<Uint8List>? findImages(List<Audio> audios) {
     final images = <Uint8List>{};
 
-    final albumAudios = <Audio>{};
+    final albumAudios = <Audio>[];
     for (var audio in audios) {
       if (albumAudios.none((a) => a.album == audio.album)) {
         albumAudios.add(audio);
@@ -183,7 +183,7 @@ class LocalAudioService {
 
   LocalSearchResult? search(String? query) {
     if (query == null) return null;
-    if (query.isEmpty) return (titles: {}, artists: {}, albums: {}, genres: {});
+    if (query.isEmpty) return (titles: [], artists: [], albums: [], genres: []);
 
     final allAlbumsFindings = audios?.where(
       (audio) =>
@@ -191,7 +191,7 @@ class LocalAudioService {
           audio.album!.toLowerCase().contains(query.toLowerCase()),
     );
 
-    final albumsResult = <Audio>{};
+    final albumsResult = <Audio>[];
     if (allAlbumsFindings != null) {
       for (var a in allAlbumsFindings) {
         if (albumsResult.none((element) => element.album == a.album)) {
@@ -206,7 +206,7 @@ class LocalAudioService {
           audio.genre!.toLowerCase().contains(query.toLowerCase()),
     );
 
-    final genreFindings = <String>{};
+    final genreFindings = <String>[];
     if (allGenresFindings != null) {
       for (var a in allGenresFindings) {
         if (a.genre?.isNotEmpty == true &&
@@ -221,7 +221,7 @@ class LocalAudioService {
           audio.artist?.isNotEmpty == true &&
           audio.artist!.toLowerCase().contains(query.toLowerCase()),
     );
-    final artistsResult = <Audio>{};
+    final artistsResult = <Audio>[];
     if (allArtistFindings != null) {
       for (var a in allArtistFindings) {
         if (artistsResult.none(
@@ -233,14 +233,14 @@ class LocalAudioService {
     }
 
     return (
-      titles: Set.from(
-        audios?.where(
-              (audio) =>
-                  audio.title?.isNotEmpty == true &&
-                  audio.title!.toLowerCase().contains(query.toLowerCase()),
-            ) ??
-            <Audio>[],
-      ),
+      titles: audios
+              ?.where(
+                (audio) =>
+                    audio.title?.isNotEmpty == true &&
+                    audio.title!.toLowerCase().contains(query.toLowerCase()),
+              )
+              .toList() ??
+          <Audio>[],
       albums: albumsResult,
       genres: genreFindings,
       artists: artistsResult,
@@ -277,7 +277,7 @@ class LocalAudioService {
 }
 
 FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
-  Set<Audio> newAudios = {};
+  List<Audio> newAudios = [];
   List<String> failedImports = [];
 
   if (directory != null && Directory(directory).existsSync()) {
@@ -298,4 +298,4 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
   return (audios: newAudios, failedImports: failedImports);
 }
 
-typedef ImportResult = ({List<String> failedImports, Set<Audio> audios});
+typedef ImportResult = ({List<String> failedImports, List<Audio> audios});

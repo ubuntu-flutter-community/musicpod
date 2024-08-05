@@ -190,7 +190,7 @@ class _NewViewState extends State<_NewView> {
                       Navigator.of(context).pop();
                       widget.libraryModel.addPlaylist(
                         _controller.text,
-                        {widget.audio},
+                        [widget.audio],
                       );
                       showAddedToPlaylistSnackBar(
                         context: context,

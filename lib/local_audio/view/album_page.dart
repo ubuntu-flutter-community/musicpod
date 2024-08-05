@@ -27,7 +27,7 @@ class AlbumPage extends StatelessWidget {
   });
 
   final String id;
-  final Set<Audio> album;
+  final List<Audio> album;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class AlbumPage extends StatelessWidget {
       di<LibraryModel>().push(
         builder: (_) {
           final artistAudios = model.findTitlesOfArtist(artistName);
-          final images = model.findImages(artistAudios ?? {});
+          final images = model.findImages(artistAudios ?? []);
 
           return ArtistPage(
             images: images,
@@ -136,7 +136,7 @@ class AlbumPageControlButton extends StatelessWidget {
   });
 
   final String id;
-  final Set<Audio> album;
+  final List<Audio> album;
 
   @override
   Widget build(BuildContext context) {

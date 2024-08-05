@@ -18,7 +18,7 @@ class GenresView extends StatelessWidget {
     this.noResultIcon,
   });
 
-  final Set<String>? genres;
+  final List<String>? genres;
   final Widget? noResultMessage, noResultIcon;
 
   @override

@@ -17,7 +17,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
     required this.audioPageType,
   });
 
-  final Set<Audio> audios;
+  final List<Audio> audios;
   final String pageId;
   final AudioPageType audioPageType;
   final void Function(String text)? onSubTitleTab;

@@ -48,7 +48,7 @@ class QueueDialog extends StatefulWidget with WatchItStatefulWidgetMixin {
     required this.addPlaylist,
   });
 
-  final void Function(String name, Set<Audio> audios) addPlaylist;
+  final void Function(String name, List<Audio> audios) addPlaylist;
 
   @override
   State<QueueDialog> createState() => _QueueDialogState();
@@ -113,7 +113,7 @@ class _QueueDialogState extends State<QueueDialog> {
           onPressed: () {
             widget.addPlaylist(
               '${context.l10n.queue} ${DateTime.now()}',
-              Set.from(queue),
+              List.from(queue),
             );
             Navigator.of(context).pop();
           },

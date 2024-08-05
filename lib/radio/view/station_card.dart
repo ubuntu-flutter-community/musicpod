@@ -19,7 +19,7 @@ class StationCard extends StatelessWidget {
 
   final Audio? station;
   final Future<void> Function({
-    required Set<Audio> audios,
+    required List<Audio> audios,
     required String listName,
     int? index,
   }) startPlaylist;
@@ -31,7 +31,7 @@ class StationCard extends StatelessWidget {
       onPlay: station?.url == null
           ? null
           : () => startPlaylist(
-                audios: {station!},
+                audios: [station!],
                 listName: station!.url!,
               ),
       onTap: station?.url == null
