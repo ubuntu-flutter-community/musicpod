@@ -83,7 +83,7 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                di<SearchModel>().setSearchType(SearchType.localTitle);
+                di<SearchModel>().setSearchType(SearchType.localArtist);
                 di<LibraryModel>().pushNamed(
                   pageId: kSearchPageId,
                 );

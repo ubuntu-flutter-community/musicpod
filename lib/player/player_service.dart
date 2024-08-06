@@ -624,15 +624,15 @@ class PlayerService {
       return Uri.tryParse(
         audio?.imageUrl ?? audio!.albumArtUrl!,
       );
-    } else if (audio?.albumId?.isNotEmpty == true) {
-      final maybeData = CoverStore().get(audio?.albumId);
+    } else if (audio?.hasPathAndId == true && File(audio!.path!).existsSync()) {
+      final maybeData = CoverStore().get(audio.albumId);
       if (maybeData != null) {
         File newFile = await _safeTempCover(maybeData);
 
         return Uri.file(newFile.path, windows: Platform.isWindows);
-      } else if (audio?.hasPathAndId == true) {
+      } else {
         final newData = await getCover(
-          albumId: audio!.albumId!,
+          albumId: audio.albumId!,
           path: audio.path!,
         );
         if (newData != null) {
