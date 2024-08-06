@@ -8,13 +8,13 @@ import '../compute_isolate.dart';
 import '../persistence_utils.dart';
 
 Future<Uint8List?> getCover({
-  required String? albumId,
-  required String? path,
+  required String albumId,
+  required String path,
 }) async {
-  if (path != null && albumId?.isNotEmpty == true) {
+  if (albumId.isNotEmpty == true) {
     final metadata = await readMetadata(File(path), getImage: true);
     return CoverStore().put(
-      albumId: albumId!,
+      albumId: albumId,
       data:
           metadata.pictures.firstWhereOrNull((e) => e.bytes.isNotEmpty)?.bytes,
     );

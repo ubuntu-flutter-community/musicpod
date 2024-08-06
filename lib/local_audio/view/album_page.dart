@@ -81,11 +81,11 @@ class AlbumPageSideBarIcon extends StatelessWidget {
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
-      child: audio == null
+      child: audio?.hasPathAndId == false
           ? fallBack
           : LocalCover(
-              albumId: audio!.albumId,
-              path: audio!.path,
+              albumId: audio!.albumId!,
+              path: audio!.path!,
               fallback: fallBack,
               dimension: sideBarImageSize,
             ),
@@ -114,17 +114,18 @@ class AlbumPageImage extends StatelessWidget {
             ),
           ),
         ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: LocalCover(
-            albumId: audio.albumId,
-            path: audio.path,
-            dimension: kMaxAudioPageHeaderHeight,
-            fallback: const CoverBackground(
+        if (audio.hasPathAndId == true)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: LocalCover(
+              albumId: audio.albumId!,
+              path: audio.path!,
               dimension: kMaxAudioPageHeaderHeight,
+              fallback: const CoverBackground(
+                dimension: kMaxAudioPageHeaderHeight,
+              ),
             ),
           ),
-        ),
       ],
     );
   }

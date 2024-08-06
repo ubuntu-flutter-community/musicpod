@@ -86,7 +86,10 @@ class AlbumsView extends StatelessWidget {
 
   Widget itemBuilder(context, index) {
     final album = albums!.elementAt(index);
-    return AlbumCard(album: album);
+    return AlbumCard(
+      key: ValueKey(album),
+      album: album,
+    );
   }
 }
 
@@ -106,12 +109,14 @@ class AlbumCard extends StatelessWidget {
 
     return AudioCard(
       bottom: AudioCardBottom(text: album),
-      image: LocalCover(
-        dimension: kAudioCardDimension,
-        albumId: id,
-        path: path,
-        fallback: fallback,
-      ),
+      image: id != null && path != null
+          ? LocalCover(
+              dimension: kAudioCardDimension,
+              albumId: id,
+              path: path,
+              fallback: fallback,
+            )
+          : const CoverBackground(),
       background: fallback,
       onTap: id == null || albumAudios == null
           ? null

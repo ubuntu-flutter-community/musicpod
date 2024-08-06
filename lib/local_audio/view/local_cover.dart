@@ -16,8 +16,8 @@ class LocalCover extends StatefulWidget {
     this.width,
   });
 
-  final String? albumId;
-  final String? path;
+  final String albumId;
+  final String path;
   final Widget fallback;
   final double? dimension;
   final double? height;

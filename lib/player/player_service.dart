@@ -630,10 +630,10 @@ class PlayerService {
         File newFile = await _safeTempCover(maybeData);
 
         return Uri.file(newFile.path, windows: Platform.isWindows);
-      } else if (audio != null) {
+      } else if (audio?.hasPathAndId == true) {
         final newData = await getCover(
-          albumId: audio.albumId,
-          path: audio.path,
+          albumId: audio!.albumId!,
+          path: audio.path!,
         );
         if (newData != null) {
           File newFile = await _safeTempCover(newData);
