@@ -11,11 +11,32 @@ import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
+import '../../podcasts/podcast_model.dart';
 import '../../podcasts/podcast_utils.dart';
 import '../search_model.dart';
 
-class SliverPodcastSearchResults extends StatelessWidget with WatchItMixin {
+class SliverPodcastSearchResults extends StatefulWidget
+    with WatchItStatefulWidgetMixin {
   const SliverPodcastSearchResults({super.key});
+
+  @override
+  State<SliverPodcastSearchResults> createState() =>
+      _SliverPodcastSearchResultsState();
+}
+
+class _SliverPodcastSearchResultsState
+    extends State<SliverPodcastSearchResults> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      if (context.mounted) {
+        await di<PodcastModel>().init(
+          updateMessage: context.l10n.newEpisodeAvailable,
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

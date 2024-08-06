@@ -45,39 +45,36 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
 
     return Align(
       alignment: Alignment.center,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 10, right: 20, left: 20),
-        child: YaruChoiceChipBar(
-          chipBackgroundColor: chipColor(theme),
-          selectedChipBackgroundColor: chipSelectionColor(theme, false),
-          borderColor: chipBorder(theme, false),
-          yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-          selectedFirst: false,
-          clearOnSelect: false,
-          labels: LocalAudioView.values.map((e) {
-            return switch (e) {
-              LocalAudioView.titles => Text(
-                  '${e.localize(context.l10n)}${titlesCount != null ? ' ($titlesCount)' : ''}',
-                ),
-              LocalAudioView.artists => Text(
-                  '${e.localize(context.l10n)}${artistCount != null ? ' ($artistCount)' : ''}',
-                ),
-              LocalAudioView.albums => Text(
-                  '${e.localize(context.l10n)}${albumCount != null ? ' ($albumCount)' : ''}',
-                ),
-              LocalAudioView.genres => Text(
-                  '${e.localize(context.l10n)}${genresCounts != null ? ' ($genresCounts)' : ''}',
-                ),
-            };
-          }).toList(),
-          isSelected: LocalAudioView.values
-              .map((e) => e == LocalAudioView.values[i])
-              .toList(),
-          onSelected: (index) {
-            appModel.setManualFilter(true);
-            appModel.localAudioindex = index;
-          },
-        ),
+      child: YaruChoiceChipBar(
+        chipBackgroundColor: chipColor(theme),
+        selectedChipBackgroundColor: chipSelectionColor(theme, false),
+        borderColor: chipBorder(theme, false),
+        yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+        selectedFirst: false,
+        clearOnSelect: false,
+        labels: LocalAudioView.values.map((e) {
+          return switch (e) {
+            LocalAudioView.titles => Text(
+                '${e.localize(context.l10n)}${titlesCount != null ? ' ($titlesCount)' : ''}',
+              ),
+            LocalAudioView.artists => Text(
+                '${e.localize(context.l10n)}${artistCount != null ? ' ($artistCount)' : ''}',
+              ),
+            LocalAudioView.albums => Text(
+                '${e.localize(context.l10n)}${albumCount != null ? ' ($albumCount)' : ''}',
+              ),
+            LocalAudioView.genres => Text(
+                '${e.localize(context.l10n)}${genresCounts != null ? ' ($genresCounts)' : ''}',
+              ),
+          };
+        }).toList(),
+        isSelected: LocalAudioView.values
+            .map((e) => e == LocalAudioView.values[i])
+            .toList(),
+        onSelected: (index) {
+          appModel.setManualFilter(true);
+          appModel.localAudioindex = index;
+        },
       ),
     );
   }

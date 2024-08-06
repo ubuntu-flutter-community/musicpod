@@ -57,41 +57,29 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     final index = watchPropertyValue((AppModel m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
 
-    void search({
-      required String? text,
-    }) {
-      final libraryModel = di<LibraryModel>();
-
-      if (text != null) {
-        di<SearchModel>().setSearchType(SearchType.localTitle);
-        di<LibraryModel>().pushNamed(
-          pageId: kSearchPageId,
-        );
-      } else {
-        libraryModel.pop();
-      }
-    }
-
-    final headerBar = HeaderBar(
-      adaptive: true,
-      titleSpacing: 0,
-      actions: [
-        Flexible(
-          child: Padding(
+    return Scaffold(
+      resizeToAvoidBottomInset: isMobile ? false : null,
+      appBar: HeaderBar(
+        adaptive: true,
+        titleSpacing: 0,
+        actions: [
+          Padding(
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               active: false,
-              onPressed: () => search(text: ''),
+              onPressed: () {
+                di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                final searchmodel = di<SearchModel>();
+                searchmodel
+                  ..setAudioType(AudioType.local)
+                  ..setSearchType(SearchType.localTitle)
+                  ..search();
+              },
             ),
           ),
-        ),
-      ],
-      title: Text(context.l10n.localAudio),
-    );
-
-    return Scaffold(
-      resizeToAvoidBottomInset: isMobile ? false : null,
-      appBar: headerBar,
+        ],
+        title: Text(context.l10n.localAudio),
+      ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return CustomScrollView(

@@ -67,10 +67,12 @@ class SliverAudioPage extends StatelessWidget {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                di<SearchModel>().setSearchType(SearchType.localTitle);
-                di<LibraryModel>().pushNamed(
-                  pageId: kSearchPageId,
-                );
+                di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                final searchModel = di<SearchModel>();
+                searchModel
+                  ..setAudioType(AudioType.local)
+                  ..setSearchType(SearchType.localTitle)
+                  ..search();
               },
             ),
           ),

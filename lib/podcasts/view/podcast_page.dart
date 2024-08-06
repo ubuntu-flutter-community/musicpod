@@ -77,7 +77,8 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                 di<LibraryModel>().pushNamed(pageId: kSearchPageId);
                 di<SearchModel>()
                   ..setAudioType(AudioType.podcast)
-                  ..setSearchType(SearchType.podcastTitle);
+                  ..setSearchType(SearchType.podcastTitle)
+                  ..search();
               },
             ),
           ),

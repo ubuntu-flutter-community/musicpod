@@ -312,7 +312,8 @@ class LibraryModel extends SafeChangeNotifier {
 
   bool isPageInLibrary(String? pageId) =>
       pageId != null &&
-      (pageId == kLikedAudiosPageId ||
+      (pageId == kSearchPageId ||
+          pageId == kLikedAudiosPageId ||
           pageId == kLocalAudioPageId ||
           pageId == kPodcastsPageId ||
           pageId == kRadioPageId ||

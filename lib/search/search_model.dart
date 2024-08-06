@@ -157,7 +157,7 @@ class SearchModel extends SafeChangeNotifier {
           setPodcastSearchResult(null);
         case AudioType.local:
           setLocalSearchResult(null);
-        default:
+        case AudioType.radio:
           setRadioSearchResult(null);
       }
     }

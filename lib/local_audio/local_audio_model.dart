@@ -15,23 +15,6 @@ class LocalAudioModel extends SafeChangeNotifier {
   final LocalAudioService _service;
   StreamSubscription<bool>? _audiosChangedSub;
 
-  LocalSearchResult? _localSearchResult;
-  LocalSearchResult? get localSearchResult => _localSearchResult;
-
-  String? _searchQuery;
-  String? get searchQuery => _searchQuery;
-  void search(String? query) {
-    _searchQuery = query;
-    if (query == null) return;
-    if (query.isEmpty) {
-      _localSearchResult = (titles: [], albums: [], artists: [], genres: []);
-      notifyListeners();
-      return;
-    }
-    _localSearchResult = _service.search(query);
-    notifyListeners();
-  }
-
   List<Audio>? get audios => _service.audios;
   List<String>? get allArtists => _service.allArtists;
   List<String>? get allGenres => _service.allGenres;

@@ -4,6 +4,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/view/adaptive_container.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../constants.dart';
@@ -54,8 +55,19 @@ class GenrePage extends StatelessWidget {
           ],
         ),
       ),
-      body: ArtistsView(
-        artists: artistAudiosWithGenre,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: getAdaptiveHorizontalPadding(constraints: constraints),
+                sliver: ArtistsView(
+                  artists: artistAudiosWithGenre,
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
