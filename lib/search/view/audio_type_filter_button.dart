@@ -1,13 +1,10 @@
-import '../../common/data/audio.dart';
-import '../../constants.dart';
-import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
-import '../../local_audio/local_audio_model.dart';
-import '../../local_audio/view/local_audio_search_page.dart';
-import '../search_model.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+
+import '../../common/data/audio.dart';
+import '../../extensions/build_context_x.dart';
+import '../../l10n/l10n.dart';
+import '../search_model.dart';
 
 class AudioTypeFilterButton extends StatelessWidget with WatchItMixin {
   const AudioTypeFilterButton({super.key});
@@ -20,16 +17,8 @@ class AudioTypeFilterButton extends StatelessWidget with WatchItMixin {
     return PopupMenuButton<AudioType>(
       initialValue: audioType,
       onSelected: (v) async {
-        if (v == AudioType.local) {
-          di<LocalAudioModel>().search(di<SearchModel>().searchQuery ?? '');
-          await di<LibraryModel>().push(
-            builder: (_) => const LocalAudioSearchPage(),
-            pageId: kSearchPageId,
-          );
-        } else {
-          searchModel.setAudioType(v);
-          searchModel.search();
-        }
+        searchModel.setAudioType(v);
+        searchModel.search();
       },
       itemBuilder: (context) => AudioType.values
           .map(

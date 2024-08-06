@@ -24,11 +24,12 @@ import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 import '../local_audio_model.dart';
 import 'album_page.dart';
 import 'album_view.dart';
 import 'genre_page.dart';
-import 'local_audio_search_page.dart';
 
 class ArtistPage extends StatelessWidget with WatchItMixin {
   const ArtistPage({
@@ -82,8 +83,8 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                di<LibraryModel>().push(
-                  builder: (_) => const LocalAudioSearchPage(),
+                di<SearchModel>().setSearchType(SearchType.localTitle);
+                di<LibraryModel>().pushNamed(
                   pageId: kSearchPageId,
                 );
               },
@@ -126,7 +127,6 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
                   padding:
                       getAdaptiveHorizontalPadding(constraints: constraints),
                   sliver: AlbumsView(
-                    sliver: true,
                     albums: albums,
                   ),
                 )

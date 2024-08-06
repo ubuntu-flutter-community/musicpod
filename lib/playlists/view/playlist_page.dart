@@ -33,8 +33,9 @@ import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../local_audio/view/genre_page.dart';
-import '../../local_audio/view/local_audio_search_page.dart';
 import '../../player/player_model.dart';
+import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 import 'manual_add_dialog.dart';
 import 'playlst_add_audios_dialog.dart';
 
@@ -94,8 +95,8 @@ class PlaylistPage extends StatelessWidget {
               padding: appBarSingleActionSpacing,
               child: SearchButton(
                 onPressed: () {
-                  di<LibraryModel>().push(
-                    builder: (_) => const LocalAudioSearchPage(),
+                  di<SearchModel>().setSearchType(SearchType.localTitle);
+                  di<LibraryModel>().pushNamed(
                     pageId: kSearchPageId,
                   );
                 },

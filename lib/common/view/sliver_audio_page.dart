@@ -4,7 +4,8 @@ import 'package:yaru/yaru.dart';
 
 import '../../constants.dart';
 import '../../library/library_model.dart';
-import '../../local_audio/view/local_audio_search_page.dart';
+import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 import '../data/audio.dart';
 import 'adaptive_container.dart';
 import 'audio_page_header.dart';
@@ -66,8 +67,8 @@ class SliverAudioPage extends StatelessWidget {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                di<LibraryModel>().push(
-                  builder: (_) => const LocalAudioSearchPage(),
+                di<SearchModel>().setSearchType(SearchType.localTitle);
+                di<LibraryModel>().pushNamed(
                   pageId: kSearchPageId,
                 );
               },

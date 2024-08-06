@@ -14,6 +14,7 @@ import '../../podcasts/podcast_model.dart';
 import '../../radio/radio_model.dart';
 import '../search_model.dart';
 import 'search_page_input.dart';
+import 'sliver_local_search_results.dart';
 import 'sliver_podcast_filter_bar.dart';
 import 'sliver_podcast_search_results.dart';
 import 'sliver_radio_search_results.dart';
@@ -80,18 +81,14 @@ class _SearchPageState extends State<SearchPage> {
                   _ => const SliverSearchTypeFilterBar(),
                 },
               ),
-              if (audioType == AudioType.radio)
-                SliverPadding(
-                  padding:
-                      getAdaptiveHorizontalPadding(constraints: constraints),
-                  sliver: const SliverRadioSearchResults(),
-                )
-              else if (audioType == AudioType.podcast)
-                SliverPadding(
-                  padding:
-                      getAdaptiveHorizontalPadding(constraints: constraints),
-                  sliver: const SliverPodcastSearchResults(),
-                ),
+              SliverPadding(
+                padding: getAdaptiveHorizontalPadding(constraints: constraints),
+                sliver: switch (audioType) {
+                  AudioType.radio => const SliverRadioSearchResults(),
+                  AudioType.podcast => const SliverPodcastSearchResults(),
+                  AudioType.local => const SliverLocalSearchResult(),
+                },
+              ),
             ],
           );
         },
