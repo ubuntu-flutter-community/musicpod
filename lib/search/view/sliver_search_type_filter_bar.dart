@@ -51,7 +51,7 @@ class SliverSearchTypeFilterBar extends StatelessWidget with WatchItMixin {
                 selectedFirst: false,
                 onSelected: (i) {
                   searchModel.setSearchType(searchTypes.elementAt(i));
-                  searchModel.search();
+                  searchModel.search(manualFilter: true);
                 },
                 labels: searchTypes
                     .map(
