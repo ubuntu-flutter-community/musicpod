@@ -26,9 +26,7 @@ class LibraryModel extends SafeChangeNotifier {
 
   Future<bool> init() async {
     await _service.init();
-    if (_service.selectedPageId != null) {
-      _pageIdStack.add(_service.selectedPageId!);
-    }
+    _pageIdStack.add(_service.selectedPageId ?? kSearchPageId);
 
     _likedAudiosSub ??=
         _service.likedAudiosChanged.listen((event) => notifyListeners());

@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
@@ -34,11 +32,9 @@ import 'genre_page.dart';
 class ArtistPage extends StatelessWidget with WatchItMixin {
   const ArtistPage({
     super.key,
-    required this.images,
     required this.artistAudios,
   });
 
-  final Set<Uint8List>? images;
   final List<Audio>? artistAudios;
 
   @override
@@ -108,7 +104,9 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
                     imageRadius: BorderRadius.circular(10000),
                     title: artistAudios?.firstOrNull?.artist ?? '',
                     image: RoundImageContainer(
-                      images: images,
+                      images: artistAudios == null
+                          ? null
+                          : model.findImages(artistAudios!),
                       fallBackText: pageId,
                     ),
                     subTitle: artistAudios?.firstOrNull?.genre,

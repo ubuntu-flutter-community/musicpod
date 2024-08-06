@@ -93,10 +93,14 @@ class SliverSearchTypeFilterBar extends StatelessWidget with WatchItMixin {
     required String? searchQuery,
   }) =>
       '${searchType.localize(context.l10n)} ${searchQuery == null || searchQuery.isEmpty ? '' : switch (searchType) {
-          SearchType.localTitle => '(${localSearchResult?.titles?.length})',
-          SearchType.localAlbum => '(${localSearchResult?.albums?.length})',
-          SearchType.localArtist => '(${localSearchResult?.artists?.length})',
-          SearchType.localGenreName => '(${localSearchResult?.genres?.length})',
+          SearchType.localTitle =>
+            '(${localSearchResult?.titles?.length ?? '0'})',
+          SearchType.localAlbum =>
+            '(${localSearchResult?.albums?.length ?? '0'})',
+          SearchType.localArtist =>
+            '(${localSearchResult?.artists?.length ?? '0'})',
+          SearchType.localGenreName =>
+            '(${localSearchResult?.genres?.length ?? '0'})',
           _ => ''
         }}';
 }

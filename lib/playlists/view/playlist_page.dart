@@ -126,15 +126,9 @@ class PlaylistPage extends StatelessWidget {
             final artistAudios = model.findTitlesOfArtist(text);
             final artist = artistAudios?.firstOrNull?.artist;
             if (artist == null) return;
-            final images = model.findImages(artistAudios ?? []);
 
             di<LibraryModel>().push(
-              builder: (_) {
-                return ArtistPage(
-                  images: images,
-                  artistAudios: artistAudios,
-                );
-              },
+              builder: (_) => ArtistPage(artistAudios: artistAudios),
               pageId: artist,
             );
           },

@@ -40,10 +40,7 @@ class AlbumPage extends StatelessWidget {
       di<LibraryModel>().push(
         builder: (_) {
           final artistAudios = model.findTitlesOfArtist(artistName);
-          final images = model.findImages(artistAudios ?? []);
-
           return ArtistPage(
-            images: images,
             artistAudios: artistAudios,
           );
         },

@@ -63,10 +63,7 @@ class ArtistsView extends StatelessWidget {
               );
             } else {
               di<LibraryModel>().push(
-                builder: (_) => ArtistPage(
-                  images: images,
-                  artistAudios: artistAudios,
-                ),
+                builder: (_) => ArtistPage(artistAudios: artistAudios),
                 pageId: artist,
               );
             }
