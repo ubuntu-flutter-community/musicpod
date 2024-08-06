@@ -15,6 +15,30 @@ class LocalAudioModel extends SafeChangeNotifier {
   final LocalAudioService _service;
   StreamSubscription<bool>? _audiosChangedSub;
 
+  int _localAudioIndex = 0;
+  int get localAudioindex => _localAudioIndex;
+  set localAudioindex(int value) {
+    if (value == _localAudioIndex) return;
+    _localAudioIndex = value;
+    notifyListeners();
+  }
+
+  bool _allowReorder = false;
+  bool get allowReorder => _allowReorder;
+  void setAllowReorder(bool value) {
+    if (value == _allowReorder) return;
+    _allowReorder = value;
+    notifyListeners();
+  }
+
+  bool _useArtistGridView = true;
+  bool get useArtistGridView => _useArtistGridView;
+  void setUseArtistGridView(bool value) {
+    if (value == _useArtistGridView) return;
+    _useArtistGridView = value;
+    notifyListeners();
+  }
+
   List<Audio>? get audios => _service.audios;
   List<String>? get allArtists => _service.allArtists;
   List<String>? get allGenres => _service.allGenres;

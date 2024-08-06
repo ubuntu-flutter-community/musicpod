@@ -24,36 +24,4 @@ class AppModel extends SafeChangeNotifier {
     _fullWindowMode = value;
     notifyListeners();
   }
-
-  int _localAudioIndex = 0;
-  int get localAudioindex => _localAudioIndex;
-  set localAudioindex(int value) {
-    if (value == _localAudioIndex) return;
-    _localAudioIndex = value;
-    notifyListeners();
-  }
-
-  bool _manualFilter = false;
-  bool get manualFilter => _manualFilter;
-  void setManualFilter(bool value) {
-    if (value == _manualFilter) return;
-    _manualFilter = value;
-    notifyListeners();
-  }
-
-  bool _allowReorder = false;
-  bool get allowReorder => _allowReorder;
-  void setAllowReorder(bool value) {
-    if (value == _allowReorder) return;
-    _allowReorder = value;
-    notifyListeners();
-  }
-
-  bool _useArtistGridView = true;
-  bool get useArtistGridView => _useArtistGridView;
-  void setUseArtistGridView(bool value) {
-    if (value == _useArtistGridView) return;
-    _useArtistGridView = value;
-    notifyListeners();
-  }
 }

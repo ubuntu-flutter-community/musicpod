@@ -4,7 +4,6 @@ import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
@@ -54,7 +53,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     final allArtists = watchPropertyValue((LocalAudioModel m) => m.allArtists);
     final allAlbums = watchPropertyValue((LocalAudioModel m) => m.allAlbums);
     final allGenres = watchPropertyValue((LocalAudioModel m) => m.allGenres);
-    final index = watchPropertyValue((AppModel m) => m.localAudioindex);
+    final index = watchPropertyValue((LocalAudioModel m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
 
     return Scaffold(

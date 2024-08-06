@@ -8,7 +8,6 @@ import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
-import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
@@ -225,7 +224,8 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final allowReorder = watchPropertyValue((AppModel m) => m.allowReorder);
+    final allowReorder =
+        watchPropertyValue((LocalAudioModel m) => m.allowReorder);
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final libraryModel = di<LibraryModel>();
     final playerModel = di<PlayerModel>();
@@ -277,7 +277,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
         IconButton(
           tooltip: context.l10n.move,
           isSelected: allowReorder,
-          onPressed: () => di<AppModel>().setAllowReorder(!allowReorder),
+          onPressed: () => di<LocalAudioModel>().setAllowReorder(!allowReorder),
           icon: Icon(
             Iconz().reorder,
             color: allowReorder ? context.t.colorScheme.primary : null,

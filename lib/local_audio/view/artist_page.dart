@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
@@ -47,7 +46,8 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
       return const SizedBox.shrink();
     }
 
-    final useGridView = watchPropertyValue((AppModel m) => m.useArtistGridView);
+    final useGridView =
+        watchPropertyValue((LocalAudioModel m) => m.useArtistGridView);
 
     void onAlbumTap(text) {
       final audios = model.findAlbum(text);
@@ -160,8 +160,9 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final useGridView = watchPropertyValue((AppModel m) => m.useArtistGridView);
-    final setUseGridView = di<AppModel>().setUseArtistGridView;
+    final useGridView =
+        watchPropertyValue((LocalAudioModel m) => m.useArtistGridView);
+    final setUseGridView = di<LocalAudioModel>().setUseArtistGridView;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
