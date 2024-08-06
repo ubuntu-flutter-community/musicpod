@@ -1,3 +1,5 @@
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
+
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +29,9 @@ class AudioPageHeaderHtmlDescription extends StatelessWidget {
         width: kAudioHeaderDescriptionWidth,
         child: InkWell(
           borderRadius: BorderRadius.circular(kButtonRadius),
-          onTap: () => showDialog(
+          onTap: () => showAnimatedDialog(
             context: context,
+            animationType: DialogTransitionType.fade,
             builder: (context) => SimpleDialog(
               titlePadding: EdgeInsets.zero,
               contentPadding: EdgeInsets.zero,

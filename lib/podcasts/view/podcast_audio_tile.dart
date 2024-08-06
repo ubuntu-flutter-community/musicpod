@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
@@ -220,8 +221,9 @@ class _Description extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: () {
-        showDialog(
+        showAnimatedDialog(
           context: context,
+          animationType: DialogTransitionType.fade,
           builder: (c) {
             return SimpleDialog(
               titlePadding: yaruStyled

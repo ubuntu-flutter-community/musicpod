@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
@@ -134,8 +135,9 @@ class MasterPanel extends StatelessWidget {
                 return MasterTile(
                   onTap: () {
                     if (item.pageId == kNewPlaylistPageId) {
-                      showDialog(
+                      showAnimatedDialog(
                         context: context,
+                        animationType: DialogTransitionType.fade,
                         builder: (context) {
                           return const ManualAddDialog();
                         },

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
@@ -243,8 +244,9 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
         IconButton(
           tooltip: context.l10n.editPlaylist,
           icon: Icon(Iconz().pen),
-          onPressed: () => showDialog(
+          onPressed: () => showAnimatedDialog(
             context: context,
+            animationType: DialogTransitionType.fade,
             builder: (context) => AlertDialog(
               content: SizedBox(
                 height: 200,
@@ -269,8 +271,9 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
         IconButton(
           tooltip: context.l10n.add,
           icon: Icon(Iconz().plus),
-          onPressed: () => showDialog(
+          onPressed: () => showAnimatedDialog(
             context: context,
+            animationType: DialogTransitionType.fade,
             builder: (context) => PlaylistAddAudiosDialog(playlistId: pageId),
           ),
         ),

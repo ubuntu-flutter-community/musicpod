@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/constants.dart';
 
@@ -42,8 +43,9 @@ class RadioHistoryTile extends StatelessWidget with PlayerMixin {
       ),
       trailing: IconButton(
         tooltip: context.l10n.metadata,
-        onPressed: () => showDialog(
+        onPressed: () => showAnimatedDialog(
           context: context,
+          animationType: DialogTransitionType.fade,
           builder: (context) {
             final image = UrlStore().get(entry.value.icyTitle);
             return MpvMetadataDialog(
