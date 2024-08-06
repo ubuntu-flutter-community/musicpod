@@ -39,7 +39,7 @@ class SafeNetworkImage extends StatelessWidget {
       child: fallBackIcon ??
           Icon(
             Iconz().musicNote,
-            size: 70,
+            size: height != null ? height! * 0.7 : null,
           ),
     );
 
@@ -49,7 +49,7 @@ class SafeNetworkImage extends StatelessWidget {
       child: errorIcon ??
           Icon(
             Iconz().imageMissing,
-            size: 70,
+            size: height != null ? height! * 0.7 : null,
             color: context.t.hintColor,
           ),
     );
