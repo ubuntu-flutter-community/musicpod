@@ -104,7 +104,7 @@ class PlaylistPage extends StatelessWidget {
         ),
         body: _PlaylistPageBody(
           onAlbumTap: (text) {
-            final albumAudios = model.findAlbum(Audio(album: text));
+            final albumAudios = model.findAlbum(text);
             if (albumAudios?.firstOrNull == null) return;
             final id = albumAudios!.first.albumId;
             if (id == null) return;

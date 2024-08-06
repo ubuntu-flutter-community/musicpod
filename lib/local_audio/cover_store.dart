@@ -4,15 +4,17 @@ import 'dart:typed_data';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 
-import '../common/data/audio.dart';
 import '../compute_isolate.dart';
 import '../persistence_utils.dart';
 
-Future<Uint8List?> getCover(Audio audio) async {
-  if (audio.path != null && audio.albumId?.isNotEmpty == true) {
-    final metadata = await readMetadata(File(audio.path!), getImage: true);
+Future<Uint8List?> getCover({
+  required String albumId,
+  required String path,
+}) async {
+  if (albumId.isNotEmpty == true) {
+    final metadata = await readMetadata(File(path), getImage: true);
     return CoverStore().put(
-      albumId: audio.albumId!,
+      albumId: albumId,
       data:
           metadata.pictures.firstWhereOrNull((e) => e.bytes.isNotEmpty)?.bytes,
     );

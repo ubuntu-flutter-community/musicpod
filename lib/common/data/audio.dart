@@ -353,6 +353,11 @@ class Audio {
       : <String>[
           for (final tag in album?.split(',') ?? <String>[]) tag,
         ];
+
+  bool get hasPathAndId =>
+      albumId?.isNotEmpty == true &&
+      path != null &&
+      audioType == AudioType.local;
 }
 
 enum AudioType {

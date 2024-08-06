@@ -2,13 +2,13 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
-import '../../common/data/audio.dart';
 import '../cover_store.dart';
 
 class LocalCover extends StatefulWidget {
   const LocalCover({
     super.key,
-    required this.audio,
+    required this.albumId,
+    required this.path,
     required this.fallback,
     this.dimension,
     this.height,
@@ -16,7 +16,8 @@ class LocalCover extends StatefulWidget {
     this.width,
   });
 
-  final Audio audio;
+  final String albumId;
+  final String path;
   final Widget fallback;
   final double? dimension;
   final double? height;
@@ -33,8 +34,13 @@ class _LocalCoverState extends State<LocalCover> {
   @override
   void initState() {
     super.initState();
-    final init = CoverStore().get(widget.audio.albumId);
-    _future = init != null ? Future.value(init) : getCover(widget.audio);
+    final init = CoverStore().get(widget.albumId);
+    _future = init != null
+        ? Future.value(init)
+        : getCover(
+            albumId: widget.albumId,
+            path: widget.path,
+          );
   }
 
   @override
