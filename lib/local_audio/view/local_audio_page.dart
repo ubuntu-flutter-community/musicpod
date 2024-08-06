@@ -35,13 +35,15 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   @override
   void initState() {
     super.initState();
-    final failedImports = di<LocalAudioModel>().failedImports;
-    if (mounted && failedImports?.isNotEmpty == true) {
-      showFailedImportsSnackBar(
-        failedImports: failedImports!,
-        context: context,
-      );
-    }
+    di<LocalAudioModel>().init().then((_) {
+      final failedImports = di<LocalAudioModel>().failedImports;
+      if (mounted && failedImports?.isNotEmpty == true) {
+        showFailedImportsSnackBar(
+          failedImports: failedImports!,
+          context: context,
+        );
+      }
+    });
   }
 
   @override

@@ -11,7 +11,6 @@ import '../../common/view/theme.dart';
 import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../local_audio/local_audio_model.dart';
 import '../../settings/settings_model.dart';
 import 'scaffold.dart';
 import 'splash_screen.dart';
@@ -125,11 +124,6 @@ class _MusicPodAppState extends State<_MusicPodApp>
     }
 
     await di<LibraryModel>().init();
-    // Note: if users have small local audio libs this will hardly be visible
-    // if users have huge local libs they will probably use MusicPod a lot
-    // for local audios and will land here sooner or later.
-    // So do this right away to avoid an uninitialized LocalAudioModel
-    await di<LocalAudioModel>().init();
 
     if (!mounted) return false;
     di<ExternalPathService>().init();

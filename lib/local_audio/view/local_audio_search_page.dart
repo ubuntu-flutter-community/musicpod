@@ -28,13 +28,13 @@ class LocalAudioSearchPage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
     final titlesResult =
-        watchPropertyValue((LocalAudioModel m) => m.titlesSearchResult);
+        watchPropertyValue((LocalAudioModel m) => m.localSearchResult?.titles);
     final artistsResult =
-        watchPropertyValue((LocalAudioModel m) => m.similarArtistsSearchResult);
+        watchPropertyValue((LocalAudioModel m) => m.localSearchResult?.artists);
     final albumsResult =
-        watchPropertyValue((LocalAudioModel m) => m.albumSearchResult);
+        watchPropertyValue((LocalAudioModel m) => m.localSearchResult?.albums);
     final genresResult =
-        watchPropertyValue((LocalAudioModel m) => m.genresSearchResult);
+        watchPropertyValue((LocalAudioModel m) => m.localSearchResult?.genres);
     final searchQuery =
         watchPropertyValue((LocalAudioModel m) => m.searchQuery);
 

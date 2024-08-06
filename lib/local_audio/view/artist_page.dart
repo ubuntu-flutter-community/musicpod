@@ -53,7 +53,7 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
     final useGridView = watchPropertyValue((AppModel m) => m.useArtistGridView);
 
     void onAlbumTap(text) {
-      final audios = model.findAlbum(Audio(album: text));
+      final audios = model.findAlbum(text);
       if (audios?.firstOrNull == null) return;
       final id = audios!.first.albumId;
       if (id == null) return;

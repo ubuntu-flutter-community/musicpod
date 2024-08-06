@@ -64,8 +64,9 @@ mixin PlayerMixin {
   }
 
   void _onLocalAudioTitleTap({required Audio audio}) {
+    if (audio.album == null) return;
     final localAudioModel = di<LocalAudioModel>();
-    final albumAudios = localAudioModel.findAlbum(audio);
+    final albumAudios = localAudioModel.findAlbum(audio.album!);
     if (albumAudios?.firstOrNull == null) return;
     final id = albumAudios!.first.albumId;
     if (id == null) return;
