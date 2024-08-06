@@ -139,14 +139,9 @@ mixin PlayerMixin {
     final artistAudios = localAudioModel.findTitlesOfArtist(artistName);
     final artist = artistAudios?.firstOrNull?.artist;
     if (artist == null) return;
-    final images = localAudioModel.findImages(artistAudios ?? []);
     di<AppModel>().setFullWindowMode(false);
-
     di<LibraryModel>().push(
-      builder: (_) => ArtistPage(
-        artistAudios: artistAudios,
-        images: images,
-      ),
+      builder: (_) => ArtistPage(artistAudios: artistAudios),
       pageId: artist,
     );
   }

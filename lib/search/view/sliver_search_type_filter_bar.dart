@@ -6,9 +6,11 @@ import 'package:yaru/yaru.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
+import '../../local_audio/local_audio_service.dart';
 import '../../radio/radio_model.dart';
 import '../../radio/view/radio_reconnect_button.dart';
 import '../search_model.dart';
+import '../search_type.dart';
 
 class SliverSearchTypeFilterBar extends StatelessWidget with WatchItMixin {
   const SliverSearchTypeFilterBar({super.key});
@@ -19,6 +21,9 @@ class SliverSearchTypeFilterBar extends StatelessWidget with WatchItMixin {
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
     final searchTypes = watchPropertyValue((SearchModel m) => m.searchTypes);
     final connectedHost = watchPropertyValue((RadioModel m) => m.connectedHost);
+    final localSearchResult =
+        watchPropertyValue((SearchModel m) => m.localSearchResult);
+    final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
 
     return SliverAppBar(
       shape: const RoundedRectangleBorder(side: BorderSide.none),
@@ -46,10 +51,19 @@ class SliverSearchTypeFilterBar extends StatelessWidget with WatchItMixin {
                 selectedFirst: false,
                 onSelected: (i) {
                   searchModel.setSearchType(searchTypes.elementAt(i));
-                  searchModel.search();
+                  searchModel.search(manualFilter: true);
                 },
                 labels: searchTypes
-                    .map((e) => Text(e.localize(context.l10n)))
+                    .map(
+                      (e) => Text(
+                        getChipText(
+                          searchType: e,
+                          context: context,
+                          localSearchResult: localSearchResult,
+                          searchQuery: searchQuery,
+                        ),
+                      ),
+                    )
                     .toList(),
                 isSelected: searchTypes.none((e) => e == searchType)
                     ? List.generate(
@@ -71,4 +85,22 @@ class SliverSearchTypeFilterBar extends StatelessWidget with WatchItMixin {
       },
     );
   }
+
+  String getChipText({
+    required SearchType searchType,
+    required BuildContext context,
+    required LocalSearchResult? localSearchResult,
+    required String? searchQuery,
+  }) =>
+      '${searchType.localize(context.l10n)} ${searchQuery == null || searchQuery.isEmpty ? '' : switch (searchType) {
+          SearchType.localTitle =>
+            '(${localSearchResult?.titles?.length ?? '0'})',
+          SearchType.localAlbum =>
+            '(${localSearchResult?.albums?.length ?? '0'})',
+          SearchType.localArtist =>
+            '(${localSearchResult?.artists?.length ?? '0'})',
+          SearchType.localGenreName =>
+            '(${localSearchResult?.genres?.length ?? '0'})',
+          _ => ''
+        }}';
 }

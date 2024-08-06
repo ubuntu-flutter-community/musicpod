@@ -8,7 +8,6 @@ import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
-import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
@@ -33,8 +32,9 @@ import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../local_audio/view/genre_page.dart';
-import '../../local_audio/view/local_audio_search_page.dart';
 import '../../player/player_model.dart';
+import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 import 'manual_add_dialog.dart';
 import 'playlst_add_audios_dialog.dart';
 
@@ -94,10 +94,12 @@ class PlaylistPage extends StatelessWidget {
               padding: appBarSingleActionSpacing,
               child: SearchButton(
                 onPressed: () {
-                  di<LibraryModel>().push(
-                    builder: (_) => const LocalAudioSearchPage(),
-                    pageId: kSearchPageId,
-                  );
+                  di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                  final searchmodel = di<SearchModel>();
+                  searchmodel
+                    ..setAudioType(AudioType.local)
+                    ..setSearchType(SearchType.localTitle)
+                    ..search();
                 },
               ),
             ),
@@ -123,15 +125,9 @@ class PlaylistPage extends StatelessWidget {
             final artistAudios = model.findTitlesOfArtist(text);
             final artist = artistAudios?.firstOrNull?.artist;
             if (artist == null) return;
-            final images = model.findImages(artistAudios ?? []);
 
             di<LibraryModel>().push(
-              builder: (_) {
-                return ArtistPage(
-                  images: images,
-                  artistAudios: artistAudios,
-                );
-              },
+              builder: (_) => ArtistPage(artistAudios: artistAudios),
               pageId: artist,
             );
           },
@@ -228,7 +224,8 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final allowReorder = watchPropertyValue((AppModel m) => m.allowReorder);
+    final allowReorder =
+        watchPropertyValue((LocalAudioModel m) => m.allowReorder);
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final libraryModel = di<LibraryModel>();
     final playerModel = di<PlayerModel>();
@@ -280,7 +277,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
         IconButton(
           tooltip: context.l10n.move,
           isSelected: allowReorder,
-          onPressed: () => di<AppModel>().setAllowReorder(!allowReorder),
+          onPressed: () => di<LocalAudioModel>().setAllowReorder(!allowReorder),
           icon: Icon(
             Iconz().reorder,
             color: allowReorder ? context.t.colorScheme.primary : null,
