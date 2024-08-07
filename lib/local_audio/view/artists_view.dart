@@ -3,8 +3,8 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/no_search_result_page.dart';
-import '../../common/view/progress.dart';
 import '../../common/view/round_image_container.dart';
+import '../../common/view/sliver_fill_remaining_progress.dart';
 import '../../common/view/snackbars.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
@@ -26,12 +26,7 @@ class ArtistsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (artists == null) {
-      return const SliverFillRemaining(
-        hasScrollBody: false,
-        child: Center(
-          child: Progress(),
-        ),
-      );
+      return const SliverFillRemainingProgress();
     }
 
     if (artists!.isEmpty) {

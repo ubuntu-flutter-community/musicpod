@@ -6,7 +6,7 @@ import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/cover_background.dart';
 import '../../common/view/no_search_result_page.dart';
-import '../../common/view/progress.dart';
+import '../../common/view/sliver_fill_remaining_progress.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../library/library_model.dart';
@@ -29,11 +29,7 @@ class AlbumsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (albums == null) {
-      return const SliverToBoxAdapter(
-        child: Center(
-          child: Progress(),
-        ),
-      );
+      return const SliverFillRemainingProgress();
     }
 
     if (albums!.isEmpty) {
