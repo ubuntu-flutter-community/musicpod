@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 import '../../common/view/icons.dart';
 import '../../constants.dart';
@@ -57,9 +56,8 @@ class _IcyImageState extends State<IcyImage> {
         borderRadius: bR,
         child: InkWell(
           borderRadius: bR,
-          onTap: () => showAnimatedDialog(
+          onTap: () => showDialog(
             context: context,
-            animationType: DialogTransitionType.fade,
             builder: (context) {
               final image = UrlStore().get(widget.mpvMetaData.icyTitle);
               return MpvMetadataDialog(

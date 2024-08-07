@@ -18,12 +18,10 @@ class TitlesView extends StatelessWidget {
     required this.audios,
     this.noResultMessage,
     this.noResultIcon,
-    required this.showLeading,
   });
 
   final List<Audio>? audios;
   final Widget? noResultMessage, noResultIcon;
-  final bool showLeading;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +44,6 @@ class TitlesView extends StatelessWidget {
     }
 
     return SliverAudioTileList(
-      showLeading: showLeading,
       audios: audios!,
       audioPageType: AudioPageType.allTitlesView,
       pageId: kLocalAudioPageId,

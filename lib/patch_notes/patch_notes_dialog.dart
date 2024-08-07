@@ -1,6 +1,5 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../extensions/build_context_x.dart';
@@ -60,9 +59,8 @@ class PatchNotesDialog extends StatelessWidget {
 Future<void> showPatchNotes(BuildContext context) {
   final settingsModel = di<SettingsModel>();
   if (settingsModel.recentPatchNotesDisposed == true) return Future.value();
-  return showAnimatedDialog(
+  return showDialog(
     context: context,
-    animationType: DialogTransitionType.fade,
     builder: (context) {
       return PatchNotesDialog(
         disposePatchNotes: settingsModel.disposePatchNotes,
