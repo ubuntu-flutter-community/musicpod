@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../common/data/audio.dart';
-import '../../constants.dart';
 import 'album_view.dart';
 import 'artists_view.dart';
 import 'genres_view.dart';
@@ -31,8 +30,6 @@ class LocalAudioBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return switch (localAudioView) {
       LocalAudioView.titles => TitlesView(
-          showLeading:
-              titles?.length != null && titles!.length < kShowLeadingThreshold,
           audios: titles,
           noResultMessage: noResultMessage,
           noResultIcon: noResultIcon,

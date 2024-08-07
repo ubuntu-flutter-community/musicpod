@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:radio_browser_api/radio_browser_api.dart';
+import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
@@ -16,17 +16,37 @@ import '../../search/search_type.dart';
 import '../local_audio_model.dart';
 import 'artists_view.dart';
 
-class GenrePage extends StatelessWidget {
+class GenrePage extends StatefulWidget {
   const GenrePage({required this.genre, super.key});
 
   final String genre;
 
   @override
-  Widget build(BuildContext context) {
-    final model = di<LocalAudioModel>();
-    final radioModel = di<RadioModel>();
+  State<GenrePage> createState() => _GenrePageState();
+}
 
-    final artistAudiosWithGenre = model.findArtistsOfGenre(genre);
+class _GenrePageState extends State<GenrePage> {
+  List<String>? artistAudiosWithGenre;
+
+  @override
+  void initState() {
+    super.initState();
+    final model = di<LocalAudioModel>();
+    model.init().then(
+      (_) {
+        if (context.mounted) {
+          setState(
+            () =>
+                artistAudiosWithGenre = model.findArtistsOfGenre(widget.genre),
+          );
+        }
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final radioModel = di<RadioModel>();
 
     return Scaffold(
       resizeToAvoidBottomInset: isMobile ? false : null,
@@ -41,7 +61,9 @@ class GenrePage extends StatelessWidget {
               onPressed: () => radioModel.init().then((value) {
                 di<LibraryModel>().pushNamed(pageId: kSearchPageId);
                 di<SearchModel>()
-                  ..setTag(Tag(name: genre.toLowerCase(), stationCount: 1))
+                  ..setTag(
+                    Tag(name: widget.genre.toLowerCase(), stationCount: 1),
+                  )
                   ..setAudioType(AudioType.radio)
                   ..setSearchType(SearchType.radioTag)
                   ..search();
@@ -51,7 +73,7 @@ class GenrePage extends StatelessWidget {
             const SizedBox(
               width: 5,
             ),
-            Text(genre),
+            Text(widget.genre),
           ],
         ),
       ),

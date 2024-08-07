@@ -48,7 +48,7 @@ class ArtistsView extends StatelessWidget {
       itemBuilder: (context, index) {
         final artistName = artists!.elementAt(index);
         final artistAudios = model.findTitlesOfArtist(artistName);
-        final images = model.findImages(artistAudios ?? []);
+        final images = model.findImages(audios: artistAudios ?? []);
 
         final text = artists!.elementAt(index);
 

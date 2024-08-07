@@ -106,7 +106,7 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
                     image: RoundImageContainer(
                       images: artistAudios == null
                           ? null
-                          : model.findImages(artistAudios!),
+                          : model.findImages(audios: artistAudios!),
                       fallBackText: pageId,
                     ),
                     subTitle: artistAudios?.firstOrNull?.genre,
@@ -135,7 +135,6 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
                   padding:
                       getAdaptiveHorizontalPadding(constraints: constraints),
                   sliver: SliverAudioTileList(
-                    showLeading: artistAudios!.length < kShowLeadingThreshold,
                     audios: artistAudios!,
                     pageId: pageId,
                     audioPageType: AudioPageType.artist,

@@ -495,14 +495,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_animated_dialog:
-    dependency: "direct main"
-    description:
-      name: flutter_animated_dialog
-      sha256: "16b88e56ea7014925a1ed4c3c3644f735edfe9194d5cc027a1a10a95d8f55fce"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   flutter_cache_manager:
     dependency: "direct main"
     description:

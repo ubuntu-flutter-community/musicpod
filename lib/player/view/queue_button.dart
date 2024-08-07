@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -30,9 +29,8 @@ class QueueButton extends StatelessWidget {
         color: color ?? theme.colorScheme.onSurface,
       ),
       onPressed: () {
-        showAnimatedDialog(
+        showDialog(
           context: context,
-          animationType: DialogTransitionType.fade,
           builder: (context) {
             return QueueDialog(
               addPlaylist: libraryModel.addPlaylist,

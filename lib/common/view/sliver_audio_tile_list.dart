@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../constants.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../data/audio.dart';
@@ -15,7 +16,6 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
     this.padding,
     this.onSubTitleTab,
     required this.audioPageType,
-    required this.showLeading,
   });
 
   final List<Audio> audios;
@@ -23,7 +23,6 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
   final AudioPageType audioPageType;
   final void Function(String text)? onSubTitleTab;
   final EdgeInsetsGeometry? padding;
-  final bool showLeading;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +30,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
     final playerModel = di<PlayerModel>();
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
+    final showLeading = audios.length < kShowLeadingThreshold;
 
     return SliverPadding(
       padding: padding ?? EdgeInsets.zero,

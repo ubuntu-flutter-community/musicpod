@@ -1,6 +1,5 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
@@ -117,9 +116,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                       ImportantButton(
                         child: Text(context.l10n.settings),
                         onPressed: () {
-                          showAnimatedDialog(
+                          showDialog(
                             context: context,
-                            animationType: DialogTransitionType.fade,
                             builder: (_) => const SettingsDialog(),
                           );
                         },

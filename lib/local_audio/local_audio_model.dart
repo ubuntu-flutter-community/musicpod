@@ -15,7 +15,7 @@ class LocalAudioModel extends SafeChangeNotifier {
   final LocalAudioService _service;
   StreamSubscription<bool>? _audiosChangedSub;
 
-  int _localAudioIndex = 0;
+  int _localAudioIndex = 2;
   int get localAudioindex => _localAudioIndex;
   set localAudioindex(int value) {
     if (value == _localAudioIndex) return;
@@ -59,7 +59,8 @@ class LocalAudioModel extends SafeChangeNotifier {
   List<String>? findArtistsOfGenre(String genre) =>
       _service.findArtistsOfGenre(genre);
 
-  Set<Uint8List>? findImages(List<Audio> audios) => _service.findImages(audios);
+  Set<Uint8List>? findImages({required List<Audio> audios, int limit = 4}) =>
+      _service.findImages(audios: audios, limit: limit);
 
   List<String>? get failedImports => _service.failedImports;
 

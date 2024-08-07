@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
@@ -65,9 +64,8 @@ class AudioTileOptionButton extends StatelessWidget {
               ),
             ),
           PopupMenuItem(
-            onTap: () => showAnimatedDialog(
+            onTap: () => showDialog(
               context: context,
-              animationType: DialogTransitionType.fade,
               builder: (context) {
                 return AddToPlaylistDialog(
                   audio: audio,
@@ -83,8 +81,7 @@ class AudioTileOptionButton extends StatelessWidget {
             ),
           ),
           PopupMenuItem(
-            onTap: () => showAnimatedDialog(
-              animationType: DialogTransitionType.fade,
+            onTap: () => showDialog(
               context: context,
               builder: (context) {
                 return MetaDataDialog(audio: audio);

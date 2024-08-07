@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
@@ -34,9 +33,8 @@ class SettingsTile extends StatelessWidget {
           YaruMasterTile(
             leading: Icon(Iconz().settings),
             title: Text(context.l10n.settings),
-            onTap: () => showAnimatedDialog(
+            onTap: () => showDialog(
               context: context,
-              animationType: DialogTransitionType.fade,
               builder: (_) => const SettingsDialog(),
             ),
           ),

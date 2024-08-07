@@ -153,7 +153,10 @@ class LocalAudioService {
     return artistsOfGenre;
   }
 
-  Set<Uint8List>? findImages(List<Audio> audios) {
+  Set<Uint8List>? findImages({
+    required List<Audio> audios,
+    int limit = 4,
+  }) {
     final images = <Uint8List>{};
 
     final albumAudios = <Audio>[];
@@ -165,7 +168,7 @@ class LocalAudioService {
 
     for (var audio in albumAudios) {
       var uint8list = CoverStore().get(audio.albumId);
-      if (uint8list != null) {
+      if (uint8list != null && images.length < limit) {
         images.add(uint8list);
       }
     }
