@@ -76,6 +76,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
           Expanded(
             child: BackGesture(
               child: Navigator(
+                // ignore: deprecated_member_use
                 onPopPage: (route, result) => route.didPop(result),
                 key: masterNavigator,
                 onGenerateRoute: (settings) {

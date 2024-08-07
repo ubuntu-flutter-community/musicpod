@@ -25,6 +25,7 @@ class AddToPlaylistDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nav = Navigator(
+      // ignore: deprecated_member_use
       onPopPage: (route, result) => route.didPop(result),
       key: playlistNavigatorKey,
       initialRoute: '/',

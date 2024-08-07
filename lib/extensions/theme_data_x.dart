@@ -22,7 +22,7 @@ extension ThemeDataX on ThemeData {
   TextStyle? get pageHeaderSubtitleStyle =>
       textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500);
 
-  Color get containerBg => colorScheme.background.scale(
+  Color get containerBg => colorScheme.surface.scale(
         lightness:
             isLight ? (yaruStyled ? -0.03 : -0.02) : (yaruStyled ? 0.01 : 0.02),
         saturation: -0.5,

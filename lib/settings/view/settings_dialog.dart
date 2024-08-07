@@ -11,6 +11,7 @@ class SettingsDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nav = Navigator(
+      // ignore: deprecated_member_use
       onPopPage: (route, result) => route.didPop(result),
       key: settingsNavigatorKey,
       initialRoute: '/settings',
@@ -29,7 +30,7 @@ class SettingsDialog extends StatelessWidget {
     );
 
     return AlertDialog(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       content: SizedBox(height: 800, width: 600, child: nav),
