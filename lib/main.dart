@@ -177,6 +177,7 @@ Future<void> main(List<String> args) async {
       podcastService: di<PodcastService>(),
       radioService: di<RadioService>(),
       libraryService: di<LibraryService>(),
+      localAudioService: di<LocalAudioService>(),
     )..init(),
   );
 

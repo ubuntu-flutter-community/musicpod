@@ -1,11 +1,8 @@
-import 'dart:typed_data';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
@@ -24,20 +21,19 @@ import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 import '../local_audio_model.dart';
 import 'album_page.dart';
 import 'album_view.dart';
 import 'genre_page.dart';
-import 'local_audio_search_page.dart';
 
 class ArtistPage extends StatelessWidget with WatchItMixin {
   const ArtistPage({
     super.key,
-    required this.images,
     required this.artistAudios,
   });
 
-  final Set<Uint8List>? images;
   final List<Audio>? artistAudios;
 
   @override
@@ -50,7 +46,8 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
       return const SizedBox.shrink();
     }
 
-    final useGridView = watchPropertyValue((AppModel m) => m.useArtistGridView);
+    final useGridView =
+        watchPropertyValue((LocalAudioModel m) => m.useArtistGridView);
 
     void onAlbumTap(text) {
       final audios = model.findAlbum(text);
@@ -82,10 +79,12 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                di<LibraryModel>().push(
-                  builder: (_) => const LocalAudioSearchPage(),
-                  pageId: kSearchPageId,
-                );
+                di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                final searchmodel = di<SearchModel>();
+                searchmodel
+                  ..setAudioType(AudioType.local)
+                  ..setSearchType(SearchType.localArtist)
+                  ..search();
               },
             ),
           ),
@@ -105,7 +104,9 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
                     imageRadius: BorderRadius.circular(10000),
                     title: artistAudios?.firstOrNull?.artist ?? '',
                     image: RoundImageContainer(
-                      images: images,
+                      images: artistAudios == null
+                          ? null
+                          : model.findImages(artistAudios!),
                       fallBackText: pageId,
                     ),
                     subTitle: artistAudios?.firstOrNull?.genre,
@@ -126,7 +127,6 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
                   padding:
                       getAdaptiveHorizontalPadding(constraints: constraints),
                   sliver: AlbumsView(
-                    sliver: true,
                     albums: albums,
                   ),
                 )
@@ -160,8 +160,9 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final useGridView = watchPropertyValue((AppModel m) => m.useArtistGridView);
-    final setUseGridView = di<AppModel>().setUseArtistGridView;
+    final useGridView =
+        watchPropertyValue((LocalAudioModel m) => m.useArtistGridView);
+    final setUseGridView = di<LocalAudioModel>().setUseArtistGridView;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [

@@ -9,6 +9,7 @@ import '../common/data/podcast_genre.dart';
 import '../common/view/languages.dart';
 import '../extensions/string_x.dart';
 import '../library/library_service.dart';
+import '../local_audio/local_audio_service.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
 import 'search_type.dart';
@@ -20,13 +21,16 @@ class SearchModel extends SafeChangeNotifier {
     required RadioService radioService,
     required PodcastService podcastService,
     required LibraryService libraryService,
+    required LocalAudioService localAudioService,
   })  : _radioService = radioService,
         _podcastService = podcastService,
-        _libraryService = libraryService;
+        _libraryService = libraryService,
+        _localAudioService = localAudioService;
 
   final RadioService _radioService;
   final PodcastService _podcastService;
   final LibraryService _libraryService;
+  final LocalAudioService _localAudioService;
 
   void init() {
     _country ??= Country.values.firstWhereOrNull(
@@ -122,6 +126,18 @@ class SearchModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  LocalSearchResult? _localSearchResult;
+  LocalSearchResult? get localSearchResult => _localSearchResult;
+  void setLocalSearchResult(LocalSearchResult? value) {
+    _localSearchResult = value;
+    notifyListeners();
+  }
+
+  Future<LocalSearchResult?> localSearch(String? query) async {
+    await Future.delayed(const Duration(microseconds: 1));
+    return _localAudioService.search(_searchQuery);
+  }
+
   // TODO: add limit increase on scroll
   int _podcastLimit = 30;
   void incrementPodcastLimit(int value) => _podcastLimit += value;
@@ -132,14 +148,19 @@ class SearchModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> search({bool clear = false}) async {
+  Future<void> search({
+    bool clear = false,
+    bool manualFilter = false,
+  }) async {
     _loading = true;
 
     if (clear) {
       switch (_audioType) {
         case AudioType.podcast:
           setPodcastSearchResult(null);
-        default:
+        case AudioType.local:
+          setLocalSearchResult(null);
+        case AudioType.radio:
           setRadioSearchResult(null);
       }
     }
@@ -186,7 +207,23 @@ class SearchModel extends SafeChangeNotifier {
           )
           .then((v) => setPodcastSearchResult(v))
           .then((_) => _loading = false),
-      _ => Future.value().then((_) => _loading = false)
+      _ => await localSearch(_searchQuery).then((v) {
+          setLocalSearchResult(v);
+
+          if (!manualFilter) {
+            if (localSearchResult?.titles?.isNotEmpty == true) {
+              setSearchType(SearchType.localTitle);
+            } else if (localSearchResult?.albums?.isNotEmpty == true) {
+              setSearchType(SearchType.localAlbum);
+            } else if (localSearchResult?.artists?.isNotEmpty == true) {
+              setSearchType(SearchType.localArtist);
+            } else if (localSearchResult?.genres?.isNotEmpty == true) {
+              setSearchType(SearchType.localGenreName);
+            }
+          }
+        }).then(
+          (_) => _loading = false,
+        ),
     };
   }
 

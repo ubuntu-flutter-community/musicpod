@@ -4,8 +4,8 @@ import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
+import '../../common/view/adaptive_container.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
@@ -16,12 +16,13 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
+import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 import '../../settings/view/settings_dialog.dart';
 import '../local_audio_model.dart';
 import 'failed_imports_content.dart';
 import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
-import 'local_audio_search_page.dart';
 import 'local_audio_view.dart';
 
 class LocalAudioPage extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -48,83 +49,88 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final model = di<LocalAudioModel>();
     final audios = watchPropertyValue((LocalAudioModel m) => m.audios);
     final allArtists = watchPropertyValue((LocalAudioModel m) => m.allArtists);
     final allAlbums = watchPropertyValue((LocalAudioModel m) => m.allAlbums);
     final allGenres = watchPropertyValue((LocalAudioModel m) => m.allGenres);
-    final index = watchPropertyValue((AppModel m) => m.localAudioindex);
+    final index = watchPropertyValue((LocalAudioModel m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
-
-    void search({
-      required String? text,
-    }) {
-      final libraryModel = di<LibraryModel>();
-
-      if (text != null) {
-        model.search(text);
-        libraryModel.push(
-          builder: (_) => const LocalAudioSearchPage(),
-          pageId: kSearchPageId,
-        );
-      } else {
-        libraryModel.pop();
-      }
-    }
-
-    final headerBar = HeaderBar(
-      adaptive: true,
-      titleSpacing: 0,
-      actions: [
-        Flexible(
-          child: Padding(
-            padding: appBarSingleActionSpacing,
-            child: SearchButton(
-              active: false,
-              onPressed: () => search(text: ''),
-            ),
-          ),
-        ),
-      ],
-      title: Text(context.l10n.localAudio),
-    );
 
     return Scaffold(
       resizeToAvoidBottomInset: isMobile ? false : null,
-      appBar: headerBar,
-      body: Column(
-        children: [
-          const LocalAudioControlPanel(),
-          Expanded(
-            child: LocalAudioBody(
-              localAudioView: localAudioView,
-              titles: audios,
-              albums: allAlbums,
-              artists: allArtists,
-              genres: allGenres,
-              noResultIcon: const AnimatedEmoji(AnimatedEmojis.bird),
-              noResultMessage: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(context.l10n.noLocalTitlesFound),
-                  const SizedBox(
-                    height: kYaruPagePadding,
-                  ),
-                  ImportantButton(
-                    child: Text(context.l10n.settings),
-                    onPressed: () {
-                      showAnimatedDialog(
-                        context: context,
-                        animationType: DialogTransitionType.fade,
-                        builder: (_) => const SettingsDialog(),
-                      );
-                    },
-                  ),
-                ],
-              ),
+      appBar: HeaderBar(
+        adaptive: true,
+        titleSpacing: 0,
+        actions: [
+          Padding(
+            padding: appBarSingleActionSpacing,
+            child: SearchButton(
+              active: false,
+              onPressed: () {
+                di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                final searchmodel = di<SearchModel>();
+                searchmodel
+                  ..setAudioType(AudioType.local)
+                  ..setSearchType(SearchType.localTitle)
+                  ..search();
+              },
             ),
           ),
         ],
+        title: Text(context.l10n.localAudio),
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: getAdaptiveHorizontalPadding(constraints: constraints)
+                    .copyWith(bottom: 5),
+                sliver: SliverAppBar(
+                  shape: const RoundedRectangleBorder(side: BorderSide.none),
+                  elevation: 0,
+                  backgroundColor: context.t.scaffoldBackgroundColor,
+                  automaticallyImplyLeading: false,
+                  pinned: true,
+                  centerTitle: true,
+                  titleSpacing: 0,
+                  stretch: true,
+                  title: const LocalAudioControlPanel(),
+                ),
+              ),
+              SliverPadding(
+                padding: getAdaptiveHorizontalPadding(constraints: constraints),
+                sliver: LocalAudioBody(
+                  localAudioView: localAudioView,
+                  titles: audios,
+                  albums: allAlbums,
+                  artists: allArtists,
+                  genres: allGenres,
+                  noResultIcon: const AnimatedEmoji(AnimatedEmojis.bird),
+                  noResultMessage: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(context.l10n.noLocalTitlesFound),
+                      const SizedBox(
+                        height: kYaruPagePadding,
+                      ),
+                      ImportantButton(
+                        child: Text(context.l10n.settings),
+                        onPressed: () {
+                          showAnimatedDialog(
+                            context: context,
+                            animationType: DialogTransitionType.fade,
+                            builder: (_) => const SettingsDialog(),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

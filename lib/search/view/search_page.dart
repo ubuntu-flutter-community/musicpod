@@ -8,37 +8,17 @@ import '../../common/view/header_bar.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
-import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../podcasts/podcast_model.dart';
-import '../../radio/radio_model.dart';
 import '../search_model.dart';
 import 'search_page_input.dart';
+import 'sliver_local_search_results.dart';
 import 'sliver_podcast_filter_bar.dart';
 import 'sliver_podcast_search_results.dart';
 import 'sliver_radio_search_results.dart';
 import 'sliver_search_type_filter_bar.dart';
 
-class SearchPage extends StatefulWidget with WatchItStatefulWidgetMixin {
+class SearchPage extends StatelessWidget with WatchItMixin {
   const SearchPage({super.key});
-
-  @override
-  State<SearchPage> createState() => _SearchPageState();
-}
-
-class _SearchPageState extends State<SearchPage> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      if (context.mounted) {
-        await di<PodcastModel>().init(
-          updateMessage: context.l10n.newEpisodeAvailable,
-        );
-        await di<RadioModel>().init();
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,18 +60,14 @@ class _SearchPageState extends State<SearchPage> {
                   _ => const SliverSearchTypeFilterBar(),
                 },
               ),
-              if (audioType == AudioType.radio)
-                SliverPadding(
-                  padding:
-                      getAdaptiveHorizontalPadding(constraints: constraints),
-                  sliver: const SliverRadioSearchResults(),
-                )
-              else if (audioType == AudioType.podcast)
-                SliverPadding(
-                  padding:
-                      getAdaptiveHorizontalPadding(constraints: constraints),
-                  sliver: const SliverPodcastSearchResults(),
-                ),
+              SliverPadding(
+                padding: getAdaptiveHorizontalPadding(constraints: constraints),
+                sliver: switch (audioType) {
+                  AudioType.radio => const SliverRadioSearchResults(),
+                  AudioType.podcast => const SliverPodcastSearchResults(),
+                  AudioType.local => const SliverLocalSearchResult(),
+                },
+              ),
             ],
           );
         },

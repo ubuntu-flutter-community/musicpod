@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:mime/mime.dart';
-
 /// TODO: either guarantee that downloads are saved with the correct extension or manage to detect files without file extensions via magic bytes
 
 extension MediaFileX on File {
@@ -21,12 +19,7 @@ extension _ValidPathX on String {
   /// |`66 4C 61 43`| `.flac` | Free Lossless Audio Codec |
   /// |`66 74 79 70 69 73 6F 6D`| `mp4`| 	ISO Base Media file (MPEG-4)|
   /// |`66 74 79 70 4D 53 4E 56`| `mp4`| 	MPEG-4 video file|
-  bool get isValidPath {
-    final mime = lookupMimeType(this);
-    return mime?.startsWith('audio') == true ||
-        mime?.startsWith('video') == true ||
-        _validMediaExtensions.any((e) => endsWith(e));
-  }
+  bool get isValidPath => _validMediaExtensions.any((e) => endsWith(e));
 }
 
 const _validMediaExtensions = [
@@ -35,6 +28,4 @@ const _validMediaExtensions = [
   '.mp4',
   '.opus',
   '.ogg',
-  '.m4a',
-  '.aac',
 ];
