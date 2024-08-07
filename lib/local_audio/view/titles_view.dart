@@ -5,8 +5,8 @@ import 'package:watch_it/watch_it.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/no_search_result_page.dart';
-import '../../common/view/progress.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
+import '../../common/view/sliver_fill_remaining_progress.dart';
 import '../../constants.dart';
 import '../../library/library_model.dart';
 import '../local_audio_model.dart';
@@ -28,12 +28,7 @@ class TitlesView extends StatelessWidget {
     final model = di<LocalAudioModel>();
 
     if (audios == null) {
-      return const SliverFillRemaining(
-        hasScrollBody: false,
-        child: Center(
-          child: Progress(),
-        ),
-      );
+      return const SliverFillRemainingProgress();
     }
 
     if (audios!.isEmpty) {
