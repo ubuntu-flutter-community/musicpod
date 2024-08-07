@@ -37,11 +37,9 @@ class AlbumsView extends StatelessWidget {
     }
 
     if (albums!.isEmpty) {
-      return SliverToBoxAdapter(
-        child: NoSearchResultPage(
-          icon: noResultIcon,
-          message: noResultMessage,
-        ),
+      return SliverFillNoSearchResultPage(
+        icon: noResultIcon,
+        message: noResultMessage,
       );
     }
 
