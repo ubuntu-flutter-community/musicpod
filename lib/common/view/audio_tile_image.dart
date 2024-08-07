@@ -17,6 +17,14 @@ class AudioTileImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final icon = Icon(
+      switch (audio?.audioType) {
+        AudioType.radio => Iconz().radio,
+        AudioType.podcast => Iconz().podcast,
+        _ => Iconz().musicNote,
+      },
+      size: size / (1.65),
+    );
     Widget image;
     if (audio?.hasPathAndId == true) {
       image = LocalCover(
@@ -24,21 +32,18 @@ class AudioTileImage extends StatelessWidget {
         path: audio!.path!,
         fit: BoxFit.cover,
         dimension: size,
-        fallback: Icon(
-          switch (audio?.audioType) {
-            AudioType.radio => Iconz().radio,
-            AudioType.podcast => Iconz().podcast,
-            _ => Iconz().musicNote,
-          },
-          size: size / (1.65),
-        ),
+        fallback: icon,
       );
-    } else {
+    } else if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
       image = SafeNetworkImage(
         url: audio?.imageUrl ?? audio?.albumArtUrl,
         height: size,
         fit: BoxFit.cover,
+        fallBackIcon: icon,
+        errorIcon: icon,
       );
+    } else {
+      image = icon;
     }
 
     return SizedBox.square(
