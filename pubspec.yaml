@@ -68,7 +68,7 @@ dependencies:
   shimmer: ^3.0.0
   smtc_windows: ^0.1.2
   super_drag_and_drop: ^0.8.15
-  system_theme: ^2.3.1
+  system_theme: ^3.0.0
   url_launcher: ^6.2.5
   watch_it: ^1.4.1
   window_manager: ^0.3.8
