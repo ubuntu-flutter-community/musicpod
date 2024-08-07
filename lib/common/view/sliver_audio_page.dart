@@ -130,6 +130,7 @@ class SliverAudioPage extends StatelessWidget {
                               constraints: constraints,
                             ),
                             sliver: SliverAudioTileList(
+                              showLeading: true,
                               audioPageType: audioPageType,
                               audios: audios!,
                               pageId: pageId,

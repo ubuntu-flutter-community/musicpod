@@ -15,6 +15,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
     this.padding,
     this.onSubTitleTab,
     required this.audioPageType,
+    required this.showLeading,
   });
 
   final List<Audio> audios;
@@ -22,6 +23,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
   final AudioPageType audioPageType;
   final void Function(String text)? onSubTitleTab;
   final EdgeInsetsGeometry? padding;
+  final bool showLeading;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
             final audio = audios.elementAt(index);
             final audioSelected = currentAudio == audio;
             return AudioTile(
+              showLeading: showLeading,
               key: ValueKey(audio.path ?? audio.url),
               audioPageType: audioPageType,
               onSubTitleTap: onSubTitleTab,

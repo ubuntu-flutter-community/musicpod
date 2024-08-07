@@ -5,6 +5,7 @@ import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 
 import '../compute_isolate.dart';
+import '../constants.dart';
 import '../persistence_utils.dart';
 
 Future<Uint8List?> getCover({
@@ -43,5 +44,3 @@ class CoverStore {
   Future<void> read() async =>
       _value = await computeIsolate(() => readUint8ListMap(kCoverStore)) ?? [];
 }
-
-const kCoverStore = 'coverStore.json';

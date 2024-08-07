@@ -29,6 +29,7 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
     this.onSubTitleTap,
     this.startPlaylist,
     required this.audioPageType,
+    required this.showLeading,
   });
 
   final String pageId;
@@ -43,6 +44,7 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
   final void Function(String text)? onSubTitleTap;
   final LibraryModel libraryModel;
   final void Function(Audio audio) insertIntoQueue;
+  final bool showLeading;
 
   @override
   State<AudioTile> createState() => _AudioTileState();
@@ -60,14 +62,16 @@ class _AudioTileState extends State<AudioTile> {
       _ => widget.audio.artist ?? context.l10n.unknown,
     };
 
-    final leading = switch (widget.audioPageType) {
-      AudioPageType.album =>
-        AlbumTileLead(trackNumber: widget.audio.trackNumber),
-      _ => AudioTileImage(
-          size: kAudioTrackWidth,
-          audio: widget.audio,
-        ),
-    };
+    var leading = !widget.showLeading
+        ? null
+        : switch (widget.audioPageType) {
+            AudioPageType.album =>
+              AlbumTileLead(trackNumber: widget.audio.trackNumber),
+            _ => AudioTileImage(
+                size: kAudioTrackWidth,
+                audio: widget.audio,
+              ),
+          };
 
     return MouseRegion(
       key: ValueKey(widget.audio.audioType?.index),

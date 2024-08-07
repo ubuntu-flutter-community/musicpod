@@ -319,6 +319,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                     key: ValueKey(audio.path ?? audio.url),
                     index: index,
                     child: AudioTile(
+                      showLeading: audios.length < kShowLeadingThreshold,
                       onSubTitleTap: onArtistTap,
                       key: ValueKey(audio.path ?? audio.url),
                       isPlayerPlaying: isPlaying,
@@ -354,6 +355,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
               SliverPadding(
                 padding: getAdaptiveHorizontalPadding(constraints: constraints),
                 sliver: SliverAudioTileList(
+                  showLeading: audios.length < kShowLeadingThreshold,
                   audios: audios,
                   pageId: pageId,
                   audioPageType: AudioPageType.playlist,
