@@ -46,8 +46,8 @@ class PatchNotesDialog extends StatelessWidget {
       actions: [
         ElevatedButton(
           onPressed: () async {
-            await disposePatchNotes()
-                .then((value) => Navigator.of(context).pop());
+            await disposePatchNotes();
+            if (context.mounted) Navigator.of(context).pop();
           },
           child: Text(context.l10n.ok),
         ),

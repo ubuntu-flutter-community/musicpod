@@ -6,7 +6,8 @@ import '../../radio/radio_model.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar({
   required BuildContext context,
-  required Widget content,
+  Widget? content,
+  SnackBar? snackBar,
   Duration? duration,
   clear = true,
 }) {
@@ -14,10 +15,11 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar({
     ScaffoldMessenger.of(context).clearSnackBars();
   }
   return ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: content,
-      duration: duration ?? const Duration(seconds: 10),
-    ),
+    snackBar ??
+        SnackBar(
+          content: content ?? const SizedBox.shrink(),
+          duration: duration ?? const Duration(seconds: 10),
+        ),
   );
 }
 
@@ -36,16 +38,17 @@ SnackBar buildConnectSnackBar({
     ),
     action: (connectedHost == null)
         ? SnackBarAction(
-            onPressed: () {
-              ScaffoldMessenger.of(context).clearSnackBars();
-              di<RadioModel>().init().then(
-                    (value) => ScaffoldMessenger.of(context).showSnackBar(
-                      buildConnectSnackBar(
-                        connectedHost: value,
-                        context: context,
-                      ),
-                    ),
-                  );
+            onPressed: () async {
+              final connectedHost = await di<RadioModel>().init();
+              if (context.mounted) {
+                showSnackBar(
+                  context: context,
+                  content: buildConnectSnackBar(
+                    connectedHost: connectedHost,
+                    context: context,
+                  ),
+                );
+              }
             },
             label: context.l10n.tryReconnect,
           )

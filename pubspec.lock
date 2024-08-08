@@ -1036,8 +1036,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "4486490240ba42cc668079064ad41f3ae8869d01"
-      resolved-ref: "4486490240ba42cc668079064ad41f3ae8869d01"
+      ref: "61c5b11fad871ee655b512c79118a2590bf5df29"
+      resolved-ref: "61c5b11fad871ee655b512c79118a2590bf5df29"
       url: "https://github.com/Feichtmeier/phoenix_theme"
     source: git
     version: "0.0.1"

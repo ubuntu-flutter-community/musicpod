@@ -58,7 +58,7 @@ dependencies:
   phoenix_theme:
     git:
       url: https://github.com/Feichtmeier/phoenix_theme
-      ref: 4486490240ba42cc668079064ad41f3ae8869d01
+      ref: 61c5b11fad871ee655b512c79118a2590bf5df29
   pls: ^1.1.0
   podcast_search: ^0.7.2
   radio_browser_api: ^2.0.0

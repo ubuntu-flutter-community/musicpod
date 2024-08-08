@@ -7,7 +7,7 @@ import 'global_keys.dart';
 import 'icons.dart';
 import 'nav_back_button.dart';
 import 'package:flutter/material.dart';
-import 'package:phoenix_theme/phoenix_theme.dart';
+import 'package:phoenix_theme/phoenix_theme.dart' hide isMobile;
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 

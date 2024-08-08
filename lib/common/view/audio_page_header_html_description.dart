@@ -2,7 +2,6 @@ import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
@@ -26,7 +25,7 @@ class AudioPageHeaderHtmlDescription extends StatelessWidget {
       child: SizedBox(
         width: kAudioHeaderDescriptionWidth,
         child: InkWell(
-          borderRadius: BorderRadius.circular(kButtonRadius),
+          borderRadius: BorderRadius.circular(kYaruButtonRadius),
           onTap: () => showDialog(
             context: context,
             builder: (context) => SimpleDialog(

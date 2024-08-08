@@ -225,7 +225,9 @@ class _PlaylistContentState extends State<PlaylistContent> {
                             _audios ?? widget.audios ?? [],
                           )
                               .then((_) async {
-                            Navigator.of(context, rootNavigator: true).pop();
+                            if (context.mounted) {
+                              Navigator.of(context, rootNavigator: true).pop();
+                            }
                             await Future.delayed(
                               const Duration(milliseconds: 300),
                             );

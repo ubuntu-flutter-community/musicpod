@@ -7,6 +7,7 @@ import '../../common/view/icons.dart';
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
 import '../common/view/progress.dart';
+import '../common/view/snackbars.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import '../player/player_model.dart';
@@ -63,16 +64,15 @@ Future<void> searchAndPushPodcastPage({
     itemImageUrl: itemImageUrl,
     genre: genre,
   ).then((podcast) async {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    if (selectedFeedUrl == feedUrl) {
-      return;
-    }
+    if (selectedFeedUrl == feedUrl) return;
+
     if (podcast.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+      if (context.mounted) {
+        showSnackBar(
+          context: context,
           content: Text(context.l10n.podcastFeedIsEmpty),
-        ),
-      );
+        );
+      }
       return;
     }
 
