@@ -59,8 +59,11 @@ class LocalAudioModel extends SafeChangeNotifier {
   List<String>? findArtistsOfGenre(String genre) =>
       _service.findArtistsOfGenre(genre);
 
-  Set<Uint8List>? findImages({required List<Audio> audios, int limit = 4}) =>
-      _service.findImages(audios: audios, limit: limit);
+  Set<Uint8List>? findLocalCovers({
+    required List<Audio> audios,
+    int limit = 4,
+  }) =>
+      _service.findLocalCovers(audios: audios, limit: limit);
 
   List<String>? get failedImports => _service.failedImports;
 

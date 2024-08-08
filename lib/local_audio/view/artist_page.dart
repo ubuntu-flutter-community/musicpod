@@ -106,7 +106,7 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
                     image: RoundImageContainer(
                       images: artistAudios == null
                           ? null
-                          : model.findImages(audios: artistAudios!),
+                          : model.findLocalCovers(audios: artistAudios!),
                       fallBackText: pageId,
                     ),
                     subTitle: artistAudios?.firstOrNull?.genre,
