@@ -114,6 +114,10 @@ InputDecoration createYaruDecoration({
 
   return InputDecoration(
     suffixIcon: suffixIcon,
+    suffixIconConstraints: const BoxConstraints(
+      maxWidth: 200,
+      maxHeight: kYaruTitleBarItemHeight,
+    ),
     hintText: hintText,
     filled: true,
     fillColor: fillColor ?? fill,

@@ -32,14 +32,15 @@ class AudioTypeFilterButton extends StatelessWidget with WatchItMixin {
             ),
           )
           .toList(),
-      icon: Padding(
-        padding: const EdgeInsets.only(right: 5),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Text(
           audioType.localize(context.l10n),
           style: context.t.textTheme.labelSmall?.copyWith(
             color: context.t.colorScheme.primary,
             fontWeight: FontWeight.bold,
           ),
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );
