@@ -77,6 +77,10 @@ InputDecoration createMaterialDecoration({
       );
   return InputDecoration(
     suffixIcon: suffixIcon,
+    suffixIconConstraints: const BoxConstraints(
+      maxWidth: 200,
+      maxHeight: kYaruTitleBarItemHeight,
+    ),
     hintText: hintText,
     fillColor: fillColor,
     filled: filled,
