@@ -29,8 +29,9 @@ class AudioTypeFilterButton extends StatelessWidget with WatchItMixin {
           child: PopupMenuButton<AudioType>(
             initialValue: audioType,
             onSelected: (v) async {
-              searchModel.setAudioType(v);
-              searchModel.search();
+              searchModel
+                ..setAudioType(v)
+                ..search();
             },
             itemBuilder: (context) => AudioType.values
                 .map(

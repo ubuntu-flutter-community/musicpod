@@ -15,11 +15,11 @@ class PodcastModel extends SafeChangeNotifier {
   final PodcastService _podcastService;
   final LibraryService _libraryService;
 
-  String? _selectedFeedUrl;
-  String? get selectedFeedUrl => _selectedFeedUrl;
-  void setSelectedFeedUrl(String? value) {
-    if (value == _selectedFeedUrl) return;
-    _selectedFeedUrl = value;
+  bool _loadingFeed = false;
+  bool get loadingFeed => _loadingFeed;
+  void setLoadingFeed(bool value) {
+    if (_loadingFeed == value) return;
+    _loadingFeed = value;
     notifyListeners();
   }
 

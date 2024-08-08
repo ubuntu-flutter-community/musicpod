@@ -43,8 +43,6 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
-
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
     final libraryModel = di<LibraryModel>();
@@ -57,7 +55,6 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       await di<PodcastModel>()
           .init(updateMessage: context.l10n.updateAvailable);
       di<LibraryModel>().pushNamed(pageId: kSearchPageId);
-
       di<SearchModel>()
         ..setAudioType(AudioType.podcast)
         ..setSearchQuery(text)
@@ -77,8 +74,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                 di<LibraryModel>().pushNamed(pageId: kSearchPageId);
                 di<SearchModel>()
                   ..setAudioType(AudioType.podcast)
-                  ..setSearchType(SearchType.podcastTitle)
-                  ..search();
+                  ..setSearchType(SearchType.podcastTitle);
               },
             ),
           ),
@@ -97,21 +93,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                   child: AudioPageHeader(
                     image: imageUrl == null
                         ? null
-                        : SafeNetworkImage(
-                            fallBackIcon: Icon(
-                              Iconz().podcast,
-                              size: 80,
-                              color: theme.hintColor,
-                            ),
-                            errorIcon: Icon(
-                              Iconz().podcast,
-                              size: 80,
-                              color: theme.hintColor,
-                            ),
-                            url: imageUrl,
-                            fit: BoxFit.fitHeight,
-                            filterQuality: FilterQuality.medium,
-                          ),
+                        : _PodcastPageImage(imageUrl: imageUrl),
                     label: audios
                             ?.firstWhereOrNull((e) => e.genre != null)
                             ?.genre ??
@@ -144,6 +126,52 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class _PodcastPageImage extends StatelessWidget {
+  const _PodcastPageImage({
+    required this.imageUrl,
+  });
+
+  final String? imageUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.t;
+    var safeNetworkImage = SafeNetworkImage(
+      fallBackIcon: Icon(
+        Iconz().podcast,
+        size: 80,
+        color: theme.hintColor,
+      ),
+      errorIcon: Icon(
+        Iconz().podcast,
+        size: 80,
+        color: theme.hintColor,
+      ),
+      url: imageUrl,
+      fit: BoxFit.fitHeight,
+      filterQuality: FilterQuality.medium,
+    );
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(10),
+      child: safeNetworkImage,
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) => SimpleDialog(
+          titlePadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.zero,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: safeNetworkImage,
+            ),
+          ],
+        ),
       ),
     );
   }

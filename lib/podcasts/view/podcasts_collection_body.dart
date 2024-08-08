@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/connectivity_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
@@ -10,6 +11,7 @@ import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/loading_grid.dart';
 import '../../common/view/no_search_result_page.dart';
+import '../../common/view/offline_page.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
@@ -23,16 +25,16 @@ import '../podcast_model.dart';
 class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
   const PodcastsCollectionBody({
     super.key,
-    required this.isOnline,
-    required this.loading,
   });
-
-  final bool isOnline;
-  final bool loading;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    if (!isOnline) return const OfflineBody();
+
+    final loading =
+        watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
     final subs = watchPropertyValue((LibraryModel m) => m.podcasts);
     watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
     final playerModel = di<PlayerModel>();
@@ -71,6 +73,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                     di<LibraryModel>().pushNamed(pageId: kSearchPageId);
                     di<SearchModel>()
                       ..setAudioType(AudioType.podcast)
+                      ..setSearchQuery(null)
                       ..search();
                   },
                   child: Text(context.l10n.discover),
@@ -130,72 +133,73 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
               const SizedBox(
                 height: 15,
               ),
-              Expanded(
-                child: loading
-                    ? LoadingGrid(limit: subsLength)
-                    : LayoutBuilder(
-                        builder: (context, constraints) {
-                          return GridView.builder(
-                            padding: getAdaptiveHorizontalPadding(
-                              constraints: constraints,
+              if (loading)
+                Expanded(child: LoadingGrid(limit: subsLength))
+              else
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return GridView.builder(
+                        padding: getAdaptiveHorizontalPadding(
+                          constraints: constraints,
+                        ),
+                        itemCount: itemCount,
+                        gridDelegate: audioCardGridDelegate,
+                        itemBuilder: (context, index) {
+                          final MapEntry<String, List<Audio>> podcast;
+                          if (updatesOnly) {
+                            podcast = subs.entries
+                                .where((e) => podcastUpdateAvailable(e.key))
+                                .elementAt(index);
+                          } else if (downloadsOnly) {
+                            podcast = subs.entries
+                                .where((e) => feedHasDownload(e.key))
+                                .elementAt(index);
+                          } else {
+                            podcast = subs.entries.elementAt(index);
+                          }
+
+                          final artworkUrl600 =
+                              podcast.value.firstOrNull?.albumArtUrl ??
+                                  podcast.value.firstOrNull?.imageUrl;
+                          final image = SafeNetworkImage(
+                            url: artworkUrl600,
+                            fit: BoxFit.cover,
+                            height: kAudioCardDimension,
+                            width: kAudioCardDimension,
+                          );
+
+                          return AudioCard(
+                            image: image,
+                            bottom: AudioCardBottom(
+                              style: podcastUpdateAvailable(podcast.key)
+                                  ? theme.textTheme.bodyMedium?.copyWith(
+                                        color: theme.colorScheme.primary,
+                                        fontWeight: FontWeight.bold,
+                                      ) ??
+                                      TextStyle(
+                                        color: theme.colorScheme.primary,
+                                        fontWeight: FontWeight.bold,
+                                      )
+                                  : null,
+                              text: podcast.value.firstOrNull?.album ??
+                                  podcast.value.firstOrNull?.title ??
+                                  podcast.value.firstOrNull.toString(),
                             ),
-                            itemCount: itemCount,
-                            gridDelegate: audioCardGridDelegate,
-                            itemBuilder: (context, index) {
-                              final MapEntry<String, List<Audio>> podcast;
-                              if (updatesOnly) {
-                                podcast = subs.entries
-                                    .where((e) => podcastUpdateAvailable(e.key))
-                                    .elementAt(index);
-                              } else if (downloadsOnly) {
-                                podcast = subs.entries
-                                    .where((e) => feedHasDownload(e.key))
-                                    .elementAt(index);
-                              } else {
-                                podcast = subs.entries.elementAt(index);
-                              }
-
-                              final artworkUrl600 =
-                                  podcast.value.firstOrNull?.albumArtUrl ??
-                                      podcast.value.firstOrNull?.imageUrl;
-                              final image = SafeNetworkImage(
-                                url: artworkUrl600,
-                                fit: BoxFit.cover,
-                                height: kAudioCardDimension,
-                                width: kAudioCardDimension,
-                              );
-
-                              return AudioCard(
-                                image: image,
-                                bottom: AudioCardBottom(
-                                  style: podcastUpdateAvailable(podcast.key)
-                                      ? theme.textTheme.bodyMedium?.copyWith(
-                                            color: theme.colorScheme.primary,
-                                            fontWeight: FontWeight.bold,
-                                          ) ??
-                                          TextStyle(
-                                            color: theme.colorScheme.primary,
-                                            fontWeight: FontWeight.bold,
-                                          )
-                                      : null,
-                                  text: podcast.value.firstOrNull?.album ??
-                                      podcast.value.firstOrNull?.title ??
-                                      podcast.value.firstOrNull.toString(),
-                                ),
-                                onPlay: () => playerModel
-                                    .startPlaylist(
-                                      audios: podcast.value,
-                                      listName: podcast.key,
-                                    )
-                                    .then((_) => removeUpdate(podcast.key)),
-                                onTap: () =>
-                                    libraryModel.pushNamed(pageId: podcast.key),
-                              );
-                            },
+                            onPlay: () => playerModel
+                                .startPlaylist(
+                                  audios: podcast.value,
+                                  listName: podcast.key,
+                                )
+                                .then((_) => removeUpdate(podcast.key)),
+                            onTap: () =>
+                                libraryModel.pushNamed(pageId: podcast.key),
                           );
                         },
-                      ),
-              ),
+                      );
+                    },
+                  ),
+                ),
             ],
           );
   }

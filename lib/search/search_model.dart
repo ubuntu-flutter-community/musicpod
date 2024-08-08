@@ -14,7 +14,7 @@ import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
 import 'search_type.dart';
 
-const _initialAudioType = AudioType.radio;
+const _initialAudioType = AudioType.podcast;
 
 class SearchModel extends SafeChangeNotifier {
   SearchModel({
