@@ -17,6 +17,7 @@ class SliverSearchTypeFilterBar extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.t;
     final searchModel = di<SearchModel>();
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
     final searchTypes = watchPropertyValue((SearchModel m) => m.searchTypes);
@@ -46,6 +47,9 @@ class SliverSearchTypeFilterBar extends StatelessWidget with WatchItMixin {
             else
               YaruChoiceChipBar(
                 yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+                chipBackgroundColor: chipColor(theme),
+                selectedChipBackgroundColor: chipSelectionColor(theme, false),
+                borderColor: chipBorder(theme, false),
                 chipHeight: chipHeight,
                 clearOnSelect: false,
                 selectedFirst: false,

@@ -191,7 +191,7 @@ FontWeight get largeTextWeight =>
 
 bool get shrinkTitleBarItems => yaruStyled;
 
-double get chipHeight => yaruStyled ? kYaruTitleBarItemHeight : 38;
+double get chipHeight => 36.0;
 
 EdgeInsetsGeometry get tabViewPadding =>
     isMobile ? const EdgeInsets.only(top: 15) : const EdgeInsets.only(top: 5);

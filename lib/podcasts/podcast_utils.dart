@@ -44,7 +44,7 @@ Future<void> searchAndPushPodcastPage({
   setSelectedFeedUrl(feedUrl);
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      duration: const Duration(seconds: 20),
+      duration: const Duration(seconds: 1000),
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -81,6 +81,9 @@ Future<void> searchAndPushPodcastPage({
             (_) => setSelectedFeedUrl(null),
           );
     } else {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+      }
       di<LibraryModel>()
           .push(
         builder: (_) {
