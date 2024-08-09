@@ -153,7 +153,7 @@ class LocalAudioService {
     return artistsOfGenre;
   }
 
-  Set<Uint8List>? findImages({
+  Set<Uint8List>? findLocalCovers({
     required List<Audio> audios,
     int limit = 4,
   }) {

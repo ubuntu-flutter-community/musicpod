@@ -7,6 +7,7 @@ import '../../common/view/icons.dart';
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
 import '../common/view/progress.dart';
+import '../common/view/snackbars.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
 import '../player/player_model.dart';
@@ -20,85 +21,71 @@ Future<void> searchAndPushPodcastPage({
   String? genre,
   required bool play,
 }) async {
-  ScaffoldMessenger.of(context).clearSnackBars();
-
-  final libraryModel = di<LibraryModel>();
-  if (feedUrl != null && libraryModel.isPageInLibrary(feedUrl)) {
-    return libraryModel.pushNamed(pageId: feedUrl);
-  }
-
   if (feedUrl == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(context.l10n.podcastFeedIsEmpty),
-      ),
+    showSnackBar(
+      context: context,
+      content: Text(context.l10n.podcastFeedIsEmpty),
     );
     return;
   }
-  final model = di<PodcastModel>();
-  final startPlaylist = di<PlayerModel>().startPlaylist;
-  final selectedFeedUrl = model.selectedFeedUrl;
-  final setSelectedFeedUrl = model.setSelectedFeedUrl;
 
-  setSelectedFeedUrl(feedUrl);
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      duration: const Duration(seconds: 20),
-      content: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(context.l10n.loadingPodcastFeed),
-          SizedBox(
-            height: iconSize,
-            width: iconSize,
-            child: const Progress(),
-          ),
-        ],
-      ),
+  final libraryModel = di<LibraryModel>();
+  if (libraryModel.isPageInLibrary(feedUrl)) {
+    return libraryModel.pushNamed(pageId: feedUrl);
+  }
+
+  showSnackBar(
+    context: context,
+    duration: const Duration(seconds: 1000),
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(context.l10n.loadingPodcastFeed),
+        SizedBox(
+          height: iconSize,
+          width: iconSize,
+          child: const Progress(),
+        ),
+      ],
     ),
   );
 
+  di<PodcastModel>().setLoadingFeed(true);
   return findEpisodes(
     feedUrl: feedUrl,
     itemImageUrl: itemImageUrl,
     genre: genre,
-  ).then((podcast) async {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    if (selectedFeedUrl == feedUrl) {
-      return;
-    }
-    if (podcast.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.podcastFeedIsEmpty),
-        ),
-      );
-      return;
-    }
-
-    if (play) {
-      startPlaylist.call(listName: feedUrl, audios: podcast).then(
-            (_) => setSelectedFeedUrl(null),
+  ).then(
+    (podcast) async {
+      if (podcast.isEmpty) {
+        if (context.mounted) {
+          showSnackBar(
+            context: context,
+            content: Text(context.l10n.podcastFeedIsEmpty),
           );
-    } else {
-      di<LibraryModel>()
-          .push(
-        builder: (_) {
-          return PodcastPage(
+        }
+        return;
+      }
+
+      if (play) {
+        di<PlayerModel>().startPlaylist(listName: feedUrl, audios: podcast);
+      } else {
+        di<LibraryModel>().push(
+          builder: (_) => PodcastPage(
             imageUrl: itemImageUrl ?? podcast.firstOrNull?.imageUrl,
             audios: podcast,
             pageId: feedUrl,
             title: podcast.firstOrNull?.album ??
                 podcast.firstOrNull?.title ??
                 feedUrl,
-          );
-        },
-        pageId: feedUrl,
-      )
-          .then((_) {
-        setSelectedFeedUrl(null);
-      });
-    }
+          ),
+          pageId: feedUrl,
+        );
+      }
+    },
+  ).then((_) {
+    di<PodcastModel>().setLoadingFeed(false);
+    if (context.mounted) ScaffoldMessenger.of(context).clearSnackBars();
   });
 }
 

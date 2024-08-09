@@ -36,8 +36,9 @@ class _SliverRadioSearchResultsState extends State<SliverRadioSearchResults> {
             return;
           }
           if (mounted && model.showConnectSnackBar) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              buildConnectSnackBar(
+            showSnackBar(
+              context: context,
+              snackBar: buildConnectSnackBar(
                 connectedHost: connectedHost,
                 context: context,
               ),

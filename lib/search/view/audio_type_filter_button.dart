@@ -14,31 +14,48 @@ class AudioTypeFilterButton extends StatelessWidget with WatchItMixin {
     final searchModel = di<SearchModel>();
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
 
-    return PopupMenuButton<AudioType>(
-      initialValue: audioType,
-      onSelected: (v) async {
-        searchModel.setAudioType(v);
-        searchModel.search();
-      },
-      itemBuilder: (context) => AudioType.values
-          .map(
-            (e) => PopupMenuItem<AudioType>(
-              value: e,
+    final shape =
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(100));
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: DecoratedBox(
+        decoration: ShapeDecoration(
+          shape: shape,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          shape: shape,
+          clipBehavior: Clip.antiAlias,
+          child: PopupMenuButton<AudioType>(
+            initialValue: audioType,
+            onSelected: (v) async {
+              searchModel
+                ..setAudioType(v)
+                ..search();
+            },
+            itemBuilder: (context) => AudioType.values
+                .map(
+                  (e) => PopupMenuItem<AudioType>(
+                    value: e,
+                    child: Text(
+                      e.localize(
+                        context.l10n,
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                e.localize(
-                  context.l10n,
+                audioType.localize(context.l10n),
+                style: context.t.textTheme.labelSmall?.copyWith(
+                  color: context.t.colorScheme.primary,
+                  fontWeight: FontWeight.bold,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
-          )
-          .toList(),
-      icon: Padding(
-        padding: const EdgeInsets.only(right: 5),
-        child: Text(
-          audioType.localize(context.l10n),
-          style: context.t.textTheme.labelSmall?.copyWith(
-            color: context.t.colorScheme.primary,
-            fontWeight: FontWeight.bold,
           ),
         ),
       ),

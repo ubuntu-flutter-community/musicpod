@@ -31,6 +31,7 @@ class ManualAddDialog extends StatelessWidget {
         height: 200,
         width: 400,
         child: Navigator(
+          // ignore: deprecated_member_use
           onPopPage: (route, result) => route.didPop(result),
           key: manualAddNavigatorKey,
           initialRoute: '/chose',
@@ -224,7 +225,9 @@ class _PlaylistContentState extends State<PlaylistContent> {
                             _audios ?? widget.audios ?? [],
                           )
                               .then((_) async {
-                            Navigator.of(context, rootNavigator: true).pop();
+                            if (context.mounted) {
+                              Navigator.of(context, rootNavigator: true).pop();
+                            }
                             await Future.delayed(
                               const Duration(milliseconds: 300),
                             );

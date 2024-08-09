@@ -48,7 +48,7 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
     final fillColor = theme.chipTheme.selectedColor;
 
     const width = 150.0;
-    final height = chipHeight - 2;
+    final height = chipHeight;
     var outlineInputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(100),
       borderSide: yaruStyled

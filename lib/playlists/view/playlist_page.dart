@@ -150,7 +150,8 @@ class PlaylistHeaderImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
-    final playlistImages = model.findImages(audios: playlist.value, limit: 16);
+    final playlistImages =
+        model.findLocalCovers(audios: playlist.value, limit: 16);
     final length = playlistImages == null ? 0 : playlistImages.take(16).length;
 
     final padding = length == 1 ? 0.0 : 8.0;

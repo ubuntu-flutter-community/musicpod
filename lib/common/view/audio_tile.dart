@@ -173,10 +173,7 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
         Opacity(
           opacity: hovered || selected || liked ? 1 : 0,
           child: switch (audio.audioType) {
-            AudioType.radio => RadioLikeIcon(
-                audio: audio,
-                popOnUnstar: false,
-              ),
+            AudioType.radio => RadioLikeIcon(audio: audio),
             AudioType.local => LikeIcon(audio: audio),
             _ => SizedBox.square(
                 dimension: context.t.buttonTheme.height,

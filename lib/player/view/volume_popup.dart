@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:phoenix_theme/phoenix_theme.dart';
+import 'package:phoenix_theme/phoenix_theme.dart' hide CustomTrackShape;
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/view/icons.dart';
@@ -35,7 +35,7 @@ class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
     }
     return PopupMenuButton(
       color: theme.isLight
-          ? theme.colorScheme.background.scale(lightness: -0.04)
+          ? theme.colorScheme.surface.scale(lightness: -0.04)
           : null,
       iconColor: color ?? theme.colorScheme.onSurface,
       padding: EdgeInsets.zero,

@@ -19,13 +19,15 @@ class RadioReconnectButton extends StatelessWidget {
       ),
       onPressed: () => model.init().then(
         (host) {
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
-            buildConnectSnackBar(
-              connectedHost: host,
+          if (context.mounted) {
+            showSnackBar(
               context: context,
-            ),
-          );
+              snackBar: buildConnectSnackBar(
+                connectedHost: host,
+                context: context,
+              ),
+            );
+          }
         },
       ),
       icon: const DisconnectedServerIcon(),

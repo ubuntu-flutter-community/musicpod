@@ -146,12 +146,15 @@ class _PodcastSectionState extends State<_PodcastSection> {
             title: Text(context.l10n.usePodcastIndex),
             trailing: CommonSwitch(
               value: usePodcastIndex,
-              onChanged: (v) => model.setUsePodcastIndex(v).then(
-                    (_) => di<PodcastModel>().init(
-                      forceInit: true,
-                      updateMessage: context.l10n.newEpisodeAvailable,
-                    ),
-                  ),
+              onChanged: (v) async {
+                await model.setUsePodcastIndex(v);
+                if (context.mounted) {
+                  di<PodcastModel>().init(
+                    forceInit: true,
+                    updateMessage: context.l10n.newEpisodeAvailable,
+                  );
+                }
+              },
             ),
           ),
           if (usePodcastIndex)

@@ -77,6 +77,10 @@ InputDecoration createMaterialDecoration({
       );
   return InputDecoration(
     suffixIcon: suffixIcon,
+    suffixIconConstraints: const BoxConstraints(
+      maxWidth: 200,
+      maxHeight: kYaruTitleBarItemHeight,
+    ),
     hintText: hintText,
     fillColor: fillColor,
     filled: filled,
@@ -114,6 +118,10 @@ InputDecoration createYaruDecoration({
 
   return InputDecoration(
     suffixIcon: suffixIcon,
+    suffixIconConstraints: const BoxConstraints(
+      maxWidth: 200,
+      maxHeight: kYaruTitleBarItemHeight,
+    ),
     hintText: hintText,
     filled: true,
     fillColor: fillColor ?? fill,
@@ -183,7 +191,7 @@ FontWeight get largeTextWeight =>
 
 bool get shrinkTitleBarItems => yaruStyled;
 
-double get chipHeight => yaruStyled ? kYaruTitleBarItemHeight : 38;
+double get chipHeight => 36.0;
 
 EdgeInsetsGeometry get tabViewPadding =>
     isMobile ? const EdgeInsets.only(top: 15) : const EdgeInsets.only(top: 5);

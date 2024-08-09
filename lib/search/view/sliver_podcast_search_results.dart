@@ -27,15 +27,13 @@ class SliverPodcastSearchResults extends StatefulWidget
 class _SliverPodcastSearchResultsState
     extends State<SliverPodcastSearchResults> {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      if (context.mounted) {
-        await di<PodcastModel>().init(
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    di<PodcastModel>()
+        .init(
           updateMessage: context.l10n.newEpisodeAvailable,
-        );
-      }
-    });
+        )
+        .then((_) => di<SearchModel>().search());
   }
 
   @override
@@ -65,6 +63,8 @@ class _SliverPodcastSearchResultsState
       );
     }
 
+    final loadingFeed = watchPropertyValue((PodcastModel m) => m.loadingFeed);
+
     return SliverGrid.builder(
       itemCount: searchResultItems.length,
       gridDelegate: audioCardGridDelegate,
@@ -84,20 +84,24 @@ class _SliverPodcastSearchResultsState
             text: podcastItem.collectionName ?? podcastItem.trackName,
           ),
           image: image,
-          onPlay: () => searchAndPushPodcastPage(
-            context: context,
-            feedUrl: podcastItem.feedUrl,
-            itemImageUrl: art,
-            genre: podcastItem.primaryGenreName,
-            play: true,
-          ),
-          onTap: () => searchAndPushPodcastPage(
-            context: context,
-            feedUrl: podcastItem.feedUrl,
-            itemImageUrl: art,
-            genre: podcastItem.primaryGenreName,
-            play: false,
-          ),
+          onPlay: loadingFeed
+              ? null
+              : () => searchAndPushPodcastPage(
+                    context: context,
+                    feedUrl: podcastItem.feedUrl,
+                    itemImageUrl: art,
+                    genre: podcastItem.primaryGenreName,
+                    play: true,
+                  ),
+          onTap: loadingFeed
+              ? null
+              : () => searchAndPushPodcastPage(
+                    context: context,
+                    feedUrl: podcastItem.feedUrl,
+                    itemImageUrl: art,
+                    genre: podcastItem.primaryGenreName,
+                    play: false,
+                  ),
         );
       },
     );

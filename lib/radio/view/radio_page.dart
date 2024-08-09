@@ -12,6 +12,7 @@ import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 import 'radio_lib_page.dart';
 
 class RadioPage extends StatelessWidget with WatchItMixin {
@@ -34,9 +35,14 @@ class RadioPage extends StatelessWidget with WatchItMixin {
                 active: false,
                 onPressed: () {
                   di<LibraryModel>().pushNamed(pageId: kSearchPageId);
-                  di<SearchModel>()
-                    ..setAudioType(AudioType.radio)
-                    ..search();
+                  final searchModel = di<SearchModel>();
+                  if (searchModel.audioType != AudioType.radio) {
+                    searchModel
+                      ..setAudioType(AudioType.radio)
+                      ..setSearchType(SearchType.radioName)
+                      ..setSearchQuery('')
+                      ..search(clear: true);
+                  }
                 },
               ),
             ),

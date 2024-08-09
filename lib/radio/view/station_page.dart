@@ -49,9 +49,14 @@ class StationPage extends StatelessWidget with WatchItMixin {
             child: SearchButton(
               onPressed: () {
                 di<LibraryModel>().pushNamed(pageId: kSearchPageId);
-                di<SearchModel>()
-                  ..setAudioType(AudioType.radio)
-                  ..setSearchType(SearchType.radioName);
+                final searchModel = di<SearchModel>();
+                if (searchModel.audioType != AudioType.radio) {
+                  searchModel
+                    ..setAudioType(AudioType.radio)
+                    ..setSearchType(SearchType.radioName)
+                    ..setSearchQuery('')
+                    ..search(clear: true);
+                }
               },
             ),
           ),

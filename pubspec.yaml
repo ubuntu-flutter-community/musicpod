@@ -6,7 +6,7 @@ publish_to: "none"
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.10.0"
+  flutter: ">=3.24.0"
 
 dependencies:
   animated_emoji: ^3.1.0
@@ -17,7 +17,7 @@ dependencies:
       url: https://github.com/Feichtmeier/audio-service-mpris
       ref: ad6f743b73e320670449026fa1852d9978438bb9
   basic_utils: ^5.7.0
-  blur: ^3.1.0
+  blur: ^4.0.0
   cached_network_image: ^3.3.1
   collection: ^1.18.0
   connectivity_plus: ^6.0.3
@@ -58,25 +58,23 @@ dependencies:
   phoenix_theme:
     git:
       url: https://github.com/Feichtmeier/phoenix_theme
-      ref: 4486490240ba42cc668079064ad41f3ae8869d01
+      ref: 61c5b11fad871ee655b512c79118a2590bf5df29
   pls: ^1.1.0
-  podcast_search: ^0.6.9
-  radio_browser_api: ^2.0.0+1
+  podcast_search: ^0.7.2
+  radio_browser_api: ^2.0.0
   reorderableitemsview: ^2.0.1
   safe_change_notifier: ^0.3.2
   scroll_to_index: ^3.0.1
   shimmer: ^3.0.0
-  smtc_windows: ^0.1.2
-  super_drag_and_drop: ^0.8.15
-  system_theme: ^2.3.1
-  url_launcher: ^6.2.5
-  watch_it: ^1.4.1
-  window_manager: ^0.3.8
+  smtc_windows: ^0.1.3
+  super_drag_and_drop: ^0.8.18
+  system_theme: ^3.0.0
+  url_launcher: ^6.3.0
+  watch_it: ^1.4.2
+  win32: 5.5.3
+  window_manager: ^0.3.9
   xdg_directories: ^1.0.4
-  yaru:
-    git:
-      url: https://github.com/ubuntu/yaru.dart
-      ref: 7b485d56d17576ff07964683c91d48eef1dc1297
+  yaru: ^5.0.0
   yaru_window: ^0.2.1
   yaru_window_linux: ^0.2.0
 
