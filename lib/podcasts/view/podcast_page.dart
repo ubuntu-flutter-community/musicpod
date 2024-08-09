@@ -24,6 +24,7 @@ import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
+import '../../settings/settings_model.dart';
 import '../podcast_model.dart';
 import 'sliver_podcast_page_list.dart';
 
@@ -50,16 +51,6 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
             ?.map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
             .toList() ??
         [];
-
-    Future<void> onTap(text) async {
-      await di<PodcastModel>()
-          .init(updateMessage: context.l10n.updateAvailable);
-      di<LibraryModel>().pushNamed(pageId: kSearchPageId);
-      di<SearchModel>()
-        ..setAudioType(AudioType.podcast)
-        ..setSearchQuery(text)
-        ..search();
-    }
 
     return Scaffold(
       resizeToAvoidBottomInset: isMobile ? false : null,
@@ -104,8 +95,14 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                       title: title,
                     ),
                     title: title,
-                    onLabelTab: onTap,
-                    onSubTitleTab: onTap,
+                    onLabelTab: (text) => onGenreTap(
+                      context: context,
+                      text: text,
+                    ),
+                    onSubTitleTab: (text) => onArtistTap(
+                      context: context,
+                      text: text,
+                    ),
                   ),
                 ),
               ),
@@ -128,6 +125,45 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         },
       ),
     );
+  }
+
+  Future<void> onArtistTap({
+    required BuildContext context,
+    required String text,
+  }) async {
+    await di<PodcastModel>().init(updateMessage: context.l10n.updateAvailable);
+    di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+    di<SearchModel>()
+      ..setAudioType(AudioType.podcast)
+      ..setSearchQuery(text)
+      ..search();
+  }
+
+  Future<void> onGenreTap({
+    required BuildContext context,
+    required String text,
+  }) async {
+    await di<PodcastModel>().init(updateMessage: context.l10n.updateAvailable);
+    final genres =
+        di<SearchModel>().getPodcastGenres(di<SettingsModel>().usePodcastIndex);
+
+    final genreOrNull = genres.firstWhereOrNull(
+      (e) =>
+          e.localize(context.l10n).toLowerCase() == text.toLowerCase() ||
+          e.id.toLowerCase() == text.toLowerCase() ||
+          e.name.toLowerCase() == text.toLowerCase(),
+    );
+    di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+    if (genreOrNull != null) {
+      di<SearchModel>()
+        ..setAudioType(AudioType.podcast)
+        ..setPodcastGenre(genreOrNull)
+        ..search();
+    } else {
+      if (context.mounted) {
+        onArtistTap(context: context, text: text);
+      }
+    }
   }
 }
 

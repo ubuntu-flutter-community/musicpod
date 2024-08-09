@@ -37,15 +37,17 @@ class AlbumPage extends StatelessWidget {
       final artistName = album.firstOrNull?.artist;
       if (artistName == null) return;
 
-      di<LibraryModel>().push(
-        builder: (_) {
-          final artistAudios = model.findTitlesOfArtist(artistName);
-          return ArtistPage(
-            artistAudios: artistAudios,
+      model.init().then(
+            (_) => di<LibraryModel>().push(
+              builder: (_) {
+                final artistAudios = model.findTitlesOfArtist(artistName);
+                return ArtistPage(
+                  artistAudios: artistAudios,
+                );
+              },
+              pageId: artistName,
+            ),
           );
-        },
-        pageId: artistName,
-      );
     }
 
     return SliverAudioPage(
@@ -55,7 +57,6 @@ class AlbumPage extends StatelessWidget {
       image: album.isEmpty ? null : AlbumPageImage(audio: album.first),
       pageTitle: album.firstWhereOrNull((e) => e.album != null)?.album,
       pageSubTitle: album.firstWhereOrNull((e) => e.artist != null)?.artist,
-      onPageLabelTab: onArtistTap,
       onPageSubTitleTab: onArtistTap,
       controlPanel: AlbumPageControlButton(album: album, id: id),
     );
