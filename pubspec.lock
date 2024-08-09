@@ -565,10 +565,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_tabler_icons
-      sha256: a1dd0221ab8c77ee15046b8da8feac5ba129b5efd2b667e199c110cf930693b3
+      sha256: "27b257b577f0f982c2ffbe57d5892c3ceac3fedc2917f0e3cec2de4a045525b3"
       url: "https://pub.dev"
     source: hosted
-    version: "1.35.0"
+    version: "1.36.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -1383,26 +1383,26 @@ packages:
     dependency: transitive
     description:
       name: super_clipboard
-      sha256: c72d2ae8c3a66b20a104523add86b7c2813b1d4cced893a9764b84fb97ac8e2a
+      sha256: "74098001413e075cc53dee72b68c32eaffc10709df41806800393abaa6dac9d5"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.18"
+    version: "0.8.19"
   super_drag_and_drop:
     dependency: "direct main"
     description:
       name: super_drag_and_drop
-      sha256: "69ff42851493fae763c796012daa416ce1b6c93ff73cdb240d411cbdc378ece7"
+      sha256: "20f4318a6c9e81a76cc090a0f2d845157ff4f3619ed784e3235324a45ce34507"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.18"
+    version: "0.8.19"
   super_native_extensions:
     dependency: transitive
     description:
       name: super_native_extensions
-      sha256: b03f19e54744b65940a7c2cb4f93abd4819b5355aa3464d7b3c9a013b6b76db1
+      sha256: c24676825c9f3ae844676a843d45ad186f2270539ffe72be4277753e46d14e29
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.18"
+    version: "0.8.19"
   synchronized:
     dependency: transitive
     description:
