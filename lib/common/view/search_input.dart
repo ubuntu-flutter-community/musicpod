@@ -65,7 +65,7 @@ class _SearchInputState extends State<SearchInput> {
         controller: _controller,
         key: widget.key,
         autofocus: widget.autoFocus,
-        onSubmitted: widget.onSubmitted,
+        onSubmitted: _onSearchChanged,
         onChanged: _onSearchChanged,
         style: yaruStyled ? theme.textTheme.bodyMedium : null,
         decoration: yaruStyled

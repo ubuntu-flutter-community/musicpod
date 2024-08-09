@@ -29,7 +29,10 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
     }
 
     final podcastGenre = watchPropertyValue((SearchModel m) => m.podcastGenre);
-    final sortedGenrez = watchPropertyValue((SearchModel m) => m.sortedGenres);
+    final genres = watchPropertyValue(
+      (SearchModel m) =>
+          m.getPodcastGenres(di<SettingsModel>().usePodcastIndex),
+    );
     final setPodcastGenre = searchModel.setPodcastGenre;
     final usePodcastIndex =
         watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
@@ -38,11 +41,6 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
     final favLanguageCodes =
         watchPropertyValue((LibraryModel m) => m.favLanguageCodes);
 
-    final sortedGenres = usePodcastIndex
-        ? sortedGenrez.where((e) => !e.name.contains('XXXITunesOnly')).toList()
-        : sortedGenrez
-            .where((e) => !e.name.contains('XXXPodcastIndexOnly'))
-            .toList();
     final language = watchPropertyValue((SearchModel m) => m.language);
 
     final fillColor = theme.chipTheme.selectedColor;
@@ -175,7 +173,7 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
                   isDense: true,
                   width: width,
                   height: height,
-                  genres: sortedGenres,
+                  genres: genres,
                   onSelected: (podcastGenre) {
                     if (podcastGenre != null) {
                       setPodcastGenre(podcastGenre);

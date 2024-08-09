@@ -7,6 +7,7 @@ import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
@@ -47,19 +48,25 @@ class _SliverPodcastSearchResultsState
       );
     }
 
+    final loading = watchPropertyValue((SearchModel m) => m.loading);
+
     final searchResultItems =
         watchPropertyValue((SearchModel m) => m.podcastSearchResult?.items);
 
     if (searchResultItems == null || searchResultItems.isEmpty) {
       return SliverFillNoSearchResultPage(
-        icon: searchResultItems == null
-            ? const AnimatedEmoji(AnimatedEmojis.drum)
-            : const AnimatedEmoji(AnimatedEmojis.babyChick),
-        message: Text(
-          searchResultItems == null
-              ? context.l10n.search
-              : context.l10n.noPodcastFound,
-        ),
+        icon: loading
+            ? const SizedBox.shrink()
+            : searchResultItems == null
+                ? const AnimatedEmoji(AnimatedEmojis.drum)
+                : const AnimatedEmoji(AnimatedEmojis.babyChick),
+        message: loading
+            ? const Progress()
+            : Text(
+                searchResultItems == null
+                    ? context.l10n.search
+                    : context.l10n.noPodcastFound,
+              ),
       );
     }
 
