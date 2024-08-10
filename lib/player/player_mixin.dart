@@ -66,20 +66,24 @@ mixin PlayerMixin {
   void _onLocalAudioTitleTap({required Audio audio}) {
     if (audio.album == null) return;
     final localAudioModel = di<LocalAudioModel>();
-    final albumAudios = localAudioModel.findAlbum(audio.album!);
-    if (albumAudios?.firstOrNull == null) return;
-    final id = albumAudios!.first.albumId;
-    if (id == null) return;
+    localAudioModel.init().then(
+      (value) {
+        final albumAudios = localAudioModel.findAlbum(audio.album!);
+        if (albumAudios?.firstOrNull == null) return;
+        final id = albumAudios!.first.albumId;
+        if (id == null) return;
 
-    di<AppModel>().setFullWindowMode(false);
+        di<AppModel>().setFullWindowMode(false);
 
-    final libraryModel = di<LibraryModel>();
-    libraryModel.push(
-      builder: (_) => AlbumPage(
-        id: id,
-        album: albumAudios,
-      ),
-      pageId: id,
+        final libraryModel = di<LibraryModel>();
+        libraryModel.push(
+          builder: (_) => AlbumPage(
+            id: id,
+            album: albumAudios,
+          ),
+          pageId: id,
+        );
+      },
     );
   }
 
@@ -134,15 +138,21 @@ mixin PlayerMixin {
 
   void _onLocalAudioArtistTap({required Audio audio}) {
     final localAudioModel = di<LocalAudioModel>();
+
     final artistName = audio.artist;
     if (artistName == null) return;
-    final artistAudios = localAudioModel.findTitlesOfArtist(artistName);
-    final artist = artistAudios?.firstOrNull?.artist;
-    if (artist == null) return;
-    di<AppModel>().setFullWindowMode(false);
-    di<LibraryModel>().push(
-      builder: (_) => ArtistPage(artistAudios: artistAudios),
-      pageId: artist,
+
+    localAudioModel.init().then(
+      (value) {
+        final artistAudios = localAudioModel.findTitlesOfArtist(artistName);
+        final artist = artistAudios?.firstOrNull?.artist;
+        if (artist == null) return;
+        di<AppModel>().setFullWindowMode(false);
+        di<LibraryModel>().push(
+          builder: (_) => ArtistPage(artistAudios: artistAudios),
+          pageId: artist,
+        );
+      },
     );
   }
 }

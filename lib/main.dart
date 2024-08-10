@@ -64,7 +64,7 @@ Future<void> main(List<String> args) async {
     dispose: (s) async => s.dispose(),
   );
 
-  final libraryService = LibraryService();
+  final libraryService = LibraryService(sharedPreferences: sharedPreferences);
 
   final playerService = PlayerService(
     controller: VideoController(

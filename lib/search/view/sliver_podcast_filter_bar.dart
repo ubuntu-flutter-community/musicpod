@@ -25,7 +25,9 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
 
     void setCountry(Country? country) {
       searchModel.setCountry(country);
-      libraryModel.setLastCountryCode(country?.code);
+      if (country?.code != null) {
+        libraryModel.setLastCountryCode(country!.code);
+      }
     }
 
     final podcastGenre = watchPropertyValue((SearchModel m) => m.podcastGenre);
@@ -110,7 +112,9 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
                     },
                     onSelected: (language) {
                       searchModel.setLanguage(language);
-                      libraryModel.setLastLanguage(language?.isoCode);
+                      if (language?.isoCode != null) {
+                        libraryModel.setLastLanguage(language!.isoCode);
+                      }
                       searchModel.search();
                     },
                   ),

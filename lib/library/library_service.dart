@@ -3,12 +3,18 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
 import '../common/data/audio.dart';
 import '../persistence_utils.dart';
 
 class LibraryService {
+  LibraryService({required SharedPreferences sharedPreferences})
+      : _sharedPreferences = sharedPreferences;
+
+  final SharedPreferences _sharedPreferences;
+
   //
   // Liked Audios
   //
@@ -80,66 +86,79 @@ class LibraryService {
     return url == null ? false : _starredStations.containsKey(url);
   }
 
-  Set<String> _favTags = {};
-  Set<String> get favRadioTags => _favTags;
-  bool isFavTag(String value) => _favTags.contains(value);
+  Set<String> get favRadioTags =>
+      _sharedPreferences.getStringList(kFavRadioTags)?.toSet() ?? {};
+  bool isFavTag(String value) => favRadioTags.contains(value);
   final _favTagsController = StreamController<bool>.broadcast();
   Stream<bool> get favTagsChanged => _favTagsController.stream;
 
   void addFavRadioTag(String name) {
     if (favRadioTags.contains(name)) return;
-    _favTags.add(name);
-    writeStringIterable(iterable: _favTags, filename: kRadioTagFavsFileName)
-        .then((_) => _favTagsController.add(true));
+    final Set<String> tags = favRadioTags;
+    tags.add(name);
+    _sharedPreferences.setStringList(kFavRadioTags, tags.toList()).then(
+      (saved) {
+        if (saved) _favTagsController.add(true);
+      },
+    );
   }
 
   void removeFavRadioTag(String name) {
     if (!favRadioTags.contains(name)) return;
-    _favTags.remove(name);
-    writeStringIterable(iterable: _favTags, filename: kRadioTagFavsFileName)
-        .then((_) => _favTagsController.add(true));
+    final Set<String> tags = favRadioTags;
+    tags.remove(name);
+    _sharedPreferences.setStringList(kFavRadioTags, tags.toList()).then(
+      (saved) {
+        if (saved) _favTagsController.add(true);
+      },
+    );
   }
 
-  String? _lastCountryCode;
-  String? get lastCountryCode => _lastCountryCode;
-  void setLastCountryCode(String? value) {
-    if (value == _lastCountryCode) return;
-    writeAppState(kLastCountryCode, value).then((_) {
-      _lastCountryCodeController.add(true);
-      _lastCountryCode = value;
-    });
+  String? get lastCountryCode => _sharedPreferences.getString(kLastCountryCode);
+  void setLastCountryCode(String value) {
+    _sharedPreferences.setString(kLastCountryCode, value).then(
+      (saved) {
+        if (saved) _lastCountryCodeController.add(true);
+      },
+    );
   }
 
   final _lastCountryCodeController = StreamController<bool>.broadcast();
   Stream<bool> get lastCountryCodeChanged => _lastCountryCodeController.stream;
 
-  Set<String> _favCountries = {};
-  Set<String> get favCountryCodes => _favCountries;
-  bool isFavCountry(String value) => _favCountries.contains(value);
+  Set<String> get favCountryCodes =>
+      _sharedPreferences.getStringList(kFavCountryCodes)?.toSet() ?? {};
+  bool isFavCountry(String value) => favCountryCodes.contains(value);
   final _favCountriesController = StreamController<bool>.broadcast();
   Stream<bool> get favCountriesChanged => _favCountriesController.stream;
 
   void addFavCountryCode(String name) {
     if (favCountryCodes.contains(name)) return;
-    _favCountries.add(name);
-    writeStringIterable(iterable: _favCountries, filename: kCountryFavsFileName)
-        .then((_) => _favCountriesController.add(true));
+    final favCodes = favCountryCodes;
+    favCodes.add(name);
+    _sharedPreferences
+        .setStringList(kFavCountryCodes, favCodes.toList())
+        .then((saved) {
+      if (saved) _favCountriesController.add(true);
+    });
   }
 
   void removeFavCountryCode(String name) {
     if (!favCountryCodes.contains(name)) return;
-    _favCountries.remove(name);
-    writeStringIterable(iterable: _favCountries, filename: kCountryFavsFileName)
-        .then((_) => _favCountriesController.add(true));
+    final favCodes = favCountryCodes;
+    favCodes.remove(name);
+    _sharedPreferences
+        .setStringList(kFavCountryCodes, favCodes.toList())
+        .then((saved) {
+      if (saved) _favCountriesController.add(true);
+    });
   }
 
-  String? _lastLanguageCode;
-  String? get lastLanguageCode => _lastLanguageCode;
-  void setLastLanguageCode(String? value) {
-    if (value == _lastLanguageCode) return;
-    writeAppState(kLastLanguageCode, value).then((_) {
-      _lastLanguageCodeController.add(true);
-      _lastLanguageCode = value;
+  String? get lastLanguageCode =>
+      _sharedPreferences.getString(kLastLanguageCode);
+  void setLastLanguageCode(String value) {
+    _sharedPreferences.setString(kLastLanguageCode, value).then((saved) {
+      if (saved) _lastLanguageCodeController.add(true);
     });
   }
 
@@ -147,28 +166,32 @@ class LibraryService {
   Stream<bool> get lastLanguageCodeChanged =>
       _lastLanguageCodeController.stream;
 
-  Set<String> _favLanguages = {};
-  Set<String> get favLanguageCodes => _favLanguages;
-  bool isFavLanguage(String value) => _favLanguages.contains(value);
+  Set<String> get favLanguageCodes =>
+      _sharedPreferences.getStringList(kFavLanguageCodes)?.toSet() ?? {};
+  bool isFavLanguage(String value) => favLanguageCodes.contains(value);
   final _favLanguagesController = StreamController<bool>.broadcast();
   Stream<bool> get favLanguagesChanged => _favLanguagesController.stream;
 
   void addFavLanguageCode(String name) {
     if (favLanguageCodes.contains(name)) return;
-    _favLanguages.add(name);
-    writeStringIterable(
-      iterable: _favLanguages,
-      filename: kFavLanguageCodesFileName,
-    ).then((_) => _favLanguagesController.add(true));
+    final favLangs = favLanguageCodes;
+    favLangs.add(name);
+    _sharedPreferences.setStringList(kFavLanguageCodes, favLangs.toList()).then(
+      (saved) {
+        if (saved) _favLanguagesController.add(true);
+      },
+    );
   }
 
   void removeFavLanguageCode(String name) {
     if (!favLanguageCodes.contains(name)) return;
-    _favLanguages.remove(name);
-    writeStringIterable(
-      iterable: _favLanguages,
-      filename: kFavLanguageCodesFileName,
-    ).then((_) => _favLanguagesController.add(true));
+    final favLangs = favLanguageCodes;
+    favLangs.remove(name);
+    _sharedPreferences.setStringList(kFavLanguageCodes, favLangs.toList()).then(
+      (saved) {
+        if (saved) _favLanguagesController.add(true);
+      },
+    );
   }
 
   //
@@ -433,8 +456,6 @@ class LibraryService {
   Future<bool> init() async {
     // Ensure [init] is only called once
     if (_libraryInitialized == true) return _libraryInitialized!;
-    final pageIdOrNull = await readAppState(kSelectedPageId);
-    selectedPageId = pageIdOrNull as String?;
 
     _playlists = await readAudioMap(kPlaylistsFileName);
     _pinnedAlbums = await readAudioMap(kPinnedAlbumsFileName);
@@ -448,32 +469,23 @@ class LibraryService {
     _likedAudios =
         (await readAudioMap(kLikedAudiosFileName)).entries.firstOrNull?.value ??
             <Audio>[];
-    _favTags = Set.from(
-      await readStringIterable(filename: kRadioTagFavsFileName) ?? <String>{},
-    );
-    _favCountries = Set.from(
-      await readStringIterable(filename: kCountryFavsFileName) ?? <String>{},
-    );
-    _favLanguages = Set.from(
-      await readStringIterable(filename: kFavLanguageCodesFileName) ??
-          <String>{},
-    );
+
     _downloadsDir = await getDownloadsDir();
     _downloads = await readStringMap(kDownloads);
     _feedsWithDownloads = Set.from(
       await readStringIterable(filename: kFeedsWithDownloads) ?? <String>{},
     );
-    _lastCountryCode = (await readAppState(kLastCountryCode)) as String?;
-    _lastLanguageCode = (await readAppState(kLastLanguageCode)) as String?;
 
     return true;
   }
 
-  String? selectedPageId;
+  String? get selectedPageId => _sharedPreferences.getString(kSelectedPageId);
+  Future<void> setSelectedPageId(String value) {
+    return _sharedPreferences.setString(kSelectedPageId, value);
+  }
 
   Future<void> dispose() async {
     dio.close();
-    await _safeAppState();
     await _albumsController.close();
     await _podcastsController.close();
     await _likedAudiosController.close();
@@ -484,9 +496,5 @@ class LibraryService {
     await _favLanguagesController.close();
     await _updateController.close();
     await _downloadsController.close();
-  }
-
-  Future<void> _safeAppState() async {
-    await writeAppState(kSelectedPageId, selectedPageId.toString());
   }
 }

@@ -102,46 +102,20 @@ class _MusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
   State<_MusicPodApp> createState() => _MusicPodAppState();
 }
 
-class _MusicPodAppState extends State<_MusicPodApp>
-    with WidgetsBindingObserver {
+class _MusicPodAppState extends State<_MusicPodApp> {
   late Future<bool> _initFuture;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _initFuture = _init();
   }
 
   Future<bool> _init() async {
-    if (!isMobile) {
-      YaruWindow.of(context).onClose(
-        () async {
-          await di.reset();
-          return true;
-        },
-      );
-    }
-
     await di<LibraryModel>().init();
-
     if (!mounted) return false;
     di<ExternalPathService>().init();
-
     return true;
-  }
-
-  @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.detached) {
-      // TODO: correctly safe things we need here, if we need this at all
-    }
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
   }
 
   @override

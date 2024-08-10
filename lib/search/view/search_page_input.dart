@@ -70,7 +70,9 @@ class CountryAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
       ]..remove(Country.none),
       onSelected: (c) async {
         searchModel.setCountry(c);
-        libraryModel.setLastCountryCode(c?.code);
+        if (c?.code != null) {
+          libraryModel.setLastCountryCode(c!.code);
+        }
         await searchModel.search();
       },
       value: country,
@@ -95,6 +97,7 @@ class TagAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
     final libraryModel = di<LibraryModel>();
     final model = di<SearchModel>();
     final tag = watchPropertyValue((SearchModel m) => m.tag);
+    watchPropertyValue((LibraryModel m) => m.favRadioTags);
     return TagAutoComplete(
       suffixIcon: const AudioTypeFilterButton(),
       value: tag,
@@ -142,7 +145,9 @@ class LanguageAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
       onSelected: (language) {
         model.setLanguage(language);
         model.search();
-        libraryModel.setLastLanguage(language?.isoCode);
+        if (language?.isoCode != null) {
+          libraryModel.setLastLanguage(language!.isoCode);
+        }
       },
       favs: favLanguageCodes,
       addFav: (language) {
