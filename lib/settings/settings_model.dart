@@ -4,7 +4,6 @@ import 'package:github/github.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../external_path/external_path_service.dart';
-import '../constants.dart';
 import 'settings_service.dart';
 
 class SettingsModel extends SafeChangeNotifier {
@@ -13,12 +12,10 @@ class SettingsModel extends SafeChangeNotifier {
     required ExternalPathService externalPathService,
     required GitHub gitHub,
   })  : _service = service,
-        _externalPathService = externalPathService,
-        _gitHub = gitHub;
+        _externalPathService = externalPathService;
 
   final SettingsService _service;
   final ExternalPathService _externalPathService;
-  final GitHub _gitHub;
 
   StreamSubscription<bool>? _usePodcastIndexChangedSub;
   StreamSubscription<bool>? _podcastIndexApiKeyChangedSub;
@@ -29,11 +26,6 @@ class SettingsModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _recentPatchNotesDisposedChangedSub;
   StreamSubscription<bool>? _useArtistGridViewChangedSub;
 
-  bool get allowManualUpdate => _service.allowManualUpdates;
-  String? get appName => _service.appName;
-  String? get packageName => _service.packageName;
-  String? get version => _service.version;
-  String? get buildNumber => _service.buildNumber;
   String? get directory => _service.directory;
   Future<void> setDirectory(String? value) async {
     if (value != null) {
@@ -97,52 +89,5 @@ class SettingsModel extends SafeChangeNotifier {
     await _recentPatchNotesDisposedChangedSub?.cancel();
     await _useArtistGridViewChangedSub?.cancel();
     super.dispose();
-  }
-
-  Future<String?> getOnlineVersion() async {
-    final release = await _gitHub.repositories
-        .listReleases(RepositorySlug.full(kGitHubShortLink))
-        .toList();
-    return release.firstOrNull?.tagName;
-  }
-
-  Future<List<Contributor>> getContributors() async {
-    return _gitHub.repositories
-        .listContributors(
-          RepositorySlug.full(kGitHubShortLink),
-        )
-        .where((c) => c.type == 'User')
-        .toList();
-  }
-
-  bool? _updateAvailable;
-  bool? get updateAvailable => _updateAvailable;
-  String? _onlineVersion;
-  String? get onlineVersion => _onlineVersion;
-  Future<void> checkForUpdate(bool isOnline) async {
-    _updateAvailable == null;
-    notifyListeners();
-
-    if (!_service.allowManualUpdates || !isOnline) {
-      _updateAvailable = false;
-      notifyListeners();
-      return Future.value();
-    }
-    _onlineVersion = await getOnlineVersion();
-    final onlineVersion = getExtendedVersionNumber(_onlineVersion) ?? 0;
-    final currentVersion = getExtendedVersionNumber(version) ?? 0;
-    if (onlineVersion > currentVersion) {
-      _updateAvailable = true;
-    } else {
-      _updateAvailable = false;
-    }
-    notifyListeners();
-  }
-
-  int? getExtendedVersionNumber(String? version) {
-    if (version == null) return null;
-    List versionCells = version.split('.');
-    versionCells = versionCells.map((i) => int.parse(i)).toList();
-    return versionCells[0] * 100000 + versionCells[1] * 1000 + versionCells[2];
   }
 }

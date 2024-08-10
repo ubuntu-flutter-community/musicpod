@@ -65,6 +65,7 @@ dependencies:
   reorderableitemsview: ^2.0.1
   safe_change_notifier: ^0.3.2
   scroll_to_index: ^3.0.1
+  shared_preferences: ^2.3.1
   shimmer: ^3.0.0
   smtc_windows: ^0.1.3
   super_drag_and_drop: ^0.8.18

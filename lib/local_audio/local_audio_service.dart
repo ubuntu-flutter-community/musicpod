@@ -19,7 +19,7 @@ typedef LocalSearchResult = ({
 });
 
 class LocalAudioService {
-  final SettingsService _settingsService;
+  final SettingsService? _settingsService;
 
   LocalAudioService({required SettingsService settingsService})
       : _settingsService = settingsService;
@@ -236,7 +236,7 @@ class LocalAudioService {
     if (kDebugMode) await CoverStore().read();
     final result = await compute(
       _readAudiosFromDirectory,
-      directory ?? _settingsService.directory,
+      directory ?? _settingsService?.directory,
     );
     _audios = result.audios;
     _failedImports = result.failedImports;

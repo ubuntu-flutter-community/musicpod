@@ -1,34 +1,30 @@
 import 'dart:io';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/local_audio/local_audio_service.dart';
 import 'package:musicpod/settings/settings_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'local_audio_service_test.mocks.dart';
+const Audio testMp3 = Audio(
+  title: 'test',
+  artist: 'musicpod',
+  genre: 'Black Metal',
+  album: 'podmusic',
+);
 
-@GenerateMocks([SettingsService])
+const Audio testOgg = Audio(
+  title: 'Cold Stones',
+  artist: 'Backslash Zero',
+  album: 'DEMO2017',
+  genre: 'Rock',
+);
+
 Future<void> main() async {
-  const Audio testMp3 = Audio(
-    title: 'test',
-    artist: 'musicpod',
-    genre: 'Black Metal',
-    album: 'podmusic',
-  );
-
-  const Audio testOgg = Audio(
-    title: 'Cold Stones',
-    artist: 'Backslash Zero',
-    album: 'DEMO2017',
-    genre: 'Rock',
-  );
-
-  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
   final service = LocalAudioService(
-    settingsService: MockSettingsService(),
+    settingsService: SettingsService(sharedPreferences: prefs),
   );
   await service.init(directory: Directory.current.path);
 

@@ -4,12 +4,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/app_model.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/tapable_text.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../settings_model.dart';
 
 const _kTileSize = 50.0;
 
@@ -26,13 +26,13 @@ class _AboutPageState extends State<AboutPage> {
   @override
   void initState() {
     super.initState();
-    _contributors = di<SettingsModel>().getContributors();
+    _contributors = di<AppModel>().getContributors();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final appName = watchPropertyValue((SettingsModel m) => m.appName);
+    final appName = watchPropertyValue((AppModel m) => m.appName);
     final linkStyle = theme.textTheme.bodyLarge
         ?.copyWith(color: Colors.lightBlue, overflow: TextOverflow.visible);
     const maxLines = 3;

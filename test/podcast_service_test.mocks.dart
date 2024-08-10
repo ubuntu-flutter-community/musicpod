@@ -69,12 +69,6 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
   }
 
   @override
-  bool get allowManualUpdates => (super.noSuchMethod(
-        Invocation.getter(#allowManualUpdates),
-        returnValue: false,
-      ) as bool);
-
-  @override
   _i3.Stream<bool> get themeIndexChanged => (super.noSuchMethod(
         Invocation.getter(#themeIndexChanged),
         returnValue: _i3.Stream<bool>.empty(),
@@ -141,18 +135,6 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
       ) as _i3.Stream<bool>);
 
   @override
-  _i3.Stream<bool> get useArtistGridViewChanged => (super.noSuchMethod(
-        Invocation.getter(#useArtistGridViewChanged),
-        returnValue: _i3.Stream<bool>.empty(),
-      ) as _i3.Stream<bool>);
-
-  @override
-  bool get useArtistGridView => (super.noSuchMethod(
-        Invocation.getter(#useArtistGridView),
-        returnValue: false,
-      ) as bool);
-
-  @override
   void setThemeIndex(int? value) => super.noSuchMethod(
         Invocation.method(
           #setThemeIndex,
@@ -213,26 +195,6 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
         Invocation.method(
           #setDirectory,
           [directory],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
-
-  @override
-  void setUseArtistGridView(bool? value) => super.noSuchMethod(
-        Invocation.method(
-          #setUseArtistGridView,
-          [value],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i3.Future<void> init({String? testDir}) => (super.noSuchMethod(
-        Invocation.method(
-          #init,
-          [],
-          {#testDir: testDir},
         ),
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),
