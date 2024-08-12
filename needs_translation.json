@@ -1588,5 +1588,26 @@
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
     "gitHubClientConnectError"
+  ],
+
+  "zh_CN": [
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle",
+    "podcastFeedLoadingTimeout",
+    "gitHubClientConnectError"
+  ],
+
+  "zh_HK": [
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle",
+    "podcastFeedLoadingTimeout",
+    "gitHubClientConnectError"
+  ],
+
+  "zh_TW": [
+    "radioTagDisclaimerTitle",
+    "radioTagDisclaimerSubTitle",
+    "podcastFeedLoadingTimeout",
+    "gitHubClientConnectError"
   ]
 }
