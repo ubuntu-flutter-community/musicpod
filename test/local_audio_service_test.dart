@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/local_audio/local_audio_service.dart';
@@ -22,6 +23,7 @@ const Audio testOgg = Audio(
 );
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final service = LocalAudioService(
     settingsService: SettingsService(sharedPreferences: prefs),
