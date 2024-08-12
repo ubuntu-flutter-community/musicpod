@@ -285,7 +285,7 @@ class _AboutTileState extends State<_AboutTile> {
   @override
   void initState() {
     super.initState();
-    di<AppModel>().checkForUpdate(di<ConnectivityModel>().isOnline);
+    di<AppModel>().checkForUpdate(di<ConnectivityModel>().isOnline, context);
   }
 
   @override

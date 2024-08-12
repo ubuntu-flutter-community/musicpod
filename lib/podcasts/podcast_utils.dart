@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
@@ -83,10 +85,32 @@ Future<void> searchAndPushPodcastPage({
         );
       }
     },
-  ).then((_) {
-    di<PodcastModel>().setLoadingFeed(false);
-    if (context.mounted) ScaffoldMessenger.of(context).clearSnackBars();
-  });
+  ).whenComplete(
+    () {
+      di<PodcastModel>().setLoadingFeed(false);
+      if (context.mounted) ScaffoldMessenger.of(context).clearSnackBars();
+    },
+  ).timeout(
+    const Duration(seconds: 15),
+    onTimeout: () {
+      if (context.mounted) {
+        showSnackBar(
+          context: context,
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(context.l10n.podcastFeedLoadingTimeout),
+              SizedBox(
+                height: iconSize,
+                width: iconSize,
+                child: const Progress(),
+              ),
+            ],
+          ),
+        );
+      }
+    },
+  );
 }
 
 Future<List<Audio>> findEpisodes({

@@ -324,5 +324,6 @@
     "language": "Sprache",
     "duration": "Dauer",
     "radioTagDisclaimerTitle": "Diese Station sendet viele Tags.",
-    "radioTagDisclaimerSubTitle": "Manchmal senden Stationen Tags, die keinem Musikgenre entsprechen. MusicPod ist nicht für den Inhalt verantwortlich!"
+    "radioTagDisclaimerSubTitle": "Manchmal senden Stationen Tags, die keinem Musikgenre entsprechen. MusicPod ist nicht für den Inhalt verantwortlich!",
+    "podcastFeedLoadingTimeout": "Das Laden des Podcast-Feeds dauert länger als gewöhnlich...."
 }

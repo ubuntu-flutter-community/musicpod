@@ -3,6 +3,7 @@ import 'package:github/github.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../common/view/snackbars.dart';
 import '../constants.dart';
 import '../settings/settings_service.dart';
 
@@ -53,7 +54,7 @@ class AppModel extends SafeChangeNotifier {
   bool? get updateAvailable => _updateAvailable;
   String? _onlineVersion;
   String? get onlineVersion => _onlineVersion;
-  Future<void> checkForUpdate(bool isOnline) async {
+  Future<void> checkForUpdate(bool isOnline, BuildContext context) async {
     _updateAvailable == null;
     notifyListeners();
 
@@ -62,7 +63,14 @@ class AppModel extends SafeChangeNotifier {
       notifyListeners();
       return Future.value();
     }
-    _onlineVersion = await getOnlineVersion();
+    _onlineVersion = await getOnlineVersion().onError(
+      (error, stackTrace) {
+        if (context.mounted) {
+          showSnackBar(context: context, content: Text(error.toString()));
+        }
+        return null;
+      },
+    );
     final onlineVersion = getExtendedVersionNumber(_onlineVersion) ?? 0;
     final currentVersion = getExtendedVersionNumber(version) ?? 0;
     if (onlineVersion > currentVersion) {
