@@ -1,12 +1,9 @@
 import 'dart:io';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/local_audio/local_audio_service.dart';
-import 'package:musicpod/settings/settings_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 const Audio testMp3 = Audio(
   title: 'test',
@@ -23,16 +20,18 @@ const Audio testOgg = Audio(
 );
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final prefs = await SharedPreferences.getInstance();
-  final service = LocalAudioService(
-    settingsService: SettingsService(sharedPreferences: prefs),
+  LocalAudioService? service;
+
+  setUpAll(
+    () async {
+      service = LocalAudioService();
+      await service?.init(directory: Directory.current.path);
+    },
   );
-  await service.init(directory: Directory.current.path);
 
   group('test metadata', () {
     test('testTestMp3', () {
-      final audios = service.audios;
+      final audios = service?.audios;
       expect(audios?.isNotEmpty, true);
 
       final testTestMp3 =
@@ -44,7 +43,7 @@ Future<void> main() async {
     });
 
     test('testTestOgg', () {
-      final audios = service.audios;
+      final audios = service?.audios;
       expect(audios?.isNotEmpty, true);
 
       final coldStones = audios

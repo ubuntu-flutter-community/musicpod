@@ -21,7 +21,7 @@ typedef LocalSearchResult = ({
 class LocalAudioService {
   final SettingsService? _settingsService;
 
-  LocalAudioService({required SettingsService settingsService})
+  LocalAudioService({SettingsService? settingsService})
       : _settingsService = settingsService;
 
   List<Audio>? _audios;
@@ -233,7 +233,9 @@ class LocalAudioService {
     // TODO: Add a dialog for when people have X (too many) music files
     // ask them to confirm that for them no local cache is being loaded and saved
     // because such a cache will always be to big
-    if (kDebugMode) await CoverStore().read();
+    if (kDebugMode && !Platform.environment.containsKey('FLUTTER_TEST')) {
+      await CoverStore().read();
+    }
     final result = await compute(
       _readAudiosFromDirectory,
       directory ?? _settingsService?.directory,
