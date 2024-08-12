@@ -1,40 +1,37 @@
 import 'dart:io';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/local_audio/local_audio_service.dart';
-import 'package:musicpod/settings/settings_service.dart';
 
-import 'local_audio_service_test.mocks.dart';
+const Audio testMp3 = Audio(
+  title: 'test',
+  artist: 'musicpod',
+  genre: 'Black Metal',
+  album: 'podmusic',
+);
 
-@GenerateMocks([SettingsService])
+const Audio testOgg = Audio(
+  title: 'Cold Stones',
+  artist: 'Backslash Zero',
+  album: 'DEMO2017',
+  genre: 'Rock',
+);
+
 Future<void> main() async {
-  const Audio testMp3 = Audio(
-    title: 'test',
-    artist: 'musicpod',
-    genre: 'Black Metal',
-    album: 'podmusic',
-  );
+  LocalAudioService? service;
 
-  const Audio testOgg = Audio(
-    title: 'Cold Stones',
-    artist: 'Backslash Zero',
-    album: 'DEMO2017',
-    genre: 'Rock',
+  setUpAll(
+    () async {
+      service = LocalAudioService();
+      await service?.init(directory: Directory.current.path);
+    },
   );
-
-  WidgetsFlutterBinding.ensureInitialized();
-  final service = LocalAudioService(
-    settingsService: MockSettingsService(),
-  );
-  await service.init(directory: Directory.current.path);
 
   group('test metadata', () {
     test('testTestMp3', () {
-      final audios = service.audios;
+      final audios = service?.audios;
       expect(audios?.isNotEmpty, true);
 
       final testTestMp3 =
@@ -46,7 +43,7 @@ Future<void> main() async {
     });
 
     test('testTestOgg', () {
-      final audios = service.audios;
+      final audios = service?.audios;
       expect(audios?.isNotEmpty, true);
 
       final coldStones = audios

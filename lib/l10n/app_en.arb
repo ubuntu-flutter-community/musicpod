@@ -324,6 +324,7 @@
     "language": "Language",
     "duration": "Duration",
     "radioTagDisclaimerTitle": "This station sends a lot of tags.",
-    "radioTagDisclaimerSubTitle": "Sometimes stations send tags that do not match music genres. MusicPod is not responsible for the content!" 
-
+    "radioTagDisclaimerSubTitle": "Sometimes stations send tags that do not match music genres. MusicPod is not responsible for the content!",
+    "podcastFeedLoadingTimeout": "Loading the podcast feed takes longer than usual...",
+    "gitHubClientConnectError": "Could not load online version from GitHub."
 }

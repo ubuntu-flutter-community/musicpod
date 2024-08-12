@@ -7,6 +7,7 @@ import 'package:github/github.dart';
 import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:window_manager/window_manager.dart';
@@ -53,15 +54,17 @@ Future<void> main(List<String> args) async {
 
   // Register services
   // TODO: when the app is in appstore/windowsstore enable/disable this only via args
-  final settingsService =
-      SettingsService(allowManualUpdates: Platform.isLinux ? false : true);
-  await settingsService.init();
+  final SharedPreferences sharedPreferences =
+      await SharedPreferences.getInstance();
+  final settingsService = SettingsService(
+    sharedPreferences: sharedPreferences,
+  );
   di.registerSingleton<SettingsService>(
     settingsService,
     dispose: (s) async => s.dispose(),
   );
 
-  final libraryService = LibraryService();
+  final libraryService = LibraryService(sharedPreferences: sharedPreferences);
 
   final playerService = PlayerService(
     controller: VideoController(
@@ -148,8 +151,15 @@ Future<void> main(List<String> args) async {
     )..init(),
     dispose: (s) => s.dispose(),
   );
+
+  final appModel = AppModel(
+    gitHub: gitHub,
+    settingsService: settingsService,
+    allowManualUpdates: Platform.isLinux ? false : true,
+  );
+  await appModel.init();
   di.registerSingleton<AppModel>(
-    AppModel(),
+    appModel,
     dispose: (s) => s.dispose(),
   );
   di.registerSingleton<LibraryModel>(

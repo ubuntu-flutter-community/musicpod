@@ -26,7 +26,10 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
   void initState() {
     super.initState();
     final settingsModel = di<SettingsModel>();
-    settingsModel.checkForUpdate(di<ConnectivityModel>().isOnline).then((_) {
+    final appModel = di<AppModel>();
+    appModel
+        .checkForUpdate(di<ConnectivityModel>().isOnline, context)
+        .then((_) {
       if (!mounted) return;
       if (settingsModel.recentPatchNotesDisposed == false) {
         showPatchNotes(context);
