@@ -73,7 +73,7 @@ InputDecoration createMaterialDecoration({
   final outlineInputBorder = border ??
       OutlineInputBorder(
         borderRadius: BorderRadius.circular(100),
-        borderSide: BorderSide(width: 2, color: colorScheme.primary),
+        borderSide: BorderSide(width: 1, color: colorScheme.outline),
       );
   return InputDecoration(
     suffixIcon: suffixIcon,
@@ -89,7 +89,12 @@ InputDecoration createMaterialDecoration({
     border: outlineInputBorder,
     errorBorder: outlineInputBorder,
     enabledBorder: outlineInputBorder,
-    focusedBorder: outlineInputBorder,
+    focusedBorder: outlineInputBorder.copyWith(
+      borderSide: BorderSide(
+        width: 1,
+        color: colorScheme.primary,
+      ),
+    ),
     disabledBorder: outlineInputBorder,
     focusedErrorBorder: outlineInputBorder,
     helperStyle: style,
@@ -207,7 +212,7 @@ EdgeInsets get countryPillPadding => yaruStyled
       )
     : const EdgeInsets.only(top: 11, bottom: 11, left: 15, right: 15);
 
-double get inputHeight => yaruStyled ? kYaruTitleBarItemHeight : 38;
+double get inputHeight => yaruStyled ? kYaruTitleBarItemHeight : 36;
 
 TextStyle getControlPanelStyle(TextTheme textTheme) =>
     textTheme.headlineSmall?.copyWith(fontWeight: largeTextWeight) ??
