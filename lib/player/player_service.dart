@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-
 import 'dart:typed_data';
+
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart' hide PlayerState;
@@ -16,7 +16,6 @@ import '../common/data/mpv_meta_data.dart';
 import '../common/data/player_state.dart';
 import '../constants.dart';
 import '../extensions/string_x.dart';
-import '../library/library_service.dart';
 import '../local_audio/cover_store.dart';
 import '../online_album_art_utils.dart';
 import '../persistence_utils.dart';
@@ -25,12 +24,11 @@ typedef Queue = ({String name, List<Audio> audios});
 
 class PlayerService {
   PlayerService({
-    required this.controller,
-    required this.libraryService,
-  });
+    required VideoController controller,
+  }) : _controller = controller;
 
-  final VideoController controller;
-  final LibraryService libraryService;
+  final VideoController _controller;
+  VideoController get controller => _controller;
 
   SMTCWindows? _smtc;
   _AudioHandler? _audioService;
@@ -45,7 +43,7 @@ class PlayerService {
   StreamSubscription<Tracks>? _tracksSub;
   StreamSubscription<double>? _rateSub;
 
-  Player get _player => controller.player;
+  Player get _player => _controller.player;
 
   final _queueController = StreamController<bool>.broadcast();
   Stream<bool> get queueChanged => _queueController.stream;
@@ -473,7 +471,7 @@ class PlayerService {
   Future<void> _setPlayerState() async {
     final playerState = await _readPlayerState();
 
-    _lastPositions = (await getSettings(kLastPositionsFileName)).map(
+    _lastPositions = (await getCustomSettings(kLastPositionsFileName)).map(
       (key, value) => MapEntry(key, value.parsedDuration ?? Duration.zero),
     );
 
@@ -509,14 +507,34 @@ class PlayerService {
   Map<String, Duration> get lastPositions => _lastPositions;
   final _lastPositionsController = StreamController<bool>.broadcast();
   Stream<bool> get lastPositionsChanged => _lastPositionsController.stream;
-  Future<void> addLastPosition(String url, Duration lastPosition) async {
-    await writeSetting(url, lastPosition.toString(), kLastPositionsFileName);
-    if (_lastPositions.containsKey(url) == true) {
-      _lastPositions.update(url, (value) => lastPosition);
+  Future<void> addLastPosition(String key, Duration lastPosition) async {
+    await writeCustomSetting(
+      key,
+      lastPosition.toString(),
+      kLastPositionsFileName,
+    );
+    if (_lastPositions.containsKey(key)) {
+      _lastPositions.update(key, (value) => lastPosition);
     } else {
-      _lastPositions.putIfAbsent(url, () => lastPosition);
+      _lastPositions.putIfAbsent(key, () => lastPosition);
     }
     _lastPositionsController.add(true);
+  }
+
+  Future<void> removeLastPosition(String key) async {
+    await removeCustomSetting(key, kLastPositionsFileName);
+    _lastPositions.remove(key);
+    _lastPositionsController.add(true);
+  }
+
+  Future<void> removeLastPositions(List<Audio> audios) async {
+    for (var e in audios) {
+      if (e.url != null) {
+        await removeCustomSetting(e.url!, kLastPositionsFileName);
+        _lastPositions.remove(e.url!);
+        _lastPositionsController.add(true);
+      }
+    }
   }
 
   Duration? getLastPosition(String? url) => _lastPositions[url];

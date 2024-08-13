@@ -153,6 +153,10 @@ class PlayerModel extends SafeChangeNotifier {
   Map<String, Duration>? get lastPositions => _service.lastPositions;
   Duration? getLastPosition(String? url) => _service.getLastPosition(url);
   Future<void> safeLastPosition() => _service.safeLastPosition();
+  Future<void> removeLastPosition(String key) =>
+      _service.removeLastPosition(key);
+  Future<void> removeLastPositions(List<Audio> audios) =>
+      _service.removeLastPositions(audios);
 
   Map<String, MpvMetaData> get radioHistory => _service.radioHistory;
 

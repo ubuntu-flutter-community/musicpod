@@ -72,7 +72,6 @@ Future<void> main(List<String> args) async {
         configuration: const PlayerConfiguration(title: 'MusicPod'),
       ),
     ),
-    libraryService: libraryService,
   );
   await playerService.init();
 

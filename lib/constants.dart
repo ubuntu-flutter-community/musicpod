@@ -130,6 +130,7 @@ const kAppStateFileName = 'appstate.json';
 const kRadioHistoryFileName = 'radiohistory.json';
 const kDownloads = 'downloads.json';
 const kFeedsWithDownloads = 'feedswithdownloads.json';
+const kAscendingFeeds = 'ascendingfeeds.json';
 const kCoverStore = 'coverStore.json';
 const kDirectoryProperty = 'directory';
 const kRadioUrl = 'de1.api.radio-browser.info';

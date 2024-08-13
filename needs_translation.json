@@ -3,7 +3,9 @@
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
-    "gitHubClientConnectError"
+    "gitHubClientConnectError",
+    "replayEpisode",
+    "replayAllEpisodes"
   ],
 
   "da": [
@@ -12,11 +14,15 @@
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
-    "gitHubClientConnectError"
+    "gitHubClientConnectError",
+    "replayEpisode",
+    "replayAllEpisodes"
   ],
 
   "de": [
-    "gitHubClientConnectError"
+    "gitHubClientConnectError",
+    "replayEpisode",
+    "replayAllEpisodes"
   ],
 
   "es": [
@@ -215,7 +221,9 @@
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
-    "gitHubClientConnectError"
+    "gitHubClientConnectError",
+    "replayEpisode",
+    "replayAllEpisodes"
   ],
 
   "fr": [
@@ -445,7 +453,9 @@
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
-    "gitHubClientConnectError"
+    "gitHubClientConnectError",
+    "replayEpisode",
+    "replayAllEpisodes"
   ],
 
   "it": [
@@ -695,7 +705,9 @@
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
-    "gitHubClientConnectError"
+    "gitHubClientConnectError",
+    "replayEpisode",
+    "replayAllEpisodes"
   ],
 
   "nl": [
@@ -922,7 +934,9 @@
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
-    "gitHubClientConnectError"
+    "gitHubClientConnectError",
+    "replayEpisode",
+    "replayAllEpisodes"
   ],
 
   "pl": [
@@ -969,7 +983,9 @@
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
-    "gitHubClientConnectError"
+    "gitHubClientConnectError",
+    "replayEpisode",
+    "replayAllEpisodes"
   ],
 
   "pt": [
@@ -1167,7 +1183,9 @@
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
-    "gitHubClientConnectError"
+    "gitHubClientConnectError",
+    "replayEpisode",
+    "replayAllEpisodes"
   ],
 
   "pt_BR": [
@@ -1365,7 +1383,9 @@
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
-    "gitHubClientConnectError"
+    "gitHubClientConnectError",
+    "replayEpisode",
+    "replayAllEpisodes"
   ],
 
   "ru": [
@@ -1378,14 +1398,18 @@
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
-    "gitHubClientConnectError"
+    "gitHubClientConnectError",
+    "replayEpisode",
+    "replayAllEpisodes"
   ],
 
   "sk": [
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
-    "gitHubClientConnectError"
+    "gitHubClientConnectError",
+    "replayEpisode",
+    "replayAllEpisodes"
   ],
 
   "sv": [
@@ -1573,13 +1597,37 @@
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
-    "gitHubClientConnectError"
+    "gitHubClientConnectError",
+    "replayEpisode",
+    "replayAllEpisodes"
   ],
 
   "tr": [
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
-    "gitHubClientConnectError"
+    "gitHubClientConnectError",
+    "replayEpisode",
+    "replayAllEpisodes"
+  ],
+
+  "zh": [
+    "replayEpisode",
+    "replayAllEpisodes"
+  ],
+
+  "zh_CN": [
+    "replayEpisode",
+    "replayAllEpisodes"
+  ],
+
+  "zh_HK": [
+    "replayEpisode",
+    "replayAllEpisodes"
+  ],
+
+  "zh_TW": [
+    "replayEpisode",
+    "replayAllEpisodes"
   ]
 }

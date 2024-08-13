@@ -23,6 +23,7 @@ class LibraryModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _favLanguageCodeFavsSub;
   StreamSubscription<bool>? _lastCountryCodeSub;
   StreamSubscription<bool>? _downloadsSub;
+  StreamSubscription<bool>? _ascendingPodcastsSub;
 
   Future<bool> init() async {
     await _service.init();
@@ -44,11 +45,12 @@ class LibraryModel extends SafeChangeNotifier {
         _service.favCountriesChanged.listen((_) => notifyListeners());
     _favLanguageCodeFavsSub ??=
         _service.favLanguagesChanged.listen((_) => notifyListeners());
-
     _downloadsSub ??=
         _service.downloadsChanged.listen((_) => notifyListeners());
     _lastCountryCodeSub ??=
         _service.lastCountryCodeChanged.listen((_) => notifyListeners());
+    _ascendingPodcastsSub ??=
+        _service.ascendingPodcastsChanged.listen((_) => notifyListeners());
 
     notifyListeners();
     return true;
@@ -67,6 +69,7 @@ class LibraryModel extends SafeChangeNotifier {
     await _favLanguageCodeFavsSub?.cancel();
     await _downloadsSub?.cancel();
     await _lastCountryCodeSub?.cancel();
+    await _ascendingPodcastsSub?.cancel();
     super.dispose();
   }
 
@@ -221,6 +224,15 @@ class LibraryModel extends SafeChangeNotifier {
       feedUrl == null ? false : _service.feedHasDownloads(feedUrl);
 
   int get feedsWithDownloadsLength => _service.feedsWithDownloadsLength;
+
+  Future<void> reorderPodcast({
+    required String feedUrl,
+    required bool ascending,
+  }) =>
+      _service.reorderPodcast(feedUrl: feedUrl, ascending: ascending);
+
+  Future<bool> showPodcastAscending(String feedUrl) async =>
+      _service.showPodcastAscending(feedUrl);
 
   //
   // Albums

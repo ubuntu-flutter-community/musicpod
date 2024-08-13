@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
@@ -12,6 +13,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/int_x.dart';
 import '../../l10n/l10n.dart';
+import '../../player/player_model.dart';
 import 'avatar_with_progress.dart';
 import 'download_button.dart';
 
@@ -21,30 +23,21 @@ class PodcastAudioTile extends StatelessWidget {
     required this.audio,
     required this.isPlayerPlaying,
     required this.selected,
-    required this.pause,
-    required this.resume,
     required this.startPlaylist,
-    required this.lastPosition,
     this.isExpanded = false,
     this.removeUpdate,
-    required this.safeLastPosition,
     this.isOnline = true,
     required this.addPodcast,
-    required this.insertIntoQueue,
   });
 
   final Audio audio;
   final bool isPlayerPlaying;
   final bool selected;
-  final void Function() pause;
-  final Future<void> Function() resume;
+
   final void Function()? startPlaylist;
   final void Function()? removeUpdate;
-  final Future<void> Function() safeLastPosition;
   final void Function()? addPodcast;
-  final void Function() insertIntoQueue;
 
-  final Duration? lastPosition;
   final bool isExpanded;
   final bool isOnline;
 
@@ -60,39 +53,28 @@ class PodcastAudioTile extends StatelessWidget {
         : context.l10n.unknown;
     final label = '$date, ${context.l10n.duration}: $duration';
 
+    final playerModel = di<PlayerModel>();
+
     return YaruExpandable(
       isExpanded: isExpanded,
-      expandIconPadding: const EdgeInsets.only(
-        right: 5,
-        bottom: 15,
-      ),
+      expandIconPadding: const EdgeInsets.only(right: 5, bottom: 15),
       gapHeight: 0,
       header: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: Padding(
-          padding: const EdgeInsets.only(
-            top: 15,
-            bottom: 10,
-            left: 5,
-          ),
+          padding: const EdgeInsets.only(top: 15, bottom: 10, left: 5),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               AvatarWithProgress(
                 selected: selected,
-                lastPosition: lastPosition,
                 audio: audio,
                 isPlayerPlaying: isPlayerPlaying,
-                pause: pause,
-                resume: resume,
-                safeLastPosition: safeLastPosition,
                 startPlaylist: startPlaylist,
                 removeUpdate: removeUpdate,
               ),
-              const SizedBox(
-                width: 25,
-              ),
+              const SizedBox(width: 25),
               Expanded(
                 child: _Center(
                   selected: selected,
@@ -136,13 +118,23 @@ class PodcastAudioTile extends StatelessWidget {
                       onPressed: () {
                         final text =
                             '${audio.title != null ? '${audio.album} - ' : ''}${audio.title ?? ''}';
-                        insertIntoQueue();
+                        playerModel.insertIntoQueue(audio);
                         showSnackBar(
                           context: context,
                           content: Text(context.l10n.insertedIntoQueue(text)),
                         );
                       },
                       icon: Icon(Iconz().insertIntoQueue),
+                    ),
+                    IconButton(
+                      tooltip: context.l10n.replayEpisode,
+                      onPressed: audio.url == null
+                          ? null
+                          : () => playerModel
+                            ..removeLastPosition(audio.url!)
+                            ..setPosition(Duration.zero)
+                            ..seek(),
+                      icon: Icon(Iconz().refresh),
                     ),
                   ],
                 ),
