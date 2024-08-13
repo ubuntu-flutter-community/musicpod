@@ -4,7 +4,6 @@ import 'package:flutter/scheduler.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
-import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import 'icons.dart';
 import 'languages.dart';
@@ -78,11 +77,6 @@ class LanguageAutoComplete extends StatelessWidget {
                 },
                 style:
                     style ?? (yaruStyled ? theme.textTheme.bodyMedium : null),
-                strutStyle: yaruStyled
-                    ? const StrutStyle(
-                        leading: 0.2,
-                      )
-                    : null,
                 textAlignVertical: yaruStyled ? TextAlignVertical.center : null,
                 cursorWidth: yaruStyled ? 1 : 2.0,
                 decoration: yaruStyled
@@ -123,9 +117,7 @@ class LanguageAutoComplete extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(6),
                     child: Material(
-                      color: theme.isLight
-                          ? theme.colorScheme.surface
-                          : theme.colorScheme.surfaceContainerHighest,
+                      color: theme.popupMenuTheme.color,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6),
                         side: BorderSide(

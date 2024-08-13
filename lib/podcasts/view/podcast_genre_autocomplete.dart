@@ -5,7 +5,6 @@ import '../../common/data/podcast_genre.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 
 class PodcastGenreAutoComplete extends StatelessWidget {
@@ -115,9 +114,7 @@ class PodcastGenreAutoComplete extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(6),
                     child: Material(
-                      color: theme.isLight
-                          ? theme.colorScheme.surface
-                          : theme.colorScheme.surfaceContainerHighest,
+                      color: theme.popupMenuTheme.color,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6),
                         side: BorderSide(

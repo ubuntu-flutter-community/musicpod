@@ -117,10 +117,9 @@ InputDecoration createYaruDecoration({
       );
 
   return InputDecoration(
-    suffixIcon: suffixIcon,
-    suffixIconConstraints: const BoxConstraints(
-      maxWidth: 200,
-      maxHeight: kYaruTitleBarItemHeight,
+    suffixIcon: Center(
+      widthFactor: 1,
+      child: suffixIcon,
     ),
     hintText: hintText,
     filled: true,
@@ -134,23 +133,13 @@ InputDecoration createYaruDecoration({
     focusedErrorBorder: border,
     isDense: true,
     contentPadding: contentPadding ??
-        const EdgeInsets.only(
-          bottom: 10,
-          top: 10,
-          right: 15,
-          left: 15,
+        const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 10.5,
         ),
     helperStyle: textStyle,
     hintStyle: textStyle,
     labelStyle: textStyle,
-  );
-}
-
-ButtonStyle createPopupStyle(ThemeData themeData) {
-  return TextButton.styleFrom(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(100),
-    ),
   );
 }
 
