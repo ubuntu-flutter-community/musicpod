@@ -503,6 +503,9 @@ class PlayerService {
   //
   // last positions
   //
+
+  // TODO: migrate to shared preferences but add a migration routine from the old file so users do not
+  // lose their progress
   Map<String, Duration> _lastPositions = {};
   Map<String, Duration> get lastPositions => _lastPositions;
   final _lastPositionsController = StreamController<bool>.broadcast();
