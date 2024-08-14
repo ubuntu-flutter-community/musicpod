@@ -2,18 +2,15 @@ import 'dart:async';
 
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../library/library_service.dart';
+import '../common/data/audio.dart';
 import 'podcast_service.dart';
 
 class PodcastModel extends SafeChangeNotifier {
   PodcastModel({
     required PodcastService podcastService,
-    required LibraryService libraryService,
-  })  : _podcastService = podcastService,
-        _libraryService = libraryService;
+  }) : _podcastService = podcastService;
 
   final PodcastService _podcastService;
-  final LibraryService _libraryService;
 
   bool _loadingFeed = false;
   bool get loadingFeed => _loadingFeed;
@@ -27,24 +24,29 @@ class PodcastModel extends SafeChangeNotifier {
   Future<void> init({
     required String updateMessage,
     bool forceInit = false,
+    Function({required String message})? notify,
   }) async {
     await _podcastService.init(forceInit: forceInit);
 
     if (_firstUpdateChecked == false) {
-      update(updateMessage);
+      update(updateMessage: updateMessage);
     }
     _firstUpdateChecked = true;
 
     notifyListeners();
   }
 
-  void update(String updateMessage) {
+  void update({
+    required String updateMessage,
+    Map<String, List<Audio>>? oldPodcasts,
+    Function({required String message})? notify,
+  }) {
     _setCheckingForUpdates(true);
     _podcastService
         .updatePodcasts(
-          oldPodcasts: _libraryService.podcasts,
-          updatePodcast: _libraryService.updatePodcast,
+          oldPodcasts: oldPodcasts,
           updateMessage: updateMessage,
+          notify: notify,
         )
         .then((_) => _setCheckingForUpdates(false));
   }

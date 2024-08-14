@@ -25,9 +25,11 @@ import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
 import '../podcast_model.dart';
+import 'podcast_refresh_button.dart';
 import 'podcast_reorder_button.dart';
 import 'podcast_replay_button.dart';
 import 'podcast_sub_button.dart';
+import 'podcast_timer_button.dart';
 import 'sliver_podcast_page_list.dart';
 
 class PodcastPage extends StatelessWidget with WatchItMixin {
@@ -121,6 +123,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     PodcastReplayButton(audios: audiosWithDownloads),
+                    const PodcastTimerButton(),
                     PodcastSubButton(
                       audios: audiosWithDownloads,
                       pageId: pageId,
@@ -129,6 +132,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                       audios: audiosWithDownloads,
                       pageId: pageId,
                     ),
+                    PodcastRefreshButton(pageId: pageId),
                     PodcastReorderButton(feedUrl: pageId),
                     ExploreOnlinePopup(text: title),
                   ],

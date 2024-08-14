@@ -328,5 +328,7 @@
     "podcastFeedLoadingTimeout": "Loading the podcast feed takes longer than usual...",
     "gitHubClientConnectError": "Could not load online version from GitHub.",
     "replayEpisode": "Replay episode",
-    "replayAllEpisodes": "Replay all episodes"
+    "replayAllEpisodes": "Replay all episodes",
+    "checkForUpdates": "Check for updates",
+    "playbackWillStopIn": "Playback will stop in: "
 }

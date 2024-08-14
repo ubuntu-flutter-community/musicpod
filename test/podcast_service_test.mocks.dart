@@ -3,11 +3,14 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
+import 'dart:async' as _i4;
 
+import 'package:dio/dio.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:musicpod/notifications/notifications_service.dart' as _i2;
-import 'package:musicpod/settings/settings_service.dart' as _i4;
+import 'package:musicpod/common/data/audio.dart' as _i7;
+import 'package:musicpod/library/library_service.dart' as _i6;
+import 'package:musicpod/notifications/notifications_service.dart' as _i3;
+import 'package:musicpod/settings/settings_service.dart' as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -22,17 +25,27 @@ import 'package:musicpod/settings/settings_service.dart' as _i4;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
+class _FakeDio_0 extends _i1.SmartFake implements _i2.Dio {
+  _FakeDio_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [NotificationsService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockNotificationsService extends _i1.Mock
-    implements _i2.NotificationsService {
+    implements _i3.NotificationsService {
   MockNotificationsService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<void> notify({
+  _i4.Future<void> notify({
     required String? message,
     String? uri,
   }) =>
@@ -45,34 +58,34 @@ class MockNotificationsService extends _i1.Mock
             #uri: uri,
           },
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
-  _i3.Future<void> dispose() => (super.noSuchMethod(
+  _i4.Future<void> dispose() => (super.noSuchMethod(
         Invocation.method(
           #dispose,
           [],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 }
 
 /// A class which mocks [SettingsService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
+class MockSettingsService extends _i1.Mock implements _i5.SettingsService {
   MockSettingsService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Stream<bool> get themeIndexChanged => (super.noSuchMethod(
+  _i4.Stream<bool> get themeIndexChanged => (super.noSuchMethod(
         Invocation.getter(#themeIndexChanged),
-        returnValue: _i3.Stream<bool>.empty(),
-      ) as _i3.Stream<bool>);
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
 
   @override
   int get themeIndex => (super.noSuchMethod(
@@ -87,16 +100,16 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
       ) as bool);
 
   @override
-  _i3.Stream<bool> get neverShowFailedImportsChanged => (super.noSuchMethod(
+  _i4.Stream<bool> get neverShowFailedImportsChanged => (super.noSuchMethod(
         Invocation.getter(#neverShowFailedImportsChanged),
-        returnValue: _i3.Stream<bool>.empty(),
-      ) as _i3.Stream<bool>);
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
 
   @override
-  _i3.Stream<bool> get recentPatchNotesDisposedChanged => (super.noSuchMethod(
+  _i4.Stream<bool> get recentPatchNotesDisposedChanged => (super.noSuchMethod(
         Invocation.getter(#recentPatchNotesDisposedChanged),
-        returnValue: _i3.Stream<bool>.empty(),
-      ) as _i3.Stream<bool>);
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
 
   @override
   bool get recentPatchNotesDisposed => (super.noSuchMethod(
@@ -105,10 +118,10 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
       ) as bool);
 
   @override
-  _i3.Stream<bool> get usePodcastIndexChanged => (super.noSuchMethod(
+  _i4.Stream<bool> get usePodcastIndexChanged => (super.noSuchMethod(
         Invocation.getter(#usePodcastIndexChanged),
-        returnValue: _i3.Stream<bool>.empty(),
-      ) as _i3.Stream<bool>);
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
 
   @override
   bool get usePodcastIndex => (super.noSuchMethod(
@@ -117,22 +130,22 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
       ) as bool);
 
   @override
-  _i3.Stream<bool> get podcastIndexApiKeyChanged => (super.noSuchMethod(
+  _i4.Stream<bool> get podcastIndexApiKeyChanged => (super.noSuchMethod(
         Invocation.getter(#podcastIndexApiKeyChanged),
-        returnValue: _i3.Stream<bool>.empty(),
-      ) as _i3.Stream<bool>);
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
 
   @override
-  _i3.Stream<bool> get podcastIndexApiSecretChanged => (super.noSuchMethod(
+  _i4.Stream<bool> get podcastIndexApiSecretChanged => (super.noSuchMethod(
         Invocation.getter(#podcastIndexApiSecretChanged),
-        returnValue: _i3.Stream<bool>.empty(),
-      ) as _i3.Stream<bool>);
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
 
   @override
-  _i3.Stream<bool> get directoryChanged => (super.noSuchMethod(
+  _i4.Stream<bool> get directoryChanged => (super.noSuchMethod(
         Invocation.getter(#directoryChanged),
-        returnValue: _i3.Stream<bool>.empty(),
-      ) as _i3.Stream<bool>);
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
 
   @override
   void setThemeIndex(int? value) => super.noSuchMethod(
@@ -153,24 +166,24 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
       );
 
   @override
-  _i3.Future<void> disposePatchNotes() => (super.noSuchMethod(
+  _i4.Future<void> disposePatchNotes() => (super.noSuchMethod(
         Invocation.method(
           #disposePatchNotes,
           [],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
-  _i3.Future<void> setUsePodcastIndex(bool? value) => (super.noSuchMethod(
+  _i4.Future<void> setUsePodcastIndex(bool? value) => (super.noSuchMethod(
         Invocation.method(
           #setUsePodcastIndex,
           [value],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
   void setPodcastIndexApiKey(String? value) => super.noSuchMethod(
@@ -191,22 +204,711 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
       );
 
   @override
-  _i3.Future<void> setDirectory(String? directory) => (super.noSuchMethod(
+  _i4.Future<void> setDirectory(String? directory) => (super.noSuchMethod(
         Invocation.method(
           #setDirectory,
           [directory],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
-  _i3.Future<void> dispose() => (super.noSuchMethod(
+  _i4.Future<void> dispose() => (super.noSuchMethod(
         Invocation.method(
           #dispose,
           [],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+}
+
+/// A class which mocks [LibraryService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
+  MockLibraryService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.Dio get dio => (super.noSuchMethod(
+        Invocation.getter(#dio),
+        returnValue: _FakeDio_0(
+          this,
+          Invocation.getter(#dio),
+        ),
+      ) as _i2.Dio);
+
+  @override
+  List<_i7.Audio> get likedAudios => (super.noSuchMethod(
+        Invocation.getter(#likedAudios),
+        returnValue: <_i7.Audio>[],
+      ) as List<_i7.Audio>);
+
+  @override
+  _i4.Stream<bool> get likedAudiosChanged => (super.noSuchMethod(
+        Invocation.getter(#likedAudiosChanged),
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
+
+  @override
+  Map<String, List<_i7.Audio>> get starredStations => (super.noSuchMethod(
+        Invocation.getter(#starredStations),
+        returnValue: <String, List<_i7.Audio>>{},
+      ) as Map<String, List<_i7.Audio>>);
+
+  @override
+  int get starredStationsLength => (super.noSuchMethod(
+        Invocation.getter(#starredStationsLength),
+        returnValue: 0,
+      ) as int);
+
+  @override
+  _i4.Stream<bool> get starredStationsChanged => (super.noSuchMethod(
+        Invocation.getter(#starredStationsChanged),
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
+
+  @override
+  Set<String> get favRadioTags => (super.noSuchMethod(
+        Invocation.getter(#favRadioTags),
+        returnValue: <String>{},
+      ) as Set<String>);
+
+  @override
+  _i4.Stream<bool> get favTagsChanged => (super.noSuchMethod(
+        Invocation.getter(#favTagsChanged),
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
+
+  @override
+  _i4.Stream<bool> get lastCountryCodeChanged => (super.noSuchMethod(
+        Invocation.getter(#lastCountryCodeChanged),
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
+
+  @override
+  Set<String> get favCountryCodes => (super.noSuchMethod(
+        Invocation.getter(#favCountryCodes),
+        returnValue: <String>{},
+      ) as Set<String>);
+
+  @override
+  _i4.Stream<bool> get favCountriesChanged => (super.noSuchMethod(
+        Invocation.getter(#favCountriesChanged),
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
+
+  @override
+  _i4.Stream<bool> get lastLanguageCodeChanged => (super.noSuchMethod(
+        Invocation.getter(#lastLanguageCodeChanged),
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
+
+  @override
+  Set<String> get favLanguageCodes => (super.noSuchMethod(
+        Invocation.getter(#favLanguageCodes),
+        returnValue: <String>{},
+      ) as Set<String>);
+
+  @override
+  _i4.Stream<bool> get favLanguagesChanged => (super.noSuchMethod(
+        Invocation.getter(#favLanguagesChanged),
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
+
+  @override
+  Map<String, List<_i7.Audio>> get playlists => (super.noSuchMethod(
+        Invocation.getter(#playlists),
+        returnValue: <String, List<_i7.Audio>>{},
+      ) as Map<String, List<_i7.Audio>>);
+
+  @override
+  _i4.Stream<bool> get playlistsChanged => (super.noSuchMethod(
+        Invocation.getter(#playlistsChanged),
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
+
+  @override
+  Map<String, String> get downloads => (super.noSuchMethod(
+        Invocation.getter(#downloads),
+        returnValue: <String, String>{},
+      ) as Map<String, String>);
+
+  @override
+  int get feedsWithDownloadsLength => (super.noSuchMethod(
+        Invocation.getter(#feedsWithDownloadsLength),
+        returnValue: 0,
+      ) as int);
+
+  @override
+  _i4.Stream<bool> get downloadsChanged => (super.noSuchMethod(
+        Invocation.getter(#downloadsChanged),
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
+
+  @override
+  Map<String, List<_i7.Audio>> get podcasts => (super.noSuchMethod(
+        Invocation.getter(#podcasts),
+        returnValue: <String, List<_i7.Audio>>{},
+      ) as Map<String, List<_i7.Audio>>);
+
+  @override
+  int get podcastsLength => (super.noSuchMethod(
+        Invocation.getter(#podcastsLength),
+        returnValue: 0,
+      ) as int);
+
+  @override
+  _i4.Stream<bool> get podcastsChanged => (super.noSuchMethod(
+        Invocation.getter(#podcastsChanged),
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
+
+  @override
+  _i4.Stream<bool> get ascendingPodcastsChanged => (super.noSuchMethod(
+        Invocation.getter(#ascendingPodcastsChanged),
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
+
+  @override
+  _i4.Stream<bool> get updatesChanged => (super.noSuchMethod(
+        Invocation.getter(#updatesChanged),
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
+
+  @override
+  Map<String, List<_i7.Audio>> get pinnedAlbums => (super.noSuchMethod(
+        Invocation.getter(#pinnedAlbums),
+        returnValue: <String, List<_i7.Audio>>{},
+      ) as Map<String, List<_i7.Audio>>);
+
+  @override
+  int get pinnedAlbumsLength => (super.noSuchMethod(
+        Invocation.getter(#pinnedAlbumsLength),
+        returnValue: 0,
+      ) as int);
+
+  @override
+  _i4.Stream<bool> get albumsChanged => (super.noSuchMethod(
+        Invocation.getter(#albumsChanged),
+        returnValue: _i4.Stream<bool>.empty(),
+      ) as _i4.Stream<bool>);
+
+  @override
+  void addLikedAudio(
+    _i7.Audio? audio, [
+    bool? notify = true,
+  ]) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #addLikedAudio,
+          [
+            audio,
+            notify,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void addLikedAudios(List<_i7.Audio>? audios) => super.noSuchMethod(
+        Invocation.method(
+          #addLikedAudios,
+          [audios],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  bool liked(_i7.Audio? audio) => (super.noSuchMethod(
+        Invocation.method(
+          #liked,
+          [audio],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  void removeLikedAudio(
+    _i7.Audio? audio, [
+    bool? notify = true,
+  ]) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #removeLikedAudio,
+          [
+            audio,
+            notify,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removeLikedAudios(List<_i7.Audio>? audios) => super.noSuchMethod(
+        Invocation.method(
+          #removeLikedAudios,
+          [audios],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void addStarredStation(
+    String? url,
+    List<_i7.Audio>? audios,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #addStarredStation,
+          [
+            url,
+            audios,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void unStarStation(String? name) => super.noSuchMethod(
+        Invocation.method(
+          #unStarStation,
+          [name],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  bool isStarredStation(String? url) => (super.noSuchMethod(
+        Invocation.method(
+          #isStarredStation,
+          [url],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool isFavTag(String? value) => (super.noSuchMethod(
+        Invocation.method(
+          #isFavTag,
+          [value],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  void addFavRadioTag(String? name) => super.noSuchMethod(
+        Invocation.method(
+          #addFavRadioTag,
+          [name],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removeFavRadioTag(String? name) => super.noSuchMethod(
+        Invocation.method(
+          #removeFavRadioTag,
+          [name],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void setLastCountryCode(String? value) => super.noSuchMethod(
+        Invocation.method(
+          #setLastCountryCode,
+          [value],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  bool isFavCountry(String? value) => (super.noSuchMethod(
+        Invocation.method(
+          #isFavCountry,
+          [value],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  void addFavCountryCode(String? name) => super.noSuchMethod(
+        Invocation.method(
+          #addFavCountryCode,
+          [name],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removeFavCountryCode(String? name) => super.noSuchMethod(
+        Invocation.method(
+          #removeFavCountryCode,
+          [name],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void setLastLanguageCode(String? value) => super.noSuchMethod(
+        Invocation.method(
+          #setLastLanguageCode,
+          [value],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  bool isFavLanguage(String? value) => (super.noSuchMethod(
+        Invocation.method(
+          #isFavLanguage,
+          [value],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  void addFavLanguageCode(String? name) => super.noSuchMethod(
+        Invocation.method(
+          #addFavLanguageCode,
+          [name],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removeFavLanguageCode(String? name) => super.noSuchMethod(
+        Invocation.method(
+          #removeFavLanguageCode,
+          [name],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i4.Future<void> addPlaylist(
+    String? id,
+    List<_i7.Audio>? audios,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #addPlaylist,
+          [
+            id,
+            audios,
+          ],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> updatePlaylist(
+    String? id,
+    List<_i7.Audio>? audios,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updatePlaylist,
+          [
+            id,
+            audios,
+          ],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  void removePlaylist(String? id) => super.noSuchMethod(
+        Invocation.method(
+          #removePlaylist,
+          [id],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void updatePlaylistName(
+    String? oldName,
+    String? newName,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #updatePlaylistName,
+          [
+            oldName,
+            newName,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void moveAudioInPlaylist({
+    required int? oldIndex,
+    required int? newIndex,
+    required String? id,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #moveAudioInPlaylist,
+          [],
+          {
+            #oldIndex: oldIndex,
+            #newIndex: newIndex,
+            #id: id,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void addAudioToPlaylist(
+    String? id,
+    _i7.Audio? audio,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #addAudioToPlaylist,
+          [
+            id,
+            audio,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removeAudioFromPlaylist(
+    String? id,
+    _i7.Audio? audio,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #removeAudioFromPlaylist,
+          [
+            id,
+            audio,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void clearPlaylist(String? id) => super.noSuchMethod(
+        Invocation.method(
+          #clearPlaylist,
+          [id],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  bool feedHasDownloads(String? feedUrl) => (super.noSuchMethod(
+        Invocation.method(
+          #feedHasDownloads,
+          [feedUrl],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  void addDownload({
+    required String? url,
+    required String? path,
+    required String? feedUrl,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #addDownload,
+          [],
+          {
+            #url: url,
+            #path: path,
+            #feedUrl: feedUrl,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removeDownload({
+    required String? url,
+    required String? feedUrl,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #removeDownload,
+          [],
+          {
+            #url: url,
+            #feedUrl: feedUrl,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void addPodcast(
+    String? feedUrl,
+    List<_i7.Audio>? audios,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #addPodcast,
+          [
+            feedUrl,
+            audios,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i4.Future<void> updatePodcast(
+    String? feedUrl,
+    List<_i7.Audio>? audios,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updatePodcast,
+          [
+            feedUrl,
+            audios,
+          ],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  bool showPodcastAscending(String? feedUrl) => (super.noSuchMethod(
+        Invocation.method(
+          #showPodcastAscending,
+          [feedUrl],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  _i4.Future<void> reorderPodcast({
+    required String? feedUrl,
+    required bool? ascending,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #reorderPodcast,
+          [],
+          {
+            #feedUrl: feedUrl,
+            #ascending: ascending,
+          },
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  bool podcastUpdateAvailable(String? feedUrl) => (super.noSuchMethod(
+        Invocation.method(
+          #podcastUpdateAvailable,
+          [feedUrl],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  void removePodcastUpdate(String? feedUrl) => super.noSuchMethod(
+        Invocation.method(
+          #removePodcastUpdate,
+          [feedUrl],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removePodcast(String? name) => super.noSuchMethod(
+        Invocation.method(
+          #removePodcast,
+          [name],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  List<_i7.Audio> getAlbumAt(int? index) => (super.noSuchMethod(
+        Invocation.method(
+          #getAlbumAt,
+          [index],
+        ),
+        returnValue: <_i7.Audio>[],
+      ) as List<_i7.Audio>);
+
+  @override
+  bool isPinnedAlbum(String? name) => (super.noSuchMethod(
+        Invocation.method(
+          #isPinnedAlbum,
+          [name],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  void addPinnedAlbum(
+    String? name,
+    List<_i7.Audio>? audios,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #addPinnedAlbum,
+          [
+            name,
+            audios,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removePinnedAlbum(String? name) => super.noSuchMethod(
+        Invocation.method(
+          #removePinnedAlbum,
+          [name],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i4.Future<bool> init() => (super.noSuchMethod(
+        Invocation.method(
+          #init,
+          [],
+        ),
+        returnValue: _i4.Future<bool>.value(false),
+      ) as _i4.Future<bool>);
+
+  @override
+  _i4.Future<void> setSelectedPageId(String? value) => (super.noSuchMethod(
+        Invocation.method(
+          #setSelectedPageId,
+          [value],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> dispose() => (super.noSuchMethod(
+        Invocation.method(
+          #dispose,
+          [],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 }

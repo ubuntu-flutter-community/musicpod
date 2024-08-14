@@ -101,6 +101,7 @@ Future<void> main(List<String> args) async {
     PodcastService(
       notificationsService: notificationsService,
       settingsService: settingsService,
+      libraryService: libraryService,
     ),
   );
 
@@ -170,10 +171,7 @@ Future<void> main(List<String> args) async {
     dispose: (s) => s.dispose(),
   );
   di.registerSingleton<PodcastModel>(
-    PodcastModel(
-      libraryService: libraryService,
-      podcastService: di.get<PodcastService>(),
-    ),
+    PodcastModel(podcastService: di.get<PodcastService>()),
     dispose: (s) => s.dispose(),
   );
   di.registerSingleton<RadioModel>(

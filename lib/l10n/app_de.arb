@@ -327,5 +327,7 @@
     "radioTagDisclaimerSubTitle": "Manchmal senden Stationen Tags, die keinem Musikgenre entsprechen. MusicPod ist nicht für den Inhalt verantwortlich!",
     "podcastFeedLoadingTimeout": "Das Laden des Podcast-Feeds dauert länger als gewöhnlich....",
     "restartEpisode": "Episode von Anfang spielen",
-    "restartAllEpisodes": "Alle Episoden von Anfang spielen"
+    "restartAllEpisodes": "Alle Episoden von Anfang spielen",
+    "checkForUpdates": "Auf Aktualisierung überprüfen",
+    "playbackWillStopIn": "Wiedergabe wird gestoppt in: "
 }

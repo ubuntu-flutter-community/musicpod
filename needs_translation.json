@@ -5,7 +5,9 @@
     "podcastFeedLoadingTimeout",
     "gitHubClientConnectError",
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "da": [
@@ -16,7 +18,9 @@
     "podcastFeedLoadingTimeout",
     "gitHubClientConnectError",
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "de": [
@@ -223,7 +227,9 @@
     "podcastFeedLoadingTimeout",
     "gitHubClientConnectError",
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "fr": [
@@ -455,7 +461,9 @@
     "podcastFeedLoadingTimeout",
     "gitHubClientConnectError",
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "it": [
@@ -707,7 +715,9 @@
     "podcastFeedLoadingTimeout",
     "gitHubClientConnectError",
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "nl": [
@@ -936,7 +946,9 @@
     "podcastFeedLoadingTimeout",
     "gitHubClientConnectError",
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "pl": [
@@ -985,7 +997,9 @@
     "podcastFeedLoadingTimeout",
     "gitHubClientConnectError",
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "pt": [
@@ -1185,7 +1199,9 @@
     "podcastFeedLoadingTimeout",
     "gitHubClientConnectError",
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "pt_BR": [
@@ -1385,7 +1401,9 @@
     "podcastFeedLoadingTimeout",
     "gitHubClientConnectError",
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "ru": [
@@ -1400,7 +1418,9 @@
     "podcastFeedLoadingTimeout",
     "gitHubClientConnectError",
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "sk": [
@@ -1409,7 +1429,9 @@
     "podcastFeedLoadingTimeout",
     "gitHubClientConnectError",
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "sv": [
@@ -1599,7 +1621,9 @@
     "podcastFeedLoadingTimeout",
     "gitHubClientConnectError",
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "tr": [
@@ -1608,26 +1632,36 @@
     "podcastFeedLoadingTimeout",
     "gitHubClientConnectError",
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "zh": [
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "zh_CN": [
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "zh_HK": [
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ],
 
   "zh_TW": [
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "checkForUpdates",
+    "playbackWillStopIn"
   ]
 }
