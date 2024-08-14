@@ -199,6 +199,11 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.refresh
           : Icons.refresh;
+  IconData get replay => yaruStyled
+      ? YaruIcons.history
+      : appleStyled
+          ? CupertinoIcons.restart
+          : Icons.history;
   IconData get speakerLowFilled => yaruStyled
       ? YaruIcons.speaker_low_filled
       : appleStyled
@@ -390,10 +395,20 @@ class Iconz {
           ? CupertinoIcons.square_grid_3x2_fill
           : Icons.grid_on;
   IconData get reorder => yaruStyled
-      ? YaruIcons.ordered_list
+      ? YaruIcons.unordered_list_new
       : appleStyled
-          ? CupertinoIcons.arrow_up_down
+          ? CupertinoIcons.move
           : Icons.move_down_rounded;
+  IconData get ascending => yaruStyled
+      ? YaruIcons.sort_ascending
+      : appleStyled
+          ? CupertinoIcons.sort_up
+          : Icons.arrow_upward;
+  IconData get descending => yaruStyled
+      ? YaruIcons.sort_descending
+      : appleStyled
+          ? CupertinoIcons.sort_down
+          : Icons.arrow_downward;
   IconData get info => yaruStyled
       ? YaruIcons.information
       : appleStyled

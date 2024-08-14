@@ -5,6 +5,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
+import '../../common/view/audio_filter.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_header_html_description.dart';
 import '../../common/view/avatar_play_button.dart';
@@ -24,6 +25,8 @@ import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
 import '../podcast_model.dart';
+import 'podcast_reorder_button.dart';
+import 'podcast_replay_button.dart';
 import 'podcast_sub_button.dart';
 import 'sliver_podcast_page_list.dart';
 
@@ -46,13 +49,18 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
 
-    watchPropertyValue((LibraryModel m) => m.showPodcastAscending(pageId));
-
     final libraryModel = di<LibraryModel>();
-    final audiosWithDownloads = audios
-            ?.map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
-            .toList() ??
-        [];
+    if (watchPropertyValue(
+      (LibraryModel m) => m.showPodcastAscending(pageId),
+    )) {
+      sortListByAudioFilter(
+        audioFilter: AudioFilter.year,
+        audios: audios ?? [],
+      );
+    }
+    final audiosWithDownloads = (audios ?? [])
+        .map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
+        .toList();
 
     return Scaffold(
       resizeToAvoidBottomInset: isMobile ? false : null,
@@ -91,9 +99,9 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                             ?.firstWhereOrNull((e) => e.genre != null)
                             ?.genre ??
                         context.l10n.podcast,
-                    subTitle: audios?.firstOrNull?.artist,
+                    subTitle: audiosWithDownloads.firstOrNull?.artist,
                     description: AudioPageHeaderHtmlDescription(
-                      description: audios?.firstOrNull?.albumArtist,
+                      description: audiosWithDownloads.firstOrNull?.albumArtist,
                       title: title,
                     ),
                     title: title,
@@ -109,10 +117,21 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                 ),
               ),
               SliverAudioPageControlPanel(
-                controlPanel: _PodcastPageControlPanel(
-                  audios: audiosWithDownloads,
-                  pageId: pageId,
-                  title: title,
+                controlPanel: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    PodcastReplayButton(audios: audiosWithDownloads),
+                    PodcastSubButton(
+                      audios: audiosWithDownloads,
+                      pageId: pageId,
+                    ),
+                    AvatarPlayButton(
+                      audios: audiosWithDownloads,
+                      pageId: pageId,
+                    ),
+                    PodcastReorderButton(feedUrl: pageId),
+                    ExploreOnlinePopup(text: title),
+                  ],
                 ),
               ),
               SliverPadding(
@@ -210,71 +229,6 @@ class _PodcastPageImage extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
-  const _PodcastPageControlPanel({
-    required this.audios,
-    required this.pageId,
-    required this.title,
-  });
-
-  final List<Audio> audios;
-  final String pageId;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        PodcastReplayButton(audios: audios),
-        PodcastSubButton(audios: audios, pageId: pageId),
-        AvatarPlayButton(audios: audios, pageId: pageId),
-        PodcastReorderButton(feedUrl: pageId),
-        ExploreOnlinePopup(text: title),
-      ],
-    );
-  }
-}
-
-class PodcastReplayButton extends StatelessWidget {
-  const PodcastReplayButton({super.key, required this.audios});
-
-  final List<Audio> audios;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      tooltip: context.l10n.replayAllEpisodes,
-      onPressed: () => di<PlayerModel>().removeLastPositions(audios),
-      icon: Icon(Iconz().refresh),
-    );
-  }
-}
-
-class PodcastReorderButton extends StatelessWidget with WatchItMixin {
-  const PodcastReorderButton({super.key, required this.feedUrl});
-
-  final String feedUrl;
-
-  @override
-  Widget build(BuildContext context) {
-    final ascending =
-        watchPropertyValue((LibraryModel m) => m.showPodcastAscending(feedUrl));
-
-    return IconButton(
-      isSelected: ascending,
-      tooltip: context.l10n.reorder,
-      onPressed: () => di<LibraryModel>()
-          .reorderPodcast(feedUrl: feedUrl, ascending: !ascending),
-      icon: Icon(Iconz().reorder),
-      selectedIcon: Icon(
-        Iconz().reorder,
-        color: context.t.colorScheme.primary,
       ),
     );
   }

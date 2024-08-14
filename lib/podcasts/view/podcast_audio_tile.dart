@@ -134,7 +134,7 @@ class PodcastAudioTile extends StatelessWidget {
                             ..removeLastPosition(audio.url!)
                             ..setPosition(Duration.zero)
                             ..seek(),
-                      icon: Icon(Iconz().refresh),
+                      icon: Icon(Iconz().replay),
                     ),
                   ],
                 ),
