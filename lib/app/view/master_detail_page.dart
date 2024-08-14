@@ -21,6 +21,8 @@ import '../../playlists/view/liked_audio_page.dart';
 import '../../playlists/view/manual_add_dialog.dart';
 import '../../playlists/view/playlist_page.dart';
 import '../../podcasts/view/podcast_page.dart';
+import '../../podcasts/view/podcast_page_side_bar_icon.dart';
+import '../../podcasts/view/podcast_page_title.dart';
 import '../../podcasts/view/podcasts_page.dart';
 import '../../radio/view/radio_page.dart';
 import '../../radio/view/radio_page_icon.dart';

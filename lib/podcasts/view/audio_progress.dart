@@ -32,7 +32,7 @@ class AudioProgress extends StatelessWidget with WatchItMixin {
             : duration) ??
         const Duration(seconds: 1);
 
-    bool sliderActive = dur.inSeconds >= pos.inSeconds;
+    bool sliderActive = dur.inSeconds > 0 && dur.inSeconds >= pos.inSeconds;
 
     return RepaintBoundary(
       child: SizedBox(

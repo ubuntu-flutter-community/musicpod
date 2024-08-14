@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../common/view/audio_filter.dart';
 import '../constants.dart';
 import '../common/data/audio.dart';
 import '../persistence_utils.dart';
@@ -305,7 +306,9 @@ class LibraryService {
     }
   }
 
-  // Podcasts
+  ///
+  /// Podcasts
+  ///
   final dio = Dio();
   Map<String, String> _downloads = {};
   Map<String, String> get downloads => _downloads;
@@ -385,11 +388,11 @@ class LibraryService {
         .then((_) => _podcastsController.add(true));
   }
 
-  void updatePodcast(String feedUrl, List<Audio> audios) {
+  Future<void> updatePodcast(String feedUrl, List<Audio> audios) async {
     if (feedUrl.isEmpty || audios.isEmpty) return;
     _addPodcastUpdate(feedUrl);
     _podcasts.update(feedUrl, (value) => audios);
-    writeAudioMap(_podcasts, kPodcastsFileName)
+    return writeAudioMap(_podcasts, kPodcastsFileName)
         .then((_) => _podcastsController.add(true));
   }
 
@@ -398,6 +401,42 @@ class LibraryService {
     _podcastUpdates?.add(feedUrl);
     writeStringIterable(iterable: _podcastUpdates!, filename: kPodcastsUpdates)
         .then((_) => _updateController.add(true));
+  }
+
+  final _ascendingPodcastsController = StreamController<bool>.broadcast();
+  Stream<bool> get ascendingPodcastsChanged =>
+      _ascendingPodcastsController.stream;
+  bool showPodcastAscending(String feedUrl) =>
+      _sharedPreferences.getBool(kAscendingFeeds + feedUrl) ?? false;
+
+  Future<void> _addAscendingPodcast(String feedUrl) async {
+    await _sharedPreferences.setBool(kAscendingFeeds + feedUrl, true).then(
+          (_) => _ascendingPodcastsController.add(true),
+        );
+  }
+
+  Future<void> _removeAscendingPodcast(String feedUrl) async =>
+      _sharedPreferences.remove(kAscendingFeeds + feedUrl).then(
+            (_) => _ascendingPodcastsController.add(true),
+          );
+
+  Future<void> reorderPodcast({
+    required String feedUrl,
+    required bool ascending,
+  }) async {
+    final podcast = _podcasts[feedUrl];
+    if (podcast == null || podcast.isEmpty) return;
+    sortListByAudioFilter(
+      audioFilter: AudioFilter.year,
+      audios: podcast,
+      descending: !ascending,
+    );
+    if (ascending) {
+      await _addAscendingPodcast(feedUrl);
+    } else {
+      await _removeAscendingPodcast(feedUrl);
+    }
+    await updatePodcast(feedUrl, podcast);
   }
 
   Set<String>? _podcastUpdates;
@@ -496,5 +535,6 @@ class LibraryService {
     await _favLanguagesController.close();
     await _updateController.close();
     await _downloadsController.close();
+    await _ascendingPodcastsController.close();
   }
 }

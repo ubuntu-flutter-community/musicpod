@@ -58,13 +58,13 @@ Future<String?> getDownloadsDir() async {
   return null;
 }
 
-Future<void> writeSetting(
+Future<void> writeCustomSetting(
   String? key,
   dynamic value, [
   String filename = kSettingsFileName,
 ]) async {
   if (key == null || value == null) return;
-  final oldSettings = await getSettings(filename);
+  final oldSettings = await getCustomSettings(filename);
   if (oldSettings.containsKey(key)) {
     oldSettings.update(key, (v) => value);
   } else {
@@ -83,16 +83,36 @@ Future<void> writeSetting(
   await file.writeAsString(jsonStr);
 }
 
-Future<dynamic> readSetting(
+Future<void> removeCustomSetting(
+  String key, [
+  String filename = kSettingsFileName,
+]) async {
+  final oldSettings = await getCustomSettings(filename);
+  if (oldSettings.containsKey(key)) {
+    oldSettings.remove(key);
+    final jsonStr = jsonEncode(oldSettings);
+
+    final workingDir = await getWorkingDir();
+
+    final file = File(p.join(workingDir, filename));
+
+    if (!file.existsSync()) {
+      file.create();
+    }
+    await file.writeAsString(jsonStr);
+  }
+}
+
+Future<dynamic> readCustomSetting(
   dynamic key, [
   String filename = kSettingsFileName,
 ]) async {
   if (key == null) return null;
-  final oldSettings = await getSettings(filename);
+  final oldSettings = await getCustomSettings(filename);
   return oldSettings[key];
 }
 
-Future<Map<String, String>> getSettings([
+Future<Map<String, String>> getCustomSettings([
   String filename = kSettingsFileName,
 ]) async {
   final workingDir = await getWorkingDir();

@@ -11,10 +11,8 @@ import '../../common/view/avatar_play_button.dart';
 import '../../common/view/explore_online_popup.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/search_button.dart';
-import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
@@ -26,6 +24,7 @@ import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
 import '../podcast_model.dart';
+import 'podcast_sub_button.dart';
 import 'sliver_podcast_page_list.dart';
 
 class PodcastPage extends StatelessWidget with WatchItMixin {
@@ -46,6 +45,9 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
+
+    watchPropertyValue((LibraryModel m) => m.showPodcastAscending(pageId));
+
     final libraryModel = di<LibraryModel>();
     final audiosWithDownloads = audios
             ?.map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
@@ -95,11 +97,11 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                       title: title,
                     ),
                     title: title,
-                    onLabelTab: (text) => onGenreTap(
+                    onLabelTab: (text) => _onGenreTap(
                       context: context,
                       text: text,
                     ),
-                    onSubTitleTab: (text) => onArtistTap(
+                    onSubTitleTab: (text) => _onArtistTap(
                       context: context,
                       text: text,
                     ),
@@ -127,7 +129,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     );
   }
 
-  Future<void> onArtistTap({
+  Future<void> _onArtistTap({
     required BuildContext context,
     required String text,
   }) async {
@@ -139,7 +141,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       ..search();
   }
 
-  Future<void> onGenreTap({
+  Future<void> _onGenreTap({
     required BuildContext context,
     required String text,
   }) async {
@@ -161,7 +163,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         ..search();
     } else {
       if (context.mounted) {
-        onArtistTap(context: context, text: text);
+        _onArtistTap(context: context, text: text);
       }
     }
   }
@@ -226,105 +228,53 @@ class _PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
-    final libraryModel = di<LibraryModel>();
-
-    final subscribed = libraryModel.isPodcastSubscribed(pageId);
-
-    watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
-    watchPropertyValue((LibraryModel m) => m.downloadsLength);
-
-    final checkingForUpdates =
-        watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        IconButton(
-          tooltip: subscribed
-              ? context.l10n.removeFromCollection
-              : context.l10n.addToCollection,
-          icon: checkingForUpdates
-              ? const SideBarProgress()
-              : Icon(
-                  subscribed ? Iconz().removeFromLibrary : Iconz().addToLibrary,
-                  color: subscribed
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.onSurface,
-                ),
-          onPressed: checkingForUpdates
-              ? null
-              : () {
-                  if (subscribed) {
-                    libraryModel.removePodcast(pageId);
-                  } else if (audios.isNotEmpty) {
-                    libraryModel.addPodcast(pageId, audios);
-                  }
-                },
-        ),
+        PodcastReplayButton(audios: audios),
+        PodcastSubButton(audios: audios, pageId: pageId),
         AvatarPlayButton(audios: audios, pageId: pageId),
+        PodcastReorderButton(feedUrl: pageId),
         ExploreOnlinePopup(text: title),
       ],
     );
   }
 }
 
-class PodcastPageTitle extends StatelessWidget with WatchItMixin {
-  const PodcastPageTitle({
-    super.key,
-    required this.feedUrl,
-    required this.title,
-  });
+class PodcastReplayButton extends StatelessWidget {
+  const PodcastReplayButton({super.key, required this.audios});
 
-  final String feedUrl;
-  final String title;
+  final List<Audio> audios;
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
-    final visible = di<LibraryModel>().podcastUpdateAvailable(feedUrl);
-    return Badge(
-      backgroundColor: context.t.colorScheme.primary,
-      isLabelVisible: visible,
-      alignment: Alignment.centerRight,
-      child: Padding(
-        padding: EdgeInsets.only(right: visible ? 10 : 0),
-        child: Text(title),
-      ),
+    return IconButton(
+      tooltip: context.l10n.replayAllEpisodes,
+      onPressed: () => di<PlayerModel>().removeLastPositions(audios),
+      icon: Icon(Iconz().refresh),
     );
   }
 }
 
-class PodcastPageSideBarIcon extends StatelessWidget {
-  const PodcastPageSideBarIcon({super.key, this.imageUrl});
+class PodcastReorderButton extends StatelessWidget with WatchItMixin {
+  const PodcastReorderButton({super.key, required this.feedUrl});
 
-  final String? imageUrl;
+  final String feedUrl;
 
   @override
   Widget build(BuildContext context) {
-    if (imageUrl == null) {
-      return SideBarFallBackImage(
-        child: Icon(Iconz().podcast),
-      );
-    }
+    final ascending =
+        watchPropertyValue((LibraryModel m) => m.showPodcastAscending(feedUrl));
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: SizedBox(
-        width: sideBarImageSize,
-        height: sideBarImageSize,
-        child: SafeNetworkImage(
-          url: imageUrl,
-          fit: BoxFit.fitHeight,
-          filterQuality: FilterQuality.medium,
-          fallBackIcon: Icon(
-            Iconz().podcast,
-            size: sideBarImageSize,
-          ),
-          errorIcon: Icon(
-            Iconz().podcast,
-            size: sideBarImageSize,
-          ),
-        ),
+    return IconButton(
+      isSelected: ascending,
+      tooltip: context.l10n.reorder,
+      onPressed: () => di<LibraryModel>()
+          .reorderPodcast(feedUrl: feedUrl, ascending: !ascending),
+      icon: Icon(Iconz().reorder),
+      selectedIcon: Icon(
+        Iconz().reorder,
+        color: context.t.colorScheme.primary,
       ),
     );
   }
