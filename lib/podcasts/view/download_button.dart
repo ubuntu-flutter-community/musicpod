@@ -6,6 +6,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import '../download_model.dart';
 
 class DownloadButton extends StatelessWidget with WatchItMixin {
@@ -26,6 +27,11 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
     final model = di<DownloadModel>();
     final value =
         watchPropertyValue((DownloadModel m) => m.getValue(audio?.url));
+
+    final download = watchPropertyValue(
+      (LibraryModel m) => m.getDownload(audio?.url) != null,
+    );
+
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -38,11 +44,11 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
               ? context.l10n.removeDownloadEpisode
               : context.l10n.downloadEpisode,
           icon: Icon(
-            audio?.path != null ? Iconz().downloadFilled : Iconz().download,
+            download ? Iconz().downloadFilled : Iconz().download,
             color: audio?.path != null ? theme.colorScheme.primary : null,
           ),
           onPressed: () {
-            if (audio?.path != null) {
+            if (download) {
               model.deleteDownload(context: context, audio: audio);
             } else {
               addPodcast?.call();
@@ -50,7 +56,9 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
             }
           },
           iconSize: iconSize,
-          color: audio?.path != null ? theme.colorScheme.primary : null,
+          color: download
+              ? theme.colorScheme.primary
+              : theme.colorScheme.onSurface,
         ),
       ],
     );
