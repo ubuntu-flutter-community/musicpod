@@ -1,3 +1,3 @@
 Most of the stuff the flatpak should automatically find and update. Make sure someone with Flatpak tests each change before merging
 
-Every time you merge a snap change the version in the appdata here(add the newest at the top) and copy the raw link, replace main or blob or whatever with the commit SHA, and then download that file and get the sha256 and replace both things in the flatpak repo
+When you update the snap in the other repo make sure to make a PR over there updating the version number and its release date. Just copy the last release and paste it above with the new information.
