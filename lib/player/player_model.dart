@@ -184,6 +184,8 @@ class PlayerModel extends SafeChangeNotifier {
         .replaceAll(')', '');
   }
 
+  void setTimer(Duration duration) => _service.setTimer(duration);
+
   @override
   Future<void> dispose() async {
     await _queueNameChangedSub?.cancel();

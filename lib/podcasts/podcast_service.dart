@@ -6,6 +6,7 @@ import '../common/data/audio.dart';
 import '../common/data/podcast_genre.dart';
 import '../common/view/audio_filter.dart';
 import '../common/view/languages.dart';
+import '../library/library_service.dart';
 import '../notifications/notifications_service.dart';
 import '../settings/settings_service.dart';
 import 'podcast_utils.dart';
@@ -13,11 +14,14 @@ import 'podcast_utils.dart';
 class PodcastService {
   final NotificationsService _notificationsService;
   final SettingsService _settingsService;
+  final LibraryService _libraryService;
   PodcastService({
     required NotificationsService notificationsService,
     required SettingsService settingsService,
+    required LibraryService libraryService,
   })  : _notificationsService = notificationsService,
-        _settingsService = settingsService;
+        _settingsService = settingsService,
+        _libraryService = libraryService;
 
   SearchResult? _searchResult;
   Search? _search;
@@ -80,11 +84,11 @@ class PodcastService {
   }
 
   Future<void> updatePodcasts({
-    required Map<String, List<Audio>> oldPodcasts,
-    required void Function(String name, List<Audio> audios) updatePodcast,
+    Map<String, List<Audio>>? oldPodcasts,
     required String updateMessage,
+    Function({required String message})? notify,
   }) async {
-    for (final old in oldPodcasts.entries) {
+    for (final old in (oldPodcasts ?? _libraryService.podcasts).entries) {
       if (old.value.isNotEmpty) {
         final list = old.value;
         sortListByAudioFilter(
@@ -102,10 +106,14 @@ class PodcastService {
                     audios.firstOrNull?.year == firstOld.year ||
                 audios.isEmpty) return;
 
-            updatePodcast(old.key, audios);
-            _notificationsService.notify(
-              message: '$updateMessage ${firstOld.album ?? old.value}',
-            );
+            _libraryService.updatePodcast(old.key, audios);
+            if (notify != null) {
+              notify(message: '$updateMessage ${firstOld.album ?? old.value}');
+            } else {
+              _notificationsService.notify(
+                message: '$updateMessage ${firstOld.album ?? old.value}',
+              );
+            }
           });
         }
       }

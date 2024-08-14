@@ -202,7 +202,7 @@ class Iconz {
   IconData get replay => yaruStyled
       ? YaruIcons.history
       : appleStyled
-          ? CupertinoIcons.restart
+          ? CupertinoIcons.clock
           : Icons.history;
   IconData get speakerLowFilled => yaruStyled
       ? YaruIcons.speaker_low_filled
@@ -425,6 +425,11 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.plus_app
           : Icons.queue;
+  IconData get sleep => yaruStyled
+      ? YaruIcons.clear_night
+      : appleStyled
+          ? CupertinoIcons.moon
+          : Icons.mode_night;
 
   Widget getAnimatedStar(bool isStarred, [Color? color]) {
     if (yaruStyled) {

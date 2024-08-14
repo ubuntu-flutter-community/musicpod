@@ -765,6 +765,11 @@ class PlayerService {
     _radioHistoryController.add(true);
   }
 
+  Timer? _timer;
+  void setTimer(Duration duration) {
+    _timer = Timer(duration, () => pause());
+  }
+
   Future<void> dispose() async {
     await _writePlayerState();
     await _smtcSub?.cancel();
@@ -791,7 +796,7 @@ class PlayerService {
     await _rateController.close();
     await _radioHistoryController.close();
     await _bufferSub?.cancel();
-
+    _timer?.cancel();
     await _player.dispose();
   }
 
