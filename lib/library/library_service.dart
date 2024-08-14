@@ -406,21 +406,19 @@ class LibraryService {
   final _ascendingPodcastsController = StreamController<bool>.broadcast();
   Stream<bool> get ascendingPodcastsChanged =>
       _ascendingPodcastsController.stream;
-  Future<bool> showPodcastAscending(String feedUrl) async {
-    final feeds = await getCustomSettings(kAscendingFeeds);
-    return feeds.containsKey(feedUrl);
-  }
+  bool showPodcastAscending(String feedUrl) =>
+      _sharedPreferences.getBool(kAscendingFeeds + feedUrl) ?? false;
 
   Future<void> _addAscendingPodcast(String feedUrl) async {
-    await writeCustomSetting(feedUrl, true.toString(), kAscendingFeeds).then(
-      (_) => _ascendingPodcastsController.add(true),
-    );
+    await _sharedPreferences.setBool(kAscendingFeeds + feedUrl, true).then(
+          (_) => _ascendingPodcastsController.add(true),
+        );
   }
 
   Future<void> _removeAscendingPodcast(String feedUrl) async =>
-      removeCustomSetting(feedUrl, kAscendingFeeds).then(
-        (_) => _ascendingPodcastsController.add(true),
-      );
+      _sharedPreferences.remove(kAscendingFeeds + feedUrl).then(
+            (_) => _ascendingPodcastsController.add(true),
+          );
 
   Future<void> reorderPodcast({
     required String feedUrl,

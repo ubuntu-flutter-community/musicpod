@@ -130,7 +130,6 @@ const kAppStateFileName = 'appstate.json';
 const kRadioHistoryFileName = 'radiohistory.json';
 const kDownloads = 'downloads.json';
 const kFeedsWithDownloads = 'feedswithdownloads.json';
-const kAscendingFeeds = 'ascendingfeeds.json';
 const kCoverStore = 'coverStore.json';
 const kDirectoryProperty = 'directory';
 const kRadioUrl = 'de1.api.radio-browser.info';
@@ -160,6 +159,7 @@ const kSearchPageId = 'searchPageId';
 const kFavRadioTags = 'favRadioTags';
 const kFavCountryCodes = 'favCountryCodes';
 const kFavLanguageCodes = 'favLanguageCodes';
+const kAscendingFeeds = 'ascendingfeed:::';
 
 const shops = <String, String>{
   'https://us.7digital.com/': '7digital',

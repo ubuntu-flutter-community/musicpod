@@ -46,6 +46,8 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
 
+    watchPropertyValue((LibraryModel m) => m.showPodcastAscending(pageId));
+
     final libraryModel = di<LibraryModel>();
     final audiosWithDownloads = audios
             ?.map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
@@ -261,11 +263,8 @@ class PodcastReorderButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final ascending = watchFuture(
-          (LibraryModel m) => m.showPodcastAscending(feedUrl),
-          initialValue: false,
-        ).data ??
-        false;
+    final ascending =
+        watchPropertyValue((LibraryModel m) => m.showPodcastAscending(feedUrl));
 
     return IconButton(
       isSelected: ascending,

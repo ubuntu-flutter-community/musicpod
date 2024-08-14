@@ -231,7 +231,7 @@ class LibraryModel extends SafeChangeNotifier {
   }) =>
       _service.reorderPodcast(feedUrl: feedUrl, ascending: ascending);
 
-  Future<bool> showPodcastAscending(String feedUrl) async =>
+  bool showPodcastAscending(String feedUrl) =>
       _service.showPodcastAscending(feedUrl);
 
   //
