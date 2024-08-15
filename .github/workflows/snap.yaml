@@ -26,6 +26,7 @@ jobs:
           else
             echo "changed=false" >> $GITHUB_OUTPUT
           fi
+          echo $changed
   build_and_publish:
     runs-on: ubuntu-latest
     steps:
@@ -38,7 +39,7 @@ jobs:
       - run: sudo apt install -y clang cmake curl libgtk-3-dev ninja-build pkg-config unzip libunwind-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev libmpv-dev
       - run: flutter pub get
       - uses: snapcore/action-build@v1
-        if: ${{ needs.check_file.outputs.has_changed == 'changed' }}
+        if: ${{ needs.check_file.outputs.changed == 5 }}
         id: build
       # - uses: snapcore/action-publish@v1
       #   if: steps.build.outcome == 'success'
