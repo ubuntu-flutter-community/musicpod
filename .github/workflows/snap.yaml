@@ -4,12 +4,28 @@ on:
   push:
     branches:
       - snap  
-
+  pull_request:
+    branches: [main]
 
 env:
   FLUTTER_VERSION: '3.24.x'
 
 jobs:
+  check_file:
+    runs-on: ubuntu-latest
+    outputs:
+      has_changed: ${{ steps.check.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check file
+        id: check
+        run: |
+          changed=$(git diff --unified=0 HEAD^ HEAD pubspec.yaml | grep -n '^@@' | cut -d':' -f1)
+          if [[ "$changed" == "3" ]]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
   build_and_publish:
     runs-on: ubuntu-latest
     steps:
@@ -22,11 +38,12 @@ jobs:
       - run: sudo apt install -y clang cmake curl libgtk-3-dev ninja-build pkg-config unzip libunwind-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev libmpv-dev
       - run: flutter pub get
       - uses: snapcore/action-build@v1
+        if: ${{ needs.check_file.outputs.has_changed == 'changed' }}
         id: build
-      - uses: snapcore/action-publish@v1
-        if: steps.build.outcome == 'success'
-        env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
-        with:
-          snap: ${{ steps.build.outputs.snap }}
-          release: edge
+      # - uses: snapcore/action-publish@v1
+      #   if: steps.build.outcome == 'success'
+      #   env:
+      #     SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+      #   with:
+      #     snap: ${{ steps.build.outputs.snap }}
+      #     release: edge
