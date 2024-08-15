@@ -55,7 +55,8 @@ jobs:
       - name: Check version in pubspec.yaml
         id: check
         run: |
-          echo $(git branch)
+          echo "Head branch: ${GITHUB_HEAD_REF}"
+          echo "Base branch: ${GITHUB_BASE_REF}"
           changed=$(git diff --unified=0 --merge-base HEAD -- 'pubspec.yaml' | grep -n '^@@' | cut -d':' -f1)
           if [[ "$changed" == "5" ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
