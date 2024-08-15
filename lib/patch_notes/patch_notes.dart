@@ -238,8 +238,18 @@ const kPatchNotes20240728 = 'Hello MusicPod Users, this big update includes\n'
     '\n* a lot of bugfixes'
     '\n';
 
-const kRecentPatchNotesDisposed = kPatchNotes20240728disposed;
-const kRecentPatchNotesTitle = kPatchNotesTitle20240728;
-const kRecentPatchNotes = kPatchNotes20240728;
+// 2024 08 15
+const kPatchNotes20240815disposed = 'patchNotes20240815disposed';
+const kPatchNotesTitle20240815 = 'Patch notes: 2024-08-15';
+const kPatchNotes20240815 = 'Hello MusicPod Users, this update includes\n'
+    '\n* search improvements'
+    '\n* new podcast options: reorder, sleep timer and reset progress'
+    '\n* a lot under the hood changes'
+    '\n* bugfixes'
+    '\n';
+
+const kRecentPatchNotesDisposed = kPatchNotes20240815disposed;
+const kRecentPatchNotesTitle = kPatchNotesTitle20240815;
+const kRecentPatchNotes = kPatchNotes20240815;
 
 const kPatchNotesDisposed = 'kPatchNotesDisposed';
