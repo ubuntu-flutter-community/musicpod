@@ -52,3 +52,4 @@ jobs:
       - run: sudo apt install -y clang cmake curl libgtk-3-dev ninja-build pkg-config unzip libunwind-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev libmpv-dev
       - run: flutter pub get
       - run: flutter build linux -v
+      - uses: snapcore/action-build@v1
