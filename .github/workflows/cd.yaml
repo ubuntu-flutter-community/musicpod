@@ -1,9 +1,9 @@
-name: Publish Snap
+name: Build and Publish
 
 on:
   push:
     branches:
-      - snap
+      - main
 
 env:
   FLUTTER_VERSION: '3.24.x'
@@ -16,11 +16,11 @@ jobs:
       - name: Check version in pubspec.yaml
         id: check
         run: |
-          echo "Head branch: ${GITHUB_HEAD_REF}"
-          echo "Base branch: ${GITHUB_BASE_REF}"
           changed=$(git diff --unified=0 --merge-base HEAD HEAD^ -- 'pubspec.yaml' | grep -n '^@@' | cut -d':' -f1)
           echo $changed >> $GITHUB_OUTPUT
           echo "lines changed: $changed"
+          echo "Head branch: ${GITHUB_HEAD_REF}"
+          echo "Base branch: ${GITHUB_BASE_REF}"
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
@@ -32,10 +32,11 @@ jobs:
       - uses: snapcore/action-build@v1
         if: steps.check.outputs.changed == '5'
         id: build
-      - uses: snapcore/action-publish@v1
-        if: steps.build.outcome == 'success'
-        env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
-        with:
-          snap: ${{ steps.build.outputs.snap }}
-          release: edge
+      # Disabled until linux arm runners are available
+      # - uses: snapcore/action-publish@v1
+      #   if: steps.build.outcome == 'success'
+      #   env:
+      #     SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+      #   with:
+      #     snap: ${{ steps.build.outputs.snap }}
+      #     release: edge
