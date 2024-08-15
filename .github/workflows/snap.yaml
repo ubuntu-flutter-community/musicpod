@@ -11,25 +11,20 @@ env:
   FLUTTER_VERSION: '3.24.x'
 
 jobs:
-  check_file:
+  build_and_publish:
     runs-on: ubuntu-latest
-    outputs:
-      has_changed: ${{ steps.check.outputs.changed }}
     steps:
       - uses: actions/checkout@v3
-      - name: Check file
+      - name: Check version in pubspec.yaml
         id: check
         run: |
-          changed=$(git diff --unified=0 main...HEAD -- 'pubspec.yaml' | grep -n '^@@' | cut -d':' -f1)
+          changed=$(git diff --unified=0 main... -- 'pubspec.yaml' | grep -n '^@@' | cut -d':' -f1)
           if [[ "$changed" == "5" ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
             echo "changed=false" >> $GITHUB_OUTPUT
           fi
           echo $changed
-  build_and_publish:
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
@@ -39,7 +34,7 @@ jobs:
       - run: sudo apt install -y clang cmake curl libgtk-3-dev ninja-build pkg-config unzip libunwind-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev libmpv-dev
       - run: flutter pub get
       - uses: snapcore/action-build@v1
-        if: ${{ needs.check_file.outputs.changed == 5 }}
+        if: steps.check.outputs.changed == 5
         id: build
       # - uses: snapcore/action-publish@v1
       #   if: steps.build.outcome == 'success'
