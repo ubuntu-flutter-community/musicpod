@@ -52,3 +52,16 @@ jobs:
       - run: sudo apt install -y clang cmake curl libgtk-3-dev ninja-build pkg-config unzip libunwind-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev libmpv-dev
       - run: flutter pub get
       - run: flutter build linux -v
+      - name: Check version in pubspec.yaml
+        id: check
+        run: |
+          changed=$(git diff --unified=0 'pubspec.yaml' | grep -n '^@@' | cut -d':' -f1)
+          if [[ "$changed" == "5" ]]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+          echo "lines changed: $changed"
+      - uses: snapcore/action-build@v1
+        if: steps.check.outputs.changed == 5
+        id: build
