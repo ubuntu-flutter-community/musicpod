@@ -55,9 +55,9 @@ jobs:
       - name: Check version in pubspec.yaml
         id: check
         run: |
+          changed=$(git diff --unified=0 main... -- 'pubspec.yaml' | grep -n '^@@' | cut -d':' -f1)
           echo "Head branch: ${GITHUB_HEAD_REF}"
           echo "Base branch: ${GITHUB_BASE_REF}"
-          changed=$(git diff --unified=0 --merge-base origin/${GITHUB_BASE_REF} origin/${GITHUB_HEAD_REF} -- 'pubspec.yaml' | grep -n '^@@' | cut -d':' -f1)
           echo $changed >> $GITHUB_OUTPUT
           echo "lines changed: $changed"
       - uses: snapcore/action-build@v1
