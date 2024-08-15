@@ -9,18 +9,22 @@ env:
   FLUTTER_VERSION: '3.24.x'
 
 jobs:
-  build_and_publish:
+  check_version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Check version in pubspec.yaml
         id: check
         run: |
-          changed=$(git diff --unified=0 --merge-base HEAD HEAD^ -- 'pubspec.yaml' | grep -n '^@@' | cut -d':' -f1)
-          echo $changed >> $GITHUB_OUTPUT
-          echo "lines changed: $changed"
-          echo "Head branch: ${GITHUB_HEAD_REF}"
-          echo "Base branch: ${GITHUB_BASE_REF}"
+          changed=$(git diff --unified=0 --merge-base HEAD^ HEAD -- 'pubspec.yaml' | grep -n '^@@' | cut -d':' -f1)
+          if [[ "$changed" != "5" ]]; then
+            exit 1
+          fi
+
+  build_and_publish:
+    needs: check_version
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
@@ -30,7 +34,6 @@ jobs:
       - run: sudo apt install -y clang cmake curl libgtk-3-dev ninja-build pkg-config unzip libunwind-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev libmpv-dev
       - run: flutter pub get
       - uses: snapcore/action-build@v1
-        if: steps.check.outputs.changed == '5'
         id: build
       # Disabled until linux arm runners are available
       # - uses: snapcore/action-publish@v1
