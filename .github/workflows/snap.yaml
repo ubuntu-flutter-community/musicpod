@@ -21,7 +21,7 @@ jobs:
         id: check
         run: |
           changed=$(git diff --unified=0 pubspec.yaml | grep -n '^@@' | cut -d':' -f1)
-          if [[ "$changed" == "3" ]]; then
+          if [[ "$changed" == "5" ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
             echo "changed=false" >> $GITHUB_OUTPUT
