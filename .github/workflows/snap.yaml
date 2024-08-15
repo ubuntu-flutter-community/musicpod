@@ -20,7 +20,7 @@ jobs:
       - name: Check file
         id: check
         run: |
-          changed=$(git diff --unified=0 HEAD~1...HEAD pubspec.yaml | grep -n '^@@' | cut -d':' -f1)
+          changed=$(git diff --unified=0 main...HEAD -- 'pubspec.yaml' | grep -n '^@@' | cut -d':' -f1)
           if [[ "$changed" == "5" ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
