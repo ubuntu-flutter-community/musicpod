@@ -57,7 +57,7 @@ jobs:
         run: |
           echo "Head branch: ${GITHUB_HEAD_REF}"
           echo "Base branch: ${GITHUB_BASE_REF}"
-          changed=$(git diff --unified=0 --merge-base ${GITHUB_BASE_REF} ${GITHUB_HEAD_REF} -- 'pubspec.yaml' | grep -n '^@@' | cut -d':' -f1)
+          changed=$(git diff --unified=0 ${GITHUB_BASE_REF}... -- 'pubspec.yaml' | grep -n '^@@' | cut -d':' -f1)
           if [[ "$changed" == "5" ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
