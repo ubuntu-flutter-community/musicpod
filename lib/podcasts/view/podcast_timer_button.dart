@@ -61,7 +61,10 @@ class _DialogState extends State<_Dialog> {
             showSnackBar(
               context: context,
               content: Text(
-                '${context.l10n.playbackWillStopIn}${duration.formattedTime} (${_timeOfDay.format(context)})',
+                context.l10n.playbackWillStopIn(
+                  duration.formattedTime,
+                  _timeOfDay.format(context),
+                ),
               ),
             );
             Navigator.of(context).pop();

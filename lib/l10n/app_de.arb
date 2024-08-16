@@ -329,5 +329,5 @@
     "restartEpisode": "Episode von Anfang spielen",
     "restartAllEpisodes": "Alle Episoden von Anfang spielen",
     "checkForUpdates": "Auf Aktualisierung überprüfen",
-    "playbackWillStopIn": "Wiedergabe wird gestoppt in: "
+    "playbackWillStopIn": "Wiedergabe wird gestoppt in: {duration} ({timeOfDay})"
 }
