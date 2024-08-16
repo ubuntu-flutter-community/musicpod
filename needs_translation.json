@@ -1635,33 +1635,5 @@
     "replayAllEpisodes",
     "checkForUpdates",
     "playbackWillStopIn"
-  ],
-
-  "zh": [
-    "replayEpisode",
-    "replayAllEpisodes",
-    "checkForUpdates",
-    "playbackWillStopIn"
-  ],
-
-  "zh_CN": [
-    "replayEpisode",
-    "replayAllEpisodes",
-    "checkForUpdates",
-    "playbackWillStopIn"
-  ],
-
-  "zh_HK": [
-    "replayEpisode",
-    "replayAllEpisodes",
-    "checkForUpdates",
-    "playbackWillStopIn"
-  ],
-
-  "zh_TW": [
-    "replayEpisode",
-    "replayAllEpisodes",
-    "checkForUpdates",
-    "playbackWillStopIn"
   ]
 }
