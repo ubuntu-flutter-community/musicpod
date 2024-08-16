@@ -135,6 +135,7 @@ class MasterPanel extends StatelessWidget {
               itemBuilder: (context, index) {
                 final item = masterItems.elementAt(index);
                 return MasterTile(
+                  key: ValueKey(item.pageId),
                   onTap: () {
                     if (item.pageId == kNewPlaylistPageId) {
                       showDialog(
