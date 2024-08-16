@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../common/data/audio.dart';
 import '../../constants.dart';
 import '../../local_audio/view/local_cover.dart';
+import '../player_model.dart';
 import 'player_fall_back_image.dart';
 import 'super_network_image.dart';
 
 class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
   const FullHeightPlayerImage({
     super.key,
-    this.audio,
-    required this.isOnline,
     this.fit,
     this.height,
     this.width,
     this.borderRadius,
   });
 
-  final Audio? audio;
-  final bool isOnline;
   final BoxFit? fit;
   final double? height, width;
   final BorderRadius? borderRadius;
 
   @override
   Widget build(BuildContext context) {
+    final audio = watchPropertyValue((PlayerModel m) => m.audio);
+    final icyTitle =
+        watchPropertyValue((PlayerModel m) => m.mpvMetaData?.icyTitle);
+
     final fallBackImage = PlayerFallBackImage(
       key: const ValueKey(0),
       audio: audio,
@@ -37,8 +37,8 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
     if (audio?.hasPathAndId == true) {
       image = LocalCover(
         key: ValueKey(audio!.path),
-        albumId: audio!.albumId!,
-        path: audio!.path!,
+        albumId: audio.albumId!,
+        path: audio.path!,
         width: width,
         height: height,
         fit: fit ?? BoxFit.fitHeight,
@@ -47,7 +47,11 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
     } else {
       if (audio?.albumArtUrl != null || audio?.imageUrl != null) {
         image = SuperNetworkImage(
-          key: ValueKey(audio?.imageUrl ?? audio?.albumArtUrl),
+          key: ValueKey(
+            (icyTitle ?? '') +
+                (audio?.imageUrl ?? '') +
+                (audio?.albumArtUrl ?? ''),
+          ),
           height: height ?? fullHeightPlayerImageSize,
           width: width ?? fullHeightPlayerImageSize,
           audio: audio,

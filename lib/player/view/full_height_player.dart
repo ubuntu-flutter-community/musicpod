@@ -59,10 +59,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  FullHeightPlayerImage(
-                    audio: audio,
-                    isOnline: isOnline,
-                  ),
+                  const FullHeightPlayerImage(),
                   const SizedBox(
                     height: kYaruPagePadding,
                   ),
