@@ -5,6 +5,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/view/snackbars.dart';
 import '../../common/view/tapable_text.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -13,6 +14,7 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
+import '../radio_model.dart';
 
 class RadioPageTagBar extends StatelessWidget {
   const RadioPageTagBar({super.key, required this.station});
@@ -30,7 +32,7 @@ class RadioPageTagBar extends StatelessWidget {
         alignment: WrapAlignment.center,
         runAlignment: WrapAlignment.center,
         crossAxisAlignment: WrapCrossAlignment.center,
-        children: tapAbleTags(tags: tags, style: style),
+        children: tapAbleTags(context: context, tags: tags, style: style),
       ),
     );
 
@@ -57,6 +59,7 @@ class RadioPageTagBar extends StatelessWidget {
   }
 
   List<Widget> tapAbleTags({
+    required BuildContext context,
     required List<String> tags,
     required TextStyle? style,
     int? limit,
@@ -71,12 +74,28 @@ class RadioPageTagBar extends StatelessWidget {
                 style: style,
                 wrapInFlexible: false,
                 onTap: () {
-                  di<LibraryModel>().pushNamed(pageId: kSearchPageId);
-                  di<SearchModel>()
-                    ..setTag(Tag(name: e, stationCount: 1))
-                    ..setAudioType(AudioType.radio)
-                    ..setSearchType(SearchType.radioTag)
-                    ..search();
+                  di<RadioModel>().init().then(
+                    (connectedHost) {
+                      if (connectedHost != null) {
+                        di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                        di<SearchModel>()
+                          ..setTag(Tag(name: e, stationCount: 1))
+                          ..setAudioType(AudioType.radio)
+                          ..setSearchType(SearchType.radioTag)
+                          ..search();
+                      } else {
+                        if (context.mounted) {
+                          showSnackBar(
+                            context: context,
+                            content: buildConnectSnackBar(
+                              connectedHost: connectedHost,
+                              context: context,
+                            ),
+                          );
+                        }
+                      }
+                    },
+                  );
                 },
                 text: e.length > 20 ? e.substring(0, 19) : e,
               ),
