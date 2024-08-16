@@ -138,6 +138,7 @@ class PlayerService {
     _setMediaControlDuration(value);
   }
 
+  int _playerStateTicker = 0;
   final _positionController = StreamController<bool>.broadcast();
   Stream<bool> get positionChanged => _positionController.stream;
   Duration? _position = Duration.zero;
@@ -145,8 +146,13 @@ class PlayerService {
   void setPosition(Duration? value) {
     if (position?.inSeconds == value?.inSeconds) return;
     _position = value;
+    _playerStateTicker = value?.inSeconds ?? 0;
     _positionController.add(true);
     _setMediaControlPosition(value);
+    if (_playerStateTicker >= 5) {
+      _playerStateTicker = 0;
+      safeLastPosition().then((_) => _writePlayerState());
+    }
   }
 
   final _bufferController = StreamController<bool>.broadcast();
