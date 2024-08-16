@@ -11,7 +11,7 @@ class BlurredFullHeightPlayerImage extends StatelessWidget {
     super.key,
     required this.size,
     required this.audio,
-    this.blur = 20,
+    this.blur = 30,
     this.opacity,
     this.borderRadius,
   });
