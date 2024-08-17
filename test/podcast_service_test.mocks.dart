@@ -112,12 +112,6 @@ class MockSettingsService extends _i1.Mock implements _i5.SettingsService {
       ) as _i4.Stream<bool>);
 
   @override
-  bool get recentPatchNotesDisposed => (super.noSuchMethod(
-        Invocation.getter(#recentPatchNotesDisposed),
-        returnValue: false,
-      ) as bool);
-
-  @override
   _i4.Stream<bool> get usePodcastIndexChanged => (super.noSuchMethod(
         Invocation.getter(#usePodcastIndexChanged),
         returnValue: _i4.Stream<bool>.empty(),
@@ -166,10 +160,19 @@ class MockSettingsService extends _i1.Mock implements _i5.SettingsService {
       );
 
   @override
-  _i4.Future<void> disposePatchNotes() => (super.noSuchMethod(
+  bool recentPatchNotesDisposed(String? version) => (super.noSuchMethod(
+        Invocation.method(
+          #recentPatchNotesDisposed,
+          [version],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  _i4.Future<void> disposePatchNotes(String? version) => (super.noSuchMethod(
         Invocation.method(
           #disposePatchNotes,
-          [],
+          [version],
         ),
         returnValue: _i4.Future<void>.value(),
         returnValueForMissingStub: _i4.Future<void>.value(),
