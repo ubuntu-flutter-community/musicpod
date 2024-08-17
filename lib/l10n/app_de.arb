@@ -297,7 +297,7 @@
     "weatherXXXPodcastIndexOnly": "Wetter",
     "wildernessXXXPodcastIndexOnly": "Wildnis",
     "wrestlingXXXPodcastIndexOnly": "Ringen",
-    "updateAvailable": "Update available",
+    "updateAvailable": "Aktualisierung verfügbar",
     "showMetaData": "Zeige Metadaten",
     "metadata": "Metadaten",
     "writeMetadata": "Write metadata",
@@ -329,5 +329,6 @@
     "restartEpisode": "Episode von Anfang spielen",
     "restartAllEpisodes": "Alle Episoden von Anfang spielen",
     "checkForUpdates": "Auf Aktualisierung überprüfen",
-    "playbackWillStopIn": "Wiedergabe wird gestoppt in: {duration} ({timeOfDay})"
+    "playbackWillStopIn": "Wiedergabe wird gestoppt in: {duration} ({timeOfDay})",
+    "schedulePlaybackStopTimer": "Schedule a time to stop playback"
 }

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
-import '../patch_notes/patch_notes.dart';
 
 class SettingsService {
   SettingsService({required SharedPreferences sharedPreferences})
@@ -39,17 +38,15 @@ class SettingsService {
       StreamController<bool>.broadcast();
   Stream<bool> get recentPatchNotesDisposedChanged =>
       _recentPatchNotesDisposedController.stream;
-  bool get recentPatchNotesDisposed =>
-      _preferences.getString(kPatchNotesDisposed) == kRecentPatchNotesDisposed;
-  Future<void> disposePatchNotes() async {
-    return _preferences
-        .setString(kPatchNotesDisposed, kRecentPatchNotesDisposed)
-        .then(
-      (saved) {
-        if (saved) _recentPatchNotesDisposedController.add(true);
-      },
-    );
-  }
+  bool recentPatchNotesDisposed(String version) =>
+      _preferences.getString(kPatchNotesDisposed) == version;
+
+  Future<void> disposePatchNotes(String version) async =>
+      _preferences.setString(kPatchNotesDisposed, version).then(
+        (saved) {
+          if (saved) _recentPatchNotesDisposedController.add(true);
+        },
+      );
 
   final _usePodcastIndexController = StreamController<bool>.broadcast();
   Stream<bool> get usePodcastIndexChanged => _usePodcastIndexController.stream;

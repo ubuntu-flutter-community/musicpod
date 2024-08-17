@@ -330,5 +330,6 @@
     "replayEpisode": "Replay episode",
     "replayAllEpisodes": "Replay all episodes",
     "checkForUpdates": "Check for updates",
-    "playbackWillStopIn": "Playback will stop in: {duration} ({timeOfDay})"
+    "playbackWillStopIn": "Playback will stop in: {duration} ({timeOfDay})",
+    "schedulePlaybackStopTimer": "Schedule a time to stop playback"
 }

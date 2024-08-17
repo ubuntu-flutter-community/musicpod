@@ -95,68 +95,75 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                return GridView.builder(
-                  padding: getAdaptiveHorizontalPadding(
-                    constraints: constraints,
+                return RefreshIndicator(
+                  onRefresh: () async => di<PodcastModel>().update(
+                    updateMessage: context.l10n.newEpisodeAvailable,
                   ),
-                  itemCount: itemCount,
-                  gridDelegate: audioCardGridDelegate,
-                  itemBuilder: (context, index) {
-                    final MapEntry<String, List<Audio>> podcast;
-                    if (updatesOnly) {
-                      podcast = subs.entries
-                          .where(
-                            (e) => libraryModel.podcastUpdateAvailable(e.key),
-                          )
-                          .elementAt(index);
-                    } else if (downloadsOnly) {
-                      podcast = subs.entries
-                          .where((e) => libraryModel.feedHasDownload(e.key))
-                          .elementAt(index);
-                    } else {
-                      podcast = subs.entries.elementAt(index);
-                    }
+                  child: GridView.builder(
+                    padding: getAdaptiveHorizontalPadding(
+                      constraints: constraints,
+                    ),
+                    itemCount: itemCount,
+                    gridDelegate: audioCardGridDelegate,
+                    itemBuilder: (context, index) {
+                      final MapEntry<String, List<Audio>> podcast;
+                      if (updatesOnly) {
+                        podcast = subs.entries
+                            .where(
+                              (e) => libraryModel.podcastUpdateAvailable(e.key),
+                            )
+                            .elementAt(index);
+                      } else if (downloadsOnly) {
+                        podcast = subs.entries
+                            .where((e) => libraryModel.feedHasDownload(e.key))
+                            .elementAt(index);
+                      } else {
+                        podcast = subs.entries.elementAt(index);
+                      }
 
-                    final artworkUrl600 =
-                        podcast.value.firstOrNull?.albumArtUrl ??
-                            podcast.value.firstOrNull?.imageUrl;
-                    final image = SafeNetworkImage(
-                      url: artworkUrl600,
-                      fit: BoxFit.cover,
-                      height: kAudioCardDimension,
-                      width: kAudioCardDimension,
-                    );
+                      final artworkUrl600 =
+                          podcast.value.firstOrNull?.albumArtUrl ??
+                              podcast.value.firstOrNull?.imageUrl;
+                      final image = SafeNetworkImage(
+                        url: artworkUrl600,
+                        fit: BoxFit.cover,
+                        height: kAudioCardDimension,
+                        width: kAudioCardDimension,
+                      );
 
-                    return AudioCard(
-                      image: image,
-                      bottom: AudioCardBottom(
-                        style: libraryModel.podcastUpdateAvailable(podcast.key)
-                            ? theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                ) ??
-                                TextStyle(
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                )
-                            : null,
-                        text: podcast.value.firstOrNull?.album ??
-                            podcast.value.firstOrNull?.title ??
-                            podcast.value.firstOrNull.toString(),
-                      ),
-                      onPlay: () => di<PlayerModel>()
-                          .startPlaylist(
-                            audios: podcast.value,
-                            listName: podcast.key,
-                          )
-                          .then(
-                            (_) => libraryModel.removePodcastUpdate(
-                              podcast.key,
+                      return AudioCard(
+                        image: image,
+                        bottom: AudioCardBottom(
+                          style:
+                              libraryModel.podcastUpdateAvailable(podcast.key)
+                                  ? theme.textTheme.bodyMedium?.copyWith(
+                                        color: theme.colorScheme.primary,
+                                        fontWeight: FontWeight.bold,
+                                      ) ??
+                                      TextStyle(
+                                        color: theme.colorScheme.primary,
+                                        fontWeight: FontWeight.bold,
+                                      )
+                                  : null,
+                          text: podcast.value.firstOrNull?.album ??
+                              podcast.value.firstOrNull?.title ??
+                              podcast.value.firstOrNull.toString(),
+                        ),
+                        onPlay: () => di<PlayerModel>()
+                            .startPlaylist(
+                              audios: podcast.value,
+                              listName: podcast.key,
+                            )
+                            .then(
+                              (_) => libraryModel.removePodcastUpdate(
+                                podcast.key,
+                              ),
                             ),
-                          ),
-                      onTap: () => libraryModel.pushNamed(pageId: podcast.key),
-                    );
-                  },
+                        onTap: () =>
+                            libraryModel.pushNamed(pageId: podcast.key),
+                      );
+                    },
+                  ),
                 );
               },
             ),

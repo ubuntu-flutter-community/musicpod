@@ -15,15 +15,14 @@ class PodcastTimerButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () => showDialog(
-        context: context,
-        builder: (context) => const _Dialog(),
-      ),
-      icon: Icon(Iconz().sleep),
-    );
-  }
+  Widget build(BuildContext context) => IconButton(
+        tooltip: context.l10n.schedulePlaybackStopTimer,
+        onPressed: () => showDialog(
+          context: context,
+          builder: (context) => const _Dialog(),
+        ),
+        icon: Icon(Iconz().sleep),
+      );
 }
 
 class _Dialog extends StatefulWidget {

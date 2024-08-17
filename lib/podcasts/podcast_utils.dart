@@ -75,7 +75,7 @@ Future<void> searchAndPushPodcastPage({
         di<LibraryModel>().push(
           builder: (_) => PodcastPage(
             imageUrl: itemImageUrl ?? podcast.firstOrNull?.imageUrl,
-            audios: podcast,
+            preFetchedEpisodes: podcast,
             pageId: feedUrl,
             title: podcast.firstOrNull?.album ??
                 podcast.firstOrNull?.title ??

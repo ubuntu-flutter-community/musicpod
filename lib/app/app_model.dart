@@ -16,10 +16,11 @@ class AppModel extends SafeChangeNotifier {
             .instance.platformDispatcher.locale.countryCode
             ?.toLowerCase(),
         _gitHub = gitHub,
-        _allowManualUpdates = allowManualUpdates;
+        _allowManualUpdates = allowManualUpdates,
+        _settingsService = settingsService;
 
   final GitHub _gitHub;
-
+  final SettingsService _settingsService;
   final bool _allowManualUpdates;
   bool get allowManualUpdate => _allowManualUpdates;
 
@@ -50,6 +51,17 @@ class AppModel extends SafeChangeNotifier {
   String? _buildNumber;
   String? get buildNumber => _buildNumber;
 
+  Future<void> disposePatchNotes() async {
+    if (_version != null) {
+      return _settingsService.disposePatchNotes(_version!);
+    } else {
+      return Future.error('unknown version');
+    }
+  }
+
+  bool recentPatchNotesDisposed() => _version == null
+      ? false
+      : _settingsService.recentPatchNotesDisposed(_version!);
   bool? _updateAvailable;
   bool? get updateAvailable => _updateAvailable;
   String? _onlineVersion;

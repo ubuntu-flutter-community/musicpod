@@ -26,7 +26,7 @@ class PodcastRefreshButton extends StatelessWidget {
                 oldPodcasts: {
                   pageId: podcast,
                 },
-                updateMessage: context.l10n.updateAvailable,
+                updateMessage: context.l10n.newEpisodeAvailable,
                 notify: ({required message}) =>
                     showSnackBar(context: context, content: Text(message)),
               ),

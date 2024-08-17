@@ -268,7 +268,6 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
           title: podcast.value.firstOrNull?.album ??
               podcast.value.firstOrNull?.title ??
               podcast.value.firstOrNull.toString(),
-          audios: podcast.value,
           imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
               podcast.value.firstOrNull?.imageUrl,
         ),

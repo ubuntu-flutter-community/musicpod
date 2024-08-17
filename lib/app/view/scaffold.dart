@@ -9,7 +9,6 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/view/player_view.dart';
-import '../../settings/settings_model.dart';
 import '../app_model.dart';
 import '../connectivity_model.dart';
 import 'master_detail_page.dart';
@@ -25,14 +24,15 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
   @override
   void initState() {
     super.initState();
-    final settingsModel = di<SettingsModel>();
     final appModel = di<AppModel>();
     appModel
         .checkForUpdate(di<ConnectivityModel>().isOnline, context)
         .then((_) {
-      if (!mounted) return;
-      if (settingsModel.recentPatchNotesDisposed == false) {
-        showPatchNotes(context);
+      if (!appModel.recentPatchNotesDisposed() && mounted) {
+        showDialog(
+          context: context,
+          builder: (_) => const PatchNotesDialog(),
+        );
       }
     });
   }

@@ -7,7 +7,8 @@
     "replayEpisode",
     "replayAllEpisodes",
     "checkForUpdates",
-    "playbackWillStopIn"
+    "playbackWillStopIn",
+    "schedulePlaybackStopTimer"
   ],
 
   "da": [
@@ -20,7 +21,8 @@
     "replayEpisode",
     "replayAllEpisodes",
     "checkForUpdates",
-    "playbackWillStopIn"
+    "playbackWillStopIn",
+    "schedulePlaybackStopTimer"
   ],
 
   "de": [
@@ -229,7 +231,8 @@
     "replayEpisode",
     "replayAllEpisodes",
     "checkForUpdates",
-    "playbackWillStopIn"
+    "playbackWillStopIn",
+    "schedulePlaybackStopTimer"
   ],
 
   "fr": [
@@ -463,7 +466,12 @@
     "replayEpisode",
     "replayAllEpisodes",
     "checkForUpdates",
-    "playbackWillStopIn"
+    "playbackWillStopIn",
+    "schedulePlaybackStopTimer"
+  ],
+
+  "it": [
+    "schedulePlaybackStopTimer"
   ],
 
   "nl": [
@@ -694,7 +702,8 @@
     "replayEpisode",
     "replayAllEpisodes",
     "checkForUpdates",
-    "playbackWillStopIn"
+    "playbackWillStopIn",
+    "schedulePlaybackStopTimer"
   ],
 
   "pl": [
@@ -745,7 +754,8 @@
     "replayEpisode",
     "replayAllEpisodes",
     "checkForUpdates",
-    "playbackWillStopIn"
+    "playbackWillStopIn",
+    "schedulePlaybackStopTimer"
   ],
 
   "pt": [
@@ -947,7 +957,8 @@
     "replayEpisode",
     "replayAllEpisodes",
     "checkForUpdates",
-    "playbackWillStopIn"
+    "playbackWillStopIn",
+    "schedulePlaybackStopTimer"
   ],
 
   "pt_BR": [
@@ -1149,7 +1160,8 @@
     "replayEpisode",
     "replayAllEpisodes",
     "checkForUpdates",
-    "playbackWillStopIn"
+    "playbackWillStopIn",
+    "schedulePlaybackStopTimer"
   ],
 
   "ru": [
@@ -1166,7 +1178,8 @@
     "replayEpisode",
     "replayAllEpisodes",
     "checkForUpdates",
-    "playbackWillStopIn"
+    "playbackWillStopIn",
+    "schedulePlaybackStopTimer"
   ],
 
   "sk": [
@@ -1177,7 +1190,8 @@
     "replayEpisode",
     "replayAllEpisodes",
     "checkForUpdates",
-    "playbackWillStopIn"
+    "playbackWillStopIn",
+    "schedulePlaybackStopTimer"
   ],
 
   "sv": [
@@ -1369,7 +1383,8 @@
     "replayEpisode",
     "replayAllEpisodes",
     "checkForUpdates",
-    "playbackWillStopIn"
+    "playbackWillStopIn",
+    "schedulePlaybackStopTimer"
   ],
 
   "tr": [
@@ -1380,6 +1395,23 @@
     "replayEpisode",
     "replayAllEpisodes",
     "checkForUpdates",
-    "playbackWillStopIn"
+    "playbackWillStopIn",
+    "schedulePlaybackStopTimer"
+  ],
+
+  "zh": [
+    "schedulePlaybackStopTimer"
+  ],
+
+  "zh_CN": [
+    "schedulePlaybackStopTimer"
+  ],
+
+  "zh_HK": [
+    "schedulePlaybackStopTimer"
+  ],
+
+  "zh_TW": [
+    "schedulePlaybackStopTimer"
   ]
 }
