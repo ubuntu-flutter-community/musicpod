@@ -64,31 +64,31 @@ class AudioPageHeaderHtmlDescription extends StatelessWidget {
               ],
             ),
           ),
-          child: SizedBox(
-            child: Html(
-              data: description,
-              onAnchorTap: (url, attributes, element) {
-                if (url == null) return;
-                launchUrl(Uri.parse(url));
-              },
-              style: {
-                'img': Style(display: Display.none),
-                'body': Style(
-                  height: Height.auto(),
-                  margin: Margins.zero,
-                  padding: HtmlPaddings.zero,
-                  textOverflow: TextOverflow.ellipsis,
-                  maxLines: 4,
-                  textAlign: TextAlign.center,
-                  fontSize: FontSize(
-                    descriptionStyle?.fontSize ?? 10,
-                  ),
-                  fontWeight: descriptionStyle?.fontWeight,
-                  fontFamily: descriptionStyle?.fontFamily,
+          child: description == null
+              ? const SizedBox.shrink()
+              : Html(
+                  data: description,
+                  onAnchorTap: (url, attributes, element) {
+                    if (url == null) return;
+                    launchUrl(Uri.parse(url));
+                  },
+                  style: {
+                    'img': Style(display: Display.none),
+                    'body': Style(
+                      height: Height.auto(),
+                      margin: Margins.zero,
+                      padding: HtmlPaddings.zero,
+                      textOverflow: TextOverflow.ellipsis,
+                      maxLines: 4,
+                      textAlign: TextAlign.center,
+                      fontSize: FontSize(
+                        descriptionStyle?.fontSize ?? 10,
+                      ),
+                      fontWeight: descriptionStyle?.fontWeight,
+                      fontFamily: descriptionStyle?.fontFamily,
+                    ),
+                  },
                 ),
-              },
-            ),
-          ),
         ),
       ),
     );

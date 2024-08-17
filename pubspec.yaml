@@ -91,6 +91,7 @@ flutter:
   assets:
     - snap/gui/musicpod.png
     - assets/images/media-optical.png
+    - CHANGELOG.md
 
 dependency_overrides:
   intl: 0.19.0

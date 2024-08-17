@@ -33,9 +33,6 @@ class SettingsModel extends SafeChangeNotifier {
     }
   }
 
-  bool get recentPatchNotesDisposed => _service.recentPatchNotesDisposed;
-  Future<void> disposePatchNotes() async => _service.disposePatchNotes();
-
   bool get neverShowFailedImports => _service.neverShowFailedImports;
   void setNeverShowFailedImports(bool value) =>
       _service.setNeverShowFailedImports(value);

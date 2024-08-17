@@ -160,6 +160,7 @@ const kFavRadioTags = 'favRadioTags';
 const kFavCountryCodes = 'favCountryCodes';
 const kFavLanguageCodes = 'favLanguageCodes';
 const kAscendingFeeds = 'ascendingfeed:::';
+const kPatchNotesDisposed = 'kPatchNotesDisposed';
 
 const shops = <String, String>{
   'https://us.7digital.com/': '7digital',

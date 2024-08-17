@@ -53,7 +53,6 @@ Future<void> main(List<String> args) async {
   }
 
   // Register services
-  // TODO: when the app is in appstore/windowsstore enable/disable this only via args
   final SharedPreferences sharedPreferences =
       await SharedPreferences.getInstance();
   final settingsService = SettingsService(
@@ -152,6 +151,7 @@ Future<void> main(List<String> args) async {
     dispose: (s) => s.dispose(),
   );
 
+  // TODO: when the app is in appstore/windowsstore enable/disable this only via args
   final appModel = AppModel(
     gitHub: gitHub,
     settingsService: settingsService,

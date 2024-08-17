@@ -15,6 +15,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
+import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -37,17 +38,21 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     super.key,
     this.imageUrl,
     required this.pageId,
-    this.audios,
+    this.preFetchedEpisodes,
     required this.title,
   });
 
   final String? imageUrl;
+
+  /// The feedUrl
   final String pageId;
   final String title;
-  final List<Audio>? audios;
+  final List<Audio>? preFetchedEpisodes;
 
   @override
   Widget build(BuildContext context) {
+    final episodes = preFetchedEpisodes ??
+        watchPropertyValue((LibraryModel m) => m.podcasts[pageId]);
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
 
@@ -57,10 +62,10 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     )) {
       sortListByAudioFilter(
         audioFilter: AudioFilter.year,
-        audios: audios ?? [],
+        audios: episodes ?? [],
       );
     }
-    final audiosWithDownloads = (audios ?? [])
+    final episodesWithDownloads = (episodes ?? [])
         .map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
         .toList();
 
@@ -85,67 +90,79 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          return CustomScrollView(
-            slivers: [
-              SliverPadding(
-                padding: getAdaptiveHorizontalPadding(
-                  constraints: constraints,
-                  min: 40,
-                ),
-                sliver: SliverToBoxAdapter(
-                  child: AudioPageHeader(
-                    image: imageUrl == null
-                        ? null
-                        : _PodcastPageImage(imageUrl: imageUrl),
-                    label: audios
-                            ?.firstWhereOrNull((e) => e.genre != null)
-                            ?.genre ??
-                        context.l10n.podcast,
-                    subTitle: audiosWithDownloads.firstOrNull?.artist,
-                    description: AudioPageHeaderHtmlDescription(
-                      description: audiosWithDownloads.firstOrNull?.albumArtist,
+          return RefreshIndicator(
+            onRefresh: () async => di<PodcastModel>().update(
+              oldPodcasts: {pageId: episodesWithDownloads},
+              updateMessage: context.l10n.newEpisodeAvailable,
+              notify: ({required message}) => showSnackBar(
+                context: context,
+                content: Text(message),
+              ),
+            ),
+            child: CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: getAdaptiveHorizontalPadding(
+                    constraints: constraints,
+                    min: 40,
+                  ),
+                  sliver: SliverToBoxAdapter(
+                    child: AudioPageHeader(
+                      image: imageUrl == null
+                          ? null
+                          : _PodcastPageImage(imageUrl: imageUrl),
+                      label: episodesWithDownloads
+                              .firstWhereOrNull((e) => e.genre != null)
+                              ?.genre ??
+                          context.l10n.podcast,
+                      subTitle: episodesWithDownloads.firstOrNull?.artist,
+                      description: AudioPageHeaderHtmlDescription(
+                        description:
+                            episodesWithDownloads.firstOrNull?.albumArtist,
+                        title: title,
+                      ),
                       title: title,
-                    ),
-                    title: title,
-                    onLabelTab: (text) => _onGenreTap(
-                      context: context,
-                      text: text,
-                    ),
-                    onSubTitleTab: (text) => _onArtistTap(
-                      context: context,
-                      text: text,
+                      onLabelTab: (text) => _onGenreTap(
+                        context: context,
+                        text: text,
+                      ),
+                      onSubTitleTab: (text) => _onArtistTap(
+                        context: context,
+                        text: text,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SliverAudioPageControlPanel(
-                controlPanel: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    PodcastReplayButton(audios: audiosWithDownloads),
-                    const PodcastTimerButton(),
-                    PodcastSubButton(
-                      audios: audiosWithDownloads,
-                      pageId: pageId,
-                    ),
-                    AvatarPlayButton(
-                      audios: audiosWithDownloads,
-                      pageId: pageId,
-                    ),
-                    PodcastRefreshButton(pageId: pageId),
-                    PodcastReorderButton(feedUrl: pageId),
-                    ExploreOnlinePopup(text: title),
-                  ],
+                SliverAudioPageControlPanel(
+                  controlPanel: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      PodcastReplayButton(audios: episodesWithDownloads),
+                      const PodcastTimerButton(),
+                      PodcastSubButton(
+                        audios: episodesWithDownloads,
+                        pageId: pageId,
+                      ),
+                      AvatarPlayButton(
+                        audios: episodesWithDownloads,
+                        pageId: pageId,
+                      ),
+                      PodcastRefreshButton(pageId: pageId),
+                      PodcastReorderButton(feedUrl: pageId),
+                      ExploreOnlinePopup(text: title),
+                    ],
+                  ),
                 ),
-              ),
-              SliverPadding(
-                padding: getAdaptiveHorizontalPadding(constraints: constraints),
-                sliver: SliverPodcastPageList(
-                  audios: audiosWithDownloads,
-                  pageId: pageId,
+                SliverPadding(
+                  padding:
+                      getAdaptiveHorizontalPadding(constraints: constraints),
+                  sliver: SliverPodcastPageList(
+                    audios: episodesWithDownloads,
+                    pageId: pageId,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),

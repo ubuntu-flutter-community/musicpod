@@ -4,9 +4,14 @@ import 'package:yaru/constants.dart';
 import '../../extensions/build_context_x.dart';
 
 class SliverAudioPageControlPanel extends StatelessWidget {
-  const SliverAudioPageControlPanel({super.key, required this.controlPanel});
+  const SliverAudioPageControlPanel({
+    super.key,
+    required this.controlPanel,
+    this.onStretchTrigger,
+  });
 
   final Widget controlPanel;
+  final Future<void> Function()? onStretchTrigger;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +30,7 @@ class SliverAudioPageControlPanel extends StatelessWidget {
           child: controlPanel,
         ),
         bottom: const _Space(),
+        onStretchTrigger: onStretchTrigger,
       ),
     );
   }
