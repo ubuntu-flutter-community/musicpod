@@ -38,6 +38,7 @@ dependencies:
   github: ^9.24.0
   gtk: ^2.1.0
   handy_window: ^0.4.0
+  html: ^0.15.4
   http: ^1.2.1
   intl: ^0.18.0
   m3u_parser_nullsafe: ^1.0.3
