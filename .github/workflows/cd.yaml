@@ -9,7 +9,79 @@ env:
   FLUTTER_VERSION: '3.24.x'
 
 jobs:
-  build_and_publish:
+  build_and_upload_macos_dmg:
+    runs-on: macos-latest
+    env:
+      MACOS_APP_RELEASE_PATH: build/macos/Build/Products/Release
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
+      - name: Check version in pubspec.yaml
+        id: check
+        run: |
+          changed=$(git diff --unified=0 --merge-base HEAD~ -- 'pubspec.yaml' | grep -n '^@@' | cut -d':' -f1)
+          if [[ "$changed" == "5" ]]; then
+            echo "lines=changed" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: subosito/flutter-action@v2
+        if: steps.check.outputs.lines == 'changed'
+        with:
+          channel: 'stable'
+          flutter-version: ${{env.FLUTTER_VERSION}}
+      - name: Build macOS app
+        id: buildmacos
+        if: steps.check.outputs.lines == 'changed'
+        run: flutter build macos --release
+      - name: Codesign executable
+        id: codesignmacos
+        if: steps.buildmacos.outcome == 'success'
+        env:
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+          MACOS_IDENTITY: ${{ secrets.MACOS_IDENTITY }}
+        run: |
+          echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
+          echo "Create Keychain"
+          security create-keychain -p $MACOS_CERTIFICATE_PWD build.keychain
+          echo "Assign to Login Keychain"
+          security default-keychain -s build.keychain
+          echo "Unlock the Login Keychain"
+          security unlock-keychain -p $MACOS_CERTIFICATE_PWD build.keychain
+          echo "Import certificate"
+          security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+          echo "Set Key Partition"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $MACOS_CERTIFICATE_PWD build.keychain
+          echo "Sign the app"
+          /usr/bin/codesign --force --deep -s $MACOS_IDENTITY ./$MACOS_APP_RELEASE_PATH/musicpod.app
+      - name: Create a dmg
+        id: createdmg
+        if: steps.codesignmacos.outcome == 'success'
+        run: |
+          echo "Install create-dmg"
+          brew install create-dmg
+          cd $MACOS_APP_RELEASE_PATH
+          create-dmg \
+            --volname "musicpod" \
+            --window-pos 200 120 \
+            --window-size 950 820 \
+            --icon-size 130 \
+            --text-size 14 \
+            --icon "musicpod.app" 260 250 \
+            --hide-extension "musicpod.app" \
+            --app-drop-link 540 250 \
+            --hdiutil-quiet \
+            "musicpod.dmg" \
+            "musicpod.app"
+      - name: Append Asset
+        if: steps.createdmg.outcome == 'success'
+        uses: AButler/upload-release-assets@v3.0
+        with:
+          files: "$MACOS_APP_RELEASE_PATH/musicpod.app"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          release-tag: ${{ github.ref_name }}
+          
+  build_and_publish_snap:
     runs-on: ubuntu-latest
     outputs:
       output1: ${{ steps.check.outputs.lines }}
