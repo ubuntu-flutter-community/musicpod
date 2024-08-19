@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
+import 'package:html/parser.dart';
 import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -295,7 +296,11 @@ class PlayerService {
           return;
         }
         final mpvMetaData = MpvMetaData.fromJson(data);
-        setMpvMetaData(mpvMetaData);
+        setMpvMetaData(
+          mpvMetaData.copyWith(
+            icyTitle: HtmlParser(mpvMetaData.icyTitle).parseFragment().text,
+          ),
+        );
         final songInfo = mpvMetaData.icyTitle.splitByDash;
         fetchAlbumArt(mpvMetaData.icyTitle).then(
           (albumArt) {
