@@ -1,44 +1,29 @@
-# Musicpod
+# MusicPod
 
-Music, Radio, Television and Podcast player for Linux Desktop, MacOS, Windows and Android made with Flutter.
+MusicPod is a local music, radio, television and podcast player for Linux Desktop, MacOS and Windows. (Android is planed but no ETA yet when it will happen.)
 
-Install for Linux Desktop (snapd is preinstalled on Ubuntu):
-
-[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/musicpod)
-
-- How to install snapd on...
-  - [Fedora](https://snapcraft.io/docs/installing-snap-on-fedora)
-  - [Arch Linux](https://snapcraft.io/docs/installing-snap-on-arch-linux)
-  - [Debian](https://snapcraft.io/docs/installing-snap-on-debian)
-  - [Manjaro](https://snapcraft.io/docs/installing-snap-on-manjaro-linux)
-
-<a href='https://flathub.org/apps/org.feichtmeier.Musicpod'>
-  <img width='180' alt='Download on Flathub' src='https://flathub.org/api/badge?locale=en'/>
-</a>
-
-> [!CAUTION]
->  Flatpak support is ***EXPERIMENTAL***, there are currently heavy graphic issues with Fedora.
-> See [#747](https://github.com/ubuntu-flutter-community/musicpod/issues/747). If you are using Fedora, currently use the snap.
-
-<br/>
-Install For MacOS & Windows:
-
-[Release Page](https://github.com/ubuntu-flutter-community/musicpod/releases)
-
-<br/>
-Android release is WIP!
-<br/>
-<br/>
-
-
-|Dark | Light|
+|OS|How to install|
 |-|-|
-|![](.github/local_dark.png)|![](.github/local_light.png)|
-|![](.github/radio_dark.png)|![](.github/radio_light.png)|
-|![](.github/podcast_dark.png)|![](.github/podcast_light.png)|
-|![](.github/album_dark.png)|![](.github/album_light.png)|
-|![](.github/full_window_dark.png)|![](.github/full_window_light.png)|
-|![](.github/wide_window_dark.png)|![](.github/wide_window_light.png)|
+|Linux|[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/musicpod) <br/> or <br/> [![](https://flathub.org/api/badge?locale=en)](https://flathub.org/apps/org.feichtmeier.Musicpod)|
+|Windows|[Release Page](https://github.com/ubuntu-flutter-community/musicpod/releases)|
+|MacOS|[Release Page](https://github.com/ubuntu-flutter-community/musicpod/releases)|
+|Android|WIP|
+
+
+<br/>
+<br/>
+
+
+|Features | Dark MacOS | Light MacOS |
+|-|-|-|
+|Play local audio|![](.github/images/album_dark_macos.png)|![](.github/images/album_light_macos.png)|
+|Find local audios sorted by [Metadata](https://github.com/ClementBeal/audio_metadata_reader) |![](.github/images/albums_dark_macos.png)|![](.github/images/albums_light_macos.png)|
+|Play radio stations, with icytags and artwork looked up!|![](.github/images/station_dark_macos.png)|![](.github/images/station_light_macos.png)|
+|Play and download podcasts, safe progress, sort episodes and more!|![](.github/images/podcast_dark_macos.png)|![](.github/images/podcast_light_macos.png)|
+|Video podcast support!|![](.github/images/video_dark_macos.png)|![](.github/images/video_light_macos.png)|
+|Discover podcasts, filtered as you like|![](.github/images/podcasts_dark_macos.png)|![](.github/images/podcasts_light_macos.png)|
+|Discover radio stations, filtered as you like|![](.github/images/radio_dark_macos.png)|![](.github/images/radio_light_macos.png)|
+
 
 ## Credits
 
@@ -55,51 +40,6 @@ Thank you [@tomassasovsky](https://github.com/tomassasovsky) for the [dart imple
 Thank you [@ClementBeal](https://github.com/ClementBeal) for the super fast, pure dart [Audio Metadata Reader](https://github.com/ClementBeal/audio_metadata_reader)!
 
 Thank you [@escamoteur](https://github.com/escamoteur) for creating [get_it](https://pub.dev/packages/get_it) and [watch_it](https://pub.dev/packages/watch_it), which made my application faster and the source code cleaner!
-
-## MusicPod Level 1
-
-- [X] play local audio files
-- [X] filter local files
-- [X] set root directory
-- [X] create and manage playlists
-- [X] play internet radio streams
-- [X] browse for radio stations
-- [X] play podcasts
-- [X] search for podcasts
-- [X] load podcast charts
-- [X] filter podcasts by country
-- [X] filter podcasts by genre
-- [X] save playlists
-- [X] save liked songs
-- [X] save settings on disk
-- [X] notify when a new episode of your subscribed podcasts is available
-
-## MusicPod Level 2
-
-- [X] Video Podcasts ([#71](https://github.com/ubuntu-flutter-community/musicpod/issues/71))
-- [X] Play TV Stations found on radiobrowser
-- [ ] Chromecast Support ([#91](https://github.com/ubuntu-flutter-community/musicpod/issues/91))
-- [X] streaming provider agnostic sharing links
-- [X] option to download podcasts (#[240](https://github.com/ubuntu-flutter-community/musicpod/issues/240))
-- [X] reduced memory allocation
-- [ ] WebDav support (#[248](https://github.com/ubuntu-flutter-community/musicpod/issues/248))
-- [ ] upnp/dlna support (#[248](https://github.com/ubuntu-flutter-community/musicpod/issues/247))
-
-## Supported operating systems and package formats
-
-- [X] Ubuntu Desktop
-  - [X] [snap package](https://snapcraft.io/musicpod) (this is the primary supported package!)
-  - [X] [Flatpak](https://flathub.org/apps/org.feichtmeier.Musicpod)
-- [X] Windows Support
-  - [ ] Windows Store
-  - [X] [Exe](https://github.com/ubuntu-flutter-community/musicpod/releases)
-- [X] Android Support (Media Controls are WIP)
-  - [ ] PlayStore
-- [X] MacOs Support
-  - [ ] Apple?Store?
-  - [X] [DMG](https://github.com/ubuntu-flutter-community/musicpod/releases)
-- [ ] iOS Support
-  - [ ] AppStore
 
 # Contributing
 
@@ -177,4 +117,4 @@ Though performance is the biggest goal, especially for flutter apps on the deskt
 
 ### Persistence
 
-For persisting both setting and application state I've chosen a home cooked solution  inside the LibraryService and SettingsService that writes json files to disk. It is simple and fast and sufficient for the needs of this application. Eventually at some point it might make sense to switch to a real database though :).
+Preferences are stored with [shared_preferences](https://pub.dev/packages/shared_preferences).

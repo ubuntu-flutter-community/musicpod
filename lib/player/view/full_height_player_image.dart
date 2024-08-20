@@ -5,7 +5,7 @@ import '../../constants.dart';
 import '../../local_audio/view/local_cover.dart';
 import '../player_model.dart';
 import 'player_fall_back_image.dart';
-import 'super_network_image.dart';
+import 'player_remote_source_image.dart';
 
 class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
   const FullHeightPlayerImage({
@@ -23,8 +23,8 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
-    final icyTitle =
-        watchPropertyValue((PlayerModel m) => m.mpvMetaData?.icyTitle);
+
+    final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
 
     final fallBackImage = PlayerFallBackImage(
       key: const ValueKey(0),
@@ -45,10 +45,13 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
         fallback: fallBackImage,
       );
     } else {
-      if (audio?.albumArtUrl != null || audio?.imageUrl != null) {
-        image = SuperNetworkImage(
+      if (mpvMetaData?.icyTitle != null ||
+          audio?.albumArtUrl != null ||
+          audio?.imageUrl != null) {
+        image = PlayerRemoteSourceImage(
+          mpvMetaData: mpvMetaData,
           key: ValueKey(
-            (icyTitle ?? '') +
+            (mpvMetaData?.icyTitle ?? '') +
                 (audio?.imageUrl ?? '') +
                 (audio?.albumArtUrl ?? ''),
           ),

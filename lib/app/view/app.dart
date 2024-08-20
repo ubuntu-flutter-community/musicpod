@@ -43,7 +43,10 @@ class YaruMusicPodApp extends StatelessWidget {
             actionIconTheme: ActionIconThemeData(
               backButtonIconBuilder: (context) => Icon(Iconz().goBack),
             ),
-            scaffoldBackgroundColor: const Color(0xFF1e1e1e),
+            scaffoldBackgroundColor:
+                yaru.darkTheme?.scaffoldBackgroundColor.scale(
+              lightness: -0.35,
+            ),
             dividerColor: yaruFixDarkDividerColor,
             dividerTheme: const DividerThemeData(
               color: yaruFixDarkDividerColor,
@@ -55,7 +58,7 @@ class YaruMusicPodApp extends StatelessWidget {
               actionTextColor: yaru.theme?.colorScheme.primary,
             ),
             cardColor: yaru.darkTheme?.cardColor.scale(
-              lightness: 0.05,
+              lightness: -0.2,
             ),
           ),
         );

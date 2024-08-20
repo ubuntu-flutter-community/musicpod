@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/data/mpv_meta_data.dart';
 import '../../common/view/icy_image.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../extensions/build_context_x.dart';
-import '../player_model.dart';
 
-class SuperNetworkImage extends StatelessWidget with WatchItMixin {
-  const SuperNetworkImage({
+class PlayerRemoteSourceImage extends StatelessWidget {
+  const PlayerRemoteSourceImage({
     super.key,
     required this.height,
     required this.width,
@@ -16,6 +15,7 @@ class SuperNetworkImage extends StatelessWidget with WatchItMixin {
     required this.fit,
     required this.fallBackIcon,
     required this.errorIcon,
+    required this.mpvMetaData,
   });
 
   final double height;
@@ -24,11 +24,11 @@ class SuperNetworkImage extends StatelessWidget with WatchItMixin {
   final BoxFit? fit;
   final Widget fallBackIcon;
   final Widget errorIcon;
+  final MpvMetaData? mpvMetaData;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
 
     final safeNetworkImage = SafeNetworkImage(
       url: audio?.imageUrl ?? audio?.albumArtUrl,
