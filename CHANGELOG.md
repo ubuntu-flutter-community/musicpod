@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.7.0](https://github.com/ubuntu-flutter-community/musicpod/compare/1.6.0...v1.7.0) (2024-08-20)
+
+
+### Features
+
+* improved patch notes dialog and single podcast refreshing ([#864](https://github.com/ubuntu-flutter-community/musicpod/issues/864)) ([02d92e9](https://github.com/ubuntu-flutter-community/musicpod/commit/02d92e943af1b69e4c772316e64320c11a748f11))
+* update Italian language ([#859](https://github.com/ubuntu-flutter-community/musicpod/issues/859)) ([9019bb2](https://github.com/ubuntu-flutter-community/musicpod/commit/9019bb2cb5d519e57ce7588d9bdd54b0b831872f))
+
+
+### Bug Fixes
+
+* appimagebuilder path ([c1ec44b](https://github.com/ubuntu-flutter-community/musicpod/commit/c1ec44bfb707b750bfe0859337ca4892bb41596e))
+* bottom player image for stations without image but with icyInfo ([#876](https://github.com/ubuntu-flutter-community/musicpod/issues/876)) ([ae27451](https://github.com/ubuntu-flutter-community/musicpod/commit/ae2745168760f9bc69bc902f199157fd82efd072))
+* init radio model before tapping on a tag ([#862](https://github.com/ubuntu-flutter-community/musicpod/issues/862)) ([3754781](https://github.com/ubuntu-flutter-community/musicpod/commit/3754781b86cefb1720f5fc62b6ec4d02ed1c06b6))
+* run build release before appimage ([62fd095](https://github.com/ubuntu-flutter-community/musicpod/commit/62fd095aa82c53d5cd7ae5e8f8bfa4b9096d37e1))
+* some title of radio is html format, need to convert to human readable format ([#870](https://github.com/ubuntu-flutter-community/musicpod/issues/870)) ([4c398e1](https://github.com/ubuntu-flutter-community/musicpod/commit/4c398e1d7904d2e837cb2fc1c6160539f2bce236)), closes [#866](https://github.com/ubuntu-flutter-community/musicpod/issues/866)
+
 ## [1.7.0](https://github.com/ubuntu-flutter-community/musicpod/compare/1.6.0...v1.7.0) (2024-08-19)
 
 
