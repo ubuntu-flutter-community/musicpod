@@ -41,6 +41,8 @@ class CoverStore {
 
   Future<void> write() async => writeUint8ListMap(_value, kCoverStore);
 
+  // This does not make much sense except for small libs, where the store is filled
+  // fast anyways. Let's keep it for eventual use...
   Future<void> read() async =>
       _value = await computeIsolate(() => readUint8ListMap(kCoverStore)) ?? [];
 }

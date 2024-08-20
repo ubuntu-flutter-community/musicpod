@@ -170,10 +170,6 @@ double? get avatarIconSize => yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
 
 double get bigPlayButtonSize => 25;
 
-double get searchBarWidth => isMobile ? kSearchBarWidth : 600;
-
-bool get showSideBarFilter => yaruStyled ? true : false;
-
 FontWeight get smallTextFontWeight =>
     yaruStyled ? FontWeight.w100 : FontWeight.w400;
 
@@ -183,15 +179,7 @@ FontWeight get mediumTextWeight =>
 FontWeight get largeTextWeight =>
     yaruStyled ? FontWeight.w200 : FontWeight.w300;
 
-bool get shrinkTitleBarItems => yaruStyled;
-
 double get chipHeight => 36.0;
-
-EdgeInsetsGeometry get tabViewPadding =>
-    isMobile ? const EdgeInsets.only(top: 15) : const EdgeInsets.only(top: 5);
-
-EdgeInsetsGeometry get gridPadding =>
-    isMobile ? kMobileGridPadding : kGridPadding;
 
 SliverGridDelegate get audioCardGridDelegate =>
     isMobile ? kMobileAudioCardGridDelegate : kAudioCardGridDelegate;
@@ -213,7 +201,3 @@ EdgeInsets get countryPillPadding => yaruStyled
     : const EdgeInsets.only(top: 11, bottom: 11, left: 15, right: 15);
 
 double get inputHeight => yaruStyled ? kYaruTitleBarItemHeight : 36;
-
-TextStyle getControlPanelStyle(TextTheme textTheme) =>
-    textTheme.headlineSmall?.copyWith(fontWeight: largeTextWeight) ??
-    const TextStyle(fontSize: 25);

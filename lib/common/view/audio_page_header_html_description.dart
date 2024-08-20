@@ -14,7 +14,7 @@ class AudioPageHeaderHtmlDescription extends StatelessWidget {
     required this.title,
   });
 
-  final String? description;
+  final String description;
   final String title;
 
   @override
@@ -22,75 +22,98 @@ class AudioPageHeaderHtmlDescription extends StatelessWidget {
     final descriptionStyle = context.t.pageHeaderDescription;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
-      child: SizedBox(
-        width: kAudioHeaderDescriptionWidth,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          minWidth: kAudioHeaderDescriptionWidth,
+          maxWidth: kAudioHeaderDescriptionWidth,
+          maxHeight: 100,
+        ),
         child: InkWell(
           borderRadius: BorderRadius.circular(kYaruButtonRadius),
           onTap: () => showDialog(
             context: context,
-            builder: (context) => SimpleDialog(
-              titlePadding: EdgeInsets.zero,
-              contentPadding: EdgeInsets.zero,
-              title: YaruDialogTitleBar(
-                title: Text(title),
-                backgroundColor: Colors.transparent,
-                border: BorderSide.none,
-              ),
-              children: [
-                SizedBox(
-                  width: 400,
-                  child: Html(
-                    data: description,
-                    onAnchorTap: (url, attributes, element) {
-                      if (url == null) return;
-                      launchUrl(Uri.parse(url));
-                    },
-                    style: {
-                      'img': Style(display: Display.none),
-                      'body': Style(
-                        height: Height.auto(),
-                        textOverflow: TextOverflow.ellipsis,
-                        maxLines: 400,
-                        textAlign: TextAlign.center,
-                        fontSize: FontSize(
-                          descriptionStyle?.fontSize ?? 10,
-                        ),
-                        fontWeight: descriptionStyle?.fontWeight,
-                        fontFamily: descriptionStyle?.fontFamily,
-                      ),
-                    },
-                  ),
-                ),
-              ],
+            builder: (context) => _HtmlDialog(
+              title: title,
+              description: description,
+              descriptionStyle: descriptionStyle,
             ),
           ),
-          child: description == null
-              ? const SizedBox.shrink()
-              : Html(
-                  data: description,
-                  onAnchorTap: (url, attributes, element) {
-                    if (url == null) return;
-                    launchUrl(Uri.parse(url));
-                  },
-                  style: {
-                    'img': Style(display: Display.none),
-                    'body': Style(
-                      height: Height.auto(),
-                      margin: Margins.zero,
-                      padding: HtmlPaddings.zero,
-                      textOverflow: TextOverflow.ellipsis,
-                      maxLines: 4,
-                      textAlign: TextAlign.center,
-                      fontSize: FontSize(
-                        descriptionStyle?.fontSize ?? 10,
-                      ),
-                      fontWeight: descriptionStyle?.fontWeight,
-                      fontFamily: descriptionStyle?.fontFamily,
-                    ),
-                  },
+          child: Html(
+            data: description,
+            onAnchorTap: (url, attributes, element) {
+              if (url == null) return;
+              launchUrl(Uri.parse(url));
+            },
+            style: {
+              'img': Style(display: Display.none),
+              'body': Style(
+                height: Height.auto(),
+                margin: Margins.zero,
+                padding: HtmlPaddings.zero,
+                textOverflow: TextOverflow.ellipsis,
+                maxLines: 4,
+                textAlign: TextAlign.center,
+                fontSize: FontSize(
+                  descriptionStyle?.fontSize ?? 10,
                 ),
+                fontWeight: descriptionStyle?.fontWeight,
+                fontFamily: descriptionStyle?.fontFamily,
+              ),
+            },
+          ),
         ),
       ),
+    );
+  }
+}
+
+class _HtmlDialog extends StatelessWidget {
+  const _HtmlDialog({
+    required this.title,
+    required this.description,
+    required this.descriptionStyle,
+  });
+
+  final String title;
+  final String? description;
+  final TextStyle? descriptionStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      titlePadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      title: YaruDialogTitleBar(
+        title: Text(title),
+        backgroundColor: Colors.transparent,
+        border: BorderSide.none,
+      ),
+      children: [
+        SizedBox(
+          width: 400,
+          child: Html(
+            data: description,
+            onAnchorTap: (url, attributes, element) {
+              if (url == null) return;
+              launchUrl(Uri.parse(url));
+            },
+            style: {
+              'img': Style(display: Display.none),
+              'body': Style(
+                height: Height.auto(),
+                textOverflow: TextOverflow.ellipsis,
+                maxLines: 400,
+                textAlign: TextAlign.center,
+                fontSize: FontSize(
+                  descriptionStyle?.fontSize ?? 10,
+                ),
+                fontWeight: descriptionStyle?.fontWeight,
+                fontFamily: descriptionStyle?.fontFamily,
+              ),
+            },
+          ),
+        ),
+      ],
     );
   }
 }

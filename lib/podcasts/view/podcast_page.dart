@@ -116,11 +116,14 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                               ?.genre ??
                           context.l10n.podcast,
                       subTitle: episodesWithDownloads.firstOrNull?.artist,
-                      description: AudioPageHeaderHtmlDescription(
-                        description:
-                            episodesWithDownloads.firstOrNull?.albumArtist,
-                        title: title,
-                      ),
+                      description:
+                          episodesWithDownloads.firstOrNull?.albumArtist == null
+                              ? null
+                              : AudioPageHeaderHtmlDescription(
+                                  description: episodesWithDownloads
+                                      .firstOrNull!.albumArtist!,
+                                  title: title,
+                                ),
                       title: title,
                       onLabelTab: (text) => _onGenreTap(
                         context: context,
