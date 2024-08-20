@@ -11,17 +11,17 @@ class PlayerFallBackImage extends StatelessWidget {
   const PlayerFallBackImage({
     super.key,
     this.audio,
-    this.height,
-    this.width,
+    required this.height,
+    required this.width,
   });
 
   final Audio? audio;
-  final double? height;
-  final double? width;
+  final double height;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
-    const iconSize = 40.0;
+    final iconSize = width * 0.7;
     final theme = context.t;
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
