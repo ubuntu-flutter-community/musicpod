@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.8.0...v1.8.1) (2024-08-20)
+
+
+### Bug Fixes
+
+* constrain podcast html descriptions ([#879](https://github.com/ubuntu-flutter-community/musicpod/issues/879)) ([17b3533](https://github.com/ubuntu-flutter-community/musicpod/commit/17b3533261a4154b6c04b26694ac003e9ff67303))
+
 ## [1.8.0](https://github.com/ubuntu-flutter-community/musicpod/compare/1.6.0...v1.8.0) (2024-08-20)
 
 
