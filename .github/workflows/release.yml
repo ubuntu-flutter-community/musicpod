@@ -84,34 +84,36 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload ${{ steps.release.outputs.tag_name }} /Users/runner/work/musicpod/musicpod/build/macos/Build/Products/Release/musicpod.dmg
 
-  release_linux_edge:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 5
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          flutter-version: ${{env.FLUTTER_VERSION}}
-      - run: sudo apt update
-      - run: sudo apt install -y clang cmake curl libgtk-3-dev ninja-build pkg-config unzip libunwind-dev libmpv-dev
-      - run: flutter pub get
-      # Disabled until linux arm runners are available
-      # - uses: snapcore/action-build@v1
-      #   id: build
-      # - uses: snapcore/action-publish@v1
-      #   if: steps.build.outcome == 'success'
-      #   env:
-      #     SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
-      #   with:
-      #     snap: ${{ steps.build.outputs.snap }}
-      #     release: edge
-      # - run: flutter clean
-      # remove this when snap build is back, since this is included in the snapcraft musicpod->override-build phase
-      - run: flutter build linux --release -v
-      - uses: AppImageCrafters/build-appimage@master
-        with:
-          recipe: "./appimage/AppImageBuilder.yml"
-        env:
-          UPDATE_INFO: gh-releases-zsync|ubuntu-flutter-community|musicpod|latest|*x86_64.AppImage.zsync
+  # Disabled until linux arm runners are available
+  # release_linux_edge:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 5
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         channel: 'stable'
+  #         flutter-version: ${{env.FLUTTER_VERSION}}
+  #     - run: sudo apt update
+  #     - run: sudo apt install -y clang cmake curl libgtk-3-dev ninja-build pkg-config unzip libunwind-dev libmpv-dev
+  #     - run: flutter pub get
+
+  #     - uses: snapcore/action-build@v1
+  #       id: build
+  #     - uses: snapcore/action-publish@v1
+  #       if: steps.build.outcome == 'success'
+  #       env:
+  #         SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+  #       with:
+  #         snap: ${{ steps.build.outputs.snap }}
+  #         release: edge
+  #     - run: flutter clean
+  #     remove this when snap build is back, since this is included in the snapcraft musicpod->override-build phase
+  #     - run: flutter build linux --release -v
+  #     Disabled because it does not work
+  #     - uses: AppImageCrafters/build-appimage@master
+  #       with:
+  #         recipe: "./appimage/AppImageBuilder.yml"
+  #       env:
+  #         UPDATE_INFO: gh-releases-zsync|ubuntu-flutter-community|musicpod|latest|*x86_64.AppImage.zsync

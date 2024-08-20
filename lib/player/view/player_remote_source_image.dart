@@ -52,6 +52,7 @@ class PlayerRemoteSourceImage extends StatelessWidget {
               ? IcyImage(
                   mpvMetaData: mpvMetaData!,
                   fallBackWidget: safeNetworkImage,
+                  errorWidget: safeNetworkImage,
                   height: height,
                   width: width,
                   fit: fit,

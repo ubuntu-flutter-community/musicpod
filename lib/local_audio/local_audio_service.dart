@@ -230,12 +230,7 @@ class LocalAudioService {
     bool forceInit = false,
   }) async {
     if (forceInit == false && _audios?.isNotEmpty == true) return;
-    // TODO: Add a dialog for when people have X (too many) music files
-    // ask them to confirm that for them no local cache is being loaded and saved
-    // because such a cache will always be to big
-    if (kDebugMode && !Platform.environment.containsKey('FLUTTER_TEST')) {
-      await CoverStore().read();
-    }
+
     final result = await compute(
       _readAudiosFromDirectory,
       directory ?? _settingsService?.directory,
@@ -249,11 +244,7 @@ class LocalAudioService {
     _audiosController.add(true);
   }
 
-  Future<void> dispose() async {
-    // TODO: delete this when the setting is added
-    if (kDebugMode) await CoverStore().write();
-    return _audiosController.close();
-  }
+  Future<void> dispose() async => _audiosController.close();
 }
 
 FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
