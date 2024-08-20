@@ -106,6 +106,6 @@ jobs:
       #     release: edge
       - uses: AppImageCrafters/build-appimage@master
         with:
-          recipe: "../../appimage/AppImageBuilder.yml"
+          recipe: "./appimage/AppImageBuilder.yml"
         env:
           UPDATE_INFO: gh-releases-zsync|ubuntu-flutter-community|musicpod|latest|*x86_64.AppImage.zsync
