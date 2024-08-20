@@ -21,6 +21,7 @@ MusicPod is a local music, radio, television and podcast player for Linux Deskto
 |Video podcast support!|![](.github/images/video_dark_linux.png)|![](.github/images/video_light_linux.png)|![](.github/images/video_dark_macos.png)|![](.github/images/video_light_macos.png)|
 |Discover podcasts, filtered as you like|![](.github/images/podcasts_dark_linux.png)|![](.github/images/podcasts_light_linux.png)|![](.github/images/podcasts_dark_macos.png)|![](.github/images/podcasts_light_macos.png)|
 |Discover radio stations, filtered as you like|![](.github/images/radio_dark_linux.png)|![](.github/images/radio_light_linux.png)|![](.github/images/radio_dark_macos.png)|![](.github/images/radio_light_macos.png)|
+|Different view modes|![](.github/images/fullheight_dark_macos.png)|![](.github/images/fullheight_dark_linux.png)|![](.github/images/fullheight_light_linux.png)|![](.github/images/fullheight_light_macos.png)|
 
 
 ## Credits
