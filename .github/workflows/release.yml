@@ -8,76 +8,104 @@ on:
 
 env:
   FLUTTER_VERSION: '3.24.x'
-  MACOS_APP_RELEASE_PATH: build/macos/Build/Products/Release
 
 jobs:
-  release:
+  release_with_macos_dmg:
     permissions:
       contents: write
       pull-requests: write
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
+    env:
+      MACOS_APP_RELEASE_PATH: build/macos/Build/Products/Release
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
           release-type: dart
-      # - uses: subosito/flutter-action@v2
-      #   if: ${{ steps.release.outputs.release_created }}
-      #   with:
-      #     channel: 'stable'
-      #     flutter-version: ${{env.FLUTTER_VERSION}}
-      # - name: Build macOS app
-      #   id: buildmacos
-      #   if: ${{ steps.release.outputs.release_created }}
-      #   run: flutter build macos --release
-      # - name: Codesign executable
-      #   id: codesignmacos
-      #   if: steps.buildmacos.outcome == 'success'
-      #   env:
-      #     MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
-      #     MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
-      #     MACOS_IDENTITY: ${{ secrets.MACOS_IDENTITY }}
-      #   run: |
-      #     echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
-      #     echo "Create Keychain"
-      #     security create-keychain -p $MACOS_CERTIFICATE_PWD build.keychain
-      #     echo "Assign to Login Keychain"
-      #     security default-keychain -s build.keychain
-      #     echo "Unlock the Login Keychain"
-      #     security unlock-keychain -p $MACOS_CERTIFICATE_PWD build.keychain
-      #     echo "Import certificate"
-      #     security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
-      #     echo "Set Key Partition"
-      #     security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $MACOS_CERTIFICATE_PWD build.keychain
-      #     echo "Find Identity"
-      #     security find-identity
-      #     echo "Sign the app"
-      #     /usr/bin/codesign --force --deep -s $MACOS_IDENTITY ./$MACOS_APP_RELEASE_PATH/musicpod.app
-          
-      # - name: Create a dmg
-      #   id: createdmg
-      #   if: steps.codesignmacos.outcome == 'success'
-      #   run: |
-      #     echo "Install create-dmg"
-      #     brew install create-dmg
-      #     cd $MACOS_APP_RELEASE_PATH
-      #     create-dmg \
-      #       --volname "musicpod" \
-      #       --window-pos 200 120 \
-      #       --window-size 950 820 \
-      #       --icon-size 130 \
-      #       --text-size 14 \
-      #       --icon "musicpod.app" 260 250 \
-      #       --hide-extension "musicpod.app" \
-      #       --app-drop-link 540 250 \
-      #       --hdiutil-quiet \
-      #       "musicpod.dmg" \
-      #       "musicpod.app"
-      #     pwd
-      #     ls -l
-      # - name: Upload Release Artifact
-      #   if: ${{ steps.release.outputs.release_created }}
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: gh release upload ${{ steps.release.outputs.tag_name }} ./artifact/musicpod.dmg
+      - uses: subosito/flutter-action@v2
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          channel: 'stable'
+          flutter-version: ${{env.FLUTTER_VERSION}}
+      - name: Build macOS app
+        id: buildmacos
+        if: ${{ steps.release.outputs.release_created }}
+        run: flutter build macos --release
+      - name: Codesign executable
+        id: codesignmacos
+        if: steps.buildmacos.outcome == 'success'
+        env:
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+          MACOS_IDENTITY: ${{ secrets.MACOS_IDENTITY }}
+        run: |
+          echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
+          echo "Create Keychain"
+          security create-keychain -p $MACOS_CERTIFICATE_PWD build.keychain
+          echo "Assign to Login Keychain"
+          security default-keychain -s build.keychain
+          echo "Unlock the Login Keychain"
+          security unlock-keychain -p $MACOS_CERTIFICATE_PWD build.keychain
+          echo "Import certificate"
+          security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+          echo "Set Key Partition"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $MACOS_CERTIFICATE_PWD build.keychain
+          echo "Find Identity"
+          security find-identity
+          echo "Sign the app"
+          /usr/bin/codesign --force --deep -s $MACOS_IDENTITY ./$MACOS_APP_RELEASE_PATH/musicpod.app
+      - name: Create a dmg
+        id: createdmg
+        if: steps.codesignmacos.outcome == 'success'
+        run: |
+          echo "Install create-dmg"
+          brew install create-dmg
+          cd $MACOS_APP_RELEASE_PATH
+          create-dmg \
+            --volname "musicpod" \
+            --window-pos 200 120 \
+            --window-size 950 820 \
+            --icon-size 130 \
+            --text-size 14 \
+            --icon "musicpod.app" 260 250 \
+            --hide-extension "musicpod.app" \
+            --app-drop-link 540 250 \
+            --hdiutil-quiet \
+            "musicpod.dmg" \
+            "musicpod.app"
+          pwd
+          ls -l
+      - name: Upload Release Artifact
+        if: ${{ steps.release.outputs.release_created }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload ${{ steps.release.outputs.tag_name }} /Users/runner/work/musicpod/musicpod/build/macos/Build/Products/Release/musicpod.dmg
 
+  release_linux_edge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: ${{env.FLUTTER_VERSION}}
+      - run: sudo apt update
+      - run: sudo apt install -y clang cmake curl libgtk-3-dev ninja-build pkg-config unzip libunwind-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev libmpv-dev
+      - run: flutter pub get
+      # Disabled until linux arm runners are available
+      # - uses: snapcore/action-build@v1
+      #   id: build
+      # - uses: snapcore/action-publish@v1
+      #   if: steps.build.outcome == 'success'
+      #   env:
+      #     SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+      #   with:
+      #     snap: ${{ steps.build.outputs.snap }}
+      #     release: edge
+      - uses: AppImageCrafters/build-appimage@master
+        with:
+          recipe: "../../appimage/AppImageBuilder.yml"
+        env:
+          UPDATE_INFO: gh-releases-zsync|ubuntu-flutter-community|musicpod|latest|*x86_64.AppImage.zsync
