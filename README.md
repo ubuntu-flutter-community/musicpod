@@ -10,19 +10,17 @@ MusicPod is a local music, radio, television and podcast player for Linux Deskto
 |Android|WIP|
 
 
-<br/>
-<br/>
+## Features
 
-
-|Features | Dark MacOS | Light MacOS |
-|-|-|-|
-|Play local audio|![](.github/images/album_dark_macos.png)|![](.github/images/album_light_macos.png)|
-|Find local audios sorted by [Metadata](https://github.com/ClementBeal/audio_metadata_reader) |![](.github/images/albums_dark_macos.png)|![](.github/images/albums_light_macos.png)|
-|Play radio stations, with icytags and artwork looked up!|![](.github/images/station_dark_macos.png)|![](.github/images/station_light_macos.png)|
-|Play and download podcasts, safe progress, sort episodes and more!|![](.github/images/podcast_dark_macos.png)|![](.github/images/podcast_light_macos.png)|
-|Video podcast support!|![](.github/images/video_dark_macos.png)|![](.github/images/video_light_macos.png)|
-|Discover podcasts, filtered as you like|![](.github/images/podcasts_dark_macos.png)|![](.github/images/podcasts_light_macos.png)|
-|Discover radio stations, filtered as you like|![](.github/images/radio_dark_macos.png)|![](.github/images/radio_light_macos.png)|
+|Features | Dark Linux | Light Linux | Dark MacOS | Light MacOS | 
+|-|-|-|-|-|
+|Play local audio|![](.github/images/album_dark_linux.png)|![](.github/images/album_light_linux.png)|![](.github/images/album_dark_macos.png)|![](.github/images/album_light_macos.png)|
+|Find local audios sorted by [Metadata](https://github.com/ClementBeal/audio_metadata_reader) |![](.github/images/albums_dark_linux.png)|![](.github/images/albums_light_linux.png)|![](.github/images/albums_dark_macos.png)|![](.github/images/albums_light_macos.png)|
+|Play radio stations, with icytags and artwork looked up!|![](.github/images/station_dark_linux.png)|![](.github/images/station_light_linux.png)|![](.github/images/station_dark_macos.png)|![](.github/images/station_light_macos.png)|
+|Play and download podcasts, safe progress, sort episodes and more!|![](.github/images/podcast_dark_linux.png)|![](.github/images/podcast_light_linux.png)|![](.github/images/podcast_dark_macos.png)|![](.github/images/podcast_light_macos.png)|
+|Video podcast support!|![](.github/images/video_dark_linux.png)|![](.github/images/video_light_linux.png)|![](.github/images/video_dark_macos.png)|![](.github/images/video_light_macos.png)|
+|Discover podcasts, filtered as you like|![](.github/images/podcasts_dark_linux.png)|![](.github/images/podcasts_light_linux.png)|![](.github/images/podcasts_dark_macos.png)|![](.github/images/podcasts_light_macos.png)|
+|Discover radio stations, filtered as you like|![](.github/images/radio_dark_linux.png)|![](.github/images/radio_light_linux.png)|![](.github/images/radio_dark_macos.png)|![](.github/images/radio_light_macos.png)|
 
 
 ## Credits
@@ -41,7 +39,7 @@ Thank you [@ClementBeal](https://github.com/ClementBeal) for the super fast, pur
 
 Thank you [@escamoteur](https://github.com/escamoteur) for creating [get_it](https://pub.dev/packages/get_it) and [watch_it](https://pub.dev/packages/watch_it), which made my application faster and the source code cleaner!
 
-# Contributing
+## Contributing
 
 Contributions are highly welcome. Especially translations.
 Please [fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) MusicPod to your GitHub namespace, [clone](https://docs.github.com/de/repositories/creating-and-managing-repositories/cloning-a-repository) it to your computer, create a branch named by yourself, commit your changes to your local branch, push them to your fork and then make a pull request from your fork to this repository.
