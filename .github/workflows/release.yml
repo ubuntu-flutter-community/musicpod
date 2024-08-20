@@ -22,6 +22,9 @@ jobs:
         id: release
         with:
           release-type: dart
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
       - uses: subosito/flutter-action@v2
         if: ${{ steps.release.outputs.release_created }}
         with:
