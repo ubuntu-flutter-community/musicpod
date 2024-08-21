@@ -6,6 +6,9 @@ import 'package:window_manager/window_manager.dart';
 
 import '../../l10n/l10n.dart';
 
+const _exitAppMenuKey = 'exit_app';
+const _showHideWindowMenuKey = 'show_hide_window';
+
 Future<void> initTray() async {
   await trayManager.setIcon(
     (Platform.isWindows)
@@ -15,12 +18,12 @@ Future<void> initTray() async {
   Menu menu = Menu(
     items: [
       MenuItem(
-        key: 'show_hide_window',
+        key: _showHideWindowMenuKey,
         label: 'Show Window',
       ),
       MenuItem.separator(),
       MenuItem(
-        key: 'exit_app',
+        key: _exitAppMenuKey,
         label: 'Exit App',
       ),
     ],
@@ -33,12 +36,12 @@ Future<void> updateTrayItems(BuildContext context) async {
   if (!context.mounted) return;
   final trayMenuItems = [
     MenuItem(
-      key: 'show_hide_window',
+      key: _showHideWindowMenuKey,
       label: isVisible ? context.l10n.hideToTray : context.l10n.closeApp,
     ),
     MenuItem.separator(),
     MenuItem(
-      key: 'exit_app',
+      key: _exitAppMenuKey,
       label: context.l10n.closeApp,
     ),
   ];
@@ -48,7 +51,7 @@ Future<void> updateTrayItems(BuildContext context) async {
 
 void reactToTray(MenuItem menuItem) {
   switch (menuItem.key) {
-    case 'show_hide_window':
+    case _showHideWindowMenuKey:
       windowManager.isVisible().then((value) {
         if (value) {
           windowManager.hide();
@@ -56,7 +59,7 @@ void reactToTray(MenuItem menuItem) {
           windowManager.show();
         }
       });
-    case 'close_application':
+    case _exitAppMenuKey:
       windowManager.close();
   }
 }
