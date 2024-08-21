@@ -4,59 +4,59 @@ import 'package:flutter/material.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
-String trayIcon() {
-  if (Platform.isWindows) {
-    return 'assets/images/tray_icon.ico';
-  } else {
-    return 'assets/images/tray_icon.png';
-  }
-}
+import '../../l10n/l10n.dart';
 
-class SystemTray with TrayListener {
-  late List<MenuItem> trayMenuItems;
-
-  Future<void> init() async {
-    trayManager.addListener(this);
-    await trayManager.setIcon(trayIcon());
-  }
-
-  Future<void> dispose() async {
-    trayManager.removeListener(this);
-  }
-
-  Future<void> updateTrayMenuItems(
-    BuildContext context,
-  ) async {
-    bool isVisible = await windowManager.isVisible();
-
-    trayMenuItems = [
+Future<void> initTray() async {
+  await trayManager.setIcon(
+    (Platform.isWindows)
+        ? 'assets/images/tray_icon.ico'
+        : 'assets/images/tray_icon.png',
+  );
+  Menu menu = Menu(
+    items: [
       MenuItem(
         key: 'show_hide_window',
-        label: isVisible ? 'Hide Window' : 'Show Window',
+        label: 'Show Window',
       ),
       MenuItem.separator(),
       MenuItem(
-        key: 'close_application',
-        label: 'Close Application',
+        key: 'exit_app',
+        label: 'Exit App',
       ),
-    ];
+    ],
+  );
+  await trayManager.setContextMenu(menu);
+}
 
-    await trayManager.setContextMenu(Menu(items: trayMenuItems));
-  }
+Future<void> updateTrayItems(BuildContext context) async {
+  bool isVisible = await windowManager.isVisible();
+  if (!context.mounted) return;
+  final trayMenuItems = [
+    MenuItem(
+      key: 'show_hide_window',
+      label: isVisible ? context.l10n.hideToTray : context.l10n.closeApp,
+    ),
+    MenuItem.separator(),
+    MenuItem(
+      key: 'exit_app',
+      label: context.l10n.closeApp,
+    ),
+  ];
 
-  @override
-  void onTrayMenuItemClick(MenuItem menuItem) {
-    switch (menuItem.key) {
-      case 'show_hide_window':
-        windowManager.isVisible().then((value) {
-          if (value) {
-            windowManager.hide();
-          } else {
-            windowManager.show();
-          }
-        });
-      case 'close_application':
-        windowManager.close();
-    }
+  await trayManager.setContextMenu(Menu(items: trayMenuItems));
+}
+
+void reactToTray(MenuItem menuItem) {
+  switch (menuItem.key) {
+    case 'show_hide_window':
+      windowManager.isVisible().then((value) {
+        if (value) {
+          windowManager.hide();
+        } else {
+          windowManager.show();
+        }
+      });
+    case 'close_application':
+      windowManager.close();
   }
 }

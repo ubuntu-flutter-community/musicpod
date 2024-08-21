@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
@@ -42,7 +44,7 @@ class SettingsPage extends StatelessWidget {
           child: ListView(
             children: [
               const _ThemeSection(),
-              if (!isMobile) const _CloseActionSection(),
+              if (Platform.isLinux) const _CloseActionSection(),
               const _PodcastSection(),
               const _LocalAudioSection(),
               const _AboutSection(),

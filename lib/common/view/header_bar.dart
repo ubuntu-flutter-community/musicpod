@@ -96,21 +96,21 @@ class HeaderBar extends StatelessWidget
       backgroundColor: backgroundColor ?? context.theme.scaffoldBackgroundColor,
       style: theStyle,
       foregroundColor: foregroundColor,
-      onClose: (context) {
-        switch (closeBtnAction) {
-          case CloseBtnAction.alwaysAsk:
-            showDialog(
-              context: context,
-              builder: (context) {
-                return const CloseWindowActionConfirmDialog();
-              },
-            );
-          case CloseBtnAction.hideToTray:
-            YaruWindow.hide(context);
-          case CloseBtnAction.close:
-            YaruWindow.close(context);
-        }
-      },
+      onClose: Platform.isLinux
+          ? (context) {
+              switch (closeBtnAction) {
+                case CloseBtnAction.alwaysAsk:
+                  showDialog(
+                    context: context,
+                    builder: (_) => const CloseWindowActionConfirmDialog(),
+                  );
+                case CloseBtnAction.hideToTray:
+                  YaruWindow.hide(context);
+                case CloseBtnAction.close:
+                  YaruWindow.close(context);
+              }
+            }
+          : null,
     );
   }
 
