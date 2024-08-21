@@ -18,6 +18,7 @@ import '../../library/library_model.dart';
 import 'app/app_model.dart';
 import 'app/connectivity_model.dart';
 import 'app/view/app.dart';
+import 'app/view/system_tray.dart';
 import 'library/library_service.dart';
 import 'local_audio/local_audio_model.dart';
 import 'local_audio/local_audio_service.dart';
@@ -132,6 +133,10 @@ Future<void> main(List<String> args) async {
 
   final gitHub = GitHub();
   di.registerSingleton<GitHub>(gitHub);
+
+  if (Platform.isLinux) {
+    await initTray();
+  }
 
   // Register ViewModels
   di.registerLazySingleton<SettingsModel>(

@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:phoenix_theme/phoenix_theme.dart' hide ColorX, isMobile;
 import 'package:system_theme/system_theme.dart';
+import 'package:tray_manager/tray_manager.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:window_manager/window_manager.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/icons.dart';
@@ -14,6 +17,7 @@ import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';
 import 'scaffold.dart';
 import 'splash_screen.dart';
+import 'system_tray.dart';
 
 class YaruMusicPodApp extends StatelessWidget {
   const YaruMusicPodApp({
@@ -105,7 +109,8 @@ class _MusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
   State<_MusicPodApp> createState() => _MusicPodAppState();
 }
 
-class _MusicPodAppState extends State<_MusicPodApp> {
+class _MusicPodAppState extends State<_MusicPodApp>
+    with WindowListener, TrayListener {
   late Future<bool> _initFuture;
 
   @override
@@ -118,8 +123,37 @@ class _MusicPodAppState extends State<_MusicPodApp> {
     await di<LibraryModel>().init();
     if (!mounted) return false;
     di<ExternalPathService>().init();
+    if (Platform.isLinux) {
+      windowManager.addListener(this);
+      trayManager.addListener(this);
+    }
     return true;
   }
+
+  @override
+  void dispose() {
+    if (Platform.isLinux) {
+      windowManager.removeListener(this);
+      trayManager.removeListener(this);
+    }
+    super.dispose();
+  }
+
+  @override
+  void onTrayIconMouseDown() {
+    trayManager.popUpContextMenu();
+  }
+
+  @override
+  void onWindowEvent(String eventName) {
+    if ('show' == eventName || 'hide' == eventName) {
+      updateTrayItems(context);
+    }
+    super.onWindowEvent(eventName);
+  }
+
+  @override
+  void onTrayMenuItemClick(MenuItem menuItem) => reactToTray(menuItem);
 
   @override
   Widget build(BuildContext context) {

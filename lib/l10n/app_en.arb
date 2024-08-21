@@ -331,5 +331,13 @@
     "replayAllEpisodes": "Replay all episodes",
     "checkForUpdates": "Check for updates",
     "playbackWillStopIn": "Playback will stop in: {duration} ({timeOfDay})",
-    "schedulePlaybackStopTimer": "Schedule a time to stop playback"
+    "schedulePlaybackStopTimer": "Schedule a time to stop playback",
+    "alwaysAsk": "Always ask",
+    "hideToTray": "Hide to tray",
+    "closeBtnAction": "Close Button Action",
+    "whenCloseBtnClicked": "When close button is clicked",
+    "closeApp": "Close Application",
+    "closeMusicPod": "Close MusicPod?",
+    "confirmCloseOrHideTip": "Please confirm if you need to close the application or hide it?",
+    "doNotAskAgain": "Do not ask again"
 }

@@ -12,6 +12,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   screen_retriever
   super_native_extensions
   system_theme
+  tray_manager
   url_launcher_windows
   window_manager
 )

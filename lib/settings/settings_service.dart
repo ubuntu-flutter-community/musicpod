@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../common/data/close_btn_action.dart';
 import '../constants.dart';
 
 class SettingsService {
@@ -87,6 +88,25 @@ class SettingsService {
     });
   }
 
+  final _closeBtnActionIndexController = StreamController<bool>.broadcast();
+  Stream<bool> get closeBtnActionChanged =>
+      _closeBtnActionIndexController.stream;
+  CloseBtnAction get closeBtnActionIndex =>
+      _preferences.getString(kCloseBtnAction) == null
+          ? CloseBtnAction.alwaysAsk
+          : CloseBtnAction.values.firstWhere(
+              (element) =>
+                  element.toString() == _preferences.getString(kCloseBtnAction),
+              orElse: () => CloseBtnAction.alwaysAsk,
+            );
+  void setCloseBtnActionIndex(CloseBtnAction value) {
+    _preferences.setString(kCloseBtnAction, value.toString()).then(
+      (saved) {
+        if (saved) _closeBtnActionIndexController.add(true);
+      },
+    );
+  }
+
   Future<void> dispose() async {
     await _themeIndexController.close();
     await _recentPatchNotesDisposedController.close();
@@ -95,5 +115,6 @@ class SettingsService {
     await _podcastIndexApiSecretController.close();
     await _usePodcastIndexController.close();
     await _podcastIndexApiKeyController.close();
+    await _closeBtnActionIndexController.close();
   }
 }

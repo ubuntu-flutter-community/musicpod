@@ -8,7 +8,15 @@
     "replayAllEpisodes",
     "checkForUpdates",
     "playbackWillStopIn",
-    "schedulePlaybackStopTimer"
+    "schedulePlaybackStopTimer",
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "da": [
@@ -22,13 +30,29 @@
     "replayAllEpisodes",
     "checkForUpdates",
     "playbackWillStopIn",
-    "schedulePlaybackStopTimer"
+    "schedulePlaybackStopTimer",
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "de": [
     "gitHubClientConnectError",
     "replayEpisode",
-    "replayAllEpisodes"
+    "replayAllEpisodes",
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "es": [
@@ -232,7 +256,37 @@
     "replayAllEpisodes",
     "checkForUpdates",
     "playbackWillStopIn",
-    "schedulePlaybackStopTimer"
+    "schedulePlaybackStopTimer",
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
+  ],
+
+  "fr": [
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
+  ],
+
+  "it": [
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "nl": [
@@ -464,7 +518,15 @@
     "replayAllEpisodes",
     "checkForUpdates",
     "playbackWillStopIn",
-    "schedulePlaybackStopTimer"
+    "schedulePlaybackStopTimer",
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "pl": [
@@ -516,7 +578,15 @@
     "replayAllEpisodes",
     "checkForUpdates",
     "playbackWillStopIn",
-    "schedulePlaybackStopTimer"
+    "schedulePlaybackStopTimer",
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "pt": [
@@ -719,7 +789,15 @@
     "replayAllEpisodes",
     "checkForUpdates",
     "playbackWillStopIn",
-    "schedulePlaybackStopTimer"
+    "schedulePlaybackStopTimer",
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "pt_BR": [
@@ -922,7 +1000,15 @@
     "replayAllEpisodes",
     "checkForUpdates",
     "playbackWillStopIn",
-    "schedulePlaybackStopTimer"
+    "schedulePlaybackStopTimer",
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "ru": [
@@ -940,7 +1026,15 @@
     "replayAllEpisodes",
     "checkForUpdates",
     "playbackWillStopIn",
-    "schedulePlaybackStopTimer"
+    "schedulePlaybackStopTimer",
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "sk": [
@@ -952,7 +1046,15 @@
     "replayAllEpisodes",
     "checkForUpdates",
     "playbackWillStopIn",
-    "schedulePlaybackStopTimer"
+    "schedulePlaybackStopTimer",
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "sv": [
@@ -1145,7 +1247,15 @@
     "replayAllEpisodes",
     "checkForUpdates",
     "playbackWillStopIn",
-    "schedulePlaybackStopTimer"
+    "schedulePlaybackStopTimer",
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "tr": [
@@ -1157,22 +1267,38 @@
     "replayAllEpisodes",
     "checkForUpdates",
     "playbackWillStopIn",
-    "schedulePlaybackStopTimer"
-  ],
-
-  "zh": [
-    "schedulePlaybackStopTimer"
-  ],
-
-  "zh_CN": [
-    "schedulePlaybackStopTimer"
+    "schedulePlaybackStopTimer",
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "zh_HK": [
-    "schedulePlaybackStopTimer"
+    "schedulePlaybackStopTimer",
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ],
 
   "zh_TW": [
-    "schedulePlaybackStopTimer"
+    "schedulePlaybackStopTimer",
+    "alwaysAsk",
+    "hideToTray",
+    "closeBtnAction",
+    "whenCloseBtnClicked",
+    "closeApp",
+    "closeMusicPod",
+    "confirmCloseOrHideTip",
+    "doNotAskAgain"
   ]
 }
