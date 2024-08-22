@@ -21,7 +21,6 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
     const baseColor = Colors.white;
 
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
-    final playerModel = di<PlayerModel>();
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
 
@@ -43,8 +42,6 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
           width: 300,
           child: PlayerMainControls(
             active: active,
-            playPrevious: playerModel.playNext,
-            playNext: playerModel.playNext,
             iconColor: baseColor,
             avatarColor: baseColor.withOpacity(0.1),
           ),

@@ -92,6 +92,10 @@ class PlayerService {
   Audio? get audio => _audio;
   void _setAudio(Audio value) async {
     if (value == _audio) return;
+    if (value.audioType != _audio?.audioType) {
+      _shuffle = false;
+      setRate(1);
+    }
     _audio = value;
     _audioController.add(true);
     setMpvMetaData(null);

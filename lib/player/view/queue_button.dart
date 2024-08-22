@@ -18,7 +18,6 @@ class QueueButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final libraryModel = di<LibraryModel>();
 
     return IconButton(
       color: color ?? theme.colorScheme.onSurface,
@@ -32,9 +31,7 @@ class QueueButton extends StatelessWidget {
         showDialog(
           context: context,
           builder: (context) {
-            return QueueDialog(
-              addPlaylist: libraryModel.addPlaylist,
-            );
+            return const QueueDialog();
           },
         );
       },
@@ -42,20 +39,53 @@ class QueueButton extends StatelessWidget {
   }
 }
 
-class QueueDialog extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const QueueDialog({
-    super.key,
-    required this.addPlaylist,
-  });
-
-  final void Function(String name, List<Audio> audios) addPlaylist;
+class QueueDialog extends StatelessWidget with WatchItMixin {
+  const QueueDialog({super.key});
 
   @override
-  State<QueueDialog> createState() => _QueueDialogState();
+  Widget build(BuildContext context) {
+    final queue = watchPropertyValue((PlayerModel m) => m.queue);
+    final queueLength = watchPropertyValue((PlayerModel m) => m.queue.length);
+
+    return AlertDialog(
+      key: ValueKey(queueLength),
+      titlePadding:
+          const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 10),
+      contentPadding: const EdgeInsets.only(bottom: 20, top: 10),
+      title: const PlayerMainControls(active: true),
+      actionsAlignment: MainAxisAlignment.center,
+      actions: [
+        OutlinedButton(
+          onPressed: () {
+            di<LibraryModel>().addPlaylist(
+              '${context.l10n.queue} ${DateTime.now()}',
+              List.from(queue),
+            );
+            Navigator.of(context).pop();
+          },
+          child: Text(context.l10n.createNewPlaylist),
+        ),
+      ],
+      content: const QueueBody(),
+    );
+  }
 }
 
-class _QueueDialogState extends State<QueueDialog> {
+class QueueBody extends StatefulWidget with WatchItStatefulWidgetMixin {
+  const QueueBody({
+    super.key,
+    this.advancedList = true,
+  });
+
+  final bool advancedList;
+
+  @override
+  State<QueueBody> createState() => _QueueBodyState();
+}
+
+class _QueueBodyState extends State<QueueBody> {
   late AutoScrollController _controller;
+  Audio? _audio;
 
   @override
   void initState() {
@@ -85,84 +115,128 @@ class _QueueDialogState extends State<QueueDialog> {
   @override
   Widget build(BuildContext context) {
     final queue = watchPropertyValue((PlayerModel m) => m.queue);
-    final queueLength = watchPropertyValue((PlayerModel m) => m.queue.length);
+    final queueName = watchPropertyValue((PlayerModel m) => m.queueName);
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
-    final playerModel = di<PlayerModel>();
-
-    return AlertDialog(
-      key: ValueKey(queueLength),
-      titlePadding:
-          const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 10),
-      contentPadding: const EdgeInsets.only(bottom: 20, top: 10),
-      title: Column(
+    if (_audio != currentAudio) {
+      _jump();
+    }
+    _audio = currentAudio;
+    return SizedBox(
+      width: 400,
+      height: 500,
+      child: Column(
         children: [
-          PlayerMainControls(
-            playPrevious: () async => playerModel.playPrevious().then(
-                  (_) => _jump(),
-                ),
-            playNext: () async => playerModel.playNext().then(
-                  (_) => _jump(),
-                ),
-            active: true,
+          Expanded(
+            child: widget.advancedList
+                ? ReorderableListView.builder(
+                    scrollController: _controller,
+                    padding: const EdgeInsets.only(
+                      left: 25,
+                      right: 25,
+                    ),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      final audio = queue.elementAt(index);
+                      final selected = audio == currentAudio;
+
+                      return AutoScrollTag(
+                        key: ObjectKey(audio),
+                        controller: _controller,
+                        index: index,
+                        child: _QueueTile(
+                          key: ValueKey(index),
+                          advancedTile: widget.advancedList,
+                          queueName: queueName,
+                          queue: queue,
+                          audio: audio,
+                          selected: selected,
+                        ),
+                      );
+                    },
+                    itemCount: queue.length,
+                    onReorder: di<PlayerModel>().moveAudioInQueue,
+                  )
+                : ListView.builder(
+                    itemCount: queue.length,
+                    controller: _controller,
+                    padding: const EdgeInsets.only(
+                      left: 25,
+                      right: 25,
+                    ),
+                    itemBuilder: (context, index) {
+                      final audio = queue.elementAt(index);
+                      final selected = audio == currentAudio;
+
+                      return AutoScrollTag(
+                        index: index,
+                        controller: _controller,
+                        key: ObjectKey(audio),
+                        child: _QueueTile(
+                          key: ValueKey(index),
+                          advancedTile: widget.advancedList,
+                          queueName: queueName,
+                          queue: queue,
+                          audio: audio,
+                          selected: selected,
+                        ),
+                      );
+                    },
+                  ),
           ),
         ],
       ),
-      actionsAlignment: MainAxisAlignment.center,
-      actions: [
-        OutlinedButton(
-          onPressed: () {
-            widget.addPlaylist(
-              '${context.l10n.queue} ${DateTime.now()}',
-              List.from(queue),
-            );
-            Navigator.of(context).pop();
-          },
-          child: Text(context.l10n.createNewPlaylist),
-        ),
-      ],
-      content: SizedBox(
-        width: 400,
-        height: 500,
-        child: Column(
-          children: [
-            Expanded(
-              child: ReorderableListView.builder(
-                scrollController: _controller,
-                padding: const EdgeInsets.only(
-                  left: 25,
-                  right: 25,
-                ),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  final audio = queue.elementAt(index);
-                  final selected = audio == currentAudio;
+    );
+  }
+}
 
-                  return AutoScrollTag(
-                    key: ObjectKey(audio),
-                    controller: _controller,
-                    index: index,
-                    child: ListTile(
-                      leading: IconButton(
-                        onPressed:
-                            selected ? null : () => playerModel.remove(audio),
-                        icon: Icon(Iconz().close),
-                      ),
-                      contentPadding: const EdgeInsets.only(right: 10, left: 0),
-                      selected: selected,
-                      key: ValueKey(index),
-                      title: Padding(
-                        padding: const EdgeInsets.only(right: 20),
-                        child: Text(audio.title ?? ''),
-                      ),
-                    ),
-                  );
-                },
-                itemCount: queue.length,
-                onReorder: playerModel.moveAudioInQueue,
-              ),
-            ),
-          ],
+class _QueueTile extends StatelessWidget {
+  const _QueueTile({
+    super.key,
+    required this.advancedTile,
+    required this.queueName,
+    required this.queue,
+    required this.audio,
+    required this.selected,
+  });
+
+  final String? queueName;
+  final List<Audio> queue;
+  final Audio audio;
+  final bool selected;
+  final bool advancedTile;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      shape: advancedTile
+          ? null
+          : RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+      onTap: advancedTile
+          ? null
+          : queueName == null
+              ? null
+              : () => di<PlayerModel>().startPlaylist(
+                    listName: queueName!,
+                    audios: queue,
+                    index: queue.indexOf(audio),
+                  ),
+      leading: advancedTile
+          ? IconButton(
+              onPressed:
+                  selected ? null : () => di<PlayerModel>().remove(audio),
+              icon: Icon(Iconz().close),
+            )
+          : null,
+      contentPadding:
+          advancedTile ? null : const EdgeInsets.only(right: 10, left: 0),
+      selected: selected,
+      key: key,
+      title: Padding(
+        padding: EdgeInsets.only(
+          left: advancedTile ? 0 : 20,
+          right: 20,
         ),
+        child: Text(audio.title ?? ''),
       ),
     );
   }

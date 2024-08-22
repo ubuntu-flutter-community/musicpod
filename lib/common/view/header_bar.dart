@@ -80,37 +80,45 @@ class HeaderBar extends StatelessWidget
           : YaruTitleBarStyle.undecorated;
     }
 
-    return YaruWindowTitleBar(
-      titleSpacing: titleSpacing,
-      actions: [
-        if ((!context.showMasterPanel && Platform.isMacOS) && leading != null)
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: leading,
-          ),
-        ...?actions,
-      ],
-      leading: !context.showMasterPanel && Platform.isMacOS ? null : leading,
-      title: title,
-      border: BorderSide.none,
-      backgroundColor: backgroundColor ?? context.theme.scaffoldBackgroundColor,
-      style: theStyle,
-      foregroundColor: foregroundColor,
-      onClose: Platform.isLinux
-          ? (context) {
-              switch (closeBtnAction) {
-                case CloseBtnAction.alwaysAsk:
-                  showDialog(
-                    context: context,
-                    builder: (_) => const CloseWindowActionConfirmDialog(),
-                  );
-                case CloseBtnAction.hideToTray:
-                  YaruWindow.hide(context);
-                case CloseBtnAction.close:
-                  YaruWindow.close(context);
+    return Theme(
+      data: context.t.copyWith(
+        appBarTheme: AppBarTheme.of(context).copyWith(
+          scrolledUnderElevation: 0,
+        ),
+      ),
+      child: YaruWindowTitleBar(
+        titleSpacing: titleSpacing,
+        actions: [
+          if ((!context.showMasterPanel && Platform.isMacOS) && leading != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: leading,
+            ),
+          ...?actions,
+        ],
+        leading: !context.showMasterPanel && Platform.isMacOS ? null : leading,
+        title: title,
+        border: BorderSide.none,
+        backgroundColor:
+            backgroundColor ?? context.theme.scaffoldBackgroundColor,
+        style: theStyle,
+        foregroundColor: foregroundColor,
+        onClose: Platform.isLinux
+            ? (context) {
+                switch (closeBtnAction) {
+                  case CloseBtnAction.alwaysAsk:
+                    showDialog(
+                      context: context,
+                      builder: (_) => const CloseWindowActionConfirmDialog(),
+                    );
+                  case CloseBtnAction.hideToTray:
+                    YaruWindow.hide(context);
+                  case CloseBtnAction.close:
+                    YaruWindow.close(context);
+                }
               }
-            }
-          : null,
+            : null,
+      ),
     );
   }
 

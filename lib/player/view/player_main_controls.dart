@@ -17,14 +17,9 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
   const PlayerMainControls({
     super.key,
     required this.active,
-    required this.playPrevious,
-    required this.playNext,
     this.iconColor,
     this.avatarColor,
   });
-
-  final Future<void> Function() playPrevious;
-  final Future<void> Function() playNext;
 
   final bool active;
   final Color? iconColor, avatarColor;
@@ -55,7 +50,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
         IconButton(
           tooltip: context.l10n.back,
           color: defaultColor,
-          onPressed: !active ? null : () => playPrevious(),
+          onPressed: !active ? null : () => di<PlayerModel>().playPrevious(),
           icon: Icon(
             Iconz().skipBackward,
             color: defaultColor,
@@ -75,7 +70,9 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
         IconButton(
           tooltip: context.l10n.next,
           color: defaultColor,
-          onPressed: !active || queueLength < 2 ? null : () => playNext(),
+          onPressed: !active || queueLength < 2
+              ? null
+              : () => di<PlayerModel>().playNext(),
           icon: Icon(
             Iconz().skipForward,
             color: defaultColor,
