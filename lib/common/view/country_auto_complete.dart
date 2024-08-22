@@ -172,11 +172,15 @@ class CountryAutoComplete extends StatelessWidget {
                 return countries ?? [];
               }
 
-              /// TODO: allow search country by name or by local name
               return countries?.where(
-                    (e) => e.name
-                        .toLowerCase()
-                        .contains(textEditingValue.text.toLowerCase()),
+                    (e) =>
+                        e
+                            .localize(context.l10n)
+                            .toLowerCase()
+                            .contains(textEditingValue.text.toLowerCase()) ||
+                        e.name
+                            .toLowerCase()
+                            .contains(textEditingValue.text.toLowerCase()),
                   ) ??
                   [];
             },
