@@ -3,7 +3,7 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../extensions/string_x.dart';
+import '../../extensions/country_x.dart';
 import '../../l10n/l10n.dart';
 import 'drop_down_arrow.dart';
 
@@ -35,7 +35,7 @@ class CountryPopup extends StatelessWidget {
       onSelected: onSelected,
       initialValue: value,
       child: Text(
-        '${context.l10n.country}: ${value?.name.camelToSentence.everyWordCapitalized ?? context.l10n.all}',
+        '${context.l10n.country}: ${value?.localize(context.l10n) ?? context.l10n.all}',
         style: textStyle ?? fallBackTextStyle,
       ),
       itemBuilder: (context) {
@@ -44,7 +44,7 @@ class CountryPopup extends StatelessWidget {
               in countries ?? Country.values.where((c) => c != Country.none))
             PopupMenuItem(
               value: c,
-              child: Text(c.name.camelToSentence.everyWordCapitalized),
+              child: Text(c.localize(context.l10n)),
             ),
         ];
       },

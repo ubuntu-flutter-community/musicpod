@@ -4,7 +4,7 @@ import 'package:podcast_search/podcast_search.dart';
 
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/string_x.dart';
+import '../../extensions/country_x.dart';
 import '../../l10n/l10n.dart';
 import 'icons.dart';
 import 'theme.dart';
@@ -58,11 +58,9 @@ class CountryAutoComplete extends StatelessWidget {
           return Autocomplete<Country>(
             key: ValueKey(value?.name),
             initialValue: TextEditingValue(
-              text: value?.name.camelToSentence.everyWordCapitalized ??
-                  context.l10n.all,
+              text: value?.localize(context.l10n) ?? context.l10n.all,
             ),
-            displayStringForOption: (option) =>
-                option.name.camelToSentence.everyWordCapitalized,
+            displayStringForOption: (option) => option.localize(context.l10n),
             fieldViewBuilder: (
               context,
               textEditingController,
@@ -173,6 +171,8 @@ class CountryAutoComplete extends StatelessWidget {
               if (textEditingValue.text.isEmpty) {
                 return countries ?? [];
               }
+
+              /// TODO: allow search country by name or by local name
               return countries?.where(
                     (e) => e.name
                         .toLowerCase()
@@ -223,9 +223,9 @@ class _CountryTile extends StatelessWidget {
       tileColor: highlight ? theme.focusColor : null,
       onTap: () => onSelected(t),
       title: Tooltip(
-        message: t.name.camelToSentence.everyWordCapitalized,
+        message: t.localize(context.l10n),
         child: Text(
-          t.name.camelToSentence.everyWordCapitalized,
+          t.localize(context.l10n),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
