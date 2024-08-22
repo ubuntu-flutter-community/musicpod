@@ -3,6 +3,8 @@ import 'package:yaru/constants.dart';
 
 const kAppName = 'musicpod';
 
+const kAppId = 'org.feichtmeier.Musicpod';
+
 const kLinuxDBusName = 'org.mpris.MediaPlayer2.musicpod';
 
 const kAndroidChannelId = 'org.feichtmeier.musicpod.channel.audio';
