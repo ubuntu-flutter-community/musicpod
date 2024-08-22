@@ -9,7 +9,6 @@ import 'package:watch_it/watch_it.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';
@@ -20,78 +19,36 @@ import 'splash_screen.dart';
 import 'system_tray.dart';
 
 class YaruMusicPodApp extends StatelessWidget {
-  const YaruMusicPodApp({
-    super.key,
-  });
+  const YaruMusicPodApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return YaruTheme(
-      builder: (context, yaru, child) {
-        return _MusicPodApp(
-          highContrastTheme: yaruHighContrastLight,
-          highContrastDarkTheme: yaruHighContrastDark,
-          lightTheme: yaru.theme?.copyWith(
-            actionIconTheme: ActionIconThemeData(
-              backButtonIconBuilder: (context) => Icon(Iconz().goBack),
-            ),
-            snackBarTheme: SnackBarThemeData(
-              behavior: SnackBarBehavior.floating,
-              actionTextColor: yaru.theme?.colorScheme.primary,
-            ),
-            cardColor: yaru.theme?.dividerColor.scale(
-              lightness: -0.01,
-            ),
-          ),
-          darkTheme: yaru.darkTheme?.copyWith(
-            actionIconTheme: ActionIconThemeData(
-              backButtonIconBuilder: (context) => Icon(Iconz().goBack),
-            ),
-            scaffoldBackgroundColor:
-                yaru.darkTheme?.scaffoldBackgroundColor.scale(
-              lightness: -0.35,
-            ),
-            dividerColor: yaruFixDarkDividerColor,
-            dividerTheme: const DividerThemeData(
-              color: yaruFixDarkDividerColor,
-              space: 1.0,
-              thickness: 0.0,
-            ),
-            snackBarTheme: SnackBarThemeData(
-              behavior: SnackBarBehavior.floating,
-              actionTextColor: yaru.theme?.colorScheme.primary,
-            ),
-            cardColor: yaru.darkTheme?.cardColor.scale(
-              lightness: -0.2,
-            ),
-          ),
-        );
-      },
+      builder: (context, yaru, child) => _MusicPodApp(
+        highContrastTheme: yaruHighContrastLight,
+        highContrastDarkTheme: yaruHighContrastDark,
+        lightTheme: yaruLightWithTweaks(yaru),
+        darkTheme: yaruDarkWithTweaks(yaru),
+      ),
     );
   }
 }
 
 class MaterialMusicPodApp extends StatelessWidget {
-  const MaterialMusicPodApp({
-    super.key,
-  });
+  const MaterialMusicPodApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return SystemThemeBuilder(
-      builder: (context, accent) {
-        return _MusicPodApp(
-          accent: accent.accent,
-        );
-      },
-    );
-  }
+  Widget build(BuildContext context) => SystemThemeBuilder(
+        builder: (context, accent) {
+          return _MusicPodApp(
+            accent: accent.accent,
+          );
+        },
+      );
 }
 
 class _MusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
   const _MusicPodApp({
-    // ignore: unused_element
-    super.key,
     this.lightTheme,
     this.darkTheme,
     this.accent,

@@ -28,7 +28,12 @@ class RadioPageStarButton extends StatelessWidget with WatchItMixin {
           : isStarred
               ? () => libraryModel.unStarStation(station.url!)
               : () => libraryModel.addStarredStation(station.url!, [station]),
-      icon: Iconz().getAnimatedStar(isStarred, context.t.colorScheme.primary),
+      icon: Iconz().getAnimatedStar(
+        isStarred,
+        isStarred
+            ? context.t.colorScheme.primary
+            : context.t.colorScheme.onSurface,
+      ),
     );
   }
 }

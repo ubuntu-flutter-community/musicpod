@@ -5,7 +5,46 @@ import 'package:yaru/yaru.dart';
 
 import '../../constants.dart';
 import '../../extensions/theme_data_x.dart';
+import 'icons.dart';
 
+ThemeData? yaruDarkWithTweaks(YaruThemeData yaru) {
+  return yaru.darkTheme?.copyWith(
+    actionIconTheme: ActionIconThemeData(
+      backButtonIconBuilder: (context) => Icon(Iconz().goBack),
+    ),
+    scaffoldBackgroundColor: yaru.darkTheme?.scaffoldBackgroundColor.scale(
+      lightness: -0.35,
+    ),
+    dividerColor: yaruFixDarkDividerColor,
+    dividerTheme: const DividerThemeData(
+      color: yaruFixDarkDividerColor,
+      space: 1.0,
+      thickness: 0.0,
+    ),
+    snackBarTheme: SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+      actionTextColor: yaru.theme?.colorScheme.primary,
+    ),
+    cardColor: yaru.darkTheme?.cardColor.scale(
+      lightness: -0.2,
+    ),
+  );
+}
+
+ThemeData? yaruLightWithTweaks(YaruThemeData yaru) {
+  return yaru.theme?.copyWith(
+    actionIconTheme: ActionIconThemeData(
+      backButtonIconBuilder: (context) => Icon(Iconz().goBack),
+    ),
+    snackBarTheme: SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+      actionTextColor: yaru.theme?.colorScheme.primary,
+    ),
+    cardColor: yaru.theme?.dividerColor.scale(
+      lightness: -0.01,
+    ),
+  );
+}
 // TODO: MOVE TO THEME EXTENSIONS where possible!
 
 const yaruFixDarkDividerColor = Color.fromARGB(19, 255, 255, 255);
