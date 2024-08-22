@@ -43,107 +43,93 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
           m.queue.length > 1 || audio?.audioType == AudioType.local,
     );
 
-    final bottomPlayerImage = ClipRRect(
-      borderRadius: BorderRadius.circular(4),
-      child: BottomPlayerImage(
-        audio: audio,
-        size: kBottomPlayerHeight - 24,
-        videoController: model.controller,
-        isVideo: isVideo,
-        isOnline: isOnline,
-      ),
-    );
-
-    final titleAndArtist = BottomPlayerTitleArtist(
-      audio: audio,
-    );
-
-    final bottomPlayerControls = PlayerMainControls(
-      playPrevious: model.playPrevious,
-      playNext: model.playNext,
-      active: active,
-    );
-
-    final track = PlayerTrack(
-      active: active,
-      bottomPlayer: true,
-    );
-
-    final bottom = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10, right: 20),
-            child: bottomPlayerImage,
-          ),
-          Expanded(
-            flex: 4,
-            child: Row(
-              children: [
-                Flexible(
-                  flex: 5,
-                  child: titleAndArtist,
-                ),
-                if (!smallWindow)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: switch (audio?.audioType) {
-                      AudioType.local => LikeIcon(
-                          audio: audio,
-                          color: theme.colorScheme.onSurface,
-                        ),
-                      AudioType.radio => RadioLikeIcon(audio: audio),
-                      _ => const SizedBox.shrink(),
-                    },
-                  ),
-              ],
-            ),
-          ),
-          if (!smallWindow)
-            Expanded(
-              flex: 6,
-              child: bottomPlayerControls,
-            ),
-          if (!smallWindow)
-            Flexible(
-              flex: 4,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  if (audio?.audioType == AudioType.podcast)
-                    PlaybackRateButton(active: active),
-                  const VolumeSliderPopup(),
-                  if (showQueueButton) const QueueButton(),
-                  IconButton(
-                    tooltip: context.l10n.fullWindow,
-                    icon: Icon(
-                      Iconz().fullWindow,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                    onPressed: () => appModel.setFullWindowMode(true),
-                  ),
-                ],
-              ),
-            )
-          else
-            PlayButton(active: active),
-          const SizedBox(
-            width: 10,
-          ),
-        ],
-      ),
-    );
-
     final player = SizedBox(
       height: kBottomPlayerHeight,
       child: Column(
         children: [
-          track,
+          PlayerTrack(
+            active: active,
+            bottomPlayer: true,
+          ),
           InkWell(
             onTap: () => appModel.setFullWindowMode(true),
-            child: bottom,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 20),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: BottomPlayerImage(
+                        audio: audio,
+                        size: kBottomPlayerHeight - 24,
+                        videoController: model.controller,
+                        isVideo: isVideo,
+                        isOnline: isOnline,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 4,
+                    child: Row(
+                      children: [
+                        Flexible(
+                          flex: 5,
+                          child: BottomPlayerTitleArtist(
+                            audio: audio,
+                          ),
+                        ),
+                        if (!smallWindow)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: switch (audio?.audioType) {
+                              AudioType.local => LikeIcon(
+                                  audio: audio,
+                                  color: theme.colorScheme.onSurface,
+                                ),
+                              AudioType.radio => RadioLikeIcon(audio: audio),
+                              _ => const SizedBox.shrink(),
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
+                  if (!smallWindow)
+                    Expanded(
+                      flex: 6,
+                      child: PlayerMainControls(active: active),
+                    ),
+                  if (!smallWindow)
+                    Flexible(
+                      flex: 4,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          if (audio?.audioType == AudioType.podcast)
+                            PlaybackRateButton(active: active),
+                          const VolumeSliderPopup(),
+                          if (showQueueButton) const QueueButton(),
+                          IconButton(
+                            tooltip: context.l10n.fullWindow,
+                            icon: Icon(
+                              Iconz().fullWindow,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                            onPressed: () => appModel.setFullWindowMode(true),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    PlayButton(active: active),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

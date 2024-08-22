@@ -23,10 +23,11 @@ class RadioHistoryTile extends StatelessWidget with PlayerMixin {
     super.key,
     required this.entry,
     required this.selected,
+    this.simpleTile = false,
   });
 
   final MapEntry<String, MpvMetaData> entry;
-  final bool selected;
+  final bool selected, simpleTile;
 
   @override
   Widget build(BuildContext context) {
@@ -35,27 +36,31 @@ class RadioHistoryTile extends StatelessWidget with PlayerMixin {
       selected: selected,
       selectedColor: context.t.contrastyPrimary,
       contentPadding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
-      leading: IcyImage(
-        height: yaruStyled ? 34 : 40,
-        width: yaruStyled ? 34 : 40,
-        mpvMetaData: entry.value,
-      ),
-      trailing: IconButton(
-        tooltip: context.l10n.metadata,
-        onPressed: () => showDialog(
-          context: context,
-          builder: (context) {
-            final image = UrlStore().get(entry.value.icyTitle);
-            return MpvMetadataDialog(
+      leading: simpleTile
+          ? null
+          : IcyImage(
+              height: yaruStyled ? 34 : 40,
+              width: yaruStyled ? 34 : 40,
               mpvMetaData: entry.value,
-              image: image,
-            );
-          },
-        ),
-        icon: Icon(
-          Iconz().info,
-        ),
-      ),
+            ),
+      trailing: simpleTile
+          ? null
+          : IconButton(
+              tooltip: context.l10n.metadata,
+              onPressed: () => showDialog(
+                context: context,
+                builder: (context) {
+                  final image = UrlStore().get(entry.value.icyTitle);
+                  return MpvMetadataDialog(
+                    mpvMetaData: entry.value,
+                    image: image,
+                  );
+                },
+              ),
+              icon: Icon(
+                Iconz().info,
+              ),
+            ),
       title: TapAbleText(
         overflow: TextOverflow.visible,
         maxLines: 10,

@@ -16,12 +16,14 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
     this.emptyMessage,
     this.padding,
     this.emptyIcon,
+    this.simpleList = false,
   });
 
   final String? filter;
   final Widget? emptyMessage;
   final Widget? emptyIcon;
   final EdgeInsetsGeometry? padding;
+  final bool simpleList;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,7 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
               final reversedIndex = radioHistory.length - index - 1;
               final e = radioHistory.elementAt(reversedIndex);
               return RadioHistoryTile(
+                simpleTile: simpleList,
                 entry: e,
                 selected: current?.icyTitle != null &&
                     current?.icyTitle == e.value.icyTitle,
