@@ -190,6 +190,7 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
               alignment: Alignment.centerRight,
               child: Text(
                 Duration(milliseconds: audio.durationMs!.toInt()).formattedTime,
+                style: context.t.textTheme.labelMedium,
               ),
             ),
           ),
@@ -214,6 +215,7 @@ class AlbumTileLead extends StatelessWidget {
         widthFactor: 1,
         child: Text(
           trackNumber?.toString() ?? '0',
+          style: context.t.textTheme.labelMedium,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
