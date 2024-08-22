@@ -4,17 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../../constants.dart';
 import '../../l10n/l10n.dart';
 
 const _exitAppMenuKey = 'exit_app';
 const _showHideWindowMenuKey = 'show_hide_window';
 
 Future<void> initTray() async {
-  await trayManager.setIcon(
-    (Platform.isWindows)
-        ? 'assets/images/tray_icon.ico'
-        : 'assets/images/tray_icon.png',
-  );
+  await trayManager.setIcon(_icon());
   Menu menu = Menu(
     items: [
       MenuItem(
@@ -29,6 +26,16 @@ Future<void> initTray() async {
     ],
   );
   await trayManager.setContextMenu(menu);
+}
+
+String _icon() {
+  if (Platform.isLinux) {
+    return kAppId;
+  } else if (Platform.isWindows) {
+    return 'assets/images/tray_icon.ico';
+  } else {
+    return 'assets/images/tray_icon.png';
+  }
 }
 
 Future<void> updateTrayItems(BuildContext context) async {
