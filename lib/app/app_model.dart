@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:github/github.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/view/snackbars.dart';
@@ -9,6 +8,7 @@ import '../settings/settings_service.dart';
 
 class AppModel extends SafeChangeNotifier {
   AppModel({
+    required String appVersion,
     required SettingsService settingsService,
     required GitHub gitHub,
     required bool allowManualUpdates,
@@ -17,7 +17,8 @@ class AppModel extends SafeChangeNotifier {
             ?.toLowerCase(),
         _gitHub = gitHub,
         _allowManualUpdates = allowManualUpdates,
-        _settingsService = settingsService;
+        _settingsService = settingsService,
+        _version = appVersion;
 
   final GitHub _gitHub;
   final SettingsService _settingsService;
@@ -42,26 +43,14 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  String? _appName;
-  String? get appName => _appName;
-  String? _packageName;
-  String? get packageName => _packageName;
-  String? _version;
+  final String _version;
   String? get version => _version;
-  String? _buildNumber;
-  String? get buildNumber => _buildNumber;
 
-  Future<void> disposePatchNotes() async {
-    if (_version != null) {
-      return _settingsService.disposePatchNotes(_version!);
-    } else {
-      return Future.error('unknown version');
-    }
-  }
+  Future<void> disposePatchNotes() async =>
+      _settingsService.disposePatchNotes(_version);
 
-  bool recentPatchNotesDisposed() => _version == null
-      ? false
-      : _settingsService.recentPatchNotesDisposed(_version!);
+  bool recentPatchNotesDisposed() =>
+      _settingsService.recentPatchNotesDisposed(_version);
   bool? _updateAvailable;
   bool? get updateAvailable => _updateAvailable;
   String? _onlineVersion;
@@ -99,14 +88,6 @@ class AppModel extends SafeChangeNotifier {
     List versionCells = version.split('.');
     versionCells = versionCells.map((i) => int.parse(i)).toList();
     return versionCells[0] * 100000 + versionCells[1] * 1000 + versionCells[2];
-  }
-
-  Future<void> init() async {
-    final packageInfo = await PackageInfo.fromPlatform();
-    _appName = packageInfo.appName;
-    _packageName = packageInfo.packageName;
-    _version = packageInfo.version;
-    _buildNumber = packageInfo.buildNumber;
   }
 
   Future<String?> getOnlineVersion() async {

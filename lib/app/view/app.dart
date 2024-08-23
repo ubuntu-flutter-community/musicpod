@@ -14,6 +14,7 @@ import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';
+import '../connectivity_model.dart';
 import 'scaffold.dart';
 import 'splash_screen.dart';
 import 'system_tray.dart';
@@ -77,6 +78,7 @@ class _MusicPodAppState extends State<_MusicPodApp>
   }
 
   Future<bool> _init() async {
+    await di<ConnectivityModel>().init();
     await di<LibraryModel>().init();
     if (!mounted) return false;
     di<ExternalPathService>().init();

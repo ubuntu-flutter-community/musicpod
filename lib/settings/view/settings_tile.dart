@@ -21,7 +21,8 @@ class SettingsTile extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget? trailing;
     // To not show any progress for Snap/Flatpak
-    if (di<ConnectivityModel>().isOnline && di<AppModel>().allowManualUpdate) {
+    if (di<ConnectivityModel>().isOnline == true &&
+        di<AppModel>().allowManualUpdate) {
       trailing = const _UpdateButton();
     }
 

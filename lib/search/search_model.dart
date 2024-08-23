@@ -142,7 +142,6 @@ class SearchModel extends SafeChangeNotifier {
     return _localAudioService.search(_searchQuery);
   }
 
-  // TODO: add limit increase on scroll
   int _podcastLimit = 30;
   void incrementPodcastLimit(int value) => _podcastLimit += value;
 
