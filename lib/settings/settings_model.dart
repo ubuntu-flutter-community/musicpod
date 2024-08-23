@@ -29,11 +29,7 @@ class SettingsModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _closeBtnActionIndexChangedSub;
 
   String? get directory => _service.directory;
-  Future<void> setDirectory(String? value) async {
-    if (value != null) {
-      await _service.setDirectory(value);
-    }
-  }
+  Future<void> setDirectory(String value) async => _service.setDirectory(value);
 
   bool get neverShowFailedImports => _service.neverShowFailedImports;
   void setNeverShowFailedImports(bool value) =>

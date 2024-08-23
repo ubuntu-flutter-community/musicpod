@@ -45,7 +45,6 @@ ThemeData? yaruLightWithTweaks(YaruThemeData yaru) {
     ),
   );
 }
-// TODO: MOVE TO THEME EXTENSIONS where possible!
 
 const yaruFixDarkDividerColor = Color.fromARGB(19, 255, 255, 255);
 

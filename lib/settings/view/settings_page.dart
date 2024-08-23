@@ -274,7 +274,7 @@ class _LocalAudioSection extends StatelessWidget with WatchItMixin {
     final directory =
         watchPropertyValue((SettingsModel m) => m.directory ?? '');
 
-    Future<void> onDirectorySelected(String? directoryPath) async {
+    Future<void> onDirectorySelected(String directoryPath) async {
       settingsModel.setDirectory(directoryPath).then(
             (_) async => localAudioModel.init(forceInit: true),
           );
@@ -291,7 +291,9 @@ class _LocalAudioSection extends StatelessWidget with WatchItMixin {
             trailing: ImportantButton(
               onPressed: () async {
                 final directoryPath = await settingsModel.getPathOfDirectory();
-                await onDirectorySelected(directoryPath);
+                if (directoryPath != null) {
+                  await onDirectorySelected(directoryPath);
+                }
               },
               child: Text(
                 context.l10n.select,
@@ -311,9 +313,7 @@ class _AboutSection extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final appName = watchPropertyValue((AppModel m) => m.appName);
-
-    final text = '${context.l10n.about} ${appName ?? ''}';
+    final text = '${context.l10n.about} $kAppTitle';
     return YaruSection(
       headline: Text(text),
       margin: const EdgeInsets.all(kYaruPagePadding),
@@ -335,7 +335,8 @@ class _AboutTileState extends State<_AboutTile> {
   @override
   void initState() {
     super.initState();
-    di<AppModel>().checkForUpdate(di<ConnectivityModel>().isOnline, context);
+    di<AppModel>()
+        .checkForUpdate(di<ConnectivityModel>().isOnline == true, context);
   }
 
   @override
@@ -348,7 +349,8 @@ class _AboutTileState extends State<_AboutTile> {
     final currentVersion = watchPropertyValue((AppModel m) => m.version);
 
     return YaruTile(
-      title: !di<ConnectivityModel>().isOnline || !appModel.allowManualUpdate
+      title: !di<ConnectivityModel>().isOnline == true ||
+              !appModel.allowManualUpdate
           ? Text(di<AppModel>().version ?? '')
           : updateAvailable == null
               ? Center(

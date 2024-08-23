@@ -27,10 +27,8 @@ class ConnectivityModel extends SafeChangeNotifier {
 
     return _connectivity
         .checkConnectivity()
-        .then(
-          _updateConnectivity,
-        )
-        .catchError((e) => _updateConnectivity);
+        .then(_updateConnectivity)
+        .catchError((_) => _updateConnectivity(ConnectivityResult.values));
   }
 
   bool get isOnline => _connectivity.isOnline(_result);

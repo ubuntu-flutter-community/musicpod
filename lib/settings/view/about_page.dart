@@ -32,7 +32,7 @@ class _AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
-    final appName = watchPropertyValue((AppModel m) => m.appName);
+
     final linkStyle = theme.textTheme.bodyLarge
         ?.copyWith(color: Colors.lightBlue, overflow: TextOverflow.visible);
     const maxLines = 3;
@@ -48,7 +48,7 @@ class _AboutPageState extends State<AboutPage> {
           YaruDialogTitleBar(
             border: BorderSide.none,
             backgroundColor: context.t.dialogBackgroundColor,
-            title: Text('${context.l10n.about} ${appName ?? ''}'),
+            title: Text('${context.l10n.about} $kAppTitle'),
             leading: YaruBackButton(
               style: YaruBackButtonStyle.rounded,
               onPressed: () => Navigator.of(context).pop(),

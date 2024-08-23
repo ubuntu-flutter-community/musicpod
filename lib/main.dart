@@ -7,6 +7,7 @@ import 'package:github/github.dart';
 import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:watch_it/watch_it.dart';
@@ -19,6 +20,7 @@ import 'app/app_model.dart';
 import 'app/connectivity_model.dart';
 import 'app/view/app.dart';
 import 'app/view/system_tray.dart';
+import 'constants.dart';
 import 'library/library_service.dart';
 import 'local_audio/local_audio_model.dart';
 import 'local_audio/local_audio_service.dart';
@@ -35,161 +37,29 @@ import 'settings/settings_model.dart';
 import 'settings/settings_service.dart';
 
 Future<void> main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   if (!isMobile) {
     await YaruWindowTitleBar.ensureInitialized();
-    if (!Platform.isLinux) {
-      await windowManager.ensureInitialized();
-      WindowManager.instance.setMinimumSize(const Size(500, 700));
-      WindowManager.instance.setSize(const Size(950, 820));
+    WindowManager.instance
+      ..setMinimumSize(const Size(500, 700))
+      ..setSize(const Size(950, 820));
+    if (Platform.isLinux) {
+      await initTray();
+    } else {
+      SystemTheme.fallbackColor = Colors.greenAccent;
+      await SystemTheme.accentColor.load();
     }
-  } else {
-    WidgetsFlutterBinding.ensureInitialized();
   }
 
   MediaKit.ensureInitialized();
+  final sharedPreferences = await SharedPreferences.getInstance();
+  final version = (await PackageInfo.fromPlatform()).version;
 
-  if (!Platform.isLinux) {
-    SystemTheme.fallbackColor = Colors.greenAccent;
-    await SystemTheme.accentColor.load();
-  }
-
-  // Register services
-  final SharedPreferences sharedPreferences =
-      await SharedPreferences.getInstance();
-  final settingsService = SettingsService(
+  registerServicesAndViewModels(
     sharedPreferences: sharedPreferences,
-  );
-  di.registerSingleton<SettingsService>(
-    settingsService,
-    dispose: (s) async => s.dispose(),
-  );
-
-  final libraryService = LibraryService(sharedPreferences: sharedPreferences);
-
-  final playerService = PlayerService(
-    controller: VideoController(
-      Player(
-        configuration: const PlayerConfiguration(title: 'MusicPod'),
-      ),
-    ),
-  );
-  await playerService.init();
-
-  di.registerSingleton<PlayerService>(
-    playerService,
-    dispose: (s) async => s.dispose(),
-  );
-
-  di.registerSingleton<LibraryService>(
-    libraryService,
-    dispose: (s) async => s.dispose(),
-  );
-  final localAudioService = LocalAudioService(settingsService: settingsService);
-  di.registerSingleton<LocalAudioService>(
-    localAudioService,
-    dispose: (s) async => s.dispose(),
-  );
-
-  final notificationsService =
-      NotificationsService(Platform.isLinux ? NotificationsClient() : null);
-  di.registerSingleton<NotificationsService>(
-    notificationsService,
-    dispose: (s) async => s.dispose(),
-  );
-
-  di.registerSingleton<PodcastService>(
-    PodcastService(
-      notificationsService: notificationsService,
-      settingsService: settingsService,
-      libraryService: libraryService,
-    ),
-  );
-
-  final connectivity = Connectivity();
-  di.registerSingleton<Connectivity>(
-    connectivity,
-  );
-  final connectivityModel = ConnectivityModel(
-    playerService: playerService,
-    connectivity: connectivity,
-  );
-  di.registerSingleton<ConnectivityModel>(
-    connectivityModel,
-  );
-  await connectivityModel.init();
-
-  // For some reason GtkApplication needs to be instantiated
-  // when the service is registered and not before
-  di.registerLazySingleton<ExternalPathService>(
-    () => ExternalPathService(
-      gtkNotifier: Platform.isLinux ? GtkApplicationNotifier(args) : null,
-      playerService: playerService,
-    ),
-    dispose: (s) => s.dispose(),
-  );
-
-  final radioService = RadioService();
-  di.registerSingleton<RadioService>(radioService);
-
-  final gitHub = GitHub();
-  di.registerSingleton<GitHub>(gitHub);
-
-  if (Platform.isLinux) {
-    await initTray();
-  }
-
-  // Register ViewModels
-  di.registerLazySingleton<SettingsModel>(
-    () => SettingsModel(
-      service: settingsService,
-      externalPathService: di<ExternalPathService>(),
-      gitHub: gitHub,
-    )..init(),
-    dispose: (s) => s.dispose(),
-  );
-
-  di.registerSingleton<PlayerModel>(
-    PlayerModel(
-      service: playerService,
-      connectivity: connectivity,
-    )..init(),
-    dispose: (s) => s.dispose(),
-  );
-
-  final appModel = AppModel(
-    gitHub: gitHub,
-    settingsService: settingsService,
-    allowManualUpdates: Platform.isLinux ? false : true,
-  );
-  await appModel.init();
-  di.registerSingleton<AppModel>(
-    appModel,
-    dispose: (s) => s.dispose(),
-  );
-  di.registerSingleton<LibraryModel>(
-    LibraryModel(libraryService),
-    dispose: (s) => s.dispose(),
-  );
-  di.registerSingleton<LocalAudioModel>(
-    LocalAudioModel(localAudioService: localAudioService),
-    dispose: (s) => s.dispose(),
-  );
-  di.registerSingleton<PodcastModel>(
-    PodcastModel(podcastService: di.get<PodcastService>()),
-    dispose: (s) => s.dispose(),
-  );
-  di.registerSingleton<RadioModel>(
-    RadioModel(radioService: radioService),
-    dispose: (s) => s.dispose(),
-  );
-  di.registerSingleton<DownloadModel>(DownloadModel(libraryService));
-  di.registerLazySingleton<SearchModel>(
-    () => SearchModel(
-      podcastService: di<PodcastService>(),
-      radioService: di<RadioService>(),
-      libraryService: di<LibraryService>(),
-      localAudioService: di<LocalAudioService>(),
-    )..init(),
+    args: args,
+    version: version,
   );
 
   runApp(
@@ -197,4 +67,114 @@ Future<void> main(List<String> args) async {
         ? const GtkApplication(child: YaruMusicPodApp())
         : const MaterialMusicPodApp(),
   );
+}
+
+void registerServicesAndViewModels({
+  required SharedPreferences sharedPreferences,
+  required List<String> args,
+  required String version,
+}) {
+  di
+    ..registerLazySingleton(() => sharedPreferences)
+    ..registerLazySingleton<PlayerService>(
+      () => PlayerService(
+        controller: VideoController(
+          Player(
+            configuration: const PlayerConfiguration(title: kAppTitle),
+          ),
+        ),
+      )..init(),
+      dispose: (s) async => s.dispose(),
+    )
+    ..registerLazySingleton<SettingsService>(
+      () => SettingsService(sharedPreferences: di<SharedPreferences>()),
+      dispose: (s) async => s.dispose(),
+    )
+    ..registerLazySingleton<LibraryService>(
+      () => LibraryService(sharedPreferences: di<SharedPreferences>()),
+      dispose: (s) async => s.dispose(),
+    )
+    ..registerLazySingleton<LocalAudioService>(
+      () => LocalAudioService(settingsService: di<SettingsService>()),
+      dispose: (s) async => s.dispose(),
+    )
+    ..registerLazySingleton<NotificationsService>(
+      () =>
+          NotificationsService(Platform.isLinux ? NotificationsClient() : null),
+      dispose: (s) async => s.dispose(),
+    )
+    ..registerLazySingleton<PodcastService>(
+      () => PodcastService(
+        notificationsService: di<NotificationsService>(),
+        settingsService: di<SettingsService>(),
+        libraryService: di<LibraryService>(),
+      ),
+    )
+    ..registerLazySingleton<Connectivity>(() => Connectivity())
+    ..registerLazySingleton<ExternalPathService>(
+      () => ExternalPathService(
+        gtkNotifier: Platform.isLinux ? GtkApplicationNotifier(args) : null,
+        playerService: di<PlayerService>(),
+      ),
+      dispose: (s) => s.dispose(),
+    )
+    ..registerLazySingleton<RadioService>(() => RadioService())
+    ..registerLazySingleton<GitHub>(() => GitHub())
+    ..registerLazySingleton<ConnectivityModel>(
+      () => ConnectivityModel(
+        playerService: di<PlayerService>(),
+        connectivity: di<Connectivity>(),
+      ),
+    )
+    ..registerLazySingleton<SettingsModel>(
+      () => SettingsModel(
+        service: di<SettingsService>(),
+        externalPathService: di<ExternalPathService>(),
+        gitHub: di<GitHub>(),
+      )..init(),
+      dispose: (s) => s.dispose(),
+    )
+    ..registerLazySingleton<PlayerModel>(
+      () => PlayerModel(
+        service: di<PlayerService>(),
+        connectivity: di<Connectivity>(),
+      )..init(),
+      dispose: (s) => s.dispose(),
+    )
+    ..registerLazySingleton<AppModel>(
+      () => AppModel(
+        appVersion: version,
+        gitHub: di<GitHub>(),
+        settingsService: di<SettingsService>(),
+        allowManualUpdates: Platform.isLinux ? false : true,
+      ),
+      dispose: (s) => s.dispose(),
+    )
+    ..registerLazySingleton<LibraryModel>(
+      () => LibraryModel(di<LibraryService>()),
+      dispose: (s) => s.dispose(),
+    )
+    ..registerLazySingleton<LocalAudioModel>(
+      () => LocalAudioModel(localAudioService: di<LocalAudioService>()),
+      dispose: (s) => s.dispose(),
+    )
+    ..registerLazySingleton<PodcastModel>(
+      () => PodcastModel(podcastService: di.get<PodcastService>()),
+      dispose: (s) => s.dispose(),
+    )
+    ..registerLazySingleton<RadioModel>(
+      () => RadioModel(radioService: di<RadioService>()),
+      dispose: (s) => s.dispose(),
+    )
+    ..registerLazySingleton<DownloadModel>(
+      () => DownloadModel(di<LibraryService>()),
+    )
+    ..registerLazySingleton<SearchModel>(
+      () => SearchModel(
+        podcastService: di<PodcastService>(),
+        radioService: di<RadioService>(),
+        libraryService: di<LibraryService>(),
+        localAudioService: di<LocalAudioService>(),
+      )..init(),
+    );
 }
