@@ -55,7 +55,24 @@ Future<void> main(List<String> args) async {
   final sharedPreferences = await SharedPreferences.getInstance();
   final version = (await PackageInfo.fromPlatform()).version;
 
-  // Register services and viewmodels
+  registerServicesAndViewModels(
+    sharedPreferences: sharedPreferences,
+    args: args,
+    version: version,
+  );
+
+  runApp(
+    Platform.isLinux
+        ? const GtkApplication(child: YaruMusicPodApp())
+        : const MaterialMusicPodApp(),
+  );
+}
+
+void registerServicesAndViewModels({
+  required SharedPreferences sharedPreferences,
+  required List<String> args,
+  required String version,
+}) {
   di
     ..registerLazySingleton(() => sharedPreferences)
     ..registerLazySingleton<PlayerService>(
@@ -159,10 +176,4 @@ Future<void> main(List<String> args) async {
         localAudioService: di<LocalAudioService>(),
       )..init(),
     );
-
-  runApp(
-    Platform.isLinux
-        ? const GtkApplication(child: YaruMusicPodApp())
-        : const MaterialMusicPodApp(),
-  );
 }
