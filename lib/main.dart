@@ -20,6 +20,7 @@ import 'app/app_model.dart';
 import 'app/connectivity_model.dart';
 import 'app/view/app.dart';
 import 'app/view/system_tray.dart';
+import 'constants.dart';
 import 'library/library_service.dart';
 import 'local_audio/local_audio_model.dart';
 import 'local_audio/local_audio_service.dart';
@@ -79,7 +80,7 @@ void registerServicesAndViewModels({
       () => PlayerService(
         controller: VideoController(
           Player(
-            configuration: const PlayerConfiguration(title: 'MusicPod'),
+            configuration: const PlayerConfiguration(title: kAppTitle),
           ),
         ),
       )..init(),
