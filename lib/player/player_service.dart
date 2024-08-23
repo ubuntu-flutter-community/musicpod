@@ -268,25 +268,25 @@ class PlayerService {
   Future<void> init() async {
     await _initMediaControl();
 
-    _isPlayingSub = _player.stream.playing.listen((value) {
+    _isPlayingSub ??= _player.stream.playing.listen((value) {
       setIsPlaying(value);
     });
 
-    _durationSub = _player.stream.duration.listen((newDuration) {
+    _durationSub ??= _player.stream.duration.listen((newDuration) {
       if (newDuration.inSeconds != 0) {
         setDuration(newDuration);
       }
     });
 
-    _positionSub = _player.stream.position.listen((newPosition) {
+    _positionSub ??= _player.stream.position.listen((newPosition) {
       setPosition(newPosition);
     });
 
-    _bufferSub = _player.stream.buffer.listen((event) {
+    _bufferSub ??= _player.stream.buffer.listen((event) {
       setBuffer(event);
     });
 
-    _isCompletedSub = _player.stream.completed.listen((value) async {
+    _isCompletedSub ??= _player.stream.completed.listen((value) async {
       if (value) {
         await playNext();
       }
@@ -321,17 +321,17 @@ class PlayerService {
       },
     );
 
-    _volumeSub = _player.stream.volume.listen((value) {
+    _volumeSub ??= _player.stream.volume.listen((value) {
       _volume = value;
       _volumeController.add(true);
     });
 
-    _rateSub = _player.stream.rate.listen((value) {
+    _rateSub ??= _player.stream.rate.listen((value) {
       _rate = value;
       _rateController.add(true);
     });
 
-    _tracksSub = _player.stream.tracks.listen((tracks) {
+    _tracksSub ??= _player.stream.tracks.listen((tracks) {
       _setIsVideo(false);
       for (var track in tracks.video) {
         if (track.fps != null && track.fps! > 1) {
