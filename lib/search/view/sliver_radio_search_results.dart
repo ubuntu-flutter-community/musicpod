@@ -51,17 +51,14 @@ class _SliverRadioSearchResultsState extends State<SliverRadioSearchResults> {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
-    final connectedHost = watchPropertyValue((RadioModel m) => m.connectedHost);
-
-    if (!isOnline) {
+    if (!watchPropertyValue((ConnectivityModel m) => m.isOnline)) {
       return const SliverFillRemaining(
         hasScrollBody: false,
         child: OfflineBody(),
       );
     }
 
-    if (connectedHost == null) {
+    if (watchPropertyValue((RadioModel m) => m.connectedHost) == null) {
       return const SliverFillRemaining(
         hasScrollBody: false,
       );
@@ -73,15 +70,15 @@ class _SliverRadioSearchResultsState extends State<SliverRadioSearchResults> {
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
     final loading = watchPropertyValue((SearchModel m) => m.loading);
 
-    if (radioSearchResult == null ||
-        (searchQuery?.isEmpty == true && radioSearchResult.isEmpty == true)) {
+    if (searchQuery == null ||
+        radioSearchResult == null ||
+        (searchQuery.isEmpty == true && radioSearchResult.isEmpty == true)) {
       return SliverFillNoSearchResultPage(
         icon: const AnimatedEmoji(AnimatedEmojis.drum),
         message:
             Text('${context.l10n.search} ${searchType.localize(context.l10n)}'),
       );
     }
-
     if (radioSearchResult.isEmpty && !loading) {
       return SliverFillNoSearchResultPage(
         icon: const AnimatedEmoji(AnimatedEmojis.rabbit),
