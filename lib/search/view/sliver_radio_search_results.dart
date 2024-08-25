@@ -70,9 +70,8 @@ class _SliverRadioSearchResultsState extends State<SliverRadioSearchResults> {
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
     final loading = watchPropertyValue((SearchModel m) => m.loading);
 
-    if (searchQuery == null ||
-        radioSearchResult == null ||
-        (searchQuery.isEmpty == true && radioSearchResult.isEmpty == true)) {
+    if (radioSearchResult == null ||
+        (searchQuery?.isEmpty == true && radioSearchResult.isEmpty == true)) {
       return SliverFillNoSearchResultPage(
         icon: const AnimatedEmoji(AnimatedEmojis.drum),
         message:
