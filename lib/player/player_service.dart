@@ -46,18 +46,17 @@ class PlayerService {
 
   Player get _player => _controller.player;
 
-  final _queueController = StreamController<bool>.broadcast();
-  Stream<bool> get queueChanged => _queueController.stream;
+  final _propertiesChangedController = StreamController<bool>.broadcast();
+  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
+
   Queue _queue = (name: '', audios: []);
   Queue get queue => _queue;
   void setQueue(Queue value) {
     if (value == _queue || value.audios.isEmpty) return;
     _queue = value;
-    _queueController.add(true);
+    _propertiesChangedController.add(true);
   }
 
-  final _mpvMetaDataController = StreamController<bool>.broadcast();
-  Stream<bool> get mpvMetaDataChanged => _mpvMetaDataController.stream;
   MpvMetaData? _mpvMetaData;
   MpvMetaData? get mpvMetaData => _mpvMetaData;
   void setMpvMetaData(MpvMetaData? value) {
@@ -83,11 +82,9 @@ class PlayerService {
         ),
       );
     }
-    _mpvMetaDataController.add(true);
+    _propertiesChangedController.add(true);
   }
 
-  final _audioController = StreamController<bool>.broadcast();
-  Stream<bool> get audioChanged => _audioController.stream;
   Audio? _audio;
   Audio? get audio => _audio;
   void _setAudio(Audio value) async {
@@ -97,62 +94,51 @@ class PlayerService {
       setRate(1);
     }
     _audio = value;
-    _audioController.add(true);
+    _propertiesChangedController.add(true);
     setMpvMetaData(null);
   }
-
-  final _isVideoController = StreamController<bool>.broadcast();
-  Stream<bool> get isVideoChanged => _isVideoController.stream;
 
   bool? _isVideo;
   bool? get isVideo => _isVideo;
   void _setIsVideo(bool? value) {
     _isVideo = value;
-    _isVideoController.add(true);
+    _propertiesChangedController.add(true);
   }
 
-  final _nextAudioController = StreamController<bool>.broadcast();
-  Stream<bool> get nextAudioChanged => _nextAudioController.stream;
   Audio? _nextAudio;
   Audio? get nextAudio => _nextAudio;
   set nextAudio(Audio? value) {
     if (value == null || value == _nextAudio) return;
     _nextAudio = value;
-    _nextAudioController.add(true);
+    _propertiesChangedController.add(true);
   }
 
-  final _isPlayingController = StreamController<bool>.broadcast();
-  Stream<bool> get isPlayingChanged => _isPlayingController.stream;
   bool _isPlaying = false;
   bool get isPlaying => _isPlaying;
   void setIsPlaying(bool value) {
     if (value == _isPlaying) return;
     _isPlaying = value;
-    _isPlayingController.add(true);
+    _propertiesChangedController.add(true);
     _setMediaControlsIsPlaying(value);
   }
 
-  final _durationController = StreamController<bool>.broadcast();
-  Stream<bool> get durationChanged => _durationController.stream;
   Duration? _duration;
   Duration? get duration => _duration;
   void setDuration(Duration? value) {
     if (value?.inSeconds == _duration?.inSeconds) return;
     _duration = value;
-    _durationController.add(true);
+    _propertiesChangedController.add(true);
     _setMediaControlDuration(value);
   }
 
   int _playerStateTicker = 0;
-  final _positionController = StreamController<bool>.broadcast();
-  Stream<bool> get positionChanged => _positionController.stream;
   Duration? _position = Duration.zero;
   Duration? get position => _position;
   void setPosition(Duration? value) {
     if (position?.inSeconds == value?.inSeconds) return;
     _position = value;
     _playerStateTicker = value?.inSeconds ?? 0;
-    _positionController.add(true);
+    _propertiesChangedController.add(true);
     _setMediaControlPosition(value);
     if (_playerStateTicker >= 5) {
       _playerStateTicker = 0;
@@ -160,29 +146,23 @@ class PlayerService {
     }
   }
 
-  final _bufferController = StreamController<bool>.broadcast();
-  Stream<bool> get bufferChanged => _bufferController.stream;
   Duration? _buffer = Duration.zero;
   Duration? get buffer => _buffer;
   void setBuffer(Duration? value) {
     if (buffer?.inSeconds == value?.inSeconds) return;
     _buffer = value;
-    _bufferController.add(true);
+    _propertiesChangedController.add(true);
   }
 
-  final _repeatSingleController = StreamController<bool>.broadcast();
-  Stream<bool> get repeatSingleChanged => _repeatSingleController.stream;
   bool _repeatSingle = false;
   bool get repeatSingle => _repeatSingle;
   void setRepeatSingle(bool value) {
     if (value == _repeatSingle) return;
     _repeatSingle = value;
     _estimateNext();
-    _repeatSingleController.add(true);
+    _propertiesChangedController.add(true);
   }
 
-  final _shuffleController = StreamController<bool>.broadcast();
-  Stream<bool> get shuffleChanged => _shuffleController.stream;
   bool _shuffle = false;
   bool get shuffle => _shuffle;
   void setShuffle(bool value) {
@@ -191,11 +171,9 @@ class PlayerService {
     if (value && queue.audios.length > 1) {
       _randomNext();
     }
-    _shuffleController.add(true);
+    _propertiesChangedController.add(true);
   }
 
-  final _volumeController = StreamController<bool>.broadcast();
-  Stream<bool> get volumeChanged => _volumeController.stream;
   double? _volume;
   double? get volume => _volume;
   Future<void> setVolume(double value) async {
@@ -203,8 +181,6 @@ class PlayerService {
     await _player.setVolume(value);
   }
 
-  final _rateController = StreamController<bool>.broadcast();
-  Stream<bool> get rateChanged => _rateController.stream;
   double _rate = 1.0;
   double get rate => _rate;
   Future<void> setRate(double value) async {
@@ -323,12 +299,12 @@ class PlayerService {
 
     _volumeSub ??= _player.stream.volume.listen((value) {
       _volume = value;
-      _volumeController.add(true);
+      _propertiesChangedController.add(true);
     });
 
     _rateSub ??= _player.stream.rate.listen((value) {
       _rate = value;
-      _rateController.add(true);
+      _propertiesChangedController.add(true);
     });
 
     _tracksSub ??= _player.stream.tracks.listen((tracks) {
@@ -374,14 +350,14 @@ class PlayerService {
 
       _estimateNext();
 
-      _queueController.add(true);
+      _propertiesChangedController.add(true);
     }
   }
 
   void remove(Audio deleteMe) {
     _queue.audios.remove(deleteMe);
     _estimateNext();
-    _queueController.add(true);
+    _propertiesChangedController.add(true);
   }
 
   void _estimateNext() {
@@ -523,8 +499,6 @@ class PlayerService {
   // lose their progress
   Map<String, Duration> _lastPositions = {};
   Map<String, Duration> get lastPositions => _lastPositions;
-  final _lastPositionsController = StreamController<bool>.broadcast();
-  Stream<bool> get lastPositionsChanged => _lastPositionsController.stream;
   Future<void> addLastPosition(String key, Duration lastPosition) async {
     await writeCustomSetting(
       key,
@@ -536,13 +510,13 @@ class PlayerService {
     } else {
       _lastPositions.putIfAbsent(key, () => lastPosition);
     }
-    _lastPositionsController.add(true);
+    _propertiesChangedController.add(true);
   }
 
   Future<void> removeLastPosition(String key) async {
     await removeCustomSetting(key, kLastPositionsFileName);
     _lastPositions.remove(key);
-    _lastPositionsController.add(true);
+    _propertiesChangedController.add(true);
   }
 
   Future<void> removeLastPositions(List<Audio> audios) async {
@@ -550,7 +524,7 @@ class PlayerService {
       if (e.url != null) {
         await removeCustomSetting(e.url!, kLastPositionsFileName);
         _lastPositions.remove(e.url!);
-        _lastPositionsController.add(true);
+        _propertiesChangedController.add(true);
       }
     }
   }
@@ -767,8 +741,6 @@ class PlayerService {
 
   final Map<String, MpvMetaData> _radioHistory = {};
   Map<String, MpvMetaData> get radioHistory => _radioHistory;
-  final _radioHistoryController = StreamController<bool>.broadcast();
-  Stream<bool> get radioHistoryChanged => _radioHistoryController.stream;
   void _addRadioHistoryElement({
     required String icyTitle,
     required MpvMetaData mpvMetaData,
@@ -777,7 +749,6 @@ class PlayerService {
       icyTitle,
       () => mpvMetaData,
     );
-    _radioHistoryController.add(true);
   }
 
   Timer? _timer;
@@ -786,21 +757,10 @@ class PlayerService {
   }
 
   Future<void> dispose() async {
-    await _writePlayerState();
+    await _propertiesChangedController.close();
     await _smtcSub?.cancel();
     await _smtc?.disableSmtc();
     await _smtc?.dispose();
-    await _queueController.close();
-    await _mpvMetaDataController.close();
-    await _audioController.close();
-    await _nextAudioController.close();
-    await _volumeController.close();
-    await _shuffleController.close();
-    await _durationController.close();
-    await _isVideoController.close();
-    await _positionController.close();
-    await _isPlayingController.close();
-    await _repeatSingleController.close();
     await _isPlayingSub?.cancel();
     await _positionSub?.cancel();
     await _durationSub?.cancel();
@@ -808,8 +768,6 @@ class PlayerService {
     await _volumeSub?.cancel();
     await _tracksSub?.cancel();
     await _rateSub?.cancel();
-    await _rateController.close();
-    await _radioHistoryController.close();
     await _bufferSub?.cancel();
     _timer?.cancel();
     await _player.dispose();

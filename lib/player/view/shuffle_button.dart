@@ -18,7 +18,6 @@ class ShuffleButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.t;
     final shuffle = watchPropertyValue((PlayerModel m) => m.shuffle);
-    final setShuffle = di<PlayerModel>().setShuffle;
 
     return IconButton(
       tooltip: context.l10n.shuffle,
@@ -30,7 +29,7 @@ class ShuffleButton extends StatelessWidget with WatchItMixin {
                 ? theme.colorScheme.primary
                 : theme.colorScheme.onSurface),
       ),
-      onPressed: !active ? null : () => setShuffle(!shuffle),
+      onPressed: !active ? null : () => di<PlayerModel>().setShuffle(!shuffle),
     );
   }
 }

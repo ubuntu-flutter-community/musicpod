@@ -71,7 +71,7 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
         audio?.imageUrl != null) {
       child = PlayerRemoteSourceImage(
         key: ValueKey(
-          mpvMetaData?.icyTitle ?? audio?.albumArtUrl ?? audio?.imageUrl,
+          '${mpvMetaData?.icyTitle ?? ''}${audio?.albumArtUrl ?? ''}${audio?.imageUrl ?? ''}',
         ),
         mpvMetaData: mpvMetaData,
         height: size,

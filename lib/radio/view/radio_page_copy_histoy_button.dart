@@ -16,7 +16,9 @@ class RadioPageCopyHistoryButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     watchPropertyValue(
-      (PlayerModel m) => m.filteredRadioHistory(filter: station.title),
+      (PlayerModel m) => m.getRadioHistoryLength(
+        filter: station.title,
+      ),
     );
     final text = di<PlayerModel>().getRadioHistoryList(filter: station.title);
     return IconButton(
