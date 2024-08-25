@@ -39,6 +39,7 @@ class RadioHistoryTile extends StatelessWidget with PlayerMixin {
       leading: simpleTile
           ? null
           : IcyImage(
+              key: ValueKey(entry.value.icyTitle),
               height: yaruStyled ? 34 : 40,
               width: yaruStyled ? 34 : 40,
               mpvMetaData: entry.value,

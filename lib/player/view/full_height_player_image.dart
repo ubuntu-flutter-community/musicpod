@@ -27,7 +27,6 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
     final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
 
     final fallBackImage = PlayerFallBackImage(
-      key: const ValueKey(0),
       audio: audio,
       height: height ?? fullHeightPlayerImageSize,
       width: width ?? fullHeightPlayerImageSize,
@@ -45,24 +44,18 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
         fallback: fallBackImage,
       );
     } else {
-      if (mpvMetaData?.icyTitle != null ||
-          audio?.albumArtUrl != null ||
-          audio?.imageUrl != null) {
-        image = PlayerRemoteSourceImage(
-          mpvMetaData: mpvMetaData,
-          key: ValueKey(
-            '${mpvMetaData?.icyTitle ?? ''}${audio?.albumArtUrl ?? ''}${audio?.imageUrl ?? ''}',
-          ),
-          height: height ?? fullHeightPlayerImageSize,
-          width: width ?? fullHeightPlayerImageSize,
-          audio: audio,
-          fit: fit,
-          fallBackIcon: fallBackImage,
-          errorIcon: fallBackImage,
-        );
-      } else {
-        image = fallBackImage;
-      }
+      image = PlayerRemoteSourceImage(
+        key: ValueKey(
+          '${mpvMetaData?.icyTitle ?? ''}${audio?.albumArtUrl ?? ''}${audio?.imageUrl ?? ''}',
+        ),
+        mpvMetaData: mpvMetaData,
+        height: height ?? fullHeightPlayerImageSize,
+        width: width ?? fullHeightPlayerImageSize,
+        audio: audio,
+        fit: fit,
+        fallBackIcon: fallBackImage,
+        errorIcon: fallBackImage,
+      );
     }
 
     return SizedBox(

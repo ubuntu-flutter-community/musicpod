@@ -51,7 +51,6 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
     Widget child;
 
     final fallBackImage = PlayerFallBackImage(
-      key: const ValueKey(0),
       audio: audio,
       height: size,
       width: size,
@@ -66,9 +65,7 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
         dimension: size,
         fallback: fallBackImage,
       );
-    } else if (mpvMetaData?.icyTitle != null ||
-        audio?.albumArtUrl != null ||
-        audio?.imageUrl != null) {
+    } else {
       child = PlayerRemoteSourceImage(
         key: ValueKey(
           '${mpvMetaData?.icyTitle ?? ''}${audio?.albumArtUrl ?? ''}${audio?.imageUrl ?? ''}',
@@ -81,8 +78,6 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
         fallBackIcon: fallBackImage,
         errorIcon: fallBackImage,
       );
-    } else {
-      child = fallBackImage;
     }
 
     return AnimatedSwitcher(
