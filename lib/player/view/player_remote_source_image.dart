@@ -41,9 +41,6 @@ class PlayerRemoteSourceImage extends StatelessWidget {
     );
 
     return Container(
-      key: ValueKey(
-        mpvMetaData?.icyTitle ?? audio?.imageUrl ?? audio?.albumArtUrl,
-      ),
       color: theme.cardColor,
       height: height,
       width: width,
