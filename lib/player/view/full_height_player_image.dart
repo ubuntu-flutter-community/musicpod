@@ -51,9 +51,7 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
         image = PlayerRemoteSourceImage(
           mpvMetaData: mpvMetaData,
           key: ValueKey(
-            (mpvMetaData?.icyTitle ?? '') +
-                (audio?.imageUrl ?? '') +
-                (audio?.albumArtUrl ?? ''),
+            '${mpvMetaData?.icyTitle ?? ''}${audio?.albumArtUrl ?? ''}${audio?.imageUrl ?? ''}',
           ),
           height: height ?? fullHeightPlayerImageSize,
           width: width ?? fullHeightPlayerImageSize,

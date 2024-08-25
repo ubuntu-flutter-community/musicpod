@@ -16,20 +16,21 @@ class LibraryService {
 
   final SharedPreferences _sharedPreferences;
 
+  final _propertiesChangedController = StreamController<bool>.broadcast();
+  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
+
   //
   // Liked Audios
   //
   List<Audio> _likedAudios = [];
   List<Audio> get likedAudios => _likedAudios;
-  final _likedAudiosController = StreamController<bool>.broadcast();
-  Stream<bool> get likedAudiosChanged => _likedAudiosController.stream;
 
   void addLikedAudio(Audio audio, [bool notify = true]) {
     if (_likedAudios.contains(audio)) return;
     _likedAudios.add(audio);
     if (notify) {
       writeAudioMap({kLikedAudiosPageId: _likedAudios}, kLikedAudiosFileName)
-          .then((value) => _likedAudiosController.add(true));
+          .then((value) => _propertiesChangedController.add(true));
     }
   }
 
@@ -38,7 +39,7 @@ class LibraryService {
       addLikedAudio(audio, false);
     }
     writeAudioMap({kLikedAudiosPageId: _likedAudios}, kLikedAudiosFileName)
-        .then((value) => _likedAudiosController.add(true));
+        .then((value) => _propertiesChangedController.add(true));
   }
 
   bool liked(Audio audio) {
@@ -49,7 +50,7 @@ class LibraryService {
     _likedAudios.remove(audio);
     if (notify) {
       writeAudioMap({kLikedAudiosPageId: _likedAudios}, kLikedAudiosFileName)
-          .then((value) => _likedAudiosController.add(true));
+          .then((value) => _propertiesChangedController.add(true));
     }
   }
 
@@ -58,7 +59,7 @@ class LibraryService {
       removeLikedAudio(audio, false);
     }
     writeAudioMap({kLikedAudiosPageId: _likedAudios}, kLikedAudiosFileName)
-        .then((value) => _likedAudiosController.add(true));
+        .then((value) => _propertiesChangedController.add(true));
   }
 
   //
@@ -68,19 +69,17 @@ class LibraryService {
   Map<String, List<Audio>> _starredStations = {};
   Map<String, List<Audio>> get starredStations => _starredStations;
   int get starredStationsLength => _starredStations.length;
-  final _starredStationsController = StreamController<bool>.broadcast();
-  Stream<bool> get starredStationsChanged => _starredStationsController.stream;
 
   void addStarredStation(String url, List<Audio> audios) {
     _starredStations.putIfAbsent(url, () => audios);
     writeAudioMap(_starredStations, kStarredStationsFileName)
-        .then((_) => _starredStationsController.add(true));
+        .then((_) => _propertiesChangedController.add(true));
   }
 
   void unStarStation(String name) {
     _starredStations.remove(name);
     writeAudioMap(_starredStations, kStarredStationsFileName)
-        .then((_) => _starredStationsController.add(true));
+        .then((_) => _propertiesChangedController.add(true));
   }
 
   bool isStarredStation(String? url) {
@@ -90,8 +89,6 @@ class LibraryService {
   Set<String> get favRadioTags =>
       _sharedPreferences.getStringList(kFavRadioTags)?.toSet() ?? {};
   bool isFavTag(String value) => favRadioTags.contains(value);
-  final _favTagsController = StreamController<bool>.broadcast();
-  Stream<bool> get favTagsChanged => _favTagsController.stream;
 
   void addFavRadioTag(String name) {
     if (favRadioTags.contains(name)) return;
@@ -99,7 +96,7 @@ class LibraryService {
     tags.add(name);
     _sharedPreferences.setStringList(kFavRadioTags, tags.toList()).then(
       (saved) {
-        if (saved) _favTagsController.add(true);
+        if (saved) _propertiesChangedController.add(true);
       },
     );
   }
@@ -110,7 +107,7 @@ class LibraryService {
     tags.remove(name);
     _sharedPreferences.setStringList(kFavRadioTags, tags.toList()).then(
       (saved) {
-        if (saved) _favTagsController.add(true);
+        if (saved) _propertiesChangedController.add(true);
       },
     );
   }
@@ -119,19 +116,14 @@ class LibraryService {
   void setLastCountryCode(String value) {
     _sharedPreferences.setString(kLastCountryCode, value).then(
       (saved) {
-        if (saved) _lastCountryCodeController.add(true);
+        if (saved) _propertiesChangedController.add(true);
       },
     );
   }
 
-  final _lastCountryCodeController = StreamController<bool>.broadcast();
-  Stream<bool> get lastCountryCodeChanged => _lastCountryCodeController.stream;
-
   Set<String> get favCountryCodes =>
       _sharedPreferences.getStringList(kFavCountryCodes)?.toSet() ?? {};
   bool isFavCountry(String value) => favCountryCodes.contains(value);
-  final _favCountriesController = StreamController<bool>.broadcast();
-  Stream<bool> get favCountriesChanged => _favCountriesController.stream;
 
   void addFavCountryCode(String name) {
     if (favCountryCodes.contains(name)) return;
@@ -140,7 +132,7 @@ class LibraryService {
     _sharedPreferences
         .setStringList(kFavCountryCodes, favCodes.toList())
         .then((saved) {
-      if (saved) _favCountriesController.add(true);
+      if (saved) _propertiesChangedController.add(true);
     });
   }
 
@@ -151,7 +143,7 @@ class LibraryService {
     _sharedPreferences
         .setStringList(kFavCountryCodes, favCodes.toList())
         .then((saved) {
-      if (saved) _favCountriesController.add(true);
+      if (saved) _propertiesChangedController.add(true);
     });
   }
 
@@ -159,19 +151,13 @@ class LibraryService {
       _sharedPreferences.getString(kLastLanguageCode);
   void setLastLanguageCode(String value) {
     _sharedPreferences.setString(kLastLanguageCode, value).then((saved) {
-      if (saved) _lastLanguageCodeController.add(true);
+      if (saved) _propertiesChangedController.add(true);
     });
   }
-
-  final _lastLanguageCodeController = StreamController<bool>.broadcast();
-  Stream<bool> get lastLanguageCodeChanged =>
-      _lastLanguageCodeController.stream;
 
   Set<String> get favLanguageCodes =>
       _sharedPreferences.getStringList(kFavLanguageCodes)?.toSet() ?? {};
   bool isFavLanguage(String value) => favLanguageCodes.contains(value);
-  final _favLanguagesController = StreamController<bool>.broadcast();
-  Stream<bool> get favLanguagesChanged => _favLanguagesController.stream;
 
   void addFavLanguageCode(String name) {
     if (favLanguageCodes.contains(name)) return;
@@ -179,7 +165,7 @@ class LibraryService {
     favLangs.add(name);
     _sharedPreferences.setStringList(kFavLanguageCodes, favLangs.toList()).then(
       (saved) {
-        if (saved) _favLanguagesController.add(true);
+        if (saved) _propertiesChangedController.add(true);
       },
     );
   }
@@ -190,7 +176,7 @@ class LibraryService {
     favLangs.remove(name);
     _sharedPreferences.setStringList(kFavLanguageCodes, favLangs.toList()).then(
       (saved) {
-        if (saved) _favLanguagesController.add(true);
+        if (saved) _propertiesChangedController.add(true);
       },
     );
   }
@@ -201,14 +187,12 @@ class LibraryService {
 
   Map<String, List<Audio>> _playlists = {};
   Map<String, List<Audio>> get playlists => _playlists;
-  final _playlistsController = StreamController<bool>.broadcast();
-  Stream<bool> get playlistsChanged => _playlistsController.stream;
 
   Future<void> addPlaylist(String id, List<Audio> audios) async {
     if (!_playlists.containsKey(id)) {
       _playlists.putIfAbsent(id, () => audios);
       await writeAudioMap(_playlists, kPlaylistsFileName)
-          .then((_) => _playlistsController.add(true));
+          .then((_) => _propertiesChangedController.add(true));
     }
   }
 
@@ -219,7 +203,7 @@ class LibraryService {
           id,
           (value) => audios,
         );
-        _playlistsController.add(true);
+        _propertiesChangedController.add(true);
       });
     }
   }
@@ -228,7 +212,7 @@ class LibraryService {
     if (_playlists.containsKey(id)) {
       _playlists.remove(id);
       writeAudioMap(_playlists, kPlaylistsFileName)
-          .then((_) => _playlistsController.add(true));
+          .then((_) => _propertiesChangedController.add(true));
     }
   }
 
@@ -239,7 +223,7 @@ class LibraryService {
       _playlists.remove(oldName);
       _playlists.putIfAbsent(newName, () => oldList);
       writeAudioMap(_playlists, kPlaylistsFileName)
-          .then((_) => _playlistsController.add(true));
+          .then((_) => _propertiesChangedController.add(true));
     }
   }
 
@@ -270,12 +254,12 @@ class LibraryService {
           .then((value) {
         likedAudios.clear();
         likedAudios.addAll(audios);
-        _likedAudiosController.add(true);
+        _propertiesChangedController.add(true);
       });
     } else {
       writeAudioMap(_playlists, kPlaylistsFileName).then((_) {
         _playlists.update(id, (value) => audios);
-        _playlistsController.add(true);
+        _propertiesChangedController.add(true);
       });
     }
   }
@@ -285,7 +269,7 @@ class LibraryService {
     if (playlist == null || playlist.contains(audio)) return;
     playlist.add(audio);
     writeAudioMap(_playlists, kPlaylistsFileName)
-        .then((_) => _playlistsController.add(true));
+        .then((_) => _propertiesChangedController.add(true));
   }
 
   void removeAudioFromPlaylist(String id, Audio audio) {
@@ -293,7 +277,7 @@ class LibraryService {
     if (playlist != null && playlist.contains(audio)) {
       playlist.remove(audio);
       writeAudioMap(_playlists, kPlaylistsFileName)
-          .then((_) => _playlistsController.add(true));
+          .then((_) => _propertiesChangedController.add(true));
     }
   }
 
@@ -302,7 +286,7 @@ class LibraryService {
     if (playlist != null) {
       playlist.clear();
       writeAudioMap(_playlists, kPlaylistsFileName)
-          .then((_) => _playlistsController.add(true));
+          .then((_) => _propertiesChangedController.add(true));
     }
   }
 
@@ -319,8 +303,6 @@ class LibraryService {
       _feedsWithDownloads.contains(feedUrl);
   int get feedsWithDownloadsLength => _feedsWithDownloads.length;
 
-  final _downloadsController = StreamController<bool>.broadcast();
-  Stream<bool> get downloadsChanged => _downloadsController.stream;
   void addDownload({
     required String url,
     required String path,
@@ -336,7 +318,7 @@ class LibraryService {
             filename: kFeedsWithDownloads,
           ),
         )
-        .then((_) => _downloadsController.add(true));
+        .then((_) => _propertiesChangedController.add(true));
   }
 
   void removeDownload({required String url, required String feedUrl}) {
@@ -360,7 +342,7 @@ class LibraryService {
               filename: kFeedsWithDownloads,
             ),
           )
-          .then((_) => _downloadsController.add(true));
+          .then((_) => _propertiesChangedController.add(true));
     }
   }
 
@@ -370,7 +352,7 @@ class LibraryService {
     writeStringIterable(
       iterable: _feedsWithDownloads,
       filename: kFeedsWithDownloads,
-    ).then((_) => _downloadsController.add(true));
+    ).then((_) => _propertiesChangedController.add(true));
   }
 
   String? _downloadsDir;
@@ -378,14 +360,12 @@ class LibraryService {
   Map<String, List<Audio>> _podcasts = {};
   Map<String, List<Audio>> get podcasts => _podcasts;
   int get podcastsLength => _podcasts.length;
-  final _podcastsController = StreamController<bool>.broadcast();
-  Stream<bool> get podcastsChanged => _podcastsController.stream;
 
   void addPodcast(String feedUrl, List<Audio> audios) {
     if (_podcasts.containsKey(feedUrl)) return;
     _podcasts.putIfAbsent(feedUrl, () => audios);
     writeAudioMap(_podcasts, kPodcastsFileName)
-        .then((_) => _podcastsController.add(true));
+        .then((_) => _propertiesChangedController.add(true));
   }
 
   Future<void> updatePodcast(String feedUrl, List<Audio> audios) async {
@@ -393,31 +373,28 @@ class LibraryService {
     _addPodcastUpdate(feedUrl);
     _podcasts.update(feedUrl, (value) => audios);
     return writeAudioMap(_podcasts, kPodcastsFileName)
-        .then((_) => _podcastsController.add(true));
+        .then((_) => _propertiesChangedController.add(true));
   }
 
   void _addPodcastUpdate(String feedUrl) {
     if (_podcastUpdates?.contains(feedUrl) == true) return;
     _podcastUpdates?.add(feedUrl);
     writeStringIterable(iterable: _podcastUpdates!, filename: kPodcastsUpdates)
-        .then((_) => _updateController.add(true));
+        .then((_) => _propertiesChangedController.add(true));
   }
 
-  final _ascendingPodcastsController = StreamController<bool>.broadcast();
-  Stream<bool> get ascendingPodcastsChanged =>
-      _ascendingPodcastsController.stream;
   bool showPodcastAscending(String feedUrl) =>
       _sharedPreferences.getBool(kAscendingFeeds + feedUrl) ?? false;
 
   Future<void> _addAscendingPodcast(String feedUrl) async {
     await _sharedPreferences.setBool(kAscendingFeeds + feedUrl, true).then(
-          (_) => _ascendingPodcastsController.add(true),
+          (_) => _propertiesChangedController.add(true),
         );
   }
 
   Future<void> _removeAscendingPodcast(String feedUrl) async =>
       _sharedPreferences.remove(kAscendingFeeds + feedUrl).then(
-            (_) => _ascendingPodcastsController.add(true),
+            (_) => _propertiesChangedController.add(true),
           );
 
   Future<void> reorderPodcast({
@@ -449,17 +426,14 @@ class LibraryService {
     if (_podcastUpdates?.isNotEmpty == false) return;
     _podcastUpdates?.remove(feedUrl);
     writeStringIterable(iterable: _podcastUpdates!, filename: kPodcastsUpdates)
-        .then((_) => _updateController.add(true));
+        .then((_) => _propertiesChangedController.add(true));
   }
-
-  final _updateController = StreamController<bool>.broadcast();
-  Stream<bool> get updatesChanged => _updateController.stream;
 
   void removePodcast(String name) {
     if (!_podcasts.containsKey(name)) return;
     _podcasts.remove(name);
     writeAudioMap(_podcasts, kPodcastsFileName)
-        .then((_) => _podcastsController.add(true))
+        .then((_) => _propertiesChangedController.add(true))
         .then((_) => removePodcastUpdate(name))
         .then((_) => _removeFeedWithDownload(name));
   }
@@ -471,8 +445,6 @@ class LibraryService {
   Map<String, List<Audio>> _pinnedAlbums = {};
   Map<String, List<Audio>> get pinnedAlbums => _pinnedAlbums;
   int get pinnedAlbumsLength => _pinnedAlbums.length;
-  final _albumsController = StreamController<bool>.broadcast();
-  Stream<bool> get albumsChanged => _albumsController.stream;
 
   List<Audio> getAlbumAt(int index) =>
       _pinnedAlbums.entries.elementAt(index).value.toList();
@@ -482,13 +454,13 @@ class LibraryService {
   void addPinnedAlbum(String name, List<Audio> audios) {
     _pinnedAlbums.putIfAbsent(name, () => audios);
     writeAudioMap(_pinnedAlbums, kPinnedAlbumsFileName)
-        .then((_) => _albumsController.add(true));
+        .then((_) => _propertiesChangedController.add(true));
   }
 
   void removePinnedAlbum(String name) {
     _pinnedAlbums.remove(name);
     writeAudioMap(_pinnedAlbums, kPinnedAlbumsFileName)
-        .then((_) => _albumsController.add(true));
+        .then((_) => _propertiesChangedController.add(true));
   }
 
   bool? _libraryInitialized;
@@ -525,16 +497,6 @@ class LibraryService {
 
   Future<void> dispose() async {
     dio.close();
-    await _albumsController.close();
-    await _podcastsController.close();
-    await _likedAudiosController.close();
-    await _playlistsController.close();
-    await _starredStationsController.close();
-    await _favTagsController.close();
-    await _favCountriesController.close();
-    await _favLanguagesController.close();
-    await _updateController.close();
-    await _downloadsController.close();
-    await _ascendingPodcastsController.close();
+    await _propertiesChangedController.close();
   }
 }

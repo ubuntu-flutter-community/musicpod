@@ -27,12 +27,13 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
 
   @override
   Widget build(BuildContext context) {
-    final radioHistory = watchPropertyValue(
-      (PlayerModel m) => m.filteredRadioHistory(filter: filter),
+    final length = watchPropertyValue(
+      (PlayerModel m) => m.getRadioHistoryLength(filter: filter),
     );
+
     final current = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
 
-    if (radioHistory.isEmpty) {
+    if (length == 0) {
       return NoSearchResultPage(
         icon: emptyIcon ?? const AnimatedEmoji(AnimatedEmojis.crystalBall),
         message: emptyMessage ?? Text(context.l10n.emptyHearingHistory),
@@ -45,10 +46,12 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
         builder: (context, constraints) {
           return ListView.builder(
             padding: getAdaptiveHorizontalPadding(constraints: constraints),
-            itemCount: radioHistory.length,
+            itemCount: length,
             itemBuilder: (context, index) {
-              final reversedIndex = radioHistory.length - index - 1;
-              final e = radioHistory.elementAt(reversedIndex);
+              final reversedIndex = length - index - 1;
+              final e = di<PlayerModel>()
+                  .filteredRadioHistory(filter: filter)
+                  .elementAt(reversedIndex);
               return RadioHistoryTile(
                 simpleTile: simpleList,
                 entry: e,
@@ -80,12 +83,12 @@ class SliverRadioHistoryList extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final radioHistory = watchPropertyValue(
-      (PlayerModel m) => m.filteredRadioHistory(filter: filter),
+    final length = watchPropertyValue(
+      (PlayerModel m) => m.getRadioHistoryLength(filter: filter),
     );
     final current = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
 
-    if (radioHistory.isEmpty) {
+    if (length == 0) {
       return SliverToBoxAdapter(
         child: NoSearchResultPage(
           icon: emptyIcon ?? const AnimatedEmoji(AnimatedEmojis.crystalBall),
@@ -97,15 +100,17 @@ class SliverRadioHistoryList extends StatelessWidget
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          final reversedIndex = radioHistory.length - index - 1;
-          final e = radioHistory.elementAt(reversedIndex);
+          final reversedIndex = length - index - 1;
+          final e = di<PlayerModel>()
+              .filteredRadioHistory(filter: filter)
+              .elementAt(reversedIndex);
           return RadioHistoryTile(
             entry: e,
             selected: current?.icyTitle != null &&
                 current?.icyTitle == e.value.icyTitle,
           );
         },
-        childCount: radioHistory.length,
+        childCount: length,
       ),
     );
   }

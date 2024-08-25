@@ -20,21 +20,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   VideoController get controller => _service.controller;
 
-  StreamSubscription<bool>? _queueNameChangedSub;
-  StreamSubscription<bool>? _queueChangedSub;
-  StreamSubscription<bool>? _mpvMetaDataChangedSub;
-  StreamSubscription<bool>? _audioChangedSub;
-  StreamSubscription<bool>? _isVideoChangedSub;
-  StreamSubscription<bool>? _nextAudioChangedSub;
-  StreamSubscription<bool>? _shuffleChangedSub;
-  StreamSubscription<bool>? _repeatSingleChangedSub;
-  StreamSubscription<bool>? _volumeChangedSub;
-  StreamSubscription<bool>? _isPlayingChangedSub;
-  StreamSubscription<bool>? _durationChangedSub;
-  StreamSubscription<bool>? _positionChangedSub;
-  StreamSubscription<bool>? _rateChanged;
-  StreamSubscription<bool>? _radioHistoryChangedSub;
-  StreamSubscription<bool>? _lastPositionsSub;
+  StreamSubscription<bool>? _propertiesChangedSub;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   String? get queueName => _service.queue.name;
@@ -88,35 +74,8 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> resume() async => _service.resume();
 
-  void init() {
-    _queueNameChangedSub ??=
-        _service.queueChanged.listen((_) => notifyListeners());
-    _queueChangedSub ??= _service.queueChanged.listen((_) => notifyListeners());
-    _mpvMetaDataChangedSub ??=
-        _service.mpvMetaDataChanged.listen((_) => notifyListeners());
-    _audioChangedSub = _service.audioChanged.listen((_) => notifyListeners());
-    _isVideoChangedSub ??=
-        _service.isVideoChanged.listen((_) => notifyListeners());
-    _nextAudioChangedSub ??=
-        _service.nextAudioChanged.listen((_) => notifyListeners());
-    _shuffleChangedSub ??=
-        _service.shuffleChanged.listen((_) => notifyListeners());
-    _repeatSingleChangedSub ??=
-        _service.repeatSingleChanged.listen((_) => notifyListeners());
-    _volumeChangedSub ??=
-        _service.volumeChanged.listen((_) => notifyListeners());
-    _rateChanged ??= _service.rateChanged.listen((_) => notifyListeners());
-    _isPlayingChangedSub ??=
-        _service.isPlayingChanged.listen((_) => notifyListeners());
-    _durationChangedSub ??=
-        _service.durationChanged.listen((_) => notifyListeners());
-    _positionChangedSub ??=
-        _service.positionChanged.listen((_) => notifyListeners());
-    _radioHistoryChangedSub ??=
-        _service.radioHistoryChanged.listen((_) => notifyListeners());
-    _lastPositionsSub ??=
-        _service.lastPositionsChanged.listen((_) => notifyListeners());
-  }
+  void init() => _propertiesChangedSub ??=
+      _service.propertiesChanged.listen((_) => notifyListeners());
 
   Future<void> playNext() async => _service.playNext();
 
@@ -158,12 +117,12 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> removeLastPositions(List<Audio> audios) =>
       _service.removeLastPositions(audios);
 
-  Map<String, MpvMetaData> get radioHistory => _service.radioHistory;
-
+  int getRadioHistoryLength({String? filter}) =>
+      filteredRadioHistory(filter: filter).length;
   Iterable<MapEntry<String, MpvMetaData>> filteredRadioHistory({
     required String? filter,
   }) {
-    return radioHistory.entries.where(
+    return _service.radioHistory.entries.where(
       (e) => filter == null
           ? true
           : e.value.icyName.contains(filter) ||
@@ -188,22 +147,8 @@ class PlayerModel extends SafeChangeNotifier {
 
   @override
   Future<void> dispose() async {
-    await _queueNameChangedSub?.cancel();
-    await _queueChangedSub?.cancel();
-    await _mpvMetaDataChangedSub?.cancel();
-    await _audioChangedSub?.cancel();
-    await _isVideoChangedSub?.cancel();
-    await _nextAudioChangedSub?.cancel();
-    await _shuffleChangedSub?.cancel();
-    await _repeatSingleChangedSub?.cancel();
-    await _volumeChangedSub?.cancel();
-    await _isPlayingChangedSub?.cancel();
-    await _durationChangedSub?.cancel();
-    await _positionChangedSub?.cancel();
-    await _rateChanged?.cancel();
-    await _radioHistoryChangedSub?.cancel();
+    await _propertiesChangedSub?.cancel();
     await _connectivitySubscription?.cancel();
-    await _lastPositionsSub?.cancel();
     super.dispose();
   }
 }

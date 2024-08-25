@@ -18,15 +18,7 @@ class SettingsModel extends SafeChangeNotifier {
   final SettingsService _service;
   final ExternalPathService _externalPathService;
 
-  StreamSubscription<bool>? _usePodcastIndexChangedSub;
-  StreamSubscription<bool>? _podcastIndexApiKeyChangedSub;
-  StreamSubscription<bool>? _podcastIndexApiSecretChangedSub;
-  StreamSubscription<bool>? _neverShowFailedImportsSub;
-  StreamSubscription<bool>? _directoryChangedSub;
-  StreamSubscription<bool>? _themeIndexChangedSub;
-  StreamSubscription<bool>? _recentPatchNotesDisposedChangedSub;
-  StreamSubscription<bool>? _useArtistGridViewChangedSub;
-  StreamSubscription<bool>? _closeBtnActionIndexChangedSub;
+  StreamSubscription<bool>? _propertiesChangedSub;
 
   String? get directory => _service.directory;
   Future<void> setDirectory(String value) async => _service.setDirectory(value);
@@ -59,37 +51,12 @@ class SettingsModel extends SafeChangeNotifier {
   void setCloseBtnActionIndex(CloseBtnAction value) =>
       _service.setCloseBtnActionIndex(value);
 
-  void init() {
-    _themeIndexChangedSub ??=
-        _service.themeIndexChanged.listen((_) => notifyListeners());
-    _usePodcastIndexChangedSub ??=
-        _service.usePodcastIndexChanged.listen((_) => notifyListeners());
-    _podcastIndexApiKeyChangedSub ??=
-        _service.podcastIndexApiKeyChanged.listen((_) => notifyListeners());
-    _podcastIndexApiSecretChangedSub ??=
-        _service.podcastIndexApiSecretChanged.listen((_) => notifyListeners());
-    _neverShowFailedImportsSub ??=
-        _service.neverShowFailedImportsChanged.listen((_) => notifyListeners());
-    _directoryChangedSub ??=
-        _service.directoryChanged.listen((_) => notifyListeners());
-    _recentPatchNotesDisposedChangedSub ??= _service
-        .recentPatchNotesDisposedChanged
-        .listen((_) => notifyListeners());
-    _closeBtnActionIndexChangedSub ??=
-        _service.closeBtnActionChanged.listen((_) => notifyListeners());
-  }
+  void init() => _propertiesChangedSub ??=
+      _service.propertiesChanged.listen((_) => notifyListeners());
 
   @override
   Future<void> dispose() async {
-    await _themeIndexChangedSub?.cancel();
-    await _usePodcastIndexChangedSub?.cancel();
-    await _podcastIndexApiKeyChangedSub?.cancel();
-    await _podcastIndexApiSecretChangedSub?.cancel();
-    await _neverShowFailedImportsSub?.cancel();
-    await _directoryChangedSub?.cancel();
-    await _recentPatchNotesDisposedChangedSub?.cancel();
-    await _useArtistGridViewChangedSub?.cancel();
-    await _closeBtnActionIndexChangedSub?.cancel();
+    await _propertiesChangedSub?.cancel();
     super.dispose();
   }
 }

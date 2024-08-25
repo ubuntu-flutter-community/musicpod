@@ -12,45 +12,14 @@ class LibraryModel extends SafeChangeNotifier {
   LibraryModel(this._service);
 
   final LibraryService _service;
-  StreamSubscription<bool>? _likedAudiosSub;
-  StreamSubscription<bool>? _playlistsSub;
-  StreamSubscription<bool>? _albumsSub;
-  StreamSubscription<bool>? _podcastsSub;
-  StreamSubscription<bool>? _stationsSub;
-  StreamSubscription<bool>? _updatesChangedSub;
-  StreamSubscription<bool>? _favTagsSub;
-  StreamSubscription<bool>? _favCountriesSub;
-  StreamSubscription<bool>? _favLanguageCodeFavsSub;
-  StreamSubscription<bool>? _lastCountryCodeSub;
-  StreamSubscription<bool>? _downloadsSub;
-  StreamSubscription<bool>? _ascendingPodcastsSub;
+  StreamSubscription<bool>? _propertiesChangedSub;
 
   Future<bool> init() async {
     await _service.init();
     _pageIdStack.add(_service.selectedPageId ?? kSearchPageId);
 
-    _likedAudiosSub ??=
-        _service.likedAudiosChanged.listen((event) => notifyListeners());
-    _playlistsSub ??=
-        _service.playlistsChanged.listen((event) => notifyListeners());
-    _albumsSub = _service.albumsChanged.listen((event) => notifyListeners());
-    _podcastsSub ??=
-        _service.podcastsChanged.listen((event) => notifyListeners());
-    _stationsSub ??=
-        _service.starredStationsChanged.listen((event) => notifyListeners());
-    _updatesChangedSub ??=
-        _service.updatesChanged.listen((_) => notifyListeners());
-    _favTagsSub ??= _service.favTagsChanged.listen((_) => notifyListeners());
-    _favCountriesSub ??=
-        _service.favCountriesChanged.listen((_) => notifyListeners());
-    _favLanguageCodeFavsSub ??=
-        _service.favLanguagesChanged.listen((_) => notifyListeners());
-    _downloadsSub ??=
-        _service.downloadsChanged.listen((_) => notifyListeners());
-    _lastCountryCodeSub ??=
-        _service.lastCountryCodeChanged.listen((_) => notifyListeners());
-    _ascendingPodcastsSub ??=
-        _service.ascendingPodcastsChanged.listen((_) => notifyListeners());
+    _propertiesChangedSub ??=
+        _service.propertiesChanged.listen((_) => notifyListeners());
 
     notifyListeners();
     return true;
@@ -58,18 +27,7 @@ class LibraryModel extends SafeChangeNotifier {
 
   @override
   Future<void> dispose() async {
-    await _likedAudiosSub?.cancel();
-    await _playlistsSub?.cancel();
-    await _albumsSub?.cancel();
-    await _podcastsSub?.cancel();
-    await _stationsSub?.cancel();
-    await _updatesChangedSub?.cancel();
-    await _favTagsSub?.cancel();
-    await _favCountriesSub?.cancel();
-    await _favLanguageCodeFavsSub?.cancel();
-    await _downloadsSub?.cancel();
-    await _lastCountryCodeSub?.cancel();
-    await _ascendingPodcastsSub?.cancel();
+    await _propertiesChangedSub?.cancel();
     super.dispose();
   }
 
