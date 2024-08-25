@@ -1,5 +1,10 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:phoenix_theme/phoenix_theme.dart' hide isMobile;
+import 'package:watch_it/watch_it.dart';
+import 'package:yaru/yaru.dart';
+
 import '../../app/app_model.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -9,11 +14,6 @@ import '../data/close_btn_action.dart';
 import 'global_keys.dart';
 import 'icons.dart';
 import 'nav_back_button.dart';
-import 'package:flutter/material.dart';
-import 'package:phoenix_theme/phoenix_theme.dart' hide isMobile;
-import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
-
 import 'theme.dart';
 
 class HeaderBar extends StatelessWidget
@@ -45,8 +45,6 @@ class HeaderBar extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     final canPop = watchPropertyValue((LibraryModel m) => m.canPop);
-    final closeBtnAction =
-        watchPropertyValue((SettingsModel m) => m.closeBtnActionIndex);
 
     Widget? leading;
 
@@ -103,21 +101,6 @@ class HeaderBar extends StatelessWidget
             backgroundColor ?? context.theme.scaffoldBackgroundColor,
         style: theStyle,
         foregroundColor: foregroundColor,
-        onClose: Platform.isLinux
-            ? (context) {
-                switch (closeBtnAction) {
-                  case CloseBtnAction.alwaysAsk:
-                    showDialog(
-                      context: context,
-                      builder: (_) => const CloseWindowActionConfirmDialog(),
-                    );
-                  case CloseBtnAction.hideToTray:
-                    YaruWindow.hide(context);
-                  case CloseBtnAction.close:
-                    YaruWindow.close(context);
-                }
-              }
-            : null,
       ),
     );
   }

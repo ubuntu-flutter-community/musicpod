@@ -19,7 +19,6 @@ import '../../library/library_model.dart';
 import 'app/app_model.dart';
 import 'app/connectivity_model.dart';
 import 'app/view/app.dart';
-import 'app/view/system_tray.dart';
 import 'constants.dart';
 import 'library/library_service.dart';
 import 'local_audio/local_audio_model.dart';
@@ -44,9 +43,7 @@ Future<void> main(List<String> args) async {
     WindowManager.instance
       ..setMinimumSize(const Size(500, 700))
       ..setSize(const Size(950, 820));
-    if (Platform.isLinux) {
-      await initTray();
-    } else {
+    if (!Platform.isLinux) {
       SystemTheme.fallbackColor = Colors.greenAccent;
       await SystemTheme.accentColor.load();
     }

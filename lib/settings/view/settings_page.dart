@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
@@ -42,12 +40,11 @@ class SettingsPage extends StatelessWidget {
         ),
         Expanded(
           child: ListView(
-            children: [
-              const _ThemeSection(),
-              if (Platform.isLinux) const _CloseActionSection(),
-              const _PodcastSection(),
-              const _LocalAudioSection(),
-              const _AboutSection(),
+            children: const [
+              _ThemeSection(),
+              _PodcastSection(),
+              _LocalAudioSection(),
+              _AboutSection(),
             ],
           ),
         ),
@@ -103,6 +100,10 @@ class _ThemeSection extends StatelessWidget with WatchItMixin {
   }
 }
 
+// TODO: figure out how to show the window from clicking the dock icon in macos, windows and linux
+// Also figure out how to show the window again, when the gtk window is triggered from the outside (open with)
+// if we can not figure this out, we can not land this feature.
+// ignore: unused_element
 class _CloseActionSection extends StatelessWidget with WatchItMixin {
   const _CloseActionSection();
 
