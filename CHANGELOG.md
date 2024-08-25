@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.9.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.8.1...v1.9.0) (2024-08-25)
+
+
+### Features
+
+* **app:** add system tray functionality ([#824](https://github.com/ubuntu-flutter-community/musicpod/issues/824)) ([857bdef](https://github.com/ubuntu-flutter-community/musicpod/commit/857bdefa7ef103d87d39110dbae8989866399b90))
+* display localized names for regions. ([#885](https://github.com/ubuntu-flutter-community/musicpod/issues/885)) ([9cba0ac](https://github.com/ubuntu-flutter-community/musicpod/commit/9cba0ac72837f68d253b1fe1d9749e2da7332884))
+* show queue or radiohistory when the player is big enough ([#888](https://github.com/ubuntu-flutter-community/musicpod/issues/888)) ([fd2d6da](https://github.com/ubuntu-flutter-community/musicpod/commit/fd2d6da57f35cd6112ab37859a67d8f3f3ef3d56))
+
+
+### Bug Fixes
+
+* add app indicator deps to snap build-packages ([#890](https://github.com/ubuntu-flutter-community/musicpod/issues/890)) ([cd6b7ba](https://github.com/ubuntu-flutter-community/musicpod/commit/cd6b7bac1227d5bf4a586b5f596f6332b3a1dba1))
+* icy image key and podfile lock ([#895](https://github.com/ubuntu-flutter-community/musicpod/issues/895)) ([3323883](https://github.com/ubuntu-flutter-community/musicpod/commit/3323883f4aedfffae50036cc6f158fe1556c4f2f))
+* improved audio tile, correct unstarred icon, update yaru ([#887](https://github.com/ubuntu-flutter-community/musicpod/issues/887)) ([8a6ecaf](https://github.com/ubuntu-flutter-community/musicpod/commit/8a6ecaff8c4a99f8e73b6842c10fa2f37d5b7283))
+* linux tray icon ([#886](https://github.com/ubuntu-flutter-community/musicpod/issues/886)) ([2eb0090](https://github.com/ubuntu-flutter-community/musicpod/commit/2eb0090aa26984b320c99797d97bc73d0e2d60f0)), closes [#793](https://github.com/ubuntu-flutter-community/musicpod/issues/793)
+* reduce radio history repaint and minimize streams ([#892](https://github.com/ubuntu-flutter-community/musicpod/issues/892)) ([b70b275](https://github.com/ubuntu-flutter-community/musicpod/commit/b70b275e4494b8ccaa5e834972da54df2b6e58b0))
+* remove broken tray ([#893](https://github.com/ubuntu-flutter-community/musicpod/issues/893)) ([b06aa1f](https://github.com/ubuntu-flutter-community/musicpod/commit/b06aa1f706732d138fc8c22b0f06393be5f81943))
+* show radio searching page when searchQuery is null ([#891](https://github.com/ubuntu-flutter-community/musicpod/issues/891)) ([f1292a1](https://github.com/ubuntu-flutter-community/musicpod/commit/f1292a1d9b464da97396229b361171abe48c552d))
+
 ## [1.8.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.8.0...v1.8.1) (2024-08-20)
 
 
