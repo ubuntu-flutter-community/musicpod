@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.9.0...v1.9.1) (2024-08-25)
+
+
+### Bug Fixes
+
+* Must search by name before searching by tag, country, or language ([#897](https://github.com/ubuntu-flutter-community/musicpod/issues/897)) ([7459008](https://github.com/ubuntu-flutter-community/musicpod/commit/7459008d466d9126466a5220bcec110b9b161ad0)), closes [#896](https://github.com/ubuntu-flutter-community/musicpod/issues/896)
+
 ## [1.9.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.8.1...v1.9.0) (2024-08-25)
 
 
