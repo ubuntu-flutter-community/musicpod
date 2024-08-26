@@ -42,8 +42,6 @@ class SettingsModel extends SafeChangeNotifier {
   void setPodcastIndexApiSecret(String value) async =>
       _service.setPodcastIndexApiSecret(value);
 
-  void playOpenedFile() => _externalPathService.playOpenedFile();
-
   Future<String?> getPathOfDirectory() async =>
       _externalPathService.getPathOfDirectory();
 

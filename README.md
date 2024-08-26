@@ -71,12 +71,11 @@ MusicPod is basically a fancy front-end for [MPV](https://github.com/mpv-player/
 
 ### Architecture: [model, view, viewmodel (MVVM)](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)
 
-The app, the player and each page have their own set of widgets, 1 view model and 1 service.
-There are additional view models for downloads or a service for all external path things but that's it.
+MusicPod uses the MVVM architectural pattern, which fits the needs of this reactive app the most, and keeps all layers separated so we can exchange the implementation of one layer if we need to. [MVVM is also recommended by Flutter itself](https://docs.flutter.dev/get-started/fwe/state-management#using-mvvm-for-your-applications-architecture).
 
-Since all views need access to each other all the time, disposing the view models all the time makes no sense and is CPU intensive for no need so all services and view models are registered as singletons before the flutter tree is created.
+The app, the player, the search and each main page have their own set of widgets, one or more view model, which depend on one or more services.
 
-Important services are also initialized once before the Flutter `runApp` call, the view models are initialized when the view is accessed but most of the internal calls are skipped when the views are accessed again after that.
+All services and ViewModels are registered lazily via [get_it](https://pub.dev/packages/get_it), which means they are not instantiated until they are located for the first time via `di<XyzService>` or `di<ViewModel>`.
 
 ```mermaid
 
@@ -89,30 +88,51 @@ classDef model fill:#77216f80
 View["`
   **View**
   (Widgets)
-`"]:::view--watch-->ViewModel["`
+`"]:::view--watchProperty-->ViewModel["`
   **ViewModel**
   (ChangeNotifier)
-`"]:::viewmodel--listen-->Model["`
+`"]:::viewmodel--listen/get properties-->Model["`
   **(Domain) Model**
   (Service)
 `"]:::model
 
 ViewModel--notify-->View
-Model--stream.add-->ViewModel
+Model--changedProperties.add(true)-->ViewModel
 
 ```
 
-### Dependency choices, dependency injection and state management
+The ViewModels have a dependencies to services which are given via their constructor, where they are located via the service locator [get_it](https://pub.dev/packages/get_it). This makes them easy to test since you can replace the services with mocked services.
 
-Regarding the packages to implement this architecture I've had quite a journey from [provider](https://pub.dev/packages/provider) to [riverpod](https://pub.dev/packages/riverpod) with [get_it](https://pub.dev/packages/get_it).
+The ViewModels are [ChangeNotifiers](https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html). They can use the `notifyListener` method which makes listeners (concrete: UI classes) react (i.e. rebuild).
 
-I found my personal favorite solution with [get_it](https://pub.dev/packages/get_it) plus its [watch_it](https://pub.dev/packages/watch_it) extension because this fits the need of this application the most without being too invasive into the API of the flutter widget tree.
+The ViewModels hold (a) [StreamSubscription(s)](https://api.flutter.dev/flutter/dart-async/StreamSubscription-class.html) to (the) service(s) they depend on. If properties are only non-persistent UI state, they are hold inside the ViewModel. If they are more than that, they are just getters to service properties.
+So if a property of a service changes, the ViewModels will be notified via the propertiesChanged stream, and if we want the UI to take notice, inside the `listen` callback we will notify the UI (listeners).
 
-This way all layers are clearly separated and easy to follow, even if this brings a little bit of boilerplate code.
+### Dependency choices, service locator and state management
 
-I am a big fan of the [KISS principle](https://en.wikipedia.org/wiki/KISS_principle) (keep it simple, stupid), so when it comes to organizing software source code and choosing architectural patterns simplicity is a big goal for me.
+Regarding the packages to implement this architecture I've had quite a journey from [provider](https://pub.dev/packages/provider) to [riverpod](https://pub.dev/packages/riverpod).
 
-Though performance is the biggest goal, especially for flutter apps on the desktop that compete against toolkits that are so slim and performant they could run on a toaster (exaggeration), so if simple things perform badly, I am willing to switch to more complicated approaches ;)
+I found my personal favorite solution with [get_it](https://pub.dev/packages/get_it) plus its [watch_it](https://pub.dev/packages/watch_it) extension because this fits the need of this application and the [MVVM-architecture](https://docs.flutter.dev/get-started/fwe/state-management#using-mvvm-for-your-applications-architecture) the most without being too invasive into the API of the flutter widget tree.
+
+This way all layers are clearly separated, easy to re-implement and easy to follow, even if this brings a little bit of boilerplate code.
+
+## Watching the ViewModels inside the View (Widgets)
+
+If the Widgets want to be rebuilt once properties of ViewModels change, we use the `watchPropertyValue` method of the [watch_it](https://pub.dev/packages/watch_it) package:
+
+```dart
+final audio = watchPropertyValue((PlayerModel m) => m.audio);
+```
+
+This makes it easier, even though we could also just use flutters built in [ListenableBuilder](https://api.flutter.dev/flutter/widgets/ListenableBuilder-class.html).
+
+### Caching
+
+Both local covers and remote covers are cached in a `CoverStore` and a `UrlStore` after they have been loaded/fetched.
+
+### Performance
+
+Reading the local covers and fetching remote covers for radio data happens inside additional second [dart isolates](https://dart.dev/language/isolates).
 
 ### Persistence
 
