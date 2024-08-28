@@ -127,8 +127,8 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                       final image = SafeNetworkImage(
                         url: artworkUrl600,
                         fit: BoxFit.cover,
-                        height: kAudioCardDimension,
-                        width: kAudioCardDimension,
+                        height: audioCardDimension,
+                        width: audioCardDimension,
                       );
 
                       return AudioCard(

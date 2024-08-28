@@ -10,7 +10,6 @@ import '../../common/view/offline_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../podcasts/podcast_model.dart';
 import '../../podcasts/podcast_utils.dart';
@@ -82,8 +81,8 @@ class _SliverPodcastSearchResultsState
         final image = SafeNetworkImage(
           url: art,
           fit: BoxFit.cover,
-          height: kAudioCardDimension,
-          width: kAudioCardDimension,
+          height: audioCardDimension,
+          width: audioCardDimension,
         );
 
         return AudioCard(

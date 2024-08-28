@@ -65,10 +65,10 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
           const SizedBox(
             height: kYaruPagePadding,
           ),
-          const SizedBox(
+          SizedBox(
             height: kYaruPagePadding,
-            width: 400,
-            child: PlayerTrack(),
+            width: playerWithSidePanel ? 400 : 350,
+            child: const PlayerTrack(),
           ),
           const SizedBox(
             height: kYaruPagePadding,
@@ -81,23 +81,24 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
         alignment: Alignment.topRight,
         children: [
           Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(width: 490, child: column),
-                if (playerWithSidePanel)
-                  audio?.audioType == AudioType.radio
-                      ? const SizedBox(
-                          width: 400,
-                          height: 500,
-                          child: RadioHistoryList(
-                            simpleList: true,
-                          ),
-                        )
-                      : const QueueBody(advancedList: false),
-              ],
-            ),
+            child: playerWithSidePanel
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(width: 490, child: column),
+                      audio?.audioType == AudioType.radio
+                          ? const SizedBox(
+                              width: 400,
+                              height: 500,
+                              child: RadioHistoryList(
+                                simpleList: true,
+                              ),
+                            )
+                          : const QueueBody(advancedList: false),
+                    ],
+                  )
+                : column,
           ),
           FullHeightPlayerTopControls(
             iconColor: iconColor,

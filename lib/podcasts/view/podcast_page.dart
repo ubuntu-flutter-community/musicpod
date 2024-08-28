@@ -140,7 +140,8 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                   controlPanel: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      PodcastReplayButton(audios: episodesWithDownloads),
+                      if (!isMobile)
+                        PodcastReplayButton(audios: episodesWithDownloads),
                       const PodcastTimerButton(),
                       PodcastSubButton(
                         audios: episodesWithDownloads,
@@ -152,7 +153,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                       ),
                       PodcastRefreshButton(pageId: pageId),
                       PodcastReorderButton(feedUrl: pageId),
-                      ExploreOnlinePopup(text: title),
+                      if (!isMobile) ExploreOnlinePopup(text: title),
                     ],
                   ),
                 ),

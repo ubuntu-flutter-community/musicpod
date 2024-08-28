@@ -1,5 +1,6 @@
 {
   "cs": [
+    "local",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
@@ -270,6 +271,7 @@
   ],
 
   "da": [
+    "local",
     "insertedIntoQueue",
     "duration",
     "radioTagDisclaimerTitle",
@@ -557,6 +559,7 @@
     "addToFavorites",
     "removeFromFavorites",
     "share",
+    "local",
     "genre",
     "year",
     "albumArtist",
@@ -1004,6 +1007,7 @@
   ],
 
   "fr": [
+    "local",
     "alwaysAsk",
     "hideToTray",
     "closeBtnAction",
@@ -1265,6 +1269,7 @@
   ],
 
   "it": [
+    "local",
     "alwaysAsk",
     "hideToTray",
     "closeBtnAction",
@@ -1541,6 +1546,7 @@
     "addToFavorites",
     "removeFromFavorites",
     "share",
+    "local",
     "genre",
     "year",
     "albumArtist",
@@ -2031,6 +2037,7 @@
     "addToFavorites",
     "removeFromFavorites",
     "share",
+    "local",
     "stations",
     "copyToClipBoard",
     "insertedIntoQueue",
@@ -2341,6 +2348,7 @@
     "addToFavorites",
     "removeFromFavorites",
     "share",
+    "local",
     "genre",
     "year",
     "albumArtist",
@@ -2802,6 +2810,7 @@
     "addToFavorites",
     "removeFromFavorites",
     "share",
+    "local",
     "genre",
     "year",
     "albumArtist",
@@ -3250,6 +3259,7 @@
   "ru": [
     "fullScreen",
     "leaveFullScreen",
+    "local",
     "copyToClipBoard",
     "insertedIntoQueue",
     "language",
@@ -3524,6 +3534,7 @@
   ],
 
   "sk": [
+    "local",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
@@ -3809,6 +3820,7 @@
     "addToFavorites",
     "removeFromFavorites",
     "share",
+    "local",
     "genre",
     "year",
     "albumArtist",
@@ -4245,6 +4257,7 @@
   ],
 
   "tr": [
+    "local",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
@@ -4514,7 +4527,16 @@
     "regionZimbabwe"
   ],
 
+  "zh": [
+    "local"
+  ],
+
+  "zh_CN": [
+    "local"
+  ],
+
   "zh_HK": [
+    "local",
     "schedulePlaybackStopTimer",
     "alwaysAsk",
     "hideToTray",
@@ -4777,6 +4799,7 @@
   ],
 
   "zh_TW": [
+    "local",
     "schedulePlaybackStopTimer",
     "alwaysAsk",
     "hideToTray",

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import 'icons.dart';
@@ -132,8 +131,8 @@ class _AudioCard extends StatelessWidget {
     final light = theme.isLight;
 
     return SizedBox(
-      height: height ?? kAudioCardDimension - (isMobile ? 10 : 0),
-      width: width ?? kAudioCardDimension,
+      height: height ?? audioCardDimension,
+      width: width ?? audioCardDimension,
       child: InkWell(
         onTap: onTap,
         onHover: onHover,

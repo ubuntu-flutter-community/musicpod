@@ -7,6 +7,7 @@ import '../../app/connectivity_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/like_icon.dart';
+import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
@@ -18,8 +19,6 @@ import 'player_main_controls.dart';
 import 'player_track.dart';
 import 'queue_button.dart';
 import 'volume_popup.dart';
-
-const kBottomPlayerHeight = 90.0;
 
 class BottomPlayer extends StatelessWidget with WatchItMixin {
   const BottomPlayer({
@@ -44,13 +43,14 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
     );
 
     final player = SizedBox(
-      height: kBottomPlayerHeight,
+      height: bottomPlayerHeight,
       child: Column(
         children: [
-          PlayerTrack(
-            active: active,
-            bottomPlayer: true,
-          ),
+          if (!isMobile)
+            PlayerTrack(
+              active: active,
+              bottomPlayer: true,
+            ),
           InkWell(
             onTap: () => appModel.setFullWindowMode(true),
             child: Padding(
@@ -64,7 +64,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                       borderRadius: BorderRadius.circular(4),
                       child: BottomPlayerImage(
                         audio: audio,
-                        size: kBottomPlayerHeight - 24,
+                        size: bottomPlayerHeight - 24,
                         videoController: model.controller,
                         isVideo: isVideo,
                         isOnline: isOnline,
@@ -131,6 +131,11 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
               ),
             ),
           ),
+          if (isMobile)
+            PlayerTrack(
+              active: active,
+              bottomPlayer: true,
+            ),
         ],
       ),
     );

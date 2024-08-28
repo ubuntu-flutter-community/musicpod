@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
+import 'theme.dart';
 
 class AudioCardBottom extends StatelessWidget {
   const AudioCardBottom({
@@ -24,11 +24,11 @@ class AudioCardBottom extends StatelessWidget {
     final light = theme.isLight;
 
     return SizedBox(
-      width: kAudioCardDimension,
+      width: audioCardDimension,
       child: Tooltip(
         message: text ?? '',
         child: Container(
-          width: kAudioCardDimension,
+          width: audioCardDimension,
           margin: const EdgeInsets.all(1),
           padding: const EdgeInsets.symmetric(
             vertical: 5,
@@ -39,7 +39,7 @@ class AudioCardBottom extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5),
                   child: SizedBox(
                     height: 15,
-                    width: kAudioCardDimension - 20,
+                    width: audioCardDimension - 20,
                     child: Shimmer.fromColors(
                       baseColor: theme.cardColor,
                       highlightColor: light
