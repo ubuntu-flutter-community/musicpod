@@ -30,7 +30,7 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
         isPlayerPlaying && pageIsQueue ? Iconz().pause : Iconz().playFilled;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: bigPlayButtonPadding,
       child: CircleAvatar(
         radius: bigPlayButtonSize,
         backgroundColor: theme.colorScheme.inverseSurface,

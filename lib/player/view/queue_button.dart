@@ -75,9 +75,11 @@ class QueueBody extends StatefulWidget with WatchItStatefulWidgetMixin {
   const QueueBody({
     super.key,
     this.advancedList = true,
+    this.selectedColor,
   });
 
   final bool advancedList;
+  final Color? selectedColor;
 
   @override
   State<QueueBody> createState() => _QueueBodyState();
@@ -178,6 +180,7 @@ class _QueueBodyState extends State<QueueBody> {
                           queue: queue,
                           audio: audio,
                           selected: selected,
+                          selectedColor: widget.selectedColor,
                         ),
                       );
                     },
@@ -197,6 +200,7 @@ class _QueueTile extends StatelessWidget {
     required this.queue,
     required this.audio,
     required this.selected,
+    this.selectedColor,
   });
 
   final String? queueName;
@@ -204,40 +208,46 @@ class _QueueTile extends StatelessWidget {
   final Audio audio;
   final bool selected;
   final bool advancedTile;
+  final Color? selectedColor;
 
   @override
   Widget build(BuildContext context) {
+    var onTap = advancedTile
+        ? null
+        : queueName == null
+            ? null
+            : () => di<PlayerModel>().startPlaylist(
+                  listName: queueName!,
+                  audios: queue,
+                  index: queue.indexOf(audio),
+                );
     return ListTile(
       shape: advancedTile
           ? null
           : RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      onTap: advancedTile
-          ? null
-          : queueName == null
-              ? null
-              : () => di<PlayerModel>().startPlaylist(
-                    listName: queueName!,
-                    audios: queue,
-                    index: queue.indexOf(audio),
-                  ),
+      onTap: onTap,
       leading: advancedTile
           ? IconButton(
               onPressed:
                   selected ? null : () => di<PlayerModel>().remove(audio),
               icon: Icon(Iconz().close),
             )
-          : null,
+          : Visibility(
+              visible: selected,
+              child: const Text('>'),
+            ),
       contentPadding:
           advancedTile ? null : const EdgeInsets.only(right: 10, left: 0),
       selected: selected,
+      selectedColor: selectedColor,
       key: key,
-      title: Padding(
-        padding: EdgeInsets.only(
-          left: advancedTile ? 0 : 20,
-          right: 20,
-        ),
-        child: Text(audio.title ?? ''),
-      ),
+      title: Text(audio.title ?? ''),
+      trailing: advancedTile
+          ? null
+          : Visibility(
+              visible: selected,
+              child: const Text('<'),
+            ),
     );
   }
 }

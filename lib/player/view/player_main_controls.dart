@@ -38,7 +38,10 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
 
     final children = <Widget>[
       if (showShuffleAndRepeat)
-        ShuffleButton(active: active)
+        ShuffleButton(
+          active: active,
+          iconColor: defaultColor,
+        )
       else if (audio?.audioType == AudioType.podcast)
         SeekButton(
           active: active,

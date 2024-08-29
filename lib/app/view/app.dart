@@ -89,8 +89,13 @@ class _MusicPodAppState extends State<_MusicPodApp> {
       themeMode: ThemeMode.values[themeIndex],
       highContrastTheme: widget.highContrastTheme,
       highContrastDarkTheme: widget.highContrastDarkTheme,
-      theme: widget.lightTheme ?? phoenix.lightTheme,
-      darkTheme: widget.darkTheme ?? phoenix.darkTheme,
+      theme: (widget.lightTheme ?? phoenix.lightTheme).copyWith(
+        iconButtonTheme:
+            iconButtonTheme(widget.lightTheme ?? phoenix.lightTheme),
+      ),
+      darkTheme: (widget.darkTheme ?? phoenix.darkTheme).copyWith(
+        iconButtonTheme: iconButtonTheme(widget.darkTheme ?? phoenix.darkTheme),
+      ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => 'MusicPod',

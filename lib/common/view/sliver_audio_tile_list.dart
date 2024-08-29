@@ -16,6 +16,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
     this.padding,
     this.onSubTitleTab,
     required this.audioPageType,
+    this.selectedColor,
   });
 
   final List<Audio> audios;
@@ -23,6 +24,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
   final AudioPageType audioPageType;
   final void Function(String text)? onSubTitleTab;
   final EdgeInsetsGeometry? padding;
+  final Color? selectedColor;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +60,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
               insertIntoQueue: playerModel.insertIntoQueue,
               pageId: pageId,
               libraryModel: libraryModel,
+              selectedColor: selectedColor,
             );
           },
         ),

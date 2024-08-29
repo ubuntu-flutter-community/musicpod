@@ -95,7 +95,10 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
                                 simpleList: true,
                               ),
                             )
-                          : const QueueBody(advancedList: false),
+                          : QueueBody(
+                              advancedList: false,
+                              selectedColor: theme.colorScheme.onSurface,
+                            ),
                     ],
                   )
                 : column,

@@ -46,6 +46,23 @@ ThemeData? yaruLightWithTweaks(YaruThemeData yaru) {
   );
 }
 
+IconButtonThemeData iconButtonTheme(ThemeData? data) {
+  return IconButtonThemeData(
+    style: data?.iconButtonTheme.style?.copyWith(
+      iconColor: WidgetStateProperty.resolveWith(
+        (s) => s.contains(WidgetState.disabled)
+            ? data.disabledColor
+            : data.colorScheme.onSurface,
+      ),
+      backgroundColor: WidgetStateProperty.resolveWith(
+        (s) => s.contains(WidgetState.selected)
+            ? data.colorScheme.onSurface.withOpacity(0.1)
+            : Colors.transparent,
+      ),
+    ),
+  );
+}
+
 const yaruFixDarkDividerColor = Color.fromARGB(19, 255, 255, 255);
 
 Color getPlayerBg(Color? surfaceTintColor, Color fallbackColor) {
@@ -206,7 +223,10 @@ double get likeButtonWidth => yaruStyled ? 62 : 70;
 
 double? get avatarIconSize => yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
 
-double get bigPlayButtonSize => 25;
+double get bigPlayButtonSize => yaruStyled ? 22 : 25;
+
+EdgeInsets get bigPlayButtonPadding =>
+    EdgeInsets.symmetric(horizontal: yaruStyled ? 2.5 : 5);
 
 FontWeight get smallTextFontWeight =>
     yaruStyled ? FontWeight.w100 : FontWeight.w400;
@@ -247,3 +267,14 @@ double get inputHeight => isMobile
 double get audioCardDimension => kAudioCardDimension - (isMobile ? 15 : 0);
 
 double get bottomPlayerHeight => isMobile ? 80.0 : 90.0;
+
+List<Widget> space({double gap = 5, required Iterable<Widget> children}) =>
+    children
+        .expand(
+          (item) sync* {
+            yield SizedBox(width: gap);
+            yield item;
+          },
+        )
+        .skip(1)
+        .toList();

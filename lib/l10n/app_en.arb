@@ -305,6 +305,7 @@
     "reorder": "Reorder",
     "move": "Move",
     "pinAlbum": "Pin album to sidebar",
+    "unPinAlbum": "Unpin album from sidebar",
     "playAll": "Play all",
     "hearingHistory": "Hearing history",
     "emptyHearingHistory": "You did not listen to radio in this app session yet",

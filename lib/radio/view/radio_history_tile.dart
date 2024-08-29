@@ -34,10 +34,15 @@ class RadioHistoryTile extends StatelessWidget with PlayerMixin {
     return ListTile(
       key: ValueKey(entry.value.icyTitle),
       selected: selected,
-      selectedColor: context.t.contrastyPrimary,
+      selectedColor: simpleTile
+          ? context.t.colorScheme.onSurface
+          : context.t.contrastyPrimary,
       contentPadding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
       leading: simpleTile
-          ? null
+          ? Visibility(
+              visible: selected,
+              child: const Text('>'),
+            )
           : IcyImage(
               key: ValueKey(entry.value.icyTitle),
               height: yaruStyled ? 34 : 40,
@@ -45,7 +50,10 @@ class RadioHistoryTile extends StatelessWidget with PlayerMixin {
               mpvMetaData: entry.value,
             ),
       trailing: simpleTile
-          ? null
+          ? Visibility(
+              visible: selected,
+              child: const Text('<'),
+            )
           : IconButton(
               tooltip: context.l10n.metadata,
               onPressed: () => showDialog(

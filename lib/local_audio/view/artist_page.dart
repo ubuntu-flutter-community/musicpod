@@ -18,7 +18,6 @@ import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
-import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
@@ -165,27 +164,27 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
     final setUseGridView = di<LocalAudioModel>().setUseArtistGridView;
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-          icon: Icon(
-            Iconz().grid,
-            color: useGridView ? context.t.colorScheme.primary : null,
+      children: space(
+        children: [
+          IconButton(
+            icon: Icon(
+              Iconz().grid,
+            ),
+            isSelected: useGridView,
+            onPressed: () => setUseGridView(true),
           ),
-          isSelected: useGridView,
-          onPressed: () => setUseGridView(true),
-        ),
-        IconButton(
-          icon: Icon(
-            Iconz().list,
-            color: !useGridView ? context.t.colorScheme.primary : null,
+          IconButton(
+            icon: Icon(
+              Iconz().list,
+            ),
+            isSelected: !useGridView,
+            onPressed: () => setUseGridView(false),
           ),
-          isSelected: !useGridView,
-          onPressed: () => setUseGridView(false),
-        ),
-        AvatarPlayButton(audios: audios, pageId: pageId),
-        LikeAllIcon(audios: audios),
-        ExploreOnlinePopup(text: pageId),
-      ],
+          AvatarPlayButton(audios: audios, pageId: pageId),
+          LikeAllIcon(audios: audios),
+          ExploreOnlinePopup(text: pageId),
+        ],
+      ),
     );
   }
 }

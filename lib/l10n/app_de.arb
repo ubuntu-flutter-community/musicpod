@@ -305,6 +305,7 @@
     "reorder": "Neuanordnen",
     "move": "Bewegen",
     "pinAlbum": "Album an Seitenleiste pinnen",
+    "unPinAlbum": "Album von Seitenleiste lösen",
     "playAll": "Alles abspielen",
     "hearingHistory": "Hörverlauf",
     "emptyHearingHistory": "Du hast noch keinem Radiosender in dieser Sitzung zugehört.",

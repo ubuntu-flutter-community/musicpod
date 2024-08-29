@@ -139,22 +139,24 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                 SliverAudioPageControlPanel(
                   controlPanel: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (!isMobile)
-                        PodcastReplayButton(audios: episodesWithDownloads),
-                      const PodcastTimerButton(),
-                      PodcastSubButton(
-                        audios: episodesWithDownloads,
-                        pageId: pageId,
-                      ),
-                      AvatarPlayButton(
-                        audios: episodesWithDownloads,
-                        pageId: pageId,
-                      ),
-                      PodcastRefreshButton(pageId: pageId),
-                      PodcastReorderButton(feedUrl: pageId),
-                      if (!isMobile) ExploreOnlinePopup(text: title),
-                    ],
+                    children: space(
+                      children: [
+                        if (!isMobile)
+                          PodcastReplayButton(audios: episodesWithDownloads),
+                        const PodcastTimerButton(),
+                        PodcastSubButton(
+                          audios: episodesWithDownloads,
+                          pageId: pageId,
+                        ),
+                        AvatarPlayButton(
+                          audios: episodesWithDownloads,
+                          pageId: pageId,
+                        ),
+                        PodcastRefreshButton(pageId: pageId),
+                        PodcastReorderButton(feedUrl: pageId),
+                        if (!isMobile) ExploreOnlinePopup(text: title),
+                      ],
+                    ),
                   ),
                 ),
                 SliverPadding(
