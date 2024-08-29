@@ -20,6 +20,7 @@ class ExploreOnlinePopup extends StatelessWidget with WatchItMixin {
     return PopupMenuButton(
       enabled: isOnline,
       tooltip: context.l10n.searchOnline,
+      padding: EdgeInsets.zero,
       itemBuilder: (c) => [
         PopupMenuItem(
           padding: const EdgeInsets.only(left: 5),

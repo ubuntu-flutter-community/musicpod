@@ -30,6 +30,7 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
     this.startPlaylist,
     required this.audioPageType,
     required this.showLeading,
+    this.selectedColor,
   });
 
   final String pageId;
@@ -45,6 +46,7 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
   final LibraryModel libraryModel;
   final void Function(Audio audio) insertIntoQueue;
   final bool showLeading;
+  final Color? selectedColor;
 
   @override
   State<AudioTile> createState() => _AudioTileState();
@@ -57,6 +59,7 @@ class _AudioTileState extends State<AudioTile> {
   Widget build(BuildContext context) {
     final theme = context.t;
     final liked = watchPropertyValue((LibraryModel m) => m.liked(widget.audio));
+    final selectedColor = widget.selectedColor ?? theme.contrastyPrimary;
     final subTitle = switch (widget.audioPageType) {
       AudioPageType.artist => widget.audio.album ?? context.l10n.unknown,
       _ => widget.audio.artist ?? context.l10n.unknown,
@@ -83,7 +86,7 @@ class _AudioTileState extends State<AudioTile> {
         leading: leading,
         selected: widget.selected,
         selectedColor: widget.isPlayerPlaying
-            ? theme.contrastyPrimary
+            ? selectedColor
             : theme.colorScheme.onSurface,
         selectedTileColor: theme.colorScheme.onSurface.withOpacity(0.05),
         contentPadding: kModernAudioTilePadding,
@@ -122,6 +125,7 @@ class _AudioTileState extends State<AudioTile> {
           pageId: widget.pageId,
           audioPageType: widget.audioPageType,
           insertIntoQueue: widget.insertIntoQueue,
+          selectedColor: selectedColor,
         ),
       ),
     );
@@ -139,6 +143,7 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
     required this.insertIntoQueue,
     required this.hovered,
     required this.liked,
+    required this.selectedColor,
   });
 
   final Audio audio;
@@ -150,6 +155,7 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
   final void Function(Audio audio) insertIntoQueue;
   final bool hovered;
   final bool liked;
+  final Color selectedColor;
 
   @override
   Widget build(BuildContext context) {
@@ -173,8 +179,14 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
         Opacity(
           opacity: hovered || selected || liked ? 1 : 0,
           child: switch (audio.audioType) {
-            AudioType.radio => RadioLikeIcon(audio: audio),
-            AudioType.local => LikeIcon(audio: audio),
+            AudioType.radio => RadioLikeIcon(
+                audio: audio,
+                color: selected && isPlayerPlaying ? selectedColor : null,
+              ),
+            AudioType.local => LikeIcon(
+                audio: audio,
+                color: selected && isPlayerPlaying ? selectedColor : null,
+              ),
             _ => SizedBox.square(
                 dimension: context.t.buttonTheme.height,
               ),
@@ -190,7 +202,9 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
               alignment: Alignment.centerRight,
               child: Text(
                 Duration(milliseconds: audio.durationMs!.toInt()).formattedTime,
-                style: context.t.textTheme.labelMedium,
+                style: context.t.textTheme.labelMedium?.copyWith(
+                  color: selected && isPlayerPlaying ? selectedColor : null,
+                ),
               ),
             ),
           ),

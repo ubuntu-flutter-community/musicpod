@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../common/view/theme.dart';
@@ -46,7 +47,7 @@ class _PlayerViewState extends State<PlayerView> {
   Widget build(BuildContext context) {
     final theme = context.t;
     final c = watchPropertyValue((PlayerModel m) => m.color);
-    final color = getPlayerBg(c, theme.cardColor);
+    final color = isMobile ? theme.cardColor : getPlayerBg(c, theme.cardColor);
 
     Widget player;
     if (widget.mode != PlayerPosition.bottom) {

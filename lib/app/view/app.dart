@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:phoenix_theme/phoenix_theme.dart' hide ColorX, isMobile;
+import 'package:phoenix_theme/phoenix_theme.dart' hide ColorX;
 import 'package:system_theme/system_theme.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';

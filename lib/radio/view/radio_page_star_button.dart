@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../extensions/build_context_x.dart';
+import '../../common/data/audio.dart';
+import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../common/view/icons.dart';
-import '../../common/data/audio.dart';
 
 class RadioPageStarButton extends StatelessWidget with WatchItMixin {
   const RadioPageStarButton({super.key, required this.station});
@@ -20,6 +19,7 @@ class RadioPageStarButton extends StatelessWidget with WatchItMixin {
     );
 
     return IconButton(
+      isSelected: isStarred,
       tooltip: isStarred
           ? context.l10n.removeFromCollection
           : context.l10n.addToCollection,
@@ -28,12 +28,7 @@ class RadioPageStarButton extends StatelessWidget with WatchItMixin {
           : isStarred
               ? () => libraryModel.unStarStation(station.url!)
               : () => libraryModel.addStarredStation(station.url!, [station]),
-      icon: Iconz().getAnimatedStar(
-        isStarred,
-        isStarred
-            ? context.t.colorScheme.primary
-            : context.t.colorScheme.onSurface,
-      ),
+      icon: Iconz().getAnimatedStar(isStarred),
     );
   }
 }

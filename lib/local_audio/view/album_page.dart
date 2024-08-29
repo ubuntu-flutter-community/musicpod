@@ -145,27 +145,30 @@ class AlbumPageControlButton extends StatelessWidget {
     final pinnedAlbum = libraryModel.isPinnedAlbum(id);
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-          tooltip: context.l10n.pinAlbum,
-          isSelected: libraryModel.isPinnedAlbum(id),
-          icon: Icon(
-            pinnedAlbum ? Iconz().pinFilled : Iconz().pin,
-            color: pinnedAlbum ? context.t.colorScheme.primary : null,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: space(
+        children: [
+          IconButton(
+            tooltip:
+                pinnedAlbum ? context.l10n.unPinAlbum : context.l10n.pinAlbum,
+            isSelected: libraryModel.isPinnedAlbum(id),
+            icon: Icon(
+              pinnedAlbum ? Iconz().pinFilled : Iconz().pin,
+            ),
+            onPressed: () {
+              if (libraryModel.isPinnedAlbum(id)) {
+                libraryModel.removePinnedAlbum(id);
+              } else {
+                libraryModel.addPinnedAlbum(id, album);
+              }
+            },
           ),
-          onPressed: () {
-            if (libraryModel.isPinnedAlbum(id)) {
-              libraryModel.removePinnedAlbum(id);
-            } else {
-              libraryModel.addPinnedAlbum(id, album);
-            }
-          },
-        ),
-        AvatarPlayButton(audios: album, pageId: id),
-        ExploreOnlinePopup(
-          text: '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
-        ),
-      ],
+          AvatarPlayButton(audios: album, pageId: id),
+          ExploreOnlinePopup(
+            text: '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
+          ),
+        ],
+      ),
     );
   }
 }

@@ -5,7 +5,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/safe_network_image.dart';
-import '../../constants.dart';
+import '../../common/view/theme.dart';
 import '../../library/library_model.dart';
 import 'radio_fall_back_icon.dart';
 import 'station_page.dart';
@@ -48,8 +48,8 @@ class StationCard extends StatelessWidget {
           errorIcon: RadioFallBackIcon(station: station),
           url: station?.imageUrl,
           fit: BoxFit.scaleDown,
-          height: kAudioCardDimension,
-          width: kAudioCardDimension,
+          height: audioCardDimension,
+          width: audioCardDimension,
         ),
       ),
     );

@@ -14,7 +14,6 @@ import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
-import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
@@ -123,18 +122,18 @@ class _StationPageControlPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: context.smallWindow
-          ? MainAxisAlignment.center
-          : MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
-      children: [
-        RadioPageStarButton(station: station),
-        AvatarPlayButton(
-          audios: [station],
-          pageId: station.url!,
-        ),
-        RadioPageCopyHistoryButton(station: station),
-      ],
+      children: space(
+        children: [
+          RadioPageStarButton(station: station),
+          AvatarPlayButton(
+            audios: [station],
+            pageId: station.url!,
+          ),
+          RadioPageCopyHistoryButton(station: station),
+        ],
+      ),
     );
   }
 }

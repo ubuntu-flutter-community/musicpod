@@ -82,7 +82,9 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
     final libraryModel = di<LibraryModel>();
 
     return NavigationBar(
-      height: 60,
+      backgroundColor: context.t.cardColor,
+      height: 45,
+      indicatorColor: Colors.transparent,
       selectedIndex: switch (selectedPageId) {
         kSearchPageId => 0,
         kLocalAudioPageId => 1,
@@ -106,7 +108,7 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
         NavigationDestination(
           icon: Icon(Iconz().localAudio),
           selectedIcon: Icon(Iconz().localAudioFilled),
-          label: context.l10n.localAudio,
+          label: context.l10n.local,
         ),
         NavigationDestination(
           icon: Icon(Iconz().radio),

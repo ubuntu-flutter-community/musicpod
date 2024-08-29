@@ -1,5 +1,7 @@
 {
   "cs": [
+    "local",
+    "unPinAlbum",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
@@ -270,7 +272,9 @@
   ],
 
   "da": [
+    "local",
     "insertedIntoQueue",
+    "unPinAlbum",
     "duration",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
@@ -557,6 +561,7 @@
     "addToFavorites",
     "removeFromFavorites",
     "share",
+    "local",
     "genre",
     "year",
     "albumArtist",
@@ -715,6 +720,7 @@
     "reorder",
     "move",
     "pinAlbum",
+    "unPinAlbum",
     "playAll",
     "hearingHistory",
     "emptyHearingHistory",
@@ -1004,6 +1010,8 @@
   ],
 
   "fr": [
+    "local",
+    "unPinAlbum",
     "alwaysAsk",
     "hideToTray",
     "closeBtnAction",
@@ -1265,6 +1273,8 @@
   ],
 
   "it": [
+    "local",
+    "unPinAlbum",
     "alwaysAsk",
     "hideToTray",
     "closeBtnAction",
@@ -1541,6 +1551,7 @@
     "addToFavorites",
     "removeFromFavorites",
     "share",
+    "local",
     "genre",
     "year",
     "albumArtist",
@@ -1727,6 +1738,7 @@
     "reorder",
     "move",
     "pinAlbum",
+    "unPinAlbum",
     "playAll",
     "hearingHistory",
     "emptyHearingHistory",
@@ -2031,12 +2043,14 @@
     "addToFavorites",
     "removeFromFavorites",
     "share",
+    "local",
     "stations",
     "copyToClipBoard",
     "insertedIntoQueue",
     "reorder",
     "move",
     "pinAlbum",
+    "unPinAlbum",
     "playAll",
     "hearingHistory",
     "emptyHearingHistory",
@@ -2341,6 +2355,7 @@
     "addToFavorites",
     "removeFromFavorites",
     "share",
+    "local",
     "genre",
     "year",
     "albumArtist",
@@ -2498,6 +2513,7 @@
     "reorder",
     "move",
     "pinAlbum",
+    "unPinAlbum",
     "playAll",
     "hearingHistory",
     "emptyHearingHistory",
@@ -2802,6 +2818,7 @@
     "addToFavorites",
     "removeFromFavorites",
     "share",
+    "local",
     "genre",
     "year",
     "albumArtist",
@@ -2959,6 +2976,7 @@
     "reorder",
     "move",
     "pinAlbum",
+    "unPinAlbum",
     "playAll",
     "hearingHistory",
     "emptyHearingHistory",
@@ -3250,8 +3268,10 @@
   "ru": [
     "fullScreen",
     "leaveFullScreen",
+    "local",
     "copyToClipBoard",
     "insertedIntoQueue",
+    "unPinAlbum",
     "language",
     "duration",
     "radioTagDisclaimerTitle",
@@ -3524,6 +3544,8 @@
   ],
 
   "sk": [
+    "local",
+    "unPinAlbum",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
@@ -3809,6 +3831,7 @@
     "addToFavorites",
     "removeFromFavorites",
     "share",
+    "local",
     "genre",
     "year",
     "albumArtist",
@@ -3956,6 +3979,7 @@
     "reorder",
     "move",
     "pinAlbum",
+    "unPinAlbum",
     "playAll",
     "hearingHistory",
     "emptyHearingHistory",
@@ -4245,6 +4269,8 @@
   ],
 
   "tr": [
+    "local",
+    "unPinAlbum",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
@@ -4514,7 +4540,19 @@
     "regionZimbabwe"
   ],
 
+  "zh": [
+    "local",
+    "unPinAlbum"
+  ],
+
+  "zh_CN": [
+    "local",
+    "unPinAlbum"
+  ],
+
   "zh_HK": [
+    "local",
+    "unPinAlbum",
     "schedulePlaybackStopTimer",
     "alwaysAsk",
     "hideToTray",
@@ -4777,6 +4815,8 @@
   ],
 
   "zh_TW": [
+    "local",
+    "unPinAlbum",
     "schedulePlaybackStopTimer",
     "alwaysAsk",
     "hideToTray",

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:phoenix_theme/phoenix_theme.dart' hide isMobile;
+import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
@@ -48,7 +48,8 @@ class HeaderBar extends StatelessWidget
 
     Widget? leading;
 
-    if (includeSidebarButton &&
+    if (!isMobile &&
+        includeSidebarButton &&
         !context.showMasterPanel &&
         masterScaffoldKey.currentState?.isDrawerOpen == false) {
       leading = const SidebarButton();
@@ -56,7 +57,11 @@ class HeaderBar extends StatelessWidget
       if (includeBackButton && canPop) {
         leading = const NavBackButton();
       } else {
-        leading = null;
+        leading = isMobile
+            ? const SizedBox(
+                width: 60,
+              )
+            : null;
       }
     }
 

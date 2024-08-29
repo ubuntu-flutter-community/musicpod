@@ -6,10 +6,10 @@ import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
-import 'audio_progress.dart';
+import 'podcast_tile_progress.dart';
 
-class AvatarWithProgress extends StatelessWidget {
-  const AvatarWithProgress({
+class PodcastTilePlayButton extends StatelessWidget {
+  const PodcastTilePlayButton({
     super.key,
     required this.selected,
     required this.audio,
@@ -32,7 +32,7 @@ class AvatarWithProgress extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        AudioProgress(
+        PodcastTileProgress(
           selected: selected,
           lastPosition: playerModel.getLastPosition(audio.url),
           duration: audio.durationMs == null
@@ -40,35 +40,38 @@ class AvatarWithProgress extends StatelessWidget {
               : Duration(milliseconds: audio.durationMs!.toInt()),
         ),
         CircleAvatar(
-          radius: avatarIconSize,
+          radius: avatarIconRadius,
           backgroundColor: selected
               ? theme.colorScheme.primary.withOpacity(0.08)
               : theme.colorScheme.onSurface.withOpacity(0.09),
-          child: IconButton(
-            icon: (isPlayerPlaying && selected)
-                ? Icon(
-                    Iconz().pause,
-                  )
-                : Padding(
-                    padding: appleStyled
-                        ? const EdgeInsets.only(left: 3)
-                        : EdgeInsets.zero,
-                    child: Icon(Iconz().playFilled),
-                  ),
-            onPressed: () {
-              if (selected) {
-                if (isPlayerPlaying) {
-                  playerModel.pause();
+          child: SizedBox.square(
+            dimension: avatarIconRadius * 2,
+            child: IconButton(
+              icon: (isPlayerPlaying && selected)
+                  ? Icon(
+                      Iconz().pause,
+                    )
+                  : Padding(
+                      padding: appleStyled
+                          ? const EdgeInsets.only(left: 3)
+                          : EdgeInsets.zero,
+                      child: Icon(Iconz().playFilled),
+                    ),
+              onPressed: () {
+                if (selected) {
+                  if (isPlayerPlaying) {
+                    playerModel.pause();
+                  } else {
+                    playerModel.resume();
+                  }
                 } else {
-                  playerModel.resume();
+                  playerModel.safeLastPosition().then((value) {
+                    startPlaylist?.call();
+                    removeUpdate?.call();
+                  });
                 }
-              } else {
-                playerModel.safeLastPosition().then((value) {
-                  startPlaylist?.call();
-                  removeUpdate?.call();
-                });
-              }
-            },
+              },
+            ),
           ),
         ),
       ],

@@ -8,7 +8,6 @@ import '../../common/view/cover_background.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../local_audio_model.dart';
@@ -71,7 +70,7 @@ class AlbumCard extends StatelessWidget {
       bottom: AudioCardBottom(text: album),
       image: id != null && path != null
           ? LocalCover(
-              dimension: kAudioCardDimension,
+              dimension: audioCardDimension,
               albumId: id,
               path: path,
               fallback: fallback,

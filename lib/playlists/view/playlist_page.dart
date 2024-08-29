@@ -342,51 +342,51 @@ class _PlaylistControlPanel extends StatelessWidget with WatchItMixin {
     final libraryModel = di<LibraryModel>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IconButton(
-          tooltip: context.l10n.editPlaylist,
-          icon: Icon(Iconz().pen),
-          onPressed: () => showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              content: SizedBox(
-                height: 200,
-                width: 500,
-                child: PlaylistContent(
-                  playlistName: pageId,
-                  initialValue: pageId,
-                  allowDelete: true,
-                  allowRename: true,
-                  libraryModel: libraryModel,
+      children: space(
+        children: [
+          IconButton(
+            tooltip: context.l10n.editPlaylist,
+            icon: Icon(Iconz().pen),
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                content: SizedBox(
+                  height: 200,
+                  width: 500,
+                  child: PlaylistContent(
+                    playlistName: pageId,
+                    initialValue: pageId,
+                    allowDelete: true,
+                    allowRename: true,
+                    libraryModel: libraryModel,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        IconButton(
-          tooltip: context.l10n.clearPlaylist,
-          icon: Icon(Iconz().clearAll),
-          onPressed: () => libraryModel.clearPlaylist(pageId),
-        ),
-        AvatarPlayButton(audios: audios, pageId: pageId),
-        IconButton(
-          tooltip: context.l10n.add,
-          icon: Icon(Iconz().plus),
-          onPressed: () => showDialog(
-            context: context,
-            builder: (context) => PlaylistAddAudiosDialog(playlistId: pageId),
+          IconButton(
+            tooltip: context.l10n.clearPlaylist,
+            icon: Icon(Iconz().clearAll),
+            onPressed: () => libraryModel.clearPlaylist(pageId),
           ),
-        ),
-        IconButton(
-          tooltip: context.l10n.move,
-          isSelected: allowReorder,
-          onPressed: () => di<LocalAudioModel>().setAllowReorder(!allowReorder),
-          icon: Icon(
-            Iconz().reorder,
-            color: allowReorder ? context.t.colorScheme.primary : null,
+          AvatarPlayButton(audios: audios, pageId: pageId),
+          IconButton(
+            tooltip: context.l10n.add,
+            icon: Icon(Iconz().plus),
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => PlaylistAddAudiosDialog(playlistId: pageId),
+            ),
           ),
-        ),
-      ],
+          IconButton(
+            tooltip: context.l10n.move,
+            isSelected: allowReorder,
+            onPressed: () =>
+                di<LocalAudioModel>().setAllowReorder(!allowReorder),
+            icon: Icon(Iconz().reorder),
+          ),
+        ],
+      ),
     );
   }
 }
