@@ -36,6 +36,7 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
       alignment: Alignment.center,
       children: [
         Progress(
+          padding: EdgeInsets.zero,
           value: value == null || value == 1.0 ? 0 : value,
           backgroundColor: Colors.transparent,
         ),

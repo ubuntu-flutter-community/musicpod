@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:phoenix_theme/phoenix_theme.dart' hide ColorX, isMobile;
+import 'package:phoenix_theme/phoenix_theme.dart' hide ColorX;
 import 'package:system_theme/system_theme.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
@@ -89,13 +89,8 @@ class _MusicPodAppState extends State<_MusicPodApp> {
       themeMode: ThemeMode.values[themeIndex],
       highContrastTheme: widget.highContrastTheme,
       highContrastDarkTheme: widget.highContrastDarkTheme,
-      theme: (widget.lightTheme ?? phoenix.lightTheme).copyWith(
-        iconButtonTheme:
-            iconButtonTheme(widget.lightTheme ?? phoenix.lightTheme),
-      ),
-      darkTheme: (widget.darkTheme ?? phoenix.darkTheme).copyWith(
-        iconButtonTheme: iconButtonTheme(widget.darkTheme ?? phoenix.darkTheme),
-      ),
+      theme: widget.lightTheme ?? phoenix.lightTheme,
+      darkTheme: widget.darkTheme ?? phoenix.darkTheme,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => 'MusicPod',

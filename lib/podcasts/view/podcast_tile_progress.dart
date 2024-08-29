@@ -6,8 +6,8 @@ import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
 
-class AudioProgress extends StatelessWidget with WatchItMixin {
-  const AudioProgress({
+class PodcastTileProgress extends StatelessWidget with WatchItMixin {
+  const PodcastTileProgress({
     super.key,
     this.lastPosition,
     this.duration,
@@ -35,19 +35,16 @@ class AudioProgress extends StatelessWidget with WatchItMixin {
     bool sliderActive = dur.inSeconds > 0 && dur.inSeconds >= pos.inSeconds;
 
     return RepaintBoundary(
-      child: SizedBox(
-        height: podcastProgressSize,
-        width: podcastProgressSize,
-        child: Progress(
-          color: selected
-              ? theme.colorScheme.primary.withOpacity(0.9)
-              : theme.colorScheme.primary.withOpacity(0.4),
-          value: sliderActive
-              ? (pos.inSeconds.toDouble() / dur.inSeconds.toDouble())
-              : 0,
-          backgroundColor: Colors.transparent,
-          strokeWidth: 3,
-        ),
+      child: Progress(
+        padding: EdgeInsets.zero,
+        color: selected
+            ? theme.colorScheme.primary.withOpacity(0.9)
+            : theme.colorScheme.primary.withOpacity(0.4),
+        value: sliderActive
+            ? (pos.inSeconds.toDouble() / dur.inSeconds.toDouble())
+            : 0,
+        backgroundColor: Colors.transparent,
+        strokeWidth: progressStrokeWidth,
       ),
     );
   }

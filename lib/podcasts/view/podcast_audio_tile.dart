@@ -14,7 +14,7 @@ import '../../extensions/duration_x.dart';
 import '../../extensions/int_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
-import 'avatar_with_progress.dart';
+import 'podcast_tile_play_button.dart';
 import 'download_button.dart';
 
 class PodcastAudioTile extends StatelessWidget {
@@ -67,7 +67,7 @@ class PodcastAudioTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AvatarWithProgress(
+              PodcastTilePlayButton(
                 selected: selected,
                 audio: audio,
                 isPlayerPlaying: isPlayerPlaying,
@@ -91,7 +91,7 @@ class PodcastAudioTile extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Padding(
           padding: EdgeInsets.only(
-            left: podcastProgressSize + 25,
+            left: (avatarIconRadius * 2) + 25,
             right: 60,
           ),
           child: Column(
@@ -102,41 +102,46 @@ class PodcastAudioTile extends StatelessWidget {
               ),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Wrap(
-                  spacing: 5,
-                  children: [
-                    DownloadButton(
-                      audio: audio,
-                      addPodcast: addPodcast,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Row(
+                    children: space(
+                      children: [
+                        DownloadButton(
+                          audio: audio,
+                          addPodcast: addPodcast,
+                        ),
+                        ShareButton(
+                          active: true,
+                          audio: audio,
+                        ),
+                        IconButton(
+                          tooltip: context.l10n.insertIntoQueue,
+                          onPressed: () {
+                            final text =
+                                '${audio.title != null ? '${audio.album} - ' : ''}${audio.title ?? ''}';
+                            playerModel.insertIntoQueue(audio);
+                            showSnackBar(
+                              context: context,
+                              content:
+                                  Text(context.l10n.insertedIntoQueue(text)),
+                            );
+                          },
+                          icon: Icon(Iconz().insertIntoQueue),
+                        ),
+                        IconButton(
+                          tooltip: context.l10n.replayEpisode,
+                          onPressed: audio.url == null
+                              ? null
+                              : () => playerModel
+                                ..removeLastPosition(audio.url!)
+                                ..setPosition(Duration.zero)
+                                ..seek(),
+                          icon: Icon(Iconz().replay),
+                        ),
+                      ],
                     ),
-                    ShareButton(
-                      active: true,
-                      audio: audio,
-                    ),
-                    IconButton(
-                      tooltip: context.l10n.insertIntoQueue,
-                      onPressed: () {
-                        final text =
-                            '${audio.title != null ? '${audio.album} - ' : ''}${audio.title ?? ''}';
-                        playerModel.insertIntoQueue(audio);
-                        showSnackBar(
-                          context: context,
-                          content: Text(context.l10n.insertedIntoQueue(text)),
-                        );
-                      },
-                      icon: Icon(Iconz().insertIntoQueue),
-                    ),
-                    IconButton(
-                      tooltip: context.l10n.replayEpisode,
-                      onPressed: audio.url == null
-                          ? null
-                          : () => playerModel
-                            ..removeLastPosition(audio.url!)
-                            ..setPosition(Duration.zero)
-                            ..seek(),
-                      icon: Icon(Iconz().replay),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ],
@@ -247,7 +252,8 @@ class _Description extends StatelessWidget {
         );
       },
       child: _createHtml(
-        color: theme.colorScheme.onSurface.scale(lightness: -0.2),
+        color:
+            theme.colorScheme.onSurface.scale(lightness: -0.2, saturation: -1),
         maxLines: 5,
         paddings: HtmlPaddings.all(5),
       ),

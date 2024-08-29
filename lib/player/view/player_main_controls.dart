@@ -61,7 +61,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
         ),
       _flex,
       CircleAvatar(
-        radius: avatarIconSize,
+        radius: avatarIconRadius,
         backgroundColor: avatarColor ?? theme.colorScheme.inverseSurface,
         child: PlayButton(
           iconColor: iconColor ?? theme.colorScheme.onInverseSurface,

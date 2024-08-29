@@ -28,6 +28,7 @@ ThemeData? yaruDarkWithTweaks(YaruThemeData yaru) {
     cardColor: yaru.darkTheme?.cardColor.scale(
       lightness: -0.2,
     ),
+    iconButtonTheme: iconButtonTheme(yaru.darkTheme),
   );
 }
 
@@ -43,12 +44,14 @@ ThemeData? yaruLightWithTweaks(YaruThemeData yaru) {
     cardColor: yaru.theme?.dividerColor.scale(
       lightness: -0.01,
     ),
+    iconButtonTheme: iconButtonTheme(yaru.theme),
   );
 }
 
 IconButtonThemeData iconButtonTheme(ThemeData? data) {
   return IconButtonThemeData(
     style: data?.iconButtonTheme.style?.copyWith(
+      iconSize: const WidgetStatePropertyAll(kYaruIconSize),
       iconColor: WidgetStateProperty.resolveWith(
         (s) => s.contains(WidgetState.disabled)
             ? data.disabledColor
@@ -217,13 +220,13 @@ Color? chipSelectionColor(ThemeData theme, bool loading) {
   return yaruStyled ? (loading ? theme.colorScheme.outline : null) : null;
 }
 
-double get podcastProgressSize => yaruStyled ? 34 : 45;
-
 double get likeButtonWidth => yaruStyled ? 62 : 70;
 
-double? get avatarIconSize => yaruStyled ? kYaruTitleBarItemHeight / 2 : null;
+double get progressStrokeWidth => 3.0;
 
-double get bigPlayButtonSize => yaruStyled ? 22 : 25;
+double get avatarIconRadius => (yaruStyled ? kYaruTitleBarItemHeight : 38) / 2;
+
+double get bigPlayButtonRadius => yaruStyled ? 22 : 23;
 
 EdgeInsets get bigPlayButtonPadding =>
     EdgeInsets.symmetric(horizontal: yaruStyled ? 2.5 : 5);
