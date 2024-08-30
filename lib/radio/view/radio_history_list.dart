@@ -86,6 +86,7 @@ class SliverRadioHistoryList extends StatelessWidget
     final length = watchPropertyValue(
       (PlayerModel m) => m.getRadioHistoryLength(filter: filter),
     );
+
     final current = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
 
     if (length == 0) {

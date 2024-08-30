@@ -5,7 +5,6 @@ import 'package:watch_it/watch_it.dart';
 import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../local_audio/view/local_cover.dart';
-import '../player_model.dart';
 import 'player_fall_back_image.dart';
 import 'player_remote_source_image.dart';
 
@@ -46,8 +45,6 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
-
     Widget child;
 
     final fallBackImage = PlayerFallBackImage(
@@ -67,13 +64,8 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
       );
     } else {
       child = PlayerRemoteSourceImage(
-        key: ValueKey(
-          '${mpvMetaData?.icyTitle ?? ''}${audio?.albumArtUrl ?? ''}${audio?.imageUrl ?? ''}',
-        ),
-        mpvMetaData: mpvMetaData,
         height: size,
         width: size,
-        audio: audio,
         fit: BoxFit.cover,
         fallBackIcon: fallBackImage,
         errorIcon: fallBackImage,

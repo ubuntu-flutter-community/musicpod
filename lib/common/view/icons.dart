@@ -473,7 +473,11 @@ class Iconz {
 
 double get sideBarImageSize => 38;
 
-double get iconSize => yaruStyled ? kYaruIconSize : 24;
+double get iconSize => yaruStyled
+    ? kYaruIconSize
+    : isMobile
+        ? 24.0
+        : 20.0;
 
 IconData getIconForTag(String tag) {
   final tagsToIcons = <String, IconData>{

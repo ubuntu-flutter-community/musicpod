@@ -27,8 +27,13 @@ class SearchButton extends StatelessWidget {
                 Icon(
                   Iconz().search,
                   color: context.t.colorScheme.primary,
+                  size: iconSize,
                 ),
-            icon: icon ?? Icon(Iconz().search),
+            icon: icon ??
+                Icon(
+                  Iconz().search,
+                  size: iconSize,
+                ),
           );
   }
 }
