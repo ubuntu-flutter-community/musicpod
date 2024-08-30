@@ -62,7 +62,7 @@ class PodcastAudioTile extends StatelessWidget {
       header: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: Padding(
-          padding: const EdgeInsets.only(top: 15, bottom: 10, left: 5),
+          padding: const EdgeInsets.only(top: 15, bottom: 10, left: 10),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -91,7 +91,7 @@ class PodcastAudioTile extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Padding(
           padding: EdgeInsets.only(
-            left: (avatarIconRadius * 2) + 25,
+            left: (avatarIconRadius * 2) + 30,
             right: 60,
           ),
           child: Column(
