@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:gtk/gtk.dart';
 import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
 import 'package:pls/pls.dart';
+import 'package:yaru/yaru.dart';
 
 import '../common/data/audio.dart';
 import '../player/player_service.dart';
@@ -161,6 +163,10 @@ class ExternalPathService {
   }
 
   Future<String?> getPathOfDirectory() async {
+    if (isMobile) {
+      return FilePicker.platform.getDirectoryPath();
+    }
+
     if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
       return getDirectoryPath();
     }

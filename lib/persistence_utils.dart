@@ -51,6 +51,11 @@ Future<String?> getDownloadsDir() async {
     path = getUserDirectory('DOWNLOAD')?.path;
   } else if (Platform.isMacOS || Platform.isIOS || Platform.isWindows) {
     path = (await getDownloadsDirectory())?.path;
+  } else if (Platform.isAndroid) {
+    final androidDir = Directory('/storage/emulated/0/Download');
+    if (androidDir.existsSync()) {
+      path = androidDir.path;
+    }
   }
   if (path != null) {
     return p.join(path, kAppName);

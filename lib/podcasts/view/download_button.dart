@@ -31,6 +31,7 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
     final download = watchPropertyValue(
       (LibraryModel m) => m.getDownload(audio?.url) != null,
     );
+    final downloadsDir = watchPropertyValue((LibraryModel m) => m.downloadsDir);
 
     return Stack(
       alignment: Alignment.center,
@@ -48,14 +49,16 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
             download ? Iconz().downloadFilled : Iconz().download,
             color: audio?.path != null ? theme.colorScheme.primary : null,
           ),
-          onPressed: () {
-            if (download) {
-              model.deleteDownload(context: context, audio: audio);
-            } else {
-              addPodcast?.call();
-              model.startDownload(context: context, audio: audio);
-            }
-          },
+          onPressed: downloadsDir == null
+              ? null
+              : () {
+                  if (download) {
+                    model.deleteDownload(context: context, audio: audio);
+                  } else {
+                    addPodcast?.call();
+                    model.startDownload(context: context, audio: audio);
+                  }
+                },
           iconSize: iconSize,
           color: download
               ? theme.colorScheme.primary

@@ -29,7 +29,10 @@ class SearchPage extends StatelessWidget with WatchItMixin {
       resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
-        title: const SearchPageInput(),
+        title: Padding(
+          padding: EdgeInsets.only(left: isMobile ? 5 : 0),
+          child: const SearchPageInput(),
+        ),
         actions: [
           Padding(
             padding: appBarSingleActionSpacing,
@@ -54,7 +57,10 @@ class SearchPage extends StatelessWidget with WatchItMixin {
             slivers: [
               SliverPadding(
                 padding: getAdaptiveHorizontalPadding(constraints: constraints)
-                    .copyWith(bottom: 5),
+                    .copyWith(
+                  bottom: 5,
+                  top: isMobile ? 10 : 0,
+                ),
                 sliver: switch (audioType) {
                   AudioType.podcast => const SliverPodcastFilterBar(),
                   _ => const SliverSearchTypeFilterBar(),

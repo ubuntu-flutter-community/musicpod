@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -18,7 +20,17 @@ class PodcastReorderButton extends StatelessWidget with WatchItMixin {
       tooltip: context.l10n.reorder,
       onPressed: () => di<LibraryModel>()
           .reorderPodcast(feedUrl: feedUrl, ascending: !ascending),
-      icon: Icon(ascending ? Iconz().ascending : Iconz().descending),
+      icon: Iconz().ascending == Icons.sort && ascending
+          ? Transform.flip(
+              flipX: true,
+              child: Transform.rotate(
+                angle: pi,
+                child: Icon(
+                  Iconz().ascending,
+                ),
+              ),
+            )
+          : Icon(ascending ? Iconz().ascending : Iconz().descending),
     );
   }
 }
