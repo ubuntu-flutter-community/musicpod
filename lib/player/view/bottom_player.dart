@@ -46,11 +46,10 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
       height: bottomPlayerHeight,
       child: Column(
         children: [
-          if (!isMobile)
-            PlayerTrack(
-              active: active,
-              bottomPlayer: true,
-            ),
+          PlayerTrack(
+            active: active,
+            bottomPlayer: true,
+          ),
           InkWell(
             onTap: () => appModel.setFullWindowMode(true),
             child: Padding(
@@ -131,11 +130,6 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
               ),
             ),
           ),
-          if (isMobile)
-            PlayerTrack(
-              active: active,
-              bottomPlayer: true,
-            ),
         ],
       ),
     );

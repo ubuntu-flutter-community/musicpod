@@ -403,12 +403,12 @@ class Iconz {
       ? YaruIcons.sort_ascending
       : appleStyled
           ? CupertinoIcons.sort_up
-          : Icons.arrow_upward;
+          : Icons.sort;
   IconData get descending => yaruStyled
       ? YaruIcons.sort_descending
       : appleStyled
           ? CupertinoIcons.sort_down
-          : Icons.arrow_downward;
+          : Icons.sort;
   IconData get info => yaruStyled
       ? YaruIcons.information
       : appleStyled

@@ -277,7 +277,10 @@ class _LocalAudioSection extends StatelessWidget with WatchItMixin {
 
     Future<void> onDirectorySelected(String directoryPath) async {
       settingsModel.setDirectory(directoryPath).then(
-            (_) async => localAudioModel.init(forceInit: true),
+            (_) async => localAudioModel.init(
+              forceInit: true,
+              directory: directoryPath,
+            ),
           );
     }
 

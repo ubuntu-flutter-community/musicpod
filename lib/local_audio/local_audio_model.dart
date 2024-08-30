@@ -75,8 +75,12 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   Future<void> init({
     bool forceInit = false,
+    String? directory,
   }) async {
-    await _service.init(forceInit: forceInit);
+    await _service.init(
+      forceInit: forceInit,
+      directory: directory,
+    );
     _audiosChangedSub ??=
         _service.audiosChanged.listen((_) => notifyListeners());
 

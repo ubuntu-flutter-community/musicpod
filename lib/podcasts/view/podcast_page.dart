@@ -161,7 +161,8 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                 ),
                 SliverPadding(
                   padding:
-                      getAdaptiveHorizontalPadding(constraints: constraints),
+                      getAdaptiveHorizontalPadding(constraints: constraints)
+                          .copyWith(bottom: kYaruPagePadding),
                   sliver: SliverPodcastPageList(
                     audios: episodesWithDownloads,
                     pageId: pageId,

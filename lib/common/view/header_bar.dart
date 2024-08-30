@@ -48,8 +48,7 @@ class HeaderBar extends StatelessWidget
 
     Widget? leading;
 
-    if (!isMobile &&
-        includeSidebarButton &&
+    if (includeSidebarButton &&
         !context.showMasterPanel &&
         masterScaffoldKey.currentState?.isDrawerOpen == false) {
       leading = const SidebarButton();

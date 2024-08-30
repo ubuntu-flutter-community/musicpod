@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/constants.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -14,6 +14,7 @@ import 'audio_tile_image.dart';
 import 'audio_tile_option_button.dart';
 import 'like_icon.dart';
 import 'tapable_text.dart';
+import 'theme.dart';
 
 class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
   const AudioTile({
@@ -78,8 +79,14 @@ class _AudioTileState extends State<AudioTile> {
 
     return MouseRegion(
       key: ValueKey(widget.audio.audioType?.index),
-      onEnter: (e) => setState(() => _hovered = true),
-      onExit: (e) => setState(() => _hovered = false),
+      onEnter: (e) {
+        if (isMobile) return;
+        setState(() => _hovered = true);
+      },
+      onExit: (e) {
+        if (isMobile) return;
+        setState(() => _hovered = false);
+      },
       child: ListTile(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         minLeadingWidth: kAudioTrackWidth,
@@ -89,7 +96,7 @@ class _AudioTileState extends State<AudioTile> {
             ? selectedColor
             : theme.colorScheme.onSurface,
         selectedTileColor: theme.colorScheme.onSurface.withOpacity(0.05),
-        contentPadding: kModernAudioTilePadding,
+        contentPadding: audioTilePadding,
         onTap: () {
           if (widget.selected) {
             if (widget.isPlayerPlaying) {
@@ -116,7 +123,7 @@ class _AudioTileState extends State<AudioTile> {
               : () => widget.onSubTitleTap?.call(subTitle),
         ),
         trailing: _AudioTileTrail(
-          hovered: _hovered,
+          hovered: isMobile ? true : _hovered,
           liked: liked,
           audio: widget.audio,
           selected: widget.selected,
@@ -192,18 +199,21 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
               ),
           },
         ),
-        const SizedBox(
-          width: 5,
-        ),
-        if (audio.audioType != AudioType.radio && audio.durationMs != null)
-          SizedBox(
-            width: 60,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                Duration(milliseconds: audio.durationMs!.toInt()).formattedTime,
-                style: context.t.textTheme.labelMedium?.copyWith(
-                  color: selected && isPlayerPlaying ? selectedColor : null,
+        if (!isMobile &&
+            audio.audioType != AudioType.radio &&
+            audio.durationMs != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 5),
+            child: SizedBox(
+              width: 60,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  Duration(milliseconds: audio.durationMs!.toInt())
+                      .formattedTime,
+                  style: context.t.textTheme.labelMedium?.copyWith(
+                    color: selected && isPlayerPlaying ? selectedColor : null,
+                  ),
                 ),
               ),
             ),
