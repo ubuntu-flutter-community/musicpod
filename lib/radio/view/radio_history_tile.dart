@@ -5,7 +5,7 @@ import 'package:yaru/constants.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/mpv_meta_data.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/icy_image.dart';
+import 'icy_image.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/theme.dart';

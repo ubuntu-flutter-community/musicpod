@@ -13,11 +13,13 @@ class PlayerFallBackImage extends StatelessWidget {
     this.audio,
     required this.height,
     required this.width,
+    this.noIcon = false,
   });
 
   final Audio? audio;
   final double height;
   final double width;
+  final bool noIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +57,17 @@ class PlayerFallBackImage extends StatelessWidget {
         ),
         width: width,
         height: height,
-        child: Icon(
-          iconData,
-          size: iconSize,
-          color: contrastColor(
-            getAlphabetColor(
-              audio?.title ?? audio?.album ?? 'a',
-            ),
-          ),
-        ),
+        child: noIcon
+            ? null
+            : Icon(
+                iconData,
+                size: iconSize,
+                color: contrastColor(
+                  getAlphabetColor(
+                    audio?.title ?? audio?.album ?? 'a',
+                  ),
+                ),
+              ),
       ),
     );
   }

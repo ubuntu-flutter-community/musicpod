@@ -206,6 +206,7 @@ class SidebarButton extends StatelessWidget {
         },
         icon: Icon(
           Iconz().sidebar,
+          size: iconSize,
         ),
       ),
     );

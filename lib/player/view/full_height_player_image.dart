@@ -14,19 +14,20 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
     this.height,
     this.width,
     this.borderRadius,
+    this.emptyFallBack = false,
   });
 
   final BoxFit? fit;
   final double? height, width;
   final BorderRadius? borderRadius;
+  final bool emptyFallBack;
 
   @override
   Widget build(BuildContext context) {
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
-    final mpvMetaData = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
-
     final fallBackImage = PlayerFallBackImage(
+      noIcon: emptyFallBack,
       audio: audio,
       height: height ?? fullHeightPlayerImageSize,
       width: width ?? fullHeightPlayerImageSize,
@@ -45,13 +46,8 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
       );
     } else {
       image = PlayerRemoteSourceImage(
-        key: ValueKey(
-          '${mpvMetaData?.icyTitle ?? ''}${audio?.albumArtUrl ?? ''}${audio?.imageUrl ?? ''}',
-        ),
-        mpvMetaData: mpvMetaData,
         height: height ?? fullHeightPlayerImageSize,
         width: width ?? fullHeightPlayerImageSize,
-        audio: audio,
         fit: fit,
         fallBackIcon: fallBackImage,
         errorIcon: fallBackImage,

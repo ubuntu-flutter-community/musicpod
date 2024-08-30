@@ -60,7 +60,6 @@ class PlayerService {
   MpvMetaData? _mpvMetaData;
   MpvMetaData? get mpvMetaData => _mpvMetaData;
   void setMpvMetaData(MpvMetaData? value) {
-    if (value?.icyTitle == _mpvMetaData?.icyTitle) return;
     _mpvMetaData = value;
 
     var validHistoryElement = _mpvMetaData?.icyTitle.isNotEmpty == true;
@@ -218,7 +217,7 @@ class PlayerService {
             );
       }
       _setMediaControlsMetaData(audio: audio!);
-      _loadColor();
+      _loadColorAndSetRemoteUrl();
       _firstPlay = false;
     } on Exception catch (_) {}
   }
@@ -276,22 +275,25 @@ class PlayerService {
           return;
         }
         final mpvMetaData = MpvMetaData.fromJson(data);
+
+        if (mpvMetaData.icyTitle == _mpvMetaData?.icyTitle) return;
         setMpvMetaData(
           mpvMetaData.copyWith(
             icyTitle: HtmlParser(mpvMetaData.icyTitle).parseFragment().text,
           ),
         );
+
         final songInfo = mpvMetaData.icyTitle.splitByDash;
         fetchAlbumArt(mpvMetaData.icyTitle).then(
-          (albumArt) {
-            _setMediaControlsMetaData(
+          (albumArt) async {
+            await _setMediaControlsMetaData(
               audio: (_audio ?? const Audio()).copyWith(
                 imageUrl: albumArt,
                 title: songInfo.songName,
                 artist: songInfo.artist,
               ),
             );
-            _loadColor(artUrl: albumArt);
+            await _loadColorAndSetRemoteUrl(artUrl: albumArt);
           },
         );
       },
@@ -437,22 +439,34 @@ class PlayerService {
   Color? _color;
   Color? get color => _color;
 
-  Future<void> _loadColor({String? artUrl}) async {
+  String? _remoteImageUrl;
+  String? get remoteImageUrl => _remoteImageUrl;
+  void _setRemoteImageUrl(String? url) {
+    _remoteImageUrl = url;
+    _propertiesChangedController.add(true);
+  }
+
+  Future<void> _loadColorAndSetRemoteUrl({String? artUrl}) async {
     final pic = CoverStore().get(_audio?.albumId);
     if (pic == null &&
         audio?.imageUrl == null &&
         audio?.albumArtUrl == null &&
         artUrl == null) {
       _color = null;
+      _setRemoteImageUrl(null);
+
       return;
     }
 
     ImageProvider? image;
     if (pic != null) {
+      _setRemoteImageUrl(null);
       image = MemoryImage(pic);
     } else {
+      final url = artUrl ?? _audio!.imageUrl ?? _audio!.albumArtUrl!;
+      _setRemoteImageUrl(url);
       image = NetworkImage(
-        artUrl ?? _audio!.imageUrl ?? _audio!.albumArtUrl!,
+        url,
       );
     }
     final generator = await PaletteGenerator.fromImageProvider(image);

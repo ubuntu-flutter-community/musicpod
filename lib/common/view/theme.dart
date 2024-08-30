@@ -21,10 +21,6 @@ ThemeData? yaruDarkWithTweaks(YaruThemeData yaru) {
       space: 1.0,
       thickness: 0.0,
     ),
-    snackBarTheme: SnackBarThemeData(
-      behavior: SnackBarBehavior.floating,
-      actionTextColor: yaru.theme?.colorScheme.primary,
-    ),
     cardColor: yaru.darkTheme?.cardColor.scale(
       lightness: -0.2,
     ),
@@ -36,10 +32,6 @@ ThemeData? yaruLightWithTweaks(YaruThemeData yaru) {
   return yaru.theme?.copyWith(
     actionIconTheme: ActionIconThemeData(
       backButtonIconBuilder: (context) => Icon(Iconz().goBack),
-    ),
-    snackBarTheme: SnackBarThemeData(
-      behavior: SnackBarBehavior.floating,
-      actionTextColor: yaru.theme?.colorScheme.primary,
     ),
     cardColor: yaru.theme?.dividerColor.scale(
       lightness: -0.01,

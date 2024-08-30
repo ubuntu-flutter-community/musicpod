@@ -100,6 +100,7 @@ class PlayerModel extends SafeChangeNotifier {
       );
 
   Color? get color => _service.color;
+  String? get remoteImageUrl => _service.remoteImageUrl;
 
   bool _isUpNextExpanded = false;
   bool get isUpNextExpanded => _isUpNextExpanded;
