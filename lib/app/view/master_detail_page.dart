@@ -74,7 +74,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
               masterItems: masterItems,
               libraryModel: libraryModel,
             ),
-          const VerticalDivider(),
+          if (context.showMasterPanel) const VerticalDivider(),
           Expanded(
             child: BackGesture(
               child: Navigator(

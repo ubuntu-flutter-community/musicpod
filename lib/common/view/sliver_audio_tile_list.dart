@@ -13,7 +13,6 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
     super.key,
     required this.audios,
     required this.pageId,
-    this.padding,
     this.onSubTitleTab,
     required this.audioPageType,
     this.selectedColor,
@@ -23,7 +22,6 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
   final String pageId;
   final AudioPageType audioPageType;
   final void Function(String text)? onSubTitleTab;
-  final EdgeInsetsGeometry? padding;
   final Color? selectedColor;
 
   @override
@@ -34,36 +32,33 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
     final showLeading = audios.length < kShowLeadingThreshold;
 
-    return SliverPadding(
-      padding: padding ?? EdgeInsets.zero,
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          childCount: audios.length,
-          (context, index) {
-            final audio = audios.elementAt(index);
-            final audioSelected = currentAudio == audio;
-            return AudioTile(
-              showLeading: showLeading,
-              key: ValueKey(audio.path ?? audio.url),
-              audioPageType: audioPageType,
-              onSubTitleTap: onSubTitleTab,
-              isPlayerPlaying: isPlaying,
-              pause: playerModel.pause,
-              startPlaylist: () => playerModel.startPlaylist(
-                audios: audios,
-                listName: pageId,
-                index: index,
-              ),
-              resume: playerModel.resume,
-              selected: audioSelected,
-              audio: audio,
-              insertIntoQueue: playerModel.insertIntoQueue,
-              pageId: pageId,
-              libraryModel: libraryModel,
-              selectedColor: selectedColor,
-            );
-          },
-        ),
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        childCount: audios.length,
+        (context, index) {
+          final audio = audios.elementAt(index);
+          final audioSelected = currentAudio == audio;
+          return AudioTile(
+            showLeading: showLeading,
+            key: ValueKey(audio.path ?? audio.url),
+            audioPageType: audioPageType,
+            onSubTitleTap: onSubTitleTab,
+            isPlayerPlaying: isPlaying,
+            pause: playerModel.pause,
+            startPlaylist: () => playerModel.startPlaylist(
+              audios: audios,
+              listName: pageId,
+              index: index,
+            ),
+            resume: playerModel.resume,
+            selected: audioSelected,
+            audio: audio,
+            insertIntoQueue: playerModel.insertIntoQueue,
+            pageId: pageId,
+            libraryModel: libraryModel,
+            selectedColor: selectedColor,
+          );
+        },
       ),
     );
   }
