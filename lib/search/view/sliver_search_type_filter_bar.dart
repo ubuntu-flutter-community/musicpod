@@ -26,67 +26,51 @@ class SliverSearchTypeFilterBar extends StatelessWidget with WatchItMixin {
         watchPropertyValue((SearchModel m) => m.localSearchResult);
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
 
-    return SliverAppBar(
-      shape: const RoundedRectangleBorder(side: BorderSide.none),
-      elevation: 0,
-      backgroundColor: context.t.scaffoldBackgroundColor,
-      automaticallyImplyLeading: false,
-      pinned: true,
-      centerTitle: true,
-      titleSpacing: 0,
-      title: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (connectedHost == null)
-              const Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: RadioReconnectButton(),
-              )
-            else
-              YaruChoiceChipBar(
-                yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-                chipBackgroundColor: chipColor(theme),
-                selectedChipBackgroundColor: chipSelectionColor(theme, false),
-                borderColor: chipBorder(theme, false),
-                chipHeight: chipHeight,
-                clearOnSelect: false,
-                selectedFirst: false,
-                onSelected: (i) {
-                  searchModel.setSearchType(searchTypes.elementAt(i));
-                  searchModel.search(manualFilter: true);
-                },
-                labels: searchTypes
-                    .map(
-                      (e) => Text(
-                        getChipText(
-                          searchType: e,
-                          context: context,
-                          localSearchResult: localSearchResult,
-                          searchQuery: searchQuery,
-                        ),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (connectedHost == null)
+            const Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: RadioReconnectButton(),
+            )
+          else
+            YaruChoiceChipBar(
+              yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+              chipBackgroundColor: chipColor(theme),
+              selectedChipBackgroundColor: chipSelectionColor(theme, false),
+              borderColor: chipBorder(theme, false),
+              chipHeight: chipHeight,
+              clearOnSelect: false,
+              selectedFirst: false,
+              onSelected: (i) {
+                searchModel.setSearchType(searchTypes.elementAt(i));
+                searchModel.search(manualFilter: true);
+              },
+              labels: searchTypes
+                  .map(
+                    (e) => Text(
+                      getChipText(
+                        searchType: e,
+                        context: context,
+                        localSearchResult: localSearchResult,
+                        searchQuery: searchQuery,
                       ),
+                      style: chipTextStyle(theme),
+                    ),
+                  )
+                  .toList(),
+              isSelected: searchTypes.none((e) => e == searchType)
+                  ? List.generate(
+                      searchTypes.length,
+                      (index) => index == 0 ? true : false,
                     )
-                    .toList(),
-                isSelected: searchTypes.none((e) => e == searchType)
-                    ? List.generate(
-                        searchTypes.length,
-                        (index) => index == 0 ? true : false,
-                      )
-                    : searchTypes.map((e) => e == searchType).toList(),
-              ),
-          ],
-        ),
+                  : searchTypes.map((e) => e == searchType).toList(),
+            ),
+        ],
       ),
-      stretch: true,
-      onStretchTrigger: () async {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-          if (context.mounted) {
-            return searchModel.search();
-          }
-        });
-      },
     );
   }
 

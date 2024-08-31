@@ -72,7 +72,6 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
       resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
-        title: isMobile ? null : Text(pageId),
         actions: [
           Padding(
             padding: appBarSingleActionSpacing,

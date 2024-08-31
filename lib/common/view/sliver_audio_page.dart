@@ -61,7 +61,6 @@ class SliverAudioPage extends StatelessWidget {
       resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
-        title: isMobile ? null : Text(pageTitle ?? pageId),
         actions: [
           Padding(
             padding: appBarSingleActionSpacing,

@@ -63,136 +63,114 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
       fontWeight: FontWeight.w500,
     );
 
-    return SliverAppBar(
-      shape: const RoundedRectangleBorder(side: BorderSide.none),
-      elevation: 0,
-      backgroundColor: context.t.scaffoldBackgroundColor,
-      automaticallyImplyLeading: false,
-      pinned: true,
-      centerTitle: true,
-      titleSpacing: 0,
-      stretch: true,
-      onStretchTrigger: () async {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-          if (context.mounted) {
-            return searchModel.search();
-          }
-        });
-      },
-      title: Align(
-        alignment: Alignment.center,
-        child: SizedBox(
-          width: kSearchBarWidth,
-          child: Row(
-            children: [
-              if (usePodcastIndex)
-                Expanded(
-                  child: LanguageAutoComplete(
-                    contentPadding: countryPillPadding,
-                    fillColor: language != null
-                        ? fillColor
-                        : yaruStyled
-                            ? theme.dividerColor
-                            : null,
-                    filled: language != null,
-                    border: outlineInputBorder,
-                    style: style,
-                    isDense: true,
-                    width: width,
-                    height: height,
-                    value: language,
-                    favs: favLanguageCodes,
-                    addFav: (language) {
-                      if (language?.isoCode == null) return;
-                      libraryModel.addFavLanguageCode(language!.isoCode);
-                    },
-                    removeFav: (language) {
-                      if (language?.isoCode == null) return;
-                      libraryModel.removeFavLanguageCode(language!.isoCode);
-                    },
-                    onSelected: (language) {
-                      searchModel.setLanguage(language);
-                      if (language?.isoCode != null) {
-                        libraryModel.setLastLanguage(language!.isoCode);
-                      }
-                      searchModel.search();
-                    },
-                  ),
-                )
-              else
-                Expanded(
-                  child: CountryAutoComplete(
-                    contentPadding: countryPillPadding,
-                    fillColor: fillColor,
-                    filled: true,
-                    border: outlineInputBorder,
-                    style: style,
-                    isDense: true,
-                    width: width,
-                    height: height,
-                    countries: [
-                      ...[
-                        ...Country.values,
-                      ].where(
-                        (e) =>
-                            libraryModel.favCountryCodes.contains(e.code) ==
-                            true,
-                      ),
-                      ...[...Country.values].where(
-                        (e) =>
-                            libraryModel.favCountryCodes.contains(e.code) ==
-                            false,
-                      ),
-                    ]..remove(Country.none),
-                    onSelected: (country) {
-                      setCountry(country);
-                      searchModel.search();
-                    },
-                    value: country,
-                    addFav: (v) {
-                      if (country?.code == null) return;
-                      libraryModel.addFavCountryCode(v!.code);
-                    },
-                    removeFav: (v) {
-                      if (country?.code == null) return;
-                      libraryModel.removeFavCountryCode(v!.code);
-                    },
-                    favs: libraryModel.favCountryCodes,
-                  ),
-                ),
-              const SizedBox(
-                width: 10,
+    return SizedBox(
+      width: kSearchBarWidth,
+      child: Row(
+        children: [
+          if (usePodcastIndex)
+            Expanded(
+              child: LanguageAutoComplete(
+                contentPadding: countryPillPadding,
+                fillColor: language != null
+                    ? fillColor
+                    : yaruStyled
+                        ? theme.dividerColor
+                        : null,
+                filled: language != null,
+                border: outlineInputBorder,
+                style: style,
+                isDense: true,
+                width: width,
+                height: height,
+                value: language,
+                favs: favLanguageCodes,
+                addFav: (language) {
+                  if (language?.isoCode == null) return;
+                  libraryModel.addFavLanguageCode(language!.isoCode);
+                },
+                removeFav: (language) {
+                  if (language?.isoCode == null) return;
+                  libraryModel.removeFavLanguageCode(language!.isoCode);
+                },
+                onSelected: (language) {
+                  searchModel.setLanguage(language);
+                  if (language?.isoCode != null) {
+                    libraryModel.setLastLanguage(language!.isoCode);
+                  }
+                  searchModel.search();
+                },
               ),
-              Expanded(
-                child: PodcastGenreAutoComplete(
-                  contentPadding: countryPillPadding,
-                  fillColor: podcastGenre != PodcastGenre.all
-                      ? fillColor
-                      : yaruStyled
-                          ? theme.dividerColor
-                          : null,
-                  filled: podcastGenre != PodcastGenre.all,
-                  border: outlineInputBorder,
-                  style: style,
-                  isDense: true,
-                  width: width,
-                  height: height,
-                  genres: genres,
-                  onSelected: (podcastGenre) {
-                    if (podcastGenre != null) {
-                      setPodcastGenre(podcastGenre);
-                    }
-
-                    searchModel.search();
-                  },
-                  value: podcastGenre,
-                  addFav: (v) {},
-                  removeFav: (v) {},
-                ),
+            )
+          else
+            Expanded(
+              child: CountryAutoComplete(
+                contentPadding: countryPillPadding,
+                fillColor: fillColor,
+                filled: true,
+                border: outlineInputBorder,
+                style: style,
+                isDense: true,
+                width: width,
+                height: height,
+                countries: [
+                  ...[
+                    ...Country.values,
+                  ].where(
+                    (e) =>
+                        libraryModel.favCountryCodes.contains(e.code) == true,
+                  ),
+                  ...[...Country.values].where(
+                    (e) =>
+                        libraryModel.favCountryCodes.contains(e.code) == false,
+                  ),
+                ]..remove(Country.none),
+                onSelected: (country) {
+                  setCountry(country);
+                  searchModel.search();
+                },
+                value: country,
+                addFav: (v) {
+                  if (country?.code == null) return;
+                  libraryModel.addFavCountryCode(v!.code);
+                },
+                removeFav: (v) {
+                  if (country?.code == null) return;
+                  libraryModel.removeFavCountryCode(v!.code);
+                },
+                favs: libraryModel.favCountryCodes,
               ),
-            ],
+            ),
+          const SizedBox(
+            width: 10,
           ),
-        ),
+          Expanded(
+            child: PodcastGenreAutoComplete(
+              contentPadding: countryPillPadding,
+              fillColor: podcastGenre != PodcastGenre.all
+                  ? fillColor
+                  : yaruStyled
+                      ? theme.dividerColor
+                      : null,
+              filled: podcastGenre != PodcastGenre.all,
+              border: outlineInputBorder,
+              style: style,
+              isDense: true,
+              width: width,
+              height: height,
+              genres: genres,
+              onSelected: (podcastGenre) {
+                if (podcastGenre != null) {
+                  setPodcastGenre(podcastGenre);
+                }
+
+                searchModel.search();
+              },
+              value: podcastGenre,
+              addFav: (v) {},
+              removeFav: (v) {},
+            ),
+          ),
+        ],
       ),
     );
   }
