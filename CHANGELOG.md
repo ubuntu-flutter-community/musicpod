@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.10.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.9.1...v1.10.0) (2024-08-31)
+
+
+### Features
+
+* improve android styling and sizes ([#902](https://github.com/ubuntu-flutter-community/musicpod/issues/902)) ([87d0147](https://github.com/ubuntu-flutter-community/musicpod/commit/87d0147ad213a33899ac774655e3e6ac926a2b1c))
+
+
+### Bug Fixes
+
+* align control panel sizes and padding, correctly load remoteimageurl ([#905](https://github.com/ubuntu-flutter-community/musicpod/issues/905)) ([549f352](https://github.com/ubuntu-flutter-community/musicpod/commit/549f35235f970e225e5bea2828a88f8d998a479d))
+* android downloads and local collection path + design adjustments ([#904](https://github.com/ubuntu-flutter-community/musicpod/issues/904)) ([3ac49fb](https://github.com/ubuntu-flutter-community/musicpod/commit/3ac49fb0c90296e4d998e8c8d12fb4390bfc1f85))
+* **Android:** round icons, darker dark theme, improved podcast tiles ([#906](https://github.com/ubuntu-flutter-community/musicpod/issues/906)) ([282685a](https://github.com/ubuntu-flutter-community/musicpod/commit/282685a8f37bd8f0e6b912b6a8527f8cc0b1f781))
+* icy image double loading ([#903](https://github.com/ubuntu-flutter-community/musicpod/issues/903)) ([df7b394](https://github.com/ubuntu-flutter-community/musicpod/commit/df7b3948d0a033d79d5c98d026da81bb7ce12d2e))
+* yaru.dart colors regression ([#900](https://github.com/ubuntu-flutter-community/musicpod/issues/900)) ([1b4efb3](https://github.com/ubuntu-flutter-community/musicpod/commit/1b4efb306fb05883708e09a0ace9e9610859bf81))
+
 ## [1.9.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.9.0...v1.9.1) (2024-08-25)
 
 
