@@ -74,7 +74,7 @@ class PodcastAudioTile extends StatelessWidget {
                 startPlaylist: startPlaylist,
                 removeUpdate: removeUpdate,
               ),
-              const SizedBox(width: 25),
+              SizedBox(width: isMobile ? 15 : 25),
               Expanded(
                 child: _Center(
                   selected: selected,
@@ -90,10 +90,12 @@ class PodcastAudioTile extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Padding(
-          padding: EdgeInsets.only(
-            left: (avatarIconRadius * 2) + 30,
-            right: 60,
-          ),
+          padding: isMobile
+              ? const EdgeInsets.symmetric(horizontal: 10)
+              : EdgeInsets.only(
+                  left: (avatarIconRadius * 2) + 30,
+                  right: 60,
+                ),
           child: Column(
             children: [
               _Description(
@@ -252,8 +254,7 @@ class _Description extends StatelessWidget {
         );
       },
       child: _createHtml(
-        color:
-            theme.colorScheme.onSurface.scale(lightness: -0.2, saturation: -1),
+        color: theme.colorScheme.onSurface,
         maxLines: 5,
         paddings: HtmlPaddings.all(5),
       ),

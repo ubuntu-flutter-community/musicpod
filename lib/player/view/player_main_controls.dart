@@ -6,6 +6,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../player_model.dart';
 import 'play_button.dart';
@@ -62,9 +63,10 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
       _flex,
       CircleAvatar(
         radius: avatarIconRadius,
-        backgroundColor: avatarColor ?? theme.colorScheme.inverseSurface,
+        backgroundColor:
+            avatarColor ?? (theme.isLight ? Colors.black : Colors.white),
         child: PlayButton(
-          iconColor: iconColor ?? theme.colorScheme.onInverseSurface,
+          iconColor: iconColor ?? (theme.isLight ? Colors.white : Colors.black),
           active: active,
         ),
       ),

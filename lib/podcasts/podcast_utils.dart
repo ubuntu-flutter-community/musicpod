@@ -99,7 +99,7 @@ Future<void> searchAndPushPodcastPage({
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(context.l10n.podcastFeedLoadingTimeout),
+              Expanded(child: Text(context.l10n.podcastFeedLoadingTimeout)),
               SizedBox(
                 height: iconSize,
                 width: iconSize,

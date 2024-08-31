@@ -1073,11 +1073,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: acf9bf1e05a110d890e83ae333f6822299fbbb5e
-      resolved-ref: acf9bf1e05a110d890e83ae333f6822299fbbb5e
+      ref: a34d30b3376cfdb161e2cbf40631941766136239
+      resolved-ref: a34d30b3376cfdb161e2cbf40631941766136239
       url: "https://github.com/ubuntu-flutter-community/phoenix_theme"
     source: git
-    version: "1.0.0"
+    version: "1.0.1"
   pixel_snap:
     dependency: transitive
     description:
