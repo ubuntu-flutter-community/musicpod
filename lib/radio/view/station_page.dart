@@ -41,7 +41,6 @@ class StationPage extends StatelessWidget with WatchItMixin {
       resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
-        title: isMobile ? null : Text(station.title ?? station.url ?? ''),
         actions: [
           Padding(
             padding: appBarSingleActionSpacing,

@@ -482,6 +482,7 @@ class PlayerService {
 
     if (playerState?.audio != null) {
       _setAudio(playerState!.audio!);
+      _setRemoteImageUrl(playerState.audio!.imageUrl);
 
       if (playerState.duration != null) {
         setDuration(playerState.duration!.parsedDuration);
@@ -789,7 +790,7 @@ class PlayerService {
 
   Future<void> _writePlayerState() async {
     final playerState = PlayerState(
-      audio: _audio,
+      audio: _audio?.copyWith(imageUrl: _remoteImageUrl),
       duration: _duration?.toString(),
       position: _position?.toString(),
       queue:

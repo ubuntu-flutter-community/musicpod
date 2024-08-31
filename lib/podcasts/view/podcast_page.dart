@@ -73,7 +73,6 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
         adaptive: true,
-        title: isMobile ? null : Text(title),
         actions: [
           Padding(
             padding: appBarSingleActionSpacing,

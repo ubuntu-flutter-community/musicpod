@@ -375,10 +375,10 @@ class Iconz {
           ? CupertinoIcons.clear
           : Icons.clear;
   IconData get viewMore => yaruStyled
-      ? YaruIcons.view_more_horizontal
+      ? YaruIcons.view_more
       : appleStyled
-          ? CupertinoIcons.ellipsis
-          : Icons.more_horiz;
+          ? CupertinoIcons.ellipsis_vertical
+          : Icons.more_vert;
   IconData? get close => yaruStyled
       ? YaruIcons.window_close
       : appleStyled

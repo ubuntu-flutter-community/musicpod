@@ -9,6 +9,7 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/search_button.dart';
+import '../../common/view/sliver_filter_app_bar.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -82,20 +83,15 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
         builder: (context, constraints) {
           return CustomScrollView(
             slivers: [
-              SliverPadding(
+              SliverFilterAppBar(
                 padding: getAdaptiveHorizontalPadding(constraints: constraints)
-                    .copyWith(bottom: 5),
-                sliver: SliverAppBar(
-                  shape: const RoundedRectangleBorder(side: BorderSide.none),
-                  elevation: 0,
-                  backgroundColor: context.t.scaffoldBackgroundColor,
-                  automaticallyImplyLeading: false,
-                  pinned: true,
-                  centerTitle: true,
-                  titleSpacing: 0,
-                  stretch: true,
-                  title: const LocalAudioControlPanel(),
+                    .copyWith(
+                  bottom: filterPanelPadding.bottom,
+                  left: filterPanelPadding.left,
+                  top: filterPanelPadding.top,
+                  right: filterPanelPadding.right,
                 ),
+                title: const LocalAudioControlPanel(),
               ),
               SliverPadding(
                 padding: getAdaptiveHorizontalPadding(constraints: constraints),

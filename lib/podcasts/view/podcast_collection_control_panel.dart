@@ -35,9 +35,13 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
       clearOnSelect: false,
       selectedFirst: false,
       labels: [
-        Text(context.l10n.newEpisodes),
+        Text(
+          context.l10n.newEpisodes,
+          style: chipTextStyle(theme),
+        ),
         Text(
           context.l10n.downloadsOnly,
+          style: chipTextStyle(theme),
         ),
       ],
       isSelected: [

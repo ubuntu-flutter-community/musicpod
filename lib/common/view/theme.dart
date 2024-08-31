@@ -208,6 +208,9 @@ Color? chipBorder(ThemeData theme, bool loading) {
   return yaruStyled ? (loading ? null : Colors.transparent) : null;
 }
 
+TextStyle chipTextStyle(ThemeData theme) =>
+    TextStyle(color: theme.colorScheme.onSurface);
+
 Color? chipSelectionColor(ThemeData theme, bool loading) {
   return yaruStyled ? (loading ? theme.colorScheme.outline : null) : null;
 }
@@ -216,9 +219,18 @@ double get likeButtonWidth => yaruStyled ? 62 : 70;
 
 double get progressStrokeWidth => 3.0;
 
-double get avatarIconRadius => (yaruStyled ? kYaruTitleBarItemHeight : 38) / 2;
+double get avatarIconRadius =>
+    (yaruStyled
+        ? kYaruTitleBarItemHeight
+        : isMobile
+            ? 42
+            : 38) /
+    2;
 
 double get bigPlayButtonRadius => yaruStyled ? 22 : 23;
+
+EdgeInsets get filterPanelPadding =>
+    EdgeInsets.only(top: isMobile ? 10 : 0, bottom: 10);
 
 EdgeInsets get bigPlayButtonPadding =>
     EdgeInsets.symmetric(horizontal: yaruStyled ? 2.5 : 5);

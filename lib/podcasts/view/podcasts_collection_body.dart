@@ -79,15 +79,15 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Align(
-          alignment: Alignment.center,
-          child: Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: PodcastCollectionControlPanel(),
+        // TODO: port to sliver to get rid of this padding drama
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: Container(
+            alignment: Alignment.center,
+            height: context.t.appBarTheme.toolbarHeight,
+            margin: filterPanelPadding,
+            child: const PodcastCollectionControlPanel(),
           ),
-        ),
-        const SizedBox(
-          height: 15,
         ),
         if (loading)
           Expanded(child: LoadingGrid(limit: subsLength))

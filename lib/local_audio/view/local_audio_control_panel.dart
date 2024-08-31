@@ -26,7 +26,12 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
         selectedFirst: false,
         clearOnSelect: false,
         labels: LocalAudioView.values
-            .map((e) => Text(e.localize(context.l10n)))
+            .map(
+              (e) => Text(
+                e.localize(context.l10n),
+                style: chipTextStyle(theme),
+              ),
+            )
             .toList(),
         isSelected: LocalAudioView.values
             .map((e) => e == LocalAudioView.values[index])

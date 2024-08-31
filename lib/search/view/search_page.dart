@@ -7,6 +7,7 @@ import '../../common/view/adaptive_container.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/search_button.dart';
+import '../../common/view/sliver_filter_app_bar.dart';
 import '../../common/view/theme.dart';
 import '../../library/library_model.dart';
 import '../search_model.dart';
@@ -55,13 +56,23 @@ class SearchPage extends StatelessWidget with WatchItMixin {
         builder: (context, constraints) {
           return CustomScrollView(
             slivers: [
-              SliverPadding(
+              SliverFilterAppBar(
                 padding: getAdaptiveHorizontalPadding(constraints: constraints)
                     .copyWith(
-                  bottom: 5,
-                  top: isMobile ? 10 : 0,
+                  bottom: filterPanelPadding.bottom,
+                  left: filterPanelPadding.left,
+                  top: filterPanelPadding.top,
+                  right: filterPanelPadding.right,
                 ),
-                sliver: switch (audioType) {
+                onStretchTrigger: () async {
+                  WidgetsBinding.instance
+                      .addPostFrameCallback((timeStamp) async {
+                    if (context.mounted) {
+                      return di<SearchModel>().search();
+                    }
+                  });
+                },
+                title: switch (audioType) {
                   AudioType.podcast => const SliverPodcastFilterBar(),
                   _ => const SliverSearchTypeFilterBar(),
                 },

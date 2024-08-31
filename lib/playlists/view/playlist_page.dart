@@ -87,7 +87,6 @@ class PlaylistPage extends StatelessWidget {
         resizeToAvoidBottomInset: isMobile ? false : null,
         appBar: HeaderBar(
           adaptive: true,
-          title: Text(playlist.key),
           actions: [
             Padding(
               padding: appBarSingleActionSpacing,
