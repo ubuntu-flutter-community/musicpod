@@ -790,7 +790,7 @@ class PlayerService {
 
   Future<void> _writePlayerState() async {
     final playerState = PlayerState(
-      audio: _audio?.copyWith(imageUrl: _remoteImageUrl),
+      audio: _audio,
       duration: _duration?.toString(),
       position: _position?.toString(),
       queue:

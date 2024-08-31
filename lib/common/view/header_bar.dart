@@ -66,10 +66,11 @@ class HeaderBar extends StatelessWidget
 
     if (isMobile) {
       return AppBar(
+        backgroundColor: backgroundColor,
         titleSpacing: titleSpacing,
         centerTitle: true,
         leading: leading,
-        title: title,
+        title: title ?? const Text(''),
         actions: actions,
         foregroundColor: foregroundColor,
       );
@@ -99,7 +100,7 @@ class HeaderBar extends StatelessWidget
           ...?actions,
         ],
         leading: !context.showMasterPanel && Platform.isMacOS ? null : leading,
-        title: title,
+        title: title ?? const Text(''),
         border: BorderSide.none,
         backgroundColor:
             backgroundColor ?? context.theme.scaffoldBackgroundColor,
@@ -203,10 +204,12 @@ class SidebarButton extends StatelessWidget {
             masterScaffoldKey.currentState?.openDrawer();
           }
         },
-        icon: Icon(
-          Iconz().sidebar,
-          size: iconSize,
-        ),
+        icon: Iconz().sidebar == Iconz().materialSidebar
+            ? Transform.flip(flipX: true, child: Icon(Iconz().materialSidebar))
+            : Icon(
+                Iconz().sidebar,
+                size: iconSize,
+              ),
       ),
     );
   }

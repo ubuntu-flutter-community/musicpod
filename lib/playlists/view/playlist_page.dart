@@ -382,7 +382,7 @@ class _PlaylistControlPanel extends StatelessWidget with WatchItMixin {
             isSelected: allowReorder,
             onPressed: () =>
                 di<LocalAudioModel>().setAllowReorder(!allowReorder),
-            icon: Icon(Iconz().reorder),
+            icon: Icon(Iconz().move),
           ),
         ],
       ),

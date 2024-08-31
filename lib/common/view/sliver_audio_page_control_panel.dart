@@ -8,10 +8,12 @@ class SliverAudioPageControlPanel extends StatelessWidget {
     super.key,
     required this.controlPanel,
     this.onStretchTrigger,
+    this.backgroundColor,
   });
 
   final Widget controlPanel;
   final Future<void> Function()? onStretchTrigger;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class SliverAudioPageControlPanel extends StatelessWidget {
       sliver: SliverAppBar(
         shape: const RoundedRectangleBorder(side: BorderSide.none),
         elevation: 0,
-        backgroundColor: context.t.scaffoldBackgroundColor,
+        backgroundColor: backgroundColor ?? context.t.scaffoldBackgroundColor,
         automaticallyImplyLeading: false,
         pinned: true,
         centerTitle: true,

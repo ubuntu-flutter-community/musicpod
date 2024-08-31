@@ -202,7 +202,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
       pageId: kSearchPageId,
     ),
     MasterItem(
-      titleBuilder: (context) => Text(context.l10n.localAudio),
+      titleBuilder: (context) => Text(context.l10n.local),
       pageBuilder: (_) => const LocalAudioPage(),
       iconBuilder: (selected) => LocalAudioPageIcon(
         selected: selected,
