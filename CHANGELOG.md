@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.10.0...v1.10.1) (2024-08-31)
+
+
+### Bug Fixes
+
+* desktop dark theme ([#907](https://github.com/ubuntu-flutter-community/musicpod/issues/907)) ([975828f](https://github.com/ubuntu-flutter-community/musicpod/commit/975828f7d4336eed65178ff130b907b258a82343))
+
 ## [1.10.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.9.1...v1.10.0) (2024-08-31)
 
 
