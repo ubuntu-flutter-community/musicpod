@@ -1073,8 +1073,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: a34d30b3376cfdb161e2cbf40631941766136239
-      resolved-ref: a34d30b3376cfdb161e2cbf40631941766136239
+      ref: fe7b369cdf03a15c735c866584a251da68f3a716
+      resolved-ref: fe7b369cdf03a15c735c866584a251da68f3a716
       url: "https://github.com/ubuntu-flutter-community/phoenix_theme"
     source: git
     version: "1.0.1"
