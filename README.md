@@ -26,6 +26,12 @@ MusicPod is a local music, radio, television and podcast player for Linux Deskto
 
 ## Credits
 
+### AppIcon
+
+The app icon has been made by [Stuart Jaggers](https://github.com/ubuntujaggers), thank you very much Stuart!
+
+### Libraries used
+
 Thanks to all the [MPV](https://github.com/mpv-player/mpv) contributors!
 
 Thank you [@amugofjava](https://github.com/amugofjava) for creating the very easy to use and reliable [podcast_search](https://github.com/amugofjava/podcast_search)!
