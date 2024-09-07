@@ -243,7 +243,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
         titleBuilder: (context) => Text(playlist.key),
         subtitleBuilder: (context) => Text(context.l10n.playlist),
         pageId: playlist.key,
-        pageBuilder: (_) => PlaylistPage(playlist: playlist),
+        pageBuilder: (_) => PlaylistPage(pageId: playlist.key),
         iconBuilder: (selected) => SideBarFallBackImage(
           color: getAlphabetColor(playlist.key),
           child: Icon(

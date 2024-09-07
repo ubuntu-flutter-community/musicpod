@@ -98,11 +98,19 @@ class AppModel extends SafeChangeNotifier {
   }
 
   Future<List<Contributor>> getContributors() async {
-    return _gitHub.repositories
+    final list = await _gitHub.repositories
         .listContributors(
           RepositorySlug.full(kGitHubShortLink),
         )
         .where((c) => c.type == 'User')
         .toList();
+    return [
+      ...list,
+      Contributor(
+        login: 'ubuntujaggers',
+        htmlUrl: 'https://github.com/ubuntujaggers',
+        avatarUrl: 'https://avatars.githubusercontent.com/u/38893390?v=4',
+      ),
+    ];
   }
 }
