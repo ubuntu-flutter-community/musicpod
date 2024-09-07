@@ -37,18 +37,23 @@ import '../../search/search_type.dart';
 import 'manual_add_dialog.dart';
 import 'playlst_add_audios_dialog.dart';
 
-class PlaylistPage extends StatelessWidget {
+class PlaylistPage extends StatelessWidget with WatchItMixin {
   const PlaylistPage({
     super.key,
-    required this.playlist,
+    required this.pageId,
   });
 
-  final MapEntry<String, List<Audio>> playlist;
+  final String pageId;
 
   @override
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
     final libraryModel = di<LibraryModel>();
+    final playlist = libraryModel.getPlaylistById(pageId);
+    // This is needed to be notified about both size changes and also reordering
+    watchPropertyValue((LibraryModel m) => m.playlists[pageId]?.length);
+    watchPropertyValue((LibraryModel m) => m.playlists[pageId]?.hashCode);
+
     return DropRegion(
       formats: Formats.standardFormats,
       hitTestBehavior: HitTestBehavior.opaque,
@@ -56,7 +61,7 @@ class PlaylistPage extends StatelessWidget {
         Future.delayed(
           const Duration(milliseconds: 300),
         ).then(
-          (_) => libraryModel.updatePlaylist(playlist.key, playlist.value),
+          (_) => libraryModel.updatePlaylist(pageId, playlist ?? []),
         );
       },
       onPerformDrop: (e) async {
@@ -69,7 +74,7 @@ class PlaylistPage extends StatelessWidget {
               if (file.isValidMedia) {
                 final data = await readMetadata(file, getImage: true);
                 var audio = Audio.fromMetadata(path: file.path, data: data);
-                playlist.value.add(audio);
+                playlist?.add(audio);
               }
             },
             onError: (_) {},
@@ -129,28 +134,31 @@ class PlaylistPage extends StatelessWidget {
               pageId: artist,
             );
           },
-          image: PlaylistHeaderImage(playlist: playlist),
-          audios: playlist.value,
-          pageId: playlist.key,
+          image: _PlaylistHeaderImage(
+            playlist: playlist ?? [],
+            pageId: pageId,
+          ),
+          audios: playlist ?? [],
+          pageId: pageId,
         ),
       ),
     );
   }
 }
 
-class PlaylistHeaderImage extends StatelessWidget {
-  const PlaylistHeaderImage({
-    super.key,
+class _PlaylistHeaderImage extends StatelessWidget {
+  const _PlaylistHeaderImage({
     required this.playlist,
+    required this.pageId,
   });
 
-  final MapEntry<String, List<Audio>> playlist;
+  final String pageId;
+  final List<Audio> playlist;
 
   @override
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
-    final playlistImages =
-        model.findLocalCovers(audios: playlist.value, limit: 16);
+    final playlistImages = model.findLocalCovers(audios: playlist, limit: 16);
     final length = playlistImages == null ? 0 : playlistImages.take(16).length;
 
     final padding = length == 1 ? 0.0 : 8.0;
@@ -199,7 +207,7 @@ class PlaylistHeaderImage extends StatelessWidget {
     }
 
     return FallBackHeaderImage(
-      color: getAlphabetColor(playlist.key),
+      color: getAlphabetColor(pageId),
       child: image,
     );
   }
@@ -229,10 +237,6 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
     final libraryModel = di<LibraryModel>();
     final playerModel = di<PlayerModel>();
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
-
-    watchPropertyValue(
-      (LibraryModel m) => m.playlists[pageId]?.length,
-    );
 
     final audioPageHeader = AudioPageHeader(
       title: pageId,
@@ -280,7 +284,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                         key: ValueKey(audio.path ?? audio.url),
                         isPlayerPlaying: isPlaying,
                         pause: playerModel.pause,
-                        startPlaylist: () => playerModel.startPlaylist(
+                        onTap: () => playerModel.startPlaylist(
                           audios: audios,
                           listName: pageId,
                           index: index,

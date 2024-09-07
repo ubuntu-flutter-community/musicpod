@@ -45,7 +45,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
             onSubTitleTap: onSubTitleTab,
             isPlayerPlaying: isPlaying,
             pause: playerModel.pause,
-            startPlaylist: () => playerModel.startPlaylist(
+            onTap: () => playerModel.startPlaylist(
               audios: audios,
               listName: pageId,
               index: index,

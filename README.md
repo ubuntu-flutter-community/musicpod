@@ -30,6 +30,10 @@ MusicPod is a local music, radio, television and podcast player for Linux Deskto
 
 The app icon has been made by [Stuart Jaggers](https://github.com/ubuntujaggers), thank you very much Stuart!
 
+### Flatpak
+
+Thanks [TheShadowOfHassen](https://github.com/TheShadowOfHassen) for packaging MusicPod as a  [Flatpak](https://flathub.org/apps/org.feichtmeier.Musicpod)!
+
 ### Libraries used
 
 Thanks to all the [MPV](https://github.com/mpv-player/mpv) contributors!

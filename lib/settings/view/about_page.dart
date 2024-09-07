@@ -6,6 +6,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../common/view/progress.dart';
+import '../../common/view/safe_network_image.dart';
 import '../../common/view/tapable_text.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -32,6 +33,7 @@ class _AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    const radius = Radius.circular(8);
 
     final linkStyle = theme.textTheme.bodyLarge
         ?.copyWith(color: Colors.lightBlue, overflow: TextOverflow.visible);
@@ -135,29 +137,41 @@ class _AboutPageState extends State<AboutPage> {
                               gridDelegate:
                                   const SliverGridDelegateWithMaxCrossAxisExtent(
                                 maxCrossAxisExtent: _kTileSize,
-                                mainAxisExtent: _kTileSize,
-                                mainAxisSpacing: 10,
-                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 5,
+                                crossAxisSpacing: 5,
                               ),
                               itemCount: snapshot.data!.length,
                               itemBuilder: (context, index) {
                                 final e = snapshot.data!.elementAt(index);
-                                return InkWell(
-                                  borderRadius: BorderRadius.circular(100),
-                                  onTap: e.htmlUrl == null
-                                      ? null
-                                      : () => launchUrl(Uri.parse(e.htmlUrl!)),
-                                  child: CircleAvatar(
-                                    backgroundImage: e.avatarUrl != null
-                                        ? NetworkImage(
-                                            e.avatarUrl!,
-                                          )
-                                        : null,
-                                    child: e.avatarUrl == null
-                                        ? const YaruPlaceholderIcon(
+                                return Tooltip(
+                                  message: e.login,
+                                  child: YaruBanner(
+                                    padding: EdgeInsets.zero,
+                                    onTap: e.htmlUrl == null
+                                        ? null
+                                        : () =>
+                                            launchUrl(Uri.parse(e.htmlUrl!)),
+                                    child: SizedBox.square(
+                                      dimension: _kTileSize,
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            const BorderRadius.all(radius),
+                                        child: SafeNetworkImage(
+                                          fit: BoxFit.cover,
+                                          url: e.avatarUrl,
+                                          fallBackIcon:
+                                              const YaruPlaceholderIcon(
+                                            borderRadius:
+                                                BorderRadiusDirectional
+                                                    .vertical(
+                                              top: radius,
+                                              bottom: radius,
+                                            ),
                                             size: Size.square(_kTileSize),
-                                          )
-                                        : null,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 );
                               },

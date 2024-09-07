@@ -28,7 +28,7 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
     required this.pause,
     required this.resume,
     this.onSubTitleTap,
-    this.startPlaylist,
+    this.onTap,
     required this.audioPageType,
     required this.showLeading,
     this.selectedColor,
@@ -41,7 +41,7 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
 
   final bool isPlayerPlaying;
   final Future<void> Function() resume;
-  final void Function()? startPlaylist;
+  final void Function()? onTap;
   final void Function() pause;
   final void Function(String text)? onSubTitleTap;
   final LibraryModel libraryModel;
@@ -105,7 +105,7 @@ class _AudioTileState extends State<AudioTile> {
               widget.resume();
             }
           } else {
-            widget.startPlaylist?.call();
+            widget.onTap?.call();
           }
         },
         title: Padding(
