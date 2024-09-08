@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.11.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.10.1...v1.11.0) (2024-09-08)
+
+
+### Features
+
+* new icon ([#910](https://github.com/ubuntu-flutter-community/musicpod/issues/910)) ([a2f69ba](https://github.com/ubuntu-flutter-community/musicpod/commit/a2f69ba61652e6244f8aa6997aa7c6c219e0e053))
+
+
+### Bug Fixes
+
+* add new icon for windows and macos ([#914](https://github.com/ubuntu-flutter-community/musicpod/issues/914)) ([94a5c81](https://github.com/ubuntu-flutter-community/musicpod/commit/94a5c818d6d5737b2d0c68054027d084f0776472))
+* new icon for flatpackers ([#912](https://github.com/ubuntu-flutter-community/musicpod/issues/912)) ([06cf7d3](https://github.com/ubuntu-flutter-community/musicpod/commit/06cf7d3452345a0ad9148a1f747912885ecdb7ae))
+* playlist reordering and update credits with @TheShadowOfHassen and [@ubuntujaggers](https://github.com/ubuntujaggers) ([#913](https://github.com/ubuntu-flutter-community/musicpod/issues/913)) ([50399d3](https://github.com/ubuntu-flutter-community/musicpod/commit/50399d360dd9b021529ab66427e6443ed15412a7))
+
 ## [1.10.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.10.0...v1.10.1) (2024-08-31)
 
 
