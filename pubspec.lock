@@ -1202,10 +1202,10 @@ packages:
     dependency: "direct main"
     description:
       name: safe_change_notifier
-      sha256: "8d0645ec2706f580912c38de488439ddb491be48247826927b7bc2e54ea8f7af"
+      sha256: e7cce266bfede647355866fa3bd054feda57c220d2383f4203f28d4dcdb3b82e
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.2"
+    version: "0.4.0"
   safe_local_storage:
     dependency: transitive
     description:
