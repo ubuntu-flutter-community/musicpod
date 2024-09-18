@@ -59,10 +59,10 @@ extension CountryX on Country {
         Country.colombia => l10n.regionColombia,
         Country.comoros => l10n.regionComoros,
         Country.congo => l10n.regionCongo,
-        Country.congoDemocraticRepublicof =>
+        Country.congoDemocraticRepublicOf =>
           l10n.regionCongodemocraticrepublicof,
         Country.cookIslands => l10n.regionCookislands,
-        Country.costarica => l10n.regionCostarica,
+        Country.costaRica => l10n.regionCostarica,
         Country.coteDivoire => l10n.regionCotedivoire,
         Country.croatia => l10n.regionCroatia,
         Country.cuba => l10n.regionCuba,

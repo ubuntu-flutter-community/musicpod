@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
@@ -54,38 +55,51 @@ class SearchPage extends StatelessWidget with WatchItMixin {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          return CustomScrollView(
-            slivers: [
-              SliverFilterAppBar(
-                padding: getAdaptiveHorizontalPadding(constraints: constraints)
-                    .copyWith(
-                  bottom: filterPanelPadding.bottom,
-                  left: filterPanelPadding.left,
-                  top: filterPanelPadding.top,
-                  right: filterPanelPadding.right,
+          return NotificationListener<UserScrollNotification>(
+            onNotification: (notification) {
+              if (notification.direction == ScrollDirection.reverse &&
+                  audioType == AudioType.podcast) {
+                di<SearchModel>()
+                  ..incrementPodcastLimit(8)
+                  ..search();
+              }
+              return true;
+            },
+            child: CustomScrollView(
+              slivers: [
+                SliverFilterAppBar(
+                  padding:
+                      getAdaptiveHorizontalPadding(constraints: constraints)
+                          .copyWith(
+                    bottom: filterPanelPadding.bottom,
+                    left: filterPanelPadding.left,
+                    top: filterPanelPadding.top,
+                    right: filterPanelPadding.right,
+                  ),
+                  onStretchTrigger: () async {
+                    WidgetsBinding.instance
+                        .addPostFrameCallback((timeStamp) async {
+                      if (context.mounted) {
+                        return di<SearchModel>().search();
+                      }
+                    });
+                  },
+                  title: switch (audioType) {
+                    AudioType.podcast => const SliverPodcastFilterBar(),
+                    _ => const SliverSearchTypeFilterBar(),
+                  },
                 ),
-                onStretchTrigger: () async {
-                  WidgetsBinding.instance
-                      .addPostFrameCallback((timeStamp) async {
-                    if (context.mounted) {
-                      return di<SearchModel>().search();
-                    }
-                  });
-                },
-                title: switch (audioType) {
-                  AudioType.podcast => const SliverPodcastFilterBar(),
-                  _ => const SliverSearchTypeFilterBar(),
-                },
-              ),
-              SliverPadding(
-                padding: getAdaptiveHorizontalPadding(constraints: constraints),
-                sliver: switch (audioType) {
-                  AudioType.radio => const SliverRadioSearchResults(),
-                  AudioType.podcast => const SliverPodcastSearchResults(),
-                  AudioType.local => const SliverLocalSearchResult(),
-                },
-              ),
-            ],
+                SliverPadding(
+                  padding:
+                      getAdaptiveHorizontalPadding(constraints: constraints),
+                  sliver: switch (audioType) {
+                    AudioType.radio => const SliverRadioSearchResults(),
+                    AudioType.podcast => const SliverPodcastSearchResults(),
+                    AudioType.local => const SliverLocalSearchResult(),
+                  },
+                ),
+              ],
+            ),
           );
         },
       ),

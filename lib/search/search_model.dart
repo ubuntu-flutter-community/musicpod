@@ -68,6 +68,7 @@ class SearchModel extends SafeChangeNotifier {
   String? get searchQuery => _searchQuery;
   void setSearchQuery(String? value) {
     if (value == _searchQuery) return;
+    _podcastLimit = _podcastDefaultLimit;
     _searchQuery = value;
     notifyListeners();
   }
@@ -142,7 +143,8 @@ class SearchModel extends SafeChangeNotifier {
     return _localAudioService.search(_searchQuery);
   }
 
-  int _podcastLimit = 30;
+  static const _podcastDefaultLimit = 32;
+  int _podcastLimit = _podcastDefaultLimit;
   void incrementPodcastLimit(int value) => _podcastLimit += value;
 
   bool loading = false;

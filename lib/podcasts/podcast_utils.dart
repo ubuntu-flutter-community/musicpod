@@ -118,29 +118,27 @@ Future<List<Audio>> findEpisodes({
   String? itemImageUrl,
   String? genre,
 }) async {
-  final episodes = <Audio>[];
   final Podcast? podcast = await compute(loadPodcast, feedUrl);
+  final episodes = podcast?.episodes
+          .where((e) => e.contentUrl != null)
+          .map(
+            (e) => Audio.fromPodcast(
+              episode: e,
+              podcast: podcast,
+              itemImageUrl: itemImageUrl,
+              genre: genre,
+            ),
+          )
+          .toList() ??
+      <Audio>[];
 
-  if (podcast?.episodes.isNotEmpty == true) {
-    for (var episode in podcast?.episodes ?? []) {
-      if (episode.contentUrl != null) {
-        final audio = Audio.fromPodcast(
-          episode: episode,
-          podcast: podcast,
-          itemImageUrl: itemImageUrl,
-          genre: genre,
-        );
-        episodes.add(audio);
-      }
-    }
-  }
-  final sortedEpisodes = episodes.toList();
   sortListByAudioFilter(
     audioFilter: AudioFilter.year,
-    audios: sortedEpisodes,
+    audios: episodes,
     descending: true,
   );
-  return List<Audio>.from(sortedEpisodes);
+
+  return episodes;
 }
 
 Future<Podcast?> loadPodcast(String url) async {

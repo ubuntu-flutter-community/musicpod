@@ -41,6 +41,7 @@ class PodcastService {
     }
   }
 
+  String? _previousQuery;
   Future<SearchResult?> search({
     String? searchQuery,
     PodcastGenre podcastGenre = PodcastGenre.all,
@@ -49,7 +50,6 @@ class PodcastService {
     int limit = 10,
   }) async {
     SearchResult? result;
-    String? error;
     try {
       if (searchQuery == null || searchQuery.isEmpty == true) {
         result = await _search?.charts(
@@ -70,16 +70,20 @@ class PodcastService {
           limit: limit,
         );
       }
-    } catch (e) {
-      error = e.toString();
+    } catch (_) {
+      return _searchResult;
     }
 
-    if (result != null && result.successful) {
+    if (result != null &&
+        result.successful &&
+        (searchQuery == null ||
+            _previousQuery != searchQuery ||
+            (_previousQuery == searchQuery &&
+                _searchResult?.items.isNotEmpty == true))) {
       _searchResult = result;
-    } else {
-      _searchResult =
-          SearchResult.fromError(lastError: error ?? 'Something went wrong');
     }
+    _previousQuery = searchQuery;
+
     return _searchResult;
   }
 
