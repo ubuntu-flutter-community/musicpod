@@ -387,10 +387,10 @@ packages:
     dependency: "direct main"
     description:
       name: dio
-      sha256: "0dfb6b6a1979dac1c1245e17cef824d7b452ea29bd33d3467269f9bef3715fb0"
+      sha256: "5598aa796bbf4699afd5c67c0f5f6e2ed542afc956884b9cd58c306966efc260"
       url: "https://pub.dev"
     source: hosted
-    version: "5.6.0"
+    version: "5.7.0"
   dio_web_adapter:
     dependency: transitive
     description:
@@ -643,6 +643,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  gsettings:
+    dependency: transitive
+    description:
+      name: gsettings
+      sha256: "1b0ce661f5436d2db1e51f3c4295a49849f03d304003a7ba177d01e3a858249c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.8"
   gtk:
     dependency: "direct main"
     description:
@@ -1122,10 +1130,10 @@ packages:
     dependency: "direct main"
     description:
       name: podcast_search
-      sha256: ab3a98d2bb7a593cee61351fae17900d3cc6e23e21638d7ae16963bb11cf9693
+      sha256: c2ca2529a7f561827cc62db6c4fba6cade0249936455912a902688125c90bd5c
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.2"
+    version: "0.7.3"
   pointycastle:
     dependency: transitive
     description:
@@ -1202,10 +1210,10 @@ packages:
     dependency: "direct main"
     description:
       name: safe_change_notifier
-      sha256: "8d0645ec2706f580912c38de488439ddb491be48247826927b7bc2e54ea8f7af"
+      sha256: e7cce266bfede647355866fa3bd054feda57c220d2383f4203f28d4dcdb3b82e
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.2"
+    version: "0.4.0"
   safe_local_storage:
     dependency: transitive
     description:
@@ -1758,12 +1766,11 @@ packages:
   yaru:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "8a16a69d5f9ea7b0154035f34c0863c987a98497"
-      resolved-ref: "8a16a69d5f9ea7b0154035f34c0863c987a98497"
-      url: "https://github.com/ubuntu/yaru.dart"
-    source: git
-    version: "5.1.0"
+      name: yaru
+      sha256: "29024f7f85ec959bab300eb5170f5e6dd48364027875b2098bf966a7c64b9ca4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.0"
   yaru_window:
     dependency: "direct main"
     description:
