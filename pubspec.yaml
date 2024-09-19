@@ -74,7 +74,7 @@ dependencies:
   url_launcher: ^6.3.0
   watch_it: ^1.4.2
   win32: ^5.5.4
-  window_manager: ^0.3.9
+  window_manager: ^0.4.0
   xdg_directories: ^1.0.4
   yaru: ^5.2.0
   yaru_window: ^0.2.1
