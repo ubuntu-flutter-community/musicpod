@@ -5,6 +5,7 @@ import 'package:yaru/constants.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/mpv_meta_data.dart';
 import '../../common/view/icons.dart';
+import '../online_art_service.dart';
 import 'icy_image.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
 import '../../common/view/tapable_text.dart';
@@ -13,7 +14,6 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../online_album_art_utils.dart';
 import '../../player/player_mixin.dart';
 import '../../search/search_model.dart';
 import 'station_page.dart';
@@ -59,7 +59,8 @@ class RadioHistoryTile extends StatelessWidget with PlayerMixin {
               onPressed: () => showDialog(
                 context: context,
                 builder: (context) {
-                  final image = UrlStore().get(entry.value.icyTitle);
+                  final image =
+                      di<OnlineArtService>().get(entry.value.icyTitle);
                   return MpvMetadataDialog(
                     mpvMetaData: entry.value,
                     image: image,
