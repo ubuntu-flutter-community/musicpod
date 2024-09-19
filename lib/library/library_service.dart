@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
-import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
 import '../constants.dart';
-import '../common/data/audio.dart';
 import '../persistence_utils.dart';
 
 class LibraryService {
@@ -293,7 +292,6 @@ class LibraryService {
   ///
   /// Podcasts
   ///
-  final dio = Dio();
   Map<String, String> _downloads = {};
   Map<String, String> get downloads => _downloads;
   String? getDownload(String? url) => downloads[url];
@@ -496,7 +494,6 @@ class LibraryService {
   }
 
   Future<void> dispose() async {
-    dio.close();
     await _propertiesChangedController.close();
   }
 }

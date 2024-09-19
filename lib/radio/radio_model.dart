@@ -4,14 +4,20 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../l10n/l10n.dart';
+import 'online_art_service.dart';
 import 'radio_service.dart';
 
 class RadioModel extends SafeChangeNotifier {
   final RadioService _radioService;
+  final OnlineArtService _onlineArtService;
 
   RadioModel({
     required RadioService radioService,
-  }) : _radioService = radioService;
+    required OnlineArtService onlineArtService,
+  })  : _radioService = radioService,
+        _onlineArtService = onlineArtService;
+
+  String? getCover(String icyTitle) => _onlineArtService.get(icyTitle);
 
   Future<void> clickStation(Audio? station) async {
     if (station?.description != null) {

@@ -10,9 +10,14 @@ import '../l10n/l10n.dart';
 import '../library/library_service.dart';
 
 class DownloadModel extends SafeChangeNotifier {
-  DownloadModel(this._service);
+  DownloadModel({
+    required LibraryService libraryService,
+    required Dio dio,
+  })  : _service = libraryService,
+        _dio = dio;
 
   final LibraryService _service;
+  final Dio _dio;
 
   final _values = <String, double?>{};
   final _cancelTokens = <String, CancelToken?>{};
@@ -66,8 +71,8 @@ class DownloadModel extends SafeChangeNotifier {
       return;
     }
 
-    _service.dio.interceptors.add(LogInterceptor());
-    _service.dio.options.headers = {HttpHeaders.acceptEncodingHeader: '*'};
+    _dio.interceptors.add(LogInterceptor());
+    _dio.options.headers = {HttpHeaders.acceptEncodingHeader: '*'};
 
     if (!Directory(downloadsDir).existsSync()) {
       Directory(downloadsDir).createSync();
@@ -112,7 +117,7 @@ class DownloadModel extends SafeChangeNotifier {
         ? _cancelTokens.update(url, (value) => CancelToken())
         : _cancelTokens.putIfAbsent(url, () => CancelToken());
     try {
-      return await _service.dio.download(
+      return await _dio.download(
         url,
         path,
         onReceiveProgress: (count, total) =>

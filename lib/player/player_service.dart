@@ -18,15 +18,19 @@ import '../common/data/player_state.dart';
 import '../constants.dart';
 import '../extensions/string_x.dart';
 import '../local_audio/cover_store.dart';
-import '../online_album_art_utils.dart';
 import '../persistence_utils.dart';
+import '../radio/online_art_service.dart';
 
 typedef Queue = ({String name, List<Audio> audios});
 
 class PlayerService {
   PlayerService({
     required VideoController controller,
-  }) : _controller = controller;
+    required OnlineArtService onlineArtService,
+  })  : _controller = controller,
+        _onlineArtService = onlineArtService;
+
+  final OnlineArtService _onlineArtService;
 
   final VideoController _controller;
   VideoController get controller => _controller;
@@ -284,7 +288,7 @@ class PlayerService {
         );
 
         final songInfo = mpvMetaData.icyTitle.splitByDash;
-        fetchAlbumArt(mpvMetaData.icyTitle).then(
+        _onlineArtService.fetchAlbumArt(mpvMetaData.icyTitle).then(
           (albumArt) async {
             await _setMediaControlsMetaData(
               audio: (_audio ?? const Audio()).copyWith(

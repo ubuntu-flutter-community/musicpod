@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:gtk/gtk.dart';
@@ -29,6 +30,7 @@ import 'player/player_service.dart';
 import 'podcasts/download_model.dart';
 import 'podcasts/podcast_model.dart';
 import 'podcasts/podcast_service.dart';
+import 'radio/online_art_service.dart';
 import 'radio/radio_model.dart';
 import 'radio/radio_service.dart';
 import 'search/search_model.dart';
@@ -72,9 +74,19 @@ void registerServicesAndViewModels({
   required String version,
 }) {
   di
-    ..registerLazySingleton(() => sharedPreferences)
+    ..registerLazySingleton<SharedPreferences>(() => sharedPreferences)
+    ..registerLazySingleton<Dio>(
+      () => Dio(),
+      dispose: (s) => s.close(),
+    )
+    ..registerLazySingleton<OnlineArtService>(
+      () => OnlineArtService(
+        dio: di<Dio>(),
+      ),
+    )
     ..registerLazySingleton<PlayerService>(
       () => PlayerService(
+        onlineArtService: di<OnlineArtService>(),
         controller: VideoController(
           Player(
             configuration: const PlayerConfiguration(title: kAppTitle),
@@ -160,11 +172,17 @@ void registerServicesAndViewModels({
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<RadioModel>(
-      () => RadioModel(radioService: di<RadioService>()),
+      () => RadioModel(
+        radioService: di<RadioService>(),
+        onlineArtService: di<OnlineArtService>(),
+      ),
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<DownloadModel>(
-      () => DownloadModel(di<LibraryService>()),
+      () => DownloadModel(
+        libraryService: di<LibraryService>(),
+        dio: di<Dio>(),
+      ),
     )
     ..registerLazySingleton<SearchModel>(
       () => SearchModel(
