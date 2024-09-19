@@ -9,7 +9,7 @@ import '../common/data/audio.dart';
 import '../common/data/mpv_meta_data.dart';
 import 'player_service.dart';
 
-const rateValues = [1.0, 1.5, 2.0];
+const rateValues = [.75, 1.0, 1.25, 1.5, 1.75, 2.0];
 
 class PlayerModel extends SafeChangeNotifier {
   final PlayerService _service;
