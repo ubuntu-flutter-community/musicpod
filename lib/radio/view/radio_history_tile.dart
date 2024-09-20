@@ -5,7 +5,7 @@ import 'package:yaru/constants.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/mpv_meta_data.dart';
 import '../../common/view/icons.dart';
-import '../online_art_service.dart';
+import '../radio_model.dart';
 import 'icy_image.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
 import '../../common/view/tapable_text.dart';
@@ -59,8 +59,7 @@ class RadioHistoryTile extends StatelessWidget with PlayerMixin {
               onPressed: () => showDialog(
                 context: context,
                 builder: (context) {
-                  final image =
-                      di<OnlineArtService>().get(entry.value.icyTitle);
+                  final image = di<RadioModel>().getCover(entry.value.icyTitle);
                   return MpvMetadataDialog(
                     mpvMetaData: entry.value,
                     image: image,
