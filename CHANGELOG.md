@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.12.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.11.0...v1.12.0) (2024-09-20)
+
+
+### Features
+
+* add extra speeds ([#922](https://github.com/ubuntu-flutter-community/musicpod/issues/922)) ([11b3ddb](https://github.com/ubuntu-flutter-community/musicpod/commit/11b3ddb9dd6ea42d9e9900e66c9577389a6cc943))
+* load more podcasts on scroll, update deps ([#920](https://github.com/ubuntu-flutter-community/musicpod/issues/920)) ([741d090](https://github.com/ubuntu-flutter-community/musicpod/commit/741d0905c87c9a262c2362388e38893369574c20))
+* show more stations on scroll ([#927](https://github.com/ubuntu-flutter-community/musicpod/issues/927)) ([23044c3](https://github.com/ubuntu-flutter-community/musicpod/commit/23044c313f85e9d574a92f43a5dfee589e10486a)), closes [#926](https://github.com/ubuntu-flutter-community/musicpod/issues/926)
+
+
+### Bug Fixes
+
+* update yaru to follow 22.10+ accents ([#925](https://github.com/ubuntu-flutter-community/musicpod/issues/925)) ([75a7b70](https://github.com/ubuntu-flutter-community/musicpod/commit/75a7b70d21dfdf6aa3c7d326c5d49dc2582dcb6e))
+
 ## [1.11.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.10.1...v1.11.0) (2024-09-08)
 
 
