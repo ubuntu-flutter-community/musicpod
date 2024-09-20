@@ -18,24 +18,24 @@ dependencies:
       ref: ad6f743b73e320670449026fa1852d9978438bb9
   basic_utils: ^5.7.0
   blur: ^4.0.0
-  cached_network_image: ^3.3.1
+  cached_network_image: ^3.4.1
   collection: ^1.18.0
-  connectivity_plus: ^6.0.3
+  connectivity_plus: ^6.0.5
   cupertino_icons: ^1.0.8
   desktop_notifications: ^0.6.3
-  dio: ^5.4.3
+  dio: ^5.7.0
   file: ^7.0.0
   file_picker: ^8.1.2
   file_selector: ^1.0.3
-  file_selector_linux: ^0.9.2+1
+  file_selector_linux: ^0.9.2
   flutter:
     sdk: flutter
-  flutter_cache_manager: ^3.3.1
+  flutter_cache_manager: ^3.4.1
   flutter_html: ^3.0.0-beta.2
   flutter_localizations:
     sdk: flutter
-  flutter_markdown: ^0.7.1
-  flutter_tabler_icons: ^1.27.0
+  flutter_markdown: ^0.7.3
+  flutter_tabler_icons: ^1.41.0
   github: ^9.24.0
   gtk: ^2.1.0
   handy_window: ^0.4.0
@@ -72,13 +72,13 @@ dependencies:
   super_drag_and_drop: ^0.8.18
   system_theme: ^3.0.0
   url_launcher: ^6.3.0
-  watch_it: ^1.4.2
+  watch_it: ^1.5.0
   win32: ^5.5.4
-  window_manager: ^0.3.9
+  window_manager: ^0.4.2
   xdg_directories: ^1.0.4
-  yaru: ^5.2.0
-  yaru_window: ^0.2.1
-  yaru_window_linux: ^0.2.0
+  yaru: ^5.2.1
+  yaru_window: ^0.2.1+1
+  yaru_window_linux: ^0.2.0+1
 
 dev_dependencies:
   build_runner: ^2.4.8
