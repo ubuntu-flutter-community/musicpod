@@ -69,6 +69,7 @@ class SearchModel extends SafeChangeNotifier {
   void setSearchQuery(String? value) {
     if (value == _searchQuery) return;
     _podcastLimit = _podcastDefaultLimit;
+    _radioLimit = _radioDefaultLimit;
     _searchQuery = value;
     notifyListeners();
   }
@@ -147,6 +148,14 @@ class SearchModel extends SafeChangeNotifier {
   int _podcastLimit = _podcastDefaultLimit;
   void incrementPodcastLimit(int value) => _podcastLimit += value;
 
+  static const _radioDefaultLimit = 64;
+  int _radioLimit = _radioDefaultLimit;
+  void incrementRadioLimit(int value) => _radioLimit += value;
+
+  void incrementLimit(int value) => _audioType == AudioType.podcast
+      ? incrementPodcastLimit(value)
+      : incrementRadioLimit(value);
+
   bool loading = false;
   set _loading(bool value) {
     loading = value;
@@ -179,7 +188,7 @@ class SearchModel extends SafeChangeNotifier {
           )
           .then((_) => _loading = false),
       SearchType.radioTag => await _radioService
-          .search(tag: _tag?.name)
+          .search(tag: _tag?.name, limit: _radioLimit)
           .then(
             (v) => setRadioSearchResult(
               v?.map((e) => Audio.fromStation(e)).toList(),
@@ -187,7 +196,7 @@ class SearchModel extends SafeChangeNotifier {
           )
           .then((_) => _loading = false),
       SearchType.radioCountry => await _radioService
-          .search(country: _country?.name.camelToSentence)
+          .search(country: _country?.name.camelToSentence, limit: _radioLimit)
           .then(
             (v) => setRadioSearchResult(
               v?.map((e) => Audio.fromStation(e)).toList(),
@@ -195,7 +204,10 @@ class SearchModel extends SafeChangeNotifier {
           )
           .then((_) => _loading = false),
       SearchType.radioLanguage => await _radioService
-          .search(language: _language?.name.toLowerCase())
+          .search(
+            language: _language?.name.toLowerCase(),
+            limit: _radioLimit,
+          )
           .then(
             (v) => setRadioSearchResult(
               v?.map((e) => Audio.fromStation(e)).toList(),
@@ -233,5 +245,5 @@ class SearchModel extends SafeChangeNotifier {
   }
 
   Future<List<Station>?> radioNameSearch(String? searchQuery) async =>
-      _radioService.search(name: searchQuery);
+      _radioService.search(name: searchQuery, limit: _radioLimit);
 }

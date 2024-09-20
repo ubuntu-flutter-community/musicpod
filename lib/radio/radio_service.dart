@@ -54,7 +54,7 @@ class RadioService {
     String? state,
     String? tag,
     String? language,
-    int limit = 100,
+    required int limit,
   }) async {
     if (_radioBrowserApi == null) {
       return [];
