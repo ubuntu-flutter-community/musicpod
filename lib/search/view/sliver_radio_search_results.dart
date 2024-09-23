@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
+import '../../common/view/audio_page_type.dart';
+import '../../common/view/audio_tile.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
 import '../../common/view/snackbars.dart';
-import '../../common/view/theme.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_model.dart';
-import '../../radio/view/station_card.dart';
 import '../search_model.dart';
 
 class SliverRadioSearchResults extends StatefulWidget
@@ -85,24 +85,25 @@ class _SliverRadioSearchResultsState extends State<SliverRadioSearchResults> {
       );
     }
 
-    return SliverGrid.builder(
-      gridDelegate: audioCardGridDelegate,
+    final playing = watchPropertyValue((PlayerModel m) => m.isPlaying);
+    final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
+
+    return SliverList.builder(
       itemCount: radioSearchResult.length,
       itemBuilder: (context, index) {
         final station = radioSearchResult.elementAt(index);
-        return StationCard(
-          station: station,
-          startPlaylist: ({
-            required audios,
-            index,
-            required listName,
-          }) {
-            return di<PlayerModel>()
-                .startPlaylist(
-                  audios: audios,
-                  listName: listName,
-                )
-                .then((_) => di<RadioModel>().clickStation(station));
+        return AudioTile(
+          showLeading: true,
+          audioPageType: AudioPageType.radioSearch,
+          isPlayerPlaying: playing,
+          selected: currentAudio == station,
+          pageId: station.description!,
+          audio: station,
+          onTap: () {
+            di<PlayerModel>().startPlaylist(
+              audios: [station],
+              listName: station.title ?? station.description ?? station.url!,
+            ).then((_) => di<RadioModel>().clickStation(station));
           },
         );
       },

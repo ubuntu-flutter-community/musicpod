@@ -69,20 +69,20 @@ class LibraryService {
   Map<String, List<Audio>> get starredStations => _starredStations;
   int get starredStationsLength => _starredStations.length;
 
-  void addStarredStation(String url, List<Audio> audios) {
-    _starredStations.putIfAbsent(url, () => audios);
+  void addStarredStation(String uuid, List<Audio> audios) {
+    _starredStations.putIfAbsent(uuid, () => audios);
     writeAudioMap(_starredStations, kStarredStationsFileName)
         .then((_) => _propertiesChangedController.add(true));
   }
 
-  void unStarStation(String name) {
-    _starredStations.remove(name);
+  void unStarStation(String uuid) {
+    _starredStations.remove(uuid);
     writeAudioMap(_starredStations, kStarredStationsFileName)
         .then((_) => _propertiesChangedController.add(true));
   }
 
-  bool isStarredStation(String? url) {
-    return url == null ? false : _starredStations.containsKey(url);
+  bool isStarredStation(String? uuid) {
+    return uuid == null ? false : _starredStations.containsKey(uuid);
   }
 
   Set<String> get favRadioTags =>

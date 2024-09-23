@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
@@ -17,7 +18,6 @@ class AudioTileOptionButton extends StatelessWidget {
     required this.audio,
     required this.playlistId,
     required this.insertIntoQueue,
-    required this.libraryModel,
     required this.allowRemove,
     required this.selected,
   });
@@ -26,60 +26,63 @@ class AudioTileOptionButton extends StatelessWidget {
   final Audio audio;
   final void Function()? insertIntoQueue;
 
-  final LibraryModel libraryModel;
   final bool allowRemove;
   final bool selected;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    final libraryModel = di<LibraryModel>();
 
     return PopupMenuButton(
       tooltip: context.l10n.moreOptions,
       padding: EdgeInsets.zero,
       itemBuilder: (context) {
         return [
-          PopupMenuItem(
-            onTap: () {
-              insertIntoQueue?.call();
-              showSnackBar(
-                context: context,
-                content: Text(
-                  '${context.l10n.addedTo} ${context.l10n.queue}: ${audio.artist} - ${audio.title}',
-                ),
-              );
-            },
-            child: YaruTile(
-              leading: Icon(Iconz().insertIntoQueue),
-              title: Text(context.l10n.playNext),
-            ),
-          ),
-          if (allowRemove)
+          if (audio.audioType != AudioType.radio)
             PopupMenuItem(
-              onTap: () =>
-                  libraryModel.removeAudioFromPlaylist(playlistId, audio),
-              child: YaruTile(
-                leading: Icon(Iconz().remove),
-                title: Text('${context.l10n.removeFrom} $playlistId'),
-              ),
-            ),
-          PopupMenuItem(
-            onTap: () => showDialog(
-              context: context,
-              builder: (context) {
-                return AddToPlaylistDialog(
-                  audio: audio,
-                  libraryModel: libraryModel,
+              onTap: () {
+                insertIntoQueue?.call();
+                showSnackBar(
+                  context: context,
+                  content: Text(
+                    '${context.l10n.addedTo} ${context.l10n.queue}: ${audio.artist} - ${audio.title}',
+                  ),
                 );
               },
-            ),
-            child: YaruTile(
-              leading: Icon(Iconz().plus),
-              title: Text(
-                '${context.l10n.addToPlaylist} ...',
+              child: YaruTile(
+                leading: Icon(Iconz().insertIntoQueue),
+                title: Text(context.l10n.playNext),
               ),
             ),
-          ),
+          if (audio.audioType != AudioType.radio)
+            if (allowRemove)
+              PopupMenuItem(
+                onTap: () =>
+                    libraryModel.removeAudioFromPlaylist(playlistId, audio),
+                child: YaruTile(
+                  leading: Icon(Iconz().remove),
+                  title: Text('${context.l10n.removeFrom} $playlistId'),
+                ),
+              ),
+          if (audio.audioType != AudioType.radio)
+            PopupMenuItem(
+              onTap: () => showDialog(
+                context: context,
+                builder: (context) {
+                  return AddToPlaylistDialog(
+                    audio: audio,
+                    libraryModel: libraryModel,
+                  );
+                },
+              ),
+              child: YaruTile(
+                leading: Icon(Iconz().plus),
+                title: Text(
+                  '${context.l10n.addToPlaylist} ...',
+                ),
+              ),
+            ),
           PopupMenuItem(
             onTap: () => showDialog(
               context: context,
@@ -94,22 +97,24 @@ class AudioTileOptionButton extends StatelessWidget {
               ),
             ),
           ),
-          PopupMenuItem(
-            enabled: false,
-            padding: EdgeInsets.zero,
-            child: Theme(
-              data: theme.copyWith(disabledColor: theme.colorScheme.onSurface),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 13),
-                child: StreamProviderRow(
-                  iconColor: theme.colorScheme.onSurface,
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  text: '${audio.artist ?? ''} - ${audio.title ?? ''}',
+          if (audio.audioType != AudioType.radio)
+            PopupMenuItem(
+              enabled: false,
+              padding: EdgeInsets.zero,
+              child: Theme(
+                data:
+                    theme.copyWith(disabledColor: theme.colorScheme.onSurface),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 13),
+                  child: StreamProviderRow(
+                    iconColor: theme.colorScheme.onSurface,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    text: '${audio.artist ?? ''} - ${audio.title ?? ''}',
+                  ),
                 ),
               ),
             ),
-          ),
         ];
       },
       icon: Icon(Iconz().viewMore),

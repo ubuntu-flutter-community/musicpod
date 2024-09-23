@@ -29,7 +29,10 @@ Future<void> main() async {
       );
       expect(result?.isNotEmpty, true);
       expect(result?.any((e) => e.name.contains('6forty')), true);
-      expect(result?.any((e) => e.url == sixFortyStation.url), true);
+      expect(
+        result?.any((e) => e.urlResolved == sixFortyStation.url),
+        true,
+      );
     });
 
     test('findByName', () async {

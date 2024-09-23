@@ -283,18 +283,15 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                         onSubTitleTap: onArtistTap,
                         key: ValueKey(audio.path ?? audio.url),
                         isPlayerPlaying: isPlaying,
-                        pause: playerModel.pause,
                         onTap: () => playerModel.startPlaylist(
                           audios: audios,
                           listName: pageId,
                           index: index,
                         ),
-                        resume: playerModel.resume,
                         selected: audioSelected,
                         audio: audio,
                         insertIntoQueue: playerModel.insertIntoQueue,
                         pageId: pageId,
-                        libraryModel: libraryModel,
                         audioPageType: AudioPageType.playlist,
                       ),
                     );
