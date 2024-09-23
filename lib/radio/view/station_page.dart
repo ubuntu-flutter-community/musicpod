@@ -71,9 +71,12 @@ class StationPage extends StatelessWidget with WatchItMixin {
                 ),
                 sliver: SliverToBoxAdapter(
                   child: AudioPageHeader(
-                    title: station.title ?? station.url ?? '',
-                    subTitle: station.artist,
-                    label: context.l10n.station,
+                    title: station.title ?? station.description ?? '',
+                    subTitle: station.albumArtist == null
+                        ? null
+                        : station.albumArtist ?? '',
+                    label:
+                        '${context.l10n.station} · ${station.fileSize ?? ''} kbps',
                     description: SizedBox(
                       width: kAudioHeaderDescriptionWidth,
                       child: RadioPageTagBar(
@@ -126,10 +129,11 @@ class _StationPageControlPanel extends StatelessWidget {
       children: space(
         children: [
           RadioPageStarButton(station: station),
-          AvatarPlayButton(
-            audios: [station],
-            pageId: station.url!,
-          ),
+          if (station.description != null)
+            AvatarPlayButton(
+              audios: [station],
+              pageId: station.description!,
+            ),
           RadioPageCopyHistoryButton(station: station),
         ],
       ),

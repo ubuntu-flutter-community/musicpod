@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../constants.dart';
-import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../data/audio.dart';
 import 'audio_page_type.dart';
@@ -26,7 +25,6 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = di<LibraryModel>();
     final playerModel = di<PlayerModel>();
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
@@ -44,18 +42,15 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
             audioPageType: audioPageType,
             onSubTitleTap: onSubTitleTab,
             isPlayerPlaying: isPlaying,
-            pause: playerModel.pause,
             onTap: () => playerModel.startPlaylist(
               audios: audios,
               listName: pageId,
               index: index,
             ),
-            resume: playerModel.resume,
             selected: audioSelected,
             audio: audio,
             insertIntoQueue: playerModel.insertIntoQueue,
             pageId: pageId,
-            libraryModel: libraryModel,
             selectedColor: selectedColor,
           );
         },

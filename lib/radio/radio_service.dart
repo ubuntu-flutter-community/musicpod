@@ -49,6 +49,7 @@ class RadioService {
   }
 
   Future<List<Station>?> search({
+    String? uuid,
     String? country,
     String? name,
     String? state,
@@ -67,6 +68,9 @@ class RadioService {
       limit: limit,
     );
     try {
+      if (uuid != null) {
+        response = await _radioBrowserApi!.getStationsByUUID(uuids: [uuid]);
+      }
       if (name?.isEmpty == false) {
         response = await _radioBrowserApi!
             .getStationsByName(name: name!, parameters: parameters);

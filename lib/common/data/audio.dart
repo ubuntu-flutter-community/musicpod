@@ -24,7 +24,7 @@ class Audio {
   /// The url of the image if remote.
   final String? imageUrl;
 
-  /// The description of the audio file or stream.
+  /// The description of the audio file or stream, for radio stations this is the UUID
   final String? description;
 
   /// Website link or feed url in case of podcasts.
@@ -42,7 +42,7 @@ class Audio {
   /// The album of the audio file or stream.
   final String? album;
 
-  /// The album artist(s) of the audio file or stream.
+  /// The album artist(s) of the audio file or stream, for radio stations this is the codec.
   final String? albumArtist;
 
   /// The track number of the audio file or stream.
@@ -69,7 +69,7 @@ class Audio {
   /// The image data. Only for local audio.
   final Uint8List? pictureData;
 
-  /// The file size of the audio file.
+  /// The file size of the audio file, for radio stations this is the stream quality in kbps.
   final int? fileSize;
 
   /// Optional art that can belong to a parent element.
@@ -260,15 +260,22 @@ class Audio {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Audio &&
-        ((other.url != null && other.url == url) ||
-            (other.path != null && other.path == path));
+    if (other is Audio) {
+      if (other.audioType != null &&
+          other.audioType == AudioType.radio &&
+          audioType == AudioType.radio) {
+        return other.description == description;
+      }
+
+      return (other.url != null && other.url == url) ||
+          (other.path != null && other.path == path);
+    }
+
+    return false;
   }
 
   @override
-  int get hashCode {
-    return path.hashCode ^ url.hashCode;
-  }
+  int get hashCode => path.hashCode ^ url.hashCode ^ description.hashCode;
 
   factory Audio.fromMetadata({
     required String path,
@@ -313,6 +320,8 @@ class Audio {
       imageUrl: station.favicon,
       website: station.homepage,
       description: station.stationUUID,
+      fileSize: station.bitrate,
+      albumArtist: station.codec,
     );
   }
 

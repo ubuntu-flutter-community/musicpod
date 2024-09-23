@@ -15,7 +15,7 @@ class RadioPageStarButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final libraryModel = di<LibraryModel>();
     final isStarred = watchPropertyValue(
-      (LibraryModel m) => m.starredStations.containsKey(station.url),
+      (LibraryModel m) => m.starredStations.containsKey(station.description),
     );
 
     return IconButton(
@@ -23,11 +23,12 @@ class RadioPageStarButton extends StatelessWidget with WatchItMixin {
       tooltip: isStarred
           ? context.l10n.removeFromCollection
           : context.l10n.addToCollection,
-      onPressed: station.url == null
+      onPressed: station.description == null
           ? null
           : isStarred
-              ? () => libraryModel.unStarStation(station.url!)
-              : () => libraryModel.addStarredStation(station.url!, [station]),
+              ? () => libraryModel.unStarStation(station.description!)
+              : () => libraryModel
+                  .addStarredStation(station.description!, [station]),
       icon: Iconz().getAnimatedStar(isStarred),
     );
   }
