@@ -252,15 +252,18 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
   List<String> failedImports = [];
 
   if (directory != null && Directory(directory).existsSync()) {
-    for (var e in Directory(directory)
-        .listSync(recursive: true, followLinks: false)
-        .whereType<File>()
-        .where((e) => e.isValidMedia)
-        .toList()) {
+    final entities = await Directory(directory)
+        .list(recursive: true, followLinks: false)
+        .handleError((e) => failedImports.add(e))
+        .toList();
+
+    for (final e in entities) {
       try {
-        final metadata = await readMetadata(e, getImage: false);
-        newAudios.add(Audio.fromMetadata(path: e.path, data: metadata));
-      } catch (error) {
+        if (e is File && e.isValidMedia) {
+          final metadata = await readMetadata(e, getImage: false);
+          newAudios.add(Audio.fromMetadata(path: e.path, data: metadata));
+        }
+      } on Exception catch (_) {
         failedImports.add(e.path);
       }
     }
