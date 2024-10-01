@@ -254,7 +254,7 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
   if (directory != null && Directory(directory).existsSync()) {
     final entities = await Directory(directory)
         .list(recursive: true, followLinks: false)
-        .handleError((e) => failedImports.add(e))
+        .handleError((e) => failedImports.add(e.toString()))
         .toList();
 
     for (final e in entities) {
