@@ -342,6 +342,8 @@
     "closeMusicPod": "Close MusicPod?",
     "confirmCloseOrHideTip": "Please confirm if you need to close the application or hide it?",
     "doNotAskAgain": "Do not ask again",
+    "skipToLivStream": "Skip to live stream",
+    "searchSimilarStation": "Search similar station",
     "regionNone": "None",
     "regionAfghanistan": "Afghanistan",
     "regionAlandislands": "Alandislands",

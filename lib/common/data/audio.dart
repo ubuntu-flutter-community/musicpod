@@ -36,7 +36,7 @@ class Audio {
   /// The duration of the audio file or stream. It can be null if was not set
   final double? durationMs;
 
-  /// The artist(s) of the audio file or stream.
+  /// The artist(s) of the audio file or stream, for radio stations this is the language.
   final String? artist;
 
   /// The album of the audio file or stream.
@@ -310,11 +310,14 @@ class Audio {
     );
   }
 
+  String? get uuid => description;
+  String? get language => artist;
+
   factory Audio.fromStation(Station station) {
     return Audio(
       url: station.urlResolved,
       title: station.name,
-      artist: station.language ?? station.name,
+      artist: station.language,
       album: station.tags ?? '',
       audioType: AudioType.radio,
       imageUrl: station.favicon,

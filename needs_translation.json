@@ -19,6 +19,8 @@
     "closeMusicPod",
     "confirmCloseOrHideTip",
     "doNotAskAgain",
+    "skipToLivStream",
+    "searchSimilarStation",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -293,6 +295,8 @@
     "closeMusicPod",
     "confirmCloseOrHideTip",
     "doNotAskAgain",
+    "skipToLivStream",
+    "searchSimilarStation",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -757,6 +761,8 @@
     "closeMusicPod",
     "confirmCloseOrHideTip",
     "doNotAskAgain",
+    "skipToLivStream",
+    "searchSimilarStation",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -1020,6 +1026,8 @@
     "closeMusicPod",
     "confirmCloseOrHideTip",
     "doNotAskAgain",
+    "skipToLivStream",
+    "searchSimilarStation",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -1272,6 +1280,11 @@
     "regionZimbabwe"
   ],
 
+  "it": [
+    "skipToLivStream",
+    "searchSimilarStation"
+  ],
+
   "nl": [
     "shuffle",
     "repeat",
@@ -1512,6 +1525,8 @@
     "closeMusicPod",
     "confirmCloseOrHideTip",
     "doNotAskAgain",
+    "skipToLivStream",
+    "searchSimilarStation",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -1824,6 +1839,8 @@
     "closeMusicPod",
     "confirmCloseOrHideTip",
     "doNotAskAgain",
+    "skipToLivStream",
+    "searchSimilarStation",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -2287,6 +2304,8 @@
     "closeMusicPod",
     "confirmCloseOrHideTip",
     "doNotAskAgain",
+    "skipToLivStream",
+    "searchSimilarStation",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -2750,6 +2769,8 @@
     "closeMusicPod",
     "confirmCloseOrHideTip",
     "doNotAskAgain",
+    "skipToLivStream",
+    "searchSimilarStation",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -3028,6 +3049,8 @@
     "closeMusicPod",
     "confirmCloseOrHideTip",
     "doNotAskAgain",
+    "skipToLivStream",
+    "searchSimilarStation",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -3280,6 +3303,11 @@
     "regionZimbabwe"
   ],
 
+  "sk": [
+    "skipToLivStream",
+    "searchSimilarStation"
+  ],
+
   "sv": [
     "shuffle",
     "repeat",
@@ -3481,6 +3509,8 @@
     "closeMusicPod",
     "confirmCloseOrHideTip",
     "doNotAskAgain",
+    "skipToLivStream",
+    "searchSimilarStation",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -3753,6 +3783,8 @@
     "closeMusicPod",
     "confirmCloseOrHideTip",
     "doNotAskAgain",
+    "skipToLivStream",
+    "searchSimilarStation",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -4007,12 +4039,16 @@
 
   "zh": [
     "local",
-    "unPinAlbum"
+    "unPinAlbum",
+    "skipToLivStream",
+    "searchSimilarStation"
   ],
 
   "zh_CN": [
     "local",
-    "unPinAlbum"
+    "unPinAlbum",
+    "skipToLivStream",
+    "searchSimilarStation"
   ],
 
   "zh_HK": [
@@ -4027,6 +4063,8 @@
     "closeMusicPod",
     "confirmCloseOrHideTip",
     "doNotAskAgain",
+    "skipToLivStream",
+    "searchSimilarStation",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -4291,6 +4329,8 @@
     "closeMusicPod",
     "confirmCloseOrHideTip",
     "doNotAskAgain",
+    "skipToLivStream",
+    "searchSimilarStation",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",

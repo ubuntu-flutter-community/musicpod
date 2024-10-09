@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
@@ -160,6 +162,67 @@ class SearchModel extends SafeChangeNotifier {
   set _loading(bool value) {
     loading = value;
     notifyListeners();
+  }
+
+  List<Station>? searchFromLanguage;
+  String? lastLanguage;
+  Future<Station?> _findSimilarStation(Audio station) async {
+    if (searchFromLanguage == null || station.language != lastLanguage) {
+      searchFromLanguage = await _radioService.search(
+        limit: 1000,
+        language: station.language,
+      );
+    }
+    lastLanguage = station.language;
+
+    final noNumbers = RegExp(r'^[^0-9]+$');
+    return searchFromLanguage
+        ?.where(
+          (e) => _areTagsSimilar(
+            stationTags: station.tags?.where((e) => noNumbers.hasMatch(e)),
+            eTags:
+                Audio.fromStation(e).tags?.where((e) => noNumbers.hasMatch(e)),
+          ),
+        )
+        .firstWhereOrNull((e) => e.stationUUID != station.uuid);
+  }
+
+  bool _areTagsSimilar({
+    required Iterable<String>? stationTags,
+    required Iterable<String>? eTags,
+  }) {
+    if (eTags == null ||
+        eTags.isEmpty ||
+        stationTags == null ||
+        stationTags.length < 2) {
+      return false;
+    }
+
+    final random = Random();
+    final randomOne = random.nextInt(stationTags.length);
+    var randomTwo = random.nextInt(stationTags.length);
+    while (randomTwo == randomOne) {
+      randomTwo = random.nextInt(stationTags.length);
+    }
+
+    return eTags.contains(stationTags.elementAt(randomOne)) &&
+        eTags.contains(stationTags.elementAt(randomTwo));
+  }
+
+  Future<Audio> nextSimilarStation(Audio station) async {
+    _loading = true;
+
+    Audio? match;
+    Station? maybe = await _findSimilarStation(station);
+    if (maybe != null) {
+      match = Audio.fromStation(maybe);
+    } else {
+      match = station;
+    }
+
+    _loading = false;
+
+    return match;
   }
 
   Future<void> search({
