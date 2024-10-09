@@ -8,6 +8,7 @@ import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
+import '../../radio/view/next_station_button.dart';
 import '../player_model.dart';
 import 'play_button.dart';
 import 'repeat_button.dart';
@@ -31,24 +32,29 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
     final defaultColor = iconColor ?? theme.colorScheme.onSurface;
     final queueLength = watchPropertyValue((PlayerModel m) => m.queue.length);
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
-    final showShuffleAndRepeat = audio?.audioType == AudioType.local;
     final showSkipButtons =
         queueLength > 1 || audio?.audioType == AudioType.local;
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
 
     final children = <Widget>[
-      if (showShuffleAndRepeat)
-        ShuffleButton(
-          active: active,
-          iconColor: defaultColor,
-        )
-      else if (audio?.audioType == AudioType.podcast)
-        SeekButton(
-          active: active,
-          forward: false,
-          iconColor: defaultColor,
-        ),
+      switch (audio?.audioType) {
+        AudioType.local => ShuffleButton(
+            active: active,
+            iconColor: defaultColor,
+          ),
+        AudioType.podcast => SeekButton(
+            active: active,
+            forward: false,
+            iconColor: defaultColor,
+          ),
+        AudioType.radio => IconButton(
+            tooltip: context.l10n.skipToLivStream,
+            onPressed: di<PlayerModel>().playNext,
+            icon: Icon(Iconz().refresh),
+          ),
+        _ => const SizedBox.shrink()
+      },
       _flex,
       if (showSkipButtons)
         IconButton(
@@ -84,16 +90,18 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
           ),
         ),
       _flex,
-      if (showShuffleAndRepeat)
-        RepeatButton(
-          active: active,
-          iconColor: defaultColor,
-        )
-      else if (audio?.audioType == AudioType.podcast)
-        SeekButton(
-          active: active,
-          iconColor: defaultColor,
-        ),
+      switch (audio?.audioType) {
+        AudioType.local => RepeatButton(
+            active: active,
+            iconColor: defaultColor,
+          ),
+        AudioType.podcast => SeekButton(
+            active: active,
+            iconColor: defaultColor,
+          ),
+        AudioType.radio => const NextStationButton(),
+        _ => const SizedBox.shrink(),
+      },
     ];
 
     return Row(

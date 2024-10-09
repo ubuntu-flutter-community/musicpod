@@ -57,7 +57,7 @@ class _AudioTileState extends State<AudioTile> {
     final playerModel = di<PlayerModel>();
     final liked = watchPropertyValue((LibraryModel m) => m.liked(widget.audio));
     final starred = watchPropertyValue(
-      (LibraryModel m) => m.isStarredStation(widget.audio.description),
+      (LibraryModel m) => m.isStarredStation(widget.audio.uuid),
     );
     final selectedColor = widget.selectedColor ?? theme.contrastyPrimary;
     final subTitle = switch (widget.audioPageType) {

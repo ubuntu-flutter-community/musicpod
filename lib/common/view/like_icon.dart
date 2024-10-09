@@ -75,17 +75,17 @@ class RadioLikeIcon extends StatelessWidget with WatchItMixin {
 
     watchPropertyValue((LibraryModel m) => m.starredStations.length);
 
-    final isStarredStation = libraryModel.isStarredStation(audio?.description);
+    final isStarredStation = libraryModel.isStarredStation(audio?.uuid);
 
     final void Function()? onLike;
-    if (audio == null && audio?.description == null) {
+    if (audio == null && audio?.uuid == null) {
       onLike = null;
     } else {
       onLike = () {
         isStarredStation
-            ? libraryModel.unStarStation(audio!.description!)
+            ? libraryModel.unStarStation(audio!.uuid!)
             : libraryModel.addStarredStation(
-                audio!.description!,
+                audio!.uuid!,
                 [audio!],
               );
       };
