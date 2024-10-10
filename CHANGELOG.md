@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.0.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.12.0...v2.0.0) (2024-10-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* rework stations to be identified by uuid, display search in a list ([#930](https://github.com/ubuntu-flutter-community/musicpod/issues/930))
+
+### Features
+
+* **radio:** add return to livestream & play similar station buttons ([#938](https://github.com/ubuntu-flutter-community/musicpod/issues/938)) ([1d2ba5e](https://github.com/ubuntu-flutter-community/musicpod/commit/1d2ba5ee4ac467c222977fce4fa5c6df3baa53dc)), closes [#937](https://github.com/ubuntu-flutter-community/musicpod/issues/937)
+* rework stations to be identified by uuid, display search in a list ([#930](https://github.com/ubuntu-flutter-community/musicpod/issues/930)) ([8c3bb05](https://github.com/ubuntu-flutter-community/musicpod/commit/8c3bb05c8baf6a790adc9b9efa7fd126cf00d168))
+
+
+### Bug Fixes
+
+* onError callback ([#936](https://github.com/ubuntu-flutter-community/musicpod/issues/936)) ([3790021](https://github.com/ubuntu-flutter-community/musicpod/commit/379002123263186147b778eb4a0bbc550fdac8c0)), closes [#934](https://github.com/ubuntu-flutter-community/musicpod/issues/934)
+* The presence of a lost+found folder makes musicpod unable to load the users music library ([#935](https://github.com/ubuntu-flutter-community/musicpod/issues/935)) ([66bca61](https://github.com/ubuntu-flutter-community/musicpod/commit/66bca61ea7081602f562e49342a0a8804191fa72)), closes [#934](https://github.com/ubuntu-flutter-community/musicpod/issues/934)
+
 ## [1.12.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.11.0...v1.12.0) (2024-09-20)
 
 
