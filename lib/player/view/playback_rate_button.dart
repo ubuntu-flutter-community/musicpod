@@ -17,7 +17,7 @@ class PlaybackRateButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final rate = watchPropertyValue((PlayerModel m) => m.rate);
     final setRate = di<PlayerModel>().setRate;
 

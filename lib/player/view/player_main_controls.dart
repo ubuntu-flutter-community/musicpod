@@ -28,7 +28,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final defaultColor = iconColor ?? theme.colorScheme.onSurface;
     final queueLength = watchPropertyValue((PlayerModel m) => m.queue.length);
     final audio = watchPropertyValue((PlayerModel m) => m.audio);

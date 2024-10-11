@@ -19,7 +19,7 @@ class AudioPageHeaderHtmlDescription extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final descriptionStyle = context.t.pageHeaderDescription;
+    final descriptionStyle = context.theme.pageHeaderDescription;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
       child: ConstrainedBox(

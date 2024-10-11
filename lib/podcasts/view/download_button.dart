@@ -23,7 +23,7 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final model = di<DownloadModel>();
     final value =
         watchPropertyValue((DownloadModel m) => m.getValue(audio?.url));

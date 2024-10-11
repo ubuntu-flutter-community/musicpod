@@ -18,7 +18,7 @@ class PodcastPageTitle extends StatelessWidget with WatchItMixin {
     watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
     final visible = di<LibraryModel>().podcastUpdateAvailable(feedUrl);
     return Badge(
-      backgroundColor: context.t.colorScheme.primary,
+      backgroundColor: context.theme.colorScheme.primary,
       isLabelVisible: visible,
       alignment: Alignment.centerRight,
       child: Padding(

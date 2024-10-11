@@ -48,7 +48,7 @@ class SafeNetworkImage extends StatelessWidget {
           Icon(
             Iconz.imageMissing,
             size: height != null ? height! * 0.7 : null,
-            color: context.t.hintColor,
+            color: context.theme.hintColor,
           ),
     );
 

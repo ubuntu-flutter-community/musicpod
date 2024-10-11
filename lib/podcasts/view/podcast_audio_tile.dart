@@ -169,7 +169,7 @@ class _Center extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final textStyle = TextStyle(
       color: theme.colorScheme.onSurface,
       fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
@@ -215,7 +215,7 @@ class _Description extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     return InkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: () {

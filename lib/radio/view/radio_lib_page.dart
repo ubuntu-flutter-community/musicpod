@@ -29,7 +29,7 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final radioCollectionView =
         watchPropertyValue((RadioModel m) => m.radioCollectionView);
     final radioModel = di<RadioModel>();
@@ -42,7 +42,7 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
           child: Container(
             alignment: Alignment.center,
             margin: filterPanelPadding,
-            height: context.t.appBarTheme.toolbarHeight,
+            height: context.theme.appBarTheme.toolbarHeight,
             child: YaruChoiceChipBar(
               chipBackgroundColor: chipColor(theme),
               selectedChipBackgroundColor: chipSelectionColor(theme, false),

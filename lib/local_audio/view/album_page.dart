@@ -106,7 +106,7 @@ class AlbumPageImage extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: context.t.cardColor,
+            color: context.theme.cardColor,
             image: const DecorationImage(
               image: AssetImage('assets/images/media-optical.png'),
             ),

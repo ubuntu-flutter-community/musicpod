@@ -46,7 +46,7 @@ class LanguageAutoComplete extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
 
     return SizedBox(
       height: height ?? inputHeight,

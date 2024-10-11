@@ -23,7 +23,7 @@ class RadioPageTagBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = context.t.pageHeaderDescription;
+    final style = context.theme.pageHeaderDescription;
     final tags = station.tags;
     if (tags == null || tags.isEmpty) return const SizedBox.shrink();
 

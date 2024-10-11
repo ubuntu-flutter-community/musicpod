@@ -164,7 +164,7 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
                   icon: Icon(
                     isPlaying && isEnQueued ? Iconz.pause : Iconz.playFilled,
                     size: kTinyButtonIconSize,
-                    color: context.t.colorScheme.primary,
+                    color: context.theme.colorScheme.primary,
                   ),
                 ),
               ),

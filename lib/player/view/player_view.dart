@@ -44,7 +44,7 @@ class _PlayerViewState extends State<PlayerView> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final c = watchPropertyValue((PlayerModel m) => m.color);
     final color = getPlayerBg(c, theme.cardColor);
 

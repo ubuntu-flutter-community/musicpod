@@ -26,7 +26,7 @@ class SearchButton extends StatelessWidget {
             selectedIcon: icon ??
                 Icon(
                   Iconz.search,
-                  color: context.t.colorScheme.primary,
+                  color: context.theme.colorScheme.primary,
                   size: iconSize,
                 ),
             icon: icon ??

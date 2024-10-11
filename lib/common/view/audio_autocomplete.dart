@@ -23,7 +23,8 @@ class AudioAutoComplete extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
+    final colorScheme = context.colorScheme;
     final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(
       fontWeight: FontWeight.w500,
     );
@@ -66,7 +67,7 @@ class AudioAutoComplete extends StatelessWidget {
                         hintText: hintText,
                       )
                     : createMaterialDecoration(
-                        colorScheme: theme.colorScheme,
+                        colorScheme: colorScheme,
                         hintText: hintText,
                       ),
                 controller: textEditingController,
@@ -89,8 +90,8 @@ class AudioAutoComplete extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                     child: Material(
                       color: theme.isLight
-                          ? theme.colorScheme.surface
-                          : theme.colorScheme.surfaceContainerHighest,
+                          ? colorScheme.surface
+                          : colorScheme.surfaceContainerHighest,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6),
                         side: BorderSide(

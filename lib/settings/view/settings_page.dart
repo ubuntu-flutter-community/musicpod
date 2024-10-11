@@ -34,7 +34,7 @@ class SettingsPage extends StatelessWidget {
       children: [
         YaruDialogTitleBar(
           border: BorderSide.none,
-          backgroundColor: context.t.dialogBackgroundColor,
+          backgroundColor: context.theme.dialogBackgroundColor,
           onClose: (p0) => Navigator.of(rootNavigator: true, context).pop(),
           title: Text(context.l10n.settings),
         ),
@@ -83,7 +83,7 @@ class _ThemeSection extends StatelessWidget with WatchItMixin {
                       borderRadius: BorderRadius.circular(15),
                       selected: themeIndex == i,
                       onTap: () => model.setThemeIndex(i),
-                      selectionColor: context.t.colorScheme.primary,
+                      selectionColor: context.theme.colorScheme.primary,
                       child: ThemeTile(ThemeMode.values[i]),
                     ),
                     Padding(
@@ -180,7 +180,7 @@ class _PodcastSectionState extends State<_PodcastSection> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final model = di<SettingsModel>();
     final usePodcastIndex =
         watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
@@ -345,7 +345,7 @@ class _AboutTileState extends State<_AboutTile> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final appModel = di<AppModel>();
     final updateAvailable =
         watchPropertyValue((AppModel m) => m.updateAvailable);
@@ -371,7 +371,7 @@ class _AboutTileState extends State<_AboutTile> {
                       : currentVersion ?? context.l10n.unknown,
                   style: updateAvailable == true
                       ? TextStyle(
-                          color: context.t.colorScheme.success
+                          color: context.theme.colorScheme.success
                               .scale(lightness: theme.isLight ? 0 : 0.3),
                         )
                       : null,

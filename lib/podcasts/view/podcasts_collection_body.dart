@@ -29,7 +29,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     if (!isOnline) return const OfflineBody();
 
@@ -84,7 +84,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: Container(
             alignment: Alignment.center,
-            height: context.t.appBarTheme.toolbarHeight,
+            height: context.theme.appBarTheme.toolbarHeight,
             margin: filterPanelPadding,
             child: const PodcastCollectionControlPanel(),
           ),

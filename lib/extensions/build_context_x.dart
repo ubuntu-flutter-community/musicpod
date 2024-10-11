@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 extension BuildContextX on BuildContext {
-  ThemeData get t => Theme.of(this);
+  ThemeData get theme => Theme.of(this);
+  ColorScheme get colorScheme => theme.colorScheme;
 
-  MediaQueryData get m => MediaQuery.of(this);
+  Size get mediaQuerySize => MediaQuery.sizeOf(this);
 
-  bool get smallWindow => m.size.width < kMasterDetailBreakPoint;
-  bool get wideWindow => m.size.width < kAdaptivContainerBreakPoint;
-  bool get showMasterPanel => m.size.width > kMasterDetailBreakPoint;
+  bool get smallWindow => mediaQuerySize.width < kMasterDetailBreakPoint;
+  bool get wideWindow => mediaQuerySize.width < kAdaptivContainerBreakPoint;
+  bool get showMasterPanel => mediaQuerySize.width > kMasterDetailBreakPoint;
 }

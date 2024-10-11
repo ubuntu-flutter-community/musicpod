@@ -35,8 +35,8 @@ class RadioHistoryTile extends StatelessWidget with PlayerMixin {
       key: ValueKey(entry.value.icyTitle),
       selected: selected,
       selectedColor: simpleTile
-          ? context.t.colorScheme.onSurface
-          : context.t.contrastyPrimary,
+          ? context.theme.colorScheme.onSurface
+          : context.theme.contrastyPrimary,
       contentPadding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
       leading: simpleTile
           ? Visibility(

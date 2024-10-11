@@ -15,7 +15,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final model = di<PodcastModel>();
 
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);

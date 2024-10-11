@@ -19,7 +19,7 @@ class RoundImageContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final boxShadow = BoxShadow(
       offset: const Offset(0, 0),
       spreadRadius: 1,
@@ -98,7 +98,7 @@ class ArtistVignette extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
 
     return Center(
       child: Container(

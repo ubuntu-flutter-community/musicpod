@@ -400,7 +400,7 @@ class _PlaylistGenreBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = context.t.pageHeaderDescription;
+    final style = context.theme.pageHeaderDescription;
     Set<String> genres = {};
     for (var e in audios) {
       final g = e.genre?.trim();

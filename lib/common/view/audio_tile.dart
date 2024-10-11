@@ -53,7 +53,7 @@ class _AudioTileState extends State<AudioTile> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final l10n = context.l10n;
     final playerModel = di<PlayerModel>();
     final liked = watchPropertyValue((LibraryModel m) => m.liked(widget.audio));
@@ -199,7 +199,7 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
                 color: selected && isPlayerPlaying ? selectedColor : null,
               ),
             _ => SizedBox.square(
-                dimension: context.t.buttonTheme.height,
+                dimension: context.theme.buttonTheme.height,
               ),
           },
         ),
@@ -215,7 +215,7 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
                 child: Text(
                   Duration(milliseconds: audio.durationMs!.toInt())
                       .formattedTime,
-                  style: context.t.textTheme.labelMedium?.copyWith(
+                  style: context.theme.textTheme.labelMedium?.copyWith(
                     color: selected && isPlayerPlaying ? selectedColor : null,
                   ),
                 ),
@@ -243,7 +243,7 @@ class AlbumTileLead extends StatelessWidget {
         widthFactor: 1,
         child: Text(
           trackNumber?.toString() ?? '0',
-          style: context.t.textTheme.labelMedium,
+          style: context.theme.textTheme.labelMedium,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),

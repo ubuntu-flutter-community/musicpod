@@ -33,7 +33,7 @@ class AudioPageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final radius = imageRadius ?? BorderRadius.circular(10);
 
     return Padding(
@@ -103,7 +103,7 @@ class _AudioPageHeaderSubTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
 
     final style = theme.pageHeaderSubtitleStyle;
     return Row(

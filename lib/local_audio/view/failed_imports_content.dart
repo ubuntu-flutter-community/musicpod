@@ -18,7 +18,7 @@ class FailedImportsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     return SizedBox(
       height: 400,
       width: 400,

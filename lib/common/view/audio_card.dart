@@ -38,7 +38,7 @@ class _AudioCardState extends State<AudioCard> {
   bool _hovered = false;
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final light = theme.isLight;
 
     return Column(
@@ -127,7 +127,7 @@ class _AudioCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final light = theme.isLight;
 
     return SizedBox(

@@ -74,7 +74,7 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
           ),
           icon: Icon(
             Iconz.updateAvailable,
-            color: context.t.colorScheme.success,
+            color: context.theme.colorScheme.success,
           ),
         ),
     };

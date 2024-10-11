@@ -15,7 +15,7 @@ class BlurredFullHeightPlayerImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
 
     return Opacity(
       opacity: theme.isLight ? 0.8 : 0.9,

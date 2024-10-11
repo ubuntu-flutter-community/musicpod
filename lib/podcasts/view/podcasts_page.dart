@@ -77,7 +77,7 @@ class PodcastsPageIcon extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final audioType = watchPropertyValue((PlayerModel m) => m.audio?.audioType);
 
     final checkingForUpdates =

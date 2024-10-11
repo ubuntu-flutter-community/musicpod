@@ -60,7 +60,7 @@ class Progress extends StatelessWidget {
               backgroundColor: value == null
                   ? null
                   : (backgroundColor ??
-                      context.t.colorScheme.primary.withOpacity(0.3)),
+                      context.theme.colorScheme.primary.withOpacity(0.3)),
             ),
           );
   }

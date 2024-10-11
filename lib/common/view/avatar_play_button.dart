@@ -20,7 +20,7 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final playerModel = di<PlayerModel>();
     final isPlayerPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final pageIsQueue = watchPropertyValue(

@@ -20,7 +20,7 @@ class AudioCardBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final light = theme.isLight;
 
     return SizedBox(
