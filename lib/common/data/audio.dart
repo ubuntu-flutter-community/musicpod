@@ -311,7 +311,14 @@ class Audio {
   }
 
   String? get uuid => description;
-  String? get language => artist;
+  String get language => artist ?? '';
+  int get clicks => discTotal ?? 0;
+  int get bitRate => fileSize ?? 0;
+  List<String>? get tags => album?.isNotEmpty == false
+      ? null
+      : <String>[
+          for (final tag in album?.split(',') ?? <String>[]) tag,
+        ];
 
   factory Audio.fromStation(Station station) {
     return Audio(
@@ -325,6 +332,7 @@ class Audio {
       description: station.stationUUID,
       fileSize: station.bitrate,
       albumArtist: station.codec,
+      discTotal: station.clickCount,
     );
   }
 
@@ -359,12 +367,6 @@ class Audio {
         : '${artistName ?? ''}:${albumName ?? ''}';
     return id;
   }
-
-  List<String>? get tags => album?.isNotEmpty == false
-      ? null
-      : <String>[
-          for (final tag in album?.split(',') ?? <String>[]) tag,
-        ];
 
   bool get hasPathAndId =>
       albumId?.isNotEmpty == true &&

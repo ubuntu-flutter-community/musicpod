@@ -54,6 +54,7 @@ class _AudioTileState extends State<AudioTile> {
   @override
   Widget build(BuildContext context) {
     final theme = context.t;
+    final l10n = context.l10n;
     final playerModel = di<PlayerModel>();
     final liked = watchPropertyValue((LibraryModel m) => m.liked(widget.audio));
     final starred = watchPropertyValue(
@@ -61,10 +62,9 @@ class _AudioTileState extends State<AudioTile> {
     );
     final selectedColor = widget.selectedColor ?? theme.contrastyPrimary;
     final subTitle = switch (widget.audioPageType) {
-      AudioPageType.artist => widget.audio.album ?? context.l10n.unknown,
-      AudioPageType.radioSearch =>
-        '${widget.audio.artist ?? context.l10n.unknown}, ${widget.audio.albumArtist ?? ''}, ${widget.audio.fileSize ?? ''} kbps',
-      _ => widget.audio.artist ?? context.l10n.unknown,
+      AudioPageType.artist => widget.audio.album ?? l10n.unknown,
+      AudioPageType.radioSearch => _buildRadioSubTitle(widget.audio, l10n),
+      _ => widget.audio.artist ?? l10n.unknown,
     };
 
     var leading = !widget.showLeading
@@ -112,7 +112,7 @@ class _AudioTileState extends State<AudioTile> {
         title: Padding(
           padding: const EdgeInsets.only(right: kYaruPagePadding),
           child: Text(
-            widget.audio.title ?? context.l10n.unknown,
+            widget.audio.title ?? l10n.unknown,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
           ),
@@ -137,6 +137,12 @@ class _AudioTileState extends State<AudioTile> {
       ),
     );
   }
+
+  String _buildRadioSubTitle(
+    Audio audio,
+    AppLocalizations l10n,
+  ) =>
+      '${audio.albumArtist?.isNotEmpty == true ? '${audio.albumArtist}' : ''}${audio.bitRate > 0 ? ' • ${audio.fileSize} kbps' : ''}${audio.clicks > 0 ? ' • ${audio.clicks} ${l10n.clicks}' : ''}${audio.language.trim().isNotEmpty ? ' • ${audio.language}' : ''}';
 }
 
 class _AudioTileTrail extends StatelessWidget with WatchItMixin {

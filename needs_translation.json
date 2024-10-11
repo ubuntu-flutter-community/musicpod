@@ -22,6 +22,7 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -299,6 +300,7 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -552,7 +554,8 @@
   ],
 
   "es": [
-    "onlineArtError"
+    "onlineArtError",
+    "clicks"
   ],
 
   "fr": [
@@ -569,6 +572,7 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -824,7 +828,8 @@
   "it": [
     "skipToLivStream",
     "searchSimilarStation",
-    "onlineArtError"
+    "onlineArtError",
+    "clicks"
   ],
 
   "nl": [
@@ -1070,6 +1075,7 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -1385,6 +1391,7 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -1851,6 +1858,7 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -2317,6 +2325,7 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -2598,6 +2607,7 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -2853,7 +2863,8 @@
   "sk": [
     "skipToLivStream",
     "searchSimilarStation",
-    "onlineArtError"
+    "onlineArtError",
+    "clicks"
   ],
 
   "sv": [
@@ -3060,6 +3071,7 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -3335,6 +3347,7 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -3592,7 +3605,8 @@
     "unPinAlbum",
     "skipToLivStream",
     "searchSimilarStation",
-    "onlineArtError"
+    "onlineArtError",
+    "clicks"
   ],
 
   "zh_CN": [
@@ -3600,7 +3614,8 @@
     "unPinAlbum",
     "skipToLivStream",
     "searchSimilarStation",
-    "onlineArtError"
+    "onlineArtError",
+    "clicks"
   ],
 
   "zh_HK": [
@@ -3618,6 +3633,7 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -3885,6 +3901,7 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
