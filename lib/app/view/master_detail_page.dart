@@ -54,7 +54,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
                   ? masterScaffoldKey.currentState?.closeEndDrawer
                   : masterScaffoldKey.currentState?.closeDrawer,
               icon: Icon(
-                Iconz().close,
+                Iconz.close,
               ),
             ),
           ),
@@ -198,7 +198,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.search),
       pageBuilder: (_) => const SearchPage(),
-      iconBuilder: (_) => Icon(Iconz().search),
+      iconBuilder: (_) => Icon(Iconz.search),
       pageId: kSearchPageId,
     ),
     MasterItem(
@@ -226,7 +226,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
       pageId: kPodcastsPageId,
     ),
     MasterItem(
-      iconBuilder: (selected) => Icon(Iconz().plus),
+      iconBuilder: (selected) => Icon(Iconz.plus),
       titleBuilder: (context) => Text(context.l10n.add),
       pageBuilder: (_) => const SizedBox.shrink(),
       pageId: kNewPlaylistPageId,
@@ -247,7 +247,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
         iconBuilder: (selected) => SideBarFallBackImage(
           color: getAlphabetColor(playlist.key),
           child: Icon(
-            Iconz().playlist,
+            Iconz.playlist,
           ),
         ),
       ),

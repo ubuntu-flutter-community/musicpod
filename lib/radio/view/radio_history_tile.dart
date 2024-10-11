@@ -67,7 +67,7 @@ class RadioHistoryTile extends StatelessWidget with PlayerMixin {
                 },
               ),
               icon: Icon(
-                Iconz().info,
+                Iconz.info,
               ),
             ),
       title: TapAbleText(

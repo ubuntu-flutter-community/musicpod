@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+
 import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
+import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-
-import 'package:flutter/material.dart';
 
 class StationPageIcon extends StatelessWidget {
   const StationPageIcon({
@@ -29,17 +30,17 @@ class StationPageIcon extends StatelessWidget {
           fallBackIcon: SideBarFallBackImage(
             color: fallBackColor,
             child: selected
-                ? Icon(Iconz().starFilled)
+                ? Icon(Iconz.starFilled)
                 : Icon(
-                    Iconz().star,
+                    Iconz.star,
                   ),
           ),
           errorIcon: SideBarFallBackImage(
             color: fallBackColor,
             child: selected
-                ? Icon(Iconz().imageMissingFilled)
+                ? Icon(Iconz.imageMissingFilled)
                 : Icon(
-                    Iconz().imageMissing,
+                    Iconz.imageMissing,
                   ),
           ),
           fit: BoxFit.fitHeight,

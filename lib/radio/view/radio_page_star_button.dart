@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/view/icons.dart';
+import '../../common/view/animated_like_icon.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 
@@ -29,7 +29,7 @@ class RadioPageStarButton extends StatelessWidget with WatchItMixin {
               ? () => libraryModel.unStarStation(station.description!)
               : () => libraryModel
                   .addStarredStation(station.description!, [station]),
-      icon: Iconz().getAnimatedStar(isStarred),
+      icon: AnimatedStar(isStarred: isStarred),
     );
   }
 }

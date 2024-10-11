@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../common/view/icons.dart';
 import '../../common/view/snackbars.dart';
 import '../../l10n/l10n.dart';
 import '../radio_model.dart';
+import 'disconnected_server_icon.dart';
 
 class RadioReconnectButton extends StatelessWidget {
   const RadioReconnectButton({super.key});

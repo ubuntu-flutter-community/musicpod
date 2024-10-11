@@ -15,7 +15,7 @@ class PodcastReplayButton extends StatelessWidget {
     return IconButton(
       tooltip: context.l10n.replayAllEpisodes,
       onPressed: () => di<PlayerModel>().removeLastPositions(audios),
-      icon: Icon(Iconz().replay),
+      icon: Icon(Iconz.replay),
     );
   }
 }

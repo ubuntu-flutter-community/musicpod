@@ -19,9 +19,9 @@ class AudioTileImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final icon = Icon(
       switch (audio?.audioType) {
-        AudioType.radio => Iconz().radio,
-        AudioType.podcast => Iconz().podcast,
-        _ => Iconz().musicNote,
+        AudioType.radio => Iconz.radio,
+        AudioType.podcast => Iconz.podcast,
+        _ => Iconz.musicNote,
       },
       size: size / (1.65),
     );

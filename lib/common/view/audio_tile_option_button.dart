@@ -51,7 +51,7 @@ class AudioTileOptionButton extends StatelessWidget {
                 );
               },
               child: YaruTile(
-                leading: Icon(Iconz().insertIntoQueue),
+                leading: Icon(Iconz.insertIntoQueue),
                 title: Text(context.l10n.playNext),
               ),
             ),
@@ -61,7 +61,7 @@ class AudioTileOptionButton extends StatelessWidget {
                 onTap: () =>
                     libraryModel.removeAudioFromPlaylist(playlistId, audio),
                 child: YaruTile(
-                  leading: Icon(Iconz().remove),
+                  leading: Icon(Iconz.remove),
                   title: Text('${context.l10n.removeFrom} $playlistId'),
                 ),
               ),
@@ -77,7 +77,7 @@ class AudioTileOptionButton extends StatelessWidget {
                 },
               ),
               child: YaruTile(
-                leading: Icon(Iconz().plus),
+                leading: Icon(Iconz.plus),
                 title: Text(
                   '${context.l10n.addToPlaylist} ...',
                 ),
@@ -91,7 +91,7 @@ class AudioTileOptionButton extends StatelessWidget {
               },
             ),
             child: YaruTile(
-              leading: Icon(Iconz().info),
+              leading: Icon(Iconz.info),
               title: Text(
                 '${context.l10n.showMetaData} ...',
               ),
@@ -117,7 +117,7 @@ class AudioTileOptionButton extends StatelessWidget {
             ),
         ];
       },
-      icon: Icon(Iconz().viewMore),
+      icon: Icon(Iconz.viewMore),
     );
   }
 }
@@ -129,39 +129,44 @@ class MetaDataDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final radio = audio.audioType == AudioType.radio;
+
     final items = <(String, String)>{
       (
-        context.l10n.title,
+        radio ? context.l10n.stationName : context.l10n.title,
         '${audio.title}',
       ),
       (
-        context.l10n.album,
-        '${audio.album}',
+        radio ? context.l10n.tags : context.l10n.album,
+        '${radio ? audio.album?.replaceAll(',', ', ') : audio.album}',
       ),
       (
-        context.l10n.artist,
-        '${audio.artist}',
+        radio ? context.l10n.language : context.l10n.artist,
+        '${radio ? audio.language : audio.artist}',
       ),
       (
-        context.l10n.albumArtists,
+        radio ? context.l10n.quality : context.l10n.albumArtists,
         '${audio.albumArtist}',
       ),
+      if (!radio)
+        (
+          context.l10n.trackNumber,
+          '${audio.trackNumber}',
+        ),
+      if (!radio)
+        (
+          context.l10n.diskNumber,
+          '${audio.discNumber}',
+        ),
       (
-        context.l10n.trackNumber,
-        '${audio.trackNumber}',
+        radio ? context.l10n.clicks : context.l10n.totalDisks,
+        '${radio ? audio.clicks : audio.discTotal}',
       ),
-      (
-        context.l10n.diskNumber,
-        '${audio.discNumber}',
-      ),
-      (
-        context.l10n.totalDisks,
-        '${audio.discTotal}',
-      ),
-      (
-        context.l10n.genre,
-        '${audio.genre}',
-      ),
+      if (!radio)
+        (
+          context.l10n.genre,
+          '${audio.genre}',
+        ),
       (
         context.l10n.url,
         (audio.url ?? ''),

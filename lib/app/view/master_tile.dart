@@ -162,9 +162,7 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
                 child: IconButton(
                   onPressed: onPlay,
                   icon: Icon(
-                    isPlaying && isEnQueued
-                        ? Iconz().pause
-                        : Iconz().playFilled,
+                    isPlaying && isEnQueued ? Iconz.pause : Iconz.playFilled,
                     size: kTinyButtonIconSize,
                     color: context.t.colorScheme.primary,
                   ),

@@ -24,7 +24,7 @@ class RepeatButton extends StatelessWidget with WatchItMixin {
       isSelected: repeatSingle,
       color: iconColor,
       tooltip: context.l10n.repeat,
-      icon: Icon(Iconz().repeatSingle),
+      icon: Icon(Iconz.repeatSingle),
       onPressed: !active ? null : () => setRepeatSingle(!repeatSingle),
     );
   }

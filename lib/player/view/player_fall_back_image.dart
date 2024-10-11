@@ -27,11 +27,11 @@ class PlayerFallBackImage extends StatelessWidget {
     final theme = context.t;
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
-      iconData = Iconz().radio;
+      iconData = Iconz.radio;
     } else if (audio?.audioType == AudioType.podcast) {
-      iconData = Iconz().podcast;
+      iconData = Iconz.podcast;
     } else {
-      iconData = Iconz().musicNote;
+      iconData = Iconz.musicNote;
     }
     return Center(
       child: Container(

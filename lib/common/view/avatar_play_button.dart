@@ -27,7 +27,7 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
       (PlayerModel m) => m.queueName != null && m.queueName == pageId,
     );
     final iconData =
-        isPlayerPlaying && pageIsQueue ? Iconz().pause : Iconz().playFilled;
+        isPlayerPlaying && pageIsQueue ? Iconz.pause : Iconz.playFilled;
 
     return Padding(
       padding: bigPlayButtonPadding,

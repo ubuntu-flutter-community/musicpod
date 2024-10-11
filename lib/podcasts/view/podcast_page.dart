@@ -227,12 +227,12 @@ class _PodcastPageImage extends StatelessWidget {
     final theme = context.t;
     var safeNetworkImage = SafeNetworkImage(
       fallBackIcon: Icon(
-        Iconz().podcast,
+        Iconz.podcast,
         size: 80,
         color: theme.hintColor,
       ),
       errorIcon: Icon(
-        Iconz().podcast,
+        Iconz.podcast,
         size: 80,
         color: theme.hintColor,
       ),

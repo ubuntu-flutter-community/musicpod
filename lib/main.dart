@@ -30,6 +30,7 @@ import 'player/player_service.dart';
 import 'podcasts/download_model.dart';
 import 'podcasts/podcast_model.dart';
 import 'podcasts/podcast_service.dart';
+import 'radio/online_art_model.dart';
 import 'radio/online_art_service.dart';
 import 'radio/radio_model.dart';
 import 'radio/radio_service.dart';
@@ -83,6 +84,7 @@ void registerServicesAndViewModels({
       () => OnlineArtService(
         dio: di<Dio>(),
       ),
+      dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<PlayerService>(
       () => PlayerService(
@@ -191,5 +193,11 @@ void registerServicesAndViewModels({
         libraryService: di<LibraryService>(),
         localAudioService: di<LocalAudioService>(),
       )..init(),
+    )
+    ..registerLazySingleton<OnlineArtModel>(
+      () => OnlineArtModel(
+        service: di<OnlineArtService>(),
+      ),
+      dispose: (m) => m.dispose(),
     );
 }

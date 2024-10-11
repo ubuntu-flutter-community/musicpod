@@ -14,18 +14,18 @@ import '../podcasts/podcast_utils.dart';
 import '../radio/view/station_page.dart';
 
 mixin PlayerMixin {
-  String getSubTitle(Audio? audio) =>
-      switch (audio?.audioType) {
-        AudioType.podcast => audio?.album,
-        AudioType.radio => audio?.title,
-        _ => audio?.artist
-      } ??
-      '';
+  String getSubTitle(Audio? audio) => (switch (audio?.audioType) {
+            AudioType.podcast => audio?.album,
+            AudioType.radio => audio?.title,
+            _ => audio?.artist
+          } ??
+          '')
+      .trim();
 
   String getTitle({required Audio? audio, required String? icyTitle}) =>
       icyTitle?.isNotEmpty == true && audio?.audioType == AudioType.radio
           ? icyTitle!
-          : (audio?.title?.isNotEmpty == true ? audio!.title! : '');
+          : (audio?.title?.isNotEmpty == true ? audio!.title! : '').trim();
 
   void onTitleTap({
     Audio? audio,

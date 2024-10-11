@@ -1,5 +1,7 @@
 import 'package:animated_emoji/animated_emoji.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
@@ -8,7 +10,6 @@ import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
-import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
@@ -186,5 +187,19 @@ class TagGrid extends StatelessWidget with WatchItMixin {
         );
       },
     );
+  }
+
+  IconData getIconForTag(String tag) {
+    final tagsToIcons = <String, IconData>{
+      'metal': TablerIcons.guitar_pick,
+      'pop': TablerIcons.diamond,
+    };
+
+    return tagsToIcons[tag] ??
+        (yaruStyled
+            ? YaruIcons.music_note
+            : appleStyled
+                ? CupertinoIcons.double_music_note
+                : Icons.music_note);
   }
 }

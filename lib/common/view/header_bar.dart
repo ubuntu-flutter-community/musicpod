@@ -204,10 +204,10 @@ class SidebarButton extends StatelessWidget {
             masterScaffoldKey.currentState?.openDrawer();
           }
         },
-        icon: Iconz().sidebar == Iconz().materialSidebar
-            ? Transform.flip(flipX: true, child: Icon(Iconz().materialSidebar))
+        icon: Iconz.sidebar == Iconz.materialSidebar
+            ? Transform.flip(flipX: true, child: Icon(Iconz.materialSidebar))
             : Icon(
-                Iconz().sidebar,
+                Iconz.sidebar,
                 size: iconSize,
               ),
       ),

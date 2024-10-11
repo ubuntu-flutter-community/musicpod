@@ -51,7 +51,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
         AudioType.radio => IconButton(
             tooltip: context.l10n.skipToLivStream,
             onPressed: di<PlayerModel>().playNext,
-            icon: Icon(Iconz().refresh),
+            icon: Icon(Iconz.refresh),
           ),
         _ => const SizedBox.shrink()
       },
@@ -62,7 +62,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
           color: defaultColor,
           onPressed: !active ? null : () => di<PlayerModel>().playPrevious(),
           icon: Icon(
-            Iconz().skipBackward,
+            Iconz.skipBackward,
             color: defaultColor,
           ),
         ),
@@ -85,7 +85,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
               ? null
               : () => di<PlayerModel>().playNext(),
           icon: Icon(
-            Iconz().skipForward,
+            Iconz.skipForward,
             color: defaultColor,
           ),
         ),

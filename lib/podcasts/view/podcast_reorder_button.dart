@@ -20,17 +20,17 @@ class PodcastReorderButton extends StatelessWidget with WatchItMixin {
       tooltip: context.l10n.reorder,
       onPressed: () => di<LibraryModel>()
           .reorderPodcast(feedUrl: feedUrl, ascending: !ascending),
-      icon: Iconz().ascending == Iconz().materialAscending && ascending
+      icon: Iconz.ascending == Iconz.materialAscending && ascending
           ? Transform.flip(
               flipX: true,
               child: Transform.rotate(
                 angle: pi,
                 child: Icon(
-                  Iconz().materialAscending,
+                  Iconz.materialAscending,
                 ),
               ),
             )
-          : Icon(ascending ? Iconz().ascending : Iconz().descending),
+          : Icon(ascending ? Iconz.ascending : Iconz.descending),
     );
   }
 }

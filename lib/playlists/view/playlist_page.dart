@@ -178,7 +178,7 @@ class _PlaylistHeaderImage extends StatelessWidget {
     Widget image;
     if (length == 0) {
       image = Icon(
-        Iconz().playlist,
+        Iconz.playlist,
         size: 65,
       );
     } else {
@@ -346,7 +346,7 @@ class _PlaylistControlPanel extends StatelessWidget with WatchItMixin {
         children: [
           IconButton(
             tooltip: context.l10n.editPlaylist,
-            icon: Icon(Iconz().pen),
+            icon: Icon(Iconz.pen),
             onPressed: () => showDialog(
               context: context,
               builder: (context) => AlertDialog(
@@ -366,13 +366,13 @@ class _PlaylistControlPanel extends StatelessWidget with WatchItMixin {
           ),
           IconButton(
             tooltip: context.l10n.clearPlaylist,
-            icon: Icon(Iconz().clearAll),
+            icon: Icon(Iconz.clearAll),
             onPressed: () => libraryModel.clearPlaylist(pageId),
           ),
           AvatarPlayButton(audios: audios, pageId: pageId),
           IconButton(
             tooltip: context.l10n.add,
-            icon: Icon(Iconz().plus),
+            icon: Icon(Iconz.plus),
             onPressed: () => showDialog(
               context: context,
               builder: (context) => PlaylistAddAudiosDialog(playlistId: pageId),
@@ -383,7 +383,7 @@ class _PlaylistControlPanel extends StatelessWidget with WatchItMixin {
             isSelected: allowReorder,
             onPressed: () =>
                 di<LocalAudioModel>().setAllowReorder(!allowReorder),
-            icon: Icon(Iconz().move),
+            icon: Icon(Iconz.move),
           ),
         ],
       ),

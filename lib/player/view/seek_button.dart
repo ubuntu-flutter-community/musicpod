@@ -23,7 +23,7 @@ class SeekButton extends StatelessWidget {
     final playerModel = di<PlayerModel>();
 
     final icon = Icon(
-      forward ? Iconz().forward30 : Iconz().backward10,
+      forward ? Iconz.forward30 : Iconz.backward10,
       color: iconColor,
     );
     return IconButton(

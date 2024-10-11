@@ -32,7 +32,7 @@ class ExploreOnlinePopup extends StatelessWidget with WatchItMixin {
           ),
         ),
       ],
-      icon: Icon(Iconz().explore),
+      icon: Icon(Iconz.explore),
     );
   }
 }

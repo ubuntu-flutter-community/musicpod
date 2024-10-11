@@ -239,7 +239,7 @@ class _CountryTile extends StatelessWidget {
           favs?.contains(t.code) == false ? addFav(t) : removeFav(t);
         },
         icon: Icon(
-          favs?.contains(t.code) == true ? Iconz().starFilled : Iconz().star,
+          favs?.contains(t.code) == true ? Iconz.starFilled : Iconz.star,
         ),
       ),
     );

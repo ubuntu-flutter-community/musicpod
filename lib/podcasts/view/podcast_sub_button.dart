@@ -35,7 +35,7 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
       icon: checkingForUpdates
           ? const SideBarProgress()
           : Icon(
-              subscribed ? Iconz().removeFromLibrary : Iconz().addToLibrary,
+              subscribed ? Iconz.removeFromLibrary : Iconz.addToLibrary,
             ),
       onPressed: checkingForUpdates
           ? null

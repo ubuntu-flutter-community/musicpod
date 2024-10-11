@@ -36,7 +36,7 @@ class RadioPageCopyHistoryButton extends StatelessWidget with WatchItMixin {
                 ),
               );
             },
-      icon: Icon(Iconz().copy),
+      icon: Icon(Iconz.copy),
     );
   }
 }

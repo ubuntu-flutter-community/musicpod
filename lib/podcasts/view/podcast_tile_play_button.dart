@@ -49,13 +49,13 @@ class PodcastTilePlayButton extends StatelessWidget {
             child: IconButton(
               icon: (isPlayerPlaying && selected)
                   ? Icon(
-                      Iconz().pause,
+                      Iconz.pause,
                     )
                   : Padding(
                       padding: appleStyled
                           ? const EdgeInsets.only(left: 3)
                           : EdgeInsets.zero,
-                      child: Icon(Iconz().playFilled),
+                      child: Icon(Iconz.playFilled),
                     ),
               onPressed: () {
                 if (selected) {

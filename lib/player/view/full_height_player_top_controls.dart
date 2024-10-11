@@ -10,10 +10,12 @@ import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/like_icon.dart';
 import '../../common/view/share_button.dart';
+import '../../common/view/snackbars.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
+import '../../radio/online_art_model.dart';
 import 'playback_rate_button.dart';
 import 'player_view.dart';
 import 'queue_button.dart';
@@ -54,18 +56,28 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
         alignment: WrapAlignment.end,
         spacing: 5.0,
         children: [
-          if (audio?.audioType != AudioType.podcast)
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: switch (audio?.audioType) {
-                AudioType.local => LikeIcon(
-                    audio: audio,
-                    color: context.t.colorScheme.onSurface,
-                  ),
-                AudioType.radio => RadioLikeIcon(audio: audio),
-                _ => const SizedBox.shrink(),
-              },
+          if (watchStream((OnlineArtModel s) => s.error).data != null &&
+              audio?.audioType == AudioType.radio)
+            IconButton(
+              tooltip: context.l10n.onlineArtError,
+              onPressed: () => showSnackBar(
+                context: context,
+                snackBar: SnackBar(content: Text(context.l10n.onlineArtError)),
+              ),
+              icon: Icon(
+                Iconz.warning,
+                color: context.t.colorScheme.onSurface,
+              ),
             ),
+          if (audio?.audioType != AudioType.podcast)
+            switch (audio?.audioType) {
+              AudioType.local => LikeIcon(
+                  audio: audio,
+                  color: context.t.colorScheme.onSurface,
+                ),
+              AudioType.radio => RadioLikeIcon(audio: audio),
+              _ => const SizedBox.shrink(),
+            },
           if (showQueueButton) QueueButton(color: iconColor),
           ShareButton(
             audio: audio,
@@ -84,8 +96,8 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
                 : context.l10n.fullWindow,
             icon: Icon(
               playerPosition == PlayerPosition.fullWindow
-                  ? Iconz().fullWindowExit
-                  : Iconz().fullWindow,
+                  ? Iconz.fullWindowExit
+                  : Iconz.fullWindow,
               color: iconColor,
             ),
             onPressed: () {

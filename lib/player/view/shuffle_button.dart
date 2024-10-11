@@ -24,7 +24,7 @@ class ShuffleButton extends StatelessWidget with WatchItMixin {
       tooltip: context.l10n.shuffle,
       color: iconColor,
       icon: Icon(
-        Iconz().shuffle,
+        Iconz.shuffle,
       ),
       onPressed: !active ? null : () => di<PlayerModel>().setShuffle(!shuffle),
     );

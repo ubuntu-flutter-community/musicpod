@@ -46,7 +46,7 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
               ? context.l10n.removeDownloadEpisode
               : context.l10n.downloadEpisode,
           icon: Icon(
-            download ? Iconz().downloadFilled : Iconz().download,
+            download ? Iconz.downloadFilled : Iconz.download,
             color: audio?.path != null ? theme.colorScheme.primary : null,
           ),
           onPressed: downloadsDir == null

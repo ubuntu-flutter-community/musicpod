@@ -36,7 +36,7 @@ class SafeNetworkImage extends StatelessWidget {
     final fallBack = Center(
       child: fallBackIcon ??
           Icon(
-            Iconz().musicNote,
+            Iconz.musicNote,
             size: height != null ? height! * 0.7 : null,
           ),
     );
@@ -46,7 +46,7 @@ class SafeNetworkImage extends StatelessWidget {
     final errorWidget = Center(
       child: errorIcon ??
           Icon(
-            Iconz().imageMissing,
+            Iconz.imageMissing,
             size: height != null ? height! * 0.7 : null,
             color: context.t.hintColor,
           ),

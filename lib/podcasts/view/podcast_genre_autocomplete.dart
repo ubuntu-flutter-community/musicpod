@@ -222,7 +222,7 @@ class _PodcastGenreTile extends StatelessWidget {
       //     favs?.contains(t.id) == false ? addFav(t) : removeFav(t);
       //   },
       //   icon: Icon(
-      //     favs?.contains(t.id) == true ? Iconz().starFilled : Iconz().star,
+      //     favs?.contains(t.id) == true ? Iconz.starFilled : Iconz.star,
       //   ),
       // ),
     );

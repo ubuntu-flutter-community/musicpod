@@ -89,14 +89,14 @@ class PodcastsPageIcon extends StatelessWidget with WatchItMixin {
 
     if (audioType == AudioType.podcast) {
       return Icon(
-        Iconz().playFilled,
+        Iconz.playFilled,
         color: theme.colorScheme.primary,
       );
     }
 
     return Padding(
       padding: kMainPageIconPadding,
-      child: selected ? Icon(Iconz().podcastFilled) : Icon(Iconz().podcast),
+      child: selected ? Icon(Iconz.podcastFilled) : Icon(Iconz.podcast),
     );
   }
 }

@@ -76,7 +76,7 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
           onTap: () => playlistNavigatorKey.currentState?.pushNamed('/new'),
           leading: SideBarFallBackImage(
             color: Colors.transparent,
-            child: Icon(Iconz().plus),
+            child: Icon(Iconz.plus),
           ),
           title: Text(context.l10n.createNewPlaylist),
         ),
@@ -121,7 +121,7 @@ class _PlaylistTile extends StatelessWidget {
       },
       leading: SideBarFallBackImage(
         color: getAlphabetColor(playlistId),
-        child: Icon(Iconz().starFilled),
+        child: Icon(Iconz.starFilled),
       ),
       title: Text(playlistId),
     );

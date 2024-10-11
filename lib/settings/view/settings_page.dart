@@ -223,7 +223,7 @@ class _PodcastSectionState extends State<_PodcastSection> {
                     onPressed: () =>
                         model.setPodcastIndexApiKey(_keyController.text),
                     icon: Icon(
-                      Iconz().check,
+                      Iconz.check,
                       color: podcastIndexApiKey == _initialKey
                           ? theme.colorScheme.success
                           : theme.colorScheme.onSurface,
@@ -250,7 +250,7 @@ class _PodcastSectionState extends State<_PodcastSection> {
                     onPressed: () =>
                         model.setPodcastIndexApiSecret(_secretController.text),
                     icon: Icon(
-                      Iconz().check,
+                      Iconz.check,
                       color: podcastIndexApiSecret == _initialSecret
                           ? theme.colorScheme.success
                           : theme.colorScheme.onSurface,

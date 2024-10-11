@@ -21,6 +21,8 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -297,6 +299,8 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -549,6 +553,11 @@
     "regionZimbabwe"
   ],
 
+  "es": [
+    "onlineArtError",
+    "clicks"
+  ],
+
   "fr": [
     "local",
     "unPinAlbum",
@@ -562,6 +571,8 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -816,7 +827,9 @@
 
   "it": [
     "skipToLivStream",
-    "searchSimilarStation"
+    "searchSimilarStation",
+    "onlineArtError",
+    "clicks"
   ],
 
   "nl": [
@@ -1061,6 +1074,8 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -1375,6 +1390,8 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -1840,6 +1857,8 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -2305,6 +2324,8 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -2585,6 +2606,8 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -2839,7 +2862,9 @@
 
   "sk": [
     "skipToLivStream",
-    "searchSimilarStation"
+    "searchSimilarStation",
+    "onlineArtError",
+    "clicks"
   ],
 
   "sv": [
@@ -3045,6 +3070,8 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -3319,6 +3346,8 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -3575,14 +3604,18 @@
     "local",
     "unPinAlbum",
     "skipToLivStream",
-    "searchSimilarStation"
+    "searchSimilarStation",
+    "onlineArtError",
+    "clicks"
   ],
 
   "zh_CN": [
     "local",
     "unPinAlbum",
     "skipToLivStream",
-    "searchSimilarStation"
+    "searchSimilarStation",
+    "onlineArtError",
+    "clicks"
   ],
 
   "zh_HK": [
@@ -3599,6 +3632,8 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -3865,6 +3900,8 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
+    "clicks",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",

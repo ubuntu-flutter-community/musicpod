@@ -24,7 +24,7 @@ class QueueButton extends StatelessWidget {
       padding: EdgeInsets.zero,
       tooltip: context.l10n.queue,
       icon: Icon(
-        Iconz().playlist,
+        Iconz.playlist,
         color: color ?? theme.colorScheme.onSurface,
       ),
       onPressed: () {
@@ -230,7 +230,7 @@ class _QueueTile extends StatelessWidget {
           ? IconButton(
               onPressed:
                   selected ? null : () => di<PlayerModel>().remove(audio),
-              icon: Icon(Iconz().close),
+              icon: Icon(Iconz.close),
             )
           : Visibility(
               visible: selected,

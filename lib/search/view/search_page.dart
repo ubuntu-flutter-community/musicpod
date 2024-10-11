@@ -57,8 +57,10 @@ class SearchPage extends StatelessWidget with WatchItMixin {
         builder: (context, constraints) {
           return NotificationListener<UserScrollNotification>(
             onNotification: (notification) {
+              // TODO(#926): improve radio search limit increase by not overwriting the search results
+              // disabled for radio until then
               if (notification.direction == ScrollDirection.reverse &&
-                  audioType != AudioType.local) {
+                  audioType == AudioType.podcast) {
                 di<SearchModel>()
                   ..incrementLimit(8)
                   ..search();

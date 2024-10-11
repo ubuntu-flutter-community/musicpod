@@ -145,15 +145,14 @@ class LocalAudioPageIcon extends StatelessWidget with WatchItMixin {
     final theme = context.t;
     if (audioType == AudioType.local) {
       return Icon(
-        Iconz().playFilled,
+        Iconz.playFilled,
         color: theme.colorScheme.primary,
       );
     }
 
     return Padding(
       padding: kMainPageIconPadding,
-      child:
-          selected ? Icon(Iconz().localAudioFilled) : Icon(Iconz().localAudio),
+      child: selected ? Icon(Iconz.localAudioFilled) : Icon(Iconz.localAudio),
     );
   }
 }

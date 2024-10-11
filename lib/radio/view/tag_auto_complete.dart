@@ -200,7 +200,7 @@ class _TagTile extends StatelessWidget {
           favs?.contains(t.name) == false ? addFav(t) : removeFav(t);
         },
         icon: Icon(
-          favs?.contains(t.name) == true ? Iconz().starFilled : Iconz().star,
+          favs?.contains(t.name) == true ? Iconz.starFilled : Iconz.star,
         ),
       ),
     );

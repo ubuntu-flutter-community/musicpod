@@ -53,7 +53,7 @@ class IcyImage extends StatelessWidget with WatchItMixin {
             width: width,
             child: SafeNetworkImage(
               url: di<RadioModel>().getCover(mpvMetaData.icyTitle),
-              fallBackIcon: fallBackWidget ?? Icon(Iconz().radio),
+              fallBackIcon: fallBackWidget ?? Icon(Iconz.radio),
               filterQuality: FilterQuality.medium,
               fit: fit ?? BoxFit.fitHeight,
             ),

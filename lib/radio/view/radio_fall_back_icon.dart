@@ -44,7 +44,7 @@ class RadioFallBackIcon extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: Icon(
-          Iconz().radio,
+          Iconz.radio,
           size: iconSize ?? 70,
           color: contrastColor(
             getAlphabetColor(

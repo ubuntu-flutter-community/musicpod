@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
-import 'icons.dart';
+import 'theme.dart';
 
 class SideBarFallBackImage extends StatelessWidget {
   const SideBarFallBackImage({

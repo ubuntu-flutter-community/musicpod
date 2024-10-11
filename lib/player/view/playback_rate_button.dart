@@ -24,9 +24,9 @@ class PlaybackRateButton extends StatelessWidget with WatchItMixin {
     return PopupMenuButton(
       icon: Icon(
         switch (rate) {
-          2.0 => Iconz().levelHigh,
-          1.5 => Iconz().levelMiddle,
-          _ => Iconz().levelLow
+          2.0 => Iconz.levelHigh,
+          1.5 => Iconz.levelMiddle,
+          _ => Iconz.levelLow
         },
         color: !active
             ? theme.disabledColor

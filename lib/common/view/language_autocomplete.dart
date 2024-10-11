@@ -231,7 +231,7 @@ class _LanguageTile extends StatelessWidget {
           favs?.contains(t.isoCode) == false ? addFav(t) : removeFav(t);
         },
         icon: Icon(
-          favs?.contains(t.isoCode) == true ? Iconz().starFilled : Iconz().star,
+          favs?.contains(t.isoCode) == true ? Iconz.starFilled : Iconz.star,
         ),
       ),
     );

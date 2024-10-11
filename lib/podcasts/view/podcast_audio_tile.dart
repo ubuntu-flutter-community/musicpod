@@ -129,7 +129,7 @@ class PodcastAudioTile extends StatelessWidget {
                                   Text(context.l10n.insertedIntoQueue(text)),
                             );
                           },
-                          icon: Icon(Iconz().insertIntoQueue),
+                          icon: Icon(Iconz.insertIntoQueue),
                         ),
                         IconButton(
                           tooltip: context.l10n.replayEpisode,
@@ -139,7 +139,7 @@ class PodcastAudioTile extends StatelessWidget {
                                 ..removeLastPosition(audio.url!)
                                 ..setPosition(Duration.zero)
                                 ..seek(),
-                          icon: Icon(Iconz().replay),
+                          icon: Icon(Iconz.replay),
                         ),
                       ],
                     ),

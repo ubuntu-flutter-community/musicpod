@@ -344,6 +344,8 @@
     "doNotAskAgain": "Do not ask again",
     "skipToLivStream": "Skip to live stream",
     "searchSimilarStation": "Search similar station",
+    "onlineArtError": "Online art lookup is currently not available",
+    "clicks": "Clicks",
     "regionNone": "None",
     "regionAfghanistan": "Afghanistan",
     "regionAlandislands": "Alandislands",

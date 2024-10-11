@@ -21,7 +21,7 @@ class PodcastTimerButton extends StatelessWidget {
           context: context,
           builder: (context) => const _Dialog(),
         ),
-        icon: Icon(Iconz().sleep),
+        icon: Icon(Iconz.sleep),
       );
 }
 

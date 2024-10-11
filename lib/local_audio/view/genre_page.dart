@@ -68,7 +68,7 @@ class _GenrePageState extends State<GenrePage> {
                   ..setSearchType(SearchType.radioTag)
                   ..search();
               }),
-              icon: Icon(Iconz().radio),
+              icon: Icon(Iconz.radio),
             ),
             const SizedBox(
               width: 5,

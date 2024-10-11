@@ -34,7 +34,7 @@ class NextStationButton extends StatelessWidget with WatchItMixin {
                 );
               });
             },
-      icon: Icon(Iconz().explore),
+      icon: Icon(Iconz.explore),
     );
   }
 }
