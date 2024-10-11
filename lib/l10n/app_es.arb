@@ -11,10 +11,10 @@
     "fastForward30": "Avance rápido de 30 segundos",
     "rewind10": "Rewind 10 seconds",
     "fullWindow": "Ventana completa",
-    "leaveFullWindow", "Sali de ventana completa",
+    "leaveFullWindow": "Salir de ventana completa",
     "fullScreen": "Pantalla completa",
-    "leaveFullScreen", "Salid de pantalla completa",
-    "playbackRate", "Velocidad de reproducción",
+    "leaveFullScreen": "Salir de pantalla completa",
+    "playbackRate": "Velocidad de reproducción",
     "addToFavorites": "Añadir a favoritos",
     "removeFromFavorites": "Quitar de favoritos",
     "share": "Compartir"
