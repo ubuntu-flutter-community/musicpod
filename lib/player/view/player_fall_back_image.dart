@@ -24,7 +24,7 @@ class PlayerFallBackImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final iconSize = width * 0.7;
-    final theme = context.t;
+    final theme = context.theme;
     IconData iconData;
     if (audio?.audioType == AudioType.radio) {
       iconData = Iconz.radio;

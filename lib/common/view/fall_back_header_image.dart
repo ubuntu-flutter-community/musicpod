@@ -14,7 +14,7 @@ class FallBackHeaderImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final baseColor = color ?? context.t.colorScheme.primary;
+    final baseColor = color ?? context.theme.colorScheme.primary;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),

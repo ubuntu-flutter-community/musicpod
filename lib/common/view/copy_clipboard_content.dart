@@ -30,7 +30,7 @@ class _CopyClipboardContentState extends State<CopyClipboardContent> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final textColor =
         theme.snackBarTheme.contentTextStyle?.color?.withOpacity(0.8);
     return Padding(

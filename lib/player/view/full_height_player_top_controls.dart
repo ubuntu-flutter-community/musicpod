@@ -40,7 +40,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
       (PlayerModel m) =>
           m.queue.length > 1 || audio?.audioType == AudioType.local,
     );
-    final playerToTheRight = context.m.size.width > kSideBarThreshHold;
+    final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
     final fullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
     final appModel = di<AppModel>();
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
@@ -66,14 +66,14 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
               ),
               icon: Icon(
                 Iconz.warning,
-                color: context.t.colorScheme.onSurface,
+                color: context.theme.colorScheme.onSurface,
               ),
             ),
           if (audio?.audioType != AudioType.podcast)
             switch (audio?.audioType) {
               AudioType.local => LikeIcon(
                   audio: audio,
-                  color: context.t.colorScheme.onSurface,
+                  color: context.theme.colorScheme.onSurface,
                 ),
               AudioType.radio => RadioLikeIcon(audio: audio),
               _ => const SizedBox.shrink(),

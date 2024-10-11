@@ -23,7 +23,7 @@ class PlayerRemoteSourceImage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
 
     return Container(
       color: theme.cardColor,

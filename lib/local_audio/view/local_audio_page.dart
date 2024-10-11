@@ -142,7 +142,7 @@ class LocalAudioPageIcon extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final audioType = watchPropertyValue((PlayerModel m) => m.audio?.audioType);
 
-    final theme = context.t;
+    final theme = context.theme;
     if (audioType == AudioType.local) {
       return Icon(
         Iconz.playFilled,

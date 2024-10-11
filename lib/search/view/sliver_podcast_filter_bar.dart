@@ -19,7 +19,7 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final libraryModel = di<LibraryModel>();
-    final theme = context.t;
+    final theme = context.theme;
     final searchModel = di<SearchModel>();
     final country = watchPropertyValue((SearchModel m) => m.country);
 

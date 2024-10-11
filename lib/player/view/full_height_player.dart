@@ -29,8 +29,8 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
-    final size = context.m.size;
+    final theme = context.theme;
+    final size = context.mediaQuerySize;
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     final appModel = di<AppModel>();
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
@@ -40,7 +40,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
     final iconColor = isVideo ? Colors.white : theme.colorScheme.onSurface;
 
     final playerWithSidePanel = playerPosition == PlayerPosition.fullWindow &&
-        context.m.size.width > 1000;
+        context.mediaQuerySize.width > 1000;
 
     final Widget bodyWithControls;
     if (isVideo) {

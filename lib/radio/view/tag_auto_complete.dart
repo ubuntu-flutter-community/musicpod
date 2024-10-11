@@ -34,7 +34,7 @@ class TagAutoComplete extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(
       fontWeight: FontWeight.w500,
     );

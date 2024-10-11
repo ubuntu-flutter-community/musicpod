@@ -20,7 +20,7 @@ class RadioPageIcon extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final audioType = watchPropertyValue((PlayerModel m) => m.audio?.audioType);
 
-    final theme = context.t;
+    final theme = context.theme;
     if (audioType == AudioType.radio) {
       return Icon(
         Iconz.playFilled,

@@ -23,7 +23,7 @@ class StationPageIcon extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(6),
       child: Container(
-        color: context.t.cardColor,
+        color: context.theme.cardColor,
         height: sideBarImageSize,
         width: sideBarImageSize,
         child: SafeNetworkImage(

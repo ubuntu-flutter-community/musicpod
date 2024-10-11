@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
@@ -84,7 +83,7 @@ class HeaderBar extends StatelessWidget
     }
 
     return Theme(
-      data: context.t.copyWith(
+      data: context.theme.copyWith(
         appBarTheme: AppBarTheme.of(context).copyWith(
           scrolledUnderElevation: 0,
         ),

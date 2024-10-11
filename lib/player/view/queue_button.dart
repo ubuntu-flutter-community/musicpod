@@ -17,7 +17,7 @@ class QueueButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
 
     return IconButton(
       color: color ?? theme.colorScheme.onSurface,

@@ -28,7 +28,7 @@ class PodcastTilePlayButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final playerModel = di<PlayerModel>();
-    final theme = context.t;
+    final theme = context.theme;
     return Stack(
       alignment: Alignment.center,
       children: [

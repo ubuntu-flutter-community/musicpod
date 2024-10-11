@@ -224,7 +224,7 @@ class _PodcastPageImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     var safeNetworkImage = SafeNetworkImage(
       fallBackIcon: Icon(
         Iconz.podcast,

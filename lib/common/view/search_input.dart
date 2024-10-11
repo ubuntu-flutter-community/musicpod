@@ -52,7 +52,7 @@ class _SearchInputState extends State<SearchInput> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     return SizedBox(
       height: yaruStyled ? null : 38,
       child: TextField(

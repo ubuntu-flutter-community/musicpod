@@ -20,7 +20,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
 
     final mainColor = theme.colorScheme.onSurface;
 

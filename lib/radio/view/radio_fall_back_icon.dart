@@ -19,7 +19,7 @@ class RadioFallBackIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final light = theme.isLight;
     final fallBackColor = theme.cardColor;
     return Container(

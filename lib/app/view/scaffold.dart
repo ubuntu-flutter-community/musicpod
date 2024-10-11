@@ -36,7 +36,7 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final playerToTheRight = context.m.size.width > kSideBarThreshHold;
+    final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
     final isFullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
 
     return Stack(

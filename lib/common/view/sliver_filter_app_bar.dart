@@ -21,7 +21,7 @@ class SliverFilterAppBar extends StatelessWidget {
       sliver: SliverAppBar(
         shape: const RoundedRectangleBorder(side: BorderSide.none),
         elevation: 0,
-        backgroundColor: context.t.scaffoldBackgroundColor,
+        backgroundColor: context.theme.scaffoldBackgroundColor,
         automaticallyImplyLeading: false,
         pinned: true,
         centerTitle: true,

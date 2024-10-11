@@ -32,7 +32,7 @@ class _AboutPageState extends State<AboutPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     const radius = Radius.circular(8);
 
     final linkStyle = theme.textTheme.bodyLarge
@@ -49,7 +49,7 @@ class _AboutPageState extends State<AboutPage> {
         children: [
           YaruDialogTitleBar(
             border: BorderSide.none,
-            backgroundColor: context.t.dialogBackgroundColor,
+            backgroundColor: context.theme.dialogBackgroundColor,
             title: Text('${context.l10n.about} $kAppTitle'),
             leading: YaruBackButton(
               style: YaruBackButtonStyle.rounded,

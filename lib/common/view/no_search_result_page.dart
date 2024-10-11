@@ -13,7 +13,7 @@ class NoSearchResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final style = theme.textTheme.headlineSmall?.copyWith(
       fontWeight: largeTextWeight,
       color: theme.colorScheme.onSurface,

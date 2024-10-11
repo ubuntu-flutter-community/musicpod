@@ -12,7 +12,6 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
     return Scaffold(
       appBar: const HeaderBar(adaptive: false, title: Text('')),
       body: Center(
@@ -25,7 +24,7 @@ class SplashScreen extends StatelessWidget {
                   width: 250,
                   height: 250,
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primary,
+                    color: context.colorScheme.primary,
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: Icon(

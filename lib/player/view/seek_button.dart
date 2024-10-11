@@ -19,7 +19,7 @@ class SeekButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final playerModel = di<PlayerModel>();
 
     final icon = Icon(
@@ -42,7 +42,7 @@ class SeekButton extends StatelessWidget {
                   right: 5,
                   child: Text(
                     forward ? '30' : '10',
-                    style: context.t.textTheme.labelSmall?.copyWith(
+                    style: context.theme.textTheme.labelSmall?.copyWith(
                       fontSize: 7,
                       color: iconColor,
                     ),
