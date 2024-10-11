@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -11,15 +13,25 @@ class OnlineArtService {
   OnlineArtService({required Dio dio}) : _dio = dio;
   final Dio _dio;
 
-  Future<String?> fetchAlbumArt(String icyTitle) async =>
-      get(icyTitle) ??
-      put(
-        key: icyTitle,
-        url: await compute(
-          _fetchAlbumArt,
-          _ComputeCapsule(icyTitle: icyTitle, dio: _dio),
-        ),
-      );
+  Future<String?> fetchAlbumArt(String icyTitle) async {
+    _errorController.add(null);
+    return get(icyTitle) ??
+        put(
+          key: icyTitle,
+          url: await compute(
+            _fetchAlbumArt,
+            _ComputeCapsule(icyTitle: icyTitle, dio: _dio),
+          ).onError(
+            (e, s) {
+              if (kDebugMode) {
+                debugPrintStack(stackTrace: s);
+              }
+              _errorController.add('$e : $s');
+              return null;
+            },
+          ),
+        );
+  }
 
   final _value = <String, String?>{};
 
@@ -30,6 +42,13 @@ class OnlineArtService {
   }
 
   String? get(String? icyTitle) => icyTitle == null ? null : _value[icyTitle];
+
+  final _errorController = StreamController<String?>.broadcast();
+  Stream<String?> get error => _errorController.stream;
+
+  Future<void> dispose() async {
+    await _errorController.close();
+  }
 }
 
 class _ComputeCapsule {
@@ -69,8 +88,8 @@ Future<String?> _fetchAlbumArt(_ComputeCapsule capsule) async {
     );
 
     return albumArtUrl;
-  } on Exception catch (_) {
-    return null;
+  } on Exception {
+    rethrow;
   }
 }
 
@@ -89,8 +108,8 @@ Future<String?> _fetchAlbumArtUrlFromReleaseId({
 
       return (artwork['image']) as String?;
     }
-  } on Exception catch (_) {
-    return null;
+  } on Exception {
+    rethrow;
   }
 
   return null;

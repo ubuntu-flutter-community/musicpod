@@ -12,6 +12,12 @@ class Iconz {
 
   Iconz._internal();
 
+  static IconData get warning => yaruStyled
+      ? YaruIcons.warning_filled
+      : appleStyled
+          ? CupertinoIcons.exclamationmark_triangle_fill
+          : Icons.warning_rounded;
+
   IconData get menu {
     return yaruStyled
         ? YaruIcons.menu

@@ -21,6 +21,7 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -297,6 +298,7 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -763,6 +765,7 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -1028,6 +1031,7 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -1282,7 +1286,8 @@
 
   "it": [
     "skipToLivStream",
-    "searchSimilarStation"
+    "searchSimilarStation",
+    "onlineArtError"
   ],
 
   "nl": [
@@ -1527,6 +1532,7 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -1841,6 +1847,7 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -2306,6 +2313,7 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -2771,6 +2779,7 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -3051,6 +3060,7 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -3305,7 +3315,8 @@
 
   "sk": [
     "skipToLivStream",
-    "searchSimilarStation"
+    "searchSimilarStation",
+    "onlineArtError"
   ],
 
   "sv": [
@@ -3511,6 +3522,7 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -3785,6 +3797,7 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -4041,14 +4054,16 @@
     "local",
     "unPinAlbum",
     "skipToLivStream",
-    "searchSimilarStation"
+    "searchSimilarStation",
+    "onlineArtError"
   ],
 
   "zh_CN": [
     "local",
     "unPinAlbum",
     "skipToLivStream",
-    "searchSimilarStation"
+    "searchSimilarStation",
+    "onlineArtError"
   ],
 
   "zh_HK": [
@@ -4065,6 +4080,7 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -4331,6 +4347,7 @@
     "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
+    "onlineArtError",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",

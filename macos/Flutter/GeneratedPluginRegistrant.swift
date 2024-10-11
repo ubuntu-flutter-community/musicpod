@@ -18,7 +18,7 @@ import path_provider_foundation
 import screen_brightness_macos
 import screen_retriever
 import shared_preferences_foundation
-import sqflite
+import sqflite_darwin
 import super_native_extensions
 import system_theme
 import url_launcher_macos

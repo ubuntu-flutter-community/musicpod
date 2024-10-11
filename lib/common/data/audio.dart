@@ -39,7 +39,7 @@ class Audio {
   /// The artist(s) of the audio file or stream, for radio stations this is the language.
   final String? artist;
 
-  /// The album of the audio file or stream.
+  /// The album of the audio file or stream, for radio stations these are the tags.
   final String? album;
 
   /// The album artist(s) of the audio file or stream, for radio stations this is the codec.
@@ -264,7 +264,7 @@ class Audio {
       if (other.audioType != null &&
           other.audioType == AudioType.radio &&
           audioType == AudioType.radio) {
-        return other.description == description;
+        return other.uuid == uuid;
       }
 
       return (other.url != null && other.url == url) ||
@@ -275,7 +275,7 @@ class Audio {
   }
 
   @override
-  int get hashCode => path.hashCode ^ url.hashCode ^ description.hashCode;
+  int get hashCode => path.hashCode ^ url.hashCode ^ uuid.hashCode;
 
   factory Audio.fromMetadata({
     required String path,
@@ -316,7 +316,7 @@ class Audio {
   factory Audio.fromStation(Station station) {
     return Audio(
       url: station.urlResolved,
-      title: station.name,
+      title: station.name.trim(),
       artist: station.language,
       album: station.tags ?? '',
       audioType: AudioType.radio,
