@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 import 'package:github/github.dart';
 import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
@@ -21,6 +22,7 @@ import 'app/app_model.dart';
 import 'app/connectivity_model.dart';
 import 'app/view/app.dart';
 import 'constants.dart';
+import 'expose/expose_service.dart';
 import 'library/library_service.dart';
 import 'local_audio/local_audio_model.dart';
 import 'local_audio/local_audio_service.dart';
@@ -56,10 +58,14 @@ Future<void> main(List<String> args) async {
   final sharedPreferences = await SharedPreferences.getInstance();
   final version = (await PackageInfo.fromPlatform()).version;
 
+  await FlutterDiscordRPC.initialize(kDiscordApplicationId);
+  FlutterDiscordRPC.instance.connect();
+
   registerServicesAndViewModels(
     sharedPreferences: sharedPreferences,
     args: args,
     version: version,
+    discordRPC: FlutterDiscordRPC.instance,
   );
 
   runApp(
@@ -71,6 +77,7 @@ Future<void> main(List<String> args) async {
 
 void registerServicesAndViewModels({
   required SharedPreferences sharedPreferences,
+  required FlutterDiscordRPC discordRPC,
   required List<String> args,
   required String version,
 }) {
@@ -86,6 +93,16 @@ void registerServicesAndViewModels({
       ),
       dispose: (s) => s.dispose(),
     )
+    ..registerLazySingleton<FlutterDiscordRPC>(
+      () => discordRPC,
+      dispose: (s) {
+        s.disconnect();
+        s.dispose();
+      },
+    )
+    ..registerLazySingleton<ExposeService>(
+      () => ExposeService(discordRPC: di<FlutterDiscordRPC>()),
+    )
     ..registerLazySingleton<PlayerService>(
       () => PlayerService(
         onlineArtService: di<OnlineArtService>(),
@@ -94,6 +111,7 @@ void registerServicesAndViewModels({
             configuration: const PlayerConfiguration(title: kAppTitle),
           ),
         ),
+        exposeService: di<ExposeService>(),
       )..init(),
       dispose: (s) async => s.dispose(),
     )
