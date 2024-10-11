@@ -56,7 +56,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
           message: context.l10n.leaveFullScreen,
           child: MaterialFullscreenButton(
             icon: Icon(
-              Iconz().fullScreenExit,
+              Iconz.fullScreenExit,
               color: baseColor,
             ),
           ),
@@ -77,7 +77,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
             message: context.l10n.fullScreen,
             child: MaterialFullscreenButton(
               icon: Icon(
-                Iconz().fullScreen,
+                Iconz.fullScreen,
                 color: baseColor,
               ),
             ),

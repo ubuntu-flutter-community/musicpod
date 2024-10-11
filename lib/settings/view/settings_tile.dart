@@ -31,7 +31,7 @@ class SettingsTile extends StatelessWidget {
       child: Stack(
         children: [
           YaruMasterTile(
-            leading: Icon(Iconz().settings),
+            leading: Icon(Iconz.settings),
             title: Text(context.l10n.settings),
             onTap: () => showDialog(
               context: context,
@@ -73,7 +73,7 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
             ),
           ),
           icon: Icon(
-            Iconz().updateAvailable,
+            Iconz.updateAvailable,
             color: context.t.colorScheme.success,
           ),
         ),

@@ -167,14 +167,14 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
         children: [
           IconButton(
             icon: Icon(
-              Iconz().grid,
+              Iconz.grid,
             ),
             isSelected: useGridView,
             onPressed: () => setUseGridView(true),
           ),
           IconButton(
             icon: Icon(
-              Iconz().list,
+              Iconz.list,
             ),
             isSelected: !useGridView,
             onPressed: () => setUseGridView(false),

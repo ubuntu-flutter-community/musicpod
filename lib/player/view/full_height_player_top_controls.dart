@@ -96,8 +96,8 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
                 : context.l10n.fullWindow,
             icon: Icon(
               playerPosition == PlayerPosition.fullWindow
-                  ? Iconz().fullWindowExit
-                  : Iconz().fullWindow,
+                  ? Iconz.fullWindowExit
+                  : Iconz.fullWindow,
               color: iconColor,
             ),
             onPressed: () {

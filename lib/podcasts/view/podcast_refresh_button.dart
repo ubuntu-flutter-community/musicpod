@@ -30,7 +30,7 @@ class PodcastRefreshButton extends StatelessWidget {
                 notify: ({required message}) =>
                     showSnackBar(context: context, content: Text(message)),
               ),
-      icon: Icon(Iconz().refresh),
+      icon: Icon(Iconz.refresh),
     );
   }
 }

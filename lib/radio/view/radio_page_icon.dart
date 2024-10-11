@@ -23,14 +23,14 @@ class RadioPageIcon extends StatelessWidget with WatchItMixin {
     final theme = context.t;
     if (audioType == AudioType.radio) {
       return Icon(
-        Iconz().playFilled,
+        Iconz.playFilled,
         color: theme.colorScheme.primary,
       );
     }
 
     return Padding(
       padding: kMainPageIconPadding,
-      child: selected ? Icon(Iconz().radioFilled) : Icon(Iconz().radio),
+      child: selected ? Icon(Iconz.radioFilled) : Icon(Iconz.radio),
     );
   }
 }

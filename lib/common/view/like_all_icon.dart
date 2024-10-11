@@ -1,8 +1,9 @@
-import '../../library/library_model.dart';
-import '../data/audio.dart';
-import 'icons.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+
+import '../../library/library_model.dart';
+import '../data/audio.dart';
+import 'animated_like_icon.dart';
 
 class LikeAllIcon extends StatelessWidget with WatchItMixin {
   const LikeAllIcon({super.key, required this.audios});
@@ -19,7 +20,7 @@ class LikeAllIcon extends StatelessWidget with WatchItMixin {
       onPressed: () => liked
           ? libraryModel.removeLikedAudios(audios)
           : libraryModel.addLikedAudios(audios),
-      icon: Iconz().getAnimatedHeartIcon(liked: liked),
+      icon: AnimatedHeart(liked: liked),
     );
   }
 }

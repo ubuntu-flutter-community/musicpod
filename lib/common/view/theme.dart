@@ -10,7 +10,7 @@ import 'icons.dart';
 ThemeData? yaruDarkWithTweaks(YaruThemeData yaru) {
   return yaru.darkTheme?.copyWith(
     actionIconTheme: ActionIconThemeData(
-      backButtonIconBuilder: (context) => Icon(Iconz().goBack),
+      backButtonIconBuilder: (context) => Icon(Iconz.goBack),
     ),
     scaffoldBackgroundColor: yaru.darkTheme?.scaffoldBackgroundColor.scale(
       lightness: -0.35,
@@ -31,7 +31,7 @@ ThemeData? yaruDarkWithTweaks(YaruThemeData yaru) {
 ThemeData? yaruLightWithTweaks(YaruThemeData yaru) {
   return yaru.theme?.copyWith(
     actionIconTheme: ActionIconThemeData(
-      backButtonIconBuilder: (context) => Icon(Iconz().goBack),
+      backButtonIconBuilder: (context) => Icon(Iconz.goBack),
     ),
     cardColor: yaru.theme?.dividerColor.scale(
       lightness: -0.01,
@@ -214,6 +214,14 @@ TextStyle chipTextStyle(ThemeData theme) =>
 Color? chipSelectionColor(ThemeData theme, bool loading) {
   return yaruStyled ? (loading ? theme.colorScheme.outline : null) : null;
 }
+
+double get iconSize => yaruStyled
+    ? kYaruIconSize
+    : isMobile
+        ? 24.0
+        : 20.0;
+
+double get sideBarImageSize => 38;
 
 double get likeButtonWidth => yaruStyled ? 62 : 70;
 

@@ -49,7 +49,7 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
       ),
       image: FallBackHeaderImage(
         child: Icon(
-          Iconz().heart,
+          Iconz.heart,
           size: 65,
         ),
       ),
@@ -65,7 +65,7 @@ class LikedAudioPageIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SideBarFallBackImage(
-      child: selected ? Icon(Iconz().heartFilled) : Icon(Iconz().heart),
+      child: selected ? Icon(Iconz.heartFilled) : Icon(Iconz.heart),
     );
   }
 }

@@ -51,7 +51,7 @@ class AudioTileOptionButton extends StatelessWidget {
                 );
               },
               child: YaruTile(
-                leading: Icon(Iconz().insertIntoQueue),
+                leading: Icon(Iconz.insertIntoQueue),
                 title: Text(context.l10n.playNext),
               ),
             ),
@@ -61,7 +61,7 @@ class AudioTileOptionButton extends StatelessWidget {
                 onTap: () =>
                     libraryModel.removeAudioFromPlaylist(playlistId, audio),
                 child: YaruTile(
-                  leading: Icon(Iconz().remove),
+                  leading: Icon(Iconz.remove),
                   title: Text('${context.l10n.removeFrom} $playlistId'),
                 ),
               ),
@@ -77,7 +77,7 @@ class AudioTileOptionButton extends StatelessWidget {
                 },
               ),
               child: YaruTile(
-                leading: Icon(Iconz().plus),
+                leading: Icon(Iconz.plus),
                 title: Text(
                   '${context.l10n.addToPlaylist} ...',
                 ),
@@ -91,7 +91,7 @@ class AudioTileOptionButton extends StatelessWidget {
               },
             ),
             child: YaruTile(
-              leading: Icon(Iconz().info),
+              leading: Icon(Iconz.info),
               title: Text(
                 '${context.l10n.showMetaData} ...',
               ),
@@ -117,7 +117,7 @@ class AudioTileOptionButton extends StatelessWidget {
             ),
         ];
       },
-      icon: Icon(Iconz().viewMore),
+      icon: Icon(Iconz.viewMore),
     );
   }
 }

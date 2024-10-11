@@ -29,7 +29,7 @@ class SplashScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: Icon(
-                    Iconz().musicNote,
+                    Iconz.musicNote,
                     size: 150,
                     color: Colors.white,
                   ),

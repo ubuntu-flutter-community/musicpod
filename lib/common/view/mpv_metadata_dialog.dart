@@ -31,7 +31,7 @@ class MpvMetadataDialog extends StatelessWidget {
             child: SizedBox(
               width: 250,
               child: SafeNetworkImage(
-                errorIcon: Icon(Iconz().imageMissing),
+                errorIcon: Icon(Iconz.imageMissing),
                 fit: BoxFit.fitHeight,
                 url: image,
               ),

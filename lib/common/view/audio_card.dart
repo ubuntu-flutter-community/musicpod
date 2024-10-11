@@ -83,7 +83,7 @@ class _AudioCardState extends State<AudioCard> {
                               ? const EdgeInsets.only(left: 3)
                               : EdgeInsets.zero,
                           child: Icon(
-                            Iconz().playFilled,
+                            Iconz.playFilled,
                             color: contrastColor(theme.colorScheme.primary),
                           ),
                         ),

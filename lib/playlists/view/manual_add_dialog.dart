@@ -85,7 +85,7 @@ class SelectAddContent extends StatelessWidget {
                 onTap: () =>
                     manualAddNavigatorKey.currentState?.pushNamed(route.key),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                trailing: Icon(Iconz().goNext),
+                trailing: Icon(Iconz.goNext),
               );
 
               if (index != routes.length - 1) {

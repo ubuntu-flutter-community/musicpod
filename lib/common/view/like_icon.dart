@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../data/audio.dart';
-import 'icons.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../playlists/view/add_to_playlist_snack_bar.dart';
+import '../data/audio.dart';
+import 'animated_like_icon.dart';
 
 class LikeIcon extends StatelessWidget with WatchItMixin {
   const LikeIcon({
@@ -49,7 +49,7 @@ class LikeIcon extends StatelessWidget with WatchItMixin {
       tooltip: liked
           ? context.l10n.removeFromFavorites
           : context.l10n.addToFavorites,
-      icon: Iconz().getAnimatedHeartIcon(
+      icon: AnimatedHeart(
         liked: liked,
         color: color,
       ),
@@ -95,7 +95,10 @@ class RadioLikeIcon extends StatelessWidget with WatchItMixin {
       tooltip: isStarredStation
           ? context.l10n.removeFromCollection
           : context.l10n.addToCollection,
-      icon: Iconz().getAnimatedStar(isStarredStation, color),
+      icon: AnimatedStar(
+        isStarred: isStarredStation,
+        color: color,
+      ),
       onPressed: onLike,
       color: color,
     );

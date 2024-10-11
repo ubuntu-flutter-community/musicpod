@@ -25,13 +25,13 @@ class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
     final setVolume = playerModel.setVolume;
     IconData iconData;
     if (volume != null && volume <= 0) {
-      iconData = Iconz().speakerMutedFilled;
+      iconData = Iconz.speakerMutedFilled;
     } else if (volume != null && volume <= 20) {
-      iconData = Iconz().speakerLowFilled;
+      iconData = Iconz.speakerLowFilled;
     } else if (volume != null && volume <= 50 && volume > 20) {
-      iconData = Iconz().speakerMediumFilled;
+      iconData = Iconz.speakerMediumFilled;
     } else {
-      iconData = Iconz().speakerHighFilled;
+      iconData = Iconz.speakerHighFilled;
     }
     return PopupMenuButton(
       color: theme.isLight

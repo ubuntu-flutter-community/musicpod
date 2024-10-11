@@ -128,7 +128,7 @@ class _BackGestureState extends State<BackGesture>
                                     BorderRadius.circular(_kButtonSize),
                               ),
                             ),
-                            child: Icon(Iconz().goBack),
+                            child: Icon(Iconz.goBack),
                           ),
                         ),
                       ),

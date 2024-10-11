@@ -72,7 +72,7 @@ class AlbumPageSideBarIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final fallBack = SideBarFallBackImage(
       child: Icon(
-        Iconz().startPlayList,
+        Iconz.startPlayList,
         color: getAlphabetColor(audio?.album ?? 'c'),
       ),
     );
@@ -153,7 +153,7 @@ class AlbumPageControlButton extends StatelessWidget {
                 pinnedAlbum ? context.l10n.unPinAlbum : context.l10n.pinAlbum,
             isSelected: libraryModel.isPinnedAlbum(id),
             icon: Icon(
-              pinnedAlbum ? Iconz().pinFilled : Iconz().pin,
+              pinnedAlbum ? Iconz.pinFilled : Iconz.pin,
             ),
             onPressed: () {
               if (libraryModel.isPinnedAlbum(id)) {
