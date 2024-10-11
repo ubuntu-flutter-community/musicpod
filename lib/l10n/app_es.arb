@@ -17,7 +17,7 @@
     "playbackRate": "Velocidad de reproducción",
     "addToFavorites": "Añadir a favoritos",
     "removeFromFavorites": "Quitar de favoritos",
-    "share": "Compartir"
+    "share": "Compartir",
     "local": "Local",
     "localAudio": "Audio local",
     "localAudioDescription": "Colección de música almacenada en tu ordenador.",
@@ -123,7 +123,7 @@
         }
     },
     "emptyPlaylist": "Esta lista de reproducción se encuentra vacía",
-    "copiedToClipBoard": "Copiado al portapapeles:"
+    "copiedToClipBoard": "Copiado al portapapeles:",
     "copyToClipBoard": "Copiar al portapapeles",
     "insertIntoQueue": "Poner en la cola",
     "insertedIntoQueue": "Puesto en la cola: {name}",
