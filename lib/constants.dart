@@ -5,6 +5,8 @@ const kAppName = 'musicpod';
 
 const kAppId = 'org.feichtmeier.Musicpod';
 
+const kDiscordApplicationId = '1235321910221602837';
+
 const kLinuxDBusName = 'org.mpris.MediaPlayer2.musicpod';
 
 const kAndroidChannelId = 'org.feichtmeier.musicpod.channel.audio';

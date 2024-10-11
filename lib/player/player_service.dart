@@ -16,6 +16,7 @@ import '../common/data/audio.dart';
 import '../common/data/mpv_meta_data.dart';
 import '../common/data/player_state.dart';
 import '../constants.dart';
+import '../expose/expose_service.dart';
 import '../extensions/string_x.dart';
 import '../local_audio/cover_store.dart';
 import '../persistence_utils.dart';
@@ -27,10 +28,13 @@ class PlayerService {
   PlayerService({
     required VideoController controller,
     required OnlineArtService onlineArtService,
+    required ExposeService exposeService,
   })  : _controller = controller,
-        _onlineArtService = onlineArtService;
+        _onlineArtService = onlineArtService,
+        _exposeService = exposeService;
 
   final OnlineArtService _onlineArtService;
+  final ExposeService _exposeService;
 
   final VideoController _controller;
   VideoController get controller => _controller;
@@ -63,7 +67,7 @@ class PlayerService {
 
   MpvMetaData? _mpvMetaData;
   MpvMetaData? get mpvMetaData => _mpvMetaData;
-  void setMpvMetaData(MpvMetaData? value) {
+  void _setMpvMetaData(MpvMetaData? value) {
     _mpvMetaData = value;
 
     var validHistoryElement = _mpvMetaData?.icyTitle.isNotEmpty == true;
@@ -98,7 +102,19 @@ class PlayerService {
     }
     _audio = value;
     _propertiesChangedController.add(true);
-    setMpvMetaData(null);
+    _setMpvMetaData(null);
+    if (_audio?.audioType != null &&
+        _audio?.title != null &&
+        _audio?.artist != null) {
+      _exposeService.exposeTitleOnline(
+        songDetails: '${_audio!.artist} - ${audio!.title}}',
+        state: switch (_audio!.audioType!) {
+          AudioType.local => 'Local Music',
+          AudioType.podcast => 'Podcast',
+          AudioType.radio => 'Internet Radio',
+        },
+      );
+    }
   }
 
   bool? _isVideo;
@@ -278,20 +294,26 @@ class PlayerService {
             !data.contains('icy-title')) {
           return;
         }
-        final mpvMetaData = MpvMetaData.fromJson(data);
+        final newData = MpvMetaData.fromJson(data);
+        final parsedIcyTitle =
+            HtmlParser(newData.icyTitle).parseFragment().text;
+        if (parsedIcyTitle == _mpvMetaData?.icyTitle) return;
 
-        if (mpvMetaData.icyTitle == _mpvMetaData?.icyTitle) return;
-        setMpvMetaData(
-          mpvMetaData.copyWith(
-            icyTitle: HtmlParser(mpvMetaData.icyTitle).parseFragment().text,
-          ),
+        _setMpvMetaData(newData.copyWith(icyTitle: parsedIcyTitle));
+
+        if (parsedIcyTitle == null) return;
+
+        await _exposeService.exposeTitleOnline(
+          songDetails: parsedIcyTitle,
+          state: _audio?.title ?? 'Internet Radio',
         );
 
-        final songInfo = mpvMetaData.icyTitle.splitByDash;
-        _onlineArtService.fetchAlbumArt(mpvMetaData.icyTitle).then(
+        final songInfo = parsedIcyTitle.splitByDash;
+        _onlineArtService.fetchAlbumArt(parsedIcyTitle).then(
           (albumArt) async {
             await _setMediaControlsMetaData(
-              audio: (_audio ?? const Audio()).copyWith(
+              audio:
+                  (_audio ?? const Audio(audioType: AudioType.radio)).copyWith(
                 imageUrl: albumArt,
                 title: songInfo.songName,
                 artist: songInfo.artist,
