@@ -340,7 +340,7 @@
     "whenCloseBtnClicked": "When close button is clicked",
     "closeApp": "Close Application",
     "closeMusicPod": "Close MusicPod?",
-    "confirmCloseOrHideTip": "Please confirm if you need to close the application or hide it?",
+    "confirmCloseOrHideTip": "Please confirm if you need to close the application or hide it",
     "doNotAskAgain": "Do not ask again",
     "skipToLivStream": "Skip to live stream",
     "searchSimilarStation": "Search similar station",
