@@ -66,18 +66,18 @@ class LibraryModel extends SafeChangeNotifier {
 
   Map<String, List<Audio>> get starredStations => _service.starredStations;
   int get starredStationsLength => _service.starredStations.length;
-  void addStarredStation(String url, List<Audio> audios) =>
-      _service.addStarredStation(url, audios);
+  void addStarredStation(String uuid, List<Audio> audios) =>
+      _service.addStarredStation(uuid, audios);
 
-  void unStarStation(String url) {
-    _service.unStarStation(url);
-    if (selectedPageId == url) {
+  void unStarStation(String uuid) {
+    _service.unStarStation(uuid);
+    if (selectedPageId == uuid) {
       pop();
     }
   }
 
-  bool isStarredStation(String? url) =>
-      url?.isNotEmpty == false ? false : _service.isStarredStation(url);
+  bool isStarredStation(String? uuid) =>
+      uuid?.isNotEmpty == false ? false : _service.isStarredStation(uuid);
 
   void addFavRadioTag(String value) => _service.addFavRadioTag(value);
   void removeRadioFavTag(String value) => _service.removeFavRadioTag(value);

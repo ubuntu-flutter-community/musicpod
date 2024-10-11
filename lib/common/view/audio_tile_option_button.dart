@@ -129,39 +129,44 @@ class MetaDataDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final radio = audio.audioType == AudioType.radio;
+
     final items = <(String, String)>{
       (
-        context.l10n.title,
+        radio ? context.l10n.stationName : context.l10n.title,
         '${audio.title}',
       ),
       (
-        context.l10n.album,
-        '${audio.album}',
+        radio ? context.l10n.tags : context.l10n.album,
+        '${radio ? audio.album?.replaceAll(',', ', ') : audio.album}',
       ),
       (
-        context.l10n.artist,
-        '${audio.artist}',
+        radio ? context.l10n.language : context.l10n.artist,
+        '${radio ? audio.language : audio.artist}',
       ),
       (
-        context.l10n.albumArtists,
+        radio ? context.l10n.quality : context.l10n.albumArtists,
         '${audio.albumArtist}',
       ),
+      if (!radio)
+        (
+          context.l10n.trackNumber,
+          '${audio.trackNumber}',
+        ),
+      if (!radio)
+        (
+          context.l10n.diskNumber,
+          '${audio.discNumber}',
+        ),
       (
-        context.l10n.trackNumber,
-        '${audio.trackNumber}',
+        radio ? context.l10n.clicks : context.l10n.totalDisks,
+        '${radio ? audio.clicks : audio.discTotal}',
       ),
-      (
-        context.l10n.diskNumber,
-        '${audio.discNumber}',
-      ),
-      (
-        context.l10n.totalDisks,
-        '${audio.discTotal}',
-      ),
-      (
-        context.l10n.genre,
-        '${audio.genre}',
-      ),
+      if (!radio)
+        (
+          context.l10n.genre,
+          '${audio.genre}',
+        ),
       (
         context.l10n.url,
         (audio.url ?? ''),
