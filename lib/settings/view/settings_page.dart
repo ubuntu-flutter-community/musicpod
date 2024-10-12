@@ -44,6 +44,7 @@ class SettingsPage extends StatelessWidget {
               _ThemeSection(),
               _PodcastSection(),
               _LocalAudioSection(),
+              _ExposeOnlineSection(),
               _AboutSection(),
             ],
           ),
@@ -409,6 +410,43 @@ class _LicenseTile extends StatelessWidget {
         child: Text(context.l10n.dependencies),
       ),
       enabled: true,
+    );
+  }
+}
+
+class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
+  const _ExposeOnlineSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return YaruSection(
+      headline: Text(l10n.exposeOnlineHeadline),
+      margin: const EdgeInsets.only(
+        top: kYaruPagePadding,
+        right: kYaruPagePadding,
+        left: kYaruPagePadding,
+      ),
+      child: Column(
+        children: [
+          YaruTile(
+            title: Text(l10n.exposeToDiscordTitle),
+            subtitle: Text(
+              kDiscordEnabledOnPlatform
+                  ? l10n.exposeToDiscordSubTitle
+                  : l10n.featureDisabledOnPlatform,
+            ),
+            trailing: CommonSwitch(
+              value: kDiscordEnabledOnPlatform
+                  ? watchPropertyValue((SettingsModel m) => m.enableDiscordRPC)
+                  : false,
+              onChanged: kDiscordEnabledOnPlatform
+                  ? di<SettingsModel>().setEnableDiscordRPC
+                  : null,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

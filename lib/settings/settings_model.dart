@@ -27,6 +27,9 @@ class SettingsModel extends SafeChangeNotifier {
   void setNeverShowFailedImports(bool value) =>
       _service.setNeverShowFailedImports(value);
 
+  bool get enableDiscordRPC => _service.enableDiscordRPC;
+  void setEnableDiscordRPC(bool value) => _service.setEnableDiscordRPC(value);
+
   bool get usePodcastIndex => _service.usePodcastIndex;
   Future<void> setUsePodcastIndex(bool value) async =>
       _service.setUsePodcastIndex(value);

@@ -10,9 +10,9 @@ class SettingsService {
       : _preferences = sharedPreferences;
 
   final SharedPreferences _preferences;
-
   final _propertiesChangedController = StreamController<bool>.broadcast();
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
+
   int get themeIndex => _preferences.getInt(kThemeIndex) ?? 0;
   void setThemeIndex(int value) {
     _preferences.setInt(kThemeIndex, value).then(
@@ -27,6 +27,16 @@ class SettingsService {
 
   void setNeverShowFailedImports(bool value) {
     _preferences.setBool(kNeverShowImportFails, value).then(
+      (saved) {
+        if (saved) _propertiesChangedController.add(true);
+      },
+    );
+  }
+
+  bool get enableDiscordRPC => _preferences.getBool(kEnableDiscordRPC) ?? false;
+
+  void setEnableDiscordRPC(bool value) {
+    _preferences.setBool(kEnableDiscordRPC, value).then(
       (saved) {
         if (saved) _propertiesChangedController.add(true);
       },

@@ -23,6 +23,10 @@
     "searchSimilarStation",
     "onlineArtError",
     "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -301,6 +305,10 @@
     "searchSimilarStation",
     "onlineArtError",
     "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -555,7 +563,11 @@
 
   "es": [
     "onlineArtError",
-    "clicks"
+    "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform"
   ],
 
   "fr": [
@@ -573,6 +585,10 @@
     "searchSimilarStation",
     "onlineArtError",
     "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -829,7 +845,11 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
-    "clicks"
+    "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform"
   ],
 
   "nl": [
@@ -1076,6 +1096,10 @@
     "searchSimilarStation",
     "onlineArtError",
     "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -1392,6 +1416,10 @@
     "searchSimilarStation",
     "onlineArtError",
     "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -1859,6 +1887,10 @@
     "searchSimilarStation",
     "onlineArtError",
     "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -2326,6 +2358,10 @@
     "searchSimilarStation",
     "onlineArtError",
     "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -2608,6 +2644,10 @@
     "searchSimilarStation",
     "onlineArtError",
     "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -2864,7 +2904,11 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
-    "clicks"
+    "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform"
   ],
 
   "sv": [
@@ -3072,6 +3116,10 @@
     "searchSimilarStation",
     "onlineArtError",
     "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -3348,6 +3396,10 @@
     "searchSimilarStation",
     "onlineArtError",
     "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -3606,7 +3658,11 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
-    "clicks"
+    "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform"
   ],
 
   "zh_CN": [
@@ -3615,7 +3671,11 @@
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
-    "clicks"
+    "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform"
   ],
 
   "zh_HK": [
@@ -3634,6 +3694,10 @@
     "searchSimilarStation",
     "onlineArtError",
     "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
@@ -3902,6 +3966,10 @@
     "searchSimilarStation",
     "onlineArtError",
     "clicks",
+    "exposeOnlineHeadline",
+    "exposeToDiscordTitle",
+    "exposeToDiscordSubTitle",
+    "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
     "regionAlandislands",
