@@ -58,14 +58,25 @@ Future<void> main(List<String> args) async {
   final sharedPreferences = await SharedPreferences.getInstance();
   final version = (await PackageInfo.fromPlatform()).version;
 
-  await FlutterDiscordRPC.initialize(kDiscordApplicationId);
-  FlutterDiscordRPC.instance.connect();
+  final enableDiscord = kDiscordEnabledOnPlatform &&
+      sharedPreferences.get(kEnableDiscordRPC) == true;
+  if (enableDiscord) {
+    await FlutterDiscordRPC.initialize(kDiscordApplicationId);
+    FlutterDiscordRPC.instance.connect();
+    di.registerLazySingleton<FlutterDiscordRPC>(
+      () => FlutterDiscordRPC.instance,
+      dispose: (s) {
+        s.disconnect();
+        s.dispose();
+      },
+    );
+  }
 
   registerServicesAndViewModels(
     sharedPreferences: sharedPreferences,
     args: args,
     version: version,
-    discordRPC: FlutterDiscordRPC.instance,
+    enableDiscord: enableDiscord,
   );
 
   runApp(
@@ -77,9 +88,9 @@ Future<void> main(List<String> args) async {
 
 void registerServicesAndViewModels({
   required SharedPreferences sharedPreferences,
-  required FlutterDiscordRPC discordRPC,
   required List<String> args,
   required String version,
+  required bool enableDiscord,
 }) {
   di
     ..registerLazySingleton<SharedPreferences>(() => sharedPreferences)
@@ -93,15 +104,10 @@ void registerServicesAndViewModels({
       ),
       dispose: (s) => s.dispose(),
     )
-    ..registerLazySingleton<FlutterDiscordRPC>(
-      () => discordRPC,
-      dispose: (s) {
-        s.disconnect();
-        s.dispose();
-      },
-    )
     ..registerLazySingleton<ExposeService>(
-      () => ExposeService(discordRPC: di<FlutterDiscordRPC>()),
+      () => ExposeService(
+        discordRPC: enableDiscord ? di<FlutterDiscordRPC>() : null,
+      ),
     )
     ..registerLazySingleton<PlayerService>(
       () => PlayerService(

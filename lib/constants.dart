@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:yaru/constants.dart';
 
@@ -146,6 +148,7 @@ const kSelectedPageId = 'selectedPageId';
 const kRadioIndex = 'radioIndex';
 const kPodcastIndex = 'podcastIndex';
 const kNeverShowImportFails = 'neverShowImportFails';
+const kEnableDiscordRPC = 'enableDiscordRPC';
 const kLastCountryCode = 'lastCountryCode';
 const kLastLanguageCode = 'lastLanguageCode';
 const kSearchResult = 'searchResult';
@@ -185,3 +188,7 @@ const kAlbumArtHeaders = {
 const kAudioHeaderDescriptionWidth = 400.0;
 
 const kShowLeadingThreshold = 3000;
+
+// TODO(#946): make discord work inside the snap
+// or leave it for linux disabled if this won't work
+bool kDiscordEnabledOnPlatform = !Platform.isLinux;
