@@ -841,17 +841,6 @@
     "regionZimbabwe"
   ],
 
-  "it": [
-    "skipToLivStream",
-    "searchSimilarStation",
-    "onlineArtError",
-    "clicks",
-    "exposeOnlineHeadline",
-    "exposeToDiscordTitle",
-    "exposeToDiscordSubTitle",
-    "featureDisabledOnPlatform"
-  ],
-
   "nl": [
     "shuffle",
     "repeat",
@@ -2898,17 +2887,6 @@
     "regionYemen",
     "regionZambia",
     "regionZimbabwe"
-  ],
-
-  "sk": [
-    "skipToLivStream",
-    "searchSimilarStation",
-    "onlineArtError",
-    "clicks",
-    "exposeOnlineHeadline",
-    "exposeToDiscordTitle",
-    "exposeToDiscordSubTitle",
-    "featureDisabledOnPlatform"
   ],
 
   "sv": [
