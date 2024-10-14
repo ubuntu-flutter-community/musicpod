@@ -4,7 +4,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../extensions/connectivity_x.dart';
 import '../player/player_service.dart';
 
 class ConnectivityModel extends SafeChangeNotifier {
@@ -20,15 +19,17 @@ class ConnectivityModel extends SafeChangeNotifier {
 
   Future<void> init() async {
     // TODO: fix https://github.com/fluttercommunity/plus_plugins/issues/1451
+    final fallback = [ConnectivityResult.wifi];
+
     _connectivitySubscription ??= _connectivity.onConnectivityChanged.listen(
       _updateConnectivity,
-      onError: (e) => _result = [ConnectivityResult.wifi],
+      onError: (e) => _result = fallback,
     );
 
     return _connectivity
         .checkConnectivity()
         .then(_updateConnectivity)
-        .catchError((_) => _updateConnectivity(ConnectivityResult.values));
+        .catchError((_) => _updateConnectivity(fallback));
   }
 
   bool get isOnline => _connectivity.isOnline(_result);
@@ -48,4 +49,13 @@ class ConnectivityModel extends SafeChangeNotifier {
     await _connectivitySubscription?.cancel();
     super.dispose();
   }
+}
+
+extension _ConnectivityX on Connectivity {
+  bool isOnline(List<ConnectivityResult>? res) =>
+      res?.contains(ConnectivityResult.ethernet) == true ||
+      res?.contains(ConnectivityResult.bluetooth) == true ||
+      res?.contains(ConnectivityResult.mobile) == true ||
+      res?.contains(ConnectivityResult.vpn) == true ||
+      res?.contains(ConnectivityResult.wifi) == true;
 }
