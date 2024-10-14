@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:path/path.dart' as p;
 
 import 'package:github/github.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
@@ -22,6 +24,37 @@ class SettingsModel extends SafeChangeNotifier {
 
   String? get directory => _service.directory;
   Future<void> setDirectory(String value) async => _service.setDirectory(value);
+
+  String? get downloadsDir => _service.downloadsDir;
+  Future<void> setDownloadsCustomDir({
+    required Function() onSuccess,
+    required Function(String e) onFail,
+  }) async {
+    String? dirError;
+    String? directoryPath;
+
+    try {
+      directoryPath = await getPathOfDirectory();
+      if (directoryPath == null) return;
+      final maybeDir = Directory(directoryPath);
+      if (!maybeDir.existsSync()) return;
+      maybeDir.statSync();
+      File(p.join(directoryPath, 'test'))
+        ..createSync()
+        ..deleteSync();
+    } catch (e) {
+      dirError = e.toString();
+    }
+
+    if (dirError != null) {
+      onFail(dirError);
+    } else {
+      if (directoryPath != null) {
+        await _service.setDownloadsCustomDir(directoryPath);
+        onSuccess();
+      }
+    }
+  }
 
   bool get neverShowFailedImports => _service.neverShowFailedImports;
   void setNeverShowFailedImports(bool value) =>

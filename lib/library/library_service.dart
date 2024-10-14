@@ -320,6 +320,17 @@ class LibraryService {
   }
 
   void removeDownload({required String url, required String feedUrl}) {
+    _deleteDownload(url);
+
+    if (_downloads.containsKey(url)) {
+      _downloads.remove(url);
+      _feedsWithDownloads.remove(feedUrl);
+
+      _updateDownloads();
+    }
+  }
+
+  void _deleteDownload(String url) {
     final path = _downloads[url];
 
     if (path != null) {
@@ -328,20 +339,26 @@ class LibraryService {
         file.deleteSync();
       }
     }
+  }
 
-    if (_downloads.containsKey(url)) {
-      _downloads.remove(url);
-      _feedsWithDownloads.remove(feedUrl);
+  void _updateDownloads() {
+    writeStringMap(_downloads, kDownloads)
+        .then(
+          (_) => writeStringIterable(
+            iterable: _feedsWithDownloads,
+            filename: kFeedsWithDownloads,
+          ),
+        )
+        .then((_) => _propertiesChangedController.add(true));
+  }
 
-      writeStringMap(_downloads, kDownloads)
-          .then(
-            (_) => writeStringIterable(
-              iterable: _feedsWithDownloads,
-              filename: kFeedsWithDownloads,
-            ),
-          )
-          .then((_) => _propertiesChangedController.add(true));
+  void removeAllDownloads() {
+    for (var download in _downloads.entries) {
+      _deleteDownload(download.key);
     }
+    _downloads.clear();
+    _feedsWithDownloads.clear();
+    _updateDownloads();
   }
 
   void _removeFeedWithDownload(String feedUrl) {
@@ -353,8 +370,6 @@ class LibraryService {
     ).then((_) => _propertiesChangedController.add(true));
   }
 
-  String? _downloadsDir;
-  String? get downloadsDir => _downloadsDir;
   Map<String, List<Audio>> _podcasts = {};
   Map<String, List<Audio>> get podcasts => _podcasts;
   int get podcastsLength => _podcasts.length;
@@ -479,7 +494,6 @@ class LibraryService {
         (await readAudioMap(kLikedAudiosFileName)).entries.firstOrNull?.value ??
             <Audio>[];
 
-    _downloadsDir = await getDownloadsDir();
     _downloads = await readStringMap(kDownloads);
     _feedsWithDownloads = Set.from(
       await readStringIterable(filename: kFeedsWithDownloads) ?? <String>{},

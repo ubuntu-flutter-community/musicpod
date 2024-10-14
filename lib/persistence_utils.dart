@@ -45,7 +45,7 @@ Future<String?> getMusicDir() async {
   return null;
 }
 
-Future<String?> getDownloadsDir() async {
+Future<String?> getDownloadsDefaultDir() async {
   String? path;
   if (Platform.isLinux) {
     path = getUserDirectory('DOWNLOAD')?.path;

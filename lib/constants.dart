@@ -138,6 +138,7 @@ const kDownloads = 'downloads.json';
 const kFeedsWithDownloads = 'feedswithdownloads.json';
 const kCoverStore = 'coverStore.json';
 const kDirectoryProperty = 'directory';
+const kDownloadsCustomDir = 'downloadsCustomDir';
 const kRadioUrl = 'de1.api.radio-browser.info';
 const kRadioBrowserBaseUrl = 'all.api.radio-browser.info';
 const kLastAudio = 'lastAudio';

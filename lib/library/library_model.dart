@@ -173,8 +173,6 @@ class LibraryModel extends SafeChangeNotifier {
   void removePodcastUpdate(String feedUrl) =>
       _service.removePodcastUpdate(feedUrl);
 
-  String? get downloadsDir => _service.downloadsDir;
-
   int get downloadsLength => _service.downloads.length;
 
   String? getDownload(String? url) =>

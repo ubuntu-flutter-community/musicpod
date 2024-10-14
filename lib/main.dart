@@ -27,6 +27,7 @@ import 'library/library_service.dart';
 import 'local_audio/local_audio_model.dart';
 import 'local_audio/local_audio_service.dart';
 import 'notifications/notifications_service.dart';
+import 'persistence_utils.dart';
 import 'player/player_model.dart';
 import 'player/player_service.dart';
 import 'podcasts/download_model.dart';
@@ -72,11 +73,14 @@ Future<void> main(List<String> args) async {
     );
   }
 
+  final downloadsDefaultDir = await getDownloadsDefaultDir();
+
   registerServicesAndViewModels(
     sharedPreferences: sharedPreferences,
     args: args,
     version: version,
     enableDiscord: enableDiscord,
+    downloadsDefaultDir: downloadsDefaultDir,
   );
 
   runApp(
@@ -87,6 +91,7 @@ Future<void> main(List<String> args) async {
 }
 
 void registerServicesAndViewModels({
+  required String? downloadsDefaultDir,
   required SharedPreferences sharedPreferences,
   required List<String> args,
   required String version,
@@ -122,7 +127,10 @@ void registerServicesAndViewModels({
       dispose: (s) async => s.dispose(),
     )
     ..registerLazySingleton<SettingsService>(
-      () => SettingsService(sharedPreferences: di<SharedPreferences>()),
+      () => SettingsService(
+        sharedPreferences: di<SharedPreferences>(),
+        downloadsDefaultDir: downloadsDefaultDir,
+      ),
       dispose: (s) async => s.dispose(),
     )
     ..registerLazySingleton<LibraryService>(
@@ -206,6 +214,7 @@ void registerServicesAndViewModels({
     )
     ..registerLazySingleton<DownloadModel>(
       () => DownloadModel(
+        settingsService: di<SettingsService>(),
         libraryService: di<LibraryService>(),
         dio: di<Dio>(),
       ),

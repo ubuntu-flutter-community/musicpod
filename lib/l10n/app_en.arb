@@ -176,6 +176,9 @@
         }
     },
     "downloadsOnly": "Downloads only",
+    "downloadsDirectory": "Location of your downloads",
+    "downloadsDirectoryDescription": "Make sure MusicPod can access this directory!",
+    "downloadsChangeWarning": "Changing the downloads directory deletes all current downloads. Do you want to proceed?",
     "moreOptions": "More options",
     "noRadioServerFound": "No radio server found",
     "connectedTo": "Connected to",

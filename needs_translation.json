@@ -1,6 +1,9 @@
 {
   "cs": [
     "local",
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning",
     "unPinAlbum",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
@@ -282,6 +285,9 @@
   "da": [
     "local",
     "insertedIntoQueue",
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning",
     "unPinAlbum",
     "duration",
     "radioTagDisclaimerTitle",
@@ -562,6 +568,9 @@
   ],
 
   "es": [
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning",
     "onlineArtError",
     "clicks",
     "exposeOnlineHeadline",
@@ -572,6 +581,9 @@
 
   "fr": [
     "local",
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning",
     "unPinAlbum",
     "alwaysAsk",
     "hideToTray",
@@ -841,6 +853,12 @@
     "regionZimbabwe"
   ],
 
+  "it": [
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning"
+  ],
+
   "nl": [
     "shuffle",
     "repeat",
@@ -915,6 +933,9 @@
     "downloadCancelled",
     "downloadFinished",
     "downloadsOnly",
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning",
     "moreOptions",
     "noRadioServerFound",
     "connectedTo",
@@ -1361,6 +1382,9 @@
     "stations",
     "copyToClipBoard",
     "insertedIntoQueue",
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning",
     "reorder",
     "move",
     "pinAlbum",
@@ -1706,6 +1730,9 @@
     "downloadCancelled",
     "downloadFinished",
     "downloadsOnly",
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning",
     "moreOptions",
     "noRadioServerFound",
     "connectedTo",
@@ -2177,6 +2204,9 @@
     "downloadCancelled",
     "downloadFinished",
     "downloadsOnly",
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning",
     "moreOptions",
     "noRadioServerFound",
     "connectedTo",
@@ -2609,6 +2639,9 @@
     "local",
     "copyToClipBoard",
     "insertedIntoQueue",
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning",
     "unPinAlbum",
     "language",
     "duration",
@@ -2889,6 +2922,12 @@
     "regionZimbabwe"
   ],
 
+  "sk": [
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning"
+  ],
+
   "sv": [
     "shuffle",
     "repeat",
@@ -2924,6 +2963,9 @@
     "downloadCancelled",
     "downloadFinished",
     "downloadsOnly",
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning",
     "moreOptions",
     "noRadioServerFound",
     "connectedTo",
@@ -3352,6 +3394,9 @@
 
   "tr": [
     "local",
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning",
     "unPinAlbum",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
@@ -3632,6 +3677,9 @@
 
   "zh": [
     "local",
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning",
     "unPinAlbum",
     "skipToLivStream",
     "searchSimilarStation",
@@ -3645,6 +3693,9 @@
 
   "zh_CN": [
     "local",
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning",
     "unPinAlbum",
     "skipToLivStream",
     "searchSimilarStation",
@@ -3658,6 +3709,9 @@
 
   "zh_HK": [
     "local",
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning",
     "unPinAlbum",
     "schedulePlaybackStopTimer",
     "alwaysAsk",
@@ -3930,6 +3984,9 @@
 
   "zh_TW": [
     "local",
+    "downloadsDirectory",
+    "downloadsDirectoryDescription",
+    "downloadsChangeWarning",
     "unPinAlbum",
     "schedulePlaybackStopTimer",
     "alwaysAsk",
