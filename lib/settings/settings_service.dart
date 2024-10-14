@@ -6,9 +6,13 @@ import '../common/data/close_btn_action.dart';
 import '../constants.dart';
 
 class SettingsService {
-  SettingsService({required SharedPreferences sharedPreferences})
-      : _preferences = sharedPreferences;
+  SettingsService({
+    required String? downloadsDefaultDir,
+    required SharedPreferences sharedPreferences,
+  })  : _preferences = sharedPreferences,
+        _downloadsDefaultDir = downloadsDefaultDir;
 
+  final String? _downloadsDefaultDir;
   final SharedPreferences _preferences;
   final _propertiesChangedController = StreamController<bool>.broadcast();
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
@@ -78,6 +82,14 @@ class SettingsService {
   String? get directory => _preferences.getString(kDirectoryProperty);
   Future<void> setDirectory(String directory) async {
     await _preferences.setString(kDirectoryProperty, directory).then((saved) {
+      if (saved) _propertiesChangedController.add(true);
+    });
+  }
+
+  String? get downloadsDir =>
+      _preferences.getString(kDownloadsCustomDir) ?? _downloadsDefaultDir;
+  Future<void> setDownloadsCustomDir(String directory) async {
+    await _preferences.setString(kDownloadsCustomDir, directory).then((saved) {
       if (saved) _propertiesChangedController.add(true);
     });
   }

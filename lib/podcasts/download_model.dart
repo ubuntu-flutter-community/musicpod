@@ -8,15 +8,19 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import '../common/data/audio.dart';
 import '../l10n/l10n.dart';
 import '../library/library_service.dart';
+import '../settings/settings_service.dart';
 
 class DownloadModel extends SafeChangeNotifier {
   DownloadModel({
     required LibraryService libraryService,
+    required SettingsService settingsService,
     required Dio dio,
-  })  : _service = libraryService,
+  })  : _libraryService = libraryService,
+        _settingsService = settingsService,
         _dio = dio;
 
-  final LibraryService _service;
+  final LibraryService _libraryService;
+  final SettingsService _settingsService;
   final Dio _dio;
 
   final _values = <String, double?>{};
@@ -42,12 +46,21 @@ class DownloadModel extends SafeChangeNotifier {
     required Audio? audio,
   }) async {
     if (audio?.url != null &&
-        _service.downloadsDir != null &&
+        _settingsService.downloadsDir != null &&
         audio?.website != null) {
-      _service.removeDownload(url: audio!.url!, feedUrl: audio.website!);
+      _libraryService.removeDownload(url: audio!.url!, feedUrl: audio.website!);
       if (_values.containsKey(audio.url)) {
         _values.update(audio.url!, (value) => null);
       }
+
+      notifyListeners();
+    }
+  }
+
+  Future<void> deleteAllDownloads() async {
+    if (_settingsService.downloadsDir != null) {
+      _libraryService.removeAllDownloads();
+      _values.clear;
 
       notifyListeners();
     }
@@ -57,7 +70,7 @@ class DownloadModel extends SafeChangeNotifier {
     required BuildContext context,
     required Audio? audio,
   }) async {
-    final downloadsDir = _service.downloadsDir;
+    final downloadsDir = _settingsService.downloadsDir;
     if (audio?.url == null || downloadsDir == null) return;
     final url = audio!.url!;
 
@@ -86,7 +99,11 @@ class DownloadModel extends SafeChangeNotifier {
       name: audio.title ?? '',
     ).then((response) {
       if (response?.statusCode == 200 && audio.website != null) {
-        _service.addDownload(url: url, path: path, feedUrl: audio.website!);
+        _libraryService.addDownload(
+          url: url,
+          path: path,
+          feedUrl: audio.website!,
+        );
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

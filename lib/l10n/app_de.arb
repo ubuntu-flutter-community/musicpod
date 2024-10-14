@@ -176,6 +176,9 @@
         }
     },
     "downloadsOnly": "Nur Downloads",
+    "downloadsDirectory": "Ort der Downloads",
+    "downloadsDirectoryDescription": "Stell sicher dass MusicPod Zugriff auf diesen Ort hat",
+    "downloadsChangeWarning": "Das Ändern des Download-Orts löscht alle bisherigen Downloads. Möchtest du fortfahren?",
     "moreOptions": "Mehr Optionen",
     "noRadioServerFound": "Es wurde kein Radio-Server gefunden",
     "connectedTo": "Verbunden mit",

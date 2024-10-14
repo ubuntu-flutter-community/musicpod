@@ -21,6 +21,7 @@ import '../../extensions/theme_data_x.dart';
 import '../../extensions/theme_mode_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_model.dart';
+import '../../podcasts/download_model.dart';
 import '../../podcasts/podcast_model.dart';
 import '../settings_model.dart';
 import 'theme_tile.dart';
@@ -182,6 +183,7 @@ class _PodcastSectionState extends State<_PodcastSection> {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
+    final l10n = context.l10n;
     final model = di<SettingsModel>();
     final usePodcastIndex =
         watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
@@ -192,11 +194,12 @@ class _PodcastSectionState extends State<_PodcastSection> {
 
     return YaruSection(
       margin: const EdgeInsets.all(kYaruPagePadding),
-      headline: Text(context.l10n.podcasts),
+      headline: Text(l10n.podcasts),
       child: Column(
         children: [
+          const _DownloadsTile(),
           YaruTile(
-            title: Text(context.l10n.usePodcastIndex),
+            title: Text(l10n.usePodcastIndex),
             trailing: CommonSwitch(
               value: usePodcastIndex,
               onChanged: (v) async {
@@ -204,7 +207,7 @@ class _PodcastSectionState extends State<_PodcastSection> {
                 if (context.mounted) {
                   di<PodcastModel>().init(
                     forceInit: true,
-                    updateMessage: context.l10n.newEpisodeAvailable,
+                    updateMessage: l10n.newEpisodeAvailable,
                   );
                 }
               },
@@ -220,7 +223,7 @@ class _PodcastSectionState extends State<_PodcastSection> {
                 decoration: InputDecoration(
                   label: Text(kPodcastIndexApiKey.camelToSentence),
                   suffixIcon: IconButton(
-                    tooltip: context.l10n.save,
+                    tooltip: l10n.save,
                     onPressed: () =>
                         model.setPodcastIndexApiKey(_keyController.text),
                     icon: Icon(
@@ -247,7 +250,7 @@ class _PodcastSectionState extends State<_PodcastSection> {
                 decoration: InputDecoration(
                   label: Text(kPodcastIndexApiSecret.camelToSentence),
                   suffixIcon: IconButton(
-                    tooltip: context.l10n.save,
+                    tooltip: l10n.save,
                     onPressed: () =>
                         model.setPodcastIndexApiSecret(_secretController.text),
                     icon: Icon(
@@ -261,6 +264,66 @@ class _PodcastSectionState extends State<_PodcastSection> {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _DownloadsTile extends StatefulWidget with WatchItStatefulWidgetMixin {
+  const _DownloadsTile();
+
+  @override
+  State<_DownloadsTile> createState() => _DownloadsTileState();
+}
+
+class _DownloadsTileState extends State<_DownloadsTile> {
+  String? _error;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
+    return YaruTile(
+      title: Text(l10n.downloadsDirectory),
+      subtitle: Text(
+        _error ?? watchPropertyValue((SettingsModel m) => m.downloadsDir ?? ''),
+      ),
+      trailing: ImportantButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              content: SizedBox(
+                width: 300,
+                child: Text(
+                  l10n.downloadsChangeWarning,
+                  style: context.textTheme.bodyLarge,
+                ),
+              ),
+              actions: [
+                OutlinedButton(
+                  onPressed: Navigator.of(context).pop,
+                  child: Text(l10n.cancel),
+                ),
+                ImportantButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    di<SettingsModel>().setDownloadsCustomDir(
+                      onSuccess: () => di<DownloadModel>().deleteAllDownloads(),
+                      onFail: (e) => setState(() => _error = e.toString()),
+                    );
+                  },
+                  child: Text(l10n.ok),
+                ),
+              ],
+            ),
+          );
+        },
+        child: Text(
+          l10n.select,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
     );
   }

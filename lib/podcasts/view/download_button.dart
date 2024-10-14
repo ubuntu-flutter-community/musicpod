@@ -7,6 +7,7 @@ import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../settings/settings_model.dart';
 import '../download_model.dart';
 
 class DownloadButton extends StatelessWidget with WatchItMixin {
@@ -31,7 +32,8 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
     final download = watchPropertyValue(
       (LibraryModel m) => m.getDownload(audio?.url) != null,
     );
-    final downloadsDir = watchPropertyValue((LibraryModel m) => m.downloadsDir);
+    final downloadsDir =
+        watchPropertyValue((SettingsModel m) => m.downloadsDir);
 
     return Stack(
       alignment: Alignment.center,
