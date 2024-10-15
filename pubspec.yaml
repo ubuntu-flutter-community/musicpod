@@ -31,7 +31,11 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_cache_manager: ^3.4.1
-  flutter_discord_rpc: ^0.1.0+1
+  flutter_discord_rpc:
+    git:
+      url: https://github.com/ubuntu-flutter-community/frb_plugins
+      path: packages/flutter_discord_rpc
+      ref: 9d5764ee143aef23517bd578fc1b3a2d83d67a44
   flutter_html: ^3.0.0-beta.2
   flutter_localizations:
     sdk: flutter
