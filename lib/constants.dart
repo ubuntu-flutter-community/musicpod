@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:yaru/constants.dart';
 
@@ -192,4 +190,4 @@ const kShowLeadingThreshold = 3000;
 
 // TODO(#946): make discord work inside the snap
 // or leave it for linux disabled if this won't work
-bool kDiscordEnabledOnPlatform = !Platform.isLinux;
+bool kDiscordEnabledOnPlatform = true;
