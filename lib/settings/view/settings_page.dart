@@ -6,6 +6,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
+import '../../app_config.dart';
 import '../../common/data/close_btn_action.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/drop_down_arrow.dart';
@@ -495,15 +496,15 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
           YaruTile(
             title: Text(l10n.exposeToDiscordTitle),
             subtitle: Text(
-              kDiscordEnabledOnPlatform
+              allowDiscordRPC
                   ? l10n.exposeToDiscordSubTitle
                   : l10n.featureDisabledOnPlatform,
             ),
             trailing: CommonSwitch(
-              value: kDiscordEnabledOnPlatform
+              value: allowDiscordRPC
                   ? watchPropertyValue((SettingsModel m) => m.enableDiscordRPC)
                   : false,
-              onChanged: kDiscordEnabledOnPlatform
+              onChanged: allowDiscordRPC
                   ? di<SettingsModel>().setEnableDiscordRPC
                   : null,
             ),
