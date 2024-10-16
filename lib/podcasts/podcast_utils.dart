@@ -76,7 +76,7 @@ Future<void> searchAndPushPodcastPage({
           builder: (_) => PodcastPage(
             imageUrl: itemImageUrl ?? podcast.firstOrNull?.imageUrl,
             preFetchedEpisodes: podcast,
-            pageId: feedUrl,
+            feedUrl: feedUrl,
             title: podcast.firstOrNull?.album ??
                 podcast.firstOrNull?.title ??
                 feedUrl,

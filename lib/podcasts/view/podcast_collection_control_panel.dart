@@ -1,14 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
+import 'package:yaru/yaru.dart';
+
 import '../../app/connectivity_model.dart';
 import '../../common/view/offline_page.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../podcast_model.dart';
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
   const PodcastCollectionControlPanel({super.key});
@@ -55,20 +54,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                 if (updatesOnly) {
                   model.setUpdatesOnly(false);
                 } else {
-                  model.update(
-                    updateMessage: context.l10n.newEpisodeAvailable,
-                    notify: Platform.isLinux
-                        ? null
-                        : ({required message}) {
-                            if (context.mounted) {
-                              showSnackBar(
-                                context: context,
-                                content: Text(message),
-                              );
-                            }
-                          },
-                  );
-
+                  model.update(updateMessage: context.l10n.newEpisodeAvailable);
                   model.setUpdatesOnly(true);
                   model.setDownloadsOnly(false);
                 }

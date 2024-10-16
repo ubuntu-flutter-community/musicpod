@@ -15,7 +15,6 @@ import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -33,11 +32,11 @@ import 'podcast_sub_button.dart';
 import 'podcast_timer_button.dart';
 import 'sliver_podcast_page_list.dart';
 
-class PodcastPage extends StatelessWidget with WatchItMixin {
+class PodcastPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const PodcastPage({
     super.key,
     this.imageUrl,
-    required this.pageId,
+    required this.feedUrl,
     this.preFetchedEpisodes,
     required this.title,
   });
@@ -45,20 +44,48 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
   final String? imageUrl;
 
   /// The feedUrl
-  final String pageId;
+  final String feedUrl;
   final String title;
   final List<Audio>? preFetchedEpisodes;
 
   @override
+  State<PodcastPage> createState() => _PodcastPageState();
+}
+
+class _PodcastPageState extends State<PodcastPage> {
+  @override
+  void initState() {
+    super.initState();
+    final libraryModel = di<LibraryModel>();
+    final episodes =
+        widget.preFetchedEpisodes ?? libraryModel.podcasts[widget.feedUrl];
+
+    if (episodes == null || episodes.isEmpty) return;
+
+    Future.delayed(const Duration(milliseconds: 500)).then(
+      (_) {
+        final episodesWithDownloads = episodes
+            .map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
+            .toList();
+        di<PodcastModel>().update(
+          oldPodcasts: {
+            widget.feedUrl: episodesWithDownloads,
+          },
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final episodes = preFetchedEpisodes ??
-        watchPropertyValue((LibraryModel m) => m.podcasts[pageId]);
+    final episodes = widget.preFetchedEpisodes ??
+        watchPropertyValue((LibraryModel m) => m.podcasts[widget.feedUrl]);
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
 
     final libraryModel = di<LibraryModel>();
     if (watchPropertyValue(
-      (LibraryModel m) => m.showPodcastAscending(pageId),
+      (LibraryModel m) => m.showPodcastAscending(widget.feedUrl),
     )) {
       sortListByAudioFilter(
         audioFilter: AudioFilter.year,
@@ -91,12 +118,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         builder: (context, constraints) {
           return RefreshIndicator(
             onRefresh: () async => di<PodcastModel>().update(
-              oldPodcasts: {pageId: episodesWithDownloads},
-              updateMessage: context.l10n.newEpisodeAvailable,
-              notify: ({required message}) => showSnackBar(
-                context: context,
-                content: Text(message),
-              ),
+              oldPodcasts: {widget.feedUrl: episodesWithDownloads},
             ),
             child: CustomScrollView(
               slivers: [
@@ -107,9 +129,9 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                   ),
                   sliver: SliverToBoxAdapter(
                     child: AudioPageHeader(
-                      image: imageUrl == null
+                      image: widget.imageUrl == null
                           ? null
-                          : _PodcastPageImage(imageUrl: imageUrl),
+                          : _PodcastPageImage(imageUrl: widget.imageUrl),
                       label: episodesWithDownloads
                               .firstWhereOrNull((e) => e.genre != null)
                               ?.genre ??
@@ -121,9 +143,9 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                               : AudioPageHeaderHtmlDescription(
                                   description: episodesWithDownloads
                                       .firstOrNull!.albumArtist!,
-                                  title: title,
+                                  title: widget.title,
                                 ),
-                      title: title,
+                      title: widget.title,
                       onLabelTab: (text) => _onGenreTap(
                         context: context,
                         text: text,
@@ -145,15 +167,15 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                         const PodcastTimerButton(),
                         PodcastSubButton(
                           audios: episodesWithDownloads,
-                          pageId: pageId,
+                          pageId: widget.feedUrl,
                         ),
                         AvatarPlayButton(
                           audios: episodesWithDownloads,
-                          pageId: pageId,
+                          pageId: widget.feedUrl,
                         ),
-                        PodcastRefreshButton(pageId: pageId),
-                        PodcastReorderButton(feedUrl: pageId),
-                        if (!isMobile) ExploreOnlinePopup(text: title),
+                        PodcastRefreshButton(pageId: widget.feedUrl),
+                        PodcastReorderButton(feedUrl: widget.feedUrl),
+                        if (!isMobile) ExploreOnlinePopup(text: widget.title),
                       ],
                     ),
                   ),
@@ -164,7 +186,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                           .copyWith(bottom: kYaruPagePadding),
                   sliver: SliverPodcastPageList(
                     audios: episodesWithDownloads,
-                    pageId: pageId,
+                    pageId: widget.feedUrl,
                   ),
                 ),
               ],

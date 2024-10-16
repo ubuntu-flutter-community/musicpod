@@ -264,7 +264,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
         ),
         pageId: podcast.key,
         pageBuilder: (_) => PodcastPage(
-          pageId: podcast.key,
+          feedUrl: podcast.key,
           title: podcast.value.firstOrNull?.album ??
               podcast.value.firstOrNull?.title ??
               podcast.value.firstOrNull.toString(),
