@@ -21,6 +21,7 @@ import '../../library/library_model.dart';
 import 'app/app_model.dart';
 import 'app/connectivity_model.dart';
 import 'app/view/app.dart';
+import 'app_config.dart';
 import 'constants.dart';
 import 'expose/expose_service.dart';
 import 'library/library_service.dart';
@@ -59,8 +60,8 @@ Future<void> main(List<String> args) async {
   final sharedPreferences = await SharedPreferences.getInstance();
   final version = (await PackageInfo.fromPlatform()).version;
 
-  final enableDiscord = kDiscordEnabledOnPlatform &&
-      sharedPreferences.get(kEnableDiscordRPC) == true;
+  final enableDiscord =
+      allowDiscordRPC && sharedPreferences.get(kEnableDiscordRPC) == true;
   if (enableDiscord) {
     await FlutterDiscordRPC.initialize(kDiscordApplicationId);
     FlutterDiscordRPC.instance.connect();
