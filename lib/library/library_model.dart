@@ -154,8 +154,6 @@ class LibraryModel extends SafeChangeNotifier {
   int get podcastsLength => podcasts.length;
   void addPodcast(String feedUrl, List<Audio> audios) =>
       _service.addPodcast(feedUrl, audios);
-  void updatePodcast(String feedUrl, List<Audio> audios) =>
-      _service.updatePodcast(feedUrl, audios);
 
   void removePodcast(String feedUrl) {
     _service.removePodcast(feedUrl);

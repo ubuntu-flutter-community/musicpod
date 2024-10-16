@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
+
 import '../../common/view/icons.dart';
-import '../../common/view/snackbars.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../podcast_model.dart';
-import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
 
 class PodcastRefreshButton extends StatelessWidget {
   const PodcastRefreshButton({
@@ -27,8 +27,6 @@ class PodcastRefreshButton extends StatelessWidget {
                   pageId: podcast,
                 },
                 updateMessage: context.l10n.newEpisodeAvailable,
-                notify: ({required message}) =>
-                    showSnackBar(context: context, content: Text(message)),
               ),
       icon: Icon(Iconz.refresh),
     );

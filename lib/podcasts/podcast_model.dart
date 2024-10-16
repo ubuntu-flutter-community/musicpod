@@ -37,17 +37,14 @@ class PodcastModel extends SafeChangeNotifier {
   }
 
   void update({
-    required String updateMessage,
+    String? updateMessage,
+    // Note: because the podcasts can be modified to include downloads
+    // this needs a map and not only the feedurl
     Map<String, List<Audio>>? oldPodcasts,
-    Function({required String message})? notify,
   }) {
     _setCheckingForUpdates(true);
     _podcastService
-        .updatePodcasts(
-          oldPodcasts: oldPodcasts,
-          updateMessage: updateMessage,
-          notify: notify,
-        )
+        .updatePodcasts(updateMessage: updateMessage, oldPodcasts: oldPodcasts)
         .then((_) => _setCheckingForUpdates(false));
   }
 

@@ -87,11 +87,14 @@ class PodcastService {
     return _searchResult;
   }
 
+  bool _updateLock = false;
+
   Future<void> updatePodcasts({
     Map<String, List<Audio>>? oldPodcasts,
-    required String updateMessage,
-    Function({required String message})? notify,
+    String? updateMessage,
   }) async {
+    if (_updateLock) return;
+    _updateLock = true;
     for (final old in (oldPodcasts ?? _libraryService.podcasts).entries) {
       if (old.value.isNotEmpty) {
         final list = old.value;
@@ -111,9 +114,7 @@ class PodcastService {
                 audios.isEmpty) return;
 
             _libraryService.updatePodcast(old.key, audios);
-            if (notify != null) {
-              notify(message: '$updateMessage ${firstOld.album ?? old.value}');
-            } else {
+            if (updateMessage != null) {
               _notificationsService.notify(
                 message: '$updateMessage ${firstOld.album ?? old.value}',
               );
@@ -122,5 +123,6 @@ class PodcastService {
         }
       }
     }
+    _updateLock = false;
   }
 }
