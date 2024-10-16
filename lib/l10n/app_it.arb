@@ -176,6 +176,9 @@
         }
     },
     "downloadsOnly": "Solo download",
+    "downloadsDirectory": "Cartella download",
+    "downloadsDirectoryDescription": "Assicurati che MusicPod possa accedere a questa cartella!",
+    "downloadsChangeWarning": "La modifica della cartella download elimina tutti i download attuali. Vuoi continuare?",
     "moreOptions": "Altre opzioni",
     "noRadioServerFound": "Nessun server radio trovato",
     "connectedTo": "Connesso a",
