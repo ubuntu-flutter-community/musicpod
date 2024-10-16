@@ -19,7 +19,6 @@ architectures:
 
 environment:
   LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/lapack:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/caca:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/vdpau:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/mfx
-  ALLOW_DISCORD_RPC: false
 
 apps:
   musicpod:
@@ -97,7 +96,7 @@ parts:
       # work around pub get stack overflow # https://github.com/dart-lang/sdk/issues/51068#issuecomment-1396588253
       set +e
       dart pub get
-      flutter build linux --release -v --dart-define=ALLOW_DISCORD_RPC=${ALLOW_DISCORD_RPC}
+      flutter build linux --release -v
       cp -r build/linux/*/release/bundle/* $CRAFT_PART_INSTALL/bin/
 
   deps:
