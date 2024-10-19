@@ -7,7 +7,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/view/local_cover.dart';
-import '../../radio/online_art_model.dart';
+import '../player_model.dart';
 import 'player_fall_back_image.dart';
 import 'player_remote_source_image.dart';
 
@@ -81,7 +81,7 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
           duration: const Duration(milliseconds: 200),
           child: child,
         ),
-        if (watchStream((OnlineArtModel s) => s.error).data != null &&
+        if (watchStream((PlayerModel s) => s.onlineArtError).data != null &&
             audio?.audioType == AudioType.radio)
           Positioned(
             bottom: 5,

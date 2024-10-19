@@ -7,41 +7,47 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/mpv_meta_data.dart';
+import '../radio/online_art_service.dart';
 import 'player_service.dart';
 
 const rateValues = [.75, 1.0, 1.25, 1.5, 1.75, 2.0];
 
 class PlayerModel extends SafeChangeNotifier {
-  final PlayerService _service;
   PlayerModel({
     required PlayerService service,
-    required Connectivity connectivity,
-  }) : _service = service;
+    required OnlineArtService onlineArtService,
+  })  : _playerService = service,
+        _onlineArtService = onlineArtService;
 
-  VideoController get controller => _service.controller;
+  final PlayerService _playerService;
+  final OnlineArtService _onlineArtService;
+
+  VideoController get controller => _playerService.controller;
 
   StreamSubscription<bool>? _propertiesChangedSub;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
-  String? get queueName => _service.queue.name;
+  Stream<String?> get onlineArtError => _onlineArtService.error;
 
-  List<Audio> get queue => _service.queue.audios;
-  MpvMetaData? get mpvMetaData => _service.mpvMetaData;
+  String? get queueName => _playerService.queue.name;
 
-  Audio? get audio => _service.audio;
+  List<Audio> get queue => _playerService.queue.audios;
+  MpvMetaData? get mpvMetaData => _playerService.mpvMetaData;
 
-  bool? get isVideo => _service.isVideo;
+  Audio? get audio => _playerService.audio;
 
-  Audio? get nextAudio => _service.nextAudio;
+  bool? get isVideo => _playerService.isVideo;
 
-  bool get isPlaying => _service.isPlaying;
+  Audio? get nextAudio => _playerService.nextAudio;
 
-  Duration? get duration => _service.duration;
+  bool get isPlaying => _playerService.isPlaying;
 
-  Duration? get position => _service.position;
-  void setPosition(Duration? value) => _service.setPosition(value);
+  Duration? get duration => _playerService.duration;
 
-  Duration? get buffer => _service.buffer;
+  Duration? get position => _playerService.position;
+  void setPosition(Duration? value) => _playerService.setPosition(value);
+
+  Duration? get buffer => _playerService.buffer;
 
   Future<void> seekInSeconds(int seconds) async {
     if (position != null && position!.inSeconds + seconds >= 0) {
@@ -54,53 +60,54 @@ class PlayerModel extends SafeChangeNotifier {
     }
   }
 
-  bool get repeatSingle => _service.repeatSingle;
-  void setRepeatSingle(bool value) => _service.setRepeatSingle(value);
+  bool get repeatSingle => _playerService.repeatSingle;
+  void setRepeatSingle(bool value) => _playerService.setRepeatSingle(value);
 
-  bool get shuffle => _service.shuffle;
-  void setShuffle(bool value) => _service.setShuffle(value);
+  bool get shuffle => _playerService.shuffle;
+  void setShuffle(bool value) => _playerService.setShuffle(value);
 
-  double? get volume => _service.volume;
-  Future<void> setVolume(double value) async => _service.setVolume(value);
+  double? get volume => _playerService.volume;
+  Future<void> setVolume(double value) async => _playerService.setVolume(value);
 
-  double get rate => _service.rate;
-  Future<void> setRate(double value) async => _service.setRate(value);
+  double get rate => _playerService.rate;
+  Future<void> setRate(double value) async => _playerService.setRate(value);
 
-  Future<void> playOrPause() async => _service.playOrPause();
+  Future<void> playOrPause() async => _playerService.playOrPause();
 
-  Future<void> pause() async => _service.pause();
+  Future<void> pause() async => _playerService.pause();
 
-  Future<void> seek() async => _service.seek();
+  Future<void> seek() async => _playerService.seek();
 
-  Future<void> resume() async => _service.resume();
+  Future<void> resume() async => _playerService.resume();
 
   void init() => _propertiesChangedSub ??=
-      _service.propertiesChanged.listen((_) => notifyListeners());
+      _playerService.propertiesChanged.listen((_) => notifyListeners());
 
-  Future<void> playNext() async => _service.playNext();
+  Future<void> playNext() async => _playerService.playNext();
 
-  void insertIntoQueue(Audio audio) async => _service.insertIntoQueue(audio);
+  void insertIntoQueue(Audio audio) async =>
+      _playerService.insertIntoQueue(audio);
 
   void moveAudioInQueue(int oldIndex, int newIndex) async =>
-      _service.moveAudioInQueue(oldIndex, newIndex);
+      _playerService.moveAudioInQueue(oldIndex, newIndex);
 
-  void remove(Audio deleteMe) => _service.remove(deleteMe);
+  void remove(Audio deleteMe) => _playerService.remove(deleteMe);
 
-  Future<void> playPrevious() async => _service.playPrevious();
+  Future<void> playPrevious() async => _playerService.playPrevious();
 
   Future<void> startPlaylist({
     required List<Audio> audios,
     required String listName,
     int? index,
   }) async =>
-      _service.startPlaylist(
+      _playerService.startPlaylist(
         audios: audios,
         listName: listName,
         index: index,
       );
 
-  Color? get color => _service.color;
-  String? get remoteImageUrl => _service.remoteImageUrl;
+  Color? get color => _playerService.color;
+  String? get remoteImageUrl => _playerService.remoteImageUrl;
 
   bool _isUpNextExpanded = false;
   bool get isUpNextExpanded => _isUpNextExpanded;
@@ -110,20 +117,20 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Map<String, Duration>? get lastPositions => _service.lastPositions;
-  Duration? getLastPosition(String? url) => _service.getLastPosition(url);
-  Future<void> safeLastPosition() => _service.safeLastPosition();
+  Map<String, Duration>? get lastPositions => _playerService.lastPositions;
+  Duration? getLastPosition(String? url) => _playerService.getLastPosition(url);
+  Future<void> safeLastPosition() => _playerService.safeLastPosition();
   Future<void> removeLastPosition(String key) =>
-      _service.removeLastPosition(key);
+      _playerService.removeLastPosition(key);
   Future<void> removeLastPositions(List<Audio> audios) =>
-      _service.removeLastPositions(audios);
+      _playerService.removeLastPositions(audios);
 
   int getRadioHistoryLength({String? filter}) =>
       filteredRadioHistory(filter: filter).length;
   Iterable<MapEntry<String, MpvMetaData>> filteredRadioHistory({
     required String? filter,
   }) {
-    return _service.radioHistory.entries.where(
+    return _playerService.radioHistory.entries.where(
       (e) => filter == null
           ? true
           : e.value.icyName.contains(filter) ||
@@ -144,7 +151,7 @@ class PlayerModel extends SafeChangeNotifier {
         .replaceAll(')', '');
   }
 
-  void setTimer(Duration duration) => _service.setTimer(duration);
+  void setTimer(Duration duration) => _playerService.setTimer(duration);
 
   @override
   Future<void> dispose() async {

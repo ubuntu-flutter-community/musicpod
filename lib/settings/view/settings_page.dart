@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
@@ -13,6 +14,7 @@ import '../../common/view/drop_down_arrow.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
+import '../../common/view/snackbars.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
@@ -404,8 +406,14 @@ class _AboutTileState extends State<_AboutTile> {
   @override
   void initState() {
     super.initState();
-    di<AppModel>()
-        .checkForUpdate(di<ConnectivityModel>().isOnline == true, context);
+    di<AppModel>().checkForUpdate(
+      isOnline: di<ConnectivityModel>().isOnline == true,
+      onError: (e) {
+        if (mounted) {
+          showSnackBar(context: context, content: Text(e));
+        }
+      },
+    );
   }
 
   @override
@@ -484,6 +492,11 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+
+    final discordEnabled = allowDiscordRPC
+        ? watchPropertyValue((SettingsModel m) => m.enableDiscordRPC)
+        : false;
+
     return YaruSection(
       headline: Text(l10n.exposeOnlineHeadline),
       margin: const EdgeInsets.only(
@@ -494,18 +507,38 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
       child: Column(
         children: [
           YaruTile(
-            title: Text(l10n.exposeToDiscordTitle),
+            title: Row(
+              children: space(
+                children: [
+                  allowDiscordRPC
+                      ? const Icon(
+                          TablerIcons.brand_discord_filled,
+                        )
+                      : Icon(
+                          TablerIcons.brand_discord_filled,
+                          color: context.theme.disabledColor,
+                        ),
+                  Text(l10n.exposeToDiscordTitle),
+                ],
+              ),
+            ),
             subtitle: Text(
               allowDiscordRPC
                   ? l10n.exposeToDiscordSubTitle
                   : l10n.featureDisabledOnPlatform,
             ),
             trailing: CommonSwitch(
-              value: allowDiscordRPC
-                  ? watchPropertyValue((SettingsModel m) => m.enableDiscordRPC)
-                  : false,
+              value: discordEnabled,
               onChanged: allowDiscordRPC
-                  ? di<SettingsModel>().setEnableDiscordRPC
+                  ? (v) {
+                      di<SettingsModel>().setEnableDiscordRPC(v);
+                      final appModel = di<AppModel>();
+                      if (v) {
+                        appModel.connectToDiscord();
+                      } else {
+                        appModel.disconnectFromDiscord();
+                      }
+                    }
                   : null,
             ),
           ),

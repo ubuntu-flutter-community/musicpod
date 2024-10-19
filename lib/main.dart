@@ -34,7 +34,6 @@ import 'player/player_service.dart';
 import 'podcasts/download_model.dart';
 import 'podcasts/podcast_model.dart';
 import 'podcasts/podcast_service.dart';
-import 'radio/online_art_model.dart';
 import 'radio/online_art_service.dart';
 import 'radio/radio_model.dart';
 import 'radio/radio_service.dart';
@@ -60,11 +59,8 @@ Future<void> main(List<String> args) async {
   final sharedPreferences = await SharedPreferences.getInstance();
   final version = (await PackageInfo.fromPlatform()).version;
 
-  final enableDiscord =
-      allowDiscordRPC && sharedPreferences.get(kEnableDiscordRPC) == true;
-  if (enableDiscord) {
+  if (allowDiscordRPC) {
     await FlutterDiscordRPC.initialize(kDiscordApplicationId);
-    FlutterDiscordRPC.instance.connect();
     di.registerLazySingleton<FlutterDiscordRPC>(
       () => FlutterDiscordRPC.instance,
       dispose: (s) {
@@ -80,7 +76,7 @@ Future<void> main(List<String> args) async {
     sharedPreferences: sharedPreferences,
     args: args,
     version: version,
-    enableDiscord: enableDiscord,
+    allowDiscordRPC: allowDiscordRPC,
     downloadsDefaultDir: downloadsDefaultDir,
   );
 
@@ -96,7 +92,7 @@ void registerServicesAndViewModels({
   required SharedPreferences sharedPreferences,
   required List<String> args,
   required String version,
-  required bool enableDiscord,
+  required bool allowDiscordRPC,
 }) {
   di
     ..registerLazySingleton<SharedPreferences>(() => sharedPreferences)
@@ -112,8 +108,9 @@ void registerServicesAndViewModels({
     )
     ..registerLazySingleton<ExposeService>(
       () => ExposeService(
-        discordRPC: enableDiscord ? di<FlutterDiscordRPC>() : null,
+        discordRPC: allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
       ),
+      dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<PlayerService>(
       () => PlayerService(
@@ -181,7 +178,7 @@ void registerServicesAndViewModels({
     ..registerLazySingleton<PlayerModel>(
       () => PlayerModel(
         service: di<PlayerService>(),
-        connectivity: di<Connectivity>(),
+        onlineArtService: di<OnlineArtService>(),
       )..init(),
       dispose: (s) => s.dispose(),
     )
@@ -190,6 +187,7 @@ void registerServicesAndViewModels({
         appVersion: version,
         gitHub: di<GitHub>(),
         settingsService: di<SettingsService>(),
+        exposeService: di<ExposeService>(),
         allowManualUpdates: Platform.isLinux ? false : true,
       ),
       dispose: (s) => s.dispose(),
@@ -227,11 +225,5 @@ void registerServicesAndViewModels({
         libraryService: di<LibraryService>(),
         localAudioService: di<LocalAudioService>(),
       )..init(),
-    )
-    ..registerLazySingleton<OnlineArtModel>(
-      () => OnlineArtModel(
-        service: di<OnlineArtService>(),
-      ),
-      dispose: (m) => m.dispose(),
     );
 }

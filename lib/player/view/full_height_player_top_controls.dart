@@ -15,7 +15,6 @@ import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
-import '../../radio/online_art_model.dart';
 import 'playback_rate_button.dart';
 import 'player_view.dart';
 import 'queue_button.dart';
@@ -56,7 +55,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
         alignment: WrapAlignment.end,
         spacing: 5.0,
         children: [
-          if (watchStream((OnlineArtModel s) => s.error).data != null &&
+          if (watchStream((PlayerModel m) => m.onlineArtError).data != null &&
               audio?.audioType == AudioType.radio)
             IconButton(
               tooltip: context.l10n.onlineArtError,
