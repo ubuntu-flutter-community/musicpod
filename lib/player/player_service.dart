@@ -103,12 +103,16 @@ class PlayerService {
     _audio = value;
     _propertiesChangedController.add(true);
     _setMpvMetaData(null);
-    if (_audio?.audioType != null &&
-        _audio?.title != null &&
-        _audio?.artist != null) {
+    _exposeAudioOnline(_audio);
+  }
+
+  void _exposeAudioOnline(Audio? audio) {
+    if (audio?.audioType != null &&
+        audio?.title != null &&
+        audio?.artist != null) {
       _exposeService.exposeTitleOnline(
-        songDetails: '${_audio!.artist} - ${audio!.title}}',
-        state: switch (_audio!.audioType!) {
+        songDetails: '${audio!.artist} - ${audio.title}}',
+        state: switch (audio.audioType!) {
           AudioType.local => 'Local Music',
           AudioType.podcast => 'Podcast',
           AudioType.radio => 'Internet Radio',

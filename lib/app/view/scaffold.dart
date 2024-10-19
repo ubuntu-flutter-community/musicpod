@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../common/view/snackbars.dart';
+import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../l10n/l10n.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/view/player_view.dart';
 import '../app_model.dart';
@@ -23,7 +27,9 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
     super.initState();
     final appModel = di<AppModel>();
     appModel
-        .checkForUpdate(di<ConnectivityModel>().isOnline == true, context)
+        .checkForUpdate(
+      isOnline: di<ConnectivityModel>().isOnline == true,
+    )
         .then((_) {
       if (!appModel.recentPatchNotesDisposed() && mounted) {
         showDialog(
@@ -38,6 +44,32 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
   Widget build(BuildContext context) {
     final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
     final isFullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
+    final l10n = context.l10n;
+    registerStreamHandler(
+      select: (AppModel m) => m.isDiscordConnectedStream,
+      handler: (context, snapshot, cancel) {
+        if (!snapshot.hasData || snapshot.hasError) return;
+        showSnackBar(
+          context: context,
+          content: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: space(
+              widthGap: 10,
+              children: [
+                Text(
+                  '${snapshot.data == true ? l10n.connectedTo : l10n.disconnectedFrom}'
+                  ' ${l10n.exposeToDiscordTitle}',
+                ),
+                Icon(
+                  TablerIcons.brand_discord_filled,
+                  color: context.theme.primaryColor,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
 
     return Stack(
       alignment: Alignment.center,

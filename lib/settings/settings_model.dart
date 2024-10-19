@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:path/path.dart' as p;
 
 import 'package:github/github.dart';
+import 'package:path/path.dart' as p;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../external_path/external_path_service.dart';

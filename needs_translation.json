@@ -4,6 +4,7 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "disconnectedFrom",
     "unPinAlbum",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
@@ -288,6 +289,7 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "disconnectedFrom",
     "unPinAlbum",
     "duration",
     "radioTagDisclaimerTitle",
@@ -571,6 +573,7 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "disconnectedFrom",
     "onlineArtError",
     "clicks",
     "exposeOnlineHeadline",
@@ -584,6 +587,7 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "disconnectedFrom",
     "unPinAlbum",
     "alwaysAsk",
     "hideToTray",
@@ -853,6 +857,10 @@
     "regionZimbabwe"
   ],
 
+  "it": [
+    "disconnectedFrom"
+  ],
+
   "nl": [
     "shuffle",
     "repeat",
@@ -933,6 +941,7 @@
     "moreOptions",
     "noRadioServerFound",
     "connectedTo",
+    "disconnectedFrom",
     "tryReconnect",
     "addedTo",
     "addToPlaylist",
@@ -1379,6 +1388,7 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "disconnectedFrom",
     "reorder",
     "move",
     "pinAlbum",
@@ -1730,6 +1740,7 @@
     "moreOptions",
     "noRadioServerFound",
     "connectedTo",
+    "disconnectedFrom",
     "tryReconnect",
     "addedTo",
     "addToPlaylist",
@@ -2204,6 +2215,7 @@
     "moreOptions",
     "noRadioServerFound",
     "connectedTo",
+    "disconnectedFrom",
     "tryReconnect",
     "addedTo",
     "addToPlaylist",
@@ -2636,6 +2648,7 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "disconnectedFrom",
     "unPinAlbum",
     "language",
     "duration",
@@ -2919,7 +2932,8 @@
   "sk": [
     "downloadsDirectory",
     "downloadsDirectoryDescription",
-    "downloadsChangeWarning"
+    "downloadsChangeWarning",
+    "disconnectedFrom"
   ],
 
   "sv": [
@@ -2963,6 +2977,7 @@
     "moreOptions",
     "noRadioServerFound",
     "connectedTo",
+    "disconnectedFrom",
     "tryReconnect",
     "addedTo",
     "addToPlaylist",
@@ -3391,6 +3406,7 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "disconnectedFrom",
     "unPinAlbum",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
@@ -3674,6 +3690,7 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "disconnectedFrom",
     "unPinAlbum",
     "skipToLivStream",
     "searchSimilarStation",
@@ -3690,6 +3707,7 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "disconnectedFrom",
     "unPinAlbum",
     "skipToLivStream",
     "searchSimilarStation",
@@ -3706,6 +3724,7 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "disconnectedFrom",
     "unPinAlbum",
     "schedulePlaybackStopTimer",
     "alwaysAsk",
@@ -3981,6 +4000,7 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "disconnectedFrom",
     "unPinAlbum",
     "schedulePlaybackStopTimer",
     "alwaysAsk",

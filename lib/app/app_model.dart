@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:github/github.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../common/view/snackbars.dart';
 import '../constants.dart';
+import '../expose/expose_service.dart';
 import '../settings/settings_service.dart';
 
 class AppModel extends SafeChangeNotifier {
@@ -12,13 +12,24 @@ class AppModel extends SafeChangeNotifier {
     required SettingsService settingsService,
     required GitHub gitHub,
     required bool allowManualUpdates,
+    required ExposeService exposeService,
   })  : _countryCode = WidgetsBinding
             .instance.platformDispatcher.locale.countryCode
             ?.toLowerCase(),
         _gitHub = gitHub,
         _allowManualUpdates = allowManualUpdates,
         _settingsService = settingsService,
-        _version = appVersion;
+        _version = appVersion,
+        _exposeService = exposeService;
+
+  final ExposeService _exposeService;
+  Stream<String?> get errorStream => _exposeService.discordErrorStream;
+  Stream<bool> get isDiscordConnectedStream =>
+      _exposeService.isDiscordConnectedStream;
+
+  Future<void> connectToDiscord() async => _exposeService.connectToDiscord();
+  Future<void> disconnectFromDiscord() async =>
+      _exposeService.disconnectFromDiscord();
 
   final GitHub _gitHub;
   final SettingsService _settingsService;
@@ -55,7 +66,10 @@ class AppModel extends SafeChangeNotifier {
   bool? get updateAvailable => _updateAvailable;
   String? _onlineVersion;
   String? get onlineVersion => _onlineVersion;
-  Future<void> checkForUpdate(bool isOnline, BuildContext context) async {
+  Future<void> checkForUpdate({
+    required bool isOnline,
+    Function(String error)? onError,
+  }) async {
     _updateAvailable == null;
     notifyListeners();
 
@@ -66,9 +80,7 @@ class AppModel extends SafeChangeNotifier {
     }
     _onlineVersion = await getOnlineVersion().onError(
       (error, stackTrace) {
-        if (context.mounted) {
-          showSnackBar(context: context, content: Text(error.toString()));
-        }
+        onError?.call(error.toString());
         return null;
       },
     );
