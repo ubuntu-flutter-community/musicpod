@@ -1,5 +1,39 @@
 # Changelog
 
+## [2.0.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.12.0...v2.0.0) (2024-10-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* rework stations to be identified by uuid, display search in a list ([#930](https://github.com/ubuntu-flutter-community/musicpod/issues/930))
+
+### Features
+
+* add discord rich presence ([#945](https://github.com/ubuntu-flutter-community/musicpod/issues/945)) ([de23cf3](https://github.com/ubuntu-flutter-community/musicpod/commit/de23cf34f4f5443985b9b303c327ae6d4b2e29ad))
+* add discord toggle in settings, disable for linux ([#947](https://github.com/ubuntu-flutter-community/musicpod/issues/947)) ([6aa080e](https://github.com/ubuntu-flutter-community/musicpod/commit/6aa080e54d86c33f8bf21c487f960448e8ea3a90)), closes [#946](https://github.com/ubuntu-flutter-community/musicpod/issues/946)
+* display online art errors in the player images, improved radio search ([#943](https://github.com/ubuntu-flutter-community/musicpod/issues/943)) ([42d61ee](https://github.com/ubuntu-flutter-community/musicpod/commit/42d61ee951eb4d1500a9a02946750fa66155397a))
+* improve discord on/off toggling ([#960](https://github.com/ubuntu-flutter-community/musicpod/issues/960)) ([4fd2980](https://github.com/ubuntu-flutter-community/musicpod/commit/4fd2980e9c721e94fce950985e0add723e6d8e28))
+* let users select the downloads directory ([#953](https://github.com/ubuntu-flutter-community/musicpod/issues/953)) ([9d8063f](https://github.com/ubuntu-flutter-community/musicpod/commit/9d8063f055b6030a0fd5f42ac6961e85bf01c97b)), closes [#928](https://github.com/ubuntu-flutter-community/musicpod/issues/928)
+* **radio:** add return to livestream & play similar station buttons ([#938](https://github.com/ubuntu-flutter-community/musicpod/issues/938)) ([1d2ba5e](https://github.com/ubuntu-flutter-community/musicpod/commit/1d2ba5ee4ac467c222977fce4fa5c6df3baa53dc)), closes [#937](https://github.com/ubuntu-flutter-community/musicpod/issues/937)
+* rework stations to be identified by uuid, display search in a list ([#930](https://github.com/ubuntu-flutter-community/musicpod/issues/930)) ([8c3bb05](https://github.com/ubuntu-flutter-community/musicpod/commit/8c3bb05c8baf6a790adc9b9efa7fd126cf00d168))
+* update app_es.arb ([#940](https://github.com/ubuntu-flutter-community/musicpod/issues/940)) ([91b35ed](https://github.com/ubuntu-flutter-community/musicpod/commit/91b35ed9d43f905a8cb0d3a0cfd07dbcb2997a10))
+* update episodes when a podcast page is loaded ([#959](https://github.com/ubuntu-flutter-community/musicpod/issues/959)) ([f925201](https://github.com/ubuntu-flutter-community/musicpod/commit/f925201d6179af04952ec79032efbc93b25b062b))
+* update Italian language ([#950](https://github.com/ubuntu-flutter-community/musicpod/issues/950)) ([807f49a](https://github.com/ubuntu-flutter-community/musicpod/commit/807f49a3398a250abb181010847dca1592ef5eb5))
+* update Italian language ([#956](https://github.com/ubuntu-flutter-community/musicpod/issues/956)) ([66c1cd8](https://github.com/ubuntu-flutter-community/musicpod/commit/66c1cd864e09cd7c5998906f9c803cb44dda4a0b))
+* update slovak translations ([#951](https://github.com/ubuntu-flutter-community/musicpod/issues/951)) ([e605df1](https://github.com/ubuntu-flutter-community/musicpod/commit/e605df11302a36f7dc5801be5b52389f983f232c))
+
+
+### Bug Fixes
+
+* do not retry connect to discord, update deps ([#962](https://github.com/ubuntu-flutter-community/musicpod/issues/962)) ([2387977](https://github.com/ubuntu-flutter-community/musicpod/commit/23879776719f3dcba3f0f7b5b537ee739ec9b4ed))
+* fallback to wifi if connectivity errors, for example if there is no network manager on linux ([#952](https://github.com/ubuntu-flutter-community/musicpod/issues/952)) ([498f32e](https://github.com/ubuntu-flutter-community/musicpod/commit/498f32e5d3c52cfc460a3b23d0541bf63c705f70)), closes [#949](https://github.com/ubuntu-flutter-community/musicpod/issues/949)
+* linux failed import snackbar ([#954](https://github.com/ubuntu-flutter-community/musicpod/issues/954)) ([1ce62b1](https://github.com/ubuntu-flutter-community/musicpod/commit/1ce62b124bd35368e8200cefff0ce06e0f0898b0)), closes [#934](https://github.com/ubuntu-flutter-community/musicpod/issues/934)
+* onError callback ([#936](https://github.com/ubuntu-flutter-community/musicpod/issues/936)) ([3790021](https://github.com/ubuntu-flutter-community/musicpod/commit/379002123263186147b778eb4a0bbc550fdac8c0)), closes [#934](https://github.com/ubuntu-flutter-community/musicpod/issues/934)
+* The presence of a lost+found folder makes musicpod unable to load the users music library ([#935](https://github.com/ubuntu-flutter-community/musicpod/issues/935)) ([66bca61](https://github.com/ubuntu-flutter-community/musicpod/commit/66bca61ea7081602f562e49342a0a8804191fa72)), closes [#934](https://github.com/ubuntu-flutter-community/musicpod/issues/934)
+* turn of discord off switch for linux ([be1b198](https://github.com/ubuntu-flutter-community/musicpod/commit/be1b19849ed1a15038d62aa84ab6b0c3a3043197))
+* update frb_plugins dependency ([#955](https://github.com/ubuntu-flutter-community/musicpod/issues/955)) ([eb291af](https://github.com/ubuntu-flutter-community/musicpod/commit/eb291af837a8e37ff102535e8c20710fec5f1789)), closes [#946](https://github.com/ubuntu-flutter-community/musicpod/issues/946)
+* use MediaQuery.sizeOf instead .of ([#944](https://github.com/ubuntu-flutter-community/musicpod/issues/944)) ([f1a11c5](https://github.com/ubuntu-flutter-community/musicpod/commit/f1a11c5b22d4c40d3996041b866729d5d6046469))
+
 ## [1.12.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.11.0...v1.12.0) (2024-09-20)
 
 
