@@ -25,10 +25,10 @@ class NextStationButton extends StatelessWidget with WatchItMixin {
                 if (host == null) return null;
                 return di<SearchModel>().nextSimilarStation(audio).then(
                   (station) {
-                    if (station == audio) return;
+                    if (station == audio || audio.uuid == null) return;
                     di<PlayerModel>().startPlaylist(
                       audios: [station],
-                      listName: station.uuid ?? station.toString(),
+                      listName: station.uuid!,
                     );
                   },
                 );

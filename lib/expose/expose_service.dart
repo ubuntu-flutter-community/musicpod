@@ -34,16 +34,34 @@ class ExposeService {
           ),
         );
       }
-    } on Exception catch (_) {}
+    } on Exception catch (e) {
+      _errorController.add(e.toString());
+    }
   }
 
   Future<void> connect() async {
-    await connectToDiscord();
+    try {
+      await _discordRPC?.connect();
+    } on Exception catch (e) {
+      _errorController.add(e.toString());
+    }
   }
 
-  Future<void> connectToDiscord() async => _discordRPC?.connect();
+  Future<void> connectToDiscord() async {
+    try {
+      await _discordRPC?.connect();
+    } on Exception catch (e) {
+      _errorController.add(e.toString());
+    }
+  }
 
-  Future<void> disconnectFromDiscord() async => _discordRPC?.disconnect();
+  Future<void> disconnectFromDiscord() async {
+    try {
+      await _discordRPC?.disconnect();
+    } on Exception catch (e) {
+      _errorController.add(e.toString());
+    }
+  }
 
   Future<void> dispose() async {
     await _discordRPC?.disconnect();

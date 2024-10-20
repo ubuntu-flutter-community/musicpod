@@ -28,17 +28,17 @@ class StationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return AudioCard(
       bottom: AudioCardBottom(text: station?.title?.replaceAll('_', '') ?? ''),
-      onPlay: station?.url == null
+      onPlay: station?.uuid == null
           ? null
           : () => startPlaylist(
                 audios: [station!],
-                listName: station!.url!,
+                listName: station!.uuid!,
               ),
-      onTap: station?.url == null
+      onTap: station?.uuid == null
           ? null
           : () => di<LibraryModel>().push(
                 builder: (_) => StationPage(station: station!),
-                pageId: station!.url!,
+                pageId: station!.uuid!,
               ),
       image: SizedBox.expand(
         child: SafeNetworkImage(

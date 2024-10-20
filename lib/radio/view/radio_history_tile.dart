@@ -86,11 +86,11 @@ class RadioHistoryTile extends StatelessWidget with PlayerMixin {
           if (libraryModel.selectedPageId == entry.value.icyUrl) return;
 
           di<SearchModel>().radioNameSearch(entry.value.icyName).then((v) {
-            if (v?.firstOrNull?.urlResolved != null) {
+            if (v?.firstOrNull?.stationUUID != null) {
               libraryModel.push(
                 builder: (_) =>
                     StationPage(station: Audio.fromStation(v.first)),
-                pageId: v!.first.urlResolved!,
+                pageId: v!.first.stationUUID,
               );
             }
           });

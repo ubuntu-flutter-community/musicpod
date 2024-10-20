@@ -99,12 +99,14 @@ class _SliverRadioSearchResultsState extends State<SliverRadioSearchResults> {
           selected: currentAudio == station,
           pageId: station.description!,
           audio: station,
-          onTap: () {
-            di<PlayerModel>().startPlaylist(
-              audios: [station],
-              listName: station.title ?? station.description ?? station.url!,
-            ).then((_) => di<RadioModel>().clickStation(station));
-          },
+          onTap: station.uuid == null
+              ? null
+              : () {
+                  di<PlayerModel>().startPlaylist(
+                    audios: [station],
+                    listName: station.uuid!,
+                  ).then((_) => di<RadioModel>().clickStation(station));
+                },
         );
       },
     );
