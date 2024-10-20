@@ -64,7 +64,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
                 snackBar: SnackBar(content: Text(context.l10n.onlineArtError)),
               ),
               icon: Icon(
-                Iconz.warning,
+                Iconz.imageMissingFilled,
                 color: context.theme.colorScheme.onSurface,
               ),
             ),

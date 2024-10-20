@@ -20,7 +20,7 @@ class ExposeService {
   }) async {
     try {
       if (_discordRPC?.isConnected == false) {
-        await _discordRPC?.connect(autoRetry: true);
+        await _discordRPC?.connect();
       }
       if (_discordRPC?.isConnected == true) {
         await _discordRPC?.setActivity(
@@ -37,8 +37,11 @@ class ExposeService {
     } on Exception catch (_) {}
   }
 
-  Future<void> connectToDiscord() async =>
-      _discordRPC?.connect(autoRetry: true);
+  Future<void> connect() async {
+    await connectToDiscord();
+  }
+
+  Future<void> connectToDiscord() async => _discordRPC?.connect();
 
   Future<void> disconnectFromDiscord() async => _discordRPC?.disconnect();
 
