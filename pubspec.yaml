@@ -31,11 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_cache_manager: ^3.4.1
-  flutter_discord_rpc:
-    git:
-      url: https://github.com/ubuntu-flutter-community/frb_plugins
-      path: packages/flutter_discord_rpc
-      ref: 9d5764ee143aef23517bd578fc1b3a2d83d67a44
+  flutter_discord_rpc: ^1.0.0
   flutter_html: ^3.0.0-beta.2
   flutter_localizations:
     sdk: flutter
@@ -71,7 +67,7 @@ dependencies:
   scroll_to_index: ^3.0.1
   shared_preferences: ^2.3.1
   shimmer: ^3.0.0
-  smtc_windows: ^0.1.3
+  smtc_windows: ^1.0.0
   super_drag_and_drop: ^0.8.18
   system_theme: ^3.0.0
   url_launcher: ^6.3.0
@@ -110,4 +106,3 @@ dependency_overrides:
       url: https://github.com/media-kit/media-kit
       path: media_kit_video/
       ref: 13f6b3f0ef9ccf8a711e396bc49cb05af9b3e497
-  uuid: ^4.1.0

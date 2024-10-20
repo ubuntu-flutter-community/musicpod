@@ -3,6 +3,7 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
@@ -44,32 +45,20 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
   Widget build(BuildContext context) {
     final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
     final isFullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
-    final l10n = context.l10n;
-    registerStreamHandler(
-      select: (AppModel m) => m.isDiscordConnectedStream,
-      handler: (context, snapshot, cancel) {
-        if (!snapshot.hasData || snapshot.hasError) return;
-        showSnackBar(
-          context: context,
-          content: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: space(
-              widthGap: 10,
-              children: [
-                Text(
-                  '${snapshot.data == true ? l10n.connectedTo : l10n.disconnectedFrom}'
-                  ' ${l10n.exposeToDiscordTitle}',
-                ),
-                Icon(
-                  TablerIcons.brand_discord_filled,
-                  color: context.theme.primaryColor,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+
+    if (allowDiscordRPC) {
+      registerStreamHandler(
+        select: (AppModel m) => m.isDiscordConnectedStream,
+        handler: (context, snapshot, cancel) {
+          if (!snapshot.hasData || snapshot.hasError) return;
+          showSnackBar(
+            context: context,
+            duration: const Duration(seconds: 3),
+            content: _DiscordConnectContent(connected: snapshot.data == true),
+          );
+        },
+      );
+    }
 
     return Stack(
       alignment: Alignment.center,
@@ -95,6 +84,33 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
         if (isFullScreen == true)
           const Scaffold(body: PlayerView(mode: PlayerPosition.fullWindow)),
       ],
+    );
+  }
+}
+
+class _DiscordConnectContent extends StatelessWidget {
+  const _DiscordConnectContent({required this.connected});
+
+  final bool connected;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: space(
+        widthGap: 10,
+        children: [
+          Text(
+            '${connected ? l10n.connectedTo : l10n.disconnectedFrom}'
+            ' ${l10n.exposeToDiscordTitle}',
+          ),
+          Icon(
+            TablerIcons.brand_discord_filled,
+            color: context.theme.primaryColor,
+          ),
+        ],
+      ),
     );
   }
 }

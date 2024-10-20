@@ -5,6 +5,12 @@ import 'package:yaru/yaru.dart';
 import 'theme.dart';
 
 class Iconz {
+  static IconData get image => yaruStyled
+      ? YaruIcons.image
+      : appleStyled
+          ? CupertinoIcons.photo
+          : Icons.image_not_supported;
+
   static IconData get warning => yaruStyled
       ? YaruIcons.warning_filled
       : appleStyled

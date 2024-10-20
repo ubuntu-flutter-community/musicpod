@@ -610,13 +610,13 @@ class PlayerService {
         case PressedButton.play:
           playOrPause().then(
             (_) => _smtc?.setPlaybackStatus(
-              _isPlaying ? PlaybackStatus.Playing : PlaybackStatus.Paused,
+              _isPlaying ? PlaybackStatus.playing : PlaybackStatus.paused,
             ),
           );
         case PressedButton.pause:
           playOrPause().then(
             (_) => _smtc?.setPlaybackStatus(
-              _isPlaying ? PlaybackStatus.Playing : PlaybackStatus.Paused,
+              _isPlaying ? PlaybackStatus.playing : PlaybackStatus.paused,
             ),
           );
         case PressedButton.next:
@@ -727,7 +727,7 @@ class PlayerService {
       );
     } else if (_smtc != null) {
       _smtc!.setPlaybackStatus(
-        playing ? PlaybackStatus.Playing : PlaybackStatus.Paused,
+        playing ? PlaybackStatus.playing : PlaybackStatus.paused,
       );
     }
   }

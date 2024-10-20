@@ -7,4 +7,5 @@ import 'package:flutter/foundation.dart';
 bool allowDiscordRPC = kDebugMode ||
     Platform.isMacOS ||
     Platform.isWindows ||
+    Platform.isLinux ||
     bool.tryParse(const String.fromEnvironment('ALLOW_DISCORD_RPC')) == true;

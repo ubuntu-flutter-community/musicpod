@@ -90,7 +90,13 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
               padding: const EdgeInsets.only(left: 5),
               child: Tooltip(
                 message: context.l10n.onlineArtError,
-                child: Icon(Iconz.warning, color: Colors.yellowAccent),
+                child: Icon(
+                  Iconz.imageMissingFilled,
+                  color: Colors.white,
+                  shadows: [
+                    const BoxShadow(offset: Offset(0, 1), blurRadius: 1),
+                  ],
+                ),
               ),
             ),
           ),
