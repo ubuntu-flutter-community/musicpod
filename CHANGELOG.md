@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.0.0...v2.0.1) (2024-10-20)
+
+
+### Bug Fixes
+
+* replace remaining station url ids with uuid, fix discord error spam ([#965](https://github.com/ubuntu-flutter-community/musicpod/issues/965)) ([04a0b5c](https://github.com/ubuntu-flutter-community/musicpod/commit/04a0b5cfdc1514910045aaa6312fb7fe6e463259))
+
 ## [2.0.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v1.12.0...v2.0.0) (2024-10-20)
 
 
