@@ -11,6 +11,7 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/view/player_view.dart';
+import '../../settings/settings_model.dart';
 import '../app_model.dart';
 import '../connectivity_model.dart';
 import 'master_detail_page.dart';
@@ -45,17 +46,20 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
   Widget build(BuildContext context) {
     final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
     final isFullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
+    final enableDiscordRPC =
+        watchPropertyValue((SettingsModel m) => m.enableDiscordRPC);
 
-    if (allowDiscordRPC) {
+    if (allowDiscordRPC && enableDiscordRPC) {
       registerStreamHandler(
         select: (AppModel m) => m.isDiscordConnectedStream,
         handler: (context, snapshot, cancel) {
-          if (!snapshot.hasData || snapshot.hasError) return;
-          showSnackBar(
-            context: context,
-            duration: const Duration(seconds: 3),
-            content: _DiscordConnectContent(connected: snapshot.data == true),
-          );
+          if (snapshot.data == true) {
+            showSnackBar(
+              context: context,
+              duration: const Duration(seconds: 3),
+              content: _DiscordConnectContent(connected: snapshot.data == true),
+            );
+          }
         },
       );
     }
