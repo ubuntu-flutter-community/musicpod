@@ -226,7 +226,7 @@ class PlayerService {
       }
       _setMediaControlsMetaData(audio: audio!);
       _loadColorAndSetRemoteUrl();
-      await _exposeService.exposeTitleOnline(
+      _exposeService.exposeTitleOnline(
         line1: audio?.title ?? '',
         line2: audio?.artist ?? '',
         line3: audio?.album ?? '',

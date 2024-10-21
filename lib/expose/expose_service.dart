@@ -12,7 +12,7 @@ class ExposeService {
   Stream<bool> get isDiscordConnectedStream =>
       _discordRPC?.isConnectedStream ?? Stream.value(false);
 
-  Future<void>? exposeTitleOnline({
+  Future<void> exposeTitleOnline({
     required String line1,
     required String line2,
     required String line3,
