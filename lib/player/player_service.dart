@@ -103,22 +103,6 @@ class PlayerService {
     _audio = value;
     _propertiesChangedController.add(true);
     _setMpvMetaData(null);
-    _exposeAudioOnline(_audio);
-  }
-
-  void _exposeAudioOnline(Audio? audio) {
-    if (audio?.audioType != null &&
-        audio?.title != null &&
-        audio?.artist != null) {
-      _exposeService.exposeTitleOnline(
-        songDetails: '${audio!.artist} - ${audio.title}}',
-        state: switch (audio.audioType!) {
-          AudioType.local => 'Local Music',
-          AudioType.podcast => 'Podcast',
-          AudioType.radio => 'Internet Radio',
-        },
-      );
-    }
   }
 
   bool? _isVideo;
@@ -242,6 +226,12 @@ class PlayerService {
       }
       _setMediaControlsMetaData(audio: audio!);
       _loadColorAndSetRemoteUrl();
+      await _exposeService.exposeTitleOnline(
+        line1: audio?.title ?? '',
+        line2: audio?.artist ?? '',
+        line3: audio?.album ?? '',
+        imageUrl: audio?.imageUrl ?? audio?.albumArtUrl,
+      );
       _firstPlay = false;
     } on Exception catch (_) {}
   }
@@ -307,23 +297,24 @@ class PlayerService {
 
         if (parsedIcyTitle == null) return;
 
-        await _exposeService.exposeTitleOnline(
-          songDetails: parsedIcyTitle,
-          state: _audio?.title ?? 'Internet Radio',
-        );
-
         final songInfo = parsedIcyTitle.splitByDash;
         _onlineArtService.fetchAlbumArt(parsedIcyTitle).then(
           (albumArt) async {
-            await _setMediaControlsMetaData(
-              audio:
-                  (_audio ?? const Audio(audioType: AudioType.radio)).copyWith(
-                imageUrl: albumArt,
-                title: songInfo.songName,
-                artist: songInfo.artist,
-              ),
+            final mergedAudio =
+                (_audio ?? const Audio(audioType: AudioType.radio)).copyWith(
+              imageUrl: albumArt,
+              title: songInfo.songName,
+              artist: songInfo.artist,
             );
+            await _setMediaControlsMetaData(audio: mergedAudio);
             await _loadColorAndSetRemoteUrl(artUrl: albumArt);
+
+            await _exposeService.exposeTitleOnline(
+              line1: songInfo.songName ?? '',
+              line2: songInfo.artist ?? '',
+              line3: _audio?.title ?? 'Internet Radio',
+              imageUrl: albumArt,
+            );
           },
         );
       },
