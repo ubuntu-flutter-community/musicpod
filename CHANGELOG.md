@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.0.2...v2.1.0) (2024-10-21)
+
+
+### Features
+
+* update app_es.arb ([#969](https://github.com/ubuntu-flutter-community/musicpod/issues/969)) ([728caf8](https://github.com/ubuntu-flutter-community/musicpod/commit/728caf8d8ae16b92fc848f84ab428ba70aa8555b))
+
+
+### Bug Fixes
+
+* correctly use discord rpc meta data ([#970](https://github.com/ubuntu-flutter-community/musicpod/issues/970)) ([26242bf](https://github.com/ubuntu-flutter-community/musicpod/commit/26242bf9ff0ae659b6991bee8c4f456117fe73bb))
+* don't wait expose title online in play ([#972](https://github.com/ubuntu-flutter-community/musicpod/issues/972)) ([89c8ac9](https://github.com/ubuntu-flutter-community/musicpod/commit/89c8ac9b6e5b2f59b5f393d32fe6ebd632a255b6))
+
 ## [2.0.2](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.0.1...v2.0.2) (2024-10-21)
 
 
