@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.0.1...v2.0.2) (2024-10-21)
+
+
+### Bug Fixes
+
+* only display discord events on connect and only if enabled ([#967](https://github.com/ubuntu-flutter-community/musicpod/issues/967)) ([5913d03](https://github.com/ubuntu-flutter-community/musicpod/commit/5913d03bd2b122ddf96f1bbe258b916420b797d3))
+
 ## [2.0.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.0.0...v2.0.1) (2024-10-20)
 
 
