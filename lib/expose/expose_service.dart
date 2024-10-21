@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 
-import '../constants.dart';
-
 class ExposeService {
   ExposeService({required FlutterDiscordRPC? discordRPC})
       : _discordRPC = discordRPC;
@@ -15,8 +13,10 @@ class ExposeService {
       _discordRPC?.isConnectedStream ?? Stream.value(false);
 
   Future<void>? exposeTitleOnline({
-    required String songDetails,
-    required String state,
+    required String line1,
+    required String line2,
+    required String line3,
+    String? imageUrl,
   }) async {
     try {
       if (_discordRPC?.isConnected == false) {
@@ -26,11 +26,12 @@ class ExposeService {
         await _discordRPC?.setActivity(
           activity: RPCActivity(
             assets: RPCAssets(
-              largeText: songDetails,
-              smallText: kAppTitle,
+              largeText: line3,
+              largeImage: imageUrl,
             ),
-            details: songDetails,
-            state: state,
+            details: line1,
+            state: line2,
+            activityType: ActivityType.listening,
           ),
         );
       }
