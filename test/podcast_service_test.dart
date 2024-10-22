@@ -6,7 +6,6 @@ import 'package:musicpod/common/data/podcast_genre.dart';
 import 'package:musicpod/library/library_service.dart';
 import 'package:musicpod/notifications/notifications_service.dart';
 import 'package:musicpod/podcasts/podcast_service.dart';
-import 'package:musicpod/podcasts/podcast_utils.dart';
 import 'package:musicpod/settings/settings_service.dart';
 import 'package:podcast_search/podcast_search.dart';
 
@@ -43,7 +42,7 @@ Future<void> main() async {
     final feedUrl = result?.items.first.feedUrl;
     List<Audio>? episodes;
     if (feedUrl != null) {
-      episodes = await findEpisodes(feedUrl: feedUrl);
+      episodes = await service.findEpisodes(feedUrl: feedUrl);
     }
 
     expect(episodes?.last.url == episodeOneAudio.url, true);

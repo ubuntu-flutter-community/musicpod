@@ -10,6 +10,8 @@ import '../../common/view/theme.dart';
 import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../player/player_model.dart';
+import '../../podcasts/podcast_model.dart';
 import '../../podcasts/podcast_utils.dart';
 
 class ManualAddDialog extends StatelessWidget {
@@ -395,7 +397,10 @@ class _AddPodcastContentState extends State<AddPodcastContent> {
                         searchAndPushPodcastPage(
                           context: context,
                           feedUrl: _urlController.text,
-                          play: false,
+                          startPlaylist: false,
+                          libraryModel: di<LibraryModel>(),
+                          playerModel: di<PlayerModel>(),
+                          podcastModel: di<PodcastModel>(),
                         );
                       },
                 child: Text(

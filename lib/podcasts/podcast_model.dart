@@ -71,4 +71,15 @@ class PodcastModel extends SafeChangeNotifier {
     _downloadsOnly = value;
     notifyListeners();
   }
+
+  Future<List<Audio>> findEpisodes({
+    required String feedUrl,
+    String? itemImageUrl,
+    String? genre,
+  }) async =>
+      _podcastService.findEpisodes(
+        feedUrl: feedUrl,
+        itemImageUrl: itemImageUrl,
+        genre: genre,
+      );
 }

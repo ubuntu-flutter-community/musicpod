@@ -74,19 +74,21 @@ class _MusicPodScaffoldState extends State<MusicPodScaffold> {
                 children: [
                   const Expanded(child: MasterDetailPage()),
                   if (!playerToTheRight || isMobile)
-                    const PlayerView(mode: PlayerPosition.bottom),
+                    const PlayerView(position: PlayerPosition.bottom),
                 ],
               ),
             ),
             if (playerToTheRight)
               const SizedBox(
                 width: kSideBarPlayerWidth,
-                child: PlayerView(mode: PlayerPosition.sideBar),
+                child: PlayerView(position: PlayerPosition.sideBar),
               ),
           ],
         ),
         if (isFullScreen == true)
-          const Scaffold(body: PlayerView(mode: PlayerPosition.fullWindow)),
+          const Scaffold(
+            body: PlayerView(position: PlayerPosition.fullWindow),
+          ),
       ],
     );
   }

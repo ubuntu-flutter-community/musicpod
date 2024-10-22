@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 import '../common/data/audio.dart';
@@ -9,7 +10,6 @@ import '../common/view/languages.dart';
 import '../library/library_service.dart';
 import '../notifications/notifications_service.dart';
 import '../settings/settings_service.dart';
-import 'podcast_utils.dart';
 
 class PodcastService {
   final NotificationsService _notificationsService;
@@ -124,5 +124,43 @@ class PodcastService {
       }
     }
     _updateLock = false;
+  }
+
+  Future<List<Audio>> findEpisodes({
+    required String feedUrl,
+    String? itemImageUrl,
+    String? genre,
+  }) async {
+    final Podcast? podcast = await compute(loadPodcast, feedUrl);
+    final episodes = podcast?.episodes
+            .where((e) => e.contentUrl != null)
+            .map(
+              (e) => Audio.fromPodcast(
+                episode: e,
+                podcast: podcast,
+                itemImageUrl: itemImageUrl,
+                genre: genre,
+              ),
+            )
+            .toList() ??
+        <Audio>[];
+
+    sortListByAudioFilter(
+      audioFilter: AudioFilter.year,
+      audios: episodes,
+      descending: true,
+    );
+
+    return episodes;
+  }
+}
+
+Future<Podcast?> loadPodcast(String url) async {
+  try {
+    return await Podcast.loadFeed(
+      url: url,
+    );
+  } catch (e) {
+    return null;
   }
 }

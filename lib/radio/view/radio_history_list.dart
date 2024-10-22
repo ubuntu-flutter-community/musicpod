@@ -5,11 +5,10 @@ import 'package:watch_it/watch_it.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../l10n/l10n.dart';
-import '../../player/player_mixin.dart';
 import '../../player/player_model.dart';
 import 'radio_history_tile.dart';
 
-class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
+class RadioHistoryList extends StatelessWidget with WatchItMixin {
   const RadioHistoryList({
     super.key,
     this.filter,
@@ -66,8 +65,7 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin, PlayerMixin {
   }
 }
 
-class SliverRadioHistoryList extends StatelessWidget
-    with WatchItMixin, PlayerMixin {
+class SliverRadioHistoryList extends StatelessWidget with WatchItMixin {
   const SliverRadioHistoryList({
     super.key,
     this.filter,

@@ -11,6 +11,8 @@ import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
+import '../../player/player_model.dart';
 import '../../podcasts/podcast_model.dart';
 import '../../podcasts/podcast_utils.dart';
 import '../search_model.dart';
@@ -85,6 +87,10 @@ class _SliverPodcastSearchResultsState
           width: audioCardDimension,
         );
 
+        final libaryModel = di<LibraryModel>();
+        final playerModel = di<PlayerModel>();
+        final podcastModel = di<PodcastModel>();
+
         return AudioCard(
           bottom: AudioCardBottom(
             text: podcastItem.collectionName ?? podcastItem.trackName,
@@ -97,7 +103,10 @@ class _SliverPodcastSearchResultsState
                     feedUrl: podcastItem.feedUrl,
                     itemImageUrl: art,
                     genre: podcastItem.primaryGenreName,
-                    play: true,
+                    startPlaylist: true,
+                    playerModel: playerModel,
+                    podcastModel: podcastModel,
+                    libraryModel: libaryModel,
                   ),
           onTap: loadingFeed
               ? null
@@ -106,7 +115,10 @@ class _SliverPodcastSearchResultsState
                     feedUrl: podcastItem.feedUrl,
                     itemImageUrl: art,
                     genre: podcastItem.primaryGenreName,
-                    play: false,
+                    startPlaylist: false,
+                    playerModel: playerModel,
+                    podcastModel: podcastModel,
+                    libraryModel: libaryModel,
                   ),
         );
       },

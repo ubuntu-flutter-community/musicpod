@@ -97,7 +97,7 @@ class _SliverRadioSearchResultsState extends State<SliverRadioSearchResults> {
           audioPageType: AudioPageType.radioSearch,
           isPlayerPlaying: playing,
           selected: currentAudio == station,
-          pageId: station.description!,
+          pageId: station.uuid!,
           audio: station,
           onTap: station.uuid == null
               ? null
