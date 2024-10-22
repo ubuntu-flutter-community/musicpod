@@ -3685,40 +3685,6 @@
     "regionZimbabwe"
   ],
 
-  "zh": [
-    "local",
-    "downloadsDirectory",
-    "downloadsDirectoryDescription",
-    "downloadsChangeWarning",
-    "disconnectedFrom",
-    "unPinAlbum",
-    "skipToLivStream",
-    "searchSimilarStation",
-    "onlineArtError",
-    "clicks",
-    "exposeOnlineHeadline",
-    "exposeToDiscordTitle",
-    "exposeToDiscordSubTitle",
-    "featureDisabledOnPlatform"
-  ],
-
-  "zh_CN": [
-    "local",
-    "downloadsDirectory",
-    "downloadsDirectoryDescription",
-    "downloadsChangeWarning",
-    "disconnectedFrom",
-    "unPinAlbum",
-    "skipToLivStream",
-    "searchSimilarStation",
-    "onlineArtError",
-    "clicks",
-    "exposeOnlineHeadline",
-    "exposeToDiscordTitle",
-    "exposeToDiscordSubTitle",
-    "featureDisabledOnPlatform"
-  ],
-
   "zh_HK": [
     "local",
     "downloadsDirectory",
