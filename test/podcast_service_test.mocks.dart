@@ -3,14 +3,14 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i3;
 
-import 'package:dio/dio.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:musicpod/common/data/audio.dart' as _i7;
+import 'package:musicpod/common/data/close_btn_action.dart' as _i5;
 import 'package:musicpod/library/library_service.dart' as _i6;
-import 'package:musicpod/notifications/notifications_service.dart' as _i3;
-import 'package:musicpod/settings/settings_service.dart' as _i5;
+import 'package:musicpod/notifications/notifications_service.dart' as _i2;
+import 'package:musicpod/settings/settings_service.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -25,27 +25,17 @@ import 'package:musicpod/settings/settings_service.dart' as _i5;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeDio_0 extends _i1.SmartFake implements _i2.Dio {
-  _FakeDio_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
 /// A class which mocks [NotificationsService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockNotificationsService extends _i1.Mock
-    implements _i3.NotificationsService {
+    implements _i2.NotificationsService {
   MockNotificationsService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<void> notify({
+  _i3.Future<void> notify({
     required String? message,
     String? uri,
   }) =>
@@ -58,34 +48,34 @@ class MockNotificationsService extends _i1.Mock
             #uri: uri,
           },
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Future<void> dispose() => (super.noSuchMethod(
+  _i3.Future<void> dispose() => (super.noSuchMethod(
         Invocation.method(
           #dispose,
           [],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }
 
 /// A class which mocks [SettingsService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSettingsService extends _i1.Mock implements _i5.SettingsService {
+class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
   MockSettingsService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Stream<bool> get themeIndexChanged => (super.noSuchMethod(
-        Invocation.getter(#themeIndexChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
+  _i3.Stream<bool> get propertiesChanged => (super.noSuchMethod(
+        Invocation.getter(#propertiesChanged),
+        returnValue: _i3.Stream<bool>.empty(),
+      ) as _i3.Stream<bool>);
 
   @override
   int get themeIndex => (super.noSuchMethod(
@@ -100,22 +90,10 @@ class MockSettingsService extends _i1.Mock implements _i5.SettingsService {
       ) as bool);
 
   @override
-  _i4.Stream<bool> get neverShowFailedImportsChanged => (super.noSuchMethod(
-        Invocation.getter(#neverShowFailedImportsChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
-
-  @override
-  _i4.Stream<bool> get recentPatchNotesDisposedChanged => (super.noSuchMethod(
-        Invocation.getter(#recentPatchNotesDisposedChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
-
-  @override
-  _i4.Stream<bool> get usePodcastIndexChanged => (super.noSuchMethod(
-        Invocation.getter(#usePodcastIndexChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
+  bool get enableDiscordRPC => (super.noSuchMethod(
+        Invocation.getter(#enableDiscordRPC),
+        returnValue: false,
+      ) as bool);
 
   @override
   bool get usePodcastIndex => (super.noSuchMethod(
@@ -124,22 +102,10 @@ class MockSettingsService extends _i1.Mock implements _i5.SettingsService {
       ) as bool);
 
   @override
-  _i4.Stream<bool> get podcastIndexApiKeyChanged => (super.noSuchMethod(
-        Invocation.getter(#podcastIndexApiKeyChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
-
-  @override
-  _i4.Stream<bool> get podcastIndexApiSecretChanged => (super.noSuchMethod(
-        Invocation.getter(#podcastIndexApiSecretChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
-
-  @override
-  _i4.Stream<bool> get directoryChanged => (super.noSuchMethod(
-        Invocation.getter(#directoryChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
+  _i5.CloseBtnAction get closeBtnActionIndex => (super.noSuchMethod(
+        Invocation.getter(#closeBtnActionIndex),
+        returnValue: _i5.CloseBtnAction.alwaysAsk,
+      ) as _i5.CloseBtnAction);
 
   @override
   void setThemeIndex(int? value) => super.noSuchMethod(
@@ -160,6 +126,15 @@ class MockSettingsService extends _i1.Mock implements _i5.SettingsService {
       );
 
   @override
+  void setEnableDiscordRPC(bool? value) => super.noSuchMethod(
+        Invocation.method(
+          #setEnableDiscordRPC,
+          [value],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   bool recentPatchNotesDisposed(String? version) => (super.noSuchMethod(
         Invocation.method(
           #recentPatchNotesDisposed,
@@ -169,24 +144,24 @@ class MockSettingsService extends _i1.Mock implements _i5.SettingsService {
       ) as bool);
 
   @override
-  _i4.Future<void> disposePatchNotes(String? version) => (super.noSuchMethod(
+  _i3.Future<void> disposePatchNotes(String? version) => (super.noSuchMethod(
         Invocation.method(
           #disposePatchNotes,
           [version],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Future<void> setUsePodcastIndex(bool? value) => (super.noSuchMethod(
+  _i3.Future<void> setUsePodcastIndex(bool? value) => (super.noSuchMethod(
         Invocation.method(
           #setUsePodcastIndex,
           [value],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
   void setPodcastIndexApiKey(String? value) => super.noSuchMethod(
@@ -207,24 +182,44 @@ class MockSettingsService extends _i1.Mock implements _i5.SettingsService {
       );
 
   @override
-  _i4.Future<void> setDirectory(String? directory) => (super.noSuchMethod(
+  _i3.Future<void> setDirectory(String? directory) => (super.noSuchMethod(
         Invocation.method(
           #setDirectory,
           [directory],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Future<void> dispose() => (super.noSuchMethod(
+  _i3.Future<void> setDownloadsCustomDir(String? directory) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setDownloadsCustomDir,
+          [directory],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  void setCloseBtnActionIndex(_i5.CloseBtnAction? value) => super.noSuchMethod(
+        Invocation.method(
+          #setCloseBtnActionIndex,
+          [value],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i3.Future<void> dispose() => (super.noSuchMethod(
         Invocation.method(
           #dispose,
           [],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }
 
 /// A class which mocks [LibraryService].
@@ -236,25 +231,16 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
   }
 
   @override
-  _i2.Dio get dio => (super.noSuchMethod(
-        Invocation.getter(#dio),
-        returnValue: _FakeDio_0(
-          this,
-          Invocation.getter(#dio),
-        ),
-      ) as _i2.Dio);
+  _i3.Stream<bool> get propertiesChanged => (super.noSuchMethod(
+        Invocation.getter(#propertiesChanged),
+        returnValue: _i3.Stream<bool>.empty(),
+      ) as _i3.Stream<bool>);
 
   @override
   List<_i7.Audio> get likedAudios => (super.noSuchMethod(
         Invocation.getter(#likedAudios),
         returnValue: <_i7.Audio>[],
       ) as List<_i7.Audio>);
-
-  @override
-  _i4.Stream<bool> get likedAudiosChanged => (super.noSuchMethod(
-        Invocation.getter(#likedAudiosChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
 
   @override
   Map<String, List<_i7.Audio>> get starredStations => (super.noSuchMethod(
@@ -269,28 +255,10 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
       ) as int);
 
   @override
-  _i4.Stream<bool> get starredStationsChanged => (super.noSuchMethod(
-        Invocation.getter(#starredStationsChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
-
-  @override
   Set<String> get favRadioTags => (super.noSuchMethod(
         Invocation.getter(#favRadioTags),
         returnValue: <String>{},
       ) as Set<String>);
-
-  @override
-  _i4.Stream<bool> get favTagsChanged => (super.noSuchMethod(
-        Invocation.getter(#favTagsChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
-
-  @override
-  _i4.Stream<bool> get lastCountryCodeChanged => (super.noSuchMethod(
-        Invocation.getter(#lastCountryCodeChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
 
   @override
   Set<String> get favCountryCodes => (super.noSuchMethod(
@@ -299,40 +267,16 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
       ) as Set<String>);
 
   @override
-  _i4.Stream<bool> get favCountriesChanged => (super.noSuchMethod(
-        Invocation.getter(#favCountriesChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
-
-  @override
-  _i4.Stream<bool> get lastLanguageCodeChanged => (super.noSuchMethod(
-        Invocation.getter(#lastLanguageCodeChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
-
-  @override
   Set<String> get favLanguageCodes => (super.noSuchMethod(
         Invocation.getter(#favLanguageCodes),
         returnValue: <String>{},
       ) as Set<String>);
 
   @override
-  _i4.Stream<bool> get favLanguagesChanged => (super.noSuchMethod(
-        Invocation.getter(#favLanguagesChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
-
-  @override
   Map<String, List<_i7.Audio>> get playlists => (super.noSuchMethod(
         Invocation.getter(#playlists),
         returnValue: <String, List<_i7.Audio>>{},
       ) as Map<String, List<_i7.Audio>>);
-
-  @override
-  _i4.Stream<bool> get playlistsChanged => (super.noSuchMethod(
-        Invocation.getter(#playlistsChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
 
   @override
   Map<String, String> get downloads => (super.noSuchMethod(
@@ -347,12 +291,6 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
       ) as int);
 
   @override
-  _i4.Stream<bool> get downloadsChanged => (super.noSuchMethod(
-        Invocation.getter(#downloadsChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
-
-  @override
   Map<String, List<_i7.Audio>> get podcasts => (super.noSuchMethod(
         Invocation.getter(#podcasts),
         returnValue: <String, List<_i7.Audio>>{},
@@ -365,24 +303,6 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
       ) as int);
 
   @override
-  _i4.Stream<bool> get podcastsChanged => (super.noSuchMethod(
-        Invocation.getter(#podcastsChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
-
-  @override
-  _i4.Stream<bool> get ascendingPodcastsChanged => (super.noSuchMethod(
-        Invocation.getter(#ascendingPodcastsChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
-
-  @override
-  _i4.Stream<bool> get updatesChanged => (super.noSuchMethod(
-        Invocation.getter(#updatesChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
-
-  @override
   Map<String, List<_i7.Audio>> get pinnedAlbums => (super.noSuchMethod(
         Invocation.getter(#pinnedAlbums),
         returnValue: <String, List<_i7.Audio>>{},
@@ -393,12 +313,6 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
         Invocation.getter(#pinnedAlbumsLength),
         returnValue: 0,
       ) as int);
-
-  @override
-  _i4.Stream<bool> get albumsChanged => (super.noSuchMethod(
-        Invocation.getter(#albumsChanged),
-        returnValue: _i4.Stream<bool>.empty(),
-      ) as _i4.Stream<bool>);
 
   @override
   void addLikedAudio(
@@ -461,14 +375,14 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
 
   @override
   void addStarredStation(
-    String? url,
+    String? uuid,
     List<_i7.Audio>? audios,
   ) =>
       super.noSuchMethod(
         Invocation.method(
           #addStarredStation,
           [
-            url,
+            uuid,
             audios,
           ],
         ),
@@ -476,19 +390,19 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
       );
 
   @override
-  void unStarStation(String? name) => super.noSuchMethod(
+  void unStarStation(String? uuid) => super.noSuchMethod(
         Invocation.method(
           #unStarStation,
-          [name],
+          [uuid],
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  bool isStarredStation(String? url) => (super.noSuchMethod(
+  bool isStarredStation(String? uuid) => (super.noSuchMethod(
         Invocation.method(
           #isStarredStation,
-          [url],
+          [uuid],
         ),
         returnValue: false,
       ) as bool);
@@ -593,7 +507,7 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
       );
 
   @override
-  _i4.Future<void> addPlaylist(
+  _i3.Future<void> addPlaylist(
     String? id,
     List<_i7.Audio>? audios,
   ) =>
@@ -605,12 +519,12 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
             audios,
           ],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Future<void> updatePlaylist(
+  _i3.Future<void> updatePlaylist(
     String? id,
     List<_i7.Audio>? audios,
   ) =>
@@ -622,9 +536,9 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
             audios,
           ],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
   void removePlaylist(String? id) => super.noSuchMethod(
@@ -757,6 +671,15 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
       );
 
   @override
+  void removeAllDownloads() => super.noSuchMethod(
+        Invocation.method(
+          #removeAllDownloads,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   void addPodcast(
     String? feedUrl,
     List<_i7.Audio>? audios,
@@ -773,7 +696,7 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
       );
 
   @override
-  _i4.Future<void> updatePodcast(
+  _i3.Future<void> updatePodcast(
     String? feedUrl,
     List<_i7.Audio>? audios,
   ) =>
@@ -785,9 +708,9 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
             audios,
           ],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
   bool showPodcastAscending(String? feedUrl) => (super.noSuchMethod(
@@ -799,7 +722,7 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
       ) as bool);
 
   @override
-  _i4.Future<void> reorderPodcast({
+  _i3.Future<void> reorderPodcast({
     required String? feedUrl,
     required bool? ascending,
   }) =>
@@ -812,9 +735,9 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
             #ascending: ascending,
           },
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
   bool podcastUpdateAvailable(String? feedUrl) => (super.noSuchMethod(
@@ -887,31 +810,31 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
       );
 
   @override
-  _i4.Future<bool> init() => (super.noSuchMethod(
+  _i3.Future<bool> init() => (super.noSuchMethod(
         Invocation.method(
           #init,
           [],
         ),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
 
   @override
-  _i4.Future<void> setSelectedPageId(String? value) => (super.noSuchMethod(
+  _i3.Future<void> setSelectedPageId(String? value) => (super.noSuchMethod(
         Invocation.method(
           #setSelectedPageId,
           [value],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Future<void> dispose() => (super.noSuchMethod(
+  _i3.Future<void> dispose() => (super.noSuchMethod(
         Invocation.method(
           #dispose,
           [],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }
