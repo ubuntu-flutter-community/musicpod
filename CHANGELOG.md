@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.2.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.1.0...v2.2.0) (2024-10-22)
+
+
+### Features
+
+* update i10n for zh ([#973](https://github.com/ubuntu-flutter-community/musicpod/issues/973)) ([78bd83b](https://github.com/ubuntu-flutter-community/musicpod/commit/78bd83bad5e9b26db95396b394c9c7d7afeb1433))
+* update Italian language ([#974](https://github.com/ubuntu-flutter-community/musicpod/issues/974)) ([57c8c59](https://github.com/ubuntu-flutter-community/musicpod/commit/57c8c5954d44d9579e781744aa3de9ee50f49d8d))
+
 ## [2.1.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.0.2...v2.1.0) (2024-10-21)
 
 
