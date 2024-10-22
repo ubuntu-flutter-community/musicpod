@@ -12,18 +12,17 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import 'bottom_player_image.dart';
-import 'bottom_player_title_artist.dart';
 import 'play_button.dart';
 import 'playback_rate_button.dart';
 import 'player_main_controls.dart';
+import 'player_title_and_artist.dart';
 import 'player_track.dart';
+import 'player_view.dart';
 import 'queue_button.dart';
 import 'volume_popup.dart';
 
 class BottomPlayer extends StatelessWidget with WatchItMixin {
-  const BottomPlayer({
-    super.key,
-  });
+  const BottomPlayer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +73,10 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                     flex: 4,
                     child: Row(
                       children: [
-                        Flexible(
+                        const Flexible(
                           flex: 5,
-                          child: BottomPlayerTitleArtist(
-                            audio: audio,
+                          child: PlayerTitleAndArtist(
+                            playerPosition: PlayerPosition.bottom,
                           ),
                         ),
                         if (!smallWindow)

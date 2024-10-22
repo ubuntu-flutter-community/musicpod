@@ -15,6 +15,7 @@ import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../radio_model.dart';
+import 'radio_connect_snackbar.dart';
 
 class RadioPageTagBar extends StatelessWidget {
   const RadioPageTagBar({super.key, required this.station});
@@ -87,9 +88,11 @@ class RadioPageTagBar extends StatelessWidget {
                         if (context.mounted) {
                           showSnackBar(
                             context: context,
-                            content: buildConnectSnackBar(
+                            content: RadioConnectSnackbar(
                               connectedHost: connectedHost,
-                              context: context,
+                            ),
+                            duration: Duration(
+                              seconds: connectedHost == null ? 10 : 3,
                             ),
                           );
                         }

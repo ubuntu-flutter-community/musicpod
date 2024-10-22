@@ -9,9 +9,9 @@ import 'bottom_player.dart';
 import 'full_height_player.dart';
 
 class PlayerView extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const PlayerView({super.key, required this.mode});
+  const PlayerView({super.key, required this.position});
 
-  final PlayerPosition mode;
+  final PlayerPosition position;
 
   @override
   State<PlayerView> createState() => _PlayerViewState();
@@ -25,7 +25,7 @@ class _PlayerViewState extends State<PlayerView> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
       di<AppModel>().setShowWindowControls(
-        widget.mode != PlayerPosition.sideBar,
+        widget.position != PlayerPosition.sideBar,
       );
     });
   }
@@ -37,7 +37,7 @@ class _PlayerViewState extends State<PlayerView> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
       di<AppModel>().setShowWindowControls(
-        widget.mode != PlayerPosition.sideBar,
+        widget.position != PlayerPosition.sideBar,
       );
     });
   }
@@ -49,13 +49,13 @@ class _PlayerViewState extends State<PlayerView> {
     final color = getPlayerBg(c, theme.cardColor);
 
     Widget player;
-    if (widget.mode != PlayerPosition.bottom) {
+    if (widget.position != PlayerPosition.bottom) {
       player = Row(
         children: [
-          if (widget.mode == PlayerPosition.sideBar)
+          if (widget.position == PlayerPosition.sideBar)
             const Material(child: VerticalDivider()),
           Expanded(
-            child: FullHeightPlayer(playerPosition: widget.mode),
+            child: FullHeightPlayer(playerPosition: widget.position),
           ),
         ],
       );

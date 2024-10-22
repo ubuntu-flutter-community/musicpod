@@ -29,6 +29,7 @@ class RadioModel extends SafeChangeNotifier {
   // The empty string is used so before the first check the UI does not overreact
   String? _connectedHost = '';
   String? get connectedHost => _connectedHost;
+  // TODO: make init a one time call...
   Future<String?> init() async {
     final oldHost = _connectedHost;
     _connectedHost = await _radioService.init();

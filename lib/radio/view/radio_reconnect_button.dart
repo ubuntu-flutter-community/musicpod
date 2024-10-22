@@ -5,6 +5,7 @@ import '../../common/view/snackbars.dart';
 import '../../l10n/l10n.dart';
 import '../radio_model.dart';
 import 'disconnected_server_icon.dart';
+import 'radio_connect_snackbar.dart';
 
 class RadioReconnectButton extends StatelessWidget {
   const RadioReconnectButton({super.key});
@@ -22,10 +23,8 @@ class RadioReconnectButton extends StatelessWidget {
           if (context.mounted) {
             showSnackBar(
               context: context,
-              snackBar: buildConnectSnackBar(
-                connectedHost: host,
-                context: context,
-              ),
+              content: RadioConnectSnackbar(connectedHost: host),
+              duration: Duration(seconds: host == null ? 10 : 3),
             );
           }
         },
