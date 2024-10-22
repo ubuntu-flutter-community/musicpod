@@ -589,5 +589,19 @@
     "regionWesternsahara": "西撒哈拉",
     "regionYemen": "也门",
     "regionZambia": "赞比亚",
-    "regionZimbabwe": "津巴布韦"
+    "regionZimbabwe": "津巴布韦",
+    "local": "本地",
+    "downloadsDirectory": "下载位置",
+    "downloadsDirectoryDescription": "确认 MusicPod 可以访问该目录！",
+    "downloadsChangeWarning": "更改下载目录会删除所有当前下载。您想继续吗？",
+    "disconnectedFrom": "Disconnected from",
+    "unPinAlbum": "取消固定到侧边栏",
+    "skipToLivStream": "跳转到直播",
+    "searchSimilarStation": "搜索类似电台",
+    "onlineArtError": "在线艺术家查找目前不可用",
+    "clicks": "Clicks",
+    "exposeOnlineHeadline": "在线公开在听的内容",
+    "exposeToDiscordTitle": "Discord",
+    "exposeToDiscordSubTitle": "您当前正在收听的歌曲/电台/播客的艺术家和标题将被共享。",
+    "featureDisabledOnPlatform": "此操作系统当前已禁用此功能。"
 }
