@@ -11,6 +11,7 @@ import '../../common/view/snackbars.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_model.dart';
+import '../../radio/view/radio_connect_snackbar.dart';
 import '../search_model.dart';
 
 class SliverRadioSearchResults extends StatefulWidget
@@ -38,9 +39,11 @@ class _SliverRadioSearchResultsState extends State<SliverRadioSearchResults> {
           if (mounted && model.showConnectSnackBar) {
             showSnackBar(
               context: context,
-              snackBar: buildConnectSnackBar(
+              content: RadioConnectSnackbar(
                 connectedHost: connectedHost,
-                context: context,
+              ),
+              duration: Duration(
+                seconds: connectedHost == null ? 10 : 3,
               ),
             );
           }

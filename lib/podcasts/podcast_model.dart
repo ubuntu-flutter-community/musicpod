@@ -1,9 +1,15 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
+import '../common/view/snackbars.dart';
+import '../library/library_model.dart';
+import '../player/player_model.dart';
 import 'podcast_service.dart';
+import 'view/podcast_page.dart';
+import 'view/podcast_snackbar_contents.dart';
 
 class PodcastModel extends SafeChangeNotifier {
   PodcastModel({
@@ -72,14 +78,77 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<Audio>> findEpisodes({
+  // This is not optimal since the model uses widgets
+  // but tolerable since snackbars update over the rest of the UI
+  Future<void> loadPodcast({
+    required BuildContext context,
+    required LibraryModel libraryModel,
     required String feedUrl,
     String? itemImageUrl,
     String? genre,
-  }) async =>
-      _podcastService.findEpisodes(
-        feedUrl: feedUrl,
-        itemImageUrl: itemImageUrl,
-        genre: genre,
-      );
+    PlayerModel? playerModel,
+  }) async {
+    if (libraryModel.isPageInLibrary(feedUrl)) {
+      return libraryModel.pushNamed(pageId: feedUrl);
+    }
+
+    showSnackBar(
+      context: context,
+      duration: const Duration(seconds: 1000),
+      content: const PodcastSearchLoadingSnackBarContent(),
+    );
+
+    setLoadingFeed(true);
+    return _podcastService
+        .findEpisodes(
+      feedUrl: feedUrl,
+      itemImageUrl: itemImageUrl,
+      genre: genre,
+    )
+        .then(
+      (podcast) async {
+        if (podcast.isEmpty) {
+          if (context.mounted) {
+            showSnackBar(
+              context: context,
+              content: const PodcastSearchEmptyFeedSnackBarContent(),
+            );
+          }
+          return;
+        }
+
+        if (playerModel != null) {
+          playerModel.startPlaylist(listName: feedUrl, audios: podcast);
+        } else {
+          libraryModel.push(
+            builder: (_) => PodcastPage(
+              imageUrl: itemImageUrl ?? podcast.firstOrNull?.imageUrl,
+              preFetchedEpisodes: podcast,
+              feedUrl: feedUrl,
+              title: podcast.firstOrNull?.album ??
+                  podcast.firstOrNull?.title ??
+                  feedUrl,
+            ),
+            pageId: feedUrl,
+          );
+        }
+      },
+    ).whenComplete(
+      () {
+        setLoadingFeed(false);
+        if (context.mounted) ScaffoldMessenger.of(context).clearSnackBars();
+      },
+    ).timeout(
+      const Duration(seconds: 15),
+      onTimeout: () {
+        setLoadingFeed(false);
+        if (context.mounted) {
+          showSnackBar(
+            context: context,
+            content: const PodcastSearchTimeoutSnackBarContent(),
+          );
+        }
+      },
+    );
+  }
 }

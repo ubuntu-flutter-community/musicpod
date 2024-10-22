@@ -13,7 +13,6 @@ import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../podcasts/podcast_model.dart';
-import '../../podcasts/podcast_utils.dart';
 import '../../radio/view/station_page.dart';
 import '../player_model.dart';
 import 'player_view.dart';
@@ -256,16 +255,15 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
         _onRadioArtistTap(audio: audio, libraryModel: libraryModel);
         return;
       case AudioType.podcast:
-        searchAndPushPodcastPage(
-          context: context,
-          podcastModel: podcastModel,
-          libraryModel: libraryModel,
-          playerModel: playerModel,
-          feedUrl: audio.website!,
-          itemImageUrl: audio.albumArtUrl,
-          genre: audio.genre,
-          startPlaylist: false,
-        );
+        if (audio.website != null) {
+          podcastModel.loadPodcast(
+            context: context,
+            libraryModel: libraryModel,
+            feedUrl: audio.website!,
+            itemImageUrl: audio.albumArtUrl,
+            genre: audio.genre,
+          );
+        }
         return;
       default:
         return;

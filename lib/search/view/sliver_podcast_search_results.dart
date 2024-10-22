@@ -9,12 +9,13 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
+import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../podcasts/podcast_model.dart';
-import '../../podcasts/podcast_utils.dart';
+import '../../podcasts/view/podcast_snackbar_contents.dart';
 import '../search_model.dart';
 
 class SliverPodcastSearchResults extends StatefulWidget
@@ -72,6 +73,9 @@ class _SliverPodcastSearchResultsState
     }
 
     final loadingFeed = watchPropertyValue((PodcastModel m) => m.loadingFeed);
+    final libraryModel = di<LibraryModel>();
+    final playerModel = di<PlayerModel>();
+    final podcastModel = di<PodcastModel>();
 
     return SliverGrid.builder(
       itemCount: searchResultItems.length,
@@ -87,39 +91,33 @@ class _SliverPodcastSearchResultsState
           width: audioCardDimension,
         );
 
-        final libaryModel = di<LibraryModel>();
-        final playerModel = di<PlayerModel>();
-        final podcastModel = di<PodcastModel>();
+        final feedUrl = podcastItem.feedUrl;
+
+        void loadPodcast({required bool play}) {
+          if (feedUrl == null) {
+            showSnackBar(
+              context: context,
+              content: const PodcastSearchEmptyFeedSnackBarContent(),
+            );
+          } else {
+            podcastModel.loadPodcast(
+              context: context,
+              feedUrl: feedUrl,
+              itemImageUrl: art,
+              genre: podcastItem.primaryGenreName,
+              playerModel: play ? playerModel : null,
+              libraryModel: libraryModel,
+            );
+          }
+        }
 
         return AudioCard(
           bottom: AudioCardBottom(
             text: podcastItem.collectionName ?? podcastItem.trackName,
           ),
           image: image,
-          onPlay: loadingFeed
-              ? null
-              : () => searchAndPushPodcastPage(
-                    context: context,
-                    feedUrl: podcastItem.feedUrl,
-                    itemImageUrl: art,
-                    genre: podcastItem.primaryGenreName,
-                    startPlaylist: true,
-                    playerModel: playerModel,
-                    podcastModel: podcastModel,
-                    libraryModel: libaryModel,
-                  ),
-          onTap: loadingFeed
-              ? null
-              : () => searchAndPushPodcastPage(
-                    context: context,
-                    feedUrl: podcastItem.feedUrl,
-                    itemImageUrl: art,
-                    genre: podcastItem.primaryGenreName,
-                    startPlaylist: false,
-                    playerModel: playerModel,
-                    podcastModel: podcastModel,
-                    libraryModel: libaryModel,
-                  ),
+          onPlay: loadingFeed ? null : () => loadPodcast(play: true),
+          onTap: loadingFeed ? null : () => loadPodcast(play: false),
         );
       },
     );
