@@ -4,11 +4,9 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:audio_service/audio_service.dart';
-import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:path/path.dart' as p;
 import 'package:smtc_windows/smtc_windows.dart';
 
@@ -67,7 +65,7 @@ class PlayerService {
 
   MpvMetaData? _mpvMetaData;
   MpvMetaData? get mpvMetaData => _mpvMetaData;
-  void _setMpvMetaData(MpvMetaData? value) {
+  Future<void> _setMpvMetaData(MpvMetaData? value) async {
     _mpvMetaData = value;
 
     var validHistoryElement = _mpvMetaData?.icyTitle.isNotEmpty == true;
@@ -88,6 +86,8 @@ class PlayerService {
           icyName: audio?.title?.trim() ?? _mpvMetaData?.icyName ?? '',
         ),
       );
+
+      await _processParsedIcyTitle(mpvMetaData!.icyTitle.everyWordCapitalized);
     }
     _propertiesChangedController.add(true);
   }
@@ -224,12 +224,13 @@ class PlayerService {
               ),
             );
       }
-      _setMediaControlsMetaData(audio: audio!);
-      _loadColorAndSetRemoteUrl();
-      _exposeService.exposeTitleOnline(
-        line1: audio?.title ?? '',
-        line2: audio?.artist ?? '',
-        line3: audio?.album ?? '',
+      _setRemoteImageUrl(_audio?.imageUrl ?? _audio?.albumArtUrl);
+
+      await _setMediaControlsMetaData(audio: audio!);
+      await _exposeService.exposeTitleOnline(
+        title: audio?.title ?? '',
+        artist: audio?.artist ?? '',
+        additionalInfo: audio?.album ?? '',
         imageUrl: audio?.imageUrl ?? audio?.albumArtUrl,
       );
       _firstPlay = false;
@@ -291,32 +292,12 @@ class PlayerService {
         final newData = MpvMetaData.fromJson(data);
         final parsedIcyTitle =
             HtmlParser(newData.icyTitle).parseFragment().text;
-        if (parsedIcyTitle == _mpvMetaData?.icyTitle) return;
+        if (parsedIcyTitle == null ||
+            parsedIcyTitle == _mpvMetaData?.icyTitle) {
+          return;
+        }
 
         _setMpvMetaData(newData.copyWith(icyTitle: parsedIcyTitle));
-
-        if (parsedIcyTitle == null) return;
-
-        final songInfo = parsedIcyTitle.splitByDash;
-        _onlineArtService.fetchAlbumArt(parsedIcyTitle).then(
-          (albumArt) async {
-            final mergedAudio =
-                (_audio ?? const Audio(audioType: AudioType.radio)).copyWith(
-              imageUrl: albumArt,
-              title: songInfo.songName,
-              artist: songInfo.artist,
-            );
-            await _setMediaControlsMetaData(audio: mergedAudio);
-            await _loadColorAndSetRemoteUrl(artUrl: albumArt);
-
-            await _exposeService.exposeTitleOnline(
-              line1: songInfo.songName ?? '',
-              line2: songInfo.artist ?? '',
-              line3: _audio?.title ?? 'Internet Radio',
-              imageUrl: albumArt,
-            );
-          },
-        );
       },
     );
 
@@ -341,6 +322,27 @@ class PlayerService {
     });
 
     await _setPlayerState();
+  }
+
+  Future<void> _processParsedIcyTitle(String parsedIcyTitle) async {
+    final songInfo = parsedIcyTitle.splitByDash;
+    final albumArt = await _onlineArtService.fetchAlbumArt(parsedIcyTitle);
+
+    final mergedAudio =
+        (_audio ?? const Audio(audioType: AudioType.radio)).copyWith(
+      imageUrl: albumArt,
+      title: songInfo.songName,
+      artist: songInfo.artist,
+    );
+    await _setMediaControlsMetaData(audio: mergedAudio);
+    _setRemoteImageUrl(albumArt ?? _audio?.imageUrl ?? _audio?.albumArtUrl);
+
+    await _exposeService.exposeTitleOnline(
+      title: songInfo.songName ?? '',
+      artist: songInfo.artist ?? '',
+      additionalInfo: _audio?.title ?? 'Internet Radio',
+      imageUrl: albumArt,
+    );
   }
 
   Future<void> playNext() async {
@@ -457,41 +459,11 @@ class PlayerService {
     await _play(newPosition: _position);
   }
 
-  Color? _color;
-  Color? get color => _color;
-
   String? _remoteImageUrl;
   String? get remoteImageUrl => _remoteImageUrl;
   void _setRemoteImageUrl(String? url) {
     _remoteImageUrl = url;
     _propertiesChangedController.add(true);
-  }
-
-  Future<void> _loadColorAndSetRemoteUrl({String? artUrl}) async {
-    final pic = CoverStore().get(_audio?.albumId);
-    if (pic == null &&
-        audio?.imageUrl == null &&
-        audio?.albumArtUrl == null &&
-        artUrl == null) {
-      _color = null;
-      _setRemoteImageUrl(null);
-
-      return;
-    }
-
-    ImageProvider? image;
-    if (pic != null) {
-      _setRemoteImageUrl(null);
-      image = MemoryImage(pic);
-    } else {
-      final url = artUrl ?? _audio!.imageUrl ?? _audio!.albumArtUrl!;
-      _setRemoteImageUrl(url);
-      image = NetworkImage(
-        url,
-      );
-    }
-    final generator = await PaletteGenerator.fromImageProvider(image);
-    _color = generator.dominantColor?.color;
   }
 
   Future<void> _setPlayerState() async {

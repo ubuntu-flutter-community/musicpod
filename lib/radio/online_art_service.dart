@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+import '../common/logging.dart';
 import '../constants.dart';
 import '../extensions/string_x.dart';
 
@@ -21,15 +23,11 @@ class OnlineArtService {
           url: await compute(
             _fetchAlbumArt,
             _ComputeCapsule(icyTitle: icyTitle, dio: _dio),
-          ).onError(
-            (e, s) {
-              if (kDebugMode) {
-                debugPrintStack(stackTrace: s);
-              }
-              _errorController.add('$e : $s');
-              return null;
-            },
-          ),
+          ).onError((e, s) {
+            printMessageInDebugMode(e.toString());
+            _errorController.add('$e : $s');
+            return null;
+          }),
         );
   }
 
@@ -60,7 +58,7 @@ class _ComputeCapsule {
 
 Future<String?> _fetchAlbumArt(_ComputeCapsule capsule) async {
   final dio = capsule.dio;
-  dio.options.headers = kAlbumArtHeaders;
+  dio.options.headers = kMusicBrainzHeaders;
   final songInfo = capsule.icyTitle.splitByDash;
   if (songInfo.songName == null || songInfo.artist == null) return null;
 
@@ -80,16 +78,34 @@ Future<String?> _fetchAlbumArt(_ComputeCapsule capsule) async {
     final releaseId =
         firstRecording == null ? null : firstRecording?['releases']?[0]?['id'];
 
-    if (releaseId == null) return null;
+    if (releaseId == null) {
+      printMessageInDebugMode('${capsule.icyTitle}: No release found}');
+      return null;
+    }
+
+    printMessageInDebugMode(
+      '${capsule.icyTitle}: Release ($releaseId) found, trying to find artwork ...',
+    );
 
     final albumArtUrl = await _fetchAlbumArtUrlFromReleaseId(
       releaseId: releaseId,
       dio: dio,
     );
 
+    if (albumArtUrl != null) {
+      printMessageInDebugMode(
+        '${capsule.icyTitle}: Resource ($albumArtUrl) found',
+      );
+    } else {
+      printMessageInDebugMode(
+        '${capsule.icyTitle}: No resource found for ($releaseId)!',
+      );
+    }
+
     return albumArtUrl;
   } on Exception {
-    rethrow;
+    printMessageInDebugMode('No release found!');
+    return null;
   }
 }
 
@@ -98,19 +114,39 @@ Future<String?> _fetchAlbumArtUrlFromReleaseId({
   required Dio dio,
 }) async {
   try {
-    dio.options.headers = kAlbumArtHeaders;
-    final response = await dio.get('$_kCoverArtArchiveAddress$releaseId');
+    dio.options.headers = kInternetArchiveHeaders;
+    dio.options.followRedirects = true;
+    dio.options.maxRedirects = 5;
+    dio.options.receiveTimeout = const Duration(seconds: 25);
+    dio.options.validateStatus = (code) {
+      final stringCode = code.toString();
+      if (stringCode.startsWith('2') || stringCode.startsWith('3')) {
+        return true;
+      }
+      return false;
+    };
 
-    final images = response.data['images'] as List;
+    final path = '$_kCoverArtArchiveAddress$releaseId';
+    final response = await dio.get(path);
+    final imagesMaps = response.data['images'] as List;
 
-    if (images.isNotEmpty) {
-      final artwork = images[0];
+    if (imagesMaps.isNotEmpty == true) {
+      final imageMap = imagesMaps
+          .firstWhereOrNull((e) => (e['front'] as bool?) == true || e != null);
 
-      return (artwork['image']) as String?;
+      final thumbnail = imageMap?['thumbnails'] as Map?;
+
+      final url = thumbnail?['large'] as String? ??
+          thumbnail?['small'] as String? ??
+          thumbnail?['500'] as String? ??
+          thumbnail?['1200'] as String? ??
+          imageMap['image'] as String?;
+
+      return url?.replaceAll('http://', 'https://');
     }
-  } on Exception {
-    rethrow;
+  } on Exception catch (e) {
+    printMessageInDebugMode(e.toString());
+    return null;
   }
-
   return null;
 }

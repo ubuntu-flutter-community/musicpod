@@ -88,8 +88,9 @@ class RadioPageTagBar extends StatelessWidget {
                         if (context.mounted) {
                           showSnackBar(
                             context: context,
-                            content: RadioConnectSnackbar(
+                            content: buildConnectSnackBar(
                               connectedHost: connectedHost,
+                              context: context,
                             ),
                             duration: Duration(
                               seconds: connectedHost == null ? 10 : 3,

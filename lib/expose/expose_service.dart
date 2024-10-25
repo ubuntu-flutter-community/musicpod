@@ -13,9 +13,23 @@ class ExposeService {
       _discordRPC?.isConnectedStream ?? Stream.value(false);
 
   Future<void> exposeTitleOnline({
-    required String line1,
-    required String line2,
-    required String line3,
+    required String title,
+    required String artist,
+    required String additionalInfo,
+    String? imageUrl,
+  }) async {
+    await _exposeTitleToDiscord(
+      title: title,
+      artist: artist,
+      additionalInfo: additionalInfo,
+      imageUrl: imageUrl,
+    );
+  }
+
+  Future<void> _exposeTitleToDiscord({
+    required String title,
+    required String artist,
+    required String additionalInfo,
     String? imageUrl,
   }) async {
     try {
@@ -26,11 +40,11 @@ class ExposeService {
         await _discordRPC?.setActivity(
           activity: RPCActivity(
             assets: RPCAssets(
-              largeText: line3,
+              largeText: additionalInfo,
               largeImage: imageUrl,
             ),
-            details: line1,
-            state: line2,
+            details: title,
+            state: artist,
             activityType: ActivityType.listening,
           ),
         );
@@ -41,11 +55,7 @@ class ExposeService {
   }
 
   Future<void> connect() async {
-    try {
-      await _discordRPC?.connect();
-    } on Exception catch (e) {
-      _errorController.add(e.toString());
-    }
+    await connectToDiscord();
   }
 
   Future<void> connectToDiscord() async {
@@ -65,7 +75,7 @@ class ExposeService {
   }
 
   Future<void> dispose() async {
-    await _discordRPC?.disconnect();
+    await disconnectFromDiscord();
     await _errorController.close();
   }
 }

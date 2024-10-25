@@ -11,6 +11,7 @@ import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
+import 'blurred_full_height_player_image.dart';
 import 'bottom_player_image.dart';
 import 'play_button.dart';
 import 'playback_rate_button.dart';
@@ -145,6 +146,17 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
       );
     }
 
-    return player;
+    if (isVideo == true) {
+      return player;
+    }
+
+    return Stack(
+      children: [
+        BlurredFullHeightPlayerImage(
+          size: Size(context.mediaQuerySize.width, bottomPlayerHeight),
+        ),
+        player,
+      ],
+    );
   }
 }

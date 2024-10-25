@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -106,7 +105,6 @@ class PlayerModel extends SafeChangeNotifier {
         index: index,
       );
 
-  Color? get color => _playerService.color;
   String? get remoteImageUrl => _playerService.remoteImageUrl;
 
   bool _isUpNextExpanded = false;
