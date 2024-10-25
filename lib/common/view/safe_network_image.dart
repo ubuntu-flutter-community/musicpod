@@ -9,6 +9,7 @@ import 'package:path/path.dart' as p;
 import 'package:xdg_directories/xdg_directories.dart';
 
 import '../../extensions/build_context_x.dart';
+import '../logging.dart';
 import 'icons.dart';
 
 class SafeNetworkImage extends StatelessWidget {
@@ -21,6 +22,7 @@ class SafeNetworkImage extends StatelessWidget {
     this.errorIcon,
     this.height,
     this.width,
+    this.httpHeaders,
   });
 
   final String? url;
@@ -30,6 +32,7 @@ class SafeNetworkImage extends StatelessWidget {
   final Widget? errorIcon;
   final double? height;
   final double? width;
+  final Map<String, String>? httpHeaders;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +67,7 @@ class SafeNetworkImage extends StatelessWidget {
           width: width,
         ),
         errorWidget: (context, url, _) => errorWidget,
+        errorListener: (e) => printMessageInDebugMode(e.toString()),
       );
     } on Exception {
       return fallBack;

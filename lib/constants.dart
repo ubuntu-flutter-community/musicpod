@@ -179,8 +179,12 @@ const shops = <String, String>{
 
 const kSponsorLink = 'https://github.com/sponsors/Feichtmeier';
 
-const kAlbumArtHeaders = {
+const kMusicBrainzHeaders = {
   'Accept': 'application/json',
+  'User-Agent': '$kAppTitle ($kRepoUrl)',
+};
+
+const kInternetArchiveHeaders = {
   'User-Agent': '$kAppTitle ($kRepoUrl)',
 };
 

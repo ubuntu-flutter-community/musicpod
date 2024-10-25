@@ -23,8 +23,13 @@ class RadioReconnectButton extends StatelessWidget {
           if (context.mounted) {
             showSnackBar(
               context: context,
-              content: RadioConnectSnackbar(connectedHost: host),
-              duration: Duration(seconds: host == null ? 10 : 3),
+              content: buildConnectSnackBar(
+                connectedHost: host,
+                context: context,
+              ),
+              duration: Duration(
+                seconds: host == null ? 10 : 3,
+              ),
             );
           }
         },

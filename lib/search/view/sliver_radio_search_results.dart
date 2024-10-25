@@ -39,8 +39,9 @@ class _SliverRadioSearchResultsState extends State<SliverRadioSearchResults> {
           if (mounted && model.showConnectSnackBar) {
             showSnackBar(
               context: context,
-              content: RadioConnectSnackbar(
+              snackBar: buildConnectSnackBar(
                 connectedHost: connectedHost,
+                context: context,
               ),
               duration: Duration(
                 seconds: connectedHost == null ? 10 : 3,

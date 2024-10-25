@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/app_model.dart';
-import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../player_model.dart';
 import 'bottom_player.dart';
 import 'full_height_player.dart';
 
@@ -45,8 +43,6 @@ class _PlayerViewState extends State<PlayerView> {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final c = watchPropertyValue((PlayerModel m) => m.color);
-    final color = getPlayerBg(c, theme.cardColor);
 
     Widget player;
     if (widget.position != PlayerPosition.bottom) {
@@ -66,7 +62,7 @@ class _PlayerViewState extends State<PlayerView> {
     // VERY important to reduce CPU usage
     return RepaintBoundary(
       child: Material(
-        color: color,
+        color: theme.cardColor,
         child: player,
       ),
     );
