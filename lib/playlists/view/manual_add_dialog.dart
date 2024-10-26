@@ -7,13 +7,21 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
+import '../../constants.dart';
 import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../local_audio/local_audio_model.dart';
+import '../../local_audio/view/local_audio_view.dart';
 import '../../podcasts/podcast_model.dart';
 
 class ManualAddDialog extends StatelessWidget {
-  const ManualAddDialog({super.key});
+  const ManualAddDialog({
+    super.key,
+    this.onlyPlaylists = false,
+  });
+
+  final bool onlyPlaylists;
 
   @override
   Widget build(BuildContext context) {
@@ -30,31 +38,40 @@ class ManualAddDialog extends StatelessWidget {
       content: SizedBox(
         height: 200,
         width: 400,
-        child: Navigator(
-          // ignore: deprecated_member_use
-          onPopPage: (route, result) => route.didPop(result),
-          key: manualAddNavigatorKey,
-          initialRoute: '/chose',
-          onGenerateRoute: (settings) {
-            Widget page = switch (settings.name) {
-              '/addPlaylist' => PlaylistContent(
+        child: onlyPlaylists
+            ? Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: PlaylistContent(
                   playlistName: context.l10n.createNewPlaylist,
                   libraryModel: di<LibraryModel>(),
                   allowCreate: true,
                 ),
-              '/addPodcast' => const AddPodcastContent(),
-              '/addStation' => const AddStationContent(),
-              _ => const SelectAddContent()
-            };
+              )
+            : Navigator(
+                // ignore: deprecated_member_use
+                onPopPage: (route, result) => route.didPop(result),
+                key: manualAddNavigatorKey,
+                initialRoute: '/chose',
+                onGenerateRoute: (settings) {
+                  Widget page = switch (settings.name) {
+                    '/addPlaylist' => PlaylistContent(
+                        playlistName: context.l10n.createNewPlaylist,
+                        libraryModel: di<LibraryModel>(),
+                        allowCreate: true,
+                      ),
+                    '/addPodcast' => const AddPodcastContent(),
+                    '/addStation' => const AddStationContent(),
+                    _ => const SelectAddContent()
+                  };
 
-            return PageRouteBuilder(
-              barrierDismissible: true,
-              pageBuilder: (_, __, ___) => page,
-              reverseTransitionDuration: const Duration(seconds: 0),
-              transitionDuration: const Duration(milliseconds: 0),
-            );
-          },
-        ),
+                  return PageRouteBuilder(
+                    barrierDismissible: true,
+                    pageBuilder: (_, __, ___) => page,
+                    reverseTransitionDuration: const Duration(seconds: 0),
+                    transitionDuration: const Duration(milliseconds: 0),
+                  );
+                },
+              ),
       ),
     );
   }
@@ -204,10 +221,14 @@ class _PlaylistContentState extends State<PlaylistContent> {
               if (widget.allowRename && widget.playlistName != null)
                 ImportantButton(
                   onPressed: () {
-                    widget.libraryModel.updatePlaylistName(
-                      widget.playlistName!,
-                      _controller.text,
-                    );
+                    di<LocalAudioModel>().localAudioindex =
+                        LocalAudioView.playlists.index;
+                    widget.libraryModel
+                      ..pushNamed(pageId: kLocalAudioPageId)
+                      ..updatePlaylistName(
+                        widget.playlistName!,
+                        _controller.text,
+                      );
                     Navigator.of(context).pop();
                   },
                   child: Text(

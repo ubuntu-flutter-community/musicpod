@@ -150,12 +150,12 @@ class SearchModel extends SafeChangeNotifier {
       genres: search?.genres,
       artists: search?.artists,
       playlists: (query != null && query.isNotEmpty)
-          ? _libraryService.playlists.keys.toList()
-          : _libraryService.playlists.keys
+          ? _libraryService.playlists.keys
               .where(
-                (e) => e.toLowerCase().contains(query?.toLowerCase() ?? ''),
+                (e) => e.toLowerCase().contains(query.toLowerCase()),
               )
               .toList()
+          : null
     );
   }
 

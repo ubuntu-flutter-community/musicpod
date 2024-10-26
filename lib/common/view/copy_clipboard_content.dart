@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -58,7 +59,9 @@ class _CopyClipboardContentState extends State<CopyClipboardContent> {
           ),
           if (widget.showActions)
             StreamProviderRow(
-              iconColor: theme.snackBarTheme.actionTextColor,
+              iconColor: theme.snackBarTheme.backgroundColor != null
+                  ? contrastColor(theme.snackBarTheme.backgroundColor!)
+                  : theme.colorScheme.primary,
               onSearch: widget.onSearch,
               text: widget.text,
             ),
