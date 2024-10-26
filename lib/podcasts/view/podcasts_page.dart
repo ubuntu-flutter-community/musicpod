@@ -3,20 +3,14 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/view/audio_type_is_playing_indicator.dart';
 import '../../common/view/header_bar.dart';
-import '../../common/view/icons.dart';
-import '../../common/view/progress.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
-import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
-import '../../settings/settings_model.dart';
 import '../podcast_model.dart';
 import 'podcasts_collection_body.dart';
 
@@ -65,46 +59,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
         title: Text('${context.l10n.podcasts} ${context.l10n.collection}'),
       ),
       body: const PodcastsCollectionBody(),
-    );
-  }
-}
-
-class PodcastsPageIcon extends StatelessWidget with WatchItMixin {
-  const PodcastsPageIcon({
-    super.key,
-    required this.selected,
-  });
-
-  final bool selected;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.theme;
-    final audioType = watchPropertyValue((PlayerModel m) => m.audio?.audioType);
-    final checkingForUpdates =
-        watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
-    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
-    final useMoreAnimations =
-        watchPropertyValue((SettingsModel m) => m.useMoreAnimations);
-
-    if (useMoreAnimations && audioType == AudioType.podcast && isPlaying) {
-      return const AudioTypeIsPlayingIndicator(thickness: 1);
-    }
-
-    if (checkingForUpdates) {
-      return const SideBarProgress();
-    }
-
-    if (audioType == AudioType.podcast) {
-      return Icon(
-        Iconz.playFilled,
-        color: theme.colorScheme.primary,
-      );
-    }
-
-    return Padding(
-      padding: kMainPageIconPadding,
-      child: selected ? Icon(Iconz.podcastFilled) : Icon(Iconz.podcast),
     );
   }
 }

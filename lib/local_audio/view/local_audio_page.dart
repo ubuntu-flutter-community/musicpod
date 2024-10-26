@@ -5,21 +5,16 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
-import '../../common/view/audio_type_is_playing_indicator.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/header_bar.dart';
-import '../../common/view/icons.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_filter_app_bar.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
-import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
-import '../../settings/settings_model.dart';
 import '../../settings/view/settings_dialog.dart';
 import '../local_audio_model.dart';
 import 'failed_imports_content.dart';
@@ -131,39 +126,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
           );
         },
       ),
-    );
-  }
-}
-
-class LocalAudioPageIcon extends StatelessWidget with WatchItMixin {
-  const LocalAudioPageIcon({
-    super.key,
-    required this.selected,
-  });
-
-  final bool selected;
-
-  @override
-  Widget build(BuildContext context) {
-    final audioType = watchPropertyValue((PlayerModel m) => m.audio?.audioType);
-    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
-    final useMoreAnimations =
-        watchPropertyValue((SettingsModel m) => m.useMoreAnimations);
-
-    if (useMoreAnimations && audioType == AudioType.local) {
-      if (isPlaying) {
-        return const AudioTypeIsPlayingIndicator(thickness: 1);
-      } else {
-        return Icon(
-          Iconz.playFilled,
-          color: context.colorScheme.primary,
-        );
-      }
-    }
-
-    return Padding(
-      padding: kMainPageIconPadding,
-      child: selected ? Icon(Iconz.localAudioFilled) : Icon(Iconz.localAudio),
     );
   }
 }
