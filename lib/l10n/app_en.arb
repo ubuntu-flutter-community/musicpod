@@ -196,6 +196,8 @@
     "contributors": "Contributors",
     "version": "Version",
     "theme": "Theme",
+    "useMoreAnimationsTitle": "Use more animations",
+    "useMoreAnimationsDescription": "This will slightly increase the CPU usage, which might be undesired on older hardware.",
     "license": "License",
     "dependencies": "Dependencies",
     "light": "Light",

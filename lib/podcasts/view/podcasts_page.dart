@@ -3,6 +3,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/view/audio_type_is_playing_indicator.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
@@ -15,6 +16,7 @@ import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
+import '../../settings/settings_model.dart';
 import '../podcast_model.dart';
 import 'podcasts_collection_body.dart';
 
@@ -79,9 +81,15 @@ class PodcastsPageIcon extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final audioType = watchPropertyValue((PlayerModel m) => m.audio?.audioType);
-
     final checkingForUpdates =
         watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
+    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
+    final useMoreAnimations =
+        watchPropertyValue((SettingsModel m) => m.useMoreAnimations);
+
+    if (useMoreAnimations && audioType == AudioType.podcast && isPlaying) {
+      return const AudioTypeIsPlayingIndicator(thickness: 1);
+    }
 
     if (checkingForUpdates) {
       return const SideBarProgress();

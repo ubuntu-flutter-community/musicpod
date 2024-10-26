@@ -5,6 +5,8 @@
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
     "disconnectedFrom",
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription",
     "unPinAlbum",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
@@ -290,6 +292,8 @@
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
     "disconnectedFrom",
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription",
     "unPinAlbum",
     "duration",
     "radioTagDisclaimerTitle",
@@ -574,6 +578,8 @@
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
     "disconnectedFrom",
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription",
     "onlineArtError",
     "clicks",
     "exposeOnlineHeadline",
@@ -588,6 +594,8 @@
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
     "disconnectedFrom",
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription",
     "unPinAlbum",
     "alwaysAsk",
     "hideToTray",
@@ -857,6 +865,11 @@
     "regionZimbabwe"
   ],
 
+  "it": [
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription"
+  ],
+
   "nl": [
     "shuffle",
     "repeat",
@@ -951,6 +964,8 @@
     "contributors",
     "version",
     "theme",
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription",
     "license",
     "dependencies",
     "light",
@@ -1385,6 +1400,8 @@
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
     "disconnectedFrom",
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription",
     "reorder",
     "move",
     "pinAlbum",
@@ -1750,6 +1767,8 @@
     "contributors",
     "version",
     "theme",
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription",
     "license",
     "dependencies",
     "light",
@@ -2225,6 +2244,8 @@
     "contributors",
     "version",
     "theme",
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription",
     "license",
     "dependencies",
     "light",
@@ -2645,6 +2666,8 @@
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
     "disconnectedFrom",
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription",
     "unPinAlbum",
     "language",
     "duration",
@@ -2929,7 +2952,9 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
-    "disconnectedFrom"
+    "disconnectedFrom",
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription"
   ],
 
   "sv": [
@@ -2987,6 +3012,8 @@
     "contributors",
     "version",
     "theme",
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription",
     "license",
     "dependencies",
     "light",
@@ -3403,6 +3430,8 @@
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
     "disconnectedFrom",
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription",
     "unPinAlbum",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
@@ -3681,12 +3710,24 @@
     "regionZimbabwe"
   ],
 
+  "zh": [
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription"
+  ],
+
+  "zh_CN": [
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription"
+  ],
+
   "zh_HK": [
     "local",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
     "disconnectedFrom",
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription",
     "unPinAlbum",
     "schedulePlaybackStopTimer",
     "alwaysAsk",
@@ -3963,6 +4004,8 @@
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
     "disconnectedFrom",
+    "useMoreAnimationsTitle",
+    "useMoreAnimationsDescription",
     "unPinAlbum",
     "schedulePlaybackStopTimer",
     "alwaysAsk",
