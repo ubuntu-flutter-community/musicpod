@@ -25,6 +25,7 @@ class PlaylistsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final lists = [
       kNewPlaylistPageId,
+      kLikedAudiosPageId,
       ...(playlists ?? []),
     ];
 
@@ -38,7 +39,8 @@ class PlaylistsView extends StatelessWidget {
           onTap: () => id == kNewPlaylistPageId
               ? showDialog(
                   context: context,
-                  builder: (context) => const ManualAddDialog(),
+                  builder: (context) =>
+                      const ManualAddDialog(onlyPlaylists: true),
                 )
               : di<LibraryModel>().push(
                   builder: (_) => PlaylistPage(
@@ -63,12 +65,24 @@ class PlaylistsView extends StatelessWidget {
                         ),
                         child: Icon(Iconz.plus),
                       )
-                    : RoundImageContainer(
-                        images: const {},
-                        fallBackText: id,
-                      ),
+                    : id == kLikedAudiosPageId
+                        ? Container(
+                            decoration: BoxDecoration(
+                              color:
+                                  context.colorScheme.primary.withOpacity(0.3),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(Iconz.heart),
+                          )
+                        : RoundImageContainer(
+                            images: const {},
+                            fallBackText: id,
+                          ),
               ),
-              if (id != kNewPlaylistPageId) ArtistVignette(text: id),
+              if (id != kNewPlaylistPageId && id != kLikedAudiosPageId)
+                ArtistVignette(
+                  text: id,
+                ),
             ],
           ),
         );

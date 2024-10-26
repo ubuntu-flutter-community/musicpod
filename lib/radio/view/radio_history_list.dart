@@ -51,12 +51,17 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin {
               final e = di<PlayerModel>()
                   .filteredRadioHistory(filter: filter)
                   .elementAt(reversedIndex);
-              return RadioHistoryTile(
-                simpleTile: simpleList,
-                entry: e,
-                selected: current?.icyTitle != null &&
-                    current?.icyTitle == e.value.icyTitle,
-              );
+              return simpleList
+                  ? RadioHistoryTile.simple(
+                      entry: e,
+                      selected: current?.icyTitle != null &&
+                          current?.icyTitle == e.value.icyTitle,
+                    )
+                  : RadioHistoryTile(
+                      entry: e,
+                      selected: current?.icyTitle != null &&
+                          current?.icyTitle == e.value.icyTitle,
+                    );
             },
           );
         },
