@@ -30,6 +30,8 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
       padding: EdgeInsets.zero,
     );
 
+    final text =
+        '${audio?.title == null ? '' : '${audio!.title}'} - ${audio?.album == null ? '' : '${audio!.album}'} - ${audio?.artist == null ? '' : '${audio!.artist}'}';
     final mediaKitTheme = MaterialVideoControlsThemeData(
       seekBarThumbColor: baseColor,
       seekBarColor: baseColor.withOpacity(0.3),
@@ -62,7 +64,20 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
           ),
         ),
       ],
-      bottomButtonBar: [],
+      bottomButtonBarMargin: const EdgeInsets.all(20),
+      bottomButtonBar: [
+        Flexible(
+          child: Tooltip(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            message: text,
+            child: Text(
+              text,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ],
       padding: const EdgeInsets.all(20),
     );
 
