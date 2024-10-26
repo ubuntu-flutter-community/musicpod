@@ -4,7 +4,8 @@ enum LocalAudioView {
   titles,
   artists,
   albums,
-  genres;
+  genres,
+  playlists;
 
   String localize(AppLocalizations l10n) {
     return switch (this) {
@@ -12,6 +13,7 @@ enum LocalAudioView {
       artists => l10n.artists,
       albums => l10n.albums,
       genres => l10n.genres,
+      playlists => l10n.playlists,
     };
   }
 }

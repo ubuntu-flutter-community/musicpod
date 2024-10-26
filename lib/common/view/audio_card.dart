@@ -73,20 +73,13 @@ class _AudioCardState extends State<AudioCard> {
                   Positioned(
                     bottom: 10,
                     right: 10,
-                    child: CircleAvatar(
-                      radius: avatarIconRadius,
-                      backgroundColor: theme.colorScheme.primary,
-                      child: IconButton(
-                        onPressed: widget.onPlay,
-                        icon: Padding(
-                          padding: appleStyled
-                              ? const EdgeInsets.only(left: 3)
-                              : EdgeInsets.zero,
-                          child: Icon(
-                            Iconz.playFilled,
-                            color: contrastColor(theme.colorScheme.primary),
-                          ),
-                        ),
+                    child: FloatingActionButton.small(
+                      onPressed: widget.onPlay,
+                      elevation: 0.5,
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Iconz.playFilled,
+                        color: Colors.black,
                       ),
                     ),
                   ),

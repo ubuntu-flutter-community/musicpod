@@ -53,6 +53,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     final allArtists = watchPropertyValue((LocalAudioModel m) => m.allArtists);
     final allAlbums = watchPropertyValue((LocalAudioModel m) => m.allAlbums);
     final allGenres = watchPropertyValue((LocalAudioModel m) => m.allGenres);
+    final playlists =
+        watchPropertyValue((LibraryModel m) => m.playlists.keys.toList());
     final index = watchPropertyValue((LocalAudioModel m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
 
@@ -101,6 +103,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                   albums: allAlbums,
                   artists: allArtists,
                   genres: allGenres,
+                  playlists: playlists,
                   noResultIcon: const AnimatedEmoji(AnimatedEmojis.bird),
                   noResultMessage: Column(
                     mainAxisSize: MainAxisSize.min,

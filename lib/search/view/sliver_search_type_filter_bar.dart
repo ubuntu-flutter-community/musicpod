@@ -12,8 +12,8 @@ import '../../radio/view/radio_reconnect_button.dart';
 import '../search_model.dart';
 import '../search_type.dart';
 
-class SliverSearchTypeFilterBar extends StatelessWidget with WatchItMixin {
-  const SliverSearchTypeFilterBar({super.key});
+class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
+  const SearchTypeFilterBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +27,7 @@ class SliverSearchTypeFilterBar extends StatelessWidget with WatchItMixin {
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
 
     return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       scrollDirection: Axis.horizontal,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -89,6 +90,8 @@ class SliverSearchTypeFilterBar extends StatelessWidget with WatchItMixin {
             '(${localSearchResult?.artists?.length ?? '0'})',
           SearchType.localGenreName =>
             '(${localSearchResult?.genres?.length ?? '0'})',
+          SearchType.localPlaylists =>
+            '(${localSearchResult?.playlists?.length ?? '0'})',
           _ => ''
         }}';
 }

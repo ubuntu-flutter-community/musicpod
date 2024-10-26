@@ -88,7 +88,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
                   },
                   title: switch (audioType) {
                     AudioType.podcast => const SliverPodcastFilterBar(),
-                    _ => const SliverSearchTypeFilterBar(),
+                    _ => const SearchTypeFilterBar(),
                   },
                 ),
                 SliverPadding(
