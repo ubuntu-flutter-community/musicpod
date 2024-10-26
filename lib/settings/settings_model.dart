@@ -63,6 +63,9 @@ class SettingsModel extends SafeChangeNotifier {
   bool get enableDiscordRPC => _service.enableDiscordRPC;
   void setEnableDiscordRPC(bool value) => _service.setEnableDiscordRPC(value);
 
+  bool get useMoreAnimations => _service.useMoreAnimations;
+  void setUseMoreAnimations(bool value) => _service.setUseMoreAnimations(value);
+
   bool get usePodcastIndex => _service.usePodcastIndex;
   Future<void> setUsePodcastIndex(bool value) async =>
       _service.setUsePodcastIndex(value);

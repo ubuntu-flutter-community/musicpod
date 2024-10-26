@@ -196,6 +196,8 @@
     "contributors": "Mitwirkende",
     "version": "Version",
     "theme": "Thema",
+    "useMoreAnimationsTitle": "Nutze mehr Animationen",
+    "useMoreAnimationsDescription": "Dies wird die CPU-Nutzung erhöhen, was auf älteren System unerwünscht sein könnte.",
     "license": "Lizenz",
     "dependencies": "Abhängigkeiten",
     "light": "Hell",

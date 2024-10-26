@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../common/view/icons.dart';
-import '../../extensions/build_context_x.dart';
-
-import '../../constants.dart';
 import '../../common/data/audio.dart';
+import '../../common/view/audio_type_is_playing_indicator.dart';
+import '../../common/view/icons.dart';
+import '../../constants.dart';
+import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
+import '../../settings/settings_model.dart';
 
 class RadioPageIcon extends StatelessWidget with WatchItMixin {
   const RadioPageIcon({
@@ -19,13 +20,19 @@ class RadioPageIcon extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final audioType = watchPropertyValue((PlayerModel m) => m.audio?.audioType);
+    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
+    final useMoreAnimations =
+        watchPropertyValue((SettingsModel m) => m.useMoreAnimations);
 
-    final theme = context.theme;
-    if (audioType == AudioType.radio) {
-      return Icon(
-        Iconz.playFilled,
-        color: theme.colorScheme.primary,
-      );
+    if (useMoreAnimations && audioType == AudioType.radio) {
+      if (isPlaying) {
+        return const AudioTypeIsPlayingIndicator(thickness: 1);
+      } else {
+        return Icon(
+          Iconz.playFilled,
+          color: context.colorScheme.primary,
+        );
+      }
     }
 
     return Padding(

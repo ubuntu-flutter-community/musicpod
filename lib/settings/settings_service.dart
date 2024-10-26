@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,7 +29,6 @@ class SettingsService {
 
   bool get neverShowFailedImports =>
       _preferences.getBool(kNeverShowImportFails) ?? false;
-
   void setNeverShowFailedImports(bool value) {
     _preferences.setBool(kNeverShowImportFails, value).then(
       (saved) {
@@ -38,9 +38,19 @@ class SettingsService {
   }
 
   bool get enableDiscordRPC => _preferences.getBool(kEnableDiscordRPC) ?? false;
-
   void setEnableDiscordRPC(bool value) {
     _preferences.setBool(kEnableDiscordRPC, value).then(
+      (saved) {
+        if (saved) _propertiesChangedController.add(true);
+      },
+    );
+  }
+
+  // TODO: check how this increases cpu usage
+  bool get useMoreAnimations =>
+      _preferences.getBool(kUseMoreAnimations) ?? !Platform.isLinux;
+  void setUseMoreAnimations(bool value) {
+    _preferences.setBool(kUseMoreAnimations, value).then(
       (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
