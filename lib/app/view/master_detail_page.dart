@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../common/data/audio.dart';
 import '../../common/view/back_gesture.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/header_bar.dart';
@@ -25,11 +26,11 @@ import '../../podcasts/view/podcast_page_side_bar_icon.dart';
 import '../../podcasts/view/podcast_page_title.dart';
 import '../../podcasts/view/podcasts_page.dart';
 import '../../radio/view/radio_page.dart';
-import '../../radio/view/radio_page_icon.dart';
 import '../../radio/view/station_page.dart';
 import '../../radio/view/station_page_icon.dart';
 import '../../search/view/search_page.dart';
 import '../../settings/view/settings_tile.dart';
+import 'main_page_icon.dart';
 import 'master_tile.dart';
 
 class MasterDetailPage extends StatelessWidget with WatchItMixin {
@@ -204,7 +205,8 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.local),
       pageBuilder: (_) => const LocalAudioPage(),
-      iconBuilder: (selected) => LocalAudioPageIcon(
+      iconBuilder: (selected) => MainPageIcon(
+        audioType: AudioType.local,
         selected: selected,
       ),
       pageId: kLocalAudioPageId,
@@ -212,7 +214,8 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.radio),
       pageBuilder: (_) => const RadioPage(),
-      iconBuilder: (selected) => RadioPageIcon(
+      iconBuilder: (selected) => MainPageIcon(
+        audioType: AudioType.radio,
         selected: selected,
       ),
       pageId: kRadioPageId,
@@ -220,7 +223,8 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.podcasts),
       pageBuilder: (_) => const PodcastsPage(),
-      iconBuilder: (selected) => PodcastsPageIcon(
+      iconBuilder: (selected) => MainPageIcon(
+        audioType: AudioType.podcast,
         selected: selected,
       ),
       pageId: kPodcastsPageId,
