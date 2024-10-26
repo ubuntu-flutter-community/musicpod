@@ -143,7 +143,20 @@ class SearchModel extends SafeChangeNotifier {
 
   Future<LocalSearchResult?> localSearch(String? query) async {
     await Future.delayed(const Duration(microseconds: 1));
-    return _localAudioService.search(_searchQuery);
+    final search = _localAudioService.search(_searchQuery);
+    return (
+      albums: search?.albums,
+      titles: search?.titles,
+      genres: search?.genres,
+      artists: search?.artists,
+      playlists: (query != null && query.isNotEmpty)
+          ? _libraryService.playlists.keys.toList()
+          : _libraryService.playlists.keys
+              .where(
+                (e) => e.toLowerCase().contains(query?.toLowerCase() ?? ''),
+              )
+              .toList()
+    );
   }
 
   static const _podcastDefaultLimit = 32;
@@ -299,6 +312,8 @@ class SearchModel extends SafeChangeNotifier {
               setSearchType(SearchType.localArtist);
             } else if (localSearchResult?.genres?.isNotEmpty == true) {
               setSearchType(SearchType.localGenreName);
+            } else if (localSearchResult?.playlists?.isNotEmpty == true) {
+              setSearchType(SearchType.localPlaylists);
             }
           }
         }).then(

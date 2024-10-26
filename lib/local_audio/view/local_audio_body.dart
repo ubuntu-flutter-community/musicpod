@@ -5,6 +5,7 @@ import 'album_view.dart';
 import 'artists_view.dart';
 import 'genres_view.dart';
 import 'local_audio_view.dart';
+import 'playlists_view.dart';
 import 'titles_view.dart';
 
 class LocalAudioBody extends StatelessWidget {
@@ -15,6 +16,7 @@ class LocalAudioBody extends StatelessWidget {
     required this.artists,
     required this.albums,
     required this.genres,
+    required this.playlists,
     this.noResultMessage,
     this.noResultIcon,
   });
@@ -24,6 +26,7 @@ class LocalAudioBody extends StatelessWidget {
   final List<String>? artists;
   final List<String>? albums;
   final List<String>? genres;
+  final List<String>? playlists;
   final Widget? noResultMessage, noResultIcon;
 
   @override
@@ -49,6 +52,9 @@ class LocalAudioBody extends StatelessWidget {
           noResultMessage: noResultMessage,
           noResultIcon: noResultIcon,
         ),
+      LocalAudioView.playlists => PlaylistsView(
+          playlists: playlists ?? [],
+        )
     };
   }
 }

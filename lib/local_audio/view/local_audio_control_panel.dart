@@ -18,25 +18,32 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
 
     return Align(
       alignment: Alignment.center,
-      child: YaruChoiceChipBar(
-        chipBackgroundColor: chipColor(theme),
-        selectedChipBackgroundColor: chipSelectionColor(theme, false),
-        borderColor: chipBorder(theme, false),
-        yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-        selectedFirst: false,
-        clearOnSelect: false,
-        labels: LocalAudioView.values
-            .map(
-              (e) => Text(
-                e.localize(context.l10n),
-                style: chipTextStyle(theme),
-              ),
-            )
-            .toList(),
-        isSelected: LocalAudioView.values
-            .map((e) => e == LocalAudioView.values[index])
-            .toList(),
-        onSelected: (index) => di<LocalAudioModel>().localAudioindex = index,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: YaruChoiceChipBar(
+            chipBackgroundColor: chipColor(theme),
+            selectedChipBackgroundColor: chipSelectionColor(theme, false),
+            borderColor: chipBorder(theme, false),
+            yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
+            selectedFirst: false,
+            clearOnSelect: false,
+            labels: LocalAudioView.values
+                .map(
+                  (e) => Text(
+                    e.localize(context.l10n),
+                    style: chipTextStyle(theme),
+                  ),
+                )
+                .toList(),
+            isSelected: LocalAudioView.values
+                .map((e) => e == LocalAudioView.values[index])
+                .toList(),
+            onSelected: (index) =>
+                di<LocalAudioModel>().localAudioindex = index,
+          ),
+        ),
       ),
     );
   }

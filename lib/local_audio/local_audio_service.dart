@@ -16,6 +16,7 @@ typedef LocalSearchResult = ({
   List<String>? artists,
   List<String>? albums,
   List<String>? genres,
+  List<String>? playlists,
 });
 
 class LocalAudioService {
@@ -178,7 +179,15 @@ class LocalAudioService {
 
   LocalSearchResult? search(String? query) {
     if (query == null) return null;
-    if (query.isEmpty) return (titles: [], artists: [], albums: [], genres: []);
+    if (query.isEmpty) {
+      return (
+        titles: [],
+        artists: [],
+        albums: [],
+        genres: [],
+        playlists: [],
+      );
+    }
 
     final allAlbumsFindings =
         allAlbums?.where((e) => e.toLowerCase().contains(query.toLowerCase()));
@@ -222,6 +231,7 @@ class LocalAudioService {
       artists: allArtists
           ?.where((a) => a.toLowerCase().contains(query.toLowerCase()))
           .toList(),
+      playlists: [],
     );
   }
 

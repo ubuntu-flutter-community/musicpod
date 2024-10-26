@@ -113,7 +113,9 @@ class _DiscordConnectContent extends StatelessWidget {
           ),
           Icon(
             TablerIcons.brand_discord_filled,
-            color: context.theme.primaryColor,
+            color: context.theme.snackBarTheme.backgroundColor != null
+                ? contrastColor(context.theme.snackBarTheme.backgroundColor!)
+                : null,
           ),
         ],
       ),

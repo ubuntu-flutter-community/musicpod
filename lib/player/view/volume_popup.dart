@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:phoenix_theme/phoenix_theme.dart'
-    hide CustomTrackShape, BuildContextX;
+import 'package:phoenix_theme/phoenix_theme.dart' hide CustomTrackShape;
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/view/icons.dart';

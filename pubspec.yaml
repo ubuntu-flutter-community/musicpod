@@ -58,7 +58,7 @@ dependencies:
   phoenix_theme:
     git:
       url: https://github.com/ubuntu-flutter-community/phoenix_theme
-      ref: fe7b369cdf03a15c735c866584a251da68f3a716
+      ref: 0a122e798c87366d74a08bc1f1104e8aa0910ee3
   pls: ^1.1.0
   podcast_search: ^0.7.3
   radio_browser_api: ^2.0.0

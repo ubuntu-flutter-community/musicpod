@@ -43,7 +43,8 @@ class _SliverLocalSearchResultState extends State<SliverLocalSearchResult> {
         SearchType.localAlbum => LocalAudioView.albums,
         SearchType.localArtist => LocalAudioView.artists,
         SearchType.localTitle => LocalAudioView.titles,
-        _ => LocalAudioView.genres,
+        SearchType.localGenreName => LocalAudioView.genres,
+        _ => LocalAudioView.playlists,
       },
     );
 
@@ -55,6 +56,8 @@ class _SliverLocalSearchResultState extends State<SliverLocalSearchResult> {
         watchPropertyValue((SearchModel m) => m.localSearchResult?.albums);
     final genresResult =
         watchPropertyValue((SearchModel m) => m.localSearchResult?.genres);
+    final playlistsResult =
+        watchPropertyValue((SearchModel m) => m.localSearchResult?.playlists);
 
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
 
@@ -73,6 +76,7 @@ class _SliverLocalSearchResultState extends State<SliverLocalSearchResult> {
       artists: artists,
       albums: albums,
       genres: genresResult,
+      playlists: playlistsResult,
     );
   }
 }
