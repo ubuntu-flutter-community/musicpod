@@ -558,7 +558,7 @@
     "regionUnitedstates": "Förenta staterna",
     "regionUnitedstatesminoroutlyingislands": "Förenta staternas mindre avlägsna öar",
     "regionUruguay": "Uruguay",
-    "regionUsvirginislands": Usa Jungfruöarna",
+    "regionUsvirginislands": "Usa Jungfruöarna",
     "regionUzbekistan": "Uzbekistan",
     "regionVanuatu": "Vanuatu",
     "regionVaticancity": "Vatikanstaten",
@@ -571,4 +571,3 @@
     "regionZimbabwe": "Zimbabwe"
 }
 
-}
