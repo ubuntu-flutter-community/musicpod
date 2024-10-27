@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.2.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.1.0...v2.2.0) (2024-10-27)
+
+
+### Features
+
+* add playlists to localaudio view and search ([#980](https://github.com/ubuntu-flutter-community/musicpod/issues/980)) ([5293dca](https://github.com/ubuntu-flutter-community/musicpod/commit/5293dcaba689238c15e0c03e9a57c460bb4385f5))
+* bring back the audio type playing indicator by @HrX03 ([#982](https://github.com/ubuntu-flutter-community/musicpod/issues/982)) ([c29c80d](https://github.com/ubuntu-flutter-community/musicpod/commit/c29c80d487c42c5459b9d78564db1cb502b90e1f))
+* update i10n for zh ([#973](https://github.com/ubuntu-flutter-community/musicpod/issues/973)) ([78bd83b](https://github.com/ubuntu-flutter-community/musicpod/commit/78bd83bad5e9b26db95396b394c9c7d7afeb1433))
+* update Italian language ([#974](https://github.com/ubuntu-flutter-community/musicpod/issues/974)) ([57c8c59](https://github.com/ubuntu-flutter-community/musicpod/commit/57c8c5954d44d9579e781744aa3de9ee50f49d8d))
+* update Swedish translation ([#985](https://github.com/ubuntu-flutter-community/musicpod/issues/985)) ([caf95f4](https://github.com/ubuntu-flutter-community/musicpod/commit/caf95f40d77ae279b323d3608e9d526ca33fa6cc))
+
+
+### Bug Fixes
+
+* add favs to playlistsview + friends ([#981](https://github.com/ubuntu-flutter-community/musicpod/issues/981)) ([89ed1ff](https://github.com/ubuntu-flutter-community/musicpod/commit/89ed1ff5b55a69b67ec63407d09153a854a6f6e6))
+* add track info in video play overlay ([#983](https://github.com/ubuntu-flutter-community/musicpod/issues/983)) ([ace16e8](https://github.com/ubuntu-flutter-community/musicpod/commit/ace16e8b500f4b9d34c7f67fbc33d4915312750f))
+* internet archive errors after their ddos attack recovery ([#979](https://github.com/ubuntu-flutter-community/musicpod/issues/979)) ([13fefb6](https://github.com/ubuntu-flutter-community/musicpod/commit/13fefb6ecd8926a58732fa0c0e5c59eb1182ccd2))
+
 ## [2.1.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.0.2...v2.1.0) (2024-10-21)
 
 
