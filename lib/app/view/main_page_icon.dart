@@ -27,13 +27,16 @@ class MainPageIcon extends StatelessWidget with WatchItMixin {
     final useMoreAnimations =
         watchPropertyValue((SettingsModel m) => m.useMoreAnimations);
 
-    if (useMoreAnimations && currentAudioType == audioType) {
-      if (isPlaying) {
+    if (currentAudioType == audioType && isPlaying) {
+      if (useMoreAnimations) {
         return const ActiveAudioSignalIndicator(thickness: 1);
       } else {
-        return Icon(
-          Iconz.playFilled,
-          color: context.colorScheme.primary,
+        return Padding(
+          padding: kMainPageIconPadding,
+          child: Icon(
+            Iconz.playFilled,
+            color: context.colorScheme.primary,
+          ),
         );
       }
     }
