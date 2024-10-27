@@ -113,7 +113,7 @@
 "collection": "Samling",
 "addToCollection": "Lägga till i samling",
 "removeFromCollection": "Ta bort från samling",
-"loadingPodcastFeed": "Laddar in podcastflöde..."
+"loadingPodcastFeed": "Laddar in podcastflöde...",
 "downloadStarted": "Nedladdningen har börjat: {name}",
     "@downloadStarted": {
         "placeholders": {
