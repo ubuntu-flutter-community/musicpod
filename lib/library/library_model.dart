@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../common/view/global_keys.dart';
+import '../common/logging.dart';
 import '../constants.dart';
 import 'library_service.dart';
 
-class LibraryModel extends SafeChangeNotifier {
+class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   LibraryModel(this._service);
 
   final LibraryService _service;
@@ -16,7 +16,6 @@ class LibraryModel extends SafeChangeNotifier {
 
   Future<bool> init() async {
     await _service.init();
-    _pageIdStack.add(_service.selectedPageId ?? kSearchPageId);
 
     _propertiesChangedSub ??=
         _service.propertiesChanged.listen((_) => notifyListeners());
@@ -110,7 +109,7 @@ class LibraryModel extends SafeChangeNotifier {
       playlists.entries.elementAt(index).value.toList();
   List<Audio>? getPlaylistById(String id) => _service.playlists[id];
 
-  bool isPlaylistSaved(String? name) => playlists.containsKey(name);
+  bool isPlaylistSaved(String? id) => _service.isPlaylistSaved(id);
 
   Future<void> addPlaylist(String name, List<Audio> audios) async =>
       _service.addPlaylist(name, audios);
@@ -208,46 +207,21 @@ class LibraryModel extends SafeChangeNotifier {
     pop();
   }
 
-  final List<String> _pageIdStack = [];
-  String? get selectedPageId => _pageIdStack.lastOrNull;
-  Future<void> pushNamed({required String pageId, bool replace = false}) async {
-    if (pageId == _pageIdStack.lastOrNull) return;
-    _putOnStack(pageId: pageId, replace: replace);
-    if (replace) {
-      await masterNavigator.currentState?.pushReplacementNamed(pageId);
-    } else {
-      await masterNavigator.currentState?.pushNamed(pageId);
-    }
-  }
+  /// Navigation inside the Library
 
-  void _putOnStack({
-    required String pageId,
-    bool replace = false,
-  }) {
-    if (replace) {
-      _pageIdStack.last = pageId;
-    } else {
-      _pageIdStack.add(pageId);
-    }
-
-    if (isPageInLibrary(pageId)) {
-      _service.setSelectedPageId(pageId);
-    }
-    notifyListeners();
-  }
-
-  bool get canPop => _pageIdStack.length > 1;
+  String? get selectedPageId => _service.selectedPageId;
+  void _setSelectedPageId(String pageId) => _service.setSelectedPageId(pageId);
 
   Future<void> push({
-    required Widget Function(BuildContext) builder,
     required String pageId,
+    Widget Function(BuildContext)? builder,
     bool maintainState = false,
-    bool replace = false,
   }) async {
-    if (isPageInLibrary(pageId)) {
-      await pushNamed(pageId: pageId, replace: replace);
-    } else {
-      _putOnStack(pageId: pageId, replace: replace);
+    final inLibrary = isPageInLibrary(pageId);
+    assert(inLibrary || builder != null);
+    if (inLibrary) {
+      await _masterNavigatorKey.currentState?.pushNamed(pageId);
+    } else if (builder != null) {
       final materialPageRoute = MaterialPageRoute(
         builder: builder,
         maintainState: maintainState,
@@ -255,36 +229,73 @@ class LibraryModel extends SafeChangeNotifier {
           name: pageId,
         ),
       );
-      if (replace) {
-        await masterNavigator.currentState?.pushReplacement(
-          materialPageRoute,
-        );
-      } else {
-        await masterNavigator.currentState?.push(
-          materialPageRoute,
-        );
-      }
+      await _masterNavigatorKey.currentState?.push(
+        materialPageRoute,
+      );
     }
   }
 
-  void pop({bool popStack = true}) {
-    if (_pageIdStack.length > 1 && popStack) {
-      _pageIdStack.removeLast();
+  void pop() => _masterNavigatorKey.currentState?.maybePop();
 
-      notifyListeners();
-    }
-    masterNavigator.currentState?.maybePop();
+  bool get canPop => _masterNavigatorKey.currentState?.canPop() == true;
+
+  bool isPageInLibrary(String? pageId) => _service.isPageInLibrary(pageId);
+
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    final pageId = previousRoute?.settings.name;
+
+    printMessageInDebugMode(
+      'didPop: ${route.settings.name}, previousPageId: ${previousRoute?.settings.name}',
+    );
+    if (pageId == null) return;
+    _setSelectedPageId(pageId);
   }
 
-  bool isPageInLibrary(String? pageId) =>
-      pageId != null &&
-      (pageId == kSearchPageId ||
-          pageId == kLikedAudiosPageId ||
-          pageId == kLocalAudioPageId ||
-          pageId == kPodcastsPageId ||
-          pageId == kRadioPageId ||
-          isPinnedAlbum(pageId) ||
-          isStarredStation(pageId) ||
-          isPlaylistSaved(pageId) ||
-          isPodcastSubscribed(pageId));
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    final pageId = route.settings.name;
+    printMessageInDebugMode(
+      'didPush: $pageId, previousPageId: ${previousRoute?.settings.name}',
+    );
+    if (pageId == null) return;
+    _setSelectedPageId(pageId);
+  }
+
+  @override
+  void didRemove(Route route, Route? previousRoute) {
+    final pageId = route.settings.name;
+    printMessageInDebugMode(
+      'didRemove: $pageId, previousPageId: ${previousRoute?.settings.name}',
+    );
+    if (pageId == null) return;
+    _setSelectedPageId(pageId);
+  }
+
+  @override
+  void didReplace({Route? newRoute, Route? oldRoute}) {
+    printMessageInDebugMode(
+      'didReplace: ${oldRoute?.settings.name}, newPageId: ${newRoute?.settings.name}',
+    );
+  }
+
+  @override
+  void didStartUserGesture(Route route, Route? previousRoute) {
+    printMessageInDebugMode(
+      'didStartUserGesture: ${route.settings.name}, previousPageId: ${previousRoute?.settings.name}',
+    );
+  }
+
+  @override
+  void didStopUserGesture() {
+    printMessageInDebugMode('didStopUserGesture');
+  }
+
+  // Note: Navigator.initState ensures assert(observer.navigator == null);
+  // Afterwards the Navigator itself!!! sets the navigator of its observers...
+  @override
+  NavigatorState? get navigator => null;
+  final GlobalKey<NavigatorState> _masterNavigatorKey =
+      GlobalKey<NavigatorState>();
+  GlobalKey<NavigatorState> get masterNavigatorKey => _masterNavigatorKey;
 }

@@ -107,7 +107,7 @@ class _PodcastPageState extends State<PodcastPage> {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                di<LibraryModel>().push(pageId: kSearchPageId);
                 di<SearchModel>()
                   ..setAudioType(AudioType.podcast)
                   ..setSearchType(SearchType.podcastTitle);
@@ -204,7 +204,7 @@ class _PodcastPageState extends State<PodcastPage> {
     required String text,
   }) async {
     await di<PodcastModel>().init(updateMessage: context.l10n.updateAvailable);
-    di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+    di<LibraryModel>().push(pageId: kSearchPageId);
     di<SearchModel>()
       ..setAudioType(AudioType.podcast)
       ..setSearchQuery(text)
@@ -225,7 +225,7 @@ class _PodcastPageState extends State<PodcastPage> {
           e.id.toLowerCase() == text.toLowerCase() ||
           e.name.toLowerCase() == text.toLowerCase(),
     );
-    di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+    di<LibraryModel>().push(pageId: kSearchPageId);
     if (genreOrNull != null) {
       di<SearchModel>()
         ..setAudioType(AudioType.podcast)

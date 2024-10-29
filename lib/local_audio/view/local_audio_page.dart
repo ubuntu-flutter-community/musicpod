@@ -66,7 +66,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             child: SearchButton(
               active: false,
               onPressed: () {
-                di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                di<LibraryModel>().push(pageId: kSearchPageId);
                 final searchmodel = di<SearchModel>();
                 searchmodel
                   ..setAudioType(AudioType.local)

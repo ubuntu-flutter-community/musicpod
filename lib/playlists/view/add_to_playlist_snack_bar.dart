@@ -26,7 +26,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
           if (appModel.fullWindowMode == true) {
             appModel.setFullWindowMode(false);
           }
-          libraryModel.pushNamed(pageId: id);
+          libraryModel.push(pageId: id);
         },
         label: context.l10n.open,
       ),
