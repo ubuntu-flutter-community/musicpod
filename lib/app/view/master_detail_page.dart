@@ -77,27 +77,25 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
             ),
           if (context.showMasterPanel) const VerticalDivider(),
           Expanded(
-            child: BackGesture(
-              child: Navigator(
-                // ignore: deprecated_member_use
-                onPopPage: (route, result) => route.didPop(result),
-                key: masterNavigator,
-                onGenerateRoute: (settings) {
-                  final page = (masterItems.firstWhereOrNull(
-                            (e) =>
-                                e.pageId == settings.name ||
-                                e.pageId == libraryModel.selectedPageId,
-                          ) ??
-                          masterItems.elementAt(0))
-                      .pageBuilder(context);
+            child: Navigator(
+              initialRoute: libraryModel.selectedPageId ?? kSearchPageId,
+              onDidRemovePage: (page) {},
+              key: libraryModel.masterNavigatorKey,
+              observers: [libraryModel],
+              onGenerateRoute: (settings) {
+                final page = (masterItems.firstWhereOrNull(
+                          (e) => e.pageId == settings.name,
+                        ) ??
+                        masterItems.elementAt(0))
+                    .pageBuilder(context);
 
-                  return PageRouteBuilder(
-                    pageBuilder: (_, __, ___) => page,
-                    transitionsBuilder: (_, a, __, c) =>
-                        FadeTransition(opacity: a, child: c),
-                  );
-                },
-              ),
+                return PageRouteBuilder(
+                  settings: settings,
+                  pageBuilder: (_, __, ___) => BackGesture(child: page),
+                  transitionsBuilder: (_, a, __, c) =>
+                      FadeTransition(opacity: a, child: c),
+                );
+              },
             ),
           ),
         ],
@@ -146,7 +144,7 @@ class MasterPanel extends StatelessWidget {
                         },
                       );
                     } else {
-                      libraryModel.pushNamed(pageId: item.pageId);
+                      libraryModel.push(pageId: item.pageId);
                     }
 
                     if (!context.showMasterPanel) {

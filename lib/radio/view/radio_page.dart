@@ -34,7 +34,7 @@ class RadioPage extends StatelessWidget with WatchItMixin {
               child: SearchButton(
                 active: false,
                 onPressed: () {
-                  di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                  di<LibraryModel>().push(pageId: kSearchPageId);
                   final searchModel = di<SearchModel>();
                   if (searchModel.audioType != AudioType.radio) {
                     searchModel

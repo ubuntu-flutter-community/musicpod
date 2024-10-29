@@ -89,7 +89,7 @@ class PodcastModel extends SafeChangeNotifier {
     PlayerModel? playerModel,
   }) async {
     if (libraryModel.isPageInLibrary(feedUrl)) {
-      return libraryModel.pushNamed(pageId: feedUrl);
+      return libraryModel.push(pageId: feedUrl);
     }
 
     showSnackBar(

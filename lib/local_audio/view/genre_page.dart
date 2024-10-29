@@ -59,7 +59,7 @@ class _GenrePageState extends State<GenrePage> {
             IconButton(
               tooltip: context.l10n.searchForRadioStationsWithGenreName,
               onPressed: () => radioModel.init().then((value) {
-                di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                di<LibraryModel>().push(pageId: kSearchPageId);
                 di<SearchModel>()
                   ..setTag(
                     Tag(name: widget.genre.toLowerCase(), stationCount: 1),

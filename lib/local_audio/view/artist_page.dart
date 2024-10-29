@@ -77,7 +77,7 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                di<LibraryModel>().push(pageId: kSearchPageId);
                 final searchmodel = di<SearchModel>();
                 searchmodel
                   ..setAudioType(AudioType.local)

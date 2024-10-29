@@ -7,4 +7,3 @@ final GlobalKey<NavigatorState> manualAddNavigatorKey =
     GlobalKey<NavigatorState>();
 
 final GlobalKey<ScaffoldState> masterScaffoldKey = GlobalKey();
-final GlobalKey<NavigatorState> masterNavigator = GlobalKey<NavigatorState>();

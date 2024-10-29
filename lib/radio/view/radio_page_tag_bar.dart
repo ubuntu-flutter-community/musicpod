@@ -78,7 +78,7 @@ class RadioPageTagBar extends StatelessWidget {
                   di<RadioModel>().init().then(
                     (connectedHost) {
                       if (connectedHost != null) {
-                        di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                        di<LibraryModel>().push(pageId: kSearchPageId);
                         di<SearchModel>()
                           ..setTag(Tag(name: e, stationCount: 1))
                           ..setAudioType(AudioType.radio)

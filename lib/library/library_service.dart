@@ -186,6 +186,8 @@ class LibraryService {
 
   Map<String, List<Audio>> _playlists = {};
   Map<String, List<Audio>> get playlists => _playlists;
+  bool isPlaylistSaved(String? id) =>
+      id == null ? false : _playlists.containsKey(id);
 
   Future<void> addPlaylist(String id, List<Audio> audios) async {
     if (!_playlists.containsKey(id)) {
@@ -371,11 +373,12 @@ class LibraryService {
   }
 
   Map<String, List<Audio>> _podcasts = {};
+  bool isPodcastSubscribed(String feedUrl) => _podcasts.containsKey(feedUrl);
   Map<String, List<Audio>> get podcasts => _podcasts;
   int get podcastsLength => _podcasts.length;
 
   void addPodcast(String feedUrl, List<Audio> audios) {
-    if (_podcasts.containsKey(feedUrl)) return;
+    if (isPodcastSubscribed(feedUrl)) return;
     _podcasts.putIfAbsent(feedUrl, () => audios);
     writeAudioMap(_podcasts, kPodcastsFileName)
         .then((_) => _propertiesChangedController.add(true));
@@ -442,13 +445,13 @@ class LibraryService {
         .then((_) => _propertiesChangedController.add(true));
   }
 
-  void removePodcast(String name) {
-    if (!_podcasts.containsKey(name)) return;
-    _podcasts.remove(name);
+  void removePodcast(String feedUrl) {
+    if (!isPodcastSubscribed(feedUrl)) return;
+    _podcasts.remove(feedUrl);
     writeAudioMap(_podcasts, kPodcastsFileName)
         .then((_) => _propertiesChangedController.add(true))
-        .then((_) => removePodcastUpdate(name))
-        .then((_) => _removeFeedWithDownload(name));
+        .then((_) => removePodcastUpdate(feedUrl))
+        .then((_) => _removeFeedWithDownload(feedUrl));
   }
 
   //
@@ -503,11 +506,30 @@ class LibraryService {
   }
 
   String? get selectedPageId => _sharedPreferences.getString(kSelectedPageId);
-  Future<void> setSelectedPageId(String value) {
-    return _sharedPreferences.setString(kSelectedPageId, value);
+  Future<void> setSelectedPageId(String value) async {
+    final success = await _sharedPreferences.setString(kSelectedPageId, value);
+    if (success) {
+      _propertiesChangedController.add(true);
+    }
   }
 
   Future<void> dispose() async {
     await _propertiesChangedController.close();
   }
+
+  bool isPageInLibrary(String? pageId) =>
+      pageId != null &&
+      (_mainPages.contains(pageId) ||
+          isPinnedAlbum(pageId) ||
+          isStarredStation(pageId) ||
+          isPlaylistSaved(pageId) ||
+          isPodcastSubscribed(pageId));
+
+  final _mainPages = [
+    kSearchPageId,
+    kLikedAudiosPageId,
+    kLocalAudioPageId,
+    kPodcastsPageId,
+    kRadioPageId,
+  ];
 }
