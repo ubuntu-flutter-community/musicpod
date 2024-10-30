@@ -16,10 +16,8 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
 
   Future<bool> init() async {
     await _service.init();
-
     _propertiesChangedSub ??=
         _service.propertiesChanged.listen((_) => notifyListeners());
-
     notifyListeners();
     return true;
   }
@@ -41,6 +39,8 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
     }
   }
 
+  bool isPageInLibrary(String? pageId) => _service.isPageInLibrary(pageId);
+
   //
   // Liked Audios
   //
@@ -48,14 +48,10 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
 
   void addLikedAudio(Audio audio, [bool notify = true]) =>
       _service.addLikedAudio(audio, notify);
-
   void addLikedAudios(List<Audio> audios) => _service.addLikedAudios(audios);
-
   void removeLikedAudios(List<Audio> audios) =>
       _service.removeLikedAudios(audios);
-
   bool liked(Audio? audio) => audio == null ? false : _service.liked(audio);
-
   void removeLikedAudio(Audio audio, [bool notify = true]) =>
       _service.removeLikedAudio(audio, notify);
 
@@ -67,7 +63,6 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   int get starredStationsLength => _service.starredStations.length;
   void addStarredStation(String uuid, List<Audio> audios) =>
       _service.addStarredStation(uuid, audios);
-
   void unStarStation(String uuid) {
     _service.unStarStation(uuid);
     if (selectedPageId == uuid) {
@@ -108,15 +103,11 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   List<Audio> getPlaylistAt(int index) =>
       playlists.entries.elementAt(index).value.toList();
   List<Audio>? getPlaylistById(String id) => _service.playlists[id];
-
   bool isPlaylistSaved(String? id) => _service.isPlaylistSaved(id);
-
   Future<void> addPlaylist(String name, List<Audio> audios) async =>
       _service.addPlaylist(name, audios);
-
   Future<void> updatePlaylist(String id, List<Audio> audios) async =>
       _service.updatePlaylist(id, audios);
-
   void removePlaylist(String id) {
     _service.removePlaylist(id);
     pop();
@@ -124,18 +115,11 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
 
   void updatePlaylistName(String oldName, String newName) =>
       _service.updatePlaylistName(oldName, newName);
-
   void addAudioToPlaylist(String playlist, Audio audio) =>
       _service.addAudioToPlaylist(playlist, audio);
-
   void removeAudioFromPlaylist(String playlist, Audio audio) =>
       _service.removeAudioFromPlaylist(playlist, audio);
-
   void clearPlaylist(String id) => _service.clearPlaylist(id);
-
-  List<String> getPlaylistNames() =>
-      playlists.entries.map((e) => e.key).toList();
-
   void moveAudioInPlaylist({
     required int oldIndex,
     required int newIndex,
@@ -147,13 +131,14 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
         id: id,
       );
 
+  //
   // Podcasts
+  //
 
   Map<String, List<Audio>> get podcasts => _service.podcasts;
   int get podcastsLength => podcasts.length;
   void addPodcast(String feedUrl, List<Audio> audios) =>
       _service.addPodcast(feedUrl, audios);
-
   void removePodcast(String feedUrl) {
     _service.removePodcast(feedUrl);
     pop();
@@ -161,23 +146,17 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
 
   bool isPodcastSubscribed(String? feedUrl) =>
       feedUrl == null ? false : podcasts.containsKey(feedUrl);
-
   bool podcastUpdateAvailable(String feedUrl) =>
       _service.podcastUpdateAvailable(feedUrl);
-
   int? get podcastUpdatesLength => _service.podcastUpdatesLength;
-
   void removePodcastUpdate(String feedUrl) =>
       _service.removePodcastUpdate(feedUrl);
 
   int get downloadsLength => _service.downloads.length;
-
   String? getDownload(String? url) =>
       url == null ? null : _service.downloads[url];
-
   bool feedHasDownload(String? feedUrl) =>
       feedUrl == null ? false : _service.feedHasDownloads(feedUrl);
-
   int get feedsWithDownloadsLength => _service.feedsWithDownloadsLength;
 
   Future<void> reorderPodcast({
@@ -198,16 +177,16 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   List<Audio> getAlbumAt(int index) =>
       pinnedAlbums.entries.elementAt(index).value.toList();
   bool isPinnedAlbum(String name) => pinnedAlbums.containsKey(name);
-
   void addPinnedAlbum(String name, List<Audio> audios) =>
       _service.addPinnedAlbum(name, audios);
-
   void removePinnedAlbum(String name) {
     _service.removePinnedAlbum(name);
     pop();
   }
 
-  /// Navigation inside the Library
+  //
+  // Navigation inside the Library
+  //
 
   String? get selectedPageId => _service.selectedPageId;
   void _setSelectedPageId(String pageId) => _service.setSelectedPageId(pageId);
@@ -238,8 +217,6 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   void pop() => _masterNavigatorKey.currentState?.maybePop();
 
   bool get canPop => _masterNavigatorKey.currentState?.canPop() == true;
-
-  bool isPageInLibrary(String? pageId) => _service.isPageInLibrary(pageId);
 
   @override
   void didPop(Route route, Route? previousRoute) {

@@ -127,7 +127,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
   TextStyle _fullHeightTitleTextStyle(ThemeData theme) {
     return TextStyle(
       fontWeight: largeTextWeight,
-      fontSize: 30,
+      fontSize: 26,
       color: theme.colorScheme.onSurface,
     );
   }
