@@ -259,7 +259,9 @@ class SearchModel extends SafeChangeNotifier {
       SearchType.radioName => await radioNameSearch(_searchQuery)
           .then(
             (v) => setRadioSearchResult(
-              v?.map((e) => Audio.fromStation(e)).toList(),
+              _searchQuery == null || _searchQuery!.isEmpty
+                  ? null
+                  : v?.map((e) => Audio.fromStation(e)).toList(),
             ),
           )
           .then((_) => _loading = false),

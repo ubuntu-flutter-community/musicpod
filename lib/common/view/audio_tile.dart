@@ -30,6 +30,7 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
     required this.audioPageType,
     required this.showLeading,
     this.selectedColor,
+    this.onTitleTap,
   });
 
   final String pageId;
@@ -39,6 +40,7 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
 
   final bool isPlayerPlaying;
   final void Function()? onTap;
+  final void Function()? onTitleTap;
   final void Function(String text)? onSubTitleTap;
   final void Function(Audio audio)? insertIntoQueue;
   final bool showLeading;
@@ -78,6 +80,9 @@ class _AudioTileState extends State<AudioTile> {
               ),
           };
 
+    const titleOverflow = TextOverflow.ellipsis;
+    const titleMaxLines = 1;
+
     return MouseRegion(
       key: ObjectKey(widget.audio),
       onEnter: (e) {
@@ -111,11 +116,18 @@ class _AudioTileState extends State<AudioTile> {
         },
         title: Padding(
           padding: const EdgeInsets.only(right: kYaruPagePadding),
-          child: Text(
-            widget.audio.title ?? l10n.unknown,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
+          child: widget.onTitleTap == null
+              ? Text(
+                  widget.audio.title ?? l10n.unknown,
+                  overflow: titleOverflow,
+                  maxLines: titleMaxLines,
+                )
+              : TapAbleText(
+                  onTap: widget.onTitleTap,
+                  text: widget.audio.title ?? l10n.unknown,
+                  overflow: titleOverflow,
+                  maxLines: titleMaxLines,
+                ),
         ),
         subtitle: TapAbleText(
           text: subTitle,
