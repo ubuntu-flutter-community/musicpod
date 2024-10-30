@@ -5,6 +5,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/logging.dart';
+import '../common/view/back_gesture.dart';
 import '../constants.dart';
 import 'library_service.dart';
 
@@ -202,7 +203,7 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
       await _masterNavigatorKey.currentState?.pushNamed(pageId);
     } else if (builder != null) {
       final materialPageRoute = MaterialPageRoute(
-        builder: builder,
+        builder: (context) => BackGesture(child: builder(context)),
         maintainState: maintainState,
         settings: RouteSettings(
           name: pageId,

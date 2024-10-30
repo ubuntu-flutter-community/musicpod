@@ -101,6 +101,7 @@ class _SliverRadioSearchResultsState extends State<SliverRadioSearchResults> {
       itemBuilder: (context, index) {
         final station = radioSearchResult.elementAt(index);
         return AudioTile(
+          key: ValueKey(station.uuid),
           showLeading: true,
           audioPageType: AudioPageType.radioSearch,
           isPlayerPlaying: playing,

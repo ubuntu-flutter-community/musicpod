@@ -112,6 +112,7 @@ class _SliverPodcastSearchResultsState
         }
 
         return AudioCard(
+          key: ValueKey(feedUrl),
           bottom: AudioCardBottom(
             text: podcastItem.collectionName ?? podcastItem.trackName,
           ),
