@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../common/data/audio.dart';
+import '../../common/data/podcast_genre.dart';
 import '../../common/view/country_auto_complete.dart';
 import '../../common/view/language_autocomplete.dart';
 import '../../common/view/search_input.dart';
@@ -13,6 +15,7 @@ import '../../radio/view/tag_auto_complete.dart';
 import '../search_model.dart';
 import '../search_type.dart';
 import 'audio_type_filter_button.dart';
+import 'podcast_search_input_prefix.dart';
 
 class SearchPageInput extends StatelessWidget with WatchItMixin {
   const SearchPageInput({super.key});
@@ -22,6 +25,7 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
     final searchModel = di<SearchModel>();
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
+    final audioType = watchPropertyValue((SearchModel m) => m.audioType);
     return SizedBox(
       width: kSearchBarWidth,
       height: inputHeight,
@@ -31,13 +35,19 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
         SearchType.radioLanguage => const LanguageAutoCompleteWithSuffix(),
         _ => SearchInput(
             text: searchQuery,
-            key: ValueKey(searchType.name),
+            key: ValueKey(searchType.name + searchQuery.toString()),
             hintText: context.l10n.search,
             onChanged: (v) async {
               searchModel.setSearchQuery(v);
+              if (v.isEmpty) {
+                searchModel.setPodcastGenre(PodcastGenre.all);
+              }
               await searchModel.search();
             },
             suffixIcon: const AudioTypeFilterButton(),
+            prefixIcon: audioType == AudioType.podcast
+                ? const PodcastSearchInputPrefix()
+                : null,
           ),
       },
     );

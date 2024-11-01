@@ -27,6 +27,7 @@ class LanguageAutoComplete extends StatelessWidget {
     this.fillColor,
     this.contentPadding,
     this.suffixIcon,
+    this.autofocus = false,
   });
 
   final void Function(SimpleLanguage? language)? onSelected;
@@ -43,6 +44,7 @@ class LanguageAutoComplete extends StatelessWidget {
   final Color? fillColor;
   final EdgeInsets? contentPadding;
   final Widget? suffixIcon;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +70,7 @@ class LanguageAutoComplete extends StatelessWidget {
               final hintText =
                   '${context.l10n.search}: ${context.l10n.language}';
               return TextField(
+                autofocus: autofocus,
                 maxLines: 1,
                 onTap: () {
                   textEditingController.selection = TextSelection(

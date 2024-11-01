@@ -32,6 +32,12 @@ class _PatchNotesDialogState extends State<PatchNotesDialog> {
         future: _markdown,
         builder: (context, snapshot) => snapshot.hasData
             ? MarkdownBody(
+                onTapLink: (text, href, title) {
+                  if (href == null) return;
+                  final uri = Uri.tryParse(href);
+                  if (uri == null) return;
+                  launchUrl(uri);
+                },
                 data: snapshot.data!,
               )
             : const Center(

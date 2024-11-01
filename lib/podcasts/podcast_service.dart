@@ -5,6 +5,7 @@ import 'package:podcast_search/podcast_search.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/podcast_genre.dart';
+import '../common/logging.dart';
 import '../common/view/audio_filter.dart';
 import '../common/view/languages.dart';
 import '../library/library_service.dart';
@@ -70,7 +71,8 @@ class PodcastService {
           limit: limit,
         );
       }
-    } catch (_) {
+    } catch (e) {
+      printMessageInDebugMode(e);
       return _searchResult;
     }
 
