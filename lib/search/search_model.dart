@@ -117,10 +117,9 @@ class SearchModel extends SafeChangeNotifier {
   }
 
   List<PodcastGenre> getPodcastGenres(bool usePodcastIndex) {
-    final notSelected =
-        PodcastGenre.values.where((g) => g != podcastGenre).toList();
+    PodcastGenre.values.where((g) => g != podcastGenre).toList();
 
-    final list = [podcastGenre, ...notSelected];
+    const list = PodcastGenre.values;
 
     return usePodcastIndex
         ? list.where((e) => !e.name.contains('XXXITunesOnly')).toList()
