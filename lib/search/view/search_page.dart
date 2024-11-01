@@ -57,7 +57,8 @@ class SearchPage extends StatelessWidget with WatchItMixin {
         builder: (context, constraints) {
           return NotificationListener<UserScrollNotification>(
             onNotification: (notification) {
-              if (notification.direction == ScrollDirection.reverse &&
+              if (notification.metrics.axisDirection == AxisDirection.down &&
+                  notification.direction == ScrollDirection.reverse &&
                   audioType != AudioType.local) {
                 di<SearchModel>()
                   ..incrementLimit(8)
@@ -72,9 +73,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
                       getAdaptiveHorizontalPadding(constraints: constraints)
                           .copyWith(
                     bottom: filterPanelPadding.bottom,
-                    left: filterPanelPadding.left,
                     top: filterPanelPadding.top,
-                    right: filterPanelPadding.right,
                   ),
                   onStretchTrigger: () async {
                     WidgetsBinding.instance

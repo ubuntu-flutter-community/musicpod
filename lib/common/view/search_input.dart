@@ -12,6 +12,7 @@ class SearchInput extends StatefulWidget {
     this.onChanged,
     this.hintText,
     this.suffixIcon,
+    this.prefixIcon,
     this.autoFocus = true,
   });
   final String? text;
@@ -20,6 +21,7 @@ class SearchInput extends StatefulWidget {
   final void Function(String)? onChanged;
   final String? hintText;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
   final bool autoFocus;
 
   @override
@@ -73,11 +75,13 @@ class _SearchInputState extends State<SearchInput> {
                 theme: theme,
                 hintText: widget.hintText,
                 suffixIcon: widget.suffixIcon,
+                prefixIcon: widget.prefixIcon,
               )
             : createMaterialDecoration(
                 colorScheme: theme.colorScheme,
                 hintText: widget.hintText,
                 suffixIcon: widget.suffixIcon,
+                prefixIcon: widget.prefixIcon,
               ),
       ),
     );

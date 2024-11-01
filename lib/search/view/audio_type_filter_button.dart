@@ -31,7 +31,7 @@ class AudioTypeFilterButton extends StatelessWidget with WatchItMixin {
             onSelected: (v) async {
               searchModel
                 ..setAudioType(v)
-                ..search();
+                ..search(clear: true);
             },
             itemBuilder: (context) => AudioType.values
                 .map(
