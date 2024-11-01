@@ -196,6 +196,8 @@
     "contributors": "Collaboratori",
     "version": "Versione",
     "theme": "Tema",
+    "useMoreAnimationsTitle": "Usa più animazioni",
+    "useMoreAnimationsDescription": "Ciò aumenterà leggermente l'uso della CPU, che potrebbe essere non ottimale con hardware non aggiornato.",
     "license": "Licenza",
     "dependencies": "Dipendenze",
     "light": "Chiaro",
