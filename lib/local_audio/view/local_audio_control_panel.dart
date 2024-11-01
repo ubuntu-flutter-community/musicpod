@@ -13,36 +13,32 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
+    final colorScheme = context.colorScheme;
     final index = watchPropertyValue((LocalAudioModel m) => m.localAudioindex);
 
     return Align(
       alignment: Alignment.center,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: YaruChoiceChipBar(
-            chipBackgroundColor: chipColor(theme),
-            selectedChipBackgroundColor: chipSelectionColor(theme, false),
-            borderColor: chipBorder(theme, false),
-            yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-            selectedFirst: false,
-            clearOnSelect: false,
-            labels: LocalAudioView.values
-                .map(
-                  (e) => Text(
-                    e.localize(context.l10n),
-                    style: chipTextStyle(theme),
-                  ),
-                )
-                .toList(),
-            isSelected: LocalAudioView.values
-                .map((e) => e == LocalAudioView.values[index])
-                .toList(),
-            onSelected: (index) =>
-                di<LocalAudioModel>().localAudioindex = index,
-          ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: YaruChoiceChipBar(
+          yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.stack,
+          chipBackgroundColor: chipColor(colorScheme),
+          selectedChipBackgroundColor: chipSelectionColor(colorScheme, false),
+          borderColor: chipBorder(false),
+          selectedFirst: false,
+          clearOnSelect: false,
+          labels: LocalAudioView.values
+              .map(
+                (e) => Text(
+                  e.localize(context.l10n),
+                  style: chipTextStyle(colorScheme),
+                ),
+              )
+              .toList(),
+          isSelected: LocalAudioView.values
+              .map((e) => e == LocalAudioView.values[index])
+              .toList(),
+          onSelected: (index) => di<LocalAudioModel>().localAudioindex = index,
         ),
       ),
     );

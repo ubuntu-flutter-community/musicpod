@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../constants.dart';
-import '../../extensions/theme_data_x.dart';
 import 'icons.dart';
 
 ThemeData? yaruDarkWithTweaks(YaruThemeData yaru) {
@@ -202,21 +201,21 @@ InputDecoration createYaruDecoration({
   );
 }
 
-Color? chipColor(ThemeData theme) {
+Color? chipColor(ColorScheme colorScheme) {
   return yaruStyled
-      ? theme.colorScheme.outline.withOpacity(theme.isLight ? 1 : 0.4)
+      ? colorScheme.surface.scale(lightness: colorScheme.isDark ? 0.03 : -0.1)
       : null;
 }
 
-Color? chipBorder(ThemeData theme, bool loading) {
+Color? chipBorder(bool loading) {
   return yaruStyled ? (loading ? null : Colors.transparent) : null;
 }
 
-TextStyle chipTextStyle(ThemeData theme) =>
-    TextStyle(color: theme.colorScheme.onSurface);
+TextStyle chipTextStyle(ColorScheme colorScheme) =>
+    TextStyle(color: colorScheme.onSurface);
 
-Color? chipSelectionColor(ThemeData theme, bool loading) {
-  return yaruStyled ? (loading ? theme.colorScheme.outline : null) : null;
+Color? chipSelectionColor(ColorScheme colorScheme, bool loading) {
+  return yaruStyled ? (loading ? colorScheme.outline : null) : null;
 }
 
 double get iconSize => yaruStyled

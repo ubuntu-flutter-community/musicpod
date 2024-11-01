@@ -6,7 +6,6 @@ import '../../common/view/country_auto_complete.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/language_autocomplete.dart';
 import '../../common/view/theme.dart';
-import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';
@@ -57,7 +56,6 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final libraryModel = di<LibraryModel>();
-    final theme = context.theme;
     final searchModel = di<SearchModel>();
     watchPropertyValue((LibraryModel m) => m.favLanguagesLength);
     watchPropertyValue((LibraryModel m) => m.favCountriesLength);
@@ -79,36 +77,14 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
 
     final language = watchPropertyValue((SearchModel m) => m.language);
 
-    final fillColor = theme.chipTheme.selectedColor;
-
-    const width = 150.0;
+    const width = 250.0;
     final height = chipHeight;
-    var outlineInputBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(100),
-      borderSide: yaruStyled
-          ? BorderSide.none
-          : BorderSide(
-              color: theme.colorScheme.outline,
-              width: 1.3,
-              strokeAlign: 1,
-            ),
-    );
-    final style = theme.textTheme.bodyMedium?.copyWith(
-      fontWeight: FontWeight.w500,
-    );
 
     return usePodcastIndex
         ? LanguageAutoComplete(
             autofocus: true,
             contentPadding: countryPillPadding,
-            fillColor: language != null
-                ? fillColor
-                : yaruStyled
-                    ? theme.dividerColor
-                    : null,
             filled: language != null,
-            border: outlineInputBorder,
-            style: style,
             isDense: true,
             width: width,
             height: height,
@@ -134,10 +110,7 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
         : CountryAutoComplete(
             autofocus: true,
             contentPadding: countryPillPadding,
-            fillColor: fillColor,
             filled: true,
-            border: outlineInputBorder,
-            style: style,
             isDense: true,
             width: width,
             height: height,
