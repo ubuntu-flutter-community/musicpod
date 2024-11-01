@@ -14,7 +14,7 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
+    final colorScheme = context.colorScheme;
     final searchModel = di<SearchModel>();
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
     final searchTypes = watchPropertyValue((SearchModel m) => m.searchTypes);
@@ -26,10 +26,9 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: YaruChoiceChipBar(
         yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.stack,
-        chipBackgroundColor: chipColor(theme),
-        selectedChipBackgroundColor: chipSelectionColor(theme, false),
-        borderColor: chipBorder(theme, false),
-        chipHeight: chipHeight,
+        chipBackgroundColor: chipColor(colorScheme),
+        selectedChipBackgroundColor: chipSelectionColor(colorScheme, false),
+        borderColor: chipBorder(false),
         clearOnSelect: false,
         selectedFirst: false,
         onSelected: (i) {
@@ -45,7 +44,7 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
                   localSearchResult: localSearchResult,
                   searchQuery: searchQuery,
                 ),
-                style: chipTextStyle(theme),
+                style: chipTextStyle(colorScheme),
               ),
             )
             .toList(),
