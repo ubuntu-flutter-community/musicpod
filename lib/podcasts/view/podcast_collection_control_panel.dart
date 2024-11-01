@@ -14,7 +14,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
+    final colorScheme = context.colorScheme;
     final model = di<PodcastModel>();
 
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
@@ -27,20 +27,20 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
         watchPropertyValue((PodcastModel m) => m.downloadsOnly);
 
     return YaruChoiceChipBar(
-      chipBackgroundColor: chipColor(theme),
-      selectedChipBackgroundColor: chipSelectionColor(theme, loading),
-      borderColor: chipBorder(theme, loading),
+      chipBackgroundColor: chipColor(colorScheme),
+      selectedChipBackgroundColor: chipSelectionColor(colorScheme, loading),
+      borderColor: chipBorder(loading),
       yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
       clearOnSelect: false,
       selectedFirst: false,
       labels: [
         Text(
           context.l10n.newEpisodes,
-          style: chipTextStyle(theme),
+          style: chipTextStyle(colorScheme),
         ),
         Text(
           context.l10n.downloadsOnly,
-          style: chipTextStyle(theme),
+          style: chipTextStyle(colorScheme),
         ),
       ],
       isSelected: [
