@@ -117,10 +117,9 @@ class SearchModel extends SafeChangeNotifier {
   }
 
   List<PodcastGenre> getPodcastGenres(bool usePodcastIndex) {
-    final notSelected =
-        PodcastGenre.values.where((g) => g != podcastGenre).toList();
+    PodcastGenre.values.where((g) => g != podcastGenre).toList();
 
-    final list = [podcastGenre, ...notSelected];
+    const list = PodcastGenre.values;
 
     return usePodcastIndex
         ? list.where((e) => !e.name.contains('XXXITunesOnly')).toList()
@@ -259,7 +258,9 @@ class SearchModel extends SafeChangeNotifier {
       SearchType.radioName => await radioNameSearch(_searchQuery)
           .then(
             (v) => setRadioSearchResult(
-              v?.map((e) => Audio.fromStation(e)).toList(),
+              _searchQuery == null || _searchQuery!.isEmpty
+                  ? null
+                  : v?.map((e) => Audio.fromStation(e)).toList(),
             ),
           )
           .then((_) => _loading = false),

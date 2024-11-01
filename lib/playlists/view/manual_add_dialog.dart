@@ -224,7 +224,7 @@ class _PlaylistContentState extends State<PlaylistContent> {
                     di<LocalAudioModel>().localAudioindex =
                         LocalAudioView.playlists.index;
                     widget.libraryModel
-                      ..pushNamed(pageId: kLocalAudioPageId)
+                      ..push(pageId: kLocalAudioPageId)
                       ..updatePlaylistName(
                         widget.playlistName!,
                         _controller.text,
@@ -253,7 +253,7 @@ class _PlaylistContentState extends State<PlaylistContent> {
                               const Duration(milliseconds: 300),
                             );
                             await widget.libraryModel
-                                .pushNamed(pageId: _controller.text);
+                                .push(pageId: _controller.text);
                           });
                         },
                   child: Text(

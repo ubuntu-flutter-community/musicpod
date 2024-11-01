@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -24,7 +23,6 @@ class PlayerModel extends SafeChangeNotifier {
   VideoController get controller => _playerService.controller;
 
   StreamSubscription<bool>? _propertiesChangedSub;
-  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   Stream<String?> get onlineArtError => _onlineArtService.error;
 
@@ -154,7 +152,6 @@ class PlayerModel extends SafeChangeNotifier {
   @override
   Future<void> dispose() async {
     await _propertiesChangedSub?.cancel();
-    await _connectivitySubscription?.cancel();
     super.dispose();
   }
 }

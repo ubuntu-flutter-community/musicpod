@@ -63,7 +63,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
             ),
             ImportantButton(
               onPressed: () {
-                di<LibraryModel>().pushNamed(pageId: kSearchPageId);
+                di<LibraryModel>().push(pageId: kSearchPageId);
                 di<SearchModel>()
                   ..setAudioType(AudioType.podcast)
                   ..setSearchQuery(null)
@@ -159,8 +159,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                                 podcast.key,
                               ),
                             ),
-                        onTap: () =>
-                            libraryModel.pushNamed(pageId: podcast.key),
+                        onTap: () => libraryModel.push(pageId: podcast.key),
                       );
                     },
                   ),

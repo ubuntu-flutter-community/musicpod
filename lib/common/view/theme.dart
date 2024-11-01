@@ -119,6 +119,7 @@ InputDecoration createMaterialDecoration({
   EdgeInsets? contentPadding,
   String? hintText,
   Widget? suffixIcon,
+  Widget? prefixIcon,
 }) {
   final outlineInputBorder = border ??
       OutlineInputBorder(
@@ -126,6 +127,7 @@ InputDecoration createMaterialDecoration({
         borderSide: BorderSide(width: 1, color: colorScheme.outline),
       );
   return InputDecoration(
+    prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
     suffixIconConstraints: const BoxConstraints(
       maxWidth: 200,
@@ -162,6 +164,7 @@ InputDecoration createYaruDecoration({
   String? hintText,
   OutlineInputBorder? border,
   Widget? suffixIcon,
+  Widget? prefixIcon,
 }) {
   final fill = theme.inputDecorationTheme.fillColor;
 
@@ -172,6 +175,7 @@ InputDecoration createYaruDecoration({
       );
 
   return InputDecoration(
+    prefixIcon: prefixIcon,
     suffixIcon: Center(
       widthFactor: 1,
       child: suffixIcon,

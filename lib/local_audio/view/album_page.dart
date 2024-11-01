@@ -58,6 +58,7 @@ class AlbumPage extends StatelessWidget {
       pageTitle: album.firstWhereOrNull((e) => e.album != null)?.album,
       pageSubTitle: album.firstWhereOrNull((e) => e.artist != null)?.artist,
       onPageSubTitleTab: onArtistTap,
+      onPageLabelTab: onArtistTap,
       controlPanel: AlbumPageControlButton(album: album, id: id),
     );
   }

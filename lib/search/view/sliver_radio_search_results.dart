@@ -9,9 +9,11 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
 import '../../common/view/snackbars.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_model.dart';
 import '../../radio/view/radio_connect_snackbar.dart';
+import '../../radio/view/station_page.dart';
 import '../search_model.dart';
 
 class SliverRadioSearchResults extends StatefulWidget
@@ -69,7 +71,9 @@ class _SliverRadioSearchResultsState extends State<SliverRadioSearchResults> {
     }
 
     final radioSearchResult =
-        watchPropertyValue((SearchModel m) => m.radioSearchResult);
+        watchPropertyValue((SearchModel m) => m.radioSearchResult)
+            ?.where((e) => e.uuid != null);
+
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
     final loading = watchPropertyValue((SearchModel m) => m.loading);
@@ -97,20 +101,23 @@ class _SliverRadioSearchResultsState extends State<SliverRadioSearchResults> {
       itemBuilder: (context, index) {
         final station = radioSearchResult.elementAt(index);
         return AudioTile(
+          key: ValueKey(station.uuid),
           showLeading: true,
           audioPageType: AudioPageType.radioSearch,
           isPlayerPlaying: playing,
           selected: currentAudio == station,
           pageId: station.uuid!,
           audio: station,
-          onTap: station.uuid == null
-              ? null
-              : () {
-                  di<PlayerModel>().startPlaylist(
-                    audios: [station],
-                    listName: station.uuid!,
-                  ).then((_) => di<RadioModel>().clickStation(station));
-                },
+          onTitleTap: () => di<LibraryModel>().push(
+            pageId: station.uuid!,
+            builder: (context) => StationPage(station: station),
+          ),
+          onTap: () {
+            di<PlayerModel>().startPlaylist(
+              audios: [station],
+              listName: station.uuid!,
+            ).then((_) => di<RadioModel>().clickStation(station));
+          },
         );
       },
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-void printMessageInDebugMode(String message) {
+void printMessageInDebugMode(Object? object) {
   if (kDebugMode) {
-    print(message);
+    print(object);
   }
 }
