@@ -106,6 +106,7 @@ class StationPage extends StatelessWidget with WatchItMixin {
                   emptyMessage: const SizedBox.shrink(),
                   emptyIcon: const SizedBox.shrink(),
                   padding: radioHistoryListPadding,
+                  allowNavigation: false,
                 ),
               ),
             ],

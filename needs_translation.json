@@ -573,21 +573,6 @@
     "regionZimbabwe"
   ],
 
-  "es": [
-    "downloadsDirectory",
-    "downloadsDirectoryDescription",
-    "downloadsChangeWarning",
-    "disconnectedFrom",
-    "useMoreAnimationsTitle",
-    "useMoreAnimationsDescription",
-    "onlineArtError",
-    "clicks",
-    "exposeOnlineHeadline",
-    "exposeToDiscordTitle",
-    "exposeToDiscordSubTitle",
-    "featureDisabledOnPlatform"
-  ],
-
   "fr": [
     "local",
     "downloadsDirectory",
