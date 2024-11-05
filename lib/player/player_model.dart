@@ -123,6 +123,9 @@ class PlayerModel extends SafeChangeNotifier {
 
   int getRadioHistoryLength({String? filter}) =>
       filteredRadioHistory(filter: filter).length;
+  MpvMetaData? getMetadata(String? icyTitle) =>
+      icyTitle == null ? null : _playerService.radioHistory[icyTitle];
+
   Iterable<MapEntry<String, MpvMetaData>> filteredRadioHistory({
     required String? filter,
   }) {
