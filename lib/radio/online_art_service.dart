@@ -14,10 +14,14 @@ const _kCoverArtArchiveAddress = 'https://coverartarchive.org/release/';
 class OnlineArtService {
   OnlineArtService({required Dio dio}) : _dio = dio;
   final Dio _dio;
+  final _propertiesChangedController = StreamController<bool>.broadcast();
+  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
+  final _errorController = StreamController<String?>.broadcast();
+  Stream<String?> get error => _errorController.stream;
 
   Future<String?> fetchAlbumArt(String icyTitle) async {
     _errorController.add(null);
-    return get(icyTitle) ??
+    final albumArtUrl = get(icyTitle) ??
         put(
           key: icyTitle,
           url: await compute(
@@ -29,23 +33,24 @@ class OnlineArtService {
             return null;
           }),
         );
+    _propertiesChangedController.add(true);
+
+    return albumArtUrl;
   }
 
-  final _value = <String, String?>{};
+  final _store = <String, String?>{};
 
   String? put({required String key, String? url}) {
-    return _value.containsKey(key)
-        ? _value.update(key, (value) => url)
-        : _value.putIfAbsent(key, () => url);
+    return _store.containsKey(key)
+        ? _store.update(key, (value) => url)
+        : _store.putIfAbsent(key, () => url);
   }
 
-  String? get(String? icyTitle) => icyTitle == null ? null : _value[icyTitle];
-
-  final _errorController = StreamController<String?>.broadcast();
-  Stream<String?> get error => _errorController.stream;
+  String? get(String? icyTitle) => icyTitle == null ? null : _store[icyTitle];
 
   Future<void> dispose() async {
     await _errorController.close();
+    await _propertiesChangedController.close();
   }
 }
 

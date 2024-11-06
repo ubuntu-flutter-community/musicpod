@@ -81,13 +81,13 @@ class PlayerService {
     }
     if (validHistoryElement) {
       _addRadioHistoryElement(
-        icyTitle: mpvMetaData!.icyTitle.everyWordCapitalized,
+        icyTitle: mpvMetaData!.icyTitle,
         mpvMetaData: mpvMetaData!.copyWith(
           icyName: audio?.title?.trim() ?? _mpvMetaData?.icyName ?? '',
         ),
       );
 
-      await _processParsedIcyTitle(mpvMetaData!.icyTitle.everyWordCapitalized);
+      await _processParsedIcyTitle(mpvMetaData!.icyTitle);
     }
     _propertiesChangedController.add(true);
   }

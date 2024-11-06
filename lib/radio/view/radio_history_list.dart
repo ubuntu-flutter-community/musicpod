@@ -53,12 +53,12 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin {
                   .elementAt(reversedIndex);
               return simpleList
                   ? RadioHistoryTile.simple(
-                      entry: e,
+                      icyTitle: e.key,
                       selected: current?.icyTitle != null &&
                           current?.icyTitle == e.value.icyTitle,
                     )
                   : RadioHistoryTile(
-                      entry: e,
+                      icyTitle: e.key,
                       selected: current?.icyTitle != null &&
                           current?.icyTitle == e.value.icyTitle,
                     );
@@ -77,12 +77,14 @@ class SliverRadioHistoryList extends StatelessWidget with WatchItMixin {
     this.emptyMessage,
     this.padding,
     this.emptyIcon,
+    required this.allowNavigation,
   });
 
   final String? filter;
   final Widget? emptyMessage;
   final Widget? emptyIcon;
   final EdgeInsetsGeometry? padding;
+  final bool allowNavigation;
 
   @override
   Widget build(BuildContext context) {
@@ -109,9 +111,10 @@ class SliverRadioHistoryList extends StatelessWidget with WatchItMixin {
               .filteredRadioHistory(filter: filter)
               .elementAt(reversedIndex);
           return RadioHistoryTile(
-            entry: e,
+            icyTitle: e.key,
             selected: current?.icyTitle != null &&
                 current?.icyTitle == e.value.icyTitle,
+            allowNavigation: allowNavigation,
           );
         },
         childCount: length,
