@@ -771,6 +771,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.9.0"
+  lastfm:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: f959b482e42d82a509c215ef2c0ad92ab36d8289
+      resolved-ref: f959b482e42d82a509c215ef2c0ad92ab36d8289
+      url: "https://github.com/CosmicRaptor/lastfm/"
+    source: git
+    version: "0.0.5"
   leak_tracker:
     dependency: transitive
     description:
