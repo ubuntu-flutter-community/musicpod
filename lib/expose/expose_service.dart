@@ -8,8 +8,9 @@ class ExposeService {
     required FlutterDiscordRPC? discordRPC,
     required LastFMAuthorized? lastFm,
     required bool lastFmEnabled,
-  })
-      : _discordRPC = discordRPC, _lastFm = lastFm, _lastFmEnabled = lastFmEnabled;
+  })  : _discordRPC = discordRPC,
+        _lastFm = lastFm,
+        _lastFmEnabled = lastFmEnabled;
 
   final FlutterDiscordRPC? _discordRPC;
   final LastFMAuthorized? _lastFm;
@@ -31,7 +32,7 @@ class ExposeService {
       additionalInfo: additionalInfo,
       imageUrl: imageUrl,
     );
-    if(_lastFmEnabled){
+    if (_lastFmEnabled) {
       await _exposeTitleToLastfm(
         title: title,
         artist: artist,
@@ -70,7 +71,7 @@ class ExposeService {
   Future<void> _exposeTitleToLastfm({
     required String title,
     required String artist,
-  }) async{
+  }) async {
     try {
       await _lastFm?.scrobble(
         track: title,

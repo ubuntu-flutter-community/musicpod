@@ -108,44 +108,42 @@ void registerServicesAndViewModels({
       ),
       dispose: (s) => s.dispose(),
     )
-    ..registerFactory<LastFM>(
-            (){
-          final apiKey = sharedPreferences.getString(kLastFmApiKey) ?? '';
-          final apiSecret = sharedPreferences.getString(klastFmSecret) ?? '';
-          final sessionKey = sharedPreferences.getString(kLastFmSessionKey);
-          final username = sharedPreferences.getString(kLastFmUsername);
+    ..registerFactory<LastFM>(() {
+      final apiKey = sharedPreferences.getString(kLastFmApiKey) ?? '';
+      final apiSecret = sharedPreferences.getString(klastFmSecret) ?? '';
+      final sessionKey = sharedPreferences.getString(kLastFmSessionKey);
+      final username = sharedPreferences.getString(kLastFmUsername);
 
-          if (sessionKey != null && username != null) {
-            return LastFMAuthorized(
-              apiKey, secret: apiSecret,
-              sessionKey: sessionKey,
-              username: username,
-            );
-          } else {
-            return LastFMUnauthorized(apiKey, apiSecret);
-          }
-        }
-    )
+      if (sessionKey != null && username != null) {
+        return LastFMAuthorized(
+          apiKey,
+          secret: apiSecret,
+          sessionKey: sessionKey,
+          username: username,
+        );
+      } else {
+        return LastFMUnauthorized(apiKey, apiSecret);
+      }
+    })
     ..registerLazySingleton<ExposeService>(
-      (){
-          final sessionKey = sharedPreferences.getString(kLastFmSessionKey);
-          final lastFMEnabled =
-          sharedPreferences.getBool(kEnableLastFmScrobbling) ?? false;
-          if(sessionKey != null){
-            return ExposeService(
-              discordRPC: allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
-              lastFm: di<LastFM>() as LastFMAuthorized,
-              lastFmEnabled: lastFMEnabled,
-            );
-          }
-          else {
-            return ExposeService(
-              discordRPC: allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
-              lastFm: null,
-              lastFmEnabled: lastFMEnabled,
-            );
-          }
-        },
+      () {
+        final sessionKey = sharedPreferences.getString(kLastFmSessionKey);
+        final lastFMEnabled =
+            sharedPreferences.getBool(kEnableLastFmScrobbling) ?? false;
+        if (sessionKey != null) {
+          return ExposeService(
+            discordRPC: allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
+            lastFm: di<LastFM>() as LastFMAuthorized,
+            lastFmEnabled: lastFMEnabled,
+          );
+        } else {
+          return ExposeService(
+            discordRPC: allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
+            lastFm: null,
+            lastFmEnabled: lastFMEnabled,
+          );
+        }
+      },
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<PlayerService>(

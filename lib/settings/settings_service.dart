@@ -45,35 +45,39 @@ class SettingsService {
   String? get lastFmUsername => _preferences.getString(kLastFmUsername);
   void setEnableLastFmScrobbling(bool value) {
     _preferences.setBool(kEnableLastFmScrobbling, value).then(
-          (saved) {
+      (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
     );
   }
+
   void setLastFmApiKey(String value) {
     _preferences.setString(kLastFmApiKey, value).then(
-          (saved) {
+      (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
     );
   }
+
   void setLastFmSecret(String value) {
     _preferences.setString(klastFmSecret, value).then(
-          (saved) {
+      (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
     );
   }
+
   void setLastFmSessionKey(String value) {
     _preferences.setString(kLastFmSessionKey, value).then(
-          (saved) {
+      (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
     );
   }
+
   void setLastFmUsername(String value) {
     _preferences.setString(kLastFmUsername, value).then(
-          (saved) {
+      (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
     );
