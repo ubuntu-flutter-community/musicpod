@@ -528,7 +528,7 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
     final TextEditingController lastFmSecretController =
         TextEditingController(text: lastFmSecret);
 
-    final _formkey = GlobalKey<FormState>();
+    final formkey = GlobalKey<FormState>();
 
     return YaruSection(
       headline: Text(l10n.exposeOnlineHeadline),
@@ -591,7 +591,7 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
                 Text(l10n.exposeToLastfmSubTitle),
                 if (lastFmEnabled)
                   Form(
-                    key: _formkey,
+                    key: formkey,
                     child: Column(
                       children: [
                         Padding(
@@ -608,7 +608,7 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
                               return null;
                             },
                             onFieldSubmitted: (value) async {
-                              if (_formkey.currentState!.validate()) {
+                              if (formkey.currentState!.validate()) {
                                 di<SettingsModel>().setLastFmApiKey(value);
                               }
                             },
@@ -628,7 +628,7 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
                               return null;
                             },
                             onFieldSubmitted: (value) async {
-                              if (_formkey.currentState!.validate()) {
+                              if (formkey.currentState!.validate()) {
                                 di<SettingsModel>().setLastFmSecret(value);
                               }
                             },
@@ -655,7 +655,7 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
                             lastFmSecretController.text.isNotEmpty) {
                           final lastfmua = di<LastFM>() as LastFMUnauthorized;
                           launchUrl(
-                              Uri.parse(await lastfmua.authorizeDesktop()));
+                              Uri.parse(await lastfmua.authorizeDesktop()),);
                           await Future.delayed(const Duration(seconds: 20));
                           final lastfm =
                               await lastfmua.finishAuthorizeDesktop();
@@ -667,10 +667,10 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
                           di.registerFactory<LastFM>(() => lastfm);
                         }
                       },
-                      child: Text(l10n.save)),
+                      child: Text(l10n.save),),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
