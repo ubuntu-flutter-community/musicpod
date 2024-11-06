@@ -63,6 +63,18 @@ class SettingsModel extends SafeChangeNotifier {
   bool get enableDiscordRPC => _service.enableDiscordRPC;
   void setEnableDiscordRPC(bool value) => _service.setEnableDiscordRPC(value);
 
+  bool get enableLastFmScrobbling => _service.enableLastFmScrobbling;
+  String? get lastFmApiKey => _service.lastFmApiKey;
+  String? get lastFmSecret => _service.lastFmSecret;
+  String? get lastFmSessionKey => _service.lastFmSessionKey;
+  String? get lastFmUsername => _service.lastFmUsername;
+  void setEnableLastFmScrobbling(bool value) =>
+      _service.setEnableLastFmScrobbling(value);
+  void setLastFmApiKey(String value) => _service.setLastFmApiKey(value);
+  void setLastFmSecret(String value) => _service.setLastFmSecret(value);
+  void setLastFmSessionKey(String value) => _service.setLastFmSessionKey(value);
+  void setLastFmUsername(String value) => _service.setLastFmUsername(value);
+
   bool get useMoreAnimations => _service.useMoreAnimations;
   void setUseMoreAnimations(bool value) => _service.setUseMoreAnimations(value);
 

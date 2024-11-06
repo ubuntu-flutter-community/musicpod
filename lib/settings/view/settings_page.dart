@@ -1,5 +1,7 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:lastfm/lastfm.dart';
 import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
@@ -97,7 +99,7 @@ class _ThemeSection extends StatelessWidget with WatchItMixin {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child:
-                              Text(ThemeMode.values[i].localize(context.l10n)),
+                          Text(ThemeMode.values[i].localize(context.l10n)),
                         ),
                       ],
                     ),
@@ -111,7 +113,7 @@ class _ThemeSection extends StatelessWidget with WatchItMixin {
             trailing: CommonSwitch(
               onChanged: di<SettingsModel>().setUseMoreAnimations,
               value:
-                  watchPropertyValue((SettingsModel m) => m.useMoreAnimations),
+              watchPropertyValue((SettingsModel m) => m.useMoreAnimations),
             ),
           ),
         ],
@@ -132,7 +134,7 @@ class _CloseActionSection extends StatelessWidget with WatchItMixin {
     final model = di<SettingsModel>();
 
     final closeBtnAction =
-        watchPropertyValue((SettingsModel m) => m.closeBtnActionIndex);
+    watchPropertyValue((SettingsModel m) => m.closeBtnActionIndex);
     return YaruSection(
       margin: const EdgeInsets.only(
         left: kYaruPagePadding,
@@ -157,7 +159,7 @@ class _CloseActionSection extends StatelessWidget with WatchItMixin {
                     PopupMenuItem(
                       value: CloseBtnAction.values[i],
                       child:
-                          Text(CloseBtnAction.values[i].localize(context.l10n)),
+                      Text(CloseBtnAction.values[i].localize(context.l10n)),
                     ),
                 ];
               },
@@ -204,11 +206,11 @@ class _PodcastSectionState extends State<_PodcastSection> {
     final l10n = context.l10n;
     final model = di<SettingsModel>();
     final usePodcastIndex =
-        watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
+    watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
     final podcastIndexApiKey =
-        watchPropertyValue((SettingsModel m) => m.podcastIndexApiKey);
+    watchPropertyValue((SettingsModel m) => m.podcastIndexApiKey);
     final podcastIndexApiSecret =
-        watchPropertyValue((SettingsModel m) => m.podcastIndexApiSecret);
+    watchPropertyValue((SettingsModel m) => m.podcastIndexApiSecret);
 
     return YaruSection(
       margin: const EdgeInsets.all(kYaruPagePadding),
@@ -355,15 +357,15 @@ class _LocalAudioSection extends StatelessWidget with WatchItMixin {
     final settingsModel = di<SettingsModel>();
     final localAudioModel = di<LocalAudioModel>();
     final directory =
-        watchPropertyValue((SettingsModel m) => m.directory ?? '');
+    watchPropertyValue((SettingsModel m) => m.directory ?? '');
 
     Future<void> onDirectorySelected(String directoryPath) async {
       settingsModel.setDirectory(directoryPath).then(
             (_) async => localAudioModel.init(
-              forceInit: true,
-              directory: directoryPath,
-            ),
-          );
+          forceInit: true,
+          directory: directoryPath,
+        ),
+      );
     }
 
     return YaruSection(
@@ -436,44 +438,44 @@ class _AboutTileState extends State<_AboutTile> {
     final theme = context.theme;
     final appModel = di<AppModel>();
     final updateAvailable =
-        watchPropertyValue((AppModel m) => m.updateAvailable);
+    watchPropertyValue((AppModel m) => m.updateAvailable);
     final onlineVersion = watchPropertyValue((AppModel m) => m.onlineVersion);
     final currentVersion = watchPropertyValue((AppModel m) => m.version);
 
     return YaruTile(
       title: !di<ConnectivityModel>().isOnline == true ||
-              !appModel.allowManualUpdate
+          !appModel.allowManualUpdate
           ? Text(di<AppModel>().version ?? '')
           : updateAvailable == null
-              ? Center(
-                  child: SizedBox.square(
-                    dimension: yaruStyled ? kYaruTitleBarItemHeight : 40,
-                    child: const Progress(
-                      padding: EdgeInsets.all(10),
-                    ),
-                  ),
-                )
-              : TapAbleText(
-                  text: updateAvailable == true
-                      ? '${context.l10n.updateAvailable}: $onlineVersion'
-                      : currentVersion ?? context.l10n.unknown,
-                  style: updateAvailable == true
-                      ? TextStyle(
-                          color: context.theme.colorScheme.success
-                              .scale(lightness: theme.isLight ? 0 : 0.3),
-                        )
-                      : null,
-                  onTap: () => launchUrl(
-                    Uri.parse(
-                      p.join(
-                        kRepoUrl,
-                        'releases',
-                        'tag',
-                        onlineVersion,
-                      ),
-                    ),
-                  ),
-                ),
+          ? Center(
+        child: SizedBox.square(
+          dimension: yaruStyled ? kYaruTitleBarItemHeight : 40,
+          child: const Progress(
+            padding: EdgeInsets.all(10),
+          ),
+        ),
+      )
+          : TapAbleText(
+        text: updateAvailable == true
+            ? '${context.l10n.updateAvailable}: $onlineVersion'
+            : currentVersion ?? context.l10n.unknown,
+        style: updateAvailable == true
+            ? TextStyle(
+          color: context.theme.colorScheme.success
+              .scale(lightness: theme.isLight ? 0 : 0.3),
+        )
+            : null,
+        onTap: () => launchUrl(
+          Uri.parse(
+            p.join(
+              kRepoUrl,
+              'releases',
+              'tag',
+              onlineVersion,
+            ),
+          ),
+        ),
+      ),
       trailing: OutlinedButton(
         onPressed: () => settingsNavigatorKey.currentState?.pushNamed('/about'),
         child: Text(context.l10n.contributors),
@@ -512,6 +514,23 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
         ? watchPropertyValue((SettingsModel m) => m.enableDiscordRPC)
         : false;
 
+    final lastFmEnabled =
+    watchPropertyValue((SettingsModel m) => m.enableLastFmScrobbling);
+
+    final lastFmApiKey =
+    watchPropertyValue((SettingsModel m) => m.lastFmApiKey);
+
+    final lastFmSecret =
+    watchPropertyValue((SettingsModel m) => m.lastFmSecret);
+
+    final TextEditingController lastFmApiKeyController =
+    TextEditingController(text: lastFmApiKey);
+
+    final TextEditingController lastFmSecretController =
+    TextEditingController(text: lastFmSecret);
+
+    final _formkey = GlobalKey<FormState>();
+
     return YaruSection(
       headline: Text(l10n.exposeOnlineHeadline),
       margin: const EdgeInsets.only(
@@ -527,12 +546,12 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
                 children: [
                   allowDiscordRPC
                       ? const Icon(
-                          TablerIcons.brand_discord_filled,
-                        )
+                    TablerIcons.brand_discord_filled,
+                  )
                       : Icon(
-                          TablerIcons.brand_discord_filled,
-                          color: context.theme.disabledColor,
-                        ),
+                    TablerIcons.brand_discord_filled,
+                    color: context.theme.disabledColor,
+                  ),
                   Text(l10n.exposeToDiscordTitle),
                 ],
               ),
@@ -546,17 +565,109 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
               value: discordEnabled,
               onChanged: allowDiscordRPC
                   ? (v) {
-                      di<SettingsModel>().setEnableDiscordRPC(v);
-                      final appModel = di<AppModel>();
-                      if (v) {
-                        appModel.connectToDiscord();
-                      } else {
-                        appModel.disconnectFromDiscord();
-                      }
-                    }
+                di<SettingsModel>().setEnableDiscordRPC(v);
+                final appModel = di<AppModel>();
+                if (v) {
+                  appModel.connectToDiscord();
+                } else {
+                  appModel.disconnectFromDiscord();
+                }
+              }
                   : null,
             ),
           ),
+          YaruTile(
+            title: Row(
+              children: space(
+                children: [
+                  const Icon(
+                    TablerIcons.brand_lastfm,
+                  ),
+                  Text(l10n.exposeToLastfmTitle),
+                ],
+              ),
+            ),
+            subtitle: Column(
+              children: [
+                Text(l10n.exposeToLastfmSubTitle),
+                if (lastFmEnabled)
+                  Form(
+                    key: _formkey,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: TextFormField(
+                            controller: lastFmApiKeyController,
+                            decoration: InputDecoration(
+                              hintText: l10n.lastfmApiKey,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return l10n.lastfmApiKeyEmpty;
+                              }
+                              return null;
+                            },
+                            onFieldSubmitted: (value) async{
+                              if(_formkey.currentState!.validate()){
+                                di<SettingsModel>().setLastFmApiKey(value);
+                              }
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: TextFormField(
+                            controller: lastFmSecretController,
+                            decoration: InputDecoration(
+                              hintText: l10n.lastfmSecret,
+                            ),
+                            validator: (value){
+                              if (value == null || value.isEmpty) {
+                                return l10n.lastfmSecretEmpty;
+                              }
+                              return null;
+                            },
+                            onFieldSubmitted: (value) async{
+                              if(_formkey.currentState!.validate()){
+                                di<SettingsModel>().setLastFmSecret(value);
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CommonSwitch(
+                  value: lastFmEnabled,
+                  onChanged: (v) {
+                    di<SettingsModel>().setEnableLastFmScrobbling(v);
+                  },
+                ),
+                if(lastFmEnabled)
+                  ImportantButton(
+                      onPressed: () async{
+                        if(lastFmApiKeyController.text.isNotEmpty && lastFmSecretController.text.isNotEmpty){
+                          final lastfmua = di<LastFM>() as LastFMUnauthorized;
+                          launchUrl(Uri.parse(await lastfmua.authorizeDesktop()));
+                          await Future.delayed(const Duration(seconds: 20));
+                          final lastfm = await lastfmua.finishAuthorizeDesktop();
+                          di<SettingsModel>().setLastFmSessionKey(lastfm.sessionKey);
+                          di<SettingsModel>().setLastFmUsername(lastfm.username);
+                          di.unregister<LastFM>();
+                          di.registerFactory<LastFM>(() => lastfm);
+                        }
+                      },
+                      child: Text(l10n.save)
+                  ),
+              ],
+            ),
+          )
         ],
       ),
     );
