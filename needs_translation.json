@@ -32,12 +32,6 @@
     "exposeOnlineHeadline",
     "exposeToDiscordTitle",
     "exposeToDiscordSubTitle",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -326,12 +320,6 @@
     "exposeOnlineHeadline",
     "exposeToDiscordTitle",
     "exposeToDiscordSubTitle",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -583,24 +571,6 @@
     "regionYemen",
     "regionZambia",
     "regionZimbabwe"
-  ],
-
-  "de": [
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty"
-  ],
-
-  "es": [
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty"
   ],
 
   "fr": [
@@ -627,12 +597,6 @@
     "exposeOnlineHeadline",
     "exposeToDiscordTitle",
     "exposeToDiscordSubTitle",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -884,15 +848,6 @@
     "regionYemen",
     "regionZambia",
     "regionZimbabwe"
-  ],
-
-  "it": [
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty"
   ],
 
   "nl": [
@@ -1148,12 +1103,6 @@
     "exposeOnlineHeadline",
     "exposeToDiscordTitle",
     "exposeToDiscordSubTitle",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -1480,12 +1429,6 @@
     "exposeOnlineHeadline",
     "exposeToDiscordTitle",
     "exposeToDiscordSubTitle",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -1963,12 +1906,6 @@
     "exposeOnlineHeadline",
     "exposeToDiscordTitle",
     "exposeToDiscordSubTitle",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -2446,12 +2383,6 @@
     "exposeOnlineHeadline",
     "exposeToDiscordTitle",
     "exposeToDiscordSubTitle",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -2744,12 +2675,6 @@
     "exposeOnlineHeadline",
     "exposeToDiscordTitle",
     "exposeToDiscordSubTitle",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -3009,13 +2934,7 @@
     "downloadsChangeWarning",
     "disconnectedFrom",
     "useMoreAnimationsTitle",
-    "useMoreAnimationsDescription",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty"
+    "useMoreAnimationsDescription"
   ],
 
   "sv": [
@@ -3048,13 +2967,7 @@
     "noStarredStations",
     "stations",
     "copyToClipBoard",
-    "insertedIntoQueue",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty"
+    "insertedIntoQueue"
   ],
 
   "tr": [
@@ -3090,12 +3003,6 @@
     "exposeOnlineHeadline",
     "exposeToDiscordTitle",
     "exposeToDiscordSubTitle",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -3351,24 +3258,12 @@
 
   "zh": [
     "useMoreAnimationsTitle",
-    "useMoreAnimationsDescription",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty"
+    "useMoreAnimationsDescription"
   ],
 
   "zh_CN": [
     "useMoreAnimationsTitle",
-    "useMoreAnimationsDescription",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty"
+    "useMoreAnimationsDescription"
   ],
 
   "zh_HK": [
@@ -3396,12 +3291,6 @@
     "exposeOnlineHeadline",
     "exposeToDiscordTitle",
     "exposeToDiscordSubTitle",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -3680,12 +3569,6 @@
     "exposeOnlineHeadline",
     "exposeToDiscordTitle",
     "exposeToDiscordSubTitle",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
