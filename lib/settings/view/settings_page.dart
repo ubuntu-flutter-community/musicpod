@@ -650,24 +650,24 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
                 ),
                 if (lastFmEnabled)
                   ImportantButton(
-                      onPressed: () async {
-                        if (lastFmApiKeyController.text.isNotEmpty &&
-                            lastFmSecretController.text.isNotEmpty) {
-                          final lastfmua = di<LastFM>() as LastFMUnauthorized;
-                          launchUrl(
-                              Uri.parse(await lastfmua.authorizeDesktop()),);
-                          await Future.delayed(const Duration(seconds: 20));
-                          final lastfm =
-                              await lastfmua.finishAuthorizeDesktop();
-                          di<SettingsModel>()
-                              .setLastFmSessionKey(lastfm.sessionKey);
-                          di<SettingsModel>()
-                              .setLastFmUsername(lastfm.username);
-                          di.unregister<LastFM>();
-                          di.registerFactory<LastFM>(() => lastfm);
-                        }
-                      },
-                      child: Text(l10n.save),),
+                    onPressed: () async {
+                      if (lastFmApiKeyController.text.isNotEmpty &&
+                          lastFmSecretController.text.isNotEmpty) {
+                        final lastfmua = di<LastFM>() as LastFMUnauthorized;
+                        launchUrl(
+                          Uri.parse(await lastfmua.authorizeDesktop()),
+                        );
+                        await Future.delayed(const Duration(seconds: 20));
+                        final lastfm = await lastfmua.finishAuthorizeDesktop();
+                        di<SettingsModel>()
+                            .setLastFmSessionKey(lastfm.sessionKey);
+                        di<SettingsModel>().setLastFmUsername(lastfm.username);
+                        di.unregister<LastFM>();
+                        di.registerFactory<LastFM>(() => lastfm);
+                      }
+                    },
+                    child: Text(l10n.save),
+                  ),
               ],
             ),
           ),
