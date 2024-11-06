@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 import 'package:github/github.dart';
 import 'package:gtk/gtk.dart';
+import 'package:lastfm/lastfm.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -106,10 +107,44 @@ void registerServicesAndViewModels({
       ),
       dispose: (s) => s.dispose(),
     )
+    ..registerFactory<LastFM>(
+      (){
+        final apiKey = sharedPreferences.getString(kLastFmApiKey) ?? '';
+        final apiSecret = sharedPreferences.getString(klastFmSecret) ?? '';
+        final sessionKey = sharedPreferences.getString(kLastFmSessionKey);
+        final username = sharedPreferences.getString(kLastFmUsername);
+
+        if (sessionKey != null && username != null) {
+          return LastFMAuthorized(
+              apiKey, secret: apiSecret,
+              sessionKey: sessionKey,
+              username: username,
+          );
+        } else {
+          return LastFMUnauthorized(apiKey, apiSecret);
+        }
+      }
+    )
     ..registerLazySingleton<ExposeService>(
-      () => ExposeService(
-        discordRPC: allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
-      ),
+      () {
+        final sessionKey = sharedPreferences.getString(kLastFmSessionKey);
+        final lastFMEnabled =
+            sharedPreferences.getBool(kEnableLastFmScrobbling) ?? false;
+        if(sessionKey != null){
+          return ExposeService(
+              discordRPC: allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
+              lastFm: di<LastFM>() as LastFMAuthorized,
+              lastFmEnabled: lastFMEnabled,
+          );
+        }
+        else {
+          return ExposeService(
+              discordRPC: allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
+              lastFm: null,
+              lastFmEnabled: lastFMEnabled,
+          );
+        }
+      },
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<PlayerService>(

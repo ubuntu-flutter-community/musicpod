@@ -1,12 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
+import 'package:lastfm/lastfm.dart';
 
 class ExposeService {
-  ExposeService({required FlutterDiscordRPC? discordRPC})
-      : _discordRPC = discordRPC;
+  ExposeService({
+    required FlutterDiscordRPC? discordRPC,
+    required LastFMAuthorized? lastFm,
+    required bool lastFmEnabled,
+  })
+      : _discordRPC = discordRPC, _lastFm = lastFm, _lastFmEnabled = lastFmEnabled;
 
   final FlutterDiscordRPC? _discordRPC;
+  final LastFMAuthorized? _lastFm;
+  final bool _lastFmEnabled;
   final _errorController = StreamController<String?>.broadcast();
   Stream<String?> get discordErrorStream => _errorController.stream;
   Stream<bool> get isDiscordConnectedStream =>
@@ -24,6 +31,12 @@ class ExposeService {
       additionalInfo: additionalInfo,
       imageUrl: imageUrl,
     );
+    if(_lastFmEnabled){
+      await _exposeTitleToLastfm(
+        title: title,
+        artist: artist,
+      );
+    }
   }
 
   Future<void> _exposeTitleToDiscord({
@@ -49,6 +62,21 @@ class ExposeService {
           ),
         );
       }
+    } on Exception catch (e) {
+      _errorController.add(e.toString());
+    }
+  }
+
+  Future<void> _exposeTitleToLastfm({
+    required String title,
+    required String artist,
+  }) async{
+    try {
+      await _lastFm?.scrobble(
+        track: title,
+        artist: artist,
+        startTime: DateTime.now(),
+      );
     } on Exception catch (e) {
       _errorController.add(e.toString());
     }
