@@ -10,6 +10,7 @@ import 'package:pls/pls.dart';
 import 'package:yaru/yaru.dart';
 
 import '../common/data/audio.dart';
+import '../common/logging.dart';
 import '../player/player_service.dart';
 
 class ExternalPathService {
@@ -46,7 +47,9 @@ class ExternalPathService {
           audios: [Audio.fromMetadata(path: path, data: data)],
         ),
       );
-    } catch (_) {}
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
   }
 
   void dispose() {
@@ -65,7 +68,9 @@ class ExternalPathService {
             ),
           );
         });
-      } on Exception catch (_) {}
+      } on Exception catch (e) {
+        printMessageInDebugMode(e);
+      }
     }
   }
 
@@ -84,7 +89,9 @@ class ExternalPathService {
         } else if (path.endsWith('.pls')) {
           audios = await _parsePlsPlaylist(path);
         }
-      } on Exception catch (_) {}
+      } on Exception catch (e) {
+        printMessageInDebugMode(e);
+      }
     }
     return (path, audios);
   }

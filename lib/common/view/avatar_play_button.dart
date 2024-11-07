@@ -4,6 +4,7 @@ import 'package:watch_it/watch_it.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
+import '../../radio/radio_model.dart';
 import '../data/audio.dart';
 import 'icons.dart';
 import 'theme.dart';
@@ -37,6 +38,10 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
         child: IconButton(
           tooltip: context.l10n.playAll,
           onPressed: () {
+            if (audios.isNotEmpty &&
+                audios.first.audioType == AudioType.radio) {
+              di<RadioModel>().clickStation(audios.first);
+            }
             if (isPlayerPlaying) {
               if (pageIsQueue) {
                 playerModel.pause();

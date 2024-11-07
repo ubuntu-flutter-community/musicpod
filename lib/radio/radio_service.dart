@@ -3,14 +3,19 @@ import 'dart:async';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
+import '../common/logging.dart';
 import '../constants.dart';
 
 class RadioService {
   RadioBrowserApi? _radioBrowserApi;
+  final _propertiesChangedController = StreamController<bool>.broadcast();
+  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
+  String? get connectedHost => _radioBrowserApi?.host;
 
-  Future<String?> init() async {
-    if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
-      return _radioBrowserApi?.host;
+  Future<void> init() async {
+    if (connectedHost != null && _tags?.isNotEmpty == true) {
+      _propertiesChangedController.add(true);
+      return;
     }
 
     final hosts = await _findHosts();
@@ -18,13 +23,14 @@ class RadioService {
       try {
         _radioBrowserApi = RadioBrowserApi.fromHost(host);
         _tags = await _loadTags();
-        if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
-          return _radioBrowserApi?.host;
+        if (connectedHost != null && _tags?.isNotEmpty == true) {
+          _propertiesChangedController.add(true);
+          return;
         }
-      } on Exception catch (_) {}
+      } on Exception catch (e) {
+        printMessageInDebugMode(e);
+      }
     }
-
-    return null;
   }
 
   Future<List<String>> _findHosts() async {
@@ -44,7 +50,9 @@ class RadioService {
           hosts.add(r.data.replaceAll('info.', 'info'));
         }
       }
-    } on Exception catch (_) {}
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
     return hosts;
   }
 
@@ -58,7 +66,10 @@ class RadioService {
     required int limit,
   }) async {
     if (_radioBrowserApi == null) {
-      return [];
+      await init();
+      if (connectedHost == null) {
+        return [];
+      }
     }
 
     RadioBrowserListResponse<Station>? response;
@@ -87,7 +98,9 @@ class RadioService {
         response = await _radioBrowserApi!
             .getStationsByLanguage(language: language!, parameters: parameters);
       }
-    } on Exception catch (_) {}
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
     return response?.items ?? [];
   }
 
@@ -112,13 +125,20 @@ class RadioService {
         ),
       );
       _tags = response.items;
-    } on Exception catch (_) {}
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
     return _tags;
   }
 
   Future<void> clickStation(String uuid) async {
     try {
       await _radioBrowserApi?.clickStation(uuid: uuid);
-    } on Exception catch (_) {}
+      printMessageInDebugMode('Station clicked: $uuid');
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
   }
+
+  Future<void> dispose() async => _propertiesChangedController.close();
 }

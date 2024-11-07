@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../common/data/audio.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/spaced_divider.dart';
+import '../../radio/radio_model.dart';
 
 class MasterTile extends StatelessWidget {
   const MasterTile({
@@ -131,6 +133,9 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
     final playerModel = di<PlayerModel>();
 
     void onPlay() {
+      if (audios.first.audioType == AudioType.radio) {
+        di<RadioModel>().clickStation(audios.first);
+      }
       if (isEnQueued) {
         isPlaying ? playerModel.pause() : playerModel.resume();
       } else {

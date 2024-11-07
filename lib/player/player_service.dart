@@ -13,6 +13,7 @@ import 'package:smtc_windows/smtc_windows.dart';
 import '../common/data/audio.dart';
 import '../common/data/mpv_meta_data.dart';
 import '../common/data/player_state.dart';
+import '../common/logging.dart';
 import '../constants.dart';
 import '../expose/expose_service.dart';
 import '../extensions/string_x.dart';
@@ -234,7 +235,9 @@ class PlayerService {
         imageUrl: audio?.imageUrl ?? audio?.albumArtUrl,
       );
       _firstPlay = false;
-    } on Exception catch (_) {}
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
   }
 
   Future<void> playOrPause() async {
@@ -807,7 +810,8 @@ class PlayerService {
       } else {
         return null;
       }
-    } on Exception catch (_) {
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
       return null;
     }
   }

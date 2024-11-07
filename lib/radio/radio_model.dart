@@ -8,30 +8,25 @@ import 'radio_service.dart';
 
 class RadioModel extends SafeChangeNotifier {
   final RadioService _radioService;
+  StreamSubscription<bool>? _propertiesChangedSub;
 
   RadioModel({required RadioService radioService})
       : _radioService = radioService;
 
   Future<void> clickStation(Audio? station) async {
-    if (station?.description != null) {
-      return _radioService.clickStation(station!.description!);
+    if (station?.uuid != null) {
+      return _radioService.clickStation(station!.uuid!);
     }
   }
 
-  bool showConnectSnackBar = true;
-  // The empty string is used so before the first check the UI does not overreact
-  String? _connectedHost = '';
-  String? get connectedHost => _connectedHost;
-  // TODO: make init a one time call...
-  Future<String?> init() async {
-    final oldHost = _connectedHost;
-    _connectedHost = await _radioService.init();
-    if (oldHost == _connectedHost) {
-      showConnectSnackBar = false;
-    }
-    notifyListeners();
-    return _connectedHost;
+  String? get connectedHost => _radioService.connectedHost;
+  Future<void> init() async {
+    await _radioService.init();
+    _propertiesChangedSub ??=
+        _radioService.propertiesChanged.listen((_) => notifyListeners());
   }
+
+  Future<void> reconnect() async => _radioService.init();
 
   RadioCollectionView _radioCollectionView = RadioCollectionView.stations;
   RadioCollectionView get radioCollectionView => _radioCollectionView;
@@ -39,6 +34,12 @@ class RadioModel extends SafeChangeNotifier {
     if (value == _radioCollectionView) return;
     _radioCollectionView = value;
     notifyListeners();
+  }
+
+  @override
+  Future<void> dispose() async {
+    await _propertiesChangedSub?.cancel();
+    super.dispose();
   }
 }
 
