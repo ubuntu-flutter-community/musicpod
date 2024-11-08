@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:xdg_directories/xdg_directories.dart';
 
+import 'common/logging.dart';
 import 'constants.dart';
 import 'common/data/audio.dart';
 
@@ -219,7 +220,8 @@ Future<Map<String, List<Audio>>> readAudioMap(String fileName) async {
     } else {
       return <String, List<Audio>>{};
     }
-  } on Exception catch (_) {
+  } on Exception catch (e) {
+    printMessageInDebugMode(e);
     return <String, List<Audio>>{};
   }
 }
@@ -246,7 +248,8 @@ Future<Map<String, String>> readStringMap(String fileName) async {
     } else {
       return <String, String>{};
     }
-  } on Exception catch (_) {
+  } on Exception catch (e) {
+    printMessageInDebugMode(e);
     return <String, String>{};
   }
 }

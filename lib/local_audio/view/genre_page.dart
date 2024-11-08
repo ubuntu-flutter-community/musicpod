@@ -10,7 +10,6 @@ import '../../common/view/icons.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../radio/radio_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../local_audio_model.dart';
@@ -46,8 +45,6 @@ class _GenrePageState extends State<GenrePage> {
 
   @override
   Widget build(BuildContext context) {
-    final radioModel = di<RadioModel>();
-
     return Scaffold(
       resizeToAvoidBottomInset: isMobile ? false : null,
       appBar: HeaderBar(
@@ -58,7 +55,7 @@ class _GenrePageState extends State<GenrePage> {
           children: [
             IconButton(
               tooltip: context.l10n.searchForRadioStationsWithGenreName,
-              onPressed: () => radioModel.init().then((value) {
+              onPressed: () {
                 di<LibraryModel>().push(pageId: kSearchPageId);
                 di<SearchModel>()
                   ..setTag(
@@ -67,7 +64,7 @@ class _GenrePageState extends State<GenrePage> {
                   ..setAudioType(AudioType.radio)
                   ..setSearchType(SearchType.radioTag)
                   ..search();
-              }),
+              },
               icon: Icon(Iconz.radio),
             ),
             const SizedBox(

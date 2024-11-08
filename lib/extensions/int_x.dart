@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:intl/intl.dart';
+import '../common/logging.dart';
 
 extension IntX on int? {
   String get unixTimeToDateString {
@@ -13,7 +14,8 @@ extension IntX on int? {
         s = DateFormat.yMMMEd(
           Platform.localeName == 'und' ? 'en_US' : Platform.localeName,
         ).format(dateTime);
-      } on Exception catch (_) {
+      } on Exception catch (e) {
+        printMessageInDebugMode(e);
         return s;
       }
       return s;

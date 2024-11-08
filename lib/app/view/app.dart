@@ -10,6 +10,7 @@ import '../../common/view/theme.dart';
 import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../radio/radio_model.dart';
 import '../../settings/settings_model.dart';
 import '../connectivity_model.dart';
 import 'scaffold.dart';
@@ -75,6 +76,7 @@ class _MusicPodAppState extends State<_MusicPodApp> {
   Future<bool> _init() async {
     await di<ConnectivityModel>().init();
     await di<LibraryModel>().init();
+    await di<RadioModel>().init();
     if (!mounted) return false;
     di<ExternalPathService>().init();
     return true;
