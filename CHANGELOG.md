@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.3.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.2.0...v2.3.0) (2024-11-09)
+
+
+### Features
+
+* redesign the podcast search filtering ([#993](https://github.com/ubuntu-flutter-community/musicpod/issues/993)) ([10ecac9](https://github.com/ubuntu-flutter-community/musicpod/commit/10ecac9747c557a503243f425454742f657fd1e3))
+* update Italian language ([#987](https://github.com/ubuntu-flutter-community/musicpod/issues/987)) ([b9cb02d](https://github.com/ubuntu-flutter-community/musicpod/commit/b9cb02dc2fbc98f4749c015245746cf22e4d30e2))
+* update spanish translations ([#995](https://github.com/ubuntu-flutter-community/musicpod/issues/995)) ([ce9cf1b](https://github.com/ubuntu-flutter-community/musicpod/commit/ce9cf1b93e0efba86d4d58cf0f7eb1448f740285))
+
+
+### Bug Fixes
+
+* changelog links are unclickable ([#994](https://github.com/ubuntu-flutter-community/musicpod/issues/994)) ([ee60398](https://github.com/ubuntu-flutter-community/musicpod/commit/ee603986daf3233f2f9dca77e977d60d371e3c75)), closes [#992](https://github.com/ubuntu-flutter-community/musicpod/issues/992)
+* podcast and radio search jumping on scroll ([#991](https://github.com/ubuntu-flutter-community/musicpod/issues/991)) ([7059972](https://github.com/ubuntu-flutter-community/musicpod/commit/70599727d7f8d4f0fe0f10dc526392ed50d9dbb0)), closes [#926](https://github.com/ubuntu-flutter-community/musicpod/issues/926)
+* radio history tile images after new station uuid mapping ([#998](https://github.com/ubuntu-flutter-community/musicpod/issues/998)) ([e305900](https://github.com/ubuntu-flutter-community/musicpod/commit/e3059000cf109a8f30ed1afc0bf7775a3d4189bf))
+* radiosearch empty on initial search swap from podcasts, add back radio search -&gt; StationPage routing ([#989](https://github.com/ubuntu-flutter-community/musicpod/issues/989)) ([27ab963](https://github.com/ubuntu-flutter-community/musicpod/commit/27ab9633f6ce2f975c023438d9cc30c6981d8ba6))
+* yaru chips ([#996](https://github.com/ubuntu-flutter-community/musicpod/issues/996)) ([c8b6f95](https://github.com/ubuntu-flutter-community/musicpod/commit/c8b6f95d8b10152cc31251cd3e6b976e356d80f2))
+
 ## [2.2.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.1.0...v2.2.0) (2024-10-27)
 
 
