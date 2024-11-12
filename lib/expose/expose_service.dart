@@ -7,14 +7,11 @@ class ExposeService {
   ExposeService({
     required FlutterDiscordRPC? discordRPC,
     required LastFMAuthorized? lastFm,
-    required bool lastFmEnabled,
   })  : _discordRPC = discordRPC,
-        _lastFm = lastFm,
-        _lastFmEnabled = lastFmEnabled;
+        _lastFm = lastFm;
 
   final FlutterDiscordRPC? _discordRPC;
   final LastFMAuthorized? _lastFm;
-  final bool _lastFmEnabled;
   final _errorController = StreamController<String?>.broadcast();
   Stream<String?> get discordErrorStream => _errorController.stream;
   Stream<bool> get isDiscordConnectedStream =>
@@ -32,7 +29,7 @@ class ExposeService {
       additionalInfo: additionalInfo,
       imageUrl: imageUrl,
     );
-    if (_lastFmEnabled) {
+    if (_lastFm != null) {
       await _exposeTitleToLastfm(
         title: title,
         artist: artist,

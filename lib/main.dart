@@ -133,14 +133,12 @@ void registerServicesAndViewModels({
         if (sessionKey != null) {
           return ExposeService(
             discordRPC: allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
-            lastFm: di<LastFM>() as LastFMAuthorized,
-            lastFmEnabled: lastFMEnabled,
+            lastFm: lastFMEnabled ? di<LastFM>() as LastFMAuthorized : null,
           );
         } else {
           return ExposeService(
             discordRPC: allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
             lastFm: null,
-            lastFmEnabled: lastFMEnabled,
           );
         }
       },
@@ -162,6 +160,7 @@ void registerServicesAndViewModels({
       () => SettingsService(
         sharedPreferences: di<SharedPreferences>(),
         downloadsDefaultDir: downloadsDefaultDir,
+        lastFm: di<LastFM>(),
       ),
       dispose: (s) async => s.dispose(),
     )

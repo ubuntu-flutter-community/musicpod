@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
-import 'package:lastfm/lastfm.dart';
 import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
@@ -650,20 +649,10 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
                 ),
                 if (lastFmEnabled)
                   ImportantButton(
-                    onPressed: () async {
+                    onPressed: () {
                       if (lastFmApiKeyController.text.isNotEmpty &&
                           lastFmSecretController.text.isNotEmpty) {
-                        final lastfmua = di<LastFM>() as LastFMUnauthorized;
-                        launchUrl(
-                          Uri.parse(await lastfmua.authorizeDesktop()),
-                        );
-                        await Future.delayed(const Duration(seconds: 20));
-                        final lastfm = await lastfmua.finishAuthorizeDesktop();
-                        di<SettingsModel>()
-                            .setLastFmSessionKey(lastfm.sessionKey);
-                        di<SettingsModel>().setLastFmUsername(lastfm.username);
-                        di.unregister<LastFM>();
-                        di.registerFactory<LastFM>(() => lastfm);
+                        di<SettingsModel>().setLastFmAuth();
                       }
                     },
                     child: Text(l10n.save),
