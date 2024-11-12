@@ -93,10 +93,21 @@ class SettingsService {
     launchUrl(
       Uri.parse(await lastfmua.authorizeDesktop()),
     );
-    await Future.delayed(const Duration(seconds: 20));
-    final lastfm = await lastfmua.finishAuthorizeDesktop();
-    setLastFmSessionKey(lastfm.sessionKey);
-    setLastFmUsername(lastfm.username);
+
+    const maxWaitDuration = Duration(minutes: 2); // Customize as needed
+    final startTime = DateTime.now();
+    await Future.delayed(const Duration(seconds: 10));
+    while (DateTime.now().difference(startTime) < maxWaitDuration) {
+      try {
+        final lastfm = await lastfmua.finishAuthorizeDesktop();
+        setLastFmSessionKey(lastfm.sessionKey);
+        setLastFmUsername(lastfm.username);
+        return;
+      } catch (e) {
+        await Future.delayed(const Duration(seconds: 10));
+      }
+    }
+    //TODO: Do something if it fails
   }
 
   bool get enableDiscordRPC => _preferences.getBool(kEnableDiscordRPC) ?? false;
