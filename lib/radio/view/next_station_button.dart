@@ -7,7 +7,9 @@ import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 
 class NextStationButton extends StatelessWidget with WatchItMixin {
-  const NextStationButton({super.key});
+  const NextStationButton({super.key, this.iconColor});
+
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class NextStationButton extends StatelessWidget with WatchItMixin {
                 },
               );
             },
-      icon: Icon(Iconz.explore),
+      icon: Icon(Iconz.explore, color: iconColor),
     );
   }
 }
