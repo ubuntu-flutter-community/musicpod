@@ -652,7 +652,7 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
                     onPressed: () {
                       if (lastFmApiKeyController.text.isNotEmpty &&
                           lastFmSecretController.text.isNotEmpty) {
-                        di<SettingsModel>().setLastFmAuth();
+                        di<AppModel>().setLastFmAuth();
                       }
                     },
                     child: Text(l10n.save),

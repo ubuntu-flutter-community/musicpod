@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:lastfm/lastfm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../common/data/close_btn_action.dart';
 import '../constants.dart';
@@ -12,14 +10,11 @@ class SettingsService {
   SettingsService({
     required String? downloadsDefaultDir,
     required SharedPreferences sharedPreferences,
-    required LastFM lastFm,
   })  : _preferences = sharedPreferences,
-        _downloadsDefaultDir = downloadsDefaultDir,
-        _lastFm = lastFm;
+        _downloadsDefaultDir = downloadsDefaultDir;
 
   final String? _downloadsDefaultDir;
   final SharedPreferences _preferences;
-  final LastFM _lastFm;
   final _propertiesChangedController = StreamController<bool>.broadcast();
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
 
@@ -86,28 +81,6 @@ class SettingsService {
         if (saved) _propertiesChangedController.add(true);
       },
     );
-  }
-
-  Future<void> setLastFmAuth() async {
-    final lastfmua = _lastFm as LastFMUnauthorized;
-    launchUrl(
-      Uri.parse(await lastfmua.authorizeDesktop()),
-    );
-
-    const maxWaitDuration = Duration(minutes: 2); // Customize as needed
-    final startTime = DateTime.now();
-    await Future.delayed(const Duration(seconds: 10));
-    while (DateTime.now().difference(startTime) < maxWaitDuration) {
-      try {
-        final lastfm = await lastfmua.finishAuthorizeDesktop();
-        setLastFmSessionKey(lastfm.sessionKey);
-        setLastFmUsername(lastfm.username);
-        return;
-      } catch (e) {
-        await Future.delayed(const Duration(seconds: 10));
-      }
-    }
-    //TODO: Do something if it fails
   }
 
   bool get enableDiscordRPC => _preferences.getBool(kEnableDiscordRPC) ?? false;

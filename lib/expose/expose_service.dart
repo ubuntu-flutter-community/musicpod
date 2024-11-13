@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 import 'package:lastfm/lastfm.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ExposeService {
   ExposeService({
@@ -13,9 +14,11 @@ class ExposeService {
   final FlutterDiscordRPC? _discordRPC;
   final LastFMAuthorized? _lastFm;
   final _errorController = StreamController<String?>.broadcast();
+  final _lastFmAuthController = StreamController<bool>.broadcast();
   Stream<String?> get discordErrorStream => _errorController.stream;
   Stream<bool> get isDiscordConnectedStream =>
       _discordRPC?.isConnectedStream ?? Stream.value(false);
+  Stream<bool> get isLastFmAuthenticatedStream => _lastFmAuthController.stream;
 
   Future<void> exposeTitleOnline({
     required String title,
@@ -35,6 +38,37 @@ class ExposeService {
         artist: artist,
       );
     }
+  }
+
+  Future<Map<String, String>?> setLastFmAuth() async {
+    final lastfmua = _lastFm as LastFMUnauthorized;
+    launchUrl(
+      Uri.parse(await lastfmua.authorizeDesktop()),
+    );
+
+    const maxWaitDuration = Duration(minutes: 2); // Customize as needed
+    final startTime = DateTime.now();
+    await Future.delayed(const Duration(seconds: 10));
+    while (DateTime.now().difference(startTime) < maxWaitDuration) {
+      try {
+        final lastfm = await lastfmua.finishAuthorizeDesktop();
+        final sessionKey = lastfm.sessionKey;
+        final username = lastfm.username;
+        _updateLastFmAuthStatus(true);
+        return {
+          'sessionKey': sessionKey,
+          'username': username,
+        };
+      } catch (e) {
+        await Future.delayed(const Duration(seconds: 10));
+      }
+    }
+    _updateLastFmAuthStatus(false);
+    return null;
+  }
+
+  void _updateLastFmAuthStatus(bool status) {
+    _lastFmAuthController.add(status);
   }
 
   Future<void> _exposeTitleToDiscord({
@@ -103,5 +137,6 @@ class ExposeService {
   Future<void> dispose() async {
     await disconnectFromDiscord();
     await _errorController.close();
+    await _lastFmAuthController.close();
   }
 }

@@ -160,7 +160,6 @@ void registerServicesAndViewModels({
       () => SettingsService(
         sharedPreferences: di<SharedPreferences>(),
         downloadsDefaultDir: downloadsDefaultDir,
-        lastFm: di<LastFM>(),
       ),
       dispose: (s) async => s.dispose(),
     )

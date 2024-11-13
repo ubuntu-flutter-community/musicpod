@@ -74,7 +74,6 @@ class SettingsModel extends SafeChangeNotifier {
   void setLastFmSecret(String value) => _service.setLastFmSecret(value);
   void setLastFmSessionKey(String value) => _service.setLastFmSessionKey(value);
   void setLastFmUsername(String value) => _service.setLastFmUsername(value);
-  Future<void> setLastFmAuth() async => _service.setLastFmAuth();
 
   bool get useMoreAnimations => _service.useMoreAnimations;
   void setUseMoreAnimations(bool value) => _service.setUseMoreAnimations(value);
