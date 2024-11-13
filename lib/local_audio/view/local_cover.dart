@@ -1,10 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
-import '../cover_store.dart';
+import '../local_cover_model.dart';
 
-class LocalCover extends StatefulWidget {
+class LocalCover extends StatefulWidget with WatchItStatefulWidgetMixin {
   const LocalCover({
     super.key,
     required this.albumId,
@@ -34,10 +35,11 @@ class _LocalCoverState extends State<LocalCover> {
   @override
   void initState() {
     super.initState();
-    final init = CoverStore().get(widget.albumId);
+    final localCoverModel = di<LocalCoverModel>();
+    final init = localCoverModel.get(widget.albumId);
     _future = init != null
         ? Future.value(init)
-        : getCover(
+        : localCoverModel.getCover(
             albumId: widget.albumId,
             path: widget.path,
           );
@@ -45,6 +47,7 @@ class _LocalCoverState extends State<LocalCover> {
 
   @override
   Widget build(BuildContext context) {
+    watchPropertyValue((LocalCoverModel m) => m.store);
     final fit = widget.fit ?? BoxFit.fitHeight;
     const medium = FilterQuality.medium;
 

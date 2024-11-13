@@ -10,7 +10,7 @@ import '../common/logging.dart';
 import '../common/view/audio_filter.dart';
 import '../extensions/media_file_x.dart';
 import '../settings/settings_service.dart';
-import 'cover_store.dart';
+import 'local_cover_service.dart';
 
 typedef LocalSearchResult = ({
   List<Audio>? titles,
@@ -22,9 +22,13 @@ typedef LocalSearchResult = ({
 
 class LocalAudioService {
   final SettingsService? _settingsService;
+  final LocalCoverService _localCoverService;
 
-  LocalAudioService({SettingsService? settingsService})
-      : _settingsService = settingsService;
+  LocalAudioService({
+    required LocalCoverService localCoverService,
+    SettingsService? settingsService,
+  })  : _settingsService = settingsService,
+        _localCoverService = localCoverService;
 
   List<Audio>? _audios;
   List<Audio>? get audios => _audios;
@@ -169,7 +173,7 @@ class LocalAudioService {
     }
 
     for (var audio in albumAudios) {
-      var uint8list = CoverStore().get(audio.albumId);
+      var uint8list = _localCoverService.get(audio.albumId);
       if (uint8list != null && images.length < limit) {
         images.add(uint8list);
       }

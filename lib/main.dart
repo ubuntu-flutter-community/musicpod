@@ -25,8 +25,10 @@ import 'app_config.dart';
 import 'constants.dart';
 import 'expose/expose_service.dart';
 import 'library/library_service.dart';
+import 'local_audio/local_cover_service.dart';
 import 'local_audio/local_audio_model.dart';
 import 'local_audio/local_audio_service.dart';
+import 'local_audio/local_cover_model.dart';
 import 'notifications/notifications_service.dart';
 import 'persistence_utils.dart';
 import 'player/player_model.dart';
@@ -113,6 +115,7 @@ void registerServicesAndViewModels({
       ),
       dispose: (s) => s.dispose(),
     )
+    ..registerLazySingleton(LocalCoverService.new, dispose: (s) => s.dispose())
     ..registerLazySingleton<PlayerService>(
       () => PlayerService(
         onlineArtService: di<OnlineArtService>(),
@@ -122,6 +125,7 @@ void registerServicesAndViewModels({
           ),
         ),
         exposeService: di<ExposeService>(),
+        localCoverService: di<LocalCoverService>(),
       )..init(),
       dispose: (s) async => s.dispose(),
     )
@@ -137,7 +141,10 @@ void registerServicesAndViewModels({
       dispose: (s) async => s.dispose(),
     )
     ..registerLazySingleton<LocalAudioService>(
-      () => LocalAudioService(settingsService: di<SettingsService>()),
+      () => LocalAudioService(
+        settingsService: di<SettingsService>(),
+        localCoverService: di<LocalCoverService>(),
+      ),
       dispose: (s) async => s.dispose(),
     )
     ..registerLazySingleton<NotificationsService>(
@@ -177,6 +184,10 @@ void registerServicesAndViewModels({
         externalPathService: di<ExternalPathService>(),
         gitHub: di<GitHub>(),
       )..init(),
+      dispose: (s) => s.dispose(),
+    )
+    ..registerLazySingleton(
+      () => LocalCoverModel(localCoverService: di<LocalCoverService>()),
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<PlayerModel>(
