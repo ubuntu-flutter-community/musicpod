@@ -26,10 +26,20 @@ class AppModel extends SafeChangeNotifier {
   Stream<String?> get errorStream => _exposeService.discordErrorStream;
   Stream<bool> get isDiscordConnectedStream =>
       _exposeService.isDiscordConnectedStream;
+  Stream<bool> get isLastFmAuthenticatedStream =>
+      _exposeService.isLastFmAuthenticatedStream;
+  //TODO: Do something(ex:change the text of the save button) once authenticated
 
   Future<void> connectToDiscord() async => _exposeService.connectToDiscord();
   Future<void> disconnectFromDiscord() async =>
       _exposeService.disconnectFromDiscord();
+  Future<void> setLastFmAuth() async {
+    final sessionData = await _exposeService.setLastFmAuth();
+    if (sessionData != null) {
+      _settingsService.setLastFmSessionKey(sessionData['sessionKey']!);
+      _settingsService.setLastFmUsername(sessionData['username']!);
+    }
+  }
 
   final GitHub _gitHub;
   final SettingsService _settingsService;

@@ -771,6 +771,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.9.0"
+  lastfm:
+    dependency: "direct main"
+    description:
+      name: lastfm
+      sha256: "8252b5d8f62625ca465a7f24da3afe851e1cf3d94d75a9ca94f6638e5764dd9f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
   leak_tracker:
     dependency: transitive
     description:

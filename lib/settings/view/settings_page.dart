@@ -512,6 +512,23 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
         ? watchPropertyValue((SettingsModel m) => m.enableDiscordRPC)
         : false;
 
+    final lastFmEnabled =
+        watchPropertyValue((SettingsModel m) => m.enableLastFmScrobbling);
+
+    final lastFmApiKey =
+        watchPropertyValue((SettingsModel m) => m.lastFmApiKey);
+
+    final lastFmSecret =
+        watchPropertyValue((SettingsModel m) => m.lastFmSecret);
+
+    final TextEditingController lastFmApiKeyController =
+        TextEditingController(text: lastFmApiKey);
+
+    final TextEditingController lastFmSecretController =
+        TextEditingController(text: lastFmSecret);
+
+    final formkey = GlobalKey<FormState>();
+
     return YaruSection(
       headline: Text(l10n.exposeOnlineHeadline),
       margin: const EdgeInsets.only(
@@ -555,6 +572,92 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
                       }
                     }
                   : null,
+            ),
+          ),
+          YaruTile(
+            title: Row(
+              children: space(
+                children: [
+                  const Icon(
+                    TablerIcons.brand_lastfm,
+                  ),
+                  Text(l10n.exposeToLastfmTitle),
+                ],
+              ),
+            ),
+            subtitle: Column(
+              children: [
+                Text(l10n.exposeToLastfmSubTitle),
+                if (lastFmEnabled)
+                  Form(
+                    key: formkey,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: TextFormField(
+                            controller: lastFmApiKeyController,
+                            decoration: InputDecoration(
+                              hintText: l10n.lastfmApiKey,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return l10n.lastfmApiKeyEmpty;
+                              }
+                              return null;
+                            },
+                            onFieldSubmitted: (value) async {
+                              if (formkey.currentState!.validate()) {
+                                di<SettingsModel>().setLastFmApiKey(value);
+                              }
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: TextFormField(
+                            controller: lastFmSecretController,
+                            decoration: InputDecoration(
+                              hintText: l10n.lastfmSecret,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return l10n.lastfmSecretEmpty;
+                              }
+                              return null;
+                            },
+                            onFieldSubmitted: (value) async {
+                              if (formkey.currentState!.validate()) {
+                                di<SettingsModel>().setLastFmSecret(value);
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CommonSwitch(
+                  value: lastFmEnabled,
+                  onChanged: (v) {
+                    di<SettingsModel>().setEnableLastFmScrobbling(v);
+                  },
+                ),
+                if (lastFmEnabled)
+                  ImportantButton(
+                    onPressed: () {
+                      if (lastFmApiKeyController.text.isNotEmpty &&
+                          lastFmSecretController.text.isNotEmpty) {
+                        di<AppModel>().setLastFmAuth();
+                      }
+                    },
+                    child: Text(l10n.save),
+                  ),
+              ],
             ),
           ),
         ],
