@@ -4,6 +4,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/constants.dart';
 
 import '../../app/connectivity_model.dart';
+import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
 import '../player_model.dart';
@@ -30,8 +31,9 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
       padding: EdgeInsets.zero,
     );
 
-    final text =
-        '${audio?.title == null ? '' : '${audio!.title}'} - ${audio?.album == null ? '' : '${audio!.album}'} - ${audio?.artist == null ? '' : '${audio!.artist}'}';
+    final text = audio?.audioType == AudioType.radio
+        ? audio?.title ?? ''
+        : '${audio?.title == null ? '' : '${audio!.title}'} - ${audio?.album == null ? '' : '${audio!.album}'} - ${audio?.artist == null ? '' : '${audio!.artist}'}';
     final mediaKitTheme = MaterialVideoControlsThemeData(
       seekBarThumbColor: baseColor,
       seekBarColor: baseColor.withOpacity(0.3),
@@ -39,6 +41,8 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
       seekBarBufferColor: baseColor.withOpacity(0.6),
       buttonBarButtonColor: baseColor,
       controlsHoverDuration: const Duration(seconds: 10),
+      seekGesture: true,
+      seekOnDoubleTap: true,
       primaryButtonBar: [
         SizedBox(
           width: 300,
