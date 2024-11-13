@@ -17,7 +17,7 @@ import '../common/logging.dart';
 import '../constants.dart';
 import '../expose/expose_service.dart';
 import '../extensions/string_x.dart';
-import '../local_audio/cover_store.dart';
+import '../local_audio/local_cover_service.dart';
 import '../persistence_utils.dart';
 import '../radio/online_art_service.dart';
 
@@ -28,13 +28,15 @@ class PlayerService {
     required VideoController controller,
     required OnlineArtService onlineArtService,
     required ExposeService exposeService,
+    required LocalCoverService localCoverService,
   })  : _controller = controller,
         _onlineArtService = onlineArtService,
-        _exposeService = exposeService;
+        _exposeService = exposeService,
+        _localCoverService = localCoverService;
 
   final OnlineArtService _onlineArtService;
   final ExposeService _exposeService;
-
+  final LocalCoverService _localCoverService;
   final VideoController _controller;
   VideoController get controller => _controller;
 
@@ -646,13 +648,13 @@ class PlayerService {
         audio?.imageUrl ?? audio!.albumArtUrl!,
       );
     } else if (audio?.hasPathAndId == true && File(audio!.path!).existsSync()) {
-      final maybeData = CoverStore().get(audio.albumId);
+      final maybeData = _localCoverService.get(audio.albumId);
       if (maybeData != null) {
         File newFile = await _safeTempCover(maybeData);
 
         return Uri.file(newFile.path, windows: Platform.isWindows);
       } else {
-        final newData = await getCover(
+        final newData = await _localCoverService.getCover(
           albumId: audio.albumId!,
           path: audio.path!,
         );

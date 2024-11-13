@@ -11,6 +11,7 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../local_audio_model.dart';
 import 'artist_page.dart';
+import 'artist_round_image_container.dart';
 
 class ArtistsView extends StatelessWidget {
   const ArtistsView({
@@ -43,7 +44,6 @@ class ArtistsView extends StatelessWidget {
       itemBuilder: (context, index) {
         final artistName = artists!.elementAt(index);
         final artistAudios = model.findTitlesOfArtist(artistName);
-        final images = model.findLocalCovers(audios: artistAudios ?? []);
 
         final text = artists!.elementAt(index);
 
@@ -70,9 +70,8 @@ class ArtistsView extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 height: double.infinity,
-                child: RoundImageContainer(
-                  images: images,
-                  fallBackText: text,
+                child: ArtistRoundImageContainer(
+                  artistAudios: artistAudios,
                 ),
               ),
               ArtistVignette(text: text),

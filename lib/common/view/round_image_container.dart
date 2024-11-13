@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
@@ -10,11 +8,11 @@ import 'theme.dart';
 class RoundImageContainer extends StatelessWidget {
   const RoundImageContainer({
     super.key,
-    this.images,
+    required this.images,
     required this.fallBackText,
   });
 
-  final Set<Uint8List>? images;
+  final List<Widget> images;
   final String fallBackText;
 
   @override
@@ -27,23 +25,12 @@ class RoundImageContainer extends StatelessWidget {
       color: theme.shadowColor.withOpacity(0.4),
     );
 
-    if (images?.length == 1) {
-      return Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: MemoryImage(images!.first),
-            fit: BoxFit.fitHeight,
-            filterQuality: FilterQuality.medium,
-          ),
-          boxShadow: [
-            boxShadow,
-          ],
-        ),
-      );
+    if (images.length == 1) {
+      return images.first;
     }
 
-    if (images?.isNotEmpty == true) {
-      if (images!.length >= 4) {
+    if (images.isNotEmpty) {
+      if (images.length >= 4) {
         return Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -51,28 +38,18 @@ class RoundImageContainer extends StatelessWidget {
             ],
           ),
           child: FourImagesGrid(
-            images: images!,
+            images: images,
           ),
         );
-      } else if (images!.length >= 2) {
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.fitHeight,
-              image: MemoryImage(images!.first),
+      } else if (images.length >= 2) {
+        return Stack(
+          children: [
+            images.first,
+            YaruClip.diagonal(
+              position: YaruDiagonalClip.bottomLeft,
+              child: images.elementAt(1),
             ),
-            boxShadow: [
-              boxShadow,
-            ],
-          ),
-          child: YaruClip.diagonal(
-            position: YaruDiagonalClip.bottomLeft,
-            child: Image.memory(
-              images!.elementAt(1),
-              fit: BoxFit.fitHeight,
-              filterQuality: FilterQuality.medium,
-            ),
-          ),
+          ],
         );
       }
     }

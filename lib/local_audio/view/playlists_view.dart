@@ -75,7 +75,7 @@ class PlaylistsView extends StatelessWidget {
                             child: Icon(Iconz.heart),
                           )
                         : RoundImageContainer(
-                            images: const {},
+                            images: [],
                             fallBackText: id,
                           ),
               ),

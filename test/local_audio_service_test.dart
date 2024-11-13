@@ -2,8 +2,12 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:musicpod/common/data/audio.dart';
+import 'package:musicpod/local_audio/local_cover_service.dart';
 import 'package:musicpod/local_audio/local_audio_service.dart';
+
+import 'local_audio_service_test.mocks.dart';
 
 const Audio testMp3 = Audio(
   title: 'test',
@@ -19,12 +23,14 @@ const Audio testOgg = Audio(
   genre: 'Rock',
 );
 
+@GenerateMocks([LocalCoverService])
 Future<void> main() async {
   LocalAudioService? service;
+  final localCoverService = MockLocalCoverService();
 
   setUpAll(
     () async {
-      service = LocalAudioService();
+      service = LocalAudioService(localCoverService: localCoverService);
       await service?.init(directory: Directory.current.path);
     },
   );
