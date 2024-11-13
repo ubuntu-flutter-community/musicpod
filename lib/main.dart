@@ -218,7 +218,7 @@ void registerServicesAndViewModels({
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton(
-      () => LocalCoverModel(localCoverService: di<LocalCoverService>()),
+      () => LocalCoverModel(localCoverService: di<LocalCoverService>())..init(),
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<PlayerModel>(
