@@ -12,7 +12,6 @@ import '../../common/view/explore_online_popup.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/like_all_icon.dart';
-import '../../common/view/round_image_container.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
@@ -25,6 +24,7 @@ import '../../search/search_type.dart';
 import '../local_audio_model.dart';
 import 'album_page.dart';
 import 'album_view.dart';
+import 'artist_round_image_container.dart';
 import 'genre_page.dart';
 
 class ArtistPage extends StatelessWidget with WatchItMixin {
@@ -101,12 +101,8 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
                   child: AudioPageHeader(
                     imageRadius: BorderRadius.circular(10000),
                     title: artistAudios?.firstOrNull?.artist ?? '',
-                    image: RoundImageContainer(
-                      images: artistAudios == null
-                          ? null
-                          : model.findLocalCovers(audios: artistAudios!),
-                      fallBackText: pageId,
-                    ),
+                    image:
+                        ArtistRoundImageContainer(artistAudios: artistAudios),
                     subTitle: artistAudios?.firstOrNull?.genre,
                     label: context.l10n.artist,
                     onLabelTab: onAlbumTap,

@@ -53,7 +53,7 @@ class GenresView extends StatelessWidget {
                 width: double.infinity,
                 height: double.infinity,
                 child: RoundImageContainer(
-                  images: const {},
+                  images: [],
                   fallBackText: text,
                 ),
               ),

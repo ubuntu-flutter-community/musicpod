@@ -165,12 +165,7 @@ class LocalAudioService {
   }) {
     final images = <Uint8List>{};
 
-    final albumAudios = <Audio>[];
-    for (var audio in audios) {
-      if (albumAudios.none((a) => a.album == audio.album)) {
-        albumAudios.add(audio);
-      }
-    }
+    List<Audio> albumAudios = findUniqueAlbumAudios(audios);
 
     for (var audio in albumAudios) {
       var uint8list = _localCoverService.get(audio.albumId);
@@ -180,6 +175,16 @@ class LocalAudioService {
     }
 
     return images;
+  }
+
+  List<Audio> findUniqueAlbumAudios(List<Audio> audios) {
+    final albumAudios = <Audio>[];
+    for (var audio in audios) {
+      if (albumAudios.none((a) => a.album == audio.album)) {
+        albumAudios.add(audio);
+      }
+    }
+    return albumAudios;
   }
 
   LocalSearchResult? search(String? query) {

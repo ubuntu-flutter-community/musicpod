@@ -65,6 +65,9 @@ class LocalAudioModel extends SafeChangeNotifier {
   }) =>
       _service.findLocalCovers(audios: audios, limit: limit);
 
+  List<Audio> findUniqueAlbumAudios(List<Audio> audios) =>
+      _service.findUniqueAlbumAudios(audios);
+
   List<String>? get failedImports => _service.failedImports;
 
   List<String>? findAllAlbums({

@@ -47,30 +47,40 @@ class _LocalCoverState extends State<LocalCover> {
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((LocalCoverModel m) => m.store);
+    watchPropertyValue((LocalCoverModel m) => m.storeLength);
+    final cover = di<LocalCoverModel>().get(widget.albumId);
     final fit = widget.fit ?? BoxFit.fitHeight;
     const medium = FilterQuality.medium;
 
-    Widget child = FutureBuilder(
-      future: _future,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData || snapshot.hasError) {
-          return Container(
-            key: const ValueKey(0),
-            child: widget.fallback,
-          );
-        } else {
-          return Image.memory(
-            key: const ValueKey(1),
-            snapshot.data!,
+    Widget child = cover != null
+        ? Image.memory(
+            key: ValueKey(widget.albumId),
+            cover,
             fit: fit,
             height: widget.dimension ?? widget.height,
             width: widget.width,
             filterQuality: medium,
+          )
+        : FutureBuilder(
+            future: _future,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData || snapshot.hasError) {
+                return Container(
+                  key: ValueKey('${widget.albumId}1'),
+                  child: widget.fallback,
+                );
+              } else {
+                return Image.memory(
+                  key: ValueKey('${widget.albumId}2'),
+                  snapshot.data!,
+                  fit: fit,
+                  height: widget.dimension ?? widget.height,
+                  width: widget.width,
+                  filterQuality: medium,
+                );
+              }
+            },
           );
-        }
-      },
-    );
 
     return SizedBox(
       height: widget.dimension ?? widget.height,

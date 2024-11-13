@@ -14,7 +14,7 @@ class LocalCoverService {
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
 
   var _store = <String, Uint8List?>{};
-  Map<String, Uint8List?> get store => _store;
+  int get storeLength => _store.length;
 
   Future<Uint8List?> getCover({
     required String albumId,
@@ -28,10 +28,11 @@ class LocalCoverService {
             .firstWhereOrNull((e) => e.bytes.isNotEmpty)
             ?.bytes,
       );
-      _propertiesChangedController.add(true);
+      if (cover != null) {
+        _propertiesChangedController.add(true);
+      }
       return cover;
     }
-
     return null;
   }
 
