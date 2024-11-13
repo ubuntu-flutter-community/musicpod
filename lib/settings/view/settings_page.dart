@@ -588,78 +588,74 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
             subtitle: Column(
               children: [
                 Text(l10n.exposeToLastfmSubTitle),
-                if (lastFmEnabled)
-                  Form(
-                    key: formkey,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: TextFormField(
-                            controller: lastFmApiKeyController,
-                            decoration: InputDecoration(
-                              hintText: l10n.lastfmApiKey,
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return l10n.lastfmApiKeyEmpty;
-                              }
-                              return null;
-                            },
-                            onFieldSubmitted: (value) async {
-                              if (formkey.currentState!.validate()) {
-                                di<SettingsModel>().setLastFmApiKey(value);
-                              }
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: TextFormField(
-                            controller: lastFmSecretController,
-                            decoration: InputDecoration(
-                              hintText: l10n.lastfmSecret,
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return l10n.lastfmSecretEmpty;
-                              }
-                              return null;
-                            },
-                            onFieldSubmitted: (value) async {
-                              if (formkey.currentState!.validate()) {
-                                di<SettingsModel>().setLastFmSecret(value);
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
               ],
             ),
-            trailing: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CommonSwitch(
-                  value: lastFmEnabled,
-                  onChanged: (v) {
-                    di<SettingsModel>().setEnableLastFmScrobbling(v);
-                  },
-                ),
-                if (lastFmEnabled)
-                  ImportantButton(
-                    onPressed: () {
-                      if (lastFmApiKeyController.text.isNotEmpty &&
-                          lastFmSecretController.text.isNotEmpty) {
-                        di<AppModel>().setLastFmAuth();
-                      }
-                    },
-                    child: Text(l10n.save),
-                  ),
-              ],
+            trailing: CommonSwitch(
+              value: lastFmEnabled,
+              onChanged: (v) {
+                di<SettingsModel>().setEnableLastFmScrobbling(v);
+              },
             ),
           ),
+          if (lastFmEnabled) ...[
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Form(
+                key: formkey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: space(
+                    heightGap: 10,
+                    children: [
+                      TextFormField(
+                        controller: lastFmApiKeyController,
+                        decoration: InputDecoration(
+                          hintText: l10n.lastfmApiKey,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return l10n.lastfmApiKeyEmpty;
+                          }
+                          return null;
+                        },
+                        onFieldSubmitted: (value) async {
+                          if (formkey.currentState!.validate()) {
+                            di<SettingsModel>().setLastFmApiKey(value);
+                          }
+                        },
+                      ),
+                      TextFormField(
+                        controller: lastFmSecretController,
+                        decoration: InputDecoration(
+                          hintText: l10n.lastfmSecret,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return l10n.lastfmSecretEmpty;
+                          }
+                          return null;
+                        },
+                        onFieldSubmitted: (value) async {
+                          if (formkey.currentState!.validate()) {
+                            di<SettingsModel>().setLastFmSecret(value);
+                          }
+                        },
+                      ),
+                      ImportantButton(
+                        onPressed: () {
+                          if (lastFmApiKeyController.text.isNotEmpty &&
+                              lastFmSecretController.text.isNotEmpty) {
+                            di<AppModel>().setLastFmAuth();
+                          }
+                        },
+                        child: Text(l10n.save),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
