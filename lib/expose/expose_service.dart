@@ -1,16 +1,24 @@
 import 'dart:async';
 
 import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
+import 'package:lastfm/lastfm.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ExposeService {
-  ExposeService({required FlutterDiscordRPC? discordRPC})
-      : _discordRPC = discordRPC;
+  ExposeService({
+    required FlutterDiscordRPC? discordRPC,
+    required LastFMAuthorized? lastFm,
+  })  : _discordRPC = discordRPC,
+        _lastFm = lastFm;
 
   final FlutterDiscordRPC? _discordRPC;
+  final LastFMAuthorized? _lastFm;
   final _errorController = StreamController<String?>.broadcast();
+  final _lastFmAuthController = StreamController<bool>.broadcast();
   Stream<String?> get discordErrorStream => _errorController.stream;
   Stream<bool> get isDiscordConnectedStream =>
       _discordRPC?.isConnectedStream ?? Stream.value(false);
+  Stream<bool> get isLastFmAuthenticatedStream => _lastFmAuthController.stream;
 
   Future<void> exposeTitleOnline({
     required String title,
@@ -24,6 +32,43 @@ class ExposeService {
       additionalInfo: additionalInfo,
       imageUrl: imageUrl,
     );
+    if (_lastFm != null) {
+      await _exposeTitleToLastfm(
+        title: title,
+        artist: artist,
+      );
+    }
+  }
+
+  Future<Map<String, String>?> setLastFmAuth() async {
+    final lastfmua = _lastFm as LastFMUnauthorized;
+    launchUrl(
+      Uri.parse(await lastfmua.authorizeDesktop()),
+    );
+
+    const maxWaitDuration = Duration(minutes: 2); // Customize as needed
+    final startTime = DateTime.now();
+    await Future.delayed(const Duration(seconds: 10));
+    while (DateTime.now().difference(startTime) < maxWaitDuration) {
+      try {
+        final lastfm = await lastfmua.finishAuthorizeDesktop();
+        final sessionKey = lastfm.sessionKey;
+        final username = lastfm.username;
+        _updateLastFmAuthStatus(true);
+        return {
+          'sessionKey': sessionKey,
+          'username': username,
+        };
+      } catch (e) {
+        await Future.delayed(const Duration(seconds: 10));
+      }
+    }
+    _updateLastFmAuthStatus(false);
+    return null;
+  }
+
+  void _updateLastFmAuthStatus(bool status) {
+    _lastFmAuthController.add(status);
   }
 
   Future<void> _exposeTitleToDiscord({
@@ -54,6 +99,21 @@ class ExposeService {
     }
   }
 
+  Future<void> _exposeTitleToLastfm({
+    required String title,
+    required String artist,
+  }) async {
+    try {
+      await _lastFm?.scrobble(
+        track: title,
+        artist: artist,
+        startTime: DateTime.now(),
+      );
+    } on Exception catch (e) {
+      _errorController.add(e.toString());
+    }
+  }
+
   Future<void> connect() async {
     await connectToDiscord();
   }
@@ -77,5 +137,6 @@ class ExposeService {
   Future<void> dispose() async {
     await disconnectFromDiscord();
     await _errorController.close();
+    await _lastFmAuthController.close();
   }
 }
