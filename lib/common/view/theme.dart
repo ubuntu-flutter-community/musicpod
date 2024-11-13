@@ -297,7 +297,10 @@ List<Widget> space({
     children
         .expand(
           (item) sync* {
-            yield SizedBox(width: widthGap);
+            yield SizedBox(
+              width: widthGap,
+              height: heightGap,
+            );
             yield item;
           },
         )
