@@ -21,10 +21,16 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
     required this.active,
     this.iconColor,
     this.avatarColor,
+    this.mainAxisAlignment = MainAxisAlignment.center,
+    this.mainAxisSize = MainAxisSize.max,
+    this.avatarPlayButton = true,
   });
 
   final bool active;
   final Color? iconColor, avatarColor;
+  final MainAxisAlignment mainAxisAlignment;
+  final MainAxisSize mainAxisSize;
+  final bool avatarPlayButton;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +42,23 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
         queueLength > 1 || audio?.audioType == AudioType.local;
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
+
+    final rawPlayButton = PlayButton(
+      iconColor: iconColor ?? (theme.isLight ? Colors.white : Colors.black),
+      active: active,
+    );
+
+    final playButton = avatarPlayButton
+        ? CircleAvatar(
+            radius: avatarIconRadius,
+            backgroundColor:
+                avatarColor ?? (theme.isLight ? Colors.black : Colors.white),
+            child: SizedBox.square(
+              dimension: 2 * avatarIconRadius,
+              child: rawPlayButton,
+            ),
+          )
+        : rawPlayButton;
 
     final children = <Widget>[
       switch (audio?.audioType) {
@@ -51,7 +74,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
         AudioType.radio => IconButton(
             tooltip: context.l10n.skipToLivStream,
             onPressed: di<PlayerModel>().playNext,
-            icon: Icon(Iconz.refresh),
+            icon: Icon(Iconz.refresh, color: defaultColor),
           ),
         _ => const SizedBox.shrink()
       },
@@ -67,15 +90,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
           ),
         ),
       _flex,
-      CircleAvatar(
-        radius: avatarIconRadius,
-        backgroundColor:
-            avatarColor ?? (theme.isLight ? Colors.black : Colors.white),
-        child: PlayButton(
-          iconColor: iconColor ?? (theme.isLight ? Colors.white : Colors.black),
-          active: active,
-        ),
-      ),
+      playButton,
       _flex,
       if (showSkipButtons)
         IconButton(
@@ -99,13 +114,16 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
             active: active,
             iconColor: defaultColor,
           ),
-        AudioType.radio => const NextStationButton(),
+        AudioType.radio => NextStationButton(
+            iconColor: defaultColor,
+          ),
         _ => const SizedBox.shrink(),
       },
     ];
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: mainAxisSize,
+      mainAxisAlignment: mainAxisAlignment,
       children: children,
     );
   }

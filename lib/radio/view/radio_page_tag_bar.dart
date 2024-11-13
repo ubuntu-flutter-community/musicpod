@@ -5,7 +5,6 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/tapable_text.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -14,8 +13,6 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
-import '../radio_model.dart';
-import 'radio_connect_snackbar.dart';
 
 class RadioPageTagBar extends StatelessWidget {
   const RadioPageTagBar({super.key, required this.station});
@@ -75,31 +72,12 @@ class RadioPageTagBar extends StatelessWidget {
                 style: style,
                 wrapInFlexible: false,
                 onTap: () {
-                  di<RadioModel>().init().then(
-                    (connectedHost) {
-                      if (connectedHost != null) {
-                        di<LibraryModel>().push(pageId: kSearchPageId);
-                        di<SearchModel>()
-                          ..setTag(Tag(name: e, stationCount: 1))
-                          ..setAudioType(AudioType.radio)
-                          ..setSearchType(SearchType.radioTag)
-                          ..search();
-                      } else {
-                        if (context.mounted) {
-                          showSnackBar(
-                            context: context,
-                            content: buildConnectSnackBar(
-                              connectedHost: connectedHost,
-                              context: context,
-                            ),
-                            duration: Duration(
-                              seconds: connectedHost == null ? 10 : 3,
-                            ),
-                          );
-                        }
-                      }
-                    },
-                  );
+                  di<LibraryModel>().push(pageId: kSearchPageId);
+                  di<SearchModel>()
+                    ..setTag(Tag(name: e, stationCount: 1))
+                    ..setAudioType(AudioType.radio)
+                    ..setSearchType(SearchType.radioTag)
+                    ..search();
                 },
                 text: e.length > 20 ? e.substring(0, 19) : e,
               ),

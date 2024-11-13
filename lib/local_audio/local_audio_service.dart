@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 import '../common/data/audio.dart';
+import '../common/logging.dart';
 import '../common/view/audio_filter.dart';
 import '../extensions/media_file_x.dart';
 import '../settings/settings_service.dart';
@@ -273,7 +274,8 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
           final metadata = await readMetadata(e, getImage: false);
           newAudios.add(Audio.fromMetadata(path: e.path, data: metadata));
         }
-      } on Exception catch (_) {
+      } on Exception catch (error) {
+        printMessageInDebugMode(error);
         failedImports.add(e.path);
       }
     }

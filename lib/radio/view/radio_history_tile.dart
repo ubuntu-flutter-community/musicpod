@@ -17,7 +17,6 @@ import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../online_art_model.dart';
-import '../radio_model.dart';
 import 'radio_history_tile_image.dart';
 import 'station_page.dart';
 
@@ -94,7 +93,6 @@ class RadioHistoryTile extends StatelessWidget {
             onTap: !allowNavigation || icyName == null
                 ? null
                 : () async {
-                    await di<RadioModel>().init();
                     di<SearchModel>().radioNameSearch(icyName).then((v) {
                       if (v?.firstOrNull?.stationUUID != null) {
                         di<LibraryModel>().push(

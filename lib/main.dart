@@ -191,7 +191,10 @@ void registerServicesAndViewModels({
       ),
       dispose: (s) => s.dispose(),
     )
-    ..registerLazySingleton<RadioService>(() => RadioService())
+    ..registerLazySingleton<RadioService>(
+      RadioService.new,
+      dispose: (s) => s.dispose(),
+    )
     ..registerLazySingleton<GitHub>(() => GitHub())
     ..registerLazySingleton<ConnectivityModel>(
       () => ConnectivityModel(

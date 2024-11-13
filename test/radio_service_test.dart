@@ -10,7 +10,8 @@ Future<void> main() async {
   final service = RadioService();
   String? host;
   setUp(() async {
-    host = await service.init();
+    await service.init();
+    host = service.connectedHost;
   });
 
   group('radio tests', () {
