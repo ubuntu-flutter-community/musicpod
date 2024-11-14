@@ -3,8 +3,6 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/podcast_genre.dart';
-import '../../common/view/theme.dart';
-import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
 import '../search_model.dart';
@@ -14,7 +12,6 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
     final searchModel = di<SearchModel>();
 
     final podcastGenre = watchPropertyValue((SearchModel m) => m.podcastGenre);
@@ -29,15 +26,11 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: YaruChoiceChipBar(
-        chipBackgroundColor: chipColor(colorScheme),
-        selectedChipBackgroundColor: chipSelectionColor(colorScheme, false),
-        borderColor: chipBorder(false),
-        yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.stack,
+        style: YaruChoiceChipBarStyle.stack,
         labels: genres
             .map(
               (e) => Text(
                 e.localize(context.l10n),
-                style: chipTextStyle(colorScheme),
               ),
             )
             .toList(),
