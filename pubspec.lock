@@ -34,18 +34,18 @@ packages:
     dependency: transitive
     description:
       name: animated_vector
-      sha256: e15c6596549ca6e2e7491c11fbe168a1dead87475a828a4bc81cf104feca0432
+      sha256: f1beb10e6fcfd8bd15abb788e20345def786d1c7391d7c1426bb2a1f2adf2132
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0"
+    version: "0.2.2"
   animated_vector_annotations:
     dependency: transitive
     description:
       name: animated_vector_annotations
-      sha256: baa6b4ed98407220f2c9634f7da3cfa5eedb46798e090466f441e666e2f7c8c0
+      sha256: "07c1ea603a2096f7eb6f1c2b8f16c3c330c680843ea78b7782a3217c3c53f979"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0"
+    version: "0.2.2"
   archive:
     dependency: transitive
     description:
@@ -1105,8 +1105,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "0a122e798c87366d74a08bc1f1104e8aa0910ee3"
-      resolved-ref: "0a122e798c87366d74a08bc1f1104e8aa0910ee3"
+      ref: adbc04c8571a560ae0bae8afd10f95d4734c1ec5
+      resolved-ref: adbc04c8571a560ae0bae8afd10f95d4734c1ec5
       url: "https://github.com/ubuntu-flutter-community/phoenix_theme"
     source: git
     version: "1.0.1"
@@ -1798,11 +1798,12 @@ packages:
   yaru:
     dependency: "direct main"
     description:
-      name: yaru
-      sha256: b226f045d3104422d7f4d87572cc57c75b7d5695adf6fa47dbab3bc664714e69
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.3.1"
+      path: "."
+      ref: "9d1558be124005c89c1e320f1a42d582e110693c"
+      resolved-ref: "9d1558be124005c89c1e320f1a42d582e110693c"
+      url: "https://github.com/ubuntu/yaru.dart"
+    source: git
+    version: "5.3.2"
   yaru_window:
     dependency: "direct main"
     description:
