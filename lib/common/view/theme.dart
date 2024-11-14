@@ -238,7 +238,7 @@ FontWeight get mediumTextWeight =>
 FontWeight get largeTextWeight =>
     yaruStyled ? FontWeight.w200 : FontWeight.w300;
 
-double get chipHeight => isMobile ? 40 : 36.0;
+double get chipHeight => isMobile ? 40 : 34.0;
 
 EdgeInsets get audioTilePadding =>
     isMobile ? kMobileAudioTilePadding : kDesktopAudioTilePadding;

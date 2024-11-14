@@ -59,7 +59,7 @@ dependencies:
   phoenix_theme:
     git:
       url: https://github.com/ubuntu-flutter-community/phoenix_theme
-      ref: adbc04c8571a560ae0bae8afd10f95d4734c1ec5
+      ref: 57d1af53ff48300b2cb059d5da2a8b0978db6402
   pls: ^1.1.0
   podcast_search: ^0.7.3
   radio_browser_api: ^2.0.0
@@ -79,7 +79,7 @@ dependencies:
   yaru:
     git:
       url: https://github.com/ubuntu/yaru.dart
-      ref: 9d1558be124005c89c1e320f1a42d582e110693c
+      ref: b907e6bf9d84ee3b15bfe0cb9c6cb58b45ca3fe2
   yaru_window: ^0.2.1+1
   yaru_window_linux: ^0.2.0+1
 

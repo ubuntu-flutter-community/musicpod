@@ -10,9 +10,12 @@ class ArtistRoundImageContainer extends StatelessWidget {
   const ArtistRoundImageContainer({
     super.key,
     required this.artistAudios,
+    this.height,
+    this.width,
   });
 
   final List<Audio>? artistAudios;
+  final double? height, width;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +33,8 @@ class ArtistRoundImageContainer extends StatelessWidget {
                   path: e.path!,
                   fallback: const CoverBackground(),
                   fit: BoxFit.cover,
+                  height: height,
+                  width: width,
                 ),
               )
               .toList(),
