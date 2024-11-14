@@ -86,9 +86,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                 padding: getAdaptiveHorizontalPadding(constraints: constraints)
                     .copyWith(
                   bottom: filterPanelPadding.bottom,
-                  left: filterPanelPadding.left,
                   top: filterPanelPadding.top,
-                  right: filterPanelPadding.right,
                 ),
                 title: const LocalAudioControlPanel(),
               ),
