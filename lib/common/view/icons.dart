@@ -352,7 +352,7 @@ class Iconz {
       ? YaruIcons.globe
       : appleStyled
           ? CupertinoIcons.globe
-          : Icons.link_rounded;
+          : Icons.language;
   static IconData get imageMissing => yaruStyled
       ? YaruIcons.image_missing
       : appleStyled

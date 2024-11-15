@@ -27,12 +27,12 @@ class AnimatedStar extends StatelessWidget {
           ? Icon(
               Iconz.starFilled,
               size: iconSize,
-              color: isStarred ? color : null,
+              color: color,
             )
           : Icon(
               Iconz.star,
               size: iconSize,
-              color: isStarred ? color : null,
+              color: color,
             );
     }
   }
