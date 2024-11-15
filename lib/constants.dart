@@ -5,6 +5,8 @@ const kAppName = 'musicpod';
 
 const kAppId = 'org.feichtmeier.Musicpod';
 
+const kMusicPodFallBackColor = Color(0xFFed3c63);
+
 const kDiscordApplicationId = '1235321910221602837';
 
 const kLinuxDBusName = 'org.mpris.MediaPlayer2.musicpod';

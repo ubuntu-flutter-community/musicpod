@@ -501,8 +501,34 @@ class _LicenseTile extends StatelessWidget {
   }
 }
 
-class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
+class _ExposeOnlineSection extends StatefulWidget
+    with WatchItStatefulWidgetMixin {
   const _ExposeOnlineSection();
+
+  @override
+  State<_ExposeOnlineSection> createState() => _ExposeOnlineSectionState();
+}
+
+class _ExposeOnlineSectionState extends State<_ExposeOnlineSection> {
+  late TextEditingController _lastFmApiKeyController;
+  late TextEditingController _lastFmSecretController;
+  final _formkey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    final model = di<SettingsModel>();
+    _lastFmApiKeyController = TextEditingController(text: model.lastFmApiKey);
+    _lastFmSecretController = TextEditingController(text: model.lastFmSecret);
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _lastFmApiKeyController.dispose();
+    _lastFmSecretController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -514,20 +540,6 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
 
     final lastFmEnabled =
         watchPropertyValue((SettingsModel m) => m.enableLastFmScrobbling);
-
-    final lastFmApiKey =
-        watchPropertyValue((SettingsModel m) => m.lastFmApiKey);
-
-    final lastFmSecret =
-        watchPropertyValue((SettingsModel m) => m.lastFmSecret);
-
-    final TextEditingController lastFmApiKeyController =
-        TextEditingController(text: lastFmApiKey);
-
-    final TextEditingController lastFmSecretController =
-        TextEditingController(text: lastFmSecret);
-
-    final formkey = GlobalKey<FormState>();
 
     return YaruSection(
       headline: Text(l10n.exposeOnlineHeadline),
@@ -581,6 +593,9 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
                   const Icon(
                     TablerIcons.brand_lastfm,
                   ),
+                  if (lastFmEnabled &&
+                      watchValue((AppModel m) => m.isLastFmAuthorized))
+                    Text(l10n.connectedTo),
                   Text(l10n.exposeToLastfmTitle),
                 ],
               ),
@@ -601,16 +616,19 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
             Padding(
               padding: const EdgeInsets.all(8),
               child: Form(
-                key: formkey,
+                key: _formkey,
+                onChanged: _formkey.currentState?.validate,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: space(
                     heightGap: 10,
                     children: [
                       TextFormField(
-                        controller: lastFmApiKeyController,
+                        obscureText: true,
+                        controller: _lastFmApiKeyController,
                         decoration: InputDecoration(
                           hintText: l10n.lastfmApiKey,
+                          label: Text(l10n.lastfmApiKey),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -618,16 +636,19 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
                           }
                           return null;
                         },
+                        onChanged: (_) => _formkey.currentState?.validate(),
                         onFieldSubmitted: (value) async {
-                          if (formkey.currentState!.validate()) {
+                          if (_formkey.currentState!.validate()) {
                             di<SettingsModel>().setLastFmApiKey(value);
                           }
                         },
                       ),
                       TextFormField(
-                        controller: lastFmSecretController,
+                        obscureText: true,
+                        controller: _lastFmSecretController,
                         decoration: InputDecoration(
                           hintText: l10n.lastfmSecret,
+                          label: Text(l10n.lastfmSecret),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -635,20 +656,28 @@ class _ExposeOnlineSection extends StatelessWidget with WatchItMixin {
                           }
                           return null;
                         },
+                        onChanged: (_) => _formkey.currentState?.validate(),
                         onFieldSubmitted: (value) async {
-                          if (formkey.currentState!.validate()) {
+                          if (_formkey.currentState!.validate()) {
                             di<SettingsModel>().setLastFmSecret(value);
                           }
                         },
                       ),
                       ImportantButton(
                         onPressed: () {
-                          if (lastFmApiKeyController.text.isNotEmpty &&
-                              lastFmSecretController.text.isNotEmpty) {
-                            di<AppModel>().setLastFmAuth();
-                          }
+                          di<SettingsModel>()
+                            ..setLastFmApiKey(
+                              _lastFmApiKeyController.text,
+                            )
+                            ..setLastFmSecret(
+                              _lastFmSecretController.text,
+                            );
+                          di<AppModel>().authorizeLastFm(
+                            apiKey: _lastFmApiKeyController.text,
+                            apiSecret: _lastFmSecretController.text,
+                          );
                         },
-                        child: Text(l10n.save),
+                        child: Text(l10n.saveAndAuthorize),
                       ),
                     ],
                   ),
