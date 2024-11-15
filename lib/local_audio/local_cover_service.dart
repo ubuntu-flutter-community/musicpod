@@ -21,7 +21,7 @@ class LocalCoverService {
     required String path,
   }) async {
     if (albumId.isNotEmpty == true) {
-      final metadata = await readMetadata(File(path), getImage: true);
+      final metadata = readMetadata(File(path), getImage: true);
       final cover = _put(
         albumId: albumId,
         data: metadata.pictures
