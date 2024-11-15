@@ -41,11 +41,10 @@ class ExternalPathService {
       return;
     }
     try {
-      readMetadata(File(path), getImage: true).then(
-        (data) => _playerService.startPlaylist(
-          listName: path,
-          audios: [Audio.fromMetadata(path: path, data: data)],
-        ),
+      final metadata = readMetadata(File(path), getImage: true);
+      _playerService.startPlaylist(
+        listName: path,
+        audios: [Audio.fromMetadata(path: path, data: metadata)],
       );
     } on Exception catch (e) {
       printMessageInDebugMode(e);
@@ -61,11 +60,10 @@ class ExternalPathService {
       try {
         openFile().then((xfile) {
           if (xfile?.path == null) return;
-          readMetadata(File(xfile!.path), getImage: true).then(
-            (metadata) => _playerService.startPlaylist(
-              listName: xfile.path,
-              audios: [Audio.fromMetadata(path: xfile.path, data: metadata)],
-            ),
+          final metadata = readMetadata(File(xfile!.path), getImage: true);
+          _playerService.startPlaylist(
+            listName: xfile.path,
+            audios: [Audio.fromMetadata(path: xfile.path, data: metadata)],
           );
         });
       } on Exception catch (e) {
@@ -113,7 +111,7 @@ class ExternalPathService {
         audios.add(
           Audio.fromMetadata(
             path: path,
-            data: await readMetadata(
+            data: readMetadata(
               File(e.link.replaceAll('file://', '')),
               getImage: true,
             ),
@@ -160,7 +158,7 @@ class ExternalPathService {
         audios.add(
           Audio.fromMetadata(
             path: e.file!,
-            data: await readMetadata(File(e.file!), getImage: true),
+            data: readMetadata(File(e.file!), getImage: true),
           ),
         );
       }
