@@ -17,6 +17,7 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
     final model = di<SettingsModel>();
     final l10n = context.l10n;
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
+
     return YaruSection(
       margin: const EdgeInsets.only(
         left: kYaruPagePadding,
@@ -63,6 +64,16 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
               onChanged: di<SettingsModel>().setUseMoreAnimations,
               value:
                   watchPropertyValue((SettingsModel m) => m.useMoreAnimations),
+            ),
+          ),
+          YaruTile(
+            title: Text(l10n.showPositionDurationTitle),
+            subtitle: Text(l10n.showPositionDurationDescription),
+            trailing: CommonSwitch(
+              onChanged: di<SettingsModel>().setShowPositionDuration,
+              value: watchPropertyValue(
+                (SettingsModel m) => m.showPositionDuration,
+              ),
             ),
           ),
         ],

@@ -100,6 +100,10 @@ class SettingsModel extends SafeChangeNotifier {
   void setCloseBtnActionIndex(CloseBtnAction value) =>
       _service.setCloseBtnActionIndex(value);
 
+  bool get showPositionDuration => _service.showPositionDuration;
+  Future<void> setShowPositionDuration(bool value) async =>
+      _service.setShowPositionDuration(value);
+
   void init() => _propertiesChangedSub ??=
       _service.propertiesChanged.listen((_) => notifyListeners());
 
