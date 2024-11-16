@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
+import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/header_bar.dart';

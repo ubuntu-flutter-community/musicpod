@@ -211,7 +211,14 @@ class PlayerService {
       Media? media = audio!.path != null
           ? Media('file://${audio!.path!}')
           : (audio!.url != null)
-              ? Media(audio!.url!)
+              ? Media(
+                  audio!.url!,
+                  httpHeaders: {
+                    'Accept': '*',
+                    'User-Agent': '$kAppTitle ($kRepoUrl)',
+                    'Content-Language': 'de-DE',
+                  },
+                )
               : null;
       if (media == null) return;
       _player.open(media).then((_) {

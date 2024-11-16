@@ -4,6 +4,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/constants.dart';
 
 import '../../app/connectivity_model.dart';
+import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
@@ -58,15 +59,16 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
       topButtonBar: [
         const Spacer(),
         controls,
-        Tooltip(
-          message: context.l10n.leaveFullScreen,
-          child: MaterialFullscreenButton(
-            icon: Icon(
-              Iconz.fullScreenExit,
-              color: baseColor,
+        if (allowVideoFullScreen)
+          Tooltip(
+            message: context.l10n.leaveFullScreen,
+            child: MaterialFullscreenButton(
+              icon: Icon(
+                Iconz.fullScreenExit,
+                color: baseColor,
+              ),
             ),
           ),
-        ),
       ],
       bottomButtonBarMargin: const EdgeInsets.all(20),
       bottomButtonBar: [
@@ -92,15 +94,16 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
         topButtonBar: [
           const Spacer(),
           controls,
-          Tooltip(
-            message: context.l10n.fullScreen,
-            child: MaterialFullscreenButton(
-              icon: Icon(
-                Iconz.fullScreen,
-                color: baseColor,
+          if (allowVideoFullScreen)
+            Tooltip(
+              message: context.l10n.fullScreen,
+              child: MaterialFullscreenButton(
+                icon: Icon(
+                  Iconz.fullScreen,
+                  color: baseColor,
+                ),
               ),
             ),
-          ),
         ],
       ),
       child: RepaintBoundary(

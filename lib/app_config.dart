@@ -8,3 +8,10 @@ bool allowDiscordRPC = kDebugMode ||
     Platform.isMacOS ||
     Platform.isWindows ||
     bool.tryParse(const String.fromEnvironment('ALLOW_DISCORD_RPC')) == true;
+
+bool get yaruStyled => Platform.isLinux;
+
+bool get appleStyled => Platform.isMacOS || Platform.isIOS;
+
+// TODO(#1022): fix linux video fullscreen
+bool get allowVideoFullScreen => !Platform.isLinux;

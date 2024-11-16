@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import '../../app_config.dart';
 import '../../common/data/podcast_genre.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';

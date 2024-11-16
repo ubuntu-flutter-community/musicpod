@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../library/library_model.dart';
-import 'theme.dart';
 
 class NavBackButton extends StatelessWidget {
   const NavBackButton({super.key});

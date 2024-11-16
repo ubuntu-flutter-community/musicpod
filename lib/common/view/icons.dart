@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
-import 'theme.dart';
+import '../../app_config.dart';
 
 class Iconz {
   static IconData get image => yaruStyled
