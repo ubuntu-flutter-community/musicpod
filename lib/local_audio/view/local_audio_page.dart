@@ -48,6 +48,9 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   Widget build(BuildContext context) {
     final audios = watchPropertyValue((LocalAudioModel m) => m.audios);
     final allArtists = watchPropertyValue((LocalAudioModel m) => m.allArtists);
+    final allAlbumArtists =
+        watchPropertyValue((LocalAudioModel m) => m.allAlbumArtists);
+
     final allAlbums = watchPropertyValue((LocalAudioModel m) => m.allAlbums);
     final allGenres = watchPropertyValue((LocalAudioModel m) => m.allGenres);
     final playlists =
@@ -97,6 +100,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                   titles: audios,
                   albums: allAlbums,
                   artists: allArtists,
+                  albumArtists: allAlbumArtists,
                   genres: allGenres,
                   playlists: playlists,
                   noResultIcon: const AnimatedEmoji(AnimatedEmojis.bird),

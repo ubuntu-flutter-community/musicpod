@@ -41,6 +41,7 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   List<Audio>? get audios => _service.audios;
   List<String>? get allArtists => _service.allArtists;
+  List<String>? get allAlbumArtists => _service.allAlbumArtists;
   List<String>? get allGenres => _service.allGenres;
   List<String>? get allAlbums => _service.allAlbums;
 
@@ -55,6 +56,12 @@ class LocalAudioModel extends SafeChangeNotifier {
     AudioFilter audioFilter = AudioFilter.album,
   ]) =>
       _service.findTitlesOfArtist(artist, audioFilter);
+
+  List<Audio>? findTitlesOfAlbumArtists(
+    String artist, [
+    AudioFilter audioFilter = AudioFilter.album,
+  ]) =>
+      _service.findTitlesOfAlbumArtists(artist, audioFilter);
 
   List<String>? findArtistsOfGenre(String genre) =>
       _service.findArtistsOfGenre(genre);

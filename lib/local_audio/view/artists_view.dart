@@ -85,3 +85,76 @@ class ArtistsView extends StatelessWidget {
     );
   }
 }
+
+class AlbumArtistsView extends StatelessWidget {
+  const AlbumArtistsView({
+    super.key,
+    this.albumArtists,
+    this.noResultMessage,
+    this.noResultIcon,
+  });
+
+  final List<String>? albumArtists;
+  final Widget? noResultMessage, noResultIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    if (albumArtists == null) {
+      return const SliverFillRemainingProgress();
+    }
+
+    if (albumArtists!.isEmpty) {
+      return SliverFillNoSearchResultPage(
+        icon: noResultIcon,
+        message: noResultMessage,
+      );
+    }
+    final model = di<LocalAudioModel>();
+
+    return SliverGrid.builder(
+      itemCount: albumArtists!.length,
+      gridDelegate: kDiskGridDelegate,
+      itemBuilder: (context, index) {
+        final albumArtistNames = albumArtists!.elementAt(index);
+        final albumArtistsAudios =
+            model.findTitlesOfAlbumArtists(albumArtistNames);
+
+        final text = albumArtists!.elementAt(index);
+
+        return YaruSelectableContainer(
+          selected: false,
+          onTap: () {
+            final artist = albumArtistsAudios?.firstOrNull?.artist;
+            if (artist == null) {
+              showSnackBar(
+                context: context,
+                content: Text(context.l10n.unknown),
+              );
+            } else {
+              di<LibraryModel>().push(
+                builder: (_) => ArtistPage(artistAudios: albumArtistsAudios),
+                pageId: artist,
+              );
+            }
+          },
+          borderRadius: BorderRadius.circular(300),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: ArtistRoundImageContainer(
+                  artistAudios: albumArtistsAudios,
+                  height: audioCardDimension,
+                  width: audioCardDimension,
+                ),
+              ),
+              ArtistVignette(text: text),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}

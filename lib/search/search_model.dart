@@ -143,18 +143,19 @@ class SearchModel extends SafeChangeNotifier {
   Future<LocalSearchResult?> localSearch(String? query) async {
     await Future.delayed(const Duration(microseconds: 1));
     final search = _localAudioService.search(_searchQuery);
-    return (
-      albums: search?.albums,
+    return LocalSearchResult(
       titles: search?.titles,
-      genres: search?.genres,
       artists: search?.artists,
+      albumArtists: search?.albumArtists,
+      albums: search?.albums,
+      genres: search?.genres,
       playlists: (query != null && query.isNotEmpty)
           ? _libraryService.playlists.keys
               .where(
                 (e) => e.toLowerCase().contains(query.toLowerCase()),
               )
               .toList()
-          : null
+          : null,
     );
   }
 
@@ -311,6 +312,8 @@ class SearchModel extends SafeChangeNotifier {
               setSearchType(SearchType.localAlbum);
             } else if (localSearchResult?.artists?.isNotEmpty == true) {
               setSearchType(SearchType.localArtist);
+            } else if (localSearchResult?.albumArtists?.isNotEmpty == true) {
+              setSearchType(SearchType.localAlbumArtist);
             } else if (localSearchResult?.genres?.isNotEmpty == true) {
               setSearchType(SearchType.localGenreName);
             } else if (localSearchResult?.playlists?.isNotEmpty == true) {

@@ -59,6 +59,8 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
             ' (${localSearchResult?.albums?.length ?? '0'})',
           SearchType.localArtist =>
             ' (${localSearchResult?.artists?.length ?? '0'})',
+          SearchType.localAlbumArtist =>
+            ' (${localSearchResult?.albumArtists?.length ?? '0'})',
           SearchType.localGenreName =>
             ' (${localSearchResult?.genres?.length ?? '0'})',
           SearchType.localPlaylists =>
