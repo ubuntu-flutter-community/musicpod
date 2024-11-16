@@ -12,13 +12,23 @@ import '../extensions/media_file_x.dart';
 import '../settings/settings_service.dart';
 import 'local_cover_service.dart';
 
-typedef LocalSearchResult = ({
-  List<Audio>? titles,
-  List<String>? artists,
-  List<String>? albums,
-  List<String>? genres,
-  List<String>? playlists,
-});
+class LocalSearchResult {
+  const LocalSearchResult({
+    required this.titles,
+    required this.artists,
+    required this.albumArtists,
+    required this.albums,
+    required this.genres,
+    required this.playlists,
+  });
+
+  final List<Audio>? titles;
+  final List<String>? artists;
+  final List<String>? albumArtists;
+  final List<String>? albums;
+  final List<String>? genres;
+  final List<String>? playlists;
+}
 
 class LocalAudioService {
   final SettingsService? _settingsService;
@@ -61,6 +71,22 @@ class LocalAudioService {
     }
     _allArtists = artists;
     _allArtists?.sort();
+  }
+
+  List<String>? _allAlbumArtists;
+  List<String>? get allAlbumArtists => _allAlbumArtists;
+  void _findAllAlbumArtists() {
+    if (_audios == null) return;
+    final albumArtists = <String>[];
+    for (var a in audios!) {
+      final albumArtist = a.albumArtist;
+      if (albumArtist?.isNotEmpty == true &&
+          !albumArtists.contains(albumArtist)) {
+        albumArtists.add(albumArtist!);
+      }
+    }
+    _allAlbumArtists = albumArtists;
+    _allAlbumArtists?.sort();
   }
 
   List<String>? _allGenres;
@@ -144,6 +170,25 @@ class LocalAudioService {
     return artistList != null ? List.from(artistList) : null;
   }
 
+  List<Audio>? findTitlesOfAlbumArtists(
+    String albumArtist, [
+    AudioFilter audioFilter = AudioFilter.album,
+  ]) {
+    final album = audios?.where(
+      (a) => a.albumArtist != null && a.albumArtist == albumArtist,
+    );
+
+    var albumArtistList = album?.toList();
+    if (albumArtistList != null) {
+      sortListByAudioFilter(
+        audioFilter: audioFilter,
+        audios: albumArtistList,
+      );
+      albumArtistList = splitByDiscs(albumArtistList).toList();
+    }
+    return albumArtistList != null ? List.from(albumArtistList) : null;
+  }
+
   List<String>? findArtistsOfGenre(String genre) {
     if (audios == null) return null;
     final artistsOfGenre = <String>[];
@@ -190,9 +235,10 @@ class LocalAudioService {
   LocalSearchResult? search(String? query) {
     if (query == null) return null;
     if (query.isEmpty) {
-      return (
+      return const LocalSearchResult(
         titles: [],
         artists: [],
+        albumArtists: [],
         albums: [],
         genres: [],
         playlists: [],
@@ -227,7 +273,7 @@ class LocalAudioService {
       }
     }
 
-    return (
+    return LocalSearchResult(
       titles: audios
               ?.where(
                 (audio) =>
@@ -239,6 +285,9 @@ class LocalAudioService {
       albums: albumsResult,
       genres: genreFindings,
       artists: allArtists
+          ?.where((a) => a.toLowerCase().contains(query.toLowerCase()))
+          .toList(),
+      albumArtists: allAlbumArtists
           ?.where((a) => a.toLowerCase().contains(query.toLowerCase()))
           .toList(),
       playlists: [],
@@ -259,6 +308,7 @@ class LocalAudioService {
     _failedImports = result.failedImports;
     _sortAllTitles();
     _findAllArtists();
+    _findAllAlbumArtists();
     findAllAlbums();
     _findAllGenres();
     _audiosController.add(true);
