@@ -553,13 +553,14 @@ class PlayerService {
 
   Future<void> _initMediaControl() async {
     if (Platform.isWindows) {
-      _initSmtc();
+      await _initSmtc();
     } else if (Platform.isLinux || Platform.isAndroid || Platform.isMacOS) {
       await _initAudioService();
     }
   }
 
-  void _initSmtc() {
+  Future<void> _initSmtc() async {
+    await SMTCWindows.initialize();
     _smtc = SMTCWindows(
       enabled: true,
       config: const SMTCConfig(
