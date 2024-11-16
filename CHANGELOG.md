@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.4.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.3.0...v2.4.0) (2024-11-16)
+
+
+### Features
+
+* add last.fm integration ([#1000](https://github.com/ubuntu-flutter-community/musicpod/issues/1000)) ([0145295](https://github.com/ubuntu-flutter-community/musicpod/commit/01452957253c30f8c77ba62b221ff1752bd03295))
+* improve local audio import speed by updating audio_metadata_reader ([#1019](https://github.com/ubuntu-flutter-community/musicpod/issues/1019)) ([ba9c0c6](https://github.com/ubuntu-flutter-community/musicpod/commit/ba9c0c69bb7949fc388fe17b31d515c69c203b98))
+* Italian language update ([#1013](https://github.com/ubuntu-flutter-community/musicpod/issues/1013)) ([ecc360e](https://github.com/ubuntu-flutter-community/musicpod/commit/ecc360ee1b9b0278a84fbf7a7b456d60fa60a171))
+* update theme packages and remove chip theme modifications ([#1014](https://github.com/ubuntu-flutter-community/musicpod/issues/1014)) ([31bee47](https://github.com/ubuntu-flutter-community/musicpod/commit/31bee4724d253220f761688c0a7b18187ebb31e9))
+
+
+### Bug Fixes
+
+* get notified about cover store changes  ([#1011](https://github.com/ubuntu-flutter-community/musicpod/issues/1011)) ([316adf5](https://github.com/ubuntu-flutter-community/musicpod/commit/316adf50dc3a2bbfcc1c21b2abdedff2f25189e4))
+* last fm improve settings UI ([#1012](https://github.com/ubuntu-flutter-community/musicpod/issues/1012)) ([5b35fe3](https://github.com/ubuntu-flutter-community/musicpod/commit/5b35fe382d335013340690ffd64d8d4d11329d19))
+* local cover and chip sizes ([#1015](https://github.com/ubuntu-flutter-community/musicpod/issues/1015)) ([8f6ccc2](https://github.com/ubuntu-flutter-community/musicpod/commit/8f6ccc22e8f8b12f4634c49ff6f7398a33870297))
+* monochrome controls for fullscreen radio TV video streams ([#1009](https://github.com/ubuntu-flutter-community/musicpod/issues/1009)) ([9effd9c](https://github.com/ubuntu-flutter-community/musicpod/commit/9effd9ceaab0ffff1357ab641570b34d0eb551e9))
+* move last fm to its own service, re-organize main by adding register.dart ([#1017](https://github.com/ubuntu-flutter-community/musicpod/issues/1017)) ([eab977e](https://github.com/ubuntu-flutter-community/musicpod/commit/eab977e4c26116964b4273cfe4abff1788c6bac2))
+* unstarred light theme icon, settingsservice ([#1018](https://github.com/ubuntu-flutter-community/musicpod/issues/1018)) ([1bad15e](https://github.com/ubuntu-flutter-community/musicpod/commit/1bad15ef41e57ae868290f7d716882ace1254e11))
+
 ## [2.3.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.2.0...v2.3.0) (2024-11-09)
 
 
