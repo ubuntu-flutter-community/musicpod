@@ -890,7 +890,6 @@
   ],
 
   "it": [
-    "saveAndAuthorize",
     "exposeToLastfmTitle",
     "exposeToLastfmSubTitle",
     "lastfmApiKey",
