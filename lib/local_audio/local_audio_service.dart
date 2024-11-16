@@ -280,7 +280,7 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
     for (final e in entities) {
       try {
         if (e is File && e.isValidMedia) {
-          final metadata = await readMetadata(e, getImage: false);
+          final metadata = readMetadata(e, getImage: false);
           newAudios.add(Audio.fromMetadata(path: e.path, data: metadata));
         }
       } on Exception catch (error) {

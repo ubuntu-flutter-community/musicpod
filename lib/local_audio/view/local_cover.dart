@@ -31,14 +31,15 @@ class LocalCover extends StatefulWidget with WatchItStatefulWidgetMixin {
 
 class _LocalCoverState extends State<LocalCover> {
   late Future<Uint8List?> _future;
+  Uint8List? _cover;
 
   @override
   void initState() {
     super.initState();
     final localCoverModel = di<LocalCoverModel>();
-    final init = localCoverModel.get(widget.albumId);
-    _future = init != null
-        ? Future.value(init)
+    _cover = localCoverModel.get(widget.albumId);
+    _future = _cover != null
+        ? Future.value(_cover)
         : localCoverModel.getCover(
             albumId: widget.albumId,
             path: widget.path,
@@ -47,15 +48,17 @@ class _LocalCoverState extends State<LocalCover> {
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((LocalCoverModel m) => m.storeLength);
-    final cover = di<LocalCoverModel>().get(widget.albumId);
+    if (_cover == null) {
+      watchPropertyValue((LocalCoverModel m) => m.storeLength);
+      _cover = di<LocalCoverModel>().get(widget.albumId);
+    }
     final fit = widget.fit ?? BoxFit.fitHeight;
     const medium = FilterQuality.medium;
 
-    Widget child = cover != null
+    Widget child = _cover != null
         ? Image.memory(
             key: ValueKey(widget.albumId),
-            cover,
+            _cover!,
             fit: fit,
             height: widget.dimension ?? widget.height,
             width: widget.width,
@@ -86,10 +89,10 @@ class _LocalCoverState extends State<LocalCover> {
       height: widget.dimension ?? widget.height,
       width: widget.dimension ?? widget.width,
       child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 200),
         transitionBuilder: (Widget child, Animation<double> animation) =>
             FadeTransition(opacity: animation, child: child),
-        reverseDuration: const Duration(milliseconds: 500),
+        reverseDuration: const Duration(milliseconds: 200),
         child: child,
       ),
     );

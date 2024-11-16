@@ -201,23 +201,6 @@ InputDecoration createYaruDecoration({
   );
 }
 
-Color? chipColor(ColorScheme colorScheme) {
-  return yaruStyled
-      ? colorScheme.surface.scale(lightness: colorScheme.isDark ? 0.03 : -0.1)
-      : null;
-}
-
-Color? chipBorder(bool loading) {
-  return yaruStyled ? (loading ? null : Colors.transparent) : null;
-}
-
-TextStyle chipTextStyle(ColorScheme colorScheme) =>
-    TextStyle(color: colorScheme.onSurface);
-
-Color? chipSelectionColor(ColorScheme colorScheme, bool loading) {
-  return yaruStyled ? (loading ? colorScheme.outline : null) : null;
-}
-
 double get iconSize => yaruStyled
     ? kYaruIconSize
     : isMobile
@@ -255,7 +238,7 @@ FontWeight get mediumTextWeight =>
 FontWeight get largeTextWeight =>
     yaruStyled ? FontWeight.w200 : FontWeight.w300;
 
-double get chipHeight => isMobile ? 40 : 36.0;
+double get chipHeight => isMobile ? 40 : 34.0;
 
 EdgeInsets get audioTilePadding =>
     isMobile ? kMobileAudioTilePadding : kDesktopAudioTilePadding;

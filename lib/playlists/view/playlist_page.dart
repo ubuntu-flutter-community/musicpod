@@ -72,7 +72,7 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
               if (value == null) return;
               final file = File.fromUri(value);
               if (file.isValidMedia) {
-                final data = await readMetadata(file, getImage: true);
+                final data = readMetadata(file, getImage: true);
                 var audio = Audio.fromMetadata(path: file.path, data: data);
                 playlist?.add(audio);
               }

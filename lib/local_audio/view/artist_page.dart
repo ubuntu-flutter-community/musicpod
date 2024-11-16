@@ -101,8 +101,11 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
                   child: AudioPageHeader(
                     imageRadius: BorderRadius.circular(10000),
                     title: artistAudios?.firstOrNull?.artist ?? '',
-                    image:
-                        ArtistRoundImageContainer(artistAudios: artistAudios),
+                    image: ArtistRoundImageContainer(
+                      artistAudios: artistAudios,
+                      height: kMaxAudioPageHeaderHeight,
+                      width: kMaxAudioPageHeaderHeight,
+                    ),
                     subTitle: artistAudios?.firstOrNull?.genre,
                     label: context.l10n.artist,
                     onLabelTab: onAlbumTap,

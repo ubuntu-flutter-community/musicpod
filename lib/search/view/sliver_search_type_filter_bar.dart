@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/view/theme.dart';
-import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_service.dart';
 import '../search_model.dart';
@@ -14,7 +12,6 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
     final searchModel = di<SearchModel>();
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
     final searchTypes = watchPropertyValue((SearchModel m) => m.searchTypes);
@@ -25,10 +22,7 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: YaruChoiceChipBar(
-        yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.stack,
-        chipBackgroundColor: chipColor(colorScheme),
-        selectedChipBackgroundColor: chipSelectionColor(colorScheme, false),
-        borderColor: chipBorder(false),
+        style: YaruChoiceChipBarStyle.stack,
         clearOnSelect: false,
         selectedFirst: false,
         onSelected: (i) {
@@ -44,7 +38,6 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
                   localSearchResult: localSearchResult,
                   searchQuery: searchQuery,
                 ),
-                style: chipTextStyle(colorScheme),
               ),
             )
             .toList(),
