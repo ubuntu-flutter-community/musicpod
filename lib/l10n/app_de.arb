@@ -199,6 +199,8 @@
     "theme": "Thema",
     "useMoreAnimationsTitle": "Nutze mehr Animationen",
     "useMoreAnimationsDescription": "Dies wird die CPU-Nutzung erhöhen, was auf älteren System unerwünscht sein könnte.",
+    "showPositionDurationTitle": "Zeige Position / Dauer im unteren Player",
+    "showPositionDurationDescription": "Dies wird andernfalls trotzdem beim Track-Hover oder Vollansicht-Player angezeigt.",
     "license": "Lizenz",
     "dependencies": "Abhängigkeiten",
     "light": "Hell",
