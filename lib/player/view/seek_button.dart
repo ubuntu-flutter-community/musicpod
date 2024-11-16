@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app_config.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../player_model.dart';
 

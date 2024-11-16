@@ -6,6 +6,7 @@ import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../constants.dart';
 import 'icons.dart';
 
@@ -69,10 +70,6 @@ Color getPlayerBg(Color? surfaceTintColor, Color fallbackColor) {
     return fallbackColor;
   }
 }
-
-bool get yaruStyled => Platform.isLinux;
-
-bool get appleStyled => Platform.isMacOS || Platform.isIOS;
 
 const alphabetColors = {
   'A': Colors.red,

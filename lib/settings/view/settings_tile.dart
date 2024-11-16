@@ -6,9 +6,9 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
+import '../../app_config.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
-import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
-import '../common/view/theme.dart';
+import '../../app_config.dart';
 
 extension ThemeDataX on ThemeData {
   bool get isLight => brightness == Brightness.light;

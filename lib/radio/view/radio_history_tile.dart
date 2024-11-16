@@ -3,13 +3,13 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/constants.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/copy_clipboard_content.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/tapable_text.dart';
-import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';

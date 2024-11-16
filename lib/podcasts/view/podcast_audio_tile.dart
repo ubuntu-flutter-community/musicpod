@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/share_button.dart';
@@ -14,8 +15,8 @@ import '../../extensions/duration_x.dart';
 import '../../extensions/int_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
-import 'podcast_tile_play_button.dart';
 import 'download_button.dart';
+import 'podcast_tile_play_button.dart';
 
 class PodcastAudioTile extends StatelessWidget {
   const PodcastAudioTile({

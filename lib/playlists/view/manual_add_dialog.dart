@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';

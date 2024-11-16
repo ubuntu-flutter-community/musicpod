@@ -1,6 +1,9 @@
-import '../../extensions/build_context_x.dart';
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
+import '../../app_config.dart';
+import '../../extensions/build_context_x.dart';
 import 'theme.dart';
 
 class SearchInput extends StatefulWidget {
