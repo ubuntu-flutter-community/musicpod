@@ -150,7 +150,7 @@ class PlayerModel extends SafeChangeNotifier {
         .replaceAll(')', '');
   }
 
-  void setTimer(Duration duration) => _playerService.setTimer(duration);
+  void setTimer(Duration duration) => _playerService.setPauseTimer(duration);
 
   @override
   Future<void> dispose() async {

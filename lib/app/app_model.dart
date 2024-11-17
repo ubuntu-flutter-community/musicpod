@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:github/github.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../constants.dart';
@@ -8,7 +9,7 @@ import '../settings/settings_service.dart';
 
 class AppModel extends SafeChangeNotifier {
   AppModel({
-    required String appVersion,
+    required PackageInfo packageInfo,
     required SettingsService settingsService,
     required GitHub gitHub,
     required bool allowManualUpdates,
@@ -19,7 +20,7 @@ class AppModel extends SafeChangeNotifier {
         _gitHub = gitHub,
         _allowManualUpdates = allowManualUpdates,
         _settingsService = settingsService,
-        _version = appVersion,
+        _packageInfo = packageInfo,
         _exposeService = exposeService;
 
   final ExposeService _exposeService;
@@ -64,14 +65,14 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  final String _version;
-  String? get version => _version;
+  final PackageInfo _packageInfo;
+  String get version => _packageInfo.version;
 
   Future<void> disposePatchNotes() async =>
-      _settingsService.disposePatchNotes(_version);
+      _settingsService.disposePatchNotes(version);
 
   bool recentPatchNotesDisposed() =>
-      _settingsService.recentPatchNotesDisposed(_version);
+      _settingsService.recentPatchNotesDisposed(version);
   bool? _updateAvailable;
   bool? get updateAvailable => _updateAvailable;
   String? _onlineVersion;

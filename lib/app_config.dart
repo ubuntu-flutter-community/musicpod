@@ -15,3 +15,8 @@ bool get appleStyled => Platform.isMacOS || Platform.isIOS;
 
 // TODO(#1022): fix linux video fullscreen
 bool get allowVideoFullScreen => !Platform.isLinux;
+
+bool get isGtkApp => Platform.isLinux;
+
+bool get useCustomBackGestures =>
+    Platform.isAndroid || Platform.isIOS || Platform.isFuchsia;
