@@ -183,9 +183,10 @@ class _PodcastPageState extends State<PodcastPage> {
                   ),
                 ),
                 SliverPadding(
-                  padding:
-                      getAdaptiveHorizontalPadding(constraints: constraints)
-                          .copyWith(bottom: kYaruPagePadding),
+                  padding: getAdaptiveHorizontalPadding(
+                    min: isMobile ? 0 : 15,
+                    constraints: constraints,
+                  ).copyWith(bottom: kYaruPagePadding),
                   sliver: SliverPodcastPageList(
                     audios: episodesWithDownloads,
                     pageId: widget.feedUrl,

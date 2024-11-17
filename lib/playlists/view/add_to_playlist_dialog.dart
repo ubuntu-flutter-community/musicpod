@@ -9,6 +9,7 @@ import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
+import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import 'add_to_playlist_snack_bar.dart';
@@ -70,29 +71,43 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
     final playlistNames = watchPropertyValue(
       (LibraryModel m) => m.playlists.keys.map((e) => e.toString()),
     );
-    return ListView(
+
+    final children = [
+      ListTile(
+        onTap: () => playlistNavigatorKey.currentState?.pushNamed('/new'),
+        leading: SideBarFallBackImage(
+          color: Colors.transparent,
+          child: Icon(Iconz.plus),
+        ),
+        title: Text(context.l10n.createNewPlaylist),
+      ),
+      _PlaylistTile(
+        playlistId: kLikedAudiosPageId,
+        title: context.l10n.likedSongs,
+        iconData: Iconz.heartFilled,
+        libraryModel: di<LibraryModel>(),
+        audio: audio,
+      ),
+      ...playlistNames.map(
+        (playlistId) => Builder(
+          builder: (context) {
+            return _PlaylistTile(
+              playlistId: playlistId,
+              libraryModel: di<LibraryModel>(),
+              audio: audio,
+            );
+          },
+        ),
+      ),
+    ];
+
+    return ListView.separated(
       shrinkWrap: true,
-      children: [
-        ListTile(
-          onTap: () => playlistNavigatorKey.currentState?.pushNamed('/new'),
-          leading: SideBarFallBackImage(
-            color: Colors.transparent,
-            child: Icon(Iconz.plus),
-          ),
-          title: Text(context.l10n.createNewPlaylist),
-        ),
-        ...playlistNames.map(
-          (playlistId) => Builder(
-            builder: (context) {
-              return _PlaylistTile(
-                playlistId: playlistId,
-                libraryModel: di<LibraryModel>(),
-                audio: audio,
-              );
-            },
-          ),
-        ),
-      ],
+      itemCount: children.length,
+      separatorBuilder: (context, index) => const SizedBox(
+        height: 10,
+      ),
+      itemBuilder: (context, index) => children.elementAt(index),
     );
   }
 }
@@ -102,11 +117,15 @@ class _PlaylistTile extends StatelessWidget {
     required this.libraryModel,
     required this.audio,
     required this.playlistId,
+    this.title,
+    this.iconData,
   });
 
   final LibraryModel libraryModel;
   final Audio audio;
   final String playlistId;
+  final String? title;
+  final IconData? iconData;
 
   @override
   Widget build(BuildContext context) {
@@ -122,9 +141,9 @@ class _PlaylistTile extends StatelessWidget {
       },
       leading: SideBarFallBackImage(
         color: getAlphabetColor(playlistId),
-        child: Icon(Iconz.starFilled),
+        child: Icon(iconData ?? Iconz.starFilled),
       ),
-      title: Text(playlistId),
+      title: Text(title ?? playlistId),
     );
   }
 }

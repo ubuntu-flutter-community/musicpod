@@ -218,7 +218,11 @@ double get avatarIconRadius =>
             : 38) /
     2;
 
-double get bigPlayButtonRadius => yaruStyled ? 22 : 23;
+double get bigPlayButtonRadius => yaruStyled
+    ? 22
+    : isMobile
+        ? 26
+        : 23;
 
 EdgeInsets get filterPanelPadding =>
     EdgeInsets.only(top: isMobile ? 10 : 0, bottom: 10);
@@ -237,8 +241,7 @@ FontWeight get largeTextWeight =>
 
 double get chipHeight => isMobile ? 40 : 34.0;
 
-EdgeInsets get audioTilePadding =>
-    isMobile ? kMobileAudioTilePadding : kDesktopAudioTilePadding;
+EdgeInsets get audioTilePadding => kAudioTilePadding;
 
 SliverGridDelegate get audioCardGridDelegate =>
     isMobile ? kMobileAudioCardGridDelegate : kAudioCardGridDelegate;

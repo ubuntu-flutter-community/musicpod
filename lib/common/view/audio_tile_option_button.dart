@@ -3,6 +3,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
+import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -32,10 +33,11 @@ class AudioTileOptionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
+    final l10n = context.l10n;
     final libraryModel = di<LibraryModel>();
 
     return PopupMenuButton(
-      tooltip: context.l10n.moreOptions,
+      tooltip: l10n.moreOptions,
       padding: EdgeInsets.zero,
       itemBuilder: (context) {
         return [
@@ -46,23 +48,26 @@ class AudioTileOptionButton extends StatelessWidget {
                 showSnackBar(
                   context: context,
                   content: Text(
-                    '${context.l10n.addedTo} ${context.l10n.queue}: ${audio.artist} - ${audio.title}',
+                    '${l10n.addedTo} ${l10n.queue}: ${audio.artist} - ${audio.title}',
                   ),
                 );
               },
               child: YaruTile(
                 leading: Icon(Iconz.insertIntoQueue),
-                title: Text(context.l10n.playNext),
+                title: Text(l10n.playNext),
               ),
             ),
           if (audio.audioType != AudioType.radio)
             if (allowRemove)
               PopupMenuItem(
-                onTap: () =>
-                    libraryModel.removeAudioFromPlaylist(playlistId, audio),
+                onTap: () => playlistId == kLikedAudiosPageId
+                    ? libraryModel.removeLikedAudio(audio)
+                    : libraryModel.removeAudioFromPlaylist(playlistId, audio),
                 child: YaruTile(
                   leading: Icon(Iconz.remove),
-                  title: Text('${context.l10n.removeFrom} $playlistId'),
+                  title: Text(
+                    '${l10n.removeFrom} ${playlistId == kLikedAudiosPageId ? l10n.likedSongs : playlistId}',
+                  ),
                 ),
               ),
           if (audio.audioType != AudioType.radio)
@@ -79,7 +84,7 @@ class AudioTileOptionButton extends StatelessWidget {
               child: YaruTile(
                 leading: Icon(Iconz.plus),
                 title: Text(
-                  '${context.l10n.addToPlaylist} ...',
+                  '${l10n.addToPlaylist} ...',
                 ),
               ),
             ),
@@ -93,7 +98,7 @@ class AudioTileOptionButton extends StatelessWidget {
             child: YaruTile(
               leading: Icon(Iconz.info),
               title: Text(
-                '${context.l10n.showMetaData} ...',
+                '${l10n.showMetaData} ...',
               ),
             ),
           ),
@@ -130,45 +135,45 @@ class MetaDataDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final radio = audio.audioType == AudioType.radio;
-
+    final l10n = context.l10n;
     final items = <(String, String)>{
       (
-        radio ? context.l10n.stationName : context.l10n.title,
+        radio ? l10n.stationName : l10n.title,
         '${audio.title}',
       ),
       (
-        radio ? context.l10n.tags : context.l10n.album,
+        radio ? l10n.tags : l10n.album,
         '${radio ? audio.album?.replaceAll(',', ', ') : audio.album}',
       ),
       (
-        radio ? context.l10n.language : context.l10n.artist,
+        radio ? l10n.language : l10n.artist,
         '${radio ? audio.language : audio.artist}',
       ),
       (
-        radio ? context.l10n.quality : context.l10n.albumArtists,
+        radio ? l10n.quality : l10n.albumArtists,
         '${audio.albumArtist}',
       ),
       if (!radio)
         (
-          context.l10n.trackNumber,
+          l10n.trackNumber,
           '${audio.trackNumber}',
         ),
       if (!radio)
         (
-          context.l10n.diskNumber,
+          l10n.diskNumber,
           '${audio.discNumber}',
         ),
       (
-        radio ? context.l10n.clicks : context.l10n.totalDisks,
+        radio ? l10n.clicks : l10n.totalDisks,
         '${radio ? audio.clicks : audio.discTotal}',
       ),
       if (!radio)
         (
-          context.l10n.genre,
+          l10n.genre,
           '${audio.genre}',
         ),
       (
-        context.l10n.url,
+        l10n.url,
         (audio.url ?? ''),
       ),
     };
@@ -176,9 +181,9 @@ class MetaDataDialog extends StatelessWidget {
     return AlertDialog(
       title: yaruStyled
           ? YaruDialogTitleBar(
-              title: Text(context.l10n.metadata),
+              title: Text(l10n.metadata),
             )
-          : Center(child: Text(context.l10n.metadata)),
+          : Center(child: Text(l10n.metadata)),
       titlePadding:
           yaruStyled ? EdgeInsets.zero : const EdgeInsets.only(top: 10),
       contentPadding: const EdgeInsets.only(bottom: 12),
