@@ -1,5 +1,8 @@
+import 'package:package_info_plus/package_info_plus.dart';
+
 import 'app/app_model.dart';
 import 'app/connectivity_model.dart';
+import 'app_config.dart';
 import 'constants.dart';
 import 'dart:io';
 import 'expose/expose_service.dart';
@@ -35,20 +38,17 @@ import 'search/search_model.dart';
 import 'settings/settings_model.dart';
 import 'settings/settings_service.dart';
 
-/// Registers all Services, ViewModels or other non-UI objects
+/// Registers all Services, ViewModels and external dependencies
 /// Note: we want lazy registration whenever possible, preferable without any async calls above.
 /// Sometimes this is not possible and we need to await a Future before we can register.
-Future<void> registerServicesAndViewModels({
-  required String? downloadsDefaultDir,
-  required SharedPreferences sharedPreferences,
+Future<void> registerDependencies({
   required List<String> args,
-  required String version,
-  required bool allowDiscordRPC,
+  required String? downloadsDefaultDir,
 }) async {
   if (allowDiscordRPC) {
     await FlutterDiscordRPC.initialize(kDiscordApplicationId);
-    di.registerLazySingleton<FlutterDiscordRPC>(
-      () => FlutterDiscordRPC.instance,
+    di.registerSingleton<FlutterDiscordRPC>(
+      FlutterDiscordRPC.instance,
       dispose: (s) {
         s.disconnect();
         s.dispose();
@@ -56,8 +56,12 @@ Future<void> registerServicesAndViewModels({
     );
   }
 
+  final sharedPreferences = await SharedPreferences.getInstance();
+  final packageInfo = await PackageInfo.fromPlatform();
+
   di
-    ..registerLazySingleton<SharedPreferences>(() => sharedPreferences)
+    ..registerSingleton<SharedPreferences>(sharedPreferences)
+    ..registerSingleton<PackageInfo>(packageInfo)
     ..registerLazySingleton<Dio>(
       () => Dio(),
       dispose: (s) => s.close(),
@@ -170,7 +174,7 @@ Future<void> registerServicesAndViewModels({
     )
     ..registerLazySingleton<AppModel>(
       () => AppModel(
-        appVersion: version,
+        packageInfo: di<PackageInfo>(),
         gitHub: di<GitHub>(),
         settingsService: di<SettingsService>(),
         exposeService: di<ExposeService>(),

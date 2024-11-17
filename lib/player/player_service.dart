@@ -20,6 +20,7 @@ import '../extensions/string_x.dart';
 import '../local_audio/local_cover_service.dart';
 import '../persistence_utils.dart';
 import '../radio/online_art_service.dart';
+import 'player_service_audio_handler.dart';
 
 typedef Queue = ({String name, List<Audio> audios});
 
@@ -34,15 +35,21 @@ class PlayerService {
         _exposeService = exposeService,
         _localCoverService = localCoverService;
 
+  // External dependencies
   final OnlineArtService _onlineArtService;
   final ExposeService _exposeService;
   final LocalCoverService _localCoverService;
   final VideoController _controller;
+
+  // MediaKit getters
   VideoController get controller => _controller;
+  Player get _player => _controller.player;
 
+  // Native media trays
   SMTCWindows? _smtc;
-  _AudioHandler? _audioService;
+  PlayerServiceAudioHandler? _audioHandler;
 
+  // Helper stream subscriptions
   StreamSubscription<PressedButton>? _smtcSub;
   StreamSubscription<bool>? _isPlayingSub;
   StreamSubscription<Duration>? _durationSub;
@@ -53,45 +60,89 @@ class PlayerService {
   StreamSubscription<Tracks>? _tracksSub;
   StreamSubscription<double>? _rateSub;
 
-  Player get _player => _controller.player;
-
+  // Used to notify whoever is listening
   final _propertiesChangedController = StreamController<bool>.broadcast();
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
+
+  /// All stream subscriptions and the initial [PlayerState] are set here
+  Future<void> init() async {
+    await _initMediaControl();
+
+    _isPlayingSub ??= _player.stream.playing.listen((value) {
+      setIsPlaying(value);
+    });
+
+    _durationSub ??= _player.stream.duration.listen((newDuration) {
+      if (newDuration.inSeconds != 0) {
+        setDuration(newDuration);
+      }
+    });
+
+    _positionSub ??= _player.stream.position.listen((newPosition) {
+      setPosition(newPosition);
+    });
+
+    _bufferSub ??= _player.stream.buffer.listen((event) {
+      setBuffer(event);
+    });
+
+    _isCompletedSub ??= _player.stream.completed.listen((value) async {
+      if (value) {
+        await playNext();
+      }
+    });
+
+    await (_player.platform as NativePlayer).observeProperty(
+      'metadata',
+      _onMpvMetadata,
+    );
+
+    _volumeSub ??= _player.stream.volume.listen((value) {
+      _volume = value;
+      _propertiesChangedController.add(true);
+    });
+
+    _rateSub ??= _player.stream.rate.listen((value) {
+      _rate = value;
+      _propertiesChangedController.add(true);
+    });
+
+    _tracksSub ??= _player.stream.tracks.listen((tracks) {
+      _setIsVideo(false);
+      for (var track in tracks.video) {
+        if (track.fps != null && track.fps! > 1) {
+          _setIsVideo(true);
+          break;
+        }
+      }
+    });
+
+    await _setPlayerState();
+  }
+
+  /// All subscriptions, native media trays and the pause timer need to be closed and disposed
+  Future<void> dispose() async {
+    await _propertiesChangedController.close();
+    await _smtcSub?.cancel();
+    await _smtc?.disableSmtc();
+    await _smtc?.dispose();
+    await _isPlayingSub?.cancel();
+    await _positionSub?.cancel();
+    await _durationSub?.cancel();
+    await _isCompletedSub?.cancel();
+    await _volumeSub?.cancel();
+    await _tracksSub?.cancel();
+    await _rateSub?.cancel();
+    await _bufferSub?.cancel();
+    _timer?.cancel();
+    await _player.dispose();
+  }
 
   Queue _queue = (name: '', audios: []);
   Queue get queue => _queue;
   void setQueue(Queue value) {
     if (value == _queue || value.audios.isEmpty) return;
     _queue = value;
-    _propertiesChangedController.add(true);
-  }
-
-  MpvMetaData? _mpvMetaData;
-  MpvMetaData? get mpvMetaData => _mpvMetaData;
-  Future<void> _setMpvMetaData(MpvMetaData? value) async {
-    _mpvMetaData = value;
-
-    var validHistoryElement = _mpvMetaData?.icyTitle.isNotEmpty == true;
-
-    if (validHistoryElement &&
-        _mpvMetaData?.icyDescription.isNotEmpty == true &&
-        (_mpvMetaData!.icyTitle.contains(_mpvMetaData!.icyDescription) ||
-            _mpvMetaData!.icyTitle.contains(
-              _mpvMetaData!.icyDescription
-                  .replaceAll(RegExp(r'[^a-zA-Z0-9]'), ''),
-            ))) {
-      validHistoryElement = false;
-    }
-    if (validHistoryElement) {
-      _addRadioHistoryElement(
-        icyTitle: mpvMetaData!.icyTitle,
-        mpvMetaData: mpvMetaData!.copyWith(
-          icyName: audio?.title?.trim() ?? _mpvMetaData?.icyName ?? '',
-        ),
-      );
-
-      await _processParsedIcyTitle(mpvMetaData!.icyTitle);
-    }
     _propertiesChangedController.add(true);
   }
 
@@ -211,14 +262,7 @@ class PlayerService {
       Media? media = audio!.path != null
           ? Media('file://${audio!.path!}')
           : (audio!.url != null)
-              ? Media(
-                  audio!.url!,
-                  httpHeaders: {
-                    'Accept': '*',
-                    'User-Agent': '$kAppTitle ($kRepoUrl)',
-                    'Content-Language': 'de-DE',
-                  },
-                )
+              ? Media(audio!.url!)
               : null;
       if (media == null) return;
       _player.open(media).then((_) {
@@ -257,6 +301,11 @@ class PlayerService {
     await _player.pause();
   }
 
+  Timer? _timer;
+  void setPauseTimer(Duration duration) {
+    _timer = Timer(duration, () => pause());
+  }
+
   Future<void> seek() async {
     if (position == null) return;
     await _player.seek(position!);
@@ -265,96 +314,6 @@ class PlayerService {
   Future<void> resume() async {
     if (audio == null) return;
     await playOrPause();
-  }
-
-  Future<void> init() async {
-    await _initMediaControl();
-
-    _isPlayingSub ??= _player.stream.playing.listen((value) {
-      setIsPlaying(value);
-    });
-
-    _durationSub ??= _player.stream.duration.listen((newDuration) {
-      if (newDuration.inSeconds != 0) {
-        setDuration(newDuration);
-      }
-    });
-
-    _positionSub ??= _player.stream.position.listen((newPosition) {
-      setPosition(newPosition);
-    });
-
-    _bufferSub ??= _player.stream.buffer.listen((event) {
-      setBuffer(event);
-    });
-
-    _isCompletedSub ??= _player.stream.completed.listen((value) async {
-      if (value) {
-        await playNext();
-      }
-    });
-
-    await (_player.platform as NativePlayer).observeProperty(
-      'metadata',
-      (data) async {
-        if (audio?.audioType != AudioType.radio ||
-            !data.contains('icy-title')) {
-          return;
-        }
-        final newData = MpvMetaData.fromJson(data);
-        final parsedIcyTitle =
-            HtmlParser(newData.icyTitle).parseFragment().text;
-        if (parsedIcyTitle == null ||
-            parsedIcyTitle == _mpvMetaData?.icyTitle) {
-          return;
-        }
-
-        _setMpvMetaData(newData.copyWith(icyTitle: parsedIcyTitle));
-      },
-    );
-
-    _volumeSub ??= _player.stream.volume.listen((value) {
-      _volume = value;
-      _propertiesChangedController.add(true);
-    });
-
-    _rateSub ??= _player.stream.rate.listen((value) {
-      _rate = value;
-      _propertiesChangedController.add(true);
-    });
-
-    _tracksSub ??= _player.stream.tracks.listen((tracks) {
-      _setIsVideo(false);
-      for (var track in tracks.video) {
-        if (track.fps != null && track.fps! > 1) {
-          _setIsVideo(true);
-          break;
-        }
-      }
-    });
-
-    await _setPlayerState();
-  }
-
-  Future<void> _processParsedIcyTitle(String parsedIcyTitle) async {
-    final songInfo = parsedIcyTitle.splitByDash;
-    final albumArt = await _onlineArtService.fetchAlbumArt(parsedIcyTitle);
-
-    final mergedAudio =
-        (_audio ?? const Audio(audioType: AudioType.radio)).copyWith(
-      imageUrl: albumArt,
-      title: songInfo.songName,
-      artist: songInfo.artist,
-    );
-    await _setMediaControlsMetaData(audio: mergedAudio);
-    _setRemoteImageUrl(albumArt ?? _audio?.imageUrl ?? _audio?.albumArtUrl);
-
-    await _exposeService.exposeTitleOnline(
-      title: songInfo.songName ?? '',
-      artist: songInfo.artist ?? '',
-      additionalInfo: _audio?.title ?? 'Internet Radio',
-      imageUrl: albumArt,
-    );
   }
 
   Future<void> playNext() async {
@@ -512,7 +471,7 @@ class PlayerService {
   }
 
   //
-  // last positions
+  // Last Positions used when the app re-opens and for podcasts
   //
 
   // TODO: migrate to shared preferences but add a migration routine from the old file so users do not
@@ -566,6 +525,10 @@ class PlayerService {
     }
   }
 
+  //
+  // Native media trays
+  //
+
   Future<void> _initSmtc() async {
     await SMTCWindows.initialize();
     _smtc = SMTCWindows(
@@ -606,13 +569,13 @@ class PlayerService {
   }
 
   Future<void> _initAudioService() async {
-    _audioService = await AudioService.init(
+    _audioHandler = await AudioService.init(
       config: const AudioServiceConfig(
         androidNotificationOngoing: true,
         androidNotificationChannelName: kAppName,
       ),
       builder: () {
-        return _AudioHandler(
+        return PlayerServiceAudioHandler(
           onPlay: playOrPause,
           onNext: playNext,
           onPause: pause,
@@ -627,9 +590,9 @@ class PlayerService {
   }
 
   void _setMediaControlPosition(Duration? position) {
-    if (_audioService != null) {
-      _audioService!.playbackState.add(
-        _audioService!.playbackState.value.copyWith(
+    if (_audioHandler != null) {
+      _audioHandler!.playbackState.add(
+        _audioHandler!.playbackState.value.copyWith(
           updatePosition: position ?? Duration.zero,
         ),
       );
@@ -639,9 +602,9 @@ class PlayerService {
   }
 
   void _setMediaControlDuration(Duration? duration) {
-    if (_audioService == null || _audioService!.mediaItem.value == null) return;
-    _audioService!.mediaItem
-        .add(_audioService!.mediaItem.value!.copyWith(duration: duration));
+    if (_audioHandler == null || _audioHandler!.mediaItem.value == null) return;
+    _audioHandler!.mediaItem
+        .add(_audioHandler!.mediaItem.value!.copyWith(duration: duration));
   }
 
   Future<void> _setMediaControlsMetaData({required Audio audio}) async {
@@ -694,9 +657,9 @@ class PlayerService {
   }
 
   Future<void> _setMediaControlsIsPlaying(bool playing) async {
-    if (_audioService != null) {
-      _audioService!.playbackState.add(
-        _audioService!.playbackState.value.copyWith(
+    if (_audioHandler != null) {
+      _audioHandler!.playbackState.add(
+        _audioHandler!.playbackState.value.copyWith(
           playing: playing,
           controls: _determineMediaControls(playing),
         ),
@@ -729,8 +692,8 @@ class PlayerService {
   }
 
   void _setAudioServiceMetaData({required Audio audio, required Uri? artUri}) {
-    if (_audioService == null) return;
-    _audioService!.mediaItem.add(
+    if (_audioHandler == null) return;
+    _audioHandler!.mediaItem.add(
       MediaItem(
         id: audio.toString(),
         title: audio.title ?? kAppTitle,
@@ -760,6 +723,76 @@ class PlayerService {
     );
   }
 
+  //
+  // Everything related to radio stream icy-title information observed from MPV and digested here
+  //
+
+  MpvMetaData? _mpvMetaData;
+  MpvMetaData? get mpvMetaData => _mpvMetaData;
+  Future<void> _setMpvMetaData(MpvMetaData? value) async {
+    _mpvMetaData = value;
+
+    if (_isValidHistoryElement(_mpvMetaData)) {
+      _addRadioHistoryElement(
+        icyTitle: mpvMetaData!.icyTitle,
+        mpvMetaData: mpvMetaData!.copyWith(
+          icyName: audio?.title?.trim() ?? _mpvMetaData?.icyName ?? '',
+        ),
+      );
+
+      await _processParsedIcyTitle(mpvMetaData!.icyTitle);
+    }
+    _propertiesChangedController.add(true);
+  }
+
+  Future<void> _onMpvMetadata(data) async {
+    if (_audio?.audioType != AudioType.radio || !data.contains('icy-title')) {
+      return;
+    }
+    final newData = MpvMetaData.fromJson(data);
+    final parsedIcyTitle = HtmlParser(newData.icyTitle).parseFragment().text;
+    if (parsedIcyTitle == null || parsedIcyTitle == _mpvMetaData?.icyTitle) {
+      return;
+    }
+
+    _setMpvMetaData(newData.copyWith(icyTitle: parsedIcyTitle));
+  }
+
+  bool _isValidHistoryElement(MpvMetaData? data) {
+    var validHistoryElement = data?.icyTitle.isNotEmpty == true;
+
+    if (validHistoryElement &&
+        data?.icyDescription.isNotEmpty == true &&
+        (data!.icyTitle.contains(data.icyDescription) ||
+            data.icyTitle.contains(
+              data.icyDescription.replaceAll(RegExp(r'[^a-zA-Z0-9]'), ''),
+            ))) {
+      validHistoryElement = false;
+    }
+    return validHistoryElement;
+  }
+
+  Future<void> _processParsedIcyTitle(String parsedIcyTitle) async {
+    final songInfo = parsedIcyTitle.splitByDash;
+    final albumArt = await _onlineArtService.fetchAlbumArt(parsedIcyTitle);
+
+    final mergedAudio =
+        (_audio ?? const Audio(audioType: AudioType.radio)).copyWith(
+      imageUrl: albumArt,
+      title: songInfo.songName,
+      artist: songInfo.artist,
+    );
+    await _setMediaControlsMetaData(audio: mergedAudio);
+    _setRemoteImageUrl(albumArt ?? _audio?.imageUrl ?? _audio?.albumArtUrl);
+
+    await _exposeService.exposeTitleOnline(
+      title: songInfo.songName ?? '',
+      artist: songInfo.artist ?? '',
+      additionalInfo: _audio?.title ?? 'Internet Radio',
+      imageUrl: albumArt,
+    );
+  }
+
   final Map<String, MpvMetaData> _radioHistory = {};
   Map<String, MpvMetaData> get radioHistory => _radioHistory;
   void _addRadioHistoryElement({
@@ -770,28 +803,6 @@ class PlayerService {
       icyTitle,
       () => mpvMetaData,
     );
-  }
-
-  Timer? _timer;
-  void setTimer(Duration duration) {
-    _timer = Timer(duration, () => pause());
-  }
-
-  Future<void> dispose() async {
-    await _propertiesChangedController.close();
-    await _smtcSub?.cancel();
-    await _smtc?.disableSmtc();
-    await _smtc?.dispose();
-    await _isPlayingSub?.cancel();
-    await _positionSub?.cancel();
-    await _durationSub?.cancel();
-    await _isCompletedSub?.cancel();
-    await _volumeSub?.cancel();
-    await _tracksSub?.cancel();
-    await _rateSub?.cancel();
-    await _bufferSub?.cancel();
-    _timer?.cancel();
-    await _player.dispose();
   }
 
   Future<void> _writePlayerState() async {
@@ -824,65 +835,5 @@ class PlayerService {
       printMessageInDebugMode(e);
       return null;
     }
-  }
-}
-
-class _AudioHandler extends BaseAudioHandler with SeekHandler {
-  final Future<void> Function() onPlay;
-  final Future<void> Function() onPause;
-  final Future<void> Function() onNext;
-  final Future<void> Function() onPrevious;
-  final Future<void> Function(Duration position) onSeek;
-
-  @override
-  _AudioHandler({
-    required this.onPlay,
-    required this.onPause,
-    required this.onNext,
-    required this.onPrevious,
-    required this.onSeek,
-  }) {
-    playbackState.add(
-      PlaybackState(
-        playing: false,
-        systemActions: {
-          MediaAction.seek,
-          MediaAction.seekBackward,
-          MediaAction.seekForward,
-        },
-        controls: [
-          MediaControl.skipToPrevious,
-          MediaControl.rewind,
-          MediaControl.play,
-          MediaControl.fastForward,
-          MediaControl.skipToNext,
-        ],
-      ),
-    );
-  }
-
-  @override
-  Future<void> play() async {
-    await onPlay();
-  }
-
-  @override
-  Future<void> pause() async {
-    await onPause();
-  }
-
-  @override
-  Future<void> skipToNext() async {
-    await onNext();
-  }
-
-  @override
-  Future<void> skipToPrevious() async {
-    await onPrevious();
-  }
-
-  @override
-  Future<void> seek(Duration position) async {
-    await onSeek(position);
   }
 }

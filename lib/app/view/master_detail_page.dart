@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/back_gesture.dart';
 import '../../common/view/global_keys.dart';
@@ -91,7 +92,8 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
 
                 return PageRouteBuilder(
                   settings: settings,
-                  pageBuilder: (_, __, ___) => BackGesture(child: page),
+                  pageBuilder: (_, __, ___) =>
+                      useCustomBackGestures ? page : BackGesture(child: page),
                   transitionsBuilder: (_, a, __, c) =>
                       FadeTransition(opacity: a, child: c),
                 );

@@ -65,7 +65,7 @@ class _AboutTileState extends State<_AboutTile> {
     return YaruTile(
       title: !di<ConnectivityModel>().isOnline == true ||
               !appModel.allowManualUpdate
-          ? Text(di<AppModel>().version ?? '')
+          ? Text(di<AppModel>().version)
           : updateAvailable == null
               ? Center(
                   child: SizedBox.square(
@@ -78,7 +78,7 @@ class _AboutTileState extends State<_AboutTile> {
               : TapAbleText(
                   text: updateAvailable == true
                       ? '${context.l10n.updateAvailable}: $onlineVersion'
-                      : currentVersion ?? context.l10n.unknown,
+                      : currentVersion,
                   style: updateAvailable == true
                       ? TextStyle(
                           color: context.theme.colorScheme.success
