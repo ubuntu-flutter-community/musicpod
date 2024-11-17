@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:gtk/gtk.dart';
 import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pls/pls.dart';
 import 'package:yaru/yaru.dart';
 
@@ -168,7 +169,7 @@ class ExternalPathService {
   }
 
   Future<String?> getPathOfDirectory() async {
-    if (isMobile) {
+    if (isMobile && await _androidPermissionsGranted()) {
       return FilePicker.platform.getDirectoryPath();
     }
 
@@ -176,5 +177,30 @@ class ExternalPathService {
       return getDirectoryPath();
     }
     return null;
+  }
+
+  Future<bool> _androidPermissionsGranted() async {
+    final mediaLibraryIsGranted = (await Permission.mediaLibrary
+            .onDeniedCallback(() {})
+            .onGrantedCallback(() {})
+            .onPermanentlyDeniedCallback(() {})
+            .onRestrictedCallback(() {})
+            .onLimitedCallback(() {})
+            .onProvisionalCallback(() {})
+            .request())
+        .isGranted;
+
+    final manageExternalStorageIsGranted = (await Permission
+            .manageExternalStorage
+            .onDeniedCallback(() {})
+            .onGrantedCallback(() {})
+            .onPermanentlyDeniedCallback(() {})
+            .onRestrictedCallback(() {})
+            .onLimitedCallback(() {})
+            .onProvisionalCallback(() {})
+            .request())
+        .isGranted;
+
+    return mediaLibraryIsGranted && manageExternalStorageIsGranted;
   }
 }
