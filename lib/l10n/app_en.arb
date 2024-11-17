@@ -199,6 +199,8 @@
     "theme": "Theme",
     "useMoreAnimationsTitle": "Use more animations",
     "useMoreAnimationsDescription": "This will slightly increase the CPU usage, which might be undesired on older hardware.",
+    "showPositionDurationTitle": "Show position / duration in bottom player",
+    "showPositionDurationDescription": "It is otherwise always shown on track hover and in the full screen player.",
     "license": "License",
     "dependencies": "Dependencies",
     "light": "Light",

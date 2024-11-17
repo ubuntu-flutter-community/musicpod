@@ -159,3 +159,66 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
     );
   }
 }
+
+class PlayerSimpleTrack extends StatelessWidget with WatchItMixin {
+  const PlayerSimpleTrack({
+    super.key,
+    this.active = true,
+  });
+
+  final bool active;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.theme;
+    final position = watchPropertyValue((PlayerModel m) => m.position);
+    final duration = watchPropertyValue((PlayerModel m) => m.duration);
+    final textStyle =
+        TextStyle(fontSize: 10, color: !active ? theme.disabledColor : null);
+
+    final positionWidth =
+        (position?.inHours != null && position!.inHours > 0) ? 48.0 : 35.0;
+    final durationWidth =
+        (duration?.inHours != null && duration!.inHours > 0) ? 48.0 : 35.0;
+
+    const slashWidth = 5.0;
+
+    const height = 13.0;
+
+    return SizedBox(
+      width: positionWidth + durationWidth + slashWidth,
+      height: height,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          RepaintBoundary(
+            child: SizedBox(
+              width: positionWidth,
+              height: height,
+              child: Text(
+                (position ?? Duration.zero).formattedTime,
+                style: textStyle,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: height,
+            width: slashWidth,
+            child: Text('/', style: textStyle),
+          ),
+          RepaintBoundary(
+            child: SizedBox(
+              width: durationWidth,
+              height: height,
+              child: Text(
+                (duration ?? Duration.zero).formattedTime,
+                style: textStyle,
+                textAlign: TextAlign.end,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

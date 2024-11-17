@@ -91,6 +91,11 @@ class SettingsService {
   Future<void> setDownloadsCustomDir(String directory) async =>
       _preferences.setString(kDownloadsCustomDir, directory).then(notify);
 
+  bool get showPositionDuration =>
+      _preferences.getBool(kShowPositionDuration) ?? false;
+  Future<void> setShowPositionDuration(bool value) async =>
+      _preferences.setBool(kShowPositionDuration, value).then(notify);
+
   CloseBtnAction get closeBtnActionIndex =>
       _preferences.getString(kCloseBtnAction) == null
           ? CloseBtnAction.alwaysAsk
