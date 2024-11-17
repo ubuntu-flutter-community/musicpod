@@ -102,7 +102,9 @@ class _AudioTileState extends State<AudioTile> {
             ? selectedColor
             : theme.colorScheme.onSurface,
         selectedTileColor: theme.colorScheme.onSurface.withOpacity(0.05),
-        contentPadding: audioTilePadding,
+        contentPadding: audioTilePadding.copyWith(
+          left: widget.audioPageType == AudioPageType.album ? 10 : null,
+        ),
         onTap: () {
           if (widget.selected) {
             if (widget.isPlayerPlaying) {
@@ -191,7 +193,8 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
             selected: selected && isPlayerPlaying,
             playlistId: pageId,
             audio: audio,
-            allowRemove: audioPageType == AudioPageType.playlist,
+            allowRemove: audioPageType == AudioPageType.playlist ||
+                audioPageType == AudioPageType.likedAudio,
             insertIntoQueue:
                 insertIntoQueue != null ? () => insertIntoQueue!(audio) : null,
           ),
@@ -199,22 +202,23 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
         const SizedBox(
           width: 5,
         ),
-        Opacity(
-          opacity: hovered || selected || liked ? 1 : 0,
-          child: switch (audio.audioType) {
-            AudioType.radio => RadioLikeIcon(
-                audio: audio,
-                color: selected && isPlayerPlaying ? selectedColor : null,
-              ),
-            AudioType.local => LikeIcon(
-                audio: audio,
-                color: selected && isPlayerPlaying ? selectedColor : null,
-              ),
-            _ => SizedBox.square(
-                dimension: context.theme.buttonTheme.height,
-              ),
-          },
-        ),
+        if (!isMobile)
+          Opacity(
+            opacity: hovered || selected || liked ? 1 : 0,
+            child: switch (audio.audioType) {
+              AudioType.radio => RadioLikeIcon(
+                  audio: audio,
+                  color: selected && isPlayerPlaying ? selectedColor : null,
+                ),
+              AudioType.local => LikeIcon(
+                  audio: audio,
+                  color: selected && isPlayerPlaying ? selectedColor : null,
+                ),
+              _ => SizedBox.square(
+                  dimension: context.theme.buttonTheme.height,
+                ),
+            },
+          ),
         if (!isMobile &&
             audio.audioType != AudioType.radio &&
             audio.durationMs != null)

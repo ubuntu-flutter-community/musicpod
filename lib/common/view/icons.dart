@@ -25,7 +25,7 @@ class Iconz {
             : Icons.menu_rounded;
   }
 
-  static IconData get materialSidebar => Icons.view_sidebar_rounded;
+  static IconData get materialSidebar => Icons.menu_rounded;
 
   static IconData get sidebar {
     return yaruStyled

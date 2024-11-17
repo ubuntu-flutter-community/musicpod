@@ -50,11 +50,11 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
 
     final playButton = avatarPlayButton
         ? CircleAvatar(
-            radius: avatarIconRadius,
+            radius: bigPlayButtonRadius,
             backgroundColor:
                 avatarColor ?? (theme.isLight ? Colors.black : Colors.white),
             child: SizedBox.square(
-              dimension: 2 * avatarIconRadius,
+              dimension: 2 * bigPlayButtonRadius,
               child: rawPlayButton,
             ),
           )
