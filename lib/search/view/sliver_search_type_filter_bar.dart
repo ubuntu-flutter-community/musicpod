@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_service.dart';
 import '../search_model.dart';
@@ -22,6 +23,8 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: YaruChoiceChipBar(
+        goNextIcon: Icon(Iconz.goNext),
+        goPreviousIcon: Icon(Iconz.goBack),
         style: YaruChoiceChipBarStyle.stack,
         clearOnSelect: false,
         selectedFirst: false,

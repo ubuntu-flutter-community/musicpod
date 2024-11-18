@@ -3,6 +3,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/connectivity_model.dart';
+import '../../common/view/icons.dart';
 import '../../common/view/offline_page.dart';
 import '../../l10n/l10n.dart';
 import '../podcast_model.dart';
@@ -24,6 +25,8 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
         watchPropertyValue((PodcastModel m) => m.downloadsOnly);
 
     return YaruChoiceChipBar(
+      goNextIcon: Icon(Iconz.goNext),
+      goPreviousIcon: Icon(Iconz.goBack),
       style: YaruChoiceChipBarStyle.wrap,
       clearOnSelect: false,
       selectedFirst: false,
