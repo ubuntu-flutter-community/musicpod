@@ -290,7 +290,6 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                         ),
                         selected: audioSelected,
                         audio: audio,
-                        insertIntoQueue: playerModel.insertIntoQueue,
                         pageId: pageId,
                         audioPageType: AudioPageType.playlist,
                       ),
