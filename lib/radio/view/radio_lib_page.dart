@@ -11,6 +11,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
+import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
@@ -44,6 +45,8 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
             margin: filterPanelPadding,
             height: context.theme.appBarTheme.toolbarHeight,
             child: YaruChoiceChipBar(
+              goNextIcon: Icon(Iconz.goNext),
+              goPreviousIcon: Icon(Iconz.goBack),
               selectedFirst: false,
               clearOnSelect: false,
               onSelected: (index) => radioModel

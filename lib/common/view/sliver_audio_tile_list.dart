@@ -51,7 +51,6 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
               ),
               selected: audioSelected,
               audio: audio,
-              insertIntoQueue: playerModel.insertIntoQueue,
               pageId: pageId,
               selectedColor: selectedColor,
             ),
