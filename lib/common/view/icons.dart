@@ -426,10 +426,10 @@ class Iconz {
           : Icons.cleaning_services_rounded;
 
   static IconData get insertIntoQueue => yaruStyled
-      ? YaruIcons.music_queue
+      ? YaruIcons.playlist_play
       : appleStyled
-          ? CupertinoIcons.plus_app
-          : Icons.queue_rounded;
+          ? CupertinoIcons.play_circle
+          : Icons.playlist_add;
   static IconData get sleep => yaruStyled
       ? YaruIcons.clear_night
       : appleStyled

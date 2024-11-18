@@ -14,12 +14,14 @@ class StreamProviderShareButton extends StatelessWidget {
     required this.text,
     required this.streamProvider,
     this.color,
+    this.tile = false,
   });
 
   final void Function()? onSearch;
   final String? text;
   final StreamProvider streamProvider;
   final Color? color;
+  final bool tile;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +45,19 @@ class StreamProviderShareButton extends StatelessWidget {
         text?.replaceAll(RegExp(r"[:/?#\[\]@!$&'()*+,;=%]"), ' ') ?? '';
 
     String address = buildAddress(clearedText);
+
+    if (tile) {
+      return ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+        leading: Icon(iconData),
+        title: Text('$tooltip ${context.l10n.search}'),
+        onTap: () => launchUrl(
+          Uri.parse(
+            address,
+          ),
+        ),
+      );
+    }
 
     return IconButton(
       tooltip: onSearch != null

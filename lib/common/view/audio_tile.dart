@@ -21,7 +21,6 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
   const AudioTile({
     super.key,
     required this.pageId,
-    this.insertIntoQueue,
     required this.selected,
     required this.audio,
     required this.isPlayerPlaying,
@@ -42,7 +41,6 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
   final void Function()? onTap;
   final void Function()? onTitleTap;
   final void Function(String text)? onSubTitleTap;
-  final void Function(Audio audio)? insertIntoQueue;
   final bool showLeading;
   final Color? selectedColor;
 
@@ -145,7 +143,6 @@ class _AudioTileState extends State<AudioTile> {
           isPlayerPlaying: widget.isPlayerPlaying,
           pageId: widget.pageId,
           audioPageType: widget.audioPageType,
-          insertIntoQueue: widget.insertIntoQueue,
           selectedColor: selectedColor,
         ),
       ),
@@ -166,7 +163,6 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
     required this.isPlayerPlaying,
     required this.pageId,
     required this.audioPageType,
-    this.insertIntoQueue,
     required this.hovered,
     required this.liked,
     required this.selectedColor,
@@ -177,7 +173,6 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
   final bool isPlayerPlaying;
   final String pageId;
   final AudioPageType audioPageType;
-  final void Function(Audio audio)? insertIntoQueue;
   final bool hovered;
   final bool liked;
   final Color selectedColor;
@@ -193,10 +188,9 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
             selected: selected && isPlayerPlaying,
             playlistId: pageId,
             audio: audio,
-            allowRemove: audioPageType == AudioPageType.playlist ||
-                audioPageType == AudioPageType.likedAudio,
-            insertIntoQueue:
-                insertIntoQueue != null ? () => insertIntoQueue!(audio) : null,
+            allowRemove: (audioPageType == AudioPageType.playlist ||
+                    audioPageType == AudioPageType.likedAudio) &&
+                audio.audioType != AudioType.radio,
           ),
         ),
         const SizedBox(
