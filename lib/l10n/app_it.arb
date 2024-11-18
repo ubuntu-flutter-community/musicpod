@@ -199,6 +199,8 @@
     "theme": "Tema",
     "useMoreAnimationsTitle": "Usa più animazioni",
     "useMoreAnimationsDescription": "Ciò aumenterà leggermente l'uso della CPU, che potrebbe essere non ottimale con hardware non aggiornato.",
+    "showPositionDurationTitle": "Visualizza posizione/durata nel player in basso",
+    "showPositionDurationDescription": "Altrimenti viene sempre visualizzato al passaggio del mouse sulla traccia e nel player a schermo intero.",
     "license": "Licenza",
     "dependencies": "Dipendenze",
     "light": "Chiaro",
