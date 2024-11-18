@@ -48,7 +48,10 @@ class StreamProviderShareButton extends StatelessWidget {
 
     if (tile) {
       return ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 5,
+        ),
         leading: Icon(iconData),
         title: Text('$tooltip ${context.l10n.search}'),
         onTap: () => launchUrl(
