@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../app/connectivity_model.dart';
+import '../../app/view/music_pod_scaffold.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
@@ -37,8 +37,7 @@ class StationPage extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
 
-    return Scaffold(
-      resizeToAvoidBottomInset: isMobile ? false : null,
+    return MusicPodScaffold(
       appBar: HeaderBar(
         adaptive: true,
         actions: [

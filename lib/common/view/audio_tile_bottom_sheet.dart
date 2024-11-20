@@ -141,9 +141,8 @@ class AudioTileBottomSheet extends StatelessWidget {
                                 Navigator.of(context).pop();
                                 showDialog(
                                   context: context,
-                                  builder: (context) {
-                                    return MetaDataDialog(audio: audio);
-                                  },
+                                  builder: (context) =>
+                                      MetaDataContent.dialog(audio: audio),
                                 );
                               },
                               icon: Icon(Iconz.info),

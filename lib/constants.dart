@@ -175,6 +175,7 @@ const kPatchNotesDisposed = 'kPatchNotesDisposed';
 const kCloseBtnAction = 'closeBtnAction';
 const kUseMoreAnimations = 'useMoreAnimations';
 const kShowPositionDuration = 'showPositionDuration';
+const kSettingsPageId = 'settings';
 
 const shops = <String, String>{
   'https://us.7digital.com/': '7digital',

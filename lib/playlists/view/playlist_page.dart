@@ -5,8 +5,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/theme.dart';
 
+import '../../app/view/music_pod_scaffold.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
@@ -88,8 +88,7 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
           return DropOperation.none;
         }
       },
-      child: Scaffold(
-        resizeToAvoidBottomInset: isMobile ? false : null,
+      child: MusicPodScaffold(
         appBar: HeaderBar(
           adaptive: true,
           actions: [

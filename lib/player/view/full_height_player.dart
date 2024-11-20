@@ -52,7 +52,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const FullHeightPlayerImage(),
+          if (!isMobile || context.isPortrait) const FullHeightPlayerImage(),
           const SizedBox(
             height: kYaruPagePadding,
           ),

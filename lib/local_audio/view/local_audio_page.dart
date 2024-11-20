@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/view/music_pod_scaffold.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_filter_app_bar.dart';
@@ -15,7 +15,7 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
-import '../../settings/view/settings_dialog.dart';
+import '../../settings/view/settings_action.dart';
 import '../local_audio_model.dart';
 import 'failed_imports_content.dart';
 import 'local_audio_body.dart';
@@ -58,12 +58,12 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     final index = watchPropertyValue((LocalAudioModel m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
 
-    return Scaffold(
-      resizeToAvoidBottomInset: isMobile ? false : null,
+    return MusicPodScaffold(
       appBar: HeaderBar(
         adaptive: true,
         titleSpacing: 0,
         actions: [
+          if (isMobile) const SettingsButton.icon(),
           Padding(
             padding: appBarSingleActionSpacing,
             child: SearchButton(
@@ -111,15 +111,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                       const SizedBox(
                         height: kYaruPagePadding,
                       ),
-                      ImportantButton(
-                        child: Text(context.l10n.settings),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (_) => const SettingsDialog(),
-                          );
-                        },
-                      ),
+                      const SettingsButton.important(),
                     ],
                   ),
                 ),

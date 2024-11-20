@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/theme.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../app/connectivity_model.dart';
+import '../../app/view/music_pod_scaffold.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/offline_page.dart';
@@ -13,6 +14,7 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
+import '../../settings/view/settings_action.dart';
 import 'radio_lib_page.dart';
 
 class RadioPage extends StatelessWidget with WatchItMixin {
@@ -23,11 +25,11 @@ class RadioPage extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
 
-    return Scaffold(
-      resizeToAvoidBottomInset: isMobile ? false : null,
+    return MusicPodScaffold(
       appBar: HeaderBar(
         adaptive: true,
         actions: [
+          if (isMobile) const SettingsButton.icon(),
           Flexible(
             child: Padding(
               padding: appBarSingleActionSpacing,

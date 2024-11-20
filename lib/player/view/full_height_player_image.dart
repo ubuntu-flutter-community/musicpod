@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../constants.dart';
+import '../../extensions/build_context_x.dart';
 import '../../local_audio/view/local_cover.dart';
 import '../player_model.dart';
 import 'player_fall_back_image.dart';
@@ -26,11 +28,19 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
+    final size = context.isPortrait
+        ? fullHeightPlayerImageSize
+        : isMobile
+            ? fullHeightPlayerImageSize / 3
+            : fullHeightPlayerImageSize;
+    final theHeight = height ?? size;
+    final theWidth = width ?? size;
+
     final fallBackImage = PlayerFallBackImage(
       noIcon: emptyFallBack,
       audio: audio,
-      height: height ?? fullHeightPlayerImageSize,
-      width: width ?? fullHeightPlayerImageSize,
+      height: theHeight,
+      width: theWidth,
     );
 
     Widget image;
@@ -39,15 +49,15 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
         key: ValueKey(audio!.path),
         albumId: audio.albumId!,
         path: audio.path!,
-        width: width,
-        height: height,
+        width: theWidth,
+        height: theHeight,
         fit: fit ?? BoxFit.fitHeight,
         fallback: fallBackImage,
       );
     } else {
       image = PlayerRemoteSourceImage(
-        height: height ?? fullHeightPlayerImageSize,
-        width: width ?? fullHeightPlayerImageSize,
+        height: theHeight,
+        width: theWidth,
         fit: fit,
         fallBackIcon: fallBackImage,
         errorIcon: fallBackImage,
@@ -55,8 +65,8 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
     }
 
     return SizedBox(
-      height: height ?? fullHeightPlayerImageSize,
-      width: width ?? fullHeightPlayerImageSize,
+      height: theHeight,
+      width: theWidth,
       child: ClipRRect(
         borderRadius: borderRadius ?? BorderRadius.circular(10),
         child: AnimatedSwitcher(

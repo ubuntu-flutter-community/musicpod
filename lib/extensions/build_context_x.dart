@@ -8,6 +8,7 @@ extension BuildContextX on BuildContext {
   TextTheme get textTheme => theme.textTheme;
 
   Size get mediaQuerySize => MediaQuery.sizeOf(this);
+  bool get isPortrait => MediaQuery.orientationOf(this) == Orientation.portrait;
 
   bool get smallWindow => mediaQuerySize.width < kMasterDetailBreakPoint;
   bool get wideWindow => mediaQuerySize.width < kAdaptivContainerBreakPoint;

@@ -246,9 +246,9 @@ EdgeInsets get audioTilePadding => kAudioTilePadding;
 SliverGridDelegate get audioCardGridDelegate =>
     isMobile ? kMobileAudioCardGridDelegate : kAudioCardGridDelegate;
 
-EdgeInsetsGeometry get appBarSingleActionSpacing => Platform.isMacOS
+EdgeInsets get appBarSingleActionSpacing => Platform.isMacOS
     ? const EdgeInsets.only(right: 5, left: 5)
-    : const EdgeInsets.only(right: 10, left: 20);
+    : EdgeInsets.only(right: 10, left: isMobile ? 0 : 20);
 
 EdgeInsetsGeometry get radioHistoryListPadding =>
     EdgeInsets.only(left: yaruStyled ? 0 : 5);

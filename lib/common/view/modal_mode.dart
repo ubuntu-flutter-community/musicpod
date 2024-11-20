@@ -1,0 +1,4 @@
+enum ModalMode {
+  dialog,
+  bottomSheet,
+}

@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
+import '../../app/view/music_pod_scaffold.dart';
 import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
@@ -28,8 +31,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
     final loading = watchPropertyValue((SearchModel m) => m.loading);
 
-    return Scaffold(
-      resizeToAvoidBottomInset: isMobile ? false : null,
+    return MusicPodScaffold(
       appBar: HeaderBar(
         adaptive: true,
         title: Padding(
@@ -38,7 +40,9 @@ class SearchPage extends StatelessWidget with WatchItMixin {
         ),
         actions: [
           Padding(
-            padding: appBarSingleActionSpacing,
+            padding: appBarSingleActionSpacing.copyWith(
+              left: Platform.isMacOS ? 5 : 20,
+            ),
             child: SearchButton(
               active: true,
               onPressed: () => di<LibraryModel>().pop(),

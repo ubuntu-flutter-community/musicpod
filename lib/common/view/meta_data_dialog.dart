@@ -1,13 +1,24 @@
-import '../../app_config.dart';
-import '../../l10n/l10n.dart';
-import '../data/audio.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
-class MetaDataDialog extends StatelessWidget {
-  const MetaDataDialog({super.key, required this.audio});
+import '../../app_config.dart';
+import '../../l10n/l10n.dart';
+import '../data/audio.dart';
+import 'modal_mode.dart';
+
+class MetaDataContent extends StatelessWidget {
+  const MetaDataContent.dialog({
+    super.key,
+    required this.audio,
+  }) : _mode = ModalMode.dialog;
+
+  const MetaDataContent.bottomSheet({
+    super.key,
+    required this.audio,
+  }) : _mode = ModalMode.bottomSheet;
 
   final Audio audio;
+  final ModalMode _mode;
 
   @override
   Widget build(BuildContext context) {
@@ -55,28 +66,42 @@ class MetaDataDialog extends StatelessWidget {
       ),
     };
 
-    return AlertDialog(
-      title: yaruStyled
-          ? YaruDialogTitleBar(
-              title: Text(l10n.metadata),
-            )
-          : Center(child: Text(l10n.metadata)),
-      titlePadding:
-          yaruStyled ? EdgeInsets.zero : const EdgeInsets.only(top: 10),
-      contentPadding: const EdgeInsets.only(bottom: 12),
-      scrollable: true,
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: items
-            .map(
-              (e) => ListTile(
-                dense: true,
-                title: Text(e.$1),
-                subtitle: Text(e.$2),
-              ),
-            )
-            .toList(),
-      ),
+    final title = yaruStyled
+        ? YaruDialogTitleBar(
+            title: Text(l10n.metadata),
+          )
+        : Center(child: Text(l10n.metadata));
+
+    final titlePadding =
+        yaruStyled ? EdgeInsets.zero : const EdgeInsets.only(top: 10);
+
+    const edgeInsets = EdgeInsets.only(bottom: 12);
+
+    final body = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: items
+          .map(
+            (e) => ListTile(
+              dense: true,
+              title: Text(e.$1),
+              subtitle: Text(e.$2),
+            ),
+          )
+          .toList(),
     );
+
+    return switch (_mode) {
+      ModalMode.dialog => AlertDialog(
+          title: title,
+          titlePadding: titlePadding,
+          contentPadding: edgeInsets,
+          scrollable: true,
+          content: body,
+        ),
+      ModalMode.bottomSheet => BottomSheet(
+          onClosing: () {},
+          builder: (context) => body,
+        )
+    };
   }
 }
