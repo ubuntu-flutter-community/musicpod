@@ -13,7 +13,7 @@ import '../../player/view/player_view.dart';
 import '../app_model.dart';
 import 'main_page_icon.dart';
 
-class MobilePlayerAndNavigationBar extends StatelessWidget {
+class MobilePlayerAndNavigationBar extends StatelessWidget with WatchItMixin {
   const MobilePlayerAndNavigationBar({
     super.key,
   });

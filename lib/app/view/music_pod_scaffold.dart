@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import 'mobile_navigation_bar.dart';
 
-class MusicPodScaffold extends StatelessWidget with WatchItMixin {
+class MusicPodScaffold extends StatelessWidget {
   const MusicPodScaffold({super.key, required this.body, this.appBar});
 
   final Widget body;
