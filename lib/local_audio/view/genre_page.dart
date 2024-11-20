@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/theme.dart';
 
+import '../../app/view/music_pod_scaffold.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/header_bar.dart';
@@ -45,8 +45,7 @@ class _GenrePageState extends State<GenrePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: isMobile ? false : null,
+    return MusicPodScaffold(
       appBar: HeaderBar(
         adaptive: true,
         titleSpacing: 0,

@@ -44,16 +44,18 @@ class HeaderBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final useSidebarButton = isMobile ? false : includeSidebarButton;
+    final useBackButton = isMobile ? true : includeBackButton;
     final canPop = watchPropertyValue((LibraryModel m) => m.canPop);
 
     Widget? leading;
 
-    if (includeSidebarButton &&
+    if (useSidebarButton &&
         !context.showMasterPanel &&
         masterScaffoldKey.currentState?.isDrawerOpen == false) {
       leading = const SidebarButton();
     } else {
-      if (includeBackButton && canPop) {
+      if (useBackButton && canPop) {
         leading = const NavBackButton();
       } else {
         leading = isMobile

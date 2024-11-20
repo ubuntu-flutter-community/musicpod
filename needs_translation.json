@@ -898,8 +898,6 @@
   ],
 
   "it": [
-    "showPositionDurationTitle",
-    "showPositionDurationDescription",
     "exposeToLastfmTitle",
     "exposeToLastfmSubTitle",
     "lastfmApiKey",
@@ -3031,24 +3029,6 @@
     "regionZimbabwe"
   ],
 
-  "sk": [
-    "saveAndAuthorize",
-    "downloadsDirectory",
-    "downloadsDirectoryDescription",
-    "downloadsChangeWarning",
-    "disconnectedFrom",
-    "useMoreAnimationsTitle",
-    "useMoreAnimationsDescription",
-    "showPositionDurationTitle",
-    "showPositionDurationDescription",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty"
-  ],
-
   "sv": [
     "shuffle",
     "repeat",
@@ -3066,7 +3046,6 @@
     "removeFromFavorites",
     "share",
     "local",
-    "saveAndAuthorize",
     "genre",
     "year",
     "albumArtist",
@@ -3080,15 +3059,7 @@
     "noStarredStations",
     "stations",
     "copyToClipBoard",
-    "insertedIntoQueue",
-    "showPositionDurationTitle",
-    "showPositionDurationDescription",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty"
+    "insertedIntoQueue"
   ],
 
   "tr": [

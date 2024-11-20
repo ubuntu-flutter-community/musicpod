@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../common/view/icons.dart';
+import '../../common/view/modals.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../constants.dart';
@@ -39,12 +41,17 @@ class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
           onTap: () {
             final metadata = di<PlayerModel>().getMetadata(icyTitle);
             if (metadata == null) return;
-            showDialog(
+            showModal(
               context: context,
-              builder: (context) => MpvMetadataDialog(
-                image: imageUrl,
-                mpvMetaData: metadata,
-              ),
+              content: isMobile
+                  ? MpvMetadataDialog.bottomSheet(
+                      image: imageUrl,
+                      mpvMetaData: metadata,
+                    )
+                  : MpvMetadataDialog.dialog(
+                      image: imageUrl,
+                      mpvMetaData: metadata,
+                    ),
             );
           },
           child: SizedBox(

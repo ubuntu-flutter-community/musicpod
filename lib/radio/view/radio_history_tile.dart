@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/constants.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/copy_clipboard_content.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/modals.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/tapable_text.dart';
@@ -66,15 +66,21 @@ class RadioHistoryTile extends StatelessWidget {
           trailing: IconButton(
             tooltip: context.l10n.metadata,
             onPressed: () {
-              final image = di<OnlineArtModel>().getCover(icyTitle);
+              final imageUrl = di<OnlineArtModel>().getCover(icyTitle);
               final metadata = di<PlayerModel>().getMetadata(icyTitle);
               if (metadata == null) return;
-              showDialog(
+
+              showModal(
                 context: context,
-                builder: (context) => MpvMetadataDialog(
-                  mpvMetaData: metadata,
-                  image: image,
-                ),
+                content: isMobile
+                    ? MpvMetadataDialog.bottomSheet(
+                        image: imageUrl,
+                        mpvMetaData: metadata,
+                      )
+                    : MpvMetadataDialog.dialog(
+                        image: imageUrl,
+                        mpvMetaData: metadata,
+                      ),
               );
             },
             icon: Icon(Iconz.info),

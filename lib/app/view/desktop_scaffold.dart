@@ -16,14 +16,14 @@ import '../app_model.dart';
 import '../connectivity_model.dart';
 import 'master_detail_page.dart';
 
-class MusicPodScaffold extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const MusicPodScaffold({super.key});
+class DesktopScaffold extends StatefulWidget with WatchItStatefulWidgetMixin {
+  const DesktopScaffold({super.key});
 
   @override
-  State<MusicPodScaffold> createState() => _MusicPodScaffoldState();
+  State<DesktopScaffold> createState() => _DesktopScaffoldState();
 }
 
-class _MusicPodScaffoldState extends State<MusicPodScaffold> {
+class _DesktopScaffoldState extends State<DesktopScaffold> {
   @override
   void initState() {
     super.initState();

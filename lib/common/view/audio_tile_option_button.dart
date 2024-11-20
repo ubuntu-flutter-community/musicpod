@@ -94,9 +94,7 @@ class AudioTileOptionButton extends StatelessWidget {
           PopupMenuItem(
             onTap: () => showDialog(
               context: context,
-              builder: (context) {
-                return MetaDataDialog(audio: audio);
-              },
+              builder: (context) => MetaDataContent.dialog(audio: audio),
             ),
             child: YaruTile(
               leading: Icon(Iconz.info),

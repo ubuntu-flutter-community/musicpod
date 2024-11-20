@@ -204,7 +204,7 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
       await _masterNavigatorKey.currentState?.pushNamed(pageId);
     } else if (builder != null) {
       final materialPageRoute = MaterialPageRoute(
-        builder: (context) => useCustomBackGestures
+        builder: (context) => useSystemBackGestures
             ? builder(context)
             : BackGesture(child: builder(context)),
         maintainState: maintainState,

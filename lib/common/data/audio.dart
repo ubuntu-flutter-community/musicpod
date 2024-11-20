@@ -364,9 +364,14 @@ class Audio {
     final artistName = artist;
     final id = albumName == null && artistName == null
         ? null
-        : '${artistName ?? ''}:${albumName ?? ''}';
-    return id;
+        : _isMobile
+            ? '${artistName ?? ''}_${albumName ?? ''}'
+            : '${artistName ?? ''}:${albumName ?? ''}';
+    return _isMobile ? id?.replaceAll(' ', '_') : id;
   }
+
+  bool get _isMobile =>
+      Platform.isAndroid || Platform.isIOS || Platform.isFuchsia;
 
   bool get hasPathAndId =>
       albumId?.isNotEmpty == true &&
