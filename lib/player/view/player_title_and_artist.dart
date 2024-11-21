@@ -130,7 +130,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
               PlayerPosition.bottom => 3,
               _ => 0,
             },
-          )
+          ),
       ],
     );
   }
