@@ -7,8 +7,8 @@ import '../../common/data/audio.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';
+import '../../common/view/audio_tile_option_button.dart';
 import '../../common/view/avatar_play_button.dart';
-import '../../common/view/explore_online_popup.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/like_all_icon.dart';
@@ -179,7 +179,15 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
           ),
           AvatarPlayButton(audios: audios, pageId: pageId),
           LikeAllIcon(audios: audios),
-          ExploreOnlinePopup(text: pageId),
+          AudioTileOptionButton(
+            audios: audios,
+            playlistId: pageId,
+            allowRemove: false,
+            selected: false,
+            searchTerm: audios.first.artist ?? '',
+            title: Text(audios.first.artist ?? ''),
+            subTitle: Text(audios.first.genre ?? ''),
+          ),
         ],
       ),
     );

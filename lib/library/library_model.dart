@@ -117,10 +117,16 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
 
   void updatePlaylistName(String oldName, String newName) =>
       _service.updatePlaylistName(oldName, newName);
-  void addAudioToPlaylist(String playlist, Audio audio) =>
-      _service.addAudioToPlaylist(playlist, audio);
-  void removeAudioFromPlaylist(String playlist, Audio audio) =>
-      _service.removeAudioFromPlaylist(playlist, audio);
+  void addAudiosToPlaylist({
+    required String playlist,
+    required List<Audio> audios,
+  }) =>
+      _service.addAudiosToPlaylist(id: playlist, audios: audios);
+  void removeAudiosFromPlaylist({
+    required String id,
+    required List<Audio> audios,
+  }) =>
+      _service.removeAudiosFromPlaylist(id: id, audios: audios);
   void clearPlaylist(String id) => _service.clearPlaylist(id);
   void moveAudioInPlaylist({
     required int oldIndex,

@@ -7,9 +7,9 @@ import '../../l10n/l10n.dart';
 import 'add_to_playlist_navigator.dart';
 
 class AddToPlaylistDialog extends StatelessWidget {
-  const AddToPlaylistDialog({super.key, required this.audio});
+  const AddToPlaylistDialog({super.key, required this.audios});
 
-  final Audio audio;
+  final List<Audio> audios;
 
   @override
   Widget build(BuildContext context) => AlertDialog(
@@ -24,7 +24,7 @@ class AddToPlaylistDialog extends StatelessWidget {
         content: SizedBox(
           height: 200,
           width: 400,
-          child: AddToPlaylistNavigator(audio: audio),
+          child: AddToPlaylistNavigator(audios: audios),
         ),
         contentPadding: const EdgeInsets.symmetric(vertical: 20),
       );

@@ -4,9 +4,9 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/audio_page_type.dart';
+import '../../common/view/audio_tile_option_button.dart';
 import '../../common/view/avatar_play_button.dart';
 import '../../common/view/cover_background.dart';
-import '../../common/view/explore_online_popup.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page.dart';
@@ -165,8 +165,15 @@ class AlbumPageControlButton extends StatelessWidget {
             },
           ),
           AvatarPlayButton(audios: album, pageId: id),
-          ExploreOnlinePopup(
-            text: '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
+          AudioTileOptionButton(
+            audios: album,
+            playlistId: id,
+            allowRemove: false,
+            selected: false,
+            searchTerm:
+                '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
+            title: Text('${album.firstOrNull?.artist}'),
+            subTitle: Text('${album.firstOrNull?.album}'),
           ),
         ],
       ),

@@ -56,10 +56,7 @@ class _AudioTileState extends State<AudioTile> {
     final theme = context.theme;
     final l10n = context.l10n;
     final playerModel = di<PlayerModel>();
-    final liked = watchPropertyValue((LibraryModel m) => m.liked(widget.audio));
-    final starred = watchPropertyValue(
-      (LibraryModel m) => m.isStarredStation(widget.audio.uuid),
-    );
+
     final selectedColor = widget.selectedColor ?? theme.contrastyPrimary;
     final color =
         widget.selected && widget.isPlayerPlaying ? selectedColor : null;
@@ -145,7 +142,6 @@ class _AudioTileState extends State<AudioTile> {
       ),
       trailing: _AudioTileTrail(
         hovered: _hovered,
-        liked: liked || starred,
         audio: widget.audio,
         selected: widget.selected,
         isPlayerPlaying: widget.isPlayerPlaying,
@@ -154,6 +150,7 @@ class _AudioTileState extends State<AudioTile> {
         selectedColor: selectedColor,
         showDuration: !isMobile,
         showLikeIcon: !isMobile,
+        alwaysShowOptionButton: isMobile,
       ),
     );
 
@@ -182,10 +179,10 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
     required this.pageId,
     required this.audioPageType,
     required this.hovered,
-    required this.liked,
     required this.selectedColor,
     required this.showLikeIcon,
     required this.showDuration,
+    required this.alwaysShowOptionButton,
   });
 
   final Audio audio;
@@ -194,21 +191,28 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
   final String pageId;
   final AudioPageType audioPageType;
   final bool hovered;
-  final bool liked;
   final Color selectedColor;
   final bool showLikeIcon, showDuration;
+  final bool alwaysShowOptionButton;
 
   @override
   Widget build(BuildContext context) {
+    final liked = watchPropertyValue((LibraryModel m) => m.liked(audio));
+    final starred = watchPropertyValue(
+      (LibraryModel m) => m.isStarredStation(audio.uuid),
+    );
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Opacity(
-          opacity: hovered || selected ? 1 : 0,
+          opacity: alwaysShowOptionButton || hovered || selected ? 1 : 0,
           child: AudioTileOptionButton(
+            title: Text(audio.title ?? ''),
+            subTitle: Text(audio.artist ?? ''),
             selected: selected && isPlayerPlaying,
             playlistId: pageId,
-            audio: audio,
+            audios: [audio],
+            searchTerm: '${audio.artist ?? ''} - ${audio.title ?? ''}',
             allowRemove: (audioPageType == AudioPageType.playlist ||
                     audioPageType == AudioPageType.likedAudio) &&
                 audio.audioType != AudioType.radio,
@@ -219,7 +223,7 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
         ),
         if (showLikeIcon)
           Opacity(
-            opacity: hovered || selected || liked ? 1 : 0,
+            opacity: hovered || selected || liked || starred ? 1 : 0,
             child: switch (audio.audioType) {
               AudioType.radio => RadioLikeIcon(
                   audio: audio,

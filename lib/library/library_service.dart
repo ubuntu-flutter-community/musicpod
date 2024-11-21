@@ -265,21 +265,33 @@ class LibraryService {
     }
   }
 
-  void addAudioToPlaylist(String id, Audio audio) {
+  void addAudiosToPlaylist({required String id, required List<Audio> audios}) {
     final playlist = _playlists[id];
-    if (playlist == null || playlist.contains(audio)) return;
-    playlist.add(audio);
+    if (playlist == null) return;
+
+    for (var audio in audios) {
+      if (!playlist.contains(audio)) {
+        playlist.add(audio);
+      }
+    }
     writeAudioMap(_playlists, kPlaylistsFileName)
         .then((_) => _propertiesChangedController.add(true));
   }
 
-  void removeAudioFromPlaylist(String id, Audio audio) {
+  void removeAudiosFromPlaylist({
+    required String id,
+    required List<Audio> audios,
+  }) {
     final playlist = _playlists[id];
-    if (playlist != null && playlist.contains(audio)) {
-      playlist.remove(audio);
-      writeAudioMap(_playlists, kPlaylistsFileName)
-          .then((_) => _propertiesChangedController.add(true));
+    if (playlist == null) return;
+
+    for (var audio in audios) {
+      if (playlist.contains(audio)) {
+        playlist.remove(audio);
+      }
     }
+    writeAudioMap(_playlists, kPlaylistsFileName)
+        .then((_) => _propertiesChangedController.add(true));
   }
 
   void clearPlaylist(String id) {

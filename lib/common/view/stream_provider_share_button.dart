@@ -44,7 +44,7 @@ class StreamProviderShareButton extends StatelessWidget {
     final clearedText =
         text?.replaceAll(RegExp(r"[:/?#\[\]@!$&'()*+,;=%]"), ' ') ?? '';
 
-    String address = buildAddress(clearedText);
+    String address = buildAddress(clearedText.trim());
 
     if (tile) {
       return ListTile(
