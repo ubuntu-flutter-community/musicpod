@@ -123,7 +123,14 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
           const Padding(
             padding: EdgeInsets.only(top: 2, bottom: 5),
             child: PlayerSimpleTrack(),
-          ),
+          )
+        else
+          SizedBox(
+            height: switch (playerPosition) {
+              PlayerPosition.bottom => 3,
+              _ => 0,
+            },
+          )
       ],
     );
   }

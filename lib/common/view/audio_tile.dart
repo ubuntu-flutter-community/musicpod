@@ -61,17 +61,22 @@ class _AudioTileState extends State<AudioTile> {
       (LibraryModel m) => m.isStarredStation(widget.audio.uuid),
     );
     final selectedColor = widget.selectedColor ?? theme.contrastyPrimary;
+    final color =
+        widget.selected && widget.isPlayerPlaying ? selectedColor : null;
+
     final subTitle = switch (widget.audioPageType) {
       AudioPageType.artist => widget.audio.album ?? l10n.unknown,
       AudioPageType.radioSearch => _buildRadioSubTitle(widget.audio, l10n),
       _ => widget.audio.artist ?? l10n.unknown,
     };
 
-    var leading = !widget.showLeading
+    final leading = !widget.showLeading
         ? null
         : switch (widget.audioPageType) {
-            AudioPageType.album =>
-              AlbumTileLead(trackNumber: widget.audio.trackNumber),
+            AudioPageType.album => _AlbumTileLead(
+                trackNumber: widget.audio.trackNumber,
+                color: color,
+              ),
             _ => AudioTileImage(
                 size: kAudioTrackWidth,
                 audio: widget.audio,
@@ -81,71 +86,84 @@ class _AudioTileState extends State<AudioTile> {
     const titleOverflow = TextOverflow.ellipsis;
     const titleMaxLines = 1;
 
+    final listTile = ListTile(
+      key: ObjectKey(widget.audio),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      minLeadingWidth: kAudioTrackWidth,
+      leading: leading,
+      selected: widget.selected,
+      selectedColor:
+          widget.isPlayerPlaying ? selectedColor : theme.colorScheme.onSurface,
+      selectedTileColor: theme.colorScheme.onSurface.withOpacity(0.05),
+      contentPadding: audioTilePadding.copyWith(
+        left: widget.audioPageType == AudioPageType.album ? 10 : null,
+      ),
+      onTap: () {
+        if (widget.selected) {
+          if (widget.isPlayerPlaying) {
+            playerModel.pause();
+          } else {
+            playerModel.resume();
+          }
+        } else {
+          widget.onTap?.call();
+        }
+      },
+      title: Padding(
+        padding: const EdgeInsets.only(right: kYaruPagePadding),
+        child: widget.onTitleTap == null
+            ? Text(
+                widget.audio.title ?? l10n.unknown,
+                overflow: titleOverflow,
+                maxLines: titleMaxLines,
+              )
+            : TapAbleText(
+                onTap: widget.onTitleTap,
+                text: widget.audio.title ?? l10n.unknown,
+                overflow: titleOverflow,
+                maxLines: titleMaxLines,
+              ),
+      ),
+      subtitle: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: TapAbleText(
+              wrapInFlexible: false,
+              text: subTitle,
+              onTap: widget.onSubTitleTap == null
+                  ? null
+                  : () => widget.onSubTitleTap?.call(subTitle),
+            ),
+          ),
+          Flexible(
+            child: _AudioTileDuration(
+              audio: widget.audio,
+            ),
+          ),
+        ],
+      ),
+      trailing: _AudioTileTrail(
+        hovered: _hovered,
+        liked: liked || starred,
+        audio: widget.audio,
+        selected: widget.selected,
+        isPlayerPlaying: widget.isPlayerPlaying,
+        pageId: widget.pageId,
+        audioPageType: widget.audioPageType,
+        selectedColor: selectedColor,
+        showDuration: !isMobile,
+        showLikeIcon: !isMobile,
+      ),
+    );
+
+    if (isMobile) return listTile;
+
     return MouseRegion(
       key: ObjectKey(widget.audio),
-      onEnter: (e) {
-        if (isMobile) return;
-        setState(() => _hovered = true);
-      },
-      onExit: (e) {
-        if (isMobile) return;
-        setState(() => _hovered = false);
-      },
-      child: ListTile(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        minLeadingWidth: kAudioTrackWidth,
-        leading: leading,
-        selected: widget.selected,
-        selectedColor: widget.isPlayerPlaying
-            ? selectedColor
-            : theme.colorScheme.onSurface,
-        selectedTileColor: theme.colorScheme.onSurface.withOpacity(0.05),
-        contentPadding: audioTilePadding.copyWith(
-          left: widget.audioPageType == AudioPageType.album ? 10 : null,
-        ),
-        onTap: () {
-          if (widget.selected) {
-            if (widget.isPlayerPlaying) {
-              playerModel.pause();
-            } else {
-              playerModel.resume();
-            }
-          } else {
-            widget.onTap?.call();
-          }
-        },
-        title: Padding(
-          padding: const EdgeInsets.only(right: kYaruPagePadding),
-          child: widget.onTitleTap == null
-              ? Text(
-                  widget.audio.title ?? l10n.unknown,
-                  overflow: titleOverflow,
-                  maxLines: titleMaxLines,
-                )
-              : TapAbleText(
-                  onTap: widget.onTitleTap,
-                  text: widget.audio.title ?? l10n.unknown,
-                  overflow: titleOverflow,
-                  maxLines: titleMaxLines,
-                ),
-        ),
-        subtitle: TapAbleText(
-          text: subTitle,
-          onTap: widget.onSubTitleTap == null
-              ? null
-              : () => widget.onSubTitleTap?.call(subTitle),
-        ),
-        trailing: _AudioTileTrail(
-          hovered: isMobile ? true : _hovered,
-          liked: liked || starred,
-          audio: widget.audio,
-          selected: widget.selected,
-          isPlayerPlaying: widget.isPlayerPlaying,
-          pageId: widget.pageId,
-          audioPageType: widget.audioPageType,
-          selectedColor: selectedColor,
-        ),
-      ),
+      onEnter: (e) => setState(() => _hovered = true),
+      onExit: (e) => setState(() => _hovered = false),
+      child: listTile,
     );
   }
 
@@ -166,6 +184,8 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
     required this.hovered,
     required this.liked,
     required this.selectedColor,
+    required this.showLikeIcon,
+    required this.showDuration,
   });
 
   final Audio audio;
@@ -176,6 +196,7 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
   final bool hovered;
   final bool liked;
   final Color selectedColor;
+  final bool showLikeIcon, showDuration;
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +217,7 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
         const SizedBox(
           width: 5,
         ),
-        if (!isMobile)
+        if (showLikeIcon)
           Opacity(
             opacity: hovered || selected || liked ? 1 : 0,
             child: switch (audio.audioType) {
@@ -213,37 +234,33 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
                 ),
             },
           ),
-        if (!isMobile &&
-            audio.audioType != AudioType.radio &&
-            audio.durationMs != null)
-          Padding(
-            padding: const EdgeInsets.only(left: 5),
-            child: SizedBox(
-              width: 60,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  Duration(milliseconds: audio.durationMs!.toInt())
-                      .formattedTime,
-                  style: context.theme.textTheme.labelMedium?.copyWith(
-                    color: selected && isPlayerPlaying ? selectedColor : null,
-                  ),
-                ),
-              ),
-            ),
-          ),
       ],
     );
   }
 }
 
-class AlbumTileLead extends StatelessWidget {
-  const AlbumTileLead({
-    super.key,
-    required this.trackNumber,
+class _AudioTileDuration extends StatelessWidget {
+  const _AudioTileDuration({
+    required this.audio,
   });
 
+  final Audio audio;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      audio.audioType != AudioType.radio && audio.durationMs != null
+          ? ' · ${Duration(milliseconds: audio.durationMs!.toInt()).formattedTime}'
+          : '',
+    );
+  }
+}
+
+class _AlbumTileLead extends StatelessWidget {
+  const _AlbumTileLead({required this.trackNumber, this.color});
+
   final int? trackNumber;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -253,7 +270,7 @@ class AlbumTileLead extends StatelessWidget {
         widthFactor: 1,
         child: Text(
           trackNumber?.toString() ?? '0',
-          style: context.theme.textTheme.labelMedium,
+          style: context.theme.textTheme.labelLarge?.copyWith(color: color),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
