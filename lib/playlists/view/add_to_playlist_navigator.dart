@@ -14,10 +14,10 @@ import 'package:watch_it/watch_it.dart';
 class AddToPlaylistNavigator extends StatelessWidget {
   const AddToPlaylistNavigator({
     super.key,
-    required this.audio,
+    required this.audios,
   });
 
-  final Audio audio;
+  final List<Audio> audios;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +28,8 @@ class AddToPlaylistNavigator extends StatelessWidget {
       onGenerateRoute: (settings) {
         return PageRouteBuilder(
           pageBuilder: (_, __, ___) => settings.name == '/new'
-              ? _NewView(audio: audio)
-              : _PlaylistTilesList(audio: audio),
+              ? _NewView(audios: audios)
+              : _PlaylistTilesList(audios: audios),
           transitionDuration: const Duration(milliseconds: 500),
         );
       },
@@ -38,11 +38,9 @@ class AddToPlaylistNavigator extends StatelessWidget {
 }
 
 class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
-  const _PlaylistTilesList({
-    required this.audio,
-  });
+  const _PlaylistTilesList({required this.audios});
 
-  final Audio audio;
+  final List<Audio> audios;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +63,7 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
         title: context.l10n.likedSongs,
         iconData: Iconz.heartFilled,
         libraryModel: di<LibraryModel>(),
-        audio: audio,
+        audios: audios,
       ),
       ...playlistNames.map(
         (playlistId) => Builder(
@@ -73,7 +71,7 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
             return _PlaylistTile(
               playlistId: playlistId,
               libraryModel: di<LibraryModel>(),
-              audio: audio,
+              audios: audios,
             );
           },
         ),
@@ -93,14 +91,14 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
 class _PlaylistTile extends StatelessWidget {
   const _PlaylistTile({
     required this.libraryModel,
-    required this.audio,
+    required this.audios,
     required this.playlistId,
     this.title,
     this.iconData,
   });
 
   final LibraryModel libraryModel;
-  final Audio audio;
+  final List<Audio> audios;
   final String playlistId;
   final String? title;
   final IconData? iconData;
@@ -113,7 +111,15 @@ class _PlaylistTile extends StatelessWidget {
     return ListTile(
       contentPadding: padding,
       onTap: () {
-        libraryModel.addAudioToPlaylist(playlistId, audio);
+        if (playlistId == kLikedAudiosPageId) {
+          libraryModel.addLikedAudios(audios);
+        } else {
+          libraryModel.addAudiosToPlaylist(
+            playlist: playlistId,
+            audios: audios,
+          );
+        }
+
         Navigator.of(context, rootNavigator: true).maybePop();
         showAddedToPlaylistSnackBar(
           context: context,
@@ -132,10 +138,10 @@ class _PlaylistTile extends StatelessWidget {
 
 class _NewView extends StatefulWidget {
   const _NewView({
-    required this.audio,
+    required this.audios,
   });
 
-  final Audio audio;
+  final List<Audio> audios;
 
   @override
   State<_NewView> createState() => _NewViewState();
@@ -192,7 +198,7 @@ class _NewViewState extends State<_NewView> {
                       Navigator.of(context).pop();
                       libraryModel.addPlaylist(
                         _controller.text,
-                        [widget.audio],
+                        widget.audios,
                       );
                       showAddedToPlaylistSnackBar(
                         context: context,

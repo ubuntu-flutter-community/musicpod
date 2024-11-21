@@ -325,7 +325,13 @@ class PlayerService {
     await _play();
   }
 
-  void insertIntoQueue(Audio newAudio) {
+  void insertIntoQueue(List<Audio> newAudios) {
+    for (var audio in newAudios.reversed) {
+      _insertAudioIntoQueue(audio);
+    }
+  }
+
+  void _insertAudioIntoQueue(Audio newAudio) {
     if (_queue.audios.isNotEmpty &&
         !_queue.audios.contains(newAudio) &&
         _audio != null) {

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
@@ -19,17 +20,24 @@ import 'stream_provider_share_button.dart';
 class AudioTileOptionButton extends StatelessWidget {
   const AudioTileOptionButton({
     super.key,
-    required this.audio,
+    required this.audios,
     required this.playlistId,
     required this.allowRemove,
     required this.selected,
+    required this.searchTerm,
+    required this.title,
+    required this.subTitle,
+    this.icon,
   });
 
   final String playlistId;
-  final Audio audio;
-
+  final List<Audio> audios;
+  final String searchTerm;
   final bool allowRemove;
   final bool selected;
+  final Widget title;
+  final Widget subTitle;
+  final Widget? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +47,13 @@ class AudioTileOptionButton extends StatelessWidget {
 
     if (isMobile) {
       return AudioTileBottomSheetButton(
-        audio: audio,
+        audios: audios,
         allowRemove: allowRemove,
         playlistId: playlistId,
+        searchTerm: searchTerm,
+        title: title,
+        subTitle: subTitle,
+        icon: icon,
       );
     }
 
@@ -50,14 +62,14 @@ class AudioTileOptionButton extends StatelessWidget {
       padding: EdgeInsets.zero,
       itemBuilder: (context) {
         return [
-          if (audio.audioType != AudioType.radio)
+          if (audios.none((e) => e.audioType == AudioType.radio))
             PopupMenuItem(
               onTap: () {
-                di<PlayerModel>().insertIntoQueue(audio);
+                di<PlayerModel>().insertIntoQueue(audios);
                 showSnackBar(
                   context: context,
                   content: Text(
-                    '${l10n.addedTo} ${l10n.queue}: ${audio.artist} - ${audio.title}',
+                    '${l10n.addedTo} ${l10n.queue}: $searchTerm',
                   ),
                 );
               },
@@ -69,8 +81,11 @@ class AudioTileOptionButton extends StatelessWidget {
           if (allowRemove)
             PopupMenuItem(
               onTap: () => playlistId == kLikedAudiosPageId
-                  ? libraryModel.removeLikedAudio(audio)
-                  : libraryModel.removeAudioFromPlaylist(playlistId, audio),
+                  ? libraryModel.removeLikedAudios(audios)
+                  : libraryModel.removeAudiosFromPlaylist(
+                      id: playlistId,
+                      audios: audios,
+                    ),
               child: YaruTile(
                 leading: Icon(Iconz.remove),
                 title: Text(
@@ -78,11 +93,11 @@ class AudioTileOptionButton extends StatelessWidget {
                 ),
               ),
             ),
-          if (audio.audioType != AudioType.radio)
+          if (audios.none((e) => e.audioType == AudioType.radio))
             PopupMenuItem(
               onTap: () => showDialog(
                 context: context,
-                builder: (context) => AddToPlaylistDialog(audio: audio),
+                builder: (context) => AddToPlaylistDialog(audios: audios),
               ),
               child: YaruTile(
                 leading: Icon(Iconz.plus),
@@ -94,7 +109,7 @@ class AudioTileOptionButton extends StatelessWidget {
           PopupMenuItem(
             onTap: () => showDialog(
               context: context,
-              builder: (context) => MetaDataContent.dialog(audio: audio),
+              builder: (context) => MetaDataContent.dialog(audio: audios.first),
             ),
             child: YaruTile(
               leading: Icon(Iconz.info),
@@ -103,7 +118,7 @@ class AudioTileOptionButton extends StatelessWidget {
               ),
             ),
           ),
-          if (audio.audioType != AudioType.radio)
+          if (audios.none((e) => e.audioType == AudioType.radio))
             PopupMenuItem(
               enabled: false,
               padding: EdgeInsets.zero,
@@ -116,14 +131,14 @@ class AudioTileOptionButton extends StatelessWidget {
                     iconColor: theme.colorScheme.onSurface,
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    text: '${audio.artist ?? ''} - ${audio.title ?? ''}',
+                    text: searchTerm,
                   ),
                 ),
               ),
             ),
         ];
       },
-      icon: Icon(Iconz.viewMore),
+      icon: icon ?? Icon(Iconz.viewMore),
     );
   }
 }
@@ -131,14 +146,22 @@ class AudioTileOptionButton extends StatelessWidget {
 class AudioTileBottomSheetButton extends StatelessWidget {
   const AudioTileBottomSheetButton({
     super.key,
-    required this.audio,
+    required this.audios,
     required this.allowRemove,
     required this.playlistId,
+    required this.searchTerm,
+    required this.title,
+    required this.subTitle,
+    this.icon,
   });
 
-  final Audio audio;
+  final List<Audio> audios;
+  final String searchTerm;
   final bool allowRemove;
   final String playlistId;
+  final Widget title;
+  final Widget subTitle;
+  final Widget? icon;
 
   @override
   Widget build(BuildContext context) => IconButton(
@@ -146,11 +169,14 @@ class AudioTileBottomSheetButton extends StatelessWidget {
         onPressed: () => showModal(
           context: context,
           content: AudioTileBottomSheet(
-            audio: audio,
+            searchTerm: searchTerm,
+            title: title,
+            subTitle: subTitle,
+            audios: audios,
             allowRemove: allowRemove,
             playlistId: playlistId,
           ),
         ),
-        icon: Icon(Iconz.viewMore),
+        icon: icon ?? Icon(Iconz.viewMore),
       );
 }

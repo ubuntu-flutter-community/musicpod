@@ -123,7 +123,7 @@ class PodcastAudioTile extends StatelessWidget {
                           onPressed: () {
                             final text =
                                 '${audio.title != null ? '${audio.album} - ' : ''}${audio.title ?? ''}';
-                            playerModel.insertIntoQueue(audio);
+                            playerModel.insertIntoQueue([audio]);
                             showSnackBar(
                               context: context,
                               content:

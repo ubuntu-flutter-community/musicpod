@@ -9,8 +9,8 @@ import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_filter.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_header_html_description.dart';
+import '../../common/view/audio_tile_option_button.dart';
 import '../../common/view/avatar_play_button.dart';
-import '../../common/view/explore_online_popup.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
@@ -177,7 +177,18 @@ class _PodcastPageState extends State<PodcastPage> {
                         ),
                         PodcastRefreshButton(pageId: widget.feedUrl),
                         PodcastReorderButton(feedUrl: widget.feedUrl),
-                        if (!isMobile) ExploreOnlinePopup(text: widget.title),
+                        if (!isMobile)
+                          AudioTileOptionButton(
+                            audios: episodesWithDownloads,
+                            playlistId: widget.feedUrl,
+                            allowRemove: false,
+                            selected: false,
+                            searchTerm: widget.title,
+                            title: Text(widget.title),
+                            subTitle: Text(
+                              episodesWithDownloads.firstOrNull?.artist ?? '',
+                            ),
+                          ),
                       ],
                     ),
                   ),

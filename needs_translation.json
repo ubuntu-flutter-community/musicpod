@@ -3371,20 +3371,6 @@
     "lastfmSecretEmpty"
   ],
 
-  "zh_CN": [
-    "saveAndAuthorize",
-    "useMoreAnimationsTitle",
-    "useMoreAnimationsDescription",
-    "showPositionDurationTitle",
-    "showPositionDurationDescription",
-    "exposeToLastfmTitle",
-    "exposeToLastfmSubTitle",
-    "lastfmApiKey",
-    "lastfmSecret",
-    "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty"
-  ],
-
   "zh_HK": [
     "local",
     "saveAndAuthorize",

@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -7,6 +9,7 @@ import '../../playlists/view/add_to_playlist_dialog.dart';
 import '../data/audio.dart';
 import 'audio_tile_image.dart';
 import 'icons.dart';
+import 'like_all_icon.dart';
 import 'like_icon.dart';
 import 'meta_data_dialog.dart';
 import 'package:flutter/material.dart';
@@ -19,14 +22,20 @@ import 'theme.dart';
 class AudioTileBottomSheet extends StatelessWidget {
   const AudioTileBottomSheet({
     super.key,
-    required this.audio,
     required this.allowRemove,
     required this.playlistId,
+    required this.searchTerm,
+    required this.title,
+    required this.subTitle,
+    required this.audios,
   });
 
-  final Audio audio;
   final bool allowRemove;
   final String playlistId;
+  final String searchTerm;
+  final Widget title;
+  final Widget subTitle;
+  final List<Audio> audios;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +45,6 @@ class AudioTileBottomSheet extends StatelessWidget {
       enableDrag: false,
       onClosing: () {},
       builder: (context) {
-        var searchTerm = '${audio.artist ?? ''} - ${audio.title ?? ''}';
         return SizedBox(
           height: 460,
           child: Column(
@@ -47,21 +55,25 @@ class AudioTileBottomSheet extends StatelessWidget {
                   right: 15,
                   top: 5,
                 ),
-                title: Text(audio.title ?? ''),
-                subtitle: Text(audio.artist ?? ''),
-                leading: AudioTileImage(
-                  size: kAudioTrackWidth,
-                  audio: audio,
-                ),
-                trailing: switch (audio.audioType) {
-                  AudioType.radio => RadioLikeIcon(
-                      audio: audio,
-                    ),
-                  AudioType.local => LikeIcon(
-                      audio: audio,
-                    ),
-                  _ => null,
-                },
+                title: title,
+                subtitle: subTitle,
+                leading: audios.isNotEmpty
+                    ? AudioTileImage(
+                        size: kAudioTrackWidth,
+                        audio: audios.first,
+                      )
+                    : null,
+                trailing: audios.isNotEmpty
+                    ? switch (audios.first.audioType) {
+                        AudioType.radio => RadioLikeIcon(
+                            audio: audios.first,
+                          ),
+                        AudioType.local => LikeAllIcon(
+                            audios: audios,
+                          ),
+                        _ => null,
+                      }
+                    : null,
               ),
               const SpacedDivider(
                 bottom: 20,
@@ -77,7 +89,7 @@ class AudioTileBottomSheet extends StatelessWidget {
                     children: space(
                       widthGap: 10,
                       children: [
-                        if (audio.audioType != AudioType.radio)
+                        if (audios.none((e) => e.audioType == AudioType.radio))
                           Column(
                             children: [
                               _Button(
@@ -87,24 +99,24 @@ class AudioTileBottomSheet extends StatelessWidget {
                                   showDialog(
                                     context: context,
                                     builder: (context) =>
-                                        AddToPlaylistDialog(audio: audio),
+                                        AddToPlaylistDialog(audios: audios),
                                   );
                                 },
                               ),
                               _ButtonLabel(label: l10n.addToPlaylist),
                             ],
                           ),
-                        if (audio.audioType != AudioType.radio)
+                        if (audios.none((e) => e.audioType == AudioType.radio))
                           Column(
                             children: [
                               _Button(
                                 onPressed: () {
-                                  di<PlayerModel>().insertIntoQueue(audio);
+                                  di<PlayerModel>().insertIntoQueue(audios);
                                   Navigator.of(context).pop();
                                   showSnackBar(
                                     context: context,
                                     content: Text(
-                                      '${l10n.addedTo} ${l10n.queue}: ${audio.artist} - ${audio.title}',
+                                      '${l10n.addedTo} ${l10n.queue}: $searchTerm',
                                     ),
                                   );
                                 },
@@ -119,10 +131,10 @@ class AudioTileBottomSheet extends StatelessWidget {
                               _Button(
                                 onPressed: () {
                                   playlistId == kLikedAudiosPageId
-                                      ? libraryModel.removeLikedAudio(audio)
-                                      : libraryModel.removeAudioFromPlaylist(
-                                          playlistId,
-                                          audio,
+                                      ? libraryModel.removeLikedAudios(audios)
+                                      : libraryModel.removeAudiosFromPlaylist(
+                                          id: playlistId,
+                                          audios: audios,
                                         );
                                   Navigator.of(context).pop();
                                 },
@@ -134,28 +146,31 @@ class AudioTileBottomSheet extends StatelessWidget {
                               ),
                             ],
                           ),
-                        Column(
-                          children: [
-                            _Button(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                showDialog(
-                                  context: context,
-                                  builder: (context) =>
-                                      MetaDataContent.dialog(audio: audio),
-                                );
-                              },
-                              icon: Icon(Iconz.info),
-                            ),
-                            _ButtonLabel(label: l10n.showMetaData),
-                          ],
-                        ),
+                        if (audios.length == 1)
+                          Column(
+                            children: [
+                              _Button(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) =>
+                                        MetaDataContent.dialog(
+                                      audio: audios.first,
+                                    ),
+                                  );
+                                },
+                                icon: Icon(Iconz.info),
+                              ),
+                              _ButtonLabel(label: l10n.showMetaData),
+                            ],
+                          ),
                       ].map((e) => Expanded(child: e)).toList(),
                     ),
                   ),
                 ),
               ),
-              if (audio.audioType != AudioType.radio)
+              if (audios.first.audioType != AudioType.radio)
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 20),
