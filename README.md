@@ -57,10 +57,9 @@ Please [fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-r
 I recommend the vscode extension [GitHub Pull Requests](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github) especially for people new to [Git](https://git-scm.com/doc) and [GitHub](https://docs.github.com/en/get-started/start-your-journey).
 
 ## Translations
-For translations into your language change the corresponding `app_xx.arb` file where `xx` is the language code of your language in lower case.
-If the file does not exist yet please create it and copy the `whole` content of app_en.arb into it and change only the values to your translation but leave the keys untouched.
-The vscode extension [arb editor by Google](https://marketplace.visualstudio.com/items?itemName=Google.arb-editor) is highly recommended to avoid arb syntax errors.
-Also recommended is the [Google Translate Extension](https://marketplace.visualstudio.com/items?itemName=funkyremi.vscode-google-translate).
+For translations MusiPod is now on Weblate thanks to @keunes
+
+https://hosted.weblate.org/projects/musicpod/app
 
 ## Code contributions
 
@@ -138,12 +137,12 @@ This makes it easier, even though we could also just use flutters built in [List
 
 ### Caching
 
-Both local covers and remote covers are cached in a `CoverStore` and a `UrlStore` after they have been loaded/fetched.
+Both local covers and remote covers are cached in `LocalCoverService` and a `OnlineArtService` after they have been loaded/fetched.
 
 ### Performance
 
-Reading the local covers and fetching remote covers for radio data happens inside additional second [dart isolates](https://dart.dev/language/isolates).
+Reading the local covers and fetching remote covers for radio data happens inside additional second [dart isolates](https://dart.dev/language/isolates). When idle MusiPod's CPU power consumption is 0%. For a 10 years old intel dual core, the CPU usage is about 2% while playing music, since only the parts are redrawn which need to be, thanks to watch_it.
 
 ### Persistence
 
-Preferences are stored with [shared_preferences](https://pub.dev/packages/shared_preferences).
+Preferences are stored with [shared_preferences](https://pub.dev/packages/shared_preferences), collections are stored inside basic json files on our computer.
