@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import '../../app_config.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../l10n/l10n.dart';
@@ -115,7 +114,7 @@ class LanguageAutoComplete extends StatelessWidget {
               return Align(
                 alignment: Alignment.topLeft,
                 child: SizedBox(
-                  width: width ?? kSearchBarWidth,
+                  width: width ?? searchBarWidth,
                   height:
                       (options.length * 50) > 400 ? 400 : options.length * 50,
                   child: ClipRRect(

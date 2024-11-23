@@ -105,6 +105,9 @@ Color getAlphabetColor(String text, [Color fallBackColor = Colors.black]) {
   return alphabetColors[letter?.toUpperCase()] ?? fallBackColor;
 }
 
+double get searchBarWidth =>
+    isMobile ? kMobileSearchBarWidth : kDesktopSearchBarWidth;
+
 InputDecoration createMaterialDecoration({
   required ColorScheme colorScheme,
   TextStyle? style,
@@ -120,35 +123,39 @@ InputDecoration createMaterialDecoration({
   final outlineInputBorder = border ??
       OutlineInputBorder(
         borderRadius: BorderRadius.circular(100),
-        borderSide: BorderSide(width: 1, color: colorScheme.outline),
+        borderSide: BorderSide(
+          width: isMobile ? 2 : 1,
+          color: colorScheme.outline,
+        ),
       );
   return InputDecoration(
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
-    suffixIconConstraints: const BoxConstraints(
-      maxWidth: 200,
-      maxHeight: kYaruTitleBarItemHeight,
+    suffixIconConstraints: BoxConstraints(
+      maxHeight: isMobile ? kToolbarHeight : kYaruTitleBarItemHeight,
     ),
     hintText: hintText,
     fillColor: fillColor,
     filled: filled,
-    contentPadding: contentPadding ??
-        const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+    contentPadding: isMobile
+        ? const EdgeInsets.only(top: 16, bottom: 0, left: 15, right: 15)
+        : contentPadding ??
+            const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
     border: outlineInputBorder,
     errorBorder: outlineInputBorder,
     enabledBorder: outlineInputBorder,
     focusedBorder: outlineInputBorder.copyWith(
       borderSide: BorderSide(
-        width: 1,
         color: colorScheme.primary,
+        width: isMobile ? 2 : 1,
       ),
     ),
     disabledBorder: outlineInputBorder,
     focusedErrorBorder: outlineInputBorder,
-    helperStyle: style,
-    hintStyle: style,
-    labelStyle: style,
-    isDense: isDense,
+    helperStyle: isMobile ? null : style,
+    hintStyle: isMobile ? null : style,
+    labelStyle: isMobile ? null : style,
+    isDense: isMobile ? false : isDense,
   );
 }
 

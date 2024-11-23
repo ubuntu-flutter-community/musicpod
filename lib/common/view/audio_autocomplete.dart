@@ -3,7 +3,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:yaru/constants.dart';
 
 import '../../app_config.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
@@ -84,7 +83,7 @@ class AudioAutoComplete extends StatelessWidget {
               return Align(
                 alignment: Alignment.topLeft,
                 child: SizedBox(
-                  width: kSearchBarWidth,
+                  width: searchBarWidth,
                   height:
                       (options.length * 50) > 400 ? 400 : options.length * 50,
                   child: ClipRRect(
