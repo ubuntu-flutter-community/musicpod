@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
 import '../../extensions/build_context_x.dart';
@@ -59,7 +60,7 @@ class _SearchInputState extends State<SearchInput> {
   Widget build(BuildContext context) {
     final theme = context.theme;
     return SizedBox(
-      height: yaruStyled ? null : 38,
+      height: yaruStyled || isMobile ? null : 38,
       child: TextField(
         onTap: () {
           _controller.selection = TextSelection(

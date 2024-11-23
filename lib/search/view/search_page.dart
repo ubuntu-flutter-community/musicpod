@@ -7,7 +7,7 @@ import 'package:yaru/theme.dart';
 
 import '../../app/view/music_pod_scaffold.dart';
 import '../../app_config.dart';
-import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/progress.dart';

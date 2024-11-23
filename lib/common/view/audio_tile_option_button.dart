@@ -10,6 +10,7 @@ import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../playlists/view/add_to_playlist_dialog.dart';
 import '../data/audio.dart';
+import '../data/audio_type.dart';
 import 'audio_tile_bottom_sheet.dart';
 import 'icons.dart';
 import 'meta_data_dialog.dart';
@@ -167,6 +168,7 @@ class AudioTileBottomSheetButton extends StatelessWidget {
   Widget build(BuildContext context) => IconButton(
         tooltip: context.l10n.moreOptions,
         onPressed: () => showModal(
+          mode: ModalMode.platformModalMode,
           context: context,
           content: AudioTileBottomSheet(
             searchTerm: searchTerm,

@@ -6,6 +6,7 @@ import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_model.dart';
 import '../data/audio.dart';
+import '../data/audio_type.dart';
 import 'icons.dart';
 import 'theme.dart';
 

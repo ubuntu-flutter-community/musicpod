@@ -8,7 +8,7 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
 import '../../extensions/string_x.dart';
-import '../../l10n/l10n.dart';
+import 'audio_type.dart';
 import 'genres.dart';
 
 class Audio {
@@ -377,16 +377,4 @@ class Audio {
       albumId?.isNotEmpty == true &&
       path != null &&
       audioType == AudioType.local;
-}
-
-enum AudioType {
-  local,
-  radio,
-  podcast;
-
-  String localize(AppLocalizations l10n) => switch (this) {
-        local => l10n.localAudio,
-        radio => l10n.radio,
-        podcast => l10n.podcast,
-      };
 }

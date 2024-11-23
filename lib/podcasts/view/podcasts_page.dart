@@ -3,7 +3,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/view/music_pod_scaffold.dart';
-import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';

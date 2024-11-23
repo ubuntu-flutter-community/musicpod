@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../common/data/audio.dart';
+import '../common/data/audio_type.dart';
 import '../player/player_service.dart';
 
 class ConnectivityModel extends SafeChangeNotifier {

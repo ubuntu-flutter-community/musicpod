@@ -11,6 +11,7 @@ import 'package:path/path.dart' as p;
 import 'package:smtc_windows/smtc_windows.dart';
 
 import '../common/data/audio.dart';
+import '../common/data/audio_type.dart';
 import '../common/data/mpv_meta_data.dart';
 import '../common/data/player_state.dart';
 import '../common/logging.dart';

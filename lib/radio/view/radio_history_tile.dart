@@ -71,16 +71,13 @@ class RadioHistoryTile extends StatelessWidget {
               if (metadata == null) return;
 
               showModal(
+                mode: ModalMode.platformModalMode,
                 context: context,
-                content: isMobile
-                    ? MpvMetadataDialog.bottomSheet(
-                        image: imageUrl,
-                        mpvMetaData: metadata,
-                      )
-                    : MpvMetadataDialog.dialog(
-                        image: imageUrl,
-                        mpvMetaData: metadata,
-                      ),
+                content: MpvMetadataDialog(
+                  mode: ModalMode.platformModalMode,
+                  image: imageUrl,
+                  mpvMetaData: metadata,
+                ),
               );
             },
             icon: Icon(Iconz.info),

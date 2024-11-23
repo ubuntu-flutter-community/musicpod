@@ -4,6 +4,7 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
 import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';

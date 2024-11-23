@@ -4,7 +4,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/connectivity_model.dart';
 import '../../app/view/music_pod_scaffold.dart';
-import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/offline_page.dart';
 import '../../common/view/search_button.dart';

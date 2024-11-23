@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
 import '../../common/data/podcast_genre.dart';
 import '../../common/view/country_auto_complete.dart';
 import '../../common/view/language_autocomplete.dart';
+import '../../common/view/modals.dart';
 import '../../common/view/search_input.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
@@ -44,7 +45,8 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
               }
               await searchModel.search();
             },
-            suffixIcon: const AudioTypeFilterButton(),
+            suffixIcon:
+                AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
             prefixIcon: audioType == AudioType.podcast
                 ? const PodcastSearchInputPrefix()
                 : null,
@@ -67,7 +69,7 @@ class CountryAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
         watchPropertyValue((LibraryModel m) => m.favCountryCodes);
 
     return CountryAutoComplete(
-      suffixIcon: const AudioTypeFilterButton(),
+      suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
       countries: [
         ...[
           ...Country.values,
@@ -109,7 +111,7 @@ class TagAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
     final tag = watchPropertyValue((SearchModel m) => m.tag);
     watchPropertyValue((LibraryModel m) => m.favRadioTags);
     return TagAutoComplete(
-      suffixIcon: const AudioTypeFilterButton(),
+      suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
       value: tag,
       addFav: (tag) {
         if (tag?.name == null) return;
@@ -150,7 +152,7 @@ class LanguageAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
     final favLanguageCodes =
         watchPropertyValue((LibraryModel m) => m.favLanguageCodes);
     return LanguageAutoComplete(
-      suffixIcon: const AudioTypeFilterButton(),
+      suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
       value: language,
       onSelected: (language) {
         model.setLanguage(language);

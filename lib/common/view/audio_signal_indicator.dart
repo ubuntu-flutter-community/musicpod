@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../app_config.dart';
 import 'theme.dart';
 
 class ActiveAudioSignalIndicator extends StatefulWidget {
@@ -59,7 +60,9 @@ class _ActiveAudioSignalIndicatorState extends State<ActiveAudioSignalIndicator>
   Widget build(BuildContext context) {
     return RepaintBoundary(
       child: Padding(
-        padding: const EdgeInsets.only(left: 3, right: 1),
+        padding: yaruStyled || appleStyled
+            ? const EdgeInsets.only(left: 3, right: 1)
+            : const EdgeInsets.only(left: 5),
         child: SizedBox(
           width: iconSize - 2,
           height: iconSize,
