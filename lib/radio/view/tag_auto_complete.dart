@@ -5,7 +5,6 @@ import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 import '../../app_config.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 
@@ -90,7 +89,7 @@ class TagAutoComplete extends StatelessWidget {
             return Align(
               alignment: Alignment.topLeft,
               child: SizedBox(
-                width: kSearchBarWidth,
+                width: searchBarWidth,
                 height: (options.length * 50) > 400 ? 400 : options.length * 50,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(6),

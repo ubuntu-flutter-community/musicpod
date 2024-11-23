@@ -9,7 +9,6 @@ import '../../common/view/language_autocomplete.dart';
 import '../../common/view/modals.dart';
 import '../../common/view/search_input.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../radio/view/tag_auto_complete.dart';
@@ -28,7 +27,7 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
     return SizedBox(
-      width: kSearchBarWidth,
+      width: searchBarWidth,
       height: inputHeight,
       child: switch (searchType) {
         SearchType.radioCountry => const CountryAutoCompleteWithSuffix(),

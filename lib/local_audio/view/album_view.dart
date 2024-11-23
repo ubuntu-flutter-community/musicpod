@@ -14,7 +14,7 @@ import '../local_audio_model.dart';
 import 'album_page.dart';
 import 'local_cover.dart';
 
-class AlbumsView extends StatelessWidget {
+class AlbumsView extends StatelessWidget with WatchItMixin {
   const AlbumsView({
     super.key,
     required this.albums,
@@ -38,11 +38,21 @@ class AlbumsView extends StatelessWidget {
       );
     }
 
+    watchPropertyValue((LibraryModel m) => m.pinnedAlbums.hashCode);
+    final pinnedAlbums = di<LibraryModel>()
+        .pinnedAlbums
+        .entries
+        .map((e) => e.value.firstOrNull?.album);
+    final sortedAlbums = [
+      ...albums!.where((e) => pinnedAlbums.contains(e)),
+      ...albums!.where((e) => !pinnedAlbums.contains(e)),
+    ];
+
     return SliverGrid.builder(
-      itemCount: albums!.length,
+      itemCount: sortedAlbums.length,
       gridDelegate: audioCardGridDelegate,
       itemBuilder: (context, index) {
-        final album = albums!.elementAt(index);
+        final album = sortedAlbums.elementAt(index);
         return AlbumCard(
           key: ValueKey(album),
           album: album,

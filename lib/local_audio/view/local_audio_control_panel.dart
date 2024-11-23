@@ -3,7 +3,6 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/icons.dart';
-import '../../common/view/theme.dart';
 import '../../l10n/l10n.dart';
 import '../local_audio_model.dart';
 import 'local_audio_view.dart';
@@ -20,7 +19,6 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
       child: YaruChoiceChipBar(
         goNextIcon: Icon(Iconz.goNext),
         goPreviousIcon: Icon(Iconz.goBack),
-        chipHeight: chipHeight,
         style: YaruChoiceChipBarStyle.stack,
         selectedFirst: false,
         clearOnSelect: false,

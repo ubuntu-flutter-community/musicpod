@@ -3,7 +3,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 import '../../app_config.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/country_x.dart';
 import '../../l10n/l10n.dart';
@@ -117,7 +116,7 @@ class CountryAutoComplete extends StatelessWidget {
               return Align(
                 alignment: Alignment.topLeft,
                 child: SizedBox(
-                  width: width ?? kSearchBarWidth,
+                  width: width ?? searchBarWidth,
                   height:
                       (options.length * 50) > 400 ? 400 : options.length * 50,
                   child: ClipRRect(
