@@ -4,7 +4,7 @@ import '../../common/data/audio.dart';
 import 'album_view.dart';
 import 'artists_view.dart';
 import 'genres_view.dart';
-import 'local_audio_view.dart';
+import '../local_audio_view.dart';
 import 'playlists_view.dart';
 import 'titles_view.dart';
 

@@ -20,7 +20,7 @@ import '../local_audio_model.dart';
 import 'failed_imports_content.dart';
 import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
-import 'local_audio_view.dart';
+import '../local_audio_view.dart';
 
 class LocalAudioPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const LocalAudioPage({super.key});

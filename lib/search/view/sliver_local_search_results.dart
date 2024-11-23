@@ -8,7 +8,7 @@ import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/view/failed_imports_content.dart';
 import '../../local_audio/view/local_audio_body.dart';
-import '../../local_audio/view/local_audio_view.dart';
+import '../../local_audio/local_audio_view.dart';
 import '../search_model.dart';
 import '../search_type.dart';
 
