@@ -12,7 +12,7 @@ import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
-import '../../local_audio/view/local_audio_view.dart';
+import '../../local_audio/local_audio_view.dart';
 import '../../podcasts/podcast_model.dart';
 
 class ManualAddDialog extends StatelessWidget {

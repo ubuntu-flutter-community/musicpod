@@ -26,6 +26,11 @@ class SettingsService {
     _preferences.setInt(kThemeIndex, value).then(notify);
   }
 
+  int get localAudioIndex => _preferences.getInt(kLocalAudioIndex) ?? 0;
+  void setLocalAudioIndex(int value) {
+    _preferences.setInt(kLocalAudioIndex, value).then(notify);
+  }
+
   bool get neverShowFailedImports =>
       _preferences.getBool(kNeverShowImportFails) ?? false;
   void setNeverShowFailedImports(bool value) {

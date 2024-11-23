@@ -5,21 +5,30 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
+import '../settings/settings_service.dart';
 import 'local_audio_service.dart';
+import 'local_audio_view.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
   LocalAudioModel({
     required LocalAudioService localAudioService,
-  }) : _service = localAudioService;
+    required SettingsService settingsService,
+  })  : _localAudioService = localAudioService,
+        _settingsService = settingsService;
 
-  final LocalAudioService _service;
+  final LocalAudioService _localAudioService;
+  final SettingsService _settingsService;
   StreamSubscription<bool>? _audiosChangedSub;
 
-  int _localAudioIndex = 2;
-  int get localAudioindex => _localAudioIndex;
+  int? _localAudioIndex;
+  int get localAudioindex =>
+      _localAudioIndex ?? LocalAudioView.values.indexOf(LocalAudioView.albums);
   set localAudioindex(int value) {
     if (value == _localAudioIndex) return;
     _localAudioIndex = value;
+    // Note: we do not listen to the local audio index change on purpose, we just pump it into the sink
+    // and load it fresh in init
+    _settingsService.setLocalAudioIndex(value);
     notifyListeners();
   }
 
@@ -39,60 +48,61 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  List<Audio>? get audios => _service.audios;
-  List<String>? get allArtists => _service.allArtists;
-  List<String>? get allAlbumArtists => _service.allAlbumArtists;
-  List<String>? get allGenres => _service.allGenres;
-  List<String>? get allAlbums => _service.allAlbums;
+  List<Audio>? get audios => _localAudioService.audios;
+  List<String>? get allArtists => _localAudioService.allArtists;
+  List<String>? get allAlbumArtists => _localAudioService.allAlbumArtists;
+  List<String>? get allGenres => _localAudioService.allGenres;
+  List<String>? get allAlbums => _localAudioService.allAlbums;
 
   List<Audio>? findAlbum(
     String albumName, [
     AudioFilter audioFilter = AudioFilter.trackNumber,
   ]) =>
-      _service.findAlbum(albumName, audioFilter);
+      _localAudioService.findAlbum(albumName, audioFilter);
 
   List<Audio>? findTitlesOfArtist(
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,
   ]) =>
-      _service.findTitlesOfArtist(artist, audioFilter);
+      _localAudioService.findTitlesOfArtist(artist, audioFilter);
 
   List<Audio>? findTitlesOfAlbumArtists(
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,
   ]) =>
-      _service.findTitlesOfAlbumArtists(artist, audioFilter);
+      _localAudioService.findTitlesOfAlbumArtists(artist, audioFilter);
 
   List<String>? findArtistsOfGenre(String genre) =>
-      _service.findArtistsOfGenre(genre);
+      _localAudioService.findArtistsOfGenre(genre);
 
   Set<Uint8List>? findLocalCovers({
     required List<Audio> audios,
     int limit = 4,
   }) =>
-      _service.findLocalCovers(audios: audios, limit: limit);
+      _localAudioService.findLocalCovers(audios: audios, limit: limit);
 
   List<Audio> findUniqueAlbumAudios(List<Audio> audios) =>
-      _service.findUniqueAlbumAudios(audios);
+      _localAudioService.findUniqueAlbumAudios(audios);
 
-  List<String>? get failedImports => _service.failedImports;
+  List<String>? get failedImports => _localAudioService.failedImports;
 
   List<String>? findAllAlbums({
     Iterable<Audio>? newAudios,
     bool clean = true,
   }) =>
-      _service.findAllAlbums(newAudios: newAudios, clean: clean);
+      _localAudioService.findAllAlbums(newAudios: newAudios, clean: clean);
 
   Future<void> init({
     bool forceInit = false,
     String? directory,
   }) async {
-    await _service.init(
+    _localAudioIndex = _settingsService.localAudioIndex;
+    await _localAudioService.init(
       forceInit: forceInit,
       directory: directory,
     );
     _audiosChangedSub ??=
-        _service.audiosChanged.listen((_) => notifyListeners());
+        _localAudioService.audiosChanged.listen((_) => notifyListeners());
 
     notifyListeners();
   }

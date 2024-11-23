@@ -187,7 +187,10 @@ Future<void> registerDependencies({
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<LocalAudioModel>(
-      () => LocalAudioModel(localAudioService: di<LocalAudioService>()),
+      () => LocalAudioModel(
+        localAudioService: di<LocalAudioService>(),
+        settingsService: di<SettingsService>(),
+      ),
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<PodcastModel>(

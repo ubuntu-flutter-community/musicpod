@@ -5,7 +5,7 @@ import 'package:yaru/yaru.dart';
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
 import '../local_audio_model.dart';
-import 'local_audio_view.dart';
+import '../local_audio_view.dart';
 
 class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
   const LocalAudioControlPanel({super.key});
