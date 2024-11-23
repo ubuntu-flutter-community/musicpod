@@ -4,7 +4,8 @@ import 'package:yaru/yaru.dart';
 import '../../app_config.dart';
 import '../../l10n/l10n.dart';
 import '../data/audio.dart';
-import 'modal_mode.dart';
+import '../data/audio_type.dart';
+import 'modals.dart';
 
 class MetaDataContent extends StatelessWidget {
   const MetaDataContent.dialog({

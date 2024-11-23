@@ -42,6 +42,7 @@ class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
             final metadata = di<PlayerModel>().getMetadata(icyTitle);
             if (metadata == null) return;
             showModal(
+              mode: ModalMode.platformModalMode,
               context: context,
               content: isMobile
                   ? MpvMetadataDialog.bottomSheet(

@@ -7,6 +7,7 @@ import 'package:radio_browser_api/radio_browser_api.dart' hide Country;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
+import '../common/data/audio_type.dart';
 import '../common/data/podcast_genre.dart';
 import '../common/view/languages.dart';
 import '../extensions/string_x.dart';

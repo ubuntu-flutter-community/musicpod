@@ -1,4 +1,4 @@
-import '../common/data/audio.dart';
+import '../common/data/audio_type.dart';
 import '../l10n/l10n.dart';
 
 enum SearchType {

@@ -4,6 +4,7 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/view/local_cover.dart';

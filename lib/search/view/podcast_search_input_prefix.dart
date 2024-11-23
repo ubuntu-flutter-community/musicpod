@@ -5,7 +5,9 @@ import 'package:watch_it/watch_it.dart';
 import '../../common/view/country_auto_complete.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/language_autocomplete.dart';
+import '../../common/view/modals.dart';
 import '../../common/view/theme.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';
@@ -23,9 +25,10 @@ class PodcastSearchInputPrefix extends StatelessWidget with WatchItMixin {
     final l10n = context.l10n;
     return IconButton(
       tooltip: usePodcastIndex ? l10n.language : l10n.country,
-      onPressed: () => showDialog(
+      onPressed: () => showModal(
+        mode: ModalMode.platformModalMode,
         context: context,
-        builder: (context) => const LocationFilterDialog(),
+        content: LocationFilterDialog(mode: ModalMode.platformModalMode),
       ),
       icon: Icon(Iconz.globe),
     );
@@ -35,23 +38,60 @@ class PodcastSearchInputPrefix extends StatelessWidget with WatchItMixin {
 class LocationFilterDialog extends StatelessWidget {
   const LocationFilterDialog({
     super.key,
-  });
+    required ModalMode mode,
+  }) : _mode = mode;
+
+  const LocationFilterDialog.dialog({
+    super.key,
+  }) : _mode = ModalMode.dialog;
+
+  const LocationFilterDialog.bottomSheet({
+    super.key,
+  }) : _mode = ModalMode.bottomSheet;
+
+  final ModalMode _mode;
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      titlePadding: EdgeInsets.zero,
-      contentPadding: const EdgeInsets.all(20),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50),
-      ),
-      content: const LocationFilter(),
-    );
-  }
+  Widget build(BuildContext context) => switch (_mode) {
+        ModalMode.dialog => AlertDialog(
+            titlePadding: EdgeInsets.zero,
+            contentPadding: const EdgeInsets.all(20),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+            content: const LocationFilter(),
+          ),
+        ModalMode.bottomSheet => BottomSheet(
+            builder: (context) => Center(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 60,
+                  top: 20,
+                  left: 20,
+                  right: 20,
+                ),
+                child: Column(
+                  children: [
+                    LocationFilter(
+                      width: context.mediaQuerySize.width - 40,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            enableDrag: false,
+            onClosing: () {},
+          )
+      };
 }
 
 class LocationFilter extends StatelessWidget with WatchItMixin {
-  const LocationFilter({super.key});
+  const LocationFilter({
+    super.key,
+    this.width,
+  });
+
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +117,7 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
 
     final language = watchPropertyValue((SearchModel m) => m.language);
 
-    const width = 250.0;
+    final theWidth = width ?? 250.0;
     final height = chipHeight;
 
     return usePodcastIndex
@@ -86,7 +126,7 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
             contentPadding: countryPillPadding,
             filled: language != null,
             isDense: true,
-            width: width,
+            width: theWidth,
             height: height,
             value: language,
             favs: favLanguageCodes,
@@ -112,7 +152,7 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
             contentPadding: countryPillPadding,
             filled: true,
             isDense: true,
-            width: width,
+            width: theWidth,
             height: height,
             countries: [
               ...[

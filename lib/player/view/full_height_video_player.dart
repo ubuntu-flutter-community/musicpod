@@ -5,7 +5,7 @@ import 'package:yaru/constants.dart';
 
 import '../../app/connectivity_model.dart';
 import '../../app_config.dart';
-import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
 import '../player_model.dart';

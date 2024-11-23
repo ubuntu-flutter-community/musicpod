@@ -5,11 +5,18 @@ import 'package:yaru/yaru.dart';
 import '../../constants.dart';
 import '../data/mpv_meta_data.dart';
 import 'icons.dart';
-import 'modal_mode.dart';
+import 'modals.dart';
 import 'safe_network_image.dart';
 import 'stream_provider_share_button.dart';
 
 class MpvMetadataDialog extends StatelessWidget {
+  const MpvMetadataDialog({
+    super.key,
+    this.image,
+    required this.mpvMetaData,
+    required ModalMode mode,
+  }) : _mode = mode;
+
   const MpvMetadataDialog.dialog({
     super.key,
     this.image,

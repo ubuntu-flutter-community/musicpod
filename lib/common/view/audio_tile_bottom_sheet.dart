@@ -7,6 +7,7 @@ import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../playlists/view/add_to_playlist_dialog.dart';
 import '../data/audio.dart';
+import '../data/audio_type.dart';
 import 'audio_tile_image.dart';
 import 'icons.dart';
 import 'like_all_icon.dart';

@@ -5,6 +5,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
 import '../../common/view/tapable_text.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';

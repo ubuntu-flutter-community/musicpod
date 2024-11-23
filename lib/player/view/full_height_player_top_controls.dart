@@ -6,7 +6,7 @@ import 'package:yaru/constants.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
-import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/like_icon.dart';
 import '../../common/view/share_button.dart';

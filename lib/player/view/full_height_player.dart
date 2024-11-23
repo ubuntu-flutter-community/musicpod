@@ -4,7 +4,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
-import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
 import '../../common/view/header_bar.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
