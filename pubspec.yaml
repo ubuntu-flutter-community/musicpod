@@ -44,13 +44,18 @@ dependencies:
   intl: ^0.19.0
   lastfm: ^0.0.6
   m3u_parser_nullsafe: ^1.0.3
-  media_kit: ^1.1.10+1
-  media_kit_libs_video: ^1.0.4
+  media_kit:
+    git:
+      url: https://github.com/media-kit/media-kit
+      path: media_kit
+  media_kit_libs_video:
+    git:
+      url: https://github.com/media-kit/media-kit
+      path: libs/universal/media_kit_libs_video
   media_kit_video:
     git:
       url: https://github.com/media-kit/media-kit
-      path: media_kit_video/
-      ref: 13f6b3f0ef9ccf8a711e396bc49cb05af9b3e497
+      path: media_kit_video
   mockito: ^5.4.4
   package_info_plus: ^8.0.0
   palette_generator: ^0.3.3+3
@@ -96,7 +101,7 @@ flutter_launcher_icons:
   min_sdk_android: 23
   image_path: "assets/icon.png"
   adaptive_icon_background: "assets/icon.png"
-  adaptive_icon_foreground: "assets/icon.png" 
+  adaptive_icon_foreground: "assets/icon.png"
 
 flutter:
   generate: true
@@ -109,13 +114,16 @@ flutter:
     - CHANGELOG.md
 
 dependency_overrides:
-  media_kit_native_event_loop:
+  media_kit:
     git:
       url: https://github.com/media-kit/media-kit
-      path: media_kit_native_event_loop/
-      ref: 13f6b3f0ef9ccf8a711e396bc49cb05af9b3e497
+      path: media_kit
+  media_kit_libs_video:
+    git:
+      url: https://github.com/media-kit/media-kit
+      path: libs/universal/media_kit_libs_video
   media_kit_video:
     git:
       url: https://github.com/media-kit/media-kit
-      path: media_kit_video/
-      ref: 13f6b3f0ef9ccf8a711e396bc49cb05af9b3e497
+      path: media_kit_video
+

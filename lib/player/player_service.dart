@@ -527,7 +527,7 @@ class PlayerService {
   Future<void> _initMediaControl() async {
     if (Platform.isWindows) {
       await _initSmtc();
-    } else if (Platform.isLinux || Platform.isAndroid || Platform.isMacOS) {
+    } else {
       await _initAudioService();
     }
   }
