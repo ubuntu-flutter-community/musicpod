@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  FLUTTER_VERSION: '3.24.3'
+  FLUTTER_VERSION: '3.24.5'
 
 jobs:
   build_and_release_linux_snap_edge_amd64:
