@@ -70,7 +70,6 @@ class SettingsService {
   void setEnableDiscordRPC(bool value) =>
       _preferences.setBool(kEnableDiscordRPC, value).then(notify);
 
-  // TODO: check how this increases cpu usage
   bool get useMoreAnimations =>
       _preferences.getBool(kUseMoreAnimations) ?? !Platform.isLinux;
   void setUseMoreAnimations(bool value) =>

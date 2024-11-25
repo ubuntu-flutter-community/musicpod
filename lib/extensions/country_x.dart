@@ -1,7 +1,6 @@
 import 'package:podcast_search/podcast_search.dart';
 
 import '../l10n/l10n.dart';
-import 'string_x.dart';
 
 extension CountryX on Country {
   String localize(AppLocalizations l10n) => switch (this) {
@@ -262,7 +261,5 @@ extension CountryX on Country {
         Country.yemen => l10n.regionYemen,
         Country.zambia => l10n.regionZambia,
         Country.zimbabwe => l10n.regionZimbabwe,
-        // ignore: unreachable_switch_case
-        _ => name.camelToSentence.everyWordCapitalized,
       };
 }
