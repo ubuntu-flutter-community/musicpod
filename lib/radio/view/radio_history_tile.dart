@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
 import '../../common/data/audio.dart';
@@ -10,6 +9,7 @@ import '../../common/view/modals.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/tapable_text.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
@@ -55,8 +55,7 @@ class RadioHistoryTile extends StatelessWidget {
           key: ValueKey(icyTitle),
           selected: selected,
           selectedColor: context.theme.contrastyPrimary,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
+          contentPadding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
           leading: RadioHistoryTileImage(
             key: ValueKey(icyTitle),
             height: yaruStyled ? 34 : 40,
@@ -128,7 +127,7 @@ class _SimpleRadioHistoryTile extends StatelessWidget {
     return ListTile(
       selected: selected,
       selectedColor: context.theme.colorScheme.onSurface,
-      contentPadding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
+      contentPadding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
       leading: Visibility(
         visible: selected,
         child: const Text('>'),

@@ -7,6 +7,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/ui_constants.dart';
 import '../../constants.dart';
 import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';
@@ -34,13 +35,17 @@ class ManualAddDialog extends StatelessWidget {
             )
           : null,
       titlePadding: yaruStyled ? EdgeInsets.zero : null,
-      contentPadding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+      contentPadding: const EdgeInsets.only(
+        left: kLargestSpace,
+        right: kLargestSpace,
+        bottom: kLargestSpace,
+      ),
       content: SizedBox(
         height: 200,
         width: 400,
         child: onlyPlaylists
             ? Padding(
-                padding: const EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(top: kLargestSpace),
                 child: PlaylistContent(
                   playlistName: context.l10n.createNewPlaylist,
                   libraryModel: di<LibraryModel>(),
@@ -309,7 +314,7 @@ class _AddStationDialogState extends State<AddStationContent> {
           onChanged: (v) => setState(() => _urlController.text = v),
         ),
         const SizedBox(
-          height: kYaruPagePadding,
+          height: kLargestSpace,
         ),
         TextField(
           controller: _nameController,
@@ -317,7 +322,7 @@ class _AddStationDialogState extends State<AddStationContent> {
           onChanged: (v) => setState(() => _nameController.text = v),
         ),
         const SizedBox(
-          height: kYaruPagePadding,
+          height: kLargestSpace,
         ),
         Align(
           alignment: Alignment.bottomRight,
@@ -395,7 +400,7 @@ class _AddPodcastContentState extends State<AddPodcastContent> {
           onChanged: (v) => setState(() => _urlController.text = v),
         ),
         const SizedBox(
-          height: kYaruPagePadding,
+          height: kLargestSpace,
         ),
         Align(
           alignment: Alignment.bottomRight,

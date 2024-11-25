@@ -4,6 +4,7 @@ import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -179,12 +180,12 @@ class _NewViewState extends State<_NewView> {
               controller: _controller,
             ),
             const SizedBox(
-              height: 20,
+              height: kLargestSpace,
             ),
             Align(
               alignment: Alignment.centerRight,
               child: Wrap(
-                spacing: 20,
+                spacing: kLargestSpace,
                 runSpacing: 10,
                 children: [
                   OutlinedButton(

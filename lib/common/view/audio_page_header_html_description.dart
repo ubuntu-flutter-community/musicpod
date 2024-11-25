@@ -1,4 +1,4 @@
-import '../../constants.dart';
+import 'ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -21,7 +21,7 @@ class AudioPageHeaderHtmlDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     final descriptionStyle = context.theme.pageHeaderDescription;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
+      padding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
       child: ConstrainedBox(
         constraints: const BoxConstraints(
           minWidth: kAudioHeaderDescriptionWidth,

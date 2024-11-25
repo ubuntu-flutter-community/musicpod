@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
+import '../common/view/ui_constants.dart';
 
 extension BuildContextX on BuildContext {
   ThemeData get theme => Theme.of(this);

@@ -11,6 +11,7 @@ import '../../common/view/global_keys.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/tapable_text.dart';
+import '../../common/view/ui_constants.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
@@ -24,7 +25,7 @@ class AboutSection extends StatelessWidget with WatchItMixin {
     final text = '${context.l10n.about} $kAppTitle';
     return YaruSection(
       headline: Text(text),
-      margin: const EdgeInsets.all(kYaruPagePadding),
+      margin: const EdgeInsets.all(kLargestSpace),
       child: const Column(
         children: [_AboutTile(), _LicenseTile()],
       ),

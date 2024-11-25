@@ -4,6 +4,7 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -49,9 +50,13 @@ class QueueDialog extends StatelessWidget with WatchItMixin {
 
     return AlertDialog(
       key: ValueKey(queueLength),
-      titlePadding:
-          const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 10),
-      contentPadding: const EdgeInsets.only(bottom: 20, top: 10),
+      titlePadding: const EdgeInsets.only(
+        left: 10,
+        right: 10,
+        top: kLargestSpace,
+        bottom: 10,
+      ),
+      contentPadding: const EdgeInsets.only(bottom: kLargestSpace, top: 10),
       title: const PlayerMainControls(active: true),
       actionsAlignment: MainAxisAlignment.center,
       actions: [

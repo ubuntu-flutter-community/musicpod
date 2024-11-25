@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:yaru/constants.dart';
 
 import '../../extensions/build_context_x.dart';
+import 'ui_constants.dart';
 
 class SliverAudioPageControlPanel extends StatelessWidget {
   const SliverAudioPageControlPanel({
@@ -29,7 +29,7 @@ class SliverAudioPageControlPanel extends StatelessWidget {
         centerTitle: true,
         titleSpacing: 0,
         title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
+          padding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
           child: controlPanel,
         ),
         bottom: const _Space(),

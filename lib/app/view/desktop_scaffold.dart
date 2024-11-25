@@ -6,7 +6,7 @@ import 'package:yaru/yaru.dart';
 import '../../app_config.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../patch_notes/patch_notes_dialog.dart';

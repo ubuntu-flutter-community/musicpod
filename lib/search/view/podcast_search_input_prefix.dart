@@ -7,6 +7,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/language_autocomplete.dart';
 import '../../common/view/modals.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -66,9 +67,9 @@ class LocationFilterDialog extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(
                   bottom: 60,
-                  top: 20,
-                  left: 20,
-                  right: 20,
+                  top: kLargestSpace,
+                  left: kLargestSpace,
+                  right: kLargestSpace,
                 ),
                 child: Column(
                   children: [

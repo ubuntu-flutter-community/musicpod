@@ -10,6 +10,7 @@ import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_filter_app_bar.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -109,7 +110,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                     children: [
                       Text(context.l10n.noLocalTitlesFound),
                       const SizedBox(
-                        height: kYaruPagePadding,
+                        height: kLargestSpace,
                       ),
                       const SettingsButton.important(),
                     ],

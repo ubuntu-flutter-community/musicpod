@@ -15,6 +15,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -99,7 +100,7 @@ class StationGrid extends StatelessWidget with WatchItMixin {
           children: [
             Text(context.l10n.noStarredStations),
             const SizedBox(
-              height: kYaruPagePadding,
+              height: kLargestSpace,
             ),
             const OpenRadioSearchButton(),
           ],
@@ -144,7 +145,7 @@ class TagGrid extends StatelessWidget with WatchItMixin {
           children: [
             Text(context.l10n.noStarredTags),
             const SizedBox(
-              height: kYaruPagePadding,
+              height: kLargestSpace,
             ),
             const OpenRadioSearchButton(),
           ],

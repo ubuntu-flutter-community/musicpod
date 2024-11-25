@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../common/view/audio_autocomplete.dart';
 import '../../common/view/progress.dart';
+import '../../common/view/ui_constants.dart';
 import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
 
@@ -40,7 +40,7 @@ class _PlaylistAddAudiosDialogState extends State<PlaylistAddAudiosDialog> {
       ),
       children: [
         Padding(
-          padding: const EdgeInsets.all(kYaruPagePadding),
+          padding: const EdgeInsets.all(kLargestSpace),
           child: SizedBox(
             // height: 50,
             width: 300,

@@ -7,7 +7,7 @@ import '../../common/view/round_image_container.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
+import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../local_audio_model.dart';

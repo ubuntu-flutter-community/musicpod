@@ -10,6 +10,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/share_button.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/int_x.dart';
@@ -235,10 +236,10 @@ class _Description extends StatelessWidget {
                     )
                   : Text(title ?? ''),
               contentPadding: EdgeInsets.only(
-                top: yaruStyled ? 0 : 20,
-                left: 20,
-                right: 20,
-                bottom: 20,
+                top: yaruStyled ? 0 : kLargestSpace,
+                left: kLargestSpace,
+                right: kLargestSpace,
+                bottom: kLargestSpace,
               ),
               children: [
                 SizedBox(

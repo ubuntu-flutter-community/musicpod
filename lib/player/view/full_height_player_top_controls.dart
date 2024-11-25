@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/constants.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
@@ -11,7 +10,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/like_icon.dart';
 import '../../common/view/share_button.dart';
 import '../../common/view/snackbars.dart';
-import '../../constants.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
@@ -48,8 +47,8 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
     return Padding(
       padding: padding ??
           EdgeInsets.only(
-            right: kYaruPagePadding,
-            top: Platform.isMacOS ? 0 : kYaruPagePadding,
+            right: kLargestSpace,
+            top: Platform.isMacOS ? 0 : kLargestSpace,
           ),
       child: Wrap(
         alignment: WrapAlignment.end,

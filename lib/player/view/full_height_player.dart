@@ -6,6 +6,7 @@ import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/header_bar.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
 import '../../radio/view/radio_history_list.dart';
@@ -54,7 +55,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
         children: [
           if (!isMobile || context.isPortrait) const FullHeightPlayerImage(),
           const SizedBox(
-            height: kYaruPagePadding,
+            height: kLargestSpace,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -63,15 +64,15 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
             ),
           ),
           const SizedBox(
-            height: kYaruPagePadding,
+            height: kLargestSpace,
           ),
           SizedBox(
-            height: kYaruPagePadding,
+            height: kLargestSpace,
             width: playerWithSidePanel ? 400 : 350,
             child: const PlayerTrack(),
           ),
           const SizedBox(
-            height: kYaruPagePadding,
+            height: kLargestSpace,
           ),
           PlayerMainControls(active: active),
         ],

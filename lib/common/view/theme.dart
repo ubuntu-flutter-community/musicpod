@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
-import '../../constants.dart';
+import 'ui_constants.dart';
 import 'icons.dart';
 
 ThemeData? yaruDarkWithTweaks(YaruThemeData yaru) {
@@ -209,7 +209,7 @@ double get iconSize => yaruStyled
     ? kYaruIconSize
     : isMobile
         ? 24.0
-        : 20.0;
+        : kLargestSpace;
 
 double get sideBarImageSize => 38;
 
@@ -255,7 +255,7 @@ SliverGridDelegate get audioCardGridDelegate =>
 
 EdgeInsets get appBarSingleActionSpacing => Platform.isMacOS
     ? const EdgeInsets.only(right: 5, left: 5)
-    : EdgeInsets.only(right: 10, left: isMobile ? 0 : 20);
+    : EdgeInsets.only(right: 10, left: isMobile ? 0 : kLargestSpace);
 
 EdgeInsetsGeometry get radioHistoryListPadding =>
     EdgeInsets.only(left: yaruStyled ? 0 : 5);

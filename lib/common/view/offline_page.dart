@@ -4,6 +4,7 @@ import 'package:yaru/yaru.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import 'header_bar.dart';
+import 'ui_constants.dart';
 
 class OfflinePage extends StatelessWidget {
   const OfflinePage({super.key, this.action});
@@ -45,7 +46,7 @@ class OfflineBody extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(
-              top: kYaruPagePadding,
+              top: kLargestSpace,
               left: 40,
               right: 40,
             ),

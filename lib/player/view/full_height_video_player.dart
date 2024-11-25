@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/constants.dart';
 
 import '../../app/connectivity_model.dart';
 import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../player_model.dart';
 import 'full_height_player_top_controls.dart';
@@ -54,8 +54,8 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
           ),
         ),
       ],
-      seekBarMargin: const EdgeInsets.all(kYaruPagePadding),
-      topButtonBarMargin: const EdgeInsets.only(right: kYaruPagePadding),
+      seekBarMargin: const EdgeInsets.all(kLargestSpace),
+      topButtonBarMargin: const EdgeInsets.only(right: kLargestSpace),
       topButtonBar: [
         const Spacer(),
         controls,
@@ -74,7 +74,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
       bottomButtonBar: [
         Flexible(
           child: Tooltip(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
+            margin: const EdgeInsets.symmetric(horizontal: kLargestSpace),
             message: text,
             child: Text(
               text,
