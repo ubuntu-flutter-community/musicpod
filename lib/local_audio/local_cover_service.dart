@@ -6,15 +6,11 @@ import 'package:path/path.dart' as p;
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 
-import '../compute_isolate.dart';
-import '../constants.dart';
-import '../persistence_utils.dart';
-
 class LocalCoverService {
   final _propertiesChangedController = StreamController<bool>.broadcast();
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
 
-  var _store = <String, Uint8List?>{};
+  final _store = <String, Uint8List?>{};
   int get storeLength => _store.length;
 
   Future<Uint8List?> getCover({
@@ -65,13 +61,6 @@ class LocalCoverService {
   }
 
   Uint8List? get(String? albumId) => albumId == null ? null : _store[albumId];
-
-  Future<void> write() async => writeUint8ListMap(_store, kCoverStore);
-
-  // This does not make much sense except for small libs, where the store is filled
-  // fast anyways. Let's keep it for eventual use...
-  Future<void> read() async =>
-      _store = await computeIsolate(() => readUint8ListMap(kCoverStore)) ?? [];
 
   Future<void> dispose() async => _propertiesChangedController.close();
 }
