@@ -48,6 +48,8 @@ class ExposeService {
     );
   }
 
+  void initListenBrains() => _listenBrainzService.init();
+
   Future<void> _exposeTitleToDiscord({
     required String title,
     required String artist,

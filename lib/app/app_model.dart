@@ -42,6 +42,8 @@ class AppModel extends SafeChangeNotifier {
         apiSecret: apiSecret,
       );
 
+  void initListenBrains() => _exposeService.initListenBrains();
+
   final GitHub _gitHub;
   final SettingsService _settingsService;
   final bool _allowManualUpdates;

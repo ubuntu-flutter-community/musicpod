@@ -24,10 +24,12 @@ class ListenBrainzService {
     try {
       if (_listenBrainz != null &&
           _settingsService.enableListenBrainzScrobbling) {
+        final track = Track(title: title, artist: artist);
         await _listenBrainz!.submitSingle(
-          Track(title: title, artist: artist),
+          track,
           DateTime.now(),
         );
+        await _listenBrainz!.submitPlayingNow(track);
       }
     } on Exception catch (e) {
       printMessageInDebugMode(e);

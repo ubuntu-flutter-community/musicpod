@@ -263,6 +263,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                         di<SettingsModel>().setListenBrainzApiKey(
                           _listenBrainzApiKeyController.text,
                         );
+                        di<AppModel>().initListenBrains();
                       },
                       child: Text(l10n.save),
                     ),
