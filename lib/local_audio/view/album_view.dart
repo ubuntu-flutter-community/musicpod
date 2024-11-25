@@ -11,7 +11,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
+import '../../common/view/ui_constants.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../local_audio_model.dart';

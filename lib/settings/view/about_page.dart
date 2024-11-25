@@ -8,6 +8,7 @@ import '../../app/app_model.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/tapable_text.dart';
+import '../../common/view/ui_constants.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -58,7 +59,7 @@ class _AboutPageState extends State<AboutPage> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(kYaruPagePadding),
+              padding: const EdgeInsets.all(kLargestSpace),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -70,7 +71,7 @@ class _AboutPageState extends State<AboutPage> {
                     maxLines: maxLines,
                   ),
                   const SizedBox(
-                    height: kYaruPagePadding,
+                    height: kLargestSpace,
                   ),
                   TapAbleText(
                     onTap: () =>
@@ -81,7 +82,7 @@ class _AboutPageState extends State<AboutPage> {
                     maxLines: maxLines,
                   ),
                   const SizedBox(
-                    height: kYaruPagePadding,
+                    height: kLargestSpace,
                   ),
                   TapAbleText(
                     onTap: () => launchUrl(
@@ -93,7 +94,7 @@ class _AboutPageState extends State<AboutPage> {
                     maxLines: maxLines,
                   ),
                   const SizedBox(
-                    height: kYaruPagePadding,
+                    height: kLargestSpace,
                   ),
                   TapAbleText(
                     onTap: () =>
@@ -104,7 +105,7 @@ class _AboutPageState extends State<AboutPage> {
                     maxLines: maxLines,
                   ),
                   const SizedBox(
-                    height: kYaruPagePadding,
+                    height: kLargestSpace,
                   ),
                   TapAbleText(
                     onTap: () => launchUrl(
@@ -118,7 +119,7 @@ class _AboutPageState extends State<AboutPage> {
                     maxLines: maxLines,
                   ),
                   const SizedBox(
-                    height: 2 * kYaruPagePadding,
+                    height: 2 * kLargestSpace,
                   ),
                   Text(
                     context.l10n.contributors,
@@ -132,8 +133,10 @@ class _AboutPageState extends State<AboutPage> {
                           return SizedBox(
                             height: 300,
                             child: GridView.builder(
-                              padding:
-                                  const EdgeInsets.only(bottom: 20, top: 10),
+                              padding: const EdgeInsets.only(
+                                bottom: kLargestSpace,
+                                top: 10,
+                              ),
                               gridDelegate:
                                   const SliverGridDelegateWithMaxCrossAxisExtent(
                                 maxCrossAxisExtent: _kTileSize,

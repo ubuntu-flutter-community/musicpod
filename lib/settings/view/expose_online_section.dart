@@ -7,6 +7,7 @@ import '../../app/app_model.dart';
 import '../../app_config.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../settings_model.dart';
@@ -61,9 +62,9 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
     return YaruSection(
       headline: Text(l10n.exposeOnlineHeadline),
       margin: const EdgeInsets.only(
-        top: kYaruPagePadding,
-        right: kYaruPagePadding,
-        left: kYaruPagePadding,
+        top: kLargestSpace,
+        right: kLargestSpace,
+        left: kLargestSpace,
       ),
       child: Column(
         children: [

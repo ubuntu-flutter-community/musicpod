@@ -7,7 +7,6 @@ import 'package:yaru/yaru.dart';
 
 import 'app/view/app.dart';
 import 'app_config.dart';
-import 'constants.dart';
 import 'persistence_utils.dart';
 import 'register.dart';
 
@@ -22,7 +21,7 @@ Future<void> main(List<String> args) async {
       ..setSize(const Size(950, 820));
   }
   if (!yaruStyled) {
-    SystemTheme.fallbackColor = kMusicPodFallBackColor;
+    SystemTheme.fallbackColor = const Color(0xFFed3c63);
     await SystemTheme.accentColor.load();
   }
 

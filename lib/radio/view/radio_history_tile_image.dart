@@ -6,7 +6,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/modals.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
 import '../../common/view/safe_network_image.dart';
-import '../../constants.dart';
+import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../online_art_model.dart';

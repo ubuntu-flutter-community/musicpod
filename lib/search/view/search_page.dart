@@ -14,6 +14,7 @@ import '../../common/view/progress.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_filter_app_bar.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../library/library_model.dart';
 import '../search_model.dart';
 import 'search_page_input.dart';
@@ -41,7 +42,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
         actions: [
           Padding(
             padding: appBarSingleActionSpacing.copyWith(
-              left: Platform.isMacOS ? 5 : 20,
+              left: Platform.isMacOS ? 5 : kLargestSpace,
             ),
             child: SearchButton(
               active: true,

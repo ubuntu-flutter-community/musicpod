@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../constants.dart';
+import 'ui_constants.dart';
 import '../data/mpv_meta_data.dart';
 import 'icons.dart';
 import 'modals.dart';

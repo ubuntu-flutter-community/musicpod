@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 
+import 'ui_constants.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -77,7 +78,7 @@ class AudioTileBottomSheet extends StatelessWidget {
                     : null,
               ),
               const SpacedDivider(
-                bottom: 20,
+                bottom: kLargestSpace,
                 top: 10,
                 left: 0,
                 right: 0,
@@ -174,7 +175,7 @@ class AudioTileBottomSheet extends StatelessWidget {
               if (audios.first.audioType != AudioType.radio)
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
+                    padding: const EdgeInsets.only(bottom: kLargestSpace),
                     child: ListView(
                       shrinkWrap: true,
                       children: [

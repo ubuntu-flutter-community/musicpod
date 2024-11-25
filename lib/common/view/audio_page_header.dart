@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:yaru/yaru.dart';
 
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
+import 'ui_constants.dart';
 
 class AudioPageHeader extends StatelessWidget {
   const AudioPageHeader({
@@ -37,7 +36,7 @@ class AudioPageHeader extends StatelessWidget {
     final radius = imageRadius ?? BorderRadius.circular(10);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: kYaruPagePadding),
+      padding: const EdgeInsets.only(bottom: kLargestSpace),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -63,7 +62,7 @@ class AudioPageHeader extends StatelessWidget {
               ),
             ),
           Padding(
-            padding: const EdgeInsets.only(top: 20, bottom: 5),
+            padding: const EdgeInsets.only(top: kLargestSpace, bottom: 5),
             child: Text(
               title,
               style: theme.pageHeaderStyle,

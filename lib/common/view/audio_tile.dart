@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../constants.dart';
+import 'ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/theme_data_x.dart';
@@ -108,7 +108,7 @@ class _AudioTileState extends State<AudioTile> {
         }
       },
       title: Padding(
-        padding: const EdgeInsets.only(right: kYaruPagePadding),
+        padding: const EdgeInsets.only(right: kLargestSpace),
         child: widget.onTitleTap == null
             ? Text(
                 widget.audio.title ?? l10n.unknown,

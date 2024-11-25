@@ -5,7 +5,7 @@ import 'package:yaru/yaru.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
-import '../../constants.dart';
+import '../../common/view/ui_constants.dart';
 import '../../library/library_model.dart';
 import 'genre_page.dart';
 

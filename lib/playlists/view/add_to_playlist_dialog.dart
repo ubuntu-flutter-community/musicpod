@@ -3,6 +3,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
 import '../../common/data/audio.dart';
+import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import 'add_to_playlist_navigator.dart';
 
@@ -26,6 +27,6 @@ class AddToPlaylistDialog extends StatelessWidget {
           width: 400,
           child: AddToPlaylistNavigator(audios: audios),
         ),
-        contentPadding: const EdgeInsets.symmetric(vertical: 20),
+        contentPadding: const EdgeInsets.symmetric(vertical: kLargestSpace),
       );
 }

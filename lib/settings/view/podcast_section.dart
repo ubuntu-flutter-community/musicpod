@@ -4,6 +4,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/ui_constants.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
@@ -54,7 +55,7 @@ class _PodcastSectionState extends State<PodcastSection> {
         watchPropertyValue((SettingsModel m) => m.podcastIndexApiSecret);
 
     return YaruSection(
-      margin: const EdgeInsets.all(kYaruPagePadding),
+      margin: const EdgeInsets.all(kLargestSpace),
       headline: Text(l10n.podcasts),
       child: Column(
         children: [
@@ -102,7 +103,7 @@ class _PodcastSectionState extends State<PodcastSection> {
               padding: const EdgeInsets.only(
                 left: 8,
                 right: 8,
-                bottom: kYaruPagePadding,
+                bottom: kLargestSpace,
               ),
               child: TextField(
                 controller: _secretController,

@@ -722,7 +722,7 @@ class PlayerService {
         albumArtist: audio.artist,
         artist: audio.artist ?? '',
         thumbnail: audio.audioType == AudioType.local
-            ? kFallbackThumbnail
+            ? kFallbackThumbnailUrl
             : artUri == null
                 ? null
                 : '$artUri',

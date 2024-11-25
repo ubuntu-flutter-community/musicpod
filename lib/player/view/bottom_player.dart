@@ -8,6 +8,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/like_icon.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
@@ -55,7 +56,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 10, right: 20),
+                padding: const EdgeInsets.only(left: 10, right: kLargestSpace),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: BottomPlayerImage(
