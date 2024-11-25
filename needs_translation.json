@@ -41,6 +41,10 @@
     "lastfmSecret",
     "lastfmApiKeyEmpty",
     "lastfmSecretEmpty",
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -338,6 +342,10 @@
     "lastfmSecret",
     "lastfmApiKeyEmpty",
     "lastfmSecretEmpty",
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -596,7 +604,18 @@
     "lastfmApiKey",
     "lastfmSecret",
     "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty"
+    "lastfmSecretEmpty",
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty"
+  ],
+
+  "es": [
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty"
   ],
 
   "fr": [
@@ -622,6 +641,10 @@
     "exposeToDiscordSubTitle",
     "exposeToLastfmSubTitle",
     "lastfmSecretEmpty",
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty",
     "regionNone"
   ],
 
@@ -631,7 +654,11 @@
     "lastfmApiKey",
     "lastfmSecret",
     "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty"
+    "lastfmSecretEmpty",
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty"
   ],
 
   "nl": [
@@ -830,6 +857,10 @@
     "lastfmSecret",
     "lastfmApiKeyEmpty",
     "lastfmSecretEmpty",
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -1165,6 +1196,10 @@
     "lastfmSecret",
     "lastfmApiKeyEmpty",
     "lastfmSecretEmpty",
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -1651,6 +1686,10 @@
     "lastfmSecret",
     "lastfmApiKeyEmpty",
     "lastfmSecretEmpty",
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -2137,6 +2176,10 @@
     "lastfmSecret",
     "lastfmApiKeyEmpty",
     "lastfmSecretEmpty",
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -2438,6 +2481,10 @@
     "lastfmSecret",
     "lastfmApiKeyEmpty",
     "lastfmSecretEmpty",
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -2691,6 +2738,13 @@
     "regionZimbabwe"
   ],
 
+  "sk": [
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty"
+  ],
+
   "sv": [
     "shuffle",
     "repeat",
@@ -2721,7 +2775,11 @@
     "noStarredStations",
     "stations",
     "copyToClipBoard",
-    "insertedIntoQueue"
+    "insertedIntoQueue",
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty"
   ],
 
   "tr": [
@@ -2766,6 +2824,10 @@
     "lastfmSecret",
     "lastfmApiKeyEmpty",
     "lastfmSecretEmpty",
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -3030,7 +3092,11 @@
     "lastfmApiKey",
     "lastfmSecret",
     "lastfmApiKeyEmpty",
-    "lastfmSecretEmpty"
+    "lastfmSecretEmpty",
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty"
   ],
 
   "zh_HK": [
@@ -3067,6 +3133,10 @@
     "lastfmSecret",
     "lastfmApiKeyEmpty",
     "lastfmSecretEmpty",
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",
@@ -3354,6 +3424,10 @@
     "lastfmSecret",
     "lastfmApiKeyEmpty",
     "lastfmSecretEmpty",
+    "exposeToListenBrainzTitle",
+    "exposeToListenBrainzSubTitle",
+    "listenBrainzApiKey",
+    "listenBrainzApiKeyEmpty",
     "featureDisabledOnPlatform",
     "regionNone",
     "regionAfghanistan",

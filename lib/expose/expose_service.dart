@@ -4,16 +4,20 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 
 import 'lastfm_service.dart';
+import 'listenbrainz_service.dart';
 
 class ExposeService {
   ExposeService({
     required FlutterDiscordRPC? discordRPC,
     required LastfmService lastFmService,
+    required ListenBrainzService listenBrainzService,
   })  : _discordRPC = discordRPC,
-        _lastFmService = lastFmService;
+        _lastFmService = lastFmService,
+        _listenBrainzService = listenBrainzService;
 
   final FlutterDiscordRPC? _discordRPC;
   final LastfmService _lastFmService;
+  final ListenBrainzService _listenBrainzService;
 
   final _errorController = StreamController<String?>.broadcast();
   Stream<String?> get discordErrorStream => _errorController.stream;
@@ -34,6 +38,11 @@ class ExposeService {
     );
 
     await _lastFmService.exposeTitleToLastfm(
+      title: title,
+      artist: artist,
+    );
+
+    await _listenBrainzService.exposeTrackToListenBrainz(
       title: title,
       artist: artist,
     );
