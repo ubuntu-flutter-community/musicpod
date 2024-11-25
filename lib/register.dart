@@ -7,6 +7,7 @@ import 'constants.dart';
 import 'dart:io';
 import 'expose/expose_service.dart';
 import 'expose/lastfm_service.dart';
+import 'expose/listenbrainz_service.dart';
 import 'external_path/external_path_service.dart';
 import 'library/library_model.dart';
 import 'library/library_service.dart';
@@ -84,10 +85,16 @@ Future<void> registerDependencies({
         settingsService: di<SettingsService>(),
       )..init(),
     )
+    ..registerLazySingleton(
+      () => ListenBrainzService(
+        settingsService: di<SettingsService>(),
+      )..init(),
+    )
     ..registerLazySingleton<ExposeService>(
       () => ExposeService(
         discordRPC: allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
         lastFmService: di<LastfmService>(),
+        listenBrainzService: di<ListenBrainzService>(),
       ),
       dispose: (s) => s.dispose(),
     )

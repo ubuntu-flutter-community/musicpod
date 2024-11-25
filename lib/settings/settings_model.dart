@@ -75,6 +75,14 @@ class SettingsModel extends SafeChangeNotifier {
   void setLastFmSessionKey(String value) => _service.setLastFmSessionKey(value);
   void setLastFmUsername(String value) => _service.setLastFmUsername(value);
 
+  bool get enableListenBrainzScrobbling =>
+      _service.enableListenBrainzScrobbling;
+  String? get listenBrainzApiKey => _service.listenBrainzApiKey;
+  void setEnableListenBrainzScrobbling(bool value) =>
+      _service.setEnableListenBrainzScrobbling(value);
+  void setListenBrainzApiKey(String value) =>
+      _service.setListenBrainzApiKey(value);
+
   bool get useMoreAnimations => _service.useMoreAnimations;
   void setUseMoreAnimations(bool value) => _service.setUseMoreAnimations(value);
 

@@ -835,6 +835,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
+  listenbrainz_dart:
+    dependency: "direct main"
+    description:
+      name: listenbrainz_dart
+      sha256: bb8607c14aa6a7a0edcc5f70460238b75ba3c8c18be11731bd37458f3b0f1f64
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   logging:
     dependency: transitive
     description:

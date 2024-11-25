@@ -22,6 +22,7 @@ class ExposeOnlineSection extends StatefulWidget
 class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
   late TextEditingController _lastFmApiKeyController;
   late TextEditingController _lastFmSecretController;
+  late TextEditingController _listenBrainzApiKeyController;
   final _formkey = GlobalKey<FormState>();
 
   @override
@@ -29,6 +30,8 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
     final model = di<SettingsModel>();
     _lastFmApiKeyController = TextEditingController(text: model.lastFmApiKey);
     _lastFmSecretController = TextEditingController(text: model.lastFmSecret);
+    _listenBrainzApiKeyController =
+        TextEditingController(text: model.listenBrainzApiKey);
 
     super.initState();
   }
@@ -50,6 +53,10 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
 
     final lastFmEnabled =
         watchPropertyValue((SettingsModel m) => m.enableLastFmScrobbling);
+
+    final listenBrainzEnabled = watchPropertyValue(
+      (SettingsModel m) => m.enableListenBrainzScrobbling,
+    );
 
     return YaruSection(
       headline: Text(l10n.exposeOnlineHeadline),
@@ -191,6 +198,76 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                       ),
                     ],
                   ),
+                ),
+              ),
+            ),
+          ],
+          YaruTile(
+            title: Row(
+              children: space(
+                children: [
+                  const ImageIcon(
+                    AssetImage('assets/images/listenbrainz-icon.png'),
+                  ),
+                  Text(l10n.exposeToListenBrainzTitle),
+                ],
+              ),
+            ),
+            subtitle: Text(l10n.exposeToListenBrainzSubTitle),
+            trailing: CommonSwitch(
+              value: listenBrainzEnabled,
+              onChanged: (v) {
+                di<SettingsModel>().setEnableListenBrainzScrobbling(v);
+              },
+            ),
+          ),
+          if (listenBrainzEnabled) ...[
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: space(
+                  heightGap: 10,
+                  children: [
+                    Form(
+                      key: _formkey,
+                      onChanged: _formkey.currentState?.validate,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _listenBrainzApiKeyController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              hintText: l10n.listenBrainzApiKey,
+                              label: Text(l10n.listenBrainzApiKey),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return l10n.listenBrainzApiKeyEmpty;
+                              }
+                              return null;
+                            },
+                            onChanged: (_) => _formkey.currentState?.validate(),
+                            onFieldSubmitted: (value) async {
+                              if (_formkey.currentState!.validate()) {
+                                di<SettingsModel>()
+                                    .setListenBrainzApiKey(value);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    ImportantButton(
+                      onPressed: () {
+                        di<SettingsModel>().setListenBrainzApiKey(
+                          _listenBrainzApiKeyController.text,
+                        );
+                        di<AppModel>().initListenBrains();
+                      },
+                      child: Text(l10n.save),
+                    ),
+                  ],
                 ),
               ),
             ),

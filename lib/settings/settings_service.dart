@@ -58,6 +58,14 @@ class SettingsService {
   void setLastFmUsername(String value) =>
       _preferences.setString(kLastFmUsername, value).then(notify);
 
+  bool get enableListenBrainzScrobbling =>
+      _preferences.getBool(kEnableListenBrainzScrobbling) ?? false;
+  String? get listenBrainzApiKey => _preferences.getString(kListenBrainzApiKey);
+  void setEnableListenBrainzScrobbling(bool value) =>
+      _preferences.setBool(kEnableListenBrainzScrobbling, value).then(notify);
+  void setListenBrainzApiKey(String value) =>
+      _preferences.setString(kListenBrainzApiKey, value).then(notify);
+
   bool get enableDiscordRPC => _preferences.getBool(kEnableDiscordRPC) ?? false;
   void setEnableDiscordRPC(bool value) =>
       _preferences.setBool(kEnableDiscordRPC, value).then(notify);
