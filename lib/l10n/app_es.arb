@@ -1181,5 +1181,13 @@
   "lastfmApiKeyEmpty": "Por favor, introduzca una clave API",
   "@lastfmApiKeyEmpty": {},
   "lastfmSecretEmpty": "Por favor, introduzca el secreto compartido",
-  "@lastfmSecretEmpty": {}
+  "@lastfmSecretEmpty": {},
+  "exposeToListenBrainzSubTitle": "Se comparten el artista y el título de la canción/emisora/podcast que estás escuchando en ese momento.",
+  "@exposeToListenBrainzSubTitle": {},
+  "exposeToListenBrainzTitle": "ListenBrainz",
+  "@exposeToListenBrainzTitle": {},
+  "listenBrainzApiKey": "Clave API de ListenBrainz",
+  "@listenBrainzApiKey": {},
+  "listenBrainzApiKeyEmpty": "Por favor, introduzca una clave API",
+  "@listenBrainzApiKeyEmpty": {}
 }
