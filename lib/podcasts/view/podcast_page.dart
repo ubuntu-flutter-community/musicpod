@@ -32,7 +32,7 @@ import 'podcast_refresh_button.dart';
 import 'podcast_reorder_button.dart';
 import 'podcast_replay_button.dart';
 import 'podcast_sub_button.dart';
-import 'podcast_timer_button.dart';
+import '../../player/view/player_pause_timer_button.dart';
 import 'sliver_podcast_page_list.dart';
 
 class PodcastPage extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -168,7 +168,7 @@ class _PodcastPageState extends State<PodcastPage> {
                       children: [
                         if (!isMobile)
                           PodcastReplayButton(audios: episodesWithDownloads),
-                        const PodcastTimerButton(),
+                        const PlayerPauseTimerButton(),
                         PodcastSubButton(
                           audios: episodesWithDownloads,
                           pageId: widget.feedUrl,
