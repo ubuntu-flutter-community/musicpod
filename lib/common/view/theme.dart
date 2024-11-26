@@ -217,7 +217,7 @@ double get likeButtonWidth => yaruStyled ? 62 : 70;
 
 double get progressStrokeWidth => 3.0;
 
-double get avatarIconRadius =>
+double get smallAvatarButtonRadius =>
     (yaruStyled
         ? kYaruTitleBarItemHeight
         : isMobile
@@ -225,7 +225,7 @@ double get avatarIconRadius =>
             : 38) /
     2;
 
-double get bigPlayButtonRadius => yaruStyled
+double get bigAvatarButtonRadius => yaruStyled
     ? 22
     : isMobile
         ? 26

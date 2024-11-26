@@ -41,12 +41,12 @@ class PodcastTilePlayButton extends StatelessWidget {
               : Duration(milliseconds: audio.durationMs!.toInt()),
         ),
         CircleAvatar(
-          radius: avatarIconRadius,
+          radius: smallAvatarButtonRadius,
           backgroundColor: selected
               ? theme.colorScheme.primary.withOpacity(0.08)
               : theme.colorScheme.onSurface.withOpacity(0.09),
           child: SizedBox.square(
-            dimension: avatarIconRadius * 2,
+            dimension: smallAvatarButtonRadius * 2,
             child: IconButton(
               icon: (isPlayerPlaying && selected)
                   ? Icon(
