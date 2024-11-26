@@ -50,11 +50,6 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
         watchPropertyValue((LibraryModel m) => m.selectedPageId);
 
     final destinations = <String, NavigationDestination>{
-      kSearchPageId: NavigationDestination(
-        selectedIcon: Icon(Iconz.search),
-        icon: Icon(Iconz.search),
-        label: l10n.search,
-      ),
       kLocalAudioPageId: NavigationDestination(
         selectedIcon:
             const MainPageIcon(selected: true, audioType: AudioType.local),
@@ -72,6 +67,11 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
             const MainPageIcon(selected: true, audioType: AudioType.podcast),
         icon: const MainPageIcon(selected: false, audioType: AudioType.podcast),
         label: l10n.podcasts,
+      ),
+      kSettingsPageId: NavigationDestination(
+        selectedIcon: Icon(Iconz.settingsFilled),
+        icon: Icon(Iconz.settings),
+        label: l10n.settings,
       ),
     };
 

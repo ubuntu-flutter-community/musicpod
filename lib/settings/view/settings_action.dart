@@ -1,7 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
+import 'package:yaru/yaru.dart';
+
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
-import 'package:flutter/material.dart';
+import '../../constants.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import 'settings_dialog.dart';
 import 'settings_tile.dart';
 
@@ -28,10 +33,12 @@ class SettingsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void onPressed() => showDialog(
-          context: context,
-          builder: (context) => const SettingsDialog(),
-        );
+    void onPressed() => isMobile
+        ? di<LibraryModel>().push(pageId: kSettingsPageId)
+        : showDialog(
+            context: context,
+            builder: (context) => const SettingsDialog(),
+          );
 
     return switch (_mode) {
       _SettingsButtonMode.icon => IconButton(
