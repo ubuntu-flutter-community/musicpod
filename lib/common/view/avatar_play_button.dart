@@ -34,7 +34,7 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
     return Padding(
       padding: bigPlayButtonPadding,
       child: CircleAvatar(
-        radius: bigPlayButtonRadius,
+        radius: bigAvatarButtonRadius,
         backgroundColor: theme.colorScheme.inverseSurface,
         child: IconButton(
           tooltip: context.l10n.playAll,

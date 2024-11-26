@@ -95,7 +95,7 @@ class PodcastAudioTile extends StatelessWidget {
           padding: isMobile
               ? const EdgeInsets.symmetric(horizontal: 10)
               : EdgeInsets.only(
-                  left: (avatarIconRadius * 2) + 30,
+                  left: (smallAvatarButtonRadius * 2) + 30,
                   right: 60,
                 ),
           child: Column(
