@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../app/connectivity_model.dart';
 import '../../app/view/music_pod_scaffold.dart';
@@ -14,7 +13,6 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
-import '../../settings/view/settings_action.dart';
 import 'radio_lib_page.dart';
 
 class RadioPage extends StatelessWidget with WatchItMixin {
@@ -29,7 +27,6 @@ class RadioPage extends StatelessWidget with WatchItMixin {
       appBar: HeaderBar(
         adaptive: true,
         actions: [
-          if (isMobile) const SettingsButton.icon(),
           Flexible(
             child: Padding(
               padding: appBarSingleActionSpacing,

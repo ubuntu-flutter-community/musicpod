@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
@@ -20,6 +21,7 @@ import '../../radio/view/radio_page.dart';
 import '../../radio/view/station_page.dart';
 import '../../radio/view/station_page_icon.dart';
 import '../../search/view/search_page.dart';
+import '../../settings/view/settings_page.dart';
 import 'main_page_icon.dart';
 
 class MasterItem {
@@ -73,6 +75,14 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
       ),
       pageId: kPodcastsPageId,
     ),
+    if (isMobile)
+      MasterItem(
+        titleBuilder: (context) => Text(context.l10n.settings),
+        iconBuilder: (selected) =>
+            Icon(selected ? Iconz.settingsFilled : Iconz.settings),
+        pageBuilder: (context) => const SettingsPage(),
+        pageId: kSettingsPageId,
+      ),
     MasterItem(
       iconBuilder: (selected) => Icon(Iconz.plus),
       titleBuilder: (context) => Text(context.l10n.add),

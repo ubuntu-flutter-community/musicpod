@@ -186,7 +186,13 @@ class Iconz {
       ? YaruIcons.settings
       : appleStyled
           ? CupertinoIcons.settings
-          : Icons.settings_rounded;
+          : Icons.settings_outlined;
+
+  static IconData get settingsFilled => yaruStyled
+      ? YaruIcons.settings_filled
+      : appleStyled
+          ? CupertinoIcons.settings
+          : Icons.settings;
 
   static IconData get addToLibrary => yaruStyled
       ? YaruIcons.bell

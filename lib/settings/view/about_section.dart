@@ -16,6 +16,8 @@ import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
+import 'about_page.dart';
 
 class AboutSection extends StatelessWidget with WatchItMixin {
   const AboutSection({super.key});
@@ -98,7 +100,12 @@ class _AboutTileState extends State<_AboutTile> {
                   ),
                 ),
       trailing: OutlinedButton(
-        onPressed: () => settingsNavigatorKey.currentState?.pushNamed('/about'),
+        onPressed: () => isMobile
+            ? di<LibraryModel>().push(
+                pageId: 'about',
+                builder: (p0) => const AboutPage(),
+              )
+            : settingsNavigatorKey.currentState?.pushNamed('/about'),
         child: Text(context.l10n.contributors),
       ),
     );
@@ -115,8 +122,12 @@ class _LicenseTile extends StatelessWidget {
         text: '${context.l10n.license}: GPL3',
       ),
       trailing: OutlinedButton(
-        onPressed: () =>
-            settingsNavigatorKey.currentState?.pushNamed('/licenses'),
+        onPressed: () => isMobile
+            ? di<LibraryModel>().push(
+                pageId: 'licenses',
+                builder: (p0) => const LicensePage(),
+              )
+            : settingsNavigatorKey.currentState?.pushNamed('/licenses'),
         child: Text(context.l10n.dependencies),
       ),
       enabled: true,

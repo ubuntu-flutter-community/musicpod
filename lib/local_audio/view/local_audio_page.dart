@@ -1,7 +1,6 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../app/view/music_pod_scaffold.dart';
 import '../../common/data/audio_type.dart';
@@ -18,10 +17,10 @@ import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../../settings/view/settings_action.dart';
 import '../local_audio_model.dart';
+import '../local_audio_view.dart';
 import 'failed_imports_content.dart';
 import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
-import '../local_audio_view.dart';
 
 class LocalAudioPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const LocalAudioPage({super.key});
@@ -64,7 +63,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
         adaptive: true,
         titleSpacing: 0,
         actions: [
-          if (isMobile) const SettingsButton.icon(),
           Padding(
             padding: appBarSingleActionSpacing,
             child: SearchButton(

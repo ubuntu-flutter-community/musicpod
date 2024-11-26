@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/view/music_pod_scaffold.dart';
+import '../../common/view/header_bar.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import 'about_section.dart';
@@ -14,6 +16,25 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final listView = ListView(
+      children: const [
+        ThemeSection(),
+        PodcastSection(),
+        LocalAudioSection(),
+        ExposeOnlineSection(),
+        AboutSection(),
+      ],
+    );
+    if (isMobile) {
+      return MusicPodScaffold(
+        appBar: HeaderBar(
+          adaptive: false,
+          title: Text(context.l10n.settings),
+        ),
+        body: listView,
+      );
+    }
+
     return Column(
       children: [
         YaruDialogTitleBar(
@@ -23,15 +44,7 @@ class SettingsPage extends StatelessWidget {
           title: Text(context.l10n.settings),
         ),
         Expanded(
-          child: ListView(
-            children: const [
-              ThemeSection(),
-              PodcastSection(),
-              LocalAudioSection(),
-              ExposeOnlineSection(),
-              AboutSection(),
-            ],
-          ),
+          child: listView,
         ),
       ],
     );

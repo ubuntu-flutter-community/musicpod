@@ -161,7 +161,7 @@ class _MobileMusicPodAppState extends State<_MobileMusicPodApp> {
       navigatorKey: libraryModel.masterNavigatorKey,
       navigatorObservers: [libraryModel],
       initialRoute:
-          isMobile ? (libraryModel.selectedPageId ?? kSearchPageId) : null,
+          isMobile ? (libraryModel.selectedPageId ?? kLocalAudioPageId) : null,
       onGenerateRoute: (settings) {
         final page = (masterItems.firstWhereOrNull(
                   (e) => e.pageId == settings.name,

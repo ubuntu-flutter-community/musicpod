@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../app/view/music_pod_scaffold.dart';
 import '../../common/data/audio_type.dart';
@@ -12,7 +11,6 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
-import '../../settings/view/settings_action.dart';
 import '../podcast_model.dart';
 import 'podcasts_collection_body.dart';
 
@@ -41,7 +39,6 @@ class _PodcastsPageState extends State<PodcastsPage> {
         titleSpacing: 0,
         adaptive: true,
         actions: [
-          if (isMobile) const SettingsButton.icon(),
           Padding(
             padding: appBarSingleActionSpacing,
             child: SearchButton(

@@ -543,5 +543,6 @@ class LibraryService {
     kLocalAudioPageId,
     kPodcastsPageId,
     kRadioPageId,
+    kSettingsPageId,
   ];
 }
