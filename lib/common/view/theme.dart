@@ -283,9 +283,10 @@ double get audioCardDimension => kAudioCardDimension - (isMobile ? 15 : 0);
 double get bottomPlayerHeight => isMobile ? 80.0 : 90.0;
 
 List<Widget> space({
-  double widthGap = 5,
-  double heightGap = 5,
+  double widthGap = kSmallestSpace,
+  double heightGap = kSmallestSpace,
   required Iterable<Widget> children,
+  bool expandAll = false,
 }) =>
     children
         .expand(
@@ -294,7 +295,11 @@ List<Widget> space({
               width: widthGap,
               height: heightGap,
             );
-            yield item;
+            if (expandAll) {
+              yield Expanded(child: item);
+            } else {
+              yield item;
+            }
           },
         )
         .skip(1)
