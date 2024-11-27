@@ -183,8 +183,12 @@ class _MobileMusicPodAppState extends State<_MobileMusicPodApp> {
       },
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.values[themeIndex],
-      theme: phoenix.lightTheme,
-      darkTheme: phoenix.darkTheme,
+      theme: phoenix.lightTheme.copyWith(
+        navigationBarTheme: navigationBarTheme(theme: phoenix.lightTheme),
+      ),
+      darkTheme: phoenix.darkTheme.copyWith(
+        navigationBarTheme: navigationBarTheme(theme: phoenix.darkTheme),
+      ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => kAppTitle,

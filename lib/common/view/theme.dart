@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
@@ -280,7 +281,40 @@ double get inputHeight => isMobile
 
 double get audioCardDimension => kAudioCardDimension - (isMobile ? 15 : 0);
 
-double get bottomPlayerHeight => isMobile ? 80.0 : 90.0;
+double get bottomPlayerHeight => isMobile ? 75.0 : 90.0;
+
+NavigationBarThemeData navigationBarTheme({required ThemeData theme}) =>
+    theme.navigationBarTheme.copyWith(
+      iconTheme: WidgetStatePropertyAll(
+        theme.iconTheme.copyWith(
+          size: 18,
+          applyTextScaling: true,
+        ),
+      ),
+    );
+
+SystemUiOverlayStyle systemOverlayStyle({
+  required ThemeData theme,
+  required bool fullWindowMode,
+}) {
+  return theme.colorScheme.isLight
+      ? SystemUiOverlayStyle.dark.copyWith(
+          systemNavigationBarColor:
+              (fullWindowMode ? Colors.transparent : theme.cardColor),
+          statusBarColor: (fullWindowMode
+              ? Colors.transparent
+              : theme.scaffoldBackgroundColor),
+          statusBarBrightness: theme.brightness,
+        )
+      : SystemUiOverlayStyle.light.copyWith(
+          systemNavigationBarColor:
+              (fullWindowMode ? Colors.transparent : theme.cardColor),
+          statusBarColor: (fullWindowMode
+              ? Colors.transparent
+              : theme.scaffoldBackgroundColor),
+          statusBarBrightness: theme.brightness,
+        );
+}
 
 List<Widget> space({
   double widthGap = kSmallestSpace,
