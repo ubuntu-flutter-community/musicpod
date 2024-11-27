@@ -581,7 +581,6 @@ class PlayerService {
         androidNotificationOngoing: true,
         androidNotificationChannelName: kAppName,
         androidNotificationChannelId: Platform.isAndroid ? kAndroidAppId : null,
-        androidStopForegroundOnPause: false,
         androidNotificationChannelDescription: 'MusicPod Media Controls',
       ),
       builder: () {
@@ -672,8 +671,7 @@ class PlayerService {
         _audioHandler!.playbackState.value.copyWith(
           playing: playing,
           controls: _determineMediaControls(playing),
-          processingState:
-              playing ? AudioProcessingState.ready : AudioProcessingState.idle,
+          processingState: AudioProcessingState.ready,
         ),
       );
     } else if (_smtc != null) {
