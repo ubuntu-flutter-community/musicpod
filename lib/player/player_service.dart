@@ -577,9 +577,12 @@ class PlayerService {
 
   Future<void> _initAudioService() async {
     _audioHandler = await AudioService.init(
-      config: const AudioServiceConfig(
+      config: AudioServiceConfig(
         androidNotificationOngoing: true,
         androidNotificationChannelName: kAppName,
+        androidNotificationChannelId: Platform.isAndroid ? kAndroidAppId : null,
+        androidStopForegroundOnPause: false,
+        androidNotificationChannelDescription: 'MusicPod Media Controls',
       ),
       builder: () {
         return PlayerServiceAudioHandler(
@@ -669,6 +672,8 @@ class PlayerService {
         _audioHandler!.playbackState.value.copyWith(
           playing: playing,
           controls: _determineMediaControls(playing),
+          processingState:
+              playing ? AudioProcessingState.ready : AudioProcessingState.idle,
         ),
       );
     } else if (_smtc != null) {

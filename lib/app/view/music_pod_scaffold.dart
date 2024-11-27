@@ -12,7 +12,7 @@ class MusicPodScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         resizeToAvoidBottomInset: isMobile ? false : null,
-        body: isMobile ? SafeArea(child: body) : body,
+        body: body,
         appBar: appBar,
         bottomNavigationBar:
             isMobile ? const MobilePlayerAndNavigationBar() : null,

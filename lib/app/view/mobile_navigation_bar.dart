@@ -3,6 +3,8 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -20,10 +22,13 @@ class MobilePlayerAndNavigationBar extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final fullWindowMode =
+        watchPropertyValue((AppModel m) => m.fullWindowMode) ?? false;
+
     return RepaintBoundary(
       child: Material(
         color: context.theme.cardColor,
-        child: watchPropertyValue((AppModel m) => m.fullWindowMode) ?? false
+        child: fullWindowMode
             ? const FullHeightPlayer(
                 playerPosition: PlayerPosition.fullWindow,
               )
@@ -31,6 +36,7 @@ class MobilePlayerAndNavigationBar extends StatelessWidget with WatchItMixin {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   BottomPlayer(),
+                  SizedBox(height: kMediumSpace),
                   MobileNavigationBar(),
                 ],
               ),
@@ -76,6 +82,7 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
     };
 
     return NavigationBar(
+      height: bottomPlayerHeight - 25,
       backgroundColor: context.theme.cardColor,
       selectedIndex: selectedPageId == null
           ? 0
