@@ -89,7 +89,11 @@ class PlayerService {
 
     _isCompletedSub ??= _player.stream.completed.listen((value) async {
       if (value) {
-        await playNext();
+        if (_repeatSingle) {
+          _play(newAudio: _audio);
+        } else {
+          await playNext();
+        }
       }
     });
 
@@ -153,6 +157,7 @@ class PlayerService {
     if (value == _audio) return;
     if (value.audioType != _audio?.audioType) {
       _shuffle = false;
+      _repeatSingle = false;
       setRate(1);
     }
     _audio = value;
@@ -319,7 +324,7 @@ class PlayerService {
 
   Future<void> playNext() async {
     await safeLastPosition();
-    if (!repeatSingle && nextAudio != null) {
+    if (nextAudio != null) {
       _setAudio(nextAudio!);
       _estimateNext();
     }
