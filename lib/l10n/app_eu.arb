@@ -1,1 +1,22 @@
-{}
+{
+  "repeatAll": "Denak errepikatu",
+  "@repeatAll": {},
+  "shuffle": "Nahastu",
+  "@shuffle": {},
+  "back": "Atzera",
+  "@back": {},
+  "repeat": "Errepikatu",
+  "@repeat": {},
+  "next": "Hurrengoa",
+  "@next": {},
+  "fastForward30": "30 segundo aurrera",
+  "@fastForward30": {},
+  "play": "Jo",
+  "@play": {},
+  "pause": "Pausa",
+  "@pause": {},
+  "stop": "Gelditu",
+  "@stop": {},
+  "rewind10": "10 segundo atzera",
+  "@rewind10": {}
+}
