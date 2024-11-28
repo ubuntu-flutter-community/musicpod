@@ -4,7 +4,7 @@ import '../l10n/l10n.dart';
 enum SearchType {
   localTitle,
   localArtist,
-  localAlbumArtist,
+  // localAlbumArtist,
   localAlbum,
   localGenreName,
   localPlaylists,
@@ -17,7 +17,7 @@ enum SearchType {
   String localize(AppLocalizations l10n) => switch (this) {
         localTitle => l10n.titles,
         localArtist => l10n.artists,
-        localAlbumArtist => l10n.albumArtists,
+        // localAlbumArtist => l10n.albumArtists,
         localAlbum => l10n.albums,
         localGenreName => l10n.genres,
         localPlaylists => l10n.playlists,

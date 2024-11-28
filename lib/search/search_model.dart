@@ -313,9 +313,11 @@ class SearchModel extends SafeChangeNotifier {
               setSearchType(SearchType.localAlbum);
             } else if (localSearchResult?.artists?.isNotEmpty == true) {
               setSearchType(SearchType.localArtist);
-            } else if (localSearchResult?.albumArtists?.isNotEmpty == true) {
-              setSearchType(SearchType.localAlbumArtist);
-            } else if (localSearchResult?.genres?.isNotEmpty == true) {
+            }
+            // else if (localSearchResult?.albumArtists?.isNotEmpty == true) {
+            //   setSearchType(SearchType.localAlbumArtist);
+            // }
+            else if (localSearchResult?.genres?.isNotEmpty == true) {
               setSearchType(SearchType.localGenreName);
             } else if (localSearchResult?.playlists?.isNotEmpty == true) {
               setSearchType(SearchType.localPlaylists);

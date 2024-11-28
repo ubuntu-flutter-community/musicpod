@@ -43,11 +43,11 @@ class LocalAudioBody extends StatelessWidget {
             noResultMessage: noResultMessage,
             noResultIcon: noResultIcon,
           ),
-        LocalAudioView.albumArtists => AlbumArtistsView(
-            albumArtists: albumArtists,
-            noResultMessage: noResultMessage,
-            noResultIcon: noResultIcon,
-          ),
+        // LocalAudioView.albumArtists => AlbumArtistsView(
+        //     albumArtists: albumArtists,
+        //     noResultMessage: noResultMessage,
+        //     noResultIcon: noResultIcon,
+        //   ),
         LocalAudioView.albums => AlbumsView(
             albums: albums,
             noResultMessage: noResultMessage,
