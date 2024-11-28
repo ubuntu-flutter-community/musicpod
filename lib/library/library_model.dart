@@ -65,12 +65,7 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   int get starredStationsLength => _service.starredStations.length;
   void addStarredStation(String uuid, List<Audio> audios) =>
       _service.addStarredStation(uuid, audios);
-  void unStarStation(String uuid) {
-    _service.unStarStation(uuid);
-    if (selectedPageId == uuid) {
-      pop();
-    }
-  }
+  void unStarStation(String uuid) => _service.unStarStation(uuid);
 
   bool isStarredStation(String? uuid) =>
       uuid?.isNotEmpty == false ? false : _service.isStarredStation(uuid);
@@ -110,10 +105,7 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
       _service.addPlaylist(name, audios);
   Future<void> updatePlaylist(String id, List<Audio> audios) async =>
       _service.updatePlaylist(id, audios);
-  void removePlaylist(String id) {
-    _service.removePlaylist(id);
-    pop();
-  }
+  void removePlaylist(String id) => _service.removePlaylist(id);
 
   void updatePlaylistName(String oldName, String newName) =>
       _service.updatePlaylistName(oldName, newName);
@@ -147,10 +139,7 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   int get podcastsLength => podcasts.length;
   void addPodcast(String feedUrl, List<Audio> audios) =>
       _service.addPodcast(feedUrl, audios);
-  void removePodcast(String feedUrl) {
-    _service.removePodcast(feedUrl);
-    pop();
-  }
+  void removePodcast(String feedUrl) => _service.removePodcast(feedUrl);
 
   bool isPodcastSubscribed(String? feedUrl) =>
       feedUrl == null ? false : podcasts.containsKey(feedUrl);
@@ -187,10 +176,7 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   bool isPinnedAlbum(String name) => pinnedAlbums.containsKey(name);
   void addPinnedAlbum(String name, List<Audio> audios) =>
       _service.addPinnedAlbum(name, audios);
-  void removePinnedAlbum(String name) {
-    _service.removePinnedAlbum(name);
-    pop();
-  }
+  void removePinnedAlbum(String name) => _service.removePinnedAlbum(name);
 
   //
   // Navigation inside the Library
@@ -203,11 +189,16 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
     required String pageId,
     Widget Function(BuildContext)? builder,
     bool maintainState = false,
+    bool replace = false,
   }) async {
     final inLibrary = isPageInLibrary(pageId);
     assert(inLibrary || builder != null);
     if (inLibrary) {
-      await _masterNavigatorKey.currentState?.pushNamed(pageId);
+      if (replace) {
+        await _masterNavigatorKey.currentState?.pushReplacementNamed(pageId);
+      } else {
+        await _masterNavigatorKey.currentState?.pushNamed(pageId);
+      }
     } else if (builder != null) {
       final materialPageRoute = MaterialPageRoute(
         builder: (context) => useSystemBackGestures
@@ -218,9 +209,15 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
           name: pageId,
         ),
       );
-      await _masterNavigatorKey.currentState?.push(
-        materialPageRoute,
-      );
+      if (replace) {
+        await _masterNavigatorKey.currentState?.pushReplacement(
+          materialPageRoute,
+        );
+      } else {
+        await _masterNavigatorKey.currentState?.push(
+          materialPageRoute,
+        );
+      }
     }
   }
 

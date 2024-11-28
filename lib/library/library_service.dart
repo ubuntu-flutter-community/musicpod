@@ -211,9 +211,12 @@ class LibraryService {
 
   void removePlaylist(String id) {
     if (_playlists.containsKey(id)) {
-      _playlists.remove(id);
-      writeAudioMap(_playlists, kPlaylistsFileName)
-          .then((_) => _propertiesChangedController.add(true));
+      writeAudioMap(_playlists, kPlaylistsFileName).then(
+        (_) {
+          _playlists.remove(id);
+          _propertiesChangedController.add(true);
+        },
+      );
     }
   }
 
