@@ -353,12 +353,11 @@ class _PlaylistControlPanel extends StatelessWidget with WatchItMixin {
                 content: SizedBox(
                   height: 200,
                   width: 500,
-                  child: PlaylistContent(
+                  child: PlaylistEditDialogContent(
                     playlistName: pageId,
                     initialValue: pageId,
                     allowDelete: true,
                     allowRename: true,
-                    libraryModel: libraryModel,
                   ),
                 ),
               ),

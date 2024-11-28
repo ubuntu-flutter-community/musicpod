@@ -46,9 +46,8 @@ class ManualAddDialog extends StatelessWidget {
         child: onlyPlaylists
             ? Padding(
                 padding: const EdgeInsets.only(top: kLargestSpace),
-                child: PlaylistContent(
+                child: PlaylistEditDialogContent(
                   playlistName: context.l10n.createNewPlaylist,
-                  libraryModel: di<LibraryModel>(),
                   allowCreate: true,
                 ),
               )
@@ -59,9 +58,8 @@ class ManualAddDialog extends StatelessWidget {
                 initialRoute: '/chose',
                 onGenerateRoute: (settings) {
                   Widget page = switch (settings.name) {
-                    '/addPlaylist' => PlaylistContent(
+                    '/addPlaylist' => PlaylistEditDialogContent(
                         playlistName: context.l10n.createNewPlaylist,
-                        libraryModel: di<LibraryModel>(),
                         allowCreate: true,
                       ),
                     '/addPodcast' => const AddPodcastContent(),
@@ -126,8 +124,8 @@ class SelectAddContent extends StatelessWidget {
   }
 }
 
-class PlaylistContent extends StatefulWidget {
-  const PlaylistContent({
+class PlaylistEditDialogContent extends StatefulWidget {
+  const PlaylistEditDialogContent({
     super.key,
     this.playlistName,
     this.initialValue,
@@ -135,20 +133,19 @@ class PlaylistContent extends StatefulWidget {
     this.allowDelete = false,
     this.allowRename = false,
     this.allowCreate = false,
-    required this.libraryModel,
   });
 
-  final LibraryModel libraryModel;
   final List<Audio>? audios;
   final String? playlistName;
   final String? initialValue;
   final bool allowRename, allowDelete, allowCreate;
 
   @override
-  State<PlaylistContent> createState() => _PlaylistContentState();
+  State<PlaylistEditDialogContent> createState() =>
+      _PlaylistEditDialogContentState();
 }
 
-class _PlaylistContentState extends State<PlaylistContent> {
+class _PlaylistEditDialogContentState extends State<PlaylistEditDialogContent> {
   late TextEditingController _controller;
   late TextEditingController _fileController;
 
@@ -171,6 +168,7 @@ class _PlaylistContentState extends State<PlaylistContent> {
 
   @override
   Widget build(BuildContext context) {
+    final libraryModel = di<LibraryModel>();
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -215,9 +213,15 @@ class _PlaylistContentState extends State<PlaylistContent> {
               ),
               if (widget.allowDelete && widget.playlistName != null)
                 OutlinedButton(
-                  onPressed: () {
-                    widget.libraryModel.removePlaylist(widget.playlistName!);
+                  onPressed: () async {
                     Navigator.of(context).pop();
+                    libraryModel.removePlaylist(widget.playlistName!);
+                    di<LocalAudioModel>().localAudioindex =
+                        LocalAudioView.playlists.index;
+                    await libraryModel.push(
+                      pageId: kLocalAudioPageId,
+                      replace: true,
+                    );
                   },
                   child: Text(
                     context.l10n.deletePlaylist,
@@ -228,7 +232,7 @@ class _PlaylistContentState extends State<PlaylistContent> {
                   onPressed: () {
                     di<LocalAudioModel>().localAudioindex =
                         LocalAudioView.playlists.index;
-                    widget.libraryModel
+                    libraryModel
                       ..push(pageId: kLocalAudioPageId)
                       ..updatePlaylistName(
                         widget.playlistName!,
@@ -245,7 +249,7 @@ class _PlaylistContentState extends State<PlaylistContent> {
                   onPressed: _controller.text.isEmpty
                       ? null
                       : () async {
-                          await widget.libraryModel
+                          await libraryModel
                               .addPlaylist(
                             _controller.text,
                             _audios ?? widget.audios ?? [],
@@ -257,8 +261,7 @@ class _PlaylistContentState extends State<PlaylistContent> {
                             await Future.delayed(
                               const Duration(milliseconds: 300),
                             );
-                            await widget.libraryModel
-                                .push(pageId: _controller.text);
+                            await libraryModel.push(pageId: _controller.text);
                           });
                         },
                   child: Text(
