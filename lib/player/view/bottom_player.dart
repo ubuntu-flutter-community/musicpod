@@ -106,7 +106,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                     children: [
                       if (audio?.audioType == AudioType.podcast)
                         PlaybackRateButton(active: active),
-                      const VolumeSliderPopup(),
+                      if (!isMobile) const VolumeSliderPopup(),
                       if (showQueueButton) const QueueButton(),
                       IconButton(
                         tooltip: context.l10n.fullWindow,

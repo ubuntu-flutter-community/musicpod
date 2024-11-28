@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/theme.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
@@ -90,7 +91,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
               active: active,
               color: iconColor,
             ),
-          VolumeSliderPopup(color: iconColor),
+          if (!isMobile) VolumeSliderPopup(color: iconColor),
           IconButton(
             tooltip: playerPosition == PlayerPosition.fullWindow
                 ? context.l10n.leaveFullWindow
