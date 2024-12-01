@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
-import '../../app/view/music_pod_scaffold.dart';
+
 import '../../common/data/audio_type.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/offline_page.dart';
@@ -23,7 +23,7 @@ class RadioPage extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
 
-    return MusicPodScaffold(
+    return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
         actions: [

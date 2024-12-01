@@ -5,7 +5,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
-import '../../app/view/music_pod_scaffold.dart';
+
 import '../../common/view/header_bar.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
@@ -180,7 +180,7 @@ class _AboutPageState extends State<AboutPage> {
     final title = Text('${context.l10n.about} $kAppTitle');
 
     if (isMobile) {
-      return MusicPodScaffold(
+      return Scaffold(
         appBar: HeaderBar(
           adaptive: false,
           title: title,

@@ -1,7 +1,9 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:github/github.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:yaru/theme.dart';
 
 import '../constants.dart';
 import '../expose/expose_service.dart';
@@ -61,9 +63,24 @@ class AppModel extends SafeChangeNotifier {
 
   bool? _fullWindowMode;
   bool? get fullWindowMode => _fullWindowMode;
-  void setFullWindowMode(bool? value) {
+  Future<void> setFullWindowMode(bool? value) async {
     if (value == null || value == _fullWindowMode) return;
     _fullWindowMode = value;
+
+    if (isMobile) {
+      if (_fullWindowMode == true) {
+        await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      } else {
+        await SystemChrome.setEnabledSystemUIMode(
+          SystemUiMode.manual,
+          overlays: SystemUiOverlay.values,
+        );
+        await SystemChrome.setPreferredOrientations(
+          [],
+        );
+      }
+    }
+
     notifyListeners();
   }
 

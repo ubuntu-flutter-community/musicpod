@@ -10,13 +10,11 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/view/bottom_player.dart';
-import '../../player/view/full_height_player.dart';
-import '../../player/view/player_view.dart';
 import '../app_model.dart';
 import 'main_page_icon.dart';
 
-class MobilePlayerAndNavigationBar extends StatelessWidget with WatchItMixin {
-  const MobilePlayerAndNavigationBar({
+class MobileBottomBar extends StatelessWidget with WatchItMixin {
+  const MobileBottomBar({
     super.key,
   });
 
@@ -24,22 +22,20 @@ class MobilePlayerAndNavigationBar extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final fullWindowMode =
         watchPropertyValue((AppModel m) => m.fullWindowMode) ?? false;
-
-    return RepaintBoundary(
-      child: Material(
-        color: context.theme.cardColor,
-        child: fullWindowMode
-            ? const FullHeightPlayer(
-                playerPosition: PlayerPosition.fullWindow,
-              )
-            : const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  BottomPlayer(),
-                  SizedBox(height: kMediumSpace),
-                  MobileNavigationBar(),
-                ],
-              ),
+    return SizedBox(
+      width: context.mediaQuerySize.width,
+      child: RepaintBoundary(
+        child: Material(
+          color: context.theme.cardColor,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: bottomPlayerHeight, child: const BottomPlayer()),
+              const SizedBox(height: kMediumSpace),
+              if (!fullWindowMode) const MobileNavigationBar(),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -55,41 +51,47 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
     final selectedPageId =
         watchPropertyValue((LibraryModel m) => m.selectedPageId);
 
-    final destinations = <String, NavigationDestination>{
-      kLocalAudioPageId: NavigationDestination(
+    final destinations = <String, IconButton>{
+      kLocalAudioPageId: IconButton(
+        isSelected: selectedPageId == kLocalAudioPageId,
         selectedIcon:
             const MainPageIcon(selected: true, audioType: AudioType.local),
         icon: const MainPageIcon(selected: false, audioType: AudioType.local),
-        label: l10n.local,
+        tooltip: l10n.local,
+        onPressed: () => di<LibraryModel>().push(pageId: kLocalAudioPageId),
       ),
-      kRadioPageId: NavigationDestination(
+      kRadioPageId: IconButton(
+        isSelected: selectedPageId == kRadioPageId,
         selectedIcon:
             const MainPageIcon(selected: true, audioType: AudioType.radio),
         icon: const MainPageIcon(selected: false, audioType: AudioType.radio),
-        label: l10n.radio,
+        tooltip: l10n.radio,
+        onPressed: () => di<LibraryModel>().push(pageId: kRadioPageId),
       ),
-      kPodcastsPageId: NavigationDestination(
+      kPodcastsPageId: IconButton(
+        isSelected: selectedPageId == kPodcastsPageId,
         selectedIcon:
             const MainPageIcon(selected: true, audioType: AudioType.podcast),
         icon: const MainPageIcon(selected: false, audioType: AudioType.podcast),
-        label: l10n.podcasts,
+        tooltip: l10n.podcasts,
+        onPressed: () => di<LibraryModel>().push(pageId: kPodcastsPageId),
       ),
-      kSettingsPageId: NavigationDestination(
+      kSettingsPageId: IconButton(
+        isSelected: selectedPageId == kSettingsPageId,
         selectedIcon: Icon(Iconz.settingsFilled),
         icon: Icon(Iconz.settings),
-        label: l10n.settings,
+        tooltip: l10n.settings,
+        onPressed: () => di<LibraryModel>().push(pageId: kSettingsPageId),
       ),
     };
 
-    return NavigationBar(
-      height: bottomPlayerHeight - 25,
-      backgroundColor: context.theme.cardColor,
-      selectedIndex: selectedPageId == null
-          ? 0
-          : destinations.keys.toList().indexOf(selectedPageId),
-      onDestinationSelected: (index) =>
-          di<LibraryModel>().push(pageId: destinations.keys.elementAt(index)),
-      destinations: destinations.values.toList(),
+    return SizedBox(
+      height: navigationBarHeight,
+      width: context.mediaQuerySize.width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: destinations.values.toList(),
+      ),
     );
   }
 }

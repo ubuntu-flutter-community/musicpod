@@ -26,6 +26,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:watch_it/watch_it.dart';
+import 'persistence_utils.dart';
 import 'player/player_model.dart';
 import 'player/player_service.dart';
 import 'podcasts/download_model.dart';
@@ -42,10 +43,7 @@ import 'settings/settings_service.dart';
 /// Registers all Services, ViewModels and external dependencies
 /// Note: we want lazy registration whenever possible, preferable without any async calls above.
 /// Sometimes this is not possible and we need to await a Future before we can register.
-Future<void> registerDependencies({
-  required List<String> args,
-  required String? downloadsDefaultDir,
-}) async {
+Future<void> registerDependencies({required List<String> args}) async {
   if (allowDiscordRPC) {
     await FlutterDiscordRPC.initialize(kDiscordApplicationId);
     di.registerSingleton<FlutterDiscordRPC>(
@@ -57,6 +55,7 @@ Future<void> registerDependencies({
     );
   }
 
+  final String? downloadsDefaultDir = await getDownloadsDefaultDir();
   final sharedPreferences = await SharedPreferences.getInstance();
   final packageInfo = await PackageInfo.fromPlatform();
 

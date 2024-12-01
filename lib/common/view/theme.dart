@@ -281,7 +281,9 @@ double get inputHeight => isMobile
 
 double get audioCardDimension => kAudioCardDimension - (isMobile ? 15 : 0);
 
-double get bottomPlayerHeight => isMobile ? 75.0 : 90.0;
+double get bottomPlayerHeight => isMobile ? 76.0 : 90.0;
+
+double get navigationBarHeight => bottomPlayerHeight - 25;
 
 NavigationBarThemeData navigationBarTheme({required ThemeData theme}) =>
     theme.navigationBarTheme.copyWith(

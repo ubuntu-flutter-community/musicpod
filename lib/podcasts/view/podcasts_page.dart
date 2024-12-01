@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app/view/music_pod_scaffold.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
@@ -34,7 +33,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MusicPodScaffold(
+    return Scaffold(
       appBar: HeaderBar(
         titleSpacing: 0,
         adaptive: true,

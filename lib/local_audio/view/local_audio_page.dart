@@ -2,7 +2,6 @@ import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app/view/music_pod_scaffold.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/header_bar.dart';
@@ -58,7 +57,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     final index = watchPropertyValue((LocalAudioModel m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
 
-    return MusicPodScaffold(
+    return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
         titleSpacing: 0,

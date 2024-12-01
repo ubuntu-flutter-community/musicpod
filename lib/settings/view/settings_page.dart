@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/view/music_pod_scaffold.dart';
 import '../../common/view/header_bar.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -26,7 +25,7 @@ class SettingsPage extends StatelessWidget {
       ],
     );
     if (isMobile) {
-      return MusicPodScaffold(
+      return Scaffold(
         appBar: HeaderBar(
           adaptive: false,
           title: Text(context.l10n.settings),
