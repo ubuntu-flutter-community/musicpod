@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/view/music_pod_scaffold.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_container.dart';
@@ -101,7 +100,7 @@ class _PodcastPageState extends State<PodcastPage> {
         .map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
         .toList();
 
-    return MusicPodScaffold(
+    return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
         actions: [

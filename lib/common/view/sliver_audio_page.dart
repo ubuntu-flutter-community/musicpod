@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/view/music_pod_scaffold.dart';
 import '../../constants.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
@@ -59,7 +58,7 @@ class SliverAudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MusicPodScaffold(
+    return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
         actions: [

@@ -5,7 +5,6 @@ import 'package:flutter/rendering.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/theme.dart';
 
-import '../../app/view/music_pod_scaffold.dart';
 import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_container.dart';
@@ -32,7 +31,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
     final loading = watchPropertyValue((SearchModel m) => m.loading);
 
-    return MusicPodScaffold(
+    return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
         title: Padding(

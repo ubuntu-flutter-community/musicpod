@@ -7,7 +7,6 @@ import 'package:yaru/yaru.dart';
 
 import 'app/view/app.dart';
 import 'app_config.dart';
-import 'persistence_utils.dart';
 import 'register.dart';
 
 Future<void> main(List<String> args) async {
@@ -27,10 +26,7 @@ Future<void> main(List<String> args) async {
 
   MediaKit.ensureInitialized();
 
-  await registerDependencies(
-    args: args,
-    downloadsDefaultDir: await getDownloadsDefaultDir(),
-  );
+  await registerDependencies(args: args);
 
   runApp(
     isGtkApp
