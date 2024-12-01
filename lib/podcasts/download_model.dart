@@ -1,12 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../l10n/l10n.dart';
 import '../library/library_service.dart';
 import '../settings/settings_service.dart';
 
@@ -25,6 +24,15 @@ class DownloadModel extends SafeChangeNotifier {
 
   final _values = <String, double?>{};
   final _cancelTokens = <String, CancelToken?>{};
+  final _messageStreamController = StreamController<String>.broadcast();
+  String _lastMessage = '';
+  void _addMessage(String message) {
+    if (message == _lastMessage) return;
+    _lastMessage = message;
+    _messageStreamController.add(message);
+  }
+
+  Stream<String> get messageStream => _messageStreamController.stream;
 
   double? getValue(String? url) => _values[url];
   void setValue({
@@ -41,10 +49,7 @@ class DownloadModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteDownload({
-    required BuildContext context,
-    required Audio? audio,
-  }) async {
+  Future<void> deleteDownload({required Audio? audio}) async {
     if (audio?.url != null &&
         _settingsService.downloadsDir != null &&
         audio?.website != null) {
@@ -67,8 +72,9 @@ class DownloadModel extends SafeChangeNotifier {
   }
 
   Future<void> startDownload({
-    required BuildContext context,
     required Audio? audio,
+    required String canceledMessage,
+    required String finishedMessage,
   }) async {
     final downloadsDir = _settingsService.downloadsDir;
     if (audio?.url == null || downloadsDir == null) return;
@@ -93,7 +99,7 @@ class DownloadModel extends SafeChangeNotifier {
 
     final path = p.join(downloadsDir, _createAudioDownloadId(audio));
     await _download(
-      context: context,
+      canceledMessage: canceledMessage,
       url: url,
       path: path,
       name: audio.title ?? '',
@@ -104,13 +110,8 @@ class DownloadModel extends SafeChangeNotifier {
           path: path,
           feedUrl: audio.website!,
         );
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(context.l10n.downloadFinished(audio.title ?? '')),
-            ),
-          );
-        }
+        _addMessage(finishedMessage);
+
         _cancelTokens.containsKey(url)
             ? _cancelTokens.update(url, (value) => null)
             : _cancelTokens.putIfAbsent(url, () => null);
@@ -125,10 +126,10 @@ class DownloadModel extends SafeChangeNotifier {
   }
 
   Future<Response<dynamic>?> _download({
-    required BuildContext context,
     required String url,
     required String path,
     required String name,
+    required String canceledMessage,
   }) async {
     _cancelTokens.containsKey(url)
         ? _cancelTokens.update(url, (value) => CancelToken())
@@ -146,14 +147,17 @@ class DownloadModel extends SafeChangeNotifier {
 
       String? message;
       if (e.toString().contains('[request cancelled]')) {
-        message = context.l10n.downloadCancelled(name);
+        message = canceledMessage;
       }
 
-      if (context.mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(message ?? e.toString())));
-      }
+      _addMessage(message ?? e.toString());
       return null;
     }
+  }
+
+  @override
+  Future<void> dispose() async {
+    await _messageStreamController.close();
+    super.dispose();
   }
 }

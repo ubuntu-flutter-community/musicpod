@@ -55,10 +55,16 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
               ? null
               : () {
                   if (download) {
-                    model.deleteDownload(context: context, audio: audio);
+                    model.deleteDownload(audio: audio);
                   } else {
                     addPodcast?.call();
-                    model.startDownload(context: context, audio: audio);
+                    model.startDownload(
+                      finishedMessage:
+                          context.l10n.downloadFinished(audio?.title ?? ''),
+                      canceledMessage:
+                          context.l10n.downloadCancelled(audio?.title ?? ''),
+                      audio: audio,
+                    );
                   }
                 },
           iconSize: iconSize,

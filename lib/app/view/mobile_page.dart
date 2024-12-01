@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../common/view/snackbars.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/view/full_height_player.dart';
 import '../../player/view/player_view.dart';
+import '../../podcasts/download_model.dart';
 import '../app_model.dart';
 import 'mobile_bottom_bar.dart';
 
@@ -20,21 +22,28 @@ class MobilePage extends StatelessWidget with WatchItMixin {
     final fullWindowMode =
         watchPropertyValue((AppModel m) => m.fullWindowMode) ?? false;
 
-    return Material(
-      color: context.theme.scaffoldBackgroundColor,
-      child: Stack(
+    registerStreamHandler(
+      select: (DownloadModel m) => m.messageStream,
+      initialValue: null,
+      handler: (context, snapshot, cancel) {
+        if (snapshot.hasData) {
+          showSnackBar(context: context, content: Text(snapshot.data ?? ''));
+        }
+      },
+    );
+
+    return Scaffold(
+      extendBody: true,
+      extendBodyBehindAppBar: true,
+      body: Stack(
         fit: StackFit.expand,
         children: [
           page,
           if (fullWindowMode)
-            const Hero(
-              tag: 'full_height_player',
-              child: Scaffold(
-                extendBody: true,
-                extendBodyBehindAppBar: true,
-                body: FullHeightPlayer(
-                  playerPosition: PlayerPosition.fullWindow,
-                ),
+            Material(
+              color: context.theme.scaffoldBackgroundColor,
+              child: const FullHeightPlayer(
+                playerPosition: PlayerPosition.fullWindow,
               ),
             )
           else

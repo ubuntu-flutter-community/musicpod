@@ -11,7 +11,7 @@ import '../../library/library_model.dart';
 import '../../radio/radio_model.dart';
 import '../../settings/settings_model.dart';
 import '../connectivity_model.dart';
-import 'desktop_scaffold.dart';
+import 'desktop_home_page.dart';
 import 'splash_screen.dart';
 
 class DesktopMusicPodApp extends StatefulWidget
@@ -57,6 +57,7 @@ class _DesktopMusicPodAppState extends State<DesktopMusicPodApp> {
   Widget build(BuildContext context) {
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
     final phoenix = phoenixTheme(color: widget.accent ?? Colors.greenAccent);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.values[themeIndex],
@@ -69,11 +70,9 @@ class _DesktopMusicPodAppState extends State<DesktopMusicPodApp> {
       onGenerateTitle: (context) => kAppTitle,
       home: FutureBuilder(
         future: _initFuture,
-        builder: (context, snapshot) {
-          return snapshot.data == true
-              ? const DesktopScaffold()
-              : const SplashScreen();
-        },
+        builder: (context, snapshot) => snapshot.data == true
+            ? const DesktopHomePage()
+            : const SplashScreen(),
       ),
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
