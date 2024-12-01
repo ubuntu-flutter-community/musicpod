@@ -6,6 +6,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -77,7 +78,10 @@ class _GenrePageState extends State<GenrePage> {
           return CustomScrollView(
             slivers: [
               SliverPadding(
-                padding: getAdaptiveHorizontalPadding(constraints: constraints),
+                padding: getAdaptiveHorizontalPadding(constraints: constraints)
+                    .copyWith(
+                  bottom: bottomPlayerPageGap,
+                ),
                 sliver: ArtistsView(
                   artists: artistAudiosWithGenre,
                 ),

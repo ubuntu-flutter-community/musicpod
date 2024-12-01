@@ -7,8 +7,8 @@ import '../../player/view/player_view.dart';
 import '../app_model.dart';
 import 'mobile_bottom_bar.dart';
 
-class MobilePageWithPlayer extends StatelessWidget with WatchItMixin {
-  const MobilePageWithPlayer({
+class MobilePage extends StatelessWidget with WatchItMixin {
+  const MobilePage({
     super.key,
     required this.page,
   });
@@ -27,11 +27,14 @@ class MobilePageWithPlayer extends StatelessWidget with WatchItMixin {
         children: [
           page,
           if (fullWindowMode)
-            const Scaffold(
-              extendBody: true,
-              extendBodyBehindAppBar: true,
-              body: FullHeightPlayer(
-                playerPosition: PlayerPosition.fullWindow,
+            const Hero(
+              tag: 'full_height_player',
+              child: Scaffold(
+                extendBody: true,
+                extendBodyBehindAppBar: true,
+                body: FullHeightPlayer(
+                  playerPosition: PlayerPosition.fullWindow,
+                ),
               ),
             )
           else

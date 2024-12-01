@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
+
 class LicensesPage extends StatelessWidget {
   const LicensesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    if (isMobile) {
+    if (isMobilePlatform) {
       return const LicensePage();
     }
 

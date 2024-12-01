@@ -122,7 +122,10 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
               if (useGridView)
                 SliverPadding(
                   padding:
-                      getAdaptiveHorizontalPadding(constraints: constraints),
+                      getAdaptiveHorizontalPadding(constraints: constraints)
+                          .copyWith(
+                    bottom: bottomPlayerPageGap,
+                  ),
                   sliver: AlbumsView(
                     albums: albums,
                   ),
@@ -130,7 +133,10 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
               else
                 SliverPadding(
                   padding:
-                      getAdaptiveHorizontalPadding(constraints: constraints),
+                      getAdaptiveHorizontalPadding(constraints: constraints)
+                          .copyWith(
+                    bottom: bottomPlayerPageGap,
+                  ),
                   sliver: SliverAudioTileList(
                     audios: artistAudios!,
                     pageId: pageId,

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
-import 'ui_constants.dart';
+import '../../app_config.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/theme_data_x.dart';
@@ -17,6 +16,7 @@ import 'audio_tile_option_button.dart';
 import 'like_icon.dart';
 import 'tapable_text.dart';
 import 'theme.dart';
+import 'ui_constants.dart';
 
 class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
   const AudioTile({
@@ -149,13 +149,13 @@ class _AudioTileState extends State<AudioTile> {
         pageId: widget.pageId,
         audioPageType: widget.audioPageType,
         selectedColor: selectedColor,
-        showDuration: !isMobile,
-        showLikeIcon: !isMobile,
-        alwaysShowOptionButton: isMobile,
+        showDuration: !isMobilePlatform,
+        showLikeIcon: !isMobilePlatform,
+        alwaysShowOptionButton: isMobilePlatform,
       ),
     );
 
-    if (isMobile) return listTile;
+    if (isMobilePlatform) return listTile;
 
     return MouseRegion(
       key: ObjectKey(widget.audio),

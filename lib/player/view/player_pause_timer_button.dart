@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/modals.dart';
@@ -22,7 +23,7 @@ class PlayerPauseTimerButton extends StatelessWidget {
         onPressed: () => showModal(
           context: context,
           mode: ModalMode.platformModalMode,
-          content: isMobile ? const _BottomSheet() : const _Dialog(),
+          content: isMobilePlatform ? const _BottomSheet() : const _Dialog(),
         ),
         icon: Icon(Iconz.sleep),
       );

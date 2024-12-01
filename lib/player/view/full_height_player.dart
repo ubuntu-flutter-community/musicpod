@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
+import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/header_bar.dart';
+import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
@@ -13,9 +14,9 @@ import '../../radio/view/radio_history_list.dart';
 import 'blurred_full_height_player_image.dart';
 import 'full_height_player_image.dart';
 import 'full_height_player_top_controls.dart';
-import 'player_title_and_artist.dart';
 import 'full_height_video_player.dart';
 import 'player_main_controls.dart';
+import 'player_title_and_artist.dart';
 import 'player_track.dart';
 import 'player_view.dart';
 import 'queue_button.dart';
@@ -53,7 +54,8 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (!isMobile || context.isPortrait) const FullHeightPlayerImage(),
+          if (!isMobilePlatform || context.isPortrait)
+            const FullHeightPlayerImage(),
           const SizedBox(
             height: kLargestSpace,
           ),
@@ -112,13 +114,14 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final body = isMobile
+    final body = isMobilePlatform
         ? GestureDetector(
             onVerticalDragEnd: (details) {
               if (details.primaryVelocity != null &&
                   details.primaryVelocity! > 150) {
                 appModel.setFullWindowMode(false);
               }
+              di<PlayerModel>().bottomPlayerHeight = bottomPlayerDefaultHeight;
             },
             child: Padding(
               padding: const EdgeInsets.only(top: 40),
@@ -148,7 +151,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
           )
         : Column(
             children: [
-              if (!isMobile) headerBar,
+              if (!isMobilePlatform) headerBar,
               Expanded(
                 child: body,
               ),

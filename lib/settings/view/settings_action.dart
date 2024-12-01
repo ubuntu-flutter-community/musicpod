@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../constants.dart';
@@ -33,7 +33,7 @@ class SettingsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void onPressed() => isMobile
+    void onPressed() => isMobilePlatform
         ? di<LibraryModel>().push(pageId: kSettingsPageId)
         : showDialog(
             context: context,

@@ -107,7 +107,7 @@ Color getAlphabetColor(String text, [Color fallBackColor = Colors.black]) {
 }
 
 double get searchBarWidth =>
-    isMobile ? kMobileSearchBarWidth : kDesktopSearchBarWidth;
+    isMobilePlatform ? kMobileSearchBarWidth : kDesktopSearchBarWidth;
 
 InputDecoration createMaterialDecoration({
   required ColorScheme colorScheme,
@@ -125,7 +125,7 @@ InputDecoration createMaterialDecoration({
       OutlineInputBorder(
         borderRadius: BorderRadius.circular(100),
         borderSide: BorderSide(
-          width: isMobile ? 2 : 1,
+          width: isMobilePlatform ? 2 : 1,
           color: colorScheme.outline,
         ),
       );
@@ -133,12 +133,12 @@ InputDecoration createMaterialDecoration({
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
     suffixIconConstraints: BoxConstraints(
-      maxHeight: isMobile ? kToolbarHeight : kYaruTitleBarItemHeight,
+      maxHeight: isMobilePlatform ? kToolbarHeight : kYaruTitleBarItemHeight,
     ),
     hintText: hintText,
     fillColor: fillColor,
     filled: filled,
-    contentPadding: isMobile
+    contentPadding: isMobilePlatform
         ? const EdgeInsets.only(top: 16, bottom: 0, left: 15, right: 15)
         : contentPadding ??
             const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
@@ -148,15 +148,15 @@ InputDecoration createMaterialDecoration({
     focusedBorder: outlineInputBorder.copyWith(
       borderSide: BorderSide(
         color: colorScheme.primary,
-        width: isMobile ? 2 : 1,
+        width: isMobilePlatform ? 2 : 1,
       ),
     ),
     disabledBorder: outlineInputBorder,
     focusedErrorBorder: outlineInputBorder,
-    helperStyle: isMobile ? null : style,
-    hintStyle: isMobile ? null : style,
-    labelStyle: isMobile ? null : style,
-    isDense: isMobile ? false : isDense,
+    helperStyle: isMobilePlatform ? null : style,
+    hintStyle: isMobilePlatform ? null : style,
+    labelStyle: isMobilePlatform ? null : style,
+    isDense: isMobilePlatform ? false : isDense,
   );
 }
 
@@ -208,7 +208,7 @@ InputDecoration createYaruDecoration({
 
 double get iconSize => yaruStyled
     ? kYaruIconSize
-    : isMobile
+    : isMobilePlatform
         ? 24.0
         : kLargestSpace;
 
@@ -221,19 +221,19 @@ double get progressStrokeWidth => 3.0;
 double get smallAvatarButtonRadius =>
     (yaruStyled
         ? kYaruTitleBarItemHeight
-        : isMobile
+        : isMobilePlatform
             ? 42
             : 38) /
     2;
 
 double get bigAvatarButtonRadius => yaruStyled
     ? 22
-    : isMobile
+    : isMobilePlatform
         ? 26
         : 23;
 
 EdgeInsets get filterPanelPadding =>
-    EdgeInsets.only(top: isMobile ? 10 : 0, bottom: 10);
+    EdgeInsets.only(top: isMobilePlatform ? 10 : 0, bottom: 10);
 
 EdgeInsets get bigPlayButtonPadding =>
     EdgeInsets.symmetric(horizontal: yaruStyled ? 2.5 : 5);
@@ -247,16 +247,16 @@ FontWeight get mediumTextWeight =>
 FontWeight get largeTextWeight =>
     yaruStyled ? FontWeight.w200 : FontWeight.w300;
 
-double get chipHeight => isMobile ? 40 : 34.0;
+double get chipHeight => isMobilePlatform ? 40 : 34.0;
 
 EdgeInsets get audioTilePadding => kAudioTilePadding;
 
 SliverGridDelegate get audioCardGridDelegate =>
-    isMobile ? kMobileAudioCardGridDelegate : kAudioCardGridDelegate;
+    isMobilePlatform ? kMobileAudioCardGridDelegate : kAudioCardGridDelegate;
 
 EdgeInsets get appBarSingleActionSpacing => Platform.isMacOS
     ? const EdgeInsets.only(right: 5, left: 5)
-    : EdgeInsets.only(right: 10, left: isMobile ? 0 : kLargestSpace);
+    : EdgeInsets.only(right: 10, left: isMobilePlatform ? 0 : kLargestSpace);
 
 EdgeInsetsGeometry get radioHistoryListPadding =>
     EdgeInsets.only(left: yaruStyled ? 0 : 5);
@@ -273,17 +273,22 @@ EdgeInsets get countryPillPadding => yaruStyled
       )
     : const EdgeInsets.only(top: 11, bottom: 11, left: 15, right: 15);
 
-double get inputHeight => isMobile
+double get inputHeight => isMobilePlatform
     ? 40
     : yaruStyled
         ? kYaruTitleBarItemHeight
         : 36;
 
-double get audioCardDimension => kAudioCardDimension - (isMobile ? 15 : 0);
+double get audioCardDimension =>
+    kAudioCardDimension - (isMobilePlatform ? 15 : 0);
 
-double get bottomPlayerHeight => isMobile ? 76.0 : 90.0;
+double get bottomPlayerDefaultHeight => isMobilePlatform ? 76.0 : 90.0;
 
-double get navigationBarHeight => bottomPlayerHeight - 25;
+double get navigationBarHeight => bottomPlayerDefaultHeight - 25;
+
+double? get bottomPlayerPageGap => isMobilePlatform
+    ? bottomPlayerDefaultHeight + navigationBarHeight + kLargestSpace
+    : null;
 
 NavigationBarThemeData navigationBarTheme({required ThemeData theme}) =>
     theme.navigationBarTheme.copyWith(

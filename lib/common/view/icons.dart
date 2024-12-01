@@ -130,28 +130,28 @@ class Iconz {
 
   static IconData get localAudio {
     if (appleStyled) {
-      if (isMobile) {
+      if (isMobilePlatform) {
         return CupertinoIcons.device_phone_portrait;
       }
       return CupertinoIcons.device_laptop;
     }
     return yaruStyled
         ? YaruIcons.drive_harddisk
-        : isMobile
+        : isMobilePlatform
             ? Icons.phone_android_outlined
             : Icons.computer_rounded;
   }
 
   static IconData get localAudioFilled {
     if (appleStyled) {
-      if (isMobile) {
+      if (isMobilePlatform) {
         return CupertinoIcons.device_phone_portrait;
       }
       return CupertinoIcons.device_laptop;
     }
     return yaruStyled
         ? YaruIcons.drive_harddisk_filled
-        : isMobile
+        : isMobilePlatform
             ? Icons.phone_android_rounded
             : Icons.computer_rounded;
   }

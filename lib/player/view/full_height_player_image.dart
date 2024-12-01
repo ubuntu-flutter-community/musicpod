@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../local_audio/view/local_cover.dart';
@@ -30,7 +30,7 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
 
     final size = context.isPortrait
         ? fullHeightPlayerImageSize
-        : isMobile
+        : isMobilePlatform
             ? fullHeightPlayerImageSize / 3
             : fullHeightPlayerImageSize;
     final theHeight = height ?? size;

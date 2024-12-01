@@ -44,8 +44,8 @@ class HeaderBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final useSidebarButton = isMobile ? false : includeSidebarButton;
-    final useBackButton = isMobile ? true : includeBackButton;
+    final useSidebarButton = isMobilePlatform ? false : includeSidebarButton;
+    final useBackButton = isMobilePlatform ? true : includeBackButton;
     final canPop = watchPropertyValue((LibraryModel m) => m.canPop);
 
     Widget? leading;
@@ -58,7 +58,7 @@ class HeaderBar extends StatelessWidget
       if (useBackButton && canPop) {
         leading = const NavBackButton();
       } else {
-        leading = isMobile
+        leading = isMobilePlatform
             ? const SizedBox(
                 width: 60,
               )
@@ -66,7 +66,7 @@ class HeaderBar extends StatelessWidget
       }
     }
 
-    if (isMobile) {
+    if (isMobilePlatform) {
       final fullWindowMode =
           watchPropertyValue((AppModel m) => m.fullWindowMode) == true;
       return AppBar(
@@ -121,7 +121,7 @@ class HeaderBar extends StatelessWidget
   @override
   Size get preferredSize => Size(
         0,
-        isMobile
+        isMobilePlatform
             ? (style == YaruTitleBarStyle.hidden ? 0 : kYaruTitleBarHeight)
             : kToolbarHeight,
       );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../app/connectivity_model.dart';
+import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
@@ -49,7 +49,8 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
       active: active,
     );
 
-    final radius = isMobile ? bigAvatarButtonRadius : smallAvatarButtonRadius;
+    final radius =
+        isMobilePlatform ? bigAvatarButtonRadius : smallAvatarButtonRadius;
     final playButton = avatarPlayButton
         ? CircleAvatar(
             radius: radius,

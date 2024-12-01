@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/view/theme.dart';
 import 'desktop_musicpod_app.dart';
 import 'mobile_musicpod_app.dart';
@@ -28,7 +29,7 @@ class MaterialMusicPodApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SystemThemeBuilder(
         builder: (context, accent) {
-          return isMobile
+          return isMobilePlatform
               ? MobileMusicPodApp(accent: accent.accent)
               : DesktopMusicPodApp(accent: accent.accent);
         },

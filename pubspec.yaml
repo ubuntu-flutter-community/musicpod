@@ -113,6 +113,7 @@ flutter:
     - assets/images/media-optical.png
     - assets/images/tray_icon.ico
     - assets/images/tray_icon.png
+    - assets/icon.png
     - CHANGELOG.md
 
 dependency_overrides:

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/modals.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
@@ -44,7 +44,7 @@ class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
             showModal(
               mode: ModalMode.platformModalMode,
               context: context,
-              content: isMobile
+              content: isMobilePlatform
                   ? MpvMetadataDialog.bottomSheet(
                       image: imageUrl,
                       mpvMetaData: metadata,

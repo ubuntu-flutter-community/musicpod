@@ -73,7 +73,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
               child: Column(
                 children: [
                   const Expanded(child: MasterDetailPage()),
-                  if (!playerToTheRight || isMobile)
+                  if (!playerToTheRight || isMobilePlatform)
                     const PlayerView(position: PlayerPosition.bottom),
                 ],
               ),

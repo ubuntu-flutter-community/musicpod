@@ -101,7 +101,10 @@ class StationPage extends StatelessWidget with WatchItMixin {
                 ),
               ),
               SliverPadding(
-                padding: getAdaptiveHorizontalPadding(constraints: constraints),
+                padding: getAdaptiveHorizontalPadding(constraints: constraints)
+                    .copyWith(
+                  bottom: bottomPlayerPageGap,
+                ),
                 sliver: SliverRadioHistoryList(
                   filter: station.title,
                   emptyMessage: const SizedBox.shrink(),

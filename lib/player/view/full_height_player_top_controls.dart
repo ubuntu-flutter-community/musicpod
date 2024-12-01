@@ -2,15 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/theme.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
+import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/like_icon.dart';
 import '../../common/view/share_button.dart';
 import '../../common/view/snackbars.dart';
+import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -91,7 +92,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
               active: active,
               color: iconColor,
             ),
-          if (!isMobile) VolumeSliderPopup(color: iconColor),
+          if (!isMobilePlatform) VolumeSliderPopup(color: iconColor),
           IconButton(
             tooltip: playerPosition == PlayerPosition.fullWindow
                 ? context.l10n.leaveFullWindow
@@ -106,6 +107,8 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
               appModel.setFullWindowMode(
                 playerPosition == PlayerPosition.fullWindow ? false : true,
               );
+
+              di<PlayerModel>().bottomPlayerHeight = bottomPlayerDefaultHeight;
 
               appModel.setShowWindowControls(
                 (fullScreen == true && playerToTheRight) ? false : true,

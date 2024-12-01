@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
@@ -75,7 +75,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
       ),
       pageId: kPodcastsPageId,
     ),
-    if (isMobile)
+    if (isMobilePlatform)
       MasterItem(
         titleBuilder: (context) => Text(context.l10n.settings),
         iconBuilder: (selected) =>

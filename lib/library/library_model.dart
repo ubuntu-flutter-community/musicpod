@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../app/view/mobile_page.dart';
 import '../app_config.dart';
 import '../common/data/audio.dart';
 import '../common/logging.dart';
@@ -201,8 +202,8 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
       }
     } else if (builder != null) {
       final materialPageRoute = MaterialPageRoute(
-        builder: (context) => useSystemBackGestures
-            ? builder(context)
+        builder: (context) => isMobilePlatform
+            ? MobilePage(page: builder(context))
             : BackGesture(child: builder(context)),
         maintainState: maintainState,
         settings: RouteSettings(
