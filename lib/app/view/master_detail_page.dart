@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/view/back_gesture.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/header_bar.dart';
@@ -49,7 +50,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
     );
 
     return Scaffold(
-      resizeToAvoidBottomInset: isMobile ? false : null,
+      resizeToAvoidBottomInset: isMobilePlatform ? false : null,
       key: masterScaffoldKey,
       endDrawer: Platform.isMacOS ? drawer : null,
       drawer: Platform.isMacOS ? null : drawer,

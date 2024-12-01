@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/view/header_bar.dart';
+import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import 'about_section.dart';
@@ -16,6 +18,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final listView = ListView(
+      padding: EdgeInsets.only(bottom: bottomPlayerPageGap ?? 0),
       children: const [
         ThemeSection(),
         PodcastSection(),
@@ -24,7 +27,7 @@ class SettingsPage extends StatelessWidget {
         AboutSection(),
       ],
     );
-    if (isMobile) {
+    if (isMobilePlatform) {
       return Scaffold(
         appBar: HeaderBar(
           adaptive: false,

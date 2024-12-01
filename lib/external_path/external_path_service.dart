@@ -8,8 +8,8 @@ import 'package:gtk/gtk.dart';
 import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pls/pls.dart';
-import 'package:yaru/yaru.dart';
 
+import '../app_config.dart';
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/logging.dart';
@@ -170,7 +170,7 @@ class ExternalPathService {
   }
 
   Future<String?> getPathOfDirectory() async {
-    if (isMobile && await _androidPermissionsGranted()) {
+    if (isMobilePlatform && await _androidPermissionsGranted()) {
       return FilePicker.platform.getDirectoryPath();
     }
 

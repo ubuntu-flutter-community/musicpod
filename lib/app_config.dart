@@ -18,5 +18,5 @@ bool get allowVideoFullScreen => !Platform.isLinux;
 
 bool get isGtkApp => Platform.isLinux;
 
-bool get useSystemBackGestures =>
+bool get isMobilePlatform =>
     Platform.isAndroid || Platform.isIOS || Platform.isFuchsia;

@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_container.dart';
@@ -23,6 +23,7 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
+import '../../player/view/player_pause_timer_button.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
@@ -31,7 +32,6 @@ import 'podcast_refresh_button.dart';
 import 'podcast_reorder_button.dart';
 import 'podcast_replay_button.dart';
 import 'podcast_sub_button.dart';
-import '../../player/view/player_pause_timer_button.dart';
 import 'sliver_podcast_page_list.dart';
 
 class PodcastPage extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -165,7 +165,7 @@ class _PodcastPageState extends State<PodcastPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: space(
                       children: [
-                        if (!isMobile)
+                        if (!isMobilePlatform)
                           PodcastReplayButton(audios: episodesWithDownloads),
                         const PlayerPauseTimerButton(),
                         PodcastSubButton(
@@ -178,7 +178,7 @@ class _PodcastPageState extends State<PodcastPage> {
                         ),
                         PodcastRefreshButton(pageId: widget.feedUrl),
                         PodcastReorderButton(feedUrl: widget.feedUrl),
-                        if (!isMobile)
+                        if (!isMobilePlatform)
                           AudioTileOptionButton(
                             audios: episodesWithDownloads,
                             playlistId: widget.feedUrl,
@@ -196,9 +196,9 @@ class _PodcastPageState extends State<PodcastPage> {
                 ),
                 SliverPadding(
                   padding: getAdaptiveHorizontalPadding(
-                    min: isMobile ? 0 : 15,
+                    min: isMobilePlatform ? 0 : 15,
                     constraints: constraints,
-                  ).copyWith(bottom: kLargestSpace),
+                  ).copyWith(bottom: bottomPlayerPageGap ?? kLargestSpace),
                   sliver: SliverPodcastPageList(
                     audios: episodesWithDownloads,
                     pageId: widget.feedUrl,

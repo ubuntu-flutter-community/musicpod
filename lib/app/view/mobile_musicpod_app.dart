@@ -1,3 +1,11 @@
+import 'dart:ui';
+
+import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:phoenix_theme/phoenix_theme.dart';
+import 'package:watch_it/watch_it.dart';
+
+import '../../app_config.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
 import '../../external_path/external_path_service.dart';
@@ -6,14 +14,8 @@ import '../../library/library_model.dart';
 import '../../radio/radio_model.dart';
 import '../../settings/settings_model.dart';
 import '../connectivity_model.dart';
-import 'dart:ui';
 import 'master_items.dart';
-import 'mobile_page_with_player.dart';
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
-import 'package:phoenix_theme/phoenix_theme.dart';
-import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
+import 'mobile_page.dart';
 import 'splash_screen.dart';
 
 class MobileMusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -54,8 +56,9 @@ class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
     return MaterialApp(
       navigatorKey: libraryModel.masterNavigatorKey,
       navigatorObservers: [libraryModel],
-      initialRoute:
-          isMobile ? (libraryModel.selectedPageId ?? kLocalAudioPageId) : null,
+      initialRoute: isMobilePlatform
+          ? (libraryModel.selectedPageId ?? kLocalAudioPageId)
+          : null,
       onGenerateRoute: (settings) {
         final page = (masterItems.firstWhereOrNull(
                   (e) => e.pageId == settings.name,
@@ -67,11 +70,9 @@ class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
           settings: settings,
           pageBuilder: (_, __, ___) => FutureBuilder(
             future: _initFuture,
-            builder: (context, snapshot) {
-              return snapshot.data == true
-                  ? MobilePageWithPlayer(page: page)
-                  : const SplashScreen();
-            },
+            builder: (context, snapshot) => snapshot.data == true
+                ? MobilePage(page: page)
+                : const SplashScreen(),
           ),
           transitionsBuilder: (_, a, __, c) =>
               FadeTransition(opacity: a, child: c),

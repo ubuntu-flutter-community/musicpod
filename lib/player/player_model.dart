@@ -5,6 +5,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/mpv_meta_data.dart';
+import '../common/view/theme.dart';
 import '../radio/online_art_service.dart';
 import 'player_service.dart';
 
@@ -151,6 +152,16 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   void setTimer(Duration duration) => _playerService.setPauseTimer(duration);
+
+  double _bottomPlayerHeight = bottomPlayerDefaultHeight;
+  double get bottomPlayerHeight => _bottomPlayerHeight;
+  set bottomPlayerHeight(double value) {
+    if (value == _bottomPlayerHeight || value < bottomPlayerDefaultHeight) {
+      return;
+    }
+    _bottomPlayerHeight = value;
+    notifyListeners();
+  }
 
   @override
   Future<void> dispose() async {

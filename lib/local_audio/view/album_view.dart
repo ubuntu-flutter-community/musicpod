@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/audio_card_vignette.dart';
@@ -116,8 +116,8 @@ class AlbumCard extends StatelessWidget {
         ),
         if (pinned)
           Positioned(
-            left: isMobile ? 6 : 5,
-            bottom: kAudioCardBottomHeight + (isMobile ? 25 : 13),
+            left: isMobilePlatform ? 6 : 5,
+            bottom: kAudioCardBottomHeight + (isMobilePlatform ? 25 : 13),
             child: AudioCardVignette(
               iconData: Iconz.pinFilled,
               onTap: id == null

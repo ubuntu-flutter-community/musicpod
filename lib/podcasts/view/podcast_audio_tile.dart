@@ -76,7 +76,7 @@ class PodcastAudioTile extends StatelessWidget {
                 startPlaylist: startPlaylist,
                 removeUpdate: removeUpdate,
               ),
-              SizedBox(width: isMobile ? 15 : 25),
+              SizedBox(width: isMobilePlatform ? 15 : 25),
               Expanded(
                 child: _Center(
                   selected: selected,
@@ -92,7 +92,7 @@ class PodcastAudioTile extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Padding(
-          padding: isMobile
+          padding: isMobilePlatform
               ? const EdgeInsets.symmetric(horizontal: 10)
               : EdgeInsets.only(
                   left: (smallAvatarButtonRadius * 2) + 30,

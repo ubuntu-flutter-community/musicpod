@@ -365,13 +365,13 @@ class Audio {
     final artistName = artist;
     final id = albumName == null && artistName == null
         ? null
-        : _isMobile
+        : _isMobilePlatform
             ? '${artistName ?? ''}_${albumName ?? ''}'
             : '${artistName ?? ''}:${albumName ?? ''}';
-    return _isMobile ? id?.replaceAll(' ', '_') : id;
+    return _isMobilePlatform ? id?.replaceAll(' ', '_') : id;
   }
 
-  bool get _isMobile =>
+  bool get _isMobilePlatform =>
       Platform.isAndroid || Platform.isIOS || Platform.isFuchsia;
 
   bool get hasPathAndId =>

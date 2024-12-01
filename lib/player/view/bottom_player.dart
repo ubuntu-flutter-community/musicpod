@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
+import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/like_icon.dart';
@@ -61,7 +61,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                   borderRadius: BorderRadius.circular(4),
                   child: BottomPlayerImage(
                     audio: audio,
-                    size: bottomPlayerHeight - 24,
+                    size: bottomPlayerDefaultHeight - 24,
                     videoController: model.controller,
                     isVideo: isVideo,
                     isOnline: isOnline,
@@ -106,7 +106,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                     children: [
                       if (audio?.audioType == AudioType.podcast)
                         PlaybackRateButton(active: active),
-                      if (!isMobile) const VolumeSliderPopup(),
+                      if (!isMobilePlatform) const VolumeSliderPopup(),
                       if (showQueueButton) const QueueButton(),
                       IconButton(
                         tooltip: context.l10n.fullWindow,
@@ -129,24 +129,13 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
         ),
       ),
     ];
+
     final player = SizedBox(
-      height: bottomPlayerHeight,
+      height: watchPropertyValue((PlayerModel m) => m.bottomPlayerHeight),
       child: Column(
-        children: (isMobile ? children.reversed : children).toList(),
+        children: (isMobilePlatform ? children.reversed : children).toList(),
       ),
     );
-
-    if (isMobile) {
-      return GestureDetector(
-        onVerticalDragEnd: (details) {
-          if (details.primaryVelocity != null &&
-              details.primaryVelocity! < 150) {
-            appModel.setFullWindowMode(true);
-          }
-        },
-        child: player,
-      );
-    }
 
     if (isVideo == true) {
       return player;
@@ -154,9 +143,13 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
 
     return Stack(
       children: [
-        BlurredFullHeightPlayerImage(
-          size: Size(context.mediaQuerySize.width, bottomPlayerHeight),
-        ),
+        if (!isMobilePlatform)
+          BlurredFullHeightPlayerImage(
+            size: Size(
+              context.mediaQuerySize.width,
+              watchPropertyValue((PlayerModel m) => m.bottomPlayerHeight),
+            ),
+          ),
         player,
       ],
     );

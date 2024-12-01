@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/theme.dart';
 
 import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
@@ -35,7 +34,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
       appBar: HeaderBar(
         adaptive: true,
         title: Padding(
-          padding: EdgeInsets.only(left: isMobile ? 5 : 0),
+          padding: EdgeInsets.only(left: isMobilePlatform ? 5 : 0),
           child: const SearchPageInput(),
         ),
         actions: [
@@ -95,7 +94,10 @@ class SearchPage extends StatelessWidget with WatchItMixin {
                 ),
                 SliverPadding(
                   padding:
-                      getAdaptiveHorizontalPadding(constraints: constraints),
+                      getAdaptiveHorizontalPadding(constraints: constraints)
+                          .copyWith(
+                    bottom: bottomPlayerPageGap,
+                  ),
                   sliver: switch (audioType) {
                     AudioType.radio => const SliverRadioSearchResults(),
                     AudioType.podcast => const SliverPodcastSearchResults(),

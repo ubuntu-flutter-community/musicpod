@@ -268,6 +268,8 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                 padding: getAdaptiveHorizontalPadding(
                   constraints: constraints,
                   min: 40,
+                ).copyWith(
+                  bottom: bottomPlayerPageGap,
                 ),
                 sliver: SliverReorderableList(
                   itemCount: audios.length,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../constants.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
@@ -84,7 +84,7 @@ class SliverAudioPage extends StatelessWidget {
         builder: (context, constraints) {
           final padding = getAdaptiveHorizontalPadding(
             constraints: constraints,
-            min: isMobile ? 5 : 15,
+            min: isMobilePlatform ? 5 : 15,
           );
 
           if (audios == null) {
@@ -133,7 +133,9 @@ class SliverAudioPage extends StatelessWidget {
                 )
               else
                 SliverPadding(
-                  padding: padding,
+                  padding: padding.copyWith(
+                    bottom: bottomPlayerPageGap,
+                  ),
                   sliver: SliverAudioTileList(
                     audioPageType: audioPageType,
                     audios: audios!,

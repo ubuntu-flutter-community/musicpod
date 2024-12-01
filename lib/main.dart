@@ -10,7 +10,7 @@ import 'app_config.dart';
 import 'register.dart';
 
 Future<void> main(List<String> args) async {
-  if (isMobile) {
+  if (isMobilePlatform) {
     WidgetsFlutterBinding.ensureInitialized();
   } else {
     // Note: this includes the `WidgetsFlutterBinding.ensureInitialized()` call

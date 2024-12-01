@@ -100,7 +100,7 @@ class _AboutTileState extends State<_AboutTile> {
                   ),
                 ),
       trailing: OutlinedButton(
-        onPressed: () => isMobile
+        onPressed: () => isMobilePlatform
             ? di<LibraryModel>().push(
                 pageId: 'about',
                 builder: (p0) => const AboutPage(),
@@ -122,7 +122,7 @@ class _LicenseTile extends StatelessWidget {
         text: '${context.l10n.license}: GPL3',
       ),
       trailing: OutlinedButton(
-        onPressed: () => isMobile
+        onPressed: () => isMobilePlatform
             ? di<LibraryModel>().push(
                 pageId: 'licenses',
                 builder: (p0) => const LicensePage(),

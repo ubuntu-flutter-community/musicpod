@@ -92,7 +92,10 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                 title: const LocalAudioControlPanel(),
               ),
               SliverPadding(
-                padding: getAdaptiveHorizontalPadding(constraints: constraints),
+                padding: getAdaptiveHorizontalPadding(constraints: constraints)
+                    .copyWith(
+                  bottom: bottomPlayerPageGap,
+                ),
                 sliver: LocalAudioBody(
                   localAudioView: localAudioView,
                   titles: audios,
