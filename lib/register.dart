@@ -215,6 +215,7 @@ Future<void> registerDependencies({required List<String> args}) async {
         libraryService: di<LibraryService>(),
         dio: di<Dio>(),
       ),
+      dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<SearchModel>(
       () => SearchModel(

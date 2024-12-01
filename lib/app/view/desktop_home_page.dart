@@ -11,19 +11,20 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/view/player_view.dart';
+import '../../podcasts/download_model.dart';
 import '../../settings/settings_model.dart';
 import '../app_model.dart';
 import '../connectivity_model.dart';
 import 'master_detail_page.dart';
 
-class DesktopScaffold extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const DesktopScaffold({super.key});
+class DesktopHomePage extends StatefulWidget with WatchItStatefulWidgetMixin {
+  const DesktopHomePage({super.key});
 
   @override
-  State<DesktopScaffold> createState() => _DesktopScaffoldState();
+  State<DesktopHomePage> createState() => _DesktopHomePageState();
 }
 
-class _DesktopScaffoldState extends State<DesktopScaffold> {
+class _DesktopHomePageState extends State<DesktopHomePage> {
   @override
   void initState() {
     super.initState();
@@ -63,6 +64,16 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
         },
       );
     }
+
+    registerStreamHandler(
+      select: (DownloadModel m) => m.messageStream,
+      initialValue: null,
+      handler: (context, snapshot, cancel) {
+        if (snapshot.hasData) {
+          showSnackBar(context: context, content: Text(snapshot.data ?? ''));
+        }
+      },
+    );
 
     return Stack(
       alignment: Alignment.center,
