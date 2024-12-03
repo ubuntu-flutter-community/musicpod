@@ -38,10 +38,6 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
 
     final active = audio?.path != null || isOnline;
-    final showQueueButton = watchPropertyValue(
-      (PlayerModel m) =>
-          m.queue.length > 1 || audio?.audioType == AudioType.local,
-    );
 
     final children = [
       PlayerTrack(
@@ -107,7 +103,9 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                       if (audio?.audioType == AudioType.podcast)
                         PlaybackRateButton(active: active),
                       if (!isMobilePlatform) const VolumeSliderPopup(),
-                      if (showQueueButton) const QueueButton(),
+                      const QueueButton(
+                        isSelected: false,
+                      ),
                       IconButton(
                         tooltip: context.l10n.fullWindow,
                         icon: Icon(

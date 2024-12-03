@@ -45,10 +45,10 @@ class Iconz {
 
   static IconData get remove {
     return yaruStyled
-        ? YaruIcons.minus
+        ? YaruIcons.trash
         : appleStyled
-            ? CupertinoIcons.minus
-            : Icons.remove_rounded;
+            ? CupertinoIcons.trash
+            : Icons.delete_outline_rounded;
   }
 
   static IconData get check => yaruStyled

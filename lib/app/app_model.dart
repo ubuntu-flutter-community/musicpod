@@ -61,6 +61,13 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  bool _showQueueOverlay = false;
+  bool get showQueueOverlay => _showQueueOverlay;
+  void setOrToggleQueueOverlay({bool? value}) {
+    _showQueueOverlay = value ?? !_showQueueOverlay;
+    notifyListeners();
+  }
+
   bool? _fullWindowMode;
   bool? get fullWindowMode => _fullWindowMode;
   Future<void> setFullWindowMode(bool? value) async {

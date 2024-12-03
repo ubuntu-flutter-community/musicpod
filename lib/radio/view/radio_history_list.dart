@@ -57,10 +57,13 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin {
                       selected: current?.icyTitle != null &&
                           current?.icyTitle == e.value.icyTitle,
                     )
-                  : RadioHistoryTile(
-                      icyTitle: e.key,
-                      selected: current?.icyTitle != null &&
-                          current?.icyTitle == e.value.icyTitle,
+                  : Padding(
+                      padding: const EdgeInsets.only(bottom: 5),
+                      child: RadioHistoryTile(
+                        icyTitle: e.key,
+                        selected: current?.icyTitle != null &&
+                            current?.icyTitle == e.value.icyTitle,
+                      ),
                     );
             },
           );

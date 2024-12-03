@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/view/snackbars.dart';
+import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
+import '../../player/player_model.dart';
 import '../../player/view/full_height_player.dart';
 import '../../player/view/player_view.dart';
 import '../../podcasts/download_model.dart';
@@ -42,8 +44,18 @@ class MobilePage extends StatelessWidget with WatchItMixin {
           if (fullWindowMode)
             Material(
               color: context.theme.scaffoldBackgroundColor,
-              child: const FullHeightPlayer(
-                playerPosition: PlayerPosition.fullWindow,
+              child: GestureDetector(
+                onVerticalDragEnd: (details) {
+                  if (details.primaryVelocity != null &&
+                      details.primaryVelocity! > 150) {
+                    di<AppModel>().setFullWindowMode(false);
+                  }
+                  di<PlayerModel>().bottomPlayerHeight =
+                      bottomPlayerDefaultHeight;
+                },
+                child: const FullHeightPlayer(
+                  playerPosition: PlayerPosition.fullWindow,
+                ),
               ),
             )
           else

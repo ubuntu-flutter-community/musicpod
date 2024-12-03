@@ -290,6 +290,15 @@ double? get bottomPlayerPageGap => isMobilePlatform
     ? bottomPlayerDefaultHeight + navigationBarHeight + kLargestSpace
     : null;
 
+EdgeInsets get playerTopControlsPadding => EdgeInsets.only(
+      right: kLargestSpace,
+      top: Platform.isMacOS
+          ? 0
+          : isMobilePlatform
+              ? 2 * kLargestSpace
+              : kLargestSpace,
+    );
+
 NavigationBarThemeData navigationBarTheme({required ThemeData theme}) =>
     theme.navigationBarTheme.copyWith(
       iconTheme: WidgetStatePropertyAll(

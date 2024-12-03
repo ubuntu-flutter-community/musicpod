@@ -53,8 +53,8 @@ class SearchModel extends SafeChangeNotifier {
   Set<SearchType> get searchTypes => _searchTypes;
   AudioType _audioType = _initialAudioType;
   AudioType get audioType => _audioType;
-  void setAudioType(AudioType value) {
-    if (value == _audioType) return;
+  void setAudioType(AudioType? value) {
+    if (value == _audioType || value == null) return;
     _audioType = value;
     _searchTypes = searchTypesFromAudioType(_audioType);
     setSearchType(_searchTypes.first);
