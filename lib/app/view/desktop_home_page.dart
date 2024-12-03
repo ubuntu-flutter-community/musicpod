@@ -10,6 +10,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
+import '../../player/player_model.dart';
 import '../../player/view/player_view.dart';
 import '../../podcasts/download_model.dart';
 import '../../settings/settings_model.dart';
@@ -47,6 +48,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
   Widget build(BuildContext context) {
     final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
     final isFullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
+    final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo == true);
     final enableDiscordRPC =
         watchPropertyValue((SettingsModel m) => m.enableDiscordRPC);
 
@@ -97,8 +99,9 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
           ],
         ),
         if (isFullScreen == true)
-          const Scaffold(
-            body: PlayerView(position: PlayerPosition.fullWindow),
+          Scaffold(
+            backgroundColor: isVideo ? Colors.black : null,
+            body: const PlayerView(position: PlayerPosition.fullWindow),
           ),
       ],
     );

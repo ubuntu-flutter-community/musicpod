@@ -66,24 +66,27 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
       itemCount: radioSearchResult.length,
       itemBuilder: (context, index) {
         final station = radioSearchResult.elementAt(index);
-        return AudioTile(
-          key: ValueKey(station.uuid),
-          showLeading: true,
-          audioPageType: AudioPageType.radioSearch,
-          isPlayerPlaying: playing,
-          selected: currentAudio == station,
-          pageId: station.uuid!,
-          audio: station,
-          onTitleTap: () => di<LibraryModel>().push(
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 5),
+          child: AudioTile(
+            key: ValueKey(station.uuid),
+            showLeading: true,
+            audioPageType: AudioPageType.radioSearch,
+            isPlayerPlaying: playing,
+            selected: currentAudio == station,
             pageId: station.uuid!,
-            builder: (context) => StationPage(station: station),
+            audio: station,
+            onTitleTap: () => di<LibraryModel>().push(
+              pageId: station.uuid!,
+              builder: (context) => StationPage(station: station),
+            ),
+            onTap: () {
+              di<PlayerModel>().startPlaylist(
+                audios: [station],
+                listName: station.uuid!,
+              ).then((_) => di<RadioModel>().clickStation(station));
+            },
           ),
-          onTap: () {
-            di<PlayerModel>().startPlaylist(
-              audios: [station],
-              listName: station.uuid!,
-            ).then((_) => di<RadioModel>().clickStation(station));
-          },
         );
       },
     );
