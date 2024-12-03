@@ -47,14 +47,28 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
         playerPosition: playerPosition,
       );
     } else {
+      final queueOrHistory = audio?.audioType == AudioType.radio
+          ? const SizedBox(
+              width: 400,
+              height: 500,
+              child: RadioHistoryList(
+                simpleList: true,
+              ),
+            )
+          : QueueBody(
+              selectedColor: theme.colorScheme.onSurface,
+            );
       final column = Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
           if (showQueue && !playerWithSidePanel)
-            const Padding(
-              padding: EdgeInsets.only(bottom: 2 * kLargestSpace),
-              child: QueueBody(),
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 2 * kLargestSpace,
+                top: kLargestSpace,
+              ),
+              child: queueOrHistory,
             )
           else ...[
             if (!isMobilePlatform || context.isPortrait)
@@ -94,17 +108,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(width: 490, child: column),
-                      audio?.audioType == AudioType.radio
-                          ? const SizedBox(
-                              width: 400,
-                              height: 500,
-                              child: RadioHistoryList(
-                                simpleList: true,
-                              ),
-                            )
-                          : QueueBody(
-                              selectedColor: theme.colorScheme.onSurface,
-                            ),
+                      queueOrHistory,
                     ],
                   )
                 : column,
