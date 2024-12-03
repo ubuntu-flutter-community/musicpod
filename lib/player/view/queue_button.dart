@@ -4,6 +4,7 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/modals.dart';
 import '../../common/view/ui_constants.dart';
@@ -24,13 +25,16 @@ class QueueButton extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
     final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
     final isFullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
+    final radio = watchPropertyValue(
+      (PlayerModel m) => m.audio?.audioType == AudioType.radio,
+    );
 
     return IconButton(
       isSelected:
           isSelected ?? watchPropertyValue((AppModel m) => m.showQueueOverlay),
       color: color ?? theme.colorScheme.onSurface,
       padding: EdgeInsets.zero,
-      tooltip: context.l10n.queue,
+      tooltip: radio ? context.l10n.hearingHistory : context.l10n.queue,
       icon: Icon(
         Iconz.playlist,
         color: color ?? theme.colorScheme.onSurface,
