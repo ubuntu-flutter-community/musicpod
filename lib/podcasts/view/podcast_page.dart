@@ -82,6 +82,7 @@ class _PodcastPageState extends State<PodcastPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final episodes = widget.preFetchedEpisodes ??
         watchPropertyValue((LibraryModel m) => m.podcasts[widget.feedUrl]);
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
@@ -138,7 +139,7 @@ class _PodcastPageState extends State<PodcastPage> {
                       label: episodesWithDownloads
                               .firstWhereOrNull((e) => e.genre != null)
                               ?.genre ??
-                          context.l10n.podcast,
+                          l10n.podcast,
                       subTitle: episodesWithDownloads.firstOrNull?.artist,
                       description:
                           episodesWithDownloads.firstOrNull?.albumArtist == null
@@ -150,11 +151,11 @@ class _PodcastPageState extends State<PodcastPage> {
                                 ),
                       title: widget.title,
                       onLabelTab: (text) => _onGenreTap(
-                        context: context,
+                        l10n: l10n,
                         text: text,
                       ),
                       onSubTitleTab: (text) => _onArtistTap(
-                        context: context,
+                        l10n: l10n,
                         text: text,
                       ),
                     ),
@@ -213,10 +214,10 @@ class _PodcastPageState extends State<PodcastPage> {
   }
 
   Future<void> _onArtistTap({
-    required BuildContext context,
+    required AppLocalizations l10n,
     required String text,
   }) async {
-    await di<PodcastModel>().init(updateMessage: context.l10n.updateAvailable);
+    await di<PodcastModel>().init(updateMessage: l10n.updateAvailable);
     di<LibraryModel>().push(pageId: kSearchPageId);
     di<SearchModel>()
       ..setAudioType(AudioType.podcast)
@@ -225,16 +226,16 @@ class _PodcastPageState extends State<PodcastPage> {
   }
 
   Future<void> _onGenreTap({
-    required BuildContext context,
+    required AppLocalizations l10n,
     required String text,
   }) async {
-    await di<PodcastModel>().init(updateMessage: context.l10n.updateAvailable);
+    await di<PodcastModel>().init(updateMessage: l10n.updateAvailable);
     final genres =
         di<SearchModel>().getPodcastGenres(di<SettingsModel>().usePodcastIndex);
 
     final genreOrNull = genres.firstWhereOrNull(
       (e) =>
-          e.localize(context.l10n).toLowerCase() == text.toLowerCase() ||
+          e.localize(l10n).toLowerCase() == text.toLowerCase() ||
           e.id.toLowerCase() == text.toLowerCase() ||
           e.name.toLowerCase() == text.toLowerCase(),
     );
@@ -246,7 +247,7 @@ class _PodcastPageState extends State<PodcastPage> {
         ..search();
     } else {
       if (context.mounted) {
-        _onArtistTap(context: context, text: text);
+        _onArtistTap(l10n: l10n, text: text);
       }
     }
   }

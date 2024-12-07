@@ -1,5 +1,6 @@
 {
     "@@locale": "en",
+    "home": "Home",
     "play": "Play",
     "pause": "Pause",
     "stop": "Stop",

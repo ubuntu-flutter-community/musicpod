@@ -84,3 +84,4 @@ const kCloseBtnAction = 'closeBtnAction';
 const kUseMoreAnimations = 'useMoreAnimations';
 const kShowPositionDuration = 'showPositionDuration';
 const kSettingsPageId = 'settings';
+const kHomePageId = 'homePage';

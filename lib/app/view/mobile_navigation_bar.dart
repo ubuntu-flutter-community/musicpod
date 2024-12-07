@@ -27,12 +27,11 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              isSelected: selectedPageId == kLikedAudiosPageId,
-              selectedIcon: Icon(Iconz.heartFilled),
-              icon: Icon(Iconz.heart),
-              tooltip: l10n.local,
-              onPressed: () =>
-                  di<LibraryModel>().push(pageId: kLikedAudiosPageId),
+              isSelected: selectedPageId == kHomePageId,
+              selectedIcon: Icon(Iconz.homeFilled),
+              icon: Icon(Iconz.home),
+              tooltip: l10n.home,
+              onPressed: () => di<LibraryModel>().push(pageId: kHomePageId),
             ),
             IconButton(
               isSelected: selectedPageId == kLocalAudioPageId,
@@ -73,13 +72,6 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
               ),
               tooltip: l10n.podcasts,
               onPressed: () => di<LibraryModel>().push(pageId: kPodcastsPageId),
-            ),
-            IconButton(
-              isSelected: selectedPageId == kSettingsPageId,
-              selectedIcon: Icon(Iconz.settingsFilled),
-              icon: Icon(Iconz.settings),
-              tooltip: l10n.settings,
-              onPressed: () => di<LibraryModel>().push(pageId: kSettingsPageId),
             ),
           ],
         ),

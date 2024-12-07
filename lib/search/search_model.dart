@@ -71,7 +71,7 @@ class SearchModel extends SafeChangeNotifier {
   String? get searchQuery => _searchQuery;
   void setSearchQuery(String? value) {
     if (value == _searchQuery) return;
-    _podcastLimit = _podcastDefaultLimit;
+    _podcastLimit = podcastDefaultLimit;
     _radioLimit = _radioDefaultLimit;
     _searchQuery = value;
     notifyListeners();
@@ -160,8 +160,8 @@ class SearchModel extends SafeChangeNotifier {
     );
   }
 
-  static const _podcastDefaultLimit = 32;
-  int _podcastLimit = _podcastDefaultLimit;
+  static const podcastDefaultLimit = 32;
+  int _podcastLimit = podcastDefaultLimit;
   void incrementPodcastLimit(int value) => _podcastLimit += value;
 
   static const _radioDefaultLimit = 64;
@@ -331,4 +331,9 @@ class SearchModel extends SafeChangeNotifier {
 
   Future<List<Station>?> radioNameSearch(String? searchQuery) async =>
       _radioService.search(name: searchQuery, limit: _radioLimit);
+
+  List<Station>? _countryCharts;
+  List<Station>? get countryCharts => _countryCharts;
+  Future<void> radioCountrySearch() async => _countryCharts =
+      await _radioService.search(country: _country?.name, limit: 3);
 }

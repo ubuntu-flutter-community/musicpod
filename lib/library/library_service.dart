@@ -541,6 +541,7 @@ class LibraryService {
           isPodcastSubscribed(pageId));
 
   final _mainPages = [
+    kHomePageId,
     kSearchPageId,
     kLikedAudiosPageId,
     kLocalAudioPageId,

@@ -22,6 +22,7 @@ import '../../radio/view/station_page.dart';
 import '../../radio/view/station_page_icon.dart';
 import '../../search/view/search_page.dart';
 import '../../settings/view/settings_page.dart';
+import 'home_page.dart';
 import 'main_page_icon.dart';
 
 class MasterItem {
@@ -82,6 +83,14 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
             Icon(selected ? Iconz.settingsFilled : Iconz.settings),
         pageBuilder: (context) => const SettingsPage(),
         pageId: kSettingsPageId,
+      ),
+    if (isMobilePlatform)
+      MasterItem(
+        titleBuilder: (context) => Text(context.l10n.home),
+        iconBuilder: (selected) =>
+            Icon(selected ? Iconz.homeFilled : Iconz.home),
+        pageBuilder: (context) => const HomePage(),
+        pageId: kHomePageId,
       ),
     MasterItem(
       iconBuilder: (selected) => Icon(Iconz.plus),

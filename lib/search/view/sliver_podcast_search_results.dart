@@ -20,7 +20,9 @@ import '../search_model.dart';
 
 class SliverPodcastSearchResults extends StatefulWidget
     with WatchItStatefulWidgetMixin {
-  const SliverPodcastSearchResults({super.key});
+  const SliverPodcastSearchResults({super.key, this.take});
+
+  final int? take;
 
   @override
   State<SliverPodcastSearchResults> createState() =>
@@ -52,8 +54,11 @@ class _SliverPodcastSearchResultsState
 
     final loading = watchPropertyValue((SearchModel m) => m.loading);
 
+    final results = watchPropertyValue(
+      (SearchModel m) => m.podcastSearchResult?.items,
+    );
     final searchResultItems =
-        watchPropertyValue((SearchModel m) => m.podcastSearchResult?.items);
+        widget.take != null ? results?.take(widget.take!) : results;
 
     if (searchResultItems == null || searchResultItems.isEmpty) {
       return SliverFillNoSearchResultPage(

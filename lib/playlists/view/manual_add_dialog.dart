@@ -41,7 +41,7 @@ class ManualAddDialog extends StatelessWidget {
         bottom: kLargestSpace,
       ),
       content: SizedBox(
-        height: 200,
+        height: 220,
         width: 400,
         child: onlyPlaylists
             ? Padding(
@@ -199,6 +199,9 @@ class _PlaylistEditDialogContentState extends State<PlaylistEditDialogContent> {
               ),
             ),
           ),
+        const SizedBox(
+          height: kLargestSpace,
+        ),
         Align(
           alignment: Alignment.bottomRight,
           child: Wrap(
