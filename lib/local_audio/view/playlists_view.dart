@@ -17,17 +17,19 @@ class PlaylistsView extends StatelessWidget {
     this.noResultMessage,
     this.noResultIcon,
     required this.playlists,
+    this.take,
   });
 
   final List<String>? playlists;
   final Widget? noResultMessage, noResultIcon;
+  final int? take;
 
   @override
   Widget build(BuildContext context) {
     final lists = [
       kNewPlaylistPageId,
       kLikedAudiosPageId,
-      ...(playlists ?? []),
+      ...(take != null ? playlists!.take(take!).toList() : playlists ?? []),
     ];
 
     return SliverGrid.builder(

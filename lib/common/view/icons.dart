@@ -5,6 +5,17 @@ import 'package:yaru/yaru.dart';
 import '../../app_config.dart';
 
 class Iconz {
+  static IconData get home => yaruStyled
+      ? YaruIcons.home
+      : appleStyled
+          ? CupertinoIcons.home
+          : Icons.home_outlined;
+  static IconData get homeFilled => yaruStyled
+      ? YaruIcons.home_filled
+      : appleStyled
+          ? CupertinoIcons.home
+          : Icons.home_filled;
+
   static IconData get image => yaruStyled
       ? YaruIcons.image
       : appleStyled

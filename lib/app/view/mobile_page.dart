@@ -35,6 +35,7 @@ class MobilePage extends StatelessWidget with WatchItMixin {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       extendBody: true,
       extendBodyBehindAppBar: true,
       body: Stack(

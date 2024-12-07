@@ -35,7 +35,6 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
         SearchType.radioLanguage => const LanguageAutoCompleteWithSuffix(),
         _ => SearchInput(
             text: searchQuery,
-            key: ValueKey(searchType.name + searchQuery.toString()),
             hintText: context.l10n.search,
             onChanged: (v) async {
               searchModel.setSearchQuery(v);
