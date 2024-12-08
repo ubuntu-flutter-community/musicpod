@@ -1189,5 +1189,7 @@
   "lastfmApiKeyEmpty": "Inserisci una chiave API",
   "@lastfmApiKeyEmpty": {},
   "lastfmSecretEmpty": "Inserisci il segreto condiviso",
-  "@lastfmSecretEmpty": {}
+  "@lastfmSecretEmpty": {},
+  "home": "Home",
+  "@home": {}
 }

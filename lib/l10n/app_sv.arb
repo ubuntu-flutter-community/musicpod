@@ -1189,5 +1189,7 @@
         "type": "String"
       }
     }
-  }
+  },
+  "home": "Hem",
+  "@home": {}
 }
