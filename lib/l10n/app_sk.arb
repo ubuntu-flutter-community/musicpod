@@ -344,7 +344,7 @@
   "@contributors": {},
   "version": "Verzia",
   "@version": {},
-  "theme": "Vzhľad",
+  "theme": "Celkový vzhľad",
   "@theme": {},
   "useMoreAnimationsTitle": "Použiť viac animácií",
   "@useMoreAnimationsTitle": {},
@@ -360,7 +360,7 @@
   "@dependencies": {},
   "light": "Svetlý",
   "@light": {},
-  "system": "Systémový",
+  "system": "Podľa systému",
   "@system": {},
   "dark": "Tmavý",
   "@dark": {},
@@ -1189,5 +1189,7 @@
   "exposeToListenBrainzTitle": "ListenBrainz",
   "@exposeToListenBrainzTitle": {},
   "listenBrainzApiKeyEmpty": "Zadajte prosím kľúč API",
-  "@listenBrainzApiKeyEmpty": {}
+  "@listenBrainzApiKeyEmpty": {},
+  "home": "Domov",
+  "@home": {}
 }
