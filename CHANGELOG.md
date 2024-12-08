@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.6.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.5.0...v2.6.0) (2024-12-08)
+
+
+### Features
+
+* add mobile home page ([#1079](https://github.com/ubuntu-flutter-community/musicpod/issues/1079)) ([651d43b](https://github.com/ubuntu-flutter-community/musicpod/commit/651d43bda35bf0a97098db204c8efc892991ccbd))
+* rework queue ([#1076](https://github.com/ubuntu-flutter-community/musicpod/issues/1076)) ([6c74a2a](https://github.com/ubuntu-flutter-community/musicpod/commit/6c74a2a81c7b4186da76ab085e323cea31a3d371))
+* rework the bottom bar for mobile ([#1073](https://github.com/ubuntu-flutter-community/musicpod/issues/1073)) ([0e2a40c](https://github.com/ubuntu-flutter-community/musicpod/commit/0e2a40cf6224916619edecefdf6fd087fbc62b4f))
+* Translated using Weblate (Swedish) ([#1070](https://github.com/ubuntu-flutter-community/musicpod/issues/1070)) ([09994f8](https://github.com/ubuntu-flutter-community/musicpod/commit/09994f811ceb3b54fb08c8e4305edb1d576e209a))
+* Translations update from Hosted Weblate ([#1075](https://github.com/ubuntu-flutter-community/musicpod/issues/1075)) ([cf7bb4f](https://github.com/ubuntu-flutter-community/musicpod/commit/cf7bb4f96679d3638d4c1f3a9bc929c6fbbe8530))
+
+
+### Bug Fixes
+
+* don't use BuildContext in non-UI class DownloadModel ([#1074](https://github.com/ubuntu-flutter-community/musicpod/issues/1074)) ([ba9fe1a](https://github.com/ubuntu-flutter-community/musicpod/commit/ba9fe1a06b56453e96d310f7604f9bc5b9cf396c))
+* Make local music genre menu case insensitive ([#1082](https://github.com/ubuntu-flutter-community/musicpod/issues/1082)) ([726c3c6](https://github.com/ubuntu-flutter-community/musicpod/commit/726c3c6fda13aef2bc0e7a0d889add871aaba421)), closes [#1081](https://github.com/ubuntu-flutter-community/musicpod/issues/1081)
+* mobile debug and full height player not full height on mobile ([#1072](https://github.com/ubuntu-flutter-community/musicpod/issues/1072)) ([474ab9c](https://github.com/ubuntu-flutter-community/musicpod/commit/474ab9c4c8b5c62cf67adce549cfe308aab56c28))
+* show radio history list on queue overlay for radio ([#1077](https://github.com/ubuntu-flutter-community/musicpod/issues/1077)) ([42beb39](https://github.com/ubuntu-flutter-community/musicpod/commit/42beb390e91f1a278b8dbd3aae12f836c216be76))
+
 ## [2.5.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.4.0...v2.5.0) (2024-11-28)
 
 
