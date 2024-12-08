@@ -284,10 +284,8 @@ class Audio {
     final fileName = File(path).uri.pathSegments.lastOrNull;
     final genre = data.genres.firstOrNull?.startsWith('(') == true &&
             data.genres.firstOrNull?.endsWith(')') == true
-        ? tagGenres[data.genres.firstOrNull
-                ?.replaceAll('(', '')
-                .replaceAll(')', '')]
-            ?.everyWordCapitalized
+        ? tagGenres[
+            data.genres.firstOrNull?.replaceAll('(', '').replaceAll(')', '')]
         : data.genres.firstOrNull;
 
     return Audio(
@@ -302,7 +300,7 @@ class Audio {
       discTotal: data.totalDisc,
       durationMs: data.duration?.inMilliseconds.toDouble(),
       // fileSize: data.,
-      genre: genre,
+      genre: genre?.everyWordCapitalized,
       pictureData:
           data.pictures.firstWhereOrNull((e) => e.bytes.isNotEmpty)?.bytes,
       pictureMimeType: data.pictures.firstOrNull?.mimetype,
