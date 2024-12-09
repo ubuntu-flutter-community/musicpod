@@ -1188,5 +1188,7 @@
   "regionWallisandfutuna": "Wallis eta Futuna",
   "@regionWallisandfutuna": {},
   "regionWesternsahara": "Mendebaldeko Sahara",
-  "@regionWesternsahara": {}
+  "@regionWesternsahara": {},
+  "home": "Etxea",
+  "@home": {}
 }
