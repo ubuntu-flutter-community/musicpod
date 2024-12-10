@@ -294,8 +294,8 @@ class Audio {
       artist: data.artist,
       title: (data.title?.isNotEmpty == true ? data.title : fileName) ?? path,
       album: data.album,
-      // TODO(#339): wait for https://github.com/ClementBeal/audio_metadata_reader/issues/13
-      albumArtist: data.artist,
+      albumArtist:
+          data.performers.isEmpty ? data.artist : data.performers.toString(),
       discNumber: data.discNumber,
       discTotal: data.totalDisc,
       durationMs: data.duration?.inMilliseconds.toDouble(),
