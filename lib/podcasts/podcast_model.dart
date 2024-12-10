@@ -1,15 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../common/view/snackbars.dart';
-import '../library/library_model.dart';
-import '../player/player_model.dart';
+import 'podcast_search_state.dart';
 import 'podcast_service.dart';
-import 'view/podcast_page.dart';
-import 'view/podcast_snackbar_contents.dart';
 
 class PodcastModel extends SafeChangeNotifier {
   PodcastModel({
@@ -18,12 +13,16 @@ class PodcastModel extends SafeChangeNotifier {
 
   final PodcastService _podcastService;
 
-  bool _loadingFeed = false;
-  bool get loadingFeed => _loadingFeed;
-  void setLoadingFeed(bool value) {
-    if (_loadingFeed == value) return;
-    _loadingFeed = value;
+  final _searchStateController =
+      StreamController<PodcastSearchState>.broadcast();
+  Stream<PodcastSearchState> get stateStream => _searchStateController.stream;
+  PodcastSearchState _lastState = PodcastSearchState.done;
+  PodcastSearchState get lastState => _lastState;
+  void _sendState(PodcastSearchState state) {
+    if (state == _lastState) return;
+    _lastState = state;
     notifyListeners();
+    _searchStateController.add(state);
   }
 
   var _firstUpdateChecked = false;
@@ -78,77 +77,44 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  // This is not optimal since the model uses widgets
-  // but tolerable since snackbars update over the rest of the UI
   Future<void> loadPodcast({
-    required BuildContext context,
-    required LibraryModel libraryModel,
     required String feedUrl,
     String? itemImageUrl,
     String? genre,
-    PlayerModel? playerModel,
+    required Function(List<Audio> podcast) onFind,
   }) async {
-    if (libraryModel.isPageInLibrary(feedUrl)) {
-      return libraryModel.push(pageId: feedUrl);
-    }
+    _sendState(PodcastSearchState.loading);
 
-    showSnackBar(
-      context: context,
-      duration: const Duration(seconds: 1000),
-      content: const PodcastSearchLoadingSnackBarContent(),
-    );
-
-    setLoadingFeed(true);
     return _podcastService
         .findEpisodes(
-      feedUrl: feedUrl,
-      itemImageUrl: itemImageUrl,
-      genre: genre,
-    )
+          feedUrl: feedUrl,
+          itemImageUrl: itemImageUrl,
+          genre: genre,
+        )
         .then(
-      (podcast) async {
-        if (podcast.isEmpty) {
-          if (context.mounted) {
-            showSnackBar(
-              context: context,
-              content: const PodcastSearchEmptyFeedSnackBarContent(),
-            );
-          }
-          return;
-        }
+          (podcast) async {
+            if (podcast.isEmpty) {
+              _sendState(PodcastSearchState.empty);
+              return;
+            }
 
-        if (playerModel != null) {
-          playerModel.startPlaylist(listName: feedUrl, audios: podcast);
-        } else {
-          libraryModel.push(
-            builder: (_) => PodcastPage(
-              imageUrl: itemImageUrl ?? podcast.firstOrNull?.imageUrl,
-              preFetchedEpisodes: podcast,
-              feedUrl: feedUrl,
-              title: podcast.firstOrNull?.album ??
-                  podcast.firstOrNull?.title ??
-                  feedUrl,
-            ),
-            pageId: feedUrl,
-          );
-        }
-      },
-    ).whenComplete(
-      () {
-        setLoadingFeed(false);
-        if (context.mounted) ScaffoldMessenger.of(context).clearSnackBars();
-      },
-    ).timeout(
-      const Duration(seconds: 15),
-      onTimeout: () {
-        setLoadingFeed(false);
-        if (context.mounted) {
-          showSnackBar(
-            context: context,
-            content: const PodcastSearchTimeoutSnackBarContent(),
-          );
-        }
-      },
-    );
+            onFind(podcast);
+          },
+        )
+        .whenComplete(
+          () => _sendState(PodcastSearchState.done),
+        )
+        .timeout(
+          const Duration(seconds: 15),
+          onTimeout: () {
+            _sendState(PodcastSearchState.timeout);
+          },
+        );
+  }
+
+  @override
+  Future<void> dispose() async {
+    super.dispose();
+    await _searchStateController.close();
   }
 }

@@ -13,6 +13,9 @@ import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/player_model.dart';
 import '../../player/view/player_view.dart';
 import '../../podcasts/download_model.dart';
+import '../../podcasts/podcast_model.dart';
+import '../../podcasts/podcast_search_state.dart';
+import '../../podcasts/view/podcast_snackbar_contents.dart';
 import '../../settings/settings_model.dart';
 import '../app_model.dart';
 import '../connectivity_model.dart';
@@ -73,6 +76,35 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
       handler: (context, snapshot, cancel) {
         if (snapshot.hasData) {
           showSnackBar(context: context, content: Text(snapshot.data ?? ''));
+        }
+      },
+    );
+
+    registerStreamHandler(
+      select: (PodcastModel m) => m.stateStream,
+      initialValue: null,
+      handler: (context, newValue, cancel) {
+        if (newValue.hasData) {
+          if (newValue.data == PodcastSearchState.done) {
+            ScaffoldMessenger.of(context).clearSnackBars();
+          } else {
+            showSnackBar(
+              context: context,
+              content: switch (newValue.data) {
+                PodcastSearchState.loading =>
+                  const PodcastSearchLoadingSnackBarContent(),
+                PodcastSearchState.empty =>
+                  const PodcastSearchEmptyFeedSnackBarContent(),
+                PodcastSearchState.timeout =>
+                  const PodcastSearchTimeoutSnackBarContent(),
+                _ => const SizedBox.shrink()
+              },
+              duration: switch (newValue.data) {
+                PodcastSearchState.loading => const Duration(seconds: 1000),
+                _ => const Duration(seconds: 3),
+              },
+            );
+          }
         }
       },
     );

@@ -262,6 +262,9 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
     printMessageInDebugMode(
       'didReplace: ${oldRoute?.settings.name}, newPageId: ${newRoute?.settings.name}',
     );
+    final pageId = newRoute?.settings.name;
+    if (pageId == null) return;
+    _setSelectedPageId(pageId);
   }
 
   @override
