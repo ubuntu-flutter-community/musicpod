@@ -42,6 +42,7 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
           : () {
               if (subscribed) {
                 libraryModel.removePodcast(pageId);
+                libraryModel.pop();
               } else if (audios.isNotEmpty) {
                 libraryModel.addPodcast(pageId, audios);
               }

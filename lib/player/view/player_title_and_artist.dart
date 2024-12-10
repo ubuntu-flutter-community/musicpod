@@ -14,6 +14,7 @@ import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../podcasts/podcast_model.dart';
+import '../../podcasts/view/podcast_page.dart';
 import '../../radio/view/station_page.dart';
 import '../../settings/settings_model.dart';
 import '../player_model.dart';
@@ -97,9 +98,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
               ? null
               : () => _onArtistTap(
                     audio: audio,
-                    context: context,
                     libraryModel: libraryModel,
-                    playerModel: playerModel,
                     localAudioModel: localAudioModel,
                     appModel: appModel,
                     podcastModel: podcastModel,
@@ -254,9 +253,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
 
   void _onArtistTap({
     required Audio audio,
-    required BuildContext context,
     required PodcastModel podcastModel,
-    required PlayerModel playerModel,
     required LocalAudioModel localAudioModel,
     required LibraryModel libraryModel,
     required AppModel appModel,
@@ -274,14 +271,29 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
         _onRadioArtistTap(audio: audio, libraryModel: libraryModel);
         return;
       case AudioType.podcast:
-        if (audio.website != null) {
-          podcastModel.loadPodcast(
-            context: context,
-            libraryModel: libraryModel,
-            feedUrl: audio.website!,
-            itemImageUrl: audio.albumArtUrl,
-            genre: audio.genre,
-          );
+        if (audio.website != null &&
+            libraryModel.selectedPageId != audio.website) {
+          final feedUrl = audio.website!;
+          if (libraryModel.isPageInLibrary(feedUrl)) {
+            libraryModel.push(pageId: feedUrl);
+          } else {
+            podcastModel.loadPodcast(
+              feedUrl: feedUrl,
+              itemImageUrl: audio.albumArtUrl,
+              genre: audio.genre,
+              onFind: (podcast) => libraryModel.push(
+                builder: (_) => PodcastPage(
+                  imageUrl: audio.albumArtUrl ?? podcast.firstOrNull?.imageUrl,
+                  preFetchedEpisodes: podcast,
+                  feedUrl: feedUrl,
+                  title: podcast.firstOrNull?.album ??
+                      podcast.firstOrNull?.title ??
+                      feedUrl,
+                ),
+                pageId: feedUrl,
+              ),
+            );
+          }
         }
         return;
       default:

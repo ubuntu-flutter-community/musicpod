@@ -652,10 +652,6 @@
     "regionNone"
   ],
 
-  "it": [
-    "home"
-  ],
-
   "nl": [
     "home",
     "noStationFound",
@@ -1130,8 +1126,6 @@
     "local",
     "saveAndAuthorize",
     "stations",
-    "copyToClipBoard",
-    "insertedIntoQueue",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
@@ -1161,7 +1155,6 @@
     "shareThisEpisode",
     "downloadEpisode",
     "removeDownloadEpisode",
-    "language",
     "duration",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
@@ -1172,20 +1165,15 @@
     "checkForUpdates",
     "playbackWillStopIn",
     "schedulePlaybackStopTimer",
-    "alwaysAsk",
     "hideToTray",
     "closeBtnAction",
     "whenCloseBtnClicked",
-    "closeApp",
-    "closeMusicPod",
     "confirmCloseOrHideTip",
-    "doNotAskAgain",
     "skipToLivStream",
     "searchSimilarStation",
     "onlineArtError",
     "clicks",
     "exposeOnlineHeadline",
-    "exposeToDiscordTitle",
     "exposeToDiscordSubTitle",
     "exposeToLastfmTitle",
     "exposeToLastfmSubTitle",
@@ -2672,14 +2660,6 @@
     "regionYemen",
     "regionZambia",
     "regionZimbabwe"
-  ],
-
-  "sk": [
-    "home"
-  ],
-
-  "sv": [
-    "home"
   ],
 
   "tr": [
