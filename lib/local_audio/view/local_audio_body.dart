@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../common/data/audio.dart';
+import '../local_audio_view.dart';
 import 'album_view.dart';
 import 'artists_view.dart';
 import 'genres_view.dart';
-import '../local_audio_view.dart';
 import 'playlists_view.dart';
 import 'titles_view.dart';
 
@@ -43,11 +43,11 @@ class LocalAudioBody extends StatelessWidget {
             noResultMessage: noResultMessage,
             noResultIcon: noResultIcon,
           ),
-        // LocalAudioView.albumArtists => AlbumArtistsView(
-        //     albumArtists: albumArtists,
-        //     noResultMessage: noResultMessage,
-        //     noResultIcon: noResultIcon,
-        //   ),
+        LocalAudioView.albumArtists => AlbumArtistsView(
+            albumArtists: albumArtists,
+            noResultMessage: noResultMessage,
+            noResultIcon: noResultIcon,
+          ),
         LocalAudioView.albums => AlbumsView(
             albums: albums,
             noResultMessage: noResultMessage,

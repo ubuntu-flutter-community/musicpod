@@ -5,6 +5,7 @@ import 'package:watch_it/watch_it.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/header_bar.dart';
+import '../../common/view/no_search_result_page.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_filter_app_bar.dart';
 import '../../common/view/theme.dart';
@@ -83,39 +84,44 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
         builder: (context, constraints) {
           return CustomScrollView(
             slivers: [
-              SliverFilterAppBar(
-                padding: getAdaptiveHorizontalPadding(constraints: constraints)
-                    .copyWith(
-                  bottom: filterPanelPadding.bottom,
-                  top: filterPanelPadding.top,
+              if (audios != null && audios.isNotEmpty)
+                SliverFilterAppBar(
+                  padding:
+                      getAdaptiveHorizontalPadding(constraints: constraints)
+                          .copyWith(
+                    bottom: filterPanelPadding.bottom,
+                    top: filterPanelPadding.top,
+                  ),
+                  title: const LocalAudioControlPanel(),
                 ),
-                title: const LocalAudioControlPanel(),
-              ),
               SliverPadding(
                 padding: getAdaptiveHorizontalPadding(constraints: constraints)
                     .copyWith(
                   bottom: bottomPlayerPageGap,
                 ),
-                sliver: LocalAudioBody(
-                  localAudioView: localAudioView,
-                  titles: audios,
-                  albums: allAlbums,
-                  artists: allArtists,
-                  albumArtists: allAlbumArtists,
-                  genres: allGenres,
-                  playlists: playlists,
-                  noResultIcon: const AnimatedEmoji(AnimatedEmojis.bird),
-                  noResultMessage: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(context.l10n.noLocalTitlesFound),
-                      const SizedBox(
-                        height: kLargestSpace,
+                sliver: audios != null && audios.isEmpty
+                    ? SliverFillNoSearchResultPage(
+                        icon: const AnimatedEmoji(AnimatedEmojis.bird),
+                        message: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(context.l10n.noLocalTitlesFound),
+                            const SizedBox(
+                              height: kLargestSpace,
+                            ),
+                            const SettingsButton.important(),
+                          ],
+                        ),
+                      )
+                    : LocalAudioBody(
+                        localAudioView: localAudioView,
+                        titles: audios,
+                        albums: allAlbums,
+                        artists: allArtists,
+                        albumArtists: allAlbumArtists,
+                        genres: allGenres,
+                        playlists: playlists,
                       ),
-                      const SettingsButton.important(),
-                    ],
-                  ),
-                ),
               ),
             ],
           );
