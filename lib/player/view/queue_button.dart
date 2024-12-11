@@ -226,11 +226,13 @@ class _QueueTileState extends State<_QueueTile> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
             onTap: widget.queueName == null
                 ? null
-                : () => di<PlayerModel>().startPlaylist(
-                      listName: widget.queueName!,
-                      audios: widget.queue,
-                      index: widget.queue.indexOf(widget.audio),
-                    ),
+                : () => di<PlayerModel>()
+                  ..setShuffle(false)
+                  ..startPlaylist(
+                    listName: widget.queueName!,
+                    audios: widget.queue,
+                    index: widget.queue.indexOf(widget.audio),
+                  ),
             hoverColor: context.colorScheme.onSurface.withOpacity(0.3),
             leading: Visibility(
               visible: widget.selected,
