@@ -35,3 +35,25 @@ class LoadingGrid extends StatelessWidget {
     );
   }
 }
+
+class SliverLoadingGrid extends StatelessWidget {
+  const SliverLoadingGrid({
+    super.key,
+    required this.limit,
+  });
+
+  final int limit;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverGrid.builder(
+      itemCount: limit,
+      gridDelegate: audioCardGridDelegate,
+      itemBuilder: (context, index) => const AudioCard(
+        color: Colors.transparent,
+        showBorder: false,
+        bottom: AudioCardBottom(),
+      ),
+    );
+  }
+}

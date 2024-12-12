@@ -3,6 +3,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/app_model.dart';
+import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
@@ -14,11 +15,22 @@ import '../../library/library_model.dart';
 import '../player_model.dart';
 import 'player_main_controls.dart';
 
+enum _Mode {
+  icon,
+  text;
+}
+
 class QueueButton extends StatelessWidget with WatchItMixin {
-  const QueueButton({super.key, this.color, this.isSelected});
+  const QueueButton({super.key, this.color, this.isSelected})
+      : _mode = _Mode.icon;
+
+  const QueueButton.text({super.key, this.color, this.isSelected})
+      : _mode = _Mode.text;
 
   final Color? color;
   final bool? isSelected;
+
+  final _Mode _mode;
 
   @override
   Widget build(BuildContext context) {
@@ -29,26 +41,49 @@ class QueueButton extends StatelessWidget with WatchItMixin {
       (PlayerModel m) => m.audio?.audioType == AudioType.radio,
     );
 
-    return IconButton(
-      isSelected:
-          isSelected ?? watchPropertyValue((AppModel m) => m.showQueueOverlay),
-      color: color ?? theme.colorScheme.onSurface,
-      padding: EdgeInsets.zero,
-      tooltip: radio ? context.l10n.hearingHistory : context.l10n.queue,
-      icon: Icon(
-        Iconz.playlist,
-        color: color ?? theme.colorScheme.onSurface,
-      ),
-      onPressed: playerToTheRight || isFullScreen == true
-          ? di<AppModel>().setOrToggleQueueOverlay
-          : () => showModal(
-                context: context,
-                content: ModalMode.platformModalMode == ModalMode.bottomSheet
-                    ? const QueueBody()
-                    : const QueueDialog(),
-                mode: ModalMode.platformModalMode,
-              ),
-    );
+    return switch (_mode) {
+      _Mode.icon => IconButton(
+          isSelected: isSelected ??
+              watchPropertyValue((AppModel m) => m.showQueueOverlay),
+          color: color ?? theme.colorScheme.onSurface,
+          padding: EdgeInsets.zero,
+          tooltip: radio ? context.l10n.hearingHistory : context.l10n.queue,
+          icon: Icon(
+            Iconz.playlist,
+            color: color ?? theme.colorScheme.onSurface,
+          ),
+          onPressed: () => onPressed(playerToTheRight, isFullScreen, context),
+        ),
+      _Mode.text => TextButton(
+          onPressed: () => onPressed(playerToTheRight, isFullScreen, context),
+          child: Text(
+            context.l10n.queue,
+            style: context.textTheme.bodyLarge?.copyWith(
+              color: context.colorScheme.onSurface,
+            ),
+          ),
+        )
+    };
+  }
+
+  void onPressed(
+    bool playerToTheRight,
+    bool? isFullScreen,
+    BuildContext context,
+  ) {
+    if ((playerToTheRight || isFullScreen == true) && !isMobilePlatform) {
+      di<AppModel>().setOrToggleQueueOverlay();
+    } else {
+      showModal(
+        context: context,
+        isScrollControlled: true,
+        showDragHandle: true,
+        content: ModalMode.platformModalMode == ModalMode.bottomSheet
+            ? const QueueBody()
+            : const QueueDialog(),
+        mode: ModalMode.platformModalMode,
+      );
+    }
   }
 }
 

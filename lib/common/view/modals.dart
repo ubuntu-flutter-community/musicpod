@@ -6,12 +6,21 @@ Future<void> showModal({
   required BuildContext context,
   required Widget content,
   required ModalMode mode,
+  bool isScrollControlled = false,
+  bool enableDrag = true,
+  bool? showDragHandle,
 }) async {
   Widget builder(context) => content;
 
   switch (mode) {
     case ModalMode.bottomSheet:
-      showModalBottomSheet(context: context, builder: builder);
+      showModalBottomSheet(
+        isScrollControlled: isScrollControlled,
+        context: context,
+        builder: builder,
+        enableDrag: enableDrag,
+        showDragHandle: showDragHandle,
+      );
 
     case ModalMode.dialog:
       showDialog(

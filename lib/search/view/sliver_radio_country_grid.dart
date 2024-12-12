@@ -3,8 +3,8 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
 import '../../common/data/audio.dart';
+import '../../common/view/loading_grid.dart';
 import '../../common/view/offline_page.dart';
-import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_model.dart';
@@ -14,7 +14,9 @@ import '../search_model.dart';
 
 class SliverRadioCountryGrid extends StatefulWidget
     with WatchItStatefulWidgetMixin {
-  const SliverRadioCountryGrid({super.key});
+  const SliverRadioCountryGrid({super.key, this.limit = 3});
+
+  final int limit;
 
   @override
   State<SliverRadioCountryGrid> createState() => _SliverRadioCountryGridState();
@@ -24,7 +26,7 @@ class _SliverRadioCountryGridState extends State<SliverRadioCountryGrid> {
   @override
   void initState() {
     super.initState();
-    di<SearchModel>().radioCountrySearch();
+    di<SearchModel>().radioCountrySearch(limit: widget.limit);
   }
 
   @override
@@ -47,9 +49,7 @@ class _SliverRadioCountryGridState extends State<SliverRadioCountryGrid> {
     );
 
     if (radioSearchResult == null) {
-      return const SliverToBoxAdapter(
-        child: Progress(),
-      );
+      return SliverLoadingGrid(limit: widget.limit);
     }
 
     if (radioSearchResult.isEmpty) {

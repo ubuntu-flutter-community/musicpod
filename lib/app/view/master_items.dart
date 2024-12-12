@@ -7,6 +7,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../constants.dart';
+import '../../home/home_page.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../local_audio/view/album_page.dart';
@@ -22,7 +23,6 @@ import '../../radio/view/station_page.dart';
 import '../../radio/view/station_page_icon.dart';
 import '../../search/view/search_page.dart';
 import '../../settings/view/settings_page.dart';
-import 'home_page.dart';
 import 'main_page_icon.dart';
 
 class MasterItem {
