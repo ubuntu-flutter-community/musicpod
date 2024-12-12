@@ -21,8 +21,7 @@ class LocalAudioModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _audiosChangedSub;
 
   int? _localAudioIndex;
-  int get localAudioindex =>
-      _localAudioIndex ?? LocalAudioView.values.indexOf(LocalAudioView.albums);
+  int get localAudioindex => _localAudioIndex ?? LocalAudioView.albums.index;
   set localAudioindex(int value) {
     if (value == _localAudioIndex) return;
     _localAudioIndex = value;

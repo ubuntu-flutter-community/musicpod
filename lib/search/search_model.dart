@@ -334,6 +334,6 @@ class SearchModel extends SafeChangeNotifier {
 
   List<Station>? _countryCharts;
   List<Station>? get countryCharts => _countryCharts;
-  Future<void> radioCountrySearch() async => _countryCharts =
-      await _radioService.search(country: _country?.name, limit: 3);
+  Future<void> radioCountrySearch({int limit = 3}) async => _countryCharts =
+      await _radioService.search(country: _country?.name, limit: limit);
 }
