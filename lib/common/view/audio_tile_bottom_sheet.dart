@@ -1,10 +1,14 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
-import 'ui_constants.dart';
 import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../local_audio/local_audio_model.dart';
+import '../../local_audio/view/album_page.dart';
+import '../../local_audio/view/artist_page.dart';
 import '../../player/player_model.dart';
 import '../../playlists/view/add_to_playlist_dialog.dart';
 import '../data/audio.dart';
@@ -14,12 +18,11 @@ import 'icons.dart';
 import 'like_all_icon.dart';
 import 'like_icon.dart';
 import 'meta_data_dialog.dart';
-import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
 import 'snackbars.dart';
 import 'spaced_divider.dart';
 import 'stream_provider_share_button.dart';
 import 'theme.dart';
+import 'ui_constants.dart';
 
 class AudioTileBottomSheet extends StatelessWidget {
   const AudioTileBottomSheet({
@@ -179,6 +182,56 @@ class AudioTileBottomSheet extends StatelessWidget {
                     child: ListView(
                       shrinkWrap: true,
                       children: [
+                        ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: kSmallestSpace,
+                            horizontal: kLargestSpace,
+                          ),
+                          leading: Icon(Iconz.artist),
+                          minLeadingWidth: 2 * kLargestSpace,
+                          title: Text(l10n.showArtistPage),
+                          onTap: () {
+                            final artistId = audios.firstOrNull?.artist;
+                            if (artistId != null) {
+                              final artistAudios = di<LocalAudioModel>()
+                                  .findTitlesOfArtist(artistId);
+                              if (artistAudios != null) {
+                                libraryModel.push(
+                                  pageId: artistId,
+                                  builder: (c) => ArtistPage(
+                                    artistAudios: artistAudios,
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                        ),
+                        ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: kLargestSpace,
+                            vertical: kSmallestSpace,
+                          ),
+                          leading: Icon(Iconz.album),
+                          minLeadingWidth: 2 * kLargestSpace,
+                          title: Text(l10n.showAlbumPage),
+                          onTap: () {
+                            final albumId = audios.firstOrNull?.albumId;
+                            final albumName = audios.firstOrNull?.album;
+                            if (albumName != null) {
+                              final albumAudios =
+                                  di<LocalAudioModel>().findAlbum(albumName);
+                              if (albumId != null && albumAudios != null) {
+                                libraryModel.push(
+                                  pageId: albumId,
+                                  builder: (context) => AlbumPage(
+                                    id: albumId,
+                                    album: albumAudios,
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                        ),
                         StreamProviderShareButton(
                           streamProvider: StreamProvider.youTubeMusic,
                           text: searchTerm,

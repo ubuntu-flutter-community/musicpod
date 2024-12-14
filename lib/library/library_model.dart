@@ -201,15 +201,18 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
         await _masterNavigatorKey.currentState?.pushNamed(pageId);
       }
     } else if (builder != null) {
-      final materialPageRoute = MaterialPageRoute(
-        builder: (context) => isMobilePlatform
-            ? MobilePage(page: builder(context))
-            : BackGesture(child: builder(context)),
+      final materialPageRoute = PageRouteBuilder(
         maintainState: maintainState,
         settings: RouteSettings(
           name: pageId,
         ),
+        pageBuilder: (context, __, ___) => isMobilePlatform
+            ? MobilePage(page: builder(context))
+            : BackGesture(child: builder(context)),
+        transitionsBuilder: (_, a, __, c) =>
+            FadeTransition(opacity: a, child: c),
       );
+
       if (replace) {
         await _masterNavigatorKey.currentState?.pushReplacement(
           materialPageRoute,

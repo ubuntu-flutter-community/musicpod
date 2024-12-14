@@ -55,7 +55,10 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
         ),
       ],
       seekBarMargin: const EdgeInsets.all(kLargestSpace),
-      topButtonBarMargin: const EdgeInsets.only(right: kLargestSpace),
+      topButtonBarMargin: EdgeInsets.only(
+        right: kLargestSpace,
+        top: isMobilePlatform ? 2 * kLargestSpace : 0,
+      ),
       topButtonBar: [
         const Spacer(),
         controls,

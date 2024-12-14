@@ -43,6 +43,8 @@
     "titles": "Titel",
     "artist": "Künstler",
     "artists": "Künstler",
+    "showArtistPage": "Zeige Künstlerseite",
+    "showAlbumPage": "Zeige Albumseite",
     "album": "Album",
     "albums": "Alben",
     "genres": "Genres",

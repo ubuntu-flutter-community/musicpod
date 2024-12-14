@@ -20,7 +20,7 @@ import 'player_main_controls.dart';
 import 'player_title_and_artist.dart';
 import 'player_track.dart';
 import 'player_view.dart';
-import 'queue_button.dart';
+import 'queue/queue_button.dart';
 import 'volume_popup.dart';
 
 class BottomPlayer extends StatelessWidget with WatchItMixin {
