@@ -18,7 +18,8 @@ import 'player_main_controls.dart';
 import 'player_title_and_artist.dart';
 import 'player_track.dart';
 import 'player_view.dart';
-import 'queue_button.dart';
+import 'queue/queue_body.dart';
+import 'queue/queue_button.dart';
 
 class FullHeightPlayer extends StatelessWidget with WatchItMixin {
   const FullHeightPlayer({

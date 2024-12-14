@@ -6,6 +6,7 @@ import 'package:watch_it/watch_it.dart';
 import '../../app/app_model.dart';
 import '../../l10n/l10n.dart';
 import 'icons.dart';
+import 'ui_constants.dart';
 
 class StreamProviderShareButton extends StatelessWidget {
   const StreamProviderShareButton({
@@ -49,9 +50,10 @@ class StreamProviderShareButton extends StatelessWidget {
     if (tile) {
       return ListTile(
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 5,
+          horizontal: kLargestSpace,
+          vertical: kSmallestSpace,
         ),
+        minLeadingWidth: 2 * kLargestSpace,
         leading: Icon(iconData),
         title: Text('$tooltip ${context.l10n.search}'),
         onTap: () => launchUrl(

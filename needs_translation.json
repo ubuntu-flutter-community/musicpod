@@ -3,6 +3,8 @@
     "home",
     "local",
     "saveAndAuthorize",
+    "showArtistPage",
+    "showAlbumPage",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
@@ -303,6 +305,8 @@
     "home",
     "local",
     "saveAndAuthorize",
+    "showArtistPage",
+    "showAlbumPage",
     "insertedIntoQueue",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
@@ -614,13 +618,22 @@
   ],
 
   "es": [
-    "home"
+    "home",
+    "showArtistPage",
+    "showAlbumPage"
+  ],
+
+  "eu": [
+    "showArtistPage",
+    "showAlbumPage"
   ],
 
   "fr": [
     "home",
     "local",
     "saveAndAuthorize",
+    "showArtistPage",
+    "showAlbumPage",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
@@ -648,8 +661,15 @@
     "regionNone"
   ],
 
+  "it": [
+    "showArtistPage",
+    "showAlbumPage"
+  ],
+
   "nl": [
     "home",
+    "showArtistPage",
+    "showAlbumPage",
     "noStationFound",
     "nothingFound",
     "noStarredStations",
@@ -1121,6 +1141,8 @@
     "share",
     "local",
     "saveAndAuthorize",
+    "showArtistPage",
+    "showAlbumPage",
     "stations",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
@@ -1372,6 +1394,8 @@
     "share",
     "local",
     "saveAndAuthorize",
+    "showArtistPage",
+    "showAlbumPage",
     "genre",
     "year",
     "albumArtist",
@@ -1863,6 +1887,8 @@
     "share",
     "local",
     "saveAndAuthorize",
+    "showArtistPage",
+    "showAlbumPage",
     "genre",
     "year",
     "albumArtist",
@@ -2337,6 +2363,8 @@
 
   "ru": [
     "home",
+    "showArtistPage",
+    "showAlbumPage",
     "clicks",
     "regionAruba",
     "regionAustralia",
@@ -2577,10 +2605,22 @@
     "regionZimbabwe"
   ],
 
+  "sk": [
+    "showArtistPage",
+    "showAlbumPage"
+  ],
+
+  "sv": [
+    "showArtistPage",
+    "showAlbumPage"
+  ],
+
   "tr": [
     "home",
     "local",
     "saveAndAuthorize",
+    "showArtistPage",
+    "showAlbumPage",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
@@ -2880,6 +2920,8 @@
   "zh": [
     "home",
     "saveAndAuthorize",
+    "showArtistPage",
+    "showAlbumPage",
     "useMoreAnimationsTitle",
     "useMoreAnimationsDescription",
     "showPositionDurationTitle",
@@ -2900,6 +2942,8 @@
     "home",
     "local",
     "saveAndAuthorize",
+    "showArtistPage",
+    "showAlbumPage",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
@@ -3192,6 +3236,8 @@
     "home",
     "local",
     "saveAndAuthorize",
+    "showArtistPage",
+    "showAlbumPage",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",

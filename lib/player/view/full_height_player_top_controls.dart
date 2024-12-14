@@ -19,7 +19,7 @@ import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import 'playback_rate_button.dart';
 import 'player_view.dart';
-import 'queue_button.dart';
+import 'queue/queue_button.dart';
 import 'volume_popup.dart';
 
 class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {

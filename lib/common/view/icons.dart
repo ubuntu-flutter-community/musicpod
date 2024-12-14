@@ -72,6 +72,16 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.double_music_note
           : Icons.music_note_rounded;
+  static IconData get artist => yaruStyled
+      ? YaruIcons.music_artist
+      : appleStyled
+          ? CupertinoIcons.music_albums
+          : Icons.interpreter_mode_outlined;
+  static IconData get album => yaruStyled
+      ? YaruIcons.disk
+      : appleStyled
+          ? CupertinoIcons.music_albums
+          : Icons.album_rounded;
   static IconData get external => yaruStyled
       ? YaruIcons.external_link
       : appleStyled
