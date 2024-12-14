@@ -85,3 +85,4 @@ const kUseMoreAnimations = 'useMoreAnimations';
 const kShowPositionDuration = 'showPositionDuration';
 const kSettingsPageId = 'settings';
 const kHomePageId = 'homePage';
+const kPlaybackRate = 'playbackRate';

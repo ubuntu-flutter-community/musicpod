@@ -11,6 +11,7 @@ class PlayerState {
   final String? queueName;
   final List<Audio>? queue;
   final String? volume;
+  final String? rate;
 
   const PlayerState({
     this.position,
@@ -19,6 +20,7 @@ class PlayerState {
     this.queueName,
     this.queue,
     this.volume,
+    this.rate,
   });
 
   PlayerState copyWith({
@@ -28,6 +30,7 @@ class PlayerState {
     String? queueName,
     List<Audio>? queue,
     String? volume,
+    String? rate,
   }) {
     return PlayerState(
       position: position ?? this.position,
@@ -36,6 +39,7 @@ class PlayerState {
       queueName: queueName ?? this.queueName,
       queue: queue ?? this.queue,
       volume: volume ?? this.volume,
+      rate: rate ?? this.rate,
     );
   }
 
@@ -60,6 +64,9 @@ class PlayerState {
     if (volume != null) {
       result.addAll({'volume': volume});
     }
+    if (rate != null) {
+      result.addAll({'rate': rate});
+    }
 
     return result;
   }
@@ -74,6 +81,7 @@ class PlayerState {
           ? List<Audio>.from(map['queue']?.map((x) => Audio.fromMap(x)))
           : null,
       volume: map['volume'],
+      rate: map['rate'],
     );
   }
 
@@ -84,7 +92,7 @@ class PlayerState {
 
   @override
   String toString() {
-    return 'PlayerState(position: $position, duration: $duration, audio: $audio, queueName: $queueName, queue: $queue, volume: $volume)';
+    return 'PlayerState(position: $position, duration: $duration, audio: $audio, queueName: $queueName, queue: $queue, volume: $volume, rate: $rate,)';
   }
 
   @override
@@ -98,7 +106,8 @@ class PlayerState {
         other.audio == audio &&
         other.queueName == queueName &&
         listEquals(other.queue, queue) &&
-        other.volume == volume;
+        other.volume == volume &&
+        other.rate == rate;
   }
 
   @override
@@ -108,6 +117,7 @@ class PlayerState {
         audio.hashCode ^
         queueName.hashCode ^
         queue.hashCode ^
-        volume.hashCode;
+        volume.hashCode ^
+        rate.hashCode;
   }
 }

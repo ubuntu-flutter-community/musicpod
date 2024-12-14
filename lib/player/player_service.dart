@@ -465,6 +465,10 @@ class PlayerService {
         setVolume(double.tryParse(playerState.volume!) ?? 100.0);
       }
 
+      if (playerState.rate != null) {
+        setRate(double.tryParse(playerState.rate!) ?? 1.0);
+      }
+
       _estimateNext();
 
       await _setMediaControlsMetaData(audio: playerState.audio!);
@@ -818,6 +822,7 @@ class PlayerService {
           _queue.audios.length <= 100 ? _queue.audios.take(100).toList() : null,
       queueName: _queue.audios.length <= 100 ? _queue.name : null,
       volume: _volume.toString(),
+      rate: _rate.toString(),
     );
 
     await writeJsonToFile(playerState.toMap(), kPlayerStateFileName);

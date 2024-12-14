@@ -9,14 +9,14 @@ import '../common/view/theme.dart';
 import '../radio/online_art_service.dart';
 import 'player_service.dart';
 
-const rateValues = [.75, 1.0, 1.25, 1.5, 1.75, 2.0];
-
 class PlayerModel extends SafeChangeNotifier {
   PlayerModel({
     required PlayerService service,
     required OnlineArtService onlineArtService,
   })  : _playerService = service,
         _onlineArtService = onlineArtService;
+
+  static const rateValues = [.75, 1.0, 1.25, 1.5, 1.75, 2.0];
 
   final PlayerService _playerService;
   final OnlineArtService _onlineArtService;
