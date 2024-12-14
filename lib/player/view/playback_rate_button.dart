@@ -35,16 +35,14 @@ class PlaybackRateButton extends StatelessWidget with WatchItMixin {
                 : (color ?? theme.colorScheme.onSurface)),
       ),
       initialValue: rate,
-      itemBuilder: (context) {
-        return rateValues
-            .map(
-              (e) => PopupMenuItem(
-                onTap: () => setRate(e),
-                child: Text('x$e'),
-              ),
-            )
-            .toList();
-      },
+      itemBuilder: (context) => PlayerModel.rateValues
+          .map(
+            (e) => PopupMenuItem(
+              onTap: () => setRate(e),
+              child: Text('x$e'),
+            ),
+          )
+          .toList(),
     );
   }
 }
