@@ -79,6 +79,15 @@ https://hosted.weblate.org/projects/musicpod/app
 If you find any error please feel free to report it as an issue and describe it as good as you can.
 If you want to contribute code, please create an issue first.
 
+## Build
+
+- for Linux desktop builds: `sudo apt install libmpv-dev mpv`
+- [install rust](https://www.rust-lang.org/tools/install) (for some dependencies)
+- [install flutter](https://docs.flutter.dev/get-started/install)
+- required for android builds: [install android-studio](https://developer.android.com/studio)
+- required for macos builds: [install xcode](https://developer.apple.com/xcode/)
+- as a good IDE for all builds: [install vcode](https://code.visualstudio.com/)
+
 ## Testing
 
 Test mocks are generated with [Mockito](https://github.com/dart-lang/mockito). You need to run the `build_runner` command in order to re-generate mocks, in case you changed the signatures of service methods.
