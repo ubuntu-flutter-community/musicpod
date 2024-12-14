@@ -1191,5 +1191,9 @@
   "lastfmSecretEmpty": "Inserisci il segreto condiviso",
   "@lastfmSecretEmpty": {},
   "home": "Home",
-  "@home": {}
+  "@home": {},
+  "showArtistPage": "Visualizza pagina artista",
+  "@showArtistPage": {},
+  "showAlbumPage": "Visualizza pagina album",
+  "@showAlbumPage": {}
 }
