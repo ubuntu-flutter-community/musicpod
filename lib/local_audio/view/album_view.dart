@@ -36,7 +36,7 @@ class AlbumsView extends StatelessWidget with WatchItMixin {
     }
 
     if (albums!.isEmpty) {
-      return SliverFillNoSearchResultPage(
+      return SliverNoSearchResultPage(
         icon: noResultIcon,
         message: noResultMessage,
       );

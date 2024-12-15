@@ -9,6 +9,7 @@ import '../../../common/view/modals.dart';
 import '../../../common/view/ui_constants.dart';
 import '../../../extensions/build_context_x.dart';
 import '../../../l10n/l10n.dart';
+import '../../../radio/view/radio_history_list.dart';
 import '../../player_model.dart';
 import 'queue_body.dart';
 import 'queue_dialog.dart';
@@ -34,6 +35,18 @@ class QueueButton extends StatelessWidget with WatchItMixin {
       (PlayerModel m) => m.audio?.audioType == AudioType.radio,
     );
 
+    final queueOrHistory = radio
+        ? const SizedBox(
+            width: 400,
+            height: 500,
+            child: RadioHistoryList(
+              simpleList: true,
+            ),
+          )
+        : QueueBody(
+            selectedColor: theme.colorScheme.onSurface,
+          );
+
     return switch (_mode) {
       _QueueButtonMode.icon => IconButton(
           isSelected: isSelected ??
@@ -45,12 +58,22 @@ class QueueButton extends StatelessWidget with WatchItMixin {
             Iconz.playlist,
             color: color ?? theme.colorScheme.onSurface,
           ),
-          onPressed: () => onPressed(playerToTheRight, isFullScreen, context),
+          onPressed: () => onPressed(
+            playerToTheRight: playerToTheRight,
+            isFullScreen: isFullScreen,
+            context: context,
+            bottomSheetContent: queueOrHistory,
+          ),
         ),
       _QueueButtonMode.text => TextButton(
-          onPressed: () => onPressed(playerToTheRight, isFullScreen, context),
+          onPressed: () => onPressed(
+            playerToTheRight: playerToTheRight,
+            isFullScreen: isFullScreen,
+            context: context,
+            bottomSheetContent: queueOrHistory,
+          ),
           child: Text(
-            context.l10n.queue,
+            radio ? context.l10n.hearingHistory : context.l10n.queue,
             style: context.textTheme.bodyLarge?.copyWith(
               color: context.colorScheme.onSurface,
             ),
@@ -59,11 +82,12 @@ class QueueButton extends StatelessWidget with WatchItMixin {
     };
   }
 
-  void onPressed(
-    bool playerToTheRight,
-    bool? isFullScreen,
-    BuildContext context,
-  ) {
+  void onPressed({
+    required bool playerToTheRight,
+    required bool? isFullScreen,
+    required BuildContext context,
+    required Widget bottomSheetContent,
+  }) {
     if ((playerToTheRight || isFullScreen == true) && !isMobilePlatform) {
       di<AppModel>().setOrToggleQueueOverlay();
     } else {
@@ -72,7 +96,7 @@ class QueueButton extends StatelessWidget with WatchItMixin {
         isScrollControlled: true,
         showDragHandle: true,
         content: ModalMode.platformModalMode == ModalMode.bottomSheet
-            ? const QueueBody()
+            ? bottomSheetContent
             : const QueueDialog(),
         mode: ModalMode.platformModalMode,
       );

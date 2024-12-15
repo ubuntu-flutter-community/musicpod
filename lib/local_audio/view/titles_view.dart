@@ -32,7 +32,7 @@ class TitlesView extends StatelessWidget {
     }
 
     if (audios!.isEmpty) {
-      return SliverFillNoSearchResultPage(
+      return SliverNoSearchResultPage(
         icon: noResultIcon,
         message: noResultMessage,
       );

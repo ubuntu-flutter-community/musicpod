@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
+import '../../common/view/loading_grid.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
 import '../../common/view/progress.dart';
@@ -14,9 +15,14 @@ import 'podcast_card.dart';
 
 class SliverPodcastSearchResults extends StatefulWidget
     with WatchItStatefulWidgetMixin {
-  const SliverPodcastSearchResults({super.key, this.take});
+  const SliverPodcastSearchResults({
+    super.key,
+    this.take,
+    this.expand = true,
+  });
 
   final int? take;
+  final bool expand;
 
   @override
   State<SliverPodcastSearchResults> createState() =>
@@ -54,8 +60,19 @@ class _SliverPodcastSearchResultsState
     final searchResultItems =
         widget.take != null ? results?.take(widget.take!) : results;
 
+    if (!widget.expand) {
+      if (searchResultItems == null) {
+        return SliverLoadingGrid(limit: widget.take ?? 100);
+      } else if (searchResultItems.isEmpty) {
+        return const SliverNoSearchResultPage(
+          expand: false,
+        );
+      }
+    }
+
     if (searchResultItems == null || searchResultItems.isEmpty) {
-      return SliverFillNoSearchResultPage(
+      return SliverNoSearchResultPage(
+        expand: widget.expand,
         icon: loading
             ? const SizedBox.shrink()
             : searchResultItems == null

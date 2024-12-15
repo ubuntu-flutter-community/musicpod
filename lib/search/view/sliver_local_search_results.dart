@@ -66,7 +66,7 @@ class _SliverLocalSearchResultState extends State<SliverLocalSearchResult> {
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
 
     if (searchQuery == null || searchQuery.isEmpty == true) {
-      return SliverFillNoSearchResultPage(
+      return SliverNoSearchResultPage(
         icon: const AnimatedEmoji(AnimatedEmojis.drum),
         message: Text(
           context.l10n.search,
