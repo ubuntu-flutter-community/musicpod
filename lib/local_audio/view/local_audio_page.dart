@@ -100,7 +100,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                   bottom: bottomPlayerPageGap,
                 ),
                 sliver: audios != null && audios.isEmpty
-                    ? SliverFillNoSearchResultPage(
+                    ? SliverNoSearchResultPage(
                         icon: const AnimatedEmoji(AnimatedEmojis.bird),
                         message: Column(
                           mainAxisSize: MainAxisSize.min,

@@ -32,7 +32,7 @@ class ArtistsView extends StatelessWidget {
     }
 
     if (artists!.isEmpty) {
-      return SliverFillNoSearchResultPage(
+      return SliverNoSearchResultPage(
         icon: noResultIcon,
         message: noResultMessage,
       );
@@ -104,7 +104,7 @@ class AlbumArtistsView extends StatelessWidget {
     }
 
     if (albumArtists!.isEmpty) {
-      return SliverFillNoSearchResultPage(
+      return SliverNoSearchResultPage(
         icon: noResultIcon,
         message: noResultMessage,
       );

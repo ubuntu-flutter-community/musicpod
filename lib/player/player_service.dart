@@ -818,9 +818,10 @@ class PlayerService {
       audio: _audio,
       duration: _duration?.toString(),
       position: _position?.toString(),
-      queue:
-          _queue.audios.length <= 100 ? _queue.audios.take(100).toList() : null,
-      queueName: _queue.audios.length <= 100 ? _queue.name : null,
+      queue: _queue.audios.length > 100
+          ? _queue.audios.take(100).toList()
+          : _queue.audios,
+      queueName: _queue.name,
       volume: _volume.toString(),
       rate: _rate.toString(),
     );

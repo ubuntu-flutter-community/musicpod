@@ -27,7 +27,7 @@ class GenresView extends StatelessWidget {
     }
 
     if (genres!.isEmpty) {
-      return SliverFillNoSearchResultPage(
+      return SliverNoSearchResultPage(
         icon: noResultIcon,
         message: noResultMessage,
       );

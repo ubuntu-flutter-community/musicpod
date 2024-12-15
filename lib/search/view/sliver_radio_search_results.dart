@@ -46,14 +46,14 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
 
     if (radioSearchResult == null ||
         (searchQuery?.isEmpty == true && radioSearchResult.isEmpty == true)) {
-      return SliverFillNoSearchResultPage(
+      return SliverNoSearchResultPage(
         icon: const AnimatedEmoji(AnimatedEmojis.drum),
         message:
             Text('${context.l10n.search} ${searchType.localize(context.l10n)}'),
       );
     }
     if (radioSearchResult.isEmpty && !loading) {
-      return SliverFillNoSearchResultPage(
+      return SliverNoSearchResultPage(
         icon: const AnimatedEmoji(AnimatedEmojis.rabbit),
         message: Text(context.l10n.noStationFound),
       );

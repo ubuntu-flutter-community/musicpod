@@ -57,16 +57,31 @@ class NoSearchResultPage extends StatelessWidget {
   }
 }
 
-class SliverFillNoSearchResultPage extends StatelessWidget {
-  const SliverFillNoSearchResultPage({super.key, this.message, this.icon});
+class SliverNoSearchResultPage extends StatelessWidget {
+  const SliverNoSearchResultPage({
+    super.key,
+    this.message,
+    this.icon,
+    this.expand = true,
+  });
 
   final Widget? message;
   final Widget? icon;
+  final bool expand;
 
   @override
   Widget build(BuildContext context) {
-    return SliverFillRemaining(
-      hasScrollBody: false,
+    if (expand) {
+      return SliverFillRemaining(
+        hasScrollBody: false,
+        child: NoSearchResultPage(
+          icon: icon,
+          message: message,
+        ),
+      );
+    }
+
+    return SliverToBoxAdapter(
       child: NoSearchResultPage(
         icon: icon,
         message: message,
