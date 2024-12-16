@@ -1191,5 +1191,9 @@
   "listenBrainzApiKeyEmpty": "Zadajte prosím kľúč API",
   "@listenBrainzApiKeyEmpty": {},
   "home": "Domov",
-  "@home": {}
+  "@home": {},
+  "showArtistPage": "Zobraziť stránku interpreta",
+  "@showArtistPage": {},
+  "showAlbumPage": "Zobraziť stránku albumu",
+  "@showAlbumPage": {}
 }
