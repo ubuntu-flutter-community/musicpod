@@ -294,8 +294,8 @@ class Audio {
       artist: data.artist,
       title: (data.title?.isNotEmpty == true ? data.title : fileName) ?? path,
       album: data.album,
-      albumArtist:
-          data.performers.isEmpty ? data.artist : data.performers.toString(),
+      // TODO(#339): wait for fix
+      albumArtist: data.artist,
       discNumber: data.discNumber,
       discTotal: data.totalDisc,
       durationMs: data.duration?.inMilliseconds.toDouble(),

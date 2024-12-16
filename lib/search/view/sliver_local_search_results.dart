@@ -42,7 +42,7 @@ class _SliverLocalSearchResultState extends State<SliverLocalSearchResult> {
       (SearchModel m) => switch (m.searchType) {
         SearchType.localAlbum => LocalAudioView.albums,
         SearchType.localArtist => LocalAudioView.artists,
-        SearchType.localAlbumArtist => LocalAudioView.albumArtists,
+        // SearchType.localAlbumArtist => LocalAudioView.albumArtists,
         SearchType.localTitle => LocalAudioView.titles,
         SearchType.localGenreName => LocalAudioView.genres,
         _ => LocalAudioView.playlists,
