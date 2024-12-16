@@ -95,7 +95,10 @@ class LocalAudioModel extends SafeChangeNotifier {
     bool forceInit = false,
     String? directory,
   }) async {
-    _localAudioIndex = _settingsService.localAudioIndex;
+    _localAudioIndex =
+        _settingsService.localAudioIndex > LocalAudioView.values.length - 1
+            ? 0
+            : _settingsService.localAudioIndex;
     await _localAudioService.init(
       forceInit: forceInit,
       directory: directory,

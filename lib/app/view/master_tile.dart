@@ -36,18 +36,13 @@ class MasterTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final yaruMasterTile = Padding(
-      padding: pageId == kLocalAudioPageId
-          ? const EdgeInsets.only(top: 5)
-          : EdgeInsets.zero,
-      child: YaruMasterTile(
-        title: title,
-        onTap: onTap,
-        selected: selected,
-        leading: leading,
-        subtitle: subtitle,
-        trailing: trailing,
-      ),
+    final yaruMasterTile = YaruMasterTile(
+      title: title,
+      onTap: onTap,
+      selected: selected,
+      leading: leading,
+      subtitle: subtitle,
+      trailing: trailing,
     );
 
     final Widget tile;
