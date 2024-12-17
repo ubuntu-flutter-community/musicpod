@@ -1190,5 +1190,9 @@
   "regionWesternsahara": "Mendebaldeko Sahara",
   "@regionWesternsahara": {},
   "home": "Etxea",
-  "@home": {}
+  "@home": {},
+  "showArtistPage": "Erakutsi artistaren orrialdea",
+  "@showArtistPage": {},
+  "showAlbumPage": "Erakutsi albumaren orrialdea",
+  "@showAlbumPage": {}
 }

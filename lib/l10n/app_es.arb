@@ -1189,5 +1189,11 @@
   "listenBrainzApiKey": "Clave API de ListenBrainz",
   "@listenBrainzApiKey": {},
   "listenBrainzApiKeyEmpty": "Por favor, introduzca una clave API",
-  "@listenBrainzApiKeyEmpty": {}
+  "@listenBrainzApiKeyEmpty": {},
+  "showAlbumPage": "Ver página del álbum",
+  "@showAlbumPage": {},
+  "showArtistPage": "Mostrar página del artista",
+  "@showArtistPage": {},
+  "home": "Inicio",
+  "@home": {}
 }
