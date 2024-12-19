@@ -617,17 +617,6 @@
     "listenBrainzApiKeyEmpty"
   ],
 
-  "es": [
-    "home",
-    "showArtistPage",
-    "showAlbumPage"
-  ],
-
-  "eu": [
-    "showArtistPage",
-    "showAlbumPage"
-  ],
-
   "fr": [
     "home",
     "local",
@@ -659,11 +648,6 @@
     "listenBrainzApiKey",
     "listenBrainzApiKeyEmpty",
     "regionNone"
-  ],
-
-  "it": [
-    "showArtistPage",
-    "showAlbumPage"
   ],
 
   "nl": [
@@ -2603,16 +2587,6 @@
     "regionYemen",
     "regionZambia",
     "regionZimbabwe"
-  ],
-
-  "sk": [
-    "showArtistPage",
-    "showAlbumPage"
-  ],
-
-  "sv": [
-    "showArtistPage",
-    "showAlbumPage"
   ],
 
   "tr": [

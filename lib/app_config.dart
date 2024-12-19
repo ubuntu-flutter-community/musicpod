@@ -9,6 +9,8 @@ bool allowDiscordRPC = (kDebugMode && !Platform.isAndroid) ||
     Platform.isWindows ||
     bool.tryParse(const String.fromEnvironment('ALLOW_DISCORD_RPC')) == true;
 
+bool get useSystemTheme => !Platform.isLinux;
+
 bool get yaruStyled => Platform.isLinux;
 
 bool get appleStyled => Platform.isMacOS || Platform.isIOS;

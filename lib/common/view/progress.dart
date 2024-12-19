@@ -85,7 +85,6 @@ class LinearProgress extends StatelessWidget {
     return yaruStyled
         ? YaruLinearProgressIndicator(
             value: value,
-            minHeight: trackHeight,
             strokeWidth: trackHeight,
             color: color,
           )

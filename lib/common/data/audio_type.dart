@@ -15,12 +15,24 @@ enum AudioType {
       };
 
   IconData get iconData => switch (this) {
-        local => Iconz.localAudio,
+        local => Iconz.musicNote,
         radio => Iconz.radio,
         podcast => Iconz.podcast,
       };
 
   IconData get selectedIconData => switch (this) {
+        local => Iconz.musicNote,
+        radio => Iconz.radioFilled,
+        podcast => Iconz.podcastFilled,
+      };
+
+  IconData get iconDataMainPage => switch (this) {
+        local => Iconz.localAudio,
+        radio => Iconz.radio,
+        podcast => Iconz.podcast,
+      };
+
+  IconData get selectedIconDataMainPage => switch (this) {
         local => Iconz.localAudioFilled,
         radio => Iconz.radioFilled,
         podcast => Iconz.podcastFilled,

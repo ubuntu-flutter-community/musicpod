@@ -56,6 +56,14 @@ class RadioService {
     return hosts;
   }
 
+  RadioBrowserListResponse<Station>? _response;
+  String? _uuid;
+  String? _country;
+  String? _name;
+  String? _state;
+  String? _tag;
+  String? _language;
+  int? _limit;
   Future<List<Station>?> search({
     String? uuid,
     String? country,
@@ -72,36 +80,55 @@ class RadioService {
       }
     }
 
-    RadioBrowserListResponse<Station>? response;
+    if (_response?.items != null &&
+        _uuid == uuid &&
+        _country == country &&
+        _name == name &&
+        _state == state &&
+        _tag == tag &&
+        _language == language &&
+        _limit == limit) {
+      return _response?.items;
+    }
+
     final parameters = InputParameters(
       hidebroken: true,
       order: 'stationcount',
-      limit: limit,
+      limit: limit > 300 ? 300 : limit,
     );
     try {
       if (uuid != null) {
-        response = await _radioBrowserApi!.getStationsByUUID(uuids: [uuid]);
+        _response = await _radioBrowserApi!.getStationsByUUID(uuids: [uuid]);
       }
       if (name?.isEmpty == false) {
-        response = await _radioBrowserApi!
+        _response = await _radioBrowserApi!
             .getStationsByName(name: name!, parameters: parameters);
       } else if (country?.isEmpty == false) {
-        response = await _radioBrowserApi!
+        _response = await _radioBrowserApi!
             .getStationsByCountry(country: country!, parameters: parameters);
       } else if (tag?.isEmpty == false) {
-        response = await _radioBrowserApi!
+        _response = await _radioBrowserApi!
             .getStationsByTag(tag: tag!, parameters: parameters);
       } else if (state?.isEmpty == false) {
-        response = await _radioBrowserApi!
+        _response = await _radioBrowserApi!
             .getStationsByState(state: state!, parameters: parameters);
       } else if (language?.isEmpty == false) {
-        response = await _radioBrowserApi!
+        _response = await _radioBrowserApi!
             .getStationsByLanguage(language: language!, parameters: parameters);
       }
     } on Exception catch (e) {
       printMessageInDebugMode(e);
     }
-    return response?.items ?? [];
+
+    _uuid = uuid;
+    _country = country;
+    _name = name;
+    _state = state;
+    _tag = tag;
+    _language = language;
+    _limit = limit;
+
+    return _response?.items ?? [];
   }
 
   List<Tag>? _tags;
