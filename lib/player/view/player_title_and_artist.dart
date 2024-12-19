@@ -307,7 +307,9 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
   }) {
     if (audio.url == null ||
         audio.uuid == null ||
-        libraryModel.selectedPageId == audio.uuid) return;
+        libraryModel.selectedPageId == audio.uuid) {
+      return;
+    }
     libraryModel.push(
       builder: (_) => StationPage(station: audio),
       pageId: audio.uuid!,

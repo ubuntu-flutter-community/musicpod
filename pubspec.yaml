@@ -6,7 +6,7 @@ publish_to: "none"
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.24.5"
+  flutter: ">=3.27.1"
 
 dependencies:
   animated_emoji: ^3.1.0
@@ -83,7 +83,10 @@ dependencies:
   win32: ^5.5.4
   window_manager: ^0.4.2
   xdg_directories: ^1.0.4
-  yaru: ^6.0.0
+  yaru:
+    git:
+      url: https://github.com/ubuntu/yaru.dart
+      ref: 4a943961ad6c1d382b1bfc3bc0e67bb9f6440089
   yaru_window: ^0.2.1+1
   yaru_window_linux: ^0.2.0+1
 

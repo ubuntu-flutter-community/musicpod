@@ -130,7 +130,7 @@ class _AudioCard extends StatelessWidget {
         onTap: onTap,
         onHover: onHover,
         borderRadius: BorderRadius.circular(12),
-        hoverColor: theme.colorScheme.onSurface.withOpacity(0.1),
+        hoverColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
         child: Container(
           margin: const EdgeInsets.all(4),
           decoration: BoxDecoration(
@@ -140,8 +140,8 @@ class _AudioCard extends StatelessWidget {
                 ? Border.all(
                     width: 1,
                     color: light
-                        ? theme.colorScheme.onSurface.withOpacity(0.05)
-                        : Colors.white.withOpacity(0.005),
+                        ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
+                        : Colors.white.withValues(alpha: 0.005),
                   )
                 : null,
           ),

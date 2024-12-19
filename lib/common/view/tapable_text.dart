@@ -25,7 +25,8 @@ class TapAbleText extends StatelessWidget {
     final theme = context.theme;
 
     final inkWell = InkWell(
-      hoverColor: (style?.color ?? theme.colorScheme.primary).withOpacity(0.3),
+      hoverColor:
+          (style?.color ?? theme.colorScheme.primary).withValues(alpha: 0.3),
       borderRadius: BorderRadius.circular(4),
       onTap: onTap == null ? null : () => onTap!(),
       child: Text(

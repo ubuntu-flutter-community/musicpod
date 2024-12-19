@@ -282,6 +282,11 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
     printMessageInDebugMode('didStopUserGesture');
   }
 
+  @override
+  void didChangeTop(Route topRoute, Route? previousTopRoute) {
+    printMessageInDebugMode('didChangeTop');
+  }
+
   // Note: Navigator.initState ensures assert(observer.navigator == null);
   // Afterwards the Navigator itself!!! sets the navigator of its observers...
   @override

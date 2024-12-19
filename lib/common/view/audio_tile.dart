@@ -92,7 +92,7 @@ class _AudioTileState extends State<AudioTile> {
       selected: widget.selected,
       selectedColor:
           widget.isPlayerPlaying ? selectedColor : theme.colorScheme.onSurface,
-      selectedTileColor: theme.colorScheme.onSurface.withOpacity(0.05),
+      selectedTileColor: theme.colorScheme.onSurface.withValues(alpha: 0.05),
       contentPadding: audioTilePadding.copyWith(
         left: widget.audioPageType == AudioPageType.album ? 10 : null,
       ),

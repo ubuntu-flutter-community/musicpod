@@ -74,7 +74,7 @@ class _QueueBodyState extends State<QueueBody> {
               ),
               buildDefaultDragHandles: false,
               proxyDecorator: (child, index, animation) => Material(
-                color: context.colorScheme.onSurface.withOpacity(0.1),
+                color: context.colorScheme.onSurface.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(6),
                 child: child,
               ),
@@ -154,7 +154,7 @@ class _QueueTileState extends State<_QueueTile> {
                     audios: widget.queue,
                     index: widget.queue.indexOf(widget.audio),
                   ),
-            hoverColor: context.colorScheme.onSurface.withOpacity(0.3),
+            hoverColor: context.colorScheme.onSurface.withValues(alpha: 0.3),
             leading: Visibility(
               visible: widget.selected,
               child: const Text('>'),

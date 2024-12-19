@@ -23,8 +23,8 @@ class FallBackHeaderImage extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            baseColor.scale(lightness: 0.1).withOpacity(0.4),
-            baseColor.scale(lightness: 0.6).withOpacity(0.4),
+            baseColor.scale(lightness: 0.1).withValues(alpha: 0.4),
+            baseColor.scale(lightness: 0.6).withValues(alpha: 0.4),
           ],
         ),
       ),

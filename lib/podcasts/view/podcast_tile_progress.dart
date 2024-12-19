@@ -38,8 +38,8 @@ class PodcastTileProgress extends StatelessWidget with WatchItMixin {
       child: Progress(
         padding: EdgeInsets.zero,
         color: selected
-            ? theme.colorScheme.primary.withOpacity(0.9)
-            : theme.colorScheme.primary.withOpacity(0.4),
+            ? theme.colorScheme.primary.withValues(alpha: 0.9)
+            : theme.colorScheme.primary.withValues(alpha: 0.4),
         value: sliderActive
             ? (pos.inSeconds.toDouble() / dur.inSeconds.toDouble())
             : 0,
