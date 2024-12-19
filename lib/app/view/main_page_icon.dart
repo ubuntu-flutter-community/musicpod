@@ -46,7 +46,11 @@ class MainPageIcon extends StatelessWidget with WatchItMixin {
 
     return Padding(
       padding: mainPageIconPadding,
-      child: Icon(selected ? audioType.selectedIconData : audioType.iconData),
+      child: Icon(
+        selected
+            ? audioType.selectedIconDataMainPage
+            : audioType.iconDataMainPage,
+      ),
     );
   }
 }

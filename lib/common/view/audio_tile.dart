@@ -109,6 +109,7 @@ class _AudioTileState extends State<AudioTile> {
       },
       title: Padding(
         padding: const EdgeInsets.only(right: kLargestSpace),
+        // TODO: make playlists audiotype agnostic and stop forwarding callbacks once and for all
         child: widget.onTitleTap == null
             ? Text(
                 widget.audio.title ?? l10n.unknown,

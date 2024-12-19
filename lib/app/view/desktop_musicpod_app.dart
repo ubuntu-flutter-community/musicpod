@@ -3,7 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../constants.dart';
 import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';
@@ -56,15 +58,22 @@ class _DesktopMusicPodAppState extends State<DesktopMusicPodApp> {
   @override
   Widget build(BuildContext context) {
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
-    final phoenix = phoenixTheme(color: widget.accent ?? Colors.greenAccent);
+    final color = widget.accent ?? const Color(0xFFed3c63);
+    final phoenix = phoenixTheme(color: color);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.values[themeIndex],
       highContrastTheme: widget.highContrastTheme,
       highContrastDarkTheme: widget.highContrastDarkTheme,
-      theme: widget.lightTheme ?? phoenix.lightTheme,
-      darkTheme: widget.darkTheme ?? phoenix.darkTheme,
+      theme: widget.lightTheme ??
+          (yaruStyled
+              ? createYaruLightTheme(primaryColor: color)
+              : phoenix.lightTheme),
+      darkTheme: widget.darkTheme ??
+          (yaruStyled
+              ? createYaruDarkTheme(primaryColor: color)
+              : phoenix.darkTheme),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => kAppTitle,

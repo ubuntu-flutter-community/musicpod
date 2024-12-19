@@ -7,7 +7,7 @@ import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../library/library_model.dart';
-import 'radio_fall_back_icon.dart';
+import '../../common/view/audio_fall_back_icon.dart';
 import 'station_page.dart';
 
 class StationCard extends StatelessWidget {
@@ -42,10 +42,14 @@ class StationCard extends StatelessWidget {
               ),
       image: SizedBox.expand(
         child: SafeNetworkImage(
-          fallBackIcon: RadioFallBackIcon(
-            station: station,
+          fallBackIcon: AudioFallBackIcon(
+            audio: station,
+            iconSize: 70,
           ),
-          errorIcon: RadioFallBackIcon(station: station),
+          errorIcon: AudioFallBackIcon(
+            audio: station,
+            iconSize: 70,
+          ),
           url: station?.imageUrl,
           fit: BoxFit.scaleDown,
           height: audioCardDimension,

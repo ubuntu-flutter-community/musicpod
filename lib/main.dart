@@ -19,7 +19,7 @@ Future<void> main(List<String> args) async {
       ..setMinimumSize(const Size(500, 700))
       ..setSize(const Size(950, 820));
   }
-  if (!yaruStyled) {
+  if (useSystemTheme) {
     SystemTheme.fallbackColor = const Color(0xFFed3c63);
     await SystemTheme.accentColor.load();
   }
