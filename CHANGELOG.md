@@ -1,5 +1,36 @@
 # Changelog
 
+## [2.6.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.5.0...v2.6.0) (2024-12-19)
+
+
+### Features
+
+* add mobile home page ([#1079](https://github.com/ubuntu-flutter-community/musicpod/issues/1079)) ([651d43b](https://github.com/ubuntu-flutter-community/musicpod/commit/651d43bda35bf0a97098db204c8efc892991ccbd))
+* add support for album artists metadata ([#1086](https://github.com/ubuntu-flutter-community/musicpod/issues/1086)) ([c385852](https://github.com/ubuntu-flutter-community/musicpod/commit/c3858524293119b27a14a3213d8a3c168532f5ee)), closes [#339](https://github.com/ubuntu-flutter-community/musicpod/issues/339)
+* better mobile video full screen top controls, queue color and audio bottom sheet ([#1093](https://github.com/ubuntu-flutter-community/musicpod/issues/1093)) ([ba858d6](https://github.com/ubuntu-flutter-community/musicpod/commit/ba858d6713adfd0979856e63917e9de73a05d9d2))
+* improve mobile home ([#1091](https://github.com/ubuntu-flutter-community/musicpod/issues/1091)) ([eeca186](https://github.com/ubuntu-flutter-community/musicpod/commit/eeca18673672b8c017d80d9a60d980068b3110e6))
+* improve radio search and update yaru ([#1101](https://github.com/ubuntu-flutter-community/musicpod/issues/1101)) ([837a22b](https://github.com/ubuntu-flutter-community/musicpod/commit/837a22bd484e11f44667cf7cd003d2cfffad32fc))
+* rework queue ([#1076](https://github.com/ubuntu-flutter-community/musicpod/issues/1076)) ([6c74a2a](https://github.com/ubuntu-flutter-community/musicpod/commit/6c74a2a81c7b4186da76ab085e323cea31a3d371))
+* rework the bottom bar for mobile ([#1073](https://github.com/ubuntu-flutter-community/musicpod/issues/1073)) ([0e2a40c](https://github.com/ubuntu-flutter-community/musicpod/commit/0e2a40cf6224916619edecefdf6fd087fbc62b4f))
+* Translated using Weblate (Swedish) ([#1070](https://github.com/ubuntu-flutter-community/musicpod/issues/1070)) ([09994f8](https://github.com/ubuntu-flutter-community/musicpod/commit/09994f811ceb3b54fb08c8e4305edb1d576e209a))
+* Translations update from Hosted Weblate ([#1075](https://github.com/ubuntu-flutter-community/musicpod/issues/1075)) ([cf7bb4f](https://github.com/ubuntu-flutter-community/musicpod/commit/cf7bb4f96679d3638d4c1f3a9bc929c6fbbe8530))
+* Translations update from Hosted Weblate ([#1083](https://github.com/ubuntu-flutter-community/musicpod/issues/1083)) ([1be2d35](https://github.com/ubuntu-flutter-community/musicpod/commit/1be2d35cd71317a03422c3ac640c2bf0a7daaaea))
+* Translations update from Hosted Weblate ([#1084](https://github.com/ubuntu-flutter-community/musicpod/issues/1084)) ([52e9c5f](https://github.com/ubuntu-flutter-community/musicpod/commit/52e9c5f59dd671bae0385611f49a55a129d0c70a))
+* Translations update from Hosted Weblate ([#1098](https://github.com/ubuntu-flutter-community/musicpod/issues/1098)) ([c9c5099](https://github.com/ubuntu-flutter-community/musicpod/commit/c9c5099c5035ae692c462fef6bba6badb1bd9b4f))
+* Translations update from Hosted Weblate ([#1100](https://github.com/ubuntu-flutter-community/musicpod/issues/1100)) ([9f956ba](https://github.com/ubuntu-flutter-community/musicpod/commit/9f956baa5454f278baedc2fca918794b070dbac2))
+* use real shuffle ([#1089](https://github.com/ubuntu-flutter-community/musicpod/issues/1089)) ([f1d51e0](https://github.com/ubuntu-flutter-community/musicpod/commit/f1d51e017418488ae89da40f3cdbb6f52d119790)), closes [#1088](https://github.com/ubuntu-flutter-community/musicpod/issues/1088)
+
+
+### Bug Fixes
+
+* don't use BuildContext in non-UI class DownloadModel ([#1074](https://github.com/ubuntu-flutter-community/musicpod/issues/1074)) ([ba9fe1a](https://github.com/ubuntu-flutter-community/musicpod/commit/ba9fe1a06b56453e96d310f7604f9bc5b9cf396c))
+* Make local music genre menu case insensitive ([#1082](https://github.com/ubuntu-flutter-community/musicpod/issues/1082)) ([726c3c6](https://github.com/ubuntu-flutter-community/musicpod/commit/726c3c6fda13aef2bc0e7a0d889add871aaba421)), closes [#1081](https://github.com/ubuntu-flutter-community/musicpod/issues/1081)
+* mobile debug and full height player not full height on mobile ([#1072](https://github.com/ubuntu-flutter-community/musicpod/issues/1072)) ([474ab9c](https://github.com/ubuntu-flutter-community/musicpod/commit/474ab9c4c8b5c62cf67adce549cfe308aab56c28))
+* mobile home and queue ([#1096](https://github.com/ubuntu-flutter-community/musicpod/issues/1096)) ([f90d11c](https://github.com/ubuntu-flutter-community/musicpod/commit/f90d11c55d89e7e0128acaee923376cdfb0ed9d3))
+* Playback Speed Setting Not Retained Between Sessions ([#1094](https://github.com/ubuntu-flutter-community/musicpod/issues/1094)) ([9c54130](https://github.com/ubuntu-flutter-community/musicpod/commit/9c54130597cfe70f2bf4d5a520f480cba5e656ea)), closes [#1092](https://github.com/ubuntu-flutter-community/musicpod/issues/1092)
+* remove build context and snackbars from podcast model ([#1085](https://github.com/ubuntu-flutter-community/musicpod/issues/1085)) ([e27611d](https://github.com/ubuntu-flutter-community/musicpod/commit/e27611d830ff8a2d4e11ca45698bfa69b6461f40))
+* show radio history list on queue overlay for radio ([#1077](https://github.com/ubuntu-flutter-community/musicpod/issues/1077)) ([42beb39](https://github.com/ubuntu-flutter-community/musicpod/commit/42beb390e91f1a278b8dbd3aae12f836c216be76))
+
 ## [2.5.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.4.0...v2.5.0) (2024-11-28)
 
 
