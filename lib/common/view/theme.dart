@@ -52,7 +52,7 @@ IconButtonThemeData iconButtonTheme(ThemeData? data) {
       ),
       backgroundColor: WidgetStateProperty.resolveWith(
         (s) => s.contains(WidgetState.selected)
-            ? data.colorScheme.onSurface.withOpacity(0.1)
+            ? data.colorScheme.onSurface.withValues(alpha: 0.1)
             : Colors.transparent,
       ),
     ),
@@ -64,7 +64,7 @@ const yaruFixDarkDividerColor = Color.fromARGB(19, 255, 255, 255);
 Color getPlayerBg(Color? surfaceTintColor, Color fallbackColor) {
   if (surfaceTintColor != null) {
     return Color.alphaBlend(
-      surfaceTintColor.withOpacity(0.15),
+      surfaceTintColor.withValues(alpha: 0.15),
       fallbackColor,
     );
   } else {

@@ -518,7 +518,9 @@ class PlayerService {
   Future<void> safeLastPosition() async {
     if (_audio?.audioType == AudioType.radio ||
         _audio?.url == null ||
-        _position == null) return;
+        _position == null) {
+      return;
+    }
     await addLastPosition(_audio!.url!, _position!);
   }
 

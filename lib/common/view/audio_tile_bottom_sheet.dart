@@ -287,7 +287,7 @@ class _Button extends StatelessWidget {
         color: context.colorScheme.onSurface,
         style: IconButton.styleFrom(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          backgroundColor: context.colorScheme.onSurface.withOpacity(0.1),
+          backgroundColor: context.colorScheme.onSurface.withValues(alpha: 0.1),
         ),
         onPressed: onPressed,
         icon: icon,

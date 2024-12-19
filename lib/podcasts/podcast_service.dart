@@ -113,7 +113,9 @@ class PodcastService {
           ).then((audios) {
             if (firstOld.year != null &&
                     audios.firstOrNull?.year == firstOld.year ||
-                audios.isEmpty) return;
+                audios.isEmpty) {
+              return;
+            }
 
             _libraryService.updatePodcast(old.key, audios);
             if (updateMessage != null) {

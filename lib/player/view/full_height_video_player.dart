@@ -37,9 +37,9 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
         : '${audio?.title == null ? '' : '${audio!.title}'} - ${audio?.album == null ? '' : '${audio!.album}'} - ${audio?.artist == null ? '' : '${audio!.artist}'}';
     final mediaKitTheme = MaterialVideoControlsThemeData(
       seekBarThumbColor: baseColor,
-      seekBarColor: baseColor.withOpacity(0.3),
-      seekBarPositionColor: baseColor.withOpacity(0.9),
-      seekBarBufferColor: baseColor.withOpacity(0.6),
+      seekBarColor: baseColor.withValues(alpha: 0.3),
+      seekBarPositionColor: baseColor.withValues(alpha: 0.9),
+      seekBarBufferColor: baseColor.withValues(alpha: 0.6),
       buttonBarButtonColor: baseColor,
       controlsHoverDuration: const Duration(seconds: 10),
       seekGesture: true,
@@ -50,7 +50,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
           child: PlayerMainControls(
             active: active,
             iconColor: baseColor,
-            avatarColor: baseColor.withOpacity(0.1),
+            avatarColor: baseColor.withValues(alpha: 0.1),
           ),
         ),
       ],

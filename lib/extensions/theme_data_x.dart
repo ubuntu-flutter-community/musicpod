@@ -13,7 +13,7 @@ extension ThemeDataX on ThemeData {
         letterSpacing: 0,
         leadingDistribution: TextLeadingDistribution.proportional,
         fontSize: 25,
-        color: colorScheme.onSurface.withOpacity(0.9),
+        color: colorScheme.onSurface.withValues(alpha: 0.9),
       );
 
   TextStyle? get pageHeaderDescription =>

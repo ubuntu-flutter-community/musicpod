@@ -71,8 +71,8 @@ class PlaylistsView extends StatelessWidget {
                     : id == kLikedAudiosPageId
                         ? Container(
                             decoration: BoxDecoration(
-                              color:
-                                  context.colorScheme.primary.withOpacity(0.3),
+                              color: context.colorScheme.primary
+                                  .withValues(alpha: 0.3),
                               shape: BoxShape.circle,
                             ),
                             child: Icon(Iconz.heart),

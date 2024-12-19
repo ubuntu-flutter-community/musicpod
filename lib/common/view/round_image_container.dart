@@ -22,7 +22,7 @@ class RoundImageContainer extends StatelessWidget {
       offset: const Offset(0, 0),
       spreadRadius: 1,
       blurRadius: 1,
-      color: theme.shadowColor.withOpacity(0.4),
+      color: theme.shadowColor.withValues(alpha: 0.4),
     );
 
     if (images.length == 1) {
@@ -86,7 +86,7 @@ class ArtistVignette extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               offset: const Offset(0, 1),
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
               blurRadius: 3,
               spreadRadius: 0.1,
             ),

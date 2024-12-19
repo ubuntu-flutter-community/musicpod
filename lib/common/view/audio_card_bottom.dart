@@ -55,7 +55,8 @@ class AudioCardBottom extends StatelessWidget {
                   text ?? '',
                   style: style ??
                       theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.9),
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.9),
                       ),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
