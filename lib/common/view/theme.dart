@@ -284,7 +284,7 @@ double get audioCardDimension =>
 
 double get bottomPlayerDefaultHeight => isMobilePlatform ? 76.0 : 90.0;
 
-double get navigationBarHeight => bottomPlayerDefaultHeight - 25;
+double get navigationBarHeight => bottomPlayerDefaultHeight;
 
 double? get bottomPlayerPageGap => isMobilePlatform
     ? bottomPlayerDefaultHeight + navigationBarHeight + kLargestSpace

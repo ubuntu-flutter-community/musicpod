@@ -20,7 +20,8 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
     return SizedBox(
       height: navigationBarHeight,
       child: Padding(
-        padding: const EdgeInsets.only(top: kMediumSpace),
+        padding:
+            const EdgeInsets.only(bottom: kLargestSpace, top: kSmallestSpace),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
