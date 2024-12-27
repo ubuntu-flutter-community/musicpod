@@ -13,7 +13,7 @@ if (keystorePropertiesFile.exists()) {
 
 
 android {
-    namespace = "org.feichtmeier.musicpod"
+    namespace = "org.feichtmeier.apps.musicpod"
     compileSdk = flutter.compileSdkVersion
     ndkVersion "27.0.12077973"
 
@@ -27,7 +27,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "org.feichtmeier.musicpod"
+        applicationId = "org.feichtmeier.apps.musicpod"
         minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

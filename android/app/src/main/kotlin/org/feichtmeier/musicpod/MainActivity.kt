@@ -1,4 +1,4 @@
-package org.feichtmeier.musicpod
+package org.feichtmeier.apps.musicpod
 
 import io.flutter.embedding.android.FlutterActivity
 
