@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.7.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.6.0...v2.7.0) (2025-01-03)
+
+
+### Features
+
+* Translated using Weblate (French) ([#1105](https://github.com/ubuntu-flutter-community/musicpod/issues/1105)) ([8a3a328](https://github.com/ubuntu-flutter-community/musicpod/commit/8a3a328959a5bd49cd2f511a69ea69656b881839))
+* Translated using Weblate (German) ([#1109](https://github.com/ubuntu-flutter-community/musicpod/issues/1109)) ([b66bdf6](https://github.com/ubuntu-flutter-community/musicpod/commit/b66bdf627b7300029a2eb127bdcf37dede16e017))
+
 ## [2.6.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.5.0...v2.6.0) (2024-12-19)
 
 
