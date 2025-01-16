@@ -713,5 +713,11 @@
   "regionArgentina": "Аргентина",
   "@regionArgentina": {},
   "regionArmenia": "Армения",
-  "@regionArmenia": {}
+  "@regionArmenia": {},
+  "showArtistPage": "Страница исполнителя",
+  "@showArtistPage": {},
+  "showAlbumPage": "Страница альбома",
+  "@showAlbumPage": {},
+  "home": "Главная",
+  "@home": {}
 }
