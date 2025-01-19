@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/data/podcast_genre.dart';
 import '../../common/view/country_auto_complete.dart';
@@ -34,6 +35,7 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
         SearchType.radioTag => const TagAutoCompleteWithSuffix(),
         SearchType.radioLanguage => const LanguageAutoCompleteWithSuffix(),
         _ => SearchInput(
+            autoFocus: !isMobilePlatform,
             text: searchQuery,
             hintText: context.l10n.search,
             onChanged: (v) async {

@@ -10,11 +10,18 @@ import 'icons.dart';
 import 'theme.dart';
 
 class SearchButton extends StatelessWidget {
-  const SearchButton({super.key, this.onPressed, this.active, this.icon});
+  const SearchButton({
+    super.key,
+    this.onPressed,
+    this.active,
+    this.icon,
+    this.iconColor,
+  });
 
   final void Function()? onPressed;
   final bool? active;
   final Widget? icon;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +32,11 @@ class SearchButton extends StatelessWidget {
         ? YaruSearchButton(
             searchActive: active,
             onPressed: onTap,
-            icon: icon,
+            icon: icon ??
+                Icon(
+                  YaruIcons.search,
+                  color: iconColor,
+                ),
             selectedIcon: icon,
           )
         : IconButton(
@@ -34,13 +45,14 @@ class SearchButton extends StatelessWidget {
             selectedIcon: icon ??
                 Icon(
                   Iconz.search,
-                  color: context.theme.colorScheme.primary,
+                  color: iconColor ?? context.theme.colorScheme.primary,
                   size: iconSize,
                 ),
             icon: icon ??
                 Icon(
                   Iconz.search,
                   size: iconSize,
+                  color: iconColor,
                 ),
           );
   }

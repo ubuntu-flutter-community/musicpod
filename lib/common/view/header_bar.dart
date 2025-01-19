@@ -67,13 +67,7 @@ class HeaderBar extends StatelessWidget
     }
 
     if (isMobilePlatform) {
-      final fullWindowMode =
-          watchPropertyValue((AppModel m) => m.fullWindowMode) == true;
       return AppBar(
-        systemOverlayStyle: systemOverlayStyle(
-          theme: context.theme,
-          fullWindowMode: fullWindowMode,
-        ),
         backgroundColor: backgroundColor,
         titleSpacing: titleSpacing,
         centerTitle: true,

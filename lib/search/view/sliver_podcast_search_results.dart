@@ -18,11 +18,9 @@ class SliverPodcastSearchResults extends StatefulWidget
   const SliverPodcastSearchResults({
     super.key,
     this.take,
-    this.expand = true,
   });
 
   final int? take;
-  final bool expand;
 
   @override
   State<SliverPodcastSearchResults> createState() =>
@@ -56,6 +54,80 @@ class _SliverPodcastSearchResultsState
 
     final results = watchPropertyValue(
       (SearchModel m) => m.podcastSearchResult?.items,
+    );
+    final searchResultItems =
+        widget.take != null ? results?.take(widget.take!) : results;
+
+    if (searchResultItems == null || searchResultItems.isEmpty) {
+      return SliverNoSearchResultPage(
+        icon: loading
+            ? const SizedBox.shrink()
+            : searchResultItems == null
+                ? const AnimatedEmoji(AnimatedEmojis.drum)
+                : const AnimatedEmoji(AnimatedEmojis.babyChick),
+        message: loading
+            ? const Progress()
+            : Text(
+                searchResultItems == null
+                    ? context.l10n.search
+                    : context.l10n.noPodcastFound,
+              ),
+      );
+    }
+
+    return SliverGrid.builder(
+      itemCount: searchResultItems.length,
+      gridDelegate: audioCardGridDelegate,
+      itemBuilder: (context, index) => PodcastCard(
+        podcastItem: searchResultItems.elementAt(index),
+      ),
+    );
+  }
+}
+
+class SliverPodcastSearchCountryChartsResults extends StatefulWidget
+    with WatchItStatefulWidgetMixin {
+  const SliverPodcastSearchCountryChartsResults({
+    super.key,
+    this.take,
+    this.expand = true,
+  });
+
+  final int? take;
+  final bool expand;
+
+  @override
+  State<SliverPodcastSearchCountryChartsResults> createState() =>
+      _SliverPodcastSearchCountryChartsResultsState();
+}
+
+class _SliverPodcastSearchCountryChartsResultsState
+    extends State<SliverPodcastSearchCountryChartsResults> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    di<PodcastModel>()
+        .init(
+          updateMessage: context.l10n.newEpisodeAvailable,
+        )
+        .then((_) => di<SearchModel>().fetchPodcastChartsPeak());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
+
+    if (!isOnline) {
+      return const SliverFillRemaining(
+        hasScrollBody: false,
+        child: OfflineBody(),
+      );
+    }
+
+    final loading = watchPropertyValue((SearchModel m) => m.loading);
+
+    final results = watchPropertyValue(
+      (SearchModel m) => m.podcastChartsPeak?.items,
     );
     final searchResultItems =
         widget.take != null ? results?.take(widget.take!) : results;
