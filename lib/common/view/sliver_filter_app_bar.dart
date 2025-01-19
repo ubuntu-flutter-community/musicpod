@@ -8,11 +8,13 @@ class SliverFilterAppBar extends StatelessWidget {
     this.onStretchTrigger,
     required this.title,
     required this.padding,
+    this.actions,
   });
 
   final Future<void> Function()? onStretchTrigger;
   final Widget title;
   final EdgeInsets padding;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class SliverFilterAppBar extends StatelessWidget {
         stretch: true,
         title: title,
         onStretchTrigger: onStretchTrigger,
+        actions: actions ?? [Container()],
       ),
     );
   }

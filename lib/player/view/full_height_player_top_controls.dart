@@ -66,6 +66,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
         children: [
           if (playerPosition == PlayerPosition.fullWindow)
             SearchButton(
+              iconColor: iconColor,
               onPressed: () async {
                 await onFullHeightButtonPressed();
                 di<SearchModel>()

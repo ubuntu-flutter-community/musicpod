@@ -83,7 +83,7 @@ class HomePage extends StatelessWidget with WatchItMixin {
               ),
               SliverPadding(
                 padding: padding,
-                sliver: const SliverPodcastSearchResults(
+                sliver: const SliverPodcastSearchCountryChartsResults(
                   expand: false,
                   take: 3,
                 ),

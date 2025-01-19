@@ -1,12 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
-import 'ui_constants.dart';
 import 'icons.dart';
+import 'ui_constants.dart';
 
 ThemeData? yaruDarkWithTweaks(YaruThemeData yaru) {
   return yaru.darkTheme?.copyWith(
@@ -308,29 +307,6 @@ NavigationBarThemeData navigationBarTheme({required ThemeData theme}) =>
         ),
       ),
     );
-
-SystemUiOverlayStyle systemOverlayStyle({
-  required ThemeData theme,
-  required bool fullWindowMode,
-}) {
-  return theme.colorScheme.isLight
-      ? SystemUiOverlayStyle.dark.copyWith(
-          systemNavigationBarColor:
-              (fullWindowMode ? Colors.transparent : theme.cardColor),
-          statusBarColor: (fullWindowMode
-              ? Colors.transparent
-              : theme.scaffoldBackgroundColor),
-          statusBarBrightness: theme.brightness,
-        )
-      : SystemUiOverlayStyle.light.copyWith(
-          systemNavigationBarColor:
-              (fullWindowMode ? Colors.transparent : theme.cardColor),
-          statusBarColor: (fullWindowMode
-              ? Colors.transparent
-              : theme.scaffoldBackgroundColor),
-          statusBarBrightness: theme.brightness,
-        );
-}
 
 List<Widget> space({
   double widthGap = kSmallestSpace,

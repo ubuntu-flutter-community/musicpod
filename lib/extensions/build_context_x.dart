@@ -9,6 +9,10 @@ extension BuildContextX on BuildContext {
 
   Size get mediaQuerySize => MediaQuery.sizeOf(this);
   bool get isPortrait => MediaQuery.orientationOf(this) == Orientation.portrait;
+  bool get isAndroidGestureNavigationEnabled {
+    final value = MediaQuery.of(this).systemGestureInsets.bottom;
+    return value < 48.0 && value != 0.0;
+  }
 
   bool get smallWindow => mediaQuerySize.width < kMasterDetailBreakPoint;
   bool get wideWindow => mediaQuerySize.width < kAdaptivContainerBreakPoint;
