@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.7.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.6.0...v2.7.0) (2025-01-19)
+
+
+### Features
+
+* Added translation using Weblate (Estonian) ([#1115](https://github.com/ubuntu-flutter-community/musicpod/issues/1115)) ([c687b07](https://github.com/ubuntu-flutter-community/musicpod/commit/c687b07b5c085de815d097f7745dabbfbd26f67f))
+* Translated using Weblate (Estonian) ([#1116](https://github.com/ubuntu-flutter-community/musicpod/issues/1116)) ([1ee795d](https://github.com/ubuntu-flutter-community/musicpod/commit/1ee795d56f1fc8186e6d24332e8dc5d0d06e0282))
+* Translated using Weblate (French) ([#1105](https://github.com/ubuntu-flutter-community/musicpod/issues/1105)) ([8a3a328](https://github.com/ubuntu-flutter-community/musicpod/commit/8a3a328959a5bd49cd2f511a69ea69656b881839))
+* Translated using Weblate (German) ([#1109](https://github.com/ubuntu-flutter-community/musicpod/issues/1109)) ([b66bdf6](https://github.com/ubuntu-flutter-community/musicpod/commit/b66bdf627b7300029a2eb127bdcf37dede16e017))
+* Translations update from Hosted Weblate ([#1118](https://github.com/ubuntu-flutter-community/musicpod/issues/1118)) ([93d3f3e](https://github.com/ubuntu-flutter-community/musicpod/commit/93d3f3e0a5d9b14d72cadae2600a0a57697d1182))
+
+
+### Bug Fixes
+
+* Album cover defaults to the back cover if there are two embedded images in a file ([#1121](https://github.com/ubuntu-flutter-community/musicpod/issues/1121)) ([23442cd](https://github.com/ubuntu-flutter-community/musicpod/commit/23442cd01989629528530eea3fcc4dac8a219341)), closes [#1111](https://github.com/ubuntu-flutter-community/musicpod/issues/1111)
+* insert gap for android 3 button navigation, dont overwrite charts peak with search, reduce desktop padding ([#1120](https://github.com/ubuntu-flutter-community/musicpod/issues/1120)) ([5d68b82](https://github.com/ubuntu-flutter-community/musicpod/commit/5d68b82718a69b48b1273b3406621443e0e87b7d))
+
 ## [2.6.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.5.0...v2.6.0) (2024-12-19)
 
 
