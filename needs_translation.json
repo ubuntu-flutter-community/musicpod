@@ -6,6 +6,10 @@
     "showArtistPage",
     "showAlbumPage",
     "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
@@ -310,6 +314,10 @@
     "showAlbumPage",
     "insertedIntoQueue",
     "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
@@ -609,27 +617,51 @@
 
   "de": [
     "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation",
     "exposeToListenBrainzSubTitle"
   ],
 
   "es": [
-    "markAllEpisodesAsDone"
+    "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation"
   ],
 
   "et": [
-    "markAllEpisodesAsDone"
+    "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation"
   ],
 
   "eu": [
-    "markAllEpisodesAsDone"
+    "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation"
   ],
 
   "fr": [
-    "markAllEpisodesAsDone"
+    "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation"
   ],
 
   "it": [
-    "markAllEpisodesAsDone"
+    "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation"
   ],
 
   "nl": [
@@ -647,6 +679,10 @@
     "tag",
     "failedToImport",
     "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation",
     "downloadsChangeWarning",
     "moreOptions",
     "noRadioServerFound",
@@ -1112,6 +1148,10 @@
     "showAlbumPage",
     "stations",
     "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
@@ -1392,6 +1432,10 @@
     "downloadCancelled",
     "downloadFinished",
     "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation",
     "downloadsOnly",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
@@ -1886,6 +1930,10 @@
     "downloadCancelled",
     "downloadFinished",
     "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation",
     "downloadsOnly",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
@@ -2333,6 +2381,10 @@
 
   "ru": [
     "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation",
     "clicks",
     "regionAruba",
     "regionAustralia",
@@ -2574,15 +2626,27 @@
   ],
 
   "sk": [
-    "markAllEpisodesAsDone"
+    "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation"
   ],
 
   "sv": [
-    "markAllEpisodesAsDone"
+    "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation"
   ],
 
   "ta": [
-    "markAllEpisodesAsDone"
+    "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation"
   ],
 
   "tr": [
@@ -2592,6 +2656,10 @@
     "showArtistPage",
     "showAlbumPage",
     "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
@@ -2894,6 +2962,10 @@
     "showArtistPage",
     "showAlbumPage",
     "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation",
     "useMoreAnimationsTitle",
     "useMoreAnimationsDescription",
     "showPositionDurationTitle",
@@ -2917,6 +2989,10 @@
     "showArtistPage",
     "showAlbumPage",
     "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
@@ -3212,6 +3288,10 @@
     "showArtistPage",
     "showAlbumPage",
     "markAllEpisodesAsDone",
+    "resetAllSettings",
+    "resetAllSettingsConfirm",
+    "confirm",
+    "confirmation",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
