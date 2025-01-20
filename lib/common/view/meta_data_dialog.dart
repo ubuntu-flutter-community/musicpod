@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
 import '../../l10n/l10n.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
+import 'copy_clipboard_content.dart';
 import 'modals.dart';
+import 'snackbars.dart';
 
 class MetaDataContent extends StatelessWidget {
   const MetaDataContent.dialog({
@@ -86,6 +89,21 @@ class MetaDataContent extends StatelessWidget {
               dense: true,
               title: Text(e.$1),
               subtitle: Text(e.$2),
+              onTap: e.$1 == l10n.url
+                  ? () {
+                      final maybeUri = Uri.tryParse(e.$2);
+                      if (maybeUri != null) {
+                        showSnackBar(
+                          context: context,
+                          content: CopyClipboardContent(
+                            text: maybeUri.toString(),
+                            onSearch: () => launchUrl(maybeUri),
+                          ),
+                        );
+                        Navigator.of(context).pop();
+                      }
+                    }
+                  : null,
             ),
           )
           .toList(),
