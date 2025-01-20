@@ -441,9 +441,7 @@ class PlayerService {
   Future<void> _setPlayerState() async {
     final playerState = await _readPlayerState();
 
-    _lastPositions = (await getCustomSettings(kLastPositionsFileName)).map(
-      (key, value) => MapEntry(key, value.parsedDuration ?? Duration.zero),
-    );
+    await _loadLastPositions();
 
     if (playerState?.audio != null) {
       _setAudio(playerState!.audio!);
@@ -475,6 +473,12 @@ class PlayerService {
     }
   }
 
+  Future<void> _loadLastPositions() async {
+    _lastPositions = (await getCustomSettings(kLastPositionsFileName)).map(
+      (key, value) => MapEntry(key, value.parsedDuration ?? Duration.zero),
+    );
+  }
+
   //
   // Last Positions used when the app re-opens and for podcasts
   //
@@ -497,6 +501,24 @@ class PlayerService {
     _propertiesChangedController.add(true);
   }
 
+  Future<void> safeAllLastPositions(List<Audio> audios) async {
+    await writeCustomSettings(
+      entries: audios
+          .where((e) => e.url != null && e.durationMs != null)
+          .map(
+            (e) => MapEntry(
+              e.url!,
+              Duration(milliseconds: e.durationMs!.toInt()).toString(),
+            ),
+          )
+          .toList(),
+      filename: kLastPositionsFileName,
+    );
+    await _loadLastPositions();
+
+    _propertiesChangedController.add(true);
+  }
+
   Future<void> removeLastPosition(String key) async {
     await removeCustomSetting(key, kLastPositionsFileName);
     _lastPositions.remove(key);
@@ -504,13 +526,14 @@ class PlayerService {
   }
 
   Future<void> removeLastPositions(List<Audio> audios) async {
-    for (var e in audios) {
-      if (e.url != null) {
-        await removeCustomSetting(e.url!, kLastPositionsFileName);
-        _lastPositions.remove(e.url!);
-        _propertiesChangedController.add(true);
-      }
-    }
+    await removeCustomSettings(
+      audios.where((e) => e.url != null).map((e) => e.url!).toList(),
+      kLastPositionsFileName,
+    );
+
+    await _loadLastPositions();
+
+    _propertiesChangedController.add(true);
   }
 
   Duration? getLastPosition(String? url) => _lastPositions[url];

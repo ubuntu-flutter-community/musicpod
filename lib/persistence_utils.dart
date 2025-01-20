@@ -83,7 +83,33 @@ Future<void> writeCustomSetting(
   final file = File(p.join(workingDir, filename));
 
   if (!file.existsSync()) {
-    file.create();
+    file.createSync();
+  }
+
+  await file.writeAsString(jsonStr);
+}
+
+Future<void> writeCustomSettings({
+  required List<MapEntry<String, dynamic>> entries,
+  required String filename,
+}) async {
+  if (entries.isEmpty) return;
+  final oldSettings = await getCustomSettings(filename);
+
+  for (var entry in entries) {
+    if (oldSettings.containsKey(entry.key)) {
+      oldSettings.update(entry.key, (v) => entry.value);
+    } else {
+      oldSettings.putIfAbsent(entry.key, () => entry.value);
+    }
+  }
+
+  final jsonStr = jsonEncode(oldSettings);
+  final workingDir = await getWorkingDir();
+  final file = File(p.join(workingDir, filename));
+
+  if (!file.existsSync()) {
+    await file.create();
   }
 
   await file.writeAsString(jsonStr);
@@ -103,10 +129,31 @@ Future<void> removeCustomSetting(
     final file = File(p.join(workingDir, filename));
 
     if (!file.existsSync()) {
-      file.create();
+      await file.create();
     }
     await file.writeAsString(jsonStr);
   }
+}
+
+Future<void> removeCustomSettings(
+  List<String> keys, [
+  String filename = kSettingsFileName,
+]) async {
+  final oldSettings = await getCustomSettings(filename);
+  for (var key in keys) {
+    if (oldSettings.containsKey(key)) {
+      oldSettings.remove(key);
+    }
+  }
+
+  final jsonStr = jsonEncode(oldSettings);
+  final workingDir = await getWorkingDir();
+  final file = File(p.join(workingDir, filename));
+
+  if (!file.existsSync()) {
+    await file.create();
+  }
+  await file.writeAsString(jsonStr);
 }
 
 Future<dynamic> readCustomSetting(
@@ -143,6 +190,20 @@ Future<Map<String, String>> getCustomSettings([
   }
 }
 
+Future<void> wipeCustomSettings([
+  String filename = kSettingsFileName,
+]) async {
+  final workingDir = await getWorkingDir();
+
+  final file = File(p.join(workingDir, filename));
+
+  if (!file.existsSync()) {
+    file.createSync();
+  }
+
+  await file.writeAsString('{}');
+}
+
 Future<void> writeStringIterable({
   required Iterable<String> iterable,
   required String filename,
@@ -150,7 +211,7 @@ Future<void> writeStringIterable({
   final workingDir = await getWorkingDir();
   final file = File('$workingDir/$filename');
   if (!file.existsSync()) {
-    file.create();
+    await file.create();
   }
   await file.writeAsString(iterable.join('\n'));
 }

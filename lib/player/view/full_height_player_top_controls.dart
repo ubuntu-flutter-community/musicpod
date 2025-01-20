@@ -18,6 +18,7 @@ import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import 'playback_rate_button.dart';
+import 'player_pause_timer_button.dart';
 import 'player_view.dart';
 import 'queue/queue_button.dart';
 import 'volume_popup.dart';
@@ -88,6 +89,9 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
               _ => const SizedBox.shrink(),
             },
           if (showQueueButton) QueueButton(color: iconColor),
+          PlayerPauseTimerButton(
+            iconColor: iconColor,
+          ),
           ShareButton(
             audio: audio,
             active: active,
