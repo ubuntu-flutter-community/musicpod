@@ -216,15 +216,15 @@ class Iconz {
           : Icons.settings;
 
   static IconData get addToLibrary => yaruStyled
-      ? YaruIcons.bell
+      ? YaruIcons.plus
       : appleStyled
-          ? CupertinoIcons.bell
-          : Icons.notifications_outlined;
+          ? CupertinoIcons.plus
+          : Icons.add;
   static IconData get removeFromLibrary => yaruStyled
-      ? YaruIcons.bell_filled
+      ? YaruIcons.checkmark
       : appleStyled
-          ? CupertinoIcons.bell_fill
-          : Icons.notifications_rounded;
+          ? CupertinoIcons.check_mark
+          : Icons.check;
   static IconData get refresh => yaruStyled
       ? YaruIcons.refresh
       : appleStyled

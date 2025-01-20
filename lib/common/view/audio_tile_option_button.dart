@@ -95,7 +95,8 @@ class AudioTileOptionButton extends StatelessWidget {
                 ),
               ),
             ),
-          if (audios.none((e) => e.audioType == AudioType.radio))
+          if (audios.none((e) => e.audioType == AudioType.radio) &&
+              audios.none((e) => e.audioType == AudioType.podcast))
             PopupMenuItem(
               onTap: () => showDialog(
                 context: context,

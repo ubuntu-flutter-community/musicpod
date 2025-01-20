@@ -15,7 +15,9 @@ import '../../l10n/l10n.dart';
 import '../player_model.dart';
 
 class PlayerPauseTimerButton extends StatelessWidget {
-  const PlayerPauseTimerButton({super.key});
+  const PlayerPauseTimerButton({super.key, this.iconColor});
+
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) => IconButton(
@@ -25,7 +27,10 @@ class PlayerPauseTimerButton extends StatelessWidget {
           mode: ModalMode.platformModalMode,
           content: isMobilePlatform ? const _BottomSheet() : const _Dialog(),
         ),
-        icon: Icon(Iconz.sleep),
+        icon: Icon(
+          Iconz.sleep,
+          color: iconColor,
+        ),
       );
 }
 
