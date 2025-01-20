@@ -17,6 +17,7 @@ import 'bottom_player_image.dart';
 import 'play_button.dart';
 import 'playback_rate_button.dart';
 import 'player_main_controls.dart';
+import 'player_pause_timer_button.dart';
 import 'player_title_and_artist.dart';
 import 'player_track.dart';
 import 'player_view.dart';
@@ -103,6 +104,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                       if (audio?.audioType == AudioType.podcast)
                         PlaybackRateButton(active: active),
                       if (!isMobilePlatform) const VolumeSliderPopup(),
+                      const PlayerPauseTimerButton(),
                       const QueueButton(
                         isSelected: false,
                       ),

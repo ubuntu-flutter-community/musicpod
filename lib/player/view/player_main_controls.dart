@@ -11,7 +11,6 @@ import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../player_model.dart';
 import 'play_button.dart';
-import 'player_pause_timer_button.dart';
 import 'repeat_button.dart';
 import 'seek_button.dart';
 import 'shuffle_button.dart';
@@ -117,8 +116,11 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
             active: active,
             iconColor: defaultColor,
           ),
-        AudioType.radio => PlayerPauseTimerButton(
-            iconColor: defaultColor,
+        AudioType.radio => SizedBox.square(
+            dimension: context.theme.iconButtonTheme.style?.shape
+                ?.resolve({})
+                ?.dimensions
+                .horizontal,
           ),
         _ => const SizedBox.shrink(),
       },

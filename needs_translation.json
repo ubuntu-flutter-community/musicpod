@@ -5,6 +5,7 @@
     "saveAndAuthorize",
     "showArtistPage",
     "showAlbumPage",
+    "markAllEpisodesAsDone",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
@@ -308,6 +309,7 @@
     "showArtistPage",
     "showAlbumPage",
     "insertedIntoQueue",
+    "markAllEpisodesAsDone",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
@@ -606,7 +608,28 @@
   ],
 
   "de": [
+    "markAllEpisodesAsDone",
     "exposeToListenBrainzSubTitle"
+  ],
+
+  "es": [
+    "markAllEpisodesAsDone"
+  ],
+
+  "et": [
+    "markAllEpisodesAsDone"
+  ],
+
+  "eu": [
+    "markAllEpisodesAsDone"
+  ],
+
+  "fr": [
+    "markAllEpisodesAsDone"
+  ],
+
+  "it": [
+    "markAllEpisodesAsDone"
   ],
 
   "nl": [
@@ -623,6 +646,7 @@
     "country",
     "tag",
     "failedToImport",
+    "markAllEpisodesAsDone",
     "downloadsChangeWarning",
     "moreOptions",
     "noRadioServerFound",
@@ -1087,6 +1111,7 @@
     "showArtistPage",
     "showAlbumPage",
     "stations",
+    "markAllEpisodesAsDone",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
@@ -1366,6 +1391,7 @@
     "downloadStarted",
     "downloadCancelled",
     "downloadFinished",
+    "markAllEpisodesAsDone",
     "downloadsOnly",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
@@ -1859,6 +1885,7 @@
     "downloadStarted",
     "downloadCancelled",
     "downloadFinished",
+    "markAllEpisodesAsDone",
     "downloadsOnly",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
@@ -2305,6 +2332,7 @@
   ],
 
   "ru": [
+    "markAllEpisodesAsDone",
     "clicks",
     "regionAruba",
     "regionAustralia",
@@ -2545,12 +2573,25 @@
     "regionZimbabwe"
   ],
 
+  "sk": [
+    "markAllEpisodesAsDone"
+  ],
+
+  "sv": [
+    "markAllEpisodesAsDone"
+  ],
+
+  "ta": [
+    "markAllEpisodesAsDone"
+  ],
+
   "tr": [
     "home",
     "local",
     "saveAndAuthorize",
     "showArtistPage",
     "showAlbumPage",
+    "markAllEpisodesAsDone",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
@@ -2852,6 +2893,7 @@
     "saveAndAuthorize",
     "showArtistPage",
     "showAlbumPage",
+    "markAllEpisodesAsDone",
     "useMoreAnimationsTitle",
     "useMoreAnimationsDescription",
     "showPositionDurationTitle",
@@ -2874,6 +2916,7 @@
     "saveAndAuthorize",
     "showArtistPage",
     "showAlbumPage",
+    "markAllEpisodesAsDone",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
@@ -3168,6 +3211,7 @@
     "saveAndAuthorize",
     "showArtistPage",
     "showAlbumPage",
+    "markAllEpisodesAsDone",
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",

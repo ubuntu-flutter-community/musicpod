@@ -23,7 +23,6 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
-import '../../player/view/player_pause_timer_button.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
@@ -168,7 +167,16 @@ class _PodcastPageState extends State<PodcastPage> {
                       children: [
                         if (!isMobilePlatform)
                           PodcastReplayButton(audios: episodesWithDownloads),
-                        const PlayerPauseTimerButton(),
+                        IconButton(
+                          tooltip: l10n.markAllEpisodesAsDone,
+                          onPressed: () {
+                            di<PlayerModel>()
+                                .safeAllLastPositions(episodesWithDownloads);
+                            di<LibraryModel>()
+                                .removePodcastUpdate(widget.feedUrl);
+                          },
+                          icon: Icon(Iconz.markAllRead),
+                        ),
                         PodcastSubButton(
                           audios: episodesWithDownloads,
                           pageId: widget.feedUrl,

@@ -179,6 +179,7 @@
             }
         }
     },
+    "markAllEpisodesAsDone": "Mark all episodes as done",
     "downloadsOnly": "Downloads only",
     "downloadsDirectory": "Location of your downloads",
     "downloadsDirectoryDescription": "Make sure MusicPod can access this directory!",

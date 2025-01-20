@@ -462,4 +462,9 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.moon
           : Icons.mode_night_rounded;
+  static IconData get markAllRead => yaruStyled
+      ? YaruIcons.ok_filled
+      : appleStyled
+          ? CupertinoIcons.check_mark_circled_solid
+          : Icons.check_circle;
 }
