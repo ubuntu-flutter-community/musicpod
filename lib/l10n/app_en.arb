@@ -180,6 +180,10 @@
         }
     },
     "markAllEpisodesAsDone": "Mark all episodes as done",
+    "resetAllSettings": "Reset all settings",
+    "resetAllSettingsConfirm": "Are you absolutely sure to reset all settings, your podcast subscriptions, your podcast progress, your starred stations and your pinned albums?  The app will be closed after and you need to re-open it.",
+    "confirm": "Confirm",
+    "confirmation": "Confirmation",
     "downloadsOnly": "Downloads only",
     "downloadsDirectory": "Location of your downloads",
     "downloadsDirectoryDescription": "Make sure MusicPod can access this directory!",
