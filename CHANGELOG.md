@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.8.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.7.0...v2.8.0) (2025-01-20)
+
+
+### Features
+
+* add reset app section to settings ([#1126](https://github.com/ubuntu-flutter-community/musicpod/issues/1126)) ([b4d143d](https://github.com/ubuntu-flutter-community/musicpod/commit/b4d143dfab4f95a7a1daea479748182849d7786b))
+* mark podcast episodes as played ([#1125](https://github.com/ubuntu-flutter-community/musicpod/issues/1125)) ([3b80a25](https://github.com/ubuntu-flutter-community/musicpod/commit/3b80a251e04461404377e3581283254fb0cd77e0)), closes [#1117](https://github.com/ubuntu-flutter-community/musicpod/issues/1117)
+
+
+### Bug Fixes
+
+* make podcast subscribe icon more clear, dont allow podcasts in playlists, add onTap for radio metadata url ([#1123](https://github.com/ubuntu-flutter-community/musicpod/issues/1123)) ([ad7aa2d](https://github.com/ubuntu-flutter-community/musicpod/commit/ad7aa2dacbbbea281f5af31ed1c4d6e0671dc96b)), closes [#1122](https://github.com/ubuntu-flutter-community/musicpod/issues/1122) [#1107](https://github.com/ubuntu-flutter-community/musicpod/issues/1107)
+
 ## [2.7.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.6.0...v2.7.0) (2025-01-19)
 
 
