@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio_type.dart';
+import '../extensions/connectivity_x.dart';
 import '../player/player_service.dart';
 
 class ConnectivityModel extends SafeChangeNotifier {
@@ -34,6 +35,9 @@ class ConnectivityModel extends SafeChangeNotifier {
 
   bool get isOnline => _connectivity.isOnline(_result);
 
+  bool get isMaybeLowBandWidth => _connectivity.isMaybeLowBandWidth(_result);
+
+  List<ConnectivityResult>? get result => _result;
   List<ConnectivityResult>? _result;
   void _updateConnectivity(List<ConnectivityResult> newResult) {
     if (!_connectivity.isOnline(newResult) &&
@@ -49,13 +53,4 @@ class ConnectivityModel extends SafeChangeNotifier {
     await _connectivitySubscription?.cancel();
     super.dispose();
   }
-}
-
-extension _ConnectivityX on Connectivity {
-  bool isOnline(List<ConnectivityResult>? res) =>
-      res?.contains(ConnectivityResult.ethernet) == true ||
-      res?.contains(ConnectivityResult.bluetooth) == true ||
-      res?.contains(ConnectivityResult.mobile) == true ||
-      res?.contains(ConnectivityResult.vpn) == true ||
-      res?.contains(ConnectivityResult.wifi) == true;
 }

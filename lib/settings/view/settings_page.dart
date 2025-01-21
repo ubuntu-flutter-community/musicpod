@@ -11,6 +11,7 @@ import 'expose_online_section.dart';
 import 'local_audio_section.dart';
 import 'podcast_section.dart';
 import 'reset_section.dart';
+import 'resource_section.dart';
 import 'theme_section.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -25,6 +26,7 @@ class SettingsPage extends StatelessWidget {
         PodcastSection(),
         LocalAudioSection(),
         ExposeOnlineSection(),
+        ResourceSection(),
         ResetSection(),
         AboutSection(),
       ],

@@ -75,6 +75,11 @@ class SettingsService {
   void setUseMoreAnimations(bool value) =>
       _preferences.setBool(kUseMoreAnimations, value).then(notify);
 
+  bool get notifyDataSafeMode =>
+      _preferences.getBool(kNotifyDataSafeMode) ?? true;
+  void setNotifyDataSafeMode(bool value) =>
+      _preferences.setBool(kNotifyDataSafeMode, value).then(notify);
+
   bool recentPatchNotesDisposed(String version) =>
       _preferences.getString(kPatchNotesDisposed) == version;
 
