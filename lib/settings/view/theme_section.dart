@@ -59,15 +59,6 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
             ),
           ),
           YaruTile(
-            title: Text(l10n.useMoreAnimationsTitle),
-            subtitle: Text(l10n.useMoreAnimationsDescription),
-            trailing: CommonSwitch(
-              onChanged: di<SettingsModel>().setUseMoreAnimations,
-              value:
-                  watchPropertyValue((SettingsModel m) => m.useMoreAnimations),
-            ),
-          ),
-          YaruTile(
             title: Text(l10n.showPositionDurationTitle),
             subtitle: Text(l10n.showPositionDurationDescription),
             trailing: CommonSwitch(

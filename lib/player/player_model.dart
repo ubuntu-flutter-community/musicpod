@@ -167,6 +167,9 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  void setDataSafeMode(bool value) => _playerService.setDataSafeMode(value);
+  bool get dataSafeMode => _playerService.dataSafeMode;
+
   @override
   Future<void> dispose() async {
     await _propertiesChangedSub?.cancel();

@@ -759,6 +759,13 @@ class PlayerService {
   //
   // Everything related to radio stream icy-title information observed from MPV and digested here
   //
+  bool _dataSafeMode = false;
+  bool get dataSafeMode => _dataSafeMode;
+  void setDataSafeMode(bool value) {
+    if (value == _dataSafeMode) return;
+    _dataSafeMode = value;
+    _propertiesChangedController.add(true);
+  }
 
   MpvMetaData? _mpvMetaData;
   MpvMetaData? get mpvMetaData => _mpvMetaData;
@@ -773,7 +780,9 @@ class PlayerService {
         ),
       );
 
-      await _processParsedIcyTitle(mpvMetaData!.icyTitle);
+      if (!_dataSafeMode) {
+        await _processParsedIcyTitle(mpvMetaData!.icyTitle);
+      }
     }
     _propertiesChangedController.add(true);
   }

@@ -86,3 +86,4 @@ const kShowPositionDuration = 'showPositionDuration';
 const kSettingsPageId = 'settings';
 const kHomePageId = 'homePage';
 const kPlaybackRate = 'playbackRate';
+const kNotifyDataSafeMode = 'notifyDataSafeMode';

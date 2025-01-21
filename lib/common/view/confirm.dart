@@ -18,6 +18,7 @@ class ConfirmationDialog extends StatelessWidget {
     this.scrollable = false,
     this.confirmLabel,
     this.enabled = true,
+    this.cancelLabel,
   });
 
   final dynamic Function()? onConfirm;
@@ -29,6 +30,7 @@ class ConfirmationDialog extends StatelessWidget {
   final bool showCloseIcon;
   final bool scrollable;
   final String? confirmLabel;
+  final String? cancelLabel;
   final bool enabled;
 
   @override
@@ -65,7 +67,7 @@ class ConfirmationDialog extends StatelessWidget {
                           }
                         }
                       : null,
-                  child: Text(l10n.cancel),
+                  child: Text(cancelLabel ?? l10n.cancel),
                 ),
               ElevatedButton(
                 onPressed: enabled
