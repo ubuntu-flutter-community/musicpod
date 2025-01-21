@@ -37,7 +37,6 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     final loading =
         watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
     final subs = watchPropertyValue((LibraryModel m) => m.podcasts);
-    watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
     final libraryModel = di<LibraryModel>();
     final updatesLength =
         watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
@@ -107,19 +106,23 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                     itemCount: itemCount,
                     gridDelegate: audioCardGridDelegate,
                     itemBuilder: (context, index) {
-                      final MapEntry<String, List<Audio>> podcast;
+                      final MapEntry<String, List<Audio>>? podcast;
                       if (updatesOnly) {
                         podcast = subs.entries
                             .where(
                               (e) => libraryModel.podcastUpdateAvailable(e.key),
                             )
-                            .elementAt(index);
+                            .elementAtOrNull(index);
                       } else if (downloadsOnly) {
                         podcast = subs.entries
                             .where((e) => libraryModel.feedHasDownload(e.key))
-                            .elementAt(index);
+                            .elementAtOrNull(index);
                       } else {
                         podcast = subs.entries.elementAt(index);
+                      }
+
+                      if (podcast == null) {
+                        return const SizedBox.shrink();
                       }
 
                       final artworkUrl600 =
@@ -152,15 +155,15 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                         ),
                         onPlay: () => di<PlayerModel>()
                             .startPlaylist(
-                              audios: podcast.value,
+                              audios: podcast!.value,
                               listName: podcast.key,
                             )
                             .then(
                               (_) => libraryModel.removePodcastUpdate(
-                                podcast.key,
+                                podcast!.key,
                               ),
                             ),
-                        onTap: () => libraryModel.push(pageId: podcast.key),
+                        onTap: () => libraryModel.push(pageId: podcast!.key),
                       );
                     },
                   ),
