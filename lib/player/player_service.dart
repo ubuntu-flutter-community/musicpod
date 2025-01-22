@@ -780,9 +780,7 @@ class PlayerService {
         ),
       );
 
-      if (!_dataSafeMode) {
-        await _processParsedIcyTitle(mpvMetaData!.icyTitle);
-      }
+      await _processParsedIcyTitle(mpvMetaData!.icyTitle);
     }
     _propertiesChangedController.add(true);
   }
@@ -816,7 +814,10 @@ class PlayerService {
 
   Future<void> _processParsedIcyTitle(String parsedIcyTitle) async {
     final songInfo = parsedIcyTitle.splitByDash;
-    final albumArt = await _onlineArtService.fetchAlbumArt(parsedIcyTitle);
+    String? albumArt;
+    if (!_dataSafeMode) {
+      await _onlineArtService.fetchAlbumArt(parsedIcyTitle);
+    }
 
     final mergedAudio =
         (_audio ?? const Audio(audioType: AudioType.radio)).copyWith(

@@ -16,37 +16,15 @@ import '../../podcasts/podcast_search_state.dart';
 import '../../podcasts/view/podcast_snackbar_contents.dart';
 import '../../settings/settings_model.dart';
 import '../app_model.dart';
-import '../connectivity_model.dart';
 import 'mobile_bottom_bar.dart';
 
-class MobilePage extends StatefulWidget with WatchItStatefulWidgetMixin {
+class MobilePage extends StatelessWidget with WatchItMixin {
   const MobilePage({
     super.key,
     required this.page,
   });
 
   final Widget page;
-
-  @override
-  State<MobilePage> createState() => _MobilePageState();
-}
-
-class _MobilePageState extends State<MobilePage> {
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (di<SettingsModel>().notifyDataSafeMode &&
-          di<ConnectivityModel>().isMaybeLowBandWidth &&
-          !di<PlayerModel>().dataSafeMode) {
-        showDialog(
-          context: context,
-          builder: (context) => const BandwidthDialog(),
-        );
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +104,7 @@ class _MobilePageState extends State<MobilePage> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          widget.page,
+          page,
           if (fullWindowMode)
             Material(
               color: context.theme.scaffoldBackgroundColor,

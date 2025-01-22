@@ -28,10 +28,10 @@ class BandwidthDialog extends StatelessWidget {
             ? l10n.isBackInWifiDialogBody
             : l10n.isMaybeLowBandwidthDialogBody,
       ),
-      onConfirm: () =>
+      onConfirm: () async =>
           di<PlayerModel>().setDataSafeMode(!backOnBetterConnection),
       cancelLabel: l10n.stopToNotifyAboutDataSafeMode,
-      onCancel: () => di<SettingsModel>().setNotifyDataSafeMode(false),
+      onCancel: () async => di<SettingsModel>().setNotifyDataSafeMode(false),
     );
   }
 }

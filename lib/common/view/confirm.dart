@@ -59,25 +59,44 @@ class ConfirmationDialog extends StatelessWidget {
               if (showCancel)
                 OutlinedButton(
                   onPressed: enabled
-                      ? () {
-                          onCancel?.call();
-                          if (context.mounted &&
-                              Navigator.of(context).canPop()) {
-                            Navigator.of(context).pop();
-                          }
-                        }
+                      ? onCancel is Future
+                          ? () async {
+                              await onCancel?.call();
+
+                              if (context.mounted &&
+                                  Navigator.of(context).canPop()) {
+                                Navigator.of(context).pop();
+                              }
+                            }
+                          : () {
+                              onCancel?.call();
+                              if (context.mounted &&
+                                  Navigator.of(context).canPop()) {
+                                Navigator.of(context).pop();
+                              }
+                            }
                       : null,
                   child: Text(cancelLabel ?? l10n.cancel),
                 ),
               ElevatedButton(
                 onPressed: enabled
-                    ? () {
-                        onConfirm?.call();
+                    ? onConfirm is Future
+                        ? () async {
+                            await onConfirm?.call();
 
-                        if (context.mounted && Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        }
-                      }
+                            if (context.mounted &&
+                                Navigator.of(context).canPop()) {
+                              Navigator.of(context).pop();
+                            }
+                          }
+                        : () {
+                            onConfirm?.call();
+
+                            if (context.mounted &&
+                                Navigator.of(context).canPop()) {
+                              Navigator.of(context).pop();
+                            }
+                          }
                     : null,
                 child: Text(
                   confirmLabel ?? l10n.ok,

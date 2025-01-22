@@ -74,8 +74,6 @@ class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
                 ? MobilePage(page: page)
                 : const SplashScreen(),
           ),
-          transitionsBuilder: (_, a, __, c) =>
-              FadeTransition(opacity: a, child: c),
         );
       },
       debugShowCheckedModeBanner: false,
