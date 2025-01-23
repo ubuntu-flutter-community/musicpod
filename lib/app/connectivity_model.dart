@@ -1,11 +1,16 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../common/data/audio_type.dart';
+import '../common/view/snackbars.dart';
 import '../extensions/connectivity_x.dart';
+import '../player/player_model.dart';
 import '../player/player_service.dart';
+import '../settings/settings_model.dart';
 
 class ConnectivityModel extends SafeChangeNotifier {
   ConnectivityModel({
@@ -16,6 +21,8 @@ class ConnectivityModel extends SafeChangeNotifier {
 
   final PlayerService _playerService;
   final Connectivity _connectivity;
+  Stream<List<ConnectivityResult>> get onConnectivityChanged =>
+      _connectivity.onConnectivityChanged;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   Future<void> init() async {
@@ -35,7 +42,7 @@ class ConnectivityModel extends SafeChangeNotifier {
 
   bool get isOnline => _connectivity.isOnline(_result);
 
-  bool get isMaybeLowBandWidth => _connectivity.isMaybeLowBandWidth(_result);
+  bool get isMaybeLowBandWidth => _connectivity.isNotWifiNorEthernet(_result);
 
   List<ConnectivityResult>? get result => _result;
   List<ConnectivityResult>? _result;
@@ -52,5 +59,33 @@ class ConnectivityModel extends SafeChangeNotifier {
   Future<void> dispose() async {
     await _connectivitySubscription?.cancel();
     super.dispose();
+  }
+}
+
+void onConnectivityChangedHandler(context, res, cancel) {
+  final l10n = context.l10n;
+  final dataSafeMode = di<PlayerModel>().dataSafeMode;
+  final notifyDataSafeMode = di<SettingsModel>().notifyDataSafeMode;
+  if (!res.hasData || !context.mounted || !notifyDataSafeMode) {
+    return;
+  }
+
+  if (!dataSafeMode && di<Connectivity>().isNotWifiNorEthernet(res.data)) {
+    di<PlayerModel>().setDataSafeMode(true);
+    showSnackBar(
+      context: context,
+      snackBar: SnackBar(
+        content: Text(l10n.dataSafeModeEnabled),
+      ),
+    );
+  } else if (dataSafeMode &&
+      !di<Connectivity>().isNotWifiNorEthernet(res.data)) {
+    di<PlayerModel>().setDataSafeMode(false);
+    showSnackBar(
+      context: context,
+      snackBar: SnackBar(
+        content: Text(l10n.dataSafeModeDisabled),
+      ),
+    );
   }
 }

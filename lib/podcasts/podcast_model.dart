@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
+import '../common/view/snackbars.dart';
 import 'podcast_search_state.dart';
 import 'podcast_service.dart';
+import 'view/podcast_snackbar_contents.dart';
 
 class PodcastModel extends SafeChangeNotifier {
   PodcastModel({
@@ -116,5 +119,30 @@ class PodcastModel extends SafeChangeNotifier {
   Future<void> dispose() async {
     super.dispose();
     await _searchStateController.close();
+  }
+}
+
+void podcastStateStreamHandler(context, newValue, cancel) {
+  if (newValue.hasData) {
+    if (newValue.data == PodcastSearchState.done) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+    } else {
+      showSnackBar(
+        context: context,
+        content: switch (newValue.data) {
+          PodcastSearchState.loading =>
+            const PodcastSearchLoadingSnackBarContent(),
+          PodcastSearchState.empty =>
+            const PodcastSearchEmptyFeedSnackBarContent(),
+          PodcastSearchState.timeout =>
+            const PodcastSearchTimeoutSnackBarContent(),
+          _ => const SizedBox.shrink()
+        },
+        duration: switch (newValue.data) {
+          PodcastSearchState.loading => const Duration(seconds: 1000),
+          _ => const Duration(seconds: 3),
+        },
+      );
+    }
   }
 }

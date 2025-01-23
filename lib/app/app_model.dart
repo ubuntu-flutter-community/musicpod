@@ -5,9 +5,11 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../app_config.dart';
+import '../common/view/snackbars.dart';
 import '../constants.dart';
 import '../expose/expose_service.dart';
 import '../settings/settings_service.dart';
+import 'view/discord_connect_content.dart';
 
 class AppModel extends SafeChangeNotifier {
   AppModel({
@@ -161,5 +163,15 @@ class AppModel extends SafeChangeNotifier {
         avatarUrl: 'https://avatars.githubusercontent.com/u/38893390?v=4',
       ),
     ];
+  }
+}
+
+void discordConnectedHandler(context, snapshot, cancel) {
+  if (snapshot.data == true) {
+    showSnackBar(
+      context: context,
+      duration: const Duration(seconds: 3),
+      content: DiscordConnectContent(connected: snapshot.data == true),
+    );
   }
 }
