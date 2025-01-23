@@ -178,49 +178,50 @@ class SearchModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  List<Station>? searchFromLanguage;
-  String? lastLanguage;
-  Future<Station?> _findSimilarStation(Audio station) async {
-    if (searchFromLanguage == null || station.language != lastLanguage) {
-      searchFromLanguage = await _radioService.search(
-        limit: 1000,
-        language: station.language,
-      );
+  final noNumbers = RegExp(r'^[^0-9]+$');
+  Future<Station?> _findSimilarStation(Audio audio) async {
+    final searchTags = audio.tags?.where((e) => noNumbers.hasMatch(e));
+    if (searchTags == null || searchTags.isEmpty) {
+      return null;
     }
-    lastLanguage = station.language;
+    Station? maybe;
+    int tries = audio.tags!.length;
+    do {
+      maybe = (await _radioService.search(
+        limit: 500,
+        tag: searchTags.elementAt(Random().nextInt(searchTags.length)),
+      ))
+          ?.where(
+            (e) => _areTagsSimilar(
+              stationTags: searchTags,
+              otherTags: (Audio.fromStation(e).tags ?? [])
+                  .where((e) => noNumbers.hasMatch(e)),
+            ),
+          )
+          .lastWhereOrNull((e) => e.stationUUID != audio.uuid);
 
-    final noNumbers = RegExp(r'^[^0-9]+$');
-    return searchFromLanguage
-        ?.where(
-          (e) => _areTagsSimilar(
-            stationTags: station.tags?.where((e) => noNumbers.hasMatch(e)),
-            eTags:
-                Audio.fromStation(e).tags?.where((e) => noNumbers.hasMatch(e)),
-          ),
-        )
-        .firstWhereOrNull((e) => e.stationUUID != station.uuid);
+      tries--;
+    } while (tries > 0 && (maybe == null || audio == Audio.fromStation(maybe)));
+
+    return maybe;
   }
 
   bool _areTagsSimilar({
-    required Iterable<String>? stationTags,
-    required Iterable<String>? eTags,
+    required Iterable<String> stationTags,
+    required Iterable<String> otherTags,
   }) {
-    if (eTags == null ||
-        eTags.isEmpty ||
-        stationTags == null ||
-        stationTags.length < 2) {
-      return false;
+    final matches = <String>{};
+    for (var tag in stationTags.map((e) => e.toLowerCase().trim()).toList()) {
+      if (otherTags.contains(tag.toLowerCase().trim())) {
+        matches.add(tag);
+      }
     }
 
-    final random = Random();
-    final randomOne = random.nextInt(stationTags.length);
-    var randomTwo = random.nextInt(stationTags.length);
-    while (randomTwo == randomOne) {
-      randomTwo = random.nextInt(stationTags.length);
-    }
-
-    return eTags.contains(stationTags.elementAt(randomOne)) &&
-        eTags.contains(stationTags.elementAt(randomTwo));
+    return switch (stationTags.length) {
+      1 || 2 || 3 => matches.isNotEmpty,
+      4 || 5 || 6 || 7 || 8 || 9 || 10 => matches.length >= 2,
+      _ => matches.length >= 3,
+    };
   }
 
   Future<Audio> nextSimilarStation(Audio station) async {

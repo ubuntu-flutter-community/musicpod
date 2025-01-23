@@ -189,6 +189,8 @@
     "isBackInWifiDialogTitle": "Back in WIFI/Ethernet",
     "isBackInWifiDialogBody": "You are connected to WIFI or Ethernet. Do you want to disable data safe mode?",
     "enableDataSafeModeSettingTitle": "Data safe mode",
+    "dataSafeModeEnabled": "Mobile Connection: Data safe mode enabled.",
+    "dataSafeModeDisabled": "Wifi/Ethernet: Data safe mode disabled.",
     "enableDataSafeModeSettingDescription": "When active the player will not try to download artwork of titles send from radio stations.",
     "stopToNotifyAboutDataSafeMode": "Stop to notify me",
     "notifyMeAboutDataSafeModeTitle": "Data safe mode notifications",

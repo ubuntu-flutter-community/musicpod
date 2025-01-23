@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
-import '../../common/view/snackbars.dart';
-import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/player_model.dart';
 import '../../player/view/player_view.dart';
 import '../../podcasts/download_model.dart';
 import '../../podcasts/podcast_model.dart';
-import '../../podcasts/podcast_search_state.dart';
-import '../../podcasts/view/podcast_snackbar_contents.dart';
 import '../../settings/settings_model.dart';
 import '../app_model.dart';
 import '../connectivity_model.dart';
@@ -58,55 +51,25 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
     if (allowDiscordRPC && enableDiscordRPC) {
       registerStreamHandler(
         select: (AppModel m) => m.isDiscordConnectedStream,
-        handler: (context, snapshot, cancel) {
-          if (snapshot.data == true) {
-            showSnackBar(
-              context: context,
-              duration: const Duration(seconds: 3),
-              content: _DiscordConnectContent(connected: snapshot.data == true),
-            );
-          }
-        },
+        handler: discordConnectedHandler,
       );
     }
 
     registerStreamHandler(
       select: (DownloadModel m) => m.messageStream,
       initialValue: null,
-      handler: (context, snapshot, cancel) {
-        if (snapshot.hasData) {
-          showSnackBar(context: context, content: Text(snapshot.data ?? ''));
-        }
-      },
+      handler: downloadMessageStreamHandler,
     );
 
     registerStreamHandler(
       select: (PodcastModel m) => m.stateStream,
       initialValue: null,
-      handler: (context, newValue, cancel) {
-        if (newValue.hasData) {
-          if (newValue.data == PodcastSearchState.done) {
-            ScaffoldMessenger.of(context).clearSnackBars();
-          } else {
-            showSnackBar(
-              context: context,
-              content: switch (newValue.data) {
-                PodcastSearchState.loading =>
-                  const PodcastSearchLoadingSnackBarContent(),
-                PodcastSearchState.empty =>
-                  const PodcastSearchEmptyFeedSnackBarContent(),
-                PodcastSearchState.timeout =>
-                  const PodcastSearchTimeoutSnackBarContent(),
-                _ => const SizedBox.shrink()
-              },
-              duration: switch (newValue.data) {
-                PodcastSearchState.loading => const Duration(seconds: 1000),
-                _ => const Duration(seconds: 3),
-              },
-            );
-          }
-        }
-      },
+      handler: podcastStateStreamHandler,
+    );
+
+    registerStreamHandler(
+      select: (ConnectivityModel m) => m.onConnectivityChanged,
+      handler: onConnectivityChangedHandler,
     );
 
     return Stack(
@@ -136,35 +99,6 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
             body: const PlayerView(position: PlayerPosition.fullWindow),
           ),
       ],
-    );
-  }
-}
-
-class _DiscordConnectContent extends StatelessWidget {
-  const _DiscordConnectContent({required this.connected});
-
-  final bool connected;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: space(
-        widthGap: 10,
-        children: [
-          Text(
-            '${connected ? l10n.connectedTo : l10n.disconnectedFrom}'
-            ' ${l10n.exposeToDiscordTitle}',
-          ),
-          Icon(
-            TablerIcons.brand_discord_filled,
-            color: context.theme.snackBarTheme.backgroundColor != null
-                ? contrastColor(context.theme.snackBarTheme.backgroundColor!)
-                : null,
-          ),
-        ],
-      ),
     );
   }
 }

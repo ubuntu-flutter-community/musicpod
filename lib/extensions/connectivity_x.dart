@@ -8,7 +8,7 @@ extension ConnectivityX on Connectivity {
       res?.contains(ConnectivityResult.vpn) == true ||
       res?.contains(ConnectivityResult.wifi) == true;
 
-  bool isMaybeLowBandWidth(List<ConnectivityResult>? res) =>
+  bool isNotWifiNorEthernet(List<ConnectivityResult>? res) =>
       res?.contains(ConnectivityResult.ethernet) == false &&
       res?.contains(ConnectivityResult.wifi) == false;
 }

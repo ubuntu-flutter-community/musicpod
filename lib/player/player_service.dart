@@ -816,7 +816,7 @@ class PlayerService {
     final songInfo = parsedIcyTitle.splitByDash;
     String? albumArt;
     if (!_dataSafeMode) {
-      await _onlineArtService.fetchAlbumArt(parsedIcyTitle);
+      albumArt = await _onlineArtService.fetchAlbumArt(parsedIcyTitle);
     }
 
     final mergedAudio =
