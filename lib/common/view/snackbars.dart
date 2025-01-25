@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? showSnackBar({
   required BuildContext? context,
   Widget? content,
+  SnackBarAction? action,
   SnackBar? snackBar,
   Duration? duration,
   bool clear = true,
@@ -16,6 +17,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? showSnackBar({
         SnackBar(
           content: content ?? const SizedBox.shrink(),
           duration: duration ?? const Duration(seconds: 10),
+          action: action,
         ),
   );
 }

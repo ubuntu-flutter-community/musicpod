@@ -164,7 +164,11 @@ class DownloadModel extends SafeChangeNotifier {
   }
 }
 
-void downloadMessageStreamHandler(context, snapshot, cancel) {
+void downloadMessageStreamHandler(
+  BuildContext context,
+  AsyncSnapshot<String?> snapshot,
+  void Function() cancel,
+) {
   if (snapshot.hasData) {
     showSnackBar(context: context, content: Text(snapshot.data ?? ''));
   }

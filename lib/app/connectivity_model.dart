@@ -8,6 +8,7 @@ import 'package:watch_it/watch_it.dart';
 import '../common/data/audio_type.dart';
 import '../common/view/snackbars.dart';
 import '../extensions/connectivity_x.dart';
+import '../l10n/l10n.dart';
 import '../player/player_model.dart';
 import '../player/player_service.dart';
 import '../settings/settings_model.dart';
@@ -62,7 +63,11 @@ class ConnectivityModel extends SafeChangeNotifier {
   }
 }
 
-void onConnectivityChangedHandler(context, res, cancel) {
+void onConnectivityChangedHandler(
+  BuildContext context,
+  AsyncSnapshot<List<ConnectivityResult>?> res,
+  void Function() cancel,
+) {
   final l10n = context.l10n;
   final dataSafeMode = di<PlayerModel>().dataSafeMode;
   final notifyDataSafeMode = di<SettingsModel>().notifyDataSafeMode;
@@ -74,18 +79,14 @@ void onConnectivityChangedHandler(context, res, cancel) {
     di<PlayerModel>().setDataSafeMode(true);
     showSnackBar(
       context: context,
-      snackBar: SnackBar(
-        content: Text(l10n.dataSafeModeEnabled),
-      ),
+      content: Text(l10n.dataSafeModeEnabled),
     );
   } else if (dataSafeMode &&
       !di<Connectivity>().isNotWifiNorEthernet(res.data)) {
     di<PlayerModel>().setDataSafeMode(false);
     showSnackBar(
       context: context,
-      snackBar: SnackBar(
-        content: Text(l10n.dataSafeModeDisabled),
-      ),
+      content: Text(l10n.dataSafeModeDisabled),
     );
   }
 }

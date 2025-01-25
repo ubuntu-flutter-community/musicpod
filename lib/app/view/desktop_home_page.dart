@@ -57,13 +57,11 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
 
     registerStreamHandler(
       select: (DownloadModel m) => m.messageStream,
-      initialValue: null,
       handler: downloadMessageStreamHandler,
     );
 
     registerStreamHandler(
       select: (PodcastModel m) => m.stateStream,
-      initialValue: null,
       handler: podcastStateStreamHandler,
     );
 

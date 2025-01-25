@@ -27,13 +27,11 @@ class MobilePage extends StatelessWidget with WatchItMixin {
 
     registerStreamHandler(
       select: (DownloadModel m) => m.messageStream,
-      initialValue: null,
       handler: downloadMessageStreamHandler,
     );
 
     registerStreamHandler(
       select: (PodcastModel m) => m.stateStream,
-      initialValue: null,
       handler: podcastStateStreamHandler,
     );
 
