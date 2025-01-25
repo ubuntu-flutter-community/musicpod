@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.8.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.7.0...v2.8.0) (2025-01-25)
+
+
+### Features
+
+* add reset app section to settings ([#1126](https://github.com/ubuntu-flutter-community/musicpod/issues/1126)) ([b4d143d](https://github.com/ubuntu-flutter-community/musicpod/commit/b4d143dfab4f95a7a1daea479748182849d7786b))
+* create data save mode for mobile connections ([#1128](https://github.com/ubuntu-flutter-community/musicpod/issues/1128)) ([c3ddadc](https://github.com/ubuntu-flutter-community/musicpod/commit/c3ddadcc1f874f2252eb09c74333dc969e1580cf)), closes [#1112](https://github.com/ubuntu-flutter-community/musicpod/issues/1112)
+* mark podcast episodes as played ([#1125](https://github.com/ubuntu-flutter-community/musicpod/issues/1125)) ([3b80a25](https://github.com/ubuntu-flutter-community/musicpod/commit/3b80a251e04461404377e3581283254fb0cd77e0)), closes [#1117](https://github.com/ubuntu-flutter-community/musicpod/issues/1117)
+* similar station button, auto data safe mode, move handlers ([#1129](https://github.com/ubuntu-flutter-community/musicpod/issues/1129)) ([1c72498](https://github.com/ubuntu-flutter-community/musicpod/commit/1c7249890e1aecb335f5430a2543c49bd688cefd))
+
+
+### Bug Fixes
+
+* make podcast subscribe icon more clear, dont allow podcasts in playlists, add onTap for radio metadata url ([#1123](https://github.com/ubuntu-flutter-community/musicpod/issues/1123)) ([ad7aa2d](https://github.com/ubuntu-flutter-community/musicpod/commit/ad7aa2dacbbbea281f5af31ed1c4d6e0671dc96b)), closes [#1122](https://github.com/ubuntu-flutter-community/musicpod/issues/1122) [#1107](https://github.com/ubuntu-flutter-community/musicpod/issues/1107)
+* range error for empty filtered podcast subs ([#1127](https://github.com/ubuntu-flutter-community/musicpod/issues/1127)) ([76df047](https://github.com/ubuntu-flutter-community/musicpod/commit/76df04735c0efa4167f6fffb96091de894d5c58c))
+
 ## [2.7.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.6.0...v2.7.0) (2025-01-19)
 
 
