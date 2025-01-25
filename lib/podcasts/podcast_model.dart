@@ -122,7 +122,11 @@ class PodcastModel extends SafeChangeNotifier {
   }
 }
 
-void podcastStateStreamHandler(context, newValue, cancel) {
+void podcastStateStreamHandler(
+  BuildContext context,
+  AsyncSnapshot<PodcastSearchState?> newValue,
+  void Function() cancel,
+) {
   if (newValue.hasData) {
     if (newValue.data == PodcastSearchState.done) {
       ScaffoldMessenger.of(context).clearSnackBars();

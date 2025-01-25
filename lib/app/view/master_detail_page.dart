@@ -6,6 +6,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/back_gesture.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/header_bar.dart';
@@ -64,7 +65,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
           if (context.showMasterPanel) const VerticalDivider(),
           Expanded(
             child: Navigator(
-              initialRoute: libraryModel.selectedPageId ?? kSearchPageId,
+              initialRoute: libraryModel.selectedPageId ?? PageIDs.searchPage,
               onDidRemovePage: (page) {},
               key: libraryModel.masterNavigatorKey,
               observers: [libraryModel],
@@ -122,7 +123,7 @@ class MasterPanel extends StatelessWidget {
                 return MasterTile(
                   key: ValueKey(item.pageId),
                   onTap: () {
-                    if (item.pageId == kNewPlaylistPageId) {
+                    if (item.pageId == PageIDs.newPlaylist) {
                       showDialog(
                         context: context,
                         builder: (context) {

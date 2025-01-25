@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app_config.dart';
-import '../../constants.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
+import '../page_ids.dart';
 import 'adaptive_container.dart';
 import 'audio_page_header.dart';
 import 'audio_page_type.dart';
@@ -66,7 +66,7 @@ class SliverAudioPage extends StatelessWidget {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                di<LibraryModel>().push(pageId: kSearchPageId);
+                di<LibraryModel>().push(pageId: PageIDs.searchPage);
                 final searchModel = di<SearchModel>();
                 if (searchModel.audioType != AudioType.local) {
                   searchModel

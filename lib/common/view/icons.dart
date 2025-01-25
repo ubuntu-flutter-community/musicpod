@@ -231,10 +231,10 @@ class Iconz {
           ? CupertinoIcons.refresh
           : Icons.refresh_rounded;
   static IconData get replay => yaruStyled
-      ? YaruIcons.history
+      ? YaruIcons.revert
       : appleStyled
-          ? CupertinoIcons.clock
-          : Icons.history_rounded;
+          ? CupertinoIcons.arrow_counterclockwise_circle
+          : Icons.undo;
   static IconData get speakerLowFilled => yaruStyled
       ? YaruIcons.speaker_low_filled
       : appleStyled
@@ -467,4 +467,9 @@ class Iconz {
       : appleStyled
           ? CupertinoIcons.check_mark_circled_solid
           : Icons.check_circle;
+  static IconData get radioHistory => yaruStyled
+      ? YaruIcons.music_history
+      : appleStyled
+          ? CupertinoIcons.clock
+          : Icons.history_rounded;
 }

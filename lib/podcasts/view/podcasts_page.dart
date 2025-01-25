@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
@@ -43,7 +43,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
             child: SearchButton(
               onPressed: () {
                 final searchModel = di<SearchModel>();
-                di<LibraryModel>().push(pageId: kSearchPageId);
+                di<LibraryModel>().push(pageId: PageIDs.searchPage);
                 if (searchModel.audioType != AudioType.podcast) {
                   searchModel
                     ..setAudioType(AudioType.podcast)

@@ -1,15 +1,13 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
-import '../../constants.dart';
 import '../../l10n/l10n.dart';
-import '../../persistence_utils.dart';
+import '../settings_model.dart';
 
 class ResetSection extends StatelessWidget {
   const ResetSection({super.key});
@@ -46,16 +44,11 @@ class ResetSection extends StatelessWidget {
   }
 }
 
-class WipeConfirmDialog extends StatefulWidget {
+class WipeConfirmDialog extends StatelessWidget {
   const WipeConfirmDialog({
     super.key,
   });
 
-  @override
-  State<WipeConfirmDialog> createState() => _WipeConfirmDialogState();
-}
-
-class _WipeConfirmDialogState extends State<WipeConfirmDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -64,22 +57,7 @@ class _WipeConfirmDialogState extends State<WipeConfirmDialog> {
       showCloseIcon: false,
       title: Text(l10n.confirm),
       content: SizedBox(width: 350, child: Text(l10n.resetAllSettingsConfirm)),
-      onConfirm: () => Future.wait([
-        wipeCustomSettings(kLikedAudiosFileName),
-        wipeCustomSettings(kRadioTagFavsFileName),
-        wipeCustomSettings(kCountryFavsFileName),
-        wipeCustomSettings(kFavLanguageCodesFileName),
-        wipeCustomSettings(kPlaylistsFileName),
-        wipeCustomSettings(kPinnedAlbumsFileName),
-        wipeCustomSettings(kPodcastsFileName),
-        wipeCustomSettings(kPodcastsUpdates),
-        wipeCustomSettings(kStarredStationsFileName),
-        wipeCustomSettings(kSettingsFileName),
-        wipeCustomSettings(kLastPositionsFileName),
-        wipeCustomSettings(kPlayerStateFileName),
-        wipeCustomSettings(kAppStateFileName),
-        wipeCustomSettings(kRadioHistoryFileName),
-      ]).then((_) => exit(0)),
+      onConfirm: di<SettingsModel>().wipeAllSettings,
     );
   }
 }

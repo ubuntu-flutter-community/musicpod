@@ -22,36 +22,10 @@ const kInternetArchiveHeaders = {
   'User-Agent': '$kAppTitle ($kRepoUrl)',
 };
 
-// persistence and library IDs and filenames
-const kLikedAudiosFileName = 'likedAudios.json';
-const kRadioTagFavsFileName = 'tagFavs.json';
-const kCountryFavsFileName = 'countryfavs.json';
-const kFavLanguageCodesFileName = 'languagefavs.json';
-const kLastRadioTag = 'lastFav';
-const kPlaylistsFileName = 'playlists.json';
-const kPinnedAlbumsFileName = 'finallyFixedPinnedAlbums.json';
-const kPodcastsFileName = 'podcasts.json';
-const kPodcastsUpdates = 'podcastsupdates.json';
-const kStarredStationsFileName = 'uuidStarredStations.json';
-const kSettingsFileName = 'settings.json';
-const kLastPositionsFileName = 'lastPositions.json';
-const kPlayerStateFileName = 'playerstate.json';
-const kAppStateFileName = 'appstate.json';
-const kRadioHistoryFileName = 'radiohistory.json';
-const kDownloads = 'downloads.json';
-const kFeedsWithDownloads = 'feedswithdownloads.json';
-const kCoverStore = 'coverStore.json';
 const kDirectoryProperty = 'directory';
 const kDownloadsCustomDir = 'downloadsCustomDir';
-const kRadioUrl = 'de1.api.radio-browser.info';
-const kRadioBrowserBaseUrl = 'all.api.radio-browser.info';
-const kLastAudio = 'lastAudio';
-const kLastPositionAsString = 'lastPositionAsString';
-const kLastDurationAsString = 'lastDurationAsString';
 const kLocalAudioIndex = 'localAudioIndex';
-const kSelectedPageId = 'selectedPageId';
-const kRadioIndex = 'radioIndex';
-const kPodcastIndex = 'podcastIndex';
+
 const kNeverShowImportFails = 'neverShowImportFails';
 const kEnableDiscordRPC = 'enableDiscordRPC';
 const kEnableLastFmScrobbling = 'enableLastFmScrobbling';
@@ -63,18 +37,13 @@ const kEnableListenBrainzScrobbling = 'enableListenBrainzScrobbling';
 const kListenBrainzApiKey = 'listenBrainzApiKey';
 const kLastCountryCode = 'lastCountryCode';
 const kLastLanguageCode = 'lastLanguageCode';
-const kSearchResult = 'searchResult';
-const kLocalAudioPageId = 'localAudio';
-const kPodcastsPageId = 'podcasts';
-const kRadioPageId = 'radio';
-const kNewPlaylistPageId = 'newPlaylist';
-const kLikedAudiosPageId = 'likedAudios';
+
 const kUsePodcastIndex = 'usePodcastIndex';
 const kThemeIndex = 'themeIndex';
 const kPodcastIndexApiKey = 'podcastIndexApiKey';
 const kPodcastIndexApiSecret = 'podcastIndexApiSecret';
 const kUseArtistGridView = 'useArtistGridView';
-const kSearchPageId = 'searchPageId';
+
 const kFavRadioTags = 'favRadioTags';
 const kFavCountryCodes = 'favCountryCodes';
 const kFavLanguageCodes = 'favLanguageCodes';
@@ -83,7 +52,6 @@ const kPatchNotesDisposed = 'kPatchNotesDisposed';
 const kCloseBtnAction = 'closeBtnAction';
 const kUseMoreAnimations = 'useMoreAnimations';
 const kShowPositionDuration = 'showPositionDuration';
-const kSettingsPageId = 'settings';
-const kHomePageId = 'homePage';
+
 const kPlaybackRate = 'playbackRate';
 const kNotifyDataSafeMode = 'notifyDataSafeMode';

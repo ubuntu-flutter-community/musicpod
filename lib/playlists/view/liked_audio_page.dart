@@ -2,12 +2,12 @@ import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../common/page_ids.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/fall_back_header_image.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
@@ -39,7 +39,7 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
       noSearchResultIcons: const AnimatedEmoji(AnimatedEmojis.twoHearts),
       audios: likedAudios,
       audioPageType: AudioPageType.likedAudio,
-      pageId: kLikedAudiosPageId,
+      pageId: PageIDs.likedAudios,
       pageTitle: context.l10n.likedSongs,
       pageLabel: context.l10n.playlist,
       pageSubTitle: '${likedAudios.length} ${context.l10n.titles}',

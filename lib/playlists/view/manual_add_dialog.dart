@@ -4,11 +4,11 @@ import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
 import '../../common/data/audio.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
-import '../../constants.dart';
 import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -173,13 +173,15 @@ class _PlaylistEditDialogContentState extends State<PlaylistEditDialogContent> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        const SizedBox(
+          height: 10,
+        ),
         Padding(
-          padding: const EdgeInsets.only(bottom: 10, top: 10),
+          padding: const EdgeInsets.only(bottom: 10),
           child: TextField(
             autofocus: true,
             decoration: InputDecoration(label: Text(context.l10n.playlist)),
             controller: _controller,
-            onChanged: (v) => setState(() => _controller.text = v),
           ),
         ),
         if (widget.allowCreate)
@@ -223,7 +225,7 @@ class _PlaylistEditDialogContentState extends State<PlaylistEditDialogContent> {
                     di<LocalAudioModel>().localAudioindex =
                         LocalAudioView.playlists.index;
                     await libraryModel.push(
-                      pageId: kLocalAudioPageId,
+                      pageId: PageIDs.likedAudios,
                       replace: true,
                     );
                   },
@@ -237,7 +239,7 @@ class _PlaylistEditDialogContentState extends State<PlaylistEditDialogContent> {
                     di<LocalAudioModel>().localAudioindex =
                         LocalAudioView.playlists.index;
                     libraryModel
-                      ..push(pageId: kLocalAudioPageId)
+                      ..push(pageId: PageIDs.likedAudios)
                       ..updatePlaylistName(
                         widget.playlistName!,
                         _controller.text,
@@ -249,28 +251,36 @@ class _PlaylistEditDialogContentState extends State<PlaylistEditDialogContent> {
                   ),
                 ),
               if (widget.allowCreate)
-                ImportantButton(
-                  onPressed: _controller.text.isEmpty
-                      ? null
-                      : () async {
-                          await libraryModel
-                              .addPlaylist(
-                            _controller.text,
-                            _audios ?? widget.audios ?? [],
-                          )
-                              .then((_) async {
-                            if (context.mounted) {
-                              Navigator.of(context, rootNavigator: true).pop();
-                            }
-                            await Future.delayed(
-                              const Duration(milliseconds: 300),
-                            );
-                            await libraryModel.push(pageId: _controller.text);
-                          });
-                        },
-                  child: Text(
-                    context.l10n.add,
-                  ),
+                ListenableBuilder(
+                  listenable: _controller,
+                  builder: (context, _) {
+                    return ImportantButton(
+                      onPressed: _controller.text.isEmpty
+                          ? null
+                          : () async {
+                              await libraryModel
+                                  .addPlaylist(
+                                _controller.text,
+                                _audios ?? widget.audios ?? [],
+                              )
+                                  .then((_) async {
+                                if (context.mounted) {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop();
+                                }
+                                await Future.delayed(
+                                  const Duration(milliseconds: 300),
+                                );
+                                await libraryModel.push(
+                                  pageId: _controller.text,
+                                );
+                              });
+                            },
+                      child: Text(
+                        context.l10n.add,
+                      ),
+                    );
+                  },
                 ),
             ],
           ),
@@ -318,7 +328,6 @@ class _AddStationDialogState extends State<AddStationContent> {
           autofocus: true,
           controller: _urlController,
           decoration: const InputDecoration(label: Text('Url')),
-          onChanged: (v) => setState(() => _urlController.text = v),
         ),
         const SizedBox(
           height: kLargestSpace,
@@ -326,7 +335,6 @@ class _AddStationDialogState extends State<AddStationContent> {
         TextField(
           controller: _nameController,
           decoration: InputDecoration(label: Text(context.l10n.station)),
-          onChanged: (v) => setState(() => _nameController.text = v),
         ),
         const SizedBox(
           height: kLargestSpace,
@@ -343,9 +351,13 @@ class _AddStationDialogState extends State<AddStationContent> {
                   context.l10n.cancel,
                 ),
               ),
-              ImportantButton(
-                onPressed:
-                    _urlController.text.isEmpty || _nameController.text.isEmpty
+              ListenableBuilder(
+                listenable: _nameController,
+                builder: (context, _) => ListenableBuilder(
+                  listenable: _urlController,
+                  builder: (context, _) => ImportantButton(
+                    onPressed: _urlController.text.isEmpty ||
+                            _nameController.text.isEmpty
                         ? null
                         : () {
                             di<LibraryModel>()
@@ -357,8 +369,10 @@ class _AddStationDialogState extends State<AddStationContent> {
                             ]);
                             Navigator.pop(context);
                           },
-                child: Text(
-                  context.l10n.add,
+                    child: Text(
+                      context.l10n.add,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -404,7 +418,6 @@ class _AddPodcastContentState extends State<AddPodcastContent> {
           autofocus: true,
           controller: _urlController,
           decoration: InputDecoration(label: Text(context.l10n.podcastFeedUrl)),
-          onChanged: (v) => setState(() => _urlController.text = v),
         ),
         const SizedBox(
           height: kLargestSpace,
@@ -421,27 +434,30 @@ class _AddPodcastContentState extends State<AddPodcastContent> {
                   context.l10n.cancel,
                 ),
               ),
-              ImportantButton(
-                onPressed: _urlController.text.isEmpty
-                    ? null
-                    : () {
-                        di<PodcastModel>().loadPodcast(
-                          feedUrl: _urlController.text,
-                          onFind: (podcast) => di<LibraryModel>().push(
-                            builder: (_) => PodcastPage(
-                              imageUrl: podcast.firstOrNull?.imageUrl,
-                              preFetchedEpisodes: podcast,
-                              feedUrl: _urlController.text,
-                              title: podcast.firstOrNull?.album ??
-                                  podcast.firstOrNull?.title ??
-                                  _urlController.text,
+              ListenableBuilder(
+                listenable: _urlController,
+                builder: (context, _) => ImportantButton(
+                  onPressed: _urlController.text.isEmpty
+                      ? null
+                      : () {
+                          di<PodcastModel>().loadPodcast(
+                            feedUrl: _urlController.text,
+                            onFind: (podcast) => di<LibraryModel>().push(
+                              builder: (_) => PodcastPage(
+                                imageUrl: podcast.firstOrNull?.imageUrl,
+                                preFetchedEpisodes: podcast,
+                                feedUrl: _urlController.text,
+                                title: podcast.firstOrNull?.album ??
+                                    podcast.firstOrNull?.title ??
+                                    _urlController.text,
+                              ),
+                              pageId: _urlController.text,
                             ),
-                            pageId: _urlController.text,
-                          ),
-                        );
-                      },
-                child: Text(
-                  context.l10n.search,
+                          );
+                        },
+                  child: Text(
+                    context.l10n.search,
+                  ),
                 ),
               ),
             ],

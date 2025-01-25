@@ -8,6 +8,7 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';
@@ -22,7 +23,6 @@ import '../../common/view/sliver_audio_tile_list.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/media_file_x.dart';
 import '../../extensions/theme_data_x.dart';
@@ -97,7 +97,7 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
               padding: appBarSingleActionSpacing,
               child: SearchButton(
                 onPressed: () {
-                  di<LibraryModel>().push(pageId: kSearchPageId);
+                  di<LibraryModel>().push(pageId: PageIDs.searchPage);
                   final searchmodel = di<SearchModel>();
                   searchmodel
                     ..setAudioType(AudioType.local)

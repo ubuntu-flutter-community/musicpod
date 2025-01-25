@@ -1,16 +1,17 @@
+import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
+
 import '../../common/data/audio.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import 'add_to_playlist_snack_bar.dart';
-import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
 
 class AddToPlaylistNavigator extends StatelessWidget {
   const AddToPlaylistNavigator({
@@ -60,7 +61,7 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
         title: Text(context.l10n.createNewPlaylist),
       ),
       _PlaylistTile(
-        playlistId: kLikedAudiosPageId,
+        playlistId: PageIDs.likedAudios,
         title: context.l10n.likedSongs,
         iconData: Iconz.heartFilled,
         libraryModel: di<LibraryModel>(),
@@ -112,7 +113,7 @@ class _PlaylistTile extends StatelessWidget {
     return ListTile(
       contentPadding: padding,
       onTap: () {
-        if (playlistId == kLikedAudiosPageId) {
+        if (playlistId == PageIDs.likedAudios) {
           libraryModel.addLikedAudios(audios);
         } else {
           libraryModel.addAudiosToPlaylist(

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
 import '../../home/home_page.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -47,7 +47,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
       titleBuilder: (context) => Text(context.l10n.search),
       pageBuilder: (_) => const SearchPage(),
       iconBuilder: (_) => Icon(Iconz.search),
-      pageId: kSearchPageId,
+      pageId: PageIDs.searchPage,
     ),
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.local),
@@ -56,7 +56,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
         audioType: AudioType.local,
         selected: selected,
       ),
-      pageId: kLocalAudioPageId,
+      pageId: PageIDs.localAudio,
     ),
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.radio),
@@ -65,7 +65,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
         audioType: AudioType.radio,
         selected: selected,
       ),
-      pageId: kRadioPageId,
+      pageId: PageIDs.radio,
     ),
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.podcasts),
@@ -74,7 +74,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
         audioType: AudioType.podcast,
         selected: selected,
       ),
-      pageId: kPodcastsPageId,
+      pageId: PageIDs.podcasts,
     ),
     if (isMobilePlatform)
       MasterItem(
@@ -82,7 +82,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
         iconBuilder: (selected) =>
             Icon(selected ? Iconz.settingsFilled : Iconz.settings),
         pageBuilder: (context) => const SettingsPage(),
-        pageId: kSettingsPageId,
+        pageId: PageIDs.settings,
       ),
     if (isMobilePlatform)
       MasterItem(
@@ -90,17 +90,17 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
         iconBuilder: (selected) =>
             Icon(selected ? Iconz.homeFilled : Iconz.home),
         pageBuilder: (context) => const HomePage(),
-        pageId: kHomePageId,
+        pageId: PageIDs.homePage,
       ),
     MasterItem(
       iconBuilder: (selected) => Icon(Iconz.plus),
       titleBuilder: (context) => Text(context.l10n.add),
       pageBuilder: (_) => const SizedBox.shrink(),
-      pageId: kNewPlaylistPageId,
+      pageId: PageIDs.newPlaylist,
     ),
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.likedSongs),
-      pageId: kLikedAudiosPageId,
+      pageId: PageIDs.likedAudios,
       pageBuilder: (_) => const LikedAudioPage(),
       subtitleBuilder: (context) => Text(context.l10n.playlist),
       iconBuilder: (selected) => LikedAudioPageIcon(selected: selected),

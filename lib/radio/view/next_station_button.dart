@@ -13,12 +13,13 @@ class NextStationButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final loading = watchPropertyValue((SearchModel m) => m.loading);
+    final findingSimilarStation =
+        watchPropertyValue((SearchModel m) => m.findingSimilarStation);
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
     return IconButton(
       tooltip: context.l10n.searchSimilarStation,
-      onPressed: loading || audio == null
+      onPressed: findingSimilarStation || audio == null
           ? null
           : () {
               di<SearchModel>().nextSimilarStation(audio).then(

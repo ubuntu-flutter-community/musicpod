@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -13,6 +12,7 @@ import '../../player/player_model.dart';
 import '../../playlists/view/add_to_playlist_dialog.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
+import '../page_ids.dart';
 import 'audio_tile_image.dart';
 import 'icons.dart';
 import 'like_all_icon.dart';
@@ -135,7 +135,7 @@ class AudioTileBottomSheet extends StatelessWidget {
                             children: [
                               _Button(
                                 onPressed: () {
-                                  playlistId == kLikedAudiosPageId
+                                  playlistId == PageIDs.likedAudios
                                       ? libraryModel.removeLikedAudios(audios)
                                       : libraryModel.removeAudiosFromPlaylist(
                                           id: playlistId,
@@ -147,7 +147,7 @@ class AudioTileBottomSheet extends StatelessWidget {
                               ),
                               _ButtonLabel(
                                 label:
-                                    '${l10n.removeFrom} ${playlistId == kLikedAudiosPageId ? l10n.likedSongs : playlistId}',
+                                    '${l10n.removeFrom} ${playlistId == PageIDs.likedAudios ? l10n.likedSongs : playlistId}',
                               ),
                             ],
                           ),
