@@ -8,7 +8,7 @@ import '../common/data/audio.dart';
 import '../common/file_names.dart';
 import '../common/page_ids.dart';
 import '../common/view/audio_filter.dart';
-import '../constants.dart';
+import '../extensions/shared_preferences_x.dart';
 import '../persistence_utils.dart';
 
 class LibraryService {
@@ -96,14 +96,14 @@ class LibraryService {
   }
 
   Set<String> get favRadioTags =>
-      _sharedPreferences.getStringList(kFavRadioTags)?.toSet() ?? {};
+      _sharedPreferences.getStringList(SPKeys.favRadioTags)?.toSet() ?? {};
   bool isFavTag(String value) => favRadioTags.contains(value);
 
   void addFavRadioTag(String name) {
     if (favRadioTags.contains(name)) return;
     final Set<String> tags = favRadioTags;
     tags.add(name);
-    _sharedPreferences.setStringList(kFavRadioTags, tags.toList()).then(
+    _sharedPreferences.setStringList(SPKeys.favRadioTags, tags.toList()).then(
       (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
@@ -114,16 +114,17 @@ class LibraryService {
     if (!favRadioTags.contains(name)) return;
     final Set<String> tags = favRadioTags;
     tags.remove(name);
-    _sharedPreferences.setStringList(kFavRadioTags, tags.toList()).then(
+    _sharedPreferences.setStringList(SPKeys.favRadioTags, tags.toList()).then(
       (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
     );
   }
 
-  String? get lastCountryCode => _sharedPreferences.getString(kLastCountryCode);
+  String? get lastCountryCode =>
+      _sharedPreferences.getString(SPKeys.lastCountryCode);
   void setLastCountryCode(String value) {
-    _sharedPreferences.setString(kLastCountryCode, value).then(
+    _sharedPreferences.setString(SPKeys.lastCountryCode, value).then(
       (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
@@ -131,7 +132,7 @@ class LibraryService {
   }
 
   Set<String> get favCountryCodes =>
-      _sharedPreferences.getStringList(kFavCountryCodes)?.toSet() ?? {};
+      _sharedPreferences.getStringList(SPKeys.favCountryCodes)?.toSet() ?? {};
   bool isFavCountry(String value) => favCountryCodes.contains(value);
 
   void addFavCountryCode(String name) {
@@ -139,7 +140,7 @@ class LibraryService {
     final favCodes = favCountryCodes;
     favCodes.add(name);
     _sharedPreferences
-        .setStringList(kFavCountryCodes, favCodes.toList())
+        .setStringList(SPKeys.favCountryCodes, favCodes.toList())
         .then((saved) {
       if (saved) _propertiesChangedController.add(true);
     });
@@ -150,29 +151,31 @@ class LibraryService {
     final favCodes = favCountryCodes;
     favCodes.remove(name);
     _sharedPreferences
-        .setStringList(kFavCountryCodes, favCodes.toList())
+        .setStringList(SPKeys.favCountryCodes, favCodes.toList())
         .then((saved) {
       if (saved) _propertiesChangedController.add(true);
     });
   }
 
   String? get lastLanguageCode =>
-      _sharedPreferences.getString(kLastLanguageCode);
+      _sharedPreferences.getString(SPKeys.lastLanguageCode);
   void setLastLanguageCode(String value) {
-    _sharedPreferences.setString(kLastLanguageCode, value).then((saved) {
+    _sharedPreferences.setString(SPKeys.lastLanguageCode, value).then((saved) {
       if (saved) _propertiesChangedController.add(true);
     });
   }
 
   Set<String> get favLanguageCodes =>
-      _sharedPreferences.getStringList(kFavLanguageCodes)?.toSet() ?? {};
+      _sharedPreferences.getStringList(SPKeys.favLanguageCodes)?.toSet() ?? {};
   bool isFavLanguage(String value) => favLanguageCodes.contains(value);
 
   void addFavLanguageCode(String name) {
     if (favLanguageCodes.contains(name)) return;
     final favLangs = favLanguageCodes;
     favLangs.add(name);
-    _sharedPreferences.setStringList(kFavLanguageCodes, favLangs.toList()).then(
+    _sharedPreferences
+        .setStringList(SPKeys.favLanguageCodes, favLangs.toList())
+        .then(
       (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
@@ -183,7 +186,9 @@ class LibraryService {
     if (!favLanguageCodes.contains(name)) return;
     final favLangs = favLanguageCodes;
     favLangs.remove(name);
-    _sharedPreferences.setStringList(kFavLanguageCodes, favLangs.toList()).then(
+    _sharedPreferences
+        .setStringList(SPKeys.favLanguageCodes, favLangs.toList())
+        .then(
       (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
@@ -430,16 +435,18 @@ class LibraryService {
   }
 
   bool showPodcastAscending(String feedUrl) =>
-      _sharedPreferences.getBool(kAscendingFeeds + feedUrl) ?? false;
+      _sharedPreferences.getBool(SPKeys.ascendingFeeds + feedUrl) ?? false;
 
   Future<void> _addAscendingPodcast(String feedUrl) async {
-    await _sharedPreferences.setBool(kAscendingFeeds + feedUrl, true).then(
+    await _sharedPreferences
+        .setBool(SPKeys.ascendingFeeds + feedUrl, true)
+        .then(
           (_) => _propertiesChangedController.add(true),
         );
   }
 
   Future<void> _removeAscendingPodcast(String feedUrl) async =>
-      _sharedPreferences.remove(kAscendingFeeds + feedUrl).then(
+      _sharedPreferences.remove(SPKeys.ascendingFeeds + feedUrl).then(
             (_) => _propertiesChangedController.add(true),
           );
 

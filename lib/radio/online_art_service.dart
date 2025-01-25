@@ -10,6 +10,14 @@ import '../extensions/string_x.dart';
 
 const _kMusicBrainzAddress = 'https://musicbrainz.org/ws/2/recording/';
 const _kCoverArtArchiveAddress = 'https://coverartarchive.org/release/';
+const _kMusicBrainzHeaders = {
+  'Accept': 'application/json',
+  'User-Agent': '$kAppTitle ($kRepoUrl)',
+};
+
+const _kInternetArchiveHeaders = {
+  'User-Agent': '$kAppTitle ($kRepoUrl)',
+};
 
 class OnlineArtService {
   OnlineArtService({required Dio dio}) : _dio = dio;
@@ -63,7 +71,7 @@ class _ComputeCapsule {
 
 Future<String?> _fetchAlbumArt(_ComputeCapsule capsule) async {
   final dio = capsule.dio;
-  dio.options.headers = kMusicBrainzHeaders;
+  dio.options.headers = _kMusicBrainzHeaders;
   final songInfo = capsule.icyTitle.splitByDash;
   if (songInfo.songName == null || songInfo.artist == null) return null;
 
@@ -119,7 +127,7 @@ Future<String?> _fetchAlbumArtUrlFromReleaseId({
   required Dio dio,
 }) async {
   try {
-    dio.options.headers = kInternetArchiveHeaders;
+    dio.options.headers = _kInternetArchiveHeaders;
     dio.options.followRedirects = true;
     dio.options.maxRedirects = 5;
     dio.options.receiveTimeout = const Duration(seconds: 25);
