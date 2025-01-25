@@ -1,12 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
+
+import '../../common/page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
 
 class MobileNavigationBar extends StatelessWidget with WatchItMixin {
   const MobileNavigationBar({super.key});
@@ -31,34 +32,35 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButton(
-                isSelected: selectedPageId == kHomePageId,
+                isSelected: selectedPageId == PageIDs.homePage,
                 selectedIcon: Icon(Iconz.homeFilled),
                 icon: Icon(Iconz.home),
                 tooltip: l10n.home,
-                onPressed: () => di<LibraryModel>().push(pageId: kHomePageId),
+                onPressed: () =>
+                    di<LibraryModel>().push(pageId: PageIDs.homePage),
               ),
               IconButton(
-                isSelected: selectedPageId == kLocalAudioPageId,
+                isSelected: selectedPageId == PageIDs.localAudio,
                 selectedIcon: Icon(Iconz.localAudioFilled),
                 icon: Icon(Iconz.localAudio),
                 tooltip: l10n.local,
                 onPressed: () =>
-                    di<LibraryModel>().push(pageId: kLocalAudioPageId),
+                    di<LibraryModel>().push(pageId: PageIDs.localAudio),
               ),
               IconButton(
-                isSelected: selectedPageId == kRadioPageId,
+                isSelected: selectedPageId == PageIDs.radio,
                 selectedIcon: Icon(Iconz.radioFilled),
                 icon: Icon(Iconz.radio),
                 tooltip: l10n.radio,
-                onPressed: () => di<LibraryModel>().push(pageId: kRadioPageId),
+                onPressed: () => di<LibraryModel>().push(pageId: PageIDs.radio),
               ),
               IconButton(
-                isSelected: selectedPageId == kPodcastsPageId,
+                isSelected: selectedPageId == PageIDs.podcasts,
                 selectedIcon: Icon(Iconz.podcastFilled),
                 icon: Icon(Iconz.podcast),
                 tooltip: l10n.podcasts,
                 onPressed: () =>
-                    di<LibraryModel>().push(pageId: kPodcastsPageId),
+                    di<LibraryModel>().push(pageId: PageIDs.podcasts),
               ),
             ],
           ),

@@ -8,6 +8,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
@@ -16,7 +17,6 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -174,7 +174,7 @@ class TagGrid extends StatelessWidget with WatchItMixin {
               ),
               bottom: AudioCardBottom(text: tag),
               onTap: () {
-                di<LibraryModel>().push(pageId: kSearchPageId);
+                di<LibraryModel>().push(pageId: PageIDs.searchPage);
                 di<SearchModel>()
                   ..setTag(Tag(name: tag.toLowerCase(), stationCount: 1))
                   ..setAudioType(AudioType.radio)

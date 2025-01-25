@@ -6,20 +6,27 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 
-class PodcastReplayButton extends StatelessWidget with WatchItMixin {
-  const PodcastReplayButton({super.key, required this.feedUrl});
+class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
+  const PodcastMarkDoneButton({
+    super.key,
+    required this.feedUrl,
+  });
 
   final String feedUrl;
 
   @override
   Widget build(BuildContext context) {
     final podcast = watchPropertyValue((LibraryModel m) => m.podcasts[feedUrl]);
+
     return IconButton(
-      tooltip: context.l10n.replayAllEpisodes,
+      tooltip: context.l10n.markAllEpisodesAsDone,
       onPressed: podcast == null
           ? null
-          : () => di<PlayerModel>().removeLastPositions(podcast),
-      icon: Icon(Iconz.replay),
+          : () {
+              di<PlayerModel>().safeAllLastPositions(podcast);
+              di<LibraryModel>().removePodcastUpdate(feedUrl);
+            },
+      icon: Icon(Iconz.markAllRead),
     );
   }
 }

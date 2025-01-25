@@ -120,7 +120,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
             child: FullHeightPlayerTopControls(
               iconColor: iconColor,
               playerPosition: playerPosition,
-              showQueueButton: !isMobilePlatform && !playerWithSidePanel,
+              showQueueButton: !playerWithSidePanel,
             ),
           ),
           if (isMobilePlatform)

@@ -5,8 +5,10 @@ import 'package:collection/collection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/data/audio.dart';
+import '../common/file_names.dart';
+import '../common/page_ids.dart';
 import '../common/view/audio_filter.dart';
-import '../constants.dart';
+import '../extensions/shared_preferences_x.dart';
 import '../persistence_utils.dart';
 
 class LibraryService {
@@ -28,8 +30,10 @@ class LibraryService {
     if (_likedAudios.contains(audio)) return;
     _likedAudios.add(audio);
     if (notify) {
-      writeAudioMap({kLikedAudiosPageId: _likedAudios}, kLikedAudiosFileName)
-          .then((value) => _propertiesChangedController.add(true));
+      writeAudioMap(
+        map: {PageIDs.likedAudios: _likedAudios},
+        fileName: FileNames.likedAudios,
+      ).then((value) => _propertiesChangedController.add(true));
     }
   }
 
@@ -37,8 +41,10 @@ class LibraryService {
     for (var audio in audios) {
       addLikedAudio(audio, false);
     }
-    writeAudioMap({kLikedAudiosPageId: _likedAudios}, kLikedAudiosFileName)
-        .then((value) => _propertiesChangedController.add(true));
+    writeAudioMap(
+      map: {PageIDs.likedAudios: _likedAudios},
+      fileName: FileNames.likedAudios,
+    ).then((value) => _propertiesChangedController.add(true));
   }
 
   bool liked(Audio audio) {
@@ -48,8 +54,10 @@ class LibraryService {
   void removeLikedAudio(Audio audio, [bool notify = true]) {
     _likedAudios.remove(audio);
     if (notify) {
-      writeAudioMap({kLikedAudiosPageId: _likedAudios}, kLikedAudiosFileName)
-          .then((value) => _propertiesChangedController.add(true));
+      writeAudioMap(
+        map: {PageIDs.likedAudios: _likedAudios},
+        fileName: FileNames.likedAudios,
+      ).then((value) => _propertiesChangedController.add(true));
     }
   }
 
@@ -57,8 +65,10 @@ class LibraryService {
     for (var audio in audios) {
       removeLikedAudio(audio, false);
     }
-    writeAudioMap({kLikedAudiosPageId: _likedAudios}, kLikedAudiosFileName)
-        .then((value) => _propertiesChangedController.add(true));
+    writeAudioMap(
+      map: {PageIDs.likedAudios: _likedAudios},
+      fileName: FileNames.likedAudios,
+    ).then((value) => _propertiesChangedController.add(true));
   }
 
   //
@@ -71,13 +81,13 @@ class LibraryService {
 
   void addStarredStation(String uuid, List<Audio> audios) {
     _starredStations.putIfAbsent(uuid, () => audios);
-    writeAudioMap(_starredStations, kStarredStationsFileName)
+    writeAudioMap(map: _starredStations, fileName: FileNames.starredStations)
         .then((_) => _propertiesChangedController.add(true));
   }
 
   void unStarStation(String uuid) {
     _starredStations.remove(uuid);
-    writeAudioMap(_starredStations, kStarredStationsFileName)
+    writeAudioMap(map: _starredStations, fileName: FileNames.starredStations)
         .then((_) => _propertiesChangedController.add(true));
   }
 
@@ -86,14 +96,14 @@ class LibraryService {
   }
 
   Set<String> get favRadioTags =>
-      _sharedPreferences.getStringList(kFavRadioTags)?.toSet() ?? {};
+      _sharedPreferences.getStringList(SPKeys.favRadioTags)?.toSet() ?? {};
   bool isFavTag(String value) => favRadioTags.contains(value);
 
   void addFavRadioTag(String name) {
     if (favRadioTags.contains(name)) return;
     final Set<String> tags = favRadioTags;
     tags.add(name);
-    _sharedPreferences.setStringList(kFavRadioTags, tags.toList()).then(
+    _sharedPreferences.setStringList(SPKeys.favRadioTags, tags.toList()).then(
       (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
@@ -104,16 +114,17 @@ class LibraryService {
     if (!favRadioTags.contains(name)) return;
     final Set<String> tags = favRadioTags;
     tags.remove(name);
-    _sharedPreferences.setStringList(kFavRadioTags, tags.toList()).then(
+    _sharedPreferences.setStringList(SPKeys.favRadioTags, tags.toList()).then(
       (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
     );
   }
 
-  String? get lastCountryCode => _sharedPreferences.getString(kLastCountryCode);
+  String? get lastCountryCode =>
+      _sharedPreferences.getString(SPKeys.lastCountryCode);
   void setLastCountryCode(String value) {
-    _sharedPreferences.setString(kLastCountryCode, value).then(
+    _sharedPreferences.setString(SPKeys.lastCountryCode, value).then(
       (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
@@ -121,7 +132,7 @@ class LibraryService {
   }
 
   Set<String> get favCountryCodes =>
-      _sharedPreferences.getStringList(kFavCountryCodes)?.toSet() ?? {};
+      _sharedPreferences.getStringList(SPKeys.favCountryCodes)?.toSet() ?? {};
   bool isFavCountry(String value) => favCountryCodes.contains(value);
 
   void addFavCountryCode(String name) {
@@ -129,7 +140,7 @@ class LibraryService {
     final favCodes = favCountryCodes;
     favCodes.add(name);
     _sharedPreferences
-        .setStringList(kFavCountryCodes, favCodes.toList())
+        .setStringList(SPKeys.favCountryCodes, favCodes.toList())
         .then((saved) {
       if (saved) _propertiesChangedController.add(true);
     });
@@ -140,29 +151,31 @@ class LibraryService {
     final favCodes = favCountryCodes;
     favCodes.remove(name);
     _sharedPreferences
-        .setStringList(kFavCountryCodes, favCodes.toList())
+        .setStringList(SPKeys.favCountryCodes, favCodes.toList())
         .then((saved) {
       if (saved) _propertiesChangedController.add(true);
     });
   }
 
   String? get lastLanguageCode =>
-      _sharedPreferences.getString(kLastLanguageCode);
+      _sharedPreferences.getString(SPKeys.lastLanguageCode);
   void setLastLanguageCode(String value) {
-    _sharedPreferences.setString(kLastLanguageCode, value).then((saved) {
+    _sharedPreferences.setString(SPKeys.lastLanguageCode, value).then((saved) {
       if (saved) _propertiesChangedController.add(true);
     });
   }
 
   Set<String> get favLanguageCodes =>
-      _sharedPreferences.getStringList(kFavLanguageCodes)?.toSet() ?? {};
+      _sharedPreferences.getStringList(SPKeys.favLanguageCodes)?.toSet() ?? {};
   bool isFavLanguage(String value) => favLanguageCodes.contains(value);
 
   void addFavLanguageCode(String name) {
     if (favLanguageCodes.contains(name)) return;
     final favLangs = favLanguageCodes;
     favLangs.add(name);
-    _sharedPreferences.setStringList(kFavLanguageCodes, favLangs.toList()).then(
+    _sharedPreferences
+        .setStringList(SPKeys.favLanguageCodes, favLangs.toList())
+        .then(
       (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
@@ -173,7 +186,9 @@ class LibraryService {
     if (!favLanguageCodes.contains(name)) return;
     final favLangs = favLanguageCodes;
     favLangs.remove(name);
-    _sharedPreferences.setStringList(kFavLanguageCodes, favLangs.toList()).then(
+    _sharedPreferences
+        .setStringList(SPKeys.favLanguageCodes, favLangs.toList())
+        .then(
       (saved) {
         if (saved) _propertiesChangedController.add(true);
       },
@@ -192,14 +207,15 @@ class LibraryService {
   Future<void> addPlaylist(String id, List<Audio> audios) async {
     if (!_playlists.containsKey(id)) {
       _playlists.putIfAbsent(id, () => audios);
-      await writeAudioMap(_playlists, kPlaylistsFileName)
+      await writeAudioMap(map: _playlists, fileName: FileNames.playlists)
           .then((_) => _propertiesChangedController.add(true));
     }
   }
 
   Future<void> updatePlaylist(String id, List<Audio> audios) async {
     if (_playlists.containsKey(id)) {
-      await writeAudioMap(_playlists, kPlaylistsFileName).then((_) {
+      await writeAudioMap(map: _playlists, fileName: FileNames.playlists)
+          .then((_) {
         _playlists.update(
           id,
           (value) => audios,
@@ -211,7 +227,7 @@ class LibraryService {
 
   void removePlaylist(String id) {
     if (_playlists.containsKey(id)) {
-      writeAudioMap(_playlists, kPlaylistsFileName).then(
+      writeAudioMap(map: _playlists, fileName: FileNames.playlists).then(
         (_) {
           _playlists.remove(id);
           _propertiesChangedController.add(true);
@@ -226,7 +242,7 @@ class LibraryService {
     if (oldList != null) {
       _playlists.remove(oldName);
       _playlists.putIfAbsent(newName, () => oldList);
-      writeAudioMap(_playlists, kPlaylistsFileName)
+      writeAudioMap(map: _playlists, fileName: FileNames.playlists)
           .then((_) => _propertiesChangedController.add(true));
     }
   }
@@ -236,7 +252,7 @@ class LibraryService {
     required int newIndex,
     required String id,
   }) {
-    final audios = id == kLikedAudiosPageId
+    final audios = id == PageIDs.likedAudios
         ? likedAudios.toList()
         : playlists[id]?.toList();
 
@@ -253,15 +269,17 @@ class LibraryService {
     final audio = audios.removeAt(oldIndex);
     audios.insert(newIndex, audio);
 
-    if (id == kLikedAudiosPageId) {
-      writeAudioMap({kLikedAudiosPageId: _likedAudios}, kLikedAudiosFileName)
-          .then((value) {
+    if (id == PageIDs.likedAudios) {
+      writeAudioMap(
+        map: {PageIDs.likedAudios: _likedAudios},
+        fileName: FileNames.likedAudios,
+      ).then((value) {
         likedAudios.clear();
         likedAudios.addAll(audios);
         _propertiesChangedController.add(true);
       });
     } else {
-      writeAudioMap(_playlists, kPlaylistsFileName).then((_) {
+      writeAudioMap(map: _playlists, fileName: FileNames.likedAudios).then((_) {
         _playlists.update(id, (value) => audios);
         _propertiesChangedController.add(true);
       });
@@ -277,7 +295,7 @@ class LibraryService {
         playlist.add(audio);
       }
     }
-    writeAudioMap(_playlists, kPlaylistsFileName)
+    writeAudioMap(map: _playlists, fileName: FileNames.playlists)
         .then((_) => _propertiesChangedController.add(true));
   }
 
@@ -293,7 +311,7 @@ class LibraryService {
         playlist.remove(audio);
       }
     }
-    writeAudioMap(_playlists, kPlaylistsFileName)
+    writeAudioMap(map: _playlists, fileName: FileNames.playlists)
         .then((_) => _propertiesChangedController.add(true));
   }
 
@@ -301,7 +319,7 @@ class LibraryService {
     final playlist = _playlists[id];
     if (playlist != null) {
       playlist.clear();
-      writeAudioMap(_playlists, kPlaylistsFileName)
+      writeAudioMap(map: _playlists, fileName: FileNames.playlists)
           .then((_) => _propertiesChangedController.add(true));
     }
   }
@@ -326,11 +344,11 @@ class LibraryService {
     if (_downloads.containsKey(url)) return;
     _downloads.putIfAbsent(url, () => path);
     _feedsWithDownloads.add(feedUrl);
-    writeStringMap(_downloads, kDownloads)
+    writeStringMap(_downloads, FileNames.downloads)
         .then(
           (_) => writeStringIterable(
             iterable: _feedsWithDownloads,
-            filename: kFeedsWithDownloads,
+            filename: FileNames.feedsWithDownloads,
           ),
         )
         .then((_) => _propertiesChangedController.add(true));
@@ -359,11 +377,11 @@ class LibraryService {
   }
 
   void _updateDownloads() {
-    writeStringMap(_downloads, kDownloads)
+    writeStringMap(_downloads, FileNames.downloads)
         .then(
           (_) => writeStringIterable(
             iterable: _feedsWithDownloads,
-            filename: kFeedsWithDownloads,
+            filename: FileNames.feedsWithDownloads,
           ),
         )
         .then((_) => _propertiesChangedController.add(true));
@@ -383,7 +401,7 @@ class LibraryService {
     _feedsWithDownloads.remove(feedUrl);
     writeStringIterable(
       iterable: _feedsWithDownloads,
-      filename: kFeedsWithDownloads,
+      filename: FileNames.feedsWithDownloads,
     ).then((_) => _propertiesChangedController.add(true));
   }
 
@@ -395,7 +413,7 @@ class LibraryService {
   void addPodcast(String feedUrl, List<Audio> audios) {
     if (isPodcastSubscribed(feedUrl)) return;
     _podcasts.putIfAbsent(feedUrl, () => audios);
-    writeAudioMap(_podcasts, kPodcastsFileName)
+    writeAudioMap(map: _podcasts, fileName: FileNames.podcasts)
         .then((_) => _propertiesChangedController.add(true));
   }
 
@@ -403,28 +421,32 @@ class LibraryService {
     if (feedUrl.isEmpty || audios.isEmpty) return;
     _addPodcastUpdate(feedUrl);
     _podcasts.update(feedUrl, (value) => audios);
-    return writeAudioMap(_podcasts, kPodcastsFileName)
+    return writeAudioMap(map: _podcasts, fileName: FileNames.podcasts)
         .then((_) => _propertiesChangedController.add(true));
   }
 
   void _addPodcastUpdate(String feedUrl) {
     if (_podcastUpdates?.contains(feedUrl) == true) return;
     _podcastUpdates?.add(feedUrl);
-    writeStringIterable(iterable: _podcastUpdates!, filename: kPodcastsUpdates)
-        .then((_) => _propertiesChangedController.add(true));
+    writeStringIterable(
+      iterable: _podcastUpdates!,
+      filename: FileNames.podcastUpdates,
+    ).then((_) => _propertiesChangedController.add(true));
   }
 
   bool showPodcastAscending(String feedUrl) =>
-      _sharedPreferences.getBool(kAscendingFeeds + feedUrl) ?? false;
+      _sharedPreferences.getBool(SPKeys.ascendingFeeds + feedUrl) ?? false;
 
   Future<void> _addAscendingPodcast(String feedUrl) async {
-    await _sharedPreferences.setBool(kAscendingFeeds + feedUrl, true).then(
+    await _sharedPreferences
+        .setBool(SPKeys.ascendingFeeds + feedUrl, true)
+        .then(
           (_) => _propertiesChangedController.add(true),
         );
   }
 
   Future<void> _removeAscendingPodcast(String feedUrl) async =>
-      _sharedPreferences.remove(kAscendingFeeds + feedUrl).then(
+      _sharedPreferences.remove(SPKeys.ascendingFeeds + feedUrl).then(
             (_) => _propertiesChangedController.add(true),
           );
 
@@ -456,14 +478,16 @@ class LibraryService {
   void removePodcastUpdate(String feedUrl) {
     if (_podcastUpdates?.isNotEmpty == false) return;
     _podcastUpdates?.remove(feedUrl);
-    writeStringIterable(iterable: _podcastUpdates!, filename: kPodcastsUpdates)
-        .then((_) => _propertiesChangedController.add(true));
+    writeStringIterable(
+      iterable: _podcastUpdates!,
+      filename: FileNames.podcastUpdates,
+    ).then((_) => _propertiesChangedController.add(true));
   }
 
   void removePodcast(String feedUrl) {
     if (!isPodcastSubscribed(feedUrl)) return;
     _podcasts.remove(feedUrl);
-    writeAudioMap(_podcasts, kPodcastsFileName)
+    writeAudioMap(map: _podcasts, fileName: FileNames.podcasts)
         .then((_) => _propertiesChangedController.add(true))
         .then((_) => removePodcastUpdate(feedUrl))
         .then((_) => _removeFeedWithDownload(feedUrl));
@@ -484,13 +508,13 @@ class LibraryService {
 
   void addPinnedAlbum(String name, List<Audio> audios) {
     _pinnedAlbums.putIfAbsent(name, () => audios);
-    writeAudioMap(_pinnedAlbums, kPinnedAlbumsFileName)
+    writeAudioMap(map: _pinnedAlbums, fileName: FileNames.pinnedAlbums)
         .then((_) => _propertiesChangedController.add(true));
   }
 
   void removePinnedAlbum(String name) {
     _pinnedAlbums.remove(name);
-    writeAudioMap(_pinnedAlbums, kPinnedAlbumsFileName)
+    writeAudioMap(map: _pinnedAlbums, fileName: FileNames.pinnedAlbums)
         .then((_) => _propertiesChangedController.add(true));
   }
 
@@ -499,30 +523,36 @@ class LibraryService {
     // Ensure [init] is only called once
     if (_libraryInitialized == true) return _libraryInitialized!;
 
-    _playlists = await readAudioMap(kPlaylistsFileName);
-    _pinnedAlbums = await readAudioMap(kPinnedAlbumsFileName);
-    _podcasts = await readAudioMap(kPodcastsFileName);
+    _playlists = await readAudioMap(FileNames.playlists);
+    _pinnedAlbums = await readAudioMap(FileNames.pinnedAlbums);
+    _podcasts = await readAudioMap(FileNames.podcasts);
     _podcastUpdates = Set.from(
-      await readStringIterable(filename: kPodcastsUpdates) ?? <String>{},
+      await readStringIterable(filename: FileNames.podcastUpdates) ??
+          <String>{},
     );
     _podcastUpdates ??= {};
-    _starredStations = await readAudioMap(kStarredStationsFileName);
+    _starredStations = await readAudioMap(FileNames.starredStations);
 
-    _likedAudios =
-        (await readAudioMap(kLikedAudiosFileName)).entries.firstOrNull?.value ??
-            <Audio>[];
+    _likedAudios = (await readAudioMap(FileNames.likedAudios))
+            .entries
+            .firstOrNull
+            ?.value ??
+        <Audio>[];
 
-    _downloads = await readStringMap(kDownloads);
+    _downloads = await readStringMap(FileNames.downloads);
     _feedsWithDownloads = Set.from(
-      await readStringIterable(filename: kFeedsWithDownloads) ?? <String>{},
+      await readStringIterable(filename: FileNames.feedsWithDownloads) ??
+          <String>{},
     );
 
     return true;
   }
 
-  String? get selectedPageId => _sharedPreferences.getString(kSelectedPageId);
+  String? get selectedPageId =>
+      _sharedPreferences.getString(PageIDs.selectedPage);
   Future<void> setSelectedPageId(String value) async {
-    final success = await _sharedPreferences.setString(kSelectedPageId, value);
+    final success =
+        await _sharedPreferences.setString(PageIDs.selectedPage, value);
     if (success) {
       _propertiesChangedController.add(true);
     }
@@ -534,19 +564,9 @@ class LibraryService {
 
   bool isPageInLibrary(String? pageId) =>
       pageId != null &&
-      (_mainPages.contains(pageId) ||
+      (PageIDs.permanent.contains(pageId) ||
           isPinnedAlbum(pageId) ||
           isStarredStation(pageId) ||
           isPlaylistSaved(pageId) ||
           isPodcastSubscribed(pageId));
-
-  final _mainPages = [
-    kHomePageId,
-    kSearchPageId,
-    kLikedAudiosPageId,
-    kLocalAudioPageId,
-    kPodcastsPageId,
-    kRadioPageId,
-    kSettingsPageId,
-  ];
 }

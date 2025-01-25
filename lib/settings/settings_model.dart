@@ -116,6 +116,8 @@ class SettingsModel extends SafeChangeNotifier {
   Future<void> setShowPositionDuration(bool value) async =>
       _service.setShowPositionDuration(value);
 
+  Future<void> wipeAllSettings() async => _service.wipeAllSettings();
+
   void init() => _propertiesChangedSub ??=
       _service.propertiesChanged.listen((_) => notifyListeners());
 

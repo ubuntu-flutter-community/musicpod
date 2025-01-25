@@ -5,8 +5,8 @@ import 'package:yaru/yaru.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/shared_preferences_x.dart';
 import '../../extensions/string_x.dart';
 import '../../l10n/l10n.dart';
 import '../../podcasts/download_model.dart';
@@ -83,7 +83,7 @@ class _PodcastSectionState extends State<PodcastSection> {
                 onChanged: (v) => setState(() => _initialKey = v),
                 obscureText: true,
                 decoration: InputDecoration(
-                  label: Text(kPodcastIndexApiKey.camelToSentence),
+                  label: Text(SPKeys.podcastIndexApiKey.camelToSentence),
                   suffixIcon: IconButton(
                     tooltip: l10n.save,
                     onPressed: () =>
@@ -110,7 +110,7 @@ class _PodcastSectionState extends State<PodcastSection> {
                 onChanged: (v) => setState(() => _initialSecret = v),
                 obscureText: true,
                 decoration: InputDecoration(
-                  label: Text(kPodcastIndexApiSecret.camelToSentence),
+                  label: Text(SPKeys.podcastIndexApiSecret.camelToSentence),
                   suffixIcon: IconButton(
                     tooltip: l10n.save,
                     onPressed: () =>

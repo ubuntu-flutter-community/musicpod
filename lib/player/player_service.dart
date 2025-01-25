@@ -13,6 +13,7 @@ import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/data/mpv_meta_data.dart';
 import '../common/data/player_state.dart';
+import '../common/file_names.dart';
 import '../common/logging.dart';
 import '../constants.dart';
 import '../expose/expose_service.dart';
@@ -474,7 +475,7 @@ class PlayerService {
   }
 
   Future<void> _loadLastPositions() async {
-    _lastPositions = (await getCustomSettings(kLastPositionsFileName)).map(
+    _lastPositions = (await getCustomSettings(FileNames.lastPositions)).map(
       (key, value) => MapEntry(key, value.parsedDuration ?? Duration.zero),
     );
   }
@@ -489,9 +490,9 @@ class PlayerService {
   Map<String, Duration> get lastPositions => _lastPositions;
   Future<void> addLastPosition(String key, Duration lastPosition) async {
     await writeCustomSetting(
-      key,
-      lastPosition.toString(),
-      kLastPositionsFileName,
+      key: key,
+      value: lastPosition.toString(),
+      filename: FileNames.lastPositions,
     );
     if (_lastPositions.containsKey(key)) {
       _lastPositions.update(key, (value) => lastPosition);
@@ -512,7 +513,7 @@ class PlayerService {
             ),
           )
           .toList(),
-      filename: kLastPositionsFileName,
+      filename: FileNames.lastPositions,
     );
     await _loadLastPositions();
 
@@ -520,15 +521,15 @@ class PlayerService {
   }
 
   Future<void> removeLastPosition(String key) async {
-    await removeCustomSetting(key, kLastPositionsFileName);
+    await removeCustomSetting(key: key, filename: FileNames.lastPositions);
     _lastPositions.remove(key);
     _propertiesChangedController.add(true);
   }
 
   Future<void> removeLastPositions(List<Audio> audios) async {
     await removeCustomSettings(
-      audios.where((e) => e.url != null).map((e) => e.url!).toList(),
-      kLastPositionsFileName,
+      keys: audios.where((e) => e.url != null).map((e) => e.url!).toList(),
+      filename: FileNames.lastPositions,
     );
 
     await _loadLastPositions();
@@ -861,13 +862,13 @@ class PlayerService {
       rate: _rate.toString(),
     );
 
-    await writeJsonToFile(playerState.toMap(), kPlayerStateFileName);
+    await writeJsonToFile(playerState.toMap(), FileNames.playerState);
   }
 
   Future<PlayerState?> _readPlayerState() async {
     try {
       final workingDir = await getWorkingDir();
-      final file = File(p.join(workingDir, kPlayerStateFileName));
+      final file = File(p.join(workingDir, FileNames.playerState));
 
       if (file.existsSync()) {
         final jsonStr = await file.readAsString();

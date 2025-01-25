@@ -1,3 +1,4 @@
+import '../../../common/data/audio_type.dart';
 import '../../../common/view/ui_constants.dart';
 import '../../../l10n/l10n.dart';
 import '../../../library/library_model.dart';
@@ -29,7 +30,7 @@ class QueueDialog extends StatelessWidget with WatchItMixin {
           onPressed: () {
             di<LibraryModel>().addPlaylist(
               '${context.l10n.queue} ${DateTime.now()}',
-              List.from(queue),
+              List.from(queue.where((e) => e.audioType == AudioType.local)),
             );
             Navigator.of(context).pop();
           },

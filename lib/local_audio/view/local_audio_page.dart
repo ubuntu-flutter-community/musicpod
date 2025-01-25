@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/no_search_result_page.dart';
@@ -10,7 +11,6 @@ import '../../common/view/search_button.dart';
 import '../../common/view/sliver_filter_app_bar.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
@@ -68,7 +68,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             child: SearchButton(
               active: false,
               onPressed: () {
-                di<LibraryModel>().push(pageId: kSearchPageId);
+                di<LibraryModel>().push(pageId: PageIDs.searchPage);
                 final searchmodel = di<SearchModel>();
                 searchmodel
                   ..setAudioType(AudioType.local)

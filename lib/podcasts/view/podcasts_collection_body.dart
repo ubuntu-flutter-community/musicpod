@@ -5,6 +5,7 @@ import 'package:watch_it/watch_it.dart';
 import '../../app/connectivity_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
@@ -14,7 +15,6 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -63,7 +63,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
             ),
             ImportantButton(
               onPressed: () {
-                di<LibraryModel>().push(pageId: kSearchPageId);
+                di<LibraryModel>().push(pageId: PageIDs.searchPage);
                 di<SearchModel>()
                   ..setAudioType(AudioType.podcast)
                   ..setSearchQuery(null)
