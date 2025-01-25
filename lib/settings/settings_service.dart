@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/data/close_btn_action.dart';
 import '../common/file_names.dart';
-import '../constants.dart';
+import '../extensions/shared_preferences_x.dart';
 import '../persistence_utils.dart';
 
 class SettingsService {
@@ -23,108 +23,116 @@ class SettingsService {
     if (saved) _propertiesChangedController.add(true);
   }
 
-  int get themeIndex => _preferences.getInt(kThemeIndex) ?? 0;
+  int get themeIndex => _preferences.getInt(SPKeys.themeIndex) ?? 0;
   void setThemeIndex(int value) {
-    _preferences.setInt(kThemeIndex, value).then(notify);
+    _preferences.setInt(SPKeys.themeIndex, value).then(notify);
   }
 
-  int get localAudioIndex => _preferences.getInt(kLocalAudioIndex) ?? 0;
+  int get localAudioIndex => _preferences.getInt(SPKeys.localAudioIndex) ?? 0;
   void setLocalAudioIndex(int value) {
-    _preferences.setInt(kLocalAudioIndex, value).then(notify);
+    _preferences.setInt(SPKeys.localAudioIndex, value).then(notify);
   }
 
   bool get neverShowFailedImports =>
-      _preferences.getBool(kNeverShowImportFails) ?? false;
+      _preferences.getBool(SPKeys.neverShowImportFails) ?? false;
   void setNeverShowFailedImports(bool value) {
-    _preferences.setBool(kNeverShowImportFails, value).then(notify);
+    _preferences.setBool(SPKeys.neverShowImportFails, value).then(notify);
   }
 
   bool get enableLastFmScrobbling =>
-      _preferences.getBool(kEnableLastFmScrobbling) ?? false;
-  String? get lastFmApiKey => _preferences.getString(kLastFmApiKey);
-  String? get lastFmSecret => _preferences.getString(klastFmSecret);
-  String? get lastFmSessionKey => _preferences.getString(kLastFmSessionKey);
-  String? get lastFmUsername => _preferences.getString(kLastFmUsername);
+      _preferences.getBool(SPKeys.enableLastFm) ?? false;
+  String? get lastFmApiKey => _preferences.getString(SPKeys.lastFmApiKey);
+  String? get lastFmSecret => _preferences.getString(SPKeys.lastFmSecret);
+  String? get lastFmSessionKey =>
+      _preferences.getString(SPKeys.lastFmSessionKey);
+  String? get lastFmUsername => _preferences.getString(SPKeys.lastFmUsername);
   void setEnableLastFmScrobbling(bool value) =>
-      _preferences.setBool(kEnableLastFmScrobbling, value).then(notify);
+      _preferences.setBool(SPKeys.enableLastFm, value).then(notify);
 
   void setLastFmApiKey(String value) =>
-      _preferences.setString(kLastFmApiKey, value).then(notify);
+      _preferences.setString(SPKeys.lastFmApiKey, value).then(notify);
 
   void setLastFmSecret(String value) =>
-      _preferences.setString(klastFmSecret, value).then(notify);
+      _preferences.setString(SPKeys.lastFmSecret, value).then(notify);
 
   void setLastFmSessionKey(String value) =>
-      _preferences.setString(kLastFmSessionKey, value).then(notify);
+      _preferences.setString(SPKeys.lastFmSessionKey, value).then(notify);
 
   void setLastFmUsername(String value) =>
-      _preferences.setString(kLastFmUsername, value).then(notify);
+      _preferences.setString(SPKeys.lastFmUsername, value).then(notify);
 
   bool get enableListenBrainzScrobbling =>
-      _preferences.getBool(kEnableListenBrainzScrobbling) ?? false;
-  String? get listenBrainzApiKey => _preferences.getString(kListenBrainzApiKey);
+      _preferences.getBool(SPKeys.enableListenBrainz) ?? false;
+  String? get listenBrainzApiKey =>
+      _preferences.getString(SPKeys.listenBrainzApiKey);
   void setEnableListenBrainzScrobbling(bool value) =>
-      _preferences.setBool(kEnableListenBrainzScrobbling, value).then(notify);
+      _preferences.setBool(SPKeys.enableListenBrainz, value).then(notify);
   void setListenBrainzApiKey(String value) =>
-      _preferences.setString(kListenBrainzApiKey, value).then(notify);
+      _preferences.setString(SPKeys.listenBrainzApiKey, value).then(notify);
 
-  bool get enableDiscordRPC => _preferences.getBool(kEnableDiscordRPC) ?? false;
+  bool get enableDiscordRPC =>
+      _preferences.getBool(SPKeys.enableDiscord) ?? false;
   void setEnableDiscordRPC(bool value) =>
-      _preferences.setBool(kEnableDiscordRPC, value).then(notify);
+      _preferences.setBool(SPKeys.enableDiscord, value).then(notify);
 
   bool get useMoreAnimations =>
-      _preferences.getBool(kUseMoreAnimations) ?? !Platform.isLinux;
+      _preferences.getBool(SPKeys.useMoreAnimations) ?? !Platform.isLinux;
   void setUseMoreAnimations(bool value) =>
-      _preferences.setBool(kUseMoreAnimations, value).then(notify);
+      _preferences.setBool(SPKeys.useMoreAnimations, value).then(notify);
 
   bool get notifyDataSafeMode =>
-      _preferences.getBool(kNotifyDataSafeMode) ?? true;
+      _preferences.getBool(SPKeys.notifyDataSafeMode) ?? true;
   void setNotifyDataSafeMode(bool value) =>
-      _preferences.setBool(kNotifyDataSafeMode, value).then(notify);
+      _preferences.setBool(SPKeys.notifyDataSafeMode, value).then(notify);
 
   bool recentPatchNotesDisposed(String version) =>
-      _preferences.getString(kPatchNotesDisposed) == version;
+      _preferences.getString(SPKeys.patchNotesDisposed) == version;
 
   Future<void> disposePatchNotes(String version) async =>
-      _preferences.setString(kPatchNotesDisposed, version).then(notify);
+      _preferences.setString(SPKeys.patchNotesDisposed, version).then(notify);
 
-  bool get usePodcastIndex => _preferences.getBool(kUsePodcastIndex) ?? false;
+  bool get usePodcastIndex =>
+      _preferences.getBool(SPKeys.usePodcastIndex) ?? false;
   Future<void> setUsePodcastIndex(bool value) async =>
-      _preferences.setBool(kUsePodcastIndex, value).then(notify);
+      _preferences.setBool(SPKeys.usePodcastIndex, value).then(notify);
 
-  String? get podcastIndexApiKey => _preferences.getString(kPodcastIndexApiKey);
+  String? get podcastIndexApiKey =>
+      _preferences.getString(SPKeys.podcastIndexApiKey);
   void setPodcastIndexApiKey(String value) =>
-      _preferences.setString(kPodcastIndexApiKey, value).then(notify);
+      _preferences.setString(SPKeys.podcastIndexApiKey, value).then(notify);
 
   String? get podcastIndexApiSecret =>
-      _preferences.getString(kPodcastIndexApiSecret);
+      _preferences.getString(SPKeys.podcastIndexApiSecret);
   void setPodcastIndexApiSecret(String value) =>
-      _preferences.setString(kPodcastIndexApiSecret, value).then(notify);
+      _preferences.setString(SPKeys.podcastIndexApiSecret, value).then(notify);
 
-  String? get directory => _preferences.getString(kDirectoryProperty);
+  String? get directory => _preferences.getString(SPKeys.directory);
   Future<void> setDirectory(String directory) async =>
-      _preferences.setString(kDirectoryProperty, directory).then(notify);
+      _preferences.setString(SPKeys.directory, directory).then(notify);
 
   String? get downloadsDir =>
-      _preferences.getString(kDownloadsCustomDir) ?? _downloadsDefaultDir;
+      _preferences.getString(SPKeys.downloads) ?? _downloadsDefaultDir;
   Future<void> setDownloadsCustomDir(String directory) async =>
-      _preferences.setString(kDownloadsCustomDir, directory).then(notify);
+      _preferences.setString(SPKeys.downloads, directory).then(notify);
 
   bool get showPositionDuration =>
-      _preferences.getBool(kShowPositionDuration) ?? false;
+      _preferences.getBool(SPKeys.showPositionDuration) ?? false;
   Future<void> setShowPositionDuration(bool value) async =>
-      _preferences.setBool(kShowPositionDuration, value).then(notify);
+      _preferences.setBool(SPKeys.showPositionDuration, value).then(notify);
 
   CloseBtnAction get closeBtnActionIndex =>
-      _preferences.getString(kCloseBtnAction) == null
+      _preferences.getString(SPKeys.closeBtnAction) == null
           ? CloseBtnAction.alwaysAsk
           : CloseBtnAction.values.firstWhere(
               (element) =>
-                  element.toString() == _preferences.getString(kCloseBtnAction),
+                  element.toString() ==
+                  _preferences.getString(SPKeys.closeBtnAction),
               orElse: () => CloseBtnAction.alwaysAsk,
             );
   void setCloseBtnActionIndex(CloseBtnAction value) {
-    _preferences.setString(kCloseBtnAction, value.toString()).then(notify);
+    _preferences
+        .setString(SPKeys.closeBtnAction, value.toString())
+        .then(notify);
   }
 
   Future<void> wipeAllSettings() async {
