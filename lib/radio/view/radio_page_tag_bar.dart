@@ -6,8 +6,8 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/tapable_text.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
@@ -73,7 +73,7 @@ class RadioPageTagBar extends StatelessWidget {
                 style: style,
                 wrapInFlexible: false,
                 onTap: () {
-                  di<LibraryModel>().push(pageId: kSearchPageId);
+                  di<LibraryModel>().push(pageId: PageIDs.searchPage);
                   di<SearchModel>()
                     ..setTag(Tag(name: e, stationCount: 1))
                     ..setAudioType(AudioType.radio)

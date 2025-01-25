@@ -5,6 +5,7 @@ import 'package:watch_it/watch_it.dart';
 import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_filter.dart';
 import '../../common/view/audio_page_header.dart';
@@ -18,7 +19,6 @@ import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -27,6 +27,7 @@ import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
 import '../podcast_model.dart';
+import 'podcast_mark_done_button.dart';
 import 'podcast_refresh_button.dart';
 import 'podcast_reorder_button.dart';
 import 'podcast_replay_button.dart';
@@ -108,7 +109,7 @@ class _PodcastPageState extends State<PodcastPage> {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                di<LibraryModel>().push(pageId: kSearchPageId);
+                di<LibraryModel>().push(pageId: PageIDs.searchPage);
                 di<SearchModel>()
                   ..setAudioType(AudioType.podcast)
                   ..setSearchType(SearchType.podcastTitle);
@@ -166,17 +167,8 @@ class _PodcastPageState extends State<PodcastPage> {
                     children: space(
                       children: [
                         if (!isMobilePlatform)
-                          PodcastReplayButton(audios: episodesWithDownloads),
-                        IconButton(
-                          tooltip: l10n.markAllEpisodesAsDone,
-                          onPressed: () {
-                            di<PlayerModel>()
-                                .safeAllLastPositions(episodesWithDownloads);
-                            di<LibraryModel>()
-                                .removePodcastUpdate(widget.feedUrl);
-                          },
-                          icon: Icon(Iconz.markAllRead),
-                        ),
+                          PodcastReplayButton(feedUrl: widget.feedUrl),
+                        PodcastMarkDoneButton(feedUrl: widget.feedUrl),
                         PodcastSubButton(
                           audios: episodesWithDownloads,
                           pageId: widget.feedUrl,
@@ -226,7 +218,7 @@ class _PodcastPageState extends State<PodcastPage> {
     required String text,
   }) async {
     await di<PodcastModel>().init(updateMessage: l10n.updateAvailable);
-    di<LibraryModel>().push(pageId: kSearchPageId);
+    di<LibraryModel>().push(pageId: PageIDs.searchPage);
     di<SearchModel>()
       ..setAudioType(AudioType.podcast)
       ..setSearchQuery(text)
@@ -247,7 +239,7 @@ class _PodcastPageState extends State<PodcastPage> {
           e.id.toLowerCase() == text.toLowerCase() ||
           e.name.toLowerCase() == text.toLowerCase(),
     );
-    di<LibraryModel>().push(pageId: kSearchPageId);
+    di<LibraryModel>().push(pageId: PageIDs.searchPage);
     if (genreOrNull != null) {
       di<SearchModel>()
         ..setAudioType(AudioType.podcast)

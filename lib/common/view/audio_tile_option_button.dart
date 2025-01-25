@@ -4,7 +4,6 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -12,6 +11,7 @@ import '../../player/player_model.dart';
 import '../../playlists/view/add_to_playlist_dialog.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
+import '../page_ids.dart';
 import 'audio_tile_bottom_sheet.dart';
 import 'icons.dart';
 import 'meta_data_dialog.dart';
@@ -63,26 +63,36 @@ class AudioTileOptionButton extends StatelessWidget {
       tooltip: l10n.moreOptions,
       padding: EdgeInsets.zero,
       itemBuilder: (context) {
+        final currentAudioType = di<PlayerModel>().audio?.audioType;
         return [
           if (audios.none((e) => e.audioType == AudioType.radio))
             PopupMenuItem(
               onTap: () {
-                di<PlayerModel>().insertIntoQueue(audios);
-                showSnackBar(
-                  context: context,
-                  content: Text(
-                    '${l10n.addedTo} ${l10n.queue}: $searchTerm',
-                  ),
-                );
+                if (di<PlayerModel>().audio?.audioType == AudioType.radio) {
+                  di<PlayerModel>()
+                      .startPlaylist(audios: audios, listName: playlistId);
+                } else {
+                  di<PlayerModel>().insertIntoQueue(audios);
+                  showSnackBar(
+                    context: context,
+                    content: Text(
+                      '${l10n.addedTo} ${l10n.queue}: $searchTerm',
+                    ),
+                  );
+                }
               },
               child: YaruTile(
                 leading: Icon(Iconz.insertIntoQueue),
-                title: Text(l10n.playNext),
+                title: Text(
+                  currentAudioType == AudioType.radio
+                      ? l10n.playAll
+                      : l10n.playNext,
+                ),
               ),
             ),
           if (allowRemove)
             PopupMenuItem(
-              onTap: () => playlistId == kLikedAudiosPageId
+              onTap: () => playlistId == PageIDs.likedAudios
                   ? libraryModel.removeLikedAudios(audios)
                   : libraryModel.removeAudiosFromPlaylist(
                       id: playlistId,
@@ -91,7 +101,7 @@ class AudioTileOptionButton extends StatelessWidget {
               child: YaruTile(
                 leading: Icon(Iconz.remove),
                 title: Text(
-                  '${l10n.removeFrom} ${playlistId == kLikedAudiosPageId ? l10n.likedSongs : playlistId}',
+                  '${l10n.removeFrom} ${playlistId == PageIDs.likedAudios ? l10n.likedSongs : playlistId}',
                 ),
               ),
             ),
@@ -109,18 +119,23 @@ class AudioTileOptionButton extends StatelessWidget {
                 ),
               ),
             ),
-          PopupMenuItem(
-            onTap: () => showDialog(
-              context: context,
-              builder: (context) => MetaDataContent.dialog(audio: audios.first),
-            ),
-            child: YaruTile(
-              leading: Icon(Iconz.info),
-              title: Text(
-                '${l10n.showMetaData} ...',
+          if (audios.none(
+                (e) => e.audioType == AudioType.podcast,
+              ) &&
+              audios.length == 1)
+            PopupMenuItem(
+              onTap: () => showDialog(
+                context: context,
+                builder: (context) =>
+                    MetaDataContent.dialog(audio: audios.first),
+              ),
+              child: YaruTile(
+                leading: Icon(Iconz.info),
+                title: Text(
+                  '${l10n.showMetaData} ...',
+                ),
               ),
             ),
-          ),
           if (audios.none((e) => e.audioType == AudioType.radio))
             PopupMenuItem(
               enabled: false,

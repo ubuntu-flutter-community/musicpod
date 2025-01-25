@@ -4,9 +4,10 @@ import 'package:basic_utils/basic_utils.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
 import '../common/logging.dart';
-import '../constants.dart';
 
 class RadioService {
+  static const _kRadioBrowserBaseUrl = 'all.api.radio-browser.info';
+
   RadioBrowserApi? _radioBrowserApi;
   final _propertiesChangedController = StreamController<bool>.broadcast();
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
@@ -37,7 +38,7 @@ class RadioService {
     final hosts = <String>[];
     try {
       final records = await DnsUtils.lookupRecord(
-        kRadioBrowserBaseUrl,
+        _kRadioBrowserBaseUrl,
         RRecordType.A,
       );
       if (records?.isNotEmpty == false) {

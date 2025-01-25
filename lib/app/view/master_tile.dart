@@ -3,13 +3,13 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
+import '../../common/view/icons.dart';
+import '../../common/view/spaced_divider.dart';
 import '../../common/view/ui_constants.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
-import '../../common/view/icons.dart';
-import '../../common/view/spaced_divider.dart';
 import '../../radio/radio_model.dart';
 
 class MasterTile extends StatelessWidget {
@@ -46,7 +46,7 @@ class MasterTile extends StatelessWidget {
     );
 
     final Widget tile;
-    if (pageId == kNewPlaylistPageId) {
+    if (pageId == PageIDs.newPlaylist) {
       tile = _FramedMasterTile(tile: yaruMasterTile);
     } else {
       tile = yaruMasterTile;

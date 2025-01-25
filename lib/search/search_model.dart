@@ -224,8 +224,15 @@ class SearchModel extends SafeChangeNotifier {
     };
   }
 
+  bool _findingSimilarStation = false;
+  bool get findingSimilarStation => _findingSimilarStation;
+  set _setFindingSimilarStation(bool value) {
+    _findingSimilarStation = value;
+    notifyListeners();
+  }
+
   Future<Audio> nextSimilarStation(Audio station) async {
-    _loading = true;
+    _setFindingSimilarStation = true;
 
     Audio? match;
     Station? maybe = await _findSimilarStation(station);
@@ -235,7 +242,7 @@ class SearchModel extends SafeChangeNotifier {
       match = station;
     }
 
-    _loading = false;
+    _setFindingSimilarStation = false;
 
     return match;
   }

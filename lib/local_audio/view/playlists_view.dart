@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../common/page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/ui_constants.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../library/library_model.dart';
 import '../../playlists/view/manual_add_dialog.dart';
@@ -27,8 +27,8 @@ class PlaylistsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final lists = [
-      kNewPlaylistPageId,
-      kLikedAudiosPageId,
+      PageIDs.newPlaylist,
+      PageIDs.likedAudios,
       ...(take != null ? playlists!.take(take!).toList() : playlists ?? []),
     ];
 
@@ -39,7 +39,7 @@ class PlaylistsView extends StatelessWidget {
         final id = lists.elementAt(index);
         return YaruSelectableContainer(
           selected: false,
-          onTap: () => id == kNewPlaylistPageId
+          onTap: () => id == PageIDs.newPlaylist
               ? showDialog(
                   context: context,
                   builder: (context) =>
@@ -58,7 +58,7 @@ class PlaylistsView extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 height: double.infinity,
-                child: id == kNewPlaylistPageId
+                child: id == PageIDs.newPlaylist
                     ? Container(
                         decoration: BoxDecoration(
                           color: context.colorScheme.surface.scale(
@@ -68,7 +68,7 @@ class PlaylistsView extends StatelessWidget {
                         ),
                         child: Icon(Iconz.plus),
                       )
-                    : id == kLikedAudiosPageId
+                    : id == PageIDs.likedAudios
                         ? Container(
                             decoration: BoxDecoration(
                               color: context.colorScheme.primary
@@ -82,7 +82,7 @@ class PlaylistsView extends StatelessWidget {
                             fallBackText: id,
                           ),
               ),
-              if (id != kNewPlaylistPageId && id != kLikedAudiosPageId)
+              if (id != PageIDs.newPlaylist && id != PageIDs.likedAudios)
                 ArtistVignette(
                   text: id,
                 ),

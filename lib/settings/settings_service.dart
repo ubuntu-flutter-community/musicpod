@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/data/close_btn_action.dart';
+import '../common/file_names.dart';
 import '../constants.dart';
+import '../persistence_utils.dart';
 
 class SettingsService {
   SettingsService({
@@ -123,6 +125,14 @@ class SettingsService {
             );
   void setCloseBtnActionIndex(CloseBtnAction value) {
     _preferences.setString(kCloseBtnAction, value.toString()).then(notify);
+  }
+
+  Future<void> wipeAllSettings() async {
+    await Future.wait([
+      for (final name in FileNames.all) wipeCustomSettings(filename: name),
+      _preferences.clear(),
+    ]);
+    exit(0);
   }
 
   Future<void> dispose() async => _propertiesChangedController.close();

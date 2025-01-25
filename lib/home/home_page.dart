@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../common/data/audio_type.dart';
+import '../common/page_ids.dart';
 import '../common/view/adaptive_container.dart';
 import '../common/view/header_bar.dart';
 import '../common/view/icons.dart';
 import '../common/view/search_button.dart';
 import '../common/view/theme.dart';
 import '../common/view/ui_constants.dart';
-import '../constants.dart';
 import '../extensions/country_x.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget with WatchItMixin {
             selectedIcon: Icon(Iconz.settingsFilled),
             icon: Icon(Iconz.settings),
             tooltip: l10n.settings,
-            onPressed: () => di<LibraryModel>().push(pageId: kSettingsPageId),
+            onPressed: () => di<LibraryModel>().push(pageId: PageIDs.settings),
           ),
           const SizedBox(
             width: kSmallestSpace,
@@ -72,7 +72,7 @@ class HomePage extends StatelessWidget with WatchItMixin {
                     ),
                     trailing: Icon(Iconz.goNext),
                     onTap: () {
-                      di<LibraryModel>().push(pageId: kSearchPageId);
+                      di<LibraryModel>().push(pageId: PageIDs.searchPage);
                       di<SearchModel>()
                         ..setAudioType(AudioType.podcast)
                         ..setSearchType(SearchType.podcastTitle)
@@ -97,7 +97,7 @@ class HomePage extends StatelessWidget with WatchItMixin {
                       '${l10n.radio} ${l10n.charts} ${country ?? ''}',
                     ),
                     onTap: () {
-                      di<LibraryModel>().push(pageId: kSearchPageId);
+                      di<LibraryModel>().push(pageId: PageIDs.searchPage);
                       di<SearchModel>()
                         ..setAudioType(AudioType.radio)
                         ..setSearchType(SearchType.radioCountry)
@@ -121,7 +121,7 @@ class HomePage extends StatelessWidget with WatchItMixin {
                     onTap: () {
                       di<LocalAudioModel>().localAudioindex =
                           LocalAudioView.playlists.index;
-                      di<LibraryModel>().push(pageId: kLocalAudioPageId);
+                      di<LibraryModel>().push(pageId: PageIDs.localAudio);
                     },
                   ),
                 ),

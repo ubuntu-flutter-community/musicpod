@@ -7,8 +7,8 @@ import '../app/view/mobile_page.dart';
 import '../app_config.dart';
 import '../common/data/audio.dart';
 import '../common/logging.dart';
+import '../common/page_ids.dart';
 import '../common/view/back_gesture.dart';
-import '../constants.dart';
 import 'library_service.dart';
 
 class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
@@ -32,7 +32,7 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   }
 
   List<Audio>? getAudiosById(String pageId) {
-    if (pageId == kLikedAudiosPageId) {
+    if (pageId == PageIDs.likedAudios) {
       return likedAudios;
     } else {
       return playlists[pageId] ??

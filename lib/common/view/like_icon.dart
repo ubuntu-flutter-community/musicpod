@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../playlists/view/add_to_playlist_snack_bar.dart';
 import '../data/audio.dart';
+import '../page_ids.dart';
 import 'animated_like_icon.dart';
 
 class LikeIcon extends StatelessWidget with WatchItMixin {
@@ -39,7 +39,7 @@ class LikeIcon extends StatelessWidget with WatchItMixin {
           showAddedToPlaylistSnackBar(
             context: context,
             libraryModel: libraryModel,
-            id: kLikedAudiosPageId,
+            id: PageIDs.likedAudios,
           );
         }
       };
