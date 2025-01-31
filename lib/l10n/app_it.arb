@@ -1229,5 +1229,9 @@
   "isMaybeLowBandwidthDialogBody": "Non sei connesso a WiFi o Ethernet. Vuoi abilitare la modalità sicura dati?",
   "@isMaybeLowBandwidthDialogBody": {},
   "enableDataSafeModeSettingDescription": "Quando attivi il riproduttore non proverà a scaricare opere d'arte di titoli inviati dalle stazioni radio.",
-  "@enableDataSafeModeSettingDescription": {}
+  "@enableDataSafeModeSettingDescription": {},
+  "toClick": "clic",
+  "@toClick": {},
+  "theClick": "clic",
+  "@theClick": {}
 }
