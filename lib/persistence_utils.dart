@@ -193,7 +193,7 @@ Future<void> wipeCustomSettings({required String filename}) async {
 
   final file = File(p.join(workingDir, filename));
 
-  if (!file.existsSync()) {
+  if (file.existsSync()) {
     await file.delete();
   }
 }
