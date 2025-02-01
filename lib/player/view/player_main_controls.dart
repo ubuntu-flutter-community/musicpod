@@ -117,7 +117,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
             active: active,
             iconColor: defaultColor,
           ),
-        AudioType.radio => const NextStationButton(),
+        AudioType.radio => NextStationButton(iconColor: defaultColor),
         _ => const SizedBox.shrink(),
       },
     ];
