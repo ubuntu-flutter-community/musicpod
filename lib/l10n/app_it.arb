@@ -254,7 +254,7 @@
       }
     }
   },
-  "about": "About",
+  "about": "Info",
   "@about": {},
   "localAudioCacheSuggestion": "Hai {length} file audio locali. Vuoi creare una cache per migliorare i tempi di avvio?",
   "@localAudioCacheSuggestion": {
@@ -264,7 +264,7 @@
       }
     }
   },
-  "noThankYou": "No, thank you.",
+  "noThankYou": "No, grazie.",
   "@noThankYou": {},
   "recreateLocalAudioCache": "Ricrea cache audio locale",
   "@recreateLocalAudioCache": {},
@@ -660,7 +660,7 @@
   "@searchSimilarStation": {},
   "onlineArtError": "La ricerca copertine online non è attualmente disponibile",
   "@onlineArtError": {},
-  "clicks": "Clic",
+  "clicks": "clic",
   "@clicks": {},
   "exposeOnlineHeadline": "Esponi l'attività di ascolto online",
   "@exposeOnlineHeadline": {},
