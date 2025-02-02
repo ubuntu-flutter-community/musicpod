@@ -660,7 +660,7 @@
   "@searchSimilarStation": {},
   "onlineArtError": "Online vyhľadávanie obrázkov albumov je momentálne nedostupné",
   "@onlineArtError": {},
-  "clicks": "Kliknutia",
+  "clicks": "kliknutí",
   "@clicks": {},
   "exposeOnlineHeadline": "Odhaliť svoju aktivitu počúvania online",
   "@exposeOnlineHeadline": {},
@@ -1229,5 +1229,9 @@
   "enableDataSafeModeSettingDescription": "Keď je režim zapnutý, prehrávač nebude sťahovať obrázky titulov od rádiových staníc.",
   "@enableDataSafeModeSettingDescription": {},
   "isMaybeLowBandwidthDialogBody": "Nie ste pripojený k WiFi ani Ethernetu. Chcete zapnúť režim šetrenia dát?",
-  "@isMaybeLowBandwidthDialogBody": {}
+  "@isMaybeLowBandwidthDialogBody": {},
+  "theClick": "kliknutie",
+  "@theClick": {},
+  "toClick": "kliknutia",
+  "@toClick": {}
 }
