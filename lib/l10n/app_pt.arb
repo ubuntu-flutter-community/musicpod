@@ -331,5 +331,21 @@
     }
   },
   "addToCollection": "Adicionar a colecção",
-  "@addToCollection": {}
+  "@addToCollection": {},
+  "stopToNotifyAboutDataSafeMode": "Parar de me notificar",
+  "@stopToNotifyAboutDataSafeMode": {},
+  "downloadsDirectory": "Localização dos seus downloads",
+  "@downloadsDirectory": {},
+  "downloadsOnly": "Apenas downloads",
+  "@downloadsOnly": {},
+  "enableDataSafeModeSettingDescription": "Quando activo,o reprodutor não vai tentar baixar as capas dos títulos enviados pela estações de rádio.",
+  "@enableDataSafeModeSettingDescription": {},
+  "notifyMeAboutDataSafeModeTitle": "Notificações do Modo de segurança de dados",
+  "@notifyMeAboutDataSafeModeTitle": {},
+  "resourceSectionTitle": "Recursos do dispositivo",
+  "@resourceSectionTitle": {},
+  "notifyMeAboutDataSafeModeDescription": "Notificar-me sobre o modo de segurança da dados",
+  "@notifyMeAboutDataSafeModeDescription": {},
+  "downloadsDirectoryDescription": "Garanta que o MusicPod pode aceder este directório!",
+  "@downloadsDirectoryDescription": {}
 }
