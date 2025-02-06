@@ -390,7 +390,7 @@
     "exposeToListenBrainzSubTitle": "Şu anda dinlediğiniz şarkı/istasyon/podcast'in sanatçısı ve başlığı paylaşılır.",
     "listenBrainzApiKey": "ListenBrainz API anahtarı",
     "listenBrainzApiKeyEmpty": "Lütfen bir API anahtarı girin",
-    "featureDisabledOnPlatform": "Bu özellik şu anda bu işletim sistemi için devre dışı."
+    "featureDisabledOnPlatform": "Bu özellik şu anda bu işletim sistemi için devre dışı.",
     "regionNone": "Yok",
     "regionAfghanistan": "Afganistan",
     "regionAlandislands": "Åland Adaları",
