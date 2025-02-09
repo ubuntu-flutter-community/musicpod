@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.9.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.8.0...v2.9.0) (2025-02-09)
+
+
+### Features
+
+* Add PopScope to monitor MobileBottomBar ([#1146](https://github.com/ubuntu-flutter-community/musicpod/issues/1146)) ([#1148](https://github.com/ubuntu-flutter-community/musicpod/issues/1148)) ([344b58e](https://github.com/ubuntu-flutter-community/musicpod/commit/344b58e12e5511ba6fef09e5ba47e83580b40fc7))
+* improve Turkish Locales ([#1147](https://github.com/ubuntu-flutter-community/musicpod/issues/1147)) ([25c1261](https://github.com/ubuntu-flutter-community/musicpod/commit/25c1261bad2f14622dccf4dbc7e1924ad4cdca2a))
+* Translated using Weblate (Estonian) ([#1143](https://github.com/ubuntu-flutter-community/musicpod/issues/1143)) ([3767081](https://github.com/ubuntu-flutter-community/musicpod/commit/3767081e0d4ce8016603b7e501850a7316310ffb))
+* Translated using Weblate (Italian) ([#1138](https://github.com/ubuntu-flutter-community/musicpod/issues/1138)) ([33bea4f](https://github.com/ubuntu-flutter-community/musicpod/commit/33bea4f31cfbfe7a26cea8f03b8987d3d0d72dbc))
+* Translated using Weblate (Portuguese (Brazil)) ([#1135](https://github.com/ubuntu-flutter-community/musicpod/issues/1135)) ([3d40ad5](https://github.com/ubuntu-flutter-community/musicpod/commit/3d40ad5a65e255fd8a8a295cebe120eb573851a1))
+* Translated using Weblate (Portuguese) ([#1145](https://github.com/ubuntu-flutter-community/musicpod/issues/1145)) ([bcbcc9a](https://github.com/ubuntu-flutter-community/musicpod/commit/bcbcc9afcab94ba8f3aba3e570c83c6943696e2a))
+* Translated using Weblate (Swedish) ([#1149](https://github.com/ubuntu-flutter-community/musicpod/issues/1149)) ([4ca8f6f](https://github.com/ubuntu-flutter-community/musicpod/commit/4ca8f6f9da94cebe5a3a814fceea0b96fa555700))
+* Translations update from Hosted Weblate ([#1133](https://github.com/ubuntu-flutter-community/musicpod/issues/1133)) ([bec913d](https://github.com/ubuntu-flutter-community/musicpod/commit/bec913d28a4a2b433d984f4ee2e46c9533a9af5c))
+* Translations update from Hosted Weblate ([#1136](https://github.com/ubuntu-flutter-community/musicpod/issues/1136)) ([42ad25d](https://github.com/ubuntu-flutter-community/musicpod/commit/42ad25db2d8c6e77ee5d366c110e6b9fdf3db289))
+* Translations update from Hosted Weblate ([#1139](https://github.com/ubuntu-flutter-community/musicpod/issues/1139)) ([cd9b24c](https://github.com/ubuntu-flutter-community/musicpod/commit/cd9b24c18713d9b82b14a327242537f37c392d1c))
+* Translations update from Hosted Weblate ([#1144](https://github.com/ubuntu-flutter-community/musicpod/issues/1144)) ([c0e80de](https://github.com/ubuntu-flutter-community/musicpod/commit/c0e80deab78534d6c207575d21f1264997c4722a))
+
 ## [2.8.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.7.0...v2.8.0) (2025-01-25)
 
 
