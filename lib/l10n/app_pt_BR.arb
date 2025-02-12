@@ -1022,7 +1022,7 @@
   "@exposeToDiscordSubTitle": {},
   "onlineArtError": "A pesquisa de arte online não está disponível no momento",
   "@onlineArtError": {},
-  "clicks": "Cliques",
+  "clicks": "cliques",
   "@clicks": {},
   "listenBrainzApiKey": "Chave API do ListenBrainz",
   "@listenBrainzApiKey": {},
@@ -1229,5 +1229,9 @@
   "regionGuernsey": "Guernsey",
   "@regionGuernsey": {},
   "regionNewzealand": "Nova Zelândia",
-  "@regionNewzealand": {}
+  "@regionNewzealand": {},
+  "toClick": "clique",
+  "@toClick": {},
+  "theClick": "clique",
+  "@theClick": {}
 }
