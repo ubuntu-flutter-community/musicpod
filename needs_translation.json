@@ -686,28 +686,6 @@
     "toClick"
   ],
 
-  "fr": [
-    "markAllEpisodesAsDone",
-    "resetAllSettings",
-    "resetAllSettingsConfirm",
-    "confirm",
-    "confirmation",
-    "isMaybeLowBandwidthDialogTitle",
-    "isMaybeLowBandwidthDialogBody",
-    "isBackInWifiDialogTitle",
-    "isBackInWifiDialogBody",
-    "enableDataSafeModeSettingTitle",
-    "dataSafeModeEnabled",
-    "dataSafeModeDisabled",
-    "enableDataSafeModeSettingDescription",
-    "stopToNotifyAboutDataSafeMode",
-    "notifyMeAboutDataSafeModeTitle",
-    "notifyMeAboutDataSafeModeDescription",
-    "resourceSectionTitle",
-    "theClick",
-    "toClick"
-  ],
-
   "nl": [
     "home",
     "showArtistPage",
@@ -1456,39 +1434,6 @@
   ],
 
   "pt": [
-    "isBackInWifiDialogTitle",
-    "downloadsChangeWarning",
-    "moreOptions",
-    "noRadioServerFound",
-    "connectedTo",
-    "disconnectedFrom",
-    "tryReconnect",
-    "addedTo",
-    "addToPlaylist",
-    "open",
-    "removeFrom",
-    "noCountryFound",
-    "noStarredTags",
-    "name",
-    "state",
-    "playNext",
-    "contributors",
-    "version",
-    "theme",
-    "useMoreAnimationsTitle",
-    "useMoreAnimationsDescription",
-    "showPositionDurationTitle",
-    "showPositionDurationDescription",
-    "license",
-    "dependencies",
-    "light",
-    "system",
-    "dark",
-    "podcastProvider",
-    "iTunes",
-    "podcastIndex",
-    "usePodcastIndex",
-    "select",
     "requiresAppRestart",
     "musicCollectionLocation",
     "astronomyXXXPodcastIndexOnly",
@@ -1899,11 +1844,6 @@
     "regionYemen",
     "regionZambia",
     "regionZimbabwe"
-  ],
-
-  "pt_BR": [
-    "theClick",
-    "toClick"
   ],
 
   "ru": [

@@ -34,6 +34,7 @@ class AppModel extends SafeChangeNotifier {
   Future<void> connectToDiscord() async => _exposeService.connectToDiscord();
   Future<void> disconnectFromDiscord() async =>
       _exposeService.disconnectFromDiscord();
+  final keyboardListenerFocus = FocusNode();
 
   ValueNotifier<bool> get isLastFmAuthorized =>
       _exposeService.isLastFmAuthorized;
@@ -104,6 +105,7 @@ class AppModel extends SafeChangeNotifier {
   bool? _updateAvailable;
   bool? get updateAvailable => _updateAvailable;
   String? _onlineVersion;
+
   String? get onlineVersion => _onlineVersion;
   Future<void> checkForUpdate({
     required bool isOnline,

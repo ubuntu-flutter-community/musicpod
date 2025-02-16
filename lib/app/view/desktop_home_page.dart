@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app_config.dart';
+import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../library/library_model.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/player_model.dart';
 import '../../player/view/player_view.dart';
 import '../../podcasts/download_model.dart';
 import '../../podcasts/podcast_model.dart';
+import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
 import '../app_model.dart';
 import '../connectivity_model.dart';
@@ -38,6 +44,31 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
         );
       }
     });
+  }
+
+  void _onTypeHandler(KeyEvent event) {
+    final character = event.character;
+    if (event is! KeyDownEvent || character == null || character.isEmpty) {
+      return;
+    }
+
+    if (FocusManager.instance.primaryFocus?.context?.widget is! FocusScope) {
+      return;
+    }
+
+    final libraryModel = di<LibraryModel>();
+    final audioType = switch (libraryModel.selectedPageId) {
+      PageIDs.podcasts => AudioType.podcast,
+      PageIDs.radio => AudioType.radio,
+      _ => AudioType.local
+    };
+
+    di<SearchModel>()
+      ..setSearchQuery(character)
+      ..setAudioType(audioType)
+      ..search();
+
+    libraryModel.push(pageId: PageIDs.searchPage);
   }
 
   @override
@@ -70,33 +101,37 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
       handler: onConnectivityChangedHandler,
     );
 
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Column(
-                children: [
-                  const Expanded(child: MasterDetailPage()),
-                  if (!playerToTheRight || isMobilePlatform)
-                    const PlayerView(position: PlayerPosition.bottom),
-                ],
+    return KeyboardListener(
+      focusNode: di<AppModel>().keyboardListenerFocus,
+      onKeyEvent: _onTypeHandler,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    const Expanded(child: MasterDetailPage()),
+                    if (!playerToTheRight || isMobilePlatform)
+                      const PlayerView(position: PlayerPosition.bottom),
+                  ],
+                ),
               ),
-            ),
-            if (playerToTheRight)
-              const SizedBox(
-                width: kSideBarPlayerWidth,
-                child: PlayerView(position: PlayerPosition.sideBar),
-              ),
-          ],
-        ),
-        if (isFullScreen == true)
-          Scaffold(
-            backgroundColor: isVideo ? Colors.black : null,
-            body: const PlayerView(position: PlayerPosition.fullWindow),
+              if (playerToTheRight)
+                const SizedBox(
+                  width: kSideBarPlayerWidth,
+                  child: PlayerView(position: PlayerPosition.sideBar),
+                ),
+            ],
           ),
-      ],
+          if (isFullScreen == true)
+            Scaffold(
+              backgroundColor: isVideo ? Colors.black : null,
+              body: const PlayerView(position: PlayerPosition.fullWindow),
+            ),
+        ],
+      ),
     );
   }
 }

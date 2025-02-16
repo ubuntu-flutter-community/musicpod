@@ -349,6 +349,8 @@ class SearchModel extends SafeChangeNotifier {
   }
 
   SearchResult? _podcastChartsPeak;
+
+  FocusNode fieldFocusNode = FocusNode();
   SearchResult? get podcastChartsPeak => _podcastChartsPeak;
   Future<void> fetchPodcastChartsPeak({int limit = 3}) async {
     _podcastChartsPeak =
