@@ -14,7 +14,6 @@ import '../../player/view/player_view.dart';
 import '../../podcasts/download_model.dart';
 import '../../podcasts/podcast_model.dart';
 import '../../search/search_model.dart';
-import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
 import '../app_model.dart';
 import '../connectivity_model.dart';
@@ -47,6 +46,10 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
   }
 
   void _onTypeHandler(KeyEvent event) {
+    if (!isGtkApp) {
+      return;
+    }
+
     final character = event.character;
     if (event is! KeyDownEvent || character == null || character.isEmpty) {
       return;
