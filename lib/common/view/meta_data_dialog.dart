@@ -66,7 +66,7 @@ class MetaDataContent extends StatelessWidget {
         ),
       (
         l10n.url,
-        (audio.url ?? ''),
+        audio.url ?? '',
       ),
     };
 
