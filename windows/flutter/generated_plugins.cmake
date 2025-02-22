@@ -13,6 +13,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   super_native_extensions
   system_theme
   url_launcher_windows
+  volume_controller
   window_manager
 )
 
