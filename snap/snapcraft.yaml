@@ -11,7 +11,7 @@ icon: snap/gui/musicpod.png
 confinement: strict
 base: core22
 grade: stable
-license: MPL-2.0
+license: GPL-3.0+
 
 architectures:
   - build-on: amd64

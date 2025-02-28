@@ -1,6 +1,9 @@
 name: Create Snap Package
 
 on:
+  pull_request:
+    branches: [main]
+
   push:
     branches:
       - main
@@ -14,6 +17,8 @@ jobs:
         with:
           fetch-depth: 5
       - uses: snapcore/action-build@v1
+        with:
+          snapcraft-channel: edge
         id: build
       - uses: snapcore/action-publish@v1
         if: steps.build.outcome == 'success'
@@ -30,6 +35,8 @@ jobs:
         with:
           fetch-depth: 5
       - uses: snapcore/action-build@v1
+        with:
+          snapcraft-channel: edge
         id: build
       - uses: snapcore/action-publish@v1
         if: steps.build.outcome == 'success'
