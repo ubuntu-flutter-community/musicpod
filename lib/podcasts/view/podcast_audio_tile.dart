@@ -230,7 +230,7 @@ class _Description extends StatelessWidget {
                   : const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
               title: yaruStyled
                   ? YaruDialogTitleBar(
-                      backgroundColor: theme.dialogBackgroundColor,
+                      backgroundColor: theme.dialogTheme.backgroundColor,
                       border: BorderSide.none,
                       title: Text(title ?? ''),
                     )

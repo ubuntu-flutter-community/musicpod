@@ -199,7 +199,7 @@ class _AboutPageState extends State<AboutPage> {
         children: [
           YaruDialogTitleBar(
             border: BorderSide.none,
-            backgroundColor: context.theme.dialogBackgroundColor,
+            backgroundColor: context.theme.dialogTheme.backgroundColor,
             title: title,
             leading: YaruBackButton(
               style: YaruBackButtonStyle.rounded,
