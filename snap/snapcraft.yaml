@@ -82,12 +82,9 @@ parts:
       - zip
     override-prime: ''
   
-  flutter:
-    source: .
-    plugin: flutter
 
   musicpod:
-    after: [flutter, mpv]
+    after: [flutter-git, mpv]
     source: .
     source-type: git
     plugin: nil
