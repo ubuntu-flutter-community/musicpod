@@ -104,6 +104,7 @@
     "unknown": "Unknown",
     "volume": "Volume",
     "queue": "Queue",
+    "clearQueue": "Clear queue",
     "limit": "Limit",
     "decreaseSearchLimit": "Please decrease the search limit for",
     "podcastFeedIsEmpty": "Sorry, this podcast's feed is empty.",
