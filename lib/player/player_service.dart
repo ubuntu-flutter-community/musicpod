@@ -152,6 +152,12 @@ class PlayerService {
     _propertiesChangedController.add(true);
   }
 
+  void clearQueue() {
+    _queue.audios.removeWhere((e) => e != _audio);
+    _nextAudio = _audio;
+    _propertiesChangedController.add(true);
+  }
+
   Audio? _audio;
   Audio? get audio => _audio;
   void _setAudio(Audio value) async {

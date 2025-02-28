@@ -30,6 +30,7 @@ class PlayerModel extends SafeChangeNotifier {
   String? get queueName => _playerService.queue.name;
 
   List<Audio> get queue => _playerService.queue.audios;
+  void clearQueue() => _playerService.clearQueue();
   MpvMetaData? get mpvMetaData => _playerService.mpvMetaData;
 
   Audio? get audio => _playerService.audio;

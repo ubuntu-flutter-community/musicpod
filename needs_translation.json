@@ -5,6 +5,7 @@
     "saveAndAuthorize",
     "showArtistPage",
     "showAlbumPage",
+    "clearQueue",
     "markAllEpisodesAsDone",
     "resetAllSettings",
     "resetAllSettingsConfirm",
@@ -326,6 +327,7 @@
     "saveAndAuthorize",
     "showArtistPage",
     "showAlbumPage",
+    "clearQueue",
     "insertedIntoQueue",
     "markAllEpisodesAsDone",
     "resetAllSettings",
@@ -665,6 +667,7 @@
   ],
 
   "es": [
+    "clearQueue",
     "markAllEpisodesAsDone",
     "resetAllSettings",
     "resetAllSettingsConfirm",
@@ -686,6 +689,22 @@
     "toClick"
   ],
 
+  "et": [
+    "clearQueue"
+  ],
+
+  "eu": [
+    "clearQueue"
+  ],
+
+  "fr": [
+    "clearQueue"
+  ],
+
+  "it": [
+    "clearQueue"
+  ],
+
   "nl": [
     "home",
     "showArtistPage",
@@ -700,6 +719,7 @@
     "country",
     "tag",
     "failedToImport",
+    "clearQueue",
     "markAllEpisodesAsDone",
     "resetAllSettings",
     "resetAllSettingsConfirm",
@@ -1183,6 +1203,7 @@
     "showArtistPage",
     "showAlbumPage",
     "stations",
+    "clearQueue",
     "markAllEpisodesAsDone",
     "resetAllSettings",
     "resetAllSettingsConfirm",
@@ -1434,6 +1455,7 @@
   ],
 
   "pt": [
+    "clearQueue",
     "basketballXXXPodcastIndexOnly",
     "buddhismXXXPodcastIndexOnly",
     "chemistryXXXPodcastIndexOnly",
@@ -1837,7 +1859,12 @@
     "regionZimbabwe"
   ],
 
+  "pt_BR": [
+    "clearQueue"
+  ],
+
   "ru": [
+    "clearQueue",
     "markAllEpisodesAsDone",
     "resetAllSettings",
     "resetAllSettingsConfirm",
@@ -2097,7 +2124,16 @@
     "regionZimbabwe"
   ],
 
+  "sk": [
+    "clearQueue"
+  ],
+
+  "sv": [
+    "clearQueue"
+  ],
+
   "ta": [
+    "clearQueue",
     "markAllEpisodesAsDone",
     "resetAllSettings",
     "resetAllSettingsConfirm",
@@ -2119,7 +2155,12 @@
     "toClick"
   ],
 
+  "tr": [
+    "clearQueue"
+  ],
+
   "zh": [
+    "clearQueue",
     "isBackInWifiDialogTitle",
     "showPositionDurationDescription",
     "theClick",
@@ -2137,6 +2178,7 @@
     "saveAndAuthorize",
     "showArtistPage",
     "showAlbumPage",
+    "clearQueue",
     "markAllEpisodesAsDone",
     "resetAllSettings",
     "resetAllSettingsConfirm",
@@ -2450,6 +2492,7 @@
     "saveAndAuthorize",
     "showArtistPage",
     "showAlbumPage",
+    "clearQueue",
     "markAllEpisodesAsDone",
     "resetAllSettings",
     "resetAllSettingsConfirm",
