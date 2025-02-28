@@ -1232,5 +1232,7 @@
   "theClick": "klikk",
   "@theClick": {},
   "toClick": "kliki",
-  "@toClick": {}
+  "@toClick": {},
+  "clearQueue": "Tühjenda esitusjärjekord",
+  "@clearQueue": {}
 }
