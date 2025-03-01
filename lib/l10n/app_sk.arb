@@ -278,7 +278,7 @@
   "@addToCollection": {},
   "removeFromCollection": "Odstrániť zo zbierky",
   "@removeFromCollection": {},
-  "loadingPodcastFeed": "Načítava sa kanál podcastov...",
+  "loadingPodcastFeed": "Načítava sa kanál podcastov…",
   "@loadingPodcastFeed": {},
   "downloadStarted": "Sťahovanie začaté: {name}",
   "@downloadStarted": {
@@ -624,7 +624,7 @@
   "@radioTagDisclaimerTitle": {},
   "radioTagDisclaimerSubTitle": "Niekedy stanice vysielajú označenia, ktoré nezodpovedajú žiadnemu žánru hudby. MusicPod nezodpovedá za obsah!",
   "@radioTagDisclaimerSubTitle": {},
-  "podcastFeedLoadingTimeout": "Načítanie kanála podcastov trvá dlhšie ako zvyčajne...",
+  "podcastFeedLoadingTimeout": "Načítanie kanála podcastov trvá dlhšie ako zvyčajne…",
   "@podcastFeedLoadingTimeout": {},
   "gitHubClientConnectError": "Nepodarilo sa načítať online verziu z GitHubu.",
   "@gitHubClientConnectError": {},
@@ -1233,5 +1233,7 @@
   "theClick": "kliknutie",
   "@theClick": {},
   "toClick": "kliknutia",
-  "@toClick": {}
+  "@toClick": {},
+  "clearQueue": "Vymazať poradie",
+  "@clearQueue": {}
 }
