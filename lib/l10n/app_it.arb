@@ -1233,5 +1233,7 @@
   "toClick": "clic",
   "@toClick": {},
   "theClick": "clic",
-  "@theClick": {}
+  "@theClick": {},
+  "clearQueue": "Azzera coda",
+  "@clearQueue": {}
 }
