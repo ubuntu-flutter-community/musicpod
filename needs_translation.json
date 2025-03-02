@@ -26,7 +26,9 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "connectedToDiscord",
     "disconnectedFrom",
+    "disconnectedFromDiscord",
     "useMoreAnimationsTitle",
     "useMoreAnimationsDescription",
     "showPositionDurationTitle",
@@ -349,7 +351,9 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "connectedToDiscord",
     "disconnectedFrom",
+    "disconnectedFromDiscord",
     "useMoreAnimationsTitle",
     "useMoreAnimationsDescription",
     "showPositionDurationTitle",
@@ -663,6 +667,8 @@
     "notifyMeAboutDataSafeModeTitle",
     "notifyMeAboutDataSafeModeDescription",
     "resourceSectionTitle",
+    "connectedToDiscord",
+    "disconnectedFromDiscord",
     "exposeToListenBrainzSubTitle"
   ],
 
@@ -685,24 +691,34 @@
     "notifyMeAboutDataSafeModeTitle",
     "notifyMeAboutDataSafeModeDescription",
     "resourceSectionTitle",
+    "connectedToDiscord",
+    "disconnectedFromDiscord",
     "theClick",
     "toClick"
   ],
 
   "et": [
-    "clearQueue"
+    "clearQueue",
+    "connectedToDiscord",
+    "disconnectedFromDiscord"
   ],
 
   "eu": [
-    "clearQueue"
+    "clearQueue",
+    "connectedToDiscord",
+    "disconnectedFromDiscord"
   ],
 
   "fr": [
-    "clearQueue"
+    "clearQueue",
+    "connectedToDiscord",
+    "disconnectedFromDiscord"
   ],
 
   "it": [
-    "clearQueue"
+    "clearQueue",
+    "connectedToDiscord",
+    "disconnectedFromDiscord"
   ],
 
   "nl": [
@@ -741,7 +757,9 @@
     "moreOptions",
     "noRadioServerFound",
     "connectedTo",
+    "connectedToDiscord",
     "disconnectedFrom",
+    "disconnectedFromDiscord",
     "tryReconnect",
     "addedTo",
     "addToPlaylist",
@@ -1224,7 +1242,9 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "connectedToDiscord",
     "disconnectedFrom",
+    "disconnectedFromDiscord",
     "useMoreAnimationsTitle",
     "useMoreAnimationsDescription",
     "showPositionDurationTitle",
@@ -1456,6 +1476,8 @@
 
   "pt": [
     "clearQueue",
+    "connectedToDiscord",
+    "disconnectedFromDiscord",
     "basketballXXXPodcastIndexOnly",
     "buddhismXXXPodcastIndexOnly",
     "chemistryXXXPodcastIndexOnly",
@@ -1860,7 +1882,9 @@
   ],
 
   "pt_BR": [
-    "clearQueue"
+    "clearQueue",
+    "connectedToDiscord",
+    "disconnectedFromDiscord"
   ],
 
   "ru": [
@@ -1882,6 +1906,8 @@
     "notifyMeAboutDataSafeModeTitle",
     "notifyMeAboutDataSafeModeDescription",
     "resourceSectionTitle",
+    "connectedToDiscord",
+    "disconnectedFromDiscord",
     "clicks",
     "theClick",
     "toClick",
@@ -2125,11 +2151,15 @@
   ],
 
   "sk": [
-    "clearQueue"
+    "clearQueue",
+    "connectedToDiscord",
+    "disconnectedFromDiscord"
   ],
 
   "sv": [
-    "clearQueue"
+    "clearQueue",
+    "connectedToDiscord",
+    "disconnectedFromDiscord"
   ],
 
   "ta": [
@@ -2151,17 +2181,23 @@
     "notifyMeAboutDataSafeModeTitle",
     "notifyMeAboutDataSafeModeDescription",
     "resourceSectionTitle",
+    "connectedToDiscord",
+    "disconnectedFromDiscord",
     "theClick",
     "toClick"
   ],
 
   "tr": [
-    "clearQueue"
+    "clearQueue",
+    "connectedToDiscord",
+    "disconnectedFromDiscord"
   ],
 
   "zh": [
     "clearQueue",
     "isBackInWifiDialogTitle",
+    "connectedToDiscord",
+    "disconnectedFromDiscord",
     "showPositionDurationDescription",
     "theClick",
     "toClick",
@@ -2199,7 +2235,9 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "connectedToDiscord",
     "disconnectedFrom",
+    "disconnectedFromDiscord",
     "useMoreAnimationsTitle",
     "useMoreAnimationsDescription",
     "showPositionDurationTitle",
@@ -2513,7 +2551,9 @@
     "downloadsDirectory",
     "downloadsDirectoryDescription",
     "downloadsChangeWarning",
+    "connectedToDiscord",
     "disconnectedFrom",
+    "disconnectedFromDiscord",
     "useMoreAnimationsTitle",
     "useMoreAnimationsDescription",
     "showPositionDurationTitle",

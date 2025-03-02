@@ -19,8 +19,7 @@ class DiscordConnectContent extends StatelessWidget {
         widthGap: 10,
         children: [
           Text(
-            '${connected ? l10n.connectedTo : l10n.disconnectedFrom}'
-            ' ${l10n.exposeToDiscordTitle}',
+            connected ? l10n.connectedToDiscord : l10n.disconnectedFromDiscord,
           ),
           Icon(
             TablerIcons.brand_discord_filled,
