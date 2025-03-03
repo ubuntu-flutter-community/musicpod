@@ -1235,5 +1235,9 @@
   "showPositionDurationDescription": "否则，它总是显示在轨迹悬停和全屏播放器中。",
   "@showPositionDurationDescription": {},
   "toClick": "点击",
-  "@toClick": {}
+  "@toClick": {},
+  "disconnectedFromDiscord": "已与 Discord 断开连接",
+  "@disconnectedFromDiscord": {},
+  "connectedToDiscord": "连接到 Discord",
+  "@connectedToDiscord": {}
 }
