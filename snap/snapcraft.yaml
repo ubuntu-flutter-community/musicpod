@@ -11,7 +11,7 @@ icon: snap/gui/musicpod.png
 confinement: strict
 base: core22
 grade: stable
-license: MPL-2.0
+license: GPL-3.0+
 
 architectures:
   - build-on: amd64
@@ -61,8 +61,8 @@ parts:
 
   flutter-git:
     source: https://github.com/flutter/flutter.git
-    source-tag: 3.29.0
-    source-depth: 1
+    source-tag: 3.29.1
+    source-depth: 5
     plugin: nil
     override-build: |
       mkdir -p $CRAFT_PART_INSTALL/usr/bin
@@ -81,6 +81,7 @@ parts:
       - xz-utils
       - zip
     override-prime: ''
+  
 
   musicpod:
     after: [flutter-git, mpv]
