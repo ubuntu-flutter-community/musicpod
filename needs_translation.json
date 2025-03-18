@@ -697,12 +697,6 @@
     "toClick"
   ],
 
-  "et": [
-    "clearQueue",
-    "connectedToDiscord",
-    "disconnectedFromDiscord"
-  ],
-
   "eu": [
     "clearQueue",
     "connectedToDiscord",
@@ -710,12 +704,6 @@
   ],
 
   "fr": [
-    "clearQueue",
-    "connectedToDiscord",
-    "disconnectedFromDiscord"
-  ],
-
-  "it": [
     "clearQueue",
     "connectedToDiscord",
     "disconnectedFromDiscord"
@@ -2151,13 +2139,6 @@
   ],
 
   "sk": [
-    "clearQueue",
-    "connectedToDiscord",
-    "disconnectedFromDiscord"
-  ],
-
-  "sv": [
-    "clearQueue",
     "connectedToDiscord",
     "disconnectedFromDiscord"
   ],
@@ -2191,21 +2172,6 @@
     "clearQueue",
     "connectedToDiscord",
     "disconnectedFromDiscord"
-  ],
-
-  "zh": [
-    "clearQueue",
-    "isBackInWifiDialogTitle",
-    "connectedToDiscord",
-    "disconnectedFromDiscord",
-    "showPositionDurationDescription",
-    "theClick",
-    "toClick",
-    "exposeToLastfmSubTitle",
-    "lastfmSecretEmpty",
-    "exposeToListenBrainzTitle",
-    "exposeToListenBrainzSubTitle",
-    "listenBrainzApiKey"
   ],
 
   "zh_HK": [

@@ -6,7 +6,10 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 class LocalCoverModel extends SafeChangeNotifier {
   LocalCoverModel({
     required LocalCoverService localCoverService,
-  }) : _localCoverService = localCoverService;
+  }) : _localCoverService = localCoverService {
+    _propertiesChangedSub ??=
+        _localCoverService.propertiesChanged.listen((_) => notifyListeners());
+  }
 
   final LocalCoverService _localCoverService;
   StreamSubscription<bool>? _propertiesChangedSub;
@@ -19,9 +22,6 @@ class LocalCoverModel extends SafeChangeNotifier {
     required String path,
   }) async =>
       _localCoverService.getCover(albumId: albumId, path: path);
-
-  void init() => _propertiesChangedSub ??=
-      _localCoverService.propertiesChanged.listen((_) => notifyListeners());
 
   @override
   Future<void> dispose() async {

@@ -15,7 +15,10 @@ class SettingsModel extends SafeChangeNotifier {
     required ExternalPathService externalPathService,
     required GitHub gitHub,
   })  : _service = service,
-        _externalPathService = externalPathService;
+        _externalPathService = externalPathService {
+    _propertiesChangedSub ??=
+        _service.propertiesChanged.listen((_) => notifyListeners());
+  }
 
   final SettingsService _service;
   final ExternalPathService _externalPathService;
@@ -117,9 +120,6 @@ class SettingsModel extends SafeChangeNotifier {
       _service.setShowPositionDuration(value);
 
   Future<void> wipeAllSettings() async => _service.wipeAllSettings();
-
-  void init() => _propertiesChangedSub ??=
-      _service.propertiesChanged.listen((_) => notifyListeners());
 
   @override
   Future<void> dispose() async {

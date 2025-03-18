@@ -14,7 +14,10 @@ class PlayerModel extends SafeChangeNotifier {
     required PlayerService service,
     required OnlineArtService onlineArtService,
   })  : _playerService = service,
-        _onlineArtService = onlineArtService;
+        _onlineArtService = onlineArtService {
+    _propertiesChangedSub ??=
+        _playerService.propertiesChanged.listen((_) => notifyListeners());
+  }
 
   static const rateValues = [.75, 1.0, 1.25, 1.5, 1.75, 2.0];
 
@@ -78,9 +81,6 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> seek() async => _playerService.seek();
 
   Future<void> resume() async => _playerService.resume();
-
-  void init() => _propertiesChangedSub ??=
-      _playerService.propertiesChanged.listen((_) => notifyListeners());
 
   Future<void> playNext() async => _playerService.playNext();
 
