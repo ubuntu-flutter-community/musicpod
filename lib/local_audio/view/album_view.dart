@@ -116,8 +116,9 @@ class AlbumCard extends StatelessWidget {
         ),
         if (pinned)
           Positioned(
-            left: isMobilePlatform ? 6 : 5,
-            bottom: kAudioCardBottomHeight + (isMobilePlatform ? 25 : 13),
+            left: AppConfig.isMobilePlatform ? 6 : 5,
+            bottom:
+                kAudioCardBottomHeight + (AppConfig.isMobilePlatform ? 25 : 13),
             child: AudioCardVignette(
               iconData: Iconz.pinFilled,
               onTap: id == null

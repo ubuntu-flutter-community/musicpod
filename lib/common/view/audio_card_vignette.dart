@@ -33,8 +33,8 @@ class AudioCardVignette extends StatelessWidget {
             color: colorScheme.inverseSurface,
             borderRadius: borderRadius,
           ),
-          width: audioCardDimension / (isMobilePlatform ? 3 : 4),
-          height: audioCardDimension / (isMobilePlatform ? 3 : 4),
+          width: audioCardDimension / (AppConfig.isMobilePlatform ? 3 : 4),
+          height: audioCardDimension / (AppConfig.isMobilePlatform ? 3 : 4),
           child: Icon(
             iconData,
             color: colorScheme.onInverseSurface,

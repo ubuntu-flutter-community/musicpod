@@ -79,7 +79,6 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // TODO: port to sliver to get rid of this padding drama
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: Container(

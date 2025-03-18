@@ -59,7 +59,7 @@ class _SearchInputState extends State<SearchInput> {
   Widget build(BuildContext context) {
     final theme = context.theme;
     return SizedBox(
-      height: yaruStyled || isMobilePlatform ? null : 38,
+      height: AppConfig.yaruStyled || AppConfig.isMobilePlatform ? null : 38,
       child: TextField(
         onTap: () {
           _controller.selection = TextSelection(
@@ -72,8 +72,8 @@ class _SearchInputState extends State<SearchInput> {
         autofocus: widget.autoFocus,
         onSubmitted: _onSearchChanged,
         onChanged: _onSearchChanged,
-        style: yaruStyled ? theme.textTheme.bodyMedium : null,
-        decoration: yaruStyled
+        style: AppConfig.yaruStyled ? theme.textTheme.bodyMedium : null,
+        decoration: AppConfig.yaruStyled
             ? createYaruDecoration(
                 theme: theme,
                 hintText: widget.hintText,

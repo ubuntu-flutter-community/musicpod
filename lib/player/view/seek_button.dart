@@ -32,7 +32,7 @@ class SeekButton extends StatelessWidget {
       onPressed: () async {
         playerModel.seekInSeconds(forward ? 30 : -10);
       },
-      icon: yaruStyled
+      icon: AppConfig.yaruStyled
           ? Stack(
               alignment: Alignment.center,
               children: [

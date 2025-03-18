@@ -14,12 +14,12 @@ class AddToPlaylistDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: yaruStyled
+        title: AppConfig.yaruStyled
             ? YaruDialogTitleBar(
                 title: Text(context.l10n.addToPlaylist),
               )
             : Text(context.l10n.addToPlaylist),
-        titlePadding: yaruStyled
+        titlePadding: AppConfig.yaruStyled
             ? EdgeInsets.zero
             : const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
         content: SizedBox(

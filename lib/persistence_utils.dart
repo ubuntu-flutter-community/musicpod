@@ -8,13 +8,13 @@ import 'package:xdg_directories/xdg_directories.dart';
 
 import 'common/data/audio.dart';
 import 'common/logging.dart';
-import 'constants.dart';
+import 'app_config.dart';
 
 String? _workingDir;
 Future<String> getWorkingDir() async {
   if (_workingDir != null) return Future.value(_workingDir!);
   if (Platform.isLinux) {
-    final workingDir = p.join(configHome.path, kAppName);
+    final workingDir = p.join(configHome.path, AppConfig.appName);
     if (!Directory(workingDir).existsSync()) {
       await Directory(workingDir).create();
     }
@@ -22,7 +22,7 @@ Future<String> getWorkingDir() async {
     return workingDir;
   } else if (Platform.isMacOS || Platform.isIOS) {
     final libDirPath = (await getLibraryDirectory()).path;
-    final workingDirPath = p.join(libDirPath, kAppName);
+    final workingDirPath = p.join(libDirPath, AppConfig.appName);
     if (!Directory(workingDirPath).existsSync()) {
       await Directory(workingDirPath).create();
     }
@@ -30,7 +30,7 @@ Future<String> getWorkingDir() async {
     return workingDirPath;
   } else {
     final docDirPath = (await getApplicationSupportDirectory()).path;
-    final workingDirPath = p.join(docDirPath, kAppName);
+    final workingDirPath = p.join(docDirPath, AppConfig.appName);
     if (!Directory(workingDirPath).existsSync()) {
       Directory(workingDirPath).createSync();
     }
@@ -39,12 +39,8 @@ Future<String> getWorkingDir() async {
   }
 }
 
-Future<String?> getMusicDir() async {
-  if (Platform.isLinux) {
-    return getUserDirectory('MUSIC')?.path;
-  }
-  return null;
-}
+String? getMusicDefaultDir() =>
+    Platform.isLinux ? getUserDirectory('MUSIC')?.path : null;
 
 Future<String?> getDownloadsDefaultDir() async {
   String? path;
@@ -59,7 +55,7 @@ Future<String?> getDownloadsDefaultDir() async {
     }
   }
   if (path != null) {
-    return p.join(path, kAppName);
+    return p.join(path, AppConfig.appName);
   }
   return null;
 }

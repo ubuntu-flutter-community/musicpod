@@ -29,7 +29,7 @@ class MaterialMusicPodApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SystemThemeBuilder(
         builder: (context, accent) {
-          return isMobilePlatform
+          return AppConfig.isMobilePlatform
               ? MobileMusicPodApp(accent: accent.accent)
               : DesktopMusicPodApp(accent: accent.accent);
         },

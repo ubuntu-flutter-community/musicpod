@@ -8,7 +8,7 @@ class LicensesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isMobilePlatform) {
+    if (AppConfig.isMobilePlatform) {
       return const LicensePage();
     }
 

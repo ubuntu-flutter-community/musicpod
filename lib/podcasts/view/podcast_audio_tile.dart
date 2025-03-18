@@ -76,7 +76,7 @@ class PodcastAudioTile extends StatelessWidget {
                 startPlaylist: startPlaylist,
                 removeUpdate: removeUpdate,
               ),
-              SizedBox(width: isMobilePlatform ? 15 : 25),
+              SizedBox(width: AppConfig.isMobilePlatform ? 15 : 25),
               Expanded(
                 child: _Center(
                   selected: selected,
@@ -92,7 +92,7 @@ class PodcastAudioTile extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Padding(
-          padding: isMobilePlatform
+          padding: AppConfig.isMobilePlatform
               ? const EdgeInsets.symmetric(horizontal: 10)
               : EdgeInsets.only(
                   left: (smallAvatarButtonRadius * 2) + 30,
@@ -225,10 +225,10 @@ class _Description extends StatelessWidget {
           context: context,
           builder: (c) {
             return SimpleDialog(
-              titlePadding: yaruStyled
+              titlePadding: AppConfig.yaruStyled
                   ? EdgeInsets.zero
                   : const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
-              title: yaruStyled
+              title: AppConfig.yaruStyled
                   ? YaruDialogTitleBar(
                       backgroundColor: theme.dialogTheme.backgroundColor,
                       border: BorderSide.none,
@@ -236,7 +236,7 @@ class _Description extends StatelessWidget {
                     )
                   : Text(title ?? ''),
               contentPadding: EdgeInsets.only(
-                top: yaruStyled ? 0 : kLargestSpace,
+                top: AppConfig.yaruStyled ? 0 : kLargestSpace,
                 left: kLargestSpace,
                 right: kLargestSpace,
                 bottom: kLargestSpace,

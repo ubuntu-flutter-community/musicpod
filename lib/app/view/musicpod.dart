@@ -26,7 +26,7 @@ class _MusicPodState extends State<MusicPod> {
   Widget build(BuildContext context) => FutureBuilder(
         future: _allReady,
         builder: (context, snapshot) => snapshot.hasData
-            ? isGtkApp
+            ? AppConfig.isGtkApp
                 ? const GtkApplication(child: YaruMusicPodApp())
                 : const MaterialMusicPodApp()
             : const SplashScreen(),

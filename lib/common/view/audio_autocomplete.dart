@@ -30,7 +30,7 @@ class AudioAutoComplete extends StatelessWidget {
     );
 
     return SizedBox(
-      height: yaruStyled ? kYaruTitleBarItemHeight : 38,
+      height: AppConfig.yaruStyled ? kYaruTitleBarItemHeight : 38,
       child: LayoutBuilder(
         builder: (_, constraints) {
           return Autocomplete<Audio>(
@@ -53,15 +53,16 @@ class AudioAutoComplete extends StatelessWidget {
                     extentOffset: textEditingController.value.text.length,
                   );
                 },
-                style: yaruStyled ? theme.textTheme.bodyMedium : null,
-                strutStyle: yaruStyled
+                style: AppConfig.yaruStyled ? theme.textTheme.bodyMedium : null,
+                strutStyle: AppConfig.yaruStyled
                     ? const StrutStyle(
                         leading: 0.2,
                       )
                     : null,
-                textAlignVertical: yaruStyled ? TextAlignVertical.center : null,
-                cursorWidth: yaruStyled ? 1 : 2.0,
-                decoration: yaruStyled
+                textAlignVertical:
+                    AppConfig.yaruStyled ? TextAlignVertical.center : null,
+                cursorWidth: AppConfig.yaruStyled ? 1 : 2.0,
+                decoration: AppConfig.yaruStyled
                     ? createYaruDecoration(
                         theme: theme,
                         hintText: hintText,

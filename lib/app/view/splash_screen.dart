@@ -12,10 +12,10 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        theme: isGtkApp
+        theme: AppConfig.isGtkApp
             ? yaruLight
             : phoenixTheme(color: kMusicPodDefaultColor).lightTheme,
-        darkTheme: isGtkApp
+        darkTheme: AppConfig.isGtkApp
             ? yaruDark
             : phoenixTheme(color: kMusicPodDefaultColor).darkTheme,
         title: '',

@@ -12,7 +12,6 @@ import '../../common/view/progress.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
@@ -24,7 +23,7 @@ class AboutSection extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final text = '${context.l10n.about} $kAppTitle';
+    final text = '${context.l10n.about} ${AppConfig.appTitle}';
     return YaruSection(
       headline: Text(text),
       margin: const EdgeInsets.all(kLargestSpace),
@@ -72,7 +71,8 @@ class _AboutTileState extends State<_AboutTile> {
           : updateAvailable == null
               ? Center(
                   child: SizedBox.square(
-                    dimension: yaruStyled ? kYaruTitleBarItemHeight : 40,
+                    dimension:
+                        AppConfig.yaruStyled ? kYaruTitleBarItemHeight : 40,
                     child: const Progress(
                       padding: EdgeInsets.all(10),
                     ),
@@ -91,7 +91,7 @@ class _AboutTileState extends State<_AboutTile> {
                   onTap: () => launchUrl(
                     Uri.parse(
                       p.join(
-                        kRepoUrl,
+                        AppConfig.repoUrl,
                         'releases',
                         'tag',
                         onlineVersion,
@@ -100,7 +100,7 @@ class _AboutTileState extends State<_AboutTile> {
                   ),
                 ),
       trailing: OutlinedButton(
-        onPressed: () => isMobilePlatform
+        onPressed: () => AppConfig.isMobilePlatform
             ? di<LibraryModel>().push(
                 pageId: 'about',
                 builder: (p0) => const AboutPage(),
@@ -122,7 +122,7 @@ class _LicenseTile extends StatelessWidget {
         text: '${context.l10n.license}: GPL3',
       ),
       trailing: OutlinedButton(
-        onPressed: () => isMobilePlatform
+        onPressed: () => AppConfig.isMobilePlatform
             ? di<LibraryModel>().push(
                 pageId: 'licenses',
                 builder: (p0) => const LicensePage(),

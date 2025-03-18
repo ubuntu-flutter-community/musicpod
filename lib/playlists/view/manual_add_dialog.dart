@@ -28,14 +28,14 @@ class ManualAddDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: yaruStyled
+      title: AppConfig.yaruStyled
           ? YaruDialogTitleBar(
               border: BorderSide.none,
               backgroundColor: Colors.transparent,
               title: Text(context.l10n.add),
             )
           : null,
-      titlePadding: yaruStyled ? EdgeInsets.zero : null,
+      titlePadding: AppConfig.yaruStyled ? EdgeInsets.zero : null,
       contentPadding: const EdgeInsets.only(
         left: kLargestSpace,
         right: kLargestSpace,
