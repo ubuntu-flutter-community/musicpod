@@ -16,7 +16,7 @@ class AnimatedStar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (yaruStyled) {
+    if (AppConfig.yaruStyled) {
       return YaruAnimatedVectorIcon(
         isStarred ? YaruAnimatedIcons.star_filled : YaruAnimatedIcons.star,
         initialProgress: 1.0,
@@ -51,7 +51,7 @@ class AnimatedHeart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (yaruStyled) {
+    if (AppConfig.yaruStyled) {
       return YaruAnimatedVectorIcon(
         liked ? YaruAnimatedIcons.heart_filled : YaruAnimatedIcons.heart,
         initialProgress: 1.0,

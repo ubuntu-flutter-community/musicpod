@@ -15,7 +15,7 @@ import '../common/data/mpv_meta_data.dart';
 import '../common/data/player_state.dart';
 import '../common/file_names.dart';
 import '../common/logging.dart';
-import '../constants.dart';
+import '../app_config.dart';
 import '../expose/expose_service.dart';
 import '../extensions/string_x.dart';
 import '../local_audio/local_cover_service.dart';
@@ -609,8 +609,9 @@ class PlayerService {
     _audioHandler = await AudioService.init(
       config: AudioServiceConfig(
         androidNotificationOngoing: true,
-        androidNotificationChannelName: kAppName,
-        androidNotificationChannelId: Platform.isAndroid ? kAndroidAppId : null,
+        androidNotificationChannelName: AppConfig.appName,
+        androidNotificationChannelId:
+            Platform.isAndroid ? AppConfig.androidChannelId : null,
         androidNotificationChannelDescription: 'MusicPod Media Controls',
       ),
       builder: () {
@@ -736,7 +737,7 @@ class PlayerService {
     _audioHandler!.mediaItem.add(
       MediaItem(
         id: audio.toString(),
-        title: audio.title ?? kAppTitle,
+        title: audio.title ?? AppConfig.appTitle,
         artist: audio.artist ?? '',
         artUri: artUri,
         duration: audio.durationMs == null
@@ -750,12 +751,12 @@ class PlayerService {
     if (_smtc == null) return;
     _smtc!.updateMetadata(
       MusicMetadata(
-        title: audio.title ?? kAppTitle,
+        title: audio.title ?? AppConfig.appTitle,
         album: audio.album,
         albumArtist: audio.artist,
         artist: audio.artist ?? '',
         thumbnail: audio.audioType == AudioType.local
-            ? kFallbackThumbnailUrl
+            ? AppConfig.fallbackThumbnailUrl
             : artUri == null
                 ? null
                 : '$artUri',

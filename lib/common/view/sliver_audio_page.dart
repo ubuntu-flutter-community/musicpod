@@ -84,7 +84,7 @@ class SliverAudioPage extends StatelessWidget {
         builder: (context, constraints) {
           final padding = getAdaptiveHorizontalPadding(
             constraints: constraints,
-            min: isMobilePlatform ? 5 : 15,
+            min: AppConfig.isMobilePlatform ? 5 : 15,
           );
 
           if (audios == null) {

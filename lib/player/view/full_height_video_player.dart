@@ -58,12 +58,12 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
       seekBarMargin: const EdgeInsets.all(kLargestSpace),
       topButtonBarMargin: EdgeInsets.only(
         right: kLargestSpace,
-        top: isMobilePlatform ? 2 * kLargestSpace : 0,
+        top: AppConfig.isMobilePlatform ? 2 * kLargestSpace : 0,
       ),
       topButtonBar: [
         const Spacer(),
         controls,
-        if (allowVideoFullScreen)
+        if (AppConfig.allowVideoFullScreen)
           Tooltip(
             message: context.l10n.leaveFullScreen,
             child: MaterialFullscreenButton(
@@ -98,7 +98,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
         topButtonBar: [
           const Spacer(),
           controls,
-          if (allowVideoFullScreen)
+          if (AppConfig.allowVideoFullScreen)
             Tooltip(
               message: context.l10n.fullScreen,
               child: MaterialFullscreenButton(
@@ -111,7 +111,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
         ],
       ),
       child: Padding(
-        padding: context.isPortrait && isMobilePlatform
+        padding: context.isPortrait && AppConfig.isMobilePlatform
             ? const EdgeInsets.only(bottom: 40)
             : EdgeInsets.zero,
         child: RepaintBoundary(

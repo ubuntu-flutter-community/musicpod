@@ -9,7 +9,7 @@ EdgeInsets getAdaptiveHorizontalPadding({
   double min = 15,
 }) {
   return EdgeInsets.symmetric(
-    horizontal: isMobilePlatform
+    horizontal: AppConfig.isMobilePlatform
         ? min
         : max((constraints.maxWidth - 850) / 2, 0) > min
             ? max((constraints.maxWidth - 850) / 2, 0)

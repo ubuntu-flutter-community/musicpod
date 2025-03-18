@@ -15,7 +15,6 @@ import 'package:watch_it/watch_it.dart';
 import 'app/app_model.dart';
 import 'app/connectivity_model.dart';
 import 'app_config.dart';
-import 'constants.dart';
 import 'expose/expose_service.dart';
 import 'expose/lastfm_service.dart';
 import 'expose/listenbrainz_service.dart';
@@ -43,10 +42,10 @@ import 'settings/settings_service.dart';
 
 /// Registers all Services, ViewModels and external dependencies
 void registerDependencies({required List<String> args}) async {
-  if (allowDiscordRPC) {
+  if (AppConfig.allowDiscordRPC) {
     di.registerSingletonAsync<FlutterDiscordRPC>(
       () async {
-        await FlutterDiscordRPC.initialize(kDiscordApplicationId);
+        await FlutterDiscordRPC.initialize(AppConfig.discordApplicationId);
         return FlutterDiscordRPC.instance;
       },
       dispose: (s) {
@@ -94,11 +93,11 @@ void registerDependencies({required List<String> args}) async {
     )
     ..registerSingletonWithDependencies<ExposeService>(
       () => ExposeService(
-        discordRPC: allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
+        discordRPC: AppConfig.allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
         lastFmService: di<LastfmService>(),
         listenBrainzService: di<ListenBrainzService>(),
       ),
-      dependsOn: [if (allowDiscordRPC) FlutterDiscordRPC],
+      dependsOn: [if (AppConfig.allowDiscordRPC) FlutterDiscordRPC],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton(LocalCoverService.new, dispose: (s) => s.dispose())
@@ -108,7 +107,8 @@ void registerDependencies({required List<String> args}) async {
           onlineArtService: di<OnlineArtService>(),
           controller: VideoController(
             Player(
-              configuration: const PlayerConfiguration(title: kAppTitle),
+              configuration:
+                  const PlayerConfiguration(title: AppConfig.appTitle),
             ),
           ),
           exposeService: di<ExposeService>(),

@@ -106,7 +106,8 @@ class SettingsService {
   void setPodcastIndexApiSecret(String value) =>
       _preferences.setString(SPKeys.podcastIndexApiSecret, value).then(notify);
 
-  String? get directory => _preferences.getString(SPKeys.directory);
+  String? get directory =>
+      _preferences.getString(SPKeys.directory) ?? getMusicDefaultDir();
   Future<void> setDirectory(String directory) async =>
       _preferences.setString(SPKeys.directory, directory).then(notify);
 

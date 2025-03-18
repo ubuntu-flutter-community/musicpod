@@ -60,7 +60,7 @@ class _ActiveAudioSignalIndicatorState extends State<ActiveAudioSignalIndicator>
   Widget build(BuildContext context) {
     return RepaintBoundary(
       child: Padding(
-        padding: yaruStyled || appleStyled
+        padding: AppConfig.yaruStyled || AppConfig.appleStyled
             ? const EdgeInsets.only(left: 3, right: 1)
             : const EdgeInsets.only(left: 5),
         child: SizedBox(

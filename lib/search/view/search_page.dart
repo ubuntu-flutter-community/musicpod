@@ -34,7 +34,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
       appBar: HeaderBar(
         adaptive: true,
         title: Padding(
-          padding: EdgeInsets.only(left: isMobilePlatform ? 5 : 0),
+          padding: EdgeInsets.only(left: AppConfig.isMobilePlatform ? 5 : 0),
           child: const SearchPageInput(),
         ),
         actions: [
@@ -47,7 +47,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
               onPressed: () => di<LibraryModel>().pop(),
               icon: loading
                   ? SizedBox.square(
-                      dimension: yaruStyled ? 18 : 25,
+                      dimension: AppConfig.yaruStyled ? 18 : 25,
                       child: const Progress(
                         strokeWidth: 2,
                       ),

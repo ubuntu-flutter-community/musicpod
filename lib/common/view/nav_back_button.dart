@@ -12,7 +12,7 @@ class NavBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     void onTap() => di<LibraryModel>().pop();
 
-    if (yaruStyled) {
+    if (AppConfig.yaruStyled) {
       return YaruBackButton(
         style: YaruBackButtonStyle.rounded,
         onPressed: onTap,

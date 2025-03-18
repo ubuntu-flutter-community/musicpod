@@ -38,7 +38,6 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
 
     return Column(
       children: [
-        // TODO: port to sliver to get rid of this padding drama
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: Container(
@@ -194,9 +193,9 @@ class TagGrid extends StatelessWidget with WatchItMixin {
     };
 
     return tagsToIcons[tag] ??
-        (yaruStyled
+        (AppConfig.yaruStyled
             ? YaruIcons.music_note
-            : appleStyled
+            : AppConfig.appleStyled
                 ? CupertinoIcons.double_music_note
                 : Icons.music_note);
   }

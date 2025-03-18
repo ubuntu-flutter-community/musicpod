@@ -58,8 +58,8 @@ class RadioHistoryTile extends StatelessWidget {
           contentPadding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
           leading: RadioHistoryTileImage(
             key: ValueKey(icyTitle),
-            height: yaruStyled ? 34 : 40,
-            width: yaruStyled ? 34 : 40,
+            height: AppConfig.yaruStyled ? 34 : 40,
+            width: AppConfig.yaruStyled ? 34 : 40,
             icyTitle: icyTitle,
           ),
           trailing: IconButton(

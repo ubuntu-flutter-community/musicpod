@@ -150,13 +150,13 @@ class _AudioTileState extends State<AudioTile> {
         pageId: widget.pageId,
         audioPageType: widget.audioPageType,
         selectedColor: selectedColor,
-        showDuration: !isMobilePlatform,
-        showLikeIcon: !isMobilePlatform,
-        alwaysShowOptionButton: isMobilePlatform,
+        showDuration: !AppConfig.isMobilePlatform,
+        showLikeIcon: !AppConfig.isMobilePlatform,
+        alwaysShowOptionButton: AppConfig.isMobilePlatform,
       ),
     );
 
-    if (isMobilePlatform) return listTile;
+    if (AppConfig.isMobilePlatform) return listTile;
 
     return MouseRegion(
       key: ObjectKey(widget.audio),

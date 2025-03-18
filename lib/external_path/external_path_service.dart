@@ -170,7 +170,7 @@ class ExternalPathService {
   }
 
   Future<String?> getPathOfDirectory() async {
-    if (isMobilePlatform && await _androidPermissionsGranted()) {
+    if (AppConfig.isMobilePlatform && await _androidPermissionsGranted()) {
       return FilePicker.platform.getDirectoryPath();
     }
 

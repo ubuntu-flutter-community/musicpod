@@ -8,7 +8,6 @@ import 'package:watch_it/watch_it.dart';
 import '../../app_config.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';
@@ -31,7 +30,7 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
     return MaterialApp(
       navigatorKey: libraryModel.masterNavigatorKey,
       navigatorObservers: [libraryModel],
-      initialRoute: isMobilePlatform
+      initialRoute: AppConfig.isMobilePlatform
           ? (libraryModel.selectedPageId ?? PageIDs.homePage)
           : null,
       onGenerateRoute: (settings) {
@@ -56,7 +55,7 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
-      onGenerateTitle: (context) => kAppTitle,
+      onGenerateTitle: (context) => AppConfig.appTitle,
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,

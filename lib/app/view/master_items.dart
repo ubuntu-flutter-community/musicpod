@@ -76,7 +76,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
       ),
       pageId: PageIDs.podcasts,
     ),
-    if (isMobilePlatform)
+    if (AppConfig.isMobilePlatform)
       MasterItem(
         titleBuilder: (context) => Text(context.l10n.settings),
         iconBuilder: (selected) =>
@@ -84,7 +84,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
         pageBuilder: (context) => const SettingsPage(),
         pageId: PageIDs.settings,
       ),
-    if (isMobilePlatform)
+    if (AppConfig.isMobilePlatform)
       MasterItem(
         titleBuilder: (context) => Text(context.l10n.home),
         iconBuilder: (selected) =>

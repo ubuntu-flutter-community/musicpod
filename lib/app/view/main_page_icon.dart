@@ -31,7 +31,7 @@ class MainPageIcon extends StatelessWidget with WatchItMixin {
     if (currentAudioType == audioType && isPlaying) {
       if (useMoreAnimations) {
         return ActiveAudioSignalIndicator(
-          thickness: yaruStyled || appleStyled ? 1 : 2,
+          thickness: AppConfig.yaruStyled || AppConfig.appleStyled ? 1 : 2,
         );
       } else {
         return Padding(

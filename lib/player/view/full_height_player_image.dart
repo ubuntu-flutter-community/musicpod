@@ -30,7 +30,7 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
 
     final size = context.isPortrait
         ? fullHeightPlayerImageSize
-        : isMobilePlatform
+        : AppConfig.isMobilePlatform
             ? fullHeightPlayerImageSize / 3
             : fullHeightPlayerImageSize;
     final theHeight = height ?? size;

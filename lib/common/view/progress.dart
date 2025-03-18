@@ -11,7 +11,7 @@ class SideBarProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox.square(
-      dimension: yaruStyled ? 18 : iconSize,
+      dimension: AppConfig.yaruStyled ? 18 : iconSize,
       child: const Progress(
         strokeWidth: 2,
       ),
@@ -45,7 +45,7 @@ class Progress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return yaruStyled
+    return AppConfig.yaruStyled
         ? YaruCircularProgressIndicator(
             strokeWidth: strokeWidth,
             value: value,
@@ -82,7 +82,7 @@ class LinearProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return yaruStyled
+    return AppConfig.yaruStyled
         ? YaruLinearProgressIndicator(
             value: value,
             strokeWidth: trackHeight,

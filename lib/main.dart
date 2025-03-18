@@ -10,7 +10,7 @@ import 'common/view/ui_constants.dart';
 import 'register.dart';
 
 Future<void> main(List<String> args) async {
-  if (isMobilePlatform) {
+  if (AppConfig.isMobilePlatform) {
     WidgetsFlutterBinding.ensureInitialized();
   } else {
     // Note: this includes the `WidgetsFlutterBinding.ensureInitialized()` call
@@ -19,7 +19,7 @@ Future<void> main(List<String> args) async {
       ..setMinimumSize(const Size(500, 700))
       ..setSize(const Size(950, 820));
   }
-  if (useSystemTheme) {
+  if (AppConfig.useSystemTheme) {
     SystemTheme.fallbackColor = kMusicPodDefaultColor;
     await SystemTheme.accentColor.load();
   }

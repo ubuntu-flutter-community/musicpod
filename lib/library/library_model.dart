@@ -201,7 +201,7 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
         settings: RouteSettings(
           name: pageId,
         ),
-        pageBuilder: (context, __, ___) => isMobilePlatform
+        pageBuilder: (context, __, ___) => AppConfig.isMobilePlatform
             ? MobilePage(page: builder(context))
             : BackGesture(child: builder(context)),
         transitionsBuilder: (_, a, __, c) =>
