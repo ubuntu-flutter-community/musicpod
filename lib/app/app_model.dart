@@ -6,7 +6,6 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../app_config.dart';
 import '../common/view/snackbars.dart';
-import '../constants.dart';
 import '../expose/expose_service.dart';
 import '../settings/settings_service.dart';
 import 'view/discord_connect_content.dart';
@@ -76,7 +75,7 @@ class AppModel extends SafeChangeNotifier {
     if (value == null || value == _fullWindowMode) return;
     _fullWindowMode = value;
 
-    if (isMobilePlatform) {
+    if (AppConfig.isMobilePlatform) {
       if (_fullWindowMode == true) {
         await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       } else {
@@ -143,7 +142,7 @@ class AppModel extends SafeChangeNotifier {
 
   Future<String?> getOnlineVersion() async {
     final release = await _gitHub.repositories
-        .listReleases(RepositorySlug.full(kGitHubShortLink))
+        .listReleases(RepositorySlug.full(AppConfig.gitHubShortLink))
         .toList();
     return release.firstOrNull?.tagName;
   }
@@ -151,7 +150,7 @@ class AppModel extends SafeChangeNotifier {
   Future<List<Contributor>> getContributors() async {
     final list = await _gitHub.repositories
         .listContributors(
-          RepositorySlug.full(kGitHubShortLink),
+          RepositorySlug.full(AppConfig.gitHubShortLink),
         )
         .where((c) => c.type == 'User')
         .toList();

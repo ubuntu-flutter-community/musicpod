@@ -66,18 +66,18 @@ class MetaDataContent extends StatelessWidget {
         ),
       (
         l10n.url,
-        (audio.url ?? ''),
+        audio.url ?? '',
       ),
     };
 
-    final title = yaruStyled
+    final title = AppConfig.yaruStyled
         ? YaruDialogTitleBar(
             title: Text(l10n.metadata),
           )
         : Center(child: Text(l10n.metadata));
 
     final titlePadding =
-        yaruStyled ? EdgeInsets.zero : const EdgeInsets.only(top: 10);
+        AppConfig.yaruStyled ? EdgeInsets.zero : const EdgeInsets.only(top: 10);
 
     const edgeInsets = EdgeInsets.only(bottom: 12);
 

@@ -207,6 +207,7 @@
   "volume": "Lautstärke",
   "@volume": {},
   "queue": "Warteschlange",
+  "clearQueue": "Warteschlange leeren",
   "@queue": {},
   "limit": "Ergebnisse",
   "@limit": {},

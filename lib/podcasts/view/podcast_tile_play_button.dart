@@ -53,7 +53,7 @@ class PodcastTilePlayButton extends StatelessWidget {
                       Iconz.pause,
                     )
                   : Padding(
-                      padding: appleStyled
+                      padding: AppConfig.appleStyled
                           ? const EdgeInsets.only(left: 3)
                           : EdgeInsets.zero,
                       child: Icon(Iconz.playFilled),

@@ -33,7 +33,7 @@ class SettingsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void onPressed() => isMobilePlatform
+    void onPressed() => AppConfig.isMobilePlatform
         ? di<LibraryModel>().push(pageId: PageIDs.settings)
         : showDialog(
             context: context,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
-import '../../app_config.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
@@ -47,6 +47,8 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+
+    final allowDiscordRPC = di.isRegistered(instance: FlutterDiscordRPC);
 
     final discordEnabled = allowDiscordRPC
         ? watchPropertyValue((SettingsModel m) => m.enableDiscordRPC)

@@ -1,4 +1,5 @@
 import '../../../common/data/audio_type.dart';
+import '../../../common/view/theme.dart';
 import '../../../common/view/ui_constants.dart';
 import '../../../l10n/l10n.dart';
 import '../../../library/library_model.dart';
@@ -25,18 +26,34 @@ class QueueDialog extends StatelessWidget with WatchItMixin {
       contentPadding: const EdgeInsets.only(bottom: kLargestSpace, top: 10),
       title: const PlayerMainControls(active: true),
       actionsAlignment: MainAxisAlignment.center,
-      actions: [
-        OutlinedButton(
-          onPressed: () {
-            di<LibraryModel>().addPlaylist(
-              '${context.l10n.queue} ${DateTime.now()}',
-              List.from(queue.where((e) => e.audioType == AudioType.local)),
-            );
-            Navigator.of(context).pop();
-          },
-          child: Text(context.l10n.createNewPlaylist),
-        ),
-      ],
+      actions: space(
+        children: [
+          OutlinedButton(
+            onPressed: queue.isEmpty ||
+                    di<PlayerModel>().queueName == null ||
+                    di<PlayerModel>().audio == null
+                ? null
+                : () => di<PlayerModel>().clearQueue(),
+            child: Text(
+              context.l10n.clearQueue,
+            ),
+          ),
+          OutlinedButton(
+            onPressed: queue.isEmpty
+                ? null
+                : () {
+                    di<LibraryModel>().addPlaylist(
+                      '${context.l10n.queue} ${DateTime.now()}',
+                      List.from(
+                        queue.where((e) => e.audioType == AudioType.local),
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  },
+            child: Text(context.l10n.createNewPlaylist),
+          ),
+        ],
+      ),
       content: const QueueBody(),
     );
   }

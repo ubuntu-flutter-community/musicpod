@@ -11,7 +11,10 @@ class RadioModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _propertiesChangedSub;
 
   RadioModel({required RadioService radioService})
-      : _radioService = radioService;
+      : _radioService = radioService {
+    _propertiesChangedSub ??=
+        _radioService.propertiesChanged.listen((_) => notifyListeners());
+  }
 
   Future<void> clickStation(Audio? station) async {
     if (station?.uuid != null) {
@@ -20,11 +23,6 @@ class RadioModel extends SafeChangeNotifier {
   }
 
   String? get connectedHost => _radioService.connectedHost;
-  Future<void> init() async {
-    await _radioService.init();
-    _propertiesChangedSub ??=
-        _radioService.propertiesChanged.listen((_) => notifyListeners());
-  }
 
   Future<void> reconnect() async => _radioService.init();
 

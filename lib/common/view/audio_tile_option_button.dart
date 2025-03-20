@@ -47,7 +47,7 @@ class AudioTileOptionButton extends StatelessWidget {
     final l10n = context.l10n;
     final libraryModel = di<LibraryModel>();
 
-    if (isMobilePlatform) {
+    if (AppConfig.isMobilePlatform) {
       return AudioTileBottomSheetButton(
         audios: audios,
         allowRemove: allowRemove,

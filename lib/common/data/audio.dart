@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
+import '../../app_config.dart';
 import '../../extensions/string_x.dart';
 import 'audio_type.dart';
 import 'genres.dart';
@@ -363,14 +364,11 @@ class Audio {
     final artistName = artist;
     final id = albumName == null && artistName == null
         ? null
-        : _isMobilePlatform
+        : AppConfig.isMobilePlatform
             ? '${artistName ?? ''}_${albumName ?? ''}'
             : '${artistName ?? ''}:${albumName ?? ''}';
-    return _isMobilePlatform ? id?.replaceAll(' ', '_') : id;
+    return AppConfig.isMobilePlatform ? id?.replaceAll(' ', '_') : id;
   }
-
-  bool get _isMobilePlatform =>
-      Platform.isAndroid || Platform.isIOS || Platform.isFuchsia;
 
   bool get hasPathAndId =>
       albumId?.isNotEmpty == true &&

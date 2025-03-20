@@ -72,7 +72,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
               child: queueOrHistory,
             )
           else ...[
-            if (!isMobilePlatform || context.isPortrait)
+            if (!AppConfig.isMobilePlatform || context.isPortrait)
               const FullHeightPlayerImage(),
             const SizedBox(
               height: kLargestSpace,
@@ -123,7 +123,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
               showQueueButton: !playerWithSidePanel,
             ),
           ),
-          if (isMobilePlatform)
+          if (AppConfig.isMobilePlatform)
             const Positioned(
               bottom: 2 * kLargestSpace,
               child: QueueButton.text(),
@@ -147,7 +147,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
 
     final fullHeightPlayer = Column(
       children: [
-        if (!isMobilePlatform) headerBar,
+        if (!AppConfig.isMobilePlatform) headerBar,
         Expanded(child: body),
       ],
     );

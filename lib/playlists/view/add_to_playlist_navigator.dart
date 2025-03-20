@@ -9,6 +9,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import 'add_to_playlist_snack_bar.dart';
@@ -169,7 +170,7 @@ class _NewViewState extends State<_NewView> {
     final libraryModel = di<LibraryModel>();
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).dialogBackgroundColor,
+        color: context.theme.dialogTheme.backgroundColor,
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),

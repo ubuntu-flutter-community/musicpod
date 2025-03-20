@@ -1232,5 +1232,11 @@
   "theClick": "klikk",
   "@theClick": {},
   "toClick": "kliki",
-  "@toClick": {}
+  "@toClick": {},
+  "clearQueue": "Tühjenda esitusjärjekord",
+  "@clearQueue": {},
+  "connectedToDiscord": "Discordiga ühendatud",
+  "@connectedToDiscord": {},
+  "disconnectedFromDiscord": "Discordi ühendus on katkestatud",
+  "@disconnectedFromDiscord": {}
 }

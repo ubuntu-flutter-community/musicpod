@@ -12,18 +12,13 @@ import '../common/view/back_gesture.dart';
 import 'library_service.dart';
 
 class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
-  LibraryModel(this._service);
+  LibraryModel(this._service) {
+    _propertiesChangedSub ??=
+        _service.propertiesChanged.listen((_) => notifyListeners());
+  }
 
   final LibraryService _service;
   StreamSubscription<bool>? _propertiesChangedSub;
-
-  Future<bool> init() async {
-    await _service.init();
-    _propertiesChangedSub ??=
-        _service.propertiesChanged.listen((_) => notifyListeners());
-    notifyListeners();
-    return true;
-  }
 
   @override
   Future<void> dispose() async {
@@ -206,7 +201,7 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
         settings: RouteSettings(
           name: pageId,
         ),
-        pageBuilder: (context, __, ___) => isMobilePlatform
+        pageBuilder: (context, __, ___) => AppConfig.isMobilePlatform
             ? MobilePage(page: builder(context))
             : BackGesture(child: builder(context)),
         transitionsBuilder: (_, a, __, c) =>

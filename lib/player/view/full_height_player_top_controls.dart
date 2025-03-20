@@ -106,7 +106,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
               active: active,
               color: iconColor,
             ),
-          if (!isMobilePlatform) VolumeSliderPopup(color: iconColor),
+          if (!AppConfig.isMobilePlatform) VolumeSliderPopup(color: iconColor),
           IconButton(
             tooltip: playerPosition == PlayerPosition.fullWindow
                 ? context.l10n.leaveFullWindow

@@ -25,7 +25,9 @@ class PlayerPauseTimerButton extends StatelessWidget {
         onPressed: () => showModal(
           context: context,
           mode: ModalMode.platformModalMode,
-          content: isMobilePlatform ? const _BottomSheet() : const _Dialog(),
+          content: AppConfig.isMobilePlatform
+              ? const _BottomSheet()
+              : const _Dialog(),
         ),
         icon: Icon(
           Iconz.sleep,

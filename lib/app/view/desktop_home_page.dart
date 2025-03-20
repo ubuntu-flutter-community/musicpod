@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app_config.dart';
@@ -48,7 +49,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
     final enableDiscordRPC =
         watchPropertyValue((SettingsModel m) => m.enableDiscordRPC);
 
-    if (allowDiscordRPC && enableDiscordRPC) {
+    if (di.isRegistered(instance: FlutterDiscordRPC) && enableDiscordRPC) {
       registerStreamHandler(
         select: (AppModel m) => m.isDiscordConnectedStream,
         handler: discordConnectedHandler,
@@ -79,7 +80,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
               child: Column(
                 children: [
                   const Expanded(child: MasterDetailPage()),
-                  if (!playerToTheRight || isMobilePlatform)
+                  if (!playerToTheRight || AppConfig.isMobilePlatform)
                     const PlayerView(position: PlayerPosition.bottom),
                 ],
               ),

@@ -31,7 +31,7 @@ class SettingsPage extends StatelessWidget {
         AboutSection(),
       ],
     );
-    if (isMobilePlatform) {
+    if (AppConfig.isMobilePlatform) {
       return Scaffold(
         appBar: HeaderBar(
           adaptive: false,

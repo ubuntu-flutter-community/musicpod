@@ -44,7 +44,7 @@ class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
             showModal(
               mode: ModalMode.platformModalMode,
               context: context,
-              content: isMobilePlatform
+              content: AppConfig.isMobilePlatform
                   ? MpvMetadataDialog.bottomSheet(
                       image: imageUrl,
                       mpvMetaData: metadata,

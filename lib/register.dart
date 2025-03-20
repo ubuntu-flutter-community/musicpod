@@ -1,10 +1,20 @@
+import 'dart:io';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:desktop_notifications/desktop_notifications.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
+import 'package:github/github.dart';
+import 'package:gtk/gtk.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:watch_it/watch_it.dart';
 
 import 'app/app_model.dart';
 import 'app/connectivity_model.dart';
 import 'app_config.dart';
-import 'constants.dart';
-import 'dart:io';
 import 'expose/expose_service.dart';
 import 'expose/lastfm_service.dart';
 import 'expose/listenbrainz_service.dart';
@@ -16,16 +26,6 @@ import 'local_audio/local_audio_service.dart';
 import 'local_audio/local_cover_model.dart';
 import 'local_audio/local_cover_service.dart';
 import 'notifications/notifications_service.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:desktop_notifications/desktop_notifications.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
-import 'package:github/github.dart';
-import 'package:gtk/gtk.dart';
-import 'package:media_kit/media_kit.dart';
-import 'package:media_kit_video/media_kit_video.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:watch_it/watch_it.dart';
 import 'persistence_utils.dart';
 import 'player/player_model.dart';
 import 'player/player_service.dart';
@@ -41,13 +41,13 @@ import 'settings/settings_model.dart';
 import 'settings/settings_service.dart';
 
 /// Registers all Services, ViewModels and external dependencies
-/// Note: we want lazy registration whenever possible, preferable without any async calls above.
-/// Sometimes this is not possible and we need to await a Future before we can register.
-Future<void> registerDependencies({required List<String> args}) async {
-  if (allowDiscordRPC) {
-    await FlutterDiscordRPC.initialize(kDiscordApplicationId);
-    di.registerSingleton<FlutterDiscordRPC>(
-      FlutterDiscordRPC.instance,
+void registerDependencies({required List<String> args}) async {
+  if (AppConfig.allowDiscordRPC) {
+    di.registerSingletonAsync<FlutterDiscordRPC>(
+      () async {
+        await FlutterDiscordRPC.initialize(AppConfig.discordApplicationId);
+        return FlutterDiscordRPC.instance;
+      },
       dispose: (s) {
         s.disconnect();
         s.dispose();
@@ -55,13 +55,9 @@ Future<void> registerDependencies({required List<String> args}) async {
     );
   }
 
-  final String? downloadsDefaultDir = await getDownloadsDefaultDir();
-  final sharedPreferences = await SharedPreferences.getInstance();
-  final packageInfo = await PackageInfo.fromPlatform();
-
   di
-    ..registerSingleton<SharedPreferences>(sharedPreferences)
-    ..registerSingleton<PackageInfo>(packageInfo)
+    ..registerSingletonAsync<SharedPreferences>(SharedPreferences.getInstance)
+    ..registerSingletonAsync<PackageInfo>(PackageInfo.fromPlatform)
     ..registerLazySingleton<Dio>(
       () => Dio(),
       dispose: (s) => s.close(),
@@ -72,54 +68,79 @@ Future<void> registerDependencies({required List<String> args}) async {
       ),
       dispose: (s) => s.dispose(),
     )
-    ..registerLazySingleton<SettingsService>(
-      () => SettingsService(
-        sharedPreferences: di<SharedPreferences>(),
-        downloadsDefaultDir: downloadsDefaultDir,
-      ),
+    ..registerSingletonAsync<SettingsService>(
+      () async {
+        final downloadsDefaultDir = await getDownloadsDefaultDir();
+        return SettingsService(
+          sharedPreferences: di<SharedPreferences>(),
+          downloadsDefaultDir: downloadsDefaultDir,
+        );
+      },
+      dependsOn: [SharedPreferences],
       dispose: (s) async => s.dispose(),
     )
-    ..registerLazySingleton(
+    ..registerSingletonWithDependencies(
       () => LastfmService(
         settingsService: di<SettingsService>(),
-      )..init(),
+      ),
+      dependsOn: [SettingsService],
     )
-    ..registerLazySingleton(
+    ..registerSingletonWithDependencies(
       () => ListenBrainzService(
         settingsService: di<SettingsService>(),
-      )..init(),
+      ),
+      dependsOn: [SettingsService],
     )
-    ..registerLazySingleton<ExposeService>(
-      () => ExposeService(
-        discordRPC: allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
+    ..registerSingletonAsync<ExposeService>(
+      () async => ExposeService(
+        discordRPC: di.isRegistered(instance: FlutterDiscordRPC)
+            ? di<FlutterDiscordRPC>()
+            : null,
         lastFmService: di<LastfmService>(),
         listenBrainzService: di<ListenBrainzService>(),
       ),
+      dependsOn: [
+        if (di.isRegistered(instance: FlutterDiscordRPC)) FlutterDiscordRPC,
+        LastfmService,
+      ],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton(LocalCoverService.new, dispose: (s) => s.dispose())
-    ..registerLazySingleton<PlayerService>(
-      () => PlayerService(
-        onlineArtService: di<OnlineArtService>(),
-        controller: VideoController(
-          Player(
-            configuration: const PlayerConfiguration(title: kAppTitle),
+    ..registerSingletonAsync<PlayerService>(
+      () async {
+        final playerService = PlayerService(
+          onlineArtService: di<OnlineArtService>(),
+          controller: VideoController(
+            Player(
+              configuration:
+                  const PlayerConfiguration(title: AppConfig.appTitle),
+            ),
           ),
-        ),
-        exposeService: di<ExposeService>(),
-        localCoverService: di<LocalCoverService>(),
-      )..init(),
+          exposeService: di<ExposeService>(),
+          localCoverService: di<LocalCoverService>(),
+        );
+        await playerService.init();
+        return playerService;
+      },
+      dependsOn: [ExposeService],
       dispose: (s) async => s.dispose(),
     )
-    ..registerLazySingleton<LibraryService>(
-      () => LibraryService(sharedPreferences: di<SharedPreferences>()),
+    ..registerSingletonAsync<LibraryService>(
+      () async {
+        final libraryService =
+            LibraryService(sharedPreferences: di<SharedPreferences>());
+        await libraryService.init();
+        return libraryService;
+      },
+      dependsOn: [SharedPreferences],
       dispose: (s) async => s.dispose(),
     )
-    ..registerLazySingleton<LocalAudioService>(
+    ..registerSingletonWithDependencies<LocalAudioService>(
       () => LocalAudioService(
         settingsService: di<SettingsService>(),
         localCoverService: di<LocalCoverService>(),
       ),
+      dependsOn: [SettingsService],
       dispose: (s) async => s.dispose(),
     )
     ..registerLazySingleton<NotificationsService>(
@@ -127,94 +148,118 @@ Future<void> registerDependencies({required List<String> args}) async {
           NotificationsService(Platform.isLinux ? NotificationsClient() : null),
       dispose: (s) async => s.dispose(),
     )
-    ..registerLazySingleton<PodcastService>(
+    ..registerSingletonWithDependencies<PodcastService>(
       () => PodcastService(
         notificationsService: di<NotificationsService>(),
         settingsService: di<SettingsService>(),
         libraryService: di<LibraryService>(),
       ),
+      dependsOn: [SettingsService, LibraryService],
     )
     ..registerLazySingleton<Connectivity>(() => Connectivity())
-    ..registerLazySingleton<ExternalPathService>(
+    ..registerSingletonWithDependencies<ExternalPathService>(
       () => ExternalPathService(
         gtkNotifier: Platform.isLinux ? GtkApplicationNotifier(args) : null,
         playerService: di<PlayerService>(),
       ),
+      dependsOn: [PlayerService],
       dispose: (s) => s.dispose(),
     )
-    ..registerLazySingleton<RadioService>(
-      RadioService.new,
+    ..registerSingletonAsync<RadioService>(
+      () async {
+        final s = RadioService();
+        await s.init();
+        return s;
+      },
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<GitHub>(() => GitHub())
-    ..registerLazySingleton<ConnectivityModel>(
-      () => ConnectivityModel(
-        playerService: di<PlayerService>(),
-        connectivity: di<Connectivity>(),
-      ),
+    ..registerSingletonAsync<ConnectivityModel>(
+      () async {
+        final connectivityModel = ConnectivityModel(
+          playerService: di<PlayerService>(),
+          connectivity: di<Connectivity>(),
+        );
+        await connectivityModel.init();
+        return connectivityModel;
+      },
+      dependsOn: [PlayerService],
     )
-    ..registerLazySingleton<SettingsModel>(
+    ..registerSingletonWithDependencies<SettingsModel>(
       () => SettingsModel(
         service: di<SettingsService>(),
         externalPathService: di<ExternalPathService>(),
         gitHub: di<GitHub>(),
-      )..init(),
+      ),
+      dependsOn: [SettingsService, ExternalPathService],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton(
-      () => LocalCoverModel(localCoverService: di<LocalCoverService>())..init(),
+      () => LocalCoverModel(localCoverService: di<LocalCoverService>()),
       dispose: (s) => s.dispose(),
     )
-    ..registerLazySingleton<PlayerModel>(
+    ..registerSingletonWithDependencies<PlayerModel>(
       () => PlayerModel(
         service: di<PlayerService>(),
         onlineArtService: di<OnlineArtService>(),
-      )..init(),
+      ),
+      dependsOn: [PlayerService],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<OnlineArtModel>(
       () => OnlineArtModel(
         onlineArtService: di<OnlineArtService>(),
-      )..init(),
-      dispose: (s) => s.dispose(),
-    )
-    ..registerLazySingleton<AppModel>(
-      () => AppModel(
-        packageInfo: di<PackageInfo>(),
-        gitHub: di<GitHub>(),
-        settingsService: di<SettingsService>(),
-        exposeService: di<ExposeService>(),
-        allowManualUpdates: Platform.isLinux ? false : true,
       ),
       dispose: (s) => s.dispose(),
     )
-    ..registerLazySingleton<LibraryModel>(
-      () => LibraryModel(di<LibraryService>()),
+    ..registerSingletonAsync<AppModel>(
+      () async {
+        final appModel = AppModel(
+          packageInfo: di<PackageInfo>(),
+          gitHub: di<GitHub>(),
+          settingsService: di<SettingsService>(),
+          exposeService: di<ExposeService>(),
+          allowManualUpdates: Platform.isLinux ? false : true,
+        );
+        await appModel.checkForUpdate(
+          isOnline: di<ConnectivityModel>().isOnline == true,
+        );
+        return appModel;
+      },
+      dependsOn: [SettingsService, ExposeService, ConnectivityModel],
       dispose: (s) => s.dispose(),
     )
-    ..registerLazySingleton<LocalAudioModel>(
+    ..registerSingletonWithDependencies<LibraryModel>(
+      () => LibraryModel(di<LibraryService>()),
+      dispose: (s) => s.dispose(),
+      dependsOn: [LibraryService],
+    )
+    ..registerSingletonWithDependencies<LocalAudioModel>(
       () => LocalAudioModel(
         localAudioService: di<LocalAudioService>(),
         settingsService: di<SettingsService>(),
       ),
+      dependsOn: [SettingsService],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<PodcastModel>(
       () => PodcastModel(podcastService: di.get<PodcastService>()),
       dispose: (s) => s.dispose(),
     )
-    ..registerLazySingleton<RadioModel>(
+    ..registerSingletonWithDependencies<RadioModel>(
       () => RadioModel(
         radioService: di<RadioService>(),
       ),
+      dependsOn: [RadioService],
       dispose: (s) => s.dispose(),
     )
-    ..registerLazySingleton<DownloadModel>(
+    ..registerSingletonWithDependencies<DownloadModel>(
       () => DownloadModel(
         settingsService: di<SettingsService>(),
         libraryService: di<LibraryService>(),
         dio: di<Dio>(),
       ),
+      dependsOn: [SettingsService, LibraryService],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<SearchModel>(
@@ -223,6 +268,6 @@ Future<void> registerDependencies({required List<String> args}) async {
         radioService: di<RadioService>(),
         libraryService: di<LibraryService>(),
         localAudioService: di<LocalAudioService>(),
-      )..init(),
+      ),
     );
 }

@@ -103,7 +103,8 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                     children: [
                       if (audio?.audioType == AudioType.podcast)
                         PlaybackRateButton(active: active),
-                      if (!isMobilePlatform) const VolumeSliderPopup(),
+                      if (!AppConfig.isMobilePlatform)
+                        const VolumeSliderPopup(),
                       const PlayerPauseTimerButton(),
                       const QueueButton(
                         isSelected: false,
@@ -133,7 +134,8 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
     final player = SizedBox(
       height: watchPropertyValue((PlayerModel m) => m.bottomPlayerHeight),
       child: Column(
-        children: (isMobilePlatform ? children.reversed : children).toList(),
+        children: (AppConfig.isMobilePlatform ? children.reversed : children)
+            .toList(),
       ),
     );
 
@@ -143,7 +145,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
 
     return Stack(
       children: [
-        if (!isMobilePlatform)
+        if (!AppConfig.isMobilePlatform)
           BlurredFullHeightPlayerImage(
             size: Size(
               context.mediaQuerySize.width,

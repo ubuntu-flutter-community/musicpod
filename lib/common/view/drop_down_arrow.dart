@@ -8,7 +8,7 @@ class DropDownArrow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return yaruStyled
+    return AppConfig.yaruStyled
         ? const Icon(YaruIcons.pan_down)
         : const Icon(Icons.arrow_drop_down);
   }

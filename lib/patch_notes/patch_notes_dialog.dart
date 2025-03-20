@@ -5,7 +5,7 @@ import 'package:watch_it/watch_it.dart';
 
 import '../app/app_model.dart';
 import '../common/view/progress.dart';
-import '../constants.dart';
+import '../app_config.dart';
 import '../l10n/l10n.dart';
 
 class PatchNotesDialog extends StatefulWidget {
@@ -48,7 +48,7 @@ class _PatchNotesDialogState extends State<PatchNotesDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            launchUrl(Uri.parse(kSponsorLink));
+            launchUrl(Uri.parse(AppConfig.sponsorLink));
             Navigator.of(context).pop();
           },
           child: const Text('Sponsor Me'),

@@ -166,7 +166,7 @@ class _PodcastPageState extends State<PodcastPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: space(
                       children: [
-                        if (!isMobilePlatform)
+                        if (!AppConfig.isMobilePlatform)
                           PodcastReplayButton(feedUrl: widget.feedUrl),
                         PodcastMarkDoneButton(feedUrl: widget.feedUrl),
                         PodcastSubButton(
@@ -179,7 +179,7 @@ class _PodcastPageState extends State<PodcastPage> {
                         ),
                         PodcastRefreshButton(pageId: widget.feedUrl),
                         PodcastReorderButton(feedUrl: widget.feedUrl),
-                        if (!isMobilePlatform)
+                        if (!AppConfig.isMobilePlatform)
                           AudioTileOptionButton(
                             audios: episodesWithDownloads,
                             playlistId: widget.feedUrl,
@@ -197,7 +197,7 @@ class _PodcastPageState extends State<PodcastPage> {
                 ),
                 SliverPadding(
                   padding: getAdaptiveHorizontalPadding(
-                    min: isMobilePlatform ? 0 : 15,
+                    min: AppConfig.isMobilePlatform ? 0 : 15,
                     constraints: constraints,
                   ).copyWith(bottom: bottomPlayerPageGap ?? kLargestSpace),
                   sliver: SliverPodcastPageList(

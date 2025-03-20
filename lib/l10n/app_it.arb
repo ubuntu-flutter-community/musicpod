@@ -1233,5 +1233,11 @@
   "toClick": "clic",
   "@toClick": {},
   "theClick": "clic",
-  "@theClick": {}
+  "@theClick": {},
+  "clearQueue": "Azzera coda",
+  "@clearQueue": {},
+  "connectedToDiscord": "Connetti a Discord",
+  "@connectedToDiscord": {},
+  "disconnectedFromDiscord": "Disconnetti da Discord",
+  "@disconnectedFromDiscord": {}
 }

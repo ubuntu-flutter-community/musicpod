@@ -19,8 +19,7 @@ class AudioTileImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fallbackIcon =
-        AudioFallBackIcon(audio: audio, iconSize: size / (1.65));
+    final fallbackIcon = AudioFallBackIcon(audio: audio, iconSize: size / 1.65);
     Widget image;
     if (audio?.hasPathAndId == true) {
       image = LocalCover(

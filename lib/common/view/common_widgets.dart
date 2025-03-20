@@ -11,7 +11,7 @@ class CommonSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return yaruStyled
+    return AppConfig.yaruStyled
         ? YaruSwitch(
             value: value,
             onChanged: onChanged,
@@ -28,7 +28,7 @@ class CommonCheckBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return yaruStyled
+    return AppConfig.yaruStyled
         ? YaruCheckbox(
             value: value,
             onChanged: onChanged,
@@ -49,7 +49,7 @@ class ImportantButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return yaruStyled
+    return AppConfig.yaruStyled
         ? ElevatedButton(
             onPressed: onPressed,
             child: child,
@@ -72,7 +72,7 @@ class ImportantButtonWithIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return yaruStyled
+    return AppConfig.yaruStyled
         ? ElevatedButton.icon(
             onPressed: onPressed,
             icon: icon,

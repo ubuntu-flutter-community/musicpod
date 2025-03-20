@@ -28,7 +28,7 @@ class SearchButton extends StatelessWidget {
     final onTap =
         onPressed ?? () => di<LibraryModel>().push(pageId: PageIDs.searchPage);
 
-    return yaruStyled
+    return AppConfig.yaruStyled
         ? YaruSearchButton(
             searchActive: active,
             onPressed: onTap,

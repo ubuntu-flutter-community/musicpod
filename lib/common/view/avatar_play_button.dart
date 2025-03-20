@@ -28,8 +28,10 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
     final pageIsQueue = watchPropertyValue(
       (PlayerModel m) => m.queueName != null && m.queueName == pageId,
     );
-    final iconData =
-        isPlayerPlaying && pageIsQueue ? Iconz.pause : Iconz.playFilled;
+    final iconData = isPlayerPlaying &&
+            (pageIsQueue && playerModel.queue.length == audios.length)
+        ? Iconz.pause
+        : Iconz.playFilled;
 
     return Padding(
       padding: bigPlayButtonPadding,
@@ -44,7 +46,7 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
               di<RadioModel>().clickStation(audios.first);
             }
             if (isPlayerPlaying) {
-              if (pageIsQueue) {
+              if (pageIsQueue && playerModel.queue.length == audios.length) {
                 playerModel.pause();
               } else {
                 playerModel.startPlaylist(
