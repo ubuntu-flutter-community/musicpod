@@ -63,6 +63,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
             onNotification: (notification) {
               if (notification.metrics.axisDirection == AxisDirection.down &&
                   notification.direction == ScrollDirection.reverse &&
+                  notification.metrics.pixels >= notification.metrics.maxScrollExtent * 0.6 &&
                   audioType != AudioType.local) {
                 di<SearchModel>()
                   ..incrementLimit(8)
