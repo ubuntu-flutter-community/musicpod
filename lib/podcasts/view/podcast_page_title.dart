@@ -1,3 +1,5 @@
+import 'package:html/parser.dart';
+
 import '../../extensions/build_context_x.dart';
 import '../../library/library_model.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +25,7 @@ class PodcastPageTitle extends StatelessWidget with WatchItMixin {
       alignment: Alignment.centerRight,
       child: Padding(
         padding: EdgeInsets.only(right: visible ? 10 : 0),
-        child: Text(title),
+        child: Text(HtmlParser(title).parseFragment().text ?? title),
       ),
     );
   }
