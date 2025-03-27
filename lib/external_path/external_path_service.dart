@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:gtk/gtk.dart';
 import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
+import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pls/pls.dart';
 
@@ -13,6 +14,7 @@ import '../app_config.dart';
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/logging.dart';
+import '../extensions/media_file_x.dart';
 import '../player/player_service.dart';
 
 class ExternalPathService {
@@ -43,11 +45,30 @@ class ExternalPathService {
       return;
     }
     try {
-      final metadata = readMetadata(File(path), getImage: true);
-      _playerService.startPlaylist(
-        listName: path,
-        audios: [Audio.fromMetadata(path: path, data: metadata)],
-      );
+      final file = File(path);
+
+      if (file.couldHaveMetadata) {
+        _playerService.startPlaylist(
+          listName: path,
+          audios: [
+            Audio.fromMetadata(
+              path: file.path,
+              data: readMetadata(file, getImage: true),
+            ),
+          ],
+        );
+      } else if (file.isPlayable) {
+        _playerService.startPlaylist(
+          listName: path,
+          audios: [
+            Audio(
+              path: file.path,
+              title: basename(file.path),
+              audioType: AudioType.local,
+            ),
+          ],
+        );
+      }
     } on Exception catch (e) {
       printMessageInDebugMode(e);
     }
@@ -61,12 +82,30 @@ class ExternalPathService {
     if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
       try {
         openFile().then((xfile) {
-          if (xfile?.path == null) return;
-          final metadata = readMetadata(File(xfile!.path), getImage: true);
-          _playerService.startPlaylist(
-            listName: xfile.path,
-            audios: [Audio.fromMetadata(path: xfile.path, data: metadata)],
-          );
+          if (xfile == null) return;
+
+          if (xfile.couldHaveMetadata) {
+            _playerService.startPlaylist(
+              listName: xfile.path,
+              audios: [
+                Audio.fromMetadata(
+                  path: xfile.path,
+                  data: readMetadata(File(xfile.path), getImage: true),
+                ),
+              ],
+            );
+          } else if (xfile.isPlayable) {
+            _playerService.startPlaylist(
+              listName: xfile.path,
+              audios: [
+                Audio(
+                  path: xfile.path,
+                  title: basename(xfile.path),
+                  audioType: AudioType.local,
+                ),
+              ],
+            );
+          }
         });
       } on Exception catch (e) {
         printMessageInDebugMode(e);
@@ -110,15 +149,26 @@ class ExternalPathService {
       }
 
       if (e.link.startsWith('file://')) {
-        audios.add(
-          Audio.fromMetadata(
-            path: path,
-            data: readMetadata(
-              File(e.link.replaceAll('file://', '')),
-              getImage: true,
+        final file = File(e.link.replaceAll('file://', ''));
+        if (file.couldHaveMetadata) {
+          audios.add(
+            Audio.fromMetadata(
+              path: path,
+              data: readMetadata(
+                file,
+                getImage: true,
+              ),
             ),
-          ),
-        );
+          );
+        } else if (file.isPlayable) {
+          audios.add(
+            Audio(
+              path: path,
+              title: basename(path),
+              audioType: AudioType.local,
+            ),
+          );
+        }
       } else if (e.link.startsWith('http')) {
         audios.add(
           Audio(
@@ -157,12 +207,23 @@ class ExternalPathService {
           ),
         );
       } else if (e.file?.isNotEmpty == true) {
-        audios.add(
-          Audio.fromMetadata(
-            path: e.file!,
-            data: readMetadata(File(e.file!), getImage: true),
-          ),
-        );
+        final file = File(e.file!);
+        if (file.couldHaveMetadata) {
+          audios.add(
+            Audio.fromMetadata(
+              path: e.file!,
+              data: readMetadata(file, getImage: true),
+            ),
+          );
+        } else if (file.isPlayable) {
+          audios.add(
+            Audio(
+              path: file.path,
+              title: basename(path),
+              audioType: AudioType.local,
+            ),
+          );
+        }
       }
     }
 

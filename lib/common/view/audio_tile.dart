@@ -68,18 +68,21 @@ class _AudioTileState extends State<AudioTile> {
       _ => widget.audio.artist ?? l10n.unknown,
     };
 
-    final leading = !widget.showLeading
-        ? null
-        : switch (widget.audioPageType) {
-            AudioPageType.album => _AlbumTileLead(
-                trackNumber: widget.audio.trackNumber,
-                color: color,
-              ),
-            _ => AudioTileImage(
-                size: kAudioTrackWidth,
-                audio: widget.audio,
-              ),
-          };
+    const dimension = kAudioTrackWidth;
+
+    final leading = switch (widget.audioPageType) {
+      AudioPageType.album => _AlbumTileLead(
+          trackNumber: widget.audio.trackNumber,
+          color: color,
+          dimension: dimension,
+        ),
+      _ => !widget.showLeading
+          ? null
+          : AudioTileImage(
+              size: dimension,
+              audio: widget.audio,
+            ),
+    };
 
     const titleOverflow = TextOverflow.ellipsis;
     const titleMaxLines = 1;
@@ -87,7 +90,7 @@ class _AudioTileState extends State<AudioTile> {
     final listTile = ListTile(
       key: ObjectKey(widget.audio),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      minLeadingWidth: kAudioTrackWidth,
+      minLeadingWidth: dimension,
       leading: leading,
       selected: widget.selected,
       selectedColor:
@@ -109,7 +112,6 @@ class _AudioTileState extends State<AudioTile> {
       },
       title: Padding(
         padding: const EdgeInsets.only(right: kLargestSpace),
-        // TODO: make playlists audiotype agnostic and stop forwarding callbacks once and for all
         child: widget.onTitleTap == null
             ? Text(
                 widget.audio.title ?? l10n.unknown,
@@ -263,15 +265,20 @@ class _AudioTileDuration extends StatelessWidget {
 }
 
 class _AlbumTileLead extends StatelessWidget {
-  const _AlbumTileLead({required this.trackNumber, this.color});
+  const _AlbumTileLead({
+    required this.trackNumber,
+    this.color,
+    this.dimension = kAudioTrackWidth,
+  });
 
   final int? trackNumber;
   final Color? color;
+  final double? dimension;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox.square(
-      dimension: kAudioTrackWidth,
+      dimension: dimension,
       child: Center(
         widthFactor: 1,
         child: Text(

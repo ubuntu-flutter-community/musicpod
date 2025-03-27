@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -72,10 +73,21 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
             (value) async {
               if (value == null) return;
               final file = File.fromUri(value);
-              if (file.isValidMedia) {
-                final data = readMetadata(file, getImage: true);
-                var audio = Audio.fromMetadata(path: file.path, data: data);
-                playlist?.add(audio);
+              if (file.couldHaveMetadata) {
+                playlist?.add(
+                  Audio.fromMetadata(
+                    path: file.path,
+                    data: readMetadata(file, getImage: true),
+                  ),
+                );
+              } else if (file.isPlayable) {
+                playlist?.add(
+                  Audio(
+                    path: file.path,
+                    title: basename(file.path),
+                    audioType: AudioType.local,
+                  ),
+                );
               }
             },
             onError: (_) {},
