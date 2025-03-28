@@ -1235,5 +1235,9 @@
   "toClick": "kliknutia",
   "@toClick": {},
   "clearQueue": "Vymazať poradie",
-  "@clearQueue": {}
+  "@clearQueue": {},
+  "connectedToDiscord": "Pripojené k Discordu",
+  "@connectedToDiscord": {},
+  "disconnectedFromDiscord": "Odpojené od Discordu",
+  "@disconnectedFromDiscord": {}
 }
