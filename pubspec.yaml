@@ -57,6 +57,7 @@ dependencies:
     git:
       url: https://github.com/media-kit/media-kit
       path: media_kit_video
+  mime: ^2.0.0
   mockito: ^5.4.4
   package_info_plus: ^8.0.0
   palette_generator: ^0.3.3+3

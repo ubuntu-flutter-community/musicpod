@@ -11,7 +11,8 @@ class RadioService {
   RadioBrowserApi? _radioBrowserApi;
   final _propertiesChangedController = StreamController<bool>.broadcast();
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
-  String? get connectedHost => _radioBrowserApi?.host;
+  String? get connectedHost =>
+      _tags == null || _tags!.isEmpty ? null : _radioBrowserApi?.host;
 
   Future<void> init() async {
     if (connectedHost != null && _tags?.isNotEmpty == true) {
@@ -19,7 +20,18 @@ class RadioService {
       return;
     }
 
-    final hosts = await _findHosts();
+    List<String>? hosts;
+    try {
+      hosts = await _findHosts().timeout(
+        const Duration(seconds: 5),
+      );
+    } on TimeoutException catch (_) {
+      printMessageInDebugMode('Timeout while trying to find a host.');
+      return;
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+      return;
+    }
     for (var host in hosts) {
       try {
         _radioBrowserApi = RadioBrowserApi.fromHost(host);
@@ -41,11 +53,11 @@ class RadioService {
         _kRadioBrowserBaseUrl,
         RRecordType.A,
       );
-      if (records?.isNotEmpty == false) {
+      if (records == null || records.isEmpty) {
         return [];
       }
 
-      for (RRecord record in records ?? <RRecord>[]) {
+      for (RRecord record in records) {
         final reverse = await DnsUtils.reverseDns(record.data);
         for (RRecord r in reverse ?? <RRecord>[]) {
           hosts.add(r.data.replaceAll('info.', 'info'));
@@ -134,7 +146,7 @@ class RadioService {
 
   List<Tag>? _tags;
   List<Tag>? get tags => _tags;
-  Future<List<Tag>?> _loadTags({
+  Future<List<Tag>?>? _loadTags({
     String? filter,
     int? limit,
   }) async {
@@ -143,16 +155,23 @@ class RadioService {
     RadioBrowserListResponse<Tag>? response;
 
     try {
-      response = await _radioBrowserApi!.getTags(
-        filter: filter,
-        parameters: InputParameters(
-          hidebroken: true,
-          limit: limit ?? 5000,
-          order: 'stationcount',
-          reverse: true,
-        ),
-      );
+      response = await _radioBrowserApi!
+          .getTags(
+            filter: filter,
+            parameters: InputParameters(
+              hidebroken: true,
+              limit: limit ?? 5000,
+              order: 'stationcount',
+              reverse: true,
+            ),
+          )
+          .timeout(const Duration(seconds: 3));
       _tags = response.items;
+    } on TimeoutException catch (_) {
+      printMessageInDebugMode(
+        'Timeout while trying to load tags from ${_radioBrowserApi?.host}.',
+      );
+      return null;
     } on Exception catch (e) {
       printMessageInDebugMode(e);
     }

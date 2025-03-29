@@ -1232,5 +1232,11 @@
   "toClick": "klik",
   "@toClick": {},
   "resetAllSettingsConfirm": "Ziur al zaude ezarpen guztiak, podcast-harpidetzak, podcast-aren aurrerapena, kate izardunak eta ainguratutako albumak berrezartzen dituzula? Aplikazioa itxi egingo da ondoren eta berriro ireki behar duzu.",
-  "@resetAllSettingsConfirm": {}
+  "@resetAllSettingsConfirm": {},
+  "clearQueue": "Garbitu ilara",
+  "@clearQueue": {},
+  "connectedToDiscord": "Discord-era konektatuta",
+  "@connectedToDiscord": {},
+  "disconnectedFromDiscord": "Discord-etik deskonektatuta",
+  "@disconnectedFromDiscord": {}
 }

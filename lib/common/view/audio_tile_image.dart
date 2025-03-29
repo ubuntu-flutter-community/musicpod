@@ -4,7 +4,6 @@ import '../../local_audio/view/local_cover.dart';
 import '../data/audio.dart';
 import 'audio_fall_back_icon.dart';
 import 'safe_network_image.dart';
-import 'ui_constants.dart';
 
 class AudioTileImage extends StatelessWidget {
   const AudioTileImage({
@@ -40,9 +39,9 @@ class AudioTileImage extends StatelessWidget {
     }
 
     return SizedBox.square(
-      dimension: kAudioTrackWidth,
+      dimension: size,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(size / 6),
         child: image,
       ),
     );

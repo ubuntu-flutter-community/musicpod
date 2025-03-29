@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:html/parser.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app_config.dart';
@@ -149,7 +150,8 @@ class _PodcastPageState extends State<PodcastPage> {
                                       .firstOrNull!.albumArtist!,
                                   title: widget.title,
                                 ),
-                      title: widget.title,
+                      title: HtmlParser(widget.title).parseFragment().text ??
+                          widget.title,
                       onLabelTab: (text) => _onGenreTap(
                         l10n: l10n,
                         text: text,
