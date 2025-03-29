@@ -697,12 +697,6 @@
     "toClick"
   ],
 
-  "eu": [
-    "clearQueue",
-    "connectedToDiscord",
-    "disconnectedFromDiscord"
-  ],
-
   "fr": [
     "clearQueue",
     "connectedToDiscord",
@@ -2136,11 +2130,6 @@
     "regionYemen",
     "regionZambia",
     "regionZimbabwe"
-  ],
-
-  "sk": [
-    "connectedToDiscord",
-    "disconnectedFromDiscord"
   ],
 
   "ta": [
