@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../extensions/build_context_x.dart';
+import 'sliver_app_bar_bottom_space.dart';
 import 'ui_constants.dart';
 
 class SliverAudioPageControlPanel extends StatelessWidget {
@@ -32,21 +33,9 @@ class SliverAudioPageControlPanel extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
           child: controlPanel,
         ),
-        bottom: const _Space(),
+        bottom: const SliverAppBarBottomSpace(),
         onStretchTrigger: onStretchTrigger,
       ),
     );
   }
-}
-
-class _Space extends StatelessWidget implements PreferredSizeWidget {
-  const _Space();
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox();
-  }
-
-  @override
-  Size get preferredSize => const Size(0, 10);
 }

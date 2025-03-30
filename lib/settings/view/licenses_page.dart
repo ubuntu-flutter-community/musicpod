@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
+import '../../extensions/build_context_x.dart';
 
 class LicensesPage extends StatelessWidget {
   const LicensesPage({super.key});
@@ -14,7 +15,7 @@ class LicensesPage extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: context.theme.dialogTheme.backgroundColor,
         borderRadius: BorderRadius.circular(kYaruContainerRadius),
       ),
       child: ClipRRect(
