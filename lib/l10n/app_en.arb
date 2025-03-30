@@ -41,6 +41,7 @@
     "saveAndAuthorize": "Save and authorize",
     "title": "Title",
     "titles": "Titles",
+    "description": "Description",
     "artist": "Artist",
     "artists": "Artists",
     "showArtistPage": "Show artist page",
