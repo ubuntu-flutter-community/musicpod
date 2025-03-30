@@ -1238,5 +1238,7 @@
   "connectedToDiscord": "Discordiga ühendatud",
   "@connectedToDiscord": {},
   "disconnectedFromDiscord": "Discordi ühendus on katkestatud",
-  "@disconnectedFromDiscord": {}
+  "@disconnectedFromDiscord": {},
+  "description": "Kirjeldus",
+  "@description": {}
 }
