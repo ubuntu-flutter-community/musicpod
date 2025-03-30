@@ -45,7 +45,7 @@ class SettingsPage extends StatelessWidget {
       children: [
         YaruDialogTitleBar(
           border: BorderSide.none,
-          backgroundColor: context.theme.scaffoldBackgroundColor,
+          backgroundColor: context.theme.dialogTheme.backgroundColor,
           onClose: (p0) => Navigator.of(rootNavigator: true, context).pop(),
           title: Text(context.l10n.settings),
         ),
