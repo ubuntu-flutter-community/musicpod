@@ -59,17 +59,31 @@ class SearchPage extends StatelessWidget with WatchItMixin {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          return NotificationListener<UserScrollNotification>(
+          return NotificationListener<ScrollNotification>(
             onNotification: (notification) {
-              if (notification.metrics.axisDirection == AxisDirection.down &&
-                  notification.direction == ScrollDirection.reverse &&
-                  notification.metrics.pixels >=
-                      notification.metrics.maxScrollExtent * 0.6 &&
-                  audioType != AudioType.local) {
-                di<SearchModel>()
-                  ..incrementLimit(8)
-                  ..search();
+              if (audioType == AudioType.local) return true;
+
+              if (notification is UserScrollNotification) {
+                if (notification.metrics.axisDirection == AxisDirection.down &&
+                    notification.direction == ScrollDirection.reverse &&
+                    notification.metrics.pixels >=
+                        notification.metrics.maxScrollExtent * 0.6) {
+                  di<SearchModel>()
+                    ..incrementLimit(8)
+                    ..search();
+                }
+              } else if (notification is ScrollEndNotification) {
+                final metrics = notification.metrics;
+                if (metrics.atEdge) {
+                  final isAtBottom = metrics.pixels != 0;
+                  if (isAtBottom) {
+                    di<SearchModel>()
+                      ..incrementLimit(16)
+                      ..search();
+                  }
+                }
               }
+
               return true;
             },
             child: CustomScrollView(
