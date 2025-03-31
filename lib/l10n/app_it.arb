@@ -1239,5 +1239,7 @@
   "connectedToDiscord": "Connetti a Discord",
   "@connectedToDiscord": {},
   "disconnectedFromDiscord": "Disconnetti da Discord",
-  "@disconnectedFromDiscord": {}
+  "@disconnectedFromDiscord": {},
+  "description": "Descrizione",
+  "@description": {}
 }
