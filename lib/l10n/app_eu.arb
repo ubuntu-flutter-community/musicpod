@@ -1238,5 +1238,7 @@
   "connectedToDiscord": "Discord-era konektatuta",
   "@connectedToDiscord": {},
   "disconnectedFromDiscord": "Discord-etik deskonektatuta",
-  "@disconnectedFromDiscord": {}
+  "@disconnectedFromDiscord": {},
+  "description": "Deskribapena",
+  "@description": {}
 }
