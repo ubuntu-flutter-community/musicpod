@@ -1239,5 +1239,7 @@
   "connectedToDiscord": "Pripojené k Discordu",
   "@connectedToDiscord": {},
   "disconnectedFromDiscord": "Odpojené od Discordu",
-  "@disconnectedFromDiscord": {}
+  "@disconnectedFromDiscord": {},
+  "description": "Popis",
+  "@description": {}
 }
