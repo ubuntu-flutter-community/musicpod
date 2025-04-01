@@ -64,7 +64,8 @@ class SettingsModel extends SafeChangeNotifier {
       _service.setNeverShowFailedImports(value);
 
   bool get enableDiscordRPC => _service.enableDiscordRPC;
-  void setEnableDiscordRPC(bool value) => _service.setEnableDiscordRPC(value);
+  Future<bool> setEnableDiscordRPC(bool value) =>
+      _service.setEnableDiscordRPC(value);
 
   bool get enableLastFmScrobbling => _service.enableLastFmScrobbling;
   String? get lastFmApiKey => _service.lastFmApiKey;
