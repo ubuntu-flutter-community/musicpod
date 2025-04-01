@@ -61,6 +61,7 @@ class _SliverPodcastPageSearchFieldState
               controller: _textEditingController,
               autofocus: true,
               decoration: InputDecoration(
+                label: Text(l10n.search),
                 prefix: InkWell(
                   onTap: di<PodcastModel>().setFilter,
                   child: Text(
