@@ -128,6 +128,7 @@ void registerDependencies({required List<String> args}) async {
     )
     ..registerSingletonAsync<ExposeService>(
       () async => ExposeService(
+        settingsService: di<SettingsService>(),
         discordRPC: AppConfig.allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
         lastFmService: di<LastfmService>(),
         listenBrainzService: di<ListenBrainzService>(),
@@ -135,6 +136,7 @@ void registerDependencies({required List<String> args}) async {
       dependsOn: [
         if (AppConfig.allowDiscordRPC) FlutterDiscordRPC,
         LastfmService,
+        SettingsService,
       ],
       dispose: (s) => s.dispose(),
     )
