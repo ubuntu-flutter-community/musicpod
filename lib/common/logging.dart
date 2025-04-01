@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 
-void printMessageInDebugMode(Object? object) {
+void printMessageInDebugMode(Object? object, [String tag = '']) {
   if (kDebugMode) {
-    print(object);
+    final message = object.toString();
+    debugPrint(tag.isNotEmpty ? '[$tag] $message' : message);
   }
 }
