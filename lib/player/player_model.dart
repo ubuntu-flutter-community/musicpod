@@ -148,12 +148,7 @@ class PlayerModel extends SafeChangeNotifier {
         .map((e) => '${e.value.icyTitle}\n')
         .toList()
         .reversed
-        .toString()
-        .replaceAll(', ', '')
-        .replaceAll('[', '')
-        .replaceAll(']', '')
-        .replaceAll('(', '')
-        .replaceAll(')', '');
+        .join();
   }
 
   void setTimer(Duration duration) => _playerService.setPauseTimer(duration);
