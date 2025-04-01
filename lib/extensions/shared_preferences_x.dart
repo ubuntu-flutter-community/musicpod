@@ -28,4 +28,8 @@ extension SPKeys on SharedPreferences {
   static const useMoreAnimations = 'useMoreAnimations';
   static const showPositionDuration = 'showPositionDuration';
   static const notifyDataSafeMode = 'notifyDataSafeMode';
+  static const windowHeight = 'windowHeight';
+  static const windowWidth = 'windowWidth';
+  static const windowMaximized = 'windowMaximized';
+  static const windowFullscreen = 'windowFullscreen';
 }
