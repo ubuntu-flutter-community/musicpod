@@ -155,19 +155,17 @@ class _PodcastPageState extends State<PodcastPage> {
                       image: widget.imageUrl == null
                           ? null
                           : _PodcastPageImage(imageUrl: widget.imageUrl),
-                      label: episodesWithDownloads
+                      label: (episodes ?? [])
                               .firstWhereOrNull((e) => e.genre != null)
                               ?.genre ??
                           l10n.podcast,
-                      subTitle: episodesWithDownloads.firstOrNull?.artist,
-                      description:
-                          episodesWithDownloads.firstOrNull?.albumArtist == null
-                              ? null
-                              : AudioPageHeaderHtmlDescription(
-                                  description: episodesWithDownloads
-                                      .firstOrNull!.albumArtist!,
-                                  title: widget.title,
-                                ),
+                      subTitle: episodes?.firstOrNull?.artist,
+                      description: episodes?.firstOrNull?.albumArtist == null
+                          ? null
+                          : AudioPageHeaderHtmlDescription(
+                              description: episodes!.firstOrNull!.albumArtist!,
+                              title: widget.title,
+                            ),
                       title: HtmlParser(widget.title).parseFragment().text ??
                           widget.title,
                       onLabelTab: (text) => _onGenreTap(
