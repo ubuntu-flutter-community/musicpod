@@ -1239,5 +1239,7 @@
   "connectedToDiscord": "Ansluten till Discord",
   "@connectedToDiscord": {},
   "disconnectedFromDiscord": "Frånkopplad från Discord",
-  "@disconnectedFromDiscord": {}
+  "@disconnectedFromDiscord": {},
+  "description": "Beskrivning",
+  "@description": {}
 }
