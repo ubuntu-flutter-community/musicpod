@@ -48,9 +48,8 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    final discordEnabled = AppConfig.allowDiscordRPC
-        ? watchPropertyValue((SettingsModel m) => m.enableDiscordRPC)
-        : false;
+    final discordEnabled =
+        watchPropertyValue((SettingsModel m) => m.enableDiscordRPC);
 
     final lastFmEnabled =
         watchPropertyValue((SettingsModel m) => m.enableLastFmScrobbling);
@@ -92,15 +91,11 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
             trailing: CommonSwitch(
               value: discordEnabled,
               onChanged: AppConfig.allowDiscordRPC
-                  ? (v) {
-                      di<SettingsModel>().setEnableDiscordRPC(v);
-                      final appModel = di<AppModel>();
-                      if (v) {
-                        appModel.connectToDiscord();
-                      } else {
-                        appModel.disconnectFromDiscord();
-                      }
-                    }
+                  ? (v) => di<AppModel>().connectToDiscord(v).then(
+                        (_) => di<SettingsModel>().setEnableDiscordRPC(
+                          di<AppModel>().isDiscordConnected,
+                        ),
+                      )
                   : null,
             ),
           ),

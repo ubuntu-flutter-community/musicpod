@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../app_config.dart';
 import '../common/data/close_btn_action.dart';
 import '../common/file_names.dart';
 import '../extensions/shared_preferences_x.dart';
@@ -19,8 +20,9 @@ class SettingsService {
   final SharedPreferences _preferences;
   final _propertiesChangedController = StreamController<bool>.broadcast();
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
-  void notify(bool saved) {
+  bool notify(bool saved) {
     if (saved) _propertiesChangedController.add(true);
+    return saved;
   }
 
   int get themeIndex => _preferences.getInt(SPKeys.themeIndex) ?? 0;
@@ -71,9 +73,10 @@ class SettingsService {
       _preferences.setString(SPKeys.listenBrainzApiKey, value).then(notify);
 
   bool get enableDiscordRPC =>
-      _preferences.getBool(SPKeys.enableDiscord) ?? false;
-  void setEnableDiscordRPC(bool value) =>
-      _preferences.setBool(SPKeys.enableDiscord, value).then(notify);
+      (_preferences.getBool(SPKeys.enableDiscord) ?? false) &&
+      AppConfig.allowDiscordRPC;
+  Future<bool> setEnableDiscordRPC(bool value) async =>
+      notify(await _preferences.setBool(SPKeys.enableDiscord, value));
 
   bool get useMoreAnimations =>
       _preferences.getBool(SPKeys.useMoreAnimations) ?? !Platform.isLinux;

@@ -23,6 +23,7 @@ class ExposeService {
   Stream<String?> get discordErrorStream => _errorController.stream;
   Stream<bool> get isDiscordConnectedStream =>
       _discordRPC?.isConnectedStream ?? Stream.value(false);
+  bool get isDiscordConnected => _discordRPC?.isConnected ?? false;
 
   Future<void> exposeTitleOnline({
     required String title,
@@ -78,13 +79,13 @@ class ExposeService {
     }
   }
 
-  Future<void> connect() async {
-    await connectToDiscord();
-  }
-
-  Future<void> connectToDiscord() async {
+  Future<void> connectToDiscord(bool value) async {
     try {
-      await _discordRPC?.connect();
+      if (value) {
+        await _discordRPC?.connect();
+      } else {
+        await _discordRPC?.disconnect();
+      }
     } on Exception catch (e) {
       _errorController.add(e.toString());
     }
@@ -100,16 +101,8 @@ class ExposeService {
         apiSecret: apiSecret,
       );
 
-  Future<void> disconnectFromDiscord() async {
-    try {
-      await _discordRPC?.disconnect();
-    } on Exception catch (e) {
-      _errorController.add(e.toString());
-    }
-  }
-
   Future<void> dispose() async {
-    await disconnectFromDiscord();
+    await connectToDiscord(false);
     await _errorController.close();
   }
 }

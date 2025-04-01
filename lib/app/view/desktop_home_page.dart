@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app_config.dart';
@@ -11,7 +10,6 @@ import '../../player/view/player_view.dart';
 import '../../podcasts/download_model.dart';
 import '../../podcasts/podcast_model.dart';
 import '../../podcasts/view/podcast_state_stream_handler.dart';
-import '../../settings/settings_model.dart';
 import '../app_model.dart';
 import '../connectivity_model.dart';
 import 'master_detail_page.dart';
@@ -47,15 +45,11 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
     final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
     final isFullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo == true);
-    final enableDiscordRPC =
-        watchPropertyValue((SettingsModel m) => m.enableDiscordRPC);
 
-    if (di.isRegistered(instance: FlutterDiscordRPC) && enableDiscordRPC) {
-      registerStreamHandler(
-        select: (AppModel m) => m.isDiscordConnectedStream,
-        handler: discordConnectedHandler,
-      );
-    }
+    registerStreamHandler(
+      select: (AppModel m) => m.isDiscordConnectedStream,
+      handler: discordConnectedHandler,
+    );
 
     registerStreamHandler(
       select: (DownloadModel m) => m.messageStream,

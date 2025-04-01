@@ -30,9 +30,9 @@ class AppModel extends SafeChangeNotifier {
   Stream<String?> get errorStream => _exposeService.discordErrorStream;
   Stream<bool> get isDiscordConnectedStream =>
       _exposeService.isDiscordConnectedStream;
-  Future<void> connectToDiscord() async => _exposeService.connectToDiscord();
-  Future<void> disconnectFromDiscord() async =>
-      _exposeService.disconnectFromDiscord();
+  Future<void> connectToDiscord(bool value) async =>
+      _exposeService.connectToDiscord(value);
+  bool get isDiscordConnected => _exposeService.isDiscordConnected;
 
   ValueNotifier<bool> get isLastFmAuthorized =>
       _exposeService.isLastFmAuthorized;
@@ -165,7 +165,11 @@ class AppModel extends SafeChangeNotifier {
   }
 }
 
-void discordConnectedHandler(context, snapshot, cancel) {
+void discordConnectedHandler(
+  BuildContext context,
+  AsyncSnapshot<bool?> snapshot,
+  void Function() cancel,
+) {
   if (snapshot.data == true) {
     showSnackBar(
       context: context,
