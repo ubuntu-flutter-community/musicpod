@@ -143,11 +143,11 @@ class PlayerService {
     await _player.dispose();
   }
 
-  List<Audio>? _oldQueue;
+  Queue? _oldQueue;
   Queue _queue = (name: '', audios: []);
   Queue get queue => _queue;
   void setQueue(Queue value) {
-    if (value == _queue || value.audios.isEmpty) return;
+    if (value.audios.isEmpty) return;
     _queue = value;
     _propertiesChangedController.add(true);
   }
@@ -243,13 +243,16 @@ class PlayerService {
     if (value == _shuffle) return;
     _shuffle = value;
     if (value) {
-      _oldQueue = _queue.audios;
+      _oldQueue = (audios: List.from(_queue.audios), name: _queue.name);
       _queue.audios.shuffle();
-    } else if (_oldQueue != null) {
+    } else if (_oldQueue != null &&
+        _oldQueue?.name != null &&
+        _oldQueue!.name == _queue.name) {
       setQueue(
-        (audios: _oldQueue!, name: _queue.name),
+        (audios: List.from(_oldQueue!.audios), name: _oldQueue!.name),
       );
     }
+    _estimateNext();
     _propertiesChangedController.add(true);
   }
 
@@ -425,6 +428,7 @@ class PlayerService {
         audios.elementAtOrNull(index) != null) {
       _setAudio(audios.elementAtOrNull(index)!);
     } else {
+      setShuffle(false);
       setQueue((name: listName, audios: audios.toList()));
       _setAudio(
         (index != null && audios.elementAtOrNull(index) != null)
@@ -432,7 +436,6 @@ class PlayerService {
             : audios.first,
       );
     }
-
     _position = getLastPosition(_audio?.url);
     _estimateNext();
     await _play(newPosition: _position);
