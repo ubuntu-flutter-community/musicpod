@@ -35,6 +35,11 @@
     "showPositionDurationTitle",
     "showPositionDurationDescription",
     "unPinAlbum",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
     "podcastFeedLoadingTimeout",
@@ -361,6 +366,11 @@
     "showPositionDurationTitle",
     "showPositionDurationDescription",
     "unPinAlbum",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or",
     "duration",
     "radioTagDisclaimerTitle",
     "radioTagDisclaimerSubTitle",
@@ -672,6 +682,11 @@
     "resourceSectionTitle",
     "connectedToDiscord",
     "disconnectedFromDiscord",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or",
     "exposeToListenBrainzSubTitle"
   ],
 
@@ -697,15 +712,49 @@
     "resourceSectionTitle",
     "connectedToDiscord",
     "disconnectedFromDiscord",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or",
     "theClick",
     "toClick"
+  ],
+
+  "et": [
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or"
+  ],
+
+  "eu": [
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or"
   ],
 
   "fr": [
     "description",
     "clearQueue",
     "connectedToDiscord",
-    "disconnectedFromDiscord"
+    "disconnectedFromDiscord",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or"
+  ],
+
+  "it": [
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or"
   ],
 
   "nl": [
@@ -891,6 +940,11 @@
     "podcastName",
     "url",
     "loadFromFileOptional",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or",
     "loadMore",
     "searchOnline",
     "shareThisEpisode",
@@ -1254,6 +1308,11 @@
     "podcastName",
     "url",
     "loadFromFileOptional",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or",
     "loadMore",
     "searchOnline",
     "shareThisEpisode",
@@ -1575,6 +1634,11 @@
     "podcastName",
     "url",
     "loadFromFileOptional",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or",
     "loadMore",
     "searchOnline",
     "shareThisEpisode",
@@ -1875,7 +1939,12 @@
     "description",
     "clearQueue",
     "connectedToDiscord",
-    "disconnectedFromDiscord"
+    "disconnectedFromDiscord",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or"
   ],
 
   "ru": [
@@ -1900,6 +1969,11 @@
     "resourceSectionTitle",
     "connectedToDiscord",
     "disconnectedFromDiscord",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or",
     "clicks",
     "theClick",
     "toClick",
@@ -2142,8 +2216,21 @@
     "regionZimbabwe"
   ],
 
+  "sk": [
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or"
+  ],
+
   "sv": [
-    "description"
+    "description",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or"
   ],
 
   "ta": [
@@ -2168,6 +2255,11 @@
     "resourceSectionTitle",
     "connectedToDiscord",
     "disconnectedFromDiscord",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or",
     "theClick",
     "toClick"
   ],
@@ -2176,11 +2268,21 @@
     "description",
     "clearQueue",
     "connectedToDiscord",
-    "disconnectedFromDiscord"
+    "disconnectedFromDiscord",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or"
   ],
 
   "zh": [
-    "description"
+    "description",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or"
   ],
 
   "zh_HK": [
@@ -2219,6 +2321,11 @@
     "showPositionDurationTitle",
     "showPositionDurationDescription",
     "unPinAlbum",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or",
     "schedulePlaybackStopTimer",
     "alwaysAsk",
     "hideToTray",
@@ -2536,6 +2643,11 @@
     "showPositionDurationTitle",
     "showPositionDurationDescription",
     "unPinAlbum",
+    "exportPlaylistTpM3u",
+    "customContentTitle",
+    "customContentDescription",
+    "setPlaylistNameAndAddMoreLater",
+    "or",
     "schedulePlaybackStopTimer",
     "alwaysAsk",
     "hideToTray",

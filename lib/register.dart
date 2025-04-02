@@ -18,6 +18,7 @@ import 'app/app_model.dart';
 import 'app/connectivity_model.dart';
 import 'app/window_size_to_settings_listener.dart';
 import 'app_config.dart';
+import 'custom_content/custom_content_model.dart';
 import 'expose/expose_service.dart';
 import 'expose/lastfm_service.dart';
 import 'expose/listenbrainz_service.dart';
@@ -304,5 +305,12 @@ void registerDependencies({required List<String> args}) async {
         libraryService: di<LibraryService>(),
         localAudioService: di<LocalAudioService>(),
       ),
+    )
+    ..registerSingletonWithDependencies<CustomContentModel>(
+      () => CustomContentModel(
+        externalPathService: di<ExternalPathService>(),
+      ),
+      dependsOn: [ExternalPathService],
+      dispose: (s) => s.dispose(),
     );
 }
