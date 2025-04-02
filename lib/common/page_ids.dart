@@ -5,7 +5,7 @@ class PageIDs {
   static const localAudio = 'localAudio';
   static const podcasts = 'podcasts';
   static const radio = 'radio';
-  static const newPlaylist = 'newPlaylist';
+  static const customContent = 'newCustomContent';
   static const likedAudios = 'likedAudios';
   static const searchPage = 'searchPageId';
 
@@ -17,5 +17,6 @@ class PageIDs {
     podcasts,
     radio,
     settings,
+    customContent,
   };
 }

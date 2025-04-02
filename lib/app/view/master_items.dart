@@ -13,6 +13,7 @@ import '../../library/library_model.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/local_audio_page.dart';
 import '../../playlists/view/liked_audio_page.dart';
+import '../../custom_content/view/custom_content_page.dart';
 import '../../playlists/view/playlist_page.dart';
 import '../../podcasts/view/podcast_page.dart';
 import '../../podcasts/view/podcast_page_side_bar_icon.dart';
@@ -95,8 +96,8 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
     MasterItem(
       iconBuilder: (selected) => Icon(Iconz.plus),
       titleBuilder: (context) => Text(context.l10n.add),
-      pageBuilder: (_) => const SizedBox.shrink(),
-      pageId: PageIDs.newPlaylist,
+      pageBuilder: (_) => const CustomContentPage(),
+      pageId: PageIDs.customContent,
     ),
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.likedSongs),

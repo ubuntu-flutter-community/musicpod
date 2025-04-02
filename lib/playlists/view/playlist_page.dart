@@ -36,7 +36,7 @@ import '../../local_audio/view/genre_page.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
-import 'manual_add_dialog.dart';
+import 'edit_playlist_dialog.dart';
 import 'playlst_add_audios_dialog.dart';
 
 class PlaylistPage extends StatelessWidget with WatchItMixin {
@@ -362,17 +362,13 @@ class _PlaylistControlPanel extends StatelessWidget with WatchItMixin {
             icon: Icon(Iconz.pen),
             onPressed: () => showDialog(
               context: context,
-              builder: (context) => AlertDialog(
-                content: SizedBox(
-                  height: 200,
-                  width: 500,
-                  child: PlaylistEditDialogContent(
-                    playlistName: pageId,
-                    initialValue: pageId,
-                    allowDelete: true,
-                    allowRename: true,
-                  ),
-                ),
+              builder: (context) => EditPlaylistDialog(
+                audios: audios,
+                playlistName: pageId,
+                initialValue: pageId,
+                allowDelete: true,
+                allowRename: true,
+                allowExport: true,
               ),
             ),
           ),

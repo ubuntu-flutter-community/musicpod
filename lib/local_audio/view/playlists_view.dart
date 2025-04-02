@@ -7,8 +7,9 @@ import '../../common/view/icons.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../playlists/view/manual_add_dialog.dart';
+import '../../playlists/view/edit_playlist_dialog.dart';
 import '../../playlists/view/playlist_page.dart';
 
 class PlaylistsView extends StatelessWidget {
@@ -27,7 +28,7 @@ class PlaylistsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final lists = [
-      PageIDs.newPlaylist,
+      PageIDs.customContent,
       PageIDs.likedAudios,
       ...(take != null ? playlists!.take(take!).toList() : playlists ?? []),
     ];
@@ -39,11 +40,13 @@ class PlaylistsView extends StatelessWidget {
         final id = lists.elementAt(index);
         return YaruSelectableContainer(
           selected: false,
-          onTap: () => id == PageIDs.newPlaylist
+          onTap: () => id == PageIDs.customContent
               ? showDialog(
                   context: context,
-                  builder: (context) =>
-                      const ManualAddDialog(onlyPlaylists: true),
+                  builder: (context) => EditPlaylistDialog(
+                    allowCreate: true,
+                    label: context.l10n.playlist,
+                  ),
                 )
               : di<LibraryModel>().push(
                   builder: (_) => PlaylistPage(
@@ -58,7 +61,7 @@ class PlaylistsView extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 height: double.infinity,
-                child: id == PageIDs.newPlaylist
+                child: id == PageIDs.customContent
                     ? Container(
                         decoration: BoxDecoration(
                           color: context.colorScheme.surface.scale(
@@ -82,7 +85,7 @@ class PlaylistsView extends StatelessWidget {
                             fallBackText: id,
                           ),
               ),
-              if (id != PageIDs.newPlaylist && id != PageIDs.likedAudios)
+              if (id != PageIDs.customContent && id != PageIDs.likedAudios)
                 ArtistVignette(
                   text: id,
                 ),

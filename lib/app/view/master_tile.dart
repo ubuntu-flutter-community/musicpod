@@ -46,7 +46,7 @@ class MasterTile extends StatelessWidget {
     );
 
     final Widget tile;
-    if (pageId == PageIDs.newPlaylist) {
+    if (pageId == PageIDs.customContent) {
       tile = _FramedMasterTile(tile: yaruMasterTile);
     } else {
       tile = yaruMasterTile;

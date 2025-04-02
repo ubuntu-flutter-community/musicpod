@@ -69,6 +69,24 @@ class RadioService {
     return hosts;
   }
 
+  Future<Station?> getStationsByUrl(String url) async {
+    if (_radioBrowserApi == null) {
+      await init();
+      if (connectedHost == null) {
+        return null;
+      }
+    }
+
+    try {
+      final response = await _radioBrowserApi!.getStationsByUrl(url: url);
+      return response.items.firstOrNull;
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
+
+    return null;
+  }
+
   RadioBrowserListResponse<Station>? _response;
   String? _uuid;
   String? _country;
