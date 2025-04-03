@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
+import 'package:opml/opml.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/data/audio.dart';
@@ -9,13 +10,18 @@ import '../common/file_names.dart';
 import '../common/page_ids.dart';
 import '../common/view/audio_filter.dart';
 import '../extensions/shared_preferences_x.dart';
+import '../external_path/external_path_service.dart';
 import '../persistence_utils.dart';
 
 class LibraryService {
-  LibraryService({required SharedPreferences sharedPreferences})
-      : _sharedPreferences = sharedPreferences;
+  LibraryService({
+    required SharedPreferences sharedPreferences,
+    required ExternalPathService externalPathService,
+  })  : _sharedPreferences = sharedPreferences,
+        _externalPathService = externalPathService;
 
   final SharedPreferences _sharedPreferences;
+  final ExternalPathService _externalPathService;
 
   final _propertiesChangedController = StreamController<bool>.broadcast();
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
@@ -417,10 +423,34 @@ class LibraryService {
         .then((_) => _propertiesChangedController.add(true));
   }
 
+  void addPodcasts(List<(String feedUrl, List<Audio> audios)> podcasts) {
+    if (podcasts.isEmpty) return;
+    for (var podcast in podcasts) {
+      if (!isPodcastSubscribed(podcast.$1)) {
+        _podcasts.putIfAbsent(podcast.$1, () => podcast.$2);
+      }
+    }
+    writeAudioMap(map: _podcasts, fileName: FileNames.podcasts)
+        .then((_) => _propertiesChangedController.add(true));
+  }
+
   Future<void> updatePodcast(String feedUrl, List<Audio> audios) async {
     if (feedUrl.isEmpty || audios.isEmpty) return;
     _addPodcastUpdate(feedUrl);
     _podcasts.update(feedUrl, (value) => audios);
+    return writeAudioMap(map: _podcasts, fileName: FileNames.podcasts)
+        .then((_) => _propertiesChangedController.add(true));
+  }
+
+  Future<void> updatePodcasts(
+    List<({String feedUrl, List<Audio> audios})> podcasts,
+  ) async {
+    if (podcasts.isEmpty) return;
+    for (var podcast in podcasts) {
+      if (podcast.feedUrl.isEmpty || podcast.audios.isEmpty) continue;
+      _addPodcastUpdate(podcast.feedUrl);
+      _podcasts.update(podcast.feedUrl, (value) => podcast.audios);
+    }
     return writeAudioMap(map: _podcasts, fileName: FileNames.podcasts)
         .then((_) => _propertiesChangedController.add(true));
   }
@@ -491,6 +521,15 @@ class LibraryService {
         .then((_) => _propertiesChangedController.add(true))
         .then((_) => removePodcastUpdate(feedUrl))
         .then((_) => _removeFeedWithDownload(feedUrl));
+  }
+
+  Future<void> removeAllPodcasts() async {
+    _podcasts.clear();
+    _podcastUpdates?.clear();
+    writeAudioMap(
+      map: _podcasts,
+      fileName: FileNames.podcasts,
+    ).then((_) => _propertiesChangedController.add(true));
   }
 
   //
@@ -569,4 +608,87 @@ class LibraryService {
           isStarredStation(pageId) ||
           isPlaylistSaved(pageId) ||
           isPodcastSubscribed(pageId));
+
+  bool _importingExporting = false;
+  bool get importingExporting => _importingExporting;
+  void setImportingExporting(bool value) {
+    if (_importingExporting == value) return;
+    _importingExporting = value;
+    _propertiesChangedController.add(true);
+  }
+
+  Future<void> importPodcastsFromOpmlFile(
+    Future<List<Audio>> Function({
+      required String feedUrl,
+      String? itemImageUrl,
+      String? genre,
+    }) findEpisodes,
+  ) async {
+    if (_importingExporting) return;
+    setImportingExporting(true);
+    final path = await _externalPathService.getPathOfFile();
+
+    if (path == null) {
+      setImportingExporting(false);
+      return;
+    }
+    final file = File(path);
+    if (!file.existsSync()) return;
+    final xml = file.readAsStringSync();
+    final doc = OpmlDocument.parse(xml);
+
+    for (var category in doc.body.where((e) => e.children != null)) {
+      final children = category.children!.where((e) => e.xmlUrl != null);
+      final podcasts = <(String feedUrl, List<Audio> audios)>[];
+      for (var feed in children) {
+        final audios = await findEpisodes(feedUrl: feed.xmlUrl!);
+        if (audios.isNotEmpty) {
+          podcasts.add((feed.xmlUrl!, audios));
+        }
+      }
+      if (podcasts.isNotEmpty) {
+        addPodcasts(podcasts);
+      }
+    }
+    setImportingExporting(false);
+  }
+
+  Future<void> exportPodcastsToOpmlFile() async {
+    if (_importingExporting) return;
+    setImportingExporting(true);
+    final location = await _externalPathService.getPathOfDirectory();
+    if (location == null) {
+      setImportingExporting(false);
+      return;
+    }
+
+    final file = File('$location/podcasts.opml');
+    if (file.existsSync()) {
+      file.deleteSync();
+    }
+    final head = OpmlHeadBuilder().title('Podcasts').build();
+    final body = <OpmlOutline>[];
+    final category = OpmlOutlineBuilder();
+
+    for (var podcast in _podcasts.entries) {
+      category.addChild(
+        OpmlOutlineBuilder()
+            .type('rss')
+            .title(podcast.value.firstOrNull?.album ?? '')
+            .text(podcast.value.firstOrNull?.artist ?? '')
+            .xmlUrl(podcast.key)
+            .build(),
+      );
+    }
+
+    body.add(category.type('rss').title('Podcasts').text('Podcasts').build());
+
+    final opml = OpmlDocument(
+      head: head,
+      body: body,
+    );
+    final xml = opml.toXmlString(pretty: true);
+    file.writeAsStringSync(xml);
+    setImportingExporting(false);
+  }
 }

@@ -161,14 +161,24 @@ void registerDependencies({required List<String> args}) async {
       dependsOn: [ExposeService],
       dispose: (s) async => s.dispose(),
     )
+    ..registerSingletonWithDependencies<ExternalPathService>(
+      () => ExternalPathService(
+        gtkNotifier: Platform.isLinux ? GtkApplicationNotifier(args) : null,
+        playerService: di<PlayerService>(),
+      ),
+      dependsOn: [PlayerService],
+      dispose: (s) => s.dispose(),
+    )
     ..registerSingletonAsync<LibraryService>(
       () async {
-        final libraryService =
-            LibraryService(sharedPreferences: di<SharedPreferences>());
+        final libraryService = LibraryService(
+          sharedPreferences: di<SharedPreferences>(),
+          externalPathService: di<ExternalPathService>(),
+        );
         await libraryService.init();
         return libraryService;
       },
-      dependsOn: [SharedPreferences],
+      dependsOn: [SharedPreferences, ExternalPathService],
       dispose: (s) async => s.dispose(),
     )
     ..registerSingletonWithDependencies<LocalAudioService>(
@@ -193,14 +203,6 @@ void registerDependencies({required List<String> args}) async {
       dependsOn: [SettingsService, LibraryService],
     )
     ..registerLazySingleton<Connectivity>(() => Connectivity())
-    ..registerSingletonWithDependencies<ExternalPathService>(
-      () => ExternalPathService(
-        gtkNotifier: Platform.isLinux ? GtkApplicationNotifier(args) : null,
-        playerService: di<PlayerService>(),
-      ),
-      dependsOn: [PlayerService],
-      dispose: (s) => s.dispose(),
-    )
     ..registerSingletonAsync<RadioService>(
       () async {
         final s = RadioService();
@@ -279,7 +281,10 @@ void registerDependencies({required List<String> args}) async {
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<PodcastModel>(
-      () => PodcastModel(podcastService: di.get<PodcastService>()),
+      () => PodcastModel(
+        podcastService: di<PodcastService>(),
+        libraryService: di<LibraryService>(),
+      ),
       dispose: (s) => s.dispose(),
     )
     ..registerSingletonWithDependencies<RadioModel>(

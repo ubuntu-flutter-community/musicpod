@@ -4,15 +4,23 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../l10n/l10n.dart';
+import '../library/library_service.dart';
 import 'podcast_search_state.dart';
 import 'podcast_service.dart';
 
 class PodcastModel extends SafeChangeNotifier {
   PodcastModel({
     required PodcastService podcastService,
-  }) : _podcastService = podcastService;
+    required LibraryService libraryService,
+  })  : _podcastService = podcastService,
+        _libraryService = libraryService {
+    _librarySubscription =
+        _libraryService.propertiesChanged.listen((_) => notifyListeners());
+  }
 
   final PodcastService _podcastService;
+  final LibraryService _libraryService;
+  StreamSubscription<bool>? _librarySubscription;
 
   final _searchStateController =
       StreamController<PodcastSearchState>.broadcast();
@@ -151,10 +159,21 @@ class PodcastModel extends SafeChangeNotifier {
         );
   }
 
+  Future<void> importPodcastsFromOpmlFile() async =>
+      _libraryService.importPodcastsFromOpmlFile(_podcastService.findEpisodes);
+
+  Future<void> exportPodcastsToOpmlFile() async =>
+      _libraryService.exportPodcastsToOpmlFile();
+
+  Future<void> removeAllPodcasts() async => _libraryService.removeAllPodcasts();
+
+  bool get importingExporting => _libraryService.importingExporting;
+
   @override
   Future<void> dispose() async {
     super.dispose();
     await _searchStateController.close();
+    await _librarySubscription?.cancel();
   }
 }
 

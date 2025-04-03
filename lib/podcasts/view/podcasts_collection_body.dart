@@ -51,31 +51,6 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
         ? updatesLength
         : (downloadsOnly ? feedsWithDownloadLength : subsLength);
 
-    if (subsLength == 0) {
-      return NoSearchResultPage(
-        icon: const AnimatedEmoji(AnimatedEmojis.faceInClouds),
-        message: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(context.l10n.noPodcastSubsFound),
-            const SizedBox(
-              height: 10,
-            ),
-            ImportantButton(
-              onPressed: () {
-                di<LibraryModel>().push(pageId: PageIDs.searchPage);
-                di<SearchModel>()
-                  ..setAudioType(AudioType.podcast)
-                  ..setSearchQuery(null)
-                  ..search();
-              },
-              child: Text(context.l10n.discover),
-            ),
-          ],
-        ),
-      );
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -90,6 +65,31 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
         ),
         if (loading)
           Expanded(child: LoadingGrid(limit: subsLength))
+        else if (subsLength == 0)
+          Expanded(
+            child: NoSearchResultPage(
+              icon: const AnimatedEmoji(AnimatedEmojis.faceInClouds),
+              message: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(context.l10n.noPodcastSubsFound),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ImportantButton(
+                    onPressed: () {
+                      di<LibraryModel>().push(pageId: PageIDs.searchPage);
+                      di<SearchModel>()
+                        ..setAudioType(AudioType.podcast)
+                        ..setSearchQuery(null)
+                        ..search();
+                    },
+                    child: Text(context.l10n.discover),
+                  ),
+                ],
+              ),
+            ),
+          )
         else
           Expanded(
             child: LayoutBuilder(
