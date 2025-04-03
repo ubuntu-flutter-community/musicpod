@@ -101,6 +101,25 @@ class ExternalPathService {
     return null;
   }
 
+  Future<List<String>> getPathsOfFiles() async {
+    if (AppConfig.isMobilePlatform && await _androidPermissionsGranted()) {
+      final filePickerResult =
+          await FilePicker.platform.pickFiles(allowMultiple: true);
+
+      if (filePickerResult == null) {
+        return [];
+      }
+
+      return filePickerResult.files
+          .map((e) => XFile(e.path!))
+          .map((e) => e.path)
+          .toList();
+    } else if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+      return (await openFiles()).map((e) => e.path).toList();
+    }
+    return [];
+  }
+
   Future<bool> _androidPermissionsGranted() async {
     final mediaLibraryIsGranted = (await Permission.mediaLibrary
             .onDeniedCallback(() {})
