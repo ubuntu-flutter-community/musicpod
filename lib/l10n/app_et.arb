@@ -1240,5 +1240,15 @@
   "disconnectedFromDiscord": "Discordi ühendus on katkestatud",
   "@disconnectedFromDiscord": {},
   "description": "Kirjeldus",
-  "@description": {}
+  "@description": {},
+  "setPlaylistNameAndAddMoreLater": "Salvesta esitusloendi nimi ja lisa sisu hiljem",
+  "@setPlaylistNameAndAddMoreLater": {},
+  "or": "või",
+  "@or": {},
+  "customContentDescription": "Kui sa ei taha kasutada raadiojaamade või taskuhäälingute otsijat, siis võid siia oma sisu lisada. Aga võid ka lisada tühje esitusloendeid või importida m3u ja pls vormingus esitusloenditest.",
+  "@customContentDescription": {},
+  "exportPlaylistTpM3u": "Ekspordi esitusloend m3u-failina",
+  "@exportPlaylistTpM3u": {},
+  "customContentTitle": "Lisa oma sisu",
+  "@customContentTitle": {}
 }
