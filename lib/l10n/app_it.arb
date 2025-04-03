@@ -1241,5 +1241,15 @@
   "disconnectedFromDiscord": "Disconnetti da Discord",
   "@disconnectedFromDiscord": {},
   "description": "Descrizione",
-  "@description": {}
+  "@description": {},
+  "exportPlaylistTpM3u": "Esporta playlist come file M3U",
+  "@exportPlaylistTpM3u": {},
+  "customContentDescription": "Se non vuoi usare la funzione di ricerca radiobrowser o podcast, puoi aggiungere i contenuti qui, o è possibile aggiungere playlist vuote o importare playlist da file M3U e PLS.",
+  "@customContentDescription": {},
+  "customContentTitle": "Aggiungi contenuto personalizzato",
+  "@customContentTitle": {},
+  "setPlaylistNameAndAddMoreLater": "Imposta il nome playlist e aggiungi più titoli in seguito",
+  "@setPlaylistNameAndAddMoreLater": {},
+  "or": "o",
+  "@or": {}
 }
