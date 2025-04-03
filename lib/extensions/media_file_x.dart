@@ -30,4 +30,5 @@ const _validMediaExtensions = [
   '.mp4',
   '.opus',
   '.ogg',
+  '.m4a',
 ];
