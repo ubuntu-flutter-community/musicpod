@@ -42,31 +42,28 @@ class CustomContentModel extends SafeChangeNotifier {
   }) async {
     List<({List<Audio> audios, String name})> lists = [];
 
-    if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-      try {
-        final xfiles = files ?? await openFiles();
-        for (var xfile in xfiles) {
-          var path = xfile.path;
-
-          if (path.endsWith('.m3u')) {
-            lists.add(
-              (
-                name: basename(path),
-                audios: await _parseM3uPlaylist(path),
-              ),
-            );
-          } else if (path.endsWith('.pls')) {
-            lists.add(
-              (
-                name: basename(path),
-                audios: await _parsePlsPlaylist(path),
-              ),
-            );
-          }
+    try {
+      final paths = files?.map((e) => e.path) ??
+          await _externalPathService.getPathsOfFiles();
+      for (var path in paths) {
+        if (path.endsWith('.m3u')) {
+          lists.add(
+            (
+              name: basename(path),
+              audios: await _parseM3uPlaylist(path),
+            ),
+          );
+        } else if (path.endsWith('.pls')) {
+          lists.add(
+            (
+              name: basename(path),
+              audios: await _parsePlsPlaylist(path),
+            ),
+          );
         }
-      } on Exception catch (e) {
-        printMessageInDebugMode(e);
       }
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
     }
 
     return lists;
@@ -101,7 +98,7 @@ class CustomContentModel extends SafeChangeNotifier {
           if (file.couldHaveMetadata) {
             audios.add(
               Audio.fromMetadata(
-                path: path,
+                path: file.path,
                 data: readMetadata(
                   file,
                   getImage: true,
@@ -111,8 +108,8 @@ class CustomContentModel extends SafeChangeNotifier {
           } else if (file.isPlayable) {
             audios.add(
               Audio(
-                path: path,
-                title: basename(path),
+                path: file.path,
+                title: basename(file.path),
                 audioType: AudioType.local,
               ),
             );
@@ -153,7 +150,7 @@ class CustomContentModel extends SafeChangeNotifier {
           if (file.couldHaveMetadata) {
             audios.add(
               Audio.fromMetadata(
-                path: e.file!,
+                path: file.path,
                 data: readMetadata(file, getImage: true),
               ),
             );
