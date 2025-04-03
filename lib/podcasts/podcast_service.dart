@@ -97,35 +97,34 @@ class PodcastService {
   }) async {
     if (_updateLock) return;
     _updateLock = true;
+    final newPodcasts = <({String feedUrl, List<Audio> audios})>[];
     for (final old in (oldPodcasts ?? _libraryService.podcasts).entries) {
-      if (old.value.isNotEmpty) {
-        final list = old.value;
-        sortListByAudioFilter(
-          audioFilter: AudioFilter.year,
-          audios: list,
-          descending: true,
-        );
-        final firstOld = list.firstOrNull;
+      if (old.value.isEmpty) continue;
 
-        if (firstOld?.website != null) {
-          await findEpisodes(
-            feedUrl: firstOld!.website!,
-          ).then((audios) {
-            if (firstOld.year != null &&
-                    audios.firstOrNull?.year == firstOld.year ||
-                audios.isEmpty) {
-              return;
-            }
+      final list = old.value;
+      sortListByAudioFilter(
+        audioFilter: AudioFilter.year,
+        audios: list,
+        descending: true,
+      );
+      final firstOld = list.firstOrNull;
+      if (firstOld == null) continue;
 
-            _libraryService.updatePodcast(old.key, audios);
-            if (updateMessage != null) {
-              _notificationsService.notify(
-                message: '$updateMessage ${firstOld.album ?? old.value}',
-              );
-            }
-          });
+      final audios = await findEpisodes(feedUrl: firstOld.website!);
+
+      if (firstOld.year != null && audios.firstOrNull?.year != firstOld.year ||
+          audios.isEmpty) {
+        newPodcasts.add((feedUrl: old.key, audios: audios));
+
+        if (updateMessage != null) {
+          _notificationsService.notify(
+            message: '$updateMessage ${firstOld.album ?? old.value}',
+          );
         }
       }
+    }
+    if (newPodcasts.isNotEmpty) {
+      _libraryService.updatePodcasts(newPodcasts);
     }
     _updateLock = false;
   }

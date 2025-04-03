@@ -1001,6 +1001,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  opml:
+    dependency: "direct main"
+    description:
+      name: opml
+      sha256: "812ac9abc81c486c24c26dc96de0ffab71696f88c26edc39e21f3435f97dbd56"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
   package_config:
     dependency: transitive
     description:
@@ -1906,4 +1914,4 @@ packages:
     version: "0.0.3+1"
 sdks:
   dart: ">=3.7.0 <4.0.0"
-  flutter: ">=3.29.1"
+  flutter: ">=3.29.2"

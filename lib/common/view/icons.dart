@@ -118,6 +118,11 @@ class Iconz {
       : AppConfig.appleStyled
           ? CupertinoIcons.play_fill
           : Icons.play_arrow_rounded;
+  static IconData get upload => AppConfig.yaruStyled
+      ? YaruIcons.arrow_up_outlined
+      : AppConfig.appleStyled
+          ? CupertinoIcons.up_arrow
+          : Icons.download_outlined;
   static IconData get download => AppConfig.yaruStyled
       ? YaruIcons.download
       : AppConfig.appleStyled
