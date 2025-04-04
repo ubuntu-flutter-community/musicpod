@@ -1,16 +1,13 @@
 import 'dart:io';
 
-import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:gtk/gtk.dart';
-import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../app_config.dart';
 import '../common/data/audio.dart';
-import '../common/data/audio_type.dart';
 import '../common/logging.dart';
 import '../extensions/media_file_x.dart';
 import '../player/player_service.dart';
@@ -45,26 +42,10 @@ class ExternalPathService {
     try {
       final file = File(path);
 
-      if (file.couldHaveMetadata) {
+      if (file.existsSync() && file.isPlayable) {
         _playerService.startPlaylist(
           listName: path,
-          audios: [
-            Audio.fromMetadata(
-              path: file.path,
-              data: readMetadata(file, getImage: true),
-            ),
-          ],
-        );
-      } else if (file.isPlayable) {
-        _playerService.startPlaylist(
-          listName: path,
-          audios: [
-            Audio(
-              path: file.path,
-              title: basename(file.path),
-              audioType: AudioType.local,
-            ),
-          ],
+          audios: [Audio.local(file, getImage: true)],
         );
       }
     } on Exception catch (e) {

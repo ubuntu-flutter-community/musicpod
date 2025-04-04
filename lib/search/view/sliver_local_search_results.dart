@@ -6,7 +6,7 @@ import 'package:watch_it/watch_it.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_model.dart';
-import '../../local_audio/view/failed_imports_content.dart';
+import '../../local_audio/view/failed_import_snackbar.dart';
 import '../../local_audio/view/local_audio_body.dart';
 import '../../local_audio/local_audio_view.dart';
 import '../search_model.dart';
@@ -31,6 +31,7 @@ class _SliverLocalSearchResultState extends State<SliverLocalSearchResult> {
         showFailedImportsSnackBar(
           failedImports: failedImports!,
           context: context,
+          message: context.l10n.failedToReadMetadata,
         );
       }
     });

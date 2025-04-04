@@ -46,9 +46,14 @@ class MockLocalCoverService extends _i1.Mock implements _i2.LocalCoverService {
   _i3.Future<_i4.Uint8List?> getCover({
     required String? albumId,
     required String? path,
+    dynamic Function()? onError,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(#getCover, [], {#albumId: albumId, #path: path}),
+        Invocation.method(#getCover, [], {
+          #albumId: albumId,
+          #path: path,
+          #onError: onError,
+        }),
         returnValue: _i3.Future<_i4.Uint8List?>.value(),
       ) as _i3.Future<_i4.Uint8List?>);
 

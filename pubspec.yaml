@@ -10,7 +10,10 @@ environment:
 
 dependencies:
   animated_emoji: ^3.1.0
-  audio_metadata_reader: 1.1.0
+  audio_metadata_reader:
+    git:
+      url: https://github.com/LorenVS/audio_metadata_reader
+      ref: 56f7aa474b8c80b47e73b07bebc96664c4bf3382
   audio_service: ^0.18.12
   audio_service_mpris:
     git:

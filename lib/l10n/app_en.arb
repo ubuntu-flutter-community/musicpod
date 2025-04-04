@@ -654,5 +654,7 @@
     "regionWesternsahara": "Western Sahara",
     "regionYemen": "Yemen",
     "regionZambia": "Zambia",
-    "regionZimbabwe": "Zimbabwe"
+    "regionZimbabwe": "Zimbabwe",
+    "failedToReadMetadata": "Failed to read metadata for the following media files:",
+    "failedToReadMetadataDescription": "The metadata of this file could not be read. This is usually caused by a missing codec or a corrupted file."
 }

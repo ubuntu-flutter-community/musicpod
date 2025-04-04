@@ -76,10 +76,11 @@ packages:
   audio_metadata_reader:
     dependency: "direct main"
     description:
-      name: audio_metadata_reader
-      sha256: "9f05d016a3277357308eb6d2f283cd1229c7fae62d6943ee6ab95b374e265222"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: "56f7aa474b8c80b47e73b07bebc96664c4bf3382"
+      resolved-ref: "56f7aa474b8c80b47e73b07bebc96664c4bf3382"
+      url: "https://github.com/LorenVS/audio_metadata_reader"
+    source: git
     version: "1.1.0"
   audio_service:
     dependency: "direct main"

@@ -3,7 +3,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../l10n/l10n.dart';
 import '../local_cover_model.dart';
+import 'failed_import_snackbar.dart';
 
 class LocalCover extends StatefulWidget with WatchItStatefulWidgetMixin {
   const LocalCover({
@@ -43,6 +45,11 @@ class _LocalCoverState extends State<LocalCover> {
         : localCoverModel.getCover(
             albumId: widget.albumId,
             path: widget.path,
+            onError: () => showFailedImportsSnackBar(
+              failedImports: [widget.path],
+              context: context,
+              message: context.l10n.failedToReadMetadata,
+            ),
           );
   }
 

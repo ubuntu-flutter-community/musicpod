@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
 import 'package:path/path.dart';
@@ -94,27 +93,7 @@ class CustomContentModel extends SafeChangeNotifier {
         );
       } else if (e.link.isNotEmpty) {
         final file = File(e.link.replaceAll('file://', ''));
-        if (file.existsSync()) {
-          if (file.couldHaveMetadata) {
-            audios.add(
-              Audio.fromMetadata(
-                path: file.path,
-                data: readMetadata(
-                  file,
-                  getImage: true,
-                ),
-              ),
-            );
-          } else if (file.isPlayable) {
-            audios.add(
-              Audio(
-                path: file.path,
-                title: basename(file.path),
-                audioType: AudioType.local,
-              ),
-            );
-          }
-        }
+        audios.add(Audio.local(file, getImage: true));
       }
     }
 
@@ -146,23 +125,8 @@ class CustomContentModel extends SafeChangeNotifier {
         );
       } else if (e.file?.isNotEmpty == true) {
         final file = File(e.file!);
-        if (file.existsSync()) {
-          if (file.couldHaveMetadata) {
-            audios.add(
-              Audio.fromMetadata(
-                path: file.path,
-                data: readMetadata(file, getImage: true),
-              ),
-            );
-          } else if (file.isPlayable) {
-            audios.add(
-              Audio(
-                path: file.path,
-                title: basename(path),
-                audioType: AudioType.local,
-              ),
-            );
-          }
+        if (file.existsSync() && file.isPlayable) {
+          audios.add(Audio.local(file, getImage: true));
         }
       }
     }

@@ -331,7 +331,9 @@
     "regionWesternsahara",
     "regionYemen",
     "regionZambia",
-    "regionZimbabwe"
+    "regionZimbabwe",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "da": [
@@ -668,7 +670,9 @@
     "regionWesternsahara",
     "regionYemen",
     "regionZambia",
-    "regionZimbabwe"
+    "regionZimbabwe",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "de": [
@@ -702,7 +706,9 @@
     "customContentDescription",
     "setPlaylistNameAndAddMoreLater",
     "or",
-    "exposeToListenBrainzSubTitle"
+    "exposeToListenBrainzSubTitle",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "es": [
@@ -738,7 +744,9 @@
     "setPlaylistNameAndAddMoreLater",
     "or",
     "theClick",
-    "toClick"
+    "toClick",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "et": [
@@ -751,7 +759,9 @@
     "customContentTitle",
     "customContentDescription",
     "setPlaylistNameAndAddMoreLater",
-    "or"
+    "or",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "eu": [
@@ -764,7 +774,9 @@
     "customContentTitle",
     "customContentDescription",
     "setPlaylistNameAndAddMoreLater",
-    "or"
+    "or",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "fr": [
@@ -781,7 +793,9 @@
     "customContentTitle",
     "customContentDescription",
     "setPlaylistNameAndAddMoreLater",
-    "or"
+    "or",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "it": [
@@ -794,7 +808,9 @@
     "customContentTitle",
     "customContentDescription",
     "setPlaylistNameAndAddMoreLater",
-    "or"
+    "or",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "nl": [
@@ -1283,7 +1299,9 @@
     "regionWesternsahara",
     "regionYemen",
     "regionZambia",
-    "regionZimbabwe"
+    "regionZimbabwe",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "pl": [
@@ -1569,7 +1587,9 @@
     "regionWesternsahara",
     "regionYemen",
     "regionZambia",
-    "regionZimbabwe"
+    "regionZimbabwe",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "pt": [
@@ -1987,7 +2007,9 @@
     "regionWesternsahara",
     "regionYemen",
     "regionZambia",
-    "regionZimbabwe"
+    "regionZimbabwe",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "pt_BR": [
@@ -2004,7 +2026,9 @@
     "customContentTitle",
     "customContentDescription",
     "setPlaylistNameAndAddMoreLater",
-    "or"
+    "or",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "ru": [
@@ -2278,7 +2302,9 @@
     "regionWesternsahara",
     "regionYemen",
     "regionZambia",
-    "regionZimbabwe"
+    "regionZimbabwe",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "sk": [
@@ -2291,7 +2317,9 @@
     "customContentTitle",
     "customContentDescription",
     "setPlaylistNameAndAddMoreLater",
-    "or"
+    "or",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "sv": [
@@ -2305,7 +2333,9 @@
     "customContentTitle",
     "customContentDescription",
     "setPlaylistNameAndAddMoreLater",
-    "or"
+    "or",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "ta": [
@@ -2341,7 +2371,9 @@
     "setPlaylistNameAndAddMoreLater",
     "or",
     "theClick",
-    "toClick"
+    "toClick",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "tr": [
@@ -2358,7 +2390,9 @@
     "customContentTitle",
     "customContentDescription",
     "setPlaylistNameAndAddMoreLater",
-    "or"
+    "or",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "zh": [
@@ -2372,7 +2406,9 @@
     "customContentTitle",
     "customContentDescription",
     "setPlaylistNameAndAddMoreLater",
-    "or"
+    "or",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "zh_HK": [
@@ -2699,7 +2735,9 @@
     "regionWesternsahara",
     "regionYemen",
     "regionZambia",
-    "regionZimbabwe"
+    "regionZimbabwe",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ],
 
   "zh_TW": [
@@ -3026,6 +3064,8 @@
     "regionWesternsahara",
     "regionYemen",
     "regionZambia",
-    "regionZimbabwe"
+    "regionZimbabwe",
+    "failedToReadMetadata",
+    "failedToReadMetadataDescription"
   ]
 }
