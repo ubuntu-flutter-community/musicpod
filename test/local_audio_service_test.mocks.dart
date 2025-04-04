@@ -32,12 +32,10 @@ class MockLocalCoverService extends _i1.Mock implements _i2.LocalCoverService {
   }
 
   @override
-  _i3.Stream<bool> get propertiesChanged =>
-      (super.noSuchMethod(
-            Invocation.getter(#propertiesChanged),
-            returnValue: _i3.Stream<bool>.empty(),
-          )
-          as _i3.Stream<bool>);
+  _i3.Stream<bool> get propertiesChanged => (super.noSuchMethod(
+        Invocation.getter(#propertiesChanged),
+        returnValue: _i3.Stream<bool>.empty(),
+      ) as _i3.Stream<bool>);
 
   @override
   int get storeLength =>
@@ -51,21 +49,18 @@ class MockLocalCoverService extends _i1.Mock implements _i2.LocalCoverService {
     dynamic Function()? onError,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#getCover, [], {
-              #albumId: albumId,
-              #path: path,
-              #onError: onError,
-            }),
-            returnValue: _i3.Future<_i4.Uint8List?>.value(),
-          )
-          as _i3.Future<_i4.Uint8List?>);
+        Invocation.method(#getCover, [], {
+          #albumId: albumId,
+          #path: path,
+          #onError: onError,
+        }),
+        returnValue: _i3.Future<_i4.Uint8List?>.value(),
+      ) as _i3.Future<_i4.Uint8List?>);
 
   @override
-  _i3.Future<void> dispose() =>
-      (super.noSuchMethod(
-            Invocation.method(#dispose, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> dispose() => (super.noSuchMethod(
+        Invocation.method(#dispose, []),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }
