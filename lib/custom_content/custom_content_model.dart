@@ -93,9 +93,7 @@ class CustomContentModel extends SafeChangeNotifier {
         );
       } else if (e.link.isNotEmpty) {
         final file = File(e.link.replaceAll('file://', ''));
-        if (file.existsSync() && file.isPlayable) {
-          Audio.local(file, getImage: true);
-        }
+        audios.add(Audio.local(file, getImage: true));
       }
     }
 
