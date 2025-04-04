@@ -302,12 +302,6 @@ class LocalAudioService {
     final result = await compute(
       _readAudiosFromDirectory,
       directory ?? _settingsService?.directory,
-    ).timeout(
-      const Duration(seconds: 10),
-      onTimeout: () => (
-        audios: <Audio>[],
-        failedImports: <String>[],
-      ),
     );
     _audios = result.audios;
     _failedImports = result.failedImports;
