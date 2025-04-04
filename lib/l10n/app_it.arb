@@ -1251,5 +1251,15 @@
   "setPlaylistNameAndAddMoreLater": "Imposta il nome playlist e aggiungi più titoli in seguito",
   "@setPlaylistNameAndAddMoreLater": {},
   "or": "o",
-  "@or": {}
+  "@or": {},
+  "exportPodcastsToOpmlFile": "Esporta podcast in file OPML",
+  "@exportPodcastsToOpmlFile": {},
+  "removeAllPodcasts": "Rimuovi tutti i podcast",
+  "@removeAllPodcasts": {},
+  "removeAllPodcastsConfirm": "Vuoi rimuovere tutti i podcast?",
+  "@removeAllPodcastsConfirm": {},
+  "removeAllPodcastsDescription": "Ciò rimuoverà tutti i tuoi abbonamenti a podcast e progressi.",
+  "@removeAllPodcastsDescription": {},
+  "importPodcastsFromOpmlFile": "Importa podcast da file OPML",
+  "@importPodcastsFromOpmlFile": {}
 }
