@@ -286,6 +286,7 @@ class Audio {
     File file, {
     bool getImage = false,
     Function(String path)? onError,
+    Function(String path)? onParseError,
   }) {
     if (!file.existsSync() || !file.isPlayable) {
       onError?.call(file.path);
@@ -298,6 +299,10 @@ class Audio {
     try {
       final metadata = readMetadata(file, getImage: getImage);
       audio = Audio._fromMetadata(metadata);
+    } on MetadataParserException catch (error) {
+      printMessageInDebugMode(error);
+      onParseError?.call(file.path);
+      audio = Audio._localWithoutMetadata(path: file.path);
     } on Exception catch (error) {
       printMessageInDebugMode(error);
       onError?.call(file.path);
@@ -341,11 +346,11 @@ class Audio {
 
   factory Audio._localWithoutMetadata({required String path}) => Audio(
         path: path,
-        title: basename(path),
-        album: '',
-        artist: '',
-        albumArtist: '',
-        genre: '',
+        title: basenameWithoutExtension(path),
+        album: 'Unknown',
+        artist: 'Unknown',
+        albumArtist: 'Unknown',
+        genre: 'Unknown',
         audioType: AudioType.local,
       );
 

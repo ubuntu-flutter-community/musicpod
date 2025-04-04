@@ -7,12 +7,9 @@ extension MediaFileX on File {
 }
 
 extension _ValidPathX on String {
-  bool get blocked => _blockedExtensions.any((e) => endsWith(e));
-  bool get isPlayable =>
-      !blocked && (lookupMimeType(this)?.contains('audio') ?? false) ||
-      (lookupMimeType(this)?.contains('video') ?? false);
+  bool get isPlayable {
+    final mime = lookupMimeType(this);
+    return (mime?.contains('audio') ?? false) ||
+        (mime?.contains('video') ?? false);
+  }
 }
-
-const _blockedExtensions = [
-  '.ogg',
-];

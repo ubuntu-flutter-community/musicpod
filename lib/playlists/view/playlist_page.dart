@@ -82,6 +82,11 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
                       context: context,
                       message: context.l10n.failedToImport,
                     ),
+                    onParseError: (path) => showFailedImportsSnackBar(
+                      failedImports: [path],
+                      context: context,
+                      message: context.l10n.failedToReadMetadata,
+                    ),
                   ),
                 );
               } on Exception catch (e) {
