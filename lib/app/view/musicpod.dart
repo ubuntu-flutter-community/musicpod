@@ -19,6 +19,10 @@ class _MusicPodState extends State<MusicPod> {
   @override
   void initState() {
     super.initState();
+    // Note: if this hangs, try
+    // timeout: const Duration(seconds: 5),
+    // ignorePendingAsyncCreation: true
+    // to debug
     _allReady = di.allReady();
   }
 

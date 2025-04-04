@@ -18,7 +18,7 @@ import '../../search/search_type.dart';
 import '../../settings/view/settings_action.dart';
 import '../local_audio_model.dart';
 import '../local_audio_view.dart';
-import 'failed_imports_content.dart';
+import 'failed_import_snackbar.dart';
 import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 
@@ -39,6 +39,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
         showFailedImportsSnackBar(
           failedImports: failedImports!,
           context: context,
+          message: context.l10n.failedToReadMetadata,
         );
       }
     });

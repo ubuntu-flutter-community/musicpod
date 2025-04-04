@@ -4,11 +4,14 @@ import 'dart:io';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
+import 'package:path/path.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
 import '../../app_config.dart';
+import '../../extensions/media_file_x.dart';
 import '../../extensions/string_x.dart';
+import '../logging.dart';
 import 'audio_type.dart';
 import 'genres.dart';
 
@@ -278,16 +281,42 @@ class Audio {
   @override
   int get hashCode => path.hashCode ^ url.hashCode ^ uuid.hashCode;
 
-  factory Audio.fromMetadata({
-    required String path,
-    required AudioMetadata data,
+  /// Be sure that the file exists and is playable before calling this method!
+  factory Audio.local(
+    File file, {
+    bool getImage = false,
+    Function(String path)? onError,
   }) {
-    final fileName = File(path).uri.pathSegments.lastOrNull;
-    final genre = data.genres.firstOrNull?.startsWith('(') == true &&
-            data.genres.firstOrNull?.endsWith(')') == true
-        ? tagGenres[
-            data.genres.firstOrNull?.replaceAll('(', '').replaceAll(')', '')]
-        : data.genres.firstOrNull;
+    if (!file.existsSync() || !file.isPlayable) {
+      onError?.call(file.path);
+      throw Exception(
+        'Audio creation aborted! File does not exist or is not playable',
+      );
+    }
+
+    Audio audio;
+    try {
+      final metadata = readMetadata(file, getImage: getImage);
+      audio = Audio._fromMetadata(metadata);
+    } on Exception catch (error) {
+      printMessageInDebugMode(error);
+      onError?.call(file.path);
+      audio = Audio._localWithoutMetadata(path: file.path);
+    }
+    return audio;
+  }
+
+  factory Audio._fromMetadata(AudioMetadata data) {
+    final path = data.file.path;
+    final fileName = data.file.uri.pathSegments.lastOrNull;
+    final genre = data.genres.isEmpty
+        ? null
+        : data.genres.firstOrNull?.startsWith('(') == true &&
+                data.genres.firstOrNull?.endsWith(')') == true
+            ? tagGenres[data.genres.firstOrNull
+                ?.replaceAll('(', '')
+                .replaceAll(')', '')]
+            : data.genres.firstOrNull;
 
     return Audio(
       path: path,
@@ -309,6 +338,16 @@ class Audio {
       year: data.year?.year,
     );
   }
+
+  factory Audio._localWithoutMetadata({required String path}) => Audio(
+        path: path,
+        title: basename(path),
+        album: '',
+        artist: '',
+        albumArtist: '',
+        genre: '',
+        audioType: AudioType.local,
+      );
 
   String? get uuid => description;
   String get language => artist ?? '';

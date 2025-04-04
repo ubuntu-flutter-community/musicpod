@@ -20,8 +20,13 @@ class LocalCoverModel extends SafeChangeNotifier {
   Future<Uint8List?> getCover({
     required String albumId,
     required String path,
+    required Function() onError,
   }) async =>
-      _localCoverService.getCover(albumId: albumId, path: path);
+      _localCoverService.getCover(
+        albumId: albumId,
+        path: path,
+        onError: onError,
+      );
 
   @override
   Future<void> dispose() async {
