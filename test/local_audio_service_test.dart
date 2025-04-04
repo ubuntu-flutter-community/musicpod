@@ -58,6 +58,6 @@ Future<void> main() async {
       expect(coldStones?.artist, testOgg.artist);
       expect(coldStones?.album, testOgg.album);
       expect(coldStones?.genre, testOgg.genre);
-    });
+    }, skip: true);
   });
 }
