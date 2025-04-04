@@ -55,7 +55,8 @@ Future<void> main() async {
         expect(audios?.isNotEmpty, true);
 
         final coldStones = audios?.firstWhereOrNull(
-            (e) => e.path?.contains('Backslash Zero') == true);
+          (e) => e.path?.contains('Backslash Zero') == true,
+        );
         expect(coldStones?.title, testOgg.title);
         expect(coldStones?.artist, testOgg.artist);
         expect(coldStones?.album, testOgg.album);
