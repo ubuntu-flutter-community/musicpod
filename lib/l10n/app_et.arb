@@ -1250,5 +1250,15 @@
   "exportPlaylistTpM3u": "Ekspordi esitusloend m3u-failina",
   "@exportPlaylistTpM3u": {},
   "customContentTitle": "Lisa oma sisu",
-  "@customContentTitle": {}
+  "@customContentTitle": {},
+  "removeAllPodcasts": "Eemalda kõik taskuhäälingud",
+  "@removeAllPodcasts": {},
+  "importPodcastsFromOpmlFile": "Impordi taskuhääling OPML-failist",
+  "@importPodcastsFromOpmlFile": {},
+  "exportPodcastsToOpmlFile": "Ekspordi taskuhääling OPML-faili",
+  "@exportPodcastsToOpmlFile": {},
+  "removeAllPodcastsConfirm": "Kas sa oled kindel, et soovid kõik taskuhäälingud eemaldada?",
+  "@removeAllPodcastsConfirm": {},
+  "removeAllPodcastsDescription": "Sellega lõpetad kõik taskuhäälingute tellimused ja kustutad salvestatud kuulamisjärjed.",
+  "@removeAllPodcastsDescription": {}
 }
