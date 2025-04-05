@@ -62,6 +62,7 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   void addStarredStation(String uuid, List<Audio> audios) =>
       _service.addStarredStation(uuid, audios);
   void unStarStation(String uuid) => _service.unStarStation(uuid);
+  void unStarAllStations() => _service.unStarAllStations();
 
   bool isStarredStation(String? uuid) =>
       uuid?.isNotEmpty == false ? false : _service.isStarredStation(uuid);

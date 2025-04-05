@@ -97,7 +97,7 @@ parts:
       # work around pub get stack overflow # https://github.com/dart-lang/sdk/issues/51068#issuecomment-1396588253
       set +e
       dart pub get
-      flutter build linux --release -v
+      flutter build linux --release -v --dart-define=FORCED_UPDATE_THRESHOLD="$(cat forced_update.txt)"
       cp -r build/linux/*/release/bundle/* $CRAFT_PART_INSTALL/bin/
 
   deps:

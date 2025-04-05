@@ -4,12 +4,14 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../app/app_model.dart';
-import '../common/view/progress.dart';
 import '../app_config.dart';
+import '../common/view/progress.dart';
 import '../l10n/l10n.dart';
 
 class PatchNotesDialog extends StatefulWidget {
-  const PatchNotesDialog({super.key});
+  const PatchNotesDialog({super.key, this.onClose});
+
+  final VoidCallback? onClose;
 
   @override
   State<PatchNotesDialog> createState() => _PatchNotesDialogState();
@@ -49,7 +51,8 @@ class _PatchNotesDialogState extends State<PatchNotesDialog> {
         TextButton(
           onPressed: () {
             launchUrl(Uri.parse(AppConfig.sponsorLink));
-            Navigator.of(context).pop();
+            if (context.mounted) Navigator.of(context).pop();
+            widget.onClose?.call();
           },
           child: const Text('Sponsor Me'),
         ),
@@ -57,6 +60,7 @@ class _PatchNotesDialogState extends State<PatchNotesDialog> {
           onPressed: () async {
             await di<AppModel>().disposePatchNotes();
             if (context.mounted) Navigator.of(context).pop();
+            widget.onClose?.call();
           },
           child: Text(context.l10n.ok),
         ),

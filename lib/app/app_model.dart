@@ -132,6 +132,42 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  bool get wasBackupSaved => _settingsService.getBackupSaved(version);
+  Future<void> setBackupSaved(bool value) async {
+    await _settingsService.setBackupSaved(version, value);
+    notifyListeners();
+  }
+
+  bool get isBackupScreenNeeded =>
+      isCurrentVersionLowerThan(_settingsService.forcedUpdateThreshold);
+
+  bool isCurrentVersionLowerThan(String otherVersion) {
+    final currentVersionInt = getExtendedVersionNumber(version) ?? 0;
+    final otherVersionInt = getExtendedVersionNumber(otherVersion) ?? 0;
+    return currentVersionInt < otherVersionInt;
+  }
+
+  bool _localAudioBackup = false;
+  bool get localAudioBackup => _localAudioBackup;
+  void setLocalAudioBackup(bool value) {
+    _localAudioBackup = value;
+    notifyListeners();
+  }
+
+  bool _podcastBackup = false;
+  bool get podcastBackup => _podcastBackup;
+  void setPodcastBackup(bool value) {
+    _podcastBackup = value;
+    notifyListeners();
+  }
+
+  bool _radioBackup = false;
+  bool get radioBackup => _radioBackup;
+  void setRadioBackup(bool value) {
+    _radioBackup = value;
+    notifyListeners();
+  }
+
   int? getExtendedVersionNumber(String? version) {
     if (version == null) return null;
     version = version.replaceAll('v', '');

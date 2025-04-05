@@ -12,6 +12,7 @@ import '../../podcasts/podcast_model.dart';
 import '../../podcasts/view/podcast_state_stream_handler.dart';
 import '../app_model.dart';
 import '../connectivity_model.dart';
+import 'breaking_changes_backup_dialog.dart';
 import 'master_detail_page.dart';
 
 class DesktopHomePage extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -34,7 +35,19 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
       if (!appModel.recentPatchNotesDisposed() && mounted) {
         showDialog(
           context: context,
-          builder: (_) => const PatchNotesDialog(),
+          builder: (_) => PatchNotesDialog(
+            onClose: () {
+              if (di<AppModel>().isBackupScreenNeeded &&
+                  !di<AppModel>().wasBackupSaved &&
+                  mounted) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => const BreakingChangesBackupDialog(),
+                );
+              }
+            },
+          ),
         );
       }
     });

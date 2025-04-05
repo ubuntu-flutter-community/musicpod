@@ -12,11 +12,14 @@ import '../../common/page_ids.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
+import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../custom_content/custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -32,49 +35,116 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final radioCollectionView =
         watchPropertyValue((RadioModel m) => m.radioCollectionView);
     final radioModel = di<RadioModel>();
+    final importingExporting =
+        watchPropertyValue((CustomContentModel m) => m.importingExporting);
 
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5),
-          child: Container(
-            alignment: Alignment.center,
-            margin: filterPanelPadding,
-            height: context.theme.appBarTheme.toolbarHeight,
-            child: YaruChoiceChipBar(
-              goNextIcon: Icon(Iconz.goNext),
-              goPreviousIcon: Icon(Iconz.goBack),
-              selectedFirst: false,
-              clearOnSelect: false,
-              onSelected: (index) => radioModel
-                  .setRadioCollectionView(RadioCollectionView.values[index]),
-              style: YaruChoiceChipBarStyle.wrap,
-              labels: [
-                Text(
-                  context.l10n.station,
+        Container(
+          alignment: Alignment.center,
+          margin: filterPanelPadding,
+          height: context.theme.appBarTheme.toolbarHeight,
+          child: Row(
+            spacing: kSmallestSpace,
+            children: [
+              const SizedBox(width: 2 * kLargestSpace),
+              Expanded(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: YaruChoiceChipBar(
+                      goNextIcon: Icon(Iconz.goNext),
+                      goPreviousIcon: Icon(Iconz.goBack),
+                      selectedFirst: false,
+                      clearOnSelect: false,
+                      onSelected: (index) => radioModel.setRadioCollectionView(
+                        RadioCollectionView.values[index],
+                      ),
+                      style: YaruChoiceChipBarStyle.wrap,
+                      labels: [
+                        Text(
+                          context.l10n.station,
+                        ),
+                        Text(
+                          context.l10n.tags,
+                        ),
+                        Text(
+                          context.l10n.hearingHistory,
+                        ),
+                      ],
+                      isSelected: RadioCollectionView.values
+                          .map((e) => e == radioCollectionView)
+                          .toList(),
+                    ),
+                  ),
                 ),
-                Text(
-                  context.l10n.tags,
+              ),
+              IconButton(
+                tooltip: l10n.exportStarredStationsToOpmlFile,
+                icon: Icon(
+                  Iconz.download,
+                  semanticLabel: l10n.exportStarredStationsToOpmlFile,
                 ),
-                Text(
-                  context.l10n.hearingHistory,
+                onPressed: importingExporting
+                    ? null
+                    : () => di<CustomContentModel>()
+                        .exportStarredStationsToOpmlFile(),
+              ),
+              IconButton(
+                tooltip: l10n.importStarredStationsFromOpmlFile,
+                icon: Icon(
+                  Iconz.upload,
+                  semanticLabel: l10n.importStarredStationsFromOpmlFile,
                 ),
-              ],
-              isSelected: RadioCollectionView.values
-                  .map((e) => e == radioCollectionView)
-                  .toList(),
-            ),
+                onPressed: importingExporting
+                    ? null
+                    : () => di<CustomContentModel>()
+                        .importStarredStationsFromOpmlFile(),
+              ),
+              IconButton(
+                icon: Icon(
+                  Iconz.remove,
+                  semanticLabel: l10n.removeAllStarredStations,
+                ),
+                tooltip: context.l10n.removeAllStarredStations,
+                onPressed: importingExporting
+                    ? null
+                    : () => showDialog(
+                          context: context,
+                          builder: (context) {
+                            return ConfirmationDialog(
+                              showCloseIcon: false,
+                              title: Text(l10n.removeAllStarredStationsConfirm),
+                              content: SizedBox(
+                                width: 350,
+                                child: Text(
+                                  l10n.removeAllStarredStationsDescription,
+                                ),
+                              ),
+                              onConfirm: () =>
+                                  di<LibraryModel>().unStarAllStations(),
+                            );
+                          },
+                        ),
+              ),
+              const SizedBox(width: kMediumSpace),
+            ],
           ),
         ),
         Expanded(
-          child: switch (radioCollectionView) {
-            RadioCollectionView.stations => const StationGrid(),
-            RadioCollectionView.tags => const TagGrid(),
-            RadioCollectionView.history => const RadioHistoryList(),
-          },
+          child: importingExporting
+              ? const Center(
+                  child: Progress(),
+                )
+              : switch (radioCollectionView) {
+                  RadioCollectionView.stations => const StationGrid(),
+                  RadioCollectionView.tags => const TagGrid(),
+                  RadioCollectionView.history => const RadioHistoryList(),
+                },
         ),
       ],
     );

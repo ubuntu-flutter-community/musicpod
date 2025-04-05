@@ -98,7 +98,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                                 id: widget.playlistName!,
                                 audios: widget.audios!,
                               ),
-                      child: Text(l10n.exportPlaylistTpM3u),
+                      child: Text(l10n.exportPlaylistToM3UFile),
                     ),
                   if (widget.allowDelete && widget.playlistName != null)
                     OutlinedButton(
