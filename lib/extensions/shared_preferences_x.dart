@@ -32,4 +32,8 @@ extension SPKeys on SharedPreferences {
   static const windowWidth = 'windowWidth';
   static const windowMaximized = 'windowMaximized';
   static const windowFullscreen = 'windowFullscreen';
+  static const forcedUpdateVersionThreshold = 'forcedUpdateVersionThreshold';
+  static const backupSaved = 'backupSaved_';
+  // TODO: #1201 chore: migrate pinned albums to shared preferences
+  static const pinnedMusicpodAlbumPrefix = 'pinnedMusicpodAlbumPrefix___';
 }

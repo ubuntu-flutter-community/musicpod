@@ -35,9 +35,12 @@
     "showPositionDurationTitle",
     "showPositionDurationDescription",
     "unPinAlbum",
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -333,7 +336,14 @@
     "regionZambia",
     "regionZimbabwe",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "da": [
@@ -373,9 +383,12 @@
     "showPositionDurationTitle",
     "showPositionDurationDescription",
     "unPinAlbum",
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -672,12 +685,29 @@
     "regionZambia",
     "regionZimbabwe",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "de": [
+    "exportPinnedAlbumsToOpmlFile",
+    "exportPlaylistsTpM3us",
+    "exportStarredStationsToOpmlFile",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "es": [
@@ -702,9 +732,12 @@
     "resourceSectionTitle",
     "connectedToDiscord",
     "disconnectedFromDiscord",
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -715,18 +748,38 @@
     "theClick",
     "toClick",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "et": [
+    "exportPinnedAlbumsToOpmlFile",
+    "exportPlaylistsTpM3us",
+    "exportStarredStationsToOpmlFile",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "eu": [
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -735,7 +788,14 @@
     "setPlaylistNameAndAddMoreLater",
     "or",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "fr": [
@@ -743,9 +803,12 @@
     "clearQueue",
     "connectedToDiscord",
     "disconnectedFromDiscord",
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -754,12 +817,29 @@
     "setPlaylistNameAndAddMoreLater",
     "or",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "it": [
+    "exportPinnedAlbumsToOpmlFile",
+    "exportPlaylistsTpM3us",
+    "exportStarredStationsToOpmlFile",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "nl": [
@@ -945,9 +1025,12 @@
     "podcastName",
     "url",
     "loadFromFileOptional",
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -1250,7 +1333,14 @@
     "regionZambia",
     "regionZimbabwe",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "pl": [
@@ -1320,9 +1410,12 @@
     "podcastName",
     "url",
     "loadFromFileOptional",
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -1538,7 +1631,14 @@
     "regionZambia",
     "regionZimbabwe",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "pt": [
@@ -1653,9 +1753,12 @@
     "podcastName",
     "url",
     "loadFromFileOptional",
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -1958,7 +2061,14 @@
     "regionZambia",
     "regionZimbabwe",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "pt_BR": [
@@ -1966,9 +2076,12 @@
     "clearQueue",
     "connectedToDiscord",
     "disconnectedFromDiscord",
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -1977,7 +2090,14 @@
     "setPlaylistNameAndAddMoreLater",
     "or",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "ru": [
@@ -2002,9 +2122,12 @@
     "resourceSectionTitle",
     "connectedToDiscord",
     "disconnectedFromDiscord",
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -2253,13 +2376,23 @@
     "regionZambia",
     "regionZimbabwe",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "sk": [
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -2268,13 +2401,23 @@
     "setPlaylistNameAndAddMoreLater",
     "or",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "sv": [
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -2283,7 +2426,14 @@
     "setPlaylistNameAndAddMoreLater",
     "or",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "ta": [
@@ -2308,9 +2458,12 @@
     "resourceSectionTitle",
     "connectedToDiscord",
     "disconnectedFromDiscord",
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -2321,7 +2474,14 @@
     "theClick",
     "toClick",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "tr": [
@@ -2329,9 +2489,12 @@
     "clearQueue",
     "connectedToDiscord",
     "disconnectedFromDiscord",
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -2340,14 +2503,24 @@
     "setPlaylistNameAndAddMoreLater",
     "or",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "zh": [
     "description",
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -2356,7 +2529,14 @@
     "setPlaylistNameAndAddMoreLater",
     "or",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "zh_HK": [
@@ -2395,9 +2575,12 @@
     "showPositionDurationTitle",
     "showPositionDurationDescription",
     "unPinAlbum",
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -2685,7 +2868,14 @@
     "regionZambia",
     "regionZimbabwe",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ],
 
   "zh_TW": [
@@ -2724,9 +2914,12 @@
     "showPositionDurationTitle",
     "showPositionDurationDescription",
     "unPinAlbum",
+    "exportPinnedAlbumsToOpmlFile",
     "exportPlaylistTpM3u",
+    "exportPlaylistsTpM3us",
     "exportPodcastsToOpmlFile",
     "importPodcastsFromOpmlFile",
+    "exportStarredStationsToOpmlFile",
     "removeAllPodcasts",
     "removeAllPodcastsConfirm",
     "removeAllPodcastsDescription",
@@ -3014,6 +3207,13 @@
     "regionZambia",
     "regionZimbabwe",
     "failedToReadMetadata",
-    "failedToReadMetadataDescription"
+    "failedToReadMetadataDescription",
+    "breakingChangesPleaseBackupTitle",
+    "breakingChangesPleaseBackupDescription",
+    "breakingChangesPleaseBackupConfirmation",
+    "pinnedAlbumsAndPlaylists",
+    "starredStations",
+    "podcastSubscriptions",
+    "pinnedAlbums"
   ]
 }

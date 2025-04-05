@@ -13,8 +13,10 @@ class SettingsService {
   SettingsService({
     required String? downloadsDefaultDir,
     required SharedPreferences sharedPreferences,
+    required String forcedUpdateThreshold,
   })  : _preferences = sharedPreferences,
-        _downloadsDefaultDir = downloadsDefaultDir;
+        _downloadsDefaultDir = downloadsDefaultDir,
+        _forcedUpdateThreshold = forcedUpdateThreshold;
 
   final String? _downloadsDefaultDir;
   final SharedPreferences _preferences;
@@ -118,6 +120,15 @@ class SettingsService {
       _preferences.getString(SPKeys.downloads) ?? _downloadsDefaultDir;
   Future<void> setDownloadsCustomDir(String directory) async =>
       _preferences.setString(SPKeys.downloads, directory).then(notify);
+
+  final String _forcedUpdateThreshold;
+  String get forcedUpdateThreshold => _forcedUpdateThreshold;
+
+  bool getBackupSaved(String version) =>
+      _preferences.getBool(SPKeys.backupSaved + version) ?? false;
+
+  Future<void> setBackupSaved(String version, bool value) async =>
+      _preferences.setBool(SPKeys.backupSaved + version, value).then(notify);
 
   bool get showPositionDuration =>
       _preferences.getBool(SPKeys.showPositionDuration) ?? false;

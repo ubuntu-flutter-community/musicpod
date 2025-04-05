@@ -57,7 +57,7 @@ class WipeConfirmDialog extends StatelessWidget {
       showCloseIcon: false,
       title: Text(l10n.confirm),
       content: SizedBox(width: 350, child: Text(l10n.resetAllSettingsConfirm)),
-      onConfirm: di<SettingsModel>().wipeAllSettings,
+      onConfirm: () => di<SettingsModel>().wipeAllSettings(),
     );
   }
 }

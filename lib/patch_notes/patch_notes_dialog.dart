@@ -4,8 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../app/app_model.dart';
-import '../common/view/progress.dart';
 import '../app_config.dart';
+import '../common/view/progress.dart';
 import '../l10n/l10n.dart';
 
 class PatchNotesDialog extends StatefulWidget {

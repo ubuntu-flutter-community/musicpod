@@ -14,6 +14,12 @@ enum AudioType {
         podcast => l10n.podcast,
       };
 
+  String localizedBackupName(AppLocalizations l10n) => switch (this) {
+        local => l10n.pinnedAlbumsAndPlaylists,
+        radio => l10n.starredStations,
+        podcast => l10n.podcastSubscriptions,
+      };
+
   IconData get iconData => switch (this) {
         local => Iconz.musicNote,
         radio => Iconz.radio,
@@ -36,5 +42,12 @@ enum AudioType {
         local => Iconz.localAudioFilled,
         radio => Iconz.radioFilled,
         podcast => Iconz.podcastFilled,
+      };
+
+  static AudioType? fromString(String type) => switch (type) {
+        'local' => local,
+        'radio' => radio,
+        'podcast' => podcast,
+        _ => null,
       };
 }
