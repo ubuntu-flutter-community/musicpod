@@ -35,17 +35,19 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
       if (!appModel.recentPatchNotesDisposed() && mounted) {
         showDialog(
           context: context,
-          builder: (_) => const PatchNotesDialog(),
-        );
-      }
-
-      if (di<AppModel>().isBackupScreenNeeded &&
-          !di<AppModel>().wasBackupSaved &&
-          mounted) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => const BreakingChangesBackupDialog(),
+          builder: (_) => PatchNotesDialog(
+            onClose: () {
+              if (di<AppModel>().isBackupScreenNeeded &&
+                  !di<AppModel>().wasBackupSaved &&
+                  mounted) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => const BreakingChangesBackupDialog(),
+                );
+              }
+            },
+          ),
         );
       }
     });

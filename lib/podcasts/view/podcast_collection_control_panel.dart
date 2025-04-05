@@ -8,6 +8,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/offline_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/ui_constants.dart';
+import '../../custom_content/custom_content_model.dart';
 import '../../l10n/l10n.dart';
 import '../podcast_model.dart';
 
@@ -27,7 +28,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
     final downloadsOnly =
         watchPropertyValue((PodcastModel m) => m.downloadsOnly);
     final importingExporting =
-        watchPropertyValue((PodcastModel m) => m.importingExporting);
+        watchPropertyValue((CustomContentModel m) => m.importingExporting);
 
     return Row(
       spacing: kSmallestSpace,
@@ -93,7 +94,8 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
               semanticLabel: context.l10n.exportPodcastsToOpmlFile,
             ),
             tooltip: context.l10n.exportPodcastsToOpmlFile,
-            onPressed: () => model.exportPodcastsToOpmlFile(),
+            onPressed: () =>
+                di<CustomContentModel>().exportPodcastsToOpmlFile(),
           ),
           IconButton(
             icon: Icon(
@@ -101,7 +103,8 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
               semanticLabel: context.l10n.importPodcastsFromOpmlFile,
             ),
             tooltip: context.l10n.importPodcastsFromOpmlFile,
-            onPressed: () => model.importPodcastsFromOpmlFile(),
+            onPressed: () =>
+                di<CustomContentModel>().importPodcastsFromOpmlFile(),
           ),
           IconButton(
             icon: Icon(Iconz.remove),

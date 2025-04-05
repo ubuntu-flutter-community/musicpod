@@ -6,15 +6,13 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/ui_constants.dart';
+import '../../custom_content/custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../podcasts/podcast_model.dart';
 import '../app_model.dart';
 
 class BreakingChangesBackupDialog extends StatelessWidget with WatchItMixin {
-  const BreakingChangesBackupDialog({
-    super.key,
-  });
+  const BreakingChangesBackupDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +31,7 @@ class BreakingChangesBackupDialog extends StatelessWidget with WatchItMixin {
     final podcastBackup = watchPropertyValue(
       (AppModel m) => m.podcastBackup,
     );
+
     return ConfirmationDialog(
       showCancel: false,
       showCloseIcon: false,
@@ -41,7 +40,7 @@ class BreakingChangesBackupDialog extends StatelessWidget with WatchItMixin {
       title: Text(l10n.breakingChangesPleaseBackupTitle),
       content: SizedBox(
         height: 500,
-        width: 500,
+        width: 450,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -55,82 +54,101 @@ class BreakingChangesBackupDialog extends StatelessWidget with WatchItMixin {
                 color: theme.colorScheme.error,
               ),
             ),
-            YaruExpansionPanel(
-              shrinkWrap: true,
-              headers: AudioType.values
-                  .map(
-                    (e) => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(e.localizedBackupName(l10n)),
-                        CommonCheckBox(
-                          value: switch (e) {
-                            AudioType.podcast => podcastBackup,
-                            AudioType.local => localAudioBackup,
-                            AudioType.radio => radioBackup,
-                          },
-                          onChanged: (v) => switch (e) {
-                            AudioType.podcast =>
-                              appModel.setPodcastBackup(v ?? false),
-                            AudioType.local =>
-                              appModel.setLocalAudioBackup(v ?? false),
-                            AudioType.radio =>
-                              appModel.setRadioBackup(v ?? false),
-                          },
-                        ),
-                      ],
-                    ),
-                  )
-                  .toList(),
-              children: AudioType.values
-                  .map(
-                    (e) => switch (e) {
-                      AudioType.local => _Section(
-                          children: [
-                            YaruTile(
-                              title: ImportantButton(
-                                onPressed: () {},
-                                child: Text(
-                                  l10n.exportPinnedAlbumsToOpmlFile,
+            Flexible(
+              child: YaruExpansionPanel(
+                key: ValueKey('$podcastBackup$localAudioBackup$radioBackup'),
+                collapseOnExpand: false,
+                shrinkWrap: true,
+                isInitiallyExpanded: AudioType.values
+                    .map(
+                      (e) => switch (e) {
+                        AudioType.local => !localAudioBackup,
+                        AudioType.podcast => !podcastBackup,
+                        AudioType.radio => !radioBackup,
+                      },
+                    )
+                    .toList(),
+                headers: AudioType.values
+                    .map(
+                      (e) => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(e.localizedBackupName(l10n)),
+                          CommonCheckBox(
+                            value: switch (e) {
+                              AudioType.podcast => podcastBackup,
+                              AudioType.local => localAudioBackup,
+                              AudioType.radio => radioBackup,
+                            },
+                            onChanged: (v) => switch (e) {
+                              AudioType.podcast =>
+                                appModel.setPodcastBackup(v ?? false),
+                              AudioType.local =>
+                                appModel.setLocalAudioBackup(v ?? false),
+                              AudioType.radio =>
+                                appModel.setRadioBackup(v ?? false),
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                    .toList(),
+                children: AudioType.values
+                    .map(
+                      (e) => switch (e) {
+                        AudioType.local => _Section(
+                            children: [
+                              YaruTile(
+                                title: ImportantButton(
+                                  onPressed: () {
+                                    di<CustomContentModel>()
+                                        .exportPlaylistsAndPinnedAlbumsToM3Us()
+                                        .then(
+                                          (v) =>
+                                              appModel.setLocalAudioBackup(v),
+                                        );
+                                  },
+                                  child: Text(
+                                    l10n.exportPlaylistsAndAlbumsToM3UFiles,
+                                  ),
                                 ),
                               ),
-                            ),
-                            YaruTile(
-                              title: ImportantButton(
-                                onPressed: () {},
-                                child: Text(
-                                  l10n.exportPlaylistsTpM3us,
+                            ],
+                          ),
+                        AudioType.podcast => _Section(
+                            children: [
+                              YaruTile(
+                                title: ImportantButton(
+                                  child: Text(l10n.exportPodcastsToOpmlFile),
+                                  onPressed: () => di<CustomContentModel>()
+                                      .exportPodcastsToOpmlFile()
+                                      .then(
+                                        (v) => appModel.setPodcastBackup(v),
+                                      ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      AudioType.podcast => _Section(
-                          children: [
-                            YaruTile(
-                              title: ImportantButton(
-                                child: Text(l10n.exportPodcastsToOpmlFile),
-                                onPressed: () => di<PodcastModel>()
-                                    .exportPodcastsToOpmlFile(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      AudioType.radio => _Section(
-                          children: [
-                            YaruTile(
-                              title: ImportantButton(
-                                onPressed: () {},
-                                child: Text(
-                                  l10n.exportStarredStationsToOpmlFile,
+                            ],
+                          ),
+                        AudioType.radio => _Section(
+                            children: [
+                              YaruTile(
+                                title: ImportantButton(
+                                  onPressed: () => di<CustomContentModel>()
+                                      .exportStarredStationsToOpmlFile()
+                                      .then(
+                                        (v) => appModel.setRadioBackup(v),
+                                      ),
+                                  child: Text(
+                                    l10n.exportStarredStationsToOpmlFile,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                    },
-                  )
-                  .toList(),
+                            ],
+                          ),
+                      },
+                    )
+                    .toList(),
+              ),
             ),
           ],
         ),

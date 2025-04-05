@@ -109,7 +109,7 @@ void registerDependencies({required List<String> args}) async {
         final downloadsDefaultDir = await getDownloadsDefaultDir();
         const forcedUpdateThreshold = String.fromEnvironment(
           'FORCED_UPDATE_THRESHOLD',
-          defaultValue: '2.10.0',
+          defaultValue: '2.11.0',
         );
         return SettingsService(
           forcedUpdateThreshold: forcedUpdateThreshold,
@@ -178,7 +178,6 @@ void registerDependencies({required List<String> args}) async {
       () async {
         final libraryService = LibraryService(
           sharedPreferences: di<SharedPreferences>(),
-          externalPathService: di<ExternalPathService>(),
         );
         await libraryService.init();
         return libraryService;
@@ -319,8 +318,10 @@ void registerDependencies({required List<String> args}) async {
     ..registerSingletonWithDependencies<CustomContentModel>(
       () => CustomContentModel(
         externalPathService: di<ExternalPathService>(),
+        libraryService: di<LibraryService>(),
+        podcastService: di<PodcastService>(),
       ),
-      dependsOn: [ExternalPathService],
+      dependsOn: [ExternalPathService, LibraryService, PodcastService],
       dispose: (s) => s.dispose(),
     );
 }

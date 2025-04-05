@@ -33,7 +33,7 @@ jobs:
       - name: Build macOS app
         id: buildmacos
         if: ${{ steps.release.outputs.release_created }}
-        run: flutter build macos --release
+        run: flutter build macos --release --dart-define=FORCED_UPDATE_THRESHOLD=${{ vars.FORCED_UPDATE_THRESHOLD}}
       - name: Codesign executable
         id: codesignmacos
         if: steps.buildmacos.outcome == 'success'

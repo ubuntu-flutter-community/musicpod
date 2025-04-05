@@ -159,15 +159,7 @@ class PodcastModel extends SafeChangeNotifier {
         );
   }
 
-  Future<void> importPodcastsFromOpmlFile() async =>
-      _libraryService.importPodcastsFromOpmlFile(_podcastService.findEpisodes);
-
-  Future<void> exportPodcastsToOpmlFile() async =>
-      _libraryService.exportPodcastsToOpmlFile();
-
   Future<void> removeAllPodcasts() async => _libraryService.removeAllPodcasts();
-
-  bool get importingExporting => _libraryService.importingExporting;
 
   @override
   Future<void> dispose() async {
