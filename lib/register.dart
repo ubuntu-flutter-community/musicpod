@@ -107,7 +107,12 @@ void registerDependencies({required List<String> args}) async {
     ..registerSingletonAsync<SettingsService>(
       () async {
         final downloadsDefaultDir = await getDownloadsDefaultDir();
+        const forcedUpdateThreshold = String.fromEnvironment(
+          'FORCED_UPDATE_THRESHOLD',
+          defaultValue: '2.10.0',
+        );
         return SettingsService(
+          forcedUpdateThreshold: forcedUpdateThreshold,
           sharedPreferences: di<SharedPreferences>(),
           downloadsDefaultDir: downloadsDefaultDir,
         );

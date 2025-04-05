@@ -351,9 +351,12 @@
     "podcastName": "Podcast name",
     "url": "Url",
     "loadFromFileOptional": "Load from file (optional)",
+    "exportPinnedAlbumsToOpmlFile": "Export pinned albums to OPML file",
     "exportPlaylistTpM3u": "Export playlist to M3U",
-    "exportPodcastsToOpmlFile" : "Export podcast to OPML file",
-    "importPodcastsFromOpmlFile" : "Import podcast from OPML file",
+    "exportPlaylistsTpM3us": "Export playlists to M3Us",
+    "exportPodcastsToOpmlFile" : "Export podcasts to OPML file",
+    "importPodcastsFromOpmlFile" : "Import podcasts from OPML file",
+    "exportStarredStationsToOpmlFile": "Export starred stations to OPML file",
     "removeAllPodcasts": "Remove all podcasts",
     "removeAllPodcastsConfirm": "Are you sure you want to remove all podcasts?",
     "removeAllPodcastsDescription": "This will remove all your podcast subscriptions and progress.",
@@ -656,5 +659,12 @@
     "regionZambia": "Zambia",
     "regionZimbabwe": "Zimbabwe",
     "failedToReadMetadata": "Failed to read metadata for the following media files:",
-    "failedToReadMetadataDescription": "The metadata of this file could not be read. This is usually caused by a missing codec or a corrupted file."
+    "failedToReadMetadataDescription": "The metadata of this file could not be read. This is usually caused by a missing codec or a corrupted file.",
+    "breakingChangesPleaseBackupTitle": "Breaking changes: Please backup!",
+    "breakingChangesPleaseBackupDescription": "The next version of MusicPod will have breaking changes. Please backup your playlists, podcast subscriptions and pinned albums before updating.",
+    "breakingChangesPleaseBackupConfirmation": "I confirm that I have backed up my:",
+    "pinnedAlbumsAndPlaylists": "Pinned albums and playlists",
+    "starredStations": "Starred stations",
+    "podcastSubscriptions": "Podcast subscriptions",
+    "pinnedAlbums": "Pinned albums"
 }
