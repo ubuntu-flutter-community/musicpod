@@ -86,10 +86,31 @@ class LibraryService {
         .then((_) => _propertiesChangedController.add(true));
   }
 
+  void addStarredStations(
+    List<(String uuid, List<Audio> audios)> stations,
+  ) {
+    if (stations.isEmpty) return;
+    for (var station in stations) {
+      if (!_starredStations.containsKey(station.$1)) {
+        _starredStations.putIfAbsent(station.$1, () => station.$2);
+      }
+    }
+    writeAudioMap(map: _starredStations, fileName: FileNames.starredStations)
+        .then((_) => _propertiesChangedController.add(true));
+  }
+
   void unStarStation(String uuid) {
     _starredStations.remove(uuid);
     writeAudioMap(map: _starredStations, fileName: FileNames.starredStations)
         .then((_) => _propertiesChangedController.add(true));
+  }
+
+  Future<void> unStarAllStations() async {
+    _starredStations.clear();
+    return writeAudioMap(
+      map: _starredStations,
+      fileName: FileNames.starredStations,
+    ).then((_) => _propertiesChangedController.add(true));
   }
 
   bool isStarredStation(String? uuid) {

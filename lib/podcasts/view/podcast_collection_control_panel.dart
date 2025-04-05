@@ -79,48 +79,49 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
             ),
           ),
         ),
-        if (importingExporting || checkingForUpdates)
-          const SizedBox(
-            width: 22,
-            height: 22,
-            child: Progress(
-              strokeWidth: 2,
-            ),
-          )
-        else ...[
-          IconButton(
-            icon: Icon(
-              Iconz.download,
-              semanticLabel: context.l10n.exportPodcastsToOpmlFile,
-            ),
-            tooltip: context.l10n.exportPodcastsToOpmlFile,
-            onPressed: () =>
-                di<CustomContentModel>().exportPodcastsToOpmlFile(),
+        IconButton(
+          icon: Icon(
+            Iconz.download,
+            semanticLabel: context.l10n.exportPodcastsToOpmlFile,
           ),
-          IconButton(
-            icon: Icon(
-              Iconz.upload,
-              semanticLabel: context.l10n.importPodcastsFromOpmlFile,
-            ),
-            tooltip: context.l10n.importPodcastsFromOpmlFile,
-            onPressed: () =>
-                di<CustomContentModel>().importPodcastsFromOpmlFile(),
+          tooltip: context.l10n.exportPodcastsToOpmlFile,
+          onPressed: importingExporting || checkingForUpdates
+              ? null
+              : () => di<CustomContentModel>().exportPodcastsToOpmlFile(),
+        ),
+        IconButton(
+          icon: Icon(
+            Iconz.upload,
+            semanticLabel: context.l10n.importPodcastsFromOpmlFile,
           ),
-          IconButton(
-            icon: Icon(Iconz.remove),
-            tooltip: context.l10n.podcasts,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (_) => ConfirmationDialog(
-                title: Text(context.l10n.removeAllPodcastsConfirm),
-                content: Text(context.l10n.removeAllPodcastsDescription),
-                confirmLabel: context.l10n.ok,
-                cancelLabel: context.l10n.cancel,
-                onConfirm: () => model.removeAllPodcasts(),
-              ),
-            ),
-          ),
-        ],
+          tooltip: context.l10n.importPodcastsFromOpmlFile,
+          onPressed: importingExporting || checkingForUpdates
+              ? null
+              : () => di<CustomContentModel>().importPodcastsFromOpmlFile(),
+        ),
+        IconButton(
+          icon: importingExporting || checkingForUpdates
+              ? const SizedBox.square(
+                  dimension: 22,
+                  child: Progress(
+                    strokeWidth: 2,
+                  ),
+                )
+              : Icon(Iconz.remove),
+          tooltip: context.l10n.podcasts,
+          onPressed: importingExporting || checkingForUpdates
+              ? null
+              : () => showDialog(
+                    context: context,
+                    builder: (_) => ConfirmationDialog(
+                      title: Text(context.l10n.removeAllPodcastsConfirm),
+                      content: Text(context.l10n.removeAllPodcastsDescription),
+                      confirmLabel: context.l10n.ok,
+                      cancelLabel: context.l10n.cancel,
+                      onConfirm: () => model.removeAllPodcasts(),
+                    ),
+                  ),
+        ),
         const SizedBox(width: kSmallestSpace),
       ],
     );

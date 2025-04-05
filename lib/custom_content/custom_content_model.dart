@@ -14,19 +14,23 @@ import '../extensions/media_file_x.dart';
 import '../external_path/external_path_service.dart';
 import '../library/library_service.dart';
 import '../podcasts/podcast_service.dart';
+import '../radio/radio_service.dart';
 
 class CustomContentModel extends SafeChangeNotifier {
   CustomContentModel({
     required ExternalPathService externalPathService,
     required LibraryService libraryService,
     required PodcastService podcastService,
+    required RadioService radioService,
   })  : _externalPathService = externalPathService,
         _libraryService = libraryService,
-        _podcastService = podcastService;
+        _podcastService = podcastService,
+        _radioService = radioService;
 
   final ExternalPathService _externalPathService;
   final LibraryService _libraryService;
   final PodcastService _podcastService;
+  final RadioService _radioService;
 
   List<({List<Audio> audios, String name})> _playlists = [];
   List<({List<Audio> audios, String name})> get playlists => _playlists;
@@ -293,20 +297,15 @@ class CustomContentModel extends SafeChangeNotifier {
     for (var station in _libraryService.starredStations.entries) {
       category.addChild(
         OpmlOutlineBuilder()
-            .type('rss')
-            .title(station.value.firstOrNull?.album ?? '')
-            .text(station.value.firstOrNull?.artist ?? '')
-            .xmlUrl(station.value.firstOrNull?.url ?? '')
+            .title(station.value.firstOrNull?.title ?? '')
+            .text(station.value.firstOrNull?.uuid ?? '')
+            .htmlUrl(station.value.firstOrNull?.url ?? '')
             .build(),
       );
     }
 
     body.add(
-      category
-          .type('rss')
-          .title('Starred Stations')
-          .text('Starred Stations')
-          .build(),
+      category.title('Starred Stations').text('Starred Stations').build(),
     );
 
     final opml = OpmlDocument(
@@ -317,5 +316,37 @@ class CustomContentModel extends SafeChangeNotifier {
     file.writeAsStringSync(xml);
     setImportingExporting(false);
     return true;
+  }
+
+  Future<void> importStarredStationsFromOpmlFile() async {
+    if (_importingExporting) return;
+    setImportingExporting(true);
+    final path = await _externalPathService.getPathOfFile();
+
+    if (path == null) {
+      setImportingExporting(false);
+      return;
+    }
+    final file = File(path);
+    if (!file.existsSync()) return;
+    final xml = file.readAsStringSync();
+    final doc = OpmlDocument.parse(xml);
+
+    for (var category in doc.body.where((e) => e.children != null)) {
+      final children = category.children!.where((e) => e.text != null);
+      final starredStations = <(String uuid, List<Audio> audios)>[];
+      for (var feed in children) {
+        final stations = await _radioService.search(uuid: feed.text!, limit: 1);
+        if (stations != null && stations.isNotEmpty) {
+          starredStations.add(
+            (feed.text!, stations.map((e) => Audio.fromStation(e)).toList()),
+          );
+        }
+      }
+      if (starredStations.isNotEmpty) {
+        _libraryService.addStarredStations(starredStations);
+      }
+    }
+    setImportingExporting(false);
   }
 }

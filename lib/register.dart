@@ -320,8 +320,14 @@ void registerDependencies({required List<String> args}) async {
         externalPathService: di<ExternalPathService>(),
         libraryService: di<LibraryService>(),
         podcastService: di<PodcastService>(),
+        radioService: di<RadioService>(),
       ),
-      dependsOn: [ExternalPathService, LibraryService, PodcastService],
+      dependsOn: [
+        ExternalPathService,
+        LibraryService,
+        PodcastService,
+        RadioService,
+      ],
       dispose: (s) => s.dispose(),
     );
 }
