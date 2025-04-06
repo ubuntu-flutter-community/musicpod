@@ -49,6 +49,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final audios = watchPropertyValue((LocalAudioModel m) => m.audios);
     final allArtists = watchPropertyValue((LocalAudioModel m) => m.allArtists);
     final allAlbumArtists =
@@ -69,8 +70,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
           showDialog(
             context: context,
             builder: (context) => ConfirmationDialog(
-              title: const Text('Local audio directory was modified'),
-              content: const Text('Do you want to restart the import?'),
+              title: Text(l10n.localAudioWatchDialogTitle),
+              content: Text(l10n.localAudioWatchDialogDescription),
               onConfirm: () => di<LocalAudioModel>().init(forceInit: true),
             ),
           );
