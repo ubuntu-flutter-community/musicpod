@@ -1265,5 +1265,13 @@
   "connectedToDiscord": "Mit Discord verbunden",
   "@connectedToDiscord": {},
   "disconnectedFromDiscord": "Von Discord getrennt",
-  "@disconnectedFromDiscord": {}
+  "@disconnectedFromDiscord": {},
+  "exportPinnedAlbumToM3UFile": "Exportiere angeheftete Alben in eine M3U-Datei",
+  "@exportPinnedAlbumToM3UFile": {},
+  "exportPlaylistToM3UFile": "Playlist in eine M3U-Datei exportieren",
+  "@exportPlaylistToM3UFile": {},
+  "exportPlaylistsAndAlbumsToM3UFiles": "Playlisten und Alben in M3U-Dateien exportieren",
+  "@exportPlaylistsAndAlbumsToM3UFiles": {},
+  "exportPinnedAlbumsToM3UFiles": "Exportiere angeheftete Alben in M3U-Dateien",
+  "@exportPinnedAlbumsToM3UFiles": {}
 }
