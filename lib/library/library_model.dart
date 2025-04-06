@@ -6,6 +6,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import '../app/view/mobile_page.dart';
 import '../app_config.dart';
 import '../common/data/audio.dart';
+import '../common/data/audio_type.dart';
 import '../common/logging.dart';
 import '../common/page_ids.dart';
 import '../common/view/back_gesture.dart';
@@ -294,4 +295,10 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   final GlobalKey<NavigatorState> _masterNavigatorKey =
       GlobalKey<NavigatorState>();
   GlobalKey<NavigatorState> get masterNavigatorKey => _masterNavigatorKey;
+
+  AudioType getCurrentAudioType() => switch (selectedPageId) {
+        PageIDs.podcasts => AudioType.podcast,
+        PageIDs.radio => AudioType.radio,
+        _ => AudioType.local
+      };
 }

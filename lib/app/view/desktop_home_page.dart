@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app_config.dart';
-import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -46,7 +45,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
   }
 
   void _onTypeHandler(KeyEvent event) {
-    if (!isGtkApp) {
+    if (!isGtkApp || event.logicalKey == LogicalKeyboardKey.control) {
       return;
     }
 
@@ -59,18 +58,19 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
       return;
     }
 
+    _performSearch(character);
+  }
+
+  void _performSearch([String? query]) {
     final libraryModel = di<LibraryModel>();
-    final audioType = switch (libraryModel.selectedPageId) {
-      PageIDs.podcasts => AudioType.podcast,
-      PageIDs.radio => AudioType.radio,
-      _ => AudioType.local
-    };
+    final audioType = libraryModel.getCurrentAudioType();
+    final searchModel = di<SearchModel>()..setAudioType(audioType);
 
-    di<SearchModel>()
-      ..setSearchQuery(character)
-      ..setAudioType(audioType)
-      ..search();
+    if (query != null) {
+      searchModel.setSearchQuery(query);
+    }
 
+    searchModel.search();
     libraryModel.push(pageId: PageIDs.searchPage);
   }
 
@@ -107,33 +107,39 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
     return KeyboardListener(
       focusNode: di<AppModel>().keyboardListenerFocus,
       onKeyEvent: _onTypeHandler,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    const Expanded(child: MasterDetailPage()),
-                    if (!playerToTheRight || isMobilePlatform)
-                      const PlayerView(position: PlayerPosition.bottom),
-                  ],
+      child: CallbackShortcuts(
+        bindings: {
+          LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyF):
+              () => _performSearch
+        },
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      const Expanded(child: MasterDetailPage()),
+                      if (!playerToTheRight || isMobilePlatform)
+                        const PlayerView(position: PlayerPosition.bottom),
+                    ],
+                  ),
                 ),
-              ),
-              if (playerToTheRight)
-                const SizedBox(
-                  width: kSideBarPlayerWidth,
-                  child: PlayerView(position: PlayerPosition.sideBar),
-                ),
-            ],
-          ),
-          if (isFullScreen == true)
-            Scaffold(
-              backgroundColor: isVideo ? Colors.black : null,
-              body: const PlayerView(position: PlayerPosition.fullWindow),
+                if (playerToTheRight)
+                  const SizedBox(
+                    width: kSideBarPlayerWidth,
+                    child: PlayerView(position: PlayerPosition.sideBar),
+                  ),
+              ],
             ),
-        ],
+            if (isFullScreen == true)
+              Scaffold(
+                backgroundColor: isVideo ? Colors.black : null,
+                body: const PlayerView(position: PlayerPosition.fullWindow),
+              ),
+          ],
+        ),
       ),
     );
   }
