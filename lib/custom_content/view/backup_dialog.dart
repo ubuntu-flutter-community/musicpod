@@ -6,13 +6,15 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/ui_constants.dart';
-import '../../custom_content/custom_content_model.dart';
+import '../custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../app_model.dart';
+import '../../app/app_model.dart';
 
-class BreakingChangesBackupDialog extends StatelessWidget with WatchItMixin {
-  const BreakingChangesBackupDialog({super.key});
+class BackupDialog extends StatelessWidget with WatchItMixin {
+  const BackupDialog({super.key, this.breakingChange = true});
+
+  final bool breakingChange;
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +36,14 @@ class BreakingChangesBackupDialog extends StatelessWidget with WatchItMixin {
 
     return ConfirmationDialog(
       showCancel: false,
-      showCloseIcon: false,
+      showCloseIcon: !breakingChange,
       confirmEnabled: confirmEnabled,
       onConfirm: () => appModel.setBackupSaved(true),
-      title: Text(l10n.breakingChangesPleaseBackupTitle),
+      title: Text(
+        breakingChange
+            ? l10n.breakingChangesPleaseBackupTitle
+            : l10n.exportYourData,
+      ),
       content: SizedBox(
         height: 500,
         width: 450,
@@ -46,14 +52,16 @@ class BreakingChangesBackupDialog extends StatelessWidget with WatchItMixin {
           mainAxisSize: MainAxisSize.min,
           spacing: kLargestSpace,
           children: [
-            Text(context.l10n.breakingChangesPleaseBackupDescription),
-            const Divider(),
-            Text(
-              context.l10n.breakingChangesPleaseBackupConfirmation,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.error,
+            if (breakingChange) ...[
+              Text(context.l10n.breakingChangesPleaseBackupDescription),
+              const Divider(),
+              Text(
+                context.l10n.breakingChangesPleaseBackupConfirmation,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.error,
+                ),
               ),
-            ),
+            ],
             Flexible(
               child: YaruExpansionPanel(
                 key: ValueKey('$podcastBackup$localAudioBackup$radioBackup'),

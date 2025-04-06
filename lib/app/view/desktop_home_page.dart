@@ -12,7 +12,7 @@ import '../../podcasts/podcast_model.dart';
 import '../../podcasts/view/podcast_state_stream_handler.dart';
 import '../app_model.dart';
 import '../connectivity_model.dart';
-import 'breaking_changes_backup_dialog.dart';
+import '../../custom_content/view/backup_dialog.dart';
 import 'master_detail_page.dart';
 
 class DesktopHomePage extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -43,7 +43,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
                 showDialog(
                   context: context,
                   barrierDismissible: false,
-                  builder: (context) => const BreakingChangesBackupDialog(),
+                  builder: (context) => const BackupDialog(),
                 );
               }
             },

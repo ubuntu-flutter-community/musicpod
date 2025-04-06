@@ -6,10 +6,9 @@ import '../../common/page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/ui_constants.dart';
+import '../../custom_content/view/custom_playlists_section.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../playlists/view/edit_playlist_dialog.dart';
 import '../../playlists/view/playlist_page.dart';
 
 class PlaylistsView extends StatelessWidget {
@@ -43,9 +42,13 @@ class PlaylistsView extends StatelessWidget {
           onTap: () => id == PageIDs.customContent
               ? showDialog(
                   context: context,
-                  builder: (context) => EditPlaylistDialog(
-                    allowCreate: true,
-                    label: context.l10n.playlist,
+                  builder: (context) => AlertDialog(
+                    content: SizedBox.square(
+                      dimension: 300,
+                      child: CustomPlaylistsSection(
+                        onAdd: () => Navigator.of(context).pop(),
+                      ),
+                    ),
                   ),
                 )
               : di<LibraryModel>().push(

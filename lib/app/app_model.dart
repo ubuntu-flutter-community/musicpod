@@ -168,6 +168,13 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  void resetBackupSettings() {
+    _localAudioBackup = false;
+    _podcastBackup = false;
+    _radioBackup = false;
+    notifyListeners();
+  }
+
   int? getExtendedVersionNumber(String? version) {
     if (version == null) return null;
     version = version.replaceAll('v', '');

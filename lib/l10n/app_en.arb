@@ -671,5 +671,9 @@
     "pinnedAlbumsAndPlaylists": "Pinned albums and playlists",
     "starredStations": "Starred stations",
     "podcastSubscriptions": "Podcast subscriptions",
-    "pinnedAlbums": "Pinned albums"
+    "pinnedAlbums": "Pinned albums",
+    "export": "Export",
+    "import": "Import",
+    "exportYourData": "Export your data",
+    "exportYourDataDescription": "Export your podcast subscriptions, starred stations and pinned albums."
 }

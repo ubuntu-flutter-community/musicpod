@@ -348,7 +348,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "da": [
@@ -702,7 +706,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "de": [
@@ -723,7 +731,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "es": [
@@ -776,7 +788,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "et": [
@@ -797,7 +813,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "eu": [
@@ -827,7 +847,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "fr": [
@@ -861,7 +885,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "it": [
@@ -882,7 +910,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "nl": [
@@ -1388,7 +1420,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "pl": [
@@ -1691,7 +1727,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "pt": [
@@ -2126,7 +2166,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "pt_BR": [
@@ -2160,7 +2204,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "ru": [
@@ -2451,7 +2499,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "sk": [
@@ -2481,7 +2533,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "sv": [
@@ -2511,7 +2567,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "ta": [
@@ -2564,7 +2624,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "tr": [
@@ -2598,7 +2662,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "zh": [
@@ -2629,7 +2697,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "zh_HK": [
@@ -2973,7 +3045,11 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ],
 
   "zh_TW": [
@@ -3317,6 +3393,10 @@
     "pinnedAlbumsAndPlaylists",
     "starredStations",
     "podcastSubscriptions",
-    "pinnedAlbums"
+    "pinnedAlbums",
+    "export",
+    "import",
+    "exportYourData",
+    "exportYourDataDescription"
   ]
 }

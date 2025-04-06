@@ -108,7 +108,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                         di<LocalAudioModel>().localAudioindex =
                             LocalAudioView.playlists.index;
                         await libraryModel.push(
-                          pageId: PageIDs.likedAudios,
+                          pageId: PageIDs.localAudio,
                           replace: true,
                         );
                       },
