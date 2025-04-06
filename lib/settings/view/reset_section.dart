@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/app_model.dart';
+import '../../custom_content/view/backup_dialog.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
@@ -24,6 +26,27 @@ class ResetSection extends StatelessWidget {
       headline: Text(l10n.resetAllSettings),
       child: Column(
         children: [
+          YaruTile(
+            leading: Icon(Iconz.download),
+            title: Text(l10n.exportYourData),
+            subtitle: SizedBox(
+              width: 300,
+              child: Text(l10n.exportYourDataDescription),
+            ),
+            trailing: ImportantButton(
+              onPressed: () => showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) {
+                  di<AppModel>().resetBackupSettings();
+                  return const BackupDialog(breakingChange: false);
+                },
+              ),
+              child: Text(
+                l10n.export,
+              ),
+            ),
+          ),
           YaruTile(
             leading: Icon(Iconz.remove),
             title: Text(l10n.resetAllSettings),

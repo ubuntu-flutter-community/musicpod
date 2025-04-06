@@ -10,7 +10,9 @@ import '../custom_content_model.dart';
 
 class CustomPlaylistsSection extends StatefulWidget
     with WatchItStatefulWidgetMixin {
-  const CustomPlaylistsSection({super.key});
+  const CustomPlaylistsSection({super.key, this.onAdd});
+
+  final VoidCallback? onAdd;
 
   @override
   State<CustomPlaylistsSection> createState() => _CustomPlaylistsSectionState();
@@ -106,10 +108,10 @@ class _CustomPlaylistsSectionState extends State<CustomPlaylistsSection> {
                                 Future.delayed(
                                   const Duration(milliseconds: 300),
                                   () {
-                                    libraryModel.push(
-                                      pageId: _controller.text,
-                                    );
+                                    final text = _controller.text;
                                     _controller.clear();
+                                    widget.onAdd?.call();
+                                    libraryModel.push(pageId: text);
                                   },
                                 );
                               },
@@ -131,6 +133,7 @@ class _CustomPlaylistsSectionState extends State<CustomPlaylistsSection> {
                                   );
                                   _controller.clear();
                                   di<CustomContentModel>().setPlaylists([]);
+                                  widget.onAdd?.call();
                                 },
                               ),
                             );
