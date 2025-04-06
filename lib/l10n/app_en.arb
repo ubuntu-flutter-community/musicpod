@@ -675,5 +675,7 @@
     "export": "Export",
     "import": "Import",
     "exportYourData": "Export your data",
-    "exportYourDataDescription": "Export your podcast subscriptions, starred stations and pinned albums."
+    "exportYourDataDescription": "Export your podcast subscriptions, starred stations and pinned albums.",
+    "localAudioWatchDialogTitle": "Local audio directory was modified",
+    "localAudioWatchDialogDescription": "Do you want to reload the local audio directory?"
 }

@@ -12,7 +12,7 @@ import '../../library/library_model.dart';
 import '../local_audio_model.dart';
 import 'artist_page.dart';
 
-class TitlesView extends StatelessWidget {
+class TitlesView extends StatelessWidget with WatchItMixin {
   const TitlesView({
     super.key,
     required this.audios,
@@ -26,8 +26,9 @@ class TitlesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
+    final importing = watchPropertyValue((LocalAudioModel m) => m.importing);
 
-    if (audios == null) {
+    if (audios == null || importing) {
       return const SliverFillRemainingProgress();
     }
 

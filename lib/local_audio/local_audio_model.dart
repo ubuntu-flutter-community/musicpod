@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:watcher/watcher.dart';
 
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
@@ -19,6 +20,7 @@ class LocalAudioModel extends SafeChangeNotifier {
   final LocalAudioService _localAudioService;
   final SettingsService _settingsService;
   StreamSubscription<bool>? _audiosChangedSub;
+  FileWatcher? get fileWatcher => _localAudioService.fileWatcher;
 
   int? _localAudioIndex;
   int get localAudioindex => _localAudioIndex ?? LocalAudioView.albums.index;
@@ -91,14 +93,24 @@ class LocalAudioModel extends SafeChangeNotifier {
   }) =>
       _localAudioService.findAllAlbums(newAudios: newAudios, clean: clean);
 
+  bool _importing = false;
+  bool get importing => _importing;
+  void setImporting(bool value) {
+    if (value == _importing) return;
+    _importing = value;
+    notifyListeners();
+  }
+
   Future<void> init({
     bool forceInit = false,
     String? directory,
   }) async {
+    setImporting(true);
     _localAudioIndex =
         _settingsService.localAudioIndex > LocalAudioView.values.length - 1
             ? 0
             : _settingsService.localAudioIndex;
+
     await _localAudioService.init(
       forceInit: forceInit,
       directory: directory,
@@ -106,7 +118,7 @@ class LocalAudioModel extends SafeChangeNotifier {
     _audiosChangedSub ??=
         _localAudioService.audiosChanged.listen((_) => notifyListeners());
 
-    notifyListeners();
+    setImporting(false);
   }
 
   @override

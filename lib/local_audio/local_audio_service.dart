@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:watcher/watcher.dart';
 
 import '../common/data/audio.dart';
 import '../common/logging.dart';
@@ -293,16 +294,24 @@ class LocalAudioService {
     );
   }
 
+  FileWatcher? _fileWatcher;
+  FileWatcher? get fileWatcher => _fileWatcher;
+
   Future<void> init({
     String? directory,
     bool forceInit = false,
   }) async {
     if (forceInit == false && _audios?.isNotEmpty == true) return;
 
+    final dir = directory ?? _settingsService?.directory;
     final result = await compute(
       _readAudiosFromDirectory,
-      directory ?? _settingsService?.directory,
+      dir,
     );
+    if (dir != null && Directory(dir).existsSync()) {
+      _fileWatcher = FileWatcher(dir);
+    }
+
     _audios = result.audios;
     _failedImports = result.failedImports;
     _sortAllTitles();
