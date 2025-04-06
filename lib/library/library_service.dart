@@ -12,8 +12,9 @@ import '../extensions/shared_preferences_x.dart';
 import '../persistence_utils.dart';
 
 class LibraryService {
-  LibraryService({required SharedPreferences sharedPreferences})
-      : _sharedPreferences = sharedPreferences;
+  LibraryService({
+    required SharedPreferences sharedPreferences,
+  }) : _sharedPreferences = sharedPreferences;
 
   final SharedPreferences _sharedPreferences;
 
@@ -85,10 +86,31 @@ class LibraryService {
         .then((_) => _propertiesChangedController.add(true));
   }
 
+  void addStarredStations(
+    List<(String uuid, List<Audio> audios)> stations,
+  ) {
+    if (stations.isEmpty) return;
+    for (var station in stations) {
+      if (!_starredStations.containsKey(station.$1)) {
+        _starredStations.putIfAbsent(station.$1, () => station.$2);
+      }
+    }
+    writeAudioMap(map: _starredStations, fileName: FileNames.starredStations)
+        .then((_) => _propertiesChangedController.add(true));
+  }
+
   void unStarStation(String uuid) {
     _starredStations.remove(uuid);
     writeAudioMap(map: _starredStations, fileName: FileNames.starredStations)
         .then((_) => _propertiesChangedController.add(true));
+  }
+
+  Future<void> unStarAllStations() async {
+    _starredStations.clear();
+    return writeAudioMap(
+      map: _starredStations,
+      fileName: FileNames.starredStations,
+    ).then((_) => _propertiesChangedController.add(true));
   }
 
   bool isStarredStation(String? uuid) {
@@ -417,10 +439,34 @@ class LibraryService {
         .then((_) => _propertiesChangedController.add(true));
   }
 
+  void addPodcasts(List<(String feedUrl, List<Audio> audios)> podcasts) {
+    if (podcasts.isEmpty) return;
+    for (var podcast in podcasts) {
+      if (!isPodcastSubscribed(podcast.$1)) {
+        _podcasts.putIfAbsent(podcast.$1, () => podcast.$2);
+      }
+    }
+    writeAudioMap(map: _podcasts, fileName: FileNames.podcasts)
+        .then((_) => _propertiesChangedController.add(true));
+  }
+
   Future<void> updatePodcast(String feedUrl, List<Audio> audios) async {
     if (feedUrl.isEmpty || audios.isEmpty) return;
     _addPodcastUpdate(feedUrl);
     _podcasts.update(feedUrl, (value) => audios);
+    return writeAudioMap(map: _podcasts, fileName: FileNames.podcasts)
+        .then((_) => _propertiesChangedController.add(true));
+  }
+
+  Future<void> updatePodcasts(
+    List<({String feedUrl, List<Audio> audios})> podcasts,
+  ) async {
+    if (podcasts.isEmpty) return;
+    for (var podcast in podcasts) {
+      if (podcast.feedUrl.isEmpty || podcast.audios.isEmpty) continue;
+      _addPodcastUpdate(podcast.feedUrl);
+      _podcasts.update(podcast.feedUrl, (value) => podcast.audios);
+    }
     return writeAudioMap(map: _podcasts, fileName: FileNames.podcasts)
         .then((_) => _propertiesChangedController.add(true));
   }
@@ -491,6 +537,15 @@ class LibraryService {
         .then((_) => _propertiesChangedController.add(true))
         .then((_) => removePodcastUpdate(feedUrl))
         .then((_) => _removeFeedWithDownload(feedUrl));
+  }
+
+  Future<void> removeAllPodcasts() async {
+    _podcasts.clear();
+    _podcastUpdates?.clear();
+    writeAudioMap(
+      map: _podcasts,
+      fileName: FileNames.podcasts,
+    ).then((_) => _propertiesChangedController.add(true));
   }
 
   //

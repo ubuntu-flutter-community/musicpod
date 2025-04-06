@@ -49,8 +49,9 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
       active: active,
     );
 
-    final radius =
-        isMobilePlatform ? bigAvatarButtonRadius : smallAvatarButtonRadius;
+    final radius = AppConfig.isMobilePlatform
+        ? bigAvatarButtonRadius
+        : smallAvatarButtonRadius;
     final playButton = avatarPlayButton
         ? CircleAvatar(
             radius: radius,

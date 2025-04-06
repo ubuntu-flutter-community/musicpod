@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
@@ -8,6 +7,7 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/logging.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
@@ -24,18 +24,18 @@ import '../../common/view/tapable_text.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/media_file_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
+import '../../local_audio/view/failed_import_snackbar.dart';
 import '../../local_audio/view/genre_page.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
-import 'manual_add_dialog.dart';
+import 'edit_playlist_dialog.dart';
 import 'playlst_add_audios_dialog.dart';
 
 class PlaylistPage extends StatelessWidget with WatchItMixin {
@@ -71,11 +71,31 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
             Formats.fileUri,
             (value) async {
               if (value == null) return;
-              final file = File.fromUri(value);
-              if (file.isValidMedia) {
-                final data = readMetadata(file, getImage: true);
-                var audio = Audio.fromMetadata(path: file.path, data: data);
-                playlist?.add(audio);
+              try {
+                final file = File.fromUri(value);
+                playlist?.add(
+                  Audio.local(
+                    file,
+                    getImage: true,
+                    onError: (path) => showFailedImportsSnackBar(
+                      failedImports: [path],
+                      context: context,
+                      message: context.l10n.failedToImport,
+                    ),
+                    onParseError: (path) => showFailedImportsSnackBar(
+                      failedImports: [path],
+                      context: context,
+                      message: context.l10n.failedToReadMetadata,
+                    ),
+                  ),
+                );
+              } on Exception catch (e) {
+                printMessageInDebugMode(e);
+                showFailedImportsSnackBar(
+                  failedImports: [value.toString()],
+                  context: context,
+                  message: context.l10n.failedToImport,
+                );
               }
             },
             onError: (_) {},
@@ -350,17 +370,13 @@ class _PlaylistControlPanel extends StatelessWidget with WatchItMixin {
             icon: Icon(Iconz.pen),
             onPressed: () => showDialog(
               context: context,
-              builder: (context) => AlertDialog(
-                content: SizedBox(
-                  height: 200,
-                  width: 500,
-                  child: PlaylistEditDialogContent(
-                    playlistName: pageId,
-                    initialValue: pageId,
-                    allowDelete: true,
-                    allowRename: true,
-                  ),
-                ),
+              builder: (context) => EditPlaylistDialog(
+                audios: audios,
+                playlistName: pageId,
+                initialValue: pageId,
+                allowDelete: true,
+                allowRename: true,
+                allowExport: true,
               ),
             ),
           ),

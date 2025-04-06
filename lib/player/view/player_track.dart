@@ -70,9 +70,9 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                 : const EdgeInsets.only(left: 7, right: 7, top: 3),
             child: LinearProgress(
               value: null,
-              trackHeight: yaruStyled && !bottomPlayer
+              trackHeight: AppConfig.yaruStyled && !bottomPlayer
                   ? 5.0
-                  : (isMobilePlatform ? 2.0 : 4.0),
+                  : (AppConfig.isMobilePlatform ? 2.0 : 4.0),
               color: mainColor.withValues(alpha: 0.8),
               backgroundColor: mainColor.withValues(alpha: 0.4),
             ),
@@ -90,8 +90,9 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                   overlayShape: thumbShape,
                   minThumbSeparation: 0,
                   trackShape: trackShape as SliderTrackShape,
-                  trackHeight:
-                      bottomPlayer ? (isMobilePlatform ? 2.0 : 4.0) : 4.0,
+                  trackHeight: bottomPlayer
+                      ? (AppConfig.isMobilePlatform ? 2.0 : 4.0)
+                      : 4.0,
                   inactiveTrackColor: mainColor.withValues(alpha: 0.2),
                   activeTrackColor: mainColor.withValues(alpha: 0.85),
                   overlayColor: mainColor,

@@ -1,21 +1,15 @@
 import 'dart:io';
 
-extension MediaFileX on File {
-  bool get isValidMedia => path.isValidPath;
-}
+import 'package:mime/mime.dart';
 
-extension MediaFileSystemEntityX on FileSystemEntity {
-  bool get isValidMedia => path.isValidPath;
+extension MediaFileX on File {
+  bool get isPlayable => path.isPlayable;
 }
 
 extension _ValidPathX on String {
-  bool get isValidPath => _validMediaExtensions.any((e) => endsWith(e));
+  bool get isPlayable {
+    final mime = lookupMimeType(this);
+    return (mime?.contains('audio') ?? false) ||
+        (mime?.contains('video') ?? false);
+  }
 }
-
-const _validMediaExtensions = [
-  '.mp3',
-  '.flac',
-  '.mp4',
-  '.opus',
-  '.ogg',
-];

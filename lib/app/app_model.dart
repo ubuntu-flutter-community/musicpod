@@ -6,7 +6,6 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../app_config.dart';
 import '../common/view/snackbars.dart';
-import '../constants.dart';
 import '../expose/expose_service.dart';
 import '../settings/settings_service.dart';
 import 'view/discord_connect_content.dart';
@@ -31,10 +30,9 @@ class AppModel extends SafeChangeNotifier {
   Stream<String?> get errorStream => _exposeService.discordErrorStream;
   Stream<bool> get isDiscordConnectedStream =>
       _exposeService.isDiscordConnectedStream;
-  Future<void> connectToDiscord() async => _exposeService.connectToDiscord();
-  Future<void> disconnectFromDiscord() async =>
-      _exposeService.disconnectFromDiscord();
-  final keyboardListenerFocus = FocusNode();
+  Future<void> connectToDiscord(bool value) async =>
+      _exposeService.connectToDiscord(value);
+  bool get isDiscordConnected => _exposeService.isDiscordConnected;
 
   ValueNotifier<bool> get isLastFmAuthorized =>
       _exposeService.isLastFmAuthorized;
@@ -77,7 +75,7 @@ class AppModel extends SafeChangeNotifier {
     if (value == null || value == _fullWindowMode) return;
     _fullWindowMode = value;
 
-    if (isMobilePlatform) {
+    if (AppConfig.isMobilePlatform) {
       if (_fullWindowMode == true) {
         await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       } else {
@@ -135,6 +133,49 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  bool get wasBackupSaved => _settingsService.getBackupSaved(version);
+  Future<void> setBackupSaved(bool value) async {
+    await _settingsService.setBackupSaved(version, value);
+    notifyListeners();
+  }
+
+  bool get isBackupScreenNeeded =>
+      isCurrentVersionLowerThan(_settingsService.forcedUpdateThreshold);
+
+  bool isCurrentVersionLowerThan(String otherVersion) {
+    final currentVersionInt = getExtendedVersionNumber(version) ?? 0;
+    final otherVersionInt = getExtendedVersionNumber(otherVersion) ?? 0;
+    return currentVersionInt < otherVersionInt;
+  }
+
+  bool _localAudioBackup = false;
+  bool get localAudioBackup => _localAudioBackup;
+  void setLocalAudioBackup(bool value) {
+    _localAudioBackup = value;
+    notifyListeners();
+  }
+
+  bool _podcastBackup = false;
+  bool get podcastBackup => _podcastBackup;
+  void setPodcastBackup(bool value) {
+    _podcastBackup = value;
+    notifyListeners();
+  }
+
+  bool _radioBackup = false;
+  bool get radioBackup => _radioBackup;
+  void setRadioBackup(bool value) {
+    _radioBackup = value;
+    notifyListeners();
+  }
+
+  void resetBackupSettings() {
+    _localAudioBackup = false;
+    _podcastBackup = false;
+    _radioBackup = false;
+    notifyListeners();
+  }
+
   int? getExtendedVersionNumber(String? version) {
     if (version == null) return null;
     version = version.replaceAll('v', '');
@@ -145,7 +186,7 @@ class AppModel extends SafeChangeNotifier {
 
   Future<String?> getOnlineVersion() async {
     final release = await _gitHub.repositories
-        .listReleases(RepositorySlug.full(kGitHubShortLink))
+        .listReleases(RepositorySlug.full(AppConfig.gitHubShortLink))
         .toList();
     return release.firstOrNull?.tagName;
   }
@@ -153,7 +194,7 @@ class AppModel extends SafeChangeNotifier {
   Future<List<Contributor>> getContributors() async {
     final list = await _gitHub.repositories
         .listContributors(
-          RepositorySlug.full(kGitHubShortLink),
+          RepositorySlug.full(AppConfig.gitHubShortLink),
         )
         .where((c) => c.type == 'User')
         .toList();
@@ -168,7 +209,11 @@ class AppModel extends SafeChangeNotifier {
   }
 }
 
-void discordConnectedHandler(context, snapshot, cancel) {
+void discordConnectedHandler(
+  BuildContext context,
+  AsyncSnapshot<bool?> snapshot,
+  void Function() cancel,
+) {
   if (snapshot.data == true) {
     showSnackBar(
       context: context,

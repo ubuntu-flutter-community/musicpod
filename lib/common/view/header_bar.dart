@@ -44,8 +44,9 @@ class HeaderBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final useSidebarButton = isMobilePlatform ? false : includeSidebarButton;
-    final useBackButton = isMobilePlatform ? true : includeBackButton;
+    final useSidebarButton =
+        AppConfig.isMobilePlatform ? false : includeSidebarButton;
+    final useBackButton = AppConfig.isMobilePlatform ? true : includeBackButton;
     final canPop = watchPropertyValue((LibraryModel m) => m.canPop);
 
     Widget? leading;
@@ -58,7 +59,7 @@ class HeaderBar extends StatelessWidget
       if (useBackButton && canPop) {
         leading = const NavBackButton();
       } else {
-        leading = isMobilePlatform
+        leading = AppConfig.isMobilePlatform
             ? const SizedBox(
                 width: 60,
               )
@@ -66,7 +67,7 @@ class HeaderBar extends StatelessWidget
       }
     }
 
-    if (isMobilePlatform) {
+    if (AppConfig.isMobilePlatform) {
       return AppBar(
         backgroundColor: backgroundColor,
         titleSpacing: titleSpacing,
@@ -115,7 +116,7 @@ class HeaderBar extends StatelessWidget
   @override
   Size get preferredSize => Size(
         0,
-        isMobilePlatform
+        AppConfig.isMobilePlatform
             ? (style == YaruTitleBarStyle.hidden ? 0 : kYaruTitleBarHeight)
             : kToolbarHeight,
       );
@@ -136,13 +137,13 @@ class _CloseWindowActionConfirmDialogState
   Widget build(BuildContext context) {
     final model = di<SettingsModel>();
     return AlertDialog(
-      title: yaruStyled
+      title: AppConfig.yaruStyled
           ? YaruDialogTitleBar(
               backgroundColor: Colors.transparent,
               title: Text(context.l10n.closeMusicPod),
             )
           : null,
-      titlePadding: yaruStyled ? EdgeInsets.zero : null,
+      titlePadding: AppConfig.yaruStyled ? EdgeInsets.zero : null,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

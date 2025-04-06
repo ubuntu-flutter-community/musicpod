@@ -34,7 +34,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
       appBar: HeaderBar(
         adaptive: true,
         title: Padding(
-          padding: EdgeInsets.only(left: isMobilePlatform ? 5 : 0),
+          padding: EdgeInsets.only(left: AppConfig.isMobilePlatform ? 5 : 0),
           child: const SearchPageInput(),
         ),
         actions: [
@@ -47,7 +47,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
               onPressed: () => di<LibraryModel>().pop(),
               icon: loading
                   ? SizedBox.square(
-                      dimension: yaruStyled ? 18 : 25,
+                      dimension: AppConfig.yaruStyled ? 18 : 25,
                       child: const Progress(
                         strokeWidth: 2,
                       ),
@@ -59,15 +59,31 @@ class SearchPage extends StatelessWidget with WatchItMixin {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          return NotificationListener<UserScrollNotification>(
+          return NotificationListener<ScrollNotification>(
             onNotification: (notification) {
-              if (notification.metrics.axisDirection == AxisDirection.down &&
-                  notification.direction == ScrollDirection.reverse &&
-                  audioType != AudioType.local) {
-                di<SearchModel>()
-                  ..incrementLimit(8)
-                  ..search();
+              if (audioType == AudioType.local) return true;
+
+              if (notification is UserScrollNotification) {
+                if (notification.metrics.axisDirection == AxisDirection.down &&
+                    notification.direction == ScrollDirection.reverse &&
+                    notification.metrics.pixels >=
+                        notification.metrics.maxScrollExtent * 0.6) {
+                  di<SearchModel>()
+                    ..incrementLimit(8)
+                    ..search();
+                }
+              } else if (notification is ScrollEndNotification) {
+                final metrics = notification.metrics;
+                if (metrics.atEdge) {
+                  final isAtBottom = metrics.pixels != 0;
+                  if (isAtBottom) {
+                    di<SearchModel>()
+                      ..incrementLimit(16)
+                      ..search();
+                  }
+                }
               }
+
               return true;
             },
             child: CustomScrollView(

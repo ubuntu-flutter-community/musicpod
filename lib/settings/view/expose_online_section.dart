@@ -48,9 +48,8 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    final discordEnabled = allowDiscordRPC
-        ? watchPropertyValue((SettingsModel m) => m.enableDiscordRPC)
-        : false;
+    final discordEnabled =
+        watchPropertyValue((SettingsModel m) => m.enableDiscordRPC);
 
     final lastFmEnabled =
         watchPropertyValue((SettingsModel m) => m.enableLastFmScrobbling);
@@ -72,7 +71,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
             title: Row(
               children: space(
                 children: [
-                  allowDiscordRPC
+                  AppConfig.allowDiscordRPC
                       ? const Icon(
                           TablerIcons.brand_discord_filled,
                         )
@@ -85,22 +84,18 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
               ),
             ),
             subtitle: Text(
-              allowDiscordRPC
+              AppConfig.allowDiscordRPC
                   ? l10n.exposeToDiscordSubTitle
                   : l10n.featureDisabledOnPlatform,
             ),
             trailing: CommonSwitch(
               value: discordEnabled,
-              onChanged: allowDiscordRPC
-                  ? (v) {
-                      di<SettingsModel>().setEnableDiscordRPC(v);
-                      final appModel = di<AppModel>();
-                      if (v) {
-                        appModel.connectToDiscord();
-                      } else {
-                        appModel.disconnectFromDiscord();
-                      }
-                    }
+              onChanged: AppConfig.allowDiscordRPC
+                  ? (v) => di<AppModel>().connectToDiscord(v).then(
+                        (_) => di<SettingsModel>().setEnableDiscordRPC(
+                          di<AppModel>().isDiscordConnected,
+                        ),
+                      )
                   : null,
             ),
           ),

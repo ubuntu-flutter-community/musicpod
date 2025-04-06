@@ -28,7 +28,9 @@ class SearchModel extends SafeChangeNotifier {
   })  : _radioService = radioService,
         _podcastService = podcastService,
         _libraryService = libraryService,
-        _localAudioService = localAudioService;
+        _localAudioService = localAudioService {
+    init();
+  }
 
   final RadioService _radioService;
   final PodcastService _podcastService;

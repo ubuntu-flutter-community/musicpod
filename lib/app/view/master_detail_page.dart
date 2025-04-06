@@ -12,10 +12,8 @@ import '../../common/view/global_keys.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../library/library_model.dart';
-import '../../playlists/view/manual_add_dialog.dart';
 import '../../settings/view/settings_action.dart';
 import 'master_items.dart';
 import 'master_tile.dart';
@@ -51,7 +49,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
     );
 
     return Scaffold(
-      resizeToAvoidBottomInset: isMobilePlatform ? false : null,
+      resizeToAvoidBottomInset: AppConfig.isMobilePlatform ? false : null,
       key: masterScaffoldKey,
       endDrawer: Platform.isMacOS ? drawer : null,
       drawer: Platform.isMacOS ? null : drawer,
@@ -113,7 +111,7 @@ class MasterPanel extends StatelessWidget {
             backgroundColor: Colors.transparent,
             style: YaruTitleBarStyle.undecorated,
             adaptive: false,
-            title: Text(kAppTitle),
+            title: Text(AppConfig.appTitle),
           ),
           Expanded(
             child: ListView.separated(
@@ -123,16 +121,7 @@ class MasterPanel extends StatelessWidget {
                 return MasterTile(
                   key: ValueKey(item.pageId),
                   onTap: () {
-                    if (item.pageId == PageIDs.newPlaylist) {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const ManualAddDialog();
-                        },
-                      );
-                    } else {
-                      libraryModel.push(pageId: item.pageId);
-                    }
+                    libraryModel.push(pageId: item.pageId);
 
                     if (!context.showMasterPanel) {
                       if (Platform.isMacOS) {

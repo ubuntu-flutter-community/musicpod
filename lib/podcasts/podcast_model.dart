@@ -1,20 +1,26 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../common/view/snackbars.dart';
+import '../l10n/l10n.dart';
+import '../library/library_service.dart';
 import 'podcast_search_state.dart';
 import 'podcast_service.dart';
-import 'view/podcast_snackbar_contents.dart';
 
 class PodcastModel extends SafeChangeNotifier {
   PodcastModel({
     required PodcastService podcastService,
-  }) : _podcastService = podcastService;
+    required LibraryService libraryService,
+  })  : _podcastService = podcastService,
+        _libraryService = libraryService {
+    _librarySubscription =
+        _libraryService.propertiesChanged.listen((_) => notifyListeners());
+  }
 
   final PodcastService _podcastService;
+  final LibraryService _libraryService;
+  StreamSubscription<bool>? _librarySubscription;
 
   final _searchStateController =
       StreamController<PodcastSearchState>.broadcast();
@@ -80,6 +86,44 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  final Map<String, bool> _showSearch = {};
+
+  void toggleShowSearch({required String feedUrl}) {
+    _showSearch[feedUrl] = !(_showSearch[feedUrl] ?? false);
+    if (_showSearch[feedUrl] != true) {
+      _searchQuery[feedUrl] = null;
+    }
+    notifyListeners();
+  }
+
+  bool getShowSearch(String? feedUrl) =>
+      feedUrl == null ? false : _showSearch[feedUrl] ?? false;
+
+  final Map<String, String?> _searchQuery = {};
+  void setSearchQuery({required String feedUrl, required String value}) {
+    if (value == _searchQuery[feedUrl]) return;
+    _searchQuery[feedUrl] = value;
+    notifyListeners();
+  }
+
+  PodcastEpisodeFilter _filter = PodcastEpisodeFilter.title;
+  PodcastEpisodeFilter get filter => _filter;
+  void setFilter() {
+    _filter = switch (_filter) {
+      PodcastEpisodeFilter.title => PodcastEpisodeFilter.description,
+      PodcastEpisodeFilter.description => PodcastEpisodeFilter.title,
+    };
+    notifyListeners();
+  }
+
+  set filter(PodcastEpisodeFilter value) {
+    if (_filter == value) return;
+    _filter = value;
+    notifyListeners();
+  }
+
+  String? getSearchQuery(String? feedUrl) => _searchQuery[feedUrl];
+
   Future<void> loadPodcast({
     required String feedUrl,
     String? itemImageUrl,
@@ -115,38 +159,22 @@ class PodcastModel extends SafeChangeNotifier {
         );
   }
 
+  Future<void> removeAllPodcasts() async => _libraryService.removeAllPodcasts();
+
   @override
   Future<void> dispose() async {
     super.dispose();
     await _searchStateController.close();
+    await _librarySubscription?.cancel();
   }
 }
 
-void podcastStateStreamHandler(
-  BuildContext context,
-  AsyncSnapshot<PodcastSearchState?> newValue,
-  void Function() cancel,
-) {
-  if (newValue.hasData) {
-    if (newValue.data == PodcastSearchState.done) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-    } else {
-      showSnackBar(
-        context: context,
-        content: switch (newValue.data) {
-          PodcastSearchState.loading =>
-            const PodcastSearchLoadingSnackBarContent(),
-          PodcastSearchState.empty =>
-            const PodcastSearchEmptyFeedSnackBarContent(),
-          PodcastSearchState.timeout =>
-            const PodcastSearchTimeoutSnackBarContent(),
-          _ => const SizedBox.shrink()
-        },
-        duration: switch (newValue.data) {
-          PodcastSearchState.loading => const Duration(seconds: 1000),
-          _ => const Duration(seconds: 3),
-        },
-      );
-    }
-  }
+enum PodcastEpisodeFilter {
+  title,
+  description;
+
+  String localize(AppLocalizations l10n) => switch (this) {
+        title => l10n.title,
+        description => l10n.description,
+      };
 }

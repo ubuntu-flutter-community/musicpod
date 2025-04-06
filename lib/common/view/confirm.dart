@@ -17,11 +17,13 @@ class ConfirmationDialog extends StatelessWidget {
     this.showCloseIcon = true,
     this.scrollable = false,
     this.confirmLabel,
-    this.enabled = true,
     this.cancelLabel,
+    this.confirmEnabled = true,
+    this.contentPadding,
   });
 
   final dynamic Function()? onConfirm;
+  final bool confirmEnabled;
   final dynamic Function()? onCancel;
   final List<Widget>? additionalActions;
   final Widget? title;
@@ -29,9 +31,8 @@ class ConfirmationDialog extends StatelessWidget {
   final bool showCancel;
   final bool showCloseIcon;
   final bool scrollable;
-  final String? confirmLabel;
-  final String? cancelLabel;
-  final bool enabled;
+  final String? confirmLabel, cancelLabel;
+  final EdgeInsetsGeometry? contentPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +47,7 @@ class ConfirmationDialog extends StatelessWidget {
       scrollable: scrollable,
       titlePadding: EdgeInsets.zero,
       content: content,
+      contentPadding: contentPadding,
       actionsAlignment: MainAxisAlignment.start,
       actionsOverflowAlignment: OverflowBarAlignment.center,
       actionsPadding: const EdgeInsets.all(kMediumSpace),
@@ -58,45 +60,23 @@ class ConfirmationDialog extends StatelessWidget {
               ...?additionalActions,
               if (showCancel)
                 OutlinedButton(
-                  onPressed: enabled
-                      ? onCancel is Future
-                          ? () async {
-                              await onCancel?.call();
-
-                              if (context.mounted &&
-                                  Navigator.of(context).canPop()) {
-                                Navigator.of(context).pop();
-                              }
-                            }
-                          : () {
-                              onCancel?.call();
-                              if (context.mounted &&
-                                  Navigator.of(context).canPop()) {
-                                Navigator.of(context).pop();
-                              }
-                            }
-                      : null,
+                  onPressed: () {
+                    onCancel?.call();
+                    if (context.mounted && Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    }
+                  },
                   child: Text(cancelLabel ?? l10n.cancel),
                 ),
               ElevatedButton(
-                onPressed: enabled
-                    ? onConfirm is Future
-                        ? () async {
-                            await onConfirm?.call();
+                onPressed: confirmEnabled
+                    ? () {
+                        onConfirm?.call();
 
-                            if (context.mounted &&
-                                Navigator.of(context).canPop()) {
-                              Navigator.of(context).pop();
-                            }
-                          }
-                        : () {
-                            onConfirm?.call();
-
-                            if (context.mounted &&
-                                Navigator.of(context).canPop()) {
-                              Navigator.of(context).pop();
-                            }
-                          }
+                        if (context.mounted && Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop();
+                        }
+                      }
                     : null,
                 child: Text(
                   confirmLabel ?? l10n.ok,

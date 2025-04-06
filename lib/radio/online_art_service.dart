@@ -5,18 +5,18 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../common/logging.dart';
-import '../constants.dart';
+import '../app_config.dart';
 import '../extensions/string_x.dart';
 
 const _kMusicBrainzAddress = 'https://musicbrainz.org/ws/2/recording/';
 const _kCoverArtArchiveAddress = 'https://coverartarchive.org/release/';
 const _kMusicBrainzHeaders = {
   'Accept': 'application/json',
-  'User-Agent': '$kAppTitle ($kRepoUrl)',
+  'User-Agent': '${AppConfig.appTitle} (${AppConfig.repoUrl})',
 };
 
 const _kInternetArchiveHeaders = {
-  'User-Agent': '$kAppTitle ($kRepoUrl)',
+  'User-Agent': '${AppConfig.appTitle} (${AppConfig.repoUrl})',
 };
 
 class OnlineArtService {

@@ -3,6 +3,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/common_widgets.dart';
+import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -154,7 +155,7 @@ class _DownloadsTileState extends State<_DownloadsTile> {
         onPressed: () {
           showDialog(
             context: context,
-            builder: (context) => AlertDialog(
+            builder: (context) => ConfirmationDialog(
               content: SizedBox(
                 width: 300,
                 child: Text(
@@ -162,22 +163,10 @@ class _DownloadsTileState extends State<_DownloadsTile> {
                   style: context.textTheme.bodyLarge,
                 ),
               ),
-              actions: [
-                OutlinedButton(
-                  onPressed: Navigator.of(context).pop,
-                  child: Text(l10n.cancel),
-                ),
-                ImportantButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    di<SettingsModel>().setDownloadsCustomDir(
-                      onSuccess: () => di<DownloadModel>().deleteAllDownloads(),
-                      onFail: (e) => setState(() => _error = e.toString()),
-                    );
-                  },
-                  child: Text(l10n.ok),
-                ),
-              ],
+              onConfirm: () => di<SettingsModel>().setDownloadsCustomDir(
+                onSuccess: () => di<DownloadModel>().deleteAllDownloads(),
+                onFail: (e) => setState(() => _error = e.toString()),
+              ),
             ),
           );
         },

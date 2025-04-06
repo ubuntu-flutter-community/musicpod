@@ -8,11 +8,12 @@ EdgeInsets getAdaptiveHorizontalPadding({
   required BoxConstraints constraints,
   double min = 15,
 }) {
+  final m = max((constraints.maxWidth - 1000) / 2, 0).toDouble();
   return EdgeInsets.symmetric(
-    horizontal: isMobilePlatform
+    horizontal: AppConfig.isMobilePlatform
         ? min
-        : max((constraints.maxWidth - 850) / 2, 0) > min
-            ? max((constraints.maxWidth - 850) / 2, 0)
+        : m > min
+            ? m
             : min,
   );
 }

@@ -80,11 +80,12 @@ class CountryAutoComplete extends StatelessWidget {
                     extentOffset: textEditingController.value.text.length,
                   );
                 },
-                style:
-                    style ?? (yaruStyled ? theme.textTheme.bodyMedium : null),
-                textAlignVertical: yaruStyled ? TextAlignVertical.center : null,
-                cursorWidth: yaruStyled ? 1 : 2.0,
-                decoration: yaruStyled
+                style: style ??
+                    (AppConfig.yaruStyled ? theme.textTheme.bodyMedium : null),
+                textAlignVertical:
+                    AppConfig.yaruStyled ? TextAlignVertical.center : null,
+                cursorWidth: AppConfig.yaruStyled ? 1 : 2.0,
+                decoration: AppConfig.yaruStyled
                     ? createYaruDecoration(
                         theme: theme,
                         style: style,

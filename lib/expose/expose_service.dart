@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 
+import '../settings/settings_service.dart';
 import 'lastfm_service.dart';
 import 'listenbrainz_service.dart';
 
@@ -11,18 +12,23 @@ class ExposeService {
     required FlutterDiscordRPC? discordRPC,
     required LastfmService lastFmService,
     required ListenBrainzService listenBrainzService,
+    required SettingsService settingsService,
   })  : _discordRPC = discordRPC,
         _lastFmService = lastFmService,
-        _listenBrainzService = listenBrainzService;
+        _listenBrainzService = listenBrainzService,
+        _settingsService = settingsService;
 
   final FlutterDiscordRPC? _discordRPC;
   final LastfmService _lastFmService;
   final ListenBrainzService _listenBrainzService;
+  //TODO: create discordservice
+  final SettingsService _settingsService;
 
   final _errorController = StreamController<String?>.broadcast();
   Stream<String?> get discordErrorStream => _errorController.stream;
   Stream<bool> get isDiscordConnectedStream =>
       _discordRPC?.isConnectedStream ?? Stream.value(false);
+  bool get isDiscordConnected => _discordRPC?.isConnected ?? false;
 
   Future<void> exposeTitleOnline({
     required String title,
@@ -57,7 +63,8 @@ class ExposeService {
     String? imageUrl,
   }) async {
     try {
-      if (_discordRPC?.isConnected == false) {
+      if (_settingsService.enableDiscordRPC &&
+          _discordRPC?.isConnected == false) {
         await _discordRPC?.connect();
       }
       if (_discordRPC?.isConnected == true) {
@@ -78,13 +85,13 @@ class ExposeService {
     }
   }
 
-  Future<void> connect() async {
-    await connectToDiscord();
-  }
-
-  Future<void> connectToDiscord() async {
+  Future<void> connectToDiscord(bool value) async {
     try {
-      await _discordRPC?.connect();
+      if (value) {
+        await _discordRPC?.connect();
+      } else {
+        await _discordRPC?.disconnect();
+      }
     } on Exception catch (e) {
       _errorController.add(e.toString());
     }
@@ -100,16 +107,8 @@ class ExposeService {
         apiSecret: apiSecret,
       );
 
-  Future<void> disconnectFromDiscord() async {
-    try {
-      await _discordRPC?.disconnect();
-    } on Exception catch (e) {
-      _errorController.add(e.toString());
-    }
-  }
-
   Future<void> dispose() async {
-    await disconnectFromDiscord();
+    await connectToDiscord(false);
     await _errorController.close();
   }
 }

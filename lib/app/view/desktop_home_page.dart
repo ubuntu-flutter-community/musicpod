@@ -13,9 +13,10 @@ import '../../player/view/player_view.dart';
 import '../../podcasts/download_model.dart';
 import '../../podcasts/podcast_model.dart';
 import '../../search/search_model.dart';
-import '../../settings/settings_model.dart';
+import '../../podcasts/view/podcast_state_stream_handler.dart';
 import '../app_model.dart';
 import '../connectivity_model.dart';
+import '../../custom_content/view/backup_dialog.dart';
 import 'master_detail_page.dart';
 
 class DesktopHomePage extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -38,7 +39,19 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
       if (!appModel.recentPatchNotesDisposed() && mounted) {
         showDialog(
           context: context,
-          builder: (_) => const PatchNotesDialog(),
+          builder: (_) => PatchNotesDialog(
+            onClose: () {
+              if (di<AppModel>().isBackupScreenNeeded &&
+                  !di<AppModel>().wasBackupSaved &&
+                  mounted) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => const BackupDialog(),
+                );
+              }
+            },
+          ),
         );
       }
     });
@@ -79,15 +92,11 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
     final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
     final isFullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo == true);
-    final enableDiscordRPC =
-        watchPropertyValue((SettingsModel m) => m.enableDiscordRPC);
 
-    if (allowDiscordRPC && enableDiscordRPC) {
-      registerStreamHandler(
-        select: (AppModel m) => m.isDiscordConnectedStream,
-        handler: discordConnectedHandler,
-      );
-    }
+    registerStreamHandler(
+      select: (AppModel m) => m.isDiscordConnectedStream,
+      handler: discordConnectedHandler,
+    );
 
     registerStreamHandler(
       select: (DownloadModel m) => m.messageStream,
@@ -121,7 +130,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
                   child: Column(
                     children: [
                       const Expanded(child: MasterDetailPage()),
-                      if (!playerToTheRight || isMobilePlatform)
+                      if (!playerToTheRight || AppConfig.isMobilePlatform)
                         const PlayerView(position: PlayerPosition.bottom),
                     ],
                   ),

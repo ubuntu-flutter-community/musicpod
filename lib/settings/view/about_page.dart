@@ -11,7 +11,6 @@ import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 
@@ -50,7 +49,7 @@ class _AboutPageState extends State<AboutPage> {
           TapAbleText(
             text:
                 'MusicPod is made by Frederik Feichtmeier. If you like MusicPod, please sponsor me!',
-            onTap: () => launchUrl(Uri.parse(kSponsorLink)),
+            onTap: () => launchUrl(Uri.parse(AppConfig.sponsorLink)),
             style: linkStyle,
             maxLines: maxLines,
           ),
@@ -168,7 +167,7 @@ class _AboutPageState extends State<AboutPage> {
           ),
           TapAbleText(
             style: linkStyle,
-            onTap: () => launchUrl(Uri.parse(kRepoUrl)),
+            onTap: () => launchUrl(Uri.parse(AppConfig.repoUrl)),
             text:
                 'Copyright by Frederik Feichtmeier 2023 and onwards - all rights reserved.',
             maxLines: maxLines,
@@ -177,9 +176,9 @@ class _AboutPageState extends State<AboutPage> {
       ),
     );
 
-    final title = Text('${context.l10n.about} $kAppTitle');
+    final title = Text('${context.l10n.about} ${AppConfig.appTitle}');
 
-    if (isMobilePlatform) {
+    if (AppConfig.isMobilePlatform) {
       return Scaffold(
         appBar: HeaderBar(
           adaptive: false,
@@ -191,7 +190,7 @@ class _AboutPageState extends State<AboutPage> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: context.theme.dialogTheme.backgroundColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(

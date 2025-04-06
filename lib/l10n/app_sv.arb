@@ -1233,5 +1233,13 @@
   "isMaybeLowBandwidthDialogBody": "Du är inte ansluten till WIFI eller Ethernet. Vill du aktivera datasäkert läge?",
   "@isMaybeLowBandwidthDialogBody": {},
   "dataSafeModeDisabled": "Wifi/Ethernet: Datasäkert läge inaktiverat.",
-  "@dataSafeModeDisabled": {}
+  "@dataSafeModeDisabled": {},
+  "clearQueue": "Rensa kö",
+  "@clearQueue": {},
+  "connectedToDiscord": "Ansluten till Discord",
+  "@connectedToDiscord": {},
+  "disconnectedFromDiscord": "Frånkopplad från Discord",
+  "@disconnectedFromDiscord": {},
+  "description": "Beskrivning",
+  "@description": {}
 }

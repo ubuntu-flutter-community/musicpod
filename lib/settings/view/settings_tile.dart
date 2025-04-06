@@ -9,7 +9,6 @@ import '../../app/connectivity_model.dart';
 import '../../app_config.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import 'settings_dialog.dart';
@@ -53,7 +52,7 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
     return switch (watchPropertyValue((AppModel m) => m.updateAvailable)) {
       null => Center(
           child: SizedBox.square(
-            dimension: yaruStyled ? kYaruTitleBarItemHeight : 40,
+            dimension: AppConfig.yaruStyled ? kYaruTitleBarItemHeight : 40,
             child: const Progress(
               padding: EdgeInsets.all(10),
             ),
@@ -65,7 +64,7 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
           onPressed: () => launchUrl(
             Uri.parse(
               p.join(
-                kRepoUrl,
+                AppConfig.repoUrl,
                 'releases',
                 'tag',
                 di<AppModel>().onlineVersion,

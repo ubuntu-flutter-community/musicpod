@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:watcher/watcher.dart';
 
 import '../common/data/audio.dart';
 import '../common/logging.dart';
@@ -294,16 +294,24 @@ class LocalAudioService {
     );
   }
 
+  FileWatcher? _fileWatcher;
+  FileWatcher? get fileWatcher => _fileWatcher;
+
   Future<void> init({
     String? directory,
     bool forceInit = false,
   }) async {
     if (forceInit == false && _audios?.isNotEmpty == true) return;
 
+    final dir = directory ?? _settingsService?.directory;
     final result = await compute(
       _readAudiosFromDirectory,
-      directory ?? _settingsService?.directory,
+      dir,
     );
+    if (dir != null && Directory(dir).existsSync()) {
+      _fileWatcher = FileWatcher(dir);
+    }
+
     _audios = result.audios;
     _failedImports = result.failedImports;
     _sortAllTitles();
@@ -328,14 +336,13 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
         .toList();
 
     for (final e in entities) {
-      try {
-        if (e is File && e.isValidMedia) {
-          final metadata = readMetadata(e, getImage: false);
-          newAudios.add(Audio.fromMetadata(path: e.path, data: metadata));
+      if (e is File && e.isPlayable) {
+        try {
+          newAudios.add(Audio.local(e, onError: (p) => failedImports.add(p)));
+        } on Exception catch (ex) {
+          failedImports.add(e.path);
+          printMessageInDebugMode(ex);
         }
-      } on Exception catch (error) {
-        printMessageInDebugMode(error);
-        failedImports.add(e.path);
       }
     }
   }

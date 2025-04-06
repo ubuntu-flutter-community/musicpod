@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:html/parser.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app_config.dart';
@@ -28,11 +29,11 @@ import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
 import '../podcast_model.dart';
 import 'podcast_mark_done_button.dart';
-import 'podcast_refresh_button.dart';
 import 'podcast_reorder_button.dart';
 import 'podcast_replay_button.dart';
 import 'podcast_sub_button.dart';
 import 'sliver_podcast_page_list.dart';
+import 'sliver_podcast_page_search_field.dart';
 
 class PodcastPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const PodcastPage({
@@ -87,6 +88,11 @@ class _PodcastPageState extends State<PodcastPage> {
         watchPropertyValue((LibraryModel m) => m.podcasts[widget.feedUrl]);
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
+    final showSearch =
+        watchPropertyValue((PodcastModel m) => m.getShowSearch(widget.feedUrl));
+    final searchQuery = watchPropertyValue(
+      (PodcastModel m) => m.getSearchQuery(widget.feedUrl),
+    );
 
     final libraryModel = di<LibraryModel>();
     if (watchPropertyValue(
@@ -97,8 +103,21 @@ class _PodcastPageState extends State<PodcastPage> {
         audios: episodes ?? [],
       );
     }
+    final filter = watchPropertyValue((PodcastModel m) => m.filter);
     final episodesWithDownloads = (episodes ?? [])
         .map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
+        .where((e) => e.title != null && e.description != null)
+        .where(
+          (e) => (searchQuery == null || searchQuery.trim().isEmpty)
+              ? true
+              : switch (filter) {
+                  PodcastEpisodeFilter.title =>
+                    e.title!.toLowerCase().contains(searchQuery.toLowerCase()),
+                  PodcastEpisodeFilter.description => e.description!
+                      .toLowerCase()
+                      .contains(searchQuery.toLowerCase())
+                },
+        )
         .toList();
 
     return Scaffold(
@@ -136,20 +155,19 @@ class _PodcastPageState extends State<PodcastPage> {
                       image: widget.imageUrl == null
                           ? null
                           : _PodcastPageImage(imageUrl: widget.imageUrl),
-                      label: episodesWithDownloads
+                      label: (episodes ?? [])
                               .firstWhereOrNull((e) => e.genre != null)
                               ?.genre ??
                           l10n.podcast,
-                      subTitle: episodesWithDownloads.firstOrNull?.artist,
-                      description:
-                          episodesWithDownloads.firstOrNull?.albumArtist == null
-                              ? null
-                              : AudioPageHeaderHtmlDescription(
-                                  description: episodesWithDownloads
-                                      .firstOrNull!.albumArtist!,
-                                  title: widget.title,
-                                ),
-                      title: widget.title,
+                      subTitle: episodes?.firstOrNull?.artist,
+                      description: episodes?.firstOrNull?.albumArtist == null
+                          ? null
+                          : AudioPageHeaderHtmlDescription(
+                              description: episodes!.firstOrNull!.albumArtist!,
+                              title: widget.title,
+                            ),
+                      title: HtmlParser(widget.title).parseFragment().text ??
+                          widget.title,
                       onLabelTab: (text) => _onGenreTap(
                         l10n: l10n,
                         text: text,
@@ -166,7 +184,7 @@ class _PodcastPageState extends State<PodcastPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: space(
                       children: [
-                        if (!isMobilePlatform)
+                        if (!AppConfig.isMobilePlatform)
                           PodcastReplayButton(feedUrl: widget.feedUrl),
                         PodcastMarkDoneButton(feedUrl: widget.feedUrl),
                         PodcastSubButton(
@@ -177,9 +195,9 @@ class _PodcastPageState extends State<PodcastPage> {
                           audios: episodesWithDownloads,
                           pageId: widget.feedUrl,
                         ),
-                        PodcastRefreshButton(pageId: widget.feedUrl),
+                        PodcastPageSearchButton(feedUrl: widget.feedUrl),
                         PodcastReorderButton(feedUrl: widget.feedUrl),
-                        if (!isMobilePlatform)
+                        if (!AppConfig.isMobilePlatform)
                           AudioTileOptionButton(
                             audios: episodesWithDownloads,
                             playlistId: widget.feedUrl,
@@ -195,9 +213,13 @@ class _PodcastPageState extends State<PodcastPage> {
                     ),
                   ),
                 ),
+                if (showSearch)
+                  SliverPodcastPageSearchField(
+                    feedUrl: widget.feedUrl,
+                  ),
                 SliverPadding(
                   padding: getAdaptiveHorizontalPadding(
-                    min: isMobilePlatform ? 0 : 15,
+                    min: AppConfig.isMobilePlatform ? 0 : 15,
                     constraints: constraints,
                   ).copyWith(bottom: bottomPlayerPageGap ?? kLargestSpace),
                   sliver: SliverPodcastPageList(
@@ -251,6 +273,23 @@ class _PodcastPageState extends State<PodcastPage> {
       }
     }
   }
+}
+
+class PodcastPageSearchButton extends StatelessWidget with WatchItMixin {
+  const PodcastPageSearchButton({
+    super.key,
+    required this.feedUrl,
+  });
+
+  final String feedUrl;
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+        isSelected:
+            watchPropertyValue((PodcastModel m) => m.getShowSearch(feedUrl)),
+        onPressed: () => di<PodcastModel>().toggleShowSearch(feedUrl: feedUrl),
+        icon: Icon(Iconz.search),
+      );
 }
 
 class _PodcastPageImage extends StatelessWidget {

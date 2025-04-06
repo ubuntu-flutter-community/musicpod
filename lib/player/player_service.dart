@@ -15,7 +15,7 @@ import '../common/data/mpv_meta_data.dart';
 import '../common/data/player_state.dart';
 import '../common/file_names.dart';
 import '../common/logging.dart';
-import '../constants.dart';
+import '../app_config.dart';
 import '../expose/expose_service.dart';
 import '../extensions/string_x.dart';
 import '../local_audio/local_cover_service.dart';
@@ -143,12 +143,18 @@ class PlayerService {
     await _player.dispose();
   }
 
-  List<Audio>? _oldQueue;
+  Queue? _oldQueue;
   Queue _queue = (name: '', audios: []);
   Queue get queue => _queue;
   void setQueue(Queue value) {
-    if (value == _queue || value.audios.isEmpty) return;
+    if (value.audios.isEmpty) return;
     _queue = value;
+    _propertiesChangedController.add(true);
+  }
+
+  void clearQueue() {
+    _queue.audios.removeWhere((e) => e != _audio);
+    _nextAudio = _audio;
     _propertiesChangedController.add(true);
   }
 
@@ -237,13 +243,16 @@ class PlayerService {
     if (value == _shuffle) return;
     _shuffle = value;
     if (value) {
-      _oldQueue = _queue.audios;
+      _oldQueue = (audios: List.from(_queue.audios), name: _queue.name);
       _queue.audios.shuffle();
-    } else if (_oldQueue != null) {
+    } else if (_oldQueue != null &&
+        _oldQueue?.name != null &&
+        _oldQueue!.name == _queue.name) {
       setQueue(
-        (audios: _oldQueue!, name: _queue.name),
+        (audios: List.from(_oldQueue!.audios), name: _oldQueue!.name),
       );
     }
+    _estimateNext();
     _propertiesChangedController.add(true);
   }
 
@@ -419,6 +428,7 @@ class PlayerService {
         audios.elementAtOrNull(index) != null) {
       _setAudio(audios.elementAtOrNull(index)!);
     } else {
+      setShuffle(false);
       setQueue((name: listName, audios: audios.toList()));
       _setAudio(
         (index != null && audios.elementAtOrNull(index) != null)
@@ -426,7 +436,6 @@ class PlayerService {
             : audios.first,
       );
     }
-
     _position = getLastPosition(_audio?.url);
     _estimateNext();
     await _play(newPosition: _position);
@@ -603,8 +612,9 @@ class PlayerService {
     _audioHandler = await AudioService.init(
       config: AudioServiceConfig(
         androidNotificationOngoing: true,
-        androidNotificationChannelName: kAppName,
-        androidNotificationChannelId: Platform.isAndroid ? kAndroidAppId : null,
+        androidNotificationChannelName: AppConfig.appName,
+        androidNotificationChannelId:
+            Platform.isAndroid ? AppConfig.androidChannelId : null,
         androidNotificationChannelDescription: 'MusicPod Media Controls',
       ),
       builder: () {
@@ -730,7 +740,7 @@ class PlayerService {
     _audioHandler!.mediaItem.add(
       MediaItem(
         id: audio.toString(),
-        title: audio.title ?? kAppTitle,
+        title: audio.title ?? AppConfig.appTitle,
         artist: audio.artist ?? '',
         artUri: artUri,
         duration: audio.durationMs == null
@@ -744,12 +754,12 @@ class PlayerService {
     if (_smtc == null) return;
     _smtc!.updateMetadata(
       MusicMetadata(
-        title: audio.title ?? kAppTitle,
+        title: audio.title ?? AppConfig.appTitle,
         album: audio.album,
         albumArtist: audio.artist,
         artist: audio.artist ?? '',
         thumbnail: audio.audioType == AudioType.local
-            ? kFallbackThumbnailUrl
+            ? AppConfig.fallbackThumbnailUrl
             : artUri == null
                 ? null
                 : '$artUri',

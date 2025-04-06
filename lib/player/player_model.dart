@@ -14,7 +14,10 @@ class PlayerModel extends SafeChangeNotifier {
     required PlayerService service,
     required OnlineArtService onlineArtService,
   })  : _playerService = service,
-        _onlineArtService = onlineArtService;
+        _onlineArtService = onlineArtService {
+    _propertiesChangedSub ??=
+        _playerService.propertiesChanged.listen((_) => notifyListeners());
+  }
 
   static const rateValues = [.75, 1.0, 1.25, 1.5, 1.75, 2.0];
 
@@ -30,6 +33,7 @@ class PlayerModel extends SafeChangeNotifier {
   String? get queueName => _playerService.queue.name;
 
   List<Audio> get queue => _playerService.queue.audios;
+  void clearQueue() => _playerService.clearQueue();
   MpvMetaData? get mpvMetaData => _playerService.mpvMetaData;
 
   Audio? get audio => _playerService.audio;
@@ -77,9 +81,6 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> seek() async => _playerService.seek();
 
   Future<void> resume() async => _playerService.resume();
-
-  void init() => _propertiesChangedSub ??=
-      _playerService.propertiesChanged.listen((_) => notifyListeners());
 
   Future<void> playNext() async => _playerService.playNext();
 
@@ -147,12 +148,7 @@ class PlayerModel extends SafeChangeNotifier {
         .map((e) => '${e.value.icyTitle}\n')
         .toList()
         .reversed
-        .toString()
-        .replaceAll(', ', '')
-        .replaceAll('[', '')
-        .replaceAll(']', '')
-        .replaceAll('(', '')
-        .replaceAll(')', '');
+        .join();
   }
 
   void setTimer(Duration duration) => _playerService.setPauseTimer(duration);

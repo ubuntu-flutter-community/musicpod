@@ -5,7 +5,9 @@ import '../settings/settings_service.dart';
 
 class ListenBrainzService {
   ListenBrainzService({required SettingsService settingsService})
-      : _settingsService = settingsService;
+      : _settingsService = settingsService {
+    init();
+  }
 
   final SettingsService _settingsService;
   ListenBrainz? _listenBrainz;

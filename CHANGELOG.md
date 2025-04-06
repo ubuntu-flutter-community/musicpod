@@ -1,5 +1,41 @@
 # Changelog
 
+## [2.10.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.9.0...v2.10.0) (2025-04-06)
+
+
+### Features
+
+* add backup dialog also in settings and playlist import also in playlistspage ([#1203](https://github.com/ubuntu-flutter-community/musicpod/issues/1203)) ([63374bc](https://github.com/ubuntu-flutter-community/musicpod/commit/63374bcbdb88f9702b729c394111b8e3ecdbc8b3))
+* add clear queue button ([#1169](https://github.com/ubuntu-flutter-community/musicpod/issues/1169)) ([a5c0840](https://github.com/ubuntu-flutter-community/musicpod/commit/a5c0840a9bc8344ca30166a55a8e54963eeba04e)), closes [#1157](https://github.com/ubuntu-flutter-community/musicpod/issues/1157)
+* bulk Importing playlists, export playlist and new dedicated page for custom content ([#1193](https://github.com/ubuntu-flutter-community/musicpod/issues/1193)) ([48e7afd](https://github.com/ubuntu-flutter-community/musicpod/commit/48e7afd43192e19b8fbe6e43c559a6053b9431c7)), closes [#1174](https://github.com/ubuntu-flutter-community/musicpod/issues/1174)
+* Import/Export podcasts through opml file ([#1194](https://github.com/ubuntu-flutter-community/musicpod/issues/1194)) ([56a5ceb](https://github.com/ubuntu-flutter-community/musicpod/commit/56a5ceb7f4a5bd2eafd45257e95487631a91e242)), closes [#1007](https://github.com/ubuntu-flutter-community/musicpod/issues/1007)
+* persist window size ([#1189](https://github.com/ubuntu-flutter-community/musicpod/issues/1189)) ([d63720b](https://github.com/ubuntu-flutter-community/musicpod/commit/d63720b8ac369943aed5b23e2df3521bacbf4d19)), closes [#626](https://github.com/ubuntu-flutter-community/musicpod/issues/626)
+* searching within a podcast ([#1182](https://github.com/ubuntu-flutter-community/musicpod/issues/1182)) ([7ce25ca](https://github.com/ubuntu-flutter-community/musicpod/commit/7ce25caa6403e2a1937cd7c29d3be450ce84d2e5)), closes [#1166](https://github.com/ubuntu-flutter-community/musicpod/issues/1166)
+* Translated using Weblate (French) ([#1158](https://github.com/ubuntu-flutter-community/musicpod/issues/1158)) ([23adbfa](https://github.com/ubuntu-flutter-community/musicpod/commit/23adbfa990b616ccac473fe148d25e6ffe23affc))
+* Translated using Weblate (Portuguese (Brazil)) ([#1155](https://github.com/ubuntu-flutter-community/musicpod/issues/1155)) ([b4abf5c](https://github.com/ubuntu-flutter-community/musicpod/commit/b4abf5c26e529031d8e46a064ad3da7cf4e322a7))
+* Translated using Weblate (Portuguese) ([#1151](https://github.com/ubuntu-flutter-community/musicpod/issues/1151)) ([35e54b0](https://github.com/ubuntu-flutter-community/musicpod/commit/35e54b019cd9b0e1b648d7d0503f6c8eb719320f))
+* Translated using Weblate (Portuguese) ([#1160](https://github.com/ubuntu-flutter-community/musicpod/issues/1160)) ([ad8ee4d](https://github.com/ubuntu-flutter-community/musicpod/commit/ad8ee4ddad5aabf003deea9fa833368f18d6780e))
+* Translations update from Hosted Weblate ([#1171](https://github.com/ubuntu-flutter-community/musicpod/issues/1171)) ([cb6a227](https://github.com/ubuntu-flutter-community/musicpod/commit/cb6a2279629bb4a4f8c418ddf505f1d8be55d97b))
+* Translations update from Hosted Weblate ([#1180](https://github.com/ubuntu-flutter-community/musicpod/issues/1180)) ([458f216](https://github.com/ubuntu-flutter-community/musicpod/commit/458f2163b8d3f7a07c6b7e9ed1a628fe703abed7))
+* Translations update from Hosted Weblate ([#1183](https://github.com/ubuntu-flutter-community/musicpod/issues/1183)) ([8031b8c](https://github.com/ubuntu-flutter-community/musicpod/commit/8031b8c5f1624e23482bfc6f04640d15877f5b02))
+* Translations update from Hosted Weblate ([#1192](https://github.com/ubuntu-flutter-community/musicpod/issues/1192)) ([8562eef](https://github.com/ubuntu-flutter-community/musicpod/commit/8562eef31ce6c6df3dbc86a66d2d57e5fe5bdb09))
+* Translations update from Hosted Weblate ([#1206](https://github.com/ubuntu-flutter-community/musicpod/issues/1206)) ([16eb696](https://github.com/ubuntu-flutter-community/musicpod/commit/16eb6969b9fa3f020210d4b03e9b45facd7f9abb))
+* watch local audio directory ([#1204](https://github.com/ubuntu-flutter-community/musicpod/issues/1204)) ([cd38dfb](https://github.com/ubuntu-flutter-community/musicpod/commit/cd38dfbec741aceb6e36260b128862a60367bad6))
+
+
+### Bug Fixes
+
+* AAC files using M4A wrapper not loading properly ([#1196](https://github.com/ubuntu-flutter-community/musicpod/issues/1196)) ([fc1abb9](https://github.com/ubuntu-flutter-community/musicpod/commit/fc1abb9c67212f011fb449f77b8beda45ca1fcd2)), closes [#1087](https://github.com/ubuntu-flutter-community/musicpod/issues/1087)
+* Avoid triggering a request to load more every time the SearchPage scrolls down [#1163](https://github.com/ubuntu-flutter-community/musicpod/issues/1163) ([#1178](https://github.com/ubuntu-flutter-community/musicpod/issues/1178)) ([ac49e11](https://github.com/ubuntu-flutter-community/musicpod/commit/ac49e11ff13e53ef12d7fe7245d1f1e0129e1260))
+* discord connect toggle for macos/windows ([#1187](https://github.com/ubuntu-flutter-community/musicpod/issues/1187)) ([bfd9253](https://github.com/ubuntu-flutter-community/musicpod/commit/bfd925317db8404064d1de8f8d6b9369e5c5daf6))
+* discord disabling ([#1191](https://github.com/ubuntu-flutter-community/musicpod/issues/1191)) ([506fb97](https://github.com/ubuntu-flutter-community/musicpod/commit/506fb978ee9f77e8639f22444a089478f02dd55c)), closes [#1016](https://github.com/ubuntu-flutter-community/musicpod/issues/1016)
+* fail to import music with no tags ([#1179](https://github.com/ubuntu-flutter-community/musicpod/issues/1179)) ([eb3982a](https://github.com/ubuntu-flutter-community/musicpod/commit/eb3982a97018cb6bce2fcd4afd606f2c0ecb98ef)), closes [#1167](https://github.com/ubuntu-flutter-community/musicpod/issues/1167)
+* improve error handling for local audio imports, block ogg for testing ([#1199](https://github.com/ubuntu-flutter-community/musicpod/issues/1199)) ([a6a422b](https://github.com/ubuntu-flutter-community/musicpod/commit/a6a422b32800632bed91f9b8c9271ce4649f50f1))
+* load app when no radio browser is online ([#1181](https://github.com/ubuntu-flutter-community/musicpod/issues/1181)) ([f79ed6e](https://github.com/ubuntu-flutter-community/musicpod/commit/f79ed6ee4e5eb7fa2377c28a0c348b1f076867b1))
+* make dep registration sync ([#1176](https://github.com/ubuntu-flutter-community/musicpod/issues/1176)) ([d446f5d](https://github.com/ubuntu-flutter-community/musicpod/commit/d446f5d6c67a1eff582dd3020fa7890adca7cae8))
+* shuffle doesn't work with local tracks ([#1188](https://github.com/ubuntu-flutter-community/musicpod/issues/1188)) ([722b68f](https://github.com/ubuntu-flutter-community/musicpod/commit/722b68f83511908b7a5c4b8bcab216b9ea79bc3a)), closes [#90](https://github.com/ubuntu-flutter-community/musicpod/issues/90)
+* update Discord connection messages ([#1172](https://github.com/ubuntu-flutter-community/musicpod/issues/1172)) ([d1e5657](https://github.com/ubuntu-flutter-community/musicpod/commit/d1e5657fcf2ee4d03e4ca173d367a79fb9601af3))
+
 ## [2.9.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.8.0...v2.9.0) (2025-02-09)
 
 

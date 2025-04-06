@@ -9,7 +9,9 @@ import '../settings/settings_service.dart';
 
 class LastfmService {
   LastfmService({required SettingsService settingsService})
-      : _settingsService = settingsService;
+      : _settingsService = settingsService {
+    init();
+  }
 
   final SettingsService _settingsService;
 

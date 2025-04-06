@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../app_config.dart';
 import '../common/data/close_btn_action.dart';
 import '../common/file_names.dart';
 import '../extensions/shared_preferences_x.dart';
@@ -12,15 +13,18 @@ class SettingsService {
   SettingsService({
     required String? downloadsDefaultDir,
     required SharedPreferences sharedPreferences,
+    required String forcedUpdateThreshold,
   })  : _preferences = sharedPreferences,
-        _downloadsDefaultDir = downloadsDefaultDir;
+        _downloadsDefaultDir = downloadsDefaultDir,
+        _forcedUpdateThreshold = forcedUpdateThreshold;
 
   final String? _downloadsDefaultDir;
   final SharedPreferences _preferences;
   final _propertiesChangedController = StreamController<bool>.broadcast();
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
-  void notify(bool saved) {
+  bool notify(bool saved) {
     if (saved) _propertiesChangedController.add(true);
+    return saved;
   }
 
   int get themeIndex => _preferences.getInt(SPKeys.themeIndex) ?? 0;
@@ -71,9 +75,10 @@ class SettingsService {
       _preferences.setString(SPKeys.listenBrainzApiKey, value).then(notify);
 
   bool get enableDiscordRPC =>
-      _preferences.getBool(SPKeys.enableDiscord) ?? false;
-  void setEnableDiscordRPC(bool value) =>
-      _preferences.setBool(SPKeys.enableDiscord, value).then(notify);
+      (_preferences.getBool(SPKeys.enableDiscord) ?? false) &&
+      AppConfig.allowDiscordRPC;
+  Future<bool> setEnableDiscordRPC(bool value) async =>
+      notify(await _preferences.setBool(SPKeys.enableDiscord, value));
 
   bool get useMoreAnimations =>
       _preferences.getBool(SPKeys.useMoreAnimations) ?? !Platform.isLinux;
@@ -106,7 +111,8 @@ class SettingsService {
   void setPodcastIndexApiSecret(String value) =>
       _preferences.setString(SPKeys.podcastIndexApiSecret, value).then(notify);
 
-  String? get directory => _preferences.getString(SPKeys.directory);
+  String? get directory =>
+      _preferences.getString(SPKeys.directory) ?? getMusicDefaultDir();
   Future<void> setDirectory(String directory) async =>
       _preferences.setString(SPKeys.directory, directory).then(notify);
 
@@ -114,6 +120,15 @@ class SettingsService {
       _preferences.getString(SPKeys.downloads) ?? _downloadsDefaultDir;
   Future<void> setDownloadsCustomDir(String directory) async =>
       _preferences.setString(SPKeys.downloads, directory).then(notify);
+
+  final String _forcedUpdateThreshold;
+  String get forcedUpdateThreshold => _forcedUpdateThreshold;
+
+  bool getBackupSaved(String version) =>
+      _preferences.getBool(SPKeys.backupSaved + version) ?? false;
+
+  Future<void> setBackupSaved(String version, bool value) async =>
+      _preferences.setBool(SPKeys.backupSaved + version, value).then(notify);
 
   bool get showPositionDuration =>
       _preferences.getBool(SPKeys.showPositionDuration) ?? false;

@@ -1,16 +1,19 @@
 name: musicpod
 description: Ubuntu music, radio and podcast player.
-version: 2.9.0
+version: 2.10.0
 
 publish_to: "none"
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.29.0"
+  flutter: ">=3.29.2"
 
 dependencies:
   animated_emoji: ^3.1.0
-  audio_metadata_reader: 1.1.0
+  audio_metadata_reader:
+    git:
+      url: https://github.com/ClementBeal/audio_metadata_reader
+      ref: 5eedca0a5d91f537dce7a846210730f008d8651c
   audio_service: ^0.18.12
   audio_service_mpris:
     git:
@@ -25,7 +28,7 @@ dependencies:
   desktop_notifications: ^0.6.3
   dio: ^5.7.0
   file: ^7.0.0
-  file_picker: ^9.0.0
+  file_picker: ^10.0.0
   file_selector: ^1.0.3
   file_selector_linux: ^0.9.2
   flutter:
@@ -57,7 +60,9 @@ dependencies:
     git:
       url: https://github.com/media-kit/media-kit
       path: media_kit_video
+  mime: ^2.0.0
   mockito: ^5.4.4
+  opml: ^0.4.0
   package_info_plus: ^8.0.0
   palette_generator: ^0.3.3+3
   path: ^1.9.0
@@ -80,13 +85,14 @@ dependencies:
   system_theme: ^3.0.0
   url_launcher: ^6.3.0
   watch_it: ^1.5.0
+  watcher: ^1.1.1
   win32: ^5.5.4
   window_manager: ^0.4.2
   xdg_directories: ^1.0.4
   yaru:
     git:
       url: https://github.com/ubuntu/yaru.dart
-      ref: 4a943961ad6c1d382b1bfc3bc0e67bb9f6440089
+      ref: 7fbf081ae7de2602d9f1f142a02ff625a423e4db
   yaru_window: ^0.2.1+1
   yaru_window_linux: ^0.2.0+1
 

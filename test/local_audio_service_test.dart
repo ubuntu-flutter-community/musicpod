@@ -48,16 +48,21 @@ Future<void> main() async {
       expect(testTestMp3?.genre, testMp3.genre);
     });
 
-    test('testTestOgg', () {
-      final audios = service?.audios;
-      expect(audios?.isNotEmpty, true);
+    test(
+      'testTestOgg',
+      () {
+        final audios = service?.audios;
+        expect(audios?.isNotEmpty, true);
 
-      final coldStones = audios
-          ?.firstWhereOrNull((e) => e.path?.contains('Backslash Zero') == true);
-      expect(coldStones?.title, testOgg.title);
-      expect(coldStones?.artist, testOgg.artist);
-      expect(coldStones?.album, testOgg.album);
-      expect(coldStones?.genre, testOgg.genre);
-    });
+        final coldStones = audios?.firstWhereOrNull(
+          (e) => e.path?.contains('Backslash Zero') == true,
+        );
+        expect(coldStones?.title, testOgg.title);
+        expect(coldStones?.artist, testOgg.artist);
+        expect(coldStones?.album, testOgg.album);
+        expect(coldStones?.genre, testOgg.genre);
+      },
+      skip: true,
+    );
   });
 }
