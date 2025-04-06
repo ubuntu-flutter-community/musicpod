@@ -58,7 +58,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
   }
 
   void _onTypeHandler(KeyEvent event) {
-    if (!isGtkApp || event.logicalKey == LogicalKeyboardKey.control) {
+    if (!AppConfig.isGtkApp || event.logicalKey == LogicalKeyboardKey.control) {
       return;
     }
 
@@ -119,7 +119,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
       child: CallbackShortcuts(
         bindings: {
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyF):
-              () => _performSearch
+              () => _performSearch()
         },
         child: Stack(
           alignment: Alignment.center,
