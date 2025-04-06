@@ -12,8 +12,8 @@ dependencies:
   animated_emoji: ^3.1.0
   audio_metadata_reader:
     git:
-      url: https://github.com/LorenVS/audio_metadata_reader
-      ref: 56f7aa474b8c80b47e73b07bebc96664c4bf3382
+      url: https://github.com/ClementBeal/audio_metadata_reader
+      ref: 5eedca0a5d91f537dce7a846210730f008d8651c
   audio_service: ^0.18.12
   audio_service_mpris:
     git:
