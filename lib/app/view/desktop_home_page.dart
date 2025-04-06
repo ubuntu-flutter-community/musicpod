@@ -119,7 +119,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
       child: CallbackShortcuts(
         bindings: {
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyF):
-              () => _performSearch()
+              () => _performSearch(),
         },
         child: Stack(
           alignment: Alignment.center,
