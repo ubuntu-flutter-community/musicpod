@@ -272,16 +272,20 @@ void registerDependencies({required List<String> args}) async {
       dispose: (s) => s.dispose(),
     )
     ..registerSingletonWithDependencies<LibraryModel>(
-      () => LibraryModel(di<LibraryService>()),
+      () => LibraryModel(
+        service: di<LibraryService>(),
+        localAudioService: di<LocalAudioService>(),
+      ),
       dispose: (s) => s.dispose(),
-      dependsOn: [LibraryService],
+      dependsOn: [LibraryService, LocalAudioService],
     )
     ..registerSingletonWithDependencies<LocalAudioModel>(
       () => LocalAudioModel(
         localAudioService: di<LocalAudioService>(),
+        libraryService: di<LibraryService>(),
         settingsService: di<SettingsService>(),
       ),
-      dependsOn: [SettingsService],
+      dependsOn: [SettingsService, LibraryService],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<PodcastModel>(

@@ -37,7 +37,7 @@ class SettingsModel extends SafeChangeNotifier {
     String? directoryPath;
 
     try {
-      directoryPath = await getPathOfDirectory();
+      directoryPath = await _externalPathService.getPathOfDirectory();
       if (directoryPath == null) return;
       final maybeDir = Directory(directoryPath);
       if (!maybeDir.existsSync()) return;
@@ -108,9 +108,6 @@ class SettingsModel extends SafeChangeNotifier {
   String? get podcastIndexApiSecret => _service.podcastIndexApiSecret;
   void setPodcastIndexApiSecret(String value) async =>
       _service.setPodcastIndexApiSecret(value);
-
-  Future<String?> getPathOfDirectory() async =>
-      _externalPathService.getPathOfDirectory();
 
   CloseBtnAction get closeBtnActionIndex => _service.closeBtnActionIndex;
   void setCloseBtnActionIndex(CloseBtnAction value) =>

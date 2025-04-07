@@ -8,6 +8,7 @@ import '../../common/view/round_image_container.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/custom_playlists_section.dart';
 import '../../extensions/build_context_x.dart';
+import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../playlists/view/playlist_page.dart';
 
@@ -43,8 +44,14 @@ class PlaylistsView extends StatelessWidget {
               ? showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
+                    titlePadding: EdgeInsets.zero,
+                    title: YaruDialogTitleBar(
+                      title: Text(context.l10n.createNewPlaylist),
+                      backgroundColor: Colors.transparent,
+                      border: BorderSide.none,
+                    ),
                     content: SizedBox.square(
-                      dimension: 300,
+                      dimension: 450,
                       child: CustomPlaylistsSection(
                         onAdd: () => Navigator.of(context).pop(),
                       ),

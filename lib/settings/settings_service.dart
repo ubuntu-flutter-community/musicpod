@@ -7,6 +7,7 @@ import '../app_config.dart';
 import '../common/data/close_btn_action.dart';
 import '../common/file_names.dart';
 import '../extensions/shared_preferences_x.dart';
+import '../local_audio/local_audio_view.dart';
 import '../persistence_utils.dart';
 
 class SettingsService {
@@ -32,10 +33,11 @@ class SettingsService {
     _preferences.setInt(SPKeys.themeIndex, value).then(notify);
   }
 
-  int get localAudioIndex => _preferences.getInt(SPKeys.localAudioIndex) ?? 0;
-  void setLocalAudioIndex(int value) {
-    _preferences.setInt(SPKeys.localAudioIndex, value).then(notify);
-  }
+  int get localAudioIndex =>
+      _preferences.getInt(SPKeys.localAudioIndex) ??
+      LocalAudioView.albums.index;
+  void setLocalAudioIndex(int value) =>
+      _preferences.setInt(SPKeys.localAudioIndex, value);
 
   bool get neverShowFailedImports =>
       _preferences.getBool(SPKeys.neverShowImportFails) ?? false;

@@ -69,7 +69,7 @@ class _CustomPlaylistsSectionState extends State<CustomPlaylistsSection> {
         ),
         ...playlists.map(
           (e) => ListTile(
-            title: Text(e.name.replaceAll('.m3u', '').replaceAll('.pls', '')),
+            title: Text(e.id.replaceAll('.m3u', '').replaceAll('.pls', '')),
             subtitle: Text(
               '${e.audios.length} ${l10n.titles}',
             ),
@@ -80,7 +80,7 @@ class _CustomPlaylistsSectionState extends State<CustomPlaylistsSection> {
                 semanticLabel: l10n.deletePlaylist,
               ),
               onPressed: () =>
-                  di<CustomContentModel>().removePlaylist(name: e.name),
+                  di<CustomContentModel>().removePlaylist(name: e.id),
             ),
           ),
         ),
@@ -117,26 +117,19 @@ class _CustomPlaylistsSectionState extends State<CustomPlaylistsSection> {
                               },
                             );
                           } else if (playlists.isNotEmpty) {
-                            Future.wait(
-                              playlists.map(
-                                (e) => libraryModel.addPlaylist(
-                                  e.name,
-                                  e.audios,
-                                ),
-                              ),
-                            ).then(
-                              (_) => Future.delayed(
-                                const Duration(milliseconds: 300),
-                                () {
-                                  libraryModel.push(
-                                    pageId: playlists.first.name,
-                                  );
-                                  _controller.clear();
-                                  di<CustomContentModel>().setPlaylists([]);
-                                  widget.onAdd?.call();
-                                },
-                              ),
-                            );
+                            libraryModel.addPlaylists(playlists).then(
+                                  (_) => Future.delayed(
+                                    const Duration(milliseconds: 300),
+                                    () {
+                                      libraryModel.push(
+                                        pageId: playlists.first.id,
+                                      );
+                                      _controller.clear();
+                                      di<CustomContentModel>().setPlaylists([]);
+                                      widget.onAdd?.call();
+                                    },
+                                  ),
+                                );
                           }
                         },
                   child: Text(

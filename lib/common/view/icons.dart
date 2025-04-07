@@ -36,6 +36,18 @@ class Iconz {
             : Icons.menu_rounded;
   }
 
+  static IconData get export => AppConfig.yaruStyled
+      ? YaruIcons.arrow_down_outlined
+      : AppConfig.appleStyled
+          ? CupertinoIcons.arrow_down
+          : Icons.arrow_downward;
+
+  static IconData get import => AppConfig.yaruStyled
+      ? YaruIcons.arrow_up_outlined
+      : AppConfig.appleStyled
+          ? CupertinoIcons.arrow_up
+          : Icons.arrow_upward;
+
   static IconData get materialSidebar => Icons.menu_rounded;
 
   static IconData get sidebar {

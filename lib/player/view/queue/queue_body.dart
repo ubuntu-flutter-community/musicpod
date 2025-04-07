@@ -3,8 +3,12 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../../common/data/audio.dart';
+import '../../../common/data/audio_type.dart';
 import '../../../common/view/icons.dart';
+import '../../../common/view/ui_constants.dart';
 import '../../../extensions/build_context_x.dart';
+import '../../../l10n/l10n.dart';
+import '../../../library/library_model.dart';
 import '../../player_model.dart';
 
 class QueueBody extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -50,6 +54,9 @@ class _QueueBodyState extends State<QueueBody> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = context.theme;
+    final colorScheme = theme.colorScheme;
     final queue = watchPropertyValue((PlayerModel m) => m.queue);
     watchPropertyValue((PlayerModel m) => m.queue.length);
 
@@ -64,6 +71,7 @@ class _QueueBodyState extends State<QueueBody> {
       width: 400,
       height: 500,
       child: Column(
+        spacing: kLargestSpace,
         children: [
           Expanded(
             child: ReorderableListView.builder(
@@ -74,7 +82,7 @@ class _QueueBodyState extends State<QueueBody> {
               ),
               buildDefaultDragHandles: false,
               proxyDecorator: (child, index, animation) => Material(
-                color: context.colorScheme.onSurface.withValues(alpha: 0.1),
+                color: colorScheme.onSurface.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(6),
                 child: child,
               ),
@@ -86,7 +94,7 @@ class _QueueBodyState extends State<QueueBody> {
                   key: ValueKey(index),
                   index: index,
                   controller: _controller,
-                  selectedColor: context.colorScheme.onSurface,
+                  selectedColor: colorScheme.onSurface,
                   queueName: queueName,
                   queue: queue,
                   audio: audio,
@@ -96,6 +104,41 @@ class _QueueBodyState extends State<QueueBody> {
               itemCount: queue.length,
               onReorder: di<PlayerModel>().moveAudioInQueue,
             ),
+          ),
+          Row(
+            spacing: kMediumSpace,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: colorScheme.onSurface,
+                ),
+                onPressed: queue.isEmpty
+                    ? null
+                    : () {
+                        di<LibraryModel>().addPlaylist(
+                          '${l10n.queue} ${DateTime.now()}',
+                          List.from(
+                            queue.where((e) => e.audioType == AudioType.local),
+                          ),
+                        );
+                        Navigator.of(context).pop();
+                      },
+                child: Text(l10n.createNewPlaylist),
+              ),
+              IconButton(
+                icon: Icon(
+                  Iconz.clearAll,
+                  semanticLabel: l10n.clearQueue,
+                ),
+                tooltip: l10n.clearQueue,
+                onPressed: queue.isEmpty ||
+                        di<PlayerModel>().queueName == null ||
+                        di<PlayerModel>().audio == null
+                    ? null
+                    : () => di<PlayerModel>().clearQueue(),
+              ),
+            ],
           ),
         ],
       ),
