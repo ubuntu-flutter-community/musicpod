@@ -4,6 +4,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/view/common_widgets.dart';
 import '../../common/view/ui_constants.dart';
+import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_model.dart';
 import '../settings_model.dart';
@@ -13,19 +14,8 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final settingsModel = di<SettingsModel>();
-    final localAudioModel = di<LocalAudioModel>();
     final directory =
         watchPropertyValue((SettingsModel m) => m.directory ?? '');
-
-    Future<void> onDirectorySelected(String directoryPath) async {
-      settingsModel.setDirectory(directoryPath).then(
-            (_) async => localAudioModel.init(
-              forceInit: true,
-              directory: directoryPath,
-            ),
-          );
-    }
 
     return YaruSection(
       headline: Text(context.l10n.localAudio),
@@ -37,9 +27,13 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
             subtitle: Text(directory),
             trailing: ImportantButton(
               onPressed: () async {
-                final directoryPath = await settingsModel.getPathOfDirectory();
+                final directoryPath =
+                    await di<ExternalPathService>().getPathOfDirectory();
                 if (directoryPath != null) {
-                  await onDirectorySelected(directoryPath);
+                  await di<LocalAudioModel>().init(
+                    forceInit: true,
+                    directory: directoryPath,
+                  );
                 }
               },
               child: Text(

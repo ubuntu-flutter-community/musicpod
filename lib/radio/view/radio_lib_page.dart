@@ -86,7 +86,7 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
               IconButton(
                 tooltip: l10n.exportStarredStationsToOpmlFile,
                 icon: Icon(
-                  Iconz.download,
+                  Iconz.export,
                   semanticLabel: l10n.exportStarredStationsToOpmlFile,
                 ),
                 onPressed: importingExporting
@@ -97,7 +97,7 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
               IconButton(
                 tooltip: l10n.importStarredStationsFromOpmlFile,
                 icon: Icon(
-                  Iconz.upload,
+                  Iconz.import,
                   semanticLabel: l10n.importStarredStationsFromOpmlFile,
                 ),
                 onPressed: importingExporting

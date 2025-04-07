@@ -166,7 +166,7 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
   }
 }
 
-class _PlaylistHeaderImage extends StatelessWidget {
+class _PlaylistHeaderImage extends StatelessWidget with WatchItMixin {
   const _PlaylistHeaderImage({
     required this.playlist,
     required this.pageId,
@@ -178,6 +178,7 @@ class _PlaylistHeaderImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
+    watchPropertyValue((LibraryModel m) => m.playlists[pageId]?.hashCode);
     final playlistImages = model.findLocalCovers(audios: playlist, limit: 16);
     final length = playlistImages == null ? 0 : playlistImages.take(16).length;
 
@@ -374,9 +375,6 @@ class _PlaylistControlPanel extends StatelessWidget with WatchItMixin {
                 audios: audios,
                 playlistName: pageId,
                 initialValue: pageId,
-                allowDelete: true,
-                allowRename: true,
-                allowExport: true,
               ),
             ),
           ),
