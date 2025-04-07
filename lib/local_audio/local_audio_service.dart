@@ -298,12 +298,16 @@ class LocalAudioService {
   FileWatcher? get fileWatcher => _fileWatcher;
 
   Future<void> init({
-    String? directory,
+    String? newDirectory,
     bool forceInit = false,
   }) async {
     if (forceInit == false && _audios?.isNotEmpty == true) return;
 
-    final dir = directory ?? _settingsService?.directory;
+    if (newDirectory != null && newDirectory != _settingsService?.directory) {
+      await _settingsService?.setDirectory(newDirectory);
+    }
+    final dir = newDirectory ?? _settingsService?.directory;
+
     final result = await compute(
       _readAudiosFromDirectory,
       dir,
@@ -312,17 +316,35 @@ class LocalAudioService {
       _fileWatcher = FileWatcher(dir);
     }
 
-    _audios = result.audios;
     _failedImports = result.failedImports;
+    addAudios(result.audios, forceInit: forceInit);
+  }
+
+  Future<void> dispose() async => _audiosController.close();
+
+  void addAudios(
+    List<Audio> newAudios, {
+    bool forceInit = false,
+    List<String>? failedImports,
+  }) {
+    if (forceInit) {
+      _audios = null;
+    }
+    _audiosController.add(true);
+    _audios = forceInit ? [] : (_audios ?? []);
+    for (var audio in newAudios) {
+      if (!_audios!.contains(audio)) {
+        _audios!.add(audio);
+      }
+    }
     _sortAllTitles();
     _findAllArtists();
     _findAllAlbumArtists();
     findAllAlbums();
     _findAllGenres();
+    _failedImports = failedImports;
     _audiosController.add(true);
   }
-
-  Future<void> dispose() async => _audiosController.close();
 }
 
 FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {

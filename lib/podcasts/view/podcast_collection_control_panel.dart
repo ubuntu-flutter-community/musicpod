@@ -81,7 +81,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
         ),
         IconButton(
           icon: Icon(
-            Iconz.download,
+            Iconz.export,
             semanticLabel: context.l10n.exportPodcastsToOpmlFile,
           ),
           tooltip: context.l10n.exportPodcastsToOpmlFile,
@@ -91,7 +91,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
         ),
         IconButton(
           icon: Icon(
-            Iconz.upload,
+            Iconz.import,
             semanticLabel: context.l10n.importPodcastsFromOpmlFile,
           ),
           tooltip: context.l10n.importPodcastsFromOpmlFile,
