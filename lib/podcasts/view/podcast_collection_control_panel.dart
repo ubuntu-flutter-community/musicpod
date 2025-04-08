@@ -27,8 +27,8 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
     final updatesOnly = watchPropertyValue((PodcastModel m) => m.updatesOnly);
     final downloadsOnly =
         watchPropertyValue((PodcastModel m) => m.downloadsOnly);
-    final importingExporting =
-        watchPropertyValue((CustomContentModel m) => m.importingExporting);
+    final processing =
+        watchPropertyValue((CustomContentModel m) => m.processing);
 
     return Row(
       spacing: kSmallestSpace,
@@ -54,7 +54,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                 updatesOnly,
                 downloadsOnly,
               ],
-              onSelected: importingExporting || checkingForUpdates
+              onSelected: processing || checkingForUpdates
                   ? null
                   : (index) {
                       if (index == 0) {
@@ -85,7 +85,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
             semanticLabel: context.l10n.exportPodcastsToOpmlFile,
           ),
           tooltip: context.l10n.exportPodcastsToOpmlFile,
-          onPressed: importingExporting || checkingForUpdates
+          onPressed: processing || checkingForUpdates
               ? null
               : () => di<CustomContentModel>().exportPodcastsToOpmlFile(),
         ),
@@ -95,12 +95,12 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
             semanticLabel: context.l10n.importPodcastsFromOpmlFile,
           ),
           tooltip: context.l10n.importPodcastsFromOpmlFile,
-          onPressed: importingExporting || checkingForUpdates
+          onPressed: processing || checkingForUpdates
               ? null
               : () => di<CustomContentModel>().importPodcastsFromOpmlFile(),
         ),
         IconButton(
-          icon: importingExporting || checkingForUpdates
+          icon: processing || checkingForUpdates
               ? const SizedBox.square(
                   dimension: 22,
                   child: Progress(
@@ -109,7 +109,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                 )
               : Icon(Iconz.remove),
           tooltip: context.l10n.podcasts,
-          onPressed: importingExporting || checkingForUpdates
+          onPressed: processing || checkingForUpdates
               ? null
               : () => showDialog(
                     context: context,

@@ -13,6 +13,7 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final index = watchPropertyValue((LocalAudioModel m) => m.localAudioindex);
+    final audios = watchPropertyValue((LocalAudioModel m) => m.audios);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -28,7 +29,9 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
         isSelected: LocalAudioView.values
             .map((e) => e == LocalAudioView.values[index])
             .toList(),
-        onSelected: (index) => di<LocalAudioModel>().localAudioindex = index,
+        onSelected: audios == null
+            ? null
+            : (index) => di<LocalAudioModel>().localAudioindex = index,
       ),
     );
   }

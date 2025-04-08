@@ -50,10 +50,10 @@ class PlaylistsView extends StatelessWidget {
                       backgroundColor: Colors.transparent,
                       border: BorderSide.none,
                     ),
-                    content: SizedBox.square(
+                    content: const SizedBox.square(
                       dimension: 450,
                       child: CustomPlaylistsSection(
-                        onAdd: () => Navigator.of(context).pop(),
+                        shownInDialog: true,
                       ),
                     ),
                   ),

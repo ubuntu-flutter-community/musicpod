@@ -105,16 +105,14 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
         builder: (context, constraints) {
           return CustomScrollView(
             slivers: [
-              if (audios != null && audios.isNotEmpty)
-                SliverFilterAppBar(
-                  padding:
-                      getAdaptiveHorizontalPadding(constraints: constraints)
-                          .copyWith(
-                    bottom: filterPanelPadding.bottom,
-                    top: filterPanelPadding.top,
-                  ),
-                  title: const LocalAudioControlPanel(),
+              SliverFilterAppBar(
+                padding: getAdaptiveHorizontalPadding(constraints: constraints)
+                    .copyWith(
+                  bottom: filterPanelPadding.bottom,
+                  top: filterPanelPadding.top,
                 ),
+                title: const LocalAudioControlPanel(),
+              ),
               SliverPadding(
                 padding: getAdaptiveHorizontalPadding(constraints: constraints)
                     .copyWith(
