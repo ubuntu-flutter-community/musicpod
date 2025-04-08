@@ -15,9 +15,11 @@ class QueueBody extends StatefulWidget with WatchItStatefulWidgetMixin {
   const QueueBody({
     super.key,
     this.selectedColor,
+    this.shownInDialog = false,
   });
 
   final Color? selectedColor;
+  final bool shownInDialog;
 
   @override
   State<QueueBody> createState() => _QueueBodyState();
@@ -122,7 +124,10 @@ class _QueueBodyState extends State<QueueBody> {
                             queue.where((e) => e.audioType == AudioType.local),
                           ),
                         );
-                        Navigator.of(context).pop();
+                        if (widget.shownInDialog &&
+                            Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop();
+                        }
                       },
                 child: Text(l10n.createNewPlaylist),
               ),

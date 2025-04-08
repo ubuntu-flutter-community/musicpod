@@ -181,21 +181,21 @@ class CustomContentModel extends SafeChangeNotifier {
     File(join(basePath, '$id.m3u')).writeAsStringSync(m3uAsString.toString());
   }
 
-  bool _importingExporting = false;
-  bool get importingExporting => _importingExporting;
-  void setImportingExporting(bool value) {
-    if (_importingExporting == value) return;
-    _importingExporting = value;
+  bool _processing = false;
+  bool get processing => _processing;
+  void setProcessing(bool value) {
+    if (_processing == value) return;
+    _processing = value;
     notifyListeners();
   }
 
   Future<void> importPodcastsFromOpmlFile() async {
-    if (_importingExporting) return;
-    setImportingExporting(true);
+    if (_processing) return;
+    setProcessing(true);
     final path = await _externalPathService.getPathOfFile();
 
     if (path == null) {
-      setImportingExporting(false);
+      setProcessing(false);
       return;
     }
     final file = File(path);
@@ -217,15 +217,15 @@ class CustomContentModel extends SafeChangeNotifier {
         _libraryService.addPodcasts(podcasts);
       }
     }
-    setImportingExporting(false);
+    setProcessing(false);
   }
 
   Future<bool> exportPodcastsToOpmlFile() async {
-    if (_importingExporting) return false;
-    setImportingExporting(true);
+    if (_processing) return false;
+    setProcessing(true);
     final location = await _externalPathService.getPathOfDirectory();
     if (location == null) {
-      setImportingExporting(false);
+      setProcessing(false);
       return false;
     }
 
@@ -256,16 +256,16 @@ class CustomContentModel extends SafeChangeNotifier {
     );
     final xml = opml.toXmlString(pretty: true);
     file.writeAsStringSync(xml);
-    setImportingExporting(false);
+    setProcessing(false);
     return true;
   }
 
   Future<bool> exportStarredStationsToOpmlFile() async {
-    if (_importingExporting) return false;
-    setImportingExporting(true);
+    if (_processing) return false;
+    setProcessing(true);
     final location = await _externalPathService.getPathOfDirectory();
     if (location == null) {
-      setImportingExporting(false);
+      setProcessing(false);
       return false;
     }
 
@@ -297,17 +297,17 @@ class CustomContentModel extends SafeChangeNotifier {
     );
     final xml = opml.toXmlString(pretty: true);
     file.writeAsStringSync(xml);
-    setImportingExporting(false);
+    setProcessing(false);
     return true;
   }
 
   Future<void> importStarredStationsFromOpmlFile() async {
-    if (_importingExporting) return;
-    setImportingExporting(true);
+    if (_processing) return;
+    setProcessing(true);
     final path = await _externalPathService.getPathOfFile();
 
     if (path == null) {
-      setImportingExporting(false);
+      setProcessing(false);
       return;
     }
     final file = File(path);
@@ -330,6 +330,21 @@ class CustomContentModel extends SafeChangeNotifier {
         _libraryService.addStarredStations(starredStations);
       }
     }
-    setImportingExporting(false);
+    setProcessing(false);
+  }
+
+  String? _playlistName;
+  String? get playlistName => _playlistName;
+  void setPlaylistName(String? value) {
+    if (_playlistName == value) return;
+    _playlistName = value;
+    notifyListeners();
+  }
+
+  void reset() {
+    _playlists = [];
+    _playlistName = null;
+    _processing = false;
+    notifyListeners();
   }
 }
