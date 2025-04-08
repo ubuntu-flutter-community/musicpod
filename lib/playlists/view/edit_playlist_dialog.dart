@@ -12,7 +12,8 @@ import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/local_audio_view.dart';
 
-class EditPlaylistDialog extends StatefulWidget {
+class EditPlaylistDialog extends StatefulWidget
+    with WatchItStatefulWidgetMixin {
   const EditPlaylistDialog({
     super.key,
     this.playlistName,
@@ -76,7 +77,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
               runSpacing: 10,
               children: [
                 TextButton.icon(
-                  icon: Icon(Iconz.download),
+                  icon: Icon(Iconz.export),
                   onPressed:
                       widget.playlistName == null || widget.audios == null
                           ? null
@@ -89,15 +90,17 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                 if (widget.playlistName != null)
                   TextButton.icon(
                     icon: Icon(Iconz.remove),
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                      libraryModel.removePlaylist(widget.playlistName!);
+                    onPressed: () {
+                      if (context.mounted && Navigator.of(context).canPop()) {
+                        Navigator.of(context).pop();
+                      }
                       di<LocalAudioModel>().localAudioindex =
                           LocalAudioView.playlists.index;
-                      await libraryModel.push(
+                      libraryModel.push(
                         pageId: PageIDs.localAudio,
                         replace: true,
                       );
+                      libraryModel.removePlaylist(widget.playlistName!);
                     },
                     label: Text(
                       context.l10n.deletePlaylist,
@@ -109,15 +112,17 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
         ],
       ),
       confirmLabel: context.l10n.save,
+      confirmEnabled:
+          watchPropertyValue((CustomContentModel m) => !m.processing),
       onConfirm: () {
         di<LocalAudioModel>().localAudioindex = LocalAudioView.playlists.index;
         libraryModel
-          ..push(pageId: PageIDs.likedAudios)
+          ..push(pageId: PageIDs.localAudio)
           ..updatePlaylistName(
             widget.playlistName!,
             _controller.text,
           );
-        Navigator.of(context).pop();
+        Navigator.of(context).maybePop();
       },
     );
   }

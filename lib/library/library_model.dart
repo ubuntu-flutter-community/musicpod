@@ -124,7 +124,7 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
 
   Future<void> updatePlaylist(String id, List<Audio> audios) async =>
       _service.updatePlaylist(id, audios);
-  void removePlaylist(String id) => _service.removePlaylist(id);
+  Future<void> removePlaylist(String id) => _service.removePlaylist(id);
 
   void updatePlaylistName(String oldName, String newName) =>
       _service.updatePlaylistName(oldName, newName);
@@ -219,16 +219,13 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
         await _masterNavigatorKey.currentState?.pushNamed(pageId);
       }
     } else if (builder != null) {
-      final materialPageRoute = PageRouteBuilder(
-        maintainState: maintainState,
+      final materialPageRoute = MaterialPageRoute(
         settings: RouteSettings(
           name: pageId,
         ),
-        pageBuilder: (context, __, ___) => AppConfig.isMobilePlatform
+        builder: (context) => AppConfig.isMobilePlatform
             ? MobilePage(page: builder(context))
             : BackGesture(child: builder(context)),
-        transitionsBuilder: (_, a, __, c) =>
-            FadeTransition(opacity: a, child: c),
       );
 
       if (replace) {

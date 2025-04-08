@@ -567,10 +567,11 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
       ) as _i3.Future<void>);
 
   @override
-  void removePlaylist(String? id) => super.noSuchMethod(
+  _i3.Future<void> removePlaylist(String? id) => (super.noSuchMethod(
         Invocation.method(#removePlaylist, [id]),
-        returnValueForMissingStub: null,
-      );
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
   void updatePlaylistName(String? oldName, String? newName) =>

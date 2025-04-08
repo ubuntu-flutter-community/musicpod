@@ -18,6 +18,6 @@ class QueueDialog extends StatelessWidget {
         contentPadding: EdgeInsets.only(bottom: kLargestSpace, top: 10),
         title: PlayerMainControls(active: true),
         actionsAlignment: MainAxisAlignment.center,
-        content: QueueBody(),
+        content: QueueBody(shownInDialog: true),
       );
 }

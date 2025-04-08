@@ -260,13 +260,11 @@ class LibraryService {
     }
   }
 
-  void removePlaylist(String id) {
+  Future<void> removePlaylist(String id) async {
     if (_playlists.containsKey(id)) {
-      writeAudioMap(map: _playlists, fileName: FileNames.playlists).then(
-        (_) {
-          _playlists.remove(id);
-          _propertiesChangedController.add(true);
-        },
+      _playlists.remove(id);
+      return writeAudioMap(map: _playlists, fileName: FileNames.playlists).then(
+        (_) => _propertiesChangedController.add(true),
       );
     }
   }

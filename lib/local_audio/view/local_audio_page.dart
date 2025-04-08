@@ -72,7 +72,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             builder: (context) => ConfirmationDialog(
               title: Text(l10n.localAudioWatchDialogTitle),
               content: Text(l10n.localAudioWatchDialogDescription),
-              onConfirm: () => di<LocalAudioModel>().init(forceInit: true),
+              onConfirm: () async =>
+                  di<LocalAudioModel>().init(forceInit: true),
             ),
           );
         }
@@ -105,16 +106,14 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
         builder: (context, constraints) {
           return CustomScrollView(
             slivers: [
-              if (audios != null && audios.isNotEmpty)
-                SliverFilterAppBar(
-                  padding:
-                      getAdaptiveHorizontalPadding(constraints: constraints)
-                          .copyWith(
-                    bottom: filterPanelPadding.bottom,
-                    top: filterPanelPadding.top,
-                  ),
-                  title: const LocalAudioControlPanel(),
+              SliverFilterAppBar(
+                padding: getAdaptiveHorizontalPadding(constraints: constraints)
+                    .copyWith(
+                  bottom: filterPanelPadding.bottom,
+                  top: filterPanelPadding.top,
                 ),
+                title: const LocalAudioControlPanel(),
+              ),
               SliverPadding(
                 padding: getAdaptiveHorizontalPadding(constraints: constraints)
                     .copyWith(
