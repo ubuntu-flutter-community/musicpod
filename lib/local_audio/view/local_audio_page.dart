@@ -72,7 +72,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             builder: (context) => ConfirmationDialog(
               title: Text(l10n.localAudioWatchDialogTitle),
               content: Text(l10n.localAudioWatchDialogDescription),
-              onConfirm: () => di<LocalAudioModel>().init(forceInit: true),
+              onConfirm: () async =>
+                  di<LocalAudioModel>().init(forceInit: true),
             ),
           );
         }
