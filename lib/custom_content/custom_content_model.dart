@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
+import 'package:flutter/foundation.dart';
 import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
 import 'package:opml/opml.dart';
 import 'package:path/path.dart';
@@ -32,9 +33,9 @@ class CustomContentModel extends SafeChangeNotifier {
   final PodcastService _podcastService;
   final RadioService _radioService;
 
-  List<({List<Audio> audios, String name})> _playlists = [];
-  List<({List<Audio> audios, String name})> get playlists => _playlists;
-  void setPlaylists(List<({List<Audio> audios, String name})> value) {
+  List<({List<Audio> audios, String id})> _playlists = [];
+  List<({List<Audio> audios, String id})> get playlists => _playlists;
+  void setPlaylists(List<({List<Audio> audios, String id})> value) {
     _playlists = value;
     notifyListeners();
   }
@@ -42,7 +43,7 @@ class CustomContentModel extends SafeChangeNotifier {
   void removePlaylist({
     required String name,
   }) {
-    _playlists.removeWhere((e) => e.name == name);
+    _playlists.removeWhere((e) => e.id == name);
     notifyListeners();
   }
 
@@ -50,10 +51,10 @@ class CustomContentModel extends SafeChangeNotifier {
         [..._playlists, ...await loadPlaylists(files: files)],
       );
 
-  Future<List<({List<Audio> audios, String name})>> loadPlaylists({
+  Future<List<({List<Audio> audios, String id})>> loadPlaylists({
     List<XFile>? files,
   }) async {
-    List<({List<Audio> audios, String name})> lists = [];
+    List<({List<Audio> audios, String id})> lists = [];
 
     try {
       final paths = files?.map((e) => e.path) ??
@@ -62,14 +63,14 @@ class CustomContentModel extends SafeChangeNotifier {
         if (path.endsWith('.m3u')) {
           lists.add(
             (
-              name: basename(path),
+              id: basename(path),
               audios: await _parseM3uPlaylist(path),
             ),
           );
         } else if (path.endsWith('.pls')) {
           lists.add(
             (
-              name: basename(path),
+              id: basename(path),
               audios: await _parsePlsPlaylist(path),
             ),
           );
@@ -84,22 +85,13 @@ class CustomContentModel extends SafeChangeNotifier {
 
   Future<List<Audio>> _parseM3uPlaylist(String path) async {
     final audios = <Audio>[];
-    final playlist = await M3uList.loadFromFile(path);
+    final playlist = await compute(M3uList.loadFromFile, path);
 
     for (var e in playlist.items) {
-      String? songName;
-      String? artist;
-      var split = e.title.split(' - ');
-      if (split.isNotEmpty) {
-        artist = split.elementAtOrNull(0);
-        songName = split.elementAtOrNull(1);
-      }
-
       if (e.link.startsWith('http')) {
         audios.add(
           Audio(
-            title: songName ?? e.title,
-            artist: artist,
+            title: e.title,
             url: e.link,
             description: e.link,
             audioType: AudioType.radio,
@@ -119,19 +111,10 @@ class CustomContentModel extends SafeChangeNotifier {
     final playlist = PlsPlaylist.parse(File(path).readAsStringSync());
 
     for (var e in playlist.entries) {
-      String? songName;
-      String? artist;
-      var split = e.title?.split(' - ');
-      if (split?.isNotEmpty == true) {
-        artist = split?.elementAtOrNull(0);
-        songName = split?.elementAtOrNull(1);
-      }
-
       if (e.file?.startsWith('http') == true) {
         audios.add(
           Audio(
-            title: songName ?? e.title,
-            artist: artist,
+            title: e.title,
             url: e.file,
             description: e.file,
             audioType: AudioType.radio,
@@ -198,21 +181,21 @@ class CustomContentModel extends SafeChangeNotifier {
     File(join(basePath, '$id.m3u')).writeAsStringSync(m3uAsString.toString());
   }
 
-  bool _importingExporting = false;
-  bool get importingExporting => _importingExporting;
-  void setImportingExporting(bool value) {
-    if (_importingExporting == value) return;
-    _importingExporting = value;
+  bool _processing = false;
+  bool get processing => _processing;
+  void setProcessing(bool value) {
+    if (_processing == value) return;
+    _processing = value;
     notifyListeners();
   }
 
   Future<void> importPodcastsFromOpmlFile() async {
-    if (_importingExporting) return;
-    setImportingExporting(true);
+    if (_processing) return;
+    setProcessing(true);
     final path = await _externalPathService.getPathOfFile();
 
     if (path == null) {
-      setImportingExporting(false);
+      setProcessing(false);
       return;
     }
     final file = File(path);
@@ -234,15 +217,15 @@ class CustomContentModel extends SafeChangeNotifier {
         _libraryService.addPodcasts(podcasts);
       }
     }
-    setImportingExporting(false);
+    setProcessing(false);
   }
 
   Future<bool> exportPodcastsToOpmlFile() async {
-    if (_importingExporting) return false;
-    setImportingExporting(true);
+    if (_processing) return false;
+    setProcessing(true);
     final location = await _externalPathService.getPathOfDirectory();
     if (location == null) {
-      setImportingExporting(false);
+      setProcessing(false);
       return false;
     }
 
@@ -273,16 +256,16 @@ class CustomContentModel extends SafeChangeNotifier {
     );
     final xml = opml.toXmlString(pretty: true);
     file.writeAsStringSync(xml);
-    setImportingExporting(false);
+    setProcessing(false);
     return true;
   }
 
   Future<bool> exportStarredStationsToOpmlFile() async {
-    if (_importingExporting) return false;
-    setImportingExporting(true);
+    if (_processing) return false;
+    setProcessing(true);
     final location = await _externalPathService.getPathOfDirectory();
     if (location == null) {
-      setImportingExporting(false);
+      setProcessing(false);
       return false;
     }
 
@@ -314,17 +297,17 @@ class CustomContentModel extends SafeChangeNotifier {
     );
     final xml = opml.toXmlString(pretty: true);
     file.writeAsStringSync(xml);
-    setImportingExporting(false);
+    setProcessing(false);
     return true;
   }
 
   Future<void> importStarredStationsFromOpmlFile() async {
-    if (_importingExporting) return;
-    setImportingExporting(true);
+    if (_processing) return;
+    setProcessing(true);
     final path = await _externalPathService.getPathOfFile();
 
     if (path == null) {
-      setImportingExporting(false);
+      setProcessing(false);
       return;
     }
     final file = File(path);
@@ -347,6 +330,21 @@ class CustomContentModel extends SafeChangeNotifier {
         _libraryService.addStarredStations(starredStations);
       }
     }
-    setImportingExporting(false);
+    setProcessing(false);
+  }
+
+  String? _playlistName;
+  String? get playlistName => _playlistName;
+  void setPlaylistName(String? value) {
+    if (_playlistName == value) return;
+    _playlistName = value;
+    notifyListeners();
+  }
+
+  void reset() {
+    _playlists = [];
+    _playlistName = null;
+    _processing = false;
+    notifyListeners();
   }
 }

@@ -234,6 +234,19 @@ class LibraryService {
     }
   }
 
+  Future<void> addPlaylists(
+    List<({String id, List<Audio> audios})> playlists,
+  ) async {
+    if (playlists.isEmpty) return;
+    for (var playlist in playlists) {
+      if (!_playlists.containsKey(playlist.id)) {
+        _playlists.putIfAbsent(playlist.id, () => playlist.audios);
+      }
+    }
+    await writeAudioMap(map: _playlists, fileName: FileNames.playlists)
+        .then((_) => _propertiesChangedController.add(true));
+  }
+
   Future<void> updatePlaylist(String id, List<Audio> audios) async {
     if (_playlists.containsKey(id)) {
       await writeAudioMap(map: _playlists, fileName: FileNames.playlists)
@@ -247,13 +260,11 @@ class LibraryService {
     }
   }
 
-  void removePlaylist(String id) {
+  Future<void> removePlaylist(String id) async {
     if (_playlists.containsKey(id)) {
-      writeAudioMap(map: _playlists, fileName: FileNames.playlists).then(
-        (_) {
-          _playlists.remove(id);
-          _propertiesChangedController.add(true);
-        },
+      _playlists.remove(id);
+      return writeAudioMap(map: _playlists, fileName: FileNames.playlists).then(
+        (_) => _propertiesChangedController.add(true),
       );
     }
   }

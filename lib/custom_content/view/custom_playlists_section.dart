@@ -8,36 +8,18 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../custom_content_model.dart';
 
-class CustomPlaylistsSection extends StatefulWidget
-    with WatchItStatefulWidgetMixin {
-  const CustomPlaylistsSection({super.key, this.onAdd});
+class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
+  const CustomPlaylistsSection({super.key, this.shownInDialog = false});
 
-  final VoidCallback? onAdd;
-
-  @override
-  State<CustomPlaylistsSection> createState() => _CustomPlaylistsSectionState();
-}
-
-class _CustomPlaylistsSectionState extends State<CustomPlaylistsSection> {
-  late TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-
-    super.dispose();
-  }
+  final bool shownInDialog;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final libraryModel = di<LibraryModel>();
+    final customContentModel = di<CustomContentModel>();
+    final playlistName =
+        watchPropertyValue((CustomContentModel m) => m.playlistName);
     watchPropertyValue((CustomContentModel m) => m.playlists.length);
     final playlists = di<CustomContentModel>().playlists;
     return Column(
@@ -50,7 +32,7 @@ class _CustomPlaylistsSectionState extends State<CustomPlaylistsSection> {
             decoration: InputDecoration(
               label: Text(l10n.setPlaylistNameAndAddMoreLater),
             ),
-            controller: _controller,
+            onChanged: di<CustomContentModel>().setPlaylistName,
           ),
         ),
         Row(
@@ -69,7 +51,7 @@ class _CustomPlaylistsSectionState extends State<CustomPlaylistsSection> {
         ),
         ...playlists.map(
           (e) => ListTile(
-            title: Text(e.name.replaceAll('.m3u', '').replaceAll('.pls', '')),
+            title: Text(e.id.replaceAll('.m3u', '').replaceAll('.pls', '')),
             subtitle: Text(
               '${e.audios.length} ${l10n.titles}',
             ),
@@ -80,7 +62,7 @@ class _CustomPlaylistsSectionState extends State<CustomPlaylistsSection> {
                 semanticLabel: l10n.deletePlaylist,
               ),
               onPressed: () =>
-                  di<CustomContentModel>().removePlaylist(name: e.name),
+                  di<CustomContentModel>().removePlaylist(name: e.id),
             ),
           ),
         ),
@@ -93,55 +75,32 @@ class _CustomPlaylistsSectionState extends State<CustomPlaylistsSection> {
             spacing: 10,
             runSpacing: 10,
             children: [
-              ListenableBuilder(
-                listenable: _controller,
-                builder: (context, _) => ImportantButton(
-                  onPressed: _controller.text.isEmpty && playlists.isEmpty
-                      ? null
-                      : () {
-                          if (_controller.text.isNotEmpty) {
-                            libraryModel.addPlaylist(
-                              _controller.text,
-                              [],
-                            ).then(
-                              (_) {
-                                Future.delayed(
-                                  const Duration(milliseconds: 300),
-                                  () {
-                                    final text = _controller.text;
-                                    _controller.clear();
-                                    widget.onAdd?.call();
-                                    libraryModel.push(pageId: text);
-                                  },
-                                );
-                              },
-                            );
-                          } else if (playlists.isNotEmpty) {
-                            Future.wait(
-                              playlists.map(
-                                (e) => libraryModel.addPlaylist(
-                                  e.name,
-                                  e.audios,
-                                ),
-                              ),
-                            ).then(
-                              (_) => Future.delayed(
-                                const Duration(milliseconds: 300),
-                                () {
-                                  libraryModel.push(
-                                    pageId: playlists.first.name,
-                                  );
-                                  _controller.clear();
-                                  di<CustomContentModel>().setPlaylists([]);
-                                  widget.onAdd?.call();
-                                },
-                              ),
-                            );
-                          }
-                        },
-                  child: Text(
-                    l10n.add,
-                  ),
+              ImportantButton(
+                onPressed: () async {
+                  if (shownInDialog && Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  }
+                  if (playlistName?.isNotEmpty ?? false) {
+                    await libraryModel.addPlaylist(playlistName!, []);
+                    await Future.delayed(
+                      const Duration(milliseconds: 200),
+                      () => libraryModel.push(
+                        pageId: customContentModel.playlistName!,
+                      ),
+                    );
+                  } else if (playlists.isNotEmpty) {
+                    await libraryModel.addPlaylists(playlists);
+                    await Future.delayed(
+                      const Duration(milliseconds: 200),
+                      () => libraryModel.push(
+                        pageId: playlists.first.id,
+                      ),
+                    );
+                  }
+                  customContentModel.reset();
+                },
+                child: Text(
+                  l10n.add,
                 ),
               ),
             ],
