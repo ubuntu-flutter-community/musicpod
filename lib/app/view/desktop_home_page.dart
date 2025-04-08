@@ -87,6 +87,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
     libraryModel.push(pageId: PageIDs.searchPage);
   }
 
+  final keyboardListenerFocus = FocusNode();
   @override
   Widget build(BuildContext context) {
     final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
@@ -114,7 +115,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
     );
 
     return KeyboardListener(
-      focusNode: di<AppModel>().keyboardListenerFocus,
+      focusNode: keyboardListenerFocus,
       onKeyEvent: _onTypeHandler,
       child: CallbackShortcuts(
         bindings: {
