@@ -44,6 +44,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/.cxx/
 
 .vscode/
 musicpod_0.1.0_amd64.snap

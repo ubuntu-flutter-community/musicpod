@@ -137,13 +137,12 @@ class _CloseWindowActionConfirmDialogState
   Widget build(BuildContext context) {
     final model = di<SettingsModel>();
     return AlertDialog(
-      title: AppConfig.yaruStyled
-          ? YaruDialogTitleBar(
-              backgroundColor: Colors.transparent,
-              title: Text(context.l10n.closeMusicPod),
-            )
-          : null,
-      titlePadding: AppConfig.yaruStyled ? EdgeInsets.zero : null,
+      title: YaruDialogTitleBar(
+        border: BorderSide.none,
+        backgroundColor: Colors.transparent,
+        title: Text(context.l10n.closeMusicPod),
+      ),
+      titlePadding: EdgeInsets.zero,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
