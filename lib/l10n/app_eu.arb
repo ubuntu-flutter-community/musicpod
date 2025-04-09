@@ -1306,5 +1306,7 @@
   "customContentDescription": "Irrati-nabigatzailea edo podcast-a bilatzeko funtzioa erabili nahi ez baduzu, zure edukia gehi dezakezu hemen, edo erreprodukzio-zerrenda hutsak gehi ditzakezu edo M3U eta PLS fitxategietatik erreprodukzio-zerrendak inportatu.",
   "@customContentDescription": {},
   "exportPinnedAlbumToM3UFile": "Esportatu ainguratutako albumak M3U fitxategira",
-  "@exportPinnedAlbumToM3UFile": {}
+  "@exportPinnedAlbumToM3UFile": {},
+  "checkForUpdatesConfirm": "Ziur {length} podcasten eguneratzeak bilatu nahi dituzula?",
+  "@checkForUpdatesConfirm": {}
 }
