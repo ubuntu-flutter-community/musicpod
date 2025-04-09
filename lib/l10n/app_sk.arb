@@ -1307,5 +1307,7 @@
   "customContentDescription": "Ak nechcete používať rádioprehliadač alebo funkciu vyhľadávania podcastov, môžete sem pridať svoj vlastný obsah alebo môžete pridať prázdne zoznamy skladieb alebo importovať zoznamy skladieb zo súborov M3U a PLS.",
   "@customContentDescription": {},
   "setPlaylistNameAndAddMoreLater": "Nastaviť názov playlistu a neskôr pridať ďalšie tituly",
-  "@setPlaylistNameAndAddMoreLater": {}
+  "@setPlaylistNameAndAddMoreLater": {},
+  "checkForUpdatesConfirm": "Naozaj chcete skontrolovať aktualizácie pre {length} podcastov?",
+  "@checkForUpdatesConfirm": {}
 }
