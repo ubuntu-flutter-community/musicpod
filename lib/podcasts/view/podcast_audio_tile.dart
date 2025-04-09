@@ -225,16 +225,12 @@ class _Description extends StatelessWidget {
           context: context,
           builder: (c) {
             return SimpleDialog(
-              titlePadding: AppConfig.yaruStyled
-                  ? EdgeInsets.zero
-                  : const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
-              title: AppConfig.yaruStyled
-                  ? YaruDialogTitleBar(
-                      backgroundColor: theme.dialogTheme.backgroundColor,
-                      border: BorderSide.none,
-                      title: Text(title ?? ''),
-                    )
-                  : Text(title ?? ''),
+              titlePadding: EdgeInsets.zero,
+              title: YaruDialogTitleBar(
+                backgroundColor: theme.dialogTheme.backgroundColor,
+                border: BorderSide.none,
+                title: Text(title ?? ''),
+              ),
               contentPadding: EdgeInsets.only(
                 top: AppConfig.yaruStyled ? 0 : kLargestSpace,
                 left: kLargestSpace,
