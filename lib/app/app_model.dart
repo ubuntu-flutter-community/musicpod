@@ -62,8 +62,6 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  final keyboardListenerFocus = FocusNode();
-
   bool _showQueueOverlay = false;
   bool get showQueueOverlay => _showQueueOverlay;
   void setOrToggleQueueOverlay({bool? value}) {
