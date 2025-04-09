@@ -383,6 +383,7 @@
     "replayEpisode": "Replay episode",
     "replayAllEpisodes": "Replay all episodes",
     "checkForUpdates": "Check for updates",
+    "checkForUpdatesConfirm": "Are you sure you want to check for updates for {length} podcasts?",
     "playbackWillStopIn": "Playback will stop in: {duration} ({timeOfDay})",
     "schedulePlaybackStopTimer": "Schedule a time to stop playback",
     "alwaysAsk": "Always ask",

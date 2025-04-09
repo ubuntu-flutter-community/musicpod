@@ -10,6 +10,7 @@ import '../../common/view/progress.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_model.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import '../podcast_model.dart';
 
 class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
@@ -61,9 +62,30 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                         if (updatesOnly) {
                           model.setUpdatesOnly(false);
                         } else {
-                          model.update(
-                            updateMessage: context.l10n.newEpisodeAvailable,
-                          );
+                          if (di<LibraryModel>().podcastsLength > 10) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => ConfirmationDialog(
+                                title: Text(context.l10n.checkForUpdates),
+                                confirmLabel: context.l10n.checkForUpdates,
+                                content: Text(
+                                  context.l10n.checkForUpdatesConfirm(
+                                    di<LibraryModel>()
+                                        .podcastsLength
+                                        .toString(),
+                                  ),
+                                ),
+                                onConfirm: () => model.update(
+                                  updateMessage:
+                                      context.l10n.newEpisodeAvailable,
+                                ),
+                              ),
+                            );
+                          } else {
+                            model.update(
+                              updateMessage: context.l10n.newEpisodeAvailable,
+                            );
+                          }
                           model.setUpdatesOnly(true);
                           model.setDownloadsOnly(false);
                         }
@@ -102,7 +124,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
         IconButton(
           icon: processing || checkingForUpdates
               ? const SizedBox.square(
-                  dimension: 22,
+                  dimension: 20,
                   child: Progress(
                     strokeWidth: 2,
                   ),
