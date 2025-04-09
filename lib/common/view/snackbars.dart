@@ -21,3 +21,8 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? showSnackBar({
         ),
   );
 }
+
+void clearSnackBars(BuildContext context) {
+  if (!context.mounted) return;
+  ScaffoldMessenger.of(context).clearSnackBars();
+}

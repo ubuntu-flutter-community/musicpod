@@ -6,27 +6,32 @@ import 'package:watcher/watcher.dart';
 
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
+import '../library/library_service.dart';
 import '../settings/settings_service.dart';
 import 'local_audio_service.dart';
-import 'local_audio_view.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
   LocalAudioModel({
     required LocalAudioService localAudioService,
+    required LibraryService libraryService,
     required SettingsService settingsService,
   })  : _localAudioService = localAudioService,
-        _settingsService = settingsService;
+        _settingsService = settingsService,
+        _libraryService = libraryService {
+    _audiosChangedSub ??=
+        _localAudioService.audiosChanged.listen((_) => notifyListeners());
+  }
 
   final LocalAudioService _localAudioService;
+  final LibraryService _libraryService;
   final SettingsService _settingsService;
   StreamSubscription<bool>? _audiosChangedSub;
   FileWatcher? get fileWatcher => _localAudioService.fileWatcher;
 
-  int? _localAudioIndex;
-  int get localAudioindex => _localAudioIndex ?? LocalAudioView.albums.index;
+  int get _localAudioIndex => _settingsService.localAudioIndex;
+  int get localAudioindex => _localAudioIndex;
   set localAudioindex(int value) {
     if (value == _localAudioIndex) return;
-    _localAudioIndex = value;
     // Note: we do not listen to the local audio index change on purpose, we just pump it into the sink
     // and load it fresh in init
     _settingsService.setLocalAudioIndex(value);
@@ -93,32 +98,20 @@ class LocalAudioModel extends SafeChangeNotifier {
   }) =>
       _localAudioService.findAllAlbums(newAudios: newAudios, clean: clean);
 
-  bool _importing = false;
-  bool get importing => _importing;
-  void setImporting(bool value) {
-    if (value == _importing) return;
-    _importing = value;
-    notifyListeners();
-  }
+  bool get importing => _localAudioService.audios == null;
 
   Future<void> init({
     bool forceInit = false,
     String? directory,
   }) async {
-    setImporting(true);
-    _localAudioIndex =
-        _settingsService.localAudioIndex > LocalAudioView.values.length - 1
-            ? 0
-            : _settingsService.localAudioIndex;
-
     await _localAudioService.init(
       forceInit: forceInit,
-      directory: directory,
+      newDirectory: directory,
     );
-    _audiosChangedSub ??=
-        _localAudioService.audiosChanged.listen((_) => notifyListeners());
-
-    setImporting(false);
+    if (_libraryService.playlists.isEmpty) return;
+    for (var playlist in _libraryService.playlists.entries) {
+      _localAudioService.addAudios(playlist.value);
+    }
   }
 
   @override

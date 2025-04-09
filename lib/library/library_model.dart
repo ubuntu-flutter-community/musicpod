@@ -9,15 +9,21 @@ import '../common/data/audio.dart';
 import '../common/logging.dart';
 import '../common/page_ids.dart';
 import '../common/view/back_gesture.dart';
+import '../local_audio/local_audio_service.dart';
 import 'library_service.dart';
 
 class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
-  LibraryModel(this._service) {
+  LibraryModel({
+    required LibraryService service,
+    required LocalAudioService localAudioService,
+  })  : _service = service,
+        _localAudioService = localAudioService {
     _propertiesChangedSub ??=
         _service.propertiesChanged.listen((_) => notifyListeners());
   }
 
   final LibraryService _service;
+  final LocalAudioService _localAudioService;
   StreamSubscription<bool>? _propertiesChangedSub;
 
   @override
@@ -100,9 +106,24 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   bool isPlaylistSaved(String? id) => _service.isPlaylistSaved(id);
   Future<void> addPlaylist(String name, List<Audio> audios) async =>
       _service.addPlaylist(name, audios);
+  Future<void> addPlaylists(
+    List<({String id, List<Audio> audios})> playlists,
+  ) async {
+    _addLocalAudiosFromPlaylists(playlists);
+    return _service.addPlaylists(playlists);
+  }
+
+  void _addLocalAudiosFromPlaylists(
+    List<({List<Audio> audios, String id})> playlists,
+  ) {
+    for (var playlist in playlists) {
+      _localAudioService.addAudios(playlist.audios);
+    }
+  }
+
   Future<void> updatePlaylist(String id, List<Audio> audios) async =>
       _service.updatePlaylist(id, audios);
-  void removePlaylist(String id) => _service.removePlaylist(id);
+  Future<void> removePlaylist(String id) => _service.removePlaylist(id);
 
   void updatePlaylistName(String oldName, String newName) =>
       _service.updatePlaylistName(oldName, newName);
@@ -197,16 +218,13 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
         await _masterNavigatorKey.currentState?.pushNamed(pageId);
       }
     } else if (builder != null) {
-      final materialPageRoute = PageRouteBuilder(
-        maintainState: maintainState,
+      final materialPageRoute = MaterialPageRoute(
         settings: RouteSettings(
           name: pageId,
         ),
-        pageBuilder: (context, __, ___) => AppConfig.isMobilePlatform
+        builder: (context) => AppConfig.isMobilePlatform
             ? MobilePage(page: builder(context))
             : BackGesture(child: builder(context)),
-        transitionsBuilder: (_, a, __, c) =>
-            FadeTransition(opacity: a, child: c),
       );
 
       if (replace) {

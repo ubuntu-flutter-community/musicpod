@@ -39,8 +39,8 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
     final radioCollectionView =
         watchPropertyValue((RadioModel m) => m.radioCollectionView);
     final radioModel = di<RadioModel>();
-    final importingExporting =
-        watchPropertyValue((CustomContentModel m) => m.importingExporting);
+    final processing =
+        watchPropertyValue((CustomContentModel m) => m.processing);
 
     return Column(
       children: [
@@ -86,10 +86,10 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
               IconButton(
                 tooltip: l10n.exportStarredStationsToOpmlFile,
                 icon: Icon(
-                  Iconz.download,
+                  Iconz.export,
                   semanticLabel: l10n.exportStarredStationsToOpmlFile,
                 ),
-                onPressed: importingExporting
+                onPressed: processing
                     ? null
                     : () => di<CustomContentModel>()
                         .exportStarredStationsToOpmlFile(),
@@ -97,10 +97,10 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
               IconButton(
                 tooltip: l10n.importStarredStationsFromOpmlFile,
                 icon: Icon(
-                  Iconz.upload,
+                  Iconz.import,
                   semanticLabel: l10n.importStarredStationsFromOpmlFile,
                 ),
-                onPressed: importingExporting
+                onPressed: processing
                     ? null
                     : () => di<CustomContentModel>()
                         .importStarredStationsFromOpmlFile(),
@@ -111,7 +111,7 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
                   semanticLabel: l10n.removeAllStarredStations,
                 ),
                 tooltip: context.l10n.removeAllStarredStations,
-                onPressed: importingExporting
+                onPressed: processing
                     ? null
                     : () => showDialog(
                           context: context,
@@ -136,7 +136,7 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
           ),
         ),
         Expanded(
-          child: importingExporting
+          child: processing
               ? const Center(
                   child: Progress(),
                 )

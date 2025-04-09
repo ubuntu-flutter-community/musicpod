@@ -10,6 +10,7 @@ import '../../common/view/progress.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_model.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import '../podcast_model.dart';
 
 class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
@@ -27,8 +28,8 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
     final updatesOnly = watchPropertyValue((PodcastModel m) => m.updatesOnly);
     final downloadsOnly =
         watchPropertyValue((PodcastModel m) => m.downloadsOnly);
-    final importingExporting =
-        watchPropertyValue((CustomContentModel m) => m.importingExporting);
+    final processing =
+        watchPropertyValue((CustomContentModel m) => m.processing);
 
     return Row(
       spacing: kSmallestSpace,
@@ -54,16 +55,37 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                 updatesOnly,
                 downloadsOnly,
               ],
-              onSelected: importingExporting || checkingForUpdates
+              onSelected: processing || checkingForUpdates
                   ? null
                   : (index) {
                       if (index == 0) {
                         if (updatesOnly) {
                           model.setUpdatesOnly(false);
                         } else {
-                          model.update(
-                            updateMessage: context.l10n.newEpisodeAvailable,
-                          );
+                          if (di<LibraryModel>().podcastsLength > 10) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => ConfirmationDialog(
+                                title: Text(context.l10n.checkForUpdates),
+                                confirmLabel: context.l10n.checkForUpdates,
+                                content: Text(
+                                  context.l10n.checkForUpdatesConfirm(
+                                    di<LibraryModel>()
+                                        .podcastsLength
+                                        .toString(),
+                                  ),
+                                ),
+                                onConfirm: () => model.update(
+                                  updateMessage:
+                                      context.l10n.newEpisodeAvailable,
+                                ),
+                              ),
+                            );
+                          } else {
+                            model.update(
+                              updateMessage: context.l10n.newEpisodeAvailable,
+                            );
+                          }
                           model.setUpdatesOnly(true);
                           model.setDownloadsOnly(false);
                         }
@@ -81,35 +103,35 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
         ),
         IconButton(
           icon: Icon(
-            Iconz.download,
+            Iconz.export,
             semanticLabel: context.l10n.exportPodcastsToOpmlFile,
           ),
           tooltip: context.l10n.exportPodcastsToOpmlFile,
-          onPressed: importingExporting || checkingForUpdates
+          onPressed: processing || checkingForUpdates
               ? null
               : () => di<CustomContentModel>().exportPodcastsToOpmlFile(),
         ),
         IconButton(
           icon: Icon(
-            Iconz.upload,
+            Iconz.import,
             semanticLabel: context.l10n.importPodcastsFromOpmlFile,
           ),
           tooltip: context.l10n.importPodcastsFromOpmlFile,
-          onPressed: importingExporting || checkingForUpdates
+          onPressed: processing || checkingForUpdates
               ? null
               : () => di<CustomContentModel>().importPodcastsFromOpmlFile(),
         ),
         IconButton(
-          icon: importingExporting || checkingForUpdates
+          icon: processing || checkingForUpdates
               ? const SizedBox.square(
-                  dimension: 22,
+                  dimension: 20,
                   child: Progress(
                     strokeWidth: 2,
                   ),
                 )
               : Icon(Iconz.remove),
           tooltip: context.l10n.podcasts,
-          onPressed: importingExporting || checkingForUpdates
+          onPressed: processing || checkingForUpdates
               ? null
               : () => showDialog(
                     context: context,

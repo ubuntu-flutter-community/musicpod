@@ -3,7 +3,10 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../app_config.dart';
 import '../../common/view/ui_constants.dart';
+import '../../custom_content/view/backup_dialog.dart';
 import '../../extensions/build_context_x.dart';
+import '../../library/library_model.dart';
+import '../../local_audio/local_audio_model.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/player_model.dart';
 import '../../player/view/player_view.dart';
@@ -12,7 +15,6 @@ import '../../podcasts/podcast_model.dart';
 import '../../podcasts/view/podcast_state_stream_handler.dart';
 import '../app_model.dart';
 import '../connectivity_model.dart';
-import '../../custom_content/view/backup_dialog.dart';
 import 'master_detail_page.dart';
 
 class DesktopHomePage extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -37,7 +39,10 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
           context: context,
           builder: (_) => PatchNotesDialog(
             onClose: () {
-              if (di<AppModel>().isBackupScreenNeeded &&
+              if ((di<LocalAudioModel>().audios?.isNotEmpty ?? false) &&
+                  di<LibraryModel>().playlists.isNotEmpty &&
+                  di<LibraryModel>().pinnedAlbums.isNotEmpty &&
+                  di<AppModel>().isBackupScreenNeeded &&
                   !di<AppModel>().wasBackupSaved &&
                   mounted) {
                 showDialog(

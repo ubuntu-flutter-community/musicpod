@@ -3,7 +3,8 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/page_ids.dart';
-import '../../common/view/common_widgets.dart';
+import '../../common/view/confirm.dart';
+import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_model.dart';
 import '../../l10n/l10n.dart';
@@ -11,22 +12,17 @@ import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/local_audio_view.dart';
 
-class EditPlaylistDialog extends StatefulWidget {
+class EditPlaylistDialog extends StatefulWidget
+    with WatchItStatefulWidgetMixin {
   const EditPlaylistDialog({
     super.key,
     this.playlistName,
     this.initialValue,
-    this.label,
     this.audios,
-    this.allowDelete = false,
-    this.allowRename = false,
-    this.allowCreate = false,
-    this.allowExport = false,
   });
 
   final List<Audio>? audios;
-  final String? playlistName, initialValue, label;
-  final bool allowRename, allowDelete, allowCreate, allowExport;
+  final String? playlistName, initialValue;
 
   @override
   State<EditPlaylistDialog> createState() => _EditPlaylistDialogState();
@@ -52,123 +48,82 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
   Widget build(BuildContext context) {
     final libraryModel = di<LibraryModel>();
     final l10n = context.l10n;
-    return AlertDialog(
-      content: SizedBox(
-        height: 200,
-        width: 400,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const SizedBox(
-              height: 10,
+    return ConfirmationDialog(
+      scrollable: true,
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: kMediumSpace,
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: TextField(
-                autofocus: true,
-                decoration: InputDecoration(
-                  label: Text(
-                    widget.label ?? context.l10n.setPlaylistNameAndAddMoreLater,
-                  ),
+            child: TextField(
+              autofocus: true,
+              decoration: InputDecoration(
+                label: Text(
+                  context.l10n.setPlaylistNameAndAddMoreLater,
                 ),
-                controller: _controller,
               ),
+              controller: _controller,
             ),
-            const SizedBox(
-              height: kLargestSpace,
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Wrap(
-                spacing: 10,
-                runSpacing: 10,
-                children: [
-                  OutlinedButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(
-                      context.l10n.cancel,
-                    ),
-                  ),
-                  if (widget.allowExport)
-                    OutlinedButton(
-                      onPressed: widget.playlistName == null ||
-                              widget.audios == null
+          ),
+          const SizedBox(
+            height: kLargestSpace,
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                TextButton.icon(
+                  icon: Icon(Iconz.export),
+                  onPressed:
+                      widget.playlistName == null || widget.audios == null
                           ? null
                           : () => di<CustomContentModel>().exportPlaylistToM3u(
                                 id: widget.playlistName!,
                                 audios: widget.audios!,
                               ),
-                      child: Text(l10n.exportPlaylistToM3UFile),
-                    ),
-                  if (widget.allowDelete && widget.playlistName != null)
-                    OutlinedButton(
-                      onPressed: () async {
+                  label: Text(l10n.exportPlaylistToM3UFile),
+                ),
+                if (widget.playlistName != null)
+                  TextButton.icon(
+                    icon: Icon(Iconz.remove),
+                    onPressed: () {
+                      if (context.mounted && Navigator.of(context).canPop()) {
                         Navigator.of(context).pop();
-                        libraryModel.removePlaylist(widget.playlistName!);
-                        di<LocalAudioModel>().localAudioindex =
-                            LocalAudioView.playlists.index;
-                        await libraryModel.push(
-                          pageId: PageIDs.localAudio,
-                          replace: true,
-                        );
-                      },
-                      child: Text(
-                        context.l10n.deletePlaylist,
-                      ),
+                      }
+                      di<LocalAudioModel>().localAudioindex =
+                          LocalAudioView.playlists.index;
+                      libraryModel.push(
+                        pageId: PageIDs.localAudio,
+                        replace: true,
+                      );
+                      libraryModel.removePlaylist(widget.playlistName!);
+                    },
+                    label: Text(
+                      context.l10n.deletePlaylist,
                     ),
-                  if (widget.allowRename && widget.playlistName != null)
-                    ImportantButton(
-                      onPressed: () {
-                        di<LocalAudioModel>().localAudioindex =
-                            LocalAudioView.playlists.index;
-                        libraryModel
-                          ..push(pageId: PageIDs.likedAudios)
-                          ..updatePlaylistName(
-                            widget.playlistName!,
-                            _controller.text,
-                          );
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        context.l10n.save,
-                      ),
-                    ),
-                  if (widget.allowCreate)
-                    ListenableBuilder(
-                      listenable: _controller,
-                      builder: (context, _) {
-                        return ImportantButton(
-                          onPressed: _controller.text.isEmpty
-                              ? null
-                              : () async {
-                                  await libraryModel.addPlaylist(
-                                    _controller.text,
-                                    [],
-                                  ).then((_) async {
-                                    if (context.mounted) {
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop();
-                                    }
-                                    await Future.delayed(
-                                      const Duration(milliseconds: 300),
-                                    );
-                                    await libraryModel.push(
-                                      pageId: _controller.text,
-                                    );
-                                  });
-                                },
-                          child: Text(
-                            context.l10n.add,
-                          ),
-                        );
-                      },
-                    ),
-                ],
-              ),
+                  ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+      confirmLabel: context.l10n.save,
+      confirmEnabled:
+          watchPropertyValue((CustomContentModel m) => !m.processing),
+      onConfirm: () {
+        di<LocalAudioModel>().localAudioindex = LocalAudioView.playlists.index;
+        libraryModel
+          ..push(pageId: PageIDs.localAudio)
+          ..updatePlaylistName(
+            widget.playlistName!,
+            _controller.text,
+          );
+        Navigator.of(context).maybePop();
+      },
     );
   }
 }

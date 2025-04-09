@@ -10,11 +10,13 @@ import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/common_widgets.dart';
+import '../../common/view/confirm.dart';
 import '../../common/view/loading_grid.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
+import '../../custom_content/custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -34,8 +36,10 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     if (!isOnline) return const OfflineBody();
 
-    final loading =
+    final checkingForUpdates =
         watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
+    final processing =
+        watchPropertyValue((CustomContentModel m) => m.processing);
     final subs = watchPropertyValue((LibraryModel m) => m.podcasts);
     final libraryModel = di<LibraryModel>();
     final updatesLength =
@@ -63,7 +67,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
             child: const PodcastCollectionControlPanel(),
           ),
         ),
-        if (loading)
+        if (checkingForUpdates)
           Expanded(child: LoadingGrid(limit: subsLength))
         else if (subsLength == 0)
           Expanded(
@@ -95,9 +99,30 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 return RefreshIndicator(
-                  onRefresh: () async => di<PodcastModel>().update(
-                    updateMessage: context.l10n.newEpisodeAvailable,
-                  ),
+                  onRefresh: () async {
+                    if (checkingForUpdates || processing) return;
+                    if (subsLength > 10) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => ConfirmationDialog(
+                          title: Text(context.l10n.checkForUpdates),
+                          confirmLabel: context.l10n.checkForUpdates,
+                          content: Text(
+                            context.l10n.checkForUpdatesConfirm(
+                              subsLength.toString(),
+                            ),
+                          ),
+                          onConfirm: () => di<PodcastModel>().update(
+                            updateMessage: context.l10n.newEpisodeAvailable,
+                          ),
+                        ),
+                      );
+                    } else {
+                      di<PodcastModel>().update(
+                        updateMessage: context.l10n.newEpisodeAvailable,
+                      );
+                    }
+                  },
                   child: GridView.builder(
                     padding: getAdaptiveHorizontalPadding(
                       constraints: constraints,

@@ -31,7 +31,7 @@ Future<void> main() async {
   setUpAll(
     () async {
       service = LocalAudioService(localCoverService: localCoverService);
-      await service?.init(directory: Directory.current.path);
+      await service?.init(newDirectory: Directory.current.path);
     },
   );
 
@@ -62,7 +62,6 @@ Future<void> main() async {
         expect(coldStones?.album, testOgg.album);
         expect(coldStones?.genre, testOgg.genre);
       },
-      skip: true,
     );
   });
 }
