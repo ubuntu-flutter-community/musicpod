@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app_config.dart';
 import '../../l10n/l10n.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
@@ -70,15 +69,6 @@ class MetaDataContent extends StatelessWidget {
       ),
     };
 
-    final title = AppConfig.yaruStyled
-        ? YaruDialogTitleBar(
-            title: Text(l10n.metadata),
-          )
-        : Center(child: Text(l10n.metadata));
-
-    final titlePadding =
-        AppConfig.yaruStyled ? EdgeInsets.zero : const EdgeInsets.only(top: 10);
-
     const edgeInsets = EdgeInsets.only(bottom: 12);
 
     final body = Column(
@@ -111,8 +101,12 @@ class MetaDataContent extends StatelessWidget {
 
     return switch (_mode) {
       ModalMode.dialog => AlertDialog(
-          title: title,
-          titlePadding: titlePadding,
+          title: YaruDialogTitleBar(
+            title: Text(l10n.metadata),
+            border: BorderSide.none,
+            backgroundColor: Colors.transparent,
+          ),
+          titlePadding: EdgeInsets.zero,
           contentPadding: edgeInsets,
           scrollable: true,
           content: body,
