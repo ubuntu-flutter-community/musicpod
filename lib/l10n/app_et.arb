@@ -1308,5 +1308,7 @@
   "import": "Impordi",
   "@import": {},
   "localAudioWatchDialogDescription": "Kas sa soovid kohaliku muusikakogu kasuta uuesti laadida?",
-  "@localAudioWatchDialogDescription": {}
+  "@localAudioWatchDialogDescription": {},
+  "checkForUpdatesConfirm": "Kas sa oled kindel, et soovid kontrollida {length} taskuhäälingu uuendusi?",
+  "@checkForUpdatesConfirm": {}
 }
