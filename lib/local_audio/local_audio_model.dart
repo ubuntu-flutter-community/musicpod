@@ -109,7 +109,9 @@ class LocalAudioModel extends SafeChangeNotifier {
       newDirectory: directory,
     );
     if (_libraryService.playlists.isEmpty) return;
-    for (var playlist in _libraryService.playlists.entries) {
+    for (var playlist in _libraryService.playlists.entries.where(
+      (e) => _settingsService.externalPlaylists.contains(e.key),
+    )) {
       _localAudioService.addAudios(playlist.value);
     }
   }

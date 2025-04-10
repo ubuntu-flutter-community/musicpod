@@ -316,8 +316,11 @@ class LocalAudioService {
       _fileWatcher = FileWatcher(dir);
     }
 
-    _failedImports = result.failedImports;
-    addAudios(result.audios, forceInit: forceInit);
+    addAudios(
+      result.audios,
+      forceInit: forceInit,
+      failedImports: result.failedImports,
+    );
   }
 
   Future<void> dispose() async => _audiosController.close();
@@ -329,14 +332,21 @@ class LocalAudioService {
   }) {
     if (forceInit) {
       _audios = null;
+      _audiosController.add(true);
     }
-    _audiosController.add(true);
-    _audios = forceInit ? [] : (_audios ?? []);
-    for (var audio in newAudios) {
-      if (!_audios!.contains(audio)) {
-        _audios!.add(audio);
+
+    _audios ??= [];
+
+    if (_audios!.isEmpty) {
+      _audios = newAudios;
+    } else {
+      for (final audio in newAudios) {
+        if (!_audios!.contains(audio)) {
+          _audios!.add(audio);
+        }
       }
     }
+
     _sortAllTitles();
     _findAllArtists();
     _findAllAlbumArtists();

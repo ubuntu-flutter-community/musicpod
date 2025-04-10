@@ -137,6 +137,28 @@ class SettingsService {
   Future<void> setShowPositionDuration(bool value) async =>
       _preferences.setBool(SPKeys.showPositionDuration, value).then(notify);
 
+  List<String> get externalPlaylists =>
+      _preferences.getStringList(SPKeys.externalPlaylists) ?? [];
+  void setExternalPlaylists(List<String> value) async =>
+      _preferences.setStringList(SPKeys.externalPlaylists, value).then(notify);
+  void addExternalPlaylist(String value) {
+    final playlists = List<String>.from(externalPlaylists);
+    if (playlists.contains(value)) return;
+    playlists.add(value);
+    _preferences
+        .setStringList(SPKeys.externalPlaylists, playlists)
+        .then(notify);
+  }
+
+  void removeExternalPlaylist(String value) {
+    final playlists = List<String>.from(externalPlaylists);
+    if (!playlists.contains(value)) return;
+    playlists.remove(value);
+    _preferences
+        .setStringList(SPKeys.externalPlaylists, playlists)
+        .then(notify);
+  }
+
   CloseBtnAction get closeBtnActionIndex =>
       _preferences.getString(SPKeys.closeBtnAction) == null
           ? CloseBtnAction.alwaysAsk
