@@ -52,8 +52,8 @@ class CustomContentPage extends StatelessWidget {
                     ],
                     children: const [
                       CustomPlaylistsSection(),
-                      CustomPodcastSection(),
                       CustomStationSection(),
+                      CustomPodcastSection(),
                     ]
                         .map(
                           (e) => Padding(
