@@ -117,6 +117,8 @@ class SettingsModel extends SafeChangeNotifier {
   Future<void> setShowPositionDuration(bool value) async =>
       _service.setShowPositionDuration(value);
 
+  List<String> get externalPlaylists => _service.externalPlaylists;
+
   Future<void> wipeAllSettings() async => _service.wipeAllSettings();
 
   @override

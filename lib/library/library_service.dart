@@ -234,13 +234,24 @@ class LibraryService {
     }
   }
 
-  Future<void> addPlaylists(
-    List<({String id, List<Audio> audios})> playlists,
-  ) async {
+  Future<void> addPlaylists({
+    required List<({String id, List<Audio> audios})> playlists,
+    required bool external,
+  }) async {
     if (playlists.isEmpty) return;
     for (var playlist in playlists) {
       if (!_playlists.containsKey(playlist.id)) {
         _playlists.putIfAbsent(playlist.id, () => playlist.audios);
+        if (external) {
+          final externalPlaylists =
+              _sharedPreferences.getStringList(SPKeys.externalPlaylists);
+          final newList = List<String>.from(externalPlaylists ?? []);
+          newList.add(playlist.id);
+          await _sharedPreferences.setStringList(
+            SPKeys.externalPlaylists,
+            newList,
+          );
+        }
       }
     }
     await writeAudioMap(map: _playlists, fileName: FileNames.playlists)
@@ -263,6 +274,19 @@ class LibraryService {
   Future<void> removePlaylist(String id) async {
     if (_playlists.containsKey(id)) {
       _playlists.remove(id);
+      if (_sharedPreferences
+              .getStringList(SPKeys.externalPlaylists)
+              ?.contains(id) ??
+          false) {
+        final newList = List<String>.from(
+          _sharedPreferences.getStringList(SPKeys.externalPlaylists) ?? [],
+        );
+        newList.remove(id);
+        await _sharedPreferences.setStringList(
+          SPKeys.externalPlaylists,
+          newList,
+        );
+      }
       return writeAudioMap(map: _playlists, fileName: FileNames.playlists).then(
         (_) => _propertiesChangedController.add(true),
       );

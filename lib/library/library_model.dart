@@ -107,10 +107,13 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   Future<void> addPlaylist(String name, List<Audio> audios) async =>
       _service.addPlaylist(name, audios);
   Future<void> addPlaylists(
-    List<({String id, List<Audio> audios})> playlists,
-  ) async {
-    _addLocalAudiosFromPlaylists(playlists);
-    return _service.addPlaylists(playlists);
+    List<({String id, List<Audio> audios})> playlists, {
+    required bool external,
+  }) async {
+    if (external) {
+      _addLocalAudiosFromPlaylists(playlists);
+    }
+    return _service.addPlaylists(playlists: playlists, external: external);
   }
 
   void _addLocalAudiosFromPlaylists(

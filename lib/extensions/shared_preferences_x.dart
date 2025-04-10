@@ -36,4 +36,5 @@ extension SPKeys on SharedPreferences {
   static const backupSaved = 'backupSaved_';
   // TODO: #1201 chore: migrate pinned albums to shared preferences
   static const pinnedMusicpodAlbumPrefix = 'pinnedMusicpodAlbumPrefix___';
+  static const externalPlaylists = 'externalPlaylists';
 }

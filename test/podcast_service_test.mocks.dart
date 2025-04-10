@@ -134,6 +134,12 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
       ) as bool);
 
   @override
+  List<String> get externalPlaylists => (super.noSuchMethod(
+        Invocation.getter(#externalPlaylists),
+        returnValue: <String>[],
+      ) as List<String>);
+
+  @override
   _i6.CloseBtnAction get closeBtnActionIndex => (super.noSuchMethod(
         Invocation.getter(#closeBtnActionIndex),
         returnValue: _i6.CloseBtnAction.alwaysAsk,
@@ -290,6 +296,24 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),
       ) as _i3.Future<void>);
+
+  @override
+  void setExternalPlaylists(List<String>? value) => super.noSuchMethod(
+        Invocation.method(#setExternalPlaylists, [value]),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void addExternalPlaylist(String? value) => super.noSuchMethod(
+        Invocation.method(#addExternalPlaylist, [value]),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removeExternalPlaylist(String? value) => super.noSuchMethod(
+        Invocation.method(#removeExternalPlaylist, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void setCloseBtnActionIndex(_i6.CloseBtnAction? value) => super.noSuchMethod(
@@ -549,11 +573,15 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
       ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> addPlaylists(
-    List<({List<_i8.Audio> audios, String id})>? playlists,
-  ) =>
+  _i3.Future<void> addPlaylists({
+    required List<({List<_i8.Audio> audios, String id})>? playlists,
+    required bool? external,
+  }) =>
       (super.noSuchMethod(
-        Invocation.method(#addPlaylists, [playlists]),
+        Invocation.method(#addPlaylists, [], {
+          #playlists: playlists,
+          #external: external,
+        }),
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),
       ) as _i3.Future<void>);

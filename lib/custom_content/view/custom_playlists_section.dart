@@ -89,7 +89,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                       ),
                     );
                   } else if (playlists.isNotEmpty) {
-                    await libraryModel.addPlaylists(playlists);
+                    await libraryModel.addPlaylists(playlists, external: true);
                     await Future.delayed(
                       const Duration(milliseconds: 200),
                       () => libraryModel.push(
