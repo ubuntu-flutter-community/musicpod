@@ -1309,5 +1309,7 @@
   "import": "Importa",
   "@import": {},
   "failedToReadMetadata": "Impossibile leggere i metadati per i seguenti file multimediali:",
-  "@failedToReadMetadata": {}
+  "@failedToReadMetadata": {},
+  "checkForUpdatesConfirm": "Vuoi verificare gli aggiornamenti per i podcast {length}?",
+  "@checkForUpdatesConfirm": {}
 }
