@@ -9,14 +9,15 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:path/path.dart' as p;
 import 'package:smtc_windows/smtc_windows.dart';
 
+import '../app_config.dart';
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/data/mpv_meta_data.dart';
 import '../common/data/player_state.dart';
 import '../common/file_names.dart';
 import '../common/logging.dart';
-import '../app_config.dart';
 import '../expose/expose_service.dart';
+import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
 import '../local_audio/local_cover_service.dart';
 import '../persistence_utils.dart';
@@ -493,7 +494,7 @@ class PlayerService {
   // Last Positions used when the app re-opens and for podcasts
   //
 
-  // TODO: migrate to shared preferences but add a migration routine from the old file so users do not
+  // TODO: #1217 migrate to shared preferences but add a migration routine from the old file so users do not
   // lose their progress
   Map<String, Duration> _lastPositions = {};
   Map<String, Duration> get lastPositions => _lastPositions;
@@ -890,6 +891,26 @@ class PlayerService {
     } on Exception catch (e) {
       printMessageInDebugMode(e);
       return null;
+    }
+  }
+
+  void playPath([
+    String? path,
+  ]) {
+    if (path == null) {
+      return;
+    }
+    try {
+      final file = File(path);
+
+      if (file.existsSync() && file.isPlayable) {
+        startPlaylist(
+          listName: path,
+          audios: [Audio.local(file, getImage: true)],
+        );
+      }
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
     }
   }
 }
