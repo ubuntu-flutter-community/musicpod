@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.10.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.10.0...v2.10.1) (2025-04-12)
+
+
+### Bug Fixes
+
+* gtk command line listener to open existing musicpod ([94e23c3](https://github.com/ubuntu-flutter-community/musicpod/commit/94e23c366e8236253ed197255f7d1135b29b64ec))
+* Translations update from Hosted Weblate ([#1210](https://github.com/ubuntu-flutter-community/musicpod/issues/1210)) ([7fa3ae6](https://github.com/ubuntu-flutter-community/musicpod/commit/7fa3ae6f1868d7c3fecef3737ef1fb46d31d2cb2))
+
 ## [2.10.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.9.0...v2.10.0) (2025-04-06)
 
 
