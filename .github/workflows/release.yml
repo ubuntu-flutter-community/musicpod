@@ -22,67 +22,69 @@ jobs:
         id: release
         with:
           release-type: dart
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 5
-      - uses: subosito/flutter-action@v2
-        if: ${{ steps.release.outputs.release_created }}
-        with:
-          channel: 'stable'
-          flutter-version: ${{env.FLUTTER_VERSION}}
-      - name: Build macOS app
-        id: buildmacos
-        if: ${{ steps.release.outputs.release_created }}
-        run: flutter build macos --release --dart-define=FORCED_UPDATE_THRESHOLD=${{ vars.FORCED_UPDATE_THRESHOLD}}
-      - name: Codesign executable
-        id: codesignmacos
-        if: steps.buildmacos.outcome == 'success'
-        env:
-          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
-          MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
-          MACOS_IDENTITY: ${{ secrets.MACOS_IDENTITY }}
-        run: |
-          echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
-          echo "Create Keychain"
-          security create-keychain -p $MACOS_CERTIFICATE_PWD build.keychain
-          echo "Assign to Login Keychain"
-          security default-keychain -s build.keychain
-          echo "Unlock the Login Keychain"
-          security unlock-keychain -p $MACOS_CERTIFICATE_PWD build.keychain
-          echo "Import certificate"
-          security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
-          echo "Set Key Partition"
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $MACOS_CERTIFICATE_PWD build.keychain
-          echo "Find Identity"
-          security find-identity
-          echo "Sign the app"
-          /usr/bin/codesign --force --deep -s $MACOS_IDENTITY ./$MACOS_APP_RELEASE_PATH/musicpod.app
-      - name: Create a dmg
-        id: createdmg
-        if: steps.codesignmacos.outcome == 'success'
-        run: |
-          echo "Install create-dmg"
-          brew install create-dmg
-          cd $MACOS_APP_RELEASE_PATH
-          create-dmg \
-            --volname "musicpod" \
-            --window-pos 200 120 \
-            --window-size 950 820 \
-            --icon-size 130 \
-            --text-size 14 \
-            --icon "musicpod.app" 260 250 \
-            --hide-extension "musicpod.app" \
-            --app-drop-link 540 250 \
-            --hdiutil-quiet \
-            "musicpod.dmg" \
-            "musicpod.app"
-          pwd
-          ls -l
-      - name: Upload Release Artifact
-        if: ${{ steps.release.outputs.release_created }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ steps.release.outputs.tag_name }} /Users/runner/work/musicpod/musicpod/build/macos/Build/Products/Release/musicpod.dmg
+          
+      # Disabled because it does not work anymore as before, switched back to xcode
+      # - uses: actions/checkout@v4
+      #   with:
+      #     fetch-depth: 5
+      # - uses: subosito/flutter-action@v2
+      #   if: ${{ steps.release.outputs.release_created }}
+      #   with:
+      #     channel: 'stable'
+      #     flutter-version: ${{env.FLUTTER_VERSION}}
+      # - name: Build macOS app
+      #   id: buildmacos
+      #   if: ${{ steps.release.outputs.release_created }}
+      #   run: flutter build macos --release --dart-define=FORCED_UPDATE_THRESHOLD=${{ vars.FORCED_UPDATE_THRESHOLD}}
+      # - name: Codesign executable
+      #   id: codesignmacos
+      #   if: steps.buildmacos.outcome == 'success'
+      #   env:
+      #     MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+      #     MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+      #     MACOS_IDENTITY: ${{ secrets.MACOS_IDENTITY }}
+      #   run: |
+      #     echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
+      #     echo "Create Keychain"
+      #     security create-keychain -p $MACOS_CERTIFICATE_PWD build.keychain
+      #     echo "Assign to Login Keychain"
+      #     security default-keychain -s build.keychain
+      #     echo "Unlock the Login Keychain"
+      #     security unlock-keychain -p $MACOS_CERTIFICATE_PWD build.keychain
+      #     echo "Import certificate"
+      #     security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+      #     echo "Set Key Partition"
+      #     security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $MACOS_CERTIFICATE_PWD build.keychain
+      #     echo "Find Identity"
+      #     security find-identity
+      #     echo "Sign the app"
+      #     /usr/bin/codesign --force --deep -s $MACOS_IDENTITY ./$MACOS_APP_RELEASE_PATH/musicpod.app
+      # - name: Create a dmg
+      #   id: createdmg
+      #   if: steps.codesignmacos.outcome == 'success'
+      #   run: |
+      #     echo "Install create-dmg"
+      #     brew install create-dmg
+      #     cd $MACOS_APP_RELEASE_PATH
+      #     create-dmg \
+      #       --volname "musicpod" \
+      #       --window-pos 200 120 \
+      #       --window-size 950 820 \
+      #       --icon-size 130 \
+      #       --text-size 14 \
+      #       --icon "musicpod.app" 260 250 \
+      #       --hide-extension "musicpod.app" \
+      #       --app-drop-link 540 250 \
+      #       --hdiutil-quiet \
+      #       "musicpod.dmg" \
+      #       "musicpod.app"
+      #     pwd
+      #     ls -l
+      # - name: Upload Release Artifact
+      #   if: ${{ steps.release.outputs.release_created }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: gh release upload ${{ steps.release.outputs.tag_name }} /Users/runner/work/musicpod/musicpod/build/macos/Build/Products/Release/musicpod.dmg
 
   # Disabled because it does not work
   # AppImage
