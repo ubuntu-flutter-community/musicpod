@@ -103,6 +103,7 @@ class AppModel extends SafeChangeNotifier {
   bool? _updateAvailable;
   bool? get updateAvailable => _updateAvailable;
   String? _onlineVersion;
+
   String? get onlineVersion => _onlineVersion;
   Future<void> checkForUpdate({
     required bool isOnline,
