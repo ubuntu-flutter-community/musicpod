@@ -6,7 +6,6 @@ import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 import 'package:github/github.dart';
-import 'package:gtk/gtk.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -166,13 +165,8 @@ void registerDependencies({required List<String> args}) async {
       dependsOn: [ExposeService],
       dispose: (s) async => s.dispose(),
     )
-    ..registerSingletonWithDependencies<ExternalPathService>(
-      () => ExternalPathService(
-        gtkNotifier: Platform.isLinux ? GtkApplicationNotifier(args) : null,
-        playerService: di<PlayerService>(),
-      ),
-      dependsOn: [PlayerService],
-      dispose: (s) => s.dispose(),
+    ..registerSingleton<ExternalPathService>(
+      const ExternalPathService(),
     )
     ..registerSingletonAsync<LibraryService>(
       () async {
@@ -182,7 +176,7 @@ void registerDependencies({required List<String> args}) async {
         await libraryService.init();
         return libraryService;
       },
-      dependsOn: [SharedPreferences, ExternalPathService],
+      dependsOn: [SharedPreferences],
       dispose: (s) async => s.dispose(),
     )
     ..registerSingletonWithDependencies<LocalAudioService>(
@@ -233,7 +227,7 @@ void registerDependencies({required List<String> args}) async {
         externalPathService: di<ExternalPathService>(),
         gitHub: di<GitHub>(),
       ),
-      dependsOn: [SettingsService, ExternalPathService],
+      dependsOn: [SettingsService],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton(
@@ -327,7 +321,6 @@ void registerDependencies({required List<String> args}) async {
         radioService: di<RadioService>(),
       ),
       dependsOn: [
-        ExternalPathService,
         LibraryService,
         PodcastService,
         RadioService,

@@ -3,7 +3,6 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../app/app_model.dart';
 import '../../extensions/build_context_x.dart';
-import '../../external_path/external_path_service.dart';
 import 'bottom_player.dart';
 import 'full_height_player.dart';
 
@@ -20,7 +19,6 @@ class _PlayerViewState extends State<PlayerView> {
   @override
   void initState() {
     super.initState();
-    di<ExternalPathService>().init();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
       di<AppModel>().setShowWindowControls(

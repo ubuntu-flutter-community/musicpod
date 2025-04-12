@@ -3,6 +3,7 @@ import 'package:gtk/gtk.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app_config.dart';
+import '../../player/player_service.dart';
 import 'app.dart';
 import 'splash_screen.dart';
 
@@ -31,7 +32,11 @@ class _MusicPodState extends State<MusicPod> {
         future: _allReady,
         builder: (context, snapshot) => snapshot.hasData
             ? AppConfig.isGtkApp
-                ? const GtkApplication(child: YaruMusicPodApp())
+                ? GtkApplication(
+                    onCommandLine: (args) =>
+                        di<PlayerService>().playPath(args.firstOrNull),
+                    child: const YaruMusicPodApp(),
+                  )
                 : const MaterialMusicPodApp()
             : const SplashScreen(),
       );

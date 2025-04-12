@@ -3,59 +3,12 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
-import 'package:gtk/gtk.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../app_config.dart';
-import '../common/data/audio.dart';
-import '../common/logging.dart';
-import '../extensions/media_file_x.dart';
-import '../player/player_service.dart';
 
 class ExternalPathService {
-  final GtkApplicationNotifier? _gtkNotifier;
-  final PlayerService _playerService;
-
-  ExternalPathService({
-    GtkApplicationNotifier? gtkNotifier,
-    required PlayerService playerService,
-  })  : _gtkNotifier = gtkNotifier,
-        _playerService = playerService;
-
-  void init() {
-    if (_gtkNotifier != null) {
-      _gtkNotifier!.addCommandLineListener(
-        (args) => _playPath(
-          _gtkNotifier?.commandLine?.firstOrNull,
-        ),
-      );
-      _playPath(_gtkNotifier?.commandLine?.firstOrNull);
-    }
-  }
-
-  void _playPath([
-    String? path,
-  ]) {
-    if (path == null) {
-      return;
-    }
-    try {
-      final file = File(path);
-
-      if (file.existsSync() && file.isPlayable) {
-        _playerService.startPlaylist(
-          listName: path,
-          audios: [Audio.local(file, getImage: true)],
-        );
-      }
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
-    }
-  }
-
-  void dispose() {
-    _gtkNotifier?.dispose();
-  }
+  const ExternalPathService();
 
   Future<String?> getPathOfDirectory() async {
     if (AppConfig.isMobilePlatform && await _androidPermissionsGranted()) {

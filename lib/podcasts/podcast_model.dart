@@ -34,19 +34,12 @@ class PodcastModel extends SafeChangeNotifier {
     _searchStateController.add(state);
   }
 
-  var _firstUpdateChecked = false;
   Future<void> init({
     required String updateMessage,
     bool forceInit = false,
     Function({required String message})? notify,
   }) async {
     await _podcastService.init(forceInit: forceInit);
-
-    if (_firstUpdateChecked == false) {
-      update(updateMessage: updateMessage);
-    }
-    _firstUpdateChecked = true;
-
     notifyListeners();
   }
 

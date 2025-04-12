@@ -28,10 +28,9 @@ class LocalAudioModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _audiosChangedSub;
   FileWatcher? get fileWatcher => _localAudioService.fileWatcher;
 
-  int get _localAudioIndex => _settingsService.localAudioIndex;
-  int get localAudioindex => _localAudioIndex;
+  int get localAudioindex => _settingsService.localAudioIndex;
   set localAudioindex(int value) {
-    if (value == _localAudioIndex) return;
+    if (value == localAudioindex) return;
     // Note: we do not listen to the local audio index change on purpose, we just pump it into the sink
     // and load it fresh in init
     _settingsService.setLocalAudioIndex(value);
@@ -109,7 +108,9 @@ class LocalAudioModel extends SafeChangeNotifier {
       newDirectory: directory,
     );
     if (_libraryService.playlists.isEmpty) return;
-    for (var playlist in _libraryService.playlists.entries) {
+    for (var playlist in _libraryService.playlists.entries.where(
+      (e) => _settingsService.externalPlaylists.contains(e.key),
+    )) {
       _localAudioService.addAudios(playlist.value);
     }
   }

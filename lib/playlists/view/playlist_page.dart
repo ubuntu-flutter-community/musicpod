@@ -35,6 +35,7 @@ import '../../local_audio/view/genre_page.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
+import '../../settings/settings_model.dart';
 import 'edit_playlist_dialog.dart';
 import 'playlst_add_audios_dialog.dart';
 
@@ -48,6 +49,8 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     final model = di<LocalAudioModel>();
     final libraryModel = di<LibraryModel>();
     final playlist = libraryModel.getPlaylistById(pageId);
@@ -80,12 +83,12 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
                     onError: (path) => showFailedImportsSnackBar(
                       failedImports: [path],
                       context: context,
-                      message: context.l10n.failedToImport,
+                      message: l10n.failedToImport,
                     ),
                     onParseError: (path) => showFailedImportsSnackBar(
                       failedImports: [path],
                       context: context,
-                      message: context.l10n.failedToReadMetadata,
+                      message: l10n.failedToReadMetadata,
                     ),
                   ),
                 );
@@ -94,7 +97,7 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
                 showFailedImportsSnackBar(
                   failedImports: [value.toString()],
                   context: context,
-                  message: context.l10n.failedToImport,
+                  message: l10n.failedToImport,
                 );
               }
             },
@@ -252,18 +255,22 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final allowReorder =
         watchPropertyValue((LocalAudioModel m) => m.allowReorder);
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final libraryModel = di<LibraryModel>();
     final playerModel = di<PlayerModel>();
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
+    watchPropertyValue((SettingsModel m) => m.externalPlaylists.length);
 
     final audioPageHeader = AudioPageHeader(
       title: pageId,
-      subTitle: '${audios.length} ${context.l10n.titles}',
+      subTitle: '${audios.length} ${l10n.titles}',
       image: image,
-      label: context.l10n.playlist,
+      label: di<SettingsModel>().externalPlaylists.contains(pageId)
+          ? '${l10n.playlist} (${l10n.external})'
+          : l10n.playlist,
       description: _PlaylistGenreBar(audios: audios),
     );
 
@@ -359,6 +366,7 @@ class _PlaylistControlPanel extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final allowReorder =
         watchPropertyValue((LocalAudioModel m) => m.allowReorder);
     final libraryModel = di<LibraryModel>();
@@ -367,7 +375,7 @@ class _PlaylistControlPanel extends StatelessWidget with WatchItMixin {
       children: space(
         children: [
           IconButton(
-            tooltip: context.l10n.editPlaylist,
+            tooltip: l10n.editPlaylist,
             icon: Icon(Iconz.pen),
             onPressed: () => showDialog(
               context: context,
@@ -379,13 +387,13 @@ class _PlaylistControlPanel extends StatelessWidget with WatchItMixin {
             ),
           ),
           IconButton(
-            tooltip: context.l10n.clearPlaylist,
+            tooltip: l10n.clearPlaylist,
             icon: Icon(Iconz.clearAll),
             onPressed: () => libraryModel.clearPlaylist(pageId),
           ),
           AvatarPlayButton(audios: audios, pageId: pageId),
           IconButton(
-            tooltip: context.l10n.add,
+            tooltip: l10n.add,
             icon: Icon(Iconz.plus),
             onPressed: () => showDialog(
               context: context,
@@ -393,7 +401,7 @@ class _PlaylistControlPanel extends StatelessWidget with WatchItMixin {
             ),
           ),
           IconButton(
-            tooltip: context.l10n.move,
+            tooltip: l10n.move,
             isSelected: allowReorder,
             onPressed: () =>
                 di<LocalAudioModel>().setAllowReorder(!allowReorder),
