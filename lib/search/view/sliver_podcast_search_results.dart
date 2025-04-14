@@ -79,7 +79,7 @@ class _SliverPodcastSearchResultsState
       itemCount: searchResultItems.length,
       gridDelegate: audioCardGridDelegate,
       itemBuilder: (context, index) => PodcastCard(
-        podcastItem: searchResultItems.elementAt(index),
+        item: searchResultItems.elementAt(index),
       ),
     );
   }
@@ -164,7 +164,7 @@ class _SliverPodcastSearchCountryChartsResultsState
       itemCount: searchResultItems.length,
       gridDelegate: audioCardGridDelegate,
       itemBuilder: (context, index) => PodcastCard(
-        podcastItem: searchResultItems.elementAt(index),
+        item: searchResultItems.elementAt(index),
       ),
     );
   }

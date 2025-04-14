@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/view/common_widgets.dart';
+import '../../common/view/snackbars.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../podcasts/podcast_model.dart';
-import '../../podcasts/view/podcast_page.dart';
+import '../../podcasts/view/lazy_podcast_page.dart';
 
 class CustomPodcastSection extends StatefulWidget {
   const CustomPodcastSection({super.key});
@@ -56,19 +57,27 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
                   onPressed: _urlController.text.isEmpty
                       ? null
                       : () {
-                          di<PodcastModel>().loadPodcast(
+                          di<PodcastModel>()
+                              .findEpisodes(
                             feedUrl: _urlController.text,
-                            onFind: (podcast) => di<LibraryModel>().push(
-                              builder: (_) => PodcastPage(
-                                imageUrl: podcast.firstOrNull?.imageUrl,
-                                preFetchedEpisodes: podcast,
-                                feedUrl: _urlController.text,
-                                title: podcast.firstOrNull?.album ??
-                                    podcast.firstOrNull?.title ??
-                                    _urlController.text,
-                              ),
-                              pageId: _urlController.text,
-                            ),
+                          )
+                              .then(
+                            (v) {
+                              if (v.isEmpty && context.mounted) {
+                                showSnackBar(
+                                  context: context,
+                                  content: Text(context.l10n.noPodcastFound),
+                                );
+                              } else {
+                                di<LibraryModel>().push(
+                                  pageId: _urlController.text,
+                                  builder: (context) => LazyPodcastPage(
+                                    imageUrl: v.firstOrNull?.imageUrl,
+                                    feedUrl: _urlController.text,
+                                  ),
+                                );
+                              }
+                            },
                           );
                         },
                   child: Text(

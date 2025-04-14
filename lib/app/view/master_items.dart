@@ -7,15 +7,15 @@ import '../../common/page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
+import '../../custom_content/view/custom_content_page.dart';
 import '../../home/home_page.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/local_audio_page.dart';
 import '../../playlists/view/liked_audio_page.dart';
-import '../../custom_content/view/custom_content_page.dart';
 import '../../playlists/view/playlist_page.dart';
-import '../../podcasts/view/podcast_page.dart';
+import '../../podcasts/view/lazy_podcast_page.dart';
 import '../../podcasts/view/podcast_page_side_bar_icon.dart';
 import '../../podcasts/view/podcast_page_title.dart';
 import '../../podcasts/view/podcasts_page.dart';
@@ -131,14 +131,7 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
           podcast.value.firstOrNull?.artist ?? context.l10n.podcast,
         ),
         pageId: podcast.key,
-        pageBuilder: (_) => PodcastPage(
-          feedUrl: podcast.key,
-          title: podcast.value.firstOrNull?.album ??
-              podcast.value.firstOrNull?.title ??
-              podcast.value.firstOrNull.toString(),
-          imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
-              podcast.value.firstOrNull?.imageUrl,
-        ),
+        pageBuilder: (_) => LazyPodcastPage(feedUrl: podcast.key),
         iconBuilder: (selected) => PodcastPageSideBarIcon(
           imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
               podcast.value.firstOrNull?.imageUrl,

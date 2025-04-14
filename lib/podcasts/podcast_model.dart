@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../l10n/l10n.dart';
 import '../library/library_service.dart';
-import 'podcast_search_state.dart';
 import 'podcast_service.dart';
 
 class PodcastModel extends SafeChangeNotifier {
@@ -21,18 +21,6 @@ class PodcastModel extends SafeChangeNotifier {
   final PodcastService _podcastService;
   final LibraryService _libraryService;
   StreamSubscription<bool>? _librarySubscription;
-
-  final _searchStateController =
-      StreamController<PodcastSearchState>.broadcast();
-  Stream<PodcastSearchState> get stateStream => _searchStateController.stream;
-  PodcastSearchState _lastState = PodcastSearchState.done;
-  PodcastSearchState get lastState => _lastState;
-  void _sendState(PodcastSearchState state) {
-    if (state == _lastState) return;
-    _lastState = state;
-    notifyListeners();
-    _searchStateController.add(state);
-  }
 
   Future<void> init({
     required String updateMessage,
@@ -117,39 +105,21 @@ class PodcastModel extends SafeChangeNotifier {
 
   String? getSearchQuery(String? feedUrl) => _searchQuery[feedUrl];
 
-  Future<void> loadPodcast({
-    required String feedUrl,
+  Future<List<Audio>> findEpisodes({
+    Item? item,
+    String? feedUrl,
     String? itemImageUrl,
     String? genre,
-    required Function(List<Audio> podcast) onFind,
-  }) async {
-    _sendState(PodcastSearchState.loading);
+  }) {
+    if (item?.feedUrl == null && feedUrl == null) {
+      return Future.value([]);
+    }
 
-    return _podcastService
-        .findEpisodes(
-          feedUrl: feedUrl,
-          itemImageUrl: itemImageUrl,
-          genre: genre,
-        )
-        .then(
-          (podcast) async {
-            if (podcast.isEmpty) {
-              _sendState(PodcastSearchState.empty);
-              return;
-            }
-
-            onFind(podcast);
-          },
-        )
-        .whenComplete(
-          () => _sendState(PodcastSearchState.done),
-        )
-        .timeout(
-          const Duration(seconds: 15),
-          onTimeout: () {
-            _sendState(PodcastSearchState.timeout);
-          },
-        );
+    return _podcastService.findEpisodes(
+      feedUrl: feedUrl ?? item!.feedUrl!,
+      itemImageUrl: itemImageUrl ?? item?.artworkUrl600 ?? item?.artworkUrl,
+      genre: genre ?? item?.primaryGenreName,
+    );
   }
 
   Future<void> removeAllPodcasts() async => _libraryService.removeAllPodcasts();
@@ -157,7 +127,6 @@ class PodcastModel extends SafeChangeNotifier {
   @override
   Future<void> dispose() async {
     super.dispose();
-    await _searchStateController.close();
     await _librarySubscription?.cancel();
   }
 }

@@ -14,7 +14,7 @@ import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../podcasts/podcast_model.dart';
-import '../../podcasts/view/podcast_page.dart';
+import '../../podcasts/view/lazy_podcast_page.dart';
 import '../../radio/view/station_page.dart';
 import '../../settings/settings_model.dart';
 import '../player_model.dart';
@@ -274,26 +274,14 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
         if (audio.website != null &&
             libraryModel.selectedPageId != audio.website) {
           final feedUrl = audio.website!;
-          if (libraryModel.isPageInLibrary(feedUrl)) {
-            libraryModel.push(pageId: feedUrl);
-          } else {
-            podcastModel.loadPodcast(
+
+          libraryModel.push(
+            pageId: feedUrl,
+            builder: (_) => LazyPodcastPage(
               feedUrl: feedUrl,
-              itemImageUrl: audio.albumArtUrl,
-              genre: audio.genre,
-              onFind: (podcast) => libraryModel.push(
-                builder: (_) => PodcastPage(
-                  imageUrl: audio.albumArtUrl ?? podcast.firstOrNull?.imageUrl,
-                  preFetchedEpisodes: podcast,
-                  feedUrl: feedUrl,
-                  title: podcast.firstOrNull?.album ??
-                      podcast.firstOrNull?.title ??
-                      feedUrl,
-                ),
-                pageId: feedUrl,
-              ),
-            );
-          }
+              imageUrl: audio.imageUrl ?? audio.albumArtUrl,
+            ),
+          );
         }
         return;
       default:

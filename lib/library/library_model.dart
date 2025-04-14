@@ -38,7 +38,7 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
     } else {
       return playlists[pageId] ??
           pinnedAlbums[pageId] ??
-          podcasts[pageId] ??
+          getPodcast(pageId) ??
           starredStations[pageId];
     }
   }
@@ -157,13 +157,15 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   //
 
   Map<String, List<Audio>> get podcasts => _service.podcasts;
-  int get podcastsLength => podcasts.length;
+  List<String> get podcastFeedUrls => _service.podcasts.keys.toList();
+  List<Audio>? getPodcast(String? feedUrl) => _service.podcasts[feedUrl];
+  int get podcastsLength => _service.podcasts.length;
   void addPodcast(String feedUrl, List<Audio> audios) =>
       _service.addPodcast(feedUrl, audios);
   void removePodcast(String feedUrl) => _service.removePodcast(feedUrl);
 
   bool isPodcastSubscribed(String? feedUrl) =>
-      feedUrl == null ? false : podcasts.containsKey(feedUrl);
+      feedUrl == null ? false : _service.podcasts.containsKey(feedUrl);
   bool podcastUpdateAvailable(String feedUrl) =>
       _service.podcastUpdateAvailable(feedUrl);
   int? get podcastUpdatesLength => _service.podcastUpdatesLength;
