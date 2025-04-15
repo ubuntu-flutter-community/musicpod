@@ -16,7 +16,7 @@ class PodcastRefreshButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var podcast = di<LibraryModel>().podcasts[pageId];
+    final podcast = di<LibraryModel>().getPodcast(pageId);
 
     return IconButton(
       tooltip: context.l10n.checkForUpdates,

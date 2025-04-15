@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:html/parser.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app_config.dart';
@@ -9,26 +8,21 @@ import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_filter.dart';
-import '../../common/view/audio_page_header.dart';
-import '../../common/view/audio_page_header_html_description.dart';
 import '../../common/view/audio_tile_option_button.dart';
 import '../../common/view/avatar_play_button.dart';
 import '../../common/view/header_bar.dart';
-import '../../common/view/icons.dart';
-import '../../common/view/safe_network_image.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
-import '../../settings/settings_model.dart';
 import '../podcast_model.dart';
 import 'podcast_mark_done_button.dart';
+import 'podcast_page_header.dart';
+import 'podcast_page_search_button.dart';
 import 'podcast_reorder_button.dart';
 import 'podcast_replay_button.dart';
 import 'podcast_sub_button.dart';
@@ -83,7 +77,6 @@ class _PodcastPageState extends State<PodcastPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final episodes = widget.preFetchedEpisodes ??
         watchPropertyValue((LibraryModel m) => m.podcasts[widget.feedUrl]);
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
@@ -151,31 +144,10 @@ class _PodcastPageState extends State<PodcastPage> {
                     min: 40,
                   ),
                   sliver: SliverToBoxAdapter(
-                    child: AudioPageHeader(
-                      image: widget.imageUrl == null
-                          ? null
-                          : _PodcastPageImage(imageUrl: widget.imageUrl),
-                      label: (episodes ?? [])
-                              .firstWhereOrNull((e) => e.genre != null)
-                              ?.genre ??
-                          l10n.podcast,
-                      subTitle: episodes?.firstOrNull?.artist,
-                      description: episodes?.firstOrNull?.albumArtist == null
-                          ? null
-                          : AudioPageHeaderHtmlDescription(
-                              description: episodes!.firstOrNull!.albumArtist!,
-                              title: widget.title,
-                            ),
-                      title: HtmlParser(widget.title).parseFragment().text ??
-                          widget.title,
-                      onLabelTab: (text) => _onGenreTap(
-                        l10n: l10n,
-                        text: text,
-                      ),
-                      onSubTitleTab: (text) => _onArtistTap(
-                        l10n: l10n,
-                        text: text,
-                      ),
+                    child: PodcastPageHeader(
+                      title: widget.title,
+                      imageUrl: widget.imageUrl,
+                      episodes: episodes,
                     ),
                   ),
                 ),
@@ -231,108 +203,6 @@ class _PodcastPageState extends State<PodcastPage> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Future<void> _onArtistTap({
-    required AppLocalizations l10n,
-    required String text,
-  }) async {
-    await di<PodcastModel>().init(updateMessage: l10n.updateAvailable);
-    di<LibraryModel>().push(pageId: PageIDs.searchPage);
-    di<SearchModel>()
-      ..setAudioType(AudioType.podcast)
-      ..setSearchQuery(text)
-      ..search();
-  }
-
-  Future<void> _onGenreTap({
-    required AppLocalizations l10n,
-    required String text,
-  }) async {
-    await di<PodcastModel>().init(updateMessage: l10n.updateAvailable);
-    final genres =
-        di<SearchModel>().getPodcastGenres(di<SettingsModel>().usePodcastIndex);
-
-    final genreOrNull = genres.firstWhereOrNull(
-      (e) =>
-          e.localize(l10n).toLowerCase() == text.toLowerCase() ||
-          e.id.toLowerCase() == text.toLowerCase() ||
-          e.name.toLowerCase() == text.toLowerCase(),
-    );
-    di<LibraryModel>().push(pageId: PageIDs.searchPage);
-    if (genreOrNull != null) {
-      di<SearchModel>()
-        ..setAudioType(AudioType.podcast)
-        ..setPodcastGenre(genreOrNull)
-        ..search();
-    } else {
-      if (context.mounted) {
-        _onArtistTap(l10n: l10n, text: text);
-      }
-    }
-  }
-}
-
-class PodcastPageSearchButton extends StatelessWidget with WatchItMixin {
-  const PodcastPageSearchButton({
-    super.key,
-    required this.feedUrl,
-  });
-
-  final String feedUrl;
-
-  @override
-  Widget build(BuildContext context) => IconButton(
-        isSelected:
-            watchPropertyValue((PodcastModel m) => m.getShowSearch(feedUrl)),
-        onPressed: () => di<PodcastModel>().toggleShowSearch(feedUrl: feedUrl),
-        icon: Icon(Iconz.search),
-      );
-}
-
-class _PodcastPageImage extends StatelessWidget {
-  const _PodcastPageImage({
-    required this.imageUrl,
-  });
-
-  final String? imageUrl;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.theme;
-    var safeNetworkImage = SafeNetworkImage(
-      fallBackIcon: Icon(
-        Iconz.podcast,
-        size: 80,
-        color: theme.hintColor,
-      ),
-      errorIcon: Icon(
-        Iconz.podcast,
-        size: 80,
-        color: theme.hintColor,
-      ),
-      url: imageUrl,
-      fit: BoxFit.fitHeight,
-      filterQuality: FilterQuality.medium,
-    );
-
-    return InkWell(
-      borderRadius: BorderRadius.circular(10),
-      child: safeNetworkImage,
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => SimpleDialog(
-          titlePadding: EdgeInsets.zero,
-          contentPadding: EdgeInsets.zero,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: safeNetworkImage,
-            ),
-          ],
-        ),
       ),
     );
   }
