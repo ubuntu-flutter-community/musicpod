@@ -1310,5 +1310,9 @@
   "localAudioWatchDialogDescription": "Kas sa soovid kohaliku muusikakogu kasuta uuesti laadida?",
   "@localAudioWatchDialogDescription": {},
   "checkForUpdatesConfirm": "Kas sa oled kindel, et soovid kontrollida {length} taskuhäälingu uuendusi?",
-  "@checkForUpdatesConfirm": {}
+  "@checkForUpdatesConfirm": {},
+  "external": "väline",
+  "@external": {},
+  "externalPlaylist": "Väline esitusloend",
+  "@externalPlaylist": {}
 }
