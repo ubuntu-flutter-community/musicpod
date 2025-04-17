@@ -1308,5 +1308,9 @@
   "exportPinnedAlbumToM3UFile": "Esportatu ainguratutako albumak M3U fitxategira",
   "@exportPinnedAlbumToM3UFile": {},
   "checkForUpdatesConfirm": "Ziur {length} podcasten eguneratzeak bilatu nahi dituzula?",
-  "@checkForUpdatesConfirm": {}
+  "@checkForUpdatesConfirm": {},
+  "external": "kanpokoa",
+  "@external": {},
+  "externalPlaylist": "Kanpoko erreprodukzio-zerrenda",
+  "@externalPlaylist": {}
 }
