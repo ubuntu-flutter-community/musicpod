@@ -37,34 +37,39 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
       padding: bigPlayButtonPadding,
       child: CircleAvatar(
         radius: bigAvatarButtonRadius,
-        backgroundColor: theme.colorScheme.inverseSurface,
+        backgroundColor: theme.colorScheme.inverseSurface.withAlpha(
+          pageId.isEmpty ? 180 : 255,
+        ),
         child: IconButton(
           tooltip: context.l10n.playAll,
-          onPressed: () {
-            if (audios.isNotEmpty &&
-                audios.first.audioType == AudioType.radio) {
-              di<RadioModel>().clickStation(audios.first);
-            }
-            if (isPlayerPlaying) {
-              if (pageIsQueue && playerModel.queue.length == audios.length) {
-                playerModel.pause();
-              } else {
-                playerModel.startPlaylist(
-                  audios: audios,
-                  listName: pageId,
-                );
-              }
-            } else {
-              if (pageIsQueue) {
-                playerModel.resume();
-              } else {
-                playerModel.startPlaylist(
-                  audios: audios,
-                  listName: pageId,
-                );
-              }
-            }
-          },
+          onPressed: pageId.isEmpty
+              ? null
+              : () {
+                  if (audios.isNotEmpty &&
+                      audios.first.audioType == AudioType.radio) {
+                    di<RadioModel>().clickStation(audios.first);
+                  }
+                  if (isPlayerPlaying) {
+                    if (pageIsQueue &&
+                        playerModel.queue.length == audios.length) {
+                      playerModel.pause();
+                    } else {
+                      playerModel.startPlaylist(
+                        audios: audios,
+                        listName: pageId,
+                      );
+                    }
+                  } else {
+                    if (pageIsQueue) {
+                      playerModel.resume();
+                    } else {
+                      playerModel.startPlaylist(
+                        audios: audios,
+                        listName: pageId,
+                      );
+                    }
+                  }
+                },
           icon: Icon(
             iconData,
             color: theme.colorScheme.onInverseSurface,

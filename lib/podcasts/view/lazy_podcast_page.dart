@@ -51,8 +51,8 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
           final imageUrl = widget.imageUrl ??
               widget.podcastItem?.artworkUrl600 ??
               widget.podcastItem?.artworkUrl ??
-              snapshot.data?.first.imageUrl ??
-              snapshot.data?.first.albumArtUrl;
+              snapshot.data?.first.albumArtUrl ??
+              snapshot.data?.first.imageUrl;
 
           if (snapshot.connectionState == ConnectionState.waiting ||
               snapshot.data == null) {

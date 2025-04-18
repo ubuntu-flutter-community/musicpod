@@ -131,19 +131,26 @@ class PodcastService {
 
   // TODO: stop axing the podcast information
   Future<List<Audio>> findEpisodes({
-    required String feedUrl,
-    String? itemImageUrl,
-    String? genre,
+    Item? item,
+    String? feedUrl,
   }) async {
-    final Podcast? podcast = await compute(loadPodcast, feedUrl);
+    if (item?.feedUrl == null && feedUrl == null) {
+      printMessageInDebugMode(
+        'findEpisodes called without feedUrl or item',
+      );
+      return Future.value([]);
+    }
+
+    final Podcast? podcast =
+        await compute(loadPodcast, feedUrl ?? item!.feedUrl!);
     final episodes = podcast?.episodes
             .where((e) => e.contentUrl != null)
             .map(
               (e) => Audio.fromPodcast(
                 episode: e,
                 podcast: podcast,
-                itemImageUrl: itemImageUrl,
-                genre: genre,
+                itemImageUrl: item?.artworkUrl600 ?? item?.artworkUrl,
+                genre: item?.primaryGenreName,
               ),
             )
             .toList() ??

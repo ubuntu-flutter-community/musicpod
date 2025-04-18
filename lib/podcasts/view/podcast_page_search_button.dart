@@ -15,7 +15,9 @@ class PodcastPageSearchButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) => IconButton(
         isSelected:
             watchPropertyValue((PodcastModel m) => m.getShowSearch(feedUrl)),
-        onPressed: () => di<PodcastModel>().toggleShowSearch(feedUrl: feedUrl),
+        onPressed: feedUrl.isEmpty
+            ? null
+            : () => di<PodcastModel>().toggleShowSearch(feedUrl: feedUrl),
         icon: Icon(Iconz.search),
       );
 }

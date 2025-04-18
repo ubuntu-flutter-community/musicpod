@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../common/view/header_bar.dart';
+import '../../common/view/sliver_audio_page_control_panel.dart';
+import 'podcast_page_control_panel.dart';
 import 'podcast_page_header.dart';
 
 class LazyPodcastLoadingPage extends StatelessWidget {
@@ -29,6 +31,13 @@ class LazyPodcastLoadingPage extends StatelessWidget {
                 imageUrl: imageUrl,
                 episodes: [],
               ),
+            ),
+          ),
+          const SliverAudioPageControlPanel(
+            controlPanel: PodcastPageControlPanel(
+              feedUrl: '',
+              audios: [],
+              title: '',
             ),
           ),
           SliverFillRemaining(

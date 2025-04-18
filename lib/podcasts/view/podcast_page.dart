@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -8,8 +7,6 @@ import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_filter.dart';
-import '../../common/view/audio_tile_option_button.dart';
-import '../../common/view/avatar_play_button.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
@@ -20,12 +17,8 @@ import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../podcast_model.dart';
-import 'podcast_mark_done_button.dart';
+import 'podcast_page_control_panel.dart';
 import 'podcast_page_header.dart';
-import 'podcast_page_search_button.dart';
-import 'podcast_reorder_button.dart';
-import 'podcast_replay_button.dart';
-import 'podcast_sub_button.dart';
 import 'sliver_podcast_page_list.dart';
 import 'sliver_podcast_page_search_field.dart';
 
@@ -152,37 +145,10 @@ class _PodcastPageState extends State<PodcastPage> {
                   ),
                 ),
                 SliverAudioPageControlPanel(
-                  controlPanel: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: space(
-                      children: [
-                        if (!AppConfig.isMobilePlatform)
-                          PodcastReplayButton(feedUrl: widget.feedUrl),
-                        PodcastMarkDoneButton(feedUrl: widget.feedUrl),
-                        PodcastSubButton(
-                          audios: episodesWithDownloads,
-                          pageId: widget.feedUrl,
-                        ),
-                        AvatarPlayButton(
-                          audios: episodesWithDownloads,
-                          pageId: widget.feedUrl,
-                        ),
-                        PodcastPageSearchButton(feedUrl: widget.feedUrl),
-                        PodcastReorderButton(feedUrl: widget.feedUrl),
-                        if (!AppConfig.isMobilePlatform)
-                          AudioTileOptionButton(
-                            audios: episodesWithDownloads,
-                            playlistId: widget.feedUrl,
-                            allowRemove: false,
-                            selected: false,
-                            searchTerm: widget.title,
-                            title: Text(widget.title),
-                            subTitle: Text(
-                              episodesWithDownloads.firstOrNull?.artist ?? '',
-                            ),
-                          ),
-                      ],
-                    ),
+                  controlPanel: PodcastPageControlPanel(
+                    feedUrl: widget.feedUrl,
+                    audios: episodesWithDownloads,
+                    title: widget.title,
                   ),
                 ),
                 if (showSearch)
