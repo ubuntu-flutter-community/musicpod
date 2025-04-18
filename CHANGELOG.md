@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.11.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.10.1...v2.11.0) (2025-04-18)
+
+
+### Features
+
+* show podcast pages immediately, then load the episodes ([#1226](https://github.com/ubuntu-flutter-community/musicpod/issues/1226)) ([be71b08](https://github.com/ubuntu-flutter-community/musicpod/commit/be71b08eb176aa0a7a85af8d1514ea523ada8ee8))
+* Translated using Weblate (Estonian) ([#1223](https://github.com/ubuntu-flutter-community/musicpod/issues/1223)) ([132a0c1](https://github.com/ubuntu-flutter-community/musicpod/commit/132a0c15dac9d133fe8e0dc2bafb38593c424b75))
+
 ## [2.10.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.10.0...v2.10.1) (2025-04-12)
 
 
