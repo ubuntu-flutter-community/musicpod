@@ -108,19 +108,8 @@ class PodcastModel extends SafeChangeNotifier {
   Future<List<Audio>> findEpisodes({
     Item? item,
     String? feedUrl,
-    String? itemImageUrl,
-    String? genre,
-  }) {
-    if (item?.feedUrl == null && feedUrl == null) {
-      return Future.value([]);
-    }
-
-    return _podcastService.findEpisodes(
-      feedUrl: feedUrl ?? item!.feedUrl!,
-      itemImageUrl: itemImageUrl ?? item?.artworkUrl600 ?? item?.artworkUrl,
-      genre: genre ?? item?.primaryGenreName,
-    );
-  }
+  }) =>
+      _podcastService.findEpisodes(item: item, feedUrl: feedUrl);
 
   Future<void> removeAllPodcasts() async => _libraryService.removeAllPodcasts();
 

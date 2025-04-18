@@ -4,6 +4,7 @@ import 'package:watch_it/watch_it.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../podcast_model.dart';
@@ -27,6 +28,7 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
     final checkingForUpdates =
         watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
 
+    final disabled = checkingForUpdates || pageId.isEmpty;
     return IconButton(
       isSelected: subscribed,
       tooltip: subscribed
@@ -36,8 +38,10 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
           ? const SideBarProgress()
           : Icon(
               subscribed ? Iconz.removeFromLibrary : Iconz.addToLibrary,
+              color:
+                  subscribed || disabled ? null : context.colorScheme.primary,
             ),
-      onPressed: checkingForUpdates
+      onPressed: disabled
           ? null
           : () {
               if (subscribed) {

@@ -62,6 +62,7 @@ class AudioTileOptionButton extends StatelessWidget {
     return PopupMenuButton(
       tooltip: l10n.moreOptions,
       padding: EdgeInsets.zero,
+      enabled: audios.isNotEmpty && playlistId.isNotEmpty,
       itemBuilder: (context) {
         final currentAudioType = di<PlayerModel>().audio?.audioType;
         return [
@@ -184,18 +185,20 @@ class AudioTileBottomSheetButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IconButton(
         tooltip: context.l10n.moreOptions,
-        onPressed: () => showModal(
-          mode: ModalMode.platformModalMode,
-          context: context,
-          content: AudioTileBottomSheet(
-            searchTerm: searchTerm,
-            title: title,
-            subTitle: subTitle,
-            audios: audios,
-            allowRemove: allowRemove,
-            playlistId: playlistId,
-          ),
-        ),
+        onPressed: playlistId.isEmpty
+            ? null
+            : () => showModal(
+                  mode: ModalMode.platformModalMode,
+                  context: context,
+                  content: AudioTileBottomSheet(
+                    searchTerm: searchTerm,
+                    title: title,
+                    subTitle: subTitle,
+                    audios: audios,
+                    allowRemove: allowRemove,
+                    playlistId: playlistId,
+                  ),
+                ),
         icon: icon ?? Icon(Iconz.viewMore),
       );
 }
