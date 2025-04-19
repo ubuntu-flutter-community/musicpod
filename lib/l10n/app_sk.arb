@@ -1309,5 +1309,9 @@
   "setPlaylistNameAndAddMoreLater": "Nastaviť názov playlistu a neskôr pridať ďalšie tituly",
   "@setPlaylistNameAndAddMoreLater": {},
   "checkForUpdatesConfirm": "Naozaj chcete skontrolovať aktualizácie pre {length} podcastov?",
-  "@checkForUpdatesConfirm": {}
+  "@checkForUpdatesConfirm": {},
+  "external": "externé",
+  "@external": {},
+  "externalPlaylist": "Externý playlist",
+  "@externalPlaylist": {}
 }
