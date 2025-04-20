@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:watcher/watcher.dart';
@@ -46,6 +47,71 @@ class LocalAudioService {
   Stream<bool> get audiosChanged => _audiosController.stream;
   List<String>? _failedImports;
   List<String>? get failedImports => _failedImports;
+
+  void changeMetadata(
+    Audio audio, {
+    Function? onChange,
+    String? title,
+    String? artist,
+    String? album,
+    String? genre,
+    String? discTotal,
+    String? discNumber,
+    String? trackNumber,
+    String? durationMs,
+    String? year,
+    List<Picture>? pictures,
+  }) {
+    if (audio.path != null) {
+      final file = File(audio.path!);
+      if (file.existsSync()) {
+        updateMetadata(
+          file,
+          (metadata) {
+            try {
+              if (title != null) {
+                metadata.setTitle(title);
+              }
+              if (artist != null) {
+                metadata.setArtist(artist);
+              }
+              if (album != null) {
+                metadata.setAlbum(album);
+              }
+              if (genre != null) {
+                metadata.setGenres([genre]);
+              }
+              if (trackNumber != null && int.tryParse(trackNumber) != null) {
+                metadata.setTrackNumber(int.tryParse(trackNumber));
+              }
+              if (year != null && int.tryParse(year) != null) {
+                metadata.setYear(DateTime(int.parse(year)));
+              }
+              if (pictures?.isNotEmpty ?? false) {
+                metadata.setPictures(pictures!);
+              }
+
+              // Not supported yet
+              // if (discNumber != null) {
+              //   metadata.setDiscNumber(discNumber);
+              // }
+              // if (discTotal != null) {
+              //   metadata.setDiscTotal(discTotal);
+              // }
+              // if (durationMs != null) {
+              //   metadata.setDuration(durationMs);
+              // }
+              // if (albumArtist != null) {
+              //   metadata.setAlbumArtist(albumArtist);
+              // }
+            } on Exception catch (e) {
+              printMessageInDebugMode(e);
+            }
+          },
+        );
+      }
+    }
+  }
 
   void _sortAllTitles() {
     if (_audios == null) return;

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:watcher/watcher.dart';
 
@@ -27,6 +28,35 @@ class LocalAudioModel extends SafeChangeNotifier {
   final SettingsService _settingsService;
   StreamSubscription<bool>? _audiosChangedSub;
   FileWatcher? get fileWatcher => _localAudioService.fileWatcher;
+
+  void changeMetadata(
+    Audio audio, {
+    Function? onChange,
+    String? title,
+    String? artist,
+    String? album,
+    String? genre,
+    String? discTotal,
+    String? discNumber,
+    String? trackNumber,
+    String? durationMs,
+    String? year,
+    List<Picture>? pictures,
+  }) =>
+      _localAudioService.changeMetadata(
+        audio,
+        onChange: onChange,
+        title: title,
+        artist: artist,
+        album: album,
+        genre: genre,
+        discTotal: discTotal,
+        discNumber: discNumber,
+        trackNumber: trackNumber,
+        durationMs: durationMs,
+        year: year,
+        pictures: pictures,
+      );
 
   int get localAudioindex => _settingsService.localAudioIndex;
   set localAudioindex(int value) {

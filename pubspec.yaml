@@ -10,7 +10,10 @@ environment:
 
 dependencies:
   animated_emoji: ^3.1.0
-  audio_metadata_reader: ^1.1.2
+  audio_metadata_reader:
+    git:
+      url: https://github.com/ClementBeal/audio_metadata_reader
+      branch: fix/write-cd-and-genres
   audio_service: ^0.18.12
   audio_service_mpris:
     git:

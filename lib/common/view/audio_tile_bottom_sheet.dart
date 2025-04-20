@@ -162,6 +162,7 @@ class AudioTileBottomSheet extends StatelessWidget {
                                     builder: (context) =>
                                         MetaDataContent.dialog(
                                       audio: audios.first,
+                                      pageId: playlistId,
                                     ),
                                   );
                                 },

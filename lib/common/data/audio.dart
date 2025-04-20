@@ -418,4 +418,8 @@ class Audio {
       albumId?.isNotEmpty == true &&
       path != null &&
       audioType == AudioType.local;
+
+  bool get isLocal => audioType == AudioType.local;
+  bool get isPodcast => audioType == AudioType.podcast;
+  bool get isRadio => audioType == AudioType.radio;
 }

@@ -76,11 +76,12 @@ packages:
   audio_metadata_reader:
     dependency: "direct main"
     description:
-      name: audio_metadata_reader
-      sha256: a0e0d660fce5f361df3811a94082887a623e4d4359d987397c61aa77173950c6
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.2"
+      path: "."
+      ref: HEAD
+      resolved-ref: d55ea0ab3c8702d1d9cefb581ebf22bb9a1db23f
+      url: "https://github.com/ClementBeal/audio_metadata_reader"
+    source: git
+    version: "1.3.1"
   audio_service:
     dependency: "direct main"
     description:

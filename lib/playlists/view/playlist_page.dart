@@ -340,7 +340,10 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
               )
             else
               SliverPadding(
-                padding: getAdaptiveHorizontalPadding(constraints: constraints),
+                padding: getAdaptiveHorizontalPadding(
+                  constraints: constraints,
+                  min: 40,
+                ),
                 sliver: SliverAudioTileList(
                   audios: audios,
                   pageId: pageId,

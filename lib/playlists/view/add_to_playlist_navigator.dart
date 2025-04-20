@@ -118,7 +118,7 @@ class _PlaylistTile extends StatelessWidget {
           libraryModel.addLikedAudios(audios);
         } else {
           libraryModel.addAudiosToPlaylist(
-            playlist: playlistId,
+            id: playlistId,
             audios: audios,
           );
         }

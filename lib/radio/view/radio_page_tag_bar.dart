@@ -16,9 +16,10 @@ import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 
 class RadioPageTagBar extends StatelessWidget {
-  const RadioPageTagBar({super.key, required this.station});
+  const RadioPageTagBar({super.key, required this.station, this.onTap});
 
   final Audio station;
+  final Function(String value)? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,12 @@ class RadioPageTagBar extends StatelessWidget {
         alignment: WrapAlignment.center,
         runAlignment: WrapAlignment.center,
         crossAxisAlignment: WrapCrossAlignment.center,
-        children: tapAbleTags(context: context, tags: tags, style: style),
+        children: tapAbleTags(
+          context: context,
+          tags: tags,
+          style: style,
+          onTap: onTap,
+        ),
       ),
     );
 
@@ -62,6 +68,7 @@ class RadioPageTagBar extends StatelessWidget {
     required List<String> tags,
     required TextStyle? style,
     int? limit,
+    Function(String value)? onTap,
   }) {
     return tags
         .take(limit ?? tags.length)
@@ -73,6 +80,7 @@ class RadioPageTagBar extends StatelessWidget {
                 style: style,
                 wrapInFlexible: false,
                 onTap: () {
+                  onTap?.call(e);
                   di<LibraryModel>().push(pageId: PageIDs.searchPage);
                   di<SearchModel>()
                     ..setTag(Tag(name: e, stationCount: 1))

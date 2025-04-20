@@ -356,10 +356,10 @@ class LibraryService {
         .then((_) => _propertiesChangedController.add(true));
   }
 
-  void removeAudiosFromPlaylist({
+  Future<void> removeAudiosFromPlaylist({
     required String id,
     required List<Audio> audios,
-  }) {
+  }) async {
     final playlist = _playlists[id];
     if (playlist == null) return;
 
@@ -368,7 +368,27 @@ class LibraryService {
         playlist.remove(audio);
       }
     }
-    writeAudioMap(map: _playlists, fileName: FileNames.playlists)
+    await writeAudioMap(map: _playlists, fileName: FileNames.playlists)
+        .then((_) => _propertiesChangedController.add(true));
+  }
+
+  Future<void> updateAudiosInPlaylist({
+    required String id,
+    required List<Audio> audios,
+  }) async {
+    final playlist = _playlists[id];
+    if (playlist == null) return;
+
+    for (var audio in audios) {
+      if (playlist.contains(audio)) {
+        final newAudio = audio.copyWith();
+        final index = playlist.indexOf(audio);
+        if (index != -1) {
+          playlist[index] = newAudio;
+        }
+      }
+    }
+    await writeAudioMap(map: _playlists, fileName: FileNames.playlists)
         .then((_) => _propertiesChangedController.add(true));
   }
 

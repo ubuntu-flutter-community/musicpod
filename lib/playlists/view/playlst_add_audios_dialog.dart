@@ -53,7 +53,7 @@ class _PlaylistAddAudiosDialogState extends State<PlaylistAddAudiosDialog> {
                     onSelected: (value) {
                       if (value == null) return;
                       libraryModel.addAudiosToPlaylist(
-                        playlist: widget.playlistId,
+                        id: widget.playlistId,
                         audios: [value],
                       );
                     },
