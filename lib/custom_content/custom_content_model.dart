@@ -14,6 +14,7 @@ import '../common/logging.dart';
 import '../extensions/media_file_x.dart';
 import '../external_path/external_path_service.dart';
 import '../library/library_service.dart';
+import '../local_audio/local_audio_service.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
 
@@ -21,17 +22,20 @@ class CustomContentModel extends SafeChangeNotifier {
   CustomContentModel({
     required ExternalPathService externalPathService,
     required LibraryService libraryService,
+    required LocalAudioService localAudioService,
     required PodcastService podcastService,
     required RadioService radioService,
   })  : _externalPathService = externalPathService,
         _libraryService = libraryService,
         _podcastService = podcastService,
-        _radioService = radioService;
+        _radioService = radioService,
+        _localAudioService = localAudioService;
 
   final ExternalPathService _externalPathService;
   final LibraryService _libraryService;
   final PodcastService _podcastService;
   final RadioService _radioService;
+  final LocalAudioService _localAudioService;
 
   List<({List<Audio> audios, String id})> _playlists = [];
   List<({List<Audio> audios, String id})> get playlists => _playlists;
@@ -142,14 +146,14 @@ class CustomContentModel extends SafeChangeNotifier {
 
   bool get isExportingPlaylistsAndPinnedAlbumsToM3UsNeeded =>
       _libraryService.playlists.isNotEmpty ||
-      _libraryService.pinnedAlbums.isNotEmpty;
+      _libraryService.favoriteAlbums.isNotEmpty;
   Future<bool> exportPlaylistsAndPinnedAlbumsToM3Us() async {
     final List<({String id, List<Audio> audios})> list = [
       ..._libraryService.playlists.entries.map(
         (e) => (id: e.key, audios: e.value),
       ),
-      ..._libraryService.pinnedAlbums.entries.map(
-        (e) => (id: e.key, audios: e.value),
+      ..._libraryService.favoriteAlbums.map(
+        (e) => (id: e, audios: _localAudioService.findAlbum(e) ?? []),
       ),
     ];
 

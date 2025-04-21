@@ -607,25 +607,40 @@ class LibraryService {
   // Albums
   //
 
-  Map<String, List<Audio>> _pinnedAlbums = {};
-  Map<String, List<Audio>> get pinnedAlbums => _pinnedAlbums;
-  int get pinnedAlbumsLength => _pinnedAlbums.length;
+  List<String> get favoriteAlbums =>
+      _sharedPreferences.getStringList(SPKeys.favoriteAlbums) ?? [];
 
-  List<Audio> getAlbumAt(int index) =>
-      _pinnedAlbums.entries.elementAt(index).value.toList();
+  bool isFavoriteAlbum(String id) => favoriteAlbums.contains(id);
 
-  bool isPinnedAlbum(String name) => _pinnedAlbums.containsKey(name);
-
-  void addPinnedAlbum(String name, List<Audio> audios) {
-    _pinnedAlbums.putIfAbsent(name, () => audios);
-    writeAudioMap(map: _pinnedAlbums, fileName: FileNames.pinnedAlbums)
-        .then((_) => _propertiesChangedController.add(true));
+  void addFavoriteAlbum(String id, {required Function() onFail}) {
+    if (id.isEmpty) {
+      onFail();
+      return;
+    }
+    if (favoriteAlbums.contains(id)) return;
+    final List<String> favorites = List.from(favoriteAlbums);
+    favorites.add(id);
+    _sharedPreferences
+        .setStringList(SPKeys.favoriteAlbums, favorites)
+        .then(notify);
   }
 
-  void removePinnedAlbum(String name) {
-    _pinnedAlbums.remove(name);
-    writeAudioMap(map: _pinnedAlbums, fileName: FileNames.pinnedAlbums)
-        .then((_) => _propertiesChangedController.add(true));
+  void removeFavoriteAlbum(String id, {required Function() onFail}) {
+    if (id.isEmpty) {
+      onFail();
+      return;
+    }
+    if (!favoriteAlbums.contains(id)) return;
+    final List<String> favorites = List.from(favoriteAlbums);
+    favorites.remove(id);
+    _sharedPreferences
+        .setStringList(SPKeys.favoriteAlbums, favorites)
+        .then(notify);
+  }
+
+  bool notify(bool saved) {
+    if (saved) _propertiesChangedController.add(true);
+    return saved;
   }
 
   bool? _libraryInitialized;
@@ -634,7 +649,6 @@ class LibraryService {
     if (_libraryInitialized == true) return _libraryInitialized!;
 
     _playlists = await readAudioMap(FileNames.playlists);
-    _pinnedAlbums = await readAudioMap(FileNames.pinnedAlbums);
     _podcasts = await readAudioMap(FileNames.podcasts);
     _podcastUpdates = Set.from(
       await readStringIterable(filename: FileNames.podcastUpdates) ??
@@ -675,7 +689,7 @@ class LibraryService {
   bool isPageInLibrary(String? pageId) =>
       pageId != null &&
       (PageIDs.permanent.contains(pageId) ||
-          isPinnedAlbum(pageId) ||
+          favoriteAlbums.contains(pageId) ||
           isStarredStation(pageId) ||
           isPlaylistSaved(pageId) ||
           isPodcastSubscribed(pageId));

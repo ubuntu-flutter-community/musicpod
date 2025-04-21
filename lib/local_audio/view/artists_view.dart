@@ -59,7 +59,7 @@ class ArtistsView extends StatelessWidget {
               );
             } else {
               di<LibraryModel>().push(
-                builder: (_) => ArtistPage(artistAudios: artistAudios),
+                builder: (_) => ArtistPage(pageId: artist),
                 pageId: artist,
               );
             }
@@ -132,7 +132,7 @@ class AlbumArtistsView extends StatelessWidget {
               );
             } else {
               di<LibraryModel>().push(
-                builder: (_) => ArtistPage(artistAudios: albumArtistsAudios),
+                builder: (_) => ArtistPage(pageId: artist),
                 pageId: artist,
               );
             }

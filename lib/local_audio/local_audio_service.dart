@@ -174,34 +174,39 @@ class LocalAudioService {
     _allGenres = List.from(list);
   }
 
-  List<String>? _allAlbums;
-  List<String>? get allAlbums => _allAlbums;
-  List<String>? findAllAlbums({Iterable<Audio>? newAudios, bool clean = true}) {
-    final theAudios = newAudios ?? audios;
+  List<String>? _allAlbumIDs;
+  List<String>? get allAlbumIDs => _allAlbumIDs;
+  List<String>? findAllAlbumIDs({
+    String? artist,
+    bool clean = true,
+  }) {
+    final theAudios = artist == null || artist.isEmpty
+        ? audios
+        : audios?.where((e) => e.artist == artist);
     if (theAudios == null) return null;
     final albumsResult = <String>[];
     for (var a in theAudios) {
-      if (a.album != null && albumsResult.none((e) => e == a.album)) {
-        albumsResult.add(a.album!);
+      if (a.albumId != null && albumsResult.none((e) => e == a.albumId)) {
+        albumsResult.add(a.albumId!);
       }
     }
     final list = albumsResult.toList();
     list.sort();
 
     if (clean) {
-      _allAlbums = List.from(list);
-      return _allAlbums;
+      _allAlbumIDs = List.from(list);
+      return _allAlbumIDs;
     } else {
       return List.from(list);
     }
   }
 
   List<Audio>? findAlbum(
-    String albumName, [
+    String albumId, [
     AudioFilter audioFilter = AudioFilter.trackNumber,
   ]) {
     final album = audios?.where(
-      (a) => a.album != null && a.album == albumName,
+      (a) => a.albumId != null && a.albumId == albumId,
     );
 
     var albumList = album?.toList();
@@ -311,8 +316,8 @@ class LocalAudioService {
       );
     }
 
-    final allAlbumsFindings =
-        allAlbums?.where((e) => e.toLowerCase().contains(query.toLowerCase()));
+    final allAlbumsFindings = allAlbumIDs
+        ?.where((e) => e.toLowerCase().contains(query.toLowerCase()));
 
     final albumsResult = <String>[];
     if (allAlbumsFindings != null) {
@@ -416,7 +421,7 @@ class LocalAudioService {
     _sortAllTitles();
     _findAllArtists();
     _findAllAlbumArtists();
-    findAllAlbums();
+    findAllAlbumIDs();
     _findAllGenres();
     _failedImports = failedImports;
     _audiosController.add(true);

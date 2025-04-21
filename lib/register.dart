@@ -319,6 +319,7 @@ void registerDependencies({required List<String> args}) async {
         libraryService: di<LibraryService>(),
         podcastService: di<PodcastService>(),
         radioService: di<RadioService>(),
+        localAudioService: di<LocalAudioService>(),
       ),
       dependsOn: [
         LibraryService,

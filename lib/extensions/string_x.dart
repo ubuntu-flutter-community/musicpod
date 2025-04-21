@@ -1,3 +1,5 @@
+import '../common/data/audio.dart';
+
 extension StringExtension on String {
   String get capitalized {
     return isEmpty
@@ -38,6 +40,9 @@ extension StringExtension on String {
     }
     return (songName: songName, artist: artist);
   }
+
+  String get albumOfId => split(Audio.albumIdSplitter).lastOrNull ?? '';
+  String get artistOfId => split(Audio.albumIdSplitter).firstOrNull ?? '';
 }
 
 extension NullableStringX on String? {

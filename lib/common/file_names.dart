@@ -1,7 +1,6 @@
 class FileNames {
   static const likedAudios = 'likedAudios.json';
   static const playlists = 'playlists.json';
-  static const pinnedAlbums = 'finallyFixedPinnedAlbums.json';
   static const podcasts = 'podcasts.json';
   static const podcastUpdates = 'podcastsupdates.json';
   static const starredStations = 'uuidStarredStations.json';
@@ -15,7 +14,6 @@ class FileNames {
   static const all = {
     likedAudios,
     playlists,
-    pinnedAlbums,
     podcasts,
     podcastUpdates,
     starredStations,

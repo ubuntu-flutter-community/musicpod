@@ -241,10 +241,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
         appModel.setFullWindowMode(false);
 
         libraryModel.push(
-          builder: (_) => AlbumPage(
-            id: id,
-            album: albumAudios,
-          ),
+          builder: (_) => AlbumPage(id: id),
           pageId: id,
         );
       },
@@ -315,13 +312,10 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
 
     localAudioModel.init().then(
       (value) {
-        final artistAudios = localAudioModel.findTitlesOfArtist(artistName);
-        final artist = artistAudios?.firstOrNull?.artist;
-        if (artist == null) return;
         appModel.setFullWindowMode(false);
         libraryModel.push(
-          builder: (_) => ArtistPage(artistAudios: artistAudios),
-          pageId: artist,
+          builder: (_) => ArtistPage(pageId: artistName),
+          pageId: artistName,
         );
       },
     );

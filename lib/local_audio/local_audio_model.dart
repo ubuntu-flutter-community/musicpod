@@ -87,13 +87,13 @@ class LocalAudioModel extends SafeChangeNotifier {
   List<String>? get allArtists => _localAudioService.allArtists;
   List<String>? get allAlbumArtists => _localAudioService.allAlbumArtists;
   List<String>? get allGenres => _localAudioService.allGenres;
-  List<String>? get allAlbums => _localAudioService.allAlbums;
+  List<String>? get allAlbumIDs => _localAudioService.allAlbumIDs;
 
   List<Audio>? findAlbum(
-    String albumName, [
+    String albumId, [
     AudioFilter audioFilter = AudioFilter.trackNumber,
   ]) =>
-      _localAudioService.findAlbum(albumName, audioFilter);
+      _localAudioService.findAlbum(albumId, audioFilter);
 
   List<Audio>? findTitlesOfArtist(
     String artist, [
@@ -121,11 +121,11 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   List<String>? get failedImports => _localAudioService.failedImports;
 
-  List<String>? findAllAlbums({
-    Iterable<Audio>? newAudios,
+  List<String>? findAllAlbumIDs({
+    String? artist,
     bool clean = true,
   }) =>
-      _localAudioService.findAllAlbums(newAudios: newAudios, clean: clean);
+      _localAudioService.findAllAlbumIDs(artist: artist, clean: clean);
 
   bool get importing => _localAudioService.audios == null;
 

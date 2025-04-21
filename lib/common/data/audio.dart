@@ -406,13 +406,12 @@ class Audio {
   String? get albumId {
     final albumName = album;
     final artistName = artist;
-    final id = albumName == null && artistName == null
+    return albumName == null && artistName == null
         ? null
-        : AppConfig.isMobilePlatform
-            ? '${artistName ?? ''}_${albumName ?? ''}'
-            : '${artistName ?? ''}:${albumName ?? ''}';
-    return AppConfig.isMobilePlatform ? id?.replaceAll(' ', '_') : id;
+        : '${artistName ?? ''}$albumIdSplitter${albumName ?? ''}';
   }
+
+  static String get albumIdSplitter => '-${AppConfig.appId}-';
 
   bool get hasPathAndId =>
       albumId?.isNotEmpty == true &&

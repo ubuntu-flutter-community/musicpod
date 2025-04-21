@@ -80,7 +80,7 @@ class _SliverLocalSearchResultState extends State<SliverLocalSearchResult> {
       titles: titles,
       artists: artists,
       albumArtists: albumArtists,
-      albums: albums,
+      albumIDs: albums,
       genres: genresResult,
       playlists: playlistsResult,
     );

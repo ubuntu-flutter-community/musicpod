@@ -139,24 +139,15 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
             if (id == null) return;
             di<LibraryModel>().push(
               builder: (_) {
-                return AlbumPage(
-                  id: id,
-                  album: albumAudios,
-                );
+                return AlbumPage(id: id);
               },
               pageId: id,
             );
           },
-          onArtistTap: (text) {
-            final artistAudios = model.findTitlesOfArtist(text);
-            final artist = artistAudios?.firstOrNull?.artist;
-            if (artist == null) return;
-
-            di<LibraryModel>().push(
-              builder: (_) => ArtistPage(artistAudios: artistAudios),
-              pageId: artist,
-            );
-          },
+          onArtistTap: (artist) => di<LibraryModel>().push(
+            builder: (_) => ArtistPage(pageId: artist),
+            pageId: artist,
+          ),
           image: _PlaylistHeaderImage(
             playlist: playlist ?? [],
             pageId: pageId,

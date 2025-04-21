@@ -55,7 +55,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     final allAlbumArtists =
         watchPropertyValue((LocalAudioModel m) => m.allAlbumArtists);
 
-    final allAlbums = watchPropertyValue((LocalAudioModel m) => m.allAlbums);
+    final allAlbumIDs =
+        watchPropertyValue((LocalAudioModel m) => m.allAlbumIDs);
     final allGenres = watchPropertyValue((LocalAudioModel m) => m.allGenres);
     final playlists =
         watchPropertyValue((LibraryModel m) => m.playlists.keys.toList());
@@ -136,7 +137,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                     : LocalAudioBody(
                         localAudioView: localAudioView,
                         titles: audios,
-                        albums: allAlbums,
+                        albumIDs: allAlbumIDs,
                         artists: allArtists,
                         albumArtists: allAlbumArtists,
                         genres: allGenres,

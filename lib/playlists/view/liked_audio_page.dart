@@ -12,7 +12,6 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/view/artist_page.dart';
 
 class LikedAudioPage extends StatelessWidget with WatchItMixin {
@@ -20,18 +19,13 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final model = di<LocalAudioModel>();
     final likedAudios = watchPropertyValue((LibraryModel m) => m.likedAudios);
     watchPropertyValue((LibraryModel m) => m.likedAudios.length);
 
     return SliverAudioPage(
-      onPageLabelTab: (text) {
-        final artistAudios = model.findTitlesOfArtist(text);
-        final artist = artistAudios?.firstOrNull?.artist;
-        if (artist == null) return;
-
+      onPageLabelTab: (artist) {
         di<LibraryModel>().push(
-          builder: (_) => ArtistPage(artistAudios: artistAudios),
+          builder: (_) => ArtistPage(pageId: artist),
           pageId: artist,
         );
       },

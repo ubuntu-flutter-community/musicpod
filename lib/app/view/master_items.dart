@@ -8,6 +8,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../custom_content/view/custom_content_page.dart';
+import '../../extensions/string_x.dart';
 import '../../home/home_page.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -137,20 +138,14 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
               podcast.value.firstOrNull?.imageUrl,
         ),
       ),
-    for (final album in libraryModel.pinnedAlbums.entries)
+    for (final id in libraryModel.favoriteAlbums)
       MasterItem(
-        titleBuilder: (context) => Text(
-          album.value.firstOrNull?.album ?? album.key,
-        ),
-        subtitleBuilder: (context) =>
-            Text(album.value.firstOrNull?.artist ?? context.l10n.album),
-        pageId: album.key,
-        pageBuilder: (_) => AlbumPage(
-          album: album.value,
-          id: album.key,
-        ),
+        titleBuilder: (context) => Text(id.albumOfId),
+        subtitleBuilder: (context) => Text(id.artistOfId),
+        pageId: id,
+        pageBuilder: (_) => AlbumPage(id: id),
         iconBuilder: (selected) => AlbumPageSideBarIcon(
-          audio: album.value.firstOrNull,
+          albumId: id,
         ),
       ),
     for (final station in libraryModel.starredStations.entries

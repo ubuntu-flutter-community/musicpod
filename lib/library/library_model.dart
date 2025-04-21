@@ -37,7 +37,9 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
       return likedAudios;
     } else {
       return playlists[pageId] ??
-          pinnedAlbums[pageId] ??
+          (favoriteAlbums.contains(pageId)
+              ? _localAudioService.findAlbum(pageId)
+              : []) ??
           getPodcast(pageId) ??
           starredStations[pageId];
     }
@@ -197,14 +199,15 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   // Albums
   //
 
-  Map<String, List<Audio>> get pinnedAlbums => _service.pinnedAlbums;
-  int get pinnedAlbumsLength => pinnedAlbums.length;
-  List<Audio> getAlbumAt(int index) =>
-      pinnedAlbums.entries.elementAt(index).value.toList();
-  bool isPinnedAlbum(String name) => pinnedAlbums.containsKey(name);
-  void addPinnedAlbum(String name, List<Audio> audios) =>
-      _service.addPinnedAlbum(name, audios);
-  void removePinnedAlbum(String name) => _service.removePinnedAlbum(name);
+  List<String> get favoriteAlbums => _service.favoriteAlbums;
+
+  bool isFavoriteAlbum(String id) => _service.isFavoriteAlbum(id);
+
+  void addFavoriteAlbum(String id, {required Function() onFail}) =>
+      _service.addFavoriteAlbum(id, onFail: onFail);
+
+  void removeFavoriteAlbum(String id, {required Function() onFail}) =>
+      _service.removeFavoriteAlbum(id, onFail: onFail);
 
   //
   // Navigation inside the Library
