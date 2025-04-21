@@ -19,8 +19,9 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final likedAudios = watchPropertyValue((LibraryModel m) => m.likedAudios);
-    watchPropertyValue((LibraryModel m) => m.likedAudios.length);
+    final likedAudios =
+        watchPropertyValue((LibraryModel m) => m.favoriteAudios);
+    watchPropertyValue((LibraryModel m) => m.favoriteAudios.length);
 
     return SliverAudioPage(
       onPageLabelTab: (artist) {

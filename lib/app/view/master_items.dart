@@ -23,6 +23,7 @@ import '../../podcasts/view/podcasts_page.dart';
 import '../../radio/view/radio_page.dart';
 import '../../radio/view/station_page.dart';
 import '../../radio/view/station_page_icon.dart';
+import '../../radio/view/station_title.dart';
 import '../../search/view/search_page.dart';
 import '../../settings/view/settings_page.dart';
 import 'main_page_icon.dart';
@@ -148,21 +149,14 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
           albumId: id,
         ),
       ),
-    for (final station in libraryModel.starredStations.entries
-        .where((e) => e.value.isNotEmpty))
+    for (final uuid in libraryModel.starredStations.where((e) => e.isNotEmpty))
       MasterItem(
-        titleBuilder: (context) =>
-            Text(station.value.first.title ?? station.key),
-        subtitleBuilder: (context) {
-          return Text(context.l10n.station);
-        },
-        pageId: station.key,
-        pageBuilder: (_) => StationPage(
-          station: station.value.first,
-        ),
+        titleBuilder: (context) => StationTitle(uuid: uuid),
+        subtitleBuilder: (context) => Text(context.l10n.station),
+        pageId: uuid,
+        pageBuilder: (_) => StationPage(uuid: uuid),
         iconBuilder: (selected) => StationPageIcon(
-          imageUrl: station.value.first.imageUrl,
-          fallBackColor: getAlphabetColor(station.value.first.title ?? 'a'),
+          uuid: uuid,
           selected: selected,
         ),
       ),

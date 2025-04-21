@@ -39,6 +39,16 @@ class RadioModel extends SafeChangeNotifier {
     await _propertiesChangedSub?.cancel();
     super.dispose();
   }
+
+  Future<Audio?> getStationByUUID(String pageId) async {
+    var stationByUUID = await _radioService.getStationByUUID(pageId);
+
+    if (stationByUUID == null) {
+      return null;
+    }
+
+    return Audio.fromStation(stationByUUID);
+  }
 }
 
 enum RadioCollectionView {

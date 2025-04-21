@@ -201,7 +201,8 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final liked = watchPropertyValue((LibraryModel m) => m.liked(audio));
+    final liked =
+        watchPropertyValue((LibraryModel m) => m.isFavoriteAudio(audio));
     final starred = watchPropertyValue(
       (LibraryModel m) => m.isStarredStation(audio.uuid),
     );

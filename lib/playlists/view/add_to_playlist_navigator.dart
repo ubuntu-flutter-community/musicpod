@@ -115,7 +115,7 @@ class _PlaylistTile extends StatelessWidget {
       contentPadding: padding,
       onTap: () {
         if (playlistId == PageIDs.likedAudios) {
-          libraryModel.addLikedAudios(audios);
+          libraryModel.addFavoriteAudios(audios);
         } else {
           libraryModel.addAudiosToPlaylist(
             id: playlistId,

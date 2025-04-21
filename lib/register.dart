@@ -179,11 +179,17 @@ void registerDependencies({required List<String> args}) async {
       dependsOn: [SharedPreferences],
       dispose: (s) async => s.dispose(),
     )
-    ..registerSingletonWithDependencies<LocalAudioService>(
-      () => LocalAudioService(
-        settingsService: di<SettingsService>(),
-        localCoverService: di<LocalCoverService>(),
-      ),
+    ..registerSingletonAsync<LocalAudioService>(
+      () async {
+        final localAudioService = LocalAudioService(
+          settingsService: di<SettingsService>(),
+          localCoverService: di<LocalCoverService>(),
+        );
+
+        await localAudioService.init();
+
+        return localAudioService;
+      },
       dependsOn: [SettingsService],
       dispose: (s) async => s.dispose(),
     )
@@ -271,7 +277,7 @@ void registerDependencies({required List<String> args}) async {
         localAudioService: di<LocalAudioService>(),
       ),
       dispose: (s) => s.dispose(),
-      dependsOn: [LibraryService, LocalAudioService],
+      dependsOn: [LibraryService, LocalAudioService, LocalAudioService],
     )
     ..registerSingletonWithDependencies<LocalAudioModel>(
       () => LocalAudioModel(
@@ -279,7 +285,7 @@ void registerDependencies({required List<String> args}) async {
         libraryService: di<LibraryService>(),
         settingsService: di<SettingsService>(),
       ),
-      dependsOn: [SettingsService, LibraryService],
+      dependsOn: [SettingsService, LibraryService, LocalAudioService],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<PodcastModel>(
@@ -305,26 +311,31 @@ void registerDependencies({required List<String> args}) async {
       dependsOn: [SettingsService, LibraryService],
       dispose: (s) => s.dispose(),
     )
-    ..registerLazySingleton<SearchModel>(
+    ..registerSingletonWithDependencies<SearchModel>(
       () => SearchModel(
         podcastService: di<PodcastService>(),
         radioService: di<RadioService>(),
         libraryService: di<LibraryService>(),
         localAudioService: di<LocalAudioService>(),
       ),
+      dependsOn: [
+        RadioService,
+        LibraryService,
+        LocalAudioService,
+      ],
     )
     ..registerSingletonWithDependencies<CustomContentModel>(
       () => CustomContentModel(
         externalPathService: di<ExternalPathService>(),
         libraryService: di<LibraryService>(),
         podcastService: di<PodcastService>(),
-        radioService: di<RadioService>(),
         localAudioService: di<LocalAudioService>(),
       ),
       dependsOn: [
         LibraryService,
         PodcastService,
         RadioService,
+        LocalAudioService,
       ],
       dispose: (s) => s.dispose(),
     );

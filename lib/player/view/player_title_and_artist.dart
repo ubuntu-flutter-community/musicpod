@@ -296,7 +296,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
       return;
     }
     libraryModel.push(
-      builder: (_) => StationPage(station: audio),
+      builder: (_) => StationPage(uuid: audio.uuid!),
       pageId: audio.uuid!,
     );
   }

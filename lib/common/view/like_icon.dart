@@ -23,9 +23,9 @@ class LikeIcon extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final libraryModel = di<LibraryModel>();
 
-    watchPropertyValue((LibraryModel m) => m.likedAudios.length);
+    watchPropertyValue((LibraryModel m) => m.favoriteAudios.length);
 
-    final liked = libraryModel.liked(audio);
+    final liked = libraryModel.isFavoriteAudio(audio);
 
     final void Function()? onLike;
     if (audio == null) {
@@ -33,9 +33,9 @@ class LikeIcon extends StatelessWidget with WatchItMixin {
     } else {
       onLike = () {
         if (liked) {
-          libraryModel.removeLikedAudio(audio!, true);
+          libraryModel.removeLikedAudio(audio!);
         } else {
-          libraryModel.addLikedAudio(audio!, true);
+          libraryModel.addFavoriteAudio(audio!);
           showAddedToPlaylistSnackBar(
             context: context,
             libraryModel: libraryModel,
@@ -86,7 +86,6 @@ class RadioLikeIcon extends StatelessWidget with WatchItMixin {
             ? libraryModel.unStarStation(audio!.uuid!)
             : libraryModel.addStarredStation(
                 audio!.uuid!,
-                [audio!],
               );
       };
     }

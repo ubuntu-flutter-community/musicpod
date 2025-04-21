@@ -16,7 +16,6 @@ import '../external_path/external_path_service.dart';
 import '../library/library_service.dart';
 import '../local_audio/local_audio_service.dart';
 import '../podcasts/podcast_service.dart';
-import '../radio/radio_service.dart';
 
 class CustomContentModel extends SafeChangeNotifier {
   CustomContentModel({
@@ -24,17 +23,14 @@ class CustomContentModel extends SafeChangeNotifier {
     required LibraryService libraryService,
     required LocalAudioService localAudioService,
     required PodcastService podcastService,
-    required RadioService radioService,
   })  : _externalPathService = externalPathService,
         _libraryService = libraryService,
         _podcastService = podcastService,
-        _radioService = radioService,
         _localAudioService = localAudioService;
 
   final ExternalPathService _externalPathService;
   final LibraryService _libraryService;
   final PodcastService _podcastService;
-  final RadioService _radioService;
   final LocalAudioService _localAudioService;
 
   List<({List<Audio> audios, String id})> _playlists = [];
@@ -281,13 +277,9 @@ class CustomContentModel extends SafeChangeNotifier {
     final body = <OpmlOutline>[];
     final category = OpmlOutlineBuilder();
 
-    for (var station in _libraryService.starredStations.entries) {
+    for (var station in _libraryService.starredStations) {
       category.addChild(
-        OpmlOutlineBuilder()
-            .title(station.value.firstOrNull?.title ?? '')
-            .text(station.value.firstOrNull?.uuid ?? '')
-            .htmlUrl(station.value.firstOrNull?.url ?? '')
-            .build(),
+        OpmlOutlineBuilder().text(station).build(),
       );
     }
 
@@ -321,14 +313,9 @@ class CustomContentModel extends SafeChangeNotifier {
 
     for (var category in doc.body.where((e) => e.children != null)) {
       final children = category.children!.where((e) => e.text != null);
-      final starredStations = <(String uuid, List<Audio> audios)>[];
+      final starredStations = <String>[];
       for (var feed in children) {
-        final stations = await _radioService.search(uuid: feed.text!, limit: 1);
-        if (stations != null && stations.isNotEmpty) {
-          starredStations.add(
-            (feed.text!, stations.map((e) => Audio.fromStation(e)).toList()),
-          );
-        }
+        starredStations.add(feed.text!);
       }
       if (starredStations.isNotEmpty) {
         _libraryService.addStarredStations(starredStations);

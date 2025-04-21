@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../common/data/audio.dart';
 import '../../common/view/common_widgets.dart';
+import '../../common/view/snackbars.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../radio/radio_service.dart';
 
 class CustomStationSection extends StatefulWidget {
   const CustomStationSection({super.key});
@@ -68,13 +69,26 @@ class _AddStationDialogState extends State<CustomStationSection> {
                             _nameController.text.isEmpty
                         ? null
                         : () {
-                            di<LibraryModel>()
-                                .addStarredStation(_urlController.text, [
-                              Audio(
-                                url: _urlController.text,
-                                title: _nameController.text,
-                              ),
-                            ]);
+                            di<RadioService>()
+                                .getStationsByUrl(_urlController.text)
+                                .then(
+                              (v) {
+                                if (v?.stationUUID == null) {
+                                  if (context.mounted) {
+                                    showSnackBar(
+                                      context: context,
+                                      content:
+                                          Text(context.l10n.noStationFound),
+                                    );
+                                  }
+                                  return;
+                                } else {
+                                  di<LibraryModel>()
+                                      .addStarredStation(v!.stationUUID);
+                                }
+                              },
+                            );
+
                             Navigator.pop(context);
                           },
                     child: Text(

@@ -133,10 +133,12 @@ class LocalAudioModel extends SafeChangeNotifier {
     bool forceInit = false,
     String? directory,
   }) async {
-    await _localAudioService.init(
-      forceInit: forceInit,
-      newDirectory: directory,
-    );
+    if (forceInit) {
+      await _localAudioService.init(
+        forceInit: forceInit,
+        newDirectory: directory,
+      );
+    }
     if (_libraryService.playlists.isEmpty) return;
     for (var playlist in _libraryService.playlists.entries.where(
       (e) => _settingsService.externalPlaylists.contains(e.key),

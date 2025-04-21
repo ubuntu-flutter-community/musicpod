@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
@@ -7,7 +8,6 @@ import '../app/view/mobile_page.dart';
 import '../app_config.dart';
 import '../common/data/audio.dart';
 import '../common/logging.dart';
-import '../common/page_ids.dart';
 import '../common/view/back_gesture.dart';
 import '../local_audio/local_audio_service.dart';
 import 'library_service.dart';
@@ -32,44 +32,33 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
     super.dispose();
   }
 
-  List<Audio>? getAudiosById(String pageId) {
-    if (pageId == PageIDs.likedAudios) {
-      return likedAudios;
-    } else {
-      return playlists[pageId] ??
-          (favoriteAlbums.contains(pageId)
-              ? _localAudioService.findAlbum(pageId)
-              : []) ??
-          getPodcast(pageId) ??
-          starredStations[pageId];
-    }
-  }
-
   bool isPageInLibrary(String? pageId) => _service.isPageInLibrary(pageId);
 
   //
-  // Liked Audios
+  // Favorite Audios
   //
-  List<Audio> get likedAudios => _service.likedAudios;
+  List<Audio> get favoriteAudios =>
+      _service.favoriteAudios.map((e) => Audio.local(File(e))).toList();
 
-  void addLikedAudio(Audio audio, [bool notify = true]) =>
-      _service.addLikedAudio(audio, notify);
-  void addLikedAudios(List<Audio> audios) => _service.addLikedAudios(audios);
-  void removeLikedAudios(List<Audio> audios) =>
-      _service.removeLikedAudios(audios);
-  bool liked(Audio? audio) => audio == null ? false : _service.liked(audio);
-  void removeLikedAudio(Audio audio, [bool notify = true]) =>
-      _service.removeLikedAudio(audio, notify);
+  void addFavoriteAudio(Audio audio) =>
+      _service.addFavoriteAudios([audio.audioId]);
+  void addFavoriteAudios(List<Audio> audios) =>
+      _service.addFavoriteAudios(audios.map((e) => e.audioId).toList());
+  void removeFavoriteAudios(List<Audio> audios) =>
+      _service.removeFavoriteAudios(audios.map((e) => e.audioId).toList());
+  bool isFavoriteAudio(Audio? audio) =>
+      audio == null ? false : _service.isFavoriteAudio(audio.audioId);
+  void removeLikedAudio(Audio audio) =>
+      _service.removeFavoriteAudios([audio.audioId]);
 
   //
   // Starred stations
   //
 
-  Map<String, List<Audio>> get starredStations => _service.starredStations;
+  List<String> get starredStations => _service.starredStations;
   int get starredStationsLength => _service.starredStations.length;
-  void addStarredStation(String uuid, List<Audio> audios) =>
-      _service.addStarredStation(uuid, audios);
-  void unStarStation(String uuid) => _service.unStarStation(uuid);
+  void addStarredStation(String uuid) => _service.addStarredStation(uuid);
+  void unStarStation(String uuid) => _service.removeStarredStation(uuid);
   void unStarAllStations() => _service.unStarAllStations();
 
   bool isStarredStation(String? uuid) =>
@@ -152,12 +141,14 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
     required int oldIndex,
     required int newIndex,
     required String id,
-  }) =>
-      _service.moveAudioInPlaylist(
-        oldIndex: oldIndex,
-        newIndex: newIndex,
-        id: id,
-      );
+  }) {
+    // TODO
+    // _service.moveAudioInPlaylist(
+    //     oldIndex: oldIndex,
+    //     newIndex: newIndex,
+    //     id: id,
+    //   );
+  }
 
   //
   // Podcasts

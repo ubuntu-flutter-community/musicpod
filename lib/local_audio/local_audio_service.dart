@@ -384,7 +384,7 @@ class LocalAudioService {
       dir,
     );
     if (dir != null && Directory(dir).existsSync()) {
-      _fileWatcher = FileWatcher(dir);
+      _fileWatcher = FileWatcher(dir, pollingDelay: const Duration(seconds: 5));
     }
 
     addAudios(

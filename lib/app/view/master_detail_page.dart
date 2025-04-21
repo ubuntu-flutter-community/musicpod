@@ -30,7 +30,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
       width: kMasterDetailSideBarWidth,
       child: Stack(
         children: [
-          MasterPanel(masterItems: masterItems, libraryModel: libraryModel),
+          MasterPanel(masterItems: masterItems),
           Positioned(
             left: Platform.isMacOS ? 5 : null,
             top: 5,
@@ -58,7 +58,6 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
           if (context.showMasterPanel)
             MasterPanel(
               masterItems: masterItems,
-              libraryModel: libraryModel,
             ),
           if (context.showMasterPanel) const VerticalDivider(),
           Expanded(
@@ -93,14 +92,13 @@ class MasterPanel extends StatelessWidget {
   const MasterPanel({
     super.key,
     required this.masterItems,
-    required this.libraryModel,
   });
 
   final List<MasterItem> masterItems;
-  final LibraryModel libraryModel;
 
   @override
   Widget build(BuildContext context) {
+    final libraryModel = di<LibraryModel>();
     return SizedBox(
       width: kMasterDetailSideBarWidth,
       child: Column(
@@ -132,7 +130,6 @@ class MasterPanel extends StatelessWidget {
                     }
                   },
                   pageId: item.pageId,
-                  libraryModel: libraryModel,
                   leading: item.iconBuilder
                       ?.call(libraryModel.selectedPageId == item.pageId),
                   title: item.titleBuilder(context),
