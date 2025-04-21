@@ -113,7 +113,7 @@ class _ArtistPageState extends State<ArtistPage> {
                     imageRadius: BorderRadius.circular(10000),
                     title: widget.pageId,
                     image: ArtistRoundImageContainer(
-                      artistAudios: artistAudios,
+                      artist: widget.pageId,
                       height: kMaxAudioPageHeaderHeight,
                       width: kMaxAudioPageHeaderHeight,
                     ),
