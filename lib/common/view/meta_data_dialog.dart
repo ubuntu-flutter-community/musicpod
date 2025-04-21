@@ -32,7 +32,7 @@ class MetaDataContent extends StatefulWidget {
   final ModalMode _mode;
   final String pageId;
 
-  static const double dimension = 350.0;
+  static const double dimension = 300.0;
 
   @override
   State<MetaDataContent> createState() => _MetaDataContentState();
@@ -52,6 +52,8 @@ class _MetaDataContentState extends State<MetaDataContent> {
       audio = widget.audio.isLocal && widget.audio.path != null
           ? Audio.local(File(widget.audio.path!))
           : widget.audio;
+    } else {
+      audio = widget.audio;
     }
   }
 
@@ -60,7 +62,7 @@ class _MetaDataContentState extends State<MetaDataContent> {
     final l10n = context.l10n;
 
     final body = SizedBox(
-      width: MetaDataContent.dimension - kMediumSpace,
+      width: MetaDataContent.dimension,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

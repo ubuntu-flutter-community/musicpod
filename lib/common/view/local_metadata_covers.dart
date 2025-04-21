@@ -6,6 +6,7 @@ import 'package:mime/mime.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../extensions/build_context_x.dart';
 import '../../extensions/picture_type_x.dart';
 import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';
@@ -87,9 +88,23 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                               ),
                               Positioned(
                                 bottom: kMediumSpace,
-                                child: Chip(
-                                  label: DropdownButton(
-                                    borderRadius: BorderRadius.circular(20),
+                                child: Material(
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                      color: context.colorScheme.outline,
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(
+                                      20,
+                                    ),
+                                  ),
+                                  child: DropdownButton(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: kMediumSpace,
+                                    ),
+                                    borderRadius: BorderRadius.circular(
+                                      20,
+                                    ),
                                     isDense: true,
                                     icon: const DropDownArrow(),
                                     underline: const SizedBox.shrink(),
@@ -99,12 +114,10 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                                           (e) => DropdownMenuItem(
                                             value: e,
                                             child: SizedBox(
-                                              width: (dimension / 2) -
-                                                  kMediumSpace,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  horizontal: kSmallestSpace,
+                                              width: dimension / 2,
+                                              child: Tooltip(
+                                                message: e.localize(
+                                                  context.l10n,
                                                 ),
                                                 child: Text(
                                                   e.localize(context.l10n),
@@ -172,7 +185,7 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                         (e) => Picture(
                           File(e).readAsBytesSync(),
                           lookupMimeType(e) ?? '',
-                          PictureType.illustration,
+                          PictureType.coverFront,
                         ),
                       ),
                     ],
