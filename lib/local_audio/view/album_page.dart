@@ -151,7 +151,7 @@ class AlbumPageImage extends StatelessWidget {
   }
 }
 
-class AlbumPageControlButton extends StatelessWidget {
+class AlbumPageControlButton extends StatelessWidget with WatchItMixin {
   const AlbumPageControlButton({
     super.key,
     required this.id,
@@ -164,7 +164,8 @@ class AlbumPageControlButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final libraryModel = di<LibraryModel>();
-    final pinnedAlbum = libraryModel.isFavoriteAlbum(id);
+    final pinnedAlbum =
+        watchPropertyValue((LibraryModel m) => m.isFavoriteAlbum(id));
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -173,12 +174,12 @@ class AlbumPageControlButton extends StatelessWidget {
           IconButton(
             tooltip:
                 pinnedAlbum ? context.l10n.unPinAlbum : context.l10n.pinAlbum,
-            isSelected: libraryModel.isFavoriteAlbum(id),
+            isSelected: pinnedAlbum,
             icon: Icon(
               pinnedAlbum ? Iconz.pinFilled : Iconz.pin,
             ),
             onPressed: () {
-              if (libraryModel.isFavoriteAlbum(id)) {
+              if (pinnedAlbum) {
                 libraryModel.removeFavoriteAlbum(
                   id,
                   onFail: () {

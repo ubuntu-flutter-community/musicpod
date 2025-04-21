@@ -411,6 +411,20 @@ class Audio {
         : '${artistName ?? ''}$albumIdSplitter${albumName ?? ''}';
   }
 
+  String? get audioId {
+    if (isRadio) {
+      return uuid;
+    }
+    final path = this.path;
+    final url = this.url;
+    if (path != null) {
+      return path;
+    } else if (url != null) {
+      return url;
+    }
+    return null;
+  }
+
   static String get albumIdSplitter => '-${AppConfig.appId}-';
 
   bool get hasPathAndId =>
