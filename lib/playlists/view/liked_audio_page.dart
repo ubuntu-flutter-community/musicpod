@@ -33,12 +33,10 @@ class _LikedAudioPageState extends State<LikedAudioPage> {
     getFavoriteAudios();
   }
 
-  void getFavoriteAudios() {
-    likedAudios = di<LibraryModel>()
-        .favoriteAudios
-        .map((e) => Audio.local(File(e)))
-        .toList();
-  }
+  void getFavoriteAudios() => likedAudios = di<LibraryModel>()
+      .favoriteAudios
+      .map((e) => Audio.local(File(e)))
+      .toList();
 
   @override
   Widget build(BuildContext context) {

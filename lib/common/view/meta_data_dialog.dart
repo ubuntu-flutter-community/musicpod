@@ -148,6 +148,37 @@ class _MetaDataContentState extends State<MetaDataContent> {
           ),
         ],
       AudioType.local => <Widget>[
+          ListTile(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: kLargestSpace,
+            ),
+            title: TextField(
+              readOnly: true,
+              decoration: InputDecoration(
+                labelText: l10n.path,
+                suffixIcon: IconButton(
+                  style: IconButton.styleFrom(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(kYaruButtonRadius),
+                        bottomRight: Radius.circular(kYaruButtonRadius),
+                      ),
+                    ),
+                  ),
+                  icon: const Icon(Icons.copy),
+                  onPressed: () {
+                    if (audio.path != null) {
+                      showSnackBar(
+                        context: context,
+                        content: CopyClipboardContent(text: audio.path!),
+                      );
+                    }
+                  },
+                ),
+              ),
+              controller: TextEditingController(text: audio.path),
+            ),
+          ),
           LocalMetadataTile.title(audio: audio),
           LocalMetadataTile.album(audio: audio),
           LocalMetadataTile.artist(audio: audio),

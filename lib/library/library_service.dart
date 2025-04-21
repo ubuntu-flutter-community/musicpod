@@ -311,13 +311,6 @@ class LibraryService {
     }
   }
 
-  void updateAudiosInPlaylist({
-    required String id,
-    required List<Audio> audios,
-  }) {
-    notify(true);
-  }
-
   void addAudiosToPlaylist({required String id, required List<Audio> audios}) {
     final playlist = (_sharedPreferences.getStringList(id) ?? [])
         .map((e) => Audio.local(File(e)))

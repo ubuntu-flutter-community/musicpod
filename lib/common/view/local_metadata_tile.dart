@@ -164,7 +164,8 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
     });
     void onChange() {
       setState(() {});
-      di<LibraryModel>().updateAudiosInPlaylist(id: widget.pageId!, audios: []);
+      di<LibraryModel>().notifyListeners();
+      di<LocalAudioModel>().notifyListeners();
     }
 
     return switch (widget.type) {

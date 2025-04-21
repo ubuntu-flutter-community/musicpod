@@ -127,11 +127,7 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
     required List<Audio> audios,
   }) async =>
       _service.removeAudiosFromPlaylist(id: id, audios: audios);
-  Future<void> updateAudiosInPlaylist({
-    required String id,
-    required List<Audio> audios,
-  }) async =>
-      _service.updateAudiosInPlaylist(id: id, audios: audios);
+
   void clearPlaylist(String id) => _service.clearPlaylist(id);
   void moveAudioInPlaylist({
     required int oldIndex,

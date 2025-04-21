@@ -48,17 +48,29 @@ class PlaylistPage extends StatefulWidget with WatchItStatefulWidgetMixin {
 class _PlaylistPageState extends State<PlaylistPage> {
   late List<Audio> playlist;
 
+  static Map<String, List<Audio>> cache = {};
+
   @override
   void initState() {
     super.initState();
-    setPlaylist();
+    getPlaylist();
   }
 
-  void setPlaylist() {
-    playlist = playlist =
-        (di<LibraryModel>().getPlaylistById(widget.pageId) ?? [])
-            .map((e) => Audio.local(File(e)))
-            .toList();
+  void getPlaylist() {
+    if (cache[widget.pageId]?.isNotEmpty == true) {
+      playlist = cache[widget.pageId]!;
+      return;
+    }
+
+    final playlistById =
+        di<LibraryModel>().getPlaylistById(widget.pageId) ?? [];
+    final list = playlistById
+        .map(
+          (e) => Audio.local(File(e)),
+        )
+        .toList();
+    cache[widget.pageId] = list;
+    playlist = list;
   }
 
   @override
@@ -71,13 +83,13 @@ class _PlaylistPageState extends State<PlaylistPage> {
     // This is needed to be notified about both size changes and also reordering
     watchPropertyValue(
       (LibraryModel m) {
-        setState(() => setPlaylist());
+        setState(() => getPlaylist());
         return m.getPlaylistById(widget.pageId)?.length;
       },
     );
     watchPropertyValue(
       (LibraryModel m) {
-        setState(() => setPlaylist());
+        setState(() => getPlaylist());
         return m.getPlaylistById(widget.pageId)?.hashCode;
       },
     );

@@ -104,6 +104,8 @@ class LocalAudioService {
               // if (albumArtist != null) {
               //   metadata.setAlbumArtist(albumArtist);
               // }
+
+              onChange?.call();
             } on Exception catch (e) {
               printMessageInDebugMode(e);
             }
@@ -384,7 +386,7 @@ class LocalAudioService {
       dir,
     );
     if (dir != null && Directory(dir).existsSync()) {
-      _fileWatcher = FileWatcher(dir, pollingDelay: const Duration(seconds: 5));
+      _fileWatcher = FileWatcher(dir);
     }
 
     addAudios(

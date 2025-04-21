@@ -704,5 +704,6 @@
     "localPictureTypebandArtistLogotype": "Band/Artist logotype",
     "localPictureTypepublisherStudioLogotype": "Publisher/Studio logotype",
     "cantPinEmptyAlbum": "You can't pin albums without empty album metadata!",
-    "cantUnpinEmptyAlbum": "You can't unpin albums without empty album metadata!"
+    "cantUnpinEmptyAlbum": "You can't unpin albums without empty album metadata!",
+    "path": "Path"
 }

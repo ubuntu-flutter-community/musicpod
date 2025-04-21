@@ -49,9 +49,7 @@ class _StationPageState extends State<StationPage> {
     setFuture();
   }
 
-  void setFuture() {
-    _future = di<RadioModel>().getStationByUUID(widget.uuid);
-  }
+  void setFuture() => _future = di<RadioModel>().getStationByUUID(widget.uuid);
 
   @override
   Widget build(BuildContext context) {

@@ -30,17 +30,12 @@ class _GenrePageState extends State<GenrePage> {
   @override
   void initState() {
     super.initState();
-    final model = di<LocalAudioModel>();
-    model.init().then(
-      (_) {
-        if (context.mounted) {
-          setState(
-            () =>
-                artistAudiosWithGenre = model.findArtistsOfGenre(widget.genre),
-          );
-        }
-      },
-    );
+    if (context.mounted) {
+      setState(
+        () => artistAudiosWithGenre =
+            di<LocalAudioModel>().findArtistsOfGenre(widget.genre),
+      );
+    }
   }
 
   @override

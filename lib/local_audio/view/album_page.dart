@@ -20,7 +20,7 @@ import '../local_audio_model.dart';
 import 'artist_page.dart';
 import 'local_cover.dart';
 
-class AlbumPage extends StatefulWidget {
+class AlbumPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const AlbumPage({
     super.key,
     required this.id,
@@ -38,12 +38,18 @@ class _AlbumPageState extends State<AlbumPage> {
   @override
   void initState() {
     super.initState();
-
-    album = di<LocalAudioModel>().findAlbum(widget.id) ?? [];
+    getAlbum();
   }
+
+  void getAlbum() => album = di<LocalAudioModel>().findAlbum(widget.id) ?? [];
 
   @override
   Widget build(BuildContext context) {
+    watchPropertyValue((LocalAudioModel m) {
+      setState(() => getAlbum());
+      return m.audios.hashCode;
+    });
+
     return SliverAudioPage(
       pageId: widget.id,
       audioPageType: AudioPageType.album,
@@ -57,19 +63,12 @@ class _AlbumPageState extends State<AlbumPage> {
     );
   }
 
-  void onArtistTap(text) {
-    final artistName = album.firstOrNull?.artist;
-    if (artistName == null) return;
-
-    di<LocalAudioModel>().init().then(
-          (_) => di<LibraryModel>().push(
-            builder: (_) => ArtistPage(
-              pageId: artistName,
-            ),
-            pageId: artistName,
-          ),
-        );
-  }
+  void onArtistTap(artistName) => di<LibraryModel>().push(
+        builder: (_) => ArtistPage(
+          pageId: artistName,
+        ),
+        pageId: artistName,
+      );
 }
 
 class AlbumPageSideBarIcon extends StatefulWidget {
