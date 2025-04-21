@@ -424,6 +424,7 @@ class PlayerService {
     required String listName,
     int? index,
   }) async {
+    if (audios.isEmpty) return;
     if (listName == _queue.name &&
         index != null &&
         audios.elementAtOrNull(index) != null) {

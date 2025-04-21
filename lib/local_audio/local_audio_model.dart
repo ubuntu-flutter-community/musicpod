@@ -7,24 +7,20 @@ import 'package:watcher/watcher.dart';
 
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
-import '../library/library_service.dart';
 import '../settings/settings_service.dart';
 import 'local_audio_service.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
   LocalAudioModel({
     required LocalAudioService localAudioService,
-    required LibraryService libraryService,
     required SettingsService settingsService,
   })  : _localAudioService = localAudioService,
-        _settingsService = settingsService,
-        _libraryService = libraryService {
+        _settingsService = settingsService {
     _audiosChangedSub ??=
         _localAudioService.audiosChanged.listen((_) => notifyListeners());
   }
 
   final LocalAudioService _localAudioService;
-  final LibraryService _libraryService;
   final SettingsService _settingsService;
   StreamSubscription<bool>? _audiosChangedSub;
   FileWatcher? get fileWatcher => _localAudioService.fileWatcher;
@@ -138,12 +134,6 @@ class LocalAudioModel extends SafeChangeNotifier {
         forceInit: forceInit,
         newDirectory: directory,
       );
-    }
-    if (_libraryService.playlists.isEmpty) return;
-    for (var playlist in _libraryService.playlists.entries.where(
-      (e) => _settingsService.externalPlaylists.contains(e.key),
-    )) {
-      _localAudioService.addAudios(playlist.value);
     }
   }
 

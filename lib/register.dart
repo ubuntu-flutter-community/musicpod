@@ -282,7 +282,6 @@ void registerDependencies({required List<String> args}) async {
     ..registerSingletonWithDependencies<LocalAudioModel>(
       () => LocalAudioModel(
         localAudioService: di<LocalAudioService>(),
-        libraryService: di<LibraryService>(),
         settingsService: di<SettingsService>(),
       ),
       dependsOn: [SettingsService, LibraryService, LocalAudioService],

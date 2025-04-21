@@ -26,9 +26,7 @@ class HomePage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final playlists = watchPropertyValue(
-      (LibraryModel m) => m.playlists.keys.toList(),
-    );
+    final playlists = watchPropertyValue((LibraryModel m) => m.playlistIDs);
     const textPadding = EdgeInsets.only(
       right: kMediumSpace,
       left: kSmallestSpace,

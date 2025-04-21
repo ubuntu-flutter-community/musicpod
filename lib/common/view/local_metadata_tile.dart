@@ -163,14 +163,8 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
       wasChangedLocally = false;
     });
     void onChange() {
-      final libraryModel = di<LibraryModel>();
-      final playlist = libraryModel.playlists[widget.pageId];
-      if (playlist != null) {
-        libraryModel.updateAudiosInPlaylist(
-          id: widget.pageId!,
-          audios: [widget.audio],
-        );
-      }
+      setState(() {});
+      di<LibraryModel>().updateAudiosInPlaylist(id: widget.pageId!, audios: []);
     }
 
     return switch (widget.type) {

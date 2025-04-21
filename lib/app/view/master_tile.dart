@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
@@ -113,6 +115,10 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
 
   @override
   Widget build(BuildContext context) {
+    if (PageIDs.permanent.contains(widget.pageId)) {
+      return widget.tile;
+    }
+
     final isEnQueued = watchPropertyValue(
       (PlayerModel m) => m.queueName != null && m.queueName == widget.pageId,
     );
@@ -174,10 +180,18 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
     }
 
     if (pageId == PageIDs.likedAudios) {
-      return libraryModel.favoriteAudios;
+      return libraryModel.favoriteAudios
+          .map((e) => Audio.local(File(e)))
+          .toList();
     } else {
-      return libraryModel.playlists[pageId] ??
-          (libraryModel.favoriteAlbums.contains(pageId)
+      if (libraryModel.getPlaylistById(pageId) != null) {
+        return libraryModel
+            .getPlaylistById(pageId)
+            ?.map((e) => Audio.local(File(e)))
+            .toList();
+      }
+
+      return (libraryModel.favoriteAlbums.contains(pageId)
               ? di<LocalAudioModel>().findAlbum(pageId)
               : []) ??
           libraryModel.getPodcast(pageId);

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
@@ -37,8 +36,7 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   //
   // Favorite Audios
   //
-  List<Audio> get favoriteAudios =>
-      _service.favoriteAudios.map((e) => Audio.local(File(e))).toList();
+  List<String> get favoriteAudios => _service.favoriteAudios;
 
   void addFavoriteAudio(Audio audio) =>
       _service.addFavoriteAudios([audio.audioId]);
@@ -89,11 +87,9 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   // Playlists
   //
 
-  Map<String, List<Audio>> get playlists => _service.playlists;
-  int get playlistsLength => playlists.length;
-  List<Audio> getPlaylistAt(int index) =>
-      playlists.entries.elementAt(index).value.toList();
-  List<Audio>? getPlaylistById(String id) => _service.playlists[id];
+  List<String> get playlistIDs => _service.playlistIDs;
+  int get playlistsLength => playlistIDs.length;
+  List<String>? getPlaylistById(String id) => _service.getPlaylistById(id);
   bool isPlaylistSaved(String? id) => _service.isPlaylistSaved(id);
   Future<void> addPlaylist(String name, List<Audio> audios) async =>
       _service.addPlaylist(name, audios);
@@ -142,12 +138,11 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
     required int newIndex,
     required String id,
   }) {
-    // TODO
-    // _service.moveAudioInPlaylist(
-    //     oldIndex: oldIndex,
-    //     newIndex: newIndex,
-    //     id: id,
-    //   );
+    _service.moveAudioInPlaylist(
+      oldIndex: oldIndex,
+      newIndex: newIndex,
+      id: id,
+    );
   }
 
   //

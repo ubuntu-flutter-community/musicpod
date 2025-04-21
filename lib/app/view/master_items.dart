@@ -108,17 +108,15 @@ List<MasterItem> createMasterItems({required LibraryModel libraryModel}) {
       subtitleBuilder: (context) => Text(context.l10n.playlist),
       iconBuilder: (selected) => LikedAudioPageIcon(selected: selected),
     ),
-    for (final playlist in libraryModel.playlists.entries)
+    for (final id in libraryModel.playlistIDs)
       MasterItem(
-        titleBuilder: (context) => Text(playlist.key),
+        titleBuilder: (context) => Text(id),
         subtitleBuilder: (context) => Text(context.l10n.playlist),
-        pageId: playlist.key,
-        pageBuilder: (_) => PlaylistPage(pageId: playlist.key),
+        pageId: id,
+        pageBuilder: (_) => PlaylistPage(pageId: id),
         iconBuilder: (selected) => SideBarFallBackImage(
-          color: getAlphabetColor(playlist.key),
-          child: Icon(
-            Iconz.playlist,
-          ),
+          color: getAlphabetColor(id),
+          child: Icon(Iconz.playlist),
         ),
       ),
     for (final podcast in libraryModel.podcasts.entries)

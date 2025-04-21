@@ -39,4 +39,5 @@ extension SPKeys on SharedPreferences {
   static const favoriteAudios = 'favoriteAudios';
   static const starredStations = 'starredStations';
   static const podcastUpdates = 'podcastUpdates';
+  static const playlistIDs = 'playlistIDs';
 }
