@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -106,23 +105,15 @@ List<MasterItem> createMasterItems() {
           child: Icon(Iconz.playlist),
         ),
       ),
-    for (final podcast in libraryModel.podcasts.entries)
+    for (final feedUrl in libraryModel.podcastFeedUrls)
       MasterItem(
         titleBuilder: (_) => PodcastPageTitle(
-          feedUrl: podcast.key,
-          title: podcast.value.firstOrNull?.album ??
-              podcast.value.firstOrNull?.title ??
-              podcast.value.firstOrNull.toString(),
+          feedUrl: feedUrl,
         ),
-        subtitleBuilder: (context) => Text(
-          podcast.value.firstOrNull?.artist ?? context.l10n.podcast,
-        ),
-        pageId: podcast.key,
-        pageBuilder: (_) => LazyPodcastPage(feedUrl: podcast.key),
-        iconBuilder: (selected) => PodcastPageSideBarIcon(
-          imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
-              podcast.value.firstOrNull?.imageUrl,
-        ),
+        subtitleBuilder: (context) => PodcastPageSubTitle(feedUrl: feedUrl),
+        pageId: feedUrl,
+        pageBuilder: (_) => LazyPodcastPage(feedUrl: feedUrl),
+        iconBuilder: (selected) => PodcastPageSideBarIcon(feedUrl: feedUrl),
       ),
     for (final id in libraryModel.favoriteAlbums)
       MasterItem(

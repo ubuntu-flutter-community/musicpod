@@ -488,6 +488,7 @@ class LibraryService {
 
   Map<String, List<Audio>> _podcasts = {};
   bool isPodcastSubscribed(String feedUrl) => _podcasts.containsKey(feedUrl);
+  List<String> get podcastFeedUrls => _podcasts.keys.toList();
   Map<String, List<Audio>> get podcasts => _podcasts;
   int get podcastsLength => _podcasts.length;
 

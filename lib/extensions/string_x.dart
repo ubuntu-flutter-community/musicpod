@@ -43,9 +43,8 @@ extension StringExtension on String {
 
   String get albumOfId => (split(Audio.albumIdSplitter).lastOrNull ?? '')
       .replaceAll(Audio.albumIdReplacer, Audio.albumIdReplacement);
-  String get artistOfId =>
-      split(Audio.albumIdSplitter).firstOrNull ??
-      ''.replaceAll(Audio.albumIdReplacer, Audio.albumIdReplacement);
+  String get artistOfId => (split(Audio.albumIdSplitter).firstOrNull ?? '')
+      .replaceAll(Audio.albumIdReplacer, Audio.albumIdReplacement);
 }
 
 extension NullableStringX on String? {
