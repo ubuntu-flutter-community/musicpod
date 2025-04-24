@@ -297,13 +297,12 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     required AppModel appModel,
     required LibraryModel libraryModel,
   }) {
-    final artistName = audio.artist;
-    if (artistName == null) return;
-
+    final artistId = audio.artist;
+    if (artistId == null) return;
     appModel.setFullWindowMode(false);
     libraryModel.push(
-      builder: (_) => ArtistPage(pageId: artistName),
-      pageId: artistName,
+      builder: (_) => ArtistPage(pageId: artistId),
+      pageId: artistId,
     );
   }
 }

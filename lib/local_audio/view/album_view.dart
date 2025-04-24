@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app_config.dart';
-import '../../common/data/audio.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/audio_card_vignette.dart';
@@ -97,7 +96,7 @@ class AlbumCard extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         AudioCard(
-          bottom: AudioCardBottom(text: id.split(Audio.albumIdSplitter).last),
+          bottom: AudioCardBottom(text: id.albumOfId),
           image: path != null
               ? LocalCover(
                   dimension: audioCardDimension,

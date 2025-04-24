@@ -705,5 +705,6 @@
     "localPictureTypepublisherStudioLogotype": "Publisher/Studio logotype",
     "cantPinEmptyAlbum": "You can't pin albums without empty album metadata!",
     "cantUnpinEmptyAlbum": "You can't unpin albums without empty album metadata!",
-    "path": "Path"
+    "path": "Path",
+    "albumNotFound": "This album does not exist or you have removed the external playlist (M3U/PLS file) where it has been loaded from."
 }

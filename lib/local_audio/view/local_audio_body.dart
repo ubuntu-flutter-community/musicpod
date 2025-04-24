@@ -19,13 +19,12 @@ class LocalAudioBody extends StatelessWidget {
     required this.playlists,
     this.noResultMessage,
     this.noResultIcon,
-    required this.albumArtists,
   });
 
   final LocalAudioView localAudioView;
   final List<Audio>? titles;
   final List<String>? artists;
-  final List<String>? albumArtists;
+
   final List<String>? albumIDs;
   final List<String>? genres;
   final List<String>? playlists;
@@ -43,11 +42,6 @@ class LocalAudioBody extends StatelessWidget {
             noResultMessage: noResultMessage,
             noResultIcon: noResultIcon,
           ),
-        // LocalAudioView.albumArtists => AlbumArtistsView(
-        //     albumArtists: albumArtists,
-        //     noResultMessage: noResultMessage,
-        //     noResultIcon: noResultIcon,
-        //   ),
         LocalAudioView.albums => AlbumsView(
             albumIDs: albumIDs,
             noResultMessage: noResultMessage,

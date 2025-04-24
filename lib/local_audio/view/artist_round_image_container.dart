@@ -29,7 +29,7 @@ class _ArtistRoundImageContainerState extends State<ArtistRoundImageContainer> {
   void initState() {
     super.initState();
     artistAudios =
-        di<LocalAudioModel>().findTitlesOfAlbumArtists(widget.artist) ?? [];
+        di<LocalAudioModel>().findTitlesOfArtist(widget.artist) ?? [];
   }
 
   @override

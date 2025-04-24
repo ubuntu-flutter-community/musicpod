@@ -50,9 +50,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     final l10n = context.l10n;
     final audios = watchPropertyValue((LocalAudioModel m) => m.audios);
     final allArtists = watchPropertyValue((LocalAudioModel m) => m.allArtists);
-    final allAlbumArtists =
-        watchPropertyValue((LocalAudioModel m) => m.allAlbumArtists);
-
     final allAlbumIDs =
         watchPropertyValue((LocalAudioModel m) => m.allAlbumIDs);
     final allGenres = watchPropertyValue((LocalAudioModel m) => m.allGenres);
@@ -70,8 +67,9 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             builder: (context) => ConfirmationDialog(
               title: Text(l10n.localAudioWatchDialogTitle),
               content: Text(l10n.localAudioWatchDialogDescription),
-              onConfirm: () async =>
-                  di<LocalAudioModel>().init(forceInit: true),
+              onConfirm: () async {
+                await di<LocalAudioModel>().init(forceInit: true);
+              },
             ),
           );
         }
@@ -136,7 +134,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                         titles: audios,
                         albumIDs: allAlbumIDs,
                         artists: allArtists,
-                        albumArtists: allAlbumArtists,
                         genres: allGenres,
                         playlists: playlists,
                       ),

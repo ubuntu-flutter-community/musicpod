@@ -5,6 +5,7 @@ import 'package:yaru/yaru.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
+import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/spaced_divider.dart';
 import '../../common/view/ui_constants.dart';
@@ -38,7 +39,12 @@ class MasterTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final yaruMasterTile = YaruMasterTile(
       title: title,
-      onTap: onTap,
+      onTap: () {
+        masterScaffoldKey.currentState
+          ?..closeEndDrawer()
+          ..closeDrawer();
+        onTap();
+      },
       selected: selected,
       leading: leading,
       subtitle: subtitle,
@@ -177,17 +183,8 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
       return audio == null ? [] : [audio];
     }
 
-    if (pageId == PageIDs.likedAudios) {
-      return libraryModel.likedAudios;
-    } else {
-      if (libraryModel.getPlaylistById(pageId) != null) {
-        return libraryModel.getPlaylistById(pageId);
-      }
-
-      return (libraryModel.favoriteAlbums.contains(pageId)
-              ? di<LocalAudioModel>().findAlbum(pageId)
-              : []) ??
-          libraryModel.getPodcast(pageId);
-    }
+    return libraryModel.getPodcast(pageId) ??
+        libraryModel.getPlaylistById(pageId) ??
+        di<LocalAudioModel>().findAlbum(pageId);
   }
 }

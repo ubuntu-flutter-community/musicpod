@@ -81,7 +81,6 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   List<Audio>? get audios => _localAudioService.audios;
   List<String>? get allArtists => _localAudioService.allArtists;
-  List<String>? get allAlbumArtists => _localAudioService.allAlbumArtists;
   List<String>? get allGenres => _localAudioService.allGenres;
   List<String>? get allAlbumIDs => _localAudioService.allAlbumIDs;
 
@@ -96,12 +95,6 @@ class LocalAudioModel extends SafeChangeNotifier {
     AudioFilter audioFilter = AudioFilter.album,
   ]) =>
       _localAudioService.findTitlesOfArtist(artist, audioFilter);
-
-  List<Audio>? findTitlesOfAlbumArtists(
-    String artist, [
-    AudioFilter audioFilter = AudioFilter.album,
-  ]) =>
-      _localAudioService.findTitlesOfAlbumArtists(artist, audioFilter);
 
   List<String>? findArtistsOfGenre(String genre) =>
       _localAudioService.findArtistsOfGenre(genre);
@@ -125,15 +118,11 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   bool get importing => _localAudioService.audios == null;
 
-  Future<void> init({
-    bool forceInit = false,
-    String? directory,
-  }) async {
-    await _localAudioService.init(
-      forceInit: forceInit,
-      newDirectory: directory,
-    );
-  }
+  Future<void> init({bool forceInit = false, String? directory}) async =>
+      _localAudioService.init(
+        forceInit: forceInit,
+        newDirectory: directory,
+      );
 
   @override
   Future<void> dispose() async {

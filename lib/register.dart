@@ -184,13 +184,9 @@ void registerDependencies({required List<String> args}) async {
         final localAudioService = LocalAudioService(
           settingsService: di<SettingsService>(),
           localCoverService: di<LocalCoverService>(),
+          libraryService: di<LibraryService>(),
         );
-        final libraryService = di<LibraryService>();
-        await localAudioService.init(
-          externalAudios: libraryService.externalPlaylistIDs
-              .map((e) => libraryService.getPlaylistById(e) ?? [])
-              .toList(),
-        );
+        await localAudioService.init();
 
         return localAudioService;
       },
@@ -288,7 +284,7 @@ void registerDependencies({required List<String> args}) async {
         localAudioService: di<LocalAudioService>(),
         settingsService: di<SettingsService>(),
       ),
-      dependsOn: [SettingsService, LibraryService, LocalAudioService],
+      dependsOn: [SettingsService, LocalAudioService],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<PodcastModel>(

@@ -11,7 +11,7 @@ import '../../common/view/theme.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';
-import 'master_items.dart';
+import 'create_master_items.dart';
 import 'mobile_page.dart';
 
 class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
@@ -25,7 +25,11 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
     final phoenix = phoenixTheme(color: accent ?? Colors.greenAccent);
 
     final libraryModel = watchIt<LibraryModel>();
-    final masterItems = createMasterItems(libraryModel: libraryModel);
+    final masterItems = createMasterItems();
+    watchPropertyValue((LibraryModel m) => m.playlistsLength);
+    watchPropertyValue((LibraryModel m) => m.starredStationsLength);
+    watchPropertyValue((LibraryModel m) => m.favoriteAlbumsLength);
+    watchPropertyValue((LibraryModel m) => m.podcastsLength);
 
     return MaterialApp(
       navigatorKey: libraryModel.masterNavigatorKey,

@@ -23,7 +23,7 @@ class LikeIcon extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final libraryModel = di<LibraryModel>();
 
-    watchPropertyValue((LibraryModel m) => m.likedAudios.length);
+    watchPropertyValue((LibraryModel m) => m.likedAudiosLength);
 
     final liked = libraryModel.isLikedAudio(audio);
 

@@ -149,7 +149,6 @@ class SearchModel extends SafeChangeNotifier {
     return LocalSearchResult(
       titles: search?.titles,
       artists: search?.artists,
-      albumArtists: search?.albumArtists,
       albums: search?.albums,
       genres: search?.genres,
       playlists: (query != null && query.isNotEmpty)

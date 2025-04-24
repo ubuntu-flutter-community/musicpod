@@ -23,42 +23,38 @@ class LikedAudioPage extends StatefulWidget with WatchItStatefulWidgetMixin {
 }
 
 class _LikedAudioPageState extends State<LikedAudioPage> {
-  late List<Audio> likedAudios;
+  late List<Audio> _likedAudios;
 
   @override
   void initState() {
     super.initState();
-    getFavoriteAudios();
+    getLikedAudios();
   }
 
-  void getFavoriteAudios() => likedAudios = di<LibraryModel>().likedAudios;
+  void getLikedAudios() => _likedAudios = di<LibraryModel>().likedAudios;
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((LibraryModel m) {
-      setState(() => getFavoriteAudios());
-      return m.likedAudios;
-    });
-    watchPropertyValue((LibraryModel m) {
-      setState(() => getFavoriteAudios());
-      return m.likedAudios.length;
+    final likedAudiosLength = watchPropertyValue((LibraryModel m) {
+      setState(() => getLikedAudios());
+      return m.likedAudiosLength;
     });
 
     return SliverAudioPage(
-      onPageLabelTab: (artist) {
+      onPageLabelTab: (text) {
         di<LibraryModel>().push(
-          builder: (_) => ArtistPage(pageId: artist),
-          pageId: artist,
+          builder: (_) => ArtistPage(pageId: text),
+          pageId: text,
         );
       },
       noSearchResultMessage: Text(context.l10n.likedSongsSubtitle),
       noSearchResultIcons: const AnimatedEmoji(AnimatedEmojis.twoHearts),
-      audios: likedAudios,
+      audios: _likedAudios,
       audioPageType: AudioPageType.likedAudio,
       pageId: PageIDs.likedAudios,
       pageTitle: context.l10n.likedSongs,
       pageLabel: context.l10n.playlist,
-      pageSubTitle: '${likedAudios.length} ${context.l10n.titles}',
+      pageSubTitle: '$likedAudiosLength ${context.l10n.titles}',
       description: Text(
         context.l10n.likedSongsSubtitle,
         style: context.theme.pageHeaderDescription,

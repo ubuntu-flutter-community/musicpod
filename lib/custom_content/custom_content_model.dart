@@ -64,14 +64,14 @@ class CustomContentModel extends SafeChangeNotifier {
           lists.add(
             (
               id: basename(path),
-              audios: await _parseM3uPlaylist(path),
+              audios: await compute(_parseM3uPlaylist, path),
             ),
           );
         } else if (path.endsWith('.pls')) {
           lists.add(
             (
               id: basename(path),
-              audios: await _parsePlsPlaylist(path),
+              audios: await compute(_parsePlsPlaylist, path),
             ),
           );
         }
@@ -81,54 +81,6 @@ class CustomContentModel extends SafeChangeNotifier {
     }
 
     return lists;
-  }
-
-  Future<List<Audio>> _parseM3uPlaylist(String path) async {
-    final audios = <Audio>[];
-    final playlist = await compute(M3uList.loadFromFile, path);
-
-    for (var e in playlist.items) {
-      if (e.link.startsWith('http')) {
-        audios.add(
-          Audio(
-            title: e.title,
-            url: e.link,
-            description: e.link,
-            audioType: AudioType.radio,
-          ),
-        );
-      } else if (e.link.isNotEmpty) {
-        final file = File(e.link.replaceAll('file://', ''));
-        audios.add(Audio.local(file));
-      }
-    }
-
-    return audios;
-  }
-
-  Future<List<Audio>> _parsePlsPlaylist(String path) async {
-    final audios = <Audio>[];
-    final playlist = PlsPlaylist.parse(File(path).readAsStringSync());
-
-    for (var e in playlist.entries) {
-      if (e.file?.startsWith('http') == true) {
-        audios.add(
-          Audio(
-            title: e.title,
-            url: e.file,
-            description: e.file,
-            audioType: AudioType.radio,
-          ),
-        );
-      } else if (e.file?.isNotEmpty == true) {
-        final file = File(e.file!);
-        if (file.existsSync() && file.isPlayable) {
-          audios.add(Audio.local(file));
-        }
-      }
-    }
-
-    return audios;
   }
 
   Future<void> exportPlaylistToM3u({
@@ -338,4 +290,52 @@ class CustomContentModel extends SafeChangeNotifier {
     _processing = false;
     notifyListeners();
   }
+}
+
+Future<List<Audio>> _parseM3uPlaylist(String path) async {
+  final audios = <Audio>[];
+  final playlist = await compute(M3uList.loadFromFile, path);
+
+  for (var e in playlist.items) {
+    if (e.link.startsWith('http')) {
+      audios.add(
+        Audio(
+          title: e.title,
+          url: e.link,
+          description: e.link,
+          audioType: AudioType.radio,
+        ),
+      );
+    } else if (e.link.isNotEmpty) {
+      final file = File(e.link.replaceAll('file://', ''));
+      audios.add(Audio.local(file));
+    }
+  }
+
+  return audios;
+}
+
+Future<List<Audio>> _parsePlsPlaylist(String path) async {
+  final audios = <Audio>[];
+  final playlist = PlsPlaylist.parse(File(path).readAsStringSync());
+
+  for (var e in playlist.entries) {
+    if (e.file?.startsWith('http') == true) {
+      audios.add(
+        Audio(
+          title: e.title,
+          url: e.file,
+          description: e.file,
+          audioType: AudioType.radio,
+        ),
+      );
+    } else if (e.file?.isNotEmpty == true) {
+      final file = File(e.file!);
+      if (file.existsSync() && file.isPlayable) {
+        audios.add(Audio.local(file));
+      }
+    }
+  }
+
+  return audios;
 }

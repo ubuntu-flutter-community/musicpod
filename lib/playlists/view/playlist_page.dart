@@ -96,7 +96,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
         Future.delayed(
           const Duration(milliseconds: 300),
         ).then(
-          (_) => libraryModel.updatePlaylist(widget.pageId, playlist),
+          (_) =>
+              libraryModel.updatePlaylist(id: widget.pageId, audios: playlist),
         );
       },
       onPerformDrop: (e) async {
@@ -175,9 +176,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
               pageId: id,
             );
           },
-          onArtistTap: (artist) => di<LibraryModel>().push(
-            builder: (_) => ArtistPage(pageId: artist),
-            pageId: artist,
+          onArtistTap: (text) => di<LibraryModel>().push(
+            builder: (_) => ArtistPage(pageId: text),
+            pageId: text,
           ),
           image: PlaylistHeaderImage(
             playlist: playlist,

@@ -408,27 +408,21 @@ class Audio {
     final artistName = artist;
     return albumName == null && artistName == null
         ? null
-        : '${artistName ?? ''}$albumIdSplitter${albumName ?? ''}';
+        : '${artistName ?? ''}$albumIdSplitter${albumName ?? ''}'.replaceAll(
+            albumIdReplacement,
+            albumIdReplacer,
+          );
   }
 
-  String? get audioId {
-    if (isRadio) {
-      return uuid;
-    }
-    final path = this.path;
-    final url = this.url;
-    if (path != null) {
-      return path;
-    } else if (url != null) {
-      return url;
-    }
-    return null;
-  }
+  // Note this assumes that no artist or no album includes ___ on their own =)
+  static const String albumIdSplitter =
+      '$albumIdReplacer${AppConfig.appId}$albumIdReplacer';
+  static const String albumIdReplacer = '___';
+  static const String albumIdReplacement = ' ';
 
-  static String get albumIdSplitter => '-${AppConfig.appId}-';
-
-  bool get hasPathAndId =>
-      albumId?.isNotEmpty == true &&
+  bool get canHaveLocalCover =>
+      albumId != null &&
+      albumId!.isNotEmpty &&
       path != null &&
       audioType == AudioType.local;
 

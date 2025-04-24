@@ -36,15 +36,15 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   //
   // Liked Audios
   //
+  int get likedAudiosLength => _service.likedAudiosLength;
   List<Audio> get likedAudios => _service.likedAudios;
-
-  void addLikedAudio(Audio audio, [bool notify = true]) =>
-      _service.addLikedAudio(audio, notify);
+  void addLikedAudio(Audio audio) => _service.addLikedAudio(audio);
   void addLikedAudios(List<Audio> audios) => _service.addLikedAudios(audios);
   void removeLikedAudios(List<Audio> audios) =>
       _service.removeLikedAudios(audios);
   bool isLikedAudio(Audio? audio) =>
-      audio == null ? false : _service.liked(audio);
+      audio == null ? false : _service.isLiked(audio);
+  bool isLikedAudios(List<Audio> audios) => _service.isLikedAudios(audios);
   void removeLikedAudio(Audio audio, [bool notify = true]) =>
       _service.removeLikedAudio(audio, notify);
 
@@ -112,8 +112,12 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
     }
   }
 
-  Future<void> updatePlaylist(String id, List<Audio> audios) async =>
-      _service.updatePlaylist(id, audios);
+  Future<void> updatePlaylist({
+    required String id,
+    required List<Audio> audios,
+    bool external = false,
+  }) async =>
+      _service.updatePlaylist(id: id, audios: audios, external: external);
   Future<void> removePlaylist(String id) => _service.removePlaylist(id);
 
   void updatePlaylistName(String oldName, String newName) =>
@@ -183,6 +187,7 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   //
 
   List<String> get favoriteAlbums => _service.favoriteAlbums;
+  int get favoriteAlbumsLength => _service.favoriteAlbums.length;
 
   bool isFavoriteAlbum(String id) => _service.isFavoriteAlbum(id);
 

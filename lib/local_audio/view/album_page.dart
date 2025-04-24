@@ -1,3 +1,4 @@
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
@@ -54,7 +55,9 @@ class _AlbumPageState extends State<AlbumPage> {
       pageId: widget.id,
       audioPageType: AudioPageType.album,
       audios: album,
-      image: album.isEmpty ? null : AlbumPageImage(audio: album.first),
+      image: AlbumPageImage(audio: album.firstOrNull),
+      noSearchResultIcons: const AnimatedEmoji(AnimatedEmojis.bubbles),
+      noSearchResultMessage: Text(context.l10n.albumNotFound),
       pageTitle: album.firstWhereOrNull((e) => e.album != null)?.album,
       pageSubTitle: album.firstWhereOrNull((e) => e.artist != null)?.artist,
       onPageSubTitleTab: onArtistTap,
@@ -63,11 +66,9 @@ class _AlbumPageState extends State<AlbumPage> {
     );
   }
 
-  void onArtistTap(artistName) => di<LibraryModel>().push(
-        builder: (_) => ArtistPage(
-          pageId: artistName,
-        ),
-        pageId: artistName,
+  void onArtistTap(String text) => di<LibraryModel>().push(
+        builder: (_) => ArtistPage(pageId: text),
+        pageId: text,
       );
 }
 
@@ -100,7 +101,7 @@ class _AlbumPageSideBarIconState extends State<AlbumPageSideBarIcon> {
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
-      child: audio == null || audio?.hasPathAndId == false
+      child: audio == null || audio?.canHaveLocalCover == false
           ? fallBack
           : LocalCover(
               albumId: audio!.albumId!,
@@ -118,7 +119,7 @@ class AlbumPageImage extends StatelessWidget {
     required this.audio,
   });
 
-  final Audio audio;
+  final Audio? audio;
 
   @override
   Widget build(BuildContext context) {
@@ -133,18 +134,21 @@ class AlbumPageImage extends StatelessWidget {
             ),
           ),
         ),
-        if (audio.hasPathAndId == true)
-          Align(
-            alignment: Alignment.centerLeft,
-            child: LocalCover(
-              albumId: audio.albumId!,
-              path: audio.path!,
-              dimension: kMaxAudioPageHeaderHeight,
-              fallback: const CoverBackground(
-                dimension: kMaxAudioPageHeaderHeight,
-              ),
-            ),
-          ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: audio != null && audio!.canHaveLocalCover
+              ? LocalCover(
+                  albumId: audio!.albumId!,
+                  path: audio!.path!,
+                  dimension: kMaxAudioPageHeaderHeight,
+                  fallback: const CoverBackground(
+                    dimension: kMaxAudioPageHeaderHeight,
+                  ),
+                )
+              : const CoverBackground(
+                  dimension: kMaxAudioPageHeaderHeight,
+                ),
+        ),
       ],
     );
   }

@@ -25,30 +25,34 @@ class LibraryService {
   //
   List<Audio> _likedAudios = [];
   List<Audio> get likedAudios => _likedAudios;
-
-  void addLikedAudio(Audio audio, [bool notify = true]) {
+  int get likedAudiosLength => _likedAudios.length;
+  void addLikedAudio(Audio audio) {
     if (_likedAudios.contains(audio)) return;
     _likedAudios.add(audio);
-    if (notify) {
-      writeAudioMap(
-        map: {PageIDs.likedAudios: _likedAudios},
-        fileName: FileNames.likedAudios,
-      ).then((value) => _propertiesChangedController.add(true));
-    }
+    writeAudioMap(
+      map: {PageIDs.likedAudios: _likedAudios},
+      fileName: FileNames.likedAudios,
+    ).then((_) => _propertiesChangedController.add(true));
   }
 
   void addLikedAudios(List<Audio> audios) {
     for (var audio in audios) {
-      addLikedAudio(audio, false);
+      _likedAudios.add(audio);
     }
     writeAudioMap(
       map: {PageIDs.likedAudios: _likedAudios},
       fileName: FileNames.likedAudios,
-    ).then((value) => _propertiesChangedController.add(true));
+    ).then((_) => _propertiesChangedController.add(true));
   }
 
-  bool liked(Audio audio) {
-    return likedAudios.contains(audio);
+  bool isLiked(Audio audio) => _likedAudios.contains(audio);
+
+  bool isLikedAudios(List<Audio> audios) {
+    if (audios.isEmpty) return false;
+    for (var audio in audios) {
+      if (!_likedAudios.contains(audio)) return false;
+    }
+    return true;
   }
 
   void removeLikedAudio(Audio audio, [bool notify = true]) {
@@ -57,7 +61,7 @@ class LibraryService {
       writeAudioMap(
         map: {PageIDs.likedAudios: _likedAudios},
         fileName: FileNames.likedAudios,
-      ).then((value) => _propertiesChangedController.add(true));
+      ).then((_) => _propertiesChangedController.add(true));
     }
   }
 
@@ -68,7 +72,7 @@ class LibraryService {
     writeAudioMap(
       map: {PageIDs.likedAudios: _likedAudios},
       fileName: FileNames.likedAudios,
-    ).then((value) => _propertiesChangedController.add(true));
+    ).then((_) => _propertiesChangedController.add(true));
   }
 
   //
@@ -204,7 +208,8 @@ class LibraryService {
 
   Map<String, List<Audio>> _playlists = {};
   List<String> get playlistIDs => _playlists.keys.toList();
-  List<Audio>? getPlaylistById(String id) => _playlists[id];
+  List<Audio>? getPlaylistById(String id) =>
+      id == PageIDs.likedAudios ? _likedAudios : _playlists[id];
   Map<String, List<Audio>> get playlists => _playlists;
   bool isPlaylistSaved(String? id) =>
       id == null ? false : _playlists.containsKey(id);
@@ -234,8 +239,15 @@ class LibraryService {
         .then((_) => _propertiesChangedController.add(true));
   }
 
-  Future<void> updatePlaylist(String id, List<Audio> audios) async {
+  Future<void> updatePlaylist({
+    required String id,
+    required List<Audio> audios,
+    bool external = false,
+  }) async {
     if (_playlists.containsKey(id)) {
+      if (external) {
+        addExternalPlaylistID(id);
+      }
       await writeAudioMap(map: _playlists, fileName: FileNames.playlists)
           .then((_) {
         _playlists.update(
@@ -275,7 +287,7 @@ class LibraryService {
     required String id,
   }) {
     final audios = id == PageIDs.likedAudios
-        ? likedAudios.toList()
+        ? _likedAudios.toList()
         : playlists[id]?.toList();
 
     if (audios == null ||
@@ -296,8 +308,8 @@ class LibraryService {
         map: {PageIDs.likedAudios: _likedAudios},
         fileName: FileNames.likedAudios,
       ).then((value) {
-        likedAudios.clear();
-        likedAudios.addAll(audios);
+        _likedAudios.clear();
+        _likedAudios.addAll(audios);
         _propertiesChangedController.add(true);
       });
     } else {
@@ -348,9 +360,22 @@ class LibraryService {
 
   List<String> get externalPlaylistIDs =>
       _sharedPreferences.getStringList(SPKeys.externalPlaylists) ?? [];
-  void setExternalPlaylistIDs(List<String> value) async => _sharedPreferences
-      .setStringList(SPKeys.externalPlaylists, value)
-      .then(notify);
+
+  List<Audio> get externalPlaylistAudios {
+    if (externalPlaylistIDs.isEmpty) return [];
+
+    return [
+      for (var e in externalPlaylistIDs) ...getPlaylistById(e) ?? [],
+    ];
+  }
+
+  List<Audio> get playlistsAudios {
+    if (_playlists.isEmpty) return [];
+    return [
+      for (var e in _playlists.entries) ...e.value,
+    ];
+  }
+
   void addExternalPlaylistID(String value) {
     final lists = List<String>.from(externalPlaylistIDs);
     if (lists.contains(value)) return;

@@ -663,7 +663,8 @@ class PlayerService {
       return Uri.tryParse(
         audio?.imageUrl ?? audio!.albumArtUrl!,
       );
-    } else if (audio?.hasPathAndId == true && File(audio!.path!).existsSync()) {
+    } else if (audio?.canHaveLocalCover == true &&
+        File(audio!.path!).existsSync()) {
       final maybeData = _localCoverService.get(audio.albumId);
       if (maybeData != null) {
         File newFile = await _safeTempCover(maybeData);

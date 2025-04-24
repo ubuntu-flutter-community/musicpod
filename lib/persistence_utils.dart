@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -324,34 +323,4 @@ Future<void> writeStringMap(Map<String, String> map, String fileName) async {
   }
 
   await file.writeAsString(jsonStr);
-}
-
-Future<void> writeUint8ListMap(
-  Map<String, Uint8List?> map,
-  String fileName,
-) async {
-  final dynamicMap = map.map(
-    (key, value) => MapEntry<String, dynamic>(key, base64Encode(value!)),
-  );
-
-  await writeJsonToFile(dynamicMap, fileName);
-}
-
-Future<Map<String, Uint8List?>?> readUint8ListMap(String fileName) async {
-  final workingDir = await getWorkingDir();
-  Map<String, Uint8List?>? theMap = {};
-
-  final file = File(p.join(workingDir, fileName));
-  if (file.existsSync()) {
-    final jsonStr = await file.readAsString();
-    final decode = jsonDecode(jsonStr) as Map<String, dynamic>;
-    for (final e in decode.entries) {
-      final value = base64Decode(e.value);
-      if (value.isNotEmpty == true) {
-        theMap.putIfAbsent(e.key, () => value);
-      }
-    }
-  }
-
-  return theMap;
 }
