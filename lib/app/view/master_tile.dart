@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
@@ -180,15 +178,10 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
     }
 
     if (pageId == PageIDs.likedAudios) {
-      return libraryModel.favoriteAudios
-          .map((e) => Audio.local(File(e)))
-          .toList();
+      return libraryModel.likedAudios;
     } else {
       if (libraryModel.getPlaylistById(pageId) != null) {
-        return libraryModel
-            .getPlaylistById(pageId)
-            ?.map((e) => Audio.local(File(e)))
-            .toList();
+        return libraryModel.getPlaylistById(pageId);
       }
 
       return (libraryModel.favoriteAlbums.contains(pageId)

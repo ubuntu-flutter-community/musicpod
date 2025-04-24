@@ -136,8 +136,7 @@ class AudioTileBottomSheet extends StatelessWidget {
                               _Button(
                                 onPressed: () {
                                   playlistId == PageIDs.likedAudios
-                                      ? libraryModel
-                                          .removeFavoriteAudios(audios)
+                                      ? libraryModel.removeLikedAudios(audios)
                                       : libraryModel.removeAudiosFromPlaylist(
                                           id: playlistId,
                                           audios: audios,

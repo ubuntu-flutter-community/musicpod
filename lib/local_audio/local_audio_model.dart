@@ -128,11 +128,12 @@ class LocalAudioModel extends SafeChangeNotifier {
   Future<void> init({
     bool forceInit = false,
     String? directory,
-  }) async =>
-      _localAudioService.init(
-        forceInit: forceInit,
-        newDirectory: directory,
-      );
+  }) async {
+    await _localAudioService.init(
+      forceInit: forceInit,
+      newDirectory: directory,
+    );
+  }
 
   @override
   Future<void> dispose() async {

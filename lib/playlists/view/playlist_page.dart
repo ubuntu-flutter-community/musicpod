@@ -28,7 +28,6 @@ import '../../local_audio/view/failed_import_snackbar.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
-import '../../settings/settings_model.dart';
 import 'playlist_control_panel.dart';
 import 'playlist_genre_bar.dart';
 import 'playlist_header_image.dart';
@@ -64,13 +63,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
 
     final playlistById =
         di<LibraryModel>().getPlaylistById(widget.pageId) ?? [];
-    final list = playlistById
-        .map(
-          (e) => Audio.local(File(e)),
-        )
-        .toList();
-    cache[widget.pageId] = list;
-    playlist = list;
+
+    cache[widget.pageId] = playlistById;
+    playlist = playlistById;
   }
 
   @override
@@ -221,13 +216,13 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
     final libraryModel = di<LibraryModel>();
     final playerModel = di<PlayerModel>();
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
-    watchPropertyValue((SettingsModel m) => m.externalPlaylists.length);
+    watchPropertyValue((LibraryModel m) => m.externalPlaylists.length);
 
     final audioPageHeader = AudioPageHeader(
       title: pageId,
       subTitle: '${audios.length} ${l10n.titles}',
       image: image,
-      label: di<SettingsModel>().externalPlaylists.contains(pageId)
+      label: di<LibraryModel>().externalPlaylists.contains(pageId)
           ? '${l10n.playlist} (${l10n.external})'
           : l10n.playlist,
       description: PlaylistGenreBar(audios: audios),

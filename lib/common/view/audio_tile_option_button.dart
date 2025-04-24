@@ -94,7 +94,7 @@ class AudioTileOptionButton extends StatelessWidget {
           if (allowRemove)
             PopupMenuItem(
               onTap: () => playlistId == PageIDs.likedAudios
-                  ? libraryModel.removeFavoriteAudios(audios)
+                  ? libraryModel.removeLikedAudios(audios)
                   : libraryModel.removeAudiosFromPlaylist(
                       id: playlistId,
                       audios: audios,

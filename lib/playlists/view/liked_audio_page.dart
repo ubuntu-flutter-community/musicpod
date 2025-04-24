@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
@@ -33,20 +31,17 @@ class _LikedAudioPageState extends State<LikedAudioPage> {
     getFavoriteAudios();
   }
 
-  void getFavoriteAudios() => likedAudios = di<LibraryModel>()
-      .favoriteAudios
-      .map((e) => Audio.local(File(e)))
-      .toList();
+  void getFavoriteAudios() => likedAudios = di<LibraryModel>().likedAudios;
 
   @override
   Widget build(BuildContext context) {
     watchPropertyValue((LibraryModel m) {
       setState(() => getFavoriteAudios());
-      return m.favoriteAudios;
+      return m.likedAudios;
     });
     watchPropertyValue((LibraryModel m) {
       setState(() => getFavoriteAudios());
-      return m.favoriteAudios.length;
+      return m.likedAudios.length;
     });
 
     return SliverAudioPage(

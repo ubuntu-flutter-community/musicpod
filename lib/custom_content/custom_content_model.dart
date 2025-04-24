@@ -99,7 +99,7 @@ class CustomContentModel extends SafeChangeNotifier {
         );
       } else if (e.link.isNotEmpty) {
         final file = File(e.link.replaceAll('file://', ''));
-        audios.add(Audio.local(file, getImage: true));
+        audios.add(Audio.local(file));
       }
     }
 
@@ -123,7 +123,7 @@ class CustomContentModel extends SafeChangeNotifier {
       } else if (e.file?.isNotEmpty == true) {
         final file = File(e.file!);
         if (file.existsSync() && file.isPlayable) {
-          audios.add(Audio.local(file, getImage: true));
+          audios.add(Audio.local(file));
         }
       }
     }
@@ -146,13 +146,7 @@ class CustomContentModel extends SafeChangeNotifier {
   Future<bool> exportPlaylistsAndPinnedAlbumsToM3Us() async {
     final List<({String id, List<Audio> audios})> list = [
       ..._libraryService.playlistIDs.map(
-        (e) => (
-          id: e,
-          audios: _libraryService
-              .getPlaylistById(e)
-              .map((e) => Audio.local(File(e)))
-              .toList()
-        ),
+        (e) => (id: e, audios: _libraryService.getPlaylistById(e) ?? []),
       ),
       ..._libraryService.favoriteAlbums.map(
         (e) => (id: e, audios: _localAudioService.findAlbum(e) ?? []),

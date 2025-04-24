@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/data/audio.dart';
 import '../common/file_names.dart';
-import '../common/logging.dart';
 import '../common/page_ids.dart';
 import '../common/view/audio_filter.dart';
 import '../extensions/shared_preferences_x.dart';
@@ -22,46 +21,54 @@ class LibraryService {
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
 
   //
-  // Favorite Audios
+  // Liked Audios
   //
+  List<Audio> _likedAudios = [];
+  List<Audio> get likedAudios => _likedAudios;
 
-  List<String> get favoriteAudios =>
-      _sharedPreferences.getStringList(SPKeys.favoriteAudios) ?? [];
-  bool isFavoriteAudio(String? id) => favoriteAudios.contains(id);
-
-  void addFavoriteAudios(List<String?> ids, {bool clear = false}) {
-    if (ids.isEmpty) return;
-    final List<String> favorites = List.from(clear ? [] : favoriteAudios);
-    for (var id in ids) {
-      if (id != null && id.isNotEmpty && !favorites.contains(id)) {
-        favorites.add(id);
-      }
-    }
-
-    try {
-      _sharedPreferences
-          .setStringList(SPKeys.favoriteAudios, favorites)
-          .then(notify);
-    } catch (e) {
-      printMessageInDebugMode(e.toString());
+  void addLikedAudio(Audio audio, [bool notify = true]) {
+    if (_likedAudios.contains(audio)) return;
+    _likedAudios.add(audio);
+    if (notify) {
+      writeAudioMap(
+        map: {PageIDs.likedAudios: _likedAudios},
+        fileName: FileNames.likedAudios,
+      ).then((value) => _propertiesChangedController.add(true));
     }
   }
 
-  void removeFavoriteAudios(List<String?> ids) {
-    if (ids.isEmpty) return;
-    final List<String> favorites = List.from(favoriteAudios);
-    for (var id in ids) {
-      if (favorites.contains(id)) {
-        favorites.remove(id);
-      }
+  void addLikedAudios(List<Audio> audios) {
+    for (var audio in audios) {
+      addLikedAudio(audio, false);
     }
-    try {
-      _sharedPreferences
-          .setStringList(SPKeys.favoriteAudios, favorites)
-          .then(notify);
-    } catch (e) {
-      printMessageInDebugMode(e.toString());
+    writeAudioMap(
+      map: {PageIDs.likedAudios: _likedAudios},
+      fileName: FileNames.likedAudios,
+    ).then((value) => _propertiesChangedController.add(true));
+  }
+
+  bool liked(Audio audio) {
+    return likedAudios.contains(audio);
+  }
+
+  void removeLikedAudio(Audio audio, [bool notify = true]) {
+    _likedAudios.remove(audio);
+    if (notify) {
+      writeAudioMap(
+        map: {PageIDs.likedAudios: _likedAudios},
+        fileName: FileNames.likedAudios,
+      ).then((value) => _propertiesChangedController.add(true));
     }
+  }
+
+  void removeLikedAudios(List<Audio> audios) {
+    for (var audio in audios) {
+      removeLikedAudio(audio, false);
+    }
+    writeAudioMap(
+      map: {PageIDs.likedAudios: _likedAudios},
+      fileName: FileNames.likedAudios,
+    ).then((value) => _propertiesChangedController.add(true));
   }
 
   //
@@ -195,38 +202,18 @@ class LibraryService {
   // Playlists
   //
 
-  List<String> get _playlistIDs =>
-      _sharedPreferences.getStringList(SPKeys.playlistIDs) ?? [];
-  List<String> getPlaylistById(String id) =>
-      _sharedPreferences.getStringList(id) ?? [];
-  List<String> get playlistIDs => _playlistIDs;
-
+  Map<String, List<Audio>> _playlists = {};
+  List<String> get playlistIDs => _playlists.keys.toList();
+  List<Audio>? getPlaylistById(String id) => _playlists[id];
+  Map<String, List<Audio>> get playlists => _playlists;
   bool isPlaylistSaved(String? id) =>
-      id == null ? false : _playlistIDs.contains(id);
+      id == null ? false : _playlists.containsKey(id);
 
   Future<void> addPlaylist(String id, List<Audio> audios) async {
-    if (!_playlistIDs.contains(id)) {
-      final ids = List<String>.from(_playlistIDs);
-      ids.add(id);
-      await _sharedPreferences.setStringList(SPKeys.playlistIDs, ids);
-      await _sharedPreferences.setStringList(
-        id,
-        audios
-            .where((e) => e.audioId != null && e.audioId!.isNotEmpty)
-            .map((e) => e.audioId!)
-            .toList(),
-      );
-      _propertiesChangedController.add(true);
-    }
-  }
-
-  Future<void> removePlaylist(String id) async {
-    if (_playlistIDs.contains(id)) {
-      final list = List<String>.from(_playlistIDs);
-      list.remove(id);
-      await _sharedPreferences.setStringList(SPKeys.playlistIDs, list);
-      await _sharedPreferences.remove(id);
-      _propertiesChangedController.add(true);
+    if (!_playlists.containsKey(id)) {
+      _playlists.putIfAbsent(id, () => audios);
+      await writeAudioMap(map: _playlists, fileName: FileNames.playlists)
+          .then((_) => _propertiesChangedController.add(true));
     }
   }
 
@@ -236,43 +223,49 @@ class LibraryService {
   }) async {
     if (playlists.isEmpty) return;
     for (var playlist in playlists) {
-      if (!_playlistIDs.contains(playlist.id)) {
-        await addPlaylist(playlist.id, playlist.audios);
+      if (!_playlists.containsKey(playlist.id)) {
+        _playlists.putIfAbsent(playlist.id, () => playlist.audios);
         if (external) {
-          final externalPlaylists =
-              _sharedPreferences.getStringList(SPKeys.externalPlaylists);
-          final newList = List<String>.from(externalPlaylists ?? []);
-          newList.add(playlist.id);
-          await _sharedPreferences.setStringList(
-            SPKeys.externalPlaylists,
-            newList,
-          );
+          addExternalPlaylistID(playlist.id);
         }
       }
     }
+    await writeAudioMap(map: _playlists, fileName: FileNames.playlists)
+        .then((_) => _propertiesChangedController.add(true));
   }
 
   Future<void> updatePlaylist(String id, List<Audio> audios) async {
-    if (id.isEmpty || audios.isEmpty) return;
-    if (_playlistIDs.contains(id)) {
-      await _sharedPreferences.setStringList(
-        id,
-        audios
-            .where((e) => e.audioId != null && e.audioId!.isNotEmpty)
-            .map((e) => e.audioId!)
-            .toList(),
+    if (_playlists.containsKey(id)) {
+      await writeAudioMap(map: _playlists, fileName: FileNames.playlists)
+          .then((_) {
+        _playlists.update(
+          id,
+          (value) => audios,
+        );
+        _propertiesChangedController.add(true);
+      });
+    }
+  }
+
+  Future<void> removePlaylist(String id) async {
+    if (_playlists.containsKey(id)) {
+      _playlists.remove(id);
+      removeExternalPlaylistID(id);
+      return writeAudioMap(map: _playlists, fileName: FileNames.playlists).then(
+        (_) => _propertiesChangedController.add(true),
       );
-      _propertiesChangedController.add(true);
     }
   }
 
   void updatePlaylistName(String oldName, String newName) {
     if (newName == oldName) return;
-    if (_playlistIDs.contains(oldName)) {
-      final list =
-          List<String>.from(_sharedPreferences.getStringList(oldName) ?? []);
-      removePlaylist(oldName);
-      addPlaylist(newName, list.map((e) => Audio.local(File(e))).toList());
+    final oldList = _playlists[oldName];
+    if (oldList != null) {
+      _playlists.remove(oldName);
+      _playlists.putIfAbsent(newName, () => oldList);
+      updateExternalPlaylistID(oldName, newName);
+      writeAudioMap(map: _playlists, fileName: FileNames.playlists)
+          .then((_) => _propertiesChangedController.add(true));
     }
   }
 
@@ -282,10 +275,12 @@ class LibraryService {
     required String id,
   }) {
     final audios = id == PageIDs.likedAudios
-        ? favoriteAudios.map((e) => Audio.local(File(e))).toList()
-        : getPlaylistById(id).map((e) => Audio.local(File(e))).toList();
+        ? likedAudios.toList()
+        : playlists[id]?.toList();
 
-    if (audios.isEmpty == true || !(newIndex < audios.length)) {
+    if (audios == null ||
+        audios.isEmpty == true ||
+        !(newIndex < audios.length)) {
       return;
     }
 
@@ -297,79 +292,97 @@ class LibraryService {
     audios.insert(newIndex, audio);
 
     if (id == PageIDs.likedAudios) {
-      addFavoriteAudios(audios.map((e) => e.audioId).toList(), clear: true);
+      writeAudioMap(
+        map: {PageIDs.likedAudios: _likedAudios},
+        fileName: FileNames.likedAudios,
+      ).then((value) {
+        likedAudios.clear();
+        likedAudios.addAll(audios);
+        _propertiesChangedController.add(true);
+      });
     } else {
-      _sharedPreferences
-          .setStringList(
-            id,
-            audios
-                .where((e) => e.audioId != null && e.audioId!.isNotEmpty)
-                .map((e) => e.audioId!)
-                .toList(),
-          )
-          .then(notify);
+      writeAudioMap(map: _playlists, fileName: FileNames.likedAudios).then((_) {
+        _playlists.update(id, (value) => audios);
+        _propertiesChangedController.add(true);
+      });
     }
   }
 
   void addAudiosToPlaylist({required String id, required List<Audio> audios}) {
-    final playlist = (_sharedPreferences.getStringList(id) ?? [])
-        .map((e) => Audio.local(File(e)))
-        .toList();
+    final playlist = _playlists[id];
+    if (playlist == null) return;
 
     for (var audio in audios) {
       if (!playlist.contains(audio)) {
         playlist.add(audio);
       }
     }
-
-    _sharedPreferences
-        .setStringList(
-          id,
-          playlist
-              .where((e) => e.audioId != null && e.audioId!.isNotEmpty)
-              .map((e) => e.audioId!)
-              .toList(),
-        )
-        .then(notify);
+    writeAudioMap(map: _playlists, fileName: FileNames.playlists)
+        .then((_) => _propertiesChangedController.add(true));
   }
 
-  Future<void> removeAudiosFromPlaylist({
+  void removeAudiosFromPlaylist({
     required String id,
     required List<Audio> audios,
-  }) async {
-    final playlist = (_sharedPreferences.getStringList(id) ?? [])
-        .map((e) => Audio.local(File(e)))
-        .toList();
+  }) {
+    final playlist = _playlists[id];
+    if (playlist == null) return;
 
     for (var audio in audios) {
       if (playlist.contains(audio)) {
         playlist.remove(audio);
       }
     }
-
-    _sharedPreferences
-        .setStringList(
-          id,
-          playlist
-              .where((e) => e.audioId != null && e.audioId!.isNotEmpty)
-              .map((e) => e.audioId!)
-              .toList(),
-        )
-        .then(notify);
+    writeAudioMap(map: _playlists, fileName: FileNames.playlists)
+        .then((_) => _propertiesChangedController.add(true));
   }
 
   void clearPlaylist(String id) {
-    if (!_playlistIDs.contains(id)) return;
-    _sharedPreferences.setStringList(id, []).then(notify);
+    final playlist = _playlists[id];
+    if (playlist != null) {
+      playlist.clear();
+      writeAudioMap(map: _playlists, fileName: FileNames.playlists)
+          .then((_) => _propertiesChangedController.add(true));
+    }
+  }
+
+  List<String> get externalPlaylistIDs =>
+      _sharedPreferences.getStringList(SPKeys.externalPlaylists) ?? [];
+  void setExternalPlaylistIDs(List<String> value) async => _sharedPreferences
+      .setStringList(SPKeys.externalPlaylists, value)
+      .then(notify);
+  void addExternalPlaylistID(String value) {
+    final lists = List<String>.from(externalPlaylistIDs);
+    if (lists.contains(value)) return;
+    lists.add(value);
+    _sharedPreferences
+        .setStringList(SPKeys.externalPlaylists, lists)
+        .then(notify);
+  }
+
+  void removeExternalPlaylistID(String value) {
+    final lists = List<String>.from(externalPlaylistIDs);
+    if (!lists.contains(value)) return;
+    lists.remove(value);
+    _sharedPreferences
+        .setStringList(SPKeys.externalPlaylists, lists)
+        .then(notify);
+  }
+
+  void updateExternalPlaylistID(String oldName, String newName) {
+    final lists = List<String>.from(externalPlaylistIDs);
+    if (lists.contains(oldName)) {
+      lists.remove(oldName);
+      lists.add(newName);
+      _sharedPreferences
+          .setStringList(SPKeys.externalPlaylists, lists)
+          .then(notify);
+    }
   }
 
   ///
   /// Podcasts
   ///
-  ///
-
-  // TODO: #1228 migrate podcasts to shared preferences
-
   Map<String, String> _downloads = {};
   Map<String, String> get downloads => _downloads;
   String? getDownload(String? url) => downloads[url];
@@ -492,17 +505,30 @@ class LibraryService {
         .then((_) => _propertiesChangedController.add(true));
   }
 
+  void _addPodcastUpdate(String feedUrl) {
+    if (_podcastUpdates?.contains(feedUrl) == true) return;
+    _podcastUpdates?.add(feedUrl);
+    writeStringIterable(
+      iterable: _podcastUpdates!,
+      filename: FileNames.podcastUpdates,
+    ).then((_) => _propertiesChangedController.add(true));
+  }
+
   bool showPodcastAscending(String feedUrl) =>
       _sharedPreferences.getBool(SPKeys.ascendingFeeds + feedUrl) ?? false;
 
   Future<void> _addAscendingPodcast(String feedUrl) async {
     await _sharedPreferences
         .setBool(SPKeys.ascendingFeeds + feedUrl, true)
-        .then(notify);
+        .then(
+          (_) => _propertiesChangedController.add(true),
+        );
   }
 
   Future<void> _removeAscendingPodcast(String feedUrl) async =>
-      _sharedPreferences.remove(SPKeys.ascendingFeeds + feedUrl).then(notify);
+      _sharedPreferences.remove(SPKeys.ascendingFeeds + feedUrl).then(
+            (_) => _propertiesChangedController.add(true),
+          );
 
   Future<void> reorderPodcast({
     required String feedUrl,
@@ -523,30 +549,19 @@ class LibraryService {
     await updatePodcast(feedUrl, podcast);
   }
 
-  List<String> get _podcastUpdates =>
-      _sharedPreferences.getStringList(SPKeys.podcastUpdates) ?? [];
-  int get podcastUpdatesLength => _podcastUpdates.length;
+  Set<String>? _podcastUpdates;
+  int? get podcastUpdatesLength => _podcastUpdates?.length;
 
   bool podcastUpdateAvailable(String feedUrl) =>
-      _podcastUpdates.contains(feedUrl);
-
-  void _addPodcastUpdate(String feedUrl) {
-    if (podcastUpdateAvailable(feedUrl)) return;
-
-    final updates = List<String>.from(_podcastUpdates);
-    updates.add(feedUrl);
-    _sharedPreferences
-        .setStringList(SPKeys.podcastUpdates, updates)
-        .then(notify);
-  }
+      _podcastUpdates?.contains(feedUrl) == true;
 
   void removePodcastUpdate(String feedUrl) {
-    if (!podcastUpdateAvailable(feedUrl)) return;
-    final updates = List<String>.from(_podcastUpdates);
-    updates.remove(feedUrl);
-    _sharedPreferences
-        .setStringList(SPKeys.podcastUpdates, updates)
-        .then(notify);
+    if (_podcastUpdates?.isNotEmpty == false) return;
+    _podcastUpdates?.remove(feedUrl);
+    writeStringIterable(
+      iterable: _podcastUpdates!,
+      filename: FileNames.podcastUpdates,
+    ).then((_) => _propertiesChangedController.add(true));
   }
 
   void removePodcast(String feedUrl) {
@@ -560,8 +575,7 @@ class LibraryService {
 
   Future<void> removeAllPodcasts() async {
     _podcasts.clear();
-    _podcastUpdates.clear();
-    _sharedPreferences.remove(SPKeys.podcastUpdates);
+    _podcastUpdates?.clear();
     writeAudioMap(
       map: _podcasts,
       fileName: FileNames.podcasts,
@@ -609,7 +623,18 @@ class LibraryService {
   }
 
   Future<void> init() async {
+    _playlists = await readAudioMap(FileNames.playlists);
+    _likedAudios = (await readAudioMap(FileNames.likedAudios))
+            .entries
+            .firstOrNull
+            ?.value ??
+        <Audio>[];
     _podcasts = await readAudioMap(FileNames.podcasts);
+    _podcastUpdates = Set.from(
+      await readStringIterable(filename: FileNames.podcastUpdates) ??
+          <String>{},
+    );
+    _podcastUpdates ??= {};
     _downloads = await readStringMap(FileNames.downloads);
     _feedsWithDownloads = Set.from(
       await readStringIterable(filename: FileNames.feedsWithDownloads) ??
@@ -618,10 +643,10 @@ class LibraryService {
   }
 
   String? get selectedPageId =>
-      _sharedPreferences.getString(PageIDs.selectedPage);
+      _sharedPreferences.getString(SPKeys.selectedPage);
   Future<void> setSelectedPageId(String value) async {
     final success =
-        await _sharedPreferences.setString(PageIDs.selectedPage, value);
+        await _sharedPreferences.setString(SPKeys.selectedPage, value);
     if (success) {
       _propertiesChangedController.add(true);
     }

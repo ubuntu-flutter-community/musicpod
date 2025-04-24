@@ -12,15 +12,14 @@ class LikeAllIcon extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final likedAudios =
-        watchPropertyValue((LibraryModel m) => m.favoriteAudios);
+    final likedAudios = watchPropertyValue((LibraryModel m) => m.likedAudios);
     final libraryModel = di<LibraryModel>();
 
     final liked = Set.from(likedAudios).containsAll(audios);
     return IconButton(
       onPressed: () => liked
-          ? libraryModel.removeFavoriteAudios(audios)
-          : libraryModel.addFavoriteAudios(audios),
+          ? libraryModel.removeLikedAudios(audios)
+          : libraryModel.addLikedAudios(audios),
       icon: AnimatedHeart(liked: liked),
     );
   }

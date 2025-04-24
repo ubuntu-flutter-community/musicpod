@@ -373,6 +373,7 @@ class LocalAudioService {
   Future<void> init({
     String? newDirectory,
     bool forceInit = false,
+    List<List<Audio>>? externalAudios,
   }) async {
     if (forceInit == false && _audios?.isNotEmpty == true) return;
 
@@ -394,6 +395,12 @@ class LocalAudioService {
       forceInit: forceInit,
       failedImports: result.failedImports,
     );
+
+    if (externalAudios != null) {
+      for (var e in externalAudios) {
+        addAudios(e, forceInit: forceInit);
+      }
+    }
   }
 
   Future<void> dispose() async => _audiosController.close();

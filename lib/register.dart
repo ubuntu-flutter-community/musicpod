@@ -185,12 +185,16 @@ void registerDependencies({required List<String> args}) async {
           settingsService: di<SettingsService>(),
           localCoverService: di<LocalCoverService>(),
         );
-
-        await localAudioService.init();
+        final libraryService = di<LibraryService>();
+        await localAudioService.init(
+          externalAudios: libraryService.externalPlaylistIDs
+              .map((e) => libraryService.getPlaylistById(e) ?? [])
+              .toList(),
+        );
 
         return localAudioService;
       },
-      dependsOn: [SettingsService],
+      dependsOn: [SettingsService, LibraryService],
       dispose: (s) async => s.dispose(),
     )
     ..registerLazySingleton<NotificationsService>(
