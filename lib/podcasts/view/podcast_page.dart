@@ -47,7 +47,7 @@ class _PodcastPageState extends State<PodcastPage> {
   void initState() {
     super.initState();
     final libraryModel = di<LibraryModel>();
-    if (!libraryModel.isPageInLibrary(widget.feedUrl)) return;
+    if (!libraryModel.isPodcastSubscribed(widget.feedUrl)) return;
 
     final episodes =
         widget.preFetchedEpisodes ?? libraryModel.getPodcast(widget.feedUrl);
