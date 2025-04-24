@@ -1,12 +1,10 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:watcher/watcher.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/adaptive_container.dart';
-import '../../common/view/confirm.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/search_button.dart';
@@ -47,7 +45,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final audios = watchPropertyValue((LocalAudioModel m) => m.audios);
     final allArtists = watchPropertyValue((LocalAudioModel m) => m.allArtists);
     final allAlbumIDs =
@@ -56,25 +53,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     final playlists = watchPropertyValue((LibraryModel m) => m.playlistIDs);
     final index = watchPropertyValue((LocalAudioModel m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
-
-    registerStreamHandler(
-      select: (LocalAudioModel m) =>
-          m.fileWatcher?.events ?? const Stream<WatchEvent>.empty(),
-      handler: (context, newValue, cancel) {
-        if (newValue.hasData && !di<LocalAudioModel>().importing) {
-          showDialog(
-            context: context,
-            builder: (context) => ConfirmationDialog(
-              title: Text(l10n.localAudioWatchDialogTitle),
-              content: Text(l10n.localAudioWatchDialogDescription),
-              onConfirm: () async {
-                await di<LocalAudioModel>().init(forceInit: true);
-              },
-            ),
-          );
-        }
-      },
-    );
 
     return Scaffold(
       appBar: HeaderBar(

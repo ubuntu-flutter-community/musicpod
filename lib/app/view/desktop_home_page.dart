@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:watcher/watcher.dart';
 
 import '../../app_config.dart';
+import '../../common/view/confirm.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/backup_dialog.dart';
 import '../../extensions/build_context_x.dart';
+import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
@@ -75,6 +78,27 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
     registerStreamHandler(
       select: (ConnectivityModel m) => m.onConnectivityChanged,
       handler: onConnectivityChangedHandler,
+    );
+
+    registerStreamHandler(
+      select: (LocalAudioModel m) =>
+          m.fileWatcher?.events ?? const Stream<WatchEvent>.empty(),
+      handler: (context, newValue, cancel) {
+        final l10n = context.l10n;
+
+        if (newValue.hasData && !di<LocalAudioModel>().importing) {
+          showDialog(
+            context: context,
+            builder: (context) => ConfirmationDialog(
+              title: Text(l10n.localAudioWatchDialogTitle),
+              content: Text(l10n.localAudioWatchDialogDescription),
+              onConfirm: () async {
+                await di<LocalAudioModel>().init(forceInit: true);
+              },
+            ),
+          );
+        }
+      },
     );
 
     return Stack(
