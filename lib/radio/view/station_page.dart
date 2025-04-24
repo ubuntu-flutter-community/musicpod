@@ -10,7 +10,9 @@ import '../../common/view/audio_fall_back_icon.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/avatar_play_button.dart';
 import '../../common/view/header_bar.dart';
+import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
@@ -20,22 +22,41 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
+import '../radio_model.dart';
 import 'radio_history_list.dart';
 import 'radio_page_copy_histoy_button.dart';
 import 'radio_page_star_button.dart';
 import 'radio_page_tag_bar.dart';
 
-class StationPage extends StatelessWidget with WatchItMixin {
+class StationPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const StationPage({
     super.key,
-    required this.station,
+    required this.uuid,
   });
 
-  final Audio station;
+  final String uuid;
+
+  @override
+  State<StationPage> createState() => _StationPageState();
+}
+
+class _StationPageState extends State<StationPage> {
+  late Future<Audio?> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    setFuture();
+  }
+
+  void setFuture() => _future = di<RadioModel>().getStationByUUID(widget.uuid);
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((ConnectivityModel m) {
+      setFuture();
+      return m.isOnline;
+    });
     if (!isOnline) return const OfflinePage();
 
     return Scaffold(
@@ -60,59 +81,83 @@ class StationPage extends StatelessWidget with WatchItMixin {
           ),
         ],
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return CustomScrollView(
-            slivers: [
-              SliverPadding(
-                padding: getAdaptiveHorizontalPadding(
-                  constraints: constraints,
-                  min: 40,
-                ),
-                sliver: SliverToBoxAdapter(
-                  child: AudioPageHeader(
-                    title: station.title ?? station.description ?? '',
-                    subTitle: station.albumArtist == null
-                        ? null
-                        : station.albumArtist ?? '',
-                    label:
-                        '${context.l10n.station} · ${station.fileSize ?? ''} kbps',
-                    description: SizedBox(
-                      width: kAudioHeaderDescriptionWidth,
-                      child: RadioPageTagBar(
-                        station: station,
-                      ),
+      body: FutureBuilder(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const NoSearchResultPage();
+          }
+
+          if (!snapshot.hasData) {
+            return const Center(
+              child: Progress(),
+            );
+          }
+
+          final station = snapshot.data!;
+
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              return CustomScrollView(
+                slivers: [
+                  SliverPadding(
+                    padding: getAdaptiveHorizontalPadding(
+                      constraints: constraints,
+                      min: 40,
                     ),
-                    image: SafeNetworkImage(
-                      fallBackIcon: AudioFallBackIcon(
-                        iconSize: kMaxAudioPageHeaderHeight / 2,
-                        audio: station,
+                    sliver: SliverToBoxAdapter(
+                      child: AudioPageHeader(
+                        title: station.title ?? station.description ?? '',
+                        subTitle: station.albumArtist == null
+                            ? null
+                            : station.albumArtist ?? '',
+                        label:
+                            '${context.l10n.station} · ${station.fileSize ?? ''} kbps',
+                        description: SizedBox(
+                          width: kAudioHeaderDescriptionWidth,
+                          child: RadioPageTagBar(
+                            station: station,
+                          ),
+                        ),
+                        image: SafeNetworkImage(
+                          fallBackIcon: AudioFallBackIcon(
+                            iconSize: kMaxAudioPageHeaderHeight / 2,
+                            audio: station,
+                            color: getAlphabetColor(station.uuid ?? 'a'),
+                          ),
+                          errorIcon: AudioFallBackIcon(
+                            iconSize: kMaxAudioPageHeaderHeight / 2,
+                            audio: station,
+                            color: getAlphabetColor(station.uuid ?? 'a'),
+                          ),
+                          url: station.imageUrl,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      url: station.imageUrl,
-                      fit: BoxFit.cover,
                     ),
                   ),
-                ),
-              ),
-              SliverAudioPageControlPanel(
-                controlPanel: _StationPageControlPanel(
-                  station: station,
-                ),
-              ),
-              SliverPadding(
-                padding: getAdaptiveHorizontalPadding(constraints: constraints)
-                    .copyWith(
-                  bottom: bottomPlayerPageGap,
-                ),
-                sliver: SliverRadioHistoryList(
-                  filter: station.title,
-                  emptyMessage: const SizedBox.shrink(),
-                  emptyIcon: const SizedBox.shrink(),
-                  padding: radioHistoryListPadding,
-                  allowNavigation: false,
-                ),
-              ),
-            ],
+                  SliverAudioPageControlPanel(
+                    controlPanel: _StationPageControlPanel(
+                      station: station,
+                    ),
+                  ),
+                  SliverPadding(
+                    padding:
+                        getAdaptiveHorizontalPadding(constraints: constraints)
+                            .copyWith(
+                      bottom: bottomPlayerPageGap,
+                    ),
+                    sliver: SliverRadioHistoryList(
+                      filter: station.title,
+                      emptyMessage: const SizedBox.shrink(),
+                      emptyIcon: const SizedBox.shrink(),
+                      padding: radioHistoryListPadding,
+                      allowNavigation: false,
+                    ),
+                  ),
+                ],
+              );
+            },
           );
         },
       ),

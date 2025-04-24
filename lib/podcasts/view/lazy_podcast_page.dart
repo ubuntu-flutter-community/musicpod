@@ -34,7 +34,7 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
     super.initState();
     final url = widget.feedUrl ?? widget.podcastItem?.feedUrl;
     final libraryModel = di<LibraryModel>();
-    _episodes = libraryModel.isPageInLibrary(url)
+    _episodes = libraryModel.isPodcastSubscribed(url)
         ? Future.value(libraryModel.getPodcast(url))
         : di<PodcastModel>()
             .findEpisodes(item: widget.podcastItem, feedUrl: url);

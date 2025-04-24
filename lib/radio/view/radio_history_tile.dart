@@ -99,7 +99,7 @@ class RadioHistoryTile extends StatelessWidget {
                       if (v?.firstOrNull?.stationUUID != null) {
                         di<LibraryModel>().push(
                           builder: (_) => StationPage(
-                            station: Audio.fromStation(v.first),
+                            uuid: Audio.fromStation(v.first).uuid!,
                           ),
                           pageId: v!.first.stationUUID,
                         );

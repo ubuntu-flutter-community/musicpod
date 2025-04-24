@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
+import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/spaced_divider.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../library/library_model.dart';
+import '../../local_audio/local_audio_model.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_model.dart';
 
@@ -20,7 +23,6 @@ class MasterTile extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.trailing,
-    required this.libraryModel,
     required this.pageId,
     required this.onTap,
   });
@@ -30,7 +32,6 @@ class MasterTile extends StatelessWidget {
   final Widget? title;
   final Widget? subtitle;
   final Widget? trailing;
-  final LibraryModel libraryModel;
   final String pageId;
   final void Function() onTap;
 
@@ -38,7 +39,12 @@ class MasterTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final yaruMasterTile = YaruMasterTile(
       title: title,
-      onTap: onTap,
+      onTap: () {
+        masterScaffoldKey.currentState
+          ?..closeEndDrawer()
+          ..closeDrawer();
+        onTap();
+      },
       selected: selected,
       leading: leading,
       subtitle: subtitle,
@@ -56,7 +62,6 @@ class MasterTile extends StatelessWidget {
       selected: selected,
       pageId: pageId,
       tile: tile,
-      libraryModel: libraryModel,
     );
   }
 }
@@ -99,13 +104,11 @@ class _PlayAbleMasterTile extends StatefulWidget
     required this.pageId,
     required this.tile,
     this.selected,
-    required this.libraryModel,
   });
 
   final String pageId;
   final Widget tile;
   final bool? selected;
-  final LibraryModel libraryModel;
 
   @override
   State<_PlayAbleMasterTile> createState() => __PlayAbleMasterTileState();
@@ -116,9 +119,7 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
 
   @override
   Widget build(BuildContext context) {
-    final audios = widget.libraryModel.getAudiosById(widget.pageId);
-
-    if (audios == null || audios.isEmpty) {
+    if (PageIDs.permanent.contains(widget.pageId)) {
       return widget.tile;
     }
 
@@ -127,26 +128,6 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
     );
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final playerModel = di<PlayerModel>();
-
-    void onPlay() {
-      if (audios.first.audioType == AudioType.radio) {
-        di<RadioModel>().clickStation(audios.first);
-      }
-      if (isEnQueued) {
-        isPlaying ? playerModel.pause() : playerModel.resume();
-      } else {
-        playerModel
-            .startPlaylist(
-              audios: audios,
-              listName: widget.pageId,
-            )
-            .then(
-              (_) => widget.libraryModel.removePodcastUpdate(
-                widget.pageId,
-              ),
-            );
-      }
-    }
 
     return MouseRegion(
       onEnter: (e) => setState(() => _hovered = true),
@@ -161,7 +142,26 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
               child: CircleAvatar(
                 radius: kTinyButtonSize / 2,
                 child: IconButton(
-                  onPressed: onPlay,
+                  onPressed: () async {
+                    final audios = await getAudiosById(widget.pageId);
+                    if (audios?.firstOrNull?.audioType == AudioType.radio) {
+                      di<RadioModel>().clickStation(audios?.firstOrNull);
+                    }
+                    if (isEnQueued) {
+                      isPlaying ? playerModel.pause() : playerModel.resume();
+                    } else if (audios != null) {
+                      playerModel
+                          .startPlaylist(
+                            audios: audios,
+                            listName: widget.pageId,
+                          )
+                          .then(
+                            (_) => di<LibraryModel>().removePodcastUpdate(
+                              widget.pageId,
+                            ),
+                          );
+                    }
+                  },
                   icon: Icon(
                     isPlaying && isEnQueued ? Iconz.pause : Iconz.playFilled,
                     size: kTinyButtonIconSize,
@@ -173,5 +173,18 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
         ],
       ),
     );
+  }
+
+  Future<List<Audio>?> getAudiosById(String pageId) async {
+    final libraryModel = di<LibraryModel>();
+
+    if (libraryModel.isStarredStation(pageId)) {
+      var audio = await di<RadioModel>().getStationByUUID(pageId);
+      return audio == null ? [] : [audio];
+    }
+
+    return libraryModel.getPodcast(pageId) ??
+        libraryModel.getPlaylistById(pageId) ??
+        di<LocalAudioModel>().findAlbum(pageId);
   }
 }

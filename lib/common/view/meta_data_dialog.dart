@@ -1,105 +1,87 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../l10n/l10n.dart';
+import '../../radio/view/radio_page_tag_bar.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
 import 'copy_clipboard_content.dart';
+import 'local_metadata_covers.dart';
+import 'local_metadata_tile.dart';
 import 'modals.dart';
 import 'snackbars.dart';
+import 'ui_constants.dart';
 
-class MetaDataContent extends StatelessWidget {
+class MetaDataContent extends StatefulWidget {
   const MetaDataContent.dialog({
     super.key,
     required this.audio,
+    required this.pageId,
   }) : _mode = ModalMode.dialog;
 
   const MetaDataContent.bottomSheet({
     super.key,
     required this.audio,
+    required this.pageId,
   }) : _mode = ModalMode.bottomSheet;
 
   final Audio audio;
   final ModalMode _mode;
+  final String pageId;
+
+  static const double dimension = 300.0;
+
+  @override
+  State<MetaDataContent> createState() => _MetaDataContentState();
+}
+
+class _MetaDataContentState extends State<MetaDataContent> {
+  late Audio audio;
+
+  @override
+  void initState() {
+    super.initState();
+    setAudio();
+  }
+
+  void setAudio() {
+    if (widget.audio.path != null) {
+      audio = widget.audio.isLocal && widget.audio.path != null
+          ? Audio.local(File(widget.audio.path!))
+          : widget.audio;
+    } else {
+      audio = widget.audio;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final radio = audio.audioType == AudioType.radio;
     final l10n = context.l10n;
-    final items = <(String, String)>{
-      (
-        radio ? l10n.stationName : l10n.title,
-        '${audio.title}',
-      ),
-      (
-        radio ? l10n.tags : l10n.album,
-        '${radio ? audio.album?.replaceAll(',', ', ') : audio.album}',
-      ),
-      (
-        radio ? l10n.language : l10n.artist,
-        '${radio ? audio.language : audio.artist}',
-      ),
-      (
-        radio ? l10n.quality : l10n.albumArtists,
-        '${audio.albumArtist}',
-      ),
-      if (!radio)
-        (
-          l10n.trackNumber,
-          '${audio.trackNumber}',
-        ),
-      if (!radio)
-        (
-          l10n.diskNumber,
-          '${audio.discNumber}',
-        ),
-      (
-        radio ? l10n.clicks : l10n.totalDisks,
-        '${radio ? audio.clicks : audio.discTotal}',
-      ),
-      if (!radio)
-        (
-          l10n.genre,
-          '${audio.genre}',
-        ),
-      (
-        l10n.url,
-        audio.url ?? '',
-      ),
-    };
 
-    const edgeInsets = EdgeInsets.only(bottom: 12);
-
-    final body = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: items
-          .map(
-            (e) => ListTile(
-              dense: true,
-              title: Text(e.$1),
-              subtitle: Text(e.$2),
-              onTap: e.$1 == l10n.url
-                  ? () {
-                      final maybeUri = Uri.tryParse(e.$2);
-                      if (maybeUri != null) {
-                        showSnackBar(
-                          context: context,
-                          content: CopyClipboardContent(
-                            text: maybeUri.toString(),
-                            onSearch: () => launchUrl(maybeUri),
-                          ),
-                        );
-                        Navigator.of(context).pop();
-                      }
-                    }
-                  : null,
+    final body = SizedBox(
+      width: MetaDataContent.dimension,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (audio.isLocal && audio.path != null && audio.albumId != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: kLargestSpace,
+              ),
+              child: SizedBox.square(
+                dimension: MetaDataContent.dimension,
+                child: LocalMetadataCovers(audio: audio),
+              ),
             ),
-          )
-          .toList(),
+          ...createItems(audio, context),
+        ],
+      ),
     );
 
-    return switch (_mode) {
+    return switch (widget._mode) {
       ModalMode.dialog => AlertDialog(
           title: YaruDialogTitleBar(
             title: Text(l10n.metadata),
@@ -107,7 +89,7 @@ class MetaDataContent extends StatelessWidget {
             backgroundColor: Colors.transparent,
           ),
           titlePadding: EdgeInsets.zero,
-          contentPadding: edgeInsets,
+          contentPadding: const EdgeInsets.only(bottom: 12),
           scrollable: true,
           content: body,
         ),
@@ -115,6 +97,97 @@ class MetaDataContent extends StatelessWidget {
           onClosing: () {},
           builder: (context) => body,
         )
+    };
+  }
+
+  List<Widget> createItems(Audio audio, BuildContext context) {
+    final l10n = context.l10n;
+
+    return switch (audio.audioType) {
+      AudioType.radio => <Widget>[
+          ListTile(
+            title: Text(l10n.stationName),
+            subtitle: Text('${audio.title}'),
+          ),
+          ListTile(
+            title: Text(l10n.tags),
+            subtitle: Align(
+              alignment: Alignment.centerLeft,
+              child: RadioPageTagBar(
+                station: audio,
+                onTap: (_) {
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+            ),
+          ),
+          ListTile(
+            title: Text(l10n.language),
+            subtitle: Text(audio.language),
+          ),
+          ListTile(
+            title: Text(l10n.quality),
+            subtitle: Text('${audio.albumArtist}'),
+          ),
+          ListTile(
+            title: Text(l10n.clicks),
+            subtitle: Text('${audio.clicks}'),
+          ),
+          ListTile(
+            title: Text(l10n.url),
+            subtitle: Text(audio.url ?? ''),
+            onTap: () => showSnackBar(
+              context: context,
+              content: CopyClipboardContent(
+                text: audio.title ?? '',
+                onSearch: () => launchUrl(Uri.parse(audio.url!)),
+              ),
+            ),
+          ),
+        ],
+      AudioType.local => <Widget>[
+          ListTile(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: kLargestSpace,
+            ),
+            title: TextField(
+              readOnly: true,
+              decoration: InputDecoration(
+                labelText: l10n.path,
+                suffixIcon: IconButton(
+                  style: IconButton.styleFrom(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(kYaruButtonRadius),
+                        bottomRight: Radius.circular(kYaruButtonRadius),
+                      ),
+                    ),
+                  ),
+                  icon: const Icon(Icons.copy),
+                  onPressed: () {
+                    if (audio.path != null) {
+                      showSnackBar(
+                        context: context,
+                        content: CopyClipboardContent(text: audio.path!),
+                      );
+                    }
+                  },
+                ),
+              ),
+              controller: TextEditingController(text: audio.path),
+            ),
+          ),
+          LocalMetadataTile.title(audio: audio),
+          LocalMetadataTile.album(audio: audio),
+          LocalMetadataTile.artist(audio: audio),
+          LocalMetadataTile.trackNumber(audio: audio),
+          LocalMetadataTile.diskNumber(audio: audio),
+          LocalMetadataTile.totalDisks(audio: audio),
+          LocalMetadataTile.genre(audio: audio),
+        ],
+      _ => [],
     };
   }
 }

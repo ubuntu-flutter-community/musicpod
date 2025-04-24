@@ -7,26 +7,13 @@ import '../../common/view/ui_constants.dart';
 import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
 
-class PlaylistAddAudiosDialog extends StatefulWidget
-    with WatchItStatefulWidgetMixin {
+class PlaylistAddAudiosDialog extends StatelessWidget with WatchItMixin {
   const PlaylistAddAudiosDialog({
     super.key,
     required this.playlistId,
   });
 
   final String playlistId;
-
-  @override
-  State<PlaylistAddAudiosDialog> createState() =>
-      _PlaylistAddAudiosDialogState();
-}
-
-class _PlaylistAddAudiosDialogState extends State<PlaylistAddAudiosDialog> {
-  @override
-  void initState() {
-    super.initState();
-    di<LocalAudioModel>().init();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +40,7 @@ class _PlaylistAddAudiosDialogState extends State<PlaylistAddAudiosDialog> {
                     onSelected: (value) {
                       if (value == null) return;
                       libraryModel.addAudiosToPlaylist(
-                        playlist: widget.playlistId,
+                        id: playlistId,
                         audios: [value],
                       );
                     },

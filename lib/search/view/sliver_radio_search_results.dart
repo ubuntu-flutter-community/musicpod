@@ -78,7 +78,7 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
             audio: station,
             onTitleTap: () => di<LibraryModel>().push(
               pageId: station.uuid!,
-              builder: (context) => StationPage(station: station),
+              builder: (context) => StationPage(uuid: station.uuid!),
             ),
             onTap: () {
               di<PlayerModel>().startPlaylist(

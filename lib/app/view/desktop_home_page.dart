@@ -38,8 +38,8 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
           builder: (_) => PatchNotesDialog(
             onClose: () {
               if ((di<LocalAudioModel>().audios?.isNotEmpty ?? false) &&
-                  di<LibraryModel>().playlists.isNotEmpty &&
-                  di<LibraryModel>().pinnedAlbums.isNotEmpty &&
+                  di<LibraryModel>().playlistIDs.isNotEmpty &&
+                  di<LibraryModel>().favoriteAlbums.isNotEmpty &&
                   di<AppModel>().isBackupScreenNeeded &&
                   !di<AppModel>().wasBackupSaved &&
                   mounted) {

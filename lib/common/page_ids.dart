@@ -1,7 +1,6 @@
 class PageIDs {
   static const settings = 'settings';
   static const homePage = 'homePage';
-  static const selectedPage = 'selectedPageId';
   static const localAudio = 'localAudio';
   static const podcasts = 'podcasts';
   static const radio = 'radio';

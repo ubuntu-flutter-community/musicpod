@@ -25,7 +25,6 @@ class TitlesView extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final model = di<LocalAudioModel>();
     final importing = watchPropertyValue((LocalAudioModel m) => m.importing);
 
     if (audios == null || importing) {
@@ -43,16 +42,10 @@ class TitlesView extends StatelessWidget with WatchItMixin {
       audios: audios!,
       audioPageType: AudioPageType.allTitlesView,
       pageId: PageIDs.localAudio,
-      onSubTitleTab: (text) {
-        final artistAudios = model.findTitlesOfArtist(text);
-        final artist = artistAudios?.firstOrNull?.artist;
-        if (artist == null) return;
-
-        di<LibraryModel>().push(
-          builder: (_) => ArtistPage(artistAudios: artistAudios),
-          pageId: artist,
-        );
-      },
+      onSubTitleTab: (artist) => di<LibraryModel>().push(
+        builder: (_) => ArtistPage(pageId: artist),
+        pageId: artist,
+      ),
     );
   }
 }

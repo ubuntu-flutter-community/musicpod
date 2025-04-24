@@ -230,24 +230,11 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     required LibraryModel libraryModel,
     required LocalAudioModel localAudioModel,
   }) {
-    if (audio.album == null) return;
-    localAudioModel.init().then(
-      (value) {
-        final albumAudios = localAudioModel.findAlbum(audio.album!);
-        if (albumAudios?.firstOrNull == null) return;
-        final id = albumAudios!.first.albumId;
-        if (id == null) return;
-
-        appModel.setFullWindowMode(false);
-
-        libraryModel.push(
-          builder: (_) => AlbumPage(
-            id: id,
-            album: albumAudios,
-          ),
-          pageId: id,
-        );
-      },
+    if (audio.albumId == null) return;
+    appModel.setFullWindowMode(false);
+    libraryModel.push(
+      builder: (_) => AlbumPage(id: audio.albumId!),
+      pageId: audio.albumId!,
     );
   }
 
@@ -299,7 +286,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
       return;
     }
     libraryModel.push(
-      builder: (_) => StationPage(station: audio),
+      builder: (_) => StationPage(uuid: audio.uuid!),
       pageId: audio.uuid!,
     );
   }
@@ -310,20 +297,12 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     required AppModel appModel,
     required LibraryModel libraryModel,
   }) {
-    final artistName = audio.artist;
-    if (artistName == null) return;
-
-    localAudioModel.init().then(
-      (value) {
-        final artistAudios = localAudioModel.findTitlesOfArtist(artistName);
-        final artist = artistAudios?.firstOrNull?.artist;
-        if (artist == null) return;
-        appModel.setFullWindowMode(false);
-        libraryModel.push(
-          builder: (_) => ArtistPage(artistAudios: artistAudios),
-          pageId: artist,
-        );
-      },
+    final artistId = audio.artist;
+    if (artistId == null) return;
+    appModel.setFullWindowMode(false);
+    libraryModel.push(
+      builder: (_) => ArtistPage(pageId: artistId),
+      pageId: artistId,
     );
   }
 }

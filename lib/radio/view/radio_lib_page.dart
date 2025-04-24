@@ -23,7 +23,6 @@ import '../../custom_content/custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../radio_model.dart';
 import 'open_radio_discover_page_button.dart';
@@ -161,7 +160,6 @@ class StationGrid extends StatelessWidget with WatchItMixin {
     final stations = watchPropertyValue((LibraryModel m) => m.starredStations);
     final length =
         watchPropertyValue((LibraryModel m) => m.starredStationsLength);
-    final playerModel = di<PlayerModel>();
 
     if (length == 0) {
       return NoSearchResultPage(
@@ -185,11 +183,8 @@ class StationGrid extends StatelessWidget with WatchItMixin {
           gridDelegate: audioCardGridDelegate,
           itemCount: length,
           itemBuilder: (context, index) {
-            final station = stations.entries.elementAt(index).value.firstOrNull;
-            return StationCard(
-              station: station,
-              startPlaylist: playerModel.startPlaylist,
-            );
+            final uuid = stations.elementAt(index);
+            return StationCard(uuid: uuid);
           },
         );
       },

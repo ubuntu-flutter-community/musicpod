@@ -6,7 +6,6 @@ import '../../common/data/audio.dart';
 import '../../common/view/loading_grid.dart';
 import '../../common/view/offline_page.dart';
 import '../../common/view/theme.dart';
-import '../../player/player_model.dart';
 import '../../radio/radio_model.dart';
 import '../../radio/view/radio_reconnect_button.dart';
 import '../../radio/view/station_card.dart';
@@ -64,19 +63,7 @@ class _SliverRadioCountryGridState extends State<SliverRadioCountryGrid> {
       itemBuilder: (context, index) {
         final station = radioSearchResult.elementAt(index);
         return StationCard(
-          station: station,
-          startPlaylist: ({
-            required audios,
-            index,
-            required listName,
-          }) {
-            return di<PlayerModel>()
-                .startPlaylist(
-                  audios: audios,
-                  listName: listName,
-                )
-                .then((_) => di<RadioModel>().clickStation(station));
-          },
+          uuid: station.uuid!,
         );
       },
     );

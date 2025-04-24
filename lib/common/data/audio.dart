@@ -406,16 +406,27 @@ class Audio {
   String? get albumId {
     final albumName = album;
     final artistName = artist;
-    final id = albumName == null && artistName == null
+    return albumName == null && artistName == null
         ? null
-        : AppConfig.isMobilePlatform
-            ? '${artistName ?? ''}_${albumName ?? ''}'
-            : '${artistName ?? ''}:${albumName ?? ''}';
-    return AppConfig.isMobilePlatform ? id?.replaceAll(' ', '_') : id;
+        : '${artistName ?? ''}$albumIdSplitter${albumName ?? ''}'.replaceAll(
+            albumIdReplacement,
+            albumIdReplacer,
+          );
   }
 
-  bool get hasPathAndId =>
-      albumId?.isNotEmpty == true &&
+  // Note this assumes that no artist or no album includes ___ on their own =)
+  static const String albumIdSplitter =
+      '$albumIdReplacer${AppConfig.appId}$albumIdReplacer';
+  static const String albumIdReplacer = '___';
+  static const String albumIdReplacement = ' ';
+
+  bool get canHaveLocalCover =>
+      albumId != null &&
+      albumId!.isNotEmpty &&
       path != null &&
       audioType == AudioType.local;
+
+  bool get isLocal => audioType == AudioType.local;
+  bool get isPodcast => audioType == AudioType.podcast;
+  bool get isRadio => audioType == AudioType.radio;
 }

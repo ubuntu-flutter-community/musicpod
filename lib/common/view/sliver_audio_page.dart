@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app_config.dart';
+import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
@@ -87,26 +88,13 @@ class SliverAudioPage extends StatelessWidget {
             min: AppConfig.isMobilePlatform ? 5 : 15,
           );
 
-          if (audios == null) {
-            return const Center(
-              child: Progress(),
-            );
-          }
-
-          if (audios!.isEmpty) {
-            return NoSearchResultPage(
-              message: noSearchResultMessage,
-              icon: noSearchResultIcons,
-            );
-          }
-
           return CustomScrollView(
             slivers: [
               SliverPadding(
                 padding: padding,
                 sliver: SliverToBoxAdapter(
                   child: AudioPageHeader(
-                    title: pageTitle ?? pageId,
+                    title: pageTitle ?? context.l10n.album,
                     image: image,
                     subTitle: pageSubTitle,
                     label: pageLabel,
@@ -129,6 +117,13 @@ class SliverAudioPage extends StatelessWidget {
                 const SliverToBoxAdapter(
                   child: Center(
                     child: Progress(),
+                  ),
+                )
+              else if (audios!.isEmpty)
+                SliverToBoxAdapter(
+                  child: NoSearchResultPage(
+                    message: noSearchResultMessage,
+                    icon: noSearchResultIcons,
                   ),
                 )
               else

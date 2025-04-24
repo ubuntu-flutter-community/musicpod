@@ -424,6 +424,7 @@ class PlayerService {
     required String listName,
     int? index,
   }) async {
+    if (audios.isEmpty) return;
     if (listName == _queue.name &&
         index != null &&
         audios.elementAtOrNull(index) != null) {
@@ -662,7 +663,8 @@ class PlayerService {
       return Uri.tryParse(
         audio?.imageUrl ?? audio!.albumArtUrl!,
       );
-    } else if (audio?.hasPathAndId == true && File(audio!.path!).existsSync()) {
+    } else if (audio?.canHaveLocalCover == true &&
+        File(audio!.path!).existsSync()) {
       final maybeData = _localCoverService.get(audio.albumId);
       if (maybeData != null) {
         File newFile = await _safeTempCover(maybeData);

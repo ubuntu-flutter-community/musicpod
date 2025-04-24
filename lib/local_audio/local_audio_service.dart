@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:watcher/watcher.dart';
@@ -9,6 +10,8 @@ import '../common/data/audio.dart';
 import '../common/logging.dart';
 import '../common/view/audio_filter.dart';
 import '../extensions/media_file_x.dart';
+import '../extensions/string_x.dart';
+import '../library/library_service.dart';
 import '../settings/settings_service.dart';
 import 'local_cover_service.dart';
 
@@ -16,7 +19,6 @@ class LocalSearchResult {
   const LocalSearchResult({
     required this.titles,
     required this.artists,
-    required this.albumArtists,
     required this.albums,
     required this.genres,
     required this.playlists,
@@ -24,7 +26,7 @@ class LocalSearchResult {
 
   final List<Audio>? titles;
   final List<String>? artists;
-  final List<String>? albumArtists;
+
   final List<String>? albums;
   final List<String>? genres;
   final List<String>? playlists;
@@ -33,12 +35,15 @@ class LocalSearchResult {
 class LocalAudioService {
   final SettingsService? _settingsService;
   final LocalCoverService _localCoverService;
+  final LibraryService? _libraryService;
 
   LocalAudioService({
     required LocalCoverService localCoverService,
     SettingsService? settingsService,
+    LibraryService? libraryService,
   })  : _settingsService = settingsService,
-        _localCoverService = localCoverService;
+        _localCoverService = localCoverService,
+        _libraryService = libraryService;
 
   List<Audio>? _audios;
   List<Audio>? get audios => _audios;
@@ -49,13 +54,10 @@ class LocalAudioService {
 
   void _sortAllTitles() {
     if (_audios == null) return;
-    final list = _audios!.toList();
     sortListByAudioFilter(
       audioFilter: AudioFilter.title,
-      audios: list,
+      audios: _audios!,
     );
-
-    _audios = List.from(list);
   }
 
   List<String>? _allArtists;
@@ -73,27 +75,11 @@ class LocalAudioService {
     _allArtists?.sort();
   }
 
-  List<String>? _allAlbumArtists;
-  List<String>? get allAlbumArtists => _allAlbumArtists;
-  void _findAllAlbumArtists() {
-    if (_audios == null) return;
-    final albumArtists = <String>[];
-    for (var a in audios!) {
-      final albumArtist = a.albumArtist;
-      if (albumArtist?.isNotEmpty == true &&
-          !albumArtists.contains(albumArtist)) {
-        albumArtists.add(albumArtist!);
-      }
-    }
-    _allAlbumArtists = albumArtists;
-    _allAlbumArtists?.sort();
-  }
-
   List<String>? _allGenres;
   List<String>? get allGenres => _allGenres;
   void _findAllGenres() {
     if (_audios == null) return;
-    final genresResult = <String>{};
+    final genresResult = <String>[];
     for (var a in audios!) {
       if (genresResult.none(
             (e) => e == a.genre,
@@ -102,40 +88,44 @@ class LocalAudioService {
         genresResult.add(a.genre!);
       }
     }
-    final list = genresResult.toList();
-    list.sort();
-
-    _allGenres = List.from(list);
+    genresResult.sort();
+    _allGenres = genresResult;
   }
 
-  List<String>? _allAlbums;
-  List<String>? get allAlbums => _allAlbums;
-  List<String>? findAllAlbums({Iterable<Audio>? newAudios, bool clean = true}) {
-    final theAudios = newAudios ?? audios;
+  List<String>? _allAlbumIDs;
+  List<String>? get allAlbumIDs => _allAlbumIDs;
+  List<String>? findAllAlbumIDs({
+    String? artist,
+    bool clean = true,
+  }) {
+    final theAudios = artist == null || artist.isEmpty
+        ? audios
+        : audios?.where((e) => e.artist == artist);
     if (theAudios == null) return null;
     final albumsResult = <String>[];
     for (var a in theAudios) {
-      if (a.album != null && albumsResult.none((e) => e == a.album)) {
-        albumsResult.add(a.album!);
+      if (a.albumId != null && albumsResult.none((e) => e == a.albumId)) {
+        albumsResult.add(a.albumId!);
       }
     }
-    final list = albumsResult.toList();
-    list.sort();
+    albumsResult.sort(
+      (a, b) => compareNatural(a.albumOfId, b.albumOfId),
+    );
 
     if (clean) {
-      _allAlbums = List.from(list);
-      return _allAlbums;
+      _allAlbumIDs = albumsResult;
+      return _allAlbumIDs;
     } else {
-      return List.from(list);
+      return albumsResult;
     }
   }
 
   List<Audio>? findAlbum(
-    String albumName, [
+    String albumId, [
     AudioFilter audioFilter = AudioFilter.trackNumber,
   ]) {
     final album = audios?.where(
-      (a) => a.album != null && a.album == albumName,
+      (a) => a.albumId != null && a.albumId == albumId,
     );
 
     var albumList = album?.toList();
@@ -170,30 +160,11 @@ class LocalAudioService {
     return artistList != null ? List.from(artistList) : null;
   }
 
-  List<Audio>? findTitlesOfAlbumArtists(
-    String albumArtist, [
-    AudioFilter audioFilter = AudioFilter.album,
-  ]) {
-    final album = audios?.where(
-      (a) => a.albumArtist != null && a.albumArtist == albumArtist,
-    );
-
-    var albumArtistList = album?.toList();
-    if (albumArtistList != null) {
-      sortListByAudioFilter(
-        audioFilter: audioFilter,
-        audios: albumArtistList,
-      );
-      albumArtistList = splitByDiscs(albumArtistList).toList();
-    }
-    return albumArtistList != null ? List.from(albumArtistList) : null;
-  }
-
   List<String>? findArtistsOfGenre(String genre) {
-    if (audios == null) return null;
+    if (_audios == null) return null;
     final artistsOfGenre = <String>[];
 
-    for (var artistAudio in audios!) {
+    for (var artistAudio in _audios!) {
       if (artistAudio.genre?.trim().isNotEmpty == true &&
           artistAudio.genre == genre &&
           artistsOfGenre.none((e) => e == artistAudio.artist)) {
@@ -238,15 +209,14 @@ class LocalAudioService {
       return const LocalSearchResult(
         titles: [],
         artists: [],
-        albumArtists: [],
         albums: [],
         genres: [],
         playlists: [],
       );
     }
 
-    final allAlbumsFindings =
-        allAlbums?.where((e) => e.toLowerCase().contains(query.toLowerCase()));
+    final allAlbumsFindings = allAlbumIDs
+        ?.where((e) => e.albumOfId.toLowerCase().contains(query.toLowerCase()));
 
     final albumsResult = <String>[];
     if (allAlbumsFindings != null) {
@@ -287,9 +257,6 @@ class LocalAudioService {
       artists: allArtists
           ?.where((a) => a.toLowerCase().contains(query.toLowerCase()))
           .toList(),
-      albumArtists: allAlbumArtists
-          ?.where((a) => a.toLowerCase().contains(query.toLowerCase()))
-          .toList(),
       playlists: [],
     );
   }
@@ -297,10 +264,7 @@ class LocalAudioService {
   FileWatcher? _fileWatcher;
   FileWatcher? get fileWatcher => _fileWatcher;
 
-  Future<void> init({
-    String? newDirectory,
-    bool forceInit = false,
-  }) async {
+  Future<void> init({String? newDirectory, bool forceInit = false}) async {
     if (forceInit == false && _audios?.isNotEmpty == true) return;
 
     if (newDirectory != null && newDirectory != _settingsService?.directory) {
@@ -308,28 +272,32 @@ class LocalAudioService {
     }
     final dir = newDirectory ?? _settingsService?.directory;
 
-    final result = await compute(
-      _readAudiosFromDirectory,
-      dir,
-    );
-    if (dir != null && Directory(dir).existsSync()) {
+    final result = await compute(_readAudiosFromDirectory, dir);
+    _failedImports = result.failedImports;
+
+    if (dir != null &&
+        Directory(dir).existsSync() &&
+        (_fileWatcher == null || _fileWatcher!.path != dir)) {
       _fileWatcher = FileWatcher(dir);
     }
 
     addAudios(
       result.audios,
       forceInit: forceInit,
-      failedImports: result.failedImports,
     );
+
+    final additionalAudios = _libraryService?.externalPlaylistAudios;
+    if (_libraryService != null && additionalAudios!.isNotEmpty) {
+      addAudios(
+        additionalAudios.where((e) => e.isLocal).toList(),
+        forceInit: forceInit,
+      );
+    }
   }
 
   Future<void> dispose() async => _audiosController.close();
 
-  void addAudios(
-    List<Audio> newAudios, {
-    bool forceInit = false,
-    List<String>? failedImports,
-  }) {
+  void addAudios(List<Audio> newAudios, {bool forceInit = false}) {
     if (forceInit) {
       _audios = null;
       _audiosController.add(true);
@@ -340,20 +308,87 @@ class LocalAudioService {
     if (_audios!.isEmpty) {
       _audios = newAudios;
     } else {
-      for (final audio in newAudios) {
-        if (!_audios!.contains(audio)) {
-          _audios!.add(audio);
-        }
-      }
+      final set = Set<Audio>.from(_audios!);
+      set.addAll(newAudios);
+      _audios = set.toList();
     }
 
+    _buildLocalLibrary();
+  }
+
+  void _buildLocalLibrary() {
     _sortAllTitles();
     _findAllArtists();
-    _findAllAlbumArtists();
-    findAllAlbums();
+    findAllAlbumIDs();
     _findAllGenres();
-    _failedImports = failedImports;
     _audiosController.add(true);
+  }
+
+  void changeMetadata(
+    Audio audio, {
+    Function? onChange,
+    String? title,
+    String? artist,
+    String? album,
+    String? genre,
+    String? discTotal,
+    String? discNumber,
+    String? trackNumber,
+    String? durationMs,
+    String? year,
+    List<Picture>? pictures,
+  }) {
+    if (audio.path != null) {
+      final file = File(audio.path!);
+      if (file.existsSync()) {
+        updateMetadata(
+          file,
+          (metadata) {
+            try {
+              if (title != null) {
+                metadata.setTitle(title);
+              }
+              if (artist != null) {
+                metadata.setArtist(artist);
+              }
+              if (album != null) {
+                metadata.setAlbum(album);
+              }
+              if (genre != null) {
+                metadata.setGenres([genre]);
+              }
+              if (trackNumber != null && int.tryParse(trackNumber) != null) {
+                metadata.setTrackNumber(int.tryParse(trackNumber));
+              }
+              if (year != null && int.tryParse(year) != null) {
+                metadata.setYear(DateTime(int.parse(year)));
+              }
+              if (pictures?.isNotEmpty ?? false) {
+                metadata.setPictures(pictures!);
+              }
+
+              // Not supported yet
+              // if (discNumber != null) {
+              //   metadata.setDiscNumber(discNumber);
+              // }
+              // if (discTotal != null) {
+              //   metadata.setDiscTotal(discTotal);
+              // }
+              // if (durationMs != null) {
+              //   metadata.setDuration(durationMs);
+              // }
+              // if (albumArtist != null) {
+              //   metadata.setAlbumArtist(albumArtist);
+              // }
+
+              onChange?.call();
+            } on Exception catch (e) {
+              printMessageInDebugMode(e);
+            }
+          },
+        );
+      }
+    }
   }
 }
 
@@ -362,13 +397,14 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
   List<String> failedImports = [];
 
   if (directory != null && Directory(directory).existsSync()) {
-    final entities = await Directory(directory)
-        .list(recursive: true, followLinks: false)
-        .handleError((e) => failedImports.add(e.toString()))
-        .toList();
+    final files = (await Directory(directory)
+            .list(recursive: true, followLinks: false)
+            .handleError((e) => failedImports.add(e.toString()))
+            .toList())
+        .whereType<File>();
 
-    for (final e in entities) {
-      if (e is File && e.isPlayable) {
+    for (final e in files) {
+      if (e.isPlayable) {
         try {
           newAudios.add(Audio.local(e, onError: (p) => failedImports.add(p)));
         } on Exception catch (ex) {

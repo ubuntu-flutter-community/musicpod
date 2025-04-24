@@ -1,32 +1,58 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:watcher/watcher.dart';
 
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
-import '../library/library_service.dart';
 import '../settings/settings_service.dart';
 import 'local_audio_service.dart';
 
 class LocalAudioModel extends SafeChangeNotifier {
   LocalAudioModel({
     required LocalAudioService localAudioService,
-    required LibraryService libraryService,
     required SettingsService settingsService,
   })  : _localAudioService = localAudioService,
-        _settingsService = settingsService,
-        _libraryService = libraryService {
+        _settingsService = settingsService {
     _audiosChangedSub ??=
         _localAudioService.audiosChanged.listen((_) => notifyListeners());
   }
 
   final LocalAudioService _localAudioService;
-  final LibraryService _libraryService;
   final SettingsService _settingsService;
   StreamSubscription<bool>? _audiosChangedSub;
   FileWatcher? get fileWatcher => _localAudioService.fileWatcher;
+
+  void changeMetadata(
+    Audio audio, {
+    Function? onChange,
+    String? title,
+    String? artist,
+    String? album,
+    String? genre,
+    String? discTotal,
+    String? discNumber,
+    String? trackNumber,
+    String? durationMs,
+    String? year,
+    List<Picture>? pictures,
+  }) =>
+      _localAudioService.changeMetadata(
+        audio,
+        onChange: onChange,
+        title: title,
+        artist: artist,
+        album: album,
+        genre: genre,
+        discTotal: discTotal,
+        discNumber: discNumber,
+        trackNumber: trackNumber,
+        durationMs: durationMs,
+        year: year,
+        pictures: pictures,
+      );
 
   int get localAudioindex => _settingsService.localAudioIndex;
   set localAudioindex(int value) {
@@ -55,27 +81,20 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   List<Audio>? get audios => _localAudioService.audios;
   List<String>? get allArtists => _localAudioService.allArtists;
-  List<String>? get allAlbumArtists => _localAudioService.allAlbumArtists;
   List<String>? get allGenres => _localAudioService.allGenres;
-  List<String>? get allAlbums => _localAudioService.allAlbums;
+  List<String>? get allAlbumIDs => _localAudioService.allAlbumIDs;
 
   List<Audio>? findAlbum(
-    String albumName, [
+    String albumId, [
     AudioFilter audioFilter = AudioFilter.trackNumber,
   ]) =>
-      _localAudioService.findAlbum(albumName, audioFilter);
+      _localAudioService.findAlbum(albumId, audioFilter);
 
   List<Audio>? findTitlesOfArtist(
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,
   ]) =>
       _localAudioService.findTitlesOfArtist(artist, audioFilter);
-
-  List<Audio>? findTitlesOfAlbumArtists(
-    String artist, [
-    AudioFilter audioFilter = AudioFilter.album,
-  ]) =>
-      _localAudioService.findTitlesOfAlbumArtists(artist, audioFilter);
 
   List<String>? findArtistsOfGenre(String genre) =>
       _localAudioService.findArtistsOfGenre(genre);
@@ -91,29 +110,19 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   List<String>? get failedImports => _localAudioService.failedImports;
 
-  List<String>? findAllAlbums({
-    Iterable<Audio>? newAudios,
+  List<String>? findAllAlbumIDs({
+    String? artist,
     bool clean = true,
   }) =>
-      _localAudioService.findAllAlbums(newAudios: newAudios, clean: clean);
+      _localAudioService.findAllAlbumIDs(artist: artist, clean: clean);
 
   bool get importing => _localAudioService.audios == null;
 
-  Future<void> init({
-    bool forceInit = false,
-    String? directory,
-  }) async {
-    await _localAudioService.init(
-      forceInit: forceInit,
-      newDirectory: directory,
-    );
-    if (_libraryService.playlists.isEmpty) return;
-    for (var playlist in _libraryService.playlists.entries.where(
-      (e) => _settingsService.externalPlaylists.contains(e.key),
-    )) {
-      _localAudioService.addAudios(playlist.value);
-    }
-  }
+  Future<void> init({bool forceInit = false, String? directory}) async =>
+      _localAudioService.init(
+        forceInit: forceInit,
+        newDirectory: directory,
+      );
 
   @override
   Future<void> dispose() async {

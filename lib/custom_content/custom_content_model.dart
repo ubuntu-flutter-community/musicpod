@@ -14,24 +14,24 @@ import '../common/logging.dart';
 import '../extensions/media_file_x.dart';
 import '../external_path/external_path_service.dart';
 import '../library/library_service.dart';
+import '../local_audio/local_audio_service.dart';
 import '../podcasts/podcast_service.dart';
-import '../radio/radio_service.dart';
 
 class CustomContentModel extends SafeChangeNotifier {
   CustomContentModel({
     required ExternalPathService externalPathService,
     required LibraryService libraryService,
+    required LocalAudioService localAudioService,
     required PodcastService podcastService,
-    required RadioService radioService,
   })  : _externalPathService = externalPathService,
         _libraryService = libraryService,
         _podcastService = podcastService,
-        _radioService = radioService;
+        _localAudioService = localAudioService;
 
   final ExternalPathService _externalPathService;
   final LibraryService _libraryService;
   final PodcastService _podcastService;
-  final RadioService _radioService;
+  final LocalAudioService _localAudioService;
 
   List<({List<Audio> audios, String id})> _playlists = [];
   List<({List<Audio> audios, String id})> get playlists => _playlists;
@@ -64,14 +64,14 @@ class CustomContentModel extends SafeChangeNotifier {
           lists.add(
             (
               id: basename(path),
-              audios: await _parseM3uPlaylist(path),
+              audios: await compute(_parseM3uPlaylist, path),
             ),
           );
         } else if (path.endsWith('.pls')) {
           lists.add(
             (
               id: basename(path),
-              audios: await _parsePlsPlaylist(path),
+              audios: await compute(_parsePlsPlaylist, path),
             ),
           );
         }
@@ -81,54 +81,6 @@ class CustomContentModel extends SafeChangeNotifier {
     }
 
     return lists;
-  }
-
-  Future<List<Audio>> _parseM3uPlaylist(String path) async {
-    final audios = <Audio>[];
-    final playlist = await compute(M3uList.loadFromFile, path);
-
-    for (var e in playlist.items) {
-      if (e.link.startsWith('http')) {
-        audios.add(
-          Audio(
-            title: e.title,
-            url: e.link,
-            description: e.link,
-            audioType: AudioType.radio,
-          ),
-        );
-      } else if (e.link.isNotEmpty) {
-        final file = File(e.link.replaceAll('file://', ''));
-        audios.add(Audio.local(file, getImage: true));
-      }
-    }
-
-    return audios;
-  }
-
-  Future<List<Audio>> _parsePlsPlaylist(String path) async {
-    final audios = <Audio>[];
-    final playlist = PlsPlaylist.parse(File(path).readAsStringSync());
-
-    for (var e in playlist.entries) {
-      if (e.file?.startsWith('http') == true) {
-        audios.add(
-          Audio(
-            title: e.title,
-            url: e.file,
-            description: e.file,
-            audioType: AudioType.radio,
-          ),
-        );
-      } else if (e.file?.isNotEmpty == true) {
-        final file = File(e.file!);
-        if (file.existsSync() && file.isPlayable) {
-          audios.add(Audio.local(file, getImage: true));
-        }
-      }
-    }
-
-    return audios;
   }
 
   Future<void> exportPlaylistToM3u({
@@ -141,15 +93,15 @@ class CustomContentModel extends SafeChangeNotifier {
   }
 
   bool get isExportingPlaylistsAndPinnedAlbumsToM3UsNeeded =>
-      _libraryService.playlists.isNotEmpty ||
-      _libraryService.pinnedAlbums.isNotEmpty;
+      _libraryService.playlistIDs.isNotEmpty ||
+      _libraryService.favoriteAlbums.isNotEmpty;
   Future<bool> exportPlaylistsAndPinnedAlbumsToM3Us() async {
     final List<({String id, List<Audio> audios})> list = [
-      ..._libraryService.playlists.entries.map(
-        (e) => (id: e.key, audios: e.value),
+      ..._libraryService.playlistIDs.map(
+        (e) => (id: e, audios: _libraryService.getPlaylistById(e) ?? []),
       ),
-      ..._libraryService.pinnedAlbums.entries.map(
-        (e) => (id: e.key, audios: e.value),
+      ..._libraryService.favoriteAlbums.map(
+        (e) => (id: e, audios: _localAudioService.findAlbum(e) ?? []),
       ),
     ];
 
@@ -277,13 +229,9 @@ class CustomContentModel extends SafeChangeNotifier {
     final body = <OpmlOutline>[];
     final category = OpmlOutlineBuilder();
 
-    for (var station in _libraryService.starredStations.entries) {
+    for (var station in _libraryService.starredStations) {
       category.addChild(
-        OpmlOutlineBuilder()
-            .title(station.value.firstOrNull?.title ?? '')
-            .text(station.value.firstOrNull?.uuid ?? '')
-            .htmlUrl(station.value.firstOrNull?.url ?? '')
-            .build(),
+        OpmlOutlineBuilder().text(station).build(),
       );
     }
 
@@ -317,14 +265,9 @@ class CustomContentModel extends SafeChangeNotifier {
 
     for (var category in doc.body.where((e) => e.children != null)) {
       final children = category.children!.where((e) => e.text != null);
-      final starredStations = <(String uuid, List<Audio> audios)>[];
+      final starredStations = <String>[];
       for (var feed in children) {
-        final stations = await _radioService.search(uuid: feed.text!, limit: 1);
-        if (stations != null && stations.isNotEmpty) {
-          starredStations.add(
-            (feed.text!, stations.map((e) => Audio.fromStation(e)).toList()),
-          );
-        }
+        starredStations.add(feed.text!);
       }
       if (starredStations.isNotEmpty) {
         _libraryService.addStarredStations(starredStations);
@@ -347,4 +290,52 @@ class CustomContentModel extends SafeChangeNotifier {
     _processing = false;
     notifyListeners();
   }
+}
+
+Future<List<Audio>> _parseM3uPlaylist(String path) async {
+  final audios = <Audio>[];
+  final playlist = await compute(M3uList.loadFromFile, path);
+
+  for (var e in playlist.items) {
+    if (e.link.startsWith('http')) {
+      audios.add(
+        Audio(
+          title: e.title,
+          url: e.link,
+          description: e.link,
+          audioType: AudioType.radio,
+        ),
+      );
+    } else if (e.link.isNotEmpty) {
+      final file = File(e.link.replaceAll('file://', ''));
+      audios.add(Audio.local(file));
+    }
+  }
+
+  return audios;
+}
+
+Future<List<Audio>> _parsePlsPlaylist(String path) async {
+  final audios = <Audio>[];
+  final playlist = PlsPlaylist.parse(File(path).readAsStringSync());
+
+  for (var e in playlist.entries) {
+    if (e.file?.startsWith('http') == true) {
+      audios.add(
+        Audio(
+          title: e.title,
+          url: e.file,
+          description: e.file,
+          audioType: AudioType.radio,
+        ),
+      );
+    } else if (e.file?.isNotEmpty == true) {
+      final file = File(e.file!);
+      if (file.existsSync() && file.isPlayable) {
+        audios.add(Audio.local(file));
+      }
+    }
+  }
+
+  return audios;
 }

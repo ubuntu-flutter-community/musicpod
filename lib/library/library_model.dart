@@ -7,7 +7,6 @@ import '../app/view/mobile_page.dart';
 import '../app_config.dart';
 import '../common/data/audio.dart';
 import '../common/logging.dart';
-import '../common/page_ids.dart';
 import '../common/view/back_gesture.dart';
 import '../local_audio/local_audio_service.dart';
 import 'library_service.dart';
@@ -32,30 +31,20 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
     super.dispose();
   }
 
-  List<Audio>? getAudiosById(String pageId) {
-    if (pageId == PageIDs.likedAudios) {
-      return likedAudios;
-    } else {
-      return playlists[pageId] ??
-          pinnedAlbums[pageId] ??
-          getPodcast(pageId) ??
-          starredStations[pageId];
-    }
-  }
-
   bool isPageInLibrary(String? pageId) => _service.isPageInLibrary(pageId);
 
   //
   // Liked Audios
   //
+  int get likedAudiosLength => _service.likedAudiosLength;
   List<Audio> get likedAudios => _service.likedAudios;
-
-  void addLikedAudio(Audio audio, [bool notify = true]) =>
-      _service.addLikedAudio(audio, notify);
+  void addLikedAudio(Audio audio) => _service.addLikedAudio(audio);
   void addLikedAudios(List<Audio> audios) => _service.addLikedAudios(audios);
   void removeLikedAudios(List<Audio> audios) =>
       _service.removeLikedAudios(audios);
-  bool liked(Audio? audio) => audio == null ? false : _service.liked(audio);
+  bool isLikedAudio(Audio? audio) =>
+      audio == null ? false : _service.isLiked(audio);
+  bool isLikedAudios(List<Audio> audios) => _service.isLikedAudios(audios);
   void removeLikedAudio(Audio audio, [bool notify = true]) =>
       _service.removeLikedAudio(audio, notify);
 
@@ -63,11 +52,10 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   // Starred stations
   //
 
-  Map<String, List<Audio>> get starredStations => _service.starredStations;
+  List<String> get starredStations => _service.starredStations;
   int get starredStationsLength => _service.starredStations.length;
-  void addStarredStation(String uuid, List<Audio> audios) =>
-      _service.addStarredStation(uuid, audios);
-  void unStarStation(String uuid) => _service.unStarStation(uuid);
+  void addStarredStation(String uuid) => _service.addStarredStation(uuid);
+  void unStarStation(String uuid) => _service.removeStarredStation(uuid);
   void unStarAllStations() => _service.unStarAllStations();
 
   bool isStarredStation(String? uuid) =>
@@ -98,11 +86,11 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   // Playlists
   //
 
-  Map<String, List<Audio>> get playlists => _service.playlists;
-  int get playlistsLength => playlists.length;
-  List<Audio> getPlaylistAt(int index) =>
-      playlists.entries.elementAt(index).value.toList();
-  List<Audio>? getPlaylistById(String id) => _service.playlists[id];
+  List<String> get playlistIDs => _service.playlistIDs;
+  int get playlistsLength => playlistIDs.length;
+  List<Audio>? getPlaylistById(String id) => _service.getPlaylistById(id);
+  List<String> get externalPlaylists => _service.externalPlaylistIDs;
+
   bool isPlaylistSaved(String? id) => _service.isPlaylistSaved(id);
   Future<void> addPlaylist(String name, List<Audio> audios) async =>
       _service.addPlaylist(name, audios);
@@ -124,40 +112,45 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
     }
   }
 
-  Future<void> updatePlaylist(String id, List<Audio> audios) async =>
-      _service.updatePlaylist(id, audios);
+  Future<void> updatePlaylist({
+    required String id,
+    required List<Audio> audios,
+    bool external = false,
+  }) async =>
+      _service.updatePlaylist(id: id, audios: audios, external: external);
   Future<void> removePlaylist(String id) => _service.removePlaylist(id);
 
   void updatePlaylistName(String oldName, String newName) =>
       _service.updatePlaylistName(oldName, newName);
   void addAudiosToPlaylist({
-    required String playlist,
-    required List<Audio> audios,
-  }) =>
-      _service.addAudiosToPlaylist(id: playlist, audios: audios);
-  void removeAudiosFromPlaylist({
     required String id,
     required List<Audio> audios,
   }) =>
+      _service.addAudiosToPlaylist(id: id, audios: audios);
+  Future<void> removeAudiosFromPlaylist({
+    required String id,
+    required List<Audio> audios,
+  }) async =>
       _service.removeAudiosFromPlaylist(id: id, audios: audios);
+
   void clearPlaylist(String id) => _service.clearPlaylist(id);
   void moveAudioInPlaylist({
     required int oldIndex,
     required int newIndex,
     required String id,
-  }) =>
-      _service.moveAudioInPlaylist(
-        oldIndex: oldIndex,
-        newIndex: newIndex,
-        id: id,
-      );
+  }) {
+    _service.moveAudioInPlaylist(
+      oldIndex: oldIndex,
+      newIndex: newIndex,
+      id: id,
+    );
+  }
 
   //
   // Podcasts
   //
 
-  Map<String, List<Audio>> get podcasts => _service.podcasts;
-  List<String> get podcastFeedUrls => _service.podcasts.keys.toList();
+  List<String> get podcastFeedUrls => _service.podcastFeedUrls;
   List<Audio>? getPodcast(String? feedUrl) => _service.podcasts[feedUrl];
   int get podcastsLength => _service.podcasts.length;
   void addPodcast(String feedUrl, List<Audio> audios) =>
@@ -192,14 +185,16 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   // Albums
   //
 
-  Map<String, List<Audio>> get pinnedAlbums => _service.pinnedAlbums;
-  int get pinnedAlbumsLength => pinnedAlbums.length;
-  List<Audio> getAlbumAt(int index) =>
-      pinnedAlbums.entries.elementAt(index).value.toList();
-  bool isPinnedAlbum(String name) => pinnedAlbums.containsKey(name);
-  void addPinnedAlbum(String name, List<Audio> audios) =>
-      _service.addPinnedAlbum(name, audios);
-  void removePinnedAlbum(String name) => _service.removePinnedAlbum(name);
+  List<String> get favoriteAlbums => _service.favoriteAlbums;
+  int get favoriteAlbumsLength => _service.favoriteAlbums.length;
+
+  bool isFavoriteAlbum(String id) => _service.isFavoriteAlbum(id);
+
+  void addFavoriteAlbum(String id, {required Function() onFail}) =>
+      _service.addFavoriteAlbum(id, onFail: onFail);
+
+  void removeFavoriteAlbum(String id, {required Function() onFail}) =>
+      _service.removeFavoriteAlbum(id, onFail: onFail);
 
   //
   // Navigation inside the Library

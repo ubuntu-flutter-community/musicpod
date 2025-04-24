@@ -3,34 +3,30 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/back_gesture.dart';
 import '../../common/view/global_keys.dart';
-import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../library/library_model.dart';
-import '../../settings/view/settings_action.dart';
-import 'master_items.dart';
-import 'master_tile.dart';
+import 'create_master_items.dart';
+import 'master_panel.dart';
 
-class MasterDetailPage extends StatelessWidget with WatchItMixin {
+class MasterDetailPage extends StatelessWidget {
   const MasterDetailPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = watchIt<LibraryModel>();
-    final masterItems = createMasterItems(libraryModel: libraryModel);
+    final libraryModel = di<LibraryModel>();
 
     final drawer = Drawer(
       width: kMasterDetailSideBarWidth,
       child: Stack(
         children: [
-          MasterPanel(masterItems: masterItems, libraryModel: libraryModel),
+          const MasterPanel(),
           Positioned(
             left: Platform.isMacOS ? 5 : null,
             top: 5,
@@ -55,11 +51,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
       drawer: Platform.isMacOS ? null : drawer,
       body: Row(
         children: [
-          if (context.showMasterPanel)
-            MasterPanel(
-              masterItems: masterItems,
-              libraryModel: libraryModel,
-            ),
+          if (context.showMasterPanel) const MasterPanel(),
           if (context.showMasterPanel) const VerticalDivider(),
           Expanded(
             child: Navigator(
@@ -68,6 +60,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
               key: libraryModel.masterNavigatorKey,
               observers: [libraryModel],
               onGenerateRoute: (settings) {
+                final masterItems = createMasterItems();
                 final page = (masterItems.firstWhereOrNull(
                           (e) => e.pageId == settings.name,
                         ) ??
@@ -83,69 +76,6 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
               },
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class MasterPanel extends StatelessWidget {
-  const MasterPanel({
-    super.key,
-    required this.masterItems,
-    required this.libraryModel,
-  });
-
-  final List<MasterItem> masterItems;
-  final LibraryModel libraryModel;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: kMasterDetailSideBarWidth,
-      child: Column(
-        children: [
-          const HeaderBar(
-            includeBackButton: false,
-            includeSidebarButton: false,
-            backgroundColor: Colors.transparent,
-            style: YaruTitleBarStyle.undecorated,
-            adaptive: false,
-            title: Text(AppConfig.appTitle),
-          ),
-          Expanded(
-            child: ListView.separated(
-              itemCount: masterItems.length,
-              itemBuilder: (context, index) {
-                final item = masterItems.elementAt(index);
-                return MasterTile(
-                  key: ValueKey(item.pageId),
-                  onTap: () {
-                    libraryModel.push(pageId: item.pageId);
-
-                    if (!context.showMasterPanel) {
-                      if (Platform.isMacOS) {
-                        masterScaffoldKey.currentState?.closeEndDrawer();
-                      } else {
-                        masterScaffoldKey.currentState?.closeDrawer();
-                      }
-                    }
-                  },
-                  pageId: item.pageId,
-                  libraryModel: libraryModel,
-                  leading: item.iconBuilder
-                      ?.call(libraryModel.selectedPageId == item.pageId),
-                  title: item.titleBuilder(context),
-                  subtitle: item.subtitleBuilder?.call(context),
-                  selected: libraryModel.selectedPageId == item.pageId,
-                );
-              },
-              separatorBuilder: (_, __) => const SizedBox(
-                height: 5,
-              ),
-            ),
-          ),
-          const SettingsButton.tile(),
         ],
       ),
     );

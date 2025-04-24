@@ -87,6 +87,34 @@ class RadioService {
     return null;
   }
 
+  final Map<String, Station> _cache = {};
+  Future<Station?> getStationByUUID(String uuid) async {
+    if (_cache.containsKey(uuid)) {
+      return _cache[uuid];
+    }
+
+    if (_radioBrowserApi == null) {
+      await init();
+      if (connectedHost == null) {
+        return null;
+      }
+    }
+
+    try {
+      final response = await _radioBrowserApi!.getStationsByUUID(uuids: [uuid]);
+      if (response.items.isEmpty) {
+        return null;
+      }
+      final station = response.items.first;
+      _cache[uuid] = station;
+      return station;
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
+
+    return null;
+  }
+
   RadioBrowserListResponse<Station>? _response;
   String? _uuid;
   String? _country;

@@ -10,7 +10,7 @@ environment:
 
 dependencies:
   animated_emoji: ^3.1.0
-  audio_metadata_reader: ^1.1.2
+  audio_metadata_reader: ^1.4.0
   audio_service: ^0.18.12
   audio_service_mpris:
     git:

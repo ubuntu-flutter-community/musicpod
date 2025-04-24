@@ -5,12 +5,9 @@ import 'package:yaru/yaru.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../local_audio_model.dart';
 import 'artist_page.dart';
 import 'artist_round_image_container.dart';
 
@@ -37,33 +34,21 @@ class ArtistsView extends StatelessWidget {
         message: noResultMessage,
       );
     }
-    final model = di<LocalAudioModel>();
 
     return SliverGrid.builder(
       itemCount: artists!.length,
       gridDelegate: kDiskGridDelegate,
       itemBuilder: (context, index) {
         final artistName = artists!.elementAt(index);
-        final artistAudios = model.findTitlesOfArtist(artistName);
 
         final text = artists!.elementAt(index);
 
         return YaruSelectableContainer(
           selected: false,
-          onTap: () {
-            final artist = artistAudios?.firstOrNull?.artist;
-            if (artist == null) {
-              showSnackBar(
-                context: context,
-                content: Text(context.l10n.unknown),
-              );
-            } else {
-              di<LibraryModel>().push(
-                builder: (_) => ArtistPage(artistAudios: artistAudios),
-                pageId: artist,
-              );
-            }
-          },
+          onTap: () => di<LibraryModel>().push(
+            builder: (_) => ArtistPage(pageId: artistName),
+            pageId: artistName,
+          ),
           borderRadius: BorderRadius.circular(300),
           child: Stack(
             alignment: Alignment.center,
@@ -72,7 +57,7 @@ class ArtistsView extends StatelessWidget {
                 width: double.infinity,
                 height: double.infinity,
                 child: ArtistRoundImageContainer(
-                  artistAudios: artistAudios,
+                  artist: artistName,
                   height: audioCardDimension,
                   width: audioCardDimension,
                 ),
@@ -109,33 +94,20 @@ class AlbumArtistsView extends StatelessWidget {
         message: noResultMessage,
       );
     }
-    final model = di<LocalAudioModel>();
 
     return SliverGrid.builder(
       itemCount: albumArtists!.length,
       gridDelegate: kDiskGridDelegate,
       itemBuilder: (context, index) {
-        final albumArtistNames = albumArtists!.elementAt(index);
-        final albumArtistsAudios =
-            model.findTitlesOfAlbumArtists(albumArtistNames);
-
-        final text = albumArtists!.elementAt(index);
+        final artist = albumArtists!.elementAt(index);
 
         return YaruSelectableContainer(
           selected: false,
           onTap: () {
-            final artist = albumArtistsAudios?.firstOrNull?.artist;
-            if (artist == null) {
-              showSnackBar(
-                context: context,
-                content: Text(context.l10n.unknown),
-              );
-            } else {
-              di<LibraryModel>().push(
-                builder: (_) => ArtistPage(artistAudios: albumArtistsAudios),
-                pageId: artist,
-              );
-            }
+            di<LibraryModel>().push(
+              builder: (_) => ArtistPage(pageId: artist),
+              pageId: artist,
+            );
           },
           borderRadius: BorderRadius.circular(300),
           child: Stack(
@@ -145,12 +117,12 @@ class AlbumArtistsView extends StatelessWidget {
                 width: double.infinity,
                 height: double.infinity,
                 child: ArtistRoundImageContainer(
-                  artistAudios: albumArtistsAudios,
+                  artist: artist,
                   height: audioCardDimension,
                   width: audioCardDimension,
                 ),
               ),
-              ArtistVignette(text: text),
+              ArtistVignette(text: artist),
             ],
           ),
         );

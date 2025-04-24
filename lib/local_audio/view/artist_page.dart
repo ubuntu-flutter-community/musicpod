@@ -28,21 +28,35 @@ import 'album_view.dart';
 import 'artist_round_image_container.dart';
 import 'genre_page.dart';
 
-class ArtistPage extends StatelessWidget with WatchItMixin {
+class ArtistPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const ArtistPage({
     super.key,
-    required this.artistAudios,
+    required this.pageId,
   });
 
-  final List<Audio>? artistAudios;
+  final String pageId;
+
+  @override
+  State<ArtistPage> createState() => _ArtistPageState();
+}
+
+class _ArtistPageState extends State<ArtistPage> {
+  late List<Audio> artistAudios;
+
+  @override
+  void initState() {
+    super.initState();
+    artistAudios =
+        di<LocalAudioModel>().findTitlesOfArtist(widget.pageId) ?? [];
+  }
 
   @override
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
-    final pageId = artistAudios?.firstOrNull?.artist;
-    final albums = model.findAllAlbums(newAudios: artistAudios, clean: false);
 
-    if (pageId == null || albums == null) {
+    final albumIDs = model.findAllAlbumIDs(artist: widget.pageId, clean: false);
+
+    if (albumIDs == null) {
       return const SizedBox.shrink();
     }
 
@@ -56,10 +70,7 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
       if (id == null) return;
 
       di<LibraryModel>().push(
-        builder: (_) => AlbumPage(
-          id: id,
-          album: audios,
-        ),
+        builder: (_) => AlbumPage(id: id),
         pageId: id,
       );
     }
@@ -100,13 +111,13 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
                 sliver: SliverToBoxAdapter(
                   child: AudioPageHeader(
                     imageRadius: BorderRadius.circular(10000),
-                    title: artistAudios?.firstOrNull?.artist ?? '',
+                    title: widget.pageId,
                     image: ArtistRoundImageContainer(
-                      artistAudios: artistAudios,
+                      artist: widget.pageId,
                       height: kMaxAudioPageHeaderHeight,
                       width: kMaxAudioPageHeaderHeight,
                     ),
-                    subTitle: artistAudios?.firstOrNull?.genre,
+                    subTitle: artistAudios.firstOrNull?.genre,
                     label: context.l10n.artist,
                     onLabelTab: onAlbumTap,
                     onSubTitleTab: onSubTitleTab,
@@ -115,8 +126,8 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
               ),
               SliverAudioPageControlPanel(
                 controlPanel: _ArtistPageControlPanel(
-                  pageId: pageId,
-                  audios: artistAudios!,
+                  pageId: widget.pageId,
+                  audios: artistAudios,
                 ),
               ),
               if (useGridView)
@@ -127,7 +138,7 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
                     bottom: bottomPlayerPageGap,
                   ),
                   sliver: AlbumsView(
-                    albums: albums,
+                    albumIDs: albumIDs,
                   ),
                 )
               else
@@ -138,8 +149,8 @@ class ArtistPage extends StatelessWidget with WatchItMixin {
                     bottom: bottomPlayerPageGap,
                   ),
                   sliver: SliverAudioTileList(
-                    audios: artistAudios!,
-                    pageId: pageId,
+                    audios: artistAudios,
+                    pageId: widget.pageId,
                     audioPageType: AudioPageType.artist,
                     onSubTitleTab: onAlbumTap,
                   ),
@@ -191,9 +202,9 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
             playlistId: pageId,
             allowRemove: false,
             selected: false,
-            searchTerm: audios.first.artist ?? '',
-            title: Text(audios.first.artist ?? ''),
-            subTitle: Text(audios.first.genre ?? ''),
+            searchTerm: audios.firstOrNull?.artist ?? '',
+            title: Text(audios.firstOrNull?.artist ?? ''),
+            subTitle: Text(audios.firstOrNull?.genre ?? ''),
           ),
         ],
       ),

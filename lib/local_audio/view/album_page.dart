@@ -1,3 +1,4 @@
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
@@ -10,6 +11,7 @@ import '../../common/view/cover_background.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page.dart';
+import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -19,68 +21,87 @@ import '../local_audio_model.dart';
 import 'artist_page.dart';
 import 'local_cover.dart';
 
-class AlbumPage extends StatelessWidget {
+class AlbumPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const AlbumPage({
     super.key,
     required this.id,
-    required this.album,
   });
 
   final String id;
-  final List<Audio> album;
+
+  @override
+  State<AlbumPage> createState() => _AlbumPageState();
+}
+
+class _AlbumPageState extends State<AlbumPage> {
+  late List<Audio> album;
+
+  @override
+  void initState() {
+    super.initState();
+    getAlbum();
+  }
+
+  void getAlbum() => album = di<LocalAudioModel>().findAlbum(widget.id) ?? [];
 
   @override
   Widget build(BuildContext context) {
-    final model = di<LocalAudioModel>();
-
-    void onArtistTap(text) {
-      final artistName = album.firstOrNull?.artist;
-      if (artistName == null) return;
-
-      model.init().then(
-            (_) => di<LibraryModel>().push(
-              builder: (_) {
-                final artistAudios = model.findTitlesOfArtist(artistName);
-                return ArtistPage(
-                  artistAudios: artistAudios,
-                );
-              },
-              pageId: artistName,
-            ),
-          );
-    }
+    watchPropertyValue((LocalAudioModel m) {
+      setState(() => getAlbum());
+      return m.audios.hashCode;
+    });
 
     return SliverAudioPage(
-      pageId: id,
+      pageId: widget.id,
       audioPageType: AudioPageType.album,
       audios: album,
-      image: album.isEmpty ? null : AlbumPageImage(audio: album.first),
+      image: AlbumPageImage(audio: album.firstOrNull),
+      noSearchResultIcons: const AnimatedEmoji(AnimatedEmojis.bubbles),
+      noSearchResultMessage: Text(context.l10n.albumNotFound),
       pageTitle: album.firstWhereOrNull((e) => e.album != null)?.album,
       pageSubTitle: album.firstWhereOrNull((e) => e.artist != null)?.artist,
       onPageSubTitleTab: onArtistTap,
       onPageLabelTab: onArtistTap,
-      controlPanel: AlbumPageControlButton(album: album, id: id),
+      controlPanel: AlbumPageControlButton(album: album, id: widget.id),
     );
   }
+
+  void onArtistTap(String text) => di<LibraryModel>().push(
+        builder: (_) => ArtistPage(pageId: text),
+        pageId: text,
+      );
 }
 
-class AlbumPageSideBarIcon extends StatelessWidget {
-  const AlbumPageSideBarIcon({super.key, required this.audio});
+class AlbumPageSideBarIcon extends StatefulWidget {
+  const AlbumPageSideBarIcon({super.key, required this.albumId});
 
-  final Audio? audio;
+  final String albumId;
+
+  @override
+  State<AlbumPageSideBarIcon> createState() => _AlbumPageSideBarIconState();
+}
+
+class _AlbumPageSideBarIconState extends State<AlbumPageSideBarIcon> {
+  Audio? audio;
+
+  @override
+  void initState() {
+    super.initState();
+    audio = di<LocalAudioModel>().findAlbum(widget.albumId)?.firstOrNull;
+  }
 
   @override
   Widget build(BuildContext context) {
     final fallBack = SideBarFallBackImage(
       child: Icon(
         Iconz.startPlayList,
-        color: getAlphabetColor(audio?.album ?? 'c'),
+        color: getAlphabetColor(widget.albumId),
       ),
     );
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
-      child: audio?.hasPathAndId == false
+      child: audio == null || audio?.canHaveLocalCover == false
           ? fallBack
           : LocalCover(
               albumId: audio!.albumId!,
@@ -98,7 +119,7 @@ class AlbumPageImage extends StatelessWidget {
     required this.audio,
   });
 
-  final Audio audio;
+  final Audio? audio;
 
   @override
   Widget build(BuildContext context) {
@@ -113,24 +134,27 @@ class AlbumPageImage extends StatelessWidget {
             ),
           ),
         ),
-        if (audio.hasPathAndId == true)
-          Align(
-            alignment: Alignment.centerLeft,
-            child: LocalCover(
-              albumId: audio.albumId!,
-              path: audio.path!,
-              dimension: kMaxAudioPageHeaderHeight,
-              fallback: const CoverBackground(
-                dimension: kMaxAudioPageHeaderHeight,
-              ),
-            ),
-          ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: audio != null && audio!.canHaveLocalCover
+              ? LocalCover(
+                  albumId: audio!.albumId!,
+                  path: audio!.path!,
+                  dimension: kMaxAudioPageHeaderHeight,
+                  fallback: const CoverBackground(
+                    dimension: kMaxAudioPageHeaderHeight,
+                  ),
+                )
+              : const CoverBackground(
+                  dimension: kMaxAudioPageHeaderHeight,
+                ),
+        ),
       ],
     );
   }
 }
 
-class AlbumPageControlButton extends StatelessWidget {
+class AlbumPageControlButton extends StatelessWidget with WatchItMixin {
   const AlbumPageControlButton({
     super.key,
     required this.id,
@@ -143,7 +167,8 @@ class AlbumPageControlButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final libraryModel = di<LibraryModel>();
-    final pinnedAlbum = libraryModel.isPinnedAlbum(id);
+    final pinnedAlbum =
+        watchPropertyValue((LibraryModel m) => m.isFavoriteAlbum(id));
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -152,15 +177,31 @@ class AlbumPageControlButton extends StatelessWidget {
           IconButton(
             tooltip:
                 pinnedAlbum ? context.l10n.unPinAlbum : context.l10n.pinAlbum,
-            isSelected: libraryModel.isPinnedAlbum(id),
+            isSelected: pinnedAlbum,
             icon: Icon(
               pinnedAlbum ? Iconz.pinFilled : Iconz.pin,
             ),
             onPressed: () {
-              if (libraryModel.isPinnedAlbum(id)) {
-                libraryModel.removePinnedAlbum(id);
+              if (pinnedAlbum) {
+                libraryModel.removeFavoriteAlbum(
+                  id,
+                  onFail: () {
+                    showSnackBar(
+                      context: context,
+                      content: Text(context.l10n.cantUnpinEmptyAlbum),
+                    );
+                  },
+                );
               } else {
-                libraryModel.addPinnedAlbum(id, album);
+                libraryModel.addFavoriteAlbum(
+                  id,
+                  onFail: () {
+                    showSnackBar(
+                      context: context,
+                      content: Text(context.l10n.cantPinEmptyAlbum),
+                    );
+                  },
+                );
               }
             },
           ),

@@ -35,16 +35,14 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   @override
   void initState() {
     super.initState();
-    di<LocalAudioModel>().init().then((_) {
-      final failedImports = di<LocalAudioModel>().failedImports;
-      if (mounted && failedImports?.isNotEmpty == true) {
-        showFailedImportsSnackBar(
-          failedImports: failedImports!,
-          context: context,
-          message: context.l10n.failedToReadMetadata,
-        );
-      }
-    });
+    final failedImports = di<LocalAudioModel>().failedImports;
+    if (mounted && failedImports?.isNotEmpty == true) {
+      showFailedImportsSnackBar(
+        failedImports: failedImports!,
+        context: context,
+        message: context.l10n.failedToReadMetadata,
+      );
+    }
   }
 
   @override
@@ -52,13 +50,10 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     final l10n = context.l10n;
     final audios = watchPropertyValue((LocalAudioModel m) => m.audios);
     final allArtists = watchPropertyValue((LocalAudioModel m) => m.allArtists);
-    final allAlbumArtists =
-        watchPropertyValue((LocalAudioModel m) => m.allAlbumArtists);
-
-    final allAlbums = watchPropertyValue((LocalAudioModel m) => m.allAlbums);
+    final allAlbumIDs =
+        watchPropertyValue((LocalAudioModel m) => m.allAlbumIDs);
     final allGenres = watchPropertyValue((LocalAudioModel m) => m.allGenres);
-    final playlists =
-        watchPropertyValue((LibraryModel m) => m.playlists.keys.toList());
+    final playlists = watchPropertyValue((LibraryModel m) => m.playlistIDs);
     final index = watchPropertyValue((LocalAudioModel m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
 
@@ -72,8 +67,9 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
             builder: (context) => ConfirmationDialog(
               title: Text(l10n.localAudioWatchDialogTitle),
               content: Text(l10n.localAudioWatchDialogDescription),
-              onConfirm: () async =>
-                  di<LocalAudioModel>().init(forceInit: true),
+              onConfirm: () async {
+                await di<LocalAudioModel>().init(forceInit: true);
+              },
             ),
           );
         }
@@ -136,9 +132,8 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                     : LocalAudioBody(
                         localAudioView: localAudioView,
                         titles: audios,
-                        albums: allAlbums,
+                        albumIDs: allAlbumIDs,
                         artists: allArtists,
-                        albumArtists: allAlbumArtists,
                         genres: allGenres,
                         playlists: playlists,
                       ),

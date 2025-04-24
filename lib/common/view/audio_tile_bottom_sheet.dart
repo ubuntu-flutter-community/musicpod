@@ -162,6 +162,7 @@ class AudioTileBottomSheet extends StatelessWidget {
                                     builder: (context) =>
                                         MetaDataContent.dialog(
                                       audio: audios.first,
+                                      pageId: playlistId,
                                     ),
                                   );
                                 },
@@ -193,16 +194,10 @@ class AudioTileBottomSheet extends StatelessWidget {
                           onTap: () {
                             final artistId = audios.firstOrNull?.artist;
                             if (artistId != null) {
-                              final artistAudios = di<LocalAudioModel>()
-                                  .findTitlesOfArtist(artistId);
-                              if (artistAudios != null) {
-                                libraryModel.push(
-                                  pageId: artistId,
-                                  builder: (c) => ArtistPage(
-                                    artistAudios: artistAudios,
-                                  ),
-                                );
-                              }
+                              libraryModel.push(
+                                pageId: artistId,
+                                builder: (c) => ArtistPage(pageId: artistId),
+                              );
                             }
                           },
                         ),
@@ -216,17 +211,13 @@ class AudioTileBottomSheet extends StatelessWidget {
                           title: Text(l10n.showAlbumPage),
                           onTap: () {
                             final albumId = audios.firstOrNull?.albumId;
-                            final albumName = audios.firstOrNull?.album;
-                            if (albumName != null) {
+                            if (albumId != null) {
                               final albumAudios =
-                                  di<LocalAudioModel>().findAlbum(albumName);
-                              if (albumId != null && albumAudios != null) {
+                                  di<LocalAudioModel>().findAlbum(albumId);
+                              if (albumAudios != null) {
                                 libraryModel.push(
                                   pageId: albumId,
-                                  builder: (context) => AlbumPage(
-                                    id: albumId,
-                                    album: albumAudios,
-                                  ),
+                                  builder: (context) => AlbumPage(id: albumId),
                                 );
                               }
                             }

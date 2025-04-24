@@ -47,9 +47,7 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final playlistNames = watchPropertyValue(
-      (LibraryModel m) => m.playlists.keys.map((e) => e.toString()),
-    );
+    final playlistNames = watchPropertyValue((LibraryModel m) => m.playlistIDs);
 
     final children = [
       ListTile(
@@ -118,7 +116,7 @@ class _PlaylistTile extends StatelessWidget {
           libraryModel.addLikedAudios(audios);
         } else {
           libraryModel.addAudiosToPlaylist(
-            playlist: playlistId,
+            id: playlistId,
             audios: audios,
           );
         }

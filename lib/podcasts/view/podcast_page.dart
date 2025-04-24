@@ -47,10 +47,10 @@ class _PodcastPageState extends State<PodcastPage> {
   void initState() {
     super.initState();
     final libraryModel = di<LibraryModel>();
-    if (!libraryModel.isPageInLibrary(widget.feedUrl)) return;
+    if (!libraryModel.isPodcastSubscribed(widget.feedUrl)) return;
 
     final episodes =
-        widget.preFetchedEpisodes ?? libraryModel.podcasts[widget.feedUrl];
+        widget.preFetchedEpisodes ?? libraryModel.getPodcast(widget.feedUrl);
 
     if (episodes == null || episodes.isEmpty) return;
 
@@ -71,7 +71,7 @@ class _PodcastPageState extends State<PodcastPage> {
   @override
   Widget build(BuildContext context) {
     final episodes = widget.preFetchedEpisodes ??
-        watchPropertyValue((LibraryModel m) => m.podcasts[widget.feedUrl]);
+        watchPropertyValue((LibraryModel m) => m.getPodcast(widget.feedUrl));
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
     final showSearch =

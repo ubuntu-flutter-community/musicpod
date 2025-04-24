@@ -10,8 +10,11 @@ import '../../common/view/cover_background.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
+import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../extensions/string_x.dart';
+import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../local_audio_model.dart';
@@ -21,33 +24,36 @@ import 'local_cover.dart';
 class AlbumsView extends StatelessWidget with WatchItMixin {
   const AlbumsView({
     super.key,
-    required this.albums,
+    required this.albumIDs,
     this.noResultMessage,
     this.noResultIcon,
   });
 
-  final List<String>? albums;
+  final List<String>? albumIDs;
   final Widget? noResultMessage, noResultIcon;
 
   @override
   Widget build(BuildContext context) {
-    if (albums == null) {
+    if (albumIDs == null) {
       return const SliverFillRemainingProgress();
     }
 
-    if (albums!.isEmpty) {
+    if (albumIDs!.isEmpty) {
       return SliverNoSearchResultPage(
         icon: noResultIcon,
         message: noResultMessage,
       );
     }
 
-    watchPropertyValue((LibraryModel m) => m.pinnedAlbums.hashCode);
-    final pinnedAlbums = di<LibraryModel>().pinnedAlbums;
-    final pinnedAlbumsAlbumNames =
-        pinnedAlbums.entries.map((e) => e.value.firstOrNull?.album);
-    final pinned = albums!.where((e) => pinnedAlbumsAlbumNames.contains(e));
-    final notPinned = albums!.where((e) => !pinnedAlbumsAlbumNames.contains(e));
+    watchPropertyValue((LibraryModel m) => m.favoriteAlbums.hashCode);
+
+    final pinnedAlbumsAlbumKeys = di<LibraryModel>().favoriteAlbums;
+    pinnedAlbumsAlbumKeys.sort((a, b) => a.albumOfId.compareTo(b.albumOfId));
+
+    final pinned =
+        albumIDs?.where((e) => pinnedAlbumsAlbumKeys.contains(e)) ?? [];
+    final notPinned =
+        albumIDs?.where((e) => !pinnedAlbumsAlbumKeys.contains(e)) ?? [];
     final sortedAlbums = [
       ...pinned,
       ...notPinned,
@@ -57,11 +63,11 @@ class AlbumsView extends StatelessWidget with WatchItMixin {
       itemCount: sortedAlbums.length,
       gridDelegate: audioCardGridDelegate,
       itemBuilder: (context, index) {
-        final album = sortedAlbums.elementAt(index);
+        final albumID = sortedAlbums.elementAt(index);
         return AlbumCard(
-          key: ValueKey(album),
-          album: album,
-          pinned: pinned.contains(album),
+          key: ValueKey(albumID),
+          id: albumID,
+          pinned: pinned.contains(albumID),
         );
       },
     );
@@ -71,28 +77,27 @@ class AlbumsView extends StatelessWidget with WatchItMixin {
 class AlbumCard extends StatelessWidget {
   const AlbumCard({
     super.key,
-    required this.album,
+    required this.id,
     required this.pinned,
   });
 
-  final String album;
+  final String id;
   final bool pinned;
 
   @override
   Widget build(BuildContext context) {
     final playerModel = di<PlayerModel>();
-    final albumAudios = di<LocalAudioModel>().findAlbum(album);
+    final albumAudios = di<LocalAudioModel>().findAlbum(id);
     const fallback = CoverBackground();
 
-    final id = albumAudios?.firstWhereOrNull((e) => e.albumId != null)?.albumId;
     final path = albumAudios?.firstWhereOrNull((e) => e.path != null)?.path;
 
     return Stack(
       alignment: Alignment.center,
       children: [
         AudioCard(
-          bottom: AudioCardBottom(text: album),
-          image: id != null && path != null
+          bottom: AudioCardBottom(text: id.albumOfId),
+          image: path != null
               ? LocalCover(
                   dimension: audioCardDimension,
                   albumId: id,
@@ -101,13 +106,13 @@ class AlbumCard extends StatelessWidget {
                 )
               : const CoverBackground(),
           background: fallback,
-          onTap: id == null || albumAudios == null
+          onTap: albumAudios == null
               ? null
               : () => di<LibraryModel>().push(
-                    builder: (context) => AlbumPage(id: id, album: albumAudios),
+                    builder: (context) => AlbumPage(id: id),
                     pageId: id,
                   ),
-          onPlay: albumAudios == null || albumAudios.isEmpty || id == null
+          onPlay: albumAudios == null || albumAudios.isEmpty
               ? null
               : () => playerModel.startPlaylist(
                     audios: albumAudios,
@@ -121,9 +126,13 @@ class AlbumCard extends StatelessWidget {
                 kAudioCardBottomHeight + (AppConfig.isMobilePlatform ? 25 : 13),
             child: AudioCardVignette(
               iconData: Iconz.pinFilled,
-              onTap: id == null
-                  ? null
-                  : () => di<LibraryModel>().removePinnedAlbum(id),
+              onTap: () => di<LibraryModel>().removeFavoriteAlbum(
+                id,
+                onFail: () => showSnackBar(
+                  context: context,
+                  content: Text(context.l10n.cantUnpinEmptyAlbum),
+                ),
+              ),
             ),
           ),
       ],

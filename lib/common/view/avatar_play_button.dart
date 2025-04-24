@@ -24,6 +24,7 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final playerModel = di<PlayerModel>();
+    final disabled = pageId.isEmpty || audios.isEmpty;
     final isPlayerPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final pageIsQueue = watchPropertyValue(
       (PlayerModel m) => m.queueName != null && m.queueName == pageId,
@@ -38,11 +39,11 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
       child: CircleAvatar(
         radius: bigAvatarButtonRadius,
         backgroundColor: theme.colorScheme.inverseSurface.withAlpha(
-          pageId.isEmpty ? 180 : 255,
+          disabled ? 50 : 255,
         ),
         child: IconButton(
           tooltip: context.l10n.playAll,
-          onPressed: pageId.isEmpty
+          onPressed: disabled
               ? null
               : () {
                   if (audios.isNotEmpty &&
@@ -72,7 +73,7 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
                 },
           icon: Icon(
             iconData,
-            color: theme.colorScheme.onInverseSurface,
+            color: disabled ? null : theme.colorScheme.onInverseSurface,
           ),
         ),
       ),

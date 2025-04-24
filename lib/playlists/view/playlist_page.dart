@@ -13,33 +13,26 @@ import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile.dart';
-import '../../common/view/avatar_play_button.dart';
-import '../../common/view/fall_back_header_image.dart';
 import '../../common/view/header_bar.dart';
-import '../../common/view/icons.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
-import '../../common/view/tapable_text.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../extensions/build_context_x.dart';
-import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../local_audio/view/failed_import_snackbar.dart';
-import '../../local_audio/view/genre_page.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
-import '../../settings/settings_model.dart';
-import 'edit_playlist_dialog.dart';
-import 'playlst_add_audios_dialog.dart';
+import 'playlist_control_panel.dart';
+import 'playlist_genre_bar.dart';
+import 'playlist_header_image.dart';
 
-class PlaylistPage extends StatelessWidget with WatchItMixin {
+class PlaylistPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const PlaylistPage({
     super.key,
     required this.pageId,
@@ -48,15 +41,53 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
   final String pageId;
 
   @override
+  State<PlaylistPage> createState() => _PlaylistPageState();
+}
+
+class _PlaylistPageState extends State<PlaylistPage> {
+  late List<Audio> playlist;
+
+  static Map<String, List<Audio>> cache = {};
+
+  @override
+  void initState() {
+    super.initState();
+    getPlaylist();
+  }
+
+  void getPlaylist() {
+    if (cache[widget.pageId]?.isNotEmpty == true) {
+      playlist = cache[widget.pageId]!;
+      return;
+    }
+
+    final playlistById =
+        di<LibraryModel>().getPlaylistById(widget.pageId) ?? [];
+
+    cache[widget.pageId] = playlistById;
+    playlist = playlistById;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
     final model = di<LocalAudioModel>();
     final libraryModel = di<LibraryModel>();
-    final playlist = libraryModel.getPlaylistById(pageId);
+
     // This is needed to be notified about both size changes and also reordering
-    watchPropertyValue((LibraryModel m) => m.playlists[pageId]?.length);
-    watchPropertyValue((LibraryModel m) => m.playlists[pageId]?.hashCode);
+    watchPropertyValue(
+      (LibraryModel m) {
+        setState(() => getPlaylist());
+        return m.getPlaylistById(widget.pageId)?.length;
+      },
+    );
+    watchPropertyValue(
+      (LibraryModel m) {
+        setState(() => getPlaylist());
+        return m.getPlaylistById(widget.pageId)?.hashCode;
+      },
+    );
 
     return DropRegion(
       formats: Formats.standardFormats,
@@ -65,7 +96,8 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
         Future.delayed(
           const Duration(milliseconds: 300),
         ).then(
-          (_) => libraryModel.updatePlaylist(pageId, playlist ?? []),
+          (_) =>
+              libraryModel.updatePlaylist(id: widget.pageId, audios: playlist),
         );
       },
       onPerformDrop: (e) async {
@@ -76,7 +108,7 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
               if (value == null) return;
               try {
                 final file = File.fromUri(value);
-                playlist?.add(
+                playlist.add(
                   Audio.local(
                     file,
                     getImage: true,
@@ -139,100 +171,23 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
             if (id == null) return;
             di<LibraryModel>().push(
               builder: (_) {
-                return AlbumPage(
-                  id: id,
-                  album: albumAudios,
-                );
+                return AlbumPage(id: id);
               },
               pageId: id,
             );
           },
-          onArtistTap: (text) {
-            final artistAudios = model.findTitlesOfArtist(text);
-            final artist = artistAudios?.firstOrNull?.artist;
-            if (artist == null) return;
-
-            di<LibraryModel>().push(
-              builder: (_) => ArtistPage(artistAudios: artistAudios),
-              pageId: artist,
-            );
-          },
-          image: _PlaylistHeaderImage(
-            playlist: playlist ?? [],
-            pageId: pageId,
+          onArtistTap: (text) => di<LibraryModel>().push(
+            builder: (_) => ArtistPage(pageId: text),
+            pageId: text,
           ),
-          audios: playlist ?? [],
-          pageId: pageId,
+          image: PlaylistHeaderImage(
+            playlist: playlist,
+            pageId: widget.pageId,
+          ),
+          audios: playlist,
+          pageId: widget.pageId,
         ),
       ),
-    );
-  }
-}
-
-class _PlaylistHeaderImage extends StatelessWidget with WatchItMixin {
-  const _PlaylistHeaderImage({
-    required this.playlist,
-    required this.pageId,
-  });
-
-  final String pageId;
-  final List<Audio> playlist;
-
-  @override
-  Widget build(BuildContext context) {
-    final model = di<LocalAudioModel>();
-    watchPropertyValue((LibraryModel m) => m.playlists[pageId]?.hashCode);
-    final playlistImages = model.findLocalCovers(audios: playlist, limit: 16);
-    final length = playlistImages == null ? 0 : playlistImages.take(16).length;
-
-    final padding = length == 1 ? 0.0 : 8.0;
-    final spacing = length == 1 ? 0.0 : 16.0;
-    final width = length == 1
-        ? kMaxAudioPageHeaderHeight
-        : length < 10
-            ? 50.0
-            : 32.0;
-    final height = length == 1
-        ? kMaxAudioPageHeaderHeight
-        : length < 10
-            ? 50.0
-            : 32.0;
-    final radius = length == 1 ? 0.0 : width / 2;
-
-    Widget image;
-    if (length == 0) {
-      image = Icon(
-        Iconz.playlist,
-        size: 65,
-      );
-    } else {
-      image = Center(
-        child: Padding(
-          padding: EdgeInsets.all(padding),
-          child: Wrap(
-            spacing: spacing,
-            runSpacing: spacing,
-            children: List.generate(
-              length,
-              (index) => ClipRRect(
-                borderRadius: BorderRadius.circular(radius),
-                child: Image.memory(
-                  playlistImages!.elementAt(index),
-                  width: width,
-                  height: height,
-                  fit: BoxFit.cover,
-                  filterQuality: FilterQuality.medium,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    return FallBackHeaderImage(
-      color: getAlphabetColor(pageId),
-      child: image,
     );
   }
 }
@@ -262,16 +217,16 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
     final libraryModel = di<LibraryModel>();
     final playerModel = di<PlayerModel>();
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
-    watchPropertyValue((SettingsModel m) => m.externalPlaylists.length);
+    watchPropertyValue((LibraryModel m) => m.externalPlaylists.length);
 
     final audioPageHeader = AudioPageHeader(
       title: pageId,
       subTitle: '${audios.length} ${l10n.titles}',
       image: image,
-      label: di<SettingsModel>().externalPlaylists.contains(pageId)
+      label: di<LibraryModel>().externalPlaylists.contains(pageId)
           ? '${l10n.playlist} (${l10n.external})'
           : l10n.playlist,
-      description: _PlaylistGenreBar(audios: audios),
+      description: PlaylistGenreBar(audios: audios),
     );
 
     return LayoutBuilder(
@@ -289,7 +244,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
             ),
             SliverAudioPageControlPanel(
               controlPanel:
-                  _PlaylistControlPanel(pageId: pageId, audios: audios),
+                  PlaylistControlPanel(pageId: pageId, audios: audios),
             ),
             if (allowReorder)
               SliverPadding(
@@ -340,7 +295,10 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
               )
             else
               SliverPadding(
-                padding: getAdaptiveHorizontalPadding(constraints: constraints),
+                padding: getAdaptiveHorizontalPadding(
+                  constraints: constraints,
+                  min: 40,
+                ),
                 sliver: SliverAudioTileList(
                   audios: audios,
                   pageId: pageId,
@@ -351,113 +309,6 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
           ],
         );
       },
-    );
-  }
-}
-
-class _PlaylistControlPanel extends StatelessWidget with WatchItMixin {
-  const _PlaylistControlPanel({
-    required this.pageId,
-    required this.audios,
-  });
-
-  final String pageId;
-  final List<Audio> audios;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final allowReorder =
-        watchPropertyValue((LocalAudioModel m) => m.allowReorder);
-    final libraryModel = di<LibraryModel>();
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: space(
-        children: [
-          IconButton(
-            tooltip: l10n.editPlaylist,
-            icon: Icon(Iconz.pen),
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => EditPlaylistDialog(
-                audios: audios,
-                playlistName: pageId,
-                initialValue: pageId,
-              ),
-            ),
-          ),
-          IconButton(
-            tooltip: l10n.clearPlaylist,
-            icon: Icon(Iconz.clearAll),
-            onPressed: () => libraryModel.clearPlaylist(pageId),
-          ),
-          AvatarPlayButton(audios: audios, pageId: pageId),
-          IconButton(
-            tooltip: l10n.add,
-            icon: Icon(Iconz.plus),
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => PlaylistAddAudiosDialog(playlistId: pageId),
-            ),
-          ),
-          IconButton(
-            tooltip: l10n.move,
-            isSelected: allowReorder,
-            onPressed: () =>
-                di<LocalAudioModel>().setAllowReorder(!allowReorder),
-            icon: Icon(Iconz.move),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PlaylistGenreBar extends StatelessWidget {
-  const _PlaylistGenreBar({
-    required this.audios,
-  });
-
-  final List<Audio> audios;
-
-  @override
-  Widget build(BuildContext context) {
-    final style = context.theme.pageHeaderDescription;
-    Set<String> genres = {};
-    for (var e in audios) {
-      final g = e.genre?.trim();
-      if (g?.isNotEmpty == true) {
-        genres.add(g!);
-      }
-    }
-
-    return SingleChildScrollView(
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        runAlignment: WrapAlignment.center,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: genres
-            .mapIndexed(
-              (i, e) => Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TapAbleText(
-                    style: style,
-                    wrapInFlexible: false,
-                    text: e,
-                    onTap: () {
-                      di<LibraryModel>().push(
-                        builder: (context) => GenrePage(genre: e),
-                        pageId: e,
-                      );
-                    },
-                  ),
-                  if (i != genres.length - 1) const Text(' · '),
-                ],
-              ),
-            )
-            .toList(),
-      ),
     );
   }
 }
